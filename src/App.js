@@ -2,12 +2,36 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import promiseMiddleware from 'redux-promise-middleware';
+import { ReducerRegistry, applyReducerHash } from '@red-hat-insights/insights-frontend-components'
 import { Routes } from './Routes';
 import './App.scss';
 
+import Reducers from './redux/reducers/entity_list';
+
+import logger from 'redux-logger';
+
+let registry;
+
 class App extends Component {
 
+    constructor (props) {
+      super(props);
+    }
+
+    static getRegistry () {
+      if (! registry) {
+        registry = new ReducerRegistry({}, [logger, promiseMiddleware()]);
+      }
+      return registry;
+    }
+
     componentDidMount () {
+        console.log('getStore()');
+        console.log(App.getRegistry().getStore());
+
+        App.getRegistry().register({inventory: applyReducerHash(Reducers)});
+
         insights.chrome.init();
         insights.chrome.identifyApp('advisor');
         insights.chrome.navigation(buildNavigation());
