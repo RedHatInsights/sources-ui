@@ -23,7 +23,9 @@ const SamplePage = asyncComponent(() => import(
     /* webpackChunkName: "SamplePage" */ './SmartComponents/SamplePage/SamplePage'));
 const paths = {
     sample: '/samplepage',
-    rules: '/advisor/rules'
+    rules: '/topologyui/rules',
+    vms: '/topologyui/vms',
+    sample_new: '/samplepage/new'
 };
 
 type Props = {
@@ -56,7 +58,9 @@ export const Routes = (props: Props) => {
 
     return (
         <Switch>
-            <InsightsRoute exact path={paths.sample} component={SamplePage} rootClass='sample' />
+            {/**<InsightsRoute exact path={paths.sample} component={SamplePage} rootClass='sample' /> **/}
+            <InsightsRoute path={paths.sample} component={SamplePage} rootClass='sample' />
+            <InsightsRoute path={paths.vms} component={ListingPage} rootClass='listing' />
             <InsightsRoute path={paths.rules} component={Rules} rootClass='rules' />
 
             {/* Finally, catch all unmatched routes */}
