@@ -40,7 +40,7 @@ class SamplePage extends Component {
     render() {
         return (
             <React.Fragment>
-                <Modal title='Add New Provider' isOpen={this.props.location.pathname == '/samplepage/new'} onClose={this.props.history.goBack}>
+                <Modal title='Add New Provider' isOpen={this.props.location.pathname == '/providers/new'} onClose={this.props.history.goBack}>
                   foobar
                 </Modal>
                 <PageHeader>
@@ -80,7 +80,7 @@ class SamplePage extends Component {
                       <Card>
                           <CardBody>
                               <Section type='button-group'>
-                                  <Link to='/samplepage/new'>
+                                  <Link to='/providers/new'>
                                     <Button variant='primary'> Add New Provider </Button>
                                   </Link>
                               </Section>
