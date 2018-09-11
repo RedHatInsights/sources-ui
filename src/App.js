@@ -33,7 +33,7 @@ class App extends Component {
         App.getRegistry().register({inventory: applyReducerHash(Reducers)});
 
         insights.chrome.init();
-        insights.chrome.identifyApp('advisor');
+        insights.chrome.identifyApp('topologyui');
         insights.chrome.navigation(buildNavigation());
 
         this.appNav = insights.chrome.on('APP_NAVIGATION', event => this.props.history.push(`/${event.navId}`));
@@ -64,13 +64,13 @@ App.propTypes = {
 export default withRouter (connect()(App));
 
 function buildNavigation () {
-    const currentPath = 'advisor' + '/' + window.location.pathname.split('/').slice(-1)[0];
+    const currentPath = 'topologyui' + '/' + window.location.pathname.split('/').slice(-1)[0];
     return [{
-        title: 'Sample App',
-        id: 'advisor/samplepage'
+        title: 'Providers',
+        id: 'topologyui/providers'
     }, {
         title: 'Rules',
-        id: 'advisor/rules'
+        id: 'topologyui/rules'
     }].map(item => ({
         ...item,
         active: item.id === currentPath

@@ -21,11 +21,17 @@ import some from 'lodash/some';
 const Rules = asyncComponent(() => import(/* webpackChunkName: "Rules" */ './PresentationalComponents/Rules/Rules'));
 const SamplePage = asyncComponent(() => import(
     /* webpackChunkName: "SamplePage" */ './SmartComponents/SamplePage/SamplePage'));
+const ListingPage = asyncComponent(() => import(
+    /* webpackChunkName: "ListingPage" */ './SmartComponents/ListingPage/ListingPage'));
+const DetailPage = asyncComponent(() => import(
+    /* webpackChunkName: "DetailPage" */ './SmartComponents/DetailPage/DetailPage'));
+
 const paths = {
-    sample: '/samplepage',
-    rules: '/topologyui/rules',
+    providers: '/providers',
+    provider_new: '/providers/new',
     vms: '/topologyui/vms',
-    sample_new: '/samplepage/new'
+    provider_detail: '/provider/:id',
+    rules: '/topologyui/rules',
 };
 
 type Props = {
@@ -58,13 +64,14 @@ export const Routes = (props: Props) => {
 
     return (
         <Switch>
-            {/**<InsightsRoute exact path={paths.sample} component={SamplePage} rootClass='sample' /> **/}
-            <InsightsRoute path={paths.sample} component={SamplePage} rootClass='sample' />
+            {/**<InsightsRoute exact path={paths.providers} component={SamplePage} rootClass='providers' /> **/}
+            <InsightsRoute path={paths.providers} component={SamplePage} rootClass='providers' />
             <InsightsRoute path={paths.vms} component={ListingPage} rootClass='listing' />
+            <InsightsRoute path={paths.provider_detail} component={DetailPage} rootClass='provider' />
             <InsightsRoute path={paths.rules} component={Rules} rootClass='rules' />
 
             {/* Finally, catch all unmatched routes */}
-            <Route render={() => some(paths, p => p === path) ? null : (<Redirect to={paths.sample} />)} />
+            <Route render={() => some(paths, p => p === path) ? null : (<Redirect to={paths.providers} />)} />
         </Switch>
     );
 };
