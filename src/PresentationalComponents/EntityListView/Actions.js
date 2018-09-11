@@ -1,3 +1,4 @@
+import { Link, Redirect, withRouter } from 'react-router-dom';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown, DropdownItem, DropdownPosition, KebabToggle } from '@patternfly/react-core';
@@ -30,9 +31,10 @@ class Actions extends React.Component {
         isOpen={this.state.isOpen}
         onSelect={this.onSelect}
       >
-          <DropdownItem>{this.props.item.name}First action</DropdownItem>
+          <DropdownItem>{/**this.props.item.name**/}<Link to='/topologyui/vms/'>Show VMs</Link></DropdownItem>
+          <DropdownItem><Link to={'/provider/' + this.props.item.id}>Show Details</Link></DropdownItem>
       </Dropdown>
-  )
+    )
   }
 }
 
