@@ -16,4 +16,5 @@ export const ACTION_TYPES = [
 )
 
 export const SELECT_ENTITY = 'SELECT_ENTITY';
+export const EXPAND_ENTITY = 'EXPAND_ENTITY';
 

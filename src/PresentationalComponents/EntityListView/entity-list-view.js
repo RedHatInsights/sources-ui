@@ -8,9 +8,12 @@ import { BrushIcon, BugIcon, ShareIcon, ServerIcon } from '@patternfly/react-ico
 import { Button } from '@patternfly/react-core';
 
 import { Table } from '@red-hat-insights/insights-frontend-components';
+
+import flatten from 'lodash/flatten'
+
 import Actions from './Actions';
 
-import { loadEntities, selectEntity } from '../../redux/actions/entity_list';
+import { loadEntities, selectEntity, expandEntity } from '../../redux/actions/entity_list';
 
 class EntityListView extends React.Component {
     constructor(props) {
@@ -19,6 +22,7 @@ class EntityListView extends React.Component {
         this.onRowClick = this.onRowClick.bind(this);
         this.onItemSelect = this.onItemSelect.bind(this);
         this.onSort = this.onSort.bind(this)
+        this.onExpandClick = this.onExpandClick.bind(this)
 
         this.state = {
         //    sortBy: {}
@@ -28,50 +32,53 @@ class EntityListView extends React.Component {
     componentDidMount() {
         this.props.loadEntities();
     }
-    // return (
-    //     <ListView>
-    //       <ListView.Item>
-    //         <Row>
-    //           <Col>foobar</Col>
-    //         </Row>
-    //       </ListView.Item>
-    //       <ListView.Item>
-    //         <Row>
-    //           <Col>bar bar</Col>
-    //           <Col>booo</Col>
-    //         </Row>
-    //       </ListView.Item>
-    //     </ListView>
-    // );
-  
+
     onRowClick(_event, key, application) {
-      console.log('onRowClick', key, application);
+        console.log('onRowClick', key, application);
     }
-    
+
     onItemSelect(_event, key, checked) {
-      console.log('onItemSelect', key, checked);
-      this.props.selectEntity(key, checked);
+        console.log('onItemSelect', key, checked);
+        this.props.selectEntity(key, checked);
     }
 
     onSort(_event, key, direction) {
     }
 
+    onExpandClick(_event, _row, rowKey) {
+        console.log('onExpandClick', _row, rowKey);
+        this.props.expandEntity(rowKey, true);
+    }
+
     render() {
-        const { entities } = this.props;
-        const data = entities.map(item => ({
-          ...item,
-          cells: [
-            item.name,
-            'OK',
-            item.type,
-            (new Date).toDateString(),
-            <Actions item={item} />
+        const { entities, expanded } = this.props;
+        console.log('expanded: ', expanded);
+        const data = flatten(entities.map((item, index) => (
+          [
+            {
+              ...item,
+              children: [index + 1],
+              cells: [
+                item.name,
+                'OK',
+                item.type,
+                (new Date).toDateString(),
+                <Actions item={item} />
+              ]
+            },
+            {
+              id: item.id + '_detail',
+              isOpen: item.id == expanded,
+              cells: [{ title: 'collapsed content', colSpan: 5 }]
+            }
           ]
-        }));
+        )));
+
         console.log(data);
 
         return <Table
             className="pf-m-compact ins-entity-table"
+            expandable={true}
             //sortBy={this.state.sortBy}
             header={['Provider', 'Status', 'Type', 'Last Updated', '']}
             //header={columns && {
@@ -85,6 +92,7 @@ class EntityListView extends React.Component {
             onSort={this.onSort}
             onRowClick={this.onRowClick}
             onItemSelect={this.onItemSelect}
+            onExpandClick={this.onExpandClick}
             hasCheckbox
             rows={data}
             footer={'Random footer'}
@@ -196,11 +204,14 @@ function mapDispatchToProps(dispatch) {
     return {
         loadEntities: () => dispatch(loadEntities()),
         selectEntity: (key, selected) => dispatch(selectEntity(key, selected)),
+        expandEntity: (key, expanded) => dispatch(expandEntity(key, expanded)),
         //filterEntities: (key = 'display_name', filterBy) => dispatch(filterEntities(key, filterBy))
     }
 }
 
-const mapStateToProps = ({inventory:{rows = [], entities = []}}) => ({entities, rows})
+const mapStateToProps = (
+  {inventory:{rows = [], entities = [], expanded}}) => ({entities, rows, expanded}
+)
 
 //export default EntityListView;
 export default connect(mapStateToProps, mapDispatchToProps)(EntityListView)

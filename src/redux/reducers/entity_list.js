@@ -1,4 +1,4 @@
-import { ACTION_TYPES, SELECT_ENTITY } from '../action-types';
+import { ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY } from '../action-types';
 import get from 'lodash/get';
 import orderBy from 'lodash/orderBy';
 
@@ -8,6 +8,7 @@ function entitiesPending(state) {
     return {
         ...state,
         loaded: false,
+        expanded: null,
     };
 }
 
@@ -22,7 +23,7 @@ function entitiesLoaded(state, { payload }) {
 }
 
 function selectEntity(state, { payload: { id, selected } }) {
-    console.log('selectEntity', id, selected);
+    console.log('R: selectEntity', id, selected);
 
     return {
         ...state,
@@ -33,8 +34,17 @@ function selectEntity(state, { payload: { id, selected } }) {
     }
 }
 
+function expandEntity(state, { payload: { id, expanded } }) {
+    console.log('R: expandEntity', id, expanded);
+    return {
+        ...state,
+        expanded: id
+    }
+}
+
 export default {
     [ACTION_TYPES.LOAD_ENTITIES_PENDING]: entitiesPending,
     [ACTION_TYPES.LOAD_ENTITIES_FULFILLED]: entitiesLoaded,
-    [SELECT_ENTITY]: selectEntity
+    [SELECT_ENTITY]: selectEntity,
+    [EXPAND_ENTITY]: expandEntity
 };
