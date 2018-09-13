@@ -7,7 +7,7 @@ import { ListView, Row, Col, DropdownKebab, MenuItem } from 'patternfly-react';
 import { BrushIcon, BugIcon, ShareIcon, ServerIcon } from '@patternfly/react-icons';
 import { Button } from '@patternfly/react-core';
 
-import { Table } from '@red-hat-insights/insights-frontend-components';
+import { Pagination, Table } from '@red-hat-insights/insights-frontend-components';
 
 import flatten from 'lodash/flatten'
 
@@ -95,7 +95,7 @@ class EntityListView extends React.Component {
             onExpandClick={this.onExpandClick}
             hasCheckbox
             rows={data}
-            footer={'Random footer'}
+            footer={<Pagination numberOfItems={10}/>}
         />
     }
 
