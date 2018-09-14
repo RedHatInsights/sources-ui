@@ -38,7 +38,10 @@ function expandEntity(state, { payload: { id, expanded } }) {
     console.log('R: expandEntity', id, expanded);
     return {
         ...state,
-        expanded: id
+        entities: state.entities.map(entity => {
+            if (entity.id == id) return {...entity, expanded: !entity.expanded}
+            return entity;
+        })
     }
 }
 

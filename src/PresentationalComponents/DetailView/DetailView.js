@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import uniqueId from 'lodash/uniqueId'
 import { Card, Grid, GridItem, Button } from '@patternfly/react-core';
 import { Donut } from '@red-hat-insights/insights-frontend-components';
 //import { Pie } from '@red-hat-insights/insights-frontend-components';
@@ -8,7 +9,7 @@ class DetailView extends Component {
         return (
           <Grid>
               <GridItem sm={6} md={4} lg={4} xl={4}>
-                  <Donut withLegend identifier='orech' values={[['Red Hat', 100], ['Google', 10]]}/>
+                  <Donut withLegend identifier={uniqueId('donut')} values={[['Red Hat', 100], ['Google', 10]]}/>
               </GridItem>
               <GridItem sm={6} md={4} lg={4} xl={4}>
                   <dl>

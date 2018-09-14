@@ -14,6 +14,7 @@ import flatten from 'lodash/flatten'
 import Actions from './Actions';
 
 import { loadEntities, selectEntity, expandEntity } from '../../redux/actions/entity_list';
+import DetailView from '../../PresentationalComponents/DetailView/DetailView';
 
 class EntityListView extends React.Component {
     constructor(props) {
@@ -51,8 +52,7 @@ class EntityListView extends React.Component {
     }
 
     render() {
-        const { entities, expanded } = this.props;
-        console.log('expanded: ', expanded);
+        const { entities } = this.props;
         const data = flatten(entities.map((item, index) => (
           [
             {
@@ -68,8 +68,13 @@ class EntityListView extends React.Component {
             },
             {
               id: item.id + '_detail',
-              isOpen: item.id == expanded,
-              cells: [{ title: 'collapsed content', colSpan: 5 }]
+              isOpen: item.expanded,
+              cells: [
+                {
+                  title: item.expanded ? <DetailView /> : 'collapsed content',
+                  colSpan: 5
+                }
+              ]
             }
           ]
         )));
@@ -117,7 +122,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 const mapStateToProps = (
-  {inventory:{rows = [], entities = [], expanded}}) => ({entities, rows, expanded}
+  {inventory:{rows = [], entities = []}}) => ({entities, rows}
 )
 
 //export default EntityListView;
