@@ -24,6 +24,8 @@ class EntityListView extends React.Component {
         this.onItemSelect = this.onItemSelect.bind(this);
         this.onSort = this.onSort.bind(this)
         this.onExpandClick = this.onExpandClick.bind(this)
+        this.onSetPage = this.onSetPage.bind(this);
+        this.onPerPageSelect = this.onPerPageSelect.bind(this);
 
         this.state = {
         //    sortBy: {}
@@ -49,6 +51,14 @@ class EntityListView extends React.Component {
     onExpandClick(_event, _row, rowKey) {
         console.log('onExpandClick', _row, rowKey);
         this.props.expandEntity(rowKey, true);
+    }
+
+    onSetPage(arg) {
+        console.log('onSetPage', arg);
+    }
+
+    onPerPageSelect(arg) {
+        console.log('onPerPageSelect', arg);
     }
 
     render() {
@@ -100,7 +110,14 @@ class EntityListView extends React.Component {
             onExpandClick={this.onExpandClick}
             hasCheckbox
             rows={data}
-            footer={<Pagination numberOfItems={10}/>}
+            footer={
+                <Pagination
+                    onSetPage={this.onSetPage}
+                    onPerPageSelect={this.onPerPageSelect}
+                    numberOfItems={10}
+                />
+            }
+
         />
     }
 };
