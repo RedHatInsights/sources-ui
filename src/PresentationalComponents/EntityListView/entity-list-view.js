@@ -13,7 +13,7 @@ import flatten from 'lodash/flatten'
 
 import Actions from './Actions';
 
-import { loadEntities, selectEntity, expandEntity } from '../../redux/actions/entity_list';
+import { loadEntities, selectEntity, expandEntity, sortEntities, pageAndSize } from '../../redux/actions/entity_list';
 import DetailView from '../../PresentationalComponents/DetailView/DetailView';
 
 class EntityListView extends React.Component {
@@ -27,8 +27,16 @@ class EntityListView extends React.Component {
         this.onSetPage = this.onSetPage.bind(this);
         this.onPerPageSelect = this.onPerPageSelect.bind(this);
 
+        this.columns = ['Provider', 'Status', 'Type', 'Last Updated']
+        this.realColumns = ['name', null, 'type', null]
+
         this.state = {
-        //    sortBy: {}
+            itemsPerPage: 10,
+            onPage: 1,
+            sortBy: {}
+            //    index: '0',
+            //    direction: 'up',
+            //}
         }
     }
 
@@ -46,6 +54,14 @@ class EntityListView extends React.Component {
     }
 
     onSort(_event, key, direction) {
+        console.log('onSort', key, this.columns[key], direction);
+        this.props.sortEntities(this.realColumns[key], direction);
+        this.setState({
+            sortBy: {
+              index: key,
+              direction: direction,
+            }
+        });
     }
 
     onExpandClick(_event, _row, rowKey) {
@@ -53,16 +69,25 @@ class EntityListView extends React.Component {
         this.props.expandEntity(rowKey, true);
     }
 
-    onSetPage(arg) {
-        console.log('onSetPage', arg);
+    onSetPage(number) {
+        console.log('onSetPage', number);
+        this.setState({
+            onPage: number,
+        });
+        this.props.pageAndSize(number, this.state.itemsPerPage);
     }
 
-    onPerPageSelect(arg) {
-        console.log('onPerPageSelect', arg);
+    onPerPageSelect(count) {
+        console.log('onPerPageSelect', count);
+        this.setState({
+            onPage: 1,
+            itemsPerPage: count
+        });
+        this.props.pageAndSize(1, count);
     }
 
     render() {
-        const { entities } = this.props;
+        const { entities, rows } = this.props;
         const data = flatten(entities.map((item, index) => (
           [
             {
@@ -73,7 +98,8 @@ class EntityListView extends React.Component {
                 'OK',
                 item.type,
                 (new Date).toDateString(),
-                <Actions item={item} />
+                <Actions item={item} />,
+                <ServerIcon />
               ]
             },
             {
@@ -82,20 +108,20 @@ class EntityListView extends React.Component {
               cells: [
                 {
                   title: item.expanded ? <DetailView /> : 'collapsed content',
-                  colSpan: 5
+                  colSpan: 6
                 }
               ]
             }
           ]
         )));
 
-        console.log(data);
+        console.log('data', data, data.length);
 
         return <Table
             className="pf-m-compact ins-entity-table"
             expandable={true}
-            //sortBy={this.state.sortBy}
-            header={['Provider', 'Status', 'Type', 'Last Updated', '']}
+            sortBy={this.state.sortBy}
+            header={[...this.columns, '', '']}
             //header={columns && {
             //    ...mapValues(keyBy(columns, item => item.key), item => item.title),
             //    health: {
@@ -112,9 +138,12 @@ class EntityListView extends React.Component {
             rows={data}
             footer={
                 <Pagination
+                    itemsPerPage={this.state.itemsPerPage}
+                    page={this.state.onPage}
+                    direction='up'
                     onSetPage={this.onSetPage}
                     onPerPageSelect={this.onPerPageSelect}
-                    numberOfItems={10}
+                    numberOfItems={data ? rows.length : 0}
                 />
             }
 
@@ -134,6 +163,8 @@ function mapDispatchToProps(dispatch) {
         loadEntities: () => dispatch(loadEntities()),
         selectEntity: (key, selected) => dispatch(selectEntity(key, selected)),
         expandEntity: (key, expanded) => dispatch(expandEntity(key, expanded)),
+        sortEntities: (column, direction) => dispatch(sortEntities(column, direction)),
+        pageAndSize: (page, size) => dispatch(pageAndSize(page, size)),
         //filterEntities: (key = 'display_name', filterBy) => dispatch(filterEntities(key, filterBy))
     }
 }
