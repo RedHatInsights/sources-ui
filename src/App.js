@@ -34,10 +34,8 @@ class App extends Component {
 
         insights.chrome.init();
         insights.chrome.identifyApp('topologyui');
-        insights.chrome.navigation(buildNavigation());
 
         this.appNav = insights.chrome.on('APP_NAVIGATION', event => this.props.history.push(`/${event.navId}`));
-        this.buildNav = this.props.history.listen(() => insights.chrome.navigation(buildNavigation()));
     }
 
     componentWillUnmount () {
@@ -62,17 +60,3 @@ App.propTypes = {
  *          https://reactjs.org/docs/higher-order-components.html
  */
 export default withRouter (connect()(App));
-
-function buildNavigation () {
-    const currentPath = 'topologyui' + '/' + window.location.pathname.split('/').slice(-1)[0];
-    return [{
-        title: 'Providers',
-        id: 'topologyui/providers'
-    }, {
-        title: 'Rules',
-        id: 'topologyui/rules'
-    }].map(item => ({
-        ...item,
-        active: item.id === currentPath
-    }));
-}

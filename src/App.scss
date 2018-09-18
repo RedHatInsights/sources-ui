@@ -1,6 +1,17 @@
 @import './src/Utilities.scss';
 
+// @import "~@red-hat-insights/insights-frontend-components/index.css";
+// @import "~@red-hat-insights/insights-frontend-components/Utilities/_all";
+
 @import '~patternfly/dist/css/patternfly.css';
 @import '~patternfly/dist/css/patternfly-additions.css';
 @import '~patternfly-react/dist/css/patternfly-react.css';
 
+.pf-l-gallery {
+  padding-bottom: 20px
+  /* padding-bottom: var(--pf-c-form--section--PaddingBottom) */
+}
+
+.ins-l-content {
+  background-color: var(--pf-global--BackgroundColor--300)
+}
