@@ -30,13 +30,6 @@ class SamplePage extends Component {
     //     <Button variant='danger'> PF-Next Danger Button </Button>
     // </Section>
 
-    // <Grid>
-    //   <GridItem span={4}>A</GridItem>
-    //   <GridItem span={4}>B</GridItem>
-    //   <GridItem span={4}>C</GridItem>
-    //   <GridItem span={12}>Table</GridItem>
-    // </Grid>
-
     render() {
         return (
             <React.Fragment>
@@ -44,7 +37,6 @@ class SamplePage extends Component {
                   foobar
                 </Modal>
                 <PageHeader>
-
                     <PageHeaderTitle title='Providers'/>
                 </PageHeader>
                 <Section type='content'>
@@ -52,12 +44,6 @@ class SamplePage extends Component {
                       <Card>
                         <CardHeader>Karta</CardHeader>
                         <CardBody><Donut withLegend identifier='orech' values={[['Red Hat', 100], ['Google', 10]]}/></CardBody>
-                        <CardFooter>Footer</CardFooter>
-                      </Card>
-
-                      <Card>
-                        <CardHeader>Karta</CardHeader>
-                        <CardBody>Telo</CardBody>
                         <CardFooter>Footer</CardFooter>
                       </Card>
 
@@ -88,26 +74,11 @@ class SamplePage extends Component {
                       </Card>
                     </Gallery>
 
+                    <EntityListView />
                 </Section>
-
-                <EntityListView />
             </React.Fragment>
         );
-       /* Cards: (karty uz jsou nove)
-        *  https://rawgit.com/patternfly/patternfly-react/gh-pages/index.html?knob-Match%20Height=true&selectedKind=patternfly-react%2FCards&selectedStory=Base%20Card%20w%2FHeightMatching&full=0&addons=1&stories=1&panelRight=0&addonPanel=storybook%2Fstories%2Fstories-panel
-        */
-
-       /* https://rawgit.com/patternfly/patternfly-react/gh-pages/index.html?selectedKind=patternfly-react%2FContent%20Views%2FList%20View&selectedStory=List%20of%20expandable%20items&full=0&addons=1&stories=1&panelRight=0&addonPanel=storybook%2Fstories%2Fstories-panel
-        * <ListView>
-        *   <ListView.Item>
-        *     <Row>
-        *       <Col>foobar</Col>
-        *     </Row>
-        *   </ListView.Item>
-        * </ListView>
-        */
     }
 }
 
-//export default withRouter(SamplePage);
 export default withRouter(SamplePage);

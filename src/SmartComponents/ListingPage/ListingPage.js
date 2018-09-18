@@ -4,7 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 //import './sample-page.scss';
 
 //import { Donut, PageHeader, PageHeaderTitle, Section } from '@red-hat-insights/insights-frontend-components';
-import { Breadcrumbs } from '@red-hat-insights/insights-frontend-components';
+import { Breadcrumbs, Section } from '@red-hat-insights/insights-frontend-components';
 
 //import { Button, Grid, GridItem } from '@patternfly/react-core';
 import FilterDropdown from './FilterDropdown';
@@ -22,15 +22,17 @@ class ListingPage extends Component {
                   items={[{title: 'Providers', navigate: 'providers'}, {title: 'VMs', navigate: 'topologyui/vms'}]}
                   current='VMs'
                 />
-                <div className='pf-c-input-group'>
-                  <FilterDropdown />
-                  <TextInput id='filter_text' />
-                  <Button>Action</Button>
-                  <SimpleKebab>
-                    <DropdownItem><Link to={'/providers/'}>Back to Providers</Link></DropdownItem>
-                  </SimpleKebab>
-                </div>
-                <ListingView />
+                <Section type='content'>
+                  <div className='pf-c-input-group'>
+                    <FilterDropdown />
+                    <TextInput id='filter_text' />
+                    <Button>Action</Button>
+                    <SimpleKebab>
+                      <DropdownItem><Link to={'/providers/'}>Back to Providers</Link></DropdownItem>
+                    </SimpleKebab>
+                  </div>
+                  <ListingView />
+                </Section>
             </React.Fragment>
         )
     }
