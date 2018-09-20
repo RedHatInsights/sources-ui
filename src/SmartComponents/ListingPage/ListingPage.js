@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 // import asyncComponent from '../../Utilities/asyncComponent';
-//import './sample-page.scss';
-
 //import { Donut, PageHeader, PageHeaderTitle, Section } from '@red-hat-insights/insights-frontend-components';
 import { Breadcrumbs, Section } from '@red-hat-insights/insights-frontend-components';
 

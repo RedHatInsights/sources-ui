@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
 import { Link, Redirect, withRouter } from 'react-router-dom';
 import asyncComponent from '../../Utilities/asyncComponent';
-import './sample-page.scss';
+import './provider-page.scss';
 
 import { Donut, PageHeader, PageHeaderTitle, Section } from '@red-hat-insights/insights-frontend-components';
 
 import { Button, Grid, GridItem } from '@patternfly/react-core';
 import { Card, CardHeader, CardBody, CardFooter, Gallery, Modal } from '@patternfly/react-core';
 
-const SampleComponent = asyncComponent(() => import('../../PresentationalComponents/SampleComponent/sample-component'));
-//const EntityListView = asyncComponent(() => import('../../PresentationalComponents/EntityListView/entity-list-view'));
-import EntityListView from '../../PresentationalComponents/EntityListView/entity-list-view';
+//const EntityListView = asyncComponent(() => import('../../PresentationalComponents/EntityListView/EntityListView'));
+import EntityListView from '../../PresentationalComponents/EntityListView/EntityListView';
 
 /**
  * A smart component that handles all the api calls and data needed by the dumb components.
@@ -19,7 +18,7 @@ import EntityListView from '../../PresentationalComponents/EntityListView/entity
  * https://reactjs.org/docs/components-and-props.html
  * https://medium.com/@thejasonfile/dumb-components-and-smart-components-e7b33a698d43
  */
-class SamplePage extends Component {
+class ProviderPage extends Component {
     render() {
         return (
             <React.Fragment>
@@ -71,4 +70,4 @@ class SamplePage extends Component {
     }
 }
 
-export default withRouter(SamplePage);
+export default withRouter(ProviderPage);

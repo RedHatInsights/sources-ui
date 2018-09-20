@@ -19,8 +19,8 @@ import some from 'lodash/some';
  *
  */
 const Rules = asyncComponent(() => import(/* webpackChunkName: "Rules" */ './PresentationalComponents/Rules/Rules'));
-const SamplePage = asyncComponent(() => import(
-    /* webpackChunkName: "SamplePage" */ './SmartComponents/SamplePage/SamplePage'));
+const ProviderPage = asyncComponent(() => import(
+    /* webpackChunkName: "ProviderPage" */ './SmartComponents/ProviderPage/ProviderPage'));
 const ListingPage = asyncComponent(() => import(
     /* webpackChunkName: "ListingPage" */ './SmartComponents/ListingPage/ListingPage'));
 const DetailPage = asyncComponent(() => import(
@@ -64,8 +64,8 @@ export const Routes = (props: Props) => {
 
     return (
         <Switch>
-            {/**<InsightsRoute exact path={paths.providers} component={SamplePage} rootClass='providers' /> **/}
-            <InsightsRoute path={paths.providers} component={SamplePage} rootClass='providers' />
+            {/**<InsightsRoute exact path={paths.providers} component={ProviderPage} rootClass='providers' /> **/}
+            <InsightsRoute path={paths.providers} component={ProviderPage} rootClass='providers' />
             <InsightsRoute path={paths.vms} component={ListingPage} rootClass='listing' />
             <InsightsRoute path={paths.provider_detail} component={DetailPage} rootClass='provider' />
             <InsightsRoute path={paths.rules} component={Rules} rootClass='rules' />
