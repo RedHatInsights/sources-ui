@@ -20,16 +20,6 @@ import EntityListView from '../../PresentationalComponents/EntityListView/entity
  * https://medium.com/@thejasonfile/dumb-components-and-smart-components-e7b33a698d43
  */
 class SamplePage extends Component {
-    // <SampleComponent> Sample Component </SampleComponent>
-    // <h1> Cards </h1>
-    // <h1> Buttons </h1>
-    // <Section type='button-group'>
-    //     <Button variant='primary'> PF-Next Primary Button </Button>
-    //     <Button variant='secondary'> PF-Next Secondary Button </Button>
-    //     <Button variant='tertiary'> PF-Next Tertiary Button </Button>
-    //     <Button variant='danger'> PF-Next Danger Button </Button>
-    // </Section>
-
     render() {
         return (
             <React.Fragment>

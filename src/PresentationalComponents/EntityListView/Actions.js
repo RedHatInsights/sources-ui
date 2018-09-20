@@ -31,8 +31,8 @@ class Actions extends React.Component {
         isOpen={this.state.isOpen}
         onSelect={this.onSelect}
       >
-          <DropdownItem>{/**this.props.item.name**/}<Link to='/topologyui/vms/'>Show VMs</Link></DropdownItem>
-          <DropdownItem><Link to={'/provider/' + this.props.item.id}>Show Details</Link></DropdownItem>
+          <DropdownItem component='div'>{/**this.props.item.name**/}<Link to='/topologyui/vms/'>Show VMs</Link></DropdownItem>
+          <DropdownItem component='div'><Link to={'/provider/' + this.props.item.id}>Show Details</Link></DropdownItem>
       </Dropdown>
     )
   }
