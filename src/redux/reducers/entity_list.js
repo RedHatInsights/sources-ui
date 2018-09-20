@@ -1,9 +1,5 @@
 import { ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE } from '../action-types';
-import get from 'lodash/get';
-import drop from 'lodash/drop';
-import take from 'lodash/take';
-import orderBy from 'lodash/orderBy';
-import lowerCase from 'lodash/lowerCase';
+import { sortList, paginateList } from '../../Utilities/listHelpers'
 
 export const defaultState = {
     loaded: false,
@@ -21,6 +17,7 @@ function entitiesPending(state) {
 
 function entitiesLoaded(state, { payload }) {
     const rows = payload;
+    console.log('LOADED');
     return {
         ...state,
         loaded: true,
@@ -55,26 +52,7 @@ function expandEntity(state, { payload: { id, expanded } }) {
     }
 }
 
-function sortList(list, column, direction) {
-    if (! column) return list;
-
-    return orderBy(
-        list,
-        [element => lowerCase(get(element, column))],
-        [direction == 'up' ? 'desc' : 'asc']
-    )
-}
-
-function paginateList(list, pageNumber, pageSize) {
-    return take(
-      drop(list, pageSize * (pageNumber - 1)),
-      pageSize
-    )
-}
-
 function sortEntities(state, { payload: { column, direction } }) {
-    console.log('R: sortEntities', column, direction);
-    console.log(get(state.rows[0], column))
     return {
         ...state,
         entities: paginateList(
@@ -105,5 +83,5 @@ export default {
     [SELECT_ENTITY]: selectEntity,
     [EXPAND_ENTITY]: expandEntity,
     [SORT_ENTITIES]: sortEntities,
-    [PAGE_AND_SIZE]: setPageAndSize
+    [PAGE_AND_SIZE]: setPageAndSize,
 };

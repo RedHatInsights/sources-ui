@@ -8,6 +8,7 @@ import { Routes } from './Routes';
 import './App.scss';
 
 import Reducers, { defaultState } from './redux/reducers/entity_list';
+import ReducersListing from './redux/reducers/listing';
 
 import logger from 'redux-logger';
 
@@ -30,7 +31,7 @@ class App extends Component {
         console.log('getStore()');
         console.log(App.getRegistry().getStore());
 
-        App.getRegistry().register({inventory: applyReducerHash(Reducers, defaultState)});
+        App.getRegistry().register({inventory: applyReducerHash({...Reducers, ...ReducersListing}, defaultState)});
 
         insights.chrome.init();
         insights.chrome.identifyApp('topologyui');

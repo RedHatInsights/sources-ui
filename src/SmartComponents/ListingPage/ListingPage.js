@@ -25,10 +25,10 @@ class ListingPage extends Component {
                 <Section type='content'>
                   <div className='pf-c-input-group'>
                     <FilterDropdown />
-                    <TextInput id='filter_text' />
+                    <TextInput id='filter_text' value=''/>
                     <Button>Action</Button>
                     <SimpleKebab>
-                      <DropdownItem><Link to={'/providers/'}>Back to Providers</Link></DropdownItem>
+                      <DropdownItem component='div'><Link to={'/providers/'}>Back to Providers</Link></DropdownItem>
                     </SimpleKebab>
                   </div>
                   <ListingView />

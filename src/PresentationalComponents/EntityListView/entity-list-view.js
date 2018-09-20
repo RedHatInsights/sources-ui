@@ -34,9 +34,6 @@ class EntityListView extends React.Component {
             itemsPerPage: 10,
             onPage: 1,
             sortBy: {}
-            //    index: '0',
-            //    direction: 'up',
-            //}
         }
     }
 
@@ -54,7 +51,6 @@ class EntityListView extends React.Component {
     }
 
     onSort(_event, key, direction) {
-        console.log('onSort', key, this.columns[key], direction);
         this.props.sortEntities(this.realColumns[key], direction);
         this.setState({
             sortBy: {
@@ -70,7 +66,6 @@ class EntityListView extends React.Component {
     }
 
     onSetPage(number) {
-        console.log('onSetPage', number);
         this.setState({
             onPage: number,
         });
@@ -78,7 +73,6 @@ class EntityListView extends React.Component {
     }
 
     onPerPageSelect(count) {
-        console.log('onPerPageSelect', count);
         this.setState({
             onPage: 1,
             itemsPerPage: count
@@ -114,8 +108,6 @@ class EntityListView extends React.Component {
             }
           ]
         )));
-
-        console.log('data', data, data.length);
 
         return <Table
             className="pf-m-compact ins-entity-table"
@@ -169,9 +161,7 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-const mapStateToProps = (
-  {inventory:{rows = [], entities = []}}) => ({entities, rows}
-)
+const mapStateToProps = ({inventory:{rows = [], entities = []}}) => ({entities, rows})
 
 //export default EntityListView;
 export default connect(mapStateToProps, mapDispatchToProps)(EntityListView)
