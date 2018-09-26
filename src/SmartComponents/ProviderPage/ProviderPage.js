@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link, Redirect, withRouter } from 'react-router-dom';
 import asyncComponent from '../../Utilities/asyncComponent';
 import './provider-page.scss';
+import filter from 'lodash/filter';
 
 import { Donut, PageHeader, PageHeaderTitle, Section } from '@red-hat-insights/insights-frontend-components';
 
@@ -10,6 +11,9 @@ import { Card, CardHeader, CardBody, CardFooter, Gallery, Modal } from '@pattern
 
 //const EntityListView = asyncComponent(() => import('../../PresentationalComponents/EntityListView/EntityListView'));
 import EntityListView from '../../PresentationalComponents/EntityListView/EntityListView';
+import EntityFilter from '../../PresentationalComponents/EntityListView/EntityFilter';
+
+import { providerColumns } from '../../SmartComponents/ProviderPage/providerColumns'
 
 /**
  * A smart component that handles all the api calls and data needed by the dumb components.
@@ -20,6 +24,10 @@ import EntityListView from '../../PresentationalComponents/EntityListView/Entity
  */
 class ProviderPage extends Component {
     render() {
+        console.log('columns', providerColumns);
+        const filterColumns = filter(providerColumns, c => c.value);
+        console.log('filterColumns', filterColumns);
+
         return (
             <React.Fragment>
                 <Modal title='Add New Provider' isOpen={this.props.location.pathname == '/providers/new'} onClose={this.props.history.goBack}>
@@ -63,7 +71,8 @@ class ProviderPage extends Component {
                       </Card>
                     </Gallery>
 
-                    <EntityListView />
+                    <EntityFilter columns={filterColumns}/>
+                    <EntityListView columns={providerColumns}/>
                 </Section>
             </React.Fragment>
         );

@@ -144,10 +144,10 @@ class EntityListView extends React.Component {
 };
 
 EntityListView.propTypes = {
-    children: PropTypes.oneOfType([
-        PropTypes.arrayOf(PropTypes.node),
-        PropTypes.node
-    ])
+    columns: PropTypes.arrayOf(PropTypes.shape({
+            value: PropTypes.string,
+            title: PropTypes.string
+    })).isRequired
 };
 
 function mapDispatchToProps(dispatch) {
