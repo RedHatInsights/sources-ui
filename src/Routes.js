@@ -25,12 +25,15 @@ const ListingPage = asyncComponent(() => import(
     /* webpackChunkName: "ListingPage" */ './SmartComponents/ListingPage/ListingPage'));
 const DetailPage = asyncComponent(() => import(
     /* webpackChunkName: "DetailPage" */ './SmartComponents/DetailPage/DetailPage'));
+const TopologyPage = asyncComponent(() => import(
+    /* webpackChunkName: "TopologyPage" */ './SmartComponents/TopologyPage/TopologyPage'));
 
 const paths = {
     providers: '/providers',
     provider_new: '/providers/new',
     vms: '/topologyui/vms',
     provider_detail: '/provider/:id',
+    topology: '/topologyui/topology/:id',
     rules: '/topologyui/rules',
 };
 
@@ -68,6 +71,7 @@ export const Routes = (props: Props) => {
             <InsightsRoute path={paths.providers} component={ProviderPage} rootClass='providers' />
             <InsightsRoute path={paths.vms} component={ListingPage} rootClass='listing' />
             <InsightsRoute path={paths.provider_detail} component={DetailPage} rootClass='provider' />
+            <InsightsRoute path={paths.topology} component={TopologyPage} rootClass='provider' />
             <InsightsRoute path={paths.rules} component={Rules} rootClass='rules' />
 
             {/* Finally, catch all unmatched routes */}
