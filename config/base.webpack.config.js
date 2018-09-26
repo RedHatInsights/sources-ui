@@ -63,7 +63,11 @@ const webpackConfig = {
                 }
             }]
         }]
-    }
+    },
+
+    resolve: {
+        alias: { 'react': resolve(__dirname, '../node_modules', 'react') },
+    },
 };
 
 module.exports = webpackConfig;
