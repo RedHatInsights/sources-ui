@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
 import { TopologyCanvas } from '@manageiq/react-ui-components/dist/topology'
 import { PageHeader, PageHeaderTitle, Section } from '@red-hat-insights/insights-frontend-components';
 import '@manageiq/react-ui-components/dist/topology.css'
-import topologyData from './topologyData.js'
+
+import { loadTopology } from '../../redux/actions/topology';
 
 class TopologyView extends Component {
     constructor(props) {
@@ -17,11 +17,11 @@ class TopologyView extends Component {
     }
 
     componentDidMount() {
-        //this.props.loadTopologyData();
+        this.props.loadTopology();
     }
 
     render() {
-        const { nodes, edges } = topologyData;
+        const { nodes, edges } = this.props;
         return (
             <React.Fragment>
                 <TopologyCanvas nodes={nodes} edges={edges} handleNodeClick={this.handleNodeClick}/>
@@ -32,11 +32,10 @@ class TopologyView extends Component {
 
 function mapDispatchToProps(dispatch) {
     return {
-        loadTopologyData: () => dispatch(loadTopologyData()),
+        loadTopology: () => dispatch(loadTopology()),
     }
 }
 
-//const mapStateToProps = ({inventory:{listingRows = [], rawRows = []}}) => ({listingRows, rawRows})
-const mapStateToProps = () => ({})
+const mapStateToProps = ({topology:{nodes = [], edges = []}}) => ({nodes, edges})
 
-export default connect(mapStateToProps, mapStateToProps)(TopologyView);
+export default connect(mapStateToProps, mapDispatchToProps)(TopologyView);

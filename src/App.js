@@ -9,6 +9,7 @@ import './App.scss';
 
 import ReducersProviders, { defaultProvidersState } from './redux/reducers/providers';
 import ReducersListing, { defaultListingState } from './redux/reducers/listing';
+import ReducersTopology from './redux/reducers/topology';
 
 import logger from 'redux-logger';
 
@@ -33,6 +34,7 @@ class App extends Component {
 
         App.getRegistry().register({providers: applyReducerHash(ReducersProviders, defaultProvidersState)});
         App.getRegistry().register({listing: applyReducerHash(ReducersListing, defaultListingState)});
+        App.getRegistry().register({topology: applyReducerHash(ReducersTopology, {})});
 
         insights.chrome.init();
         insights.chrome.identifyApp('topologyui');
