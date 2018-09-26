@@ -1,7 +1,7 @@
 import { ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE } from '../action-types';
 import { sortList, paginateList } from '../../Utilities/listHelpers'
 
-export const defaultState = {
+export const defaultProvidersState = {
     loaded: false,
     pageSize: 10,
     pageNumber: 1, // PF numbers pages from 1. Seriously.

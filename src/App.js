@@ -7,8 +7,8 @@ import { ReducerRegistry, applyReducerHash } from '@red-hat-insights/insights-fr
 import { Routes } from './Routes';
 import './App.scss';
 
-import Reducers, { defaultState } from './redux/reducers/entity_list';
-import ReducersListing from './redux/reducers/listing';
+import ReducersProviders, { defaultProvidersState } from './redux/reducers/providers';
+import ReducersListing, { defaultListingState } from './redux/reducers/listing';
 
 import logger from 'redux-logger';
 
@@ -31,7 +31,8 @@ class App extends Component {
         console.log('getStore()');
         console.log(App.getRegistry().getStore());
 
-        App.getRegistry().register({inventory: applyReducerHash({...Reducers, ...ReducersListing}, defaultState)});
+        App.getRegistry().register({providers: applyReducerHash(ReducersProviders, defaultProvidersState)});
+        App.getRegistry().register({listing: applyReducerHash(ReducersListing, defaultListingState)});
 
         insights.chrome.init();
         insights.chrome.identifyApp('topologyui');

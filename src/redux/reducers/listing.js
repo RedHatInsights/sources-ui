@@ -1,6 +1,12 @@
 import { LOAD_LISTING_DATA, SORT_LISTING_DATA, PAGE_AND_SIZE_LISTING_DATA } from '../action-types-listing';
 import { sortList, paginateList } from '../../Utilities/listHelpers'
 
+export const defaultListingState = {
+    loaded: false,
+    pageSize: 10,
+    pageNumber: 1, // PF numbers pages from 1. Seriously.
+};
+
 function loadListingData(state, { payload }) {
     return {
         ...state,

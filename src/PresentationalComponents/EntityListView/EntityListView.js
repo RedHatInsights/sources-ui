@@ -13,7 +13,7 @@ import flatten from 'lodash/flatten'
 
 import Actions from './Actions';
 
-import { loadEntities, selectEntity, expandEntity, sortEntities, pageAndSize } from '../../redux/actions/entity_list';
+import { loadEntities, selectEntity, expandEntity, sortEntities, pageAndSize } from '../../redux/actions/providers';
 import DetailView from '../../PresentationalComponents/DetailView/DetailView';
 
 class EntityListView extends React.Component {
@@ -161,7 +161,7 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-const mapStateToProps = ({inventory:{rows = [], entities = []}}) => ({entities, rows})
+const mapStateToProps = ({providers:{rows = [], entities = []}}) => ({entities, rows})
 
 //export default EntityListView;
 export default connect(mapStateToProps, mapDispatchToProps)(EntityListView)

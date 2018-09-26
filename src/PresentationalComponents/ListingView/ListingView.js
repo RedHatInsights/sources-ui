@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Pagination, Table } from '@red-hat-insights/insights-frontend-components';
 import { connect } from 'react-redux';
 
-import { loadListingData, sortListingData, pageAndSize } from '../../redux/actions/listing_view';
+import { loadListingData, sortListingData, pageAndSize } from '../../redux/actions/listing';
 
 class ListingView extends Component {
     constructor(props) {
@@ -90,6 +90,6 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-const mapStateToProps = ({inventory:{listingRows = [], rawRows = []}}) => ({listingRows, rawRows})
+const mapStateToProps = ({listing:{listingRows = [], rawRows = []}}) => ({listingRows, rawRows})
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListingView);
