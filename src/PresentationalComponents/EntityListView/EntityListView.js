@@ -163,6 +163,5 @@ function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = ({providers:{rows = [], entities = []}}) => ({entities, rows})
 
-//export default EntityListView;
 export default connect(mapStateToProps, mapDispatchToProps)(EntityListView)
 
