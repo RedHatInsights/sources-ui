@@ -3,8 +3,11 @@ import { connect } from 'react-redux';
 import { TopologyCanvas } from '@manageiq/react-ui-components/dist/topology'
 import { PageHeader, PageHeaderTitle, Section } from '@red-hat-insights/insights-frontend-components';
 import '@manageiq/react-ui-components/dist/topology.css'
+import { Split, SplitItem } from '@patternfly/react-core';
 
-import { loadTopology } from '../../redux/actions/topology';
+import { loadTopology, nodeClick } from '../../redux/actions/topology';
+import topologyData from '../../api/topology'
+import NodeDetails from './NodeDetails'
 
 class TopologyView extends Component {
     constructor(props) {
@@ -12,8 +15,9 @@ class TopologyView extends Component {
         this.handleNodeClick = this.handleNodeClick.bind(this);
     }
 
-    handleNodeClick(args) {
-        console.log('handleNodeClick', args);
+    handleNodeClick(node) {
+        console.log('handleNodeClick', node);
+        this.props.nodeClick(node);
     }
 
     componentDidMount() {
@@ -22,10 +26,21 @@ class TopologyView extends Component {
 
     render() {
         const { nodes, edges } = this.props;
+        //const { nodes, edges } = topologyData;
+        if (nodes.length === 0) {
+            return <h1>Loading</h1>
+        }
         return (
-            <React.Fragment>
-                <TopologyCanvas nodes={nodes} edges={edges} handleNodeClick={this.handleNodeClick}/>
-            </React.Fragment>
+            <Split>
+                <SplitItem isMain>
+                    <TopologyCanvas nodes={nodes} edges={edges}
+                        handleNodeClick={this.handleNodeClick}
+                    />
+                </SplitItem>
+                <SplitItem>
+                    <NodeDetails />
+                </SplitItem>
+            </Split>
         )
     }
 }
@@ -33,6 +48,7 @@ class TopologyView extends Component {
 function mapDispatchToProps(dispatch) {
     return {
         loadTopology: () => dispatch(loadTopology()),
+        nodeClick: (node) => dispatch(nodeClick(node)),
     }
 }
 
