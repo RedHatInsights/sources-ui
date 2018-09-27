@@ -1,4 +1,4 @@
-import { ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE } from '../action-types';
+import { ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE } from '../action-types-providers';
 import { getEntities } from '../../api/entities';
 
 export const loadEntities = () => ({
