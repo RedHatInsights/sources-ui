@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Link, Redirect, withRouter } from 'react-router-dom';
 import asyncComponent from '../../Utilities/asyncComponent';
 import './provider-page.scss';
 import filter from 'lodash/filter';
+import { addProvider } from '../../redux/actions/providers';
 
 import { Donut, PageHeader, PageHeaderTitle, Section } from '@red-hat-insights/insights-frontend-components';
+import {  FormRenderer } from '@red-hat-insights/insights-frontend-components/components/Forms';
 
 import { Button, Grid, GridItem } from '@patternfly/react-core';
 import { Card, CardHeader, CardBody, CardFooter, Gallery, Modal } from '@patternfly/react-core';
@@ -14,6 +17,7 @@ import EntityListView from '../../PresentationalComponents/EntityListView/Entity
 import EntityFilter from '../../PresentationalComponents/EntityListView/EntityFilter';
 
 import { providerColumns } from '../../SmartComponents/ProviderPage/providerColumns'
+import { providerForm } from './providerForm'
 
 /**
  * A smart component that handles all the api calls and data needed by the dumb components.
@@ -23,6 +27,17 @@ import { providerColumns } from '../../SmartComponents/ProviderPage/providerColu
  * https://medium.com/@thejasonfile/dumb-components-and-smart-components-e7b33a698d43
  */
 class ProviderPage extends Component {
+    constructor (props) {
+        super(props);
+        this.submitProvider = this.submitProvider.bind(this);
+    }
+
+    submitProvider(values, formState) {
+        console.log('submitProvider', values, formState);
+        this.props.addProvider(values);
+        this.props.history.replace('/providers')
+    }
+
     render() {
         console.log('columns', providerColumns);
         const filterColumns = filter(providerColumns, c => c.value);
@@ -31,7 +46,7 @@ class ProviderPage extends Component {
         return (
             <React.Fragment>
                 <Modal title='Add New Provider' isOpen={this.props.location.pathname == '/providers/new'} onClose={this.props.history.goBack}>
-                  foobar
+                    <FormRenderer schema={providerForm.schema} uiSchema={providerForm.uiSchema} onSubmit={this.submitProvider} />
                 </Modal>
                 <PageHeader>
                     <PageHeaderTitle title='Providers'/>
@@ -79,4 +94,12 @@ class ProviderPage extends Component {
     }
 }
 
-export default withRouter(ProviderPage);
+function mapDispatchToProps(dispatch) {
+    return {
+        addProvider: (formData) => dispatch(addProvider(formData)),
+    }
+}
+
+const mapStateToProps = () => ({})
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ProviderPage));

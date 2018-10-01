@@ -1,4 +1,4 @@
-import { ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE } from '../action-types-providers';
+import { ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE, ADD_PROVIDER } from '../action-types-providers';
 import { sortList, paginateList } from '../../Utilities/listHelpers'
 
 export const defaultProvidersState = {
@@ -77,6 +77,13 @@ function setPageAndSize(state, { payload: { page, size } }) {
     }
 }
 
+function addProvider(state, { payload: { formData } }) {
+    console.log('R: addProvider', formData);
+    return {
+        ...state,
+    }
+}
+
 export default {
     [ACTION_TYPES.LOAD_ENTITIES_PENDING]: entitiesPending,
     [ACTION_TYPES.LOAD_ENTITIES_FULFILLED]: entitiesLoaded,
@@ -84,4 +91,5 @@ export default {
     [EXPAND_ENTITY]: expandEntity,
     [SORT_ENTITIES]: sortEntities,
     [PAGE_AND_SIZE]: setPageAndSize,
+    [ADD_PROVIDER]:  addProvider,
 };

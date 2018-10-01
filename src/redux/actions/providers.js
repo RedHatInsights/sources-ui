@@ -1,4 +1,4 @@
-import { ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE } from '../action-types-providers';
+import { ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE, ADD_PROVIDER } from '../action-types-providers';
 import { getEntities } from '../../api/entities';
 
 export const loadEntities = () => ({
@@ -24,4 +24,9 @@ export const sortEntities = (column, direction) => ({
 export const pageAndSize = (page, size) => ({
     type: PAGE_AND_SIZE,
     payload: { page, size }
+});
+
+export const addProvider = (formData) => ({
+    type: ADD_PROVIDER,
+    payload: { formData }
 });
