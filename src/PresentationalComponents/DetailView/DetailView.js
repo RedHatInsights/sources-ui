@@ -21,10 +21,6 @@ class DetailView extends Component {
                   </dl>
               </GridItem>
               <GridItem sm={6} md={4} lg={4} xl={3}>
-                  <Button variant='primary'>Tag</Button>
-                  <Button variant='primary'>Animal</Button>
-                  <Button variant='primary'>Foobar</Button>
-                  <Button variant='primary'>Another Tag</Button>
                   <TagView assignedTags={
                     [
                       {id: 11, description: 'Environment', values: [{id: 1, description: 'Production'}]},
