@@ -1,4 +1,4 @@
-import { ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE, ADD_PROVIDER } from '../action-types-providers';
+import { ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE, ADD_PROVIDER, FILTER_PROVIDERS } from '../action-types-providers';
 import { getEntities } from '../../api/entities';
 
 export const loadEntities = () => ({
@@ -29,4 +29,9 @@ export const pageAndSize = (page, size) => ({
 export const addProvider = (formData) => ({
     type: ADD_PROVIDER,
     payload: { formData }
+});
+
+export const filterProviders = (column, value) => ({
+    type: FILTER_PROVIDERS,
+    payload: { column, value }
 });

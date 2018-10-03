@@ -7,21 +7,11 @@ class EntityFilter extends Component {
         super(props);
 
         this.onFilterButtonClick  = this.onFilterButtonClick.bind(this);
-        this.onFilterOptionSelect = this.onFilterOptionSelect.bind(this);
-
-        this.state = {
-        }
     }
 
-    onFilterButtonClick(args) {
-        console.log(args);
-    }
-
-    onFilterOptionSelect(field) {
-        console.log(field);
-        this.setState({
-            filterField: field
-        })
+    onFilterButtonClick(filterValue, column) {
+        console.log('filter click',column.value, filterValue);
+        this.props.onFilter(column.value, filterValue);
     }
 
     render() {
@@ -32,7 +22,6 @@ class EntityFilter extends Component {
                     items: this.props.columns
                 }}
                 onButtonClick={this.onFilterButtonClick}
-                onOptionSelect={this.onFilterOptionSelect}
             />
         );
     }
@@ -42,7 +31,8 @@ EntityFilter.propTypes = {
     columns: PropTypes.arrayOf(PropTypes.shape({
             value: PropTypes.string,
             title: PropTypes.string
-    })).isRequired
+    })).isRequired,
+    onFilter: PropTypes.func.isRequired,
 }
 
 export default EntityFilter;

@@ -135,7 +135,7 @@ class EntityListView extends React.Component {
                     direction='up'
                     onSetPage={this.onSetPage}
                     onPerPageSelect={this.onPerPageSelect}
-                    numberOfItems={data ? rows.length : 0}
+                    numberOfItems={data ? this.props.numberOfEntities : 0}
                 />
             }
 
@@ -161,7 +161,7 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-const mapStateToProps = ({providers:{rows = [], entities = []}}) => ({entities, rows})
+const mapStateToProps = ({providers:{rows = [], entities = [], numberOfEntities = 0}}) => ({entities, rows, numberOfEntities})
 
 export default connect(mapStateToProps, mapDispatchToProps)(EntityListView)
 

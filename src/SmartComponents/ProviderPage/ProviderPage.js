@@ -4,7 +4,7 @@ import { Link, Redirect, withRouter } from 'react-router-dom';
 import asyncComponent from '../../Utilities/asyncComponent';
 import './provider-page.scss';
 import filter from 'lodash/filter';
-import { addProvider } from '../../redux/actions/providers';
+import { addProvider, filterProviders } from '../../redux/actions/providers';
 
 import { Donut, PageHeader, PageHeaderTitle, Section } from '@red-hat-insights/insights-frontend-components';
 import {  FormRenderer } from '@red-hat-insights/insights-frontend-components/components/Forms';
@@ -30,12 +30,18 @@ class ProviderPage extends Component {
     constructor (props) {
         super(props);
         this.submitProvider = this.submitProvider.bind(this);
+        this.onFilter = this.onFilter.bind(this);
     }
 
     submitProvider(values, formState) {
         console.log('submitProvider', values, formState);
         this.props.addProvider(values);
         this.props.history.replace('/providers')
+    }
+
+    onFilter(filterColumn, filterValue) {
+        console.log('onFilter', filterColumn, filterValue);
+        this.props.filterProviders(filterColumn, filterValue);
     }
 
     render() {
@@ -86,7 +92,7 @@ class ProviderPage extends Component {
                       </Card>
                     </Gallery>
 
-                    <EntityFilter columns={filterColumns}/>
+                    <EntityFilter columns={filterColumns} onFilter={this.onFilter}/>
                     <EntityListView columns={providerColumns}/>
                 </Section>
             </React.Fragment>
@@ -97,6 +103,7 @@ class ProviderPage extends Component {
 function mapDispatchToProps(dispatch) {
     return {
         addProvider: (formData) => dispatch(addProvider(formData)),
+        filterProviders: (filterColumn, filterValue) => dispatch(filterProviders(filterColumn, filterValue)),
     }
 }
 
