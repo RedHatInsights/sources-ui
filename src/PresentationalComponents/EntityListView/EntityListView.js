@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { ListView, Row, Col, DropdownKebab, MenuItem } from 'patternfly-react';
 
-import { BrushIcon, BugIcon, ShareIcon, ServerIcon } from '@patternfly/react-icons';
+import { BrushIcon, BugIcon, ShareIcon, TopologyIcon } from '@patternfly/react-icons';
 import { Button } from '@patternfly/react-core';
 
 import { Pagination, Table } from '@red-hat-insights/insights-frontend-components';
@@ -93,7 +94,7 @@ class EntityListView extends React.Component {
                 item.type,
                 (new Date).toDateString(),
                 <Actions item={item} />,
-                <ServerIcon />
+                <Link to={'/topologyui/topology/' + item.id}><TopologyIcon /></Link>
               ]
             },
             {
