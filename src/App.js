@@ -37,7 +37,7 @@ class App extends Component {
         App.getRegistry().register({topology: applyReducerHash(ReducersTopology, {})});
 
         insights.chrome.init();
-        insights.chrome.identifyApp('topologyui');
+        insights.chrome.identifyApp('sources');
 
         this.appNav = insights.chrome.on('APP_NAVIGATION', event => this.props.history.push(`/${event.navId}`));
     }
