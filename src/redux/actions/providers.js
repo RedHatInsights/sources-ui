@@ -1,4 +1,4 @@
-import { ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE, ADD_PROVIDER, FILTER_PROVIDERS } from '../action-types-providers';
+import { ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE, ADD_PROVIDER, FILTER_PROVIDERS, CLOSE_ALERT } from '../action-types-providers';
 import { getEntities } from '../../api/entities';
 
 export const loadEntities = () => ({
@@ -34,4 +34,13 @@ export const addProvider = (formData) => ({
 export const filterProviders = (column, value) => ({
     type: FILTER_PROVIDERS,
     payload: { column, value }
+});
+
+export const closeAlert = () => ({
+    type: CLOSE_ALERT,
+});
+
+export const addAlert = (message, type) => ({
+    type: CLOSE_ALERT,
+    payload: { message, type },
 });

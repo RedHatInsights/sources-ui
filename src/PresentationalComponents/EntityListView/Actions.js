@@ -33,7 +33,8 @@ class Actions extends React.Component {
       >
           <DropdownItem component='div'>{/**this.props.item.name**/}<Link to='/topologyui/vms/'>Show VMs</Link></DropdownItem>
           <DropdownItem component='div'><Link to={'/provider/' + this.props.item.id}>Show Details</Link></DropdownItem>
-          <DropdownItem component='div'><Link to={'/topologyui/topology/' + this.props.item.id}>Show Topology</Link></DropdownItem>
+          <DropdownItem component='div'><Link to={'/topologyui/topology/' + this.props.item.id}>Edit Source</Link></DropdownItem>
+          <DropdownItem component='div'><Link to={'/topologyui/topology/' + this.props.item.id}>Remove Source</Link></DropdownItem>
       </Dropdown>
     )
   }

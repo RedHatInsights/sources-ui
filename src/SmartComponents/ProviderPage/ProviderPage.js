@@ -4,13 +4,13 @@ import { Link, Redirect, withRouter } from 'react-router-dom';
 import asyncComponent from '../../Utilities/asyncComponent';
 import './provider-page.scss';
 import filter from 'lodash/filter';
-import { addProvider, filterProviders } from '../../redux/actions/providers';
+import { addProvider, closeAlert, filterProviders } from '../../redux/actions/providers';
 
 import { Donut, PageHeader, PageHeaderTitle, Section } from '@red-hat-insights/insights-frontend-components';
 import {  FormRenderer } from '@red-hat-insights/insights-frontend-components/components/Forms';
 
 import { Button, Grid, GridItem } from '@patternfly/react-core';
-import { Card, CardHeader, CardBody, CardFooter, Gallery, Modal } from '@patternfly/react-core';
+import { Alert, Card, CardHeader, CardBody, CardFooter, Gallery, Modal } from '@patternfly/react-core';
 
 //const EntityListView = asyncComponent(() => import('../../PresentationalComponents/EntityListView/EntityListView'));
 import EntityListView from '../../PresentationalComponents/EntityListView/EntityListView';
@@ -85,12 +85,14 @@ class ProviderPage extends Component {
                           <CardBody>
                               <Section type='button-group'>
                                   <Link to='/providers/new'>
-                                    <Button variant='primary'> Add New Provider </Button>
+                                    <Button variant='primary'> Add a New Source </Button>
                                   </Link>
                               </Section>
                           </CardBody>
                       </Card>
                     </Gallery>
+
+                    { this.props.alert && <Alert variant={this.props.alert.type} title={this.props.alert.message} action={<Button onClick={this.props.closeAlert} variant="secondary">Close</Button>}/> }
 
                     <EntityFilter columns={filterColumns} onFilter={this.onFilter}/>
                     <EntityListView columns={providerColumns}/>
@@ -104,9 +106,10 @@ function mapDispatchToProps(dispatch) {
     return {
         addProvider: (formData) => dispatch(addProvider(formData)),
         filterProviders: (filterColumn, filterValue) => dispatch(filterProviders(filterColumn, filterValue)),
+        closeAlert: () => dispatch(closeAlert()),
     }
 }
 
-const mapStateToProps = () => ({})
+const mapStateToProps = ({providers:{alert}}) => ({alert})
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ProviderPage));

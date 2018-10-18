@@ -1,4 +1,4 @@
-import { ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE, ADD_PROVIDER, FILTER_PROVIDERS } from '../action-types-providers';
+import { ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE, ADD_PROVIDER, FILTER_PROVIDERS, CLOSE_ALERT } from '../action-types-providers';
 import { sortList, paginateList, filterList } from '../../Utilities/listHelpers'
 
 export const defaultProvidersState = {
@@ -89,6 +89,11 @@ function addProvider(state, { payload: { formData } }) {
 
     return {
         ...state,
+        // for now just add an alert
+        alert: {
+            message: 'New source was succesfully added.',
+            type: 'success',
+        }
     }
 }
 
@@ -102,6 +107,23 @@ function filterProviders(state, { payload: { column, value } }) {
     })
 }
 
+function closeAlert(state) {
+    return {
+        ...state,
+        alert: null
+    }
+}
+
+function addAlert(state, { payload: { message, type } }) {
+    return {
+        ...state,
+        alert: {
+            message,
+            type,
+        }
+    }
+}
+
 export default {
     [ACTION_TYPES.LOAD_ENTITIES_PENDING]: entitiesPending,
     [ACTION_TYPES.LOAD_ENTITIES_FULFILLED]: entitiesLoaded,
@@ -111,4 +133,5 @@ export default {
     [PAGE_AND_SIZE]: setPageAndSize,
     [ADD_PROVIDER]: addProvider,
     [FILTER_PROVIDERS]: filterProviders,
+    [CLOSE_ALERT]: closeAlert,
 };
