@@ -1,5 +1,5 @@
-import { LOAD_LISTING_DATA, SORT_LISTING_DATA, PAGE_AND_SIZE_LISTING_DATA } from '../action-types-listing';
-import { sortList, paginateList } from '../../Utilities/listHelpers'
+import { ASYNC_ACTION_TYPES, SORT_LISTING_DATA, PAGE_AND_SIZE_LISTING_DATA } from '../action-types-listing';
+import { sortList, paginateList, filterList } from '../../Utilities/listHelpers'
 
 export const defaultListingState = {
     loaded: false,
@@ -7,11 +7,12 @@ export const defaultListingState = {
     pageNumber: 1, // PF numbers pages from 1. Seriously.
 };
 
-function loadListingData(state, { payload }) {
+function loadedListingData(state, { payload }) {
     return {
         ...state,
+        loaded: true,
         listingRows: paginateList(
-            sortList(payload, state.sortColumn, state.sortDirection),
+            sortList(payload, state.sortBy, state.sortDirection),
             state.pageNumber, state.pageSize
         ),
         rawRows: payload,
@@ -21,6 +22,8 @@ function loadListingData(state, { payload }) {
 }
 
 function sortListingData(state, { payload: { column, direction } }) {
+    console.log('sortListingData');
+    console.log(column);
     return {
         ...state,
         listingRows: paginateList(
@@ -45,7 +48,7 @@ function setPageAndSize(state, { payload: { page, size } }) {
 }
 
 export default {
-    [LOAD_LISTING_DATA]: loadListingData,
+    [ASYNC_ACTION_TYPES.LOAD_LISTING_DATA_FULFILLED]: loadedListingData,
     [SORT_LISTING_DATA]: sortListingData,
     [PAGE_AND_SIZE_LISTING_DATA]: setPageAndSize,
 };
