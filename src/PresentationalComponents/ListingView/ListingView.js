@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Pagination, Table } from '@red-hat-insights/insights-frontend-components';
 import { connect } from 'react-redux';
+import filter from 'lodash/filter';
 
 import { loadListingData, sortListingData, pageAndSize } from '../../redux/actions/listing';
+import { viewDefinitions } from '../../views/viewDefinitions'
 
 class ListingView extends Component {
     constructor(props) {
@@ -12,8 +14,8 @@ class ListingView extends Component {
         this.onSetPage = this.onSetPage.bind(this);
         this.onPerPageSelect = this.onPerPageSelect.bind(this);
 
-        this.columns = ['Name', 'Cluster', 'Host', 'IP Address', 'DataStore']
-        this.realColumns = ['name', 'cluster', 'host', 'ip_address', 'datastore']
+        this.filteredColumns = filter(viewDefinitions.container_projects.columns, c => c.title);
+        this.headers = this.filteredColumns.map(col => col.title);
 
         this.state = {
             itemsPerPage: 10,
@@ -27,7 +29,7 @@ class ListingView extends Component {
     }
 
     onSort(_event, key, direction) {
-        this.props.sortListingData(this.realColumns[key], direction);
+        this.props.sortListingData(this.filteredColumns[key].value, direction);
         this.setState({
             sortBy: {
               index: key,
@@ -37,12 +39,10 @@ class ListingView extends Component {
     }
 
     mapDataToRows(data) {
-        return data.map(item => (
-            {
-                id: item.id,
-                cells: this.realColumns.map(name => item[name])
-            }
-        ));
+        return data.map(row => ({
+            id: row.id,
+            cells: this.filteredColumns.map(col => row[col.value] || '')
+        }));
     }
 
     onSetPage(number) {
@@ -64,7 +64,7 @@ class ListingView extends Component {
         return (
             <Table
                 sortBy={this.state.sortBy}
-                header={this.columns}
+                header={this.headers}
                 onSort={this.onSort}
                 rows={this.mapDataToRows(this.props.listingRows)}
                 footer={
