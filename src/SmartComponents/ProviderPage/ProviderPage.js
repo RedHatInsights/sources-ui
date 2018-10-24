@@ -4,7 +4,7 @@ import { Link, Redirect, withRouter } from 'react-router-dom';
 import asyncComponent from '../../Utilities/asyncComponent';
 import './provider-page.scss';
 import filter from 'lodash/filter';
-import { addProvider, closeAlert, filterProviders } from '../../redux/actions/providers';
+import { addProvider, createSource, addAlert, closeAlert, filterProviders } from '../../redux/actions/providers';
 
 import { Donut, PageHeader, PageHeaderTitle, Section } from '@red-hat-insights/insights-frontend-components';
 import {  FormRenderer } from '@red-hat-insights/insights-frontend-components/components/Forms';
@@ -35,8 +35,15 @@ class ProviderPage extends Component {
 
     submitProvider(values, formState) {
         console.log('submitProvider', values, formState);
-        this.props.addProvider(values);
-        this.props.history.replace('/providers')
+        //this.props.addProvider(values);
+        this.props.createSource(values).then(() => {
+            this.props.addAlert('Source added', 'success');
+            this.props.history.replace('/providers')
+        }).catch(error => {
+            console.debug('CATCH:'); console.debug(error);
+            this.props.addAlert('Source adding failed', 'danger');
+            this.props.history.replace('/providers')
+        });
     }
 
     onFilter(filterColumn, filterValue) {
@@ -103,7 +110,10 @@ class ProviderPage extends Component {
 function mapDispatchToProps(dispatch) {
     return {
         addProvider: (formData) => dispatch(addProvider(formData)),
+        createSource: (formData) => dispatch(createSource(formData)),
+
         filterProviders: (filterColumn, filterValue) => dispatch(filterProviders(filterColumn, filterValue)),
+        addAlert: (message, type) => dispatch(addAlert(message, type)),
         closeAlert: () => dispatch(closeAlert()),
     }
 }

@@ -158,7 +158,6 @@ function mapDispatchToProps(dispatch) {
         expandEntity: (key, expanded) => dispatch(expandEntity(key, expanded)),
         sortEntities: (column, direction) => dispatch(sortEntities(column, direction)),
         pageAndSize: (page, size) => dispatch(pageAndSize(page, size)),
-        //filterEntities: (key = 'display_name', filterBy) => dispatch(filterEntities(key, filterBy))
     }
 }
 

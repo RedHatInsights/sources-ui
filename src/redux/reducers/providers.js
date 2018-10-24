@@ -1,4 +1,4 @@
-import { ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE, ADD_PROVIDER, FILTER_PROVIDERS, CLOSE_ALERT } from '../action-types-providers';
+import { ACTION_TYPES, CREATE_SOURCE, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE, ADD_PROVIDER, FILTER_PROVIDERS, CLOSE_ALERT, ADD_ALERT } from '../action-types-providers';
 import { sortList, paginateList, filterList } from '../../Utilities/listHelpers'
 
 export const defaultProvidersState = {
@@ -124,9 +124,29 @@ function addAlert(state, { payload: { message, type } }) {
     }
 }
 
+function createSourcePending(state) {
+    return {
+        ...state,
+        created: false,
+    };
+}
+
+function createSourceFulFilled(state, { payload }) {
+    const createData = payload;
+    console.log('R: createSourceFulFilled');
+
+    return processList({
+        ...state,
+        created: true,
+    });
+}
+
 export default {
     [ACTION_TYPES.LOAD_ENTITIES_PENDING]: entitiesPending,
     [ACTION_TYPES.LOAD_ENTITIES_FULFILLED]: entitiesLoaded,
+//    [ACTION_TYPES.CREATE_SOURCE_PENDING]: createSourcePending,
+//    [ACTION_TYPES.CREATE_SOURCE_FULFILLED]: createSourceFulFilled,
+
     [SELECT_ENTITY]: selectEntity,
     [EXPAND_ENTITY]: expandEntity,
     [SORT_ENTITIES]: sortEntities,
@@ -134,4 +154,5 @@ export default {
     [ADD_PROVIDER]: addProvider,
     [FILTER_PROVIDERS]: filterProviders,
     [CLOSE_ALERT]: closeAlert,
+    [ADD_ALERT]: addAlert,
 };

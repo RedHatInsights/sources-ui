@@ -1,5 +1,6 @@
 const asyncActions = [
-  'LOAD_ENTITIES'
+  'LOAD_ENTITIES',
+  'CREATE_SOURCE',
 ].reduce((acc, curr) => [
   ... acc,
   ...[curr, `${curr}_PENDING`, `${curr}_FULFILLED`, `${curr}_REJECTED`]
@@ -22,3 +23,4 @@ export const PAGE_AND_SIZE = 'PAGE_AND_SIZE';
 export const ADD_PROVIDER  = 'ADD_PROVIDER';
 export const FILTER_PROVIDERS  = 'FILTER_PROVIDERS';
 export const CLOSE_ALERT  = 'CLOSE_ALERT';
+export const ADD_ALERT  = 'ADD_ALERT';
