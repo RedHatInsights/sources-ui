@@ -45,9 +45,7 @@ class ProviderPage extends Component {
     }
 
     render() {
-        console.log('columns', providerColumns);
         const filterColumns = filter(providerColumns, c => c.value);
-        console.log('filterColumns', filterColumns);
 
         return (
             <React.Fragment>

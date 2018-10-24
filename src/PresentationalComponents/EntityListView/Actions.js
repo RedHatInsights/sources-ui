@@ -23,7 +23,6 @@ class Actions extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <Dropdown
         position={DropdownPosition.right}
