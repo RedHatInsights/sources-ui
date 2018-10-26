@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import uniqueId from 'lodash/uniqueId'
-import { Card, Grid, GridItem, Button } from '@patternfly/react-core';
+import { Grid, GridItem, Button } from '@patternfly/react-core';
 import { Pie } from '@red-hat-insights/insights-frontend-components';
 
 import { TagView } from '@manageiq/react-ui-components/dist/tagging-pf4'
