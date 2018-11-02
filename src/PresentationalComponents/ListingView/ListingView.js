@@ -60,7 +60,7 @@ class ListingView extends Component {
         this.props.pageAndSize(1, count);
     }
 
-    render = () => {
+    render = () =>
         <Table
             sortBy={this.state.sortBy}
             header={this.headers}
@@ -77,7 +77,6 @@ class ListingView extends Component {
                 />
             }
         />
-    }
 }
 
 const mapDispatchToProps = (dispatch) => ({

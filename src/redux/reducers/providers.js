@@ -1,5 +1,6 @@
 import { ACTION_TYPES, CREATE_SOURCE, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE, ADD_PROVIDER, FILTER_PROVIDERS, CLOSE_ALERT, ADD_ALERT } from '../action-types-providers';
 import { sortList, paginateList, filterList } from '../../Utilities/listHelpers'
+import flow from "lodash/fp/flow";
 
 export const defaultProvidersState = {
     loaded: false,
@@ -8,85 +9,81 @@ export const defaultProvidersState = {
     numberOfEntities: 0,
 };
 
-function entitiesPending(state) {
-    return {
-        ...state,
-        loaded: false,
-        expanded: null,
-    };
-}
+const entitiesPending = (state) => ({
+    ...state,
+    loaded: false,
+    expanded: null,
+})
 
-function processList(state) {
-    const processedList = paginateList(
-        sortList(
-            filterList(state.rows, state.filterColumn, state.filterValue),
-            state.sortBy, state.sortDirection),
-        state.pageNumber, state.pageSize
-    );
+const processList = (state) => {
+    const filtered = filterList(state.rows, state.filterColumn, state.filterValue);
 
     return {
-        ...state,
-        entities: processedList,
-        numberOfEntities: filterList(state.rows, state.filterColumn, state.filterValue).length
+        length: filtered.length,
+        list: flow(
+            l => sortList(l, state.sortBy, state.sortDirection),
+            l => paginateList(l, state.pageNumber, state.pageSize)
+        )(filtered)
     }
 }
 
-function entitiesLoaded(state, { payload }) {
-    const rows = payload;
-    console.log('R: entitiesLoaded');
+const processListInState = (state) => {
+    const { length, list } = processList(state)
 
-    return processList({
+    return {
+        ...state,
+        entities: list,
+        numberOfEntities: length
+    }
+}
+
+const entitiesLoaded = (state, { payload: rows }) => {
+    console.log('R: entitiesLoaded');
+    return processListInState({
         ...state,
         loaded: true,
-        rows: rows,
+        rows,
     });
 }
 
-function selectEntity(state, { payload: { id, selected } }) {
+const selectEntity = (state, { payload: { id, selected } }) => {
     console.log('R: selectEntity', id, selected);
-
     return {
         ...state,
-        entities: state.entities.map(entity => {
-            if (entity.id == id) return {...entity, selected}
-            return entity;
-        })
+        entities: state.entities.map(entity =>
+            entity.id == id ? {...entity, selected} : entity
+        )
     }
 }
 
-function expandEntity(state, { payload: { id, expanded } }) {
+const expandEntity = (state, { payload: { id, expanded } }) => {
     console.log('R: expandEntity', id, expanded);
-
     return {
         ...state,
-        entities: state.entities.map(entity => {
-            if (entity.id == id) return {...entity, expanded: !entity.expanded}
-            return entity;
-        })
+        entities: state.entities.map(entity =>
+            (entity.id == id) ? {...entity, expanded: !entity.expanded} : entity
+        )
     }
 }
 
-function sortEntities(state, { payload: { column, direction } }) {
-    return processList({
+const sortEntities = (state, { payload: { column, direction } }) =>
+    processListInState({
         ...state,
         sortBy: column,
         sortDirection: direction
-    });
-}
+    })
 
-function setPageAndSize(state, { payload: { page, size } }) {
+const setPageAndSize = (state, { payload: { page, size } }) =>  {
     console.log('R: setPageAndSize', page, size);
-
-    return processList({
+    return processListInState({
         ...state,
         pageSize: size,
         pageNumber: page,
     });
 }
 
-function addProvider(state, { payload: { formData } }) {
+const addProvider = (state, { payload: { formData } }) => {
     console.log('R: addProvider', formData);
-
     return {
         ...state,
         // for now just add an alert
@@ -97,9 +94,9 @@ function addProvider(state, { payload: { formData } }) {
     }
 }
 
-function filterProviders(state, { payload: { column, value } }) {
+const filterProviders = (state, { payload: { column, value } }) => {
     console.log('R: filterProviders', column, value);
-    return processList({
+    return processListInState({
         ...state,
         filterColumn: column,
         filterValue: value,
@@ -107,35 +104,29 @@ function filterProviders(state, { payload: { column, value } }) {
     })
 }
 
-function closeAlert(state) {
-    return {
-        ...state,
-        alert: null
+const closeAlert = (state) => ({
+    ...state,
+    alert: null
+})
+
+const addAlert = (state, { payload: { message, type } }) => ({
+    ...state,
+    alert: {
+        message,
+        type,
     }
-}
+})
 
-function addAlert(state, { payload: { message, type } }) {
-    return {
-        ...state,
-        alert: {
-            message,
-            type,
-        }
-    }
-}
+const createSourcePending = (state) => ({
+    ...state,
+    created: false,
+})
 
-function createSourcePending(state) {
-    return {
-        ...state,
-        created: false,
-    };
-}
-
-function createSourceFulFilled(state, { payload }) {
+const createSourceFulFilled = (state, { payload }) => {
     const createData = payload;
     console.log('R: createSourceFulFilled');
 
-    return processList({
+    return processListInState({
         ...state,
         created: true,
     });
