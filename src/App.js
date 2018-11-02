@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import promiseMiddleware from 'redux-promise-middleware';
-import thunk from 'redux-thunk';
 import { ReducerRegistry, applyReducerHash } from '@red-hat-insights/insights-frontend-components'
 import { Routes } from './Routes';
 import './App.scss';

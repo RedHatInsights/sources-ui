@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-// import asyncComponent from '../../Utilities/asyncComponent';
-//import { Donut, PageHeader, PageHeaderTitle, Section } from '@red-hat-insights/insights-frontend-components';
 import { Breadcrumbs, Section } from '@red-hat-insights/insights-frontend-components';
 
-//import { Button, Grid, GridItem } from '@patternfly/react-core';
 import FilterDropdown from './FilterDropdown';
 import { Button, TextInput, DropdownItem } from '@patternfly/react-core';
 
@@ -17,7 +14,7 @@ class ListingPage extends Component {
             <React.Fragment>
                 {/**<ConnectedBreadcrumbs current="Place" />**/}
                 <Breadcrumbs
-                  items={[{title: 'Providers', navigate: 'providers'}, {title: 'VMs', navigate: 'topologyui/vms'}]}
+                  items={[{title: 'Sources', navigate: 'Sources'}, {title: 'VMs', navigate: 'topologyui/vms'}]}
                   current='VMs'
                 />
                 <Section type='content'>
