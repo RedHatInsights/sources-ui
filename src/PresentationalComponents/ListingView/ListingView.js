@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import { Pagination, Table } from '@red-hat-insights/insights-frontend-components';
 import { connect } from 'react-redux';
 import filter from 'lodash/filter';
@@ -10,11 +11,14 @@ class ListingView extends Component {
     constructor(props) {
         super(props);
 
+        const viewName = this.props.location.pathname.split('/').pop();
+        this.viewDefinition = viewDefinitions[viewName];
+
         this.onSort = this.onSort.bind(this)
         this.onSetPage = this.onSetPage.bind(this);
         this.onPerPageSelect = this.onPerPageSelect.bind(this);
 
-        this.filteredColumns = filter(viewDefinitions.container_projects.columns, c => c.title);
+        this.filteredColumns = filter(this.viewDefinition.columns, c => c.title);
         this.headers = this.filteredColumns.map(col => col.title);
 
         this.state = {
@@ -25,7 +29,7 @@ class ListingView extends Component {
     }
 
     componentDidMount() {
-        this.props.loadListingData();
+        this.props.loadListingData(this.viewDefinition);
     }
 
     onSort(_event, key, direction) {
@@ -84,7 +88,7 @@ class ListingView extends Component {
 
 function mapDispatchToProps(dispatch) {
     return {
-        loadListingData: () => dispatch(loadListingData()),
+        loadListingData: (viewDefinition) => dispatch(loadListingData(viewDefinition)),
         sortListingData: (column, direction) => dispatch(sortListingData(column, direction)),
         pageAndSize: (page, size) => dispatch(pageAndSize(page, size)),
     }
@@ -92,4 +96,4 @@ function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = ({listing:{listingRows = [], rawRows = []}}) => ({listingRows, rawRows})
 
-export default connect(mapStateToProps, mapDispatchToProps)(ListingView);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ListingView));

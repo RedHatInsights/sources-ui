@@ -94,7 +94,7 @@ class EntityListView extends React.Component {
                 item.type,
                 (new Date).toDateString(),
                 <Actions item={item} />,
-                <Link to={'/topologyui/topology/' + item.id}><TopologyIcon /></Link>
+                <Link to={`/source/${item.id}/topology`}><TopologyIcon /></Link>
               ]
             },
             {

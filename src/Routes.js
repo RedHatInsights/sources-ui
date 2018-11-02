@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import asyncComponent from './Utilities/asyncComponent';
 import some from 'lodash/some';
+//import map from 'lodash/map';
+
+import { viewDefinitions } from './views/viewDefinitions'
 
 /**
  * Aysnc imports of components
@@ -29,12 +32,11 @@ const TopologyPage = asyncComponent(() => import(
     /* webpackChunkName: "TopologyPage" */ './SmartComponents/TopologyPage/TopologyPage'));
 
 const paths = {
-    providers: '/providers',
-    provider_new: '/providers/new',
-    vms: '/topologyui/vms',
-    provider_detail: '/provider/:id',
-    topology: '/topologyui/topology/:id',
-    rules: '/topologyui/rules',
+    providers: '/sources',
+    provider_new: '/sources/new',
+    vms: '/source/:id/vms',
+    provider_detail: '/source/:id',
+    topology: '/source/:id/topology',
 };
 
 type Props = {
@@ -54,6 +56,18 @@ InsightsRoute.propTypes = {
     rootClass: PropTypes.string
 };
 
+const dynamicRoutes = (viewDefinitions) => {
+    var acc = [];
+    for (var viewName in viewDefinitions) {
+        if (viewDefinitions.hasOwnProperty(viewName)) {
+            acc.push(
+                <InsightsRoute path={`/source/:id/${viewName}`} key={viewName} component={ListingPage} rootClass='listing' />
+            );
+        }
+    }
+    return acc;
+}
+
 /**
  * the Switch component changes routes depending on the path.
  *
@@ -70,9 +84,9 @@ export const Routes = (props: Props) => {
             {/**<InsightsRoute exact path={paths.providers} component={ProviderPage} rootClass='providers' /> **/}
             <InsightsRoute path={paths.providers} component={ProviderPage} rootClass='providers' />
             <InsightsRoute path={paths.vms} component={ListingPage} rootClass='listing' />
-            <InsightsRoute path={paths.provider_detail} component={DetailPage} rootClass='provider' />
+            <InsightsRoute exact path={paths.provider_detail} component={DetailPage} rootClass='provider' />
             <InsightsRoute path={paths.topology} component={TopologyPage} rootClass='provider' />
-            <InsightsRoute path={paths.rules} component={Rules} rootClass='rules' />
+            { dynamicRoutes(viewDefinitions) }
 
             {/* Finally, catch all unmatched routes */}
             <Route render={() => some(paths, p => p === path) ? null : (<Redirect to={paths.providers} />)} />

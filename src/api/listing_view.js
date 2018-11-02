@@ -16,15 +16,12 @@ export function generateRandomData(num) {
     return rows
 }
 
-export function doLoadListingData() {
-    console.debug('doLoadListingData');
-    //const url = 'https://topological-inventory-api-topological-inventory-ci.10.8.96.54.nip.io/api/v0.0/sources/1/container_projects/'
-    const url = viewDefinitions.container_projects.url;
+export function doLoadListingData(viewDefinition) {
+    const url = viewDefinition.url;
 
     return fetch(url).then(r => {
         if (r.ok || r.type == 'opaque') {
             return r.json();
-            //return generateRandomData(100)
         }
         throw new Error(`Unexpected response code ${r.status}`);
     });
