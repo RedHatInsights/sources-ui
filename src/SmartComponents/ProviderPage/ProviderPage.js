@@ -7,7 +7,7 @@ import filter from 'lodash/filter';
 import { addProvider, createSource, addAlert, closeAlert, filterProviders } from '../../redux/actions/providers';
 
 import { Donut, PageHeader, PageHeaderTitle, Section } from '@red-hat-insights/insights-frontend-components';
-import {  FormRenderer } from '@red-hat-insights/insights-frontend-components/components/Forms';
+import { FormRenderer } from '@red-hat-insights/insights-frontend-components/components/Forms';
 
 import { Button, Grid, GridItem } from '@patternfly/react-core';
 import { Alert, Card, CardHeader, CardBody, CardFooter, Gallery, Modal } from '@patternfly/react-core';
@@ -29,11 +29,9 @@ import { providerForm } from './providerForm'
 class ProviderPage extends Component {
     constructor (props) {
         super(props);
-        this.submitProvider = this.submitProvider.bind(this);
-        this.onFilter = this.onFilter.bind(this);
     }
 
-    submitProvider(values, formState) {
+    submitProvider = (values, formState) => {
         console.log('submitProvider', values, formState);
         //this.props.addProvider(values);
         this.props.createSource(values).then(() => {
@@ -46,12 +44,12 @@ class ProviderPage extends Component {
         });
     }
 
-    onFilter(filterColumn, filterValue) {
+    onFilter = (filterColumn, filterValue) => {
         console.log('onFilter', filterColumn, filterValue);
         this.props.filterProviders(filterColumn, filterValue);
     }
 
-    render() {
+    render = () => {
         const filterColumns = filter(providerColumns, c => c.value);
 
         return (
@@ -107,16 +105,14 @@ class ProviderPage extends Component {
     }
 }
 
-function mapDispatchToProps(dispatch) {
-    return {
-        addProvider: (formData) => dispatch(addProvider(formData)),
-        createSource: (formData) => dispatch(createSource(formData)),
+const mapDispatchToProps = (dispatch) => ({
+    addProvider: (formData) => dispatch(addProvider(formData)),
+    createSource: (formData) => dispatch(createSource(formData)),
 
-        filterProviders: (filterColumn, filterValue) => dispatch(filterProviders(filterColumn, filterValue)),
-        addAlert: (message, type) => dispatch(addAlert(message, type)),
-        closeAlert: () => dispatch(closeAlert()),
-    }
-}
+    filterProviders: (filterColumn, filterValue) => dispatch(filterProviders(filterColumn, filterValue)),
+    addAlert: (message, type) => dispatch(addAlert(message, type)),
+    closeAlert: () => dispatch(closeAlert()),
+})
 
 const mapStateToProps = ({providers:{alert}}) => ({alert})
 

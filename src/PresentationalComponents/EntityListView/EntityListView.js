@@ -2,31 +2,19 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-
 import { ListView, Row, Col, DropdownKebab, MenuItem } from 'patternfly-react';
-
 import { BrushIcon, BugIcon, ShareIcon, TopologyIcon } from '@patternfly/react-icons';
 import { Button } from '@patternfly/react-core';
-
 import { Pagination, Table } from '@red-hat-insights/insights-frontend-components';
-
 import flatten from 'lodash/flatten'
 
 import Actions from './Actions';
-
 import { loadEntities, selectEntity, expandEntity, sortEntities, pageAndSize } from '../../redux/actions/providers';
 import DetailView from '../../PresentationalComponents/DetailView/DetailView';
 
 class EntityListView extends React.Component {
     constructor(props) {
         super(props);
-
-        this.onRowClick = this.onRowClick.bind(this);
-        this.onItemSelect = this.onItemSelect.bind(this);
-        this.onSort = this.onSort.bind(this)
-        this.onExpandClick = this.onExpandClick.bind(this)
-        this.onSetPage = this.onSetPage.bind(this);
-        this.onPerPageSelect = this.onPerPageSelect.bind(this);
 
         this.columns = ['Provider', 'Status', 'Type', 'Last Updated']
         this.realColumns = ['name', null, 'type', null]
@@ -38,20 +26,15 @@ class EntityListView extends React.Component {
         }
     }
 
-    componentDidMount() {
-        this.props.loadEntities();
-    }
+    componentDidMount = () => this.props.loadEntities();
 
-    onRowClick(_event, key, application) {
+    onRowClick = (_event, key, application) => {
         console.log('onRowClick', key, application);
     }
 
-    onItemSelect(_event, key, checked) {
-        console.log('onItemSelect', key, checked);
-        this.props.selectEntity(key, checked);
-    }
+    onItemSelect = (_event, key, checked) => this.props.selectEntity(key, checked);
 
-    onSort(_event, key, direction) {
+    onSort = (_event, key, direction) => {
         this.props.sortEntities(this.realColumns[key], direction);
         this.setState({
             sortBy: {
@@ -61,19 +44,16 @@ class EntityListView extends React.Component {
         });
     }
 
-    onExpandClick(_event, _row, rowKey) {
-        console.log('onExpandClick', _row, rowKey);
-        this.props.expandEntity(rowKey, true);
-    }
+    onExpandClick = (_event, _row, rowKey) => this.props.expandEntity(rowKey, true);
 
-    onSetPage(number) {
+    onSetPage = (number) => {
         this.setState({
             onPage: number,
         });
         this.props.pageAndSize(number, this.state.itemsPerPage);
     }
 
-    onPerPageSelect(count) {
+    onPerPageSelect = (count) => {
         this.setState({
             onPage: 1,
             itemsPerPage: count
@@ -81,7 +61,7 @@ class EntityListView extends React.Component {
         this.props.pageAndSize(1, count);
     }
 
-    render() {
+    render = () => {
         const { entities, rows } = this.props;
         const data = flatten(entities.map((item, index) => (
           [
@@ -146,20 +126,18 @@ class EntityListView extends React.Component {
 
 EntityListView.propTypes = {
     columns: PropTypes.arrayOf(PropTypes.shape({
-            value: PropTypes.string,
-            title: PropTypes.string
+        value: PropTypes.string,
+        title: PropTypes.string
     })).isRequired
 };
 
-function mapDispatchToProps(dispatch) {
-    return {
-        loadEntities: () => dispatch(loadEntities()),
-        selectEntity: (key, selected) => dispatch(selectEntity(key, selected)),
-        expandEntity: (key, expanded) => dispatch(expandEntity(key, expanded)),
-        sortEntities: (column, direction) => dispatch(sortEntities(column, direction)),
-        pageAndSize: (page, size) => dispatch(pageAndSize(page, size)),
-    }
-}
+const mapDispatchToProps = (dispatch) => ({
+    loadEntities: () => dispatch(loadEntities()),
+    selectEntity: (key, selected) => dispatch(selectEntity(key, selected)),
+    expandEntity: (key, expanded) => dispatch(expandEntity(key, expanded)),
+    sortEntities: (column, direction) => dispatch(sortEntities(column, direction)),
+    pageAndSize: (page, size) => dispatch(pageAndSize(page, size)),
+})
 
 const mapStateToProps = ({providers:{rows = [], entities = [], numberOfEntities = 0}}) => ({entities, rows, numberOfEntities})
 

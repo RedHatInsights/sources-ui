@@ -8,23 +8,19 @@ import { viewDefinitions } from '../../views/viewDefinitions'
 class Actions extends React.Component {
     constructor(props) {
         super(props);
-        this.onToggle = this.onToggle.bind(this);
-        this.onSelect = this.onSelect.bind(this);
         this.state = {
             isOpen: false
         }
     }
 
-    onToggle(opened) {
-        this.setState({isOpen: opened});
-    }
+    onToggle = (opened) => this.setState({isOpen: opened});
 
-    onSelect(event) {
+    onSelect = (event) => {
         event.stopPropagation();
         this.setState({isCollapsed: true});
     }
 
-    dropdownLinks(viewDefinitions, item_id) {
+    dropdownLinks = (viewDefinitions, item_id) => {
         var acc = [];
         for (var viewName in viewDefinitions) {
             if (viewDefinitions.hasOwnProperty(viewName)) {
@@ -36,7 +32,7 @@ class Actions extends React.Component {
         return acc;
     }
 
-    render() {
+    render = () => {
         const item_id = this.props.item.id;
 
         return (

@@ -14,10 +14,6 @@ class ListingView extends Component {
         const viewName = this.props.location.pathname.split('/').pop();
         this.viewDefinition = viewDefinitions[viewName];
 
-        this.onSort = this.onSort.bind(this)
-        this.onSetPage = this.onSetPage.bind(this);
-        this.onPerPageSelect = this.onPerPageSelect.bind(this);
-
         this.filteredColumns = filter(this.viewDefinition.columns, c => c.title);
         this.headers = this.filteredColumns.map(col => col.title);
 
@@ -28,11 +24,11 @@ class ListingView extends Component {
         }
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         this.props.loadListingData(this.viewDefinition);
     }
 
-    onSort(_event, key, direction) {
+    onSort = (_event, key, direction) => {
         this.props.sortListingData(this.filteredColumns[key].value, direction);
         this.setState({
             sortBy: {
@@ -42,21 +38,21 @@ class ListingView extends Component {
         });
     }
 
-    mapDataToRows(data) {
-        return data.map(row => ({
+    mapDataToRows = (data) => data.map(
+        row => ({
             id: row.id,
             cells: this.filteredColumns.map(col => row[col.value] || '')
-        }));
-    }
+        })
+    );
 
-    onSetPage(number) {
+    onSetPage = (number) => {
         this.setState({
             onPage: number,
         });
         this.props.pageAndSize(number, this.state.itemsPerPage);
     }
 
-    onPerPageSelect(count) {
+    onPerPageSelect = (count) => {
         this.setState({
             onPage: 1,
             itemsPerPage: count
@@ -64,35 +60,31 @@ class ListingView extends Component {
         this.props.pageAndSize(1, count);
     }
 
-    render() {
-        return (
-            <Table
-                sortBy={this.state.sortBy}
-                header={this.headers}
-                onSort={this.onSort}
-                rows={this.mapDataToRows(this.props.listingRows)}
-                footer={
-                    <Pagination
-                        itemsPerPage={this.state.itemsPerPage}
-                        page={this.state.onPage}
-                        direction='up'
-                        onSetPage={this.onSetPage}
-                        onPerPageSelect={this.onPerPageSelect}
-                        numberOfItems={this.props.rawRows ? this.props.rawRows.length : 0}
-                    />
-                }
-            />
-        )
+    render = () => {
+        <Table
+            sortBy={this.state.sortBy}
+            header={this.headers}
+            onSort={this.onSort}
+            rows={this.mapDataToRows(this.props.listingRows)}
+            footer={
+                <Pagination
+                    itemsPerPage={this.state.itemsPerPage}
+                    page={this.state.onPage}
+                    direction='up'
+                    onSetPage={this.onSetPage}
+                    onPerPageSelect={this.onPerPageSelect}
+                    numberOfItems={this.props.rawRows ? this.props.rawRows.length : 0}
+                />
+            }
+        />
     }
 }
 
-function mapDispatchToProps(dispatch) {
-    return {
-        loadListingData: (viewDefinition) => dispatch(loadListingData(viewDefinition)),
-        sortListingData: (column, direction) => dispatch(sortListingData(column, direction)),
-        pageAndSize: (page, size) => dispatch(pageAndSize(page, size)),
-    }
-}
+const mapDispatchToProps = (dispatch) => ({
+    loadListingData: (viewDefinition) => dispatch(loadListingData(viewDefinition)),
+    sortListingData: (column, direction) => dispatch(sortListingData(column, direction)),
+    pageAndSize: (page, size) => dispatch(pageAndSize(page, size)),
+})
 
 const mapStateToProps = ({listing:{listingRows = [], rawRows = []}}) => ({listingRows, rawRows})
 

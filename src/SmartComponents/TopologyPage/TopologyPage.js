@@ -3,18 +3,15 @@ import TopologyView from '../../PresentationalComponents/TopologyView/TopologyVi
 import { PageHeader, PageHeaderTitle, Section } from '@red-hat-insights/insights-frontend-components';
 
 class TopologyPage extends Component {
-    render() {
-        return (
-            <React.Fragment>
-                <PageHeader>
-                      <PageHeaderTitle title='Topology'/>
-                </PageHeader>
-                <Section type='content'>
-                      <TopologyView />
-                </Section>
-            </React.Fragment>
-        )
-    }
+    render = () =>
+        <React.Fragment>
+            <PageHeader>
+                  <PageHeaderTitle title='Topology'/>
+            </PageHeader>
+            <Section type='content'>
+                  <TopologyView />
+            </Section>
+        </React.Fragment>
 }
 
 export default TopologyPage;

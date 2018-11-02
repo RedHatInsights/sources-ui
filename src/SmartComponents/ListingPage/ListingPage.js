@@ -9,28 +9,26 @@ import ListingView from '../../PresentationalComponents/ListingView/ListingView'
 import SimpleKebab from './SimpleKebab';
 
 class ListingPage extends Component {
-    render() {
-        return (
-            <React.Fragment>
-                {/**<ConnectedBreadcrumbs current="Place" />**/}
-                <Breadcrumbs
-                  items={[{title: 'Sources', navigate: 'Sources'}, {title: 'VMs', navigate: 'topologyui/vms'}]}
-                  current='VMs'
-                />
-                <Section type='content'>
-                  <div className='pf-c-input-group'>
+    render = () => (
+        <React.Fragment>
+            {/**<ConnectedBreadcrumbs current="Place" />**/}
+            <Breadcrumbs
+                items={[{title: 'Sources', navigate: 'Sources'}, {title: 'VMs', navigate: 'topologyui/vms'}]}
+                current='VMs'
+            />
+            <Section type='content'>
+                <div className='pf-c-input-group'>
                     <FilterDropdown />
                     <TextInput id='filter_text' value=''/>
                     <Button>Action</Button>
                     <SimpleKebab>
-                      <DropdownItem component='div'><Link to={'/providers/'}>Back to Providers</Link></DropdownItem>
+                        <DropdownItem component='div'><Link to={'/providers/'}>Back to Providers</Link></DropdownItem>
                     </SimpleKebab>
-                  </div>
-                  <ListingView />
-                </Section>
-            </React.Fragment>
-        )
-    }
+                </div>
+                <ListingView />
+            </Section>
+        </React.Fragment>
+    )
 };
 
 export default withRouter(ListingPage);

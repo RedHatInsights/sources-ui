@@ -12,21 +12,19 @@ import NodeDetails from './NodeDetails'
 class TopologyView extends Component {
     constructor(props) {
         super(props);
-        this.handleNodeClick = this.handleNodeClick.bind(this);
     }
 
-    handleNodeClick(node) {
+    handleNodeClick = (node) => {
         console.log('handleNodeClick', node);
         this.props.nodeClick(node);
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         this.props.loadTopology();
     }
 
-    render() {
+    render = () => {
         const { nodes, edges } = this.props;
-        //const { nodes, edges } = topologyData;
         if (nodes.length === 0) {
             return <h1>Loading</h1>
         }
@@ -45,12 +43,10 @@ class TopologyView extends Component {
     }
 }
 
-function mapDispatchToProps(dispatch) {
-    return {
-        loadTopology: () => dispatch(loadTopology()),
-        nodeClick: (node) => dispatch(nodeClick(node)),
-    }
-}
+const mapDispatchToProps = (dispatch) => ({
+    loadTopology: () => dispatch(loadTopology()),
+    nodeClick: (node) => dispatch(nodeClick(node)),
+})
 
 const mapStateToProps = ({topology:{nodes = [], edges = []}}) => ({nodes, edges})
 

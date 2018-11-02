@@ -5,26 +5,21 @@ import { SimpleTableFilter } from '@red-hat-insights/insights-frontend-component
 class EntityFilter extends Component {
     constructor(props) {
         super(props);
-
-        this.onFilterButtonClick  = this.onFilterButtonClick.bind(this);
     }
 
-    onFilterButtonClick(filterValue, column) {
+    onFilterButtonClick = (filterValue, column) => {
         console.log('filter click',column.value, filterValue);
         this.props.onFilter(column.value, filterValue);
     }
 
-    render() {
-        return (
-            <SimpleTableFilter
-                options={{
-                    title: 'Filter By',
-                    items: this.props.columns
-                }}
-                onButtonClick={this.onFilterButtonClick}
-            />
-        );
-    }
+    render = () =>
+        <SimpleTableFilter
+            options={{
+                title: 'Filter By',
+                items: this.props.columns
+            }}
+            onButtonClick={this.onFilterButtonClick}
+        />
 }
 
 EntityFilter.propTypes = {
