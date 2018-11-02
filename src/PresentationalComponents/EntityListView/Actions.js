@@ -25,7 +25,7 @@ class Actions extends React.Component {
         for (var viewName in viewDefinitions) {
             if (viewDefinitions.hasOwnProperty(viewName)) {
                 acc.push(
-                    <DropdownItem key={viewName}><Link to={`/source/${item_id}/${viewName}`}>Show {viewName}</Link></DropdownItem>
+                    <DropdownItem component="div" key={viewName}><Link to={`/source/${item_id}/${viewName}`}>Show {viewName}</Link></DropdownItem>
                 );
             }
         }
@@ -43,9 +43,9 @@ class Actions extends React.Component {
                 onSelect={this.onSelect}
             >
                 { this.dropdownLinks( viewDefinitions, item_id) }
-                <DropdownItem><Link to={`/source/${item_id}`}>Show Details</Link></DropdownItem>
-                <DropdownItem><Link to={'/source/fixme/' + item_id}>Edit Source</Link></DropdownItem>
-                <DropdownItem><Link to={'/source/fixme/' + item_id}>Remove Source</Link></DropdownItem>
+                <DropdownItem component="div"><Link to={`/source/${item_id}`}>Show Details</Link></DropdownItem>
+                <DropdownItem component="div"><Link to={'/source/fixme/' + item_id}>Edit Source</Link></DropdownItem>
+                <DropdownItem component="div"><Link to={'/source/fixme/' + item_id}>Remove Source</Link></DropdownItem>
             </Dropdown>
         )
     }
