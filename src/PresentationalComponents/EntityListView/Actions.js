@@ -2,6 +2,7 @@ import { Link, Redirect, withRouter } from 'react-router-dom';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown, DropdownItem, DropdownPosition, KebabToggle } from '@patternfly/react-core';
+import reduce from 'lodash/reduce';
 
 import { viewDefinitions } from '../../views/viewDefinitions'
 
@@ -20,17 +21,14 @@ class Actions extends React.Component {
         this.setState({isCollapsed: true});
     }
 
-    dropdownLinks = (viewDefinitions, item_id) => {
-        var acc = [];
-        for (var viewName in viewDefinitions) {
-            if (viewDefinitions.hasOwnProperty(viewName)) {
-                acc.push(
-                    <DropdownItem component="div" key={viewName}><Link to={`/source/${item_id}/${viewName}`}>Show {viewName}</Link></DropdownItem>
-                );
-            }
-        }
-        return acc;
-    }
+    dropdownLinks = (viewDefinitions, item_id) =>
+        reduce(Object.keys(viewDefinitions), (acc, viewName) => (
+            acc.push(
+                <DropdownItem component="div" key={viewName}>
+                    <Link to={`/source/${item_id}/${viewName}`}>Show {viewDefinitions[viewName].displayName}</Link>
+                </DropdownItem>
+            ) && acc
+        ), []);
 
     render = () => {
         const item_id = this.props.item.id;

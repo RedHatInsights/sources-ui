@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import asyncComponent from './Utilities/asyncComponent';
 import some from 'lodash/some';
-//import map from 'lodash/map';
+import reduce from 'lodash/reduce';
 
 import { viewDefinitions } from './views/viewDefinitions'
 
@@ -56,17 +56,12 @@ InsightsRoute.propTypes = {
     rootClass: PropTypes.string
 };
 
-const dynamicRoutes = (viewDefinitions) => {
-    var acc = [];
-    for (var viewName in viewDefinitions) {
-        if (viewDefinitions.hasOwnProperty(viewName)) {
-            acc.push(
-                <InsightsRoute path={`/source/:id/${viewName}`} key={viewName} component={ListingPage} rootClass='listing' />
-            );
-        }
-    }
-    return acc;
-}
+const dynamicRoutes = (viewDefinitions) =>
+    reduce(Object.keys(viewDefinitions), (acc, viewName) => (
+        acc.push(
+            <InsightsRoute path={`/source/:id/${viewName}`} key={viewName} component={ListingPage} rootClass='listing' />
+        ) && acc
+    ), []);
 
 /**
  * the Switch component changes routes depending on the path.
