@@ -9,9 +9,9 @@ export default class FilterDropdown extends Component {
         };
     }
 
-    onToggle = (isOpen) => this.setState({ ...this.state, isOpen });
+    onToggle = (isOpen) => this.setState({ isOpen });
 
-    onSelect = (event) => this.setState({ ...this.state, isOpen: !this.state.isOpen });
+    onSelect = (event) => this.setState( prevState => ({ isOpen: !prevState.isOpen }) );
 
     render = () =>
         <Dropdown

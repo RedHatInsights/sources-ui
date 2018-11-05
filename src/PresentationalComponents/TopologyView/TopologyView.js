@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { TopologyCanvas } from '@manageiq/react-ui-components/dist/topology'
 import { PageHeader, PageHeaderTitle, Section } from '@red-hat-insights/insights-frontend-components';
@@ -43,10 +44,7 @@ class TopologyView extends Component {
     }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-    loadTopology: () => dispatch(loadTopology()),
-    nodeClick: (node) => dispatch(nodeClick(node)),
-})
+const mapDispatchToProps = dispatch => bindActionCreators({ loadTopology, nodeClick }, dispatch);
 
 const mapStateToProps = ({topology:{nodes = [], edges = []}}) => ({nodes, edges})
 

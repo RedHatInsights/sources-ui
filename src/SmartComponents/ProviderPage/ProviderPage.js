@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link, Redirect, withRouter } from 'react-router-dom';
 import asyncComponent from '../../Utilities/asyncComponent';
@@ -105,14 +106,7 @@ class ProviderPage extends Component {
     }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-    addProvider: (formData) => dispatch(addProvider(formData)),
-    createSource: (formData) => dispatch(createSource(formData)),
-
-    filterProviders: (filterColumn, filterValue) => dispatch(filterProviders(filterColumn, filterValue)),
-    addAlert: (message, type) => dispatch(addAlert(message, type)),
-    closeAlert: () => dispatch(closeAlert()),
-})
+const mapDispatchToProps = dispatch => bindActionCreators({ addProvider, createSource, addAlert, closeAlert, filterProviders }, dispatch);
 
 const mapStateToProps = ({providers:{alert}}) => ({alert})
 

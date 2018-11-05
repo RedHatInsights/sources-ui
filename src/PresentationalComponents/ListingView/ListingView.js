@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Pagination, Table } from '@red-hat-insights/insights-frontend-components';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import filter from 'lodash/filter';
 
@@ -16,12 +17,12 @@ class ListingView extends Component {
 
         this.filteredColumns = filter(this.viewDefinition.columns, c => c.title);
         this.headers = this.filteredColumns.map(col => col.title);
+    }
 
-        this.state = {
-            itemsPerPage: 10,
-            onPage: 1,
-            sortBy: {}
-        }
+    state = {
+        itemsPerPage: 10,
+        onPage: 1,
+        sortBy: {}
     }
 
     componentDidMount = () => {
@@ -79,11 +80,7 @@ class ListingView extends Component {
         />
 }
 
-const mapDispatchToProps = (dispatch) => ({
-    loadListingData: (viewDefinition) => dispatch(loadListingData(viewDefinition)),
-    sortListingData: (column, direction) => dispatch(sortListingData(column, direction)),
-    pageAndSize: (page, size) => dispatch(pageAndSize(page, size)),
-})
+const mapDispatchToProps = dispatch => bindActionCreators({ loadListingData, sortListingData, pageAndSize }, dispatch)
 
 const mapStateToProps = ({listing:{listingRows = [], rawRows = []}}) => ({listingRows, rawRows})
 

@@ -7,11 +7,8 @@ import reduce from 'lodash/reduce';
 import { viewDefinitions } from '../../views/viewDefinitions'
 
 class Actions extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isOpen: false
-        }
+    state = {
+        isOpen: false
     }
 
     onToggle = (opened) => this.setState({isOpen: opened});

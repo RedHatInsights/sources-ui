@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { ListView, Row, Col, DropdownKebab, MenuItem } from 'patternfly-react';
@@ -131,13 +132,7 @@ EntityListView.propTypes = {
     })).isRequired
 };
 
-const mapDispatchToProps = (dispatch) => ({
-    loadEntities: () => dispatch(loadEntities()),
-    selectEntity: (key, selected) => dispatch(selectEntity(key, selected)),
-    expandEntity: (key, expanded) => dispatch(expandEntity(key, expanded)),
-    sortEntities: (column, direction) => dispatch(sortEntities(column, direction)),
-    pageAndSize: (page, size) => dispatch(pageAndSize(page, size)),
-})
+const mapDispatchToProps = dispatch => bindActionCreators({ loadEntities, selectEntity, expandEntity, sortEntities, pageAndSize }, dispatch);
 
 const mapStateToProps = ({providers:{rows = [], entities = [], numberOfEntities = 0}}) => ({entities, rows, numberOfEntities})
 
