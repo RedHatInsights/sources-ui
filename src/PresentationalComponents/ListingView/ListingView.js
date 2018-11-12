@@ -3,19 +3,19 @@ import { withRouter } from 'react-router-dom';
 import { Pagination, Table } from '@red-hat-insights/insights-frontend-components';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import filter from 'lodash/filter';
 
 import { loadListingData, sortListingData, pageAndSize } from '../../redux/actions/listing';
-import { viewDefinitions } from '../../views/viewDefinitions'
 
 class ListingView extends Component {
+    static propTypes = {
+        viewDefinition : PropTypes.any.isRequired
+    }
+
     constructor(props) {
         super(props);
-
-        const viewName = this.props.location.pathname.split('/').pop();
-        this.viewDefinition = viewDefinitions[viewName];
-
-        this.filteredColumns = filter(this.viewDefinition.columns, c => c.title);
+        this.filteredColumns = filter(this.props.viewDefinition.columns, c => c.title);
         this.headers = this.filteredColumns.map(col => col.title);
     }
 
@@ -26,7 +26,7 @@ class ListingView extends Component {
     }
 
     componentDidMount = () => {
-        this.props.loadListingData(this.viewDefinition);
+        this.props.loadListingData(this.props.viewDefinition);
     }
 
     onSort = (_event, key, direction) => {
@@ -62,6 +62,7 @@ class ListingView extends Component {
     }
 
     render = () =>
+        this.props.loaded ?
         <Table
             sortBy={this.state.sortBy}
             header={this.headers}
@@ -77,11 +78,12 @@ class ListingView extends Component {
                     numberOfItems={this.props.rawRows ? this.props.rawRows.length : 0}
                 />
             }
-        />
+        /> :
+        <div>Loading data...</div>
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({ loadListingData, sortListingData, pageAndSize }, dispatch)
 
-const mapStateToProps = ({listing:{listingRows = [], rawRows = []}}) => ({listingRows, rawRows})
+const mapStateToProps = ({listing:{loaded = false, listingRows = [], rawRows = []}}) => ({loaded, listingRows, rawRows})
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ListingView));

@@ -1,21 +1,46 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { Breadcrumbs, Section } from '@red-hat-insights/insights-frontend-components';
+import { Breadcrumbs, PageHeader, PageHeaderTitle, Section } from '@red-hat-insights/insights-frontend-components';
 
 import FilterDropdown from './FilterDropdown';
 import { Button, TextInput, DropdownItem } from '@patternfly/react-core';
 
 import ListingView from '../../PresentationalComponents/ListingView/ListingView';
 import SimpleKebab from './SimpleKebab';
+import { viewDefinitions } from '../../views/viewDefinitions'
 
 class ListingPage extends Component {
+
+    onNavigate = (_event, navigate, _index) => {
+        this.props.history.push(navigate);
+    }
+
+    loadDefinition = () => viewDefinitions[this.props.location.pathname.split('/').pop()]
+
+    constructor(props) {
+        super(props);
+        this.state = { viewDefinition: this.loadDefinition() };
+    }
+
+    componentDidUpdate = (prevProps, prevState) => {
+        if ( this.props.location.pathname != prevProps.location.pathname ) {
+            setState({ viewDefinition: this.loadDefinition() });
+        }
+    }
+
     render = () => (
         <React.Fragment>
-            {/**<ConnectedBreadcrumbs current="Place" />**/}
-            <Breadcrumbs
-                items={[{title: 'Sources', navigate: 'Sources'}, {title: 'VMs', navigate: 'topologyui/vms'}]}
-                current='VMs'
-            />
+            <PageHeader>
+                <PageHeaderTitle title='Providers'/>
+                {/**<ConnectedBreadcrumbs current="Place" />**/}
+                <Breadcrumbs
+                    items={[
+                        {title: 'Sources', navigate: '/sources'},
+                    ]}
+                    current={this.state.viewDefinition.displayName}
+                    onNavigate={this.onNavigate}
+                />
+            </PageHeader>
             <Section type='content'>
                 <div className='pf-c-input-group'>
                     <FilterDropdown />
@@ -25,7 +50,7 @@ class ListingPage extends Component {
                         <DropdownItem component='div'><Link to={'/providers/'}>Back to Providers</Link></DropdownItem>
                     </SimpleKebab>
                 </div>
-                <ListingView />
+                <ListingView viewDefinition={this.state.viewDefinition}/>
             </Section>
         </React.Fragment>
     )

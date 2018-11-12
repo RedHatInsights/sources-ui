@@ -47,8 +47,15 @@ function setPageAndSize(state, { payload: { page, size } }) {
     }
 }
 
+const listingPending = (state) => ({
+    ...state,
+    loaded: false,
+})
+
+
 export default {
     [ASYNC_ACTION_TYPES.LOAD_LISTING_DATA_FULFILLED]: loadedListingData,
+    [ASYNC_ACTION_TYPES.LOAD_LISTING_DATA_PENDING]: listingPending,
     [SORT_LISTING_DATA]: sortListingData,
     [PAGE_AND_SIZE_LISTING_DATA]: setPageAndSize,
 };
