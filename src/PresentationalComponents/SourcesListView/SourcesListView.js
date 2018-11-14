@@ -13,7 +13,7 @@ import Actions from './Actions';
 import { loadEntities, selectEntity, expandEntity, sortEntities, pageAndSize } from '../../redux/actions/providers';
 import DetailView from '../../PresentationalComponents/DetailView/DetailView';
 
-class EntityListView extends React.Component {
+class SourcesListView extends React.Component {
     constructor(props) {
         super(props);
 
@@ -125,7 +125,7 @@ class EntityListView extends React.Component {
     }
 };
 
-EntityListView.propTypes = {
+SourcesListView.propTypes = {
     columns: PropTypes.arrayOf(PropTypes.shape({
         value: PropTypes.string,
         title: PropTypes.string
@@ -136,5 +136,5 @@ const mapDispatchToProps = dispatch => bindActionCreators({ loadEntities, select
 
 const mapStateToProps = ({providers:{rows = [], entities = [], numberOfEntities = 0}}) => ({entities, rows, numberOfEntities})
 
-export default connect(mapStateToProps, mapDispatchToProps)(EntityListView)
+export default connect(mapStateToProps, mapDispatchToProps)(SourcesListView)
 

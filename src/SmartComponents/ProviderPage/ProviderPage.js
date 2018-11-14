@@ -13,9 +13,9 @@ import { FormRenderer } from '@red-hat-insights/insights-frontend-components/com
 import { Button, Grid, GridItem } from '@patternfly/react-core';
 import { Alert, Card, CardHeader, CardBody, CardFooter, Gallery, Modal } from '@patternfly/react-core';
 
-//const EntityListView = asyncComponent(() => import('../../PresentationalComponents/EntityListView/EntityListView'));
-import EntityListView from '../../PresentationalComponents/EntityListView/EntityListView';
-import EntityFilter from '../../PresentationalComponents/EntityListView/EntityFilter';
+//const SourcesListView = asyncComponent(() => import('../../PresentationalComponents/SourcesListView/SourcesListView'));
+import SourcesListView from '../../PresentationalComponents/SourcesListView/SourcesListView';
+import SourcesFilter from '../../PresentationalComponents/SourcesListView/SourcesFilter';
 
 import { providerColumns } from '../../SmartComponents/ProviderPage/providerColumns'
 import { providerForm } from './providerForm'
@@ -98,8 +98,8 @@ class ProviderPage extends Component {
 
                     { this.props.alert && <Alert variant={this.props.alert.type} title={this.props.alert.message} action={<Button onClick={this.props.closeAlert} variant="secondary">Close</Button>}/> }
 
-                    <EntityFilter columns={filterColumns} onFilter={this.onFilter}/>
-                    <EntityListView columns={providerColumns}/>
+                    <SourcesFilter columns={filterColumns} onFilter={this.onFilter}/>
+                    <SourcesListView columns={providerColumns}/>
                 </Section>
             </React.Fragment>
         );

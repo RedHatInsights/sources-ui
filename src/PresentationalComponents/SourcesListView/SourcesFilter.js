@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { SimpleTableFilter } from '@red-hat-insights/insights-frontend-components';
 
-class EntityFilter extends Component {
+class SourcesFilter extends Component {
     constructor(props) {
         super(props);
     }
@@ -22,7 +22,7 @@ class EntityFilter extends Component {
         />
 }
 
-EntityFilter.propTypes = {
+SourcesFilter.propTypes = {
     columns: PropTypes.arrayOf(PropTypes.shape({
             value: PropTypes.string,
             title: PropTypes.string
@@ -30,4 +30,4 @@ EntityFilter.propTypes = {
     onFilter: PropTypes.func.isRequired,
 }
 
-export default EntityFilter;
+export default SourcesFilter;
