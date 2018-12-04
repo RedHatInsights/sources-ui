@@ -1,5 +1,5 @@
 import { ACTION_TYPES, CREATE_SOURCE, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE, ADD_PROVIDER, FILTER_PROVIDERS, CLOSE_ALERT, ADD_ALERT } from '../action-types-providers';
-import { sortList, paginateList, filterList } from '../../Utilities/listHelpers'
+import { processList } from '../../Utilities/listHelpers'
 import flow from "lodash/fp/flow";
 
 export const defaultProvidersState = {
@@ -15,20 +15,8 @@ const entitiesPending = (state) => ({
     expanded: null,
 })
 
-const processList = (state) => {
-    const filtered = filterList(state.rows, state.filterColumn, state.filterValue);
-
-    return {
-        length: filtered.length,
-        list: flow(
-            l => sortList(l, state.sortBy, state.sortDirection),
-            l => paginateList(l, state.pageNumber, state.pageSize)
-        )(filtered)
-    }
-}
-
 const processListInState = (state) => {
-    const { length, list } = processList(state)
+    const { length, list } = processList(state.rows, state)
 
     return {
         ...state,
@@ -37,34 +25,26 @@ const processListInState = (state) => {
     }
 }
 
-const entitiesLoaded = (state, { payload: rows }) => {
-    console.log('R: entitiesLoaded');
-    return processListInState({
+const entitiesLoaded = (state, { payload: rows }) =>
+    processListInState({
         ...state,
         loaded: true,
         rows,
-    });
-}
+    })
 
-const selectEntity = (state, { payload: { id, selected } }) => {
-    console.log('R: selectEntity', id, selected);
-    return {
+const selectEntity = (state, { payload: { id, selected } }) => ({
         ...state,
         entities: state.entities.map(entity =>
             entity.id == id ? {...entity, selected} : entity
         )
-    }
-}
+    })
 
-const expandEntity = (state, { payload: { id, expanded } }) => {
-    console.log('R: expandEntity', id, expanded);
-    return {
+const expandEntity = (state, { payload: { id, expanded } }) => ({
         ...state,
         entities: state.entities.map(entity =>
             (entity.id == id) ? {...entity, expanded: !entity.expanded} : entity
         )
-    }
-}
+    })
 
 const sortEntities = (state, { payload: { column, direction } }) =>
     processListInState({
@@ -73,14 +53,12 @@ const sortEntities = (state, { payload: { column, direction } }) =>
         sortDirection: direction
     })
 
-const setPageAndSize = (state, { payload: { page, size } }) =>  {
-    console.log('R: setPageAndSize', page, size);
-    return processListInState({
+const setPageAndSize = (state, { payload: { page, size } }) => 
+    processListInState({
         ...state,
         pageSize: size,
         pageNumber: page,
-    });
-}
+    })
 
 const addProvider = (state, { payload: { formData } }) => {
     console.log('R: addProvider', formData);
@@ -94,9 +72,8 @@ const addProvider = (state, { payload: { formData } }) => {
     }
 }
 
-const filterProviders = (state, { payload: { column, value } }) => {
-    console.log('R: filterProviders', column, value);
-    return processListInState({
+const filterProviders = (state, { payload: { column, value } }) =>
+    processListInState({
         ...state,
         filterColumn: column,
         filterValue: value,

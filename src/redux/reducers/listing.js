@@ -39,8 +39,8 @@ function setPageAndSize(state, { payload: { page, size } }) {
     return {
         ...state,
         listingRows: paginateList(
-          sortList(state.rawRows, state.sortBy, state.sortDirection),
-          page, size
+            sortList(state.rawRows, state.sortBy, state.sortDirection),
+            page, size
         ),
         pageSize: size,
         pageNumber: page,

@@ -8,17 +8,20 @@ import { BrushIcon, BugIcon, ShareIcon, TopologyIcon } from '@patternfly/react-i
 import { Button } from '@patternfly/react-core';
 import { Pagination, Table } from '@red-hat-insights/insights-frontend-components';
 import flatten from 'lodash/flatten'
+import filter from 'lodash/filter';
 
 import Actions from './Actions';
 import { loadEntities, selectEntity, expandEntity, sortEntities, pageAndSize } from '../../redux/actions/providers';
 import DetailView from '../../PresentationalComponents/DetailView/DetailView';
 
+import { sourcesViewDefinition } from '../../views/sourcesViewDefinition'
+
 class SourcesListView extends React.Component {
     constructor(props) {
         super(props);
 
-        this.columns = ['Provider', 'Status', 'Type', 'Last Updated']
-        this.realColumns = ['name', null, 'type', null]
+        this.filteredColumns = filter(sourcesViewDefinition.columns, c => c.title);
+        this.headers = this.filteredColumns.map(col => col.title);
 
         this.state = {
             itemsPerPage: 10,
@@ -36,7 +39,7 @@ class SourcesListView extends React.Component {
     onItemSelect = (_event, key, checked) => this.props.selectEntity(key, checked);
 
     onSort = (_event, key, direction) => {
-        this.props.sortEntities(this.realColumns[key], direction);
+        this.props.sortEntities(this.filteredColumns[key].value, direction);
         this.setState({
             sortBy: {
               index: key,
@@ -69,14 +72,13 @@ class SourcesListView extends React.Component {
             {
               ...item,
               children: [index + 1],
-              cells: [
-                item.name,
-                'OK',
-                item.type,
-                (new Date).toDateString(),
-                <Actions item={item} />,
-                <Link to={`/source/${item.id}/topology`}><TopologyIcon /></Link>
-              ]
+              cells: [].concat(
+                  this.filteredColumns.map(col => item[col.value] || ''),
+                  [
+                    <Actions item={item} />,
+                    <Link to={`/source/${item.id}/topology`}><TopologyIcon /></Link>
+                  ]
+              )
             },
             {
               id: item.id + '_detail',
@@ -95,7 +97,7 @@ class SourcesListView extends React.Component {
             className="pf-m-compact ins-entity-table"
             expandable={true}
             sortBy={this.state.sortBy}
-            header={[...this.columns, '', '']}
+            header={[...this.headers, '', '']}
             //header={columns && {
             //    ...mapValues(keyBy(columns, item => item.key), item => item.title),
             //    health: {
