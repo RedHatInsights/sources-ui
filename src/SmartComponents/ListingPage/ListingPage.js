@@ -46,9 +46,7 @@ class ListingPage extends Component {
                     <FilterDropdown />
                     <TextInput id='filter_text' value=''/>
                     <Button>Action</Button>
-                    <SimpleKebab>
-                        <DropdownItem component='div'><Link to={'/providers/'}>Back to Providers</Link></DropdownItem>
-                    </SimpleKebab>
+                    <SimpleKebab dropdownItems={ [ <DropdownItem component='div'><Link to={'/providers/'}>Back to Providers</Link></DropdownItem> ] } />
                 </div>
                 <ListingView viewDefinition={this.state.viewDefinition}/>
             </Section>

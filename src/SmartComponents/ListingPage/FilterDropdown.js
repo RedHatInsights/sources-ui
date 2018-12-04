@@ -13,21 +13,24 @@ export default class FilterDropdown extends Component {
 
     onSelect = (event) => this.setState( prevState => ({ isOpen: !prevState.isOpen }) );
 
+    dropdownItems = () => [
+        <DropdownItem>Link</DropdownItem>,
+        <DropdownItem component="button">Action</DropdownItem>,
+        <DropdownItem isDisabled>Disabled Link</DropdownItem>,
+        <DropdownItem isDisabled component="button">
+            Disabled Action
+        </DropdownItem>,
+        <DropdownSeparator />,
+        <DropdownItem>Separated Link</DropdownItem>,
+        <DropdownItem component="button">Separated Action</DropdownItem>,
+    ]
+
     render = () =>
         <Dropdown
             onToggle={this.onToggle}
             onSelect={this.onSelect}
             toggle={<DropdownToggle onToggle={this.onToggle}>All</DropdownToggle>}
             isOpen={this.state.isOpen}
-        >
-            <DropdownItem>Link</DropdownItem>
-            <DropdownItem component="button">Action</DropdownItem>
-            <DropdownItem isDisabled>Disabled Link</DropdownItem>
-            <DropdownItem isDisabled component="button">
-                Disabled Action
-            </DropdownItem>
-            <DropdownSeparator />
-            <DropdownItem>Separated Link</DropdownItem>
-            <DropdownItem component="button">Separated Action</DropdownItem>
-        </Dropdown>
+            dropdownItems={this.dropdownItems()}
+        />
 }

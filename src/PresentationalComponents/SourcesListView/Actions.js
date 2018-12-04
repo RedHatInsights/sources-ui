@@ -30,18 +30,20 @@ class Actions extends React.Component {
     render = () => {
         const item_id = this.props.item.id;
 
+        const dropdownItems = [
+            ...this.dropdownLinks( viewDefinitions, item_id),
+            <DropdownItem component="div"><Link to={`/source/${item_id}`}>Show Details</Link></DropdownItem>,
+            <DropdownItem component="div"><Link to={'/source/fixme/' + item_id}>Edit Source</Link></DropdownItem>,
+            <DropdownItem component="div"><Link to={'/source/fixme/' + item_id}>Remove Source</Link></DropdownItem>,
+        ]
+
         return (
             <Dropdown
                 position={DropdownPosition.right}
                 toggle={<KebabToggle onToggle={this.onToggle}/>}
                 isOpen={this.state.isOpen}
                 onSelect={this.onSelect}
-            >
-                { this.dropdownLinks( viewDefinitions, item_id) }
-                <DropdownItem component="div"><Link to={`/source/${item_id}`}>Show Details</Link></DropdownItem>
-                <DropdownItem component="div"><Link to={'/source/fixme/' + item_id}>Edit Source</Link></DropdownItem>
-                <DropdownItem component="div"><Link to={'/source/fixme/' + item_id}>Remove Source</Link></DropdownItem>
-            </Dropdown>
+                dropdownItems={dropdownItems} />
         )
     }
 }

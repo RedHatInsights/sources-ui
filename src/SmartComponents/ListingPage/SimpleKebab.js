@@ -9,16 +9,12 @@ export default class SimpleKebab extends Component {
     onToggle = (opened) => this.setState({isOpen: opened});
 
     render() {
-        const { children } = this.props;
-
         return (
             <Dropdown
                 position={DropdownPosition.right}
                 toggle={<KebabToggle onToggle={this.onToggle}/>}
                 isOpen={this.state.isOpen}
-            >
-                {children}
-            </Dropdown>
+                dropdownItems={this.props.dropdownItems} />
         )
     }
 }
