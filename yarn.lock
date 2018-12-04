@@ -53,6 +53,16 @@
     source-map "^0.5.0"
     trim-right "^1.0.1"
 
+"@babel/helper-create-class-features-plugin@^7.2.0":
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/@babel/helper-create-class-features-plugin/-/helper-create-class-features-plugin-7.2.0.tgz#8d52930558897042444e670f26ae6581ec9a4a4a"
+  dependencies:
+    "@babel/helper-function-name" "^7.1.0"
+    "@babel/helper-member-expression-to-functions" "^7.0.0"
+    "@babel/helper-optimise-call-expression" "^7.0.0"
+    "@babel/helper-plugin-utils" "^7.0.0"
+    "@babel/helper-replace-supers" "^7.1.0"
+
 "@babel/helper-function-name@7.0.0-beta.44":
   version "7.0.0-beta.44"
   resolved "http://registry.npmjs.org/@babel/helper-function-name/-/helper-function-name-7.0.0-beta.44.tgz#e18552aaae2231100a6e485e03854bc3532d44dd"
@@ -81,15 +91,36 @@
   dependencies:
     "@babel/types" "^7.0.0"
 
+"@babel/helper-member-expression-to-functions@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@babel/helper-member-expression-to-functions/-/helper-member-expression-to-functions-7.0.0.tgz#8cd14b0a0df7ff00f009e7d7a436945f47c7a16f"
+  dependencies:
+    "@babel/types" "^7.0.0"
+
 "@babel/helper-module-imports@^7.0.0", "@babel/helper-module-imports@^7.0.0-beta.33", "@babel/helper-module-imports@^7.0.0-beta.49":
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/@babel/helper-module-imports/-/helper-module-imports-7.0.0.tgz#96081b7111e486da4d2cd971ad1a4fe216cc2e3d"
   dependencies:
     "@babel/types" "^7.0.0"
 
-"@babel/helper-plugin-utils@^7.0.0-beta.48":
+"@babel/helper-optimise-call-expression@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@babel/helper-optimise-call-expression/-/helper-optimise-call-expression-7.0.0.tgz#a2920c5702b073c15de51106200aa8cad20497d5"
+  dependencies:
+    "@babel/types" "^7.0.0"
+
+"@babel/helper-plugin-utils@^7.0.0", "@babel/helper-plugin-utils@^7.0.0-beta.48":
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/@babel/helper-plugin-utils/-/helper-plugin-utils-7.0.0.tgz#bbb3fbee98661c569034237cc03967ba99b4f250"
+
+"@babel/helper-replace-supers@^7.1.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@babel/helper-replace-supers/-/helper-replace-supers-7.1.0.tgz#5fc31de522ec0ef0899dc9b3e7cf6a5dd655f362"
+  dependencies:
+    "@babel/helper-member-expression-to-functions" "^7.0.0"
+    "@babel/helper-optimise-call-expression" "^7.0.0"
+    "@babel/traverse" "^7.1.0"
+    "@babel/types" "^7.0.0"
 
 "@babel/helper-split-export-declaration@7.0.0-beta.44":
   version "7.0.0-beta.44"
@@ -131,6 +162,13 @@
   version "7.1.3"
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.1.3.tgz#2c92469bac2b7fbff810b67fca07bd138b48af77"
 
+"@babel/plugin-proposal-class-properties@^7.1.0":
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-class-properties/-/plugin-proposal-class-properties-7.2.0.tgz#12ade6dc7b92ea4fa4c84b4d7b87e9d0f446b4f8"
+  dependencies:
+    "@babel/helper-create-class-features-plugin" "^7.2.0"
+    "@babel/helper-plugin-utils" "^7.0.0"
+
 "@babel/runtime-corejs2@^7.0.0":
   version "7.1.2"
   resolved "https://registry.yarnpkg.com/@babel/runtime-corejs2/-/runtime-corejs2-7.1.2.tgz#8695811a3fd8091f54f274b9320334e5e8c62200"
@@ -147,6 +185,12 @@
 "@babel/runtime@^7.1.2":
   version "7.1.2"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.1.2.tgz#81c89935f4647706fc54541145e6b4ecfef4b8e3"
+  dependencies:
+    regenerator-runtime "^0.12.0"
+
+"@babel/runtime@^7.1.5":
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.2.0.tgz#b03e42eeddf5898e00646e4c840fa07ba8dcad7f"
   dependencies:
     regenerator-runtime "^0.12.0"
 
@@ -211,6 +255,22 @@
     esutils "^2.0.2"
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
+
+"@data-driven-forms/pf4-component-mapper@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@data-driven-forms/pf4-component-mapper/-/pf4-component-mapper-0.2.1.tgz#661e673d5683fc64a35e621c159f1308757f4c02"
+  dependencies:
+    "@patternfly/patternfly-next" "^1.0.87"
+
+"@data-driven-forms/react-form-renderer@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@data-driven-forms/react-form-renderer/-/react-form-renderer-1.2.1.tgz#ac5da41a44b926f3989bf6b2da5753a9e6b04543"
+  dependencies:
+    "@babel/plugin-proposal-class-properties" "^7.1.0"
+    final-form "^4.11.0"
+    final-form-arrays "^1.1.0"
+    react-final-form "^4.0.2"
+    react-final-form-arrays "^2.0.1"
 
 "@emotion/babel-utils@^0.6.4":
   version "0.6.10"
@@ -292,7 +352,11 @@
   version "1.0.65"
   resolved "https://registry.yarnpkg.com/@patternfly/patternfly-next/-/patternfly-next-1.0.65.tgz#5b2e4525b8743813211acb68cbb94f6318388674"
 
-"@patternfly/react-core@^1.11.1", "@patternfly/react-core@^1.19.1":
+"@patternfly/patternfly-next@^1.0.87", "@patternfly/patternfly-next@^1.0.90":
+  version "1.0.90"
+  resolved "https://registry.yarnpkg.com/@patternfly/patternfly-next/-/patternfly-next-1.0.90.tgz#ade82d7b99bc034d4e80f6b3599b70d5966f5ea5"
+
+"@patternfly/react-core@^1.11.1":
   version "1.29.0"
   resolved "https://registry.yarnpkg.com/@patternfly/react-core/-/react-core-1.29.0.tgz#0d4880c9d0a60137d1840fc6bb4a99374074ac5d"
   dependencies:
@@ -303,9 +367,24 @@
   optionalDependencies:
     "@patternfly/react-tokens" "^1.0.0"
 
-"@patternfly/react-icons@^2.4.0", "@patternfly/react-icons@^2.5.0", "@patternfly/react-icons@^2.6.0":
+"@patternfly/react-core@^1.36.0", "@patternfly/react-core@^1.38.4":
+  version "1.38.4"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-core/-/react-core-1.38.4.tgz#98ba02d375e82512c4082bd7ce6a05d5bed52016"
+  dependencies:
+    "@patternfly/react-icons" "^2.9.2"
+    "@patternfly/react-styles" "^2.3.0"
+    exenv "^1.2.2"
+    focus-trap-react "^4.0.1"
+  optionalDependencies:
+    "@patternfly/react-tokens" "^1.0.0"
+
+"@patternfly/react-icons@^2.4.0", "@patternfly/react-icons@^2.6.0":
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/@patternfly/react-icons/-/react-icons-2.6.0.tgz#eeb47fa1e0de1a95de837eed797f063ca4706997"
+
+"@patternfly/react-icons@^2.8.0", "@patternfly/react-icons@^2.9.2":
+  version "2.9.2"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-icons/-/react-icons-2.9.2.tgz#c0ce843bc813df8ae6653d1b2693ce13377be0b2"
 
 "@patternfly/react-styles@^2.3.0":
   version "2.3.0"
@@ -328,12 +407,12 @@
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/@patternfly/react-tokens/-/react-tokens-1.6.0.tgz#b07732389fab68bb15d30b9c48c28b701fe891d2"
 
-"@red-hat-insights/insights-frontend-components@^3.20.11":
-  version "3.20.11"
-  resolved "https://registry.yarnpkg.com/@red-hat-insights/insights-frontend-components/-/insights-frontend-components-3.20.11.tgz#9b9d7e715afa76387e6f4bb5fec2b76bf8fea108"
+"@red-hat-insights/insights-frontend-components@^3.24.0":
+  version "3.24.0"
+  resolved "https://registry.yarnpkg.com/@red-hat-insights/insights-frontend-components/-/insights-frontend-components-3.24.0.tgz#9dce51121ce892ca1c1a6d36eacd9302a1004608"
   dependencies:
-    "@patternfly/react-core" "^1.19.1"
-    "@patternfly/react-icons" "^2.4.0"
+    "@patternfly/react-core" "^1.36.0"
+    "@patternfly/react-icons" "^2.8.0"
     bootstrap-sass "^3.3.7"
     c3 "^0.6.7"
     classnames "^2.2.5"
@@ -4600,6 +4679,12 @@ final-form@^4.10.0, final-form@^4.7.3:
   version "4.10.0"
   resolved "https://registry.yarnpkg.com/final-form/-/final-form-4.10.0.tgz#6179bca7676925202510e9877eb1ad2ad1cd3460"
 
+final-form@^4.11.0:
+  version "4.11.0"
+  resolved "https://registry.yarnpkg.com/final-form/-/final-form-4.11.0.tgz#81750bda11b82c3ddf7b27092f29ebe427f8a560"
+  dependencies:
+    "@babel/runtime" "^7.1.5"
+
 finalhandler@1.1.1:
   version "1.1.1"
   resolved "http://registry.npmjs.org/finalhandler/-/finalhandler-1.1.1.tgz#eebf4ed840079c83f4249038c9d703008301b105"
@@ -8845,9 +8930,21 @@ react-final-form-arrays@^1.0.6:
   dependencies:
     react-lifecycles-compat "^3.0.4"
 
+react-final-form-arrays@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/react-final-form-arrays/-/react-final-form-arrays-2.0.1.tgz#ded628e3a1f2b4c4316b4aa6bf910e23eedca894"
+  dependencies:
+    react-lifecycles-compat "^3.0.4"
+
 react-final-form@^3.5.1, react-final-form@^3.6.5:
   version "3.6.7"
   resolved "https://registry.yarnpkg.com/react-final-form/-/react-final-form-3.6.7.tgz#c4d2e01e04674201b850cdd05ed5b67ff5ea06c5"
+
+react-final-form@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/react-final-form/-/react-final-form-4.0.2.tgz#fa829d7fb60dcc168804bf2edda58f3d62c4607b"
+  dependencies:
+    "@babel/runtime" "^7.1.2"
 
 react-fontawesome@^1.6.1:
   version "1.6.1"

@@ -5,10 +5,9 @@ import { Link, Redirect, withRouter } from 'react-router-dom';
 import asyncComponent from '../../Utilities/asyncComponent';
 import './provider-page.scss';
 import filter from 'lodash/filter';
-import { addProvider, createSource, addAlert, closeAlert, filterProviders } from '../../redux/actions/providers';
+import { addProvider, createSource, filterProviders } from '../../redux/actions/providers';
 
 import { Donut, PageHeader, PageHeaderTitle, Section } from '@red-hat-insights/insights-frontend-components';
-import { FormRenderer } from '@red-hat-insights/insights-frontend-components/components/Forms';
 
 import { Button, Grid, GridItem } from '@patternfly/react-core';
 import { Alert, Card, CardHeader, CardBody, CardFooter, Gallery, Modal } from '@patternfly/react-core';
@@ -19,6 +18,7 @@ import SourcesFilter from '../../PresentationalComponents/SourcesListView/Source
 
 import { providerColumns } from '../../SmartComponents/ProviderPage/providerColumns'
 import { providerForm } from './providerForm'
+import SourcesFormRenderer from '../../Utilities/SourcesFormRenderer'
 
 /**
  * A smart component that handles all the api calls and data needed by the dumb components.
@@ -36,11 +36,11 @@ class ProviderPage extends Component {
         console.log('submitProvider', values, formState);
         //this.props.addProvider(values);
         this.props.createSource(values).then(() => {
-            this.props.addAlert('Source added', 'success');
+            //this.props.addAlert('Source added', 'success');
             this.props.history.replace('/sources')
         }).catch(error => {
             console.debug('CATCH:'); console.debug(error);
-            this.props.addAlert('Source adding failed', 'danger');
+            //this.props.addAlert('Source adding failed', 'danger');
             this.props.history.replace('/sources')
         });
     }
@@ -56,7 +56,7 @@ class ProviderPage extends Component {
         return (
             <React.Fragment>
                 <Modal title='Add New Provider' isOpen={this.props.location.pathname == '/sources/new'} onClose={this.props.history.goBack}>
-                    <FormRenderer schema={providerForm.schema} uiSchema={providerForm.uiSchema} onSubmit={this.submitProvider} />
+                    <SourcesFormRenderer schemaType="mozilla" schema={providerForm.schema} uiSchema={providerForm.uiSchema} onSubmit={this.submitProvider} />
                 </Modal>
                 <PageHeader>
                     <PageHeaderTitle title='Providers'/>
@@ -96,8 +96,6 @@ class ProviderPage extends Component {
                       </Card>
                     </Gallery>
 
-                    { this.props.alert && <Alert variant={this.props.alert.type} title={this.props.alert.message} action={<Button onClick={this.props.closeAlert} variant="secondary">Close</Button>}/> }
-
                     <SourcesFilter columns={filterColumns} onFilter={this.onFilter}/>
                     <SourcesListView columns={providerColumns}/>
                 </Section>
@@ -106,8 +104,8 @@ class ProviderPage extends Component {
     }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators({ addProvider, createSource, addAlert, closeAlert, filterProviders }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ addProvider, createSource, filterProviders }, dispatch);
 
-const mapStateToProps = ({providers:{alert}}) => ({alert})
+const mapStateToProps = () => ({})
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ProviderPage));

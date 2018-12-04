@@ -49,5 +49,14 @@ export const createSource = (formData) => {
     return {
         type: ACTION_TYPES.CREATE_SOURCE,
         payload: doCreateSource(formData),
+        meta: {
+            notifications: {
+                fulfilled: {
+                    variant: 'success',
+                    title: 'Source was created.',
+                    description: 'The new source was successfully created.'
+                }
+            }
+        }
     };
 }

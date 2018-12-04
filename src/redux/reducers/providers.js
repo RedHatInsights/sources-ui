@@ -79,20 +79,19 @@ const filterProviders = (state, { payload: { column, value } }) =>
         filterValue: value,
         pageNumber: 1,
     })
-}
 
-const closeAlert = (state) => ({
-    ...state,
-    alert: null
-})
-
-const addAlert = (state, { payload: { message, type } }) => ({
-    ...state,
-    alert: {
-        message,
-        type,
-    }
-})
+//const closeAlert = (state) => ({
+//    ...state,
+//    alert: null
+//})
+//
+//const addAlert = (state, { payload: { message, type } }) => ({
+//    ...state,
+//    alert: {
+//        message,
+//        type,
+//    }
+//})
 
 const createSourcePending = (state) => ({
     ...state,
@@ -121,6 +120,6 @@ export default {
     [PAGE_AND_SIZE]: setPageAndSize,
     [ADD_PROVIDER]: addProvider,
     [FILTER_PROVIDERS]: filterProviders,
-    [CLOSE_ALERT]: closeAlert,
-    [ADD_ALERT]: addAlert,
+//    [CLOSE_ALERT]: closeAlert,
+//    [ADD_ALERT]: addAlert,
 };

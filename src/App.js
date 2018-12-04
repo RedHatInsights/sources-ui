@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import promiseMiddleware from 'redux-promise-middleware';
 import { ReducerRegistry, applyReducerHash } from '@red-hat-insights/insights-frontend-components'
+import { NotificationsPortal, notifications, notificationsMiddleware } from '@red-hat-insights/insights-frontend-components/components/Notifications'
 import { Routes } from './Routes';
 import './App.scss';
 
@@ -23,7 +24,14 @@ class App extends Component {
 
     static getRegistry () {
       if (! registry) {
-        registry = new ReducerRegistry({}, [promiseMiddleware(), logger]);
+        registry = new ReducerRegistry(
+            {},
+            [
+                promiseMiddleware(),
+                notificationsMiddleware({ errorTitleKey: 'error', errorDescriptionKey: 'error' }),
+                logger
+            ]
+        );
       }
       return registry;
     }
@@ -35,6 +43,7 @@ class App extends Component {
         App.getRegistry().register({providers: applyReducerHash(ReducersProviders, defaultProvidersState)});
         App.getRegistry().register({listing: applyReducerHash(ReducersListing, defaultListingState)});
         App.getRegistry().register({topology: applyReducerHash(ReducersTopology, {})});
+        App.getRegistry().register({ notifications });
 
         insights.chrome.init();
         insights.chrome.identifyApp('sources');
@@ -48,7 +57,10 @@ class App extends Component {
 
     render () {
         return (
-            <Routes childProps={this.props} />
+            <React.Fragment>
+                <NotificationsPortal />
+                <Routes childProps={this.props} />
+            </React.Fragment>
         );
     }
 }
