@@ -9,3 +9,6 @@ global.shallow = shallow;
 global.render = render;
 global.mount = mount;
 global.React = React;
+
+window.SVGPathElement = window.Element;
+//var svgjs = require('svg.js')(window)
