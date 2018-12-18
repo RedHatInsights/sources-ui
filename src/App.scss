@@ -17,3 +17,19 @@
 .ins-l-content {
   background-color: var(--pf-global--BackgroundColor--300)
 }
+
+/* styling for "Add source" modal */
+.add-source {
+  border: none !important;
+  min-width: 500px;
+  min-height: 800px !important;
+  .pf-c-modal-box__header {
+    .pf-c-modal-box__header-title {
+      color: white;
+    }
+    background-image: url('../static/images/pfbg_576.jpg');
+  }
+  .pf-c-modal-box__footer {
+    display: none;
+  }
+}

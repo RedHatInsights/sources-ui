@@ -17,7 +17,7 @@ import SourcesListView from '../../PresentationalComponents/SourcesListView/Sour
 import SourcesFilter from '../../PresentationalComponents/SourcesListView/SourcesFilter';
 
 import { providerColumns } from '../../SmartComponents/ProviderPage/providerColumns'
-import { providerForm } from './providerForm'
+import { providerForm, wizardForm } from './providerForm'
 import SourcesFormRenderer from '../../Utilities/SourcesFormRenderer'
 
 /**
@@ -53,10 +53,20 @@ class ProviderPage extends Component {
     render = () => {
         const filterColumns = filter(providerColumns, c => c.value);
 
+        //const form = providerForm;
+        const form = wizardForm;
+
         return (
             <React.Fragment>
-                <Modal title='Add New Provider' isOpen={this.props.location.pathname == '/sources/new'} onClose={this.props.history.goBack}>
-                    <SourcesFormRenderer schemaType="mozilla" schema={providerForm.schema} uiSchema={providerForm.uiSchema} onSubmit={this.submitProvider} />
+                <Modal className='add-source' isLarge title='Add New Provider' isOpen={this.props.location.pathname == '/sources/new'} onClose={this.props.history.goBack}>
+                    <SourcesFormRenderer
+                        initialValues={form.initialValues}
+                        schemaType={form.schemaType}
+                        schema={form.schema}
+                        uiSchema={form.uiSchema}
+                        showFormControls={form.showFormControls}
+                        onSubmit={this.submitProvider}
+                    />
                 </Modal>
                 <PageHeader>
                     <PageHeaderTitle title='Providers'/>
