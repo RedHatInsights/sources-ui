@@ -18,22 +18,41 @@ export function doCreateSource (formData) {
     let apiInstance = new TopologicalInventory.DefaultApi();
     apiInstance.basePath = SOURCES_API_BASE;
 
-    //let body = new TopologicalInventory.Id(); // Id
-    //{id, name, uid, tenant_id}
-    //return apiInstance.createSource(body);
-    // [{"id":1,"name":null,
-    // "uid":"0b4e4948-14f5-4940-85b4-b7da98250590",
-    // "created_at":"2018-11-26T17:51:21.406Z","updated_at":"2018-11-26T17:51:21.406Z",
-    // "tenant_id":1,"source_type_id":1}]
-    let body = {
+    let sourceData = {
         tenant_id: 1,
         name: formData.name,
         source_type_id: 1,
     };
 
-    return apiInstance.createSource(body).then((data) => {
-        console.log('API called successfully. Returned data: ' + data);
-        return data;
+    return apiInstance.createSource(sourceData).then((sourceData) => {
+        console.log('API call createSource returned data: ', sourceData);
+
+        // For now we parse these from a single 'URL' field.
+        // TODO: need to create a component for entry of these
+        const parsed = formData.url.match('(https?)://(.*?):([0-9]*)?$');
+        const schema = parsed[1];
+        const host = parsed[2];
+        const port = parsed[3];
+
+        const endpointData = {
+            source_id: parseInt(sourceData.id, 10),
+            tenant_id: parseInt(sourceData.tenant_id, 10),
+            role: formData.role, // 'kubernetes'
+            schema: schema,
+            port: parseInt(port, 10),
+            host: host,
+            verify_ssl: formData.verify_ssl,
+            certificate_authority: formData.certificate_authority,
+            // TODO: authentications: token
+        }
+
+        return apiInstance.createEndpoint(endpointData).then((data) => {
+            console.log('API call createEndpoint returned data: ', data);
+            return data;
+        }, (error) => {
+            console.error('endpoint creation failure');
+        })
+
     }, (error) => {
         console.error(error);
         throw new Error(error);
