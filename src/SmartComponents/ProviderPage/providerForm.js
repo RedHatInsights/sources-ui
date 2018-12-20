@@ -22,6 +22,7 @@ export const providerForm = {
 import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
 export const wizardForm = {
   initialValues: {
+    role: 'kubernetes',
     verify_ssl: true,
   },
   schemaType: 'default',
@@ -75,6 +76,10 @@ export const wizardForm = {
         stepKey: 'openshift',
         nextStep: 'summary',
         fields: [{
+            component: componentTypes.TEXT_FIELD,
+            name: 'role',
+            type: 'hidden',
+        },{
           component: componentTypes.TEXT_FIELD,
           name: 'url',
           label: 'URL',
