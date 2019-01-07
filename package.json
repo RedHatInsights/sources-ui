@@ -1,5 +1,5 @@
 {
-  "name": "insights-frontend-starter-app",
+  "name": "topology-inventory-ui",
   "version": "1.1.0",
   "private": false,
   "dependencies": {
@@ -7,7 +7,7 @@
     "@data-driven-forms/pf4-component-mapper": "^0.2.1",
     "@data-driven-forms/react-form-renderer": "^1.2.1",
     "@manageiq/react-ui-components": "^0.11.2",
-    "@patternfly/patternfly-next": "^1.0.90",
+    "@patternfly/patternfly-next": "1.0.80",
     "@patternfly/react-core": "^1.38.4",
     "@patternfly/react-icons": "^2.9.2",
     "@red-hat-insights/insights-frontend-components": "^3.24.0",
