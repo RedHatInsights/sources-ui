@@ -65,11 +65,11 @@ export default class ServiceOffering {
             if (data.hasOwnProperty('description')) {
                 obj['description'] = ApiClient.convertToType(data['description'], 'String');
             }
-            if (data.hasOwnProperty('ems_ref')) {
-                obj['ems_ref'] = ApiClient.convertToType(data['ems_ref'], 'String');
+            if (data.hasOwnProperty('source_ref')) {
+                obj['source_ref'] = ApiClient.convertToType(data['source_ref'], 'String');
             }
             if (data.hasOwnProperty('extra')) {
-                obj['extra'] = ApiClient.convertToType(data['extra'], Object);
+                obj['extra'] = ApiClient.convertToType(data['extra'], 'String');
             }
             if (data.hasOwnProperty('source_created_at')) {
                 obj['source_created_at'] = ApiClient.convertToType(data['source_created_at'], 'Date');
@@ -79,9 +79,6 @@ export default class ServiceOffering {
             }
             if (data.hasOwnProperty('source_id')) {
                 obj['source_id'] = ApiClient.convertToType(data['source_id'], 'String');
-            }
-            if (data.hasOwnProperty('source_ref')) {
-                obj['source_ref'] = ApiClient.convertToType(data['source_ref'], 'String');
             }
             if (data.hasOwnProperty('tenant_id')) {
                 obj['tenant_id'] = ApiClient.convertToType(data['tenant_id'], 'String');
@@ -103,12 +100,13 @@ export default class ServiceOffering {
     */
     description = undefined;
     /**
-    * The native reference used by the EMS to refer to this object
-    * @member {String} ems_ref
+    * The native reference used by the Source to refer to this object
+    * @member {String} source_ref
     */
-    ems_ref = undefined;
+    source_ref = undefined;
     /**
-    * @member {Object} extra
+    * Extra information about this object in JSON format
+    * @member {String} extra
     */
     extra = undefined;
     /**
@@ -123,10 +121,6 @@ export default class ServiceOffering {
     * @member {String} source_id
     */
     source_id = undefined;
-    /**
-    * @member {String} source_ref
-    */
-    source_ref = undefined;
     /**
     * @member {String} tenant_id
     */

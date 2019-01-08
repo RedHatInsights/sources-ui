@@ -71,6 +71,9 @@ export default class Endpoint {
             if (data.hasOwnProperty('port')) {
                 obj['port'] = ApiClient.convertToType(data['port'], 'Number');
             }
+            if (data.hasOwnProperty('role')) {
+                obj['role'] = ApiClient.convertToType(data['role'], 'String');
+            }
             if (data.hasOwnProperty('scheme')) {
                 obj['scheme'] = ApiClient.convertToType(data['scheme'], 'String');
             }
@@ -107,6 +110,10 @@ export default class Endpoint {
     * @member {Number} port
     */
     port = undefined;
+    /**
+    * @member {String} role
+    */
+    role = undefined;
     /**
     * URI scheme component
     * @member {String} scheme

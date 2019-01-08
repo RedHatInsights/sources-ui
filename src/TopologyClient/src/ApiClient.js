@@ -32,9 +32,9 @@ export default class ApiClient {
         /**
          * The base URL against which to resolve every API call's (relative) path.
          * @type {String}
-         * @default https://virtserver.swaggerhub.com/api/v0.0
+         * @default https://virtserver.swaggerhub.com/r/insights/platform/topological-inventory/v0.0
          */
-        //this.basePath = 'https://virtserver.swaggerhub.com/api/v0.0'.replace(/\/+$/, '');
+        //this.basePath = 'https://virtserver.swaggerhub.com/r/insights/platform/topological-inventory/v0.0'.replace(/\/+$/, '');
         this.basePath = 'https://topological-inventory-api-topological-inventory-ci.10.8.96.54.nip.io/api/v0.0'
 
         /**

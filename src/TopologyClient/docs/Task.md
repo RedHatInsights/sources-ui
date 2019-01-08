@@ -1,12 +1,14 @@
-# TopologicalInventory.Source
+# TopologicalInventory.Task
 
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | [optional] 
-**sourceTypeId** | **String** |  | [optional] 
 **name** | **String** |  | [optional] 
-**uid** | **String** |  | [optional] 
+**status** | **String** |  | [optional] 
+**state** | **String** |  | [optional] 
+**context** | **Object** |  | [optional] 
+**completedAt** | **Date** |  | [optional] 
 **tenantId** | **String** |  | [optional] 
 
 

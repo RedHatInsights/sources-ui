@@ -5,7 +5,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | [optional] 
 **name** | **String** |  | [optional] 
-**extra** | **Object** |  | [optional] 
+**extra** | **String** | Extra information about this object in JSON format | [optional] 
 **sourceCreatedAt** | **Date** |  | [optional] 
 **sourceDeletedAt** | **Date** |  | [optional] 
 **serviceOfferingId** | **String** |  | [optional] 

@@ -1,50 +1,137 @@
 # TopologicalInventory.DefaultApi
 
-All URIs are relative to *https://virtserver.swaggerhub.com/api/v0.0*
+All URIs are relative to *https://virtserver.swaggerhub.com/r/insights/platform/topological-inventory/v0.0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**createAuthentication**](DefaultApi.md#createAuthentication) | **POST** /authentications | Create a new Authentication
 [**createEndpoint**](DefaultApi.md#createEndpoint) | **POST** /endpoints | Create a new Endpoint
 [**createSource**](DefaultApi.md#createSource) | **POST** /sources | Create a new Source
+[**createSourceType**](DefaultApi.md#createSourceType) | **POST** /source_types | Create a new SourceType
+[**deleteAuthentication**](DefaultApi.md#deleteAuthentication) | **DELETE** /authentications/{id} | Delete an existing Authentication
 [**deleteEndpoint**](DefaultApi.md#deleteEndpoint) | **DELETE** /endpoints/{id} | Delete an existing Endpoint
 [**deleteSource**](DefaultApi.md#deleteSource) | **DELETE** /sources/{id} | Delete an existing Source
+[**listAuthentications**](DefaultApi.md#listAuthentications) | **GET** /authentications | List Authentications
+[**listContainerGroupContainers**](DefaultApi.md#listContainerGroupContainers) | **GET** /container_groups/{id}/containers | List Containers for ContainerGroup
 [**listContainerGroups**](DefaultApi.md#listContainerGroups) | **GET** /container_groups | List ContainerGroups
+[**listContainerImages**](DefaultApi.md#listContainerImages) | **GET** /container_images | List ContainerImages
 [**listContainerNodeContainerGroups**](DefaultApi.md#listContainerNodeContainerGroups) | **GET** /container_nodes/{id}/container_groups | List ContainerGroups for ContainerNode
 [**listContainerNodes**](DefaultApi.md#listContainerNodes) | **GET** /container_nodes | List ContainerNodes
 [**listContainerProjectContainerGroups**](DefaultApi.md#listContainerProjectContainerGroups) | **GET** /container_projects/{id}/container_groups | List ContainerGroups for ContainerProject
 [**listContainerProjectContainerTemplates**](DefaultApi.md#listContainerProjectContainerTemplates) | **GET** /container_projects/{id}/container_templates | List ContainerTemplates for ContainerProject
 [**listContainerProjects**](DefaultApi.md#listContainerProjects) | **GET** /container_projects | List ContainerProjects
 [**listContainerTemplates**](DefaultApi.md#listContainerTemplates) | **GET** /container_templates | List ContainerTemplates
+[**listContainers**](DefaultApi.md#listContainers) | **GET** /containers | List Containers
 [**listEndpoints**](DefaultApi.md#listEndpoints) | **GET** /endpoints | List Endpoints
+[**listFlavors**](DefaultApi.md#listFlavors) | **GET** /flavors | List Flavors
+[**listOrchestrationStacks**](DefaultApi.md#listOrchestrationStacks) | **GET** /orchestration_stacks | List OrchestrationStacks
 [**listServiceInstances**](DefaultApi.md#listServiceInstances) | **GET** /service_instances | List ServiceInstances
 [**listServiceOfferingServiceInstances**](DefaultApi.md#listServiceOfferingServiceInstances) | **GET** /service_offerings/{id}/service_instances | List ServiceInstances for ServiceOffering
-[**listServiceOfferingServiceParametersSets**](DefaultApi.md#listServiceOfferingServiceParametersSets) | **GET** /service_offerings/{id}/service_parameters_sets | List ServiceParametersSets for ServiceOffering
+[**listServiceOfferingServicePlans**](DefaultApi.md#listServiceOfferingServicePlans) | **GET** /service_offerings/{id}/service_plans | List ServicePlans for ServiceOffering
 [**listServiceOfferings**](DefaultApi.md#listServiceOfferings) | **GET** /service_offerings | List ServiceOfferings
-[**listServiceParametersSetServiceInstances**](DefaultApi.md#listServiceParametersSetServiceInstances) | **GET** /service_parameters_sets/{id}/service_instances | List ServiceInstances for ServiceParametersSet
-[**listServiceParametersSets**](DefaultApi.md#listServiceParametersSets) | **GET** /service_parameters_sets | List ServiceParametersSets
+[**listServicePlanServiceInstances**](DefaultApi.md#listServicePlanServiceInstances) | **GET** /service_plans/{id}/service_instances | List ServiceInstances for ServicePlan
+[**listServicePlans**](DefaultApi.md#listServicePlans) | **GET** /service_plans | List ServicePlans
 [**listSourceContainerGroups**](DefaultApi.md#listSourceContainerGroups) | **GET** /sources/{id}/container_groups | List ContainerGroups for Source
+[**listSourceContainerImages**](DefaultApi.md#listSourceContainerImages) | **GET** /sources/{id}/container_images | List ContainerImages for Source
 [**listSourceContainerNodes**](DefaultApi.md#listSourceContainerNodes) | **GET** /sources/{id}/container_nodes | List ContainerNodes for Source
 [**listSourceContainerProjects**](DefaultApi.md#listSourceContainerProjects) | **GET** /sources/{id}/container_projects | List ContainerProjects for Source
 [**listSourceContainerTemplates**](DefaultApi.md#listSourceContainerTemplates) | **GET** /sources/{id}/container_templates | List ContainerTemplates for Source
+[**listSourceContainers**](DefaultApi.md#listSourceContainers) | **GET** /sources/{id}/containers | List Containers for Source
 [**listSourceEndpoints**](DefaultApi.md#listSourceEndpoints) | **GET** /sources/{id}/endpoints | List Endpoints for Source
+[**listSourceOrchestrationStacks**](DefaultApi.md#listSourceOrchestrationStacks) | **GET** /sources/{id}/orchestration_stacks | List OrchestrationStacks for Source
 [**listSourceServiceInstances**](DefaultApi.md#listSourceServiceInstances) | **GET** /sources/{id}/service_instances | List ServiceInstances for Source
 [**listSourceServiceOfferings**](DefaultApi.md#listSourceServiceOfferings) | **GET** /sources/{id}/service_offerings | List ServiceOfferings for Source
-[**listSourceServiceParametersSets**](DefaultApi.md#listSourceServiceParametersSets) | **GET** /sources/{id}/service_parameters_sets | List ServiceParametersSets for Source
+[**listSourceServicePlans**](DefaultApi.md#listSourceServicePlans) | **GET** /sources/{id}/service_plans | List ServicePlans for Source
+[**listSourceTypeSources**](DefaultApi.md#listSourceTypeSources) | **GET** /source_types/{id}/sources | List Sources for SourceType
+[**listSourceTypes**](DefaultApi.md#listSourceTypes) | **GET** /source_types | List SourceTypes
+[**listSourceVms**](DefaultApi.md#listSourceVms) | **GET** /sources/{id}/vms | List Vms for Source
+[**listSourceVolumeTypes**](DefaultApi.md#listSourceVolumeTypes) | **GET** /sources/{id}/volume_types | List VolumeTypes for Source
+[**listSourceVolumes**](DefaultApi.md#listSourceVolumes) | **GET** /sources/{id}/volumes | List Volumes for Source
 [**listSources**](DefaultApi.md#listSources) | **GET** /sources | List Sources
+[**listTasks**](DefaultApi.md#listTasks) | **GET** /tasks | List Tasks
+[**listVmVolumeAttachments**](DefaultApi.md#listVmVolumeAttachments) | **GET** /vms/{id}/volume_attachments | List VolumeAttachments for Vm
+[**listVmVolumes**](DefaultApi.md#listVmVolumes) | **GET** /vms/{id}/volumes | List Volumes for Vm
+[**listVms**](DefaultApi.md#listVms) | **GET** /vms | List Vms
+[**listVolumeAttachments**](DefaultApi.md#listVolumeAttachments) | **GET** /volume_attachments | List VolumeAttachments
+[**listVolumeTypes**](DefaultApi.md#listVolumeTypes) | **GET** /volume_types | List VolumeTypes
+[**listVolumes**](DefaultApi.md#listVolumes) | **GET** /volumes | List Volumes
+[**orderServicePlan**](DefaultApi.md#orderServicePlan) | **POST** /service_plans/{id}/order | Order an existing ServicePlan
+[**replaceAuthentication**](DefaultApi.md#replaceAuthentication) | **PUT** /authentications/{id} | Replace an existing Authentication
 [**replaceEndpoint**](DefaultApi.md#replaceEndpoint) | **PUT** /endpoints/{id} | Replace an existing Endpoint
 [**replaceSource**](DefaultApi.md#replaceSource) | **PUT** /sources/{id} | Replace an existing Source
+[**showAuthentication**](DefaultApi.md#showAuthentication) | **GET** /authentications/{id} | Show an existing Authentication
+[**showContainer**](DefaultApi.md#showContainer) | **GET** /containers/{id} | Show an existing Container
 [**showContainerGroup**](DefaultApi.md#showContainerGroup) | **GET** /container_groups/{id} | Show an existing ContainerGroup
+[**showContainerImage**](DefaultApi.md#showContainerImage) | **GET** /container_images/{id} | Show an existing ContainerImage
 [**showContainerNode**](DefaultApi.md#showContainerNode) | **GET** /container_nodes/{id} | Show an existing ContainerNode
 [**showContainerProject**](DefaultApi.md#showContainerProject) | **GET** /container_projects/{id} | Show an existing ContainerProject
 [**showContainerTemplate**](DefaultApi.md#showContainerTemplate) | **GET** /container_templates/{id} | Show an existing ContainerTemplate
 [**showEndpoint**](DefaultApi.md#showEndpoint) | **GET** /endpoints/{id} | Show an existing Endpoint
+[**showFlavor**](DefaultApi.md#showFlavor) | **GET** /flavors/{id} | Show an existing Flavor
+[**showOrchestrationStack**](DefaultApi.md#showOrchestrationStack) | **GET** /orchestration_stacks/{id} | Show an existing OrchestrationStack
 [**showServiceInstance**](DefaultApi.md#showServiceInstance) | **GET** /service_instances/{id} | Show an existing ServiceInstance
 [**showServiceOffering**](DefaultApi.md#showServiceOffering) | **GET** /service_offerings/{id} | Show an existing ServiceOffering
-[**showServiceParametersSet**](DefaultApi.md#showServiceParametersSet) | **GET** /service_parameters_sets/{id} | Show an existing ServiceParametersSet
+[**showServicePlan**](DefaultApi.md#showServicePlan) | **GET** /service_plans/{id} | Show an existing ServicePlan
 [**showSource**](DefaultApi.md#showSource) | **GET** /sources/{id} | Show an existing Source
+[**showSourceType**](DefaultApi.md#showSourceType) | **GET** /source_types/{id} | Show an existing SourceType
+[**showTask**](DefaultApi.md#showTask) | **GET** /tasks/{id} | Show an existing Task
+[**showVm**](DefaultApi.md#showVm) | **GET** /vms/{id} | Show an existing Vm
+[**showVolume**](DefaultApi.md#showVolume) | **GET** /volumes/{id} | Show an existing Volume
+[**showVolumeAttachment**](DefaultApi.md#showVolumeAttachment) | **GET** /volume_attachments/{id} | Show an existing VolumeAttachment
+[**showVolumeType**](DefaultApi.md#showVolumeType) | **GET** /volume_types/{id} | Show an existing VolumeType
+[**updateAuthentication**](DefaultApi.md#updateAuthentication) | **PATCH** /authentications/{id} | Update an existing Authentication
 [**updateEndpoint**](DefaultApi.md#updateEndpoint) | **PATCH** /endpoints/{id} | Update an existing Endpoint
 [**updateSource**](DefaultApi.md#updateSource) | **PATCH** /sources/{id} | Update an existing Source
 
+
+<a name="createAuthentication"></a>
+# **createAuthentication**
+> Object createAuthentication(body)
+
+Create a new Authentication
+
+Creates a Authentication object
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let body = new TopologicalInventory.ID(); // ID | 
+
+apiInstance.createAuthentication(body).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**ID**](ID.md)|  | 
+
+### Return type
+
+**Object**
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
 
 <a name="createEndpoint"></a>
 # **createEndpoint**
@@ -66,7 +153,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let body = new TopologicalInventory.Id(); // Id | 
+let body = new TopologicalInventory.ID(); // ID | 
 
 apiInstance.createEndpoint(body).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
@@ -80,7 +167,7 @@ apiInstance.createEndpoint(body).then((data) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**Id**](Id.md)|  | 
+ **body** | [**ID**](ID.md)|  | 
 
 ### Return type
 
@@ -115,7 +202,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let body = new TopologicalInventory.Id(); // Id | 
+let body = new TopologicalInventory.ID(); // ID | 
 
 apiInstance.createSource(body).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
@@ -129,7 +216,7 @@ apiInstance.createSource(body).then((data) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**Id**](Id.md)|  | 
+ **body** | [**ID**](ID.md)|  | 
 
 ### Return type
 
@@ -142,6 +229,104 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
  - **Content-Type**: application/json
+ - **Accept**: application/json
+
+<a name="createSourceType"></a>
+# **createSourceType**
+> Object createSourceType(body)
+
+Create a new SourceType
+
+Creates a SourceType object
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let body = new TopologicalInventory.ID(); // ID | 
+
+apiInstance.createSourceType(body).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**ID**](ID.md)|  | 
+
+### Return type
+
+**Object**
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+<a name="deleteAuthentication"></a>
+# **deleteAuthentication**
+> deleteAuthentication(id)
+
+Delete an existing Authentication
+
+Deletes a Authentication object
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let id = "id_example"; // String | ID of the resource
+
+apiInstance.deleteAuthentication(id).then(() => {
+  console.log('API called successfully.');
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**| ID of the resource | 
+
+### Return type
+
+null (empty response body)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 <a name="deleteEndpoint"></a>
@@ -164,7 +349,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
 apiInstance.deleteEndpoint(id).then(() => {
   console.log('API called successfully.');
@@ -178,7 +363,7 @@ apiInstance.deleteEndpoint(id).then(() => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
@@ -213,7 +398,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
 apiInstance.deleteSource(id).then(() => {
   console.log('API called successfully.');
@@ -227,11 +412,103 @@ apiInstance.deleteSource(id).then(() => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
 null (empty response body)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="listAuthentications"></a>
+# **listAuthentications**
+> [Authentication] listAuthentications()
+
+List Authentications
+
+Returns an array of Authentication objects
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+apiInstance.listAuthentications().then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**[Authentication]**](Authentication.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="listContainerGroupContainers"></a>
+# **listContainerGroupContainers**
+> [Container] listContainerGroupContainers(id)
+
+List Containers for ContainerGroup
+
+Returns an array of Container objects
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let id = "id_example"; // String | ID of the resource
+
+apiInstance.listContainerGroupContainers(id).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**| ID of the resource | 
+
+### Return type
+
+[**[Container]**](Container.md)
 
 ### Authorization
 
@@ -285,6 +562,49 @@ This endpoint does not need any parameter.
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
+<a name="listContainerImages"></a>
+# **listContainerImages**
+> [ContainerImage] listContainerImages()
+
+List ContainerImages
+
+Returns an array of ContainerImage objects
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+apiInstance.listContainerImages().then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**[ContainerImage]**](ContainerImage.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
 <a name="listContainerNodeContainerGroups"></a>
 # **listContainerNodeContainerGroups**
 > [ContainerGroup] listContainerNodeContainerGroups(id)
@@ -305,7 +625,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
 apiInstance.listContainerNodeContainerGroups(id).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
@@ -319,7 +639,7 @@ apiInstance.listContainerNodeContainerGroups(id).then((data) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
@@ -397,7 +717,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
 apiInstance.listContainerProjectContainerGroups(id).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
@@ -411,7 +731,7 @@ apiInstance.listContainerProjectContainerGroups(id).then((data) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
@@ -446,7 +766,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
 apiInstance.listContainerProjectContainerTemplates(id).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
@@ -460,7 +780,7 @@ apiInstance.listContainerProjectContainerTemplates(id).then((data) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
@@ -561,6 +881,49 @@ This endpoint does not need any parameter.
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
+<a name="listContainers"></a>
+# **listContainers**
+> [Container] listContainers()
+
+List Containers
+
+Returns an array of Container objects
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+apiInstance.listContainers().then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**[Container]**](Container.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
 <a name="listEndpoints"></a>
 # **listEndpoints**
 > [Endpoint] listEndpoints()
@@ -594,6 +957,92 @@ This endpoint does not need any parameter.
 ### Return type
 
 [**[Endpoint]**](Endpoint.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="listFlavors"></a>
+# **listFlavors**
+> [Flavor] listFlavors()
+
+List Flavors
+
+Returns an array of Flavor objects
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+apiInstance.listFlavors().then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**[Flavor]**](Flavor.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="listOrchestrationStacks"></a>
+# **listOrchestrationStacks**
+> [OrchestrationStack] listOrchestrationStacks()
+
+List OrchestrationStacks
+
+Returns an array of OrchestrationStack objects
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+apiInstance.listOrchestrationStacks().then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**[OrchestrationStack]**](OrchestrationStack.md)
 
 ### Authorization
 
@@ -667,7 +1116,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
 apiInstance.listServiceOfferingServiceInstances(id).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
@@ -681,7 +1130,7 @@ apiInstance.listServiceOfferingServiceInstances(id).then((data) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
@@ -696,13 +1145,13 @@ Name | Type | Description  | Notes
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
-<a name="listServiceOfferingServiceParametersSets"></a>
-# **listServiceOfferingServiceParametersSets**
-> [ServiceParametersSet] listServiceOfferingServiceParametersSets(id)
+<a name="listServiceOfferingServicePlans"></a>
+# **listServiceOfferingServicePlans**
+> [ServicePlan] listServiceOfferingServicePlans(id)
 
-List ServiceParametersSets for ServiceOffering
+List ServicePlans for ServiceOffering
 
-Returns an array of ServiceParametersSet objects
+Returns an array of ServicePlan objects
 
 ### Example
 ```javascript
@@ -716,9 +1165,9 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
-apiInstance.listServiceOfferingServiceParametersSets(id).then((data) => {
+apiInstance.listServiceOfferingServicePlans(id).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
 }, (error) => {
   console.error(error);
@@ -730,11 +1179,11 @@ apiInstance.listServiceOfferingServiceParametersSets(id).then((data) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
-[**[ServiceParametersSet]**](ServiceParametersSet.md)
+[**[ServicePlan]**](ServicePlan.md)
 
 ### Authorization
 
@@ -788,11 +1237,11 @@ This endpoint does not need any parameter.
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
-<a name="listServiceParametersSetServiceInstances"></a>
-# **listServiceParametersSetServiceInstances**
-> [ServiceInstance] listServiceParametersSetServiceInstances(id)
+<a name="listServicePlanServiceInstances"></a>
+# **listServicePlanServiceInstances**
+> [ServiceInstance] listServicePlanServiceInstances(id)
 
-List ServiceInstances for ServiceParametersSet
+List ServiceInstances for ServicePlan
 
 Returns an array of ServiceInstance objects
 
@@ -808,9 +1257,9 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
-apiInstance.listServiceParametersSetServiceInstances(id).then((data) => {
+apiInstance.listServicePlanServiceInstances(id).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
 }, (error) => {
   console.error(error);
@@ -822,7 +1271,7 @@ apiInstance.listServiceParametersSetServiceInstances(id).then((data) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
@@ -837,13 +1286,13 @@ Name | Type | Description  | Notes
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
-<a name="listServiceParametersSets"></a>
-# **listServiceParametersSets**
-> [ServiceParametersSet] listServiceParametersSets()
+<a name="listServicePlans"></a>
+# **listServicePlans**
+> [ServicePlan] listServicePlans()
 
-List ServiceParametersSets
+List ServicePlans
 
-Returns an array of ServiceParametersSet objects
+Returns an array of ServicePlan objects
 
 ### Example
 ```javascript
@@ -856,7 +1305,7 @@ UserSecurity.username = 'YOUR USERNAME';
 UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
-apiInstance.listServiceParametersSets().then((data) => {
+apiInstance.listServicePlans().then((data) => {
   console.log('API called successfully. Returned data: ' + data);
 }, (error) => {
   console.error(error);
@@ -869,7 +1318,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**[ServiceParametersSet]**](ServiceParametersSet.md)
+[**[ServicePlan]**](ServicePlan.md)
 
 ### Authorization
 
@@ -900,7 +1349,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
 apiInstance.listSourceContainerGroups(id).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
@@ -914,11 +1363,60 @@ apiInstance.listSourceContainerGroups(id).then((data) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
 [**[ContainerGroup]**](ContainerGroup.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="listSourceContainerImages"></a>
+# **listSourceContainerImages**
+> [ContainerImage] listSourceContainerImages(id)
+
+List ContainerImages for Source
+
+Returns an array of ContainerImage objects
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let id = "id_example"; // String | ID of the resource
+
+apiInstance.listSourceContainerImages(id).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**| ID of the resource | 
+
+### Return type
+
+[**[ContainerImage]**](ContainerImage.md)
 
 ### Authorization
 
@@ -949,7 +1447,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
 apiInstance.listSourceContainerNodes(id).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
@@ -963,7 +1461,7 @@ apiInstance.listSourceContainerNodes(id).then((data) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
@@ -998,7 +1496,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
 apiInstance.listSourceContainerProjects(id).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
@@ -1012,7 +1510,7 @@ apiInstance.listSourceContainerProjects(id).then((data) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
@@ -1047,7 +1545,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
 apiInstance.listSourceContainerTemplates(id).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
@@ -1061,11 +1559,60 @@ apiInstance.listSourceContainerTemplates(id).then((data) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
 [**[ContainerTemplate]**](ContainerTemplate.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="listSourceContainers"></a>
+# **listSourceContainers**
+> [Container] listSourceContainers(id)
+
+List Containers for Source
+
+Returns an array of Container objects
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let id = "id_example"; // String | ID of the resource
+
+apiInstance.listSourceContainers(id).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**| ID of the resource | 
+
+### Return type
+
+[**[Container]**](Container.md)
 
 ### Authorization
 
@@ -1096,7 +1643,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
 apiInstance.listSourceEndpoints(id).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
@@ -1110,11 +1657,60 @@ apiInstance.listSourceEndpoints(id).then((data) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
 [**[Endpoint]**](Endpoint.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="listSourceOrchestrationStacks"></a>
+# **listSourceOrchestrationStacks**
+> [OrchestrationStack] listSourceOrchestrationStacks(id)
+
+List OrchestrationStacks for Source
+
+Returns an array of OrchestrationStack objects
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let id = "id_example"; // String | ID of the resource
+
+apiInstance.listSourceOrchestrationStacks(id).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**| ID of the resource | 
+
+### Return type
+
+[**[OrchestrationStack]**](OrchestrationStack.md)
 
 ### Authorization
 
@@ -1145,7 +1741,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
 apiInstance.listSourceServiceInstances(id).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
@@ -1159,7 +1755,7 @@ apiInstance.listSourceServiceInstances(id).then((data) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
@@ -1194,7 +1790,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
 apiInstance.listSourceServiceOfferings(id).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
@@ -1208,7 +1804,7 @@ apiInstance.listSourceServiceOfferings(id).then((data) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
@@ -1223,13 +1819,13 @@ Name | Type | Description  | Notes
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
-<a name="listSourceServiceParametersSets"></a>
-# **listSourceServiceParametersSets**
-> [ServiceParametersSet] listSourceServiceParametersSets(id)
+<a name="listSourceServicePlans"></a>
+# **listSourceServicePlans**
+> [ServicePlan] listSourceServicePlans(id)
 
-List ServiceParametersSets for Source
+List ServicePlans for Source
 
-Returns an array of ServiceParametersSet objects
+Returns an array of ServicePlan objects
 
 ### Example
 ```javascript
@@ -1243,9 +1839,9 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
-apiInstance.listSourceServiceParametersSets(id).then((data) => {
+apiInstance.listSourceServicePlans(id).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
 }, (error) => {
   console.error(error);
@@ -1257,11 +1853,250 @@ apiInstance.listSourceServiceParametersSets(id).then((data) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
-[**[ServiceParametersSet]**](ServiceParametersSet.md)
+[**[ServicePlan]**](ServicePlan.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="listSourceTypeSources"></a>
+# **listSourceTypeSources**
+> [Source] listSourceTypeSources(id)
+
+List Sources for SourceType
+
+Returns an array of Source objects
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let id = "id_example"; // String | ID of the resource
+
+apiInstance.listSourceTypeSources(id).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**| ID of the resource | 
+
+### Return type
+
+[**[Source]**](Source.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="listSourceTypes"></a>
+# **listSourceTypes**
+> [SourceType] listSourceTypes()
+
+List SourceTypes
+
+Returns an array of SourceType objects
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+apiInstance.listSourceTypes().then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**[SourceType]**](SourceType.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="listSourceVms"></a>
+# **listSourceVms**
+> [Vm] listSourceVms(id)
+
+List Vms for Source
+
+Returns an array of Vm objects
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let id = "id_example"; // String | ID of the resource
+
+apiInstance.listSourceVms(id).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**| ID of the resource | 
+
+### Return type
+
+[**[Vm]**](Vm.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="listSourceVolumeTypes"></a>
+# **listSourceVolumeTypes**
+> [VolumeType] listSourceVolumeTypes(id)
+
+List VolumeTypes for Source
+
+Returns an array of VolumeType objects
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let id = "id_example"; // String | ID of the resource
+
+apiInstance.listSourceVolumeTypes(id).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**| ID of the resource | 
+
+### Return type
+
+[**[VolumeType]**](VolumeType.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="listSourceVolumes"></a>
+# **listSourceVolumes**
+> [Volume] listSourceVolumes(id)
+
+List Volumes for Source
+
+Returns an array of Volume objects
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let id = "id_example"; // String | ID of the resource
+
+apiInstance.listSourceVolumes(id).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**| ID of the resource | 
+
+### Return type
+
+[**[Volume]**](Volume.md)
 
 ### Authorization
 
@@ -1315,6 +2150,420 @@ This endpoint does not need any parameter.
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
+<a name="listTasks"></a>
+# **listTasks**
+> [Task] listTasks()
+
+List Tasks
+
+Returns an array of Task objects
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+apiInstance.listTasks().then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**[Task]**](Task.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="listVmVolumeAttachments"></a>
+# **listVmVolumeAttachments**
+> [VolumeAttachment] listVmVolumeAttachments(id)
+
+List VolumeAttachments for Vm
+
+Returns an array of VolumeAttachment objects
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let id = "id_example"; // String | ID of the resource
+
+apiInstance.listVmVolumeAttachments(id).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**| ID of the resource | 
+
+### Return type
+
+[**[VolumeAttachment]**](VolumeAttachment.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="listVmVolumes"></a>
+# **listVmVolumes**
+> [Volume] listVmVolumes(id)
+
+List Volumes for Vm
+
+Returns an array of Volume objects
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let id = "id_example"; // String | ID of the resource
+
+apiInstance.listVmVolumes(id).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**| ID of the resource | 
+
+### Return type
+
+[**[Volume]**](Volume.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="listVms"></a>
+# **listVms**
+> [Vm] listVms()
+
+List Vms
+
+Returns an array of Vm objects
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+apiInstance.listVms().then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**[Vm]**](Vm.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="listVolumeAttachments"></a>
+# **listVolumeAttachments**
+> [VolumeAttachment] listVolumeAttachments()
+
+List VolumeAttachments
+
+Returns an array of VolumeAttachment objects
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+apiInstance.listVolumeAttachments().then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**[VolumeAttachment]**](VolumeAttachment.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="listVolumeTypes"></a>
+# **listVolumeTypes**
+> [VolumeType] listVolumeTypes()
+
+List VolumeTypes
+
+Returns an array of VolumeType objects
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+apiInstance.listVolumeTypes().then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**[VolumeType]**](VolumeType.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="listVolumes"></a>
+# **listVolumes**
+> [Volume] listVolumes()
+
+List Volumes
+
+Returns an array of Volume objects
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+apiInstance.listVolumes().then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**[Volume]**](Volume.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="orderServicePlan"></a>
+# **orderServicePlan**
+> InlineResponse200 orderServicePlan(idparameters)
+
+Order an existing ServicePlan
+
+Returns a Task id
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let id = "id_example"; // String | ID of the resource
+
+let parameters = new TopologicalInventory.OrderParameters(); // OrderParameters | Order parameters defining the service and provider control
+
+apiInstance.orderServicePlan(idparameters).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**| ID of the resource | 
+ **parameters** | [**OrderParameters**](OrderParameters.md)| Order parameters defining the service and provider control | 
+
+### Return type
+
+[**InlineResponse200**](InlineResponse200.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: Not defined
+
+<a name="replaceAuthentication"></a>
+# **replaceAuthentication**
+> replaceAuthentication(id)
+
+Replace an existing Authentication
+
+Replaces a Authentication object
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let id = "id_example"; // String | ID of the resource
+
+apiInstance.replaceAuthentication(id).then(() => {
+  console.log('API called successfully.');
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**| ID of the resource | 
+
+### Return type
+
+null (empty response body)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
 <a name="replaceEndpoint"></a>
 # **replaceEndpoint**
 > replaceEndpoint(id)
@@ -1335,7 +2584,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
 apiInstance.replaceEndpoint(id).then(() => {
   console.log('API called successfully.');
@@ -1349,7 +2598,7 @@ apiInstance.replaceEndpoint(id).then(() => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
@@ -1384,7 +2633,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
 apiInstance.replaceSource(id).then(() => {
   console.log('API called successfully.');
@@ -1398,7 +2647,7 @@ apiInstance.replaceSource(id).then(() => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
@@ -1411,6 +2660,104 @@ null (empty response body)
 ### HTTP request headers
 
  - **Content-Type**: application/json
+ - **Accept**: application/json
+
+<a name="showAuthentication"></a>
+# **showAuthentication**
+> Authentication showAuthentication(id)
+
+Show an existing Authentication
+
+Returns a Authentication object
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let id = "id_example"; // String | ID of the resource
+
+apiInstance.showAuthentication(id).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**| ID of the resource | 
+
+### Return type
+
+[**Authentication**](Authentication.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="showContainer"></a>
+# **showContainer**
+> Container showContainer(id)
+
+Show an existing Container
+
+Returns a Container object
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let id = "id_example"; // String | ID of the resource
+
+apiInstance.showContainer(id).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**| ID of the resource | 
+
+### Return type
+
+[**Container**](Container.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 <a name="showContainerGroup"></a>
@@ -1433,7 +2780,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
 apiInstance.showContainerGroup(id).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
@@ -1447,11 +2794,60 @@ apiInstance.showContainerGroup(id).then((data) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
 [**ContainerGroup**](ContainerGroup.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="showContainerImage"></a>
+# **showContainerImage**
+> ContainerImage showContainerImage(id)
+
+Show an existing ContainerImage
+
+Returns a ContainerImage object
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let id = "id_example"; // String | ID of the resource
+
+apiInstance.showContainerImage(id).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**| ID of the resource | 
+
+### Return type
+
+[**ContainerImage**](ContainerImage.md)
 
 ### Authorization
 
@@ -1482,7 +2878,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
 apiInstance.showContainerNode(id).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
@@ -1496,7 +2892,7 @@ apiInstance.showContainerNode(id).then((data) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
@@ -1531,7 +2927,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
 apiInstance.showContainerProject(id).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
@@ -1545,7 +2941,7 @@ apiInstance.showContainerProject(id).then((data) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
@@ -1580,7 +2976,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
 apiInstance.showContainerTemplate(id).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
@@ -1594,7 +2990,7 @@ apiInstance.showContainerTemplate(id).then((data) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
@@ -1629,7 +3025,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
 apiInstance.showEndpoint(id).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
@@ -1643,11 +3039,109 @@ apiInstance.showEndpoint(id).then((data) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
 [**Endpoint**](Endpoint.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="showFlavor"></a>
+# **showFlavor**
+> Flavor showFlavor(id)
+
+Show an existing Flavor
+
+Returns a Flavor object
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let id = "id_example"; // String | ID of the resource
+
+apiInstance.showFlavor(id).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**| ID of the resource | 
+
+### Return type
+
+[**Flavor**](Flavor.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="showOrchestrationStack"></a>
+# **showOrchestrationStack**
+> OrchestrationStack showOrchestrationStack(id)
+
+Show an existing OrchestrationStack
+
+Returns a OrchestrationStack object
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let id = "id_example"; // String | ID of the resource
+
+apiInstance.showOrchestrationStack(id).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**| ID of the resource | 
+
+### Return type
+
+[**OrchestrationStack**](OrchestrationStack.md)
 
 ### Authorization
 
@@ -1678,7 +3172,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
 apiInstance.showServiceInstance(id).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
@@ -1692,7 +3186,7 @@ apiInstance.showServiceInstance(id).then((data) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
@@ -1727,7 +3221,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
 apiInstance.showServiceOffering(id).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
@@ -1741,7 +3235,7 @@ apiInstance.showServiceOffering(id).then((data) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
@@ -1756,13 +3250,13 @@ Name | Type | Description  | Notes
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
-<a name="showServiceParametersSet"></a>
-# **showServiceParametersSet**
-> ServiceParametersSet showServiceParametersSet(id)
+<a name="showServicePlan"></a>
+# **showServicePlan**
+> ServicePlan showServicePlan(id)
 
-Show an existing ServiceParametersSet
+Show an existing ServicePlan
 
-Returns a ServiceParametersSet object
+Returns a ServicePlan object
 
 ### Example
 ```javascript
@@ -1776,9 +3270,9 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
-apiInstance.showServiceParametersSet(id).then((data) => {
+apiInstance.showServicePlan(id).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
 }, (error) => {
   console.error(error);
@@ -1790,11 +3284,11 @@ apiInstance.showServiceParametersSet(id).then((data) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
-[**ServiceParametersSet**](ServiceParametersSet.md)
+[**ServicePlan**](ServicePlan.md)
 
 ### Authorization
 
@@ -1825,7 +3319,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
 apiInstance.showSource(id).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
@@ -1839,7 +3333,7 @@ apiInstance.showSource(id).then((data) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
@@ -1852,6 +3346,349 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
  - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="showSourceType"></a>
+# **showSourceType**
+> SourceType showSourceType(id)
+
+Show an existing SourceType
+
+Returns a SourceType object
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let id = "id_example"; // String | ID of the resource
+
+apiInstance.showSourceType(id).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**| ID of the resource | 
+
+### Return type
+
+[**SourceType**](SourceType.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="showTask"></a>
+# **showTask**
+> Task showTask(id)
+
+Show an existing Task
+
+Returns a Task object
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let id = "id_example"; // String | ID of the resource
+
+apiInstance.showTask(id).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**| ID of the resource | 
+
+### Return type
+
+[**Task**](Task.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="showVm"></a>
+# **showVm**
+> Vm showVm(id)
+
+Show an existing Vm
+
+Returns a Vm object
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let id = "id_example"; // String | ID of the resource
+
+apiInstance.showVm(id).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**| ID of the resource | 
+
+### Return type
+
+[**Vm**](Vm.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="showVolume"></a>
+# **showVolume**
+> Volume showVolume(id)
+
+Show an existing Volume
+
+Returns a Volume object
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let id = "id_example"; // String | ID of the resource
+
+apiInstance.showVolume(id).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**| ID of the resource | 
+
+### Return type
+
+[**Volume**](Volume.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="showVolumeAttachment"></a>
+# **showVolumeAttachment**
+> VolumeAttachment showVolumeAttachment(id)
+
+Show an existing VolumeAttachment
+
+Returns a VolumeAttachment object
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let id = "id_example"; // String | ID of the resource
+
+apiInstance.showVolumeAttachment(id).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**| ID of the resource | 
+
+### Return type
+
+[**VolumeAttachment**](VolumeAttachment.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="showVolumeType"></a>
+# **showVolumeType**
+> VolumeType showVolumeType(id)
+
+Show an existing VolumeType
+
+Returns a VolumeType object
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let id = "id_example"; // String | ID of the resource
+
+apiInstance.showVolumeType(id).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**| ID of the resource | 
+
+### Return type
+
+[**VolumeType**](VolumeType.md)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="updateAuthentication"></a>
+# **updateAuthentication**
+> updateAuthentication(id)
+
+Update an existing Authentication
+
+Updates a Authentication object
+
+### Example
+```javascript
+import TopologicalInventory from 'topological_inventory';
+let defaultClient = TopologicalInventory.ApiClient.instance;
+
+// Configure HTTP basic authorization: UserSecurity
+let UserSecurity = defaultClient.authentications['UserSecurity'];
+UserSecurity.username = 'YOUR USERNAME';
+UserSecurity.password = 'YOUR PASSWORD';
+
+let apiInstance = new TopologicalInventory.DefaultApi();
+
+let id = "id_example"; // String | ID of the resource
+
+apiInstance.updateAuthentication(id).then(() => {
+  console.log('API called successfully.');
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**| ID of the resource | 
+
+### Return type
+
+null (empty response body)
+
+### Authorization
+
+[UserSecurity](../README.md#UserSecurity)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="updateEndpoint"></a>
@@ -1874,7 +3711,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
 apiInstance.updateEndpoint(id).then(() => {
   console.log('API called successfully.');
@@ -1888,7 +3725,7 @@ apiInstance.updateEndpoint(id).then(() => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 
@@ -1923,7 +3760,7 @@ UserSecurity.password = 'YOUR PASSWORD';
 
 let apiInstance = new TopologicalInventory.DefaultApi();
 
-let id = "id_example"; // String | ID of the resource to return
+let id = "id_example"; // String | ID of the resource
 
 apiInstance.updateSource(id).then(() => {
   console.log('API called successfully.');
@@ -1937,7 +3774,7 @@ apiInstance.updateSource(id).then(() => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**String**](.md)| ID of the resource to return | 
+ **id** | **String**| ID of the resource | 
 
 ### Return type
 

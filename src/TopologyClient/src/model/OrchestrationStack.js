@@ -19,14 +19,14 @@ import ApiClient from '../ApiClient';
 
 
 /**
-* The ContainerNode model module.
-* @module model/ContainerNode
+* The OrchestrationStack model module.
+* @module model/OrchestrationStack
 * @version 0.0.1
 */
-export default class ContainerNode {
+export default class OrchestrationStack {
     /**
-    * Constructs a new <code>ContainerNode</code>.
-    * @alias module:model/ContainerNode
+    * Constructs a new <code>OrchestrationStack</code>.
+    * @alias module:model/OrchestrationStack
     * @class
     */
 
@@ -42,15 +42,15 @@ export default class ContainerNode {
     }
 
     /**
-    * Constructs a <code>ContainerNode</code> from a plain JavaScript object, optionally creating a new instance.
+    * Constructs a <code>OrchestrationStack</code> from a plain JavaScript object, optionally creating a new instance.
     * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
     * @param {Object} data The plain JavaScript object bearing properties of interest.
-    * @param {module:model/ContainerNode} obj Optional instance to populate.
-    * @return {module:model/ContainerNode} The populated <code>ContainerNode</code> instance.
+    * @param {module:model/OrchestrationStack} obj Optional instance to populate.
+    * @return {module:model/OrchestrationStack} The populated <code>OrchestrationStack</code> instance.
     */
     static constructFromObject(data, obj) {
         if (data) {
-            obj = obj || new ContainerNode();
+            obj = obj || new OrchestrationStack();
 
             
             
@@ -62,14 +62,8 @@ export default class ContainerNode {
             if (data.hasOwnProperty('name')) {
                 obj['name'] = ApiClient.convertToType(data['name'], 'String');
             }
-            if (data.hasOwnProperty('cpus')) {
-                obj['cpus'] = ApiClient.convertToType(data['cpus'], 'Number');
-            }
-            if (data.hasOwnProperty('lives_on_type')) {
-                obj['lives_on_type'] = ApiClient.convertToType(data['lives_on_type'], 'String');
-            }
-            if (data.hasOwnProperty('memory')) {
-                obj['memory'] = ApiClient.convertToType(data['memory'], 'Number');
+            if (data.hasOwnProperty('description')) {
+                obj['description'] = ApiClient.convertToType(data['description'], 'String');
             }
             if (data.hasOwnProperty('source_created_at')) {
                 obj['source_created_at'] = ApiClient.convertToType(data['source_created_at'], 'Date');
@@ -99,17 +93,10 @@ export default class ContainerNode {
     */
     name = undefined;
     /**
-    * @member {Number} cpus
+    * Description of the OrchestrationStack
+    * @member {String} description
     */
-    cpus = undefined;
-    /**
-    * @member {String} lives_on_type
-    */
-    lives_on_type = undefined;
-    /**
-    * @member {Number} memory
-    */
-    memory = undefined;
+    description = undefined;
     /**
     * @member {Date} source_created_at
     */

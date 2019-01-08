@@ -13,16 +13,29 @@
 
 
 import ApiClient from "../ApiClient";
+import Authentication from '../model/Authentication';
+import Container from '../model/Container';
 import ContainerGroup from '../model/ContainerGroup';
+import ContainerImage from '../model/ContainerImage';
 import ContainerNode from '../model/ContainerNode';
 import ContainerProject from '../model/ContainerProject';
 import ContainerTemplate from '../model/ContainerTemplate';
 import Endpoint from '../model/Endpoint';
+import Flavor from '../model/Flavor';
 import Id from '../model/Id';
+import InlineResponse200 from '../model/InlineResponse200';
+import OrchestrationStack from '../model/OrchestrationStack';
+import OrderParameters from '../model/OrderParameters';
 import ServiceInstance from '../model/ServiceInstance';
 import ServiceOffering from '../model/ServiceOffering';
-import ServiceParametersSet from '../model/ServiceParametersSet';
+import ServicePlan from '../model/ServicePlan';
 import Source from '../model/Source';
+import SourceType from '../model/SourceType';
+import Task from '../model/Task';
+import Vm from '../model/Vm';
+import Volume from '../model/Volume';
+import VolumeAttachment from '../model/VolumeAttachment';
+import VolumeType from '../model/VolumeType';
 
 /**
 * Default service.
@@ -45,9 +58,59 @@ export default class DefaultApi {
 
 
     /**
+     * Create a new Authentication
+     * Creates a Authentication object
+     * @param {module:model/ID} body 
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Object} and HTTP response
+     */
+    createAuthenticationWithHttpInfo(body) {
+      let postBody = body;
+
+      // verify the required parameter 'body' is set
+      if (body === undefined || body === null) {
+        throw new Error("Missing the required parameter 'body' when calling createAuthentication");
+      }
+
+
+      let pathParams = {
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = ['application/json'];
+      let accepts = ['application/json'];
+      let returnType = Object;
+
+      return this.apiClient.callApi(
+        '/authentications', 'POST',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * Create a new Authentication
+     * Creates a Authentication object
+     * @param {module:model/ID} body 
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Object}
+     */
+    createAuthentication(body) {
+      return this.createAuthenticationWithHttpInfo(body)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
      * Create a new Endpoint
      * Creates a Endpoint object
-     * @param {module:model/Id} body 
+     * @param {module:model/ID} body 
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Object} and HTTP response
      */
     createEndpointWithHttpInfo(body) {
@@ -83,7 +146,7 @@ export default class DefaultApi {
     /**
      * Create a new Endpoint
      * Creates a Endpoint object
-     * @param {module:model/Id} body 
+     * @param {module:model/ID} body 
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Object}
      */
     createEndpoint(body) {
@@ -97,7 +160,7 @@ export default class DefaultApi {
     /**
      * Create a new Source
      * Creates a Source object
-     * @param {module:model/Id} body 
+     * @param {module:model/ID} body 
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Object} and HTTP response
      */
     createSourceWithHttpInfo(body) {
@@ -133,7 +196,7 @@ export default class DefaultApi {
     /**
      * Create a new Source
      * Creates a Source object
-     * @param {module:model/Id} body 
+     * @param {module:model/ID} body 
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Object}
      */
     createSource(body) {
@@ -145,9 +208,110 @@ export default class DefaultApi {
 
 
     /**
+     * Create a new SourceType
+     * Creates a SourceType object
+     * @param {module:model/ID} body 
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Object} and HTTP response
+     */
+    createSourceTypeWithHttpInfo(body) {
+      let postBody = body;
+
+      // verify the required parameter 'body' is set
+      if (body === undefined || body === null) {
+        throw new Error("Missing the required parameter 'body' when calling createSourceType");
+      }
+
+
+      let pathParams = {
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = ['application/json'];
+      let accepts = ['application/json'];
+      let returnType = Object;
+
+      return this.apiClient.callApi(
+        '/source_types', 'POST',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * Create a new SourceType
+     * Creates a SourceType object
+     * @param {module:model/ID} body 
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Object}
+     */
+    createSourceType(body) {
+      return this.createSourceTypeWithHttpInfo(body)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * Delete an existing Authentication
+     * Deletes a Authentication object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing HTTP response
+     */
+    deleteAuthenticationWithHttpInfo(id) {
+      let postBody = null;
+
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling deleteAuthentication");
+      }
+
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = null;
+
+      return this.apiClient.callApi(
+        '/authentications/{id}', 'DELETE',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * Delete an existing Authentication
+     * Deletes a Authentication object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}
+     */
+    deleteAuthentication(id) {
+      return this.deleteAuthenticationWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
      * Delete an existing Endpoint
      * Deletes a Endpoint object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing HTTP response
      */
     deleteEndpointWithHttpInfo(id) {
@@ -184,7 +348,7 @@ export default class DefaultApi {
     /**
      * Delete an existing Endpoint
      * Deletes a Endpoint object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}
      */
     deleteEndpoint(id) {
@@ -198,7 +362,7 @@ export default class DefaultApi {
     /**
      * Delete an existing Source
      * Deletes a Source object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing HTTP response
      */
     deleteSourceWithHttpInfo(id) {
@@ -235,11 +399,105 @@ export default class DefaultApi {
     /**
      * Delete an existing Source
      * Deletes a Source object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}
      */
     deleteSource(id) {
       return this.deleteSourceWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * List Authentications
+     * Returns an array of Authentication objects
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/Authentication>} and HTTP response
+     */
+    listAuthenticationsWithHttpInfo() {
+      let postBody = null;
+
+
+      let pathParams = {
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = [Authentication];
+
+      return this.apiClient.callApi(
+        '/authentications', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * List Authentications
+     * Returns an array of Authentication objects
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/Authentication>}
+     */
+    listAuthentications() {
+      return this.listAuthenticationsWithHttpInfo()
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * List Containers for ContainerGroup
+     * Returns an array of Container objects
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/Container>} and HTTP response
+     */
+    listContainerGroupContainersWithHttpInfo(id) {
+      let postBody = null;
+
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling listContainerGroupContainers");
+      }
+
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = [Container];
+
+      return this.apiClient.callApi(
+        '/container_groups/{id}/containers', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * List Containers for ContainerGroup
+     * Returns an array of Container objects
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/Container>}
+     */
+    listContainerGroupContainers(id) {
+      return this.listContainerGroupContainersWithHttpInfo(id)
         .then(function(response_and_data) {
           return response_and_data.data;
         });
@@ -290,9 +548,52 @@ export default class DefaultApi {
 
 
     /**
+     * List ContainerImages
+     * Returns an array of ContainerImage objects
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/ContainerImage>} and HTTP response
+     */
+    listContainerImagesWithHttpInfo() {
+      let postBody = null;
+
+
+      let pathParams = {
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = [ContainerImage];
+
+      return this.apiClient.callApi(
+        '/container_images', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * List ContainerImages
+     * Returns an array of ContainerImage objects
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/ContainerImage>}
+     */
+    listContainerImages() {
+      return this.listContainerImagesWithHttpInfo()
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
      * List ContainerGroups for ContainerNode
      * Returns an array of ContainerGroup objects
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/ContainerGroup>} and HTTP response
      */
     listContainerNodeContainerGroupsWithHttpInfo(id) {
@@ -329,7 +630,7 @@ export default class DefaultApi {
     /**
      * List ContainerGroups for ContainerNode
      * Returns an array of ContainerGroup objects
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/ContainerGroup>}
      */
     listContainerNodeContainerGroups(id) {
@@ -386,7 +687,7 @@ export default class DefaultApi {
     /**
      * List ContainerGroups for ContainerProject
      * Returns an array of ContainerGroup objects
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/ContainerGroup>} and HTTP response
      */
     listContainerProjectContainerGroupsWithHttpInfo(id) {
@@ -423,7 +724,7 @@ export default class DefaultApi {
     /**
      * List ContainerGroups for ContainerProject
      * Returns an array of ContainerGroup objects
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/ContainerGroup>}
      */
     listContainerProjectContainerGroups(id) {
@@ -437,7 +738,7 @@ export default class DefaultApi {
     /**
      * List ContainerTemplates for ContainerProject
      * Returns an array of ContainerTemplate objects
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/ContainerTemplate>} and HTTP response
      */
     listContainerProjectContainerTemplatesWithHttpInfo(id) {
@@ -474,7 +775,7 @@ export default class DefaultApi {
     /**
      * List ContainerTemplates for ContainerProject
      * Returns an array of ContainerTemplate objects
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/ContainerTemplate>}
      */
     listContainerProjectContainerTemplates(id) {
@@ -572,6 +873,49 @@ export default class DefaultApi {
 
 
     /**
+     * List Containers
+     * Returns an array of Container objects
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/Container>} and HTTP response
+     */
+    listContainersWithHttpInfo() {
+      let postBody = null;
+
+
+      let pathParams = {
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = [Container];
+
+      return this.apiClient.callApi(
+        '/containers', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * List Containers
+     * Returns an array of Container objects
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/Container>}
+     */
+    listContainers() {
+      return this.listContainersWithHttpInfo()
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
      * List Endpoints
      * Returns an array of Endpoint objects
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/Endpoint>} and HTTP response
@@ -608,6 +952,92 @@ export default class DefaultApi {
      */
     listEndpoints() {
       return this.listEndpointsWithHttpInfo()
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * List Flavors
+     * Returns an array of Flavor objects
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/Flavor>} and HTTP response
+     */
+    listFlavorsWithHttpInfo() {
+      let postBody = null;
+
+
+      let pathParams = {
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = [Flavor];
+
+      return this.apiClient.callApi(
+        '/flavors', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * List Flavors
+     * Returns an array of Flavor objects
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/Flavor>}
+     */
+    listFlavors() {
+      return this.listFlavorsWithHttpInfo()
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * List OrchestrationStacks
+     * Returns an array of OrchestrationStack objects
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/OrchestrationStack>} and HTTP response
+     */
+    listOrchestrationStacksWithHttpInfo() {
+      let postBody = null;
+
+
+      let pathParams = {
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = [OrchestrationStack];
+
+      return this.apiClient.callApi(
+        '/orchestration_stacks', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * List OrchestrationStacks
+     * Returns an array of OrchestrationStack objects
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/OrchestrationStack>}
+     */
+    listOrchestrationStacks() {
+      return this.listOrchestrationStacksWithHttpInfo()
         .then(function(response_and_data) {
           return response_and_data.data;
         });
@@ -660,7 +1090,7 @@ export default class DefaultApi {
     /**
      * List ServiceInstances for ServiceOffering
      * Returns an array of ServiceInstance objects
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/ServiceInstance>} and HTTP response
      */
     listServiceOfferingServiceInstancesWithHttpInfo(id) {
@@ -697,7 +1127,7 @@ export default class DefaultApi {
     /**
      * List ServiceInstances for ServiceOffering
      * Returns an array of ServiceInstance objects
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/ServiceInstance>}
      */
     listServiceOfferingServiceInstances(id) {
@@ -709,17 +1139,17 @@ export default class DefaultApi {
 
 
     /**
-     * List ServiceParametersSets for ServiceOffering
-     * Returns an array of ServiceParametersSet objects
-     * @param {String} id ID of the resource to return
-     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/ServiceParametersSet>} and HTTP response
+     * List ServicePlans for ServiceOffering
+     * Returns an array of ServicePlan objects
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/ServicePlan>} and HTTP response
      */
-    listServiceOfferingServiceParametersSetsWithHttpInfo(id) {
+    listServiceOfferingServicePlansWithHttpInfo(id) {
       let postBody = null;
 
       // verify the required parameter 'id' is set
       if (id === undefined || id === null) {
-        throw new Error("Missing the required parameter 'id' when calling listServiceOfferingServiceParametersSets");
+        throw new Error("Missing the required parameter 'id' when calling listServiceOfferingServicePlans");
       }
 
 
@@ -736,23 +1166,23 @@ export default class DefaultApi {
       let authNames = ['UserSecurity'];
       let contentTypes = [];
       let accepts = ['application/json'];
-      let returnType = [ServiceParametersSet];
+      let returnType = [ServicePlan];
 
       return this.apiClient.callApi(
-        '/service_offerings/{id}/service_parameters_sets', 'GET',
+        '/service_offerings/{id}/service_plans', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType
       );
     }
 
     /**
-     * List ServiceParametersSets for ServiceOffering
-     * Returns an array of ServiceParametersSet objects
-     * @param {String} id ID of the resource to return
-     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/ServiceParametersSet>}
+     * List ServicePlans for ServiceOffering
+     * Returns an array of ServicePlan objects
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/ServicePlan>}
      */
-    listServiceOfferingServiceParametersSets(id) {
-      return this.listServiceOfferingServiceParametersSetsWithHttpInfo(id)
+    listServiceOfferingServicePlans(id) {
+      return this.listServiceOfferingServicePlansWithHttpInfo(id)
         .then(function(response_and_data) {
           return response_and_data.data;
         });
@@ -803,17 +1233,17 @@ export default class DefaultApi {
 
 
     /**
-     * List ServiceInstances for ServiceParametersSet
+     * List ServiceInstances for ServicePlan
      * Returns an array of ServiceInstance objects
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/ServiceInstance>} and HTTP response
      */
-    listServiceParametersSetServiceInstancesWithHttpInfo(id) {
+    listServicePlanServiceInstancesWithHttpInfo(id) {
       let postBody = null;
 
       // verify the required parameter 'id' is set
       if (id === undefined || id === null) {
-        throw new Error("Missing the required parameter 'id' when calling listServiceParametersSetServiceInstances");
+        throw new Error("Missing the required parameter 'id' when calling listServicePlanServiceInstances");
       }
 
 
@@ -833,20 +1263,20 @@ export default class DefaultApi {
       let returnType = [ServiceInstance];
 
       return this.apiClient.callApi(
-        '/service_parameters_sets/{id}/service_instances', 'GET',
+        '/service_plans/{id}/service_instances', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType
       );
     }
 
     /**
-     * List ServiceInstances for ServiceParametersSet
+     * List ServiceInstances for ServicePlan
      * Returns an array of ServiceInstance objects
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/ServiceInstance>}
      */
-    listServiceParametersSetServiceInstances(id) {
-      return this.listServiceParametersSetServiceInstancesWithHttpInfo(id)
+    listServicePlanServiceInstances(id) {
+      return this.listServicePlanServiceInstancesWithHttpInfo(id)
         .then(function(response_and_data) {
           return response_and_data.data;
         });
@@ -854,11 +1284,11 @@ export default class DefaultApi {
 
 
     /**
-     * List ServiceParametersSets
-     * Returns an array of ServiceParametersSet objects
-     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/ServiceParametersSet>} and HTTP response
+     * List ServicePlans
+     * Returns an array of ServicePlan objects
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/ServicePlan>} and HTTP response
      */
-    listServiceParametersSetsWithHttpInfo() {
+    listServicePlansWithHttpInfo() {
       let postBody = null;
 
 
@@ -874,22 +1304,22 @@ export default class DefaultApi {
       let authNames = ['UserSecurity'];
       let contentTypes = [];
       let accepts = ['application/json'];
-      let returnType = [ServiceParametersSet];
+      let returnType = [ServicePlan];
 
       return this.apiClient.callApi(
-        '/service_parameters_sets', 'GET',
+        '/service_plans', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType
       );
     }
 
     /**
-     * List ServiceParametersSets
-     * Returns an array of ServiceParametersSet objects
-     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/ServiceParametersSet>}
+     * List ServicePlans
+     * Returns an array of ServicePlan objects
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/ServicePlan>}
      */
-    listServiceParametersSets() {
-      return this.listServiceParametersSetsWithHttpInfo()
+    listServicePlans() {
+      return this.listServicePlansWithHttpInfo()
         .then(function(response_and_data) {
           return response_and_data.data;
         });
@@ -899,7 +1329,7 @@ export default class DefaultApi {
     /**
      * List ContainerGroups for Source
      * Returns an array of ContainerGroup objects
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/ContainerGroup>} and HTTP response
      */
     listSourceContainerGroupsWithHttpInfo(id) {
@@ -936,7 +1366,7 @@ export default class DefaultApi {
     /**
      * List ContainerGroups for Source
      * Returns an array of ContainerGroup objects
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/ContainerGroup>}
      */
     listSourceContainerGroups(id) {
@@ -948,9 +1378,60 @@ export default class DefaultApi {
 
 
     /**
+     * List ContainerImages for Source
+     * Returns an array of ContainerImage objects
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/ContainerImage>} and HTTP response
+     */
+    listSourceContainerImagesWithHttpInfo(id) {
+      let postBody = null;
+
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling listSourceContainerImages");
+      }
+
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = [ContainerImage];
+
+      return this.apiClient.callApi(
+        '/sources/{id}/container_images', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * List ContainerImages for Source
+     * Returns an array of ContainerImage objects
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/ContainerImage>}
+     */
+    listSourceContainerImages(id) {
+      return this.listSourceContainerImagesWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
      * List ContainerNodes for Source
      * Returns an array of ContainerNode objects
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/ContainerNode>} and HTTP response
      */
     listSourceContainerNodesWithHttpInfo(id) {
@@ -987,7 +1468,7 @@ export default class DefaultApi {
     /**
      * List ContainerNodes for Source
      * Returns an array of ContainerNode objects
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/ContainerNode>}
      */
     listSourceContainerNodes(id) {
@@ -1001,7 +1482,7 @@ export default class DefaultApi {
     /**
      * List ContainerProjects for Source
      * Returns an array of ContainerProject objects
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/ContainerProject>} and HTTP response
      */
     listSourceContainerProjectsWithHttpInfo(id) {
@@ -1038,7 +1519,7 @@ export default class DefaultApi {
     /**
      * List ContainerProjects for Source
      * Returns an array of ContainerProject objects
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/ContainerProject>}
      */
     listSourceContainerProjects(id) {
@@ -1052,7 +1533,7 @@ export default class DefaultApi {
     /**
      * List ContainerTemplates for Source
      * Returns an array of ContainerTemplate objects
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/ContainerTemplate>} and HTTP response
      */
     listSourceContainerTemplatesWithHttpInfo(id) {
@@ -1089,7 +1570,7 @@ export default class DefaultApi {
     /**
      * List ContainerTemplates for Source
      * Returns an array of ContainerTemplate objects
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/ContainerTemplate>}
      */
     listSourceContainerTemplates(id) {
@@ -1101,9 +1582,60 @@ export default class DefaultApi {
 
 
     /**
+     * List Containers for Source
+     * Returns an array of Container objects
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/Container>} and HTTP response
+     */
+    listSourceContainersWithHttpInfo(id) {
+      let postBody = null;
+
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling listSourceContainers");
+      }
+
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = [Container];
+
+      return this.apiClient.callApi(
+        '/sources/{id}/containers', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * List Containers for Source
+     * Returns an array of Container objects
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/Container>}
+     */
+    listSourceContainers(id) {
+      return this.listSourceContainersWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
      * List Endpoints for Source
      * Returns an array of Endpoint objects
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/Endpoint>} and HTTP response
      */
     listSourceEndpointsWithHttpInfo(id) {
@@ -1140,7 +1672,7 @@ export default class DefaultApi {
     /**
      * List Endpoints for Source
      * Returns an array of Endpoint objects
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/Endpoint>}
      */
     listSourceEndpoints(id) {
@@ -1152,9 +1684,60 @@ export default class DefaultApi {
 
 
     /**
+     * List OrchestrationStacks for Source
+     * Returns an array of OrchestrationStack objects
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/OrchestrationStack>} and HTTP response
+     */
+    listSourceOrchestrationStacksWithHttpInfo(id) {
+      let postBody = null;
+
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling listSourceOrchestrationStacks");
+      }
+
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = [OrchestrationStack];
+
+      return this.apiClient.callApi(
+        '/sources/{id}/orchestration_stacks', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * List OrchestrationStacks for Source
+     * Returns an array of OrchestrationStack objects
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/OrchestrationStack>}
+     */
+    listSourceOrchestrationStacks(id) {
+      return this.listSourceOrchestrationStacksWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
      * List ServiceInstances for Source
      * Returns an array of ServiceInstance objects
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/ServiceInstance>} and HTTP response
      */
     listSourceServiceInstancesWithHttpInfo(id) {
@@ -1191,7 +1774,7 @@ export default class DefaultApi {
     /**
      * List ServiceInstances for Source
      * Returns an array of ServiceInstance objects
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/ServiceInstance>}
      */
     listSourceServiceInstances(id) {
@@ -1205,7 +1788,7 @@ export default class DefaultApi {
     /**
      * List ServiceOfferings for Source
      * Returns an array of ServiceOffering objects
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/ServiceOffering>} and HTTP response
      */
     listSourceServiceOfferingsWithHttpInfo(id) {
@@ -1242,7 +1825,7 @@ export default class DefaultApi {
     /**
      * List ServiceOfferings for Source
      * Returns an array of ServiceOffering objects
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/ServiceOffering>}
      */
     listSourceServiceOfferings(id) {
@@ -1254,17 +1837,17 @@ export default class DefaultApi {
 
 
     /**
-     * List ServiceParametersSets for Source
-     * Returns an array of ServiceParametersSet objects
-     * @param {String} id ID of the resource to return
-     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/ServiceParametersSet>} and HTTP response
+     * List ServicePlans for Source
+     * Returns an array of ServicePlan objects
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/ServicePlan>} and HTTP response
      */
-    listSourceServiceParametersSetsWithHttpInfo(id) {
+    listSourceServicePlansWithHttpInfo(id) {
       let postBody = null;
 
       // verify the required parameter 'id' is set
       if (id === undefined || id === null) {
-        throw new Error("Missing the required parameter 'id' when calling listSourceServiceParametersSets");
+        throw new Error("Missing the required parameter 'id' when calling listSourceServicePlans");
       }
 
 
@@ -1281,23 +1864,270 @@ export default class DefaultApi {
       let authNames = ['UserSecurity'];
       let contentTypes = [];
       let accepts = ['application/json'];
-      let returnType = [ServiceParametersSet];
+      let returnType = [ServicePlan];
 
       return this.apiClient.callApi(
-        '/sources/{id}/service_parameters_sets', 'GET',
+        '/sources/{id}/service_plans', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType
       );
     }
 
     /**
-     * List ServiceParametersSets for Source
-     * Returns an array of ServiceParametersSet objects
-     * @param {String} id ID of the resource to return
-     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/ServiceParametersSet>}
+     * List ServicePlans for Source
+     * Returns an array of ServicePlan objects
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/ServicePlan>}
      */
-    listSourceServiceParametersSets(id) {
-      return this.listSourceServiceParametersSetsWithHttpInfo(id)
+    listSourceServicePlans(id) {
+      return this.listSourceServicePlansWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * List Sources for SourceType
+     * Returns an array of Source objects
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/Source>} and HTTP response
+     */
+    listSourceTypeSourcesWithHttpInfo(id) {
+      let postBody = null;
+
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling listSourceTypeSources");
+      }
+
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = [Source];
+
+      return this.apiClient.callApi(
+        '/source_types/{id}/sources', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * List Sources for SourceType
+     * Returns an array of Source objects
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/Source>}
+     */
+    listSourceTypeSources(id) {
+      return this.listSourceTypeSourcesWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * List SourceTypes
+     * Returns an array of SourceType objects
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/SourceType>} and HTTP response
+     */
+    listSourceTypesWithHttpInfo() {
+      let postBody = null;
+
+
+      let pathParams = {
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = [SourceType];
+
+      return this.apiClient.callApi(
+        '/source_types', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * List SourceTypes
+     * Returns an array of SourceType objects
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/SourceType>}
+     */
+    listSourceTypes() {
+      return this.listSourceTypesWithHttpInfo()
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * List Vms for Source
+     * Returns an array of Vm objects
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/Vm>} and HTTP response
+     */
+    listSourceVmsWithHttpInfo(id) {
+      let postBody = null;
+
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling listSourceVms");
+      }
+
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = [Vm];
+
+      return this.apiClient.callApi(
+        '/sources/{id}/vms', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * List Vms for Source
+     * Returns an array of Vm objects
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/Vm>}
+     */
+    listSourceVms(id) {
+      return this.listSourceVmsWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * List VolumeTypes for Source
+     * Returns an array of VolumeType objects
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/VolumeType>} and HTTP response
+     */
+    listSourceVolumeTypesWithHttpInfo(id) {
+      let postBody = null;
+
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling listSourceVolumeTypes");
+      }
+
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = [VolumeType];
+
+      return this.apiClient.callApi(
+        '/sources/{id}/volume_types', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * List VolumeTypes for Source
+     * Returns an array of VolumeType objects
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/VolumeType>}
+     */
+    listSourceVolumeTypes(id) {
+      return this.listSourceVolumeTypesWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * List Volumes for Source
+     * Returns an array of Volume objects
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/Volume>} and HTTP response
+     */
+    listSourceVolumesWithHttpInfo(id) {
+      let postBody = null;
+
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling listSourceVolumes");
+      }
+
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = [Volume];
+
+      return this.apiClient.callApi(
+        '/sources/{id}/volumes', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * List Volumes for Source
+     * Returns an array of Volume objects
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/Volume>}
+     */
+    listSourceVolumes(id) {
+      return this.listSourceVolumesWithHttpInfo(id)
         .then(function(response_and_data) {
           return response_and_data.data;
         });
@@ -1348,9 +2178,435 @@ export default class DefaultApi {
 
 
     /**
+     * List Tasks
+     * Returns an array of Task objects
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/Task>} and HTTP response
+     */
+    listTasksWithHttpInfo() {
+      let postBody = null;
+
+
+      let pathParams = {
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = [Task];
+
+      return this.apiClient.callApi(
+        '/tasks', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * List Tasks
+     * Returns an array of Task objects
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/Task>}
+     */
+    listTasks() {
+      return this.listTasksWithHttpInfo()
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * List VolumeAttachments for Vm
+     * Returns an array of VolumeAttachment objects
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/VolumeAttachment>} and HTTP response
+     */
+    listVmVolumeAttachmentsWithHttpInfo(id) {
+      let postBody = null;
+
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling listVmVolumeAttachments");
+      }
+
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = [VolumeAttachment];
+
+      return this.apiClient.callApi(
+        '/vms/{id}/volume_attachments', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * List VolumeAttachments for Vm
+     * Returns an array of VolumeAttachment objects
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/VolumeAttachment>}
+     */
+    listVmVolumeAttachments(id) {
+      return this.listVmVolumeAttachmentsWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * List Volumes for Vm
+     * Returns an array of Volume objects
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/Volume>} and HTTP response
+     */
+    listVmVolumesWithHttpInfo(id) {
+      let postBody = null;
+
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling listVmVolumes");
+      }
+
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = [Volume];
+
+      return this.apiClient.callApi(
+        '/vms/{id}/volumes', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * List Volumes for Vm
+     * Returns an array of Volume objects
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/Volume>}
+     */
+    listVmVolumes(id) {
+      return this.listVmVolumesWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * List Vms
+     * Returns an array of Vm objects
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/Vm>} and HTTP response
+     */
+    listVmsWithHttpInfo() {
+      let postBody = null;
+
+
+      let pathParams = {
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = [Vm];
+
+      return this.apiClient.callApi(
+        '/vms', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * List Vms
+     * Returns an array of Vm objects
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/Vm>}
+     */
+    listVms() {
+      return this.listVmsWithHttpInfo()
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * List VolumeAttachments
+     * Returns an array of VolumeAttachment objects
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/VolumeAttachment>} and HTTP response
+     */
+    listVolumeAttachmentsWithHttpInfo() {
+      let postBody = null;
+
+
+      let pathParams = {
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = [VolumeAttachment];
+
+      return this.apiClient.callApi(
+        '/volume_attachments', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * List VolumeAttachments
+     * Returns an array of VolumeAttachment objects
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/VolumeAttachment>}
+     */
+    listVolumeAttachments() {
+      return this.listVolumeAttachmentsWithHttpInfo()
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * List VolumeTypes
+     * Returns an array of VolumeType objects
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/VolumeType>} and HTTP response
+     */
+    listVolumeTypesWithHttpInfo() {
+      let postBody = null;
+
+
+      let pathParams = {
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = [VolumeType];
+
+      return this.apiClient.callApi(
+        '/volume_types', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * List VolumeTypes
+     * Returns an array of VolumeType objects
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/VolumeType>}
+     */
+    listVolumeTypes() {
+      return this.listVolumeTypesWithHttpInfo()
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * List Volumes
+     * Returns an array of Volume objects
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/Volume>} and HTTP response
+     */
+    listVolumesWithHttpInfo() {
+      let postBody = null;
+
+
+      let pathParams = {
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = [Volume];
+
+      return this.apiClient.callApi(
+        '/volumes', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * List Volumes
+     * Returns an array of Volume objects
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/Volume>}
+     */
+    listVolumes() {
+      return this.listVolumesWithHttpInfo()
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * Order an existing ServicePlan
+     * Returns a Task id
+     * @param {String} id ID of the resource
+     * @param {module:model/OrderParameters} parameters Order parameters defining the service and provider control
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link module:model/InlineResponse200} and HTTP response
+     */
+    orderServicePlanWithHttpInfo(id, parameters) {
+      let postBody = parameters;
+
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling orderServicePlan");
+      }
+
+      // verify the required parameter 'parameters' is set
+      if (parameters === undefined || parameters === null) {
+        throw new Error("Missing the required parameter 'parameters' when calling orderServicePlan");
+      }
+
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = ['application/json'];
+      let accepts = [];
+      let returnType = InlineResponse200;
+
+      return this.apiClient.callApi(
+        '/service_plans/{id}/order', 'POST',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * Order an existing ServicePlan
+     * Returns a Task id
+     * @param {String} id ID of the resource
+     * @param {module:model/OrderParameters} parameters Order parameters defining the service and provider control
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link module:model/InlineResponse200}
+     */
+    orderServicePlan(id, parameters) {
+      return this.orderServicePlanWithHttpInfo(id, parameters)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * Replace an existing Authentication
+     * Replaces a Authentication object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing HTTP response
+     */
+    replaceAuthenticationWithHttpInfo(id) {
+      let postBody = null;
+
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling replaceAuthentication");
+      }
+
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = ['application/json'];
+      let accepts = ['application/json'];
+      let returnType = null;
+
+      return this.apiClient.callApi(
+        '/authentications/{id}', 'PUT',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * Replace an existing Authentication
+     * Replaces a Authentication object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}
+     */
+    replaceAuthentication(id) {
+      return this.replaceAuthenticationWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
      * Replace an existing Endpoint
      * Replaces a Endpoint object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing HTTP response
      */
     replaceEndpointWithHttpInfo(id) {
@@ -1387,7 +2643,7 @@ export default class DefaultApi {
     /**
      * Replace an existing Endpoint
      * Replaces a Endpoint object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}
      */
     replaceEndpoint(id) {
@@ -1401,7 +2657,7 @@ export default class DefaultApi {
     /**
      * Replace an existing Source
      * Replaces a Source object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing HTTP response
      */
     replaceSourceWithHttpInfo(id) {
@@ -1438,7 +2694,7 @@ export default class DefaultApi {
     /**
      * Replace an existing Source
      * Replaces a Source object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}
      */
     replaceSource(id) {
@@ -1450,9 +2706,111 @@ export default class DefaultApi {
 
 
     /**
+     * Show an existing Authentication
+     * Returns a Authentication object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link module:model/Authentication} and HTTP response
+     */
+    showAuthenticationWithHttpInfo(id) {
+      let postBody = null;
+
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling showAuthentication");
+      }
+
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = Authentication;
+
+      return this.apiClient.callApi(
+        '/authentications/{id}', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * Show an existing Authentication
+     * Returns a Authentication object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link module:model/Authentication}
+     */
+    showAuthentication(id) {
+      return this.showAuthenticationWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * Show an existing Container
+     * Returns a Container object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link module:model/Container} and HTTP response
+     */
+    showContainerWithHttpInfo(id) {
+      let postBody = null;
+
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling showContainer");
+      }
+
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = Container;
+
+      return this.apiClient.callApi(
+        '/containers/{id}', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * Show an existing Container
+     * Returns a Container object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link module:model/Container}
+     */
+    showContainer(id) {
+      return this.showContainerWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
      * Show an existing ContainerGroup
      * Returns a ContainerGroup object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link module:model/ContainerGroup} and HTTP response
      */
     showContainerGroupWithHttpInfo(id) {
@@ -1489,7 +2847,7 @@ export default class DefaultApi {
     /**
      * Show an existing ContainerGroup
      * Returns a ContainerGroup object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link module:model/ContainerGroup}
      */
     showContainerGroup(id) {
@@ -1501,9 +2859,60 @@ export default class DefaultApi {
 
 
     /**
+     * Show an existing ContainerImage
+     * Returns a ContainerImage object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link module:model/ContainerImage} and HTTP response
+     */
+    showContainerImageWithHttpInfo(id) {
+      let postBody = null;
+
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling showContainerImage");
+      }
+
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = ContainerImage;
+
+      return this.apiClient.callApi(
+        '/container_images/{id}', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * Show an existing ContainerImage
+     * Returns a ContainerImage object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link module:model/ContainerImage}
+     */
+    showContainerImage(id) {
+      return this.showContainerImageWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
      * Show an existing ContainerNode
      * Returns a ContainerNode object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link module:model/ContainerNode} and HTTP response
      */
     showContainerNodeWithHttpInfo(id) {
@@ -1540,7 +2949,7 @@ export default class DefaultApi {
     /**
      * Show an existing ContainerNode
      * Returns a ContainerNode object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link module:model/ContainerNode}
      */
     showContainerNode(id) {
@@ -1554,7 +2963,7 @@ export default class DefaultApi {
     /**
      * Show an existing ContainerProject
      * Returns a ContainerProject object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link module:model/ContainerProject} and HTTP response
      */
     showContainerProjectWithHttpInfo(id) {
@@ -1591,7 +3000,7 @@ export default class DefaultApi {
     /**
      * Show an existing ContainerProject
      * Returns a ContainerProject object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link module:model/ContainerProject}
      */
     showContainerProject(id) {
@@ -1605,7 +3014,7 @@ export default class DefaultApi {
     /**
      * Show an existing ContainerTemplate
      * Returns a ContainerTemplate object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link module:model/ContainerTemplate} and HTTP response
      */
     showContainerTemplateWithHttpInfo(id) {
@@ -1642,7 +3051,7 @@ export default class DefaultApi {
     /**
      * Show an existing ContainerTemplate
      * Returns a ContainerTemplate object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link module:model/ContainerTemplate}
      */
     showContainerTemplate(id) {
@@ -1656,7 +3065,7 @@ export default class DefaultApi {
     /**
      * Show an existing Endpoint
      * Returns a Endpoint object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link module:model/Endpoint} and HTTP response
      */
     showEndpointWithHttpInfo(id) {
@@ -1693,7 +3102,7 @@ export default class DefaultApi {
     /**
      * Show an existing Endpoint
      * Returns a Endpoint object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link module:model/Endpoint}
      */
     showEndpoint(id) {
@@ -1705,9 +3114,111 @@ export default class DefaultApi {
 
 
     /**
+     * Show an existing Flavor
+     * Returns a Flavor object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link module:model/Flavor} and HTTP response
+     */
+    showFlavorWithHttpInfo(id) {
+      let postBody = null;
+
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling showFlavor");
+      }
+
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = Flavor;
+
+      return this.apiClient.callApi(
+        '/flavors/{id}', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * Show an existing Flavor
+     * Returns a Flavor object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link module:model/Flavor}
+     */
+    showFlavor(id) {
+      return this.showFlavorWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * Show an existing OrchestrationStack
+     * Returns a OrchestrationStack object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link module:model/OrchestrationStack} and HTTP response
+     */
+    showOrchestrationStackWithHttpInfo(id) {
+      let postBody = null;
+
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling showOrchestrationStack");
+      }
+
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = OrchestrationStack;
+
+      return this.apiClient.callApi(
+        '/orchestration_stacks/{id}', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * Show an existing OrchestrationStack
+     * Returns a OrchestrationStack object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link module:model/OrchestrationStack}
+     */
+    showOrchestrationStack(id) {
+      return this.showOrchestrationStackWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
      * Show an existing ServiceInstance
      * Returns a ServiceInstance object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link module:model/ServiceInstance} and HTTP response
      */
     showServiceInstanceWithHttpInfo(id) {
@@ -1744,7 +3255,7 @@ export default class DefaultApi {
     /**
      * Show an existing ServiceInstance
      * Returns a ServiceInstance object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link module:model/ServiceInstance}
      */
     showServiceInstance(id) {
@@ -1758,7 +3269,7 @@ export default class DefaultApi {
     /**
      * Show an existing ServiceOffering
      * Returns a ServiceOffering object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link module:model/ServiceOffering} and HTTP response
      */
     showServiceOfferingWithHttpInfo(id) {
@@ -1795,7 +3306,7 @@ export default class DefaultApi {
     /**
      * Show an existing ServiceOffering
      * Returns a ServiceOffering object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link module:model/ServiceOffering}
      */
     showServiceOffering(id) {
@@ -1807,17 +3318,17 @@ export default class DefaultApi {
 
 
     /**
-     * Show an existing ServiceParametersSet
-     * Returns a ServiceParametersSet object
-     * @param {String} id ID of the resource to return
-     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link module:model/ServiceParametersSet} and HTTP response
+     * Show an existing ServicePlan
+     * Returns a ServicePlan object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link module:model/ServicePlan} and HTTP response
      */
-    showServiceParametersSetWithHttpInfo(id) {
+    showServicePlanWithHttpInfo(id) {
       let postBody = null;
 
       // verify the required parameter 'id' is set
       if (id === undefined || id === null) {
-        throw new Error("Missing the required parameter 'id' when calling showServiceParametersSet");
+        throw new Error("Missing the required parameter 'id' when calling showServicePlan");
       }
 
 
@@ -1834,23 +3345,23 @@ export default class DefaultApi {
       let authNames = ['UserSecurity'];
       let contentTypes = [];
       let accepts = ['application/json'];
-      let returnType = ServiceParametersSet;
+      let returnType = ServicePlan;
 
       return this.apiClient.callApi(
-        '/service_parameters_sets/{id}', 'GET',
+        '/service_plans/{id}', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType
       );
     }
 
     /**
-     * Show an existing ServiceParametersSet
-     * Returns a ServiceParametersSet object
-     * @param {String} id ID of the resource to return
-     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link module:model/ServiceParametersSet}
+     * Show an existing ServicePlan
+     * Returns a ServicePlan object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link module:model/ServicePlan}
      */
-    showServiceParametersSet(id) {
-      return this.showServiceParametersSetWithHttpInfo(id)
+    showServicePlan(id) {
+      return this.showServicePlanWithHttpInfo(id)
         .then(function(response_and_data) {
           return response_and_data.data;
         });
@@ -1860,7 +3371,7 @@ export default class DefaultApi {
     /**
      * Show an existing Source
      * Returns a Source object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link module:model/Source} and HTTP response
      */
     showSourceWithHttpInfo(id) {
@@ -1897,7 +3408,7 @@ export default class DefaultApi {
     /**
      * Show an existing Source
      * Returns a Source object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link module:model/Source}
      */
     showSource(id) {
@@ -1909,9 +3420,366 @@ export default class DefaultApi {
 
 
     /**
+     * Show an existing SourceType
+     * Returns a SourceType object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link module:model/SourceType} and HTTP response
+     */
+    showSourceTypeWithHttpInfo(id) {
+      let postBody = null;
+
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling showSourceType");
+      }
+
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = SourceType;
+
+      return this.apiClient.callApi(
+        '/source_types/{id}', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * Show an existing SourceType
+     * Returns a SourceType object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link module:model/SourceType}
+     */
+    showSourceType(id) {
+      return this.showSourceTypeWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * Show an existing Task
+     * Returns a Task object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link module:model/Task} and HTTP response
+     */
+    showTaskWithHttpInfo(id) {
+      let postBody = null;
+
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling showTask");
+      }
+
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = Task;
+
+      return this.apiClient.callApi(
+        '/tasks/{id}', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * Show an existing Task
+     * Returns a Task object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link module:model/Task}
+     */
+    showTask(id) {
+      return this.showTaskWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * Show an existing Vm
+     * Returns a Vm object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link module:model/Vm} and HTTP response
+     */
+    showVmWithHttpInfo(id) {
+      let postBody = null;
+
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling showVm");
+      }
+
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = Vm;
+
+      return this.apiClient.callApi(
+        '/vms/{id}', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * Show an existing Vm
+     * Returns a Vm object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link module:model/Vm}
+     */
+    showVm(id) {
+      return this.showVmWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * Show an existing Volume
+     * Returns a Volume object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link module:model/Volume} and HTTP response
+     */
+    showVolumeWithHttpInfo(id) {
+      let postBody = null;
+
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling showVolume");
+      }
+
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = Volume;
+
+      return this.apiClient.callApi(
+        '/volumes/{id}', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * Show an existing Volume
+     * Returns a Volume object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link module:model/Volume}
+     */
+    showVolume(id) {
+      return this.showVolumeWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * Show an existing VolumeAttachment
+     * Returns a VolumeAttachment object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link module:model/VolumeAttachment} and HTTP response
+     */
+    showVolumeAttachmentWithHttpInfo(id) {
+      let postBody = null;
+
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling showVolumeAttachment");
+      }
+
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = VolumeAttachment;
+
+      return this.apiClient.callApi(
+        '/volume_attachments/{id}', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * Show an existing VolumeAttachment
+     * Returns a VolumeAttachment object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link module:model/VolumeAttachment}
+     */
+    showVolumeAttachment(id) {
+      return this.showVolumeAttachmentWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * Show an existing VolumeType
+     * Returns a VolumeType object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link module:model/VolumeType} and HTTP response
+     */
+    showVolumeTypeWithHttpInfo(id) {
+      let postBody = null;
+
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling showVolumeType");
+      }
+
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = VolumeType;
+
+      return this.apiClient.callApi(
+        '/volume_types/{id}', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * Show an existing VolumeType
+     * Returns a VolumeType object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link module:model/VolumeType}
+     */
+    showVolumeType(id) {
+      return this.showVolumeTypeWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * Update an existing Authentication
+     * Updates a Authentication object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing HTTP response
+     */
+    updateAuthenticationWithHttpInfo(id) {
+      let postBody = null;
+
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling updateAuthentication");
+      }
+
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['UserSecurity'];
+      let contentTypes = ['application/json'];
+      let accepts = ['application/json'];
+      let returnType = null;
+
+      return this.apiClient.callApi(
+        '/authentications/{id}', 'PATCH',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * Update an existing Authentication
+     * Updates a Authentication object
+     * @param {String} id ID of the resource
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}
+     */
+    updateAuthentication(id) {
+      return this.updateAuthenticationWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
      * Update an existing Endpoint
      * Updates a Endpoint object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing HTTP response
      */
     updateEndpointWithHttpInfo(id) {
@@ -1948,7 +3816,7 @@ export default class DefaultApi {
     /**
      * Update an existing Endpoint
      * Updates a Endpoint object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}
      */
     updateEndpoint(id) {
@@ -1962,7 +3830,7 @@ export default class DefaultApi {
     /**
      * Update an existing Source
      * Updates a Source object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing HTTP response
      */
     updateSourceWithHttpInfo(id) {
@@ -1999,7 +3867,7 @@ export default class DefaultApi {
     /**
      * Update an existing Source
      * Updates a Source object
-     * @param {String} id ID of the resource to return
+     * @param {String} id ID of the resource
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}
      */
     updateSource(id) {

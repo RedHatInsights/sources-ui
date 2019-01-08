@@ -63,7 +63,7 @@ export default class ServiceInstance {
                 obj['name'] = ApiClient.convertToType(data['name'], 'String');
             }
             if (data.hasOwnProperty('extra')) {
-                obj['extra'] = ApiClient.convertToType(data['extra'], Object);
+                obj['extra'] = ApiClient.convertToType(data['extra'], 'String');
             }
             if (data.hasOwnProperty('source_created_at')) {
                 obj['source_created_at'] = ApiClient.convertToType(data['source_created_at'], 'Date');
@@ -96,7 +96,8 @@ export default class ServiceInstance {
     */
     name = undefined;
     /**
-    * @member {Object} extra
+    * Extra information about this object in JSON format
+    * @member {String} extra
     */
     extra = undefined;
     /**

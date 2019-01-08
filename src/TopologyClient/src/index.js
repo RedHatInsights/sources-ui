@@ -13,16 +13,28 @@
 
 
 import ApiClient from './ApiClient';
+import Authentication from './model/Authentication';
+import Container from './model/Container';
 import ContainerGroup from './model/ContainerGroup';
+import ContainerImage from './model/ContainerImage';
 import ContainerNode from './model/ContainerNode';
 import ContainerProject from './model/ContainerProject';
 import ContainerTemplate from './model/ContainerTemplate';
 import Endpoint from './model/Endpoint';
-import Id from './model/Id';
+import Flavor from './model/Flavor';
+import InlineResponse200 from './model/InlineResponse200';
+import OrchestrationStack from './model/OrchestrationStack';
+import OrderParameters from './model/OrderParameters';
 import ServiceInstance from './model/ServiceInstance';
 import ServiceOffering from './model/ServiceOffering';
-import ServiceParametersSet from './model/ServiceParametersSet';
+import ServicePlan from './model/ServicePlan';
 import Source from './model/Source';
+import SourceType from './model/SourceType';
+import Task from './model/Task';
+import Vm from './model/Vm';
+import Volume from './model/Volume';
+import VolumeAttachment from './model/VolumeAttachment';
+import VolumeType from './model/VolumeType';
 import DefaultApi from './api/DefaultApi';
 
 
@@ -65,10 +77,28 @@ export {
     ApiClient,
 
     /**
+     * The Authentication model constructor.
+     * @property {module:model/Authentication}
+     */
+    Authentication,
+
+    /**
+     * The Container model constructor.
+     * @property {module:model/Container}
+     */
+    Container,
+
+    /**
      * The ContainerGroup model constructor.
      * @property {module:model/ContainerGroup}
      */
     ContainerGroup,
+
+    /**
+     * The ContainerImage model constructor.
+     * @property {module:model/ContainerImage}
+     */
+    ContainerImage,
 
     /**
      * The ContainerNode model constructor.
@@ -95,10 +125,28 @@ export {
     Endpoint,
 
     /**
-     * The Id model constructor.
-     * @property {module:model/Id}
+     * The Flavor model constructor.
+     * @property {module:model/Flavor}
      */
-    Id,
+    Flavor,
+
+    /**
+     * The InlineResponse200 model constructor.
+     * @property {module:model/InlineResponse200}
+     */
+    InlineResponse200,
+
+    /**
+     * The OrchestrationStack model constructor.
+     * @property {module:model/OrchestrationStack}
+     */
+    OrchestrationStack,
+
+    /**
+     * The OrderParameters model constructor.
+     * @property {module:model/OrderParameters}
+     */
+    OrderParameters,
 
     /**
      * The ServiceInstance model constructor.
@@ -113,16 +161,52 @@ export {
     ServiceOffering,
 
     /**
-     * The ServiceParametersSet model constructor.
-     * @property {module:model/ServiceParametersSet}
+     * The ServicePlan model constructor.
+     * @property {module:model/ServicePlan}
      */
-    ServiceParametersSet,
+    ServicePlan,
 
     /**
      * The Source model constructor.
      * @property {module:model/Source}
      */
     Source,
+
+    /**
+     * The SourceType model constructor.
+     * @property {module:model/SourceType}
+     */
+    SourceType,
+
+    /**
+     * The Task model constructor.
+     * @property {module:model/Task}
+     */
+    Task,
+
+    /**
+     * The Vm model constructor.
+     * @property {module:model/Vm}
+     */
+    Vm,
+
+    /**
+     * The Volume model constructor.
+     * @property {module:model/Volume}
+     */
+    Volume,
+
+    /**
+     * The VolumeAttachment model constructor.
+     * @property {module:model/VolumeAttachment}
+     */
+    VolumeAttachment,
+
+    /**
+     * The VolumeType model constructor.
+     * @property {module:model/VolumeType}
+     */
+    VolumeType,
 
     /**
     * The DefaultApi service constructor.

@@ -19,14 +19,14 @@ import ApiClient from '../ApiClient';
 
 
 /**
-* The Source model module.
-* @module model/Source
+* The Task model module.
+* @module model/Task
 * @version 0.0.1
 */
-export default class Source {
+export default class Task {
     /**
-    * Constructs a new <code>Source</code>.
-    * @alias module:model/Source
+    * Constructs a new <code>Task</code>.
+    * @alias module:model/Task
     * @class
     */
 
@@ -42,15 +42,15 @@ export default class Source {
     }
 
     /**
-    * Constructs a <code>Source</code> from a plain JavaScript object, optionally creating a new instance.
+    * Constructs a <code>Task</code> from a plain JavaScript object, optionally creating a new instance.
     * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
     * @param {Object} data The plain JavaScript object bearing properties of interest.
-    * @param {module:model/Source} obj Optional instance to populate.
-    * @return {module:model/Source} The populated <code>Source</code> instance.
+    * @param {module:model/Task} obj Optional instance to populate.
+    * @return {module:model/Task} The populated <code>Task</code> instance.
     */
     static constructFromObject(data, obj) {
         if (data) {
-            obj = obj || new Source();
+            obj = obj || new Task();
 
             
             
@@ -59,14 +59,20 @@ export default class Source {
             if (data.hasOwnProperty('id')) {
                 obj['id'] = ApiClient.convertToType(data['id'], 'String');
             }
-            if (data.hasOwnProperty('source_type_id')) {
-                obj['source_type_id'] = ApiClient.convertToType(data['source_type_id'], 'String');
-            }
             if (data.hasOwnProperty('name')) {
                 obj['name'] = ApiClient.convertToType(data['name'], 'String');
             }
-            if (data.hasOwnProperty('uid')) {
-                obj['uid'] = ApiClient.convertToType(data['uid'], 'String');
+            if (data.hasOwnProperty('status')) {
+                obj['status'] = ApiClient.convertToType(data['status'], 'String');
+            }
+            if (data.hasOwnProperty('state')) {
+                obj['state'] = ApiClient.convertToType(data['state'], 'String');
+            }
+            if (data.hasOwnProperty('context')) {
+                obj['context'] = ApiClient.convertToType(data['context'], Object);
+            }
+            if (data.hasOwnProperty('completed_at')) {
+                obj['completed_at'] = ApiClient.convertToType(data['completed_at'], 'Date');
             }
             if (data.hasOwnProperty('tenant_id')) {
                 obj['tenant_id'] = ApiClient.convertToType(data['tenant_id'], 'String');
@@ -80,17 +86,25 @@ export default class Source {
     */
     id = undefined;
     /**
-    * @member {String} source_type_id
-    */
-    source_type_id = undefined;
-    /**
     * @member {String} name
     */
     name = undefined;
     /**
-    * @member {String} uid
+    * @member {String} status
     */
-    uid = undefined;
+    status = undefined;
+    /**
+    * @member {String} state
+    */
+    state = undefined;
+    /**
+    * @member {Object} context
+    */
+    context = undefined;
+    /**
+    * @member {Date} completed_at
+    */
+    completed_at = undefined;
     /**
     * @member {String} tenant_id
     */
