@@ -1,5 +1,4 @@
-//export const API_BASE = 'http://lucifer.usersys.redhat.com:3001/Fryguy/topological_inventory/0.0.1/providers';
-export const SOURCES_API_BASE = 'https://topological-inventory-api-topological-inventory-ci.10.8.96.54.nip.io/api/v0.0/sources/'
+export const SOURCES_API_BASE = '/r/insights/platform/topological-inventory/v0.0'
 import { sourcesViewDefinition } from '../views/sourcesViewDefinition'
 
 export function getEntities () {
@@ -11,21 +10,26 @@ export function getEntities () {
     });
 }
 
+//import * as TopologicalInventory from '../TopologyClient/src/index'
+//import * as TopologicalInventory from '../../../TopologyClient'
+var TopologicalInventory = require('@manageiq/topological_inventory');
 
-import * as TopologicalInventory from '../TopologyClient/src/index'
+console.log(TopologicalInventory);
 
 export function doCreateSource (formData) {
     let apiInstance = new TopologicalInventory.DefaultApi();
-    apiInstance.basePath = SOURCES_API_BASE;
+
+    var defaultClient = TopologicalInventory.ApiClient.instance;
+    defaultClient.basePath = SOURCES_API_BASE;
 
     let sourceData = {
-        tenant_id: 1,
+        tenant_id: 1, // FIXME: where do I get it?
         name: formData.name,
-        source_type_id: 1,
+        source_type_id: 1, // FIXME should come from the form
     };
 
-    return apiInstance.createSource(sourceData).then((sourceData) => {
-        console.log('API call createSource returned data: ', sourceData);
+    return apiInstance.createSource(sourceData).then((sourceDataOut) => {
+        console.log('API call createSource returned data: ', sourceDataOut);
 
         // For now we parse these from a single 'URL' field.
         // TODO: need to create a component for entry of these
@@ -35,26 +39,44 @@ export function doCreateSource (formData) {
         const port = parsed[3];
 
         const endpointData = {
-            source_id: parseInt(sourceData.id, 10),
-            tenant_id: parseInt(sourceData.tenant_id, 10),
+            source_id: parseInt(sourceDataOut.id, 10),
+            tenant_id: parseInt(sourceDataOut.tenant_id, 10),
             role: formData.role, // 'kubernetes'
             schema: schema,
             port: parseInt(port, 10),
             host: host,
             verify_ssl: formData.verify_ssl,
             certificate_authority: formData.certificate_authority,
-            // TODO: authentications: token
         }
 
-        return apiInstance.createEndpoint(endpointData).then((data) => {
-            console.log('API call createEndpoint returned data: ', data);
-            return data;
+        return apiInstance.createEndpoint(endpointData).then((endpointDataOut) => {
+            console.log('API call createEndpoint returned data: ', endpointDataOut);
+
+            const authenticationData = {
+                resource_id: parseInt(endpointDataOut.id, 10),
+                resource_type: 'Endpoint',
+                tenant_id: parseInt(sourceDataOut.tenant_id, 10),
+                token: formData.token
+            }
+
+            return apiInstance.createAuthentication(authenticationData).then((authenticationDataOut) => {
+                console.log('API call createAuthentication returned data: ', authenticationDataOut);
+
+                return authenticationDataOut;
+            }, (error) => {
+                console.error('Authentication creation failure.');
+                throw {error: 'Authentication creation failure.'};
+            });
+
+            return endpointDataOut;
         }, (error) => {
-            console.error('endpoint creation failure');
+            console.error('Endpoint creation failure.');
+            throw {error: 'Endpoint creation failure.'};
         })
 
     }, (error) => {
-        console.error(error);
-        throw new Error(error);
+        console.error('Source creation failure.');
+        throw {error: 'Source creation failure.'};
+        //throw new Error(error);
     });
 }

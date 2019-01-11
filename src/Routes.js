@@ -39,10 +39,6 @@ const paths = {
     topology: '/source/:id/topology',
 };
 
-type Props = {
-    childProps: any
-};
-
 const InsightsRoute = ({ component: Component, rootClass, ...rest }) => {
     const root = document.getElementById('root');
     root.removeAttribute('class');
@@ -71,7 +67,7 @@ const dynamicRoutes = (viewDefinitions) =>
  *      path - https://prod.foo.redhat.com:1337/insights/advisor/rules
  *      component - component to be rendered when a route has been chosen.
  */
-export const Routes = (props: Props) => {
+export const Routes = (props) => {
     const path = props.childProps.location.pathname;
 
     return (
