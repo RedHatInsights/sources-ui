@@ -7,6 +7,7 @@ import { ListView, Row, Col, DropdownKebab, MenuItem } from 'patternfly-react';
 import { BrushIcon, BugIcon, ShareIcon, TopologyIcon } from '@patternfly/react-icons';
 import { Button } from '@patternfly/react-core';
 import { Pagination, Table } from '@red-hat-insights/insights-frontend-components';
+import { RowLoader } from '@red-hat-insights/insights-frontend-components/Utilities/helpers'
 import flatten from 'lodash/flatten'
 import filter from 'lodash/filter';
 
@@ -66,7 +67,7 @@ class SourcesListView extends React.Component {
     }
 
     render = () => {
-        const { entities, rows } = this.props;
+        const { entities, rows, loaded } = this.props;
         const data = flatten(entities.map((item, index) => (
           [
             {
@@ -93,38 +94,66 @@ class SourcesListView extends React.Component {
           ]
         )));
 
-        return <Table
-            widget-id="sourcesMainTable"
-            className="pf-m-compact ins-entity-table"
-            expandable={true}
-            sortBy={this.state.sortBy}
-            header={[...this.headers, '', '']}
-            //header={columns && {
-            //    ...mapValues(keyBy(columns, item => item.key), item => item.title),
-            //    health: {
-            //        title: 'Health',
-            //        hasSort: false
-            //    },
-            //    action: ''
-            //}}
-            onSort={this.onSort}
-            onRowClick={this.onRowClick}
-            onItemSelect={this.onItemSelect}
-            onExpandClick={this.onExpandClick}
-            hasCheckbox
-            rows={data}
-            footer={
-                <Pagination
-                    itemsPerPage={this.state.itemsPerPage}
-                    page={this.state.onPage}
-                    direction='up'
-                    onSetPage={this.onSetPage}
-                    onPerPageSelect={this.onPerPageSelect}
-                    numberOfItems={data ? this.props.numberOfEntities : 0}
-                />
-            }
+        if (loaded) {
+          return (
+            <Table
+              widget-id="sourcesMainTable"
+              className="pf-m-compact ins-entity-table"
+              expandable={true}
+              sortBy={this.state.sortBy}
+              header={[...this.headers, '', '']}
+              //header={columns && {
+              //    ...mapValues(keyBy(columns, item => item.key), item => item.title),
+              //    health: {
+              //        title: 'Health',
+              //        hasSort: false
+              //    },
+              //    action: ''
+              //}}
+              onSort={this.onSort}
+              onRowClick={this.onRowClick}
+              onItemSelect={this.onItemSelect}
+              onExpandClick={this.onExpandClick}
+              hasCheckbox
+              rows={data}
+              footer={
+                  <Pagination
+                      itemsPerPage={this.state.itemsPerPage}
+                      page={this.state.onPage}
+                      direction='up'
+                      onSetPage={this.onSetPage}
+                      onPerPageSelect={this.onPerPageSelect}
+                      numberOfItems={data ? this.props.numberOfEntities : 0}
+                  />
+              }
+            />
+          )
+        }
 
-        />
+        return <Table
+              widget-id="sourcesMainTable"
+              className="pf-m-compact ins-entity-table"
+              expandable={true}
+              sortBy={this.state.sortBy}
+              header={[...this.headers, '', '']}
+              onSort={this.onSort}
+              onRowClick={this.onRowClick}
+              onItemSelect={this.onItemSelect}
+              onExpandClick={this.onExpandClick}
+              hasCheckbox
+              rows={[<RowLoader />, <RowLoader />, <RowLoader />]}
+              footer={
+                  <Pagination
+                      itemsPerPage={this.state.itemsPerPage}
+                      page={this.state.onPage}
+                      direction='up'
+                      onSetPage={this.onSetPage}
+                      onPerPageSelect={this.onPerPageSelect}
+                      numberOfItems={data ? this.props.numberOfEntities : 0}
+                  />
+              }
+
+          />
     }
 };
 
@@ -135,9 +164,16 @@ SourcesListView.propTypes = {
     })).isRequired
 };
 
+SourcesListView.defaultProps = {
+    rows: [],
+    entities: [],
+    numberOfEntities: 0,
+    loaded: false
+};
+
 const mapDispatchToProps = dispatch => bindActionCreators({ loadEntities, selectEntity, expandEntity, sortEntities, pageAndSize }, dispatch);
 
-const mapStateToProps = ({providers:{rows = [], entities = [], numberOfEntities = 0}}) => ({entities, rows, numberOfEntities})
+const mapStateToProps = ({providers:{rows, entities, numberOfEntities, loaded}}) => ({entities, rows, numberOfEntities, loaded});
 
-export default connect(mapStateToProps, mapDispatchToProps)(SourcesListView)
+export default connect(mapStateToProps, mapDispatchToProps)(SourcesListView);
 
