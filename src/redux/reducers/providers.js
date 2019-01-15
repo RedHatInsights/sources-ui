@@ -53,7 +53,7 @@ const sortEntities = (state, { payload: { column, direction } }) =>
         sortDirection: direction
     })
 
-const setPageAndSize = (state, { payload: { page, size } }) => 
+const setPageAndSize = (state, { payload: { page, size } }) =>
     processListInState({
         ...state,
         pageSize: size,
