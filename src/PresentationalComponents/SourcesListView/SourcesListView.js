@@ -94,6 +94,7 @@ class SourcesListView extends React.Component {
         )));
 
         return <Table
+            widget-id="sourcesMainTable"
             className="pf-m-compact ins-entity-table"
             expandable={true}
             sortBy={this.state.sortBy}
