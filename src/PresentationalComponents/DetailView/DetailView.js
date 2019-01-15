@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import uniqueId from 'lodash/uniqueId'
 import { Grid, GridItem, Button } from '@patternfly/react-core';
@@ -7,10 +8,11 @@ import { TagView } from '@manageiq/react-ui-components/dist/tagging-pf4'
 
 class DetailView extends Component {
     render() {
+        const { sourceId } = this.props;
         return (
           <Grid>
               <GridItem sm={6} md={4} lg={4} xl={4}>
-                  <Pie withLegend identifier={uniqueId('donut')} values={[['Red Hat', 100], ['Google', 10]]}/>
+                  <Pie withLegend identifier={`donut-${sourceId}`} values={[['Red Hat', 100], ['Google', 10]]}/>
               </GridItem>
               <GridItem sm={6} md={4} lg={4} xl={4}>
                   <dl>
@@ -32,6 +34,10 @@ class DetailView extends Component {
           </Grid>
         )
     }
+}
+
+DetailView.propTypes = {
+    sourceId: PropTypes.number.isRequired
 }
 
 export default DetailView;
