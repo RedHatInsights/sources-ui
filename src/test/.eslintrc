@@ -1,0 +1,17 @@
+{
+  "env": {
+    "jest": true,
+    "es6": true
+  },
+  "globals": {
+    "fetchMock": true,
+    "setImmediate": true,
+    "toJson": true,
+    "beforeAll": true,
+    "describe": true,
+    "expect": true,
+    "it": true,
+    "mount": true,
+    "shallow": true,
+  }
+}

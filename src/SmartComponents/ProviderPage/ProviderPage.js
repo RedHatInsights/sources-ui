@@ -1,24 +1,23 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Link, Redirect, withRouter } from 'react-router-dom';
-import asyncComponent from '../../Utilities/asyncComponent';
+import { Link, withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { Donut, PageHeader, PageHeaderTitle, Section } from '@red-hat-insights/insights-frontend-components';
+
 import './provider-page.scss';
 import filter from 'lodash/filter';
 import { addProvider, createSource, filterProviders } from '../../redux/actions/providers';
 
-import { Donut, PageHeader, PageHeaderTitle, Section } from '@red-hat-insights/insights-frontend-components';
+import { Button } from '@patternfly/react-core';
+import { Card, CardHeader, CardBody, CardFooter, Gallery, Modal } from '@patternfly/react-core';
 
-import { Button, Grid, GridItem } from '@patternfly/react-core';
-import { Alert, Card, CardHeader, CardBody, CardFooter, Gallery, Modal } from '@patternfly/react-core';
-
-//const SourcesListView = asyncComponent(() => import('../../PresentationalComponents/SourcesListView/SourcesListView'));
 import SourcesListView from '../../PresentationalComponents/SourcesListView/SourcesListView';
 import SourcesFilter from '../../PresentationalComponents/SourcesListView/SourcesFilter';
 
-import { providerColumns } from '../../SmartComponents/ProviderPage/providerColumns'
-import { providerForm, wizardForm } from './providerForm'
-import SourcesFormRenderer from '../../Utilities/SourcesFormRenderer'
+import { providerColumns } from '../../SmartComponents/ProviderPage/providerColumns';
+import { wizardForm } from './providerForm';
+import SourcesFormRenderer from '../../Utilities/SourcesFormRenderer';
 
 /**
  * A smart component that handles all the api calls and data needed by the dumb components.
@@ -28,6 +27,15 @@ import SourcesFormRenderer from '../../Utilities/SourcesFormRenderer'
  * https://medium.com/@thejasonfile/dumb-components-and-smart-components-e7b33a698d43
  */
 class ProviderPage extends Component {
+    static propTypes = {
+        addProvider: PropTypes.func.isRequired,
+        createSource: PropTypes.func.isRequired,
+        filterProviders: PropTypes.func.isRequired,
+
+        location: PropTypes.any.isRequired,
+        history: PropTypes.any.isRequired
+    };
+
     constructor (props) {
         super(props);
     }
@@ -37,11 +45,11 @@ class ProviderPage extends Component {
         //this.props.addProvider(values);
         this.props.createSource(values).then(() => {
             //this.props.addAlert('Source added', 'success');
-            this.props.history.replace('/sources')
+            this.props.history.replace('/sources');
         }).catch(error => {
             console.debug('CATCH:'); console.debug(error);
             //this.props.addAlert('Source adding failed', 'danger');
-            this.props.history.replace('/sources')
+            this.props.history.replace('/sources');
         });
     }
 
@@ -53,12 +61,16 @@ class ProviderPage extends Component {
     render = () => {
         const filterColumns = filter(providerColumns, c => c.value);
 
-        //const form = providerForm;
         const form = wizardForm;
 
         return (
             <React.Fragment>
-                <Modal className='add-source' isLarge title='Add New Provider' isOpen={this.props.location.pathname == '/sources/new'} onClose={this.props.history.goBack}>
+                <Modal
+                    className='add-source'
+                    isLarge title='Add New Provider'
+                    isOpen={this.props.location.pathname === '/sources/new'}
+                    onClose={this.props.history.goBack}>
+
                     <SourcesFormRenderer
                         initialValues={form.initialValues}
                         schemaType={form.schemaType}
@@ -73,37 +85,39 @@ class ProviderPage extends Component {
                 </PageHeader>
                 <Section type='content'>
                     <Gallery>
-                      <Card>
-                        <CardHeader>Karta</CardHeader>
-                        <CardBody><Donut withLegend identifier='orech' values={[['Red Hat', 100], ['Google', 10]]}/></CardBody>
-                        <CardFooter>Footer</CardFooter>
-                      </Card>
+                        <Card>
+                            <CardHeader>Karta</CardHeader>
+                            <CardBody>
+                                <Donut withLegend identifier='orech' values={[['Red Hat', 100], ['Google', 10]]}/>
+                            </CardBody>
+                            <CardFooter>Footer</CardFooter>
+                        </Card>
 
-                      <Card>
-                        <CardBody>
-                          <p>5 Cloud</p>
-                          <p>2 Virtual Infrastructure</p>
-                          <p>1 Physical Infrastructure</p>
-                        </CardBody>
-                      </Card>
+                        <Card>
+                            <CardBody>
+                                <p>5 Cloud</p>
+                                <p>2 Virtual Infrastructure</p>
+                                <p>1 Physical Infrastructure</p>
+                            </CardBody>
+                        </Card>
 
-                      <Card>
-                        <CardBody>
-                          <p>1 Network</p>
-                          <p>0 Storage</p>
-                          <p>0 Automation</p>
-                        </CardBody>
-                      </Card>
+                        <Card>
+                            <CardBody>
+                                <p>1 Network</p>
+                                <p>0 Storage</p>
+                                <p>0 Automation</p>
+                            </CardBody>
+                        </Card>
 
-                      <Card>
-                          <CardBody>
-                              <Section type='button-group'>
-                                  <Link to='/sources/new'>
-                                    <Button variant='primary'> Add a New Source </Button>
-                                  </Link>
-                              </Section>
-                          </CardBody>
-                      </Card>
+                        <Card>
+                            <CardBody>
+                                <Section type='button-group'>
+                                    <Link to='/sources/new'>
+                                        <Button variant='primary'> Add a New Source </Button>
+                                    </Link>
+                                </Section>
+                            </CardBody>
+                        </Card>
                     </Gallery>
 
                     <SourcesFilter columns={filterColumns} onFilter={this.onFilter}/>
@@ -116,6 +130,6 @@ class ProviderPage extends Component {
 
 const mapDispatchToProps = dispatch => bindActionCreators({ addProvider, createSource, filterProviders }, dispatch);
 
-const mapStateToProps = () => ({})
+const mapStateToProps = () => ({});
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ProviderPage));

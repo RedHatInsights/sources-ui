@@ -8,9 +8,12 @@ import filter from 'lodash/filter';
 
 import { loadListingData, sortListingData, pageAndSize } from '../../redux/actions/listing';
 
+/* FIXME */
+/*eslint react/prop-types: 1*/
+
 class ListingView extends Component {
     static propTypes = {
-        viewDefinition : PropTypes.any.isRequired
+        viewDefinition: PropTypes.any.isRequired
     }
 
     constructor(props) {
@@ -33,8 +36,8 @@ class ListingView extends Component {
         this.props.sortListingData(this.filteredColumns[key].value, direction);
         this.setState({
             sortBy: {
-              index: key,
-              direction: direction,
+                index: key,
+                direction
             }
         });
     }
@@ -48,7 +51,7 @@ class ListingView extends Component {
 
     onSetPage = (number) => {
         this.setState({
-            onPage: number,
+            onPage: number
         });
         this.props.pageAndSize(number, this.state.itemsPerPage);
     }
@@ -63,27 +66,27 @@ class ListingView extends Component {
 
     render = () =>
         this.props.loaded ?
-        <Table
-            sortBy={this.state.sortBy}
-            header={this.headers}
-            onSort={this.onSort}
-            rows={this.mapDataToRows(this.props.listingRows)}
-            footer={
-                <Pagination
-                    itemsPerPage={this.state.itemsPerPage}
-                    page={this.state.onPage}
-                    direction='up'
-                    onSetPage={this.onSetPage}
-                    onPerPageSelect={this.onPerPageSelect}
-                    numberOfItems={this.props.rawRows ? this.props.rawRows.length : 0}
-                />
-            }
-        /> :
-        <div>Loading data...</div>
+            <Table
+                sortBy={this.state.sortBy}
+                header={this.headers}
+                onSort={this.onSort}
+                rows={this.mapDataToRows(this.props.listingRows)}
+                footer={
+                    <Pagination
+                        itemsPerPage={this.state.itemsPerPage}
+                        page={this.state.onPage}
+                        direction='up'
+                        onSetPage={this.onSetPage}
+                        onPerPageSelect={this.onPerPageSelect}
+                        numberOfItems={this.props.rawRows ? this.props.rawRows.length : 0}
+                    />
+                }
+            /> :
+            <div>Loading data...</div>
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators({ loadListingData, sortListingData, pageAndSize }, dispatch)
+const mapDispatchToProps = dispatch => bindActionCreators({ loadListingData, sortListingData, pageAndSize }, dispatch);
 
-const mapStateToProps = ({listing:{loaded = false, listingRows = [], rawRows = []}}) => ({loaded, listingRows, rawRows})
+const mapStateToProps = ({ listing: { loaded = false, listingRows = [], rawRows = [] } }) => ({ loaded, listingRows, rawRows });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ListingView));

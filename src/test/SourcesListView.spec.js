@@ -1,7 +1,7 @@
 import SourcesListView from '../PresentationalComponents/SourcesListView/SourcesListView';
 
 import configureStore from 'redux-mock-store';
-import { Provider } from 'react-redux';
+//import { Provider } from 'react-redux';
 import { sourcesTestData } from './sourcesData';
 
 //beforeEach(function() {
@@ -20,20 +20,20 @@ import { sourcesTestData } from './sourcesData';
 //});
 
 describe('SourcesListView', () => {
-  it('renders table and pagination', done => {
-    const mockStore = configureStore([]);
-    const store = mockStore({providers: {rows: [], entities: [], numberOfEntities: 0}});
+    it('renders table and pagination', done => {
+        const mockStore = configureStore([]);
+        const store = mockStore({ providers: { rows: [], entities: [], numberOfEntities: 0 } });
 
-    fetchMock
-      .getOnce('/r/insights/platform/topological-inventory/v0.0/sources/', sourcesTestData);
+        fetchMock
+        .getOnce('/r/insights/platform/topological-inventory/v0.0/sources/', sourcesTestData);
 
-    const listView = shallow(
-       <SourcesListView store={store} columns={[]}/>
-    ).dive();
+        const listView = shallow(
+            <SourcesListView store={store} columns={[]}/>
+        ).dive();
 
-    setImmediate(() => {
-       expect(toJson(listView)).toMatchSnapshot();
-       done();
+        setImmediate(() => {
+            expect(toJson(listView)).toMatchSnapshot();
+            done();
+        });
     });
-  });
 });
