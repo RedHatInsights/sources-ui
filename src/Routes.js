@@ -5,7 +5,7 @@ import asyncComponent from './Utilities/asyncComponent';
 import some from 'lodash/some';
 import reduce from 'lodash/reduce';
 
-import { viewDefinitions } from './views/viewDefinitions'
+import { viewDefinitions } from './views/viewDefinitions';
 
 /**
  * Aysnc imports of components
@@ -21,7 +21,6 @@ import { viewDefinitions } from './views/viewDefinitions'
  *         see the difference with DashboardMap and InventoryDeployments.
  *
  */
-const Rules = asyncComponent(() => import(/* webpackChunkName: "Rules" */ './PresentationalComponents/Rules/Rules'));
 const ProviderPage = asyncComponent(() => import(
     /* webpackChunkName: "ProviderPage" */ './SmartComponents/ProviderPage/ProviderPage'));
 const ListingPage = asyncComponent(() => import(
@@ -36,7 +35,7 @@ const paths = {
     provider_new: '/sources/new',
     vms: '/source/:id/vms',
     provider_detail: '/source/:id',
-    topology: '/source/:id/topology',
+    topology: '/source/:id/topology'
 };
 
 const InsightsRoute = ({ component: Component, rootClass, ...rest }) => {
@@ -83,4 +82,8 @@ export const Routes = (props) => {
             <Route render={() => some(paths, p => p === path) ? null : (<Redirect to={paths.providers} />)} />
         </Switch>
     );
+};
+
+Routes.propTypes = {
+    childProps: PropTypes.any.isRequired
 };

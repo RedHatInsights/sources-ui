@@ -11,8 +11,10 @@ export default class FilterDropdown extends Component {
 
     onToggle = (isOpen) => this.setState({ isOpen });
 
-    onSelect = (event) => this.setState( prevState => ({ isOpen: !prevState.isOpen }) );
+    onSelect = (_event) => this.setState(prevState => ({ isOpen: !prevState.isOpen }));
 
+    /* TODO */
+    /* eslint react/jsx-key: "warn" */
     dropdownItems = () => [
         <DropdownItem>Link</DropdownItem>,
         <DropdownItem component="button">Action</DropdownItem>,
@@ -22,7 +24,7 @@ export default class FilterDropdown extends Component {
         </DropdownItem>,
         <DropdownSeparator />,
         <DropdownItem>Separated Link</DropdownItem>,
-        <DropdownItem component="button">Separated Action</DropdownItem>,
+        <DropdownItem component="button">Separated Action</DropdownItem>
     ]
 
     render = () =>

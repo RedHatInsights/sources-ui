@@ -3,8 +3,12 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import promiseMiddleware from 'redux-promise-middleware';
-import { ReducerRegistry, applyReducerHash } from '@red-hat-insights/insights-frontend-components'
-import { NotificationsPortal, notifications, notificationsMiddleware } from '@red-hat-insights/insights-frontend-components/components/Notifications'
+import { ReducerRegistry, applyReducerHash } from '@red-hat-insights/insights-frontend-components';
+import {
+    NotificationsPortal,
+    notifications,
+    notificationsMiddleware
+} from '@red-hat-insights/insights-frontend-components/components/Notifications';
 import { Routes } from './Routes';
 import './App.scss';
 
@@ -19,30 +23,31 @@ let registry;
 class App extends Component {
 
     constructor (props) {
-      super(props);
+        super(props);
     }
 
     static getRegistry () {
-      if (! registry) {
-        registry = new ReducerRegistry(
-            {},
-            [
-                promiseMiddleware(),
-                notificationsMiddleware({ errorTitleKey: 'error', errorDescriptionKey: 'error' }),
-                logger
-            ]
-        );
-      }
-      return registry;
+        if (!registry) {
+            registry = new ReducerRegistry(
+                {},
+                [
+                    promiseMiddleware(),
+                    notificationsMiddleware({ errorTitleKey: 'error', errorDescriptionKey: 'error' }),
+                    logger
+                ]
+            );
+        }
+
+        return registry;
     }
 
     componentDidMount () {
         console.log('getStore()');
         console.log(App.getRegistry().getStore());
 
-        App.getRegistry().register({providers: applyReducerHash(ReducersProviders, defaultProvidersState)});
-        App.getRegistry().register({listing: applyReducerHash(ReducersListing, defaultListingState)});
-        App.getRegistry().register({topology: applyReducerHash(ReducersTopology, {})});
+        App.getRegistry().register({ providers: applyReducerHash(ReducersProviders, defaultProvidersState) });
+        App.getRegistry().register({ listing: applyReducerHash(ReducersListing, defaultListingState) });
+        App.getRegistry().register({ topology: applyReducerHash(ReducersTopology, {}) });
         App.getRegistry().register({ notifications });
 
         insights.chrome.init();

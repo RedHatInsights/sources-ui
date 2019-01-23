@@ -6,10 +6,10 @@ class TopologyPage extends Component {
     render = () =>
         <React.Fragment>
             <PageHeader>
-                  <PageHeaderTitle title='Topology'/>
+                <PageHeaderTitle title='Topology'/>
             </PageHeader>
             <Section type='content'>
-                  <TopologyView />
+                <TopologyView />
             </Section>
         </React.Fragment>
 }

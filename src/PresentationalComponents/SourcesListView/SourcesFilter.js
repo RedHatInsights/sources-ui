@@ -8,7 +8,7 @@ class SourcesFilter extends Component {
     }
 
     onFilterButtonClick = (filterValue, column) => {
-        console.log('filter click',column.value, filterValue);
+        console.log('filter click', column.value, filterValue);
         this.props.onFilter(column.value, filterValue);
     }
 
@@ -24,10 +24,10 @@ class SourcesFilter extends Component {
 
 SourcesFilter.propTypes = {
     columns: PropTypes.arrayOf(PropTypes.shape({
-            value: PropTypes.string,
-            title: PropTypes.string
+        value: PropTypes.string,
+        title: PropTypes.string
     })).isRequired,
-    onFilter: PropTypes.func.isRequired,
-}
+    onFilter: PropTypes.func.isRequired
+};
 
 export default SourcesFilter;

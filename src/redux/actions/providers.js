@@ -1,4 +1,7 @@
-import { ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE, ADD_PROVIDER, FILTER_PROVIDERS, CLOSE_ALERT, ADD_ALERT } from '../action-types-providers';
+import {
+    ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE,
+    ADD_PROVIDER, FILTER_PROVIDERS, CLOSE_ALERT, ADD_ALERT
+} from '../action-types-providers';
 import { getEntities, doCreateSource } from '../../api/entities';
 
 export const loadEntities = () => ({
@@ -37,12 +40,12 @@ export const filterProviders = (column, value) => ({
 });
 
 export const closeAlert = () => ({
-    type: CLOSE_ALERT,
+    type: CLOSE_ALERT
 });
 
 export const addAlert = (message, type) => ({
     type: ADD_ALERT,
-    payload: { message, type },
+    payload: { message, type }
 });
 
 export const createSource = (formData) => {
@@ -59,4 +62,4 @@ export const createSource = (formData) => {
             }
         }
     };
-}
+};

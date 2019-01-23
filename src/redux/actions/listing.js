@@ -1,5 +1,5 @@
 import { ASYNC_ACTION_TYPES, SORT_LISTING_DATA, PAGE_AND_SIZE_LISTING_DATA } from '../action-types-listing';
-import { generateRandomData, doLoadListingData } from '../../api/listing_view';
+import { doLoadListingData } from '../../api/listing_view';
 
 export const loadListingData = (viewDefinition) => ({
     type: ASYNC_ACTION_TYPES.LOAD_LISTING_DATA,

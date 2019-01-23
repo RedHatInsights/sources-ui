@@ -4,7 +4,7 @@ import take from 'lodash/take';
 import orderBy from 'lodash/orderBy';
 import lowerCase from 'lodash/lowerCase';
 import filter from 'lodash/filter';
-import flow from "lodash/fp/flow";
+import flow from 'lodash/fp/flow';
 
 export const sortList = (list, column, direction) =>
     !column ?
@@ -12,14 +12,14 @@ export const sortList = (list, column, direction) =>
         orderBy(
             list,
             [element => lowerCase('' + get(element, column))],
-            [direction == 'up' ? 'desc' : 'asc']
-        )
+            [direction === 'up' ? 'desc' : 'asc']
+        );
 
 export const paginateList = (list, pageNumber, pageSize) =>
     take(
         drop(list, pageSize * (pageNumber - 1)),
         pageSize
-    )
+    );
 
 export const filterList = (list, column, value) =>
     !value || !column ?
@@ -27,7 +27,7 @@ export const filterList = (list, column, value) =>
         filter(
             list,
             element => get(element, column).match(RegExp(value))
-        )
+        );
 
 export const processList = (list, options) => {
     const filtered = filterList(list, options.filterColumn, options.filterValue);
@@ -38,7 +38,6 @@ export const processList = (list, options) => {
             l => sortList(l, options.sortBy, options.sortDirection),
             l => paginateList(l, options.pageNumber, options.pageSize)
         )(filtered)
-    }
-}
-
+    };
+};
 
