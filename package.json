@@ -2,6 +2,9 @@
   "name": "topology-inventory-ui",
   "version": "1.1.0",
   "private": false,
+  "insights": {
+    "appname": "topological-inventory"
+  },
   "dependencies": {
     "@data-driven-forms/pf4-component-mapper": "^0.2.1",
     "@data-driven-forms/react-form-renderer": "^1.2.1",
