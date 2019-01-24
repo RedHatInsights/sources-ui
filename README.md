@@ -1,6 +1,9 @@
-[![Build Status](https://travis-ci.org/RedHatInsights/insights-frontend-starter-app.svg?branch=master)](https://travis-ci.org/RedHatInsights/insights-frontend-starter-app)
 
 # insights-frontend-starter-app
+
+[![Build Status](https://travis-ci.org/ManageIQ/topological_inventory-ui.svg?branch=master)](https://travis-ci.org/ManageIQ/topological_inventory-ui)
+[![Maintainability](https://api.codeclimate.com/v1/badges/039360fc91bcfa8b5232/maintainability)](https://codeclimate.com/github/ManageIQ/topological_inventory-ui/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/039360fc91bcfa8b5232/test_coverage)](https://codeclimate.com/github/ManageIQ/topological_inventory-ui/test_coverage)
 
 React.js starter app for Red Hat Insights products that includes Patternfly 3 and Patternfly Next.
 
@@ -199,3 +202,7 @@ When setting up the routes, the page content is wrapped with a `.page__{pageName
   - navigate to a new location
 - [withRouter](https://reacttraining.com/react-router/web/api/withRouter)
   - passes updated match, location, and history props to the wrapped component whenever it renders
+
+## License
+
+This project is available as open source under the terms of the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
