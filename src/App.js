@@ -51,7 +51,7 @@ class App extends Component {
         App.getRegistry().register({ notifications });
 
         insights.chrome.init();
-        insights.chrome.identifyApp('sources');
+        insights.chrome.identifyApp('topological-inventory');
 
         this.appNav = insights.chrome.on('APP_NAVIGATION', event => this.props.history.push(`/${event.navId}`));
     }
