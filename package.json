@@ -17,6 +17,7 @@
     "@red-hat-insights/insights-frontend-components": "^3.24.0",
     "classnames": "^2.2.5",
     "create-react-class": "^15.6.3",
+    "html-replace-webpack-plugin": "^2.5.5",
     "patternfly-react": "^2.20.3",
     "react-content-loader": "^3.4.2",
     "redux-logger": "^3.0.6",

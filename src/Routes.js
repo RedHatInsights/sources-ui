@@ -31,8 +31,8 @@ const TopologyPage = asyncComponent(() => import(
     /* webpackChunkName: "TopologyPage" */ './SmartComponents/TopologyPage/TopologyPage'));
 
 const paths = {
-    providers: '/sources',
-    provider_new: '/sources/new',
+    providers: '/topological-inventory',
+    provider_new: '/topological-inventory/new',
     vms: '/source/:id/vms',
     provider_detail: '/source/:id',
     topology: '/source/:id/topology'
