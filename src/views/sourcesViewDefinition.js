@@ -12,6 +12,8 @@ export const sourcesViewDefinition = {
         { title: 'UID', value: 'uid' },
         { title: 'Name', value: 'name' },
         { title: 'Source Type', value: 'source_type' },
+        // this column does not actually exist in the API, but is required by the design
+        { title: 'Applications', value: 'applications' },
         //{ title: 'Tags', value: 'tags', },
         //{ title: null, value: 'display_name', },
         //{ title: 'Created at', value: 'created_at', },

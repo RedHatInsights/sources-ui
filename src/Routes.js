@@ -31,11 +31,11 @@ const TopologyPage = asyncComponent(() => import(
     /* webpackChunkName: "TopologyPage" */ './SmartComponents/TopologyPage/TopologyPage'));
 
 const paths = {
-    providers: '/topological-inventory',
-    provider_new: '/topological-inventory/new',
-    vms: '/source/:id/vms',
-    provider_detail: '/source/:id',
-    topology: '/source/:id/topology'
+    providers: '/',
+    provider_new: '/new',
+    vms: '/:id/vms',
+    provider_detail: '/:id',
+    topology: '/:id/topology'
 };
 
 const InsightsRoute = ({ component: Component, rootClass, ...rest }) => {
@@ -54,7 +54,7 @@ InsightsRoute.propTypes = {
 const dynamicRoutes = (viewDefinitions) =>
     reduce(Object.keys(viewDefinitions), (acc, viewName) => (
         acc.push(
-            <InsightsRoute path={`/source/:id/${viewName}`} key={viewName} component={ListingPage} rootClass='listing' />
+            <InsightsRoute path={`/:id/${viewName}`} key={viewName} component={ListingPage} rootClass='listing' />
         ) && acc
     ), []);
 
