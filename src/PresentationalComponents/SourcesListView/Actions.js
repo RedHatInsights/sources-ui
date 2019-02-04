@@ -24,7 +24,7 @@ class Actions extends React.Component {
                 <DropdownItem component="div" key={viewName}>
                     <Link
                         key={`link_${item_id}/${viewName}`}
-                        to={`/source/${item_id}/${viewName}`}>Show {viewDefinitions[viewName].displayName}
+                        to={`/${item_id}/${viewName}`}>Show {viewDefinitions[viewName].displayName}
                     </Link>
                 </DropdownItem>
             ) && acc

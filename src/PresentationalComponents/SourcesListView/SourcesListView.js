@@ -91,7 +91,7 @@ class SourcesListView extends React.Component {
                         this.filteredColumns.map(col => item[col.value] || ''),
                         [
                             <Actions key='foo' item={item} />,
-                            <Link key='bar' to={`/source/${item.id}/topology`}><TopologyIcon /></Link>
+                            <Link key='bar' to={`/${item.id}/topology`}><TopologyIcon /></Link>
                         ]
                     )
                 },

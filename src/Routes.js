@@ -33,7 +33,7 @@ const TopologyPage = asyncComponent(() => import(
 const paths = {
     providers: '/',
     provider_new: '/new',
-    vms: '/:id/vms',
+    //vms: '/:id/vms',
     provider_detail: '/:id',
     topology: '/:id/topology'
 };
@@ -72,14 +72,17 @@ export const Routes = (props) => {
     return (
         <Switch>
             {/**<InsightsRoute exact path={paths.providers} component={ProviderPage} rootClass='providers' /> **/}
-            <InsightsRoute path={paths.providers} component={ProviderPage} rootClass='providers' />
-            <InsightsRoute path={paths.vms} component={ListingPage} rootClass='listing' />
+
+            <InsightsRoute exact path={paths.providers} component={ProviderPage} rootClass='providers' />
+            <InsightsRoute exact path={paths.provider_new} component={ProviderPage} rootClass='providers' />
+
+            {/**<InsightsRoute path={paths.vms} component={ListingPage} rootClass='listing' />**/}
             <InsightsRoute exact path={paths.provider_detail} component={DetailPage} rootClass='provider' />
             <InsightsRoute path={paths.topology} component={TopologyPage} rootClass='provider' />
             { dynamicRoutes(viewDefinitions) }
 
             {/* Finally, catch all unmatched routes */}
-            <Route render={() => some(paths, p => p === path) ? null : (<Redirect to={paths.providers} />)} />
+            //<Route render={() => some(paths, p => p === path) ? null : (<Redirect to={paths.providers} />)} />
         </Switch>
     );
 };
