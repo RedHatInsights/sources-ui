@@ -45,11 +45,11 @@ class ProviderPage extends Component {
         //this.props.addProvider(values);
         this.props.createSource(values).then(() => {
             //this.props.addAlert('Source added', 'success');
-            this.props.history.replace('/sources');
+            this.props.history.replace('/');
         }).catch(error => {
             console.debug('CATCH:'); console.debug(error);
             //this.props.addAlert('Source adding failed', 'danger');
-            this.props.history.replace('/sources');
+            this.props.history.replace('/');
         });
     }
 
@@ -68,7 +68,7 @@ class ProviderPage extends Component {
                 <Modal
                     className='add-source'
                     isLarge title='Add New Provider'
-                    isOpen={this.props.location.pathname === '/sources/new'}
+                    isOpen={this.props.location.pathname === '/new'}
                     onClose={this.props.history.goBack}>
 
                     <SourcesFormRenderer
@@ -112,7 +112,7 @@ class ProviderPage extends Component {
                         <Card>
                             <CardBody>
                                 <Section type='button-group'>
-                                    <Link to='/sources/new'>
+                                    <Link to='/new'>
                                         <Button variant='primary'> Add a New Source </Button>
                                     </Link>
                                 </Section>

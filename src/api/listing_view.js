@@ -16,8 +16,9 @@ export function generateRandomData(num) {
     return rows;
 }
 
-export function doLoadListingData(viewDefinition) {
-    const url = viewDefinition.url;
+export function doLoadListingData(viewDefinition, sourceId) {
+    console.log('doLoadListingData', sourceId);
+    const url = viewDefinition.url.replace(/:id/, sourceId);
 
     return fetch(url).then(r => {
         if (r.ok || r.type === 'opaque') {
