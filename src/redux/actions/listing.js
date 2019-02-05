@@ -1,10 +1,9 @@
 import { ASYNC_ACTION_TYPES, SORT_LISTING_DATA, PAGE_AND_SIZE_LISTING_DATA } from '../action-types-listing';
 import { doLoadListingData } from '../../api/listing_view';
 
-export const loadListingData = (viewDefinition) => ({
+export const loadListingData = (viewDefinition, sourceId) => ({
     type: ASYNC_ACTION_TYPES.LOAD_LISTING_DATA,
-    //payload: generateRandomData(100)
-    payload: doLoadListingData(viewDefinition)
+    payload: doLoadListingData(viewDefinition, sourceId)
 });
 
 export const sortListingData = (column, direction) => ({

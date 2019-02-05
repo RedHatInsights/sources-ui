@@ -35,7 +35,7 @@ class Actions extends React.Component {
 
         const dropdownItems = [
             ...this.dropdownLinks(viewDefinitions, item_id),
-            <DropdownItem key='link_show' component="div"><Link to={`/source/${item_id}`}>Show Details</Link></DropdownItem>,
+            <DropdownItem key='link_show' component="div"><Link to={`/${item_id}`}>Show Details</Link></DropdownItem>,
             <DropdownItem key='link_edit' component="div"><Link to={'/source/fixme/' + item_id}>Edit Source</Link></DropdownItem>,
             <DropdownItem key='link_remove' component="div">
                 <Link to={'/source/fixme/' + item_id}>Remove Source</Link>

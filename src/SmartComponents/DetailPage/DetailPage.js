@@ -1,15 +1,21 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
+
 import { Section } from '@red-hat-insights/insights-frontend-components';
 
 import DetailView from '../../PresentationalComponents/DetailView/DetailView';
 
 class DetailPage extends Component {
+    static propTypes = {
+        match: PropTypes.object.isRequired
+    };
+
     render = () =>
         <React.Fragment>
             <Section type='content'>
                 <h1>Details of a Provider</h1>
-                <DetailView />
+                <DetailView sourceId={this.props.match.params.id}/>
             </Section>
         </React.Fragment>
 };

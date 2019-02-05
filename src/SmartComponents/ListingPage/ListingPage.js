@@ -21,14 +21,24 @@ class ListingPage extends Component {
 
     loadDefinition = () => viewDefinitions[this.props.location.pathname.split('/').pop()]
 
+    parseSourceId = () => {
+        const parts = this.props.location.pathname.split('/');
+        return parseInt(parts[parts.length - 2], 10);
+    }
+
+    locationToState = () => ({
+        viewDefinition: this.loadDefinition(),
+        sourceId: this.parseSourceId()
+    })
+
     constructor(props) {
         super(props);
-        this.state = { viewDefinition: this.loadDefinition() };
+        this.state = this.locationToState();
     }
 
     componentDidUpdate = (prevProps, _prevState) => {
         if (this.props.location.pathname !== prevProps.location.pathname) {
-            this.setState({ viewDefinition: this.loadDefinition() });
+            this.setState(this.locationToState());
         }
     }
 
@@ -39,7 +49,7 @@ class ListingPage extends Component {
                 {/**<ConnectedBreadcrumbs current="Place" />**/}
                 <Breadcrumbs
                     items={[
-                        { title: 'Sources', navigate: '/sources' }
+                        { title: 'Sources', navigate: '/' }
                     ]}
                     current={this.state.viewDefinition.displayName}
                     onNavigate={this.onNavigate}
@@ -51,10 +61,10 @@ class ListingPage extends Component {
                     <TextInput id='filter_text' value=''/>
                     <Button>Action</Button>
                     <SimpleKebab dropdownItems={
-                        [<DropdownItem key='foo' component='div'><Link to={'/providers/'}>Back to Providers</Link></DropdownItem>]
+                        [<DropdownItem key='foo' component='div'><Link to={'/'}>Back to Sources</Link></DropdownItem>]
                     }/>
                 </div>
-                <ListingView viewDefinition={this.state.viewDefinition}/>
+                <ListingView viewDefinition={this.state.viewDefinition} sourceId={this.state.sourceId}/>
             </Section>
         </React.Fragment>
     )

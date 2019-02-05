@@ -13,6 +13,7 @@ import { loadListingData, sortListingData, pageAndSize } from '../../redux/actio
 
 class ListingView extends Component {
     static propTypes = {
+        sourceId: PropTypes.number.isRequired,
         viewDefinition: PropTypes.any.isRequired
     }
 
@@ -28,9 +29,7 @@ class ListingView extends Component {
         sortBy: {}
     }
 
-    componentDidMount = () => {
-        this.props.loadListingData(this.props.viewDefinition);
-    }
+    componentDidMount = () => this.props.loadListingData(this.props.viewDefinition, this.props.sourceId);
 
     onSort = (_event, key, direction) => {
         this.props.sortListingData(this.filteredColumns[key].value, direction);
