@@ -40,7 +40,7 @@ const paths = {
 const InsightsRoute = ({ rootClass, ...rest }) => {
     const root = document.getElementById('root');
     root.removeAttribute('class');
-    root.classList.add(`page__${rootClass}`);
+    root.classList.add(`page__${rootClass}`, 'pf-c-page__main', 'pf-l-page__main');
 
     return (<Route { ...rest } />);
 };
