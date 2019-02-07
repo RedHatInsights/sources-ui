@@ -4,7 +4,9 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { TopologyIcon } from '@patternfly/react-icons';
-import { Pagination, Table } from '@red-hat-insights/insights-frontend-components';
+import { Pagination, } from '@red-hat-insights/insights-frontend-components';
+import { Table, TableHeader, TableBody, sortable } from '@patternfly/react-table';
+
 import flatten from 'lodash/flatten';
 import filter from 'lodash/filter';
 import ContentLoader from 'react-content-loader';
@@ -36,7 +38,11 @@ class SourcesListView extends React.Component {
         super(props);
 
         this.filteredColumns = filter(sourcesViewDefinition.columns, c => c.title);
-        this.headers = this.filteredColumns.map(col => col.title);
+
+        this.headers = this.filteredColumns.map(col => ({
+            title: col.title,
+            transforms: [sortable]
+        })).concat('');
 
         this.state = {
             itemsPerPage: 10,
@@ -47,14 +53,17 @@ class SourcesListView extends React.Component {
 
     componentDidMount = () => this.props.loadEntities();
 
-    onRowClick = (_event, key, application) => {
-        console.log('onRowClick', key, application);
-    }
+    //onSelect = (_event, key, application) => {
+    //    console.log('onSelect', key, application);
+    //}
 
     onItemSelect = (_event, key, checked) => this.props.selectEntity(key, checked);
 
     onSort = (_event, key, direction) => {
-        this.props.sortEntities(this.filteredColumns[key].value, direction);
+        console.log('onSort', key-1, direction, this.filteredColumns[key-1].value);
+
+        // -1 for the expander column
+        this.props.sortEntities(this.filteredColumns[key - 1].value, direction);
         this.setState({
             sortBy: {
                 index: key,
@@ -80,24 +89,24 @@ class SourcesListView extends React.Component {
         this.props.pageAndSize(1, count);
     }
 
+    onCollapse = (event, rowIndex, isOpen) =>
+        this.props.expandEntity(this.props.entities[rowIndex / 2].id, isOpen);
+
     render = () => {
         const { entities, loaded } = this.props;
         const data = flatten(entities.map((item, index) => (
             [
                 {
                     ...item,
-                    children: [index + 1],
-                    cells: [].concat(
-                        this.filteredColumns.map(col => item[col.value] || ''),
-                        [
-                            <Actions key='foo' item={item} />,
-                            <Link key='bar' to={`/${item.id}/topology`}><TopologyIcon /></Link>
-                        ]
-                    )
+                    isOpen: !!item.expanded,
+                    cells: this.filteredColumns.map(col => item[col.value] || '').concat({
+                        title: <Link key='bar' to={`/${item.id}/topology`}><TopologyIcon /></Link>
+                    }),
+                    //        <Actions key='foo' item={item} />,
                 },
                 {
                     id: item.id + '_detail',
-                    isOpen: item.expanded,
+                    parent: index,
                     cells: [
                         {
                             title: item.expanded ? <DetailView sourceId={item.id}/> : 'collapsed content',
@@ -107,40 +116,27 @@ class SourcesListView extends React.Component {
                 }
             ]
         )));
+        console.log(data);
 
         if (loaded) {
             return (
                 <Table
-                    widget-id="sourcesMainTable"
-                    className="pf-m-compact ins-entity-table"
-                    expandable={true}
-                    sortBy={this.state.sortBy}
-                    header={[...this.headers, '', '']}
-                    //header={columns && {
-                    //    ...mapValues(keyBy(columns, item => item.key), item => item.title),
-                    //    health: {
-                    //        title: 'Health',
-                    //        hasSort: false
-                    //    },
-                    //    action: ''
-                    //}}
+                    caption="List of Sources"
+                    onCollapse={this.onCollapse}
                     onSort={this.onSort}
-                    onRowClick={this.onRowClick}
-                    onItemSelect={this.onItemSelect}
-                    onExpandClick={this.onExpandClick}
-                    hasCheckbox
+                    sortBy={this.state.sortBy}
                     rows={data}
-                    footer={
-                        <Pagination
-                            itemsPerPage={this.state.itemsPerPage}
-                            page={this.state.onPage}
-                            direction='up'
-                            onSetPage={this.onSetPage}
-                            onPerPageSelect={this.onPerPageSelect}
-                            numberOfItems={data ? this.props.numberOfEntities : 0}
-                        />
-                    }
-                />
+                    cells={this.headers}
+                    actions={[
+                        {
+                          title: 'Some action',
+                          onClick: (event, rowId) => console.log('clicked on Some action, on row: ', rowId)
+                        },
+                    ]}
+                >
+                    <TableHeader />
+                    <TableBody />
+                </Table>
             );
         }
 

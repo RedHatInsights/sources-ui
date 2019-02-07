@@ -5,7 +5,7 @@ export const sourcesViewDefinition = {
         "updated_at":"2018-10-25T14:19:27.252Z","tenant_id":1}, {"id":"2","name":"foo","uid":null,
         "created_at":"2018-11-01T11:24:24.767Z","updated_at":"2018-11-01T11:24:24.767Z","tenant_id":1}] */
     columns: [
-        { title: 'ID', value: 'id' },
+        { title: null, value: 'id' },
         //{ title: null, value: 'source_id', },
         //{ title: null, value: 'source_ref', },
         //{ title: 'Resource version', value: 'resource_version', },

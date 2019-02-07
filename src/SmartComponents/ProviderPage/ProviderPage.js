@@ -120,8 +120,15 @@ class ProviderPage extends Component {
                         </Card>
                     </Gallery>
 
-                    <SourcesFilter columns={filterColumns} onFilter={this.onFilter}/>
-                    <SourcesListView columns={providerColumns}/>
+                    <Card>
+                        <CardHeader>
+                            <SourcesFilter columns={filterColumns} onFilter={this.onFilter}/>
+                        </CardHeader>
+                        <CardBody>
+                            <SourcesListView columns={providerColumns}/>
+                        </CardBody>
+                        <CardFooter>FIXME: pagination</CardFooter>
+                    </Card>
                 </Section>
             </React.Fragment>
         );
