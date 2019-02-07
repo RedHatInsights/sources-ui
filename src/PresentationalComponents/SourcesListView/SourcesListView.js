@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { TopologyIcon } from '@patternfly/react-icons';
-import { Pagination, } from '@red-hat-insights/insights-frontend-components';
 import { Table, TableHeader, TableBody, sortable } from '@patternfly/react-table';
 
 import flatten from 'lodash/flatten';
@@ -12,7 +11,7 @@ import filter from 'lodash/filter';
 import ContentLoader from 'react-content-loader';
 
 import Actions from './Actions';
-import { loadEntities, selectEntity, expandEntity, sortEntities, pageAndSize } from '../../redux/actions/providers';
+import { loadEntities, selectEntity, expandEntity, sortEntities } from '../../redux/actions/providers';
 import DetailView from '../../PresentationalComponents/DetailView/DetailView';
 
 import { sourcesViewDefinition } from '../../views/sourcesViewDefinition';
@@ -45,8 +44,6 @@ class SourcesListView extends React.Component {
         })).concat('');
 
         this.state = {
-            itemsPerPage: 10,
-            onPage: 1,
             sortBy: {}
         };
     }
@@ -74,27 +71,12 @@ class SourcesListView extends React.Component {
 
     onExpandClick = (_event, _row, rowKey) => this.props.expandEntity(rowKey, true);
 
-    onSetPage = (number) => {
-        this.setState({
-            onPage: number
-        });
-        this.props.pageAndSize(number, this.state.itemsPerPage);
-    }
-
-    onPerPageSelect = (count) => {
-        this.setState({
-            onPage: 1,
-            itemsPerPage: count
-        });
-        this.props.pageAndSize(1, count);
-    }
-
     onCollapse = (event, rowIndex, isOpen) =>
         this.props.expandEntity(this.props.entities[rowIndex / 2].id, isOpen);
 
     render = () => {
         const { entities, loaded } = this.props;
-        const data = flatten(entities.map((item, index) => (
+        const rowData = flatten(entities.map((item, index) => (
             [
                 {
                     ...item,
@@ -116,7 +98,7 @@ class SourcesListView extends React.Component {
                 }
             ]
         )));
-        console.log(data);
+        console.log(rowData);
 
         if (loaded) {
             return (
@@ -125,7 +107,7 @@ class SourcesListView extends React.Component {
                     onCollapse={this.onCollapse}
                     onSort={this.onSort}
                     sortBy={this.state.sortBy}
-                    rows={data}
+                    rows={rowData}
                     cells={this.headers}
                     actions={[
                         {
@@ -161,7 +143,6 @@ SourcesListView.propTypes = {
     selectEntity: PropTypes.func.isRequired,
     expandEntity: PropTypes.func.isRequired,
     sortEntities: PropTypes.func.isRequired,
-    pageAndSize: PropTypes.func.isRequired,
 
     entities: PropTypes.arrayOf(PropTypes.any),
     numberOfEntities: PropTypes.number.isRequired,
@@ -175,7 +156,7 @@ SourcesListView.defaultProps = {
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    loadEntities, selectEntity, expandEntity, sortEntities, pageAndSize }, dispatch);
+    loadEntities, selectEntity, expandEntity, sortEntities }, dispatch);
 
 const mapStateToProps = ({ providers: { entities, numberOfEntities, loaded } }) => ({ entities, numberOfEntities, loaded });
 
