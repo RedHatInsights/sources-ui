@@ -11,7 +11,6 @@ import filter from 'lodash/filter';
 import reduce from 'lodash/reduce';
 import ContentLoader from 'react-content-loader';
 
-import Actions from './Actions';
 import { loadEntities, selectEntity, expandEntity, sortEntities } from '../../redux/actions/providers';
 import DetailView from '../../PresentationalComponents/DetailView/DetailView';
 
@@ -59,8 +58,6 @@ class SourcesListView extends React.Component {
     onItemSelect = (_event, key, checked) => this.props.selectEntity(key, checked);
 
     onSort = (_event, key, direction) => {
-        console.log('onSort', key-1, direction, this.filteredColumns[key-1].value);
-
         // -1 for the expander column
         this.props.sortEntities(this.filteredColumns[key - 1].value, direction);
         this.setState({
@@ -84,7 +81,7 @@ class SourcesListView extends React.Component {
                 title: 'Show Details',
                 onClick: (_ev, i) => this.props.history.push(`/${this.sourceIndexToId(i)}`)
             },
-            ...this.renderViewLinks(),
+            ...this.renderViewLinks()
         ]
     );
 
@@ -107,7 +104,7 @@ class SourcesListView extends React.Component {
                     isOpen: !!item.expanded,
                     cells: this.filteredColumns.map(col => item[col.value] || '').concat({
                         title: <Link key='bar' to={`/${item.id}/topology`}><TopologyIcon /></Link>
-                    }),
+                    })
                 },
                 {
                     id: item.id + '_detail',
@@ -121,7 +118,7 @@ class SourcesListView extends React.Component {
                 }
             ]
         )));
-        console.log(rowData);
+        // console.log(rowData);
 
         if (loaded) {
             return (

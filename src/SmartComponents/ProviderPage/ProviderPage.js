@@ -46,7 +46,7 @@ class ProviderPage extends Component {
 
         this.state = {
             itemsPerPage: 10,
-            onPage: 1,
+            onPage: 1
         };
     }
 
@@ -82,7 +82,6 @@ class ProviderPage extends Component {
         });
         this.props.pageAndSize(1, count);
     }
-
 
     render = () => {
         const filterColumns = filter(providerColumns, c => c.value);
