@@ -15,7 +15,7 @@ class DetailPage extends Component {
         <React.Fragment>
             <Section type='content'>
                 <h1>Details of a Provider</h1>
-                <DetailView sourceId={this.props.match.params.id}/>
+                <DetailView sourceId={parseInt(this.props.match.params.id, 10)}/>
             </Section>
         </React.Fragment>
 };

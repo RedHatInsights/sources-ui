@@ -2,12 +2,13 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { TopologyIcon } from '@patternfly/react-icons';
 import { Table, TableHeader, TableBody, sortable } from '@patternfly/react-table';
 
 import flatten from 'lodash/flatten';
 import filter from 'lodash/filter';
+import reduce from 'lodash/reduce';
 import ContentLoader from 'react-content-loader';
 
 import Actions from './Actions';
@@ -15,6 +16,7 @@ import { loadEntities, selectEntity, expandEntity, sortEntities } from '../../re
 import DetailView from '../../PresentationalComponents/DetailView/DetailView';
 
 import { sourcesViewDefinition } from '../../views/sourcesViewDefinition';
+import { viewDefinitions } from '../../views/viewDefinitions';
 
 const RowLoader = props => (
     <ContentLoader
@@ -71,8 +73,30 @@ class SourcesListView extends React.Component {
 
     onExpandClick = (_event, _row, rowKey) => this.props.expandEntity(rowKey, true);
 
-    onCollapse = (event, rowIndex, isOpen) =>
-        this.props.expandEntity(this.props.entities[rowIndex / 2].id, isOpen);
+    onCollapse = (_event, i, isOpen) =>
+        this.props.expandEntity(this.sourceIndexToId(i), isOpen);
+
+    sourceIndexToId = (i) => this.props.entities[i / 2].id;
+
+    renderActions = () => (
+        [
+            {
+                title: 'Show Details',
+                onClick: (_ev, i) => this.props.history.push(`/${this.sourceIndexToId(i)}`)
+            },
+            ...this.renderViewLinks(),
+        ]
+    );
+
+    renderViewLinks = () =>
+        reduce(Object.keys(viewDefinitions), (acc, viewName) => (
+            acc.push(
+                {
+                    title: `Show ${viewDefinitions[viewName].displayName}`,
+                    onClick: (_ev, i) => this.props.history.push(`/${this.sourceIndexToId(i)}/${viewName}`)
+                }
+            ) && acc
+        ), []);
 
     render = () => {
         const { entities, loaded } = this.props;
@@ -84,7 +108,6 @@ class SourcesListView extends React.Component {
                     cells: this.filteredColumns.map(col => item[col.value] || '').concat({
                         title: <Link key='bar' to={`/${item.id}/topology`}><TopologyIcon /></Link>
                     }),
-                    //        <Actions key='foo' item={item} />,
                 },
                 {
                     id: item.id + '_detail',
@@ -103,18 +126,13 @@ class SourcesListView extends React.Component {
         if (loaded) {
             return (
                 <Table
-                    caption="List of Sources"
+                    aria-label="List of Sources"
                     onCollapse={this.onCollapse}
                     onSort={this.onSort}
                     sortBy={this.state.sortBy}
                     rows={rowData}
                     cells={this.headers}
-                    actions={[
-                        {
-                          title: 'Some action',
-                          onClick: (event, rowId) => console.log('clicked on Some action, on row: ', rowId)
-                        },
-                    ]}
+                    actions={this.renderActions()}
                 >
                     <TableHeader />
                     <TableBody />
@@ -146,7 +164,9 @@ SourcesListView.propTypes = {
 
     entities: PropTypes.arrayOf(PropTypes.any),
     numberOfEntities: PropTypes.number.isRequired,
-    loaded: PropTypes.bool.isRequired
+    loaded: PropTypes.bool.isRequired,
+
+    history: PropTypes.any.isRequired
 };
 
 SourcesListView.defaultProps = {
@@ -160,5 +180,5 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 
 const mapStateToProps = ({ providers: { entities, numberOfEntities, loaded } }) => ({ entities, numberOfEntities, loaded });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SourcesListView);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesListView));
 
