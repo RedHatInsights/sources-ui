@@ -3,7 +3,7 @@ export const viewDefinitions = {
         displayName: 'Container Projects',
         //url: 'https://topological-inventory-api-topological-inventory-ci.10.8.96.54.nip.io/api/v0.0/sources/1/container_projects/',
         // FIXME
-        url: '/r/insights/platform/topological-inventory/v0.0/:id/sources/container_projects/',
+        url: '/r/insights/platform/topological-inventory/v0.0/sources/:id/container_projects/',
         columns: [
             { title: 'ID', value: 'id' },
             { title: null, value: 'source_id' },
@@ -64,7 +64,7 @@ export const viewDefinitions = {
     container_templates: {
         displayName: 'Container Templates',
         //url: 'https://topological-inventory-api-topological-inventory-ci.10.8.96.54.nip.io/api/v0.0/sources/1/container_templates/',
-        url: '/r/insights/platform/topological-inventory/v0.0/:id/sources/container_templates/',
+        url: '/r/insights/platform/topological-inventory/v0.0/sources/:id/container_templates/',
         // {"id":"131","source_id":1,"source_ref":"1e443dec-594a-11e8-ba7e-d094660d31fb","resource_version":"1689429","container_project_id":null,"created_at":"2018-10-17T15:32:12.764Z","updated_at":"2018-10-24T03:24:50.980Z","source_deleted_at":null,"tenant_id":null,"source_created_at":"2018-05-16T20:45:50.000Z","name":"nginx-example","archived_on":null}
         columns: [
             { title: 'ID', value: 'id' },
