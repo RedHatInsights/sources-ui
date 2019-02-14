@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Donut, PageHeader, PageHeaderTitle, Section } from '@red-hat-insights/insights-frontend-components';
+import { Donut, PageHeader, PageHeaderTitle, Pagination, Section } from '@red-hat-insights/insights-frontend-components';
 
 import './provider-page.scss';
 import filter from 'lodash/filter';
@@ -19,6 +19,8 @@ import { providerColumns } from '../../SmartComponents/ProviderPage/providerColu
 import { wizardForm } from './providerForm';
 import SourcesFormRenderer from '../../Utilities/SourcesFormRenderer';
 
+import { pageAndSize } from '../../redux/actions/providers';
+
 /**
  * A smart component that handles all the api calls and data needed by the dumb components.
  * Smart components are usually classes.
@@ -31,6 +33,9 @@ class ProviderPage extends Component {
         addProvider: PropTypes.func.isRequired,
         createSource: PropTypes.func.isRequired,
         filterProviders: PropTypes.func.isRequired,
+        pageAndSize: PropTypes.func.isRequired,
+
+        numberOfEntities: PropTypes.number.isRequired,
 
         location: PropTypes.any.isRequired,
         history: PropTypes.any.isRequired
@@ -38,6 +43,11 @@ class ProviderPage extends Component {
 
     constructor (props) {
         super(props);
+
+        this.state = {
+            itemsPerPage: 10,
+            onPage: 1
+        };
     }
 
     submitProvider = (values, formState) => {
@@ -56,6 +66,21 @@ class ProviderPage extends Component {
     onFilter = (filterColumn, filterValue) => {
         console.log('onFilter', filterColumn, filterValue);
         this.props.filterProviders(filterColumn, filterValue);
+    }
+
+    onSetPage = (number) => {
+        this.setState({
+            onPage: number
+        });
+        this.props.pageAndSize(number, this.state.itemsPerPage);
+    }
+
+    onPerPageSelect = (count) => {
+        this.setState({
+            onPage: 1,
+            itemsPerPage: count
+        });
+        this.props.pageAndSize(1, count);
     }
 
     render = () => {
@@ -120,16 +145,32 @@ class ProviderPage extends Component {
                         </Card>
                     </Gallery>
 
-                    <SourcesFilter columns={filterColumns} onFilter={this.onFilter}/>
-                    <SourcesListView columns={providerColumns}/>
+                    <Card>
+                        <CardHeader>
+                            <SourcesFilter columns={filterColumns} onFilter={this.onFilter}/>
+                        </CardHeader>
+                        <CardBody>
+                            <SourcesListView columns={providerColumns}/>
+                        </CardBody>
+                        <CardFooter>
+                            <Pagination
+                                itemsPerPage={this.state.itemsPerPage}
+                                page={this.state.onPage}
+                                direction='up'
+                                onSetPage={this.onSetPage}
+                                onPerPageSelect={this.onPerPageSelect}
+                                numberOfItems={this.props.numberOfEntities || 0}
+                            />
+                        </CardFooter>
+                    </Card>
                 </Section>
             </React.Fragment>
         );
     }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators({ addProvider, createSource, filterProviders }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ addProvider, createSource, filterProviders, pageAndSize }, dispatch);
 
-const mapStateToProps = () => ({});
+const mapStateToProps = ({ providers: { numberOfEntities } }) => ({ numberOfEntities });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ProviderPage));

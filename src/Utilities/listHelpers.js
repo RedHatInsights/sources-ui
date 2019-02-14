@@ -12,7 +12,7 @@ export const sortList = (list, column, direction) =>
         orderBy(
             list,
             [element => lowerCase('' + get(element, column))],
-            [direction === 'up' ? 'desc' : 'asc']
+            [direction]
         );
 
 export const paginateList = (list, pageNumber, pageSize) =>

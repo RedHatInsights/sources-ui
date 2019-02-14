@@ -6,7 +6,6 @@
 @import '~patternfly/dist/css/patternfly.css';
 @import '~patternfly/dist/css/patternfly-additions.css';
 @import '~patternfly-react/dist/css/patternfly-react.css';
-@import '~@patternfly/patternfly-next/patternfly.css';
 @import '~@red-hat-insights/insights-frontend-components/components/Notifications.css';
 
 .pf-l-gallery {
@@ -31,6 +30,9 @@
   }
   .pf-c-modal-box__footer {
     display: none;
+  }
+  .pf-c-modal-box__body {
+    overflow: visible;
   }
 }
 

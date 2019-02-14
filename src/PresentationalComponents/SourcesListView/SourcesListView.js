@@ -2,18 +2,20 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { TopologyIcon } from '@patternfly/react-icons';
-import { Pagination, Table } from '@red-hat-insights/insights-frontend-components';
+import { Table, TableHeader, TableBody, sortable } from '@patternfly/react-table';
+
 import flatten from 'lodash/flatten';
 import filter from 'lodash/filter';
+import reduce from 'lodash/reduce';
 import ContentLoader from 'react-content-loader';
 
-import Actions from './Actions';
-import { loadEntities, selectEntity, expandEntity, sortEntities, pageAndSize } from '../../redux/actions/providers';
+import { loadEntities, selectEntity, expandEntity, sortEntities } from '../../redux/actions/providers';
 import DetailView from '../../PresentationalComponents/DetailView/DetailView';
 
 import { sourcesViewDefinition } from '../../views/sourcesViewDefinition';
+import { viewDefinitions } from '../../views/viewDefinitions';
 
 const RowLoader = props => (
     <ContentLoader
@@ -36,25 +38,28 @@ class SourcesListView extends React.Component {
         super(props);
 
         this.filteredColumns = filter(sourcesViewDefinition.columns, c => c.title);
-        this.headers = this.filteredColumns.map(col => col.title);
+
+        this.headers = this.filteredColumns.map(col => ({
+            title: col.title,
+            transforms: [sortable]
+        })).concat('');
 
         this.state = {
-            itemsPerPage: 10,
-            onPage: 1,
             sortBy: {}
         };
     }
 
     componentDidMount = () => this.props.loadEntities();
 
-    onRowClick = (_event, key, application) => {
-        console.log('onRowClick', key, application);
-    }
+    //onSelect = (_event, key, application) => {
+    //    console.log('onSelect', key, application);
+    //}
 
     onItemSelect = (_event, key, checked) => this.props.selectEntity(key, checked);
 
     onSort = (_event, key, direction) => {
-        this.props.sortEntities(this.filteredColumns[key].value, direction);
+        // -1 for the expander column
+        this.props.sortEntities(this.filteredColumns[key - 1].value, direction);
         this.setState({
             sortBy: {
                 index: key,
@@ -65,39 +70,45 @@ class SourcesListView extends React.Component {
 
     onExpandClick = (_event, _row, rowKey) => this.props.expandEntity(rowKey, true);
 
-    onSetPage = (number) => {
-        this.setState({
-            onPage: number
-        });
-        this.props.pageAndSize(number, this.state.itemsPerPage);
-    }
+    onCollapse = (_event, i, isOpen) =>
+        this.props.expandEntity(this.sourceIndexToId(i), isOpen);
 
-    onPerPageSelect = (count) => {
-        this.setState({
-            onPage: 1,
-            itemsPerPage: count
-        });
-        this.props.pageAndSize(1, count);
-    }
+    sourceIndexToId = (i) => this.props.entities[i / 2].id;
+
+    renderActions = () => (
+        [
+            {
+                title: 'Show Details',
+                onClick: (_ev, i) => this.props.history.push(`/${this.sourceIndexToId(i)}`)
+            },
+            ...this.renderViewLinks()
+        ]
+    );
+
+    renderViewLinks = () =>
+        reduce(Object.keys(viewDefinitions), (acc, viewName) => (
+            acc.push(
+                {
+                    title: `Show ${viewDefinitions[viewName].displayName}`,
+                    onClick: (_ev, i) => this.props.history.push(`/${this.sourceIndexToId(i)}/${viewName}`)
+                }
+            ) && acc
+        ), []);
 
     render = () => {
         const { entities, loaded } = this.props;
-        const data = flatten(entities.map((item, index) => (
+        const rowData = flatten(entities.map((item, index) => (
             [
                 {
                     ...item,
-                    children: [index + 1],
-                    cells: [].concat(
-                        this.filteredColumns.map(col => item[col.value] || ''),
-                        [
-                            <Actions key='foo' item={item} />,
-                            <Link key='bar' to={`/${item.id}/topology`}><TopologyIcon /></Link>
-                        ]
-                    )
+                    isOpen: !!item.expanded,
+                    cells: this.filteredColumns.map(col => item[col.value] || '').concat({
+                        title: <Link key='bar' to={`/${item.id}/topology`}><TopologyIcon /></Link>
+                    })
                 },
                 {
                     id: item.id + '_detail',
-                    isOpen: item.expanded,
+                    parent: index,
                     cells: [
                         {
                             title: item.expanded ? <DetailView sourceId={item.id}/> : 'collapsed content',
@@ -107,40 +118,22 @@ class SourcesListView extends React.Component {
                 }
             ]
         )));
+        // console.log(rowData);
 
         if (loaded) {
             return (
                 <Table
-                    widget-id="sourcesMainTable"
-                    className="pf-m-compact ins-entity-table"
-                    expandable={true}
-                    sortBy={this.state.sortBy}
-                    header={[...this.headers, '', '']}
-                    //header={columns && {
-                    //    ...mapValues(keyBy(columns, item => item.key), item => item.title),
-                    //    health: {
-                    //        title: 'Health',
-                    //        hasSort: false
-                    //    },
-                    //    action: ''
-                    //}}
+                    aria-label="List of Sources"
+                    onCollapse={this.onCollapse}
                     onSort={this.onSort}
-                    onRowClick={this.onRowClick}
-                    onItemSelect={this.onItemSelect}
-                    onExpandClick={this.onExpandClick}
-                    hasCheckbox
-                    rows={data}
-                    footer={
-                        <Pagination
-                            itemsPerPage={this.state.itemsPerPage}
-                            page={this.state.onPage}
-                            direction='up'
-                            onSetPage={this.onSetPage}
-                            onPerPageSelect={this.onPerPageSelect}
-                            numberOfItems={data ? this.props.numberOfEntities : 0}
-                        />
-                    }
-                />
+                    sortBy={this.state.sortBy}
+                    rows={rowData}
+                    cells={this.headers}
+                    actions={this.renderActions()}
+                >
+                    <TableHeader />
+                    <TableBody />
+                </Table>
             );
         }
 
@@ -165,11 +158,12 @@ SourcesListView.propTypes = {
     selectEntity: PropTypes.func.isRequired,
     expandEntity: PropTypes.func.isRequired,
     sortEntities: PropTypes.func.isRequired,
-    pageAndSize: PropTypes.func.isRequired,
 
     entities: PropTypes.arrayOf(PropTypes.any),
     numberOfEntities: PropTypes.number.isRequired,
-    loaded: PropTypes.bool.isRequired
+    loaded: PropTypes.bool.isRequired,
+
+    history: PropTypes.any.isRequired
 };
 
 SourcesListView.defaultProps = {
@@ -179,9 +173,9 @@ SourcesListView.defaultProps = {
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    loadEntities, selectEntity, expandEntity, sortEntities, pageAndSize }, dispatch);
+    loadEntities, selectEntity, expandEntity, sortEntities }, dispatch);
 
 const mapStateToProps = ({ providers: { entities, numberOfEntities, loaded } }) => ({ entities, numberOfEntities, loaded });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SourcesListView);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesListView));
 
