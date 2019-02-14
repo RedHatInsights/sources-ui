@@ -5,7 +5,7 @@ import 'babel-polyfill';
 import toJson from 'enzyme-to-json';
 import fetchMock from 'fetch-mock';
 
-// import 'unfetch/polyfill' // work around an issue in insights-ui-components
+import 'unfetch/polyfill'; // work around an issue in insights-ui-components
 
 configure({ adapter: new Adapter() });
 
