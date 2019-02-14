@@ -30,9 +30,15 @@ const DetailPage = asyncComponent(() => import(
 const TopologyPage = asyncComponent(() => import(
     /* webpackChunkName: "TopologyPage" */ './SmartComponents/TopologyPage/TopologyPage'));
 
+const SourcesPage = asyncComponent(() => import(
+    /* webpackChunkName: "SourcesPage" */ './pages/SourcesPage'));
+
 const paths = {
-    providers: '/',
-    provider_new: '/new',
+    sources: '/',
+    sources_new: '/new',
+
+    providers: '/providers',
+    provider_new: '/providers/new',
     provider_detail: '/:id',
     topology: '/:id/topology'
 };
@@ -70,6 +76,8 @@ export const Routes = (props) => {
 
     return (
         <Switch>
+            <InsightsRoute exact path={paths.sources} component={SourcesPage} rootClass='providers' />
+            <InsightsRoute exact path={paths.sources_new} component={SourcesPage} rootClass='providers' />
             <InsightsRoute exact path={paths.providers} component={ProviderPage} rootClass='providers' />
             <InsightsRoute exact path={paths.provider_new} component={ProviderPage} rootClass='providers' />
             <InsightsRoute path={paths.topology} component={TopologyPage} rootClass='provider' />
