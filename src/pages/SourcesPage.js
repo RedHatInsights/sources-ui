@@ -3,14 +3,13 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Donut, PageHeader, PageHeaderTitle, Pagination, Section } from '@red-hat-insights/insights-frontend-components';
+import { PageHeader, PageHeaderTitle, Pagination, Section } from '@red-hat-insights/insights-frontend-components';
 
 //import './provider-page.scss';
-import filter from 'lodash/filter';
 import { addProvider, createSource, filterProviders, loadEntities } from '../redux/actions/providers';
 
 import { Button } from '@patternfly/react-core';
-import { Card, CardHeader, CardBody, CardFooter, Gallery, Modal } from '@patternfly/react-core';
+import { Card, CardBody, CardFooter, Modal } from '@patternfly/react-core';
 
 import SourcesSimpleView from '../components/SourcesSimpleView';
 //import SourcesFilter from '../components/SourcesFilter';
@@ -33,6 +32,7 @@ class SourcesPage extends Component {
         addProvider: PropTypes.func.isRequired,
         createSource: PropTypes.func.isRequired,
         filterProviders: PropTypes.func.isRequired,
+        loadEntities: PropTypes.func.isRequired,
         pageAndSize: PropTypes.func.isRequired,
 
         numberOfEntities: PropTypes.number.isRequired,
@@ -85,7 +85,7 @@ class SourcesPage extends Component {
     }
 
     render = () => {
-        const filterColumns = filter(providerColumns, c => c.value);
+        // const filterColumns = filter(providerColumns, c => c.value);
 
         const form = wizardForm;
 
@@ -137,7 +137,8 @@ class SourcesPage extends Component {
     }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators({ addProvider, createSource, filterProviders, loadEntities, pageAndSize }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators(
+    { addProvider, createSource, filterProviders, loadEntities, pageAndSize }, dispatch);
 
 const mapStateToProps = ({ providers: { numberOfEntities } }) => ({ numberOfEntities });
 

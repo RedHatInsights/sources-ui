@@ -2,13 +2,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
-import { TopologyIcon } from '@patternfly/react-icons';
+import { withRouter } from 'react-router-dom';
 import { Table, TableHeader, TableBody, sortable } from '@patternfly/react-table';
 
 import flatten from 'lodash/flatten';
 import filter from 'lodash/filter';
-import reduce from 'lodash/reduce';
 import ContentLoader from 'react-content-loader';
 
 import { loadEntities, selectEntity, expandEntity, sortEntities } from '../redux/actions/providers';
@@ -70,14 +68,14 @@ class SourcesSimpleView extends React.Component {
             {
                 title: 'Remove Source',
                 onClick: (_ev, i) => this.props.history.push(`/${this.sourceIndexToId(i)}`)
-            },
+            }
         ]
     );
 
     render = () => {
         const { entities, loaded } = this.props;
-        const rowData = flatten(entities.map((item, index) => (
-            [{...item, cells: this.filteredColumns.map(col => item[col.value] || '') }]
+        const rowData = flatten(entities.map(item => (
+            [{ ...item, cells: this.filteredColumns.map(col => item[col.value] || '') }]
         )));
 
         if (loaded) {
