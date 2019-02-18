@@ -22,7 +22,7 @@ export const providerForm = {
 import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
 export const wizardForm = {
     initialValues: {
-        role: 'kubernetes',
+        role: 'kubernetes', // 'aws' for AWS EC2
         verify_ssl: true
     },
     schemaType: 'default',
@@ -37,9 +37,9 @@ export const wizardForm = {
                 name: 'step-1',
                 stepKey: 1,
                 nextStep: {
-                    when: 'source-type',
+                    when: 'source_type',
                     stepMapper: {
-                        aws: 'aws',
+                        amazon: 'amazon',
                         google: 'google',
                         openshift: 'openshift'
                     }
@@ -51,7 +51,7 @@ export const wizardForm = {
                     label: 'Name'
                 }, {
                     component: componentTypes.SELECT_COMPONENT,
-                    name: 'source-type',
+                    name: 'source_type',
                     label: 'Source type',
                     isRequired: true,
                     options: [{
@@ -60,12 +60,12 @@ export const wizardForm = {
                         value: 'openshift',
                         label: 'OpenShift'
                     }, {
-                        value: 'aws',
+                        value: 'amazon',
                         label: 'AWS EC2'
-                    }, {
+                    }/*, {
                         value: 'google',
                         label: 'Google Compute'
-                    }],
+                    }*/],
                     validate: [{
                         type: validatorTypes.REQUIRED
                     }]
@@ -103,12 +103,16 @@ export const wizardForm = {
             }, {
                 title: 'Configure AWS',
                 name: 'step-2',
-                stepKey: 'aws',
+                stepKey: 'amazon',
                 nextStep: 'summary',
                 fields: [{
                     component: componentTypes.TEXT_FIELD,
-                    name: 'aws-field',
-                    label: 'Aws field part'
+                    name: 'user_name',
+                    label: 'Access Key'
+                }, {
+                    component: componentTypes.TEXT_FIELD,
+                    name: 'password',
+                    label: 'Secret Key'
                 }]
             }, {
                 stepKey: 'google',
