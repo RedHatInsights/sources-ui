@@ -16,6 +16,27 @@ let TopologicalInventory = require('@manageiq/topological_inventory');
 
 console.log(TopologicalInventory);
 
+/*
+ * hard-coded provider specific functionality
+ */
+const sourceType2ProviderSpecific = source_type => {
+    switch (source_type) {
+        case 'openshift':
+            return {
+                role: 'kubernetes',
+                source_type: 1 // suppose OpenShift is 1
+                /* FIXME: replace with
+                 * https://ci.foo.redhat.com:1337/r/insights/platform/topological-inventory/v0.0/source_types?name=amazon
+                 * get id from there as source_type */
+            };
+        case 'amazon':
+            return {
+                role: 'aws',
+                source_type: 2 // suppose AWS is 2
+            };
+    }
+};
+
 export function doCreateSource (formData) {
     console.log('doCreateSource', formData);
     let apiInstance = new TopologicalInventory.DefaultApi();
@@ -23,26 +44,35 @@ export function doCreateSource (formData) {
     let defaultClient = TopologicalInventory.ApiClient.instance;
     defaultClient.basePath = SOURCES_API_BASE;
 
+    // lookup hard-coded values
+    const providerData = sourceType2ProviderSpecific(formData.source_type);
+
     let sourceData = {
-        tenant_id: 1, // FIXME: where do I get it?
+        tenant_id: 1, /* FIXME: get it from somewhere. Session? */
         name: formData.source_name,
-        source_type_id: 1 // FIXME should come from the form
+        source_type_id: providerData.source_type
     };
 
     return apiInstance.createSource(sourceData).then((sourceDataOut) => {
         console.log('API call createSource returned data: ', sourceDataOut);
 
         // For now we parse these from a single 'URL' field.
-        // TODO: need to create a component for entry of these
-        const parsed = formData.url.match('(https?)://(.*?):([0-9]*)?$');
-        const scheme = parsed[1];
-        const host = parsed[2];
-        const port = parsed[3];
+        /* TODO: need to create a component for entry of these */
+        let scheme;
+        let host;
+        let port;
+
+        if (formData.url) {
+            const parsed = formData.url.match('(https?)://(.*?):([0-9]*)?$');
+            scheme = parsed[1];
+            host = parsed[2];
+            port = parsed[3];
+        }
 
         const endpointData = {
             source_id: parseInt(sourceDataOut.id, 10),
             tenant_id: parseInt(sourceDataOut.tenant_id, 10),
-            role: formData.role, // 'kubernetes'
+            role: providerData.role, // formData.role, // 'kubernetes'
             scheme,
             port: parseInt(port, 10),
             host,
