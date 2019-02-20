@@ -50,16 +50,12 @@ class SourcesPage extends Component {
         };
     }
 
-    submitProvider = (values, formState) => {
-        console.log('submitProvider', values, formState);
-        //this.props.addProvider(values);
+    submitProvider = (values, _formState) => {
         this.props.createSource(values).then(() => {
-            //this.props.addAlert('Source added', 'success');
             this.props.history.replace('/');
             this.props.loadEntities();
         }).catch(error => {
-            console.debug('CATCH:'); console.debug(error);
-            //this.props.addAlert('Source adding failed', 'danger');
+            console.log('CATCH:'); console.log(error);
             this.props.history.replace('/');
         });
     }

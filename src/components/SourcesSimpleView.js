@@ -9,7 +9,7 @@ import flatten from 'lodash/flatten';
 import filter from 'lodash/filter';
 import ContentLoader from 'react-content-loader';
 
-import { loadEntities, selectEntity, expandEntity, sortEntities } from '../redux/actions/providers';
+import { loadEntities, selectEntity, expandEntity, removeSource, sortEntities } from '../redux/actions/providers';
 
 import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
 
@@ -67,7 +67,11 @@ class SourcesSimpleView extends React.Component {
         [
             {
                 title: 'Remove Source',
-                onClick: (_ev, i) => this.props.history.push(`/${this.sourceIndexToId(i)}`)
+                onClick: (_ev, i) => {
+                    this.props.removeSource(this.sourceIndexToId(i)).then(() => {
+                        this.props.loadEntities();
+                    });
+                }
             }
         ]
     );
@@ -115,6 +119,7 @@ SourcesSimpleView.propTypes = {
     loadEntities: PropTypes.func.isRequired,
     selectEntity: PropTypes.func.isRequired,
     expandEntity: PropTypes.func.isRequired,
+    removeSource: PropTypes.func.isRequired,
     sortEntities: PropTypes.func.isRequired,
 
     entities: PropTypes.arrayOf(PropTypes.any),
@@ -131,7 +136,7 @@ SourcesSimpleView.defaultProps = {
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    loadEntities, selectEntity, expandEntity, sortEntities }, dispatch);
+    loadEntities, selectEntity, expandEntity, sortEntities, removeSource }, dispatch);
 
 const mapStateToProps = ({ providers: { entities, numberOfEntities, loaded } }) => ({ entities, numberOfEntities, loaded });
 
