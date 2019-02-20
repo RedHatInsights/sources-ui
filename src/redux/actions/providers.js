@@ -2,7 +2,7 @@ import {
     ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE,
     ADD_PROVIDER, FILTER_PROVIDERS, CLOSE_ALERT, ADD_ALERT
 } from '../action-types-providers';
-import { getEntities, doCreateSource } from '../../api/entities';
+import { getEntities, doCreateSource, doRemoveSource } from '../../api/entities';
 
 export const loadEntities = () => ({
     type: ACTION_TYPES.LOAD_ENTITIES,
@@ -58,6 +58,22 @@ export const createSource = (formData) => {
                     variant: 'success',
                     title: 'Source was created.',
                     description: 'The new source was successfully created.'
+                }
+            }
+        }
+    };
+};
+
+export const removeSource = (sourceId) => {
+    return {
+        type: ACTION_TYPES.REMOVE_SOURCE,
+        payload: doRemoveSource(sourceId),
+        meta: {
+            notifications: {
+                fulfilled: {
+                    variant: 'success',
+                    title: 'Source was removed.',
+                    description: 'The selectes source was removed.'
                 }
             }
         }

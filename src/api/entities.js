@@ -37,6 +37,19 @@ const sourceType2ProviderSpecific = source_type => {
     }
 };
 
+export function doRemoveSource(sourceId) {
+    let apiInstance = new TopologicalInventory.DefaultApi();
+    let defaultClient = TopologicalInventory.ApiClient.instance;
+    defaultClient.basePath = SOURCES_API_BASE;
+
+    return apiInstance.deleteSource(sourceId).then((sourceDataOut) => {
+        console.log('API call deleteSource returned data: ', sourceDataOut);
+    }, (_error) => {
+        console.error('Source removal failed.');
+        throw { error: 'Source removal failed.' };
+    });
+}
+
 export function doCreateSource (formData) {
     console.log('doCreateSource', formData);
     let apiInstance = new TopologicalInventory.DefaultApi();
