@@ -30,11 +30,101 @@ const compileSourcesComboOptions = (sourceTypes) => (
     )
 );
 
+const temporatyHardcodedSourceSchemas = {
+    openshift: {
+        title: 'Configure OpenShift',
+        name: 'step-4',
+        stepKey: 'openshift',
+        nextStep: 'summary',
+        fields: [{
+            component: componentTypes.TEXT_FIELD,
+            name: 'role',
+            type: 'hidden'
+        }, {
+            component: componentTypes.TEXT_FIELD,
+            name: 'url',
+            label: 'URL'
+        }, {
+            component: componentTypes.CHECKBOX,
+            name: 'verify_ssl',
+            label: 'Verify SSL'
+        }, {
+            component: componentTypes.TEXT_FIELD,
+            name: 'certificate_authority',
+            label: 'Certificate Authority',
+            condition: {
+                when: 'verify_ssl',
+                is: true
+            }
+        }, {
+            component: componentTypes.TEXTAREA_FIELD,
+            name: 'token',
+            label: 'Token'
+        }]
+    },
+    amazon: {
+        title: 'Configure AWS',
+        name: 'step-2',
+        stepKey: 'amazon',
+        nextStep: 'summary',
+        fields: [{
+            component: componentTypes.TEXT_FIELD,
+            name: 'user_name',
+            label: 'Access Key'
+        }, {
+            component: componentTypes.TEXT_FIELD,
+            name: 'password',
+            label: 'Secret Key'
+        }]
+    }
+};
+
+const compileStepMapper = (_sourceTypes) => ({
+    amazon: 'amazon',
+    google: 'google',
+    openshift: 'openshift'
+});
+
+const firstStep = (sourceTypes) => ({
+    title: 'Get started with adding source',
+    name: 'step-1',
+    stepKey: 1,
+    nextStep: {
+        when: 'source_type',
+        stepMapper: compileStepMapper(sourceTypes)
+    },
+    fields: [{
+        component: componentTypes.TEXT_FIELD,
+        name: 'source_name',
+        type: 'text',
+        label: 'Name'
+    }, {
+        component: componentTypes.SELECT_COMPONENT,
+        name: 'source_type',
+        label: 'Source type',
+        isRequired: true,
+        options: compileSourcesComboOptions(sourceTypes),
+        validate: [{
+            type: validatorTypes.REQUIRED
+        }]
+    }]
+});
+
+const summaryStep = () => ({
+    fields: [{
+        name: 'summary',
+        component: 'summary',
+        assignFieldProvider: true
+    }],
+    stepKey: 'summary',
+    name: 'summary'
+});
+
 export function wizardForm(sourceTypes) {
     return {
         initialValues: {
             role: 'kubernetes', // 'aws' for AWS EC2
-            verify_ssl: true
+            verify_ssl: true    // for OpenShift
         },
         schemaType: 'default',
         showFormControls: false,
@@ -43,96 +133,12 @@ export function wizardForm(sourceTypes) {
                 component: componentTypes.WIZARD,
                 name: 'wizzard',
                 assignFieldProvider: true,
-                fields: [{
-                    title: 'Get started with adding source',
-                    name: 'step-1',
-                    stepKey: 1,
-                    nextStep: {
-                        when: 'source_type',
-                        stepMapper: {
-                            amazon: 'amazon',
-                            google: 'google',
-                            openshift: 'openshift'
-                        }
-                    },
-                    fields: [{
-                        component: componentTypes.TEXT_FIELD,
-                        name: 'source_name',
-                        type: 'text',
-                        label: 'Name'
-                    }, {
-                        component: componentTypes.SELECT_COMPONENT,
-                        name: 'source_type',
-                        label: 'Source type',
-                        isRequired: true,
-                        options: compileSourcesComboOptions(sourceTypes),
-                        validate: [{
-                            type: validatorTypes.REQUIRED
-                        }]
-                    }]
-                }, {
-                    title: 'Configure OpenShift',
-                    name: 'step-4',
-                    stepKey: 'openshift',
-                    nextStep: 'summary',
-                    fields: [{
-                        component: componentTypes.TEXT_FIELD,
-                        name: 'role',
-                        type: 'hidden'
-                    }, {
-                        component: componentTypes.TEXT_FIELD,
-                        name: 'url',
-                        label: 'URL'
-                    }, {
-                        component: componentTypes.CHECKBOX,
-                        name: 'verify_ssl',
-                        label: 'Verify SSL'
-                    }, {
-                        component: componentTypes.TEXT_FIELD,
-                        name: 'certificate_authority',
-                        label: 'Certificate Authority',
-                        condition: {
-                            when: 'verify_ssl',
-                            is: true
-                        }
-                    }, {
-                        component: componentTypes.TEXTAREA_FIELD,
-                        name: 'token',
-                        label: 'Token'
-                    }]
-                }, {
-                    title: 'Configure AWS',
-                    name: 'step-2',
-                    stepKey: 'amazon',
-                    nextStep: 'summary',
-                    fields: [{
-                        component: componentTypes.TEXT_FIELD,
-                        name: 'user_name',
-                        label: 'Access Key'
-                    }, {
-                        component: componentTypes.TEXT_FIELD,
-                        name: 'password',
-                        label: 'Secret Key'
-                    }]
-                }, {
-                    stepKey: 'google',
-                    title: 'Configure google',
-                    name: 'step-3',
-                    nextStep: 'summary',
-                    fields: [{
-                        component: componentTypes.TEXT_FIELD,
-                        name: 'google-field',
-                        label: 'Google field part'
-                    }]
-                }, {
-                    fields: [{
-                        name: 'summary',
-                        component: 'summary',
-                        assignFieldProvider: true
-                    }],
-                    stepKey: 'summary',
-                    name: 'summary'
-                }]
+                fields: [
+                    firstStep(sourceTypes),
+                    temporatyHardcodedSourceSchemas.openshift,
+                    temporatyHardcodedSourceSchemas.amazon,
+                    summaryStep()
+                ]
             }]
         },
         uiSchema: {
