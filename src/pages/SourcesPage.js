@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { PageHeader, PageHeaderTitle, Pagination, Section } from '@red-hat-insights/insights-frontend-components';
 
 //import './provider-page.scss';
-import { addProvider, createSource, filterProviders, loadEntities } from '../redux/actions/providers';
+import { addProvider, createSource, filterProviders, loadEntities, loadSourceTypes } from '../redux/actions/providers';
 
 import { Button } from '@patternfly/react-core';
 import { Card, CardBody, CardFooter, Modal } from '@patternfly/react-core';
@@ -33,13 +33,19 @@ class SourcesPage extends Component {
         createSource: PropTypes.func.isRequired,
         filterProviders: PropTypes.func.isRequired,
         loadEntities: PropTypes.func.isRequired,
+        loadSourceTypes: PropTypes.func.isRequired,
         pageAndSize: PropTypes.func.isRequired,
 
         numberOfEntities: PropTypes.number.isRequired,
+        sourceTypes: PropTypes.arrayOf(PropTypes.any),
 
         location: PropTypes.any.isRequired,
         history: PropTypes.any.isRequired
     };
+
+    componentDidMount = () => {
+        this.props.loadSourceTypes();
+    }
 
     constructor (props) {
         super(props);
@@ -83,7 +89,7 @@ class SourcesPage extends Component {
     render = () => {
         // const filterColumns = filter(providerColumns, c => c.value);
 
-        const form = wizardForm;
+        const form = wizardForm(this.props.sourceTypes || []);
 
         return (
             <React.Fragment>
@@ -134,8 +140,9 @@ class SourcesPage extends Component {
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators(
-    { addProvider, createSource, filterProviders, loadEntities, pageAndSize }, dispatch);
+    { addProvider, createSource, filterProviders, loadEntities,
+        loadSourceTypes, pageAndSize }, dispatch);
 
-const mapStateToProps = ({ providers: { numberOfEntities } }) => ({ numberOfEntities });
+const mapStateToProps = ({ providers: { numberOfEntities, sourceTypes } }) => ({ numberOfEntities, sourceTypes });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesPage));
