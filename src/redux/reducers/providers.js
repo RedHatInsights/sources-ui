@@ -36,12 +36,12 @@ const entitiesLoaded = (state, { payload: rows }) =>
 
 const sourceTypesPending = (state) => ({
     ...state,
-    sourceTypes: [],
+    sourceTypes: []
 });
 
 const sourceTypesLoaded = (state, { payload: sourceTypes }) => ({
     ...state,
-    sourceTypes,
+    sourceTypes
 });
 
 const selectEntity = (state, { payload: { id, selected } }) => ({

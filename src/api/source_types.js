@@ -1,9 +1,9 @@
-import { getApiInstance } from './entities.js'
+import { getApiInstance } from './entities.js';
 
 export function doLoadSourceTypes() {
     let opts = {
-      'limit': 100,
-      'offset': 0
+        limit: 100,
+        offset: 0
     };
     return getApiInstance().listSourceTypes(opts).then((data) => {
         console.log('API called successfully. Returned data: ', data);
@@ -12,4 +12,6 @@ export function doLoadSourceTypes() {
         console.error(error);
         return [];
     });
-};
+}
+
+;

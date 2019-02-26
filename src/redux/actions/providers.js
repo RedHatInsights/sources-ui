@@ -83,5 +83,5 @@ export const removeSource = (sourceId) => {
 
 export const loadSourceTypes = () => ({
     type: ACTION_TYPES.LOAD_SOURCE_TYPES,
-    payload: doLoadSourceTypes(),
+    payload: doLoadSourceTypes()
 });

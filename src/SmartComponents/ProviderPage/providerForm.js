@@ -23,10 +23,10 @@ import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-re
 
 const compileSourcesComboOptions = (sourceTypes) => (
     [{ label: 'Please Choose' }].concat(
-       sourceTypes.map(t => ({
-           value: t.id,
-           label: t.product_name
-       }))
+        sourceTypes.map(t => ({
+            value: t.name,
+            label: t.product_name
+        }))
     )
 );
 
@@ -138,5 +138,7 @@ export function wizardForm(sourceTypes) {
         uiSchema: {
         //password: {'ui:widget': 'password'}
         }
-    }
-};
+    };
+}
+
+;
