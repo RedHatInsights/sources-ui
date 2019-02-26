@@ -37,12 +37,15 @@ const sourceType2ProviderSpecific = source_type => {
     }
 };
 
-export function doRemoveSource(sourceId) {
+export function getApiInstance() {
     let apiInstance = new TopologicalInventory.DefaultApi();
     let defaultClient = TopologicalInventory.ApiClient.instance;
     defaultClient.basePath = SOURCES_API_BASE;
+    return apiInstance;
+}
 
-    return apiInstance.deleteSource(sourceId).then((sourceDataOut) => {
+export function doRemoveSource(sourceId) {
+    return getApiInstance.deleteSource(sourceId).then((sourceDataOut) => {
         console.log('API call deleteSource returned data: ', sourceDataOut);
     }, (_error) => {
         console.error('Source removal failed.');
@@ -50,12 +53,8 @@ export function doRemoveSource(sourceId) {
     });
 }
 
-export function doCreateSource (formData) {
+export function doCreateSource(formData) {
     console.log('doCreateSource', formData);
-    let apiInstance = new TopologicalInventory.DefaultApi();
-
-    let defaultClient = TopologicalInventory.ApiClient.instance;
-    defaultClient.basePath = SOURCES_API_BASE;
 
     // lookup hard-coded values
     const providerData = sourceType2ProviderSpecific(formData.source_type);
@@ -66,7 +65,7 @@ export function doCreateSource (formData) {
         source_type_id: providerData.source_type
     };
 
-    return apiInstance.createSource(sourceData).then((sourceDataOut) => {
+    return getApiInstance.createSource(sourceData).then((sourceDataOut) => {
         console.log('API call createSource returned data: ', sourceDataOut);
 
         // For now we parse these from a single 'URL' field.
