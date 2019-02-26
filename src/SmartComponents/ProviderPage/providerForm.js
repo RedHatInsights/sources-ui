@@ -20,122 +20,123 @@ export const providerForm = {
 };
 
 import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
-export const wizardForm = {
-    initialValues: {
-        role: 'kubernetes', // 'aws' for AWS EC2
-        verify_ssl: true
-    },
-    schemaType: 'default',
-    showFormControls: false,
-    schema: {
-        fields: [{
-            component: componentTypes.WIZARD,
-            name: 'wizzard',
-            assignFieldProvider: true,
+
+const compileSourcesComboOptions = (sourceTypes) => (
+    [{ label: 'Please Choose' }].concat(
+       sourceTypes.map(t => ({
+           value: t.id,
+           label: t.product_name
+       }))
+    )
+);
+
+export function wizardForm(sourceTypes) {
+    return {
+        initialValues: {
+            role: 'kubernetes', // 'aws' for AWS EC2
+            verify_ssl: true
+        },
+        schemaType: 'default',
+        showFormControls: false,
+        schema: {
             fields: [{
-                title: 'Get started with adding source',
-                name: 'step-1',
-                stepKey: 1,
-                nextStep: {
-                    when: 'source_type',
-                    stepMapper: {
-                        amazon: 'amazon',
-                        google: 'google',
-                        openshift: 'openshift'
-                    }
-                },
+                component: componentTypes.WIZARD,
+                name: 'wizzard',
+                assignFieldProvider: true,
                 fields: [{
-                    component: componentTypes.TEXT_FIELD,
-                    name: 'source_name',
-                    type: 'text',
-                    label: 'Name'
-                }, {
-                    component: componentTypes.SELECT_COMPONENT,
-                    name: 'source_type',
-                    label: 'Source type',
-                    isRequired: true,
-                    options: [{
-                        label: 'Please Choose'
+                    title: 'Get started with adding source',
+                    name: 'step-1',
+                    stepKey: 1,
+                    nextStep: {
+                        when: 'source_type',
+                        stepMapper: {
+                            amazon: 'amazon',
+                            google: 'google',
+                            openshift: 'openshift'
+                        }
+                    },
+                    fields: [{
+                        component: componentTypes.TEXT_FIELD,
+                        name: 'source_name',
+                        type: 'text',
+                        label: 'Name'
                     }, {
-                        value: 'openshift',
-                        label: 'OpenShift'
-                    }, {
-                        value: 'amazon',
-                        label: 'AWS EC2'
-                    }/*, {
-                        value: 'google',
-                        label: 'Google Compute'
-                    }*/],
-                    validate: [{
-                        type: validatorTypes.REQUIRED
+                        component: componentTypes.SELECT_COMPONENT,
+                        name: 'source_type',
+                        label: 'Source type',
+                        isRequired: true,
+                        options: compileSourcesComboOptions(sourceTypes),
+                        validate: [{
+                            type: validatorTypes.REQUIRED
+                        }]
                     }]
+                }, {
+                    title: 'Configure OpenShift',
+                    name: 'step-4',
+                    stepKey: 'openshift',
+                    nextStep: 'summary',
+                    fields: [{
+                        component: componentTypes.TEXT_FIELD,
+                        name: 'role',
+                        type: 'hidden'
+                    }, {
+                        component: componentTypes.TEXT_FIELD,
+                        name: 'url',
+                        label: 'URL'
+                    }, {
+                        component: componentTypes.CHECKBOX,
+                        name: 'verify_ssl',
+                        label: 'Verify SSL'
+                    }, {
+                        component: componentTypes.TEXT_FIELD,
+                        name: 'certificate_authority',
+                        label: 'Certificate Authority',
+                        condition: {
+                            when: 'verify_ssl',
+                            is: true
+                        }
+                    }, {
+                        component: componentTypes.TEXTAREA_FIELD,
+                        name: 'token',
+                        label: 'Token'
+                    }]
+                }, {
+                    title: 'Configure AWS',
+                    name: 'step-2',
+                    stepKey: 'amazon',
+                    nextStep: 'summary',
+                    fields: [{
+                        component: componentTypes.TEXT_FIELD,
+                        name: 'user_name',
+                        label: 'Access Key'
+                    }, {
+                        component: componentTypes.TEXT_FIELD,
+                        name: 'password',
+                        label: 'Secret Key'
+                    }]
+                }, {
+                    stepKey: 'google',
+                    title: 'Configure google',
+                    name: 'step-3',
+                    nextStep: 'summary',
+                    fields: [{
+                        component: componentTypes.TEXT_FIELD,
+                        name: 'google-field',
+                        label: 'Google field part'
+                    }]
+                }, {
+                    fields: [{
+                        name: 'summary',
+                        component: 'summary',
+                        assignFieldProvider: true
+                    }],
+                    stepKey: 'summary',
+                    name: 'summary'
                 }]
-            }, {
-                title: 'Configure OpenShift',
-                name: 'step-4',
-                stepKey: 'openshift',
-                nextStep: 'summary',
-                fields: [{
-                    component: componentTypes.TEXT_FIELD,
-                    name: 'role',
-                    type: 'hidden'
-                }, {
-                    component: componentTypes.TEXT_FIELD,
-                    name: 'url',
-                    label: 'URL'
-                }, {
-                    component: componentTypes.CHECKBOX,
-                    name: 'verify_ssl',
-                    label: 'Verify SSL'
-                }, {
-                    component: componentTypes.TEXT_FIELD,
-                    name: 'certificate_authority',
-                    label: 'Certificate Authority',
-                    condition: {
-                        when: 'verify_ssl',
-                        is: true
-                    }
-                }, {
-                    component: componentTypes.TEXTAREA_FIELD,
-                    name: 'token',
-                    label: 'Token'
-                }]
-            }, {
-                title: 'Configure AWS',
-                name: 'step-2',
-                stepKey: 'amazon',
-                nextStep: 'summary',
-                fields: [{
-                    component: componentTypes.TEXT_FIELD,
-                    name: 'user_name',
-                    label: 'Access Key'
-                }, {
-                    component: componentTypes.TEXT_FIELD,
-                    name: 'password',
-                    label: 'Secret Key'
-                }]
-            }, {
-                stepKey: 'google',
-                title: 'Configure google',
-                name: 'step-3',
-                nextStep: 'summary',
-                fields: [{
-                    component: componentTypes.TEXT_FIELD,
-                    name: 'google-field',
-                    label: 'Google field part'
-                }]
-            }, {
-                fields: [{
-                    name: 'summary',
-                    component: 'summary',
-                    assignFieldProvider: true
-                }],
-                stepKey: 'summary',
-                name: 'summary'
             }]
-        }]
-    },
-    uiSchema: {
-    //password: {'ui:widget': 'password'}
+        },
+        uiSchema: {
+        //password: {'ui:widget': 'password'}
+        }
     }
 };
