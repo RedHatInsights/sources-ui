@@ -101,8 +101,7 @@ const firstStep = (sourceTypes) => ({
 const summaryStep = () => ({
     fields: [{
         name: 'summary',
-        component: 'summary',
-        assignFieldProvider: true
+        component: 'summary'
     }],
     stepKey: 'summary',
     name: 'summary'
@@ -125,15 +124,11 @@ export function wizardForm(sourceTypes) {
             fields: [{
                 component: componentTypes.WIZARD,
                 name: 'wizzard',
-                assignFieldProvider: true,
                 fields: [firstStep(sourceTypes)].concat(
                     sourceTypes.map(t => fieldsToStep(sourceTypeSchema(t), t.name, 'summary')),
                     summaryStep()
                 )
             }]
-        },
-        uiSchema: {
-        //password: {'ui:widget': 'password'}
         }
     };
 }
