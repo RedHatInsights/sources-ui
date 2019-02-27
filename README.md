@@ -66,7 +66,7 @@ Insights Platform will deliver components and static assets through [npm](https:
 
 ## Topological Inventory Javascript API client
 
-- [jsclient](https://github.com/ManageIQ/topological_inventory-api-jsclient)
+- [Topological Inventory API javascript client](https://github.com/ManageIQ/topological_inventory-api-jsclient)
 
 
 ## Technologies

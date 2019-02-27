@@ -89,7 +89,7 @@ class SourcesPage extends Component {
             <React.Fragment>
                 <Modal
                     className='add-source'
-                    isLarge title='Add New Provider'
+                    isLarge title='Add a New Source'
                     isOpen={this.props.location.pathname === '/new'}
                     onClose={this.props.history.goBack}>
 
