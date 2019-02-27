@@ -1,4 +1,4 @@
-export const SOURCES_API_BASE = '/r/insights/platform/topological-inventory/v0.0';
+import { TOPOLOGICAL_INVENTORY_API_BASE } from '../Utilities/Constants';
 import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
 
 export function getEntities () {
@@ -46,7 +46,7 @@ export function getApiInstance() {
 
     apiInstance = new TopologicalInventory.DefaultApi();
     let defaultClient = TopologicalInventory.ApiClient.instance;
-    defaultClient.basePath = SOURCES_API_BASE;
+    defaultClient.basePath = TOPOLOGICAL_INVENTORY_API_BASE;
     return apiInstance;
 }
 
