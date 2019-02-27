@@ -11,12 +11,6 @@ export const defaultProvidersState = {
     numberOfEntities: 0
 };
 
-const entitiesPending = (state) => ({
-    ...state,
-    loaded: false,
-    expanded: null
-});
-
 const processListInState = (state) => {
     const { length, list } = processList(state.rows, state);
 
@@ -27,12 +21,28 @@ const processListInState = (state) => {
     };
 };
 
+const entitiesPending = (state) => ({
+    ...state,
+    loaded: false,
+    expanded: null
+});
+
 const entitiesLoaded = (state, { payload: rows }) =>
     processListInState({
         ...state,
         loaded: true,
         rows
     });
+
+const sourceTypesPending = (state) => ({
+    ...state,
+    sourceTypes: []
+});
+
+const sourceTypesLoaded = (state, { payload: sourceTypes }) => ({
+    ...state,
+    sourceTypes
+});
 
 const selectEntity = (state, { payload: { id, selected } }) => ({
     ...state,
@@ -117,6 +127,8 @@ export default {
     [ACTION_TYPES.LOAD_ENTITIES_FULFILLED]: entitiesLoaded,
     //    [ACTION_TYPES.CREATE_SOURCE_PENDING]: createSourcePending,
     //    [ACTION_TYPES.CREATE_SOURCE_FULFILLED]: createSourceFulFilled,
+    [ACTION_TYPES.LOAD_SOURCE_TYPES_PENDING]: sourceTypesPending,
+    [ACTION_TYPES.LOAD_SOURCE_TYPES_FULFILLED]: sourceTypesLoaded,
 
     [SELECT_ENTITY]: selectEntity,
     [EXPAND_ENTITY]: expandEntity,

@@ -84,6 +84,14 @@ const CopyFilesWebpackPlugin = new (require('copy-webpack-plugin'))([
 plugins.push(CopyFilesWebpackPlugin);
 
 /**
+ * Makes build-time env vars available to the client-side as constants
+ */
+const envPlugin = new webpack.DefinePlugin({
+    'process.env.BASE_PATH': JSON.stringify(process.env.BASE_PATH || '/r/insights/platform')
+});
+plugins.push(envPlugin);
+
+/**
  * Replaces any @@insights in the html files with config.insightsDeployment value.
  * This handles the path being either insights or insightsbeta in the esi:include.
  */

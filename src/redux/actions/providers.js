@@ -3,6 +3,7 @@ import {
     ADD_PROVIDER, FILTER_PROVIDERS, CLOSE_ALERT, ADD_ALERT
 } from '../action-types-providers';
 import { getEntities, doCreateSource, doRemoveSource } from '../../api/entities';
+import { doLoadSourceTypes } from '../../api/source_types';
 
 export const loadEntities = () => ({
     type: ACTION_TYPES.LOAD_ENTITIES,
@@ -79,3 +80,8 @@ export const removeSource = (sourceId) => {
         }
     };
 };
+
+export const loadSourceTypes = () => ({
+    type: ACTION_TYPES.LOAD_SOURCE_TYPES,
+    payload: doLoadSourceTypes()
+});

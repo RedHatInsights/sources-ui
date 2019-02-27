@@ -1,4 +1,4 @@
-export const SOURCES_API_BASE = '/r/insights/platform/topological-inventory/v0.0';
+import { TOPOLOGICAL_INVENTORY_API_BASE } from '../Utilities/Constants';
 import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
 
 export function getEntities () {
@@ -37,12 +37,21 @@ const sourceType2ProviderSpecific = source_type => {
     }
 };
 
-export function doRemoveSource(sourceId) {
-    let apiInstance = new TopologicalInventory.DefaultApi();
-    let defaultClient = TopologicalInventory.ApiClient.instance;
-    defaultClient.basePath = SOURCES_API_BASE;
+let apiInstance;
 
-    return apiInstance.deleteSource(sourceId).then((sourceDataOut) => {
+export function getApiInstance() {
+    if (apiInstance) {
+        return apiInstance;
+    }
+
+    apiInstance = new TopologicalInventory.DefaultApi();
+    let defaultClient = TopologicalInventory.ApiClient.instance;
+    defaultClient.basePath = TOPOLOGICAL_INVENTORY_API_BASE;
+    return apiInstance;
+}
+
+export function doRemoveSource(sourceId) {
+    return getApiInstance().deleteSource(sourceId).then((sourceDataOut) => {
         console.log('API call deleteSource returned data: ', sourceDataOut);
     }, (_error) => {
         console.error('Source removal failed.');
@@ -50,12 +59,8 @@ export function doRemoveSource(sourceId) {
     });
 }
 
-export function doCreateSource (formData) {
+export function doCreateSource(formData) {
     console.log('doCreateSource', formData);
-    let apiInstance = new TopologicalInventory.DefaultApi();
-
-    let defaultClient = TopologicalInventory.ApiClient.instance;
-    defaultClient.basePath = SOURCES_API_BASE;
 
     // lookup hard-coded values
     const providerData = sourceType2ProviderSpecific(formData.source_type);
@@ -66,7 +71,7 @@ export function doCreateSource (formData) {
         source_type_id: providerData.source_type
     };
 
-    return apiInstance.createSource(sourceData).then((sourceDataOut) => {
+    return getApiInstance().createSource(sourceData).then((sourceDataOut) => {
         console.log('API call createSource returned data: ', sourceDataOut);
 
         // For now we parse these from a single 'URL' field.
@@ -93,7 +98,7 @@ export function doCreateSource (formData) {
             certificate_authority: formData.certificate_authority
         };
 
-        return apiInstance.createEndpoint(endpointData).then((endpointDataOut) => {
+        return getApiInstance().createEndpoint(endpointData).then((endpointDataOut) => {
             console.log('API call createEndpoint returned data: ', endpointDataOut);
 
             const authenticationData = {
@@ -103,7 +108,7 @@ export function doCreateSource (formData) {
                 password: formData.token
             };
 
-            return apiInstance.createAuthentication(authenticationData).then((authenticationDataOut) => {
+            return getApiInstance().createAuthentication(authenticationData).then((authenticationDataOut) => {
                 console.log('API call createAuthentication returned data: ', authenticationDataOut);
 
                 return authenticationDataOut;
