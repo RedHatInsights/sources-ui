@@ -2,7 +2,7 @@ import { TOPOLOGICAL_INVENTORY_API_BASE } from '../Utilities/Constants';
 import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
 
 export function getEntities () {
-    return fetch(sourcesViewDefinition.url).then(r => {
+    return fetch(TOPOLOGICAL_INVENTORY_API_BASE + sourcesViewDefinition.url).then(r => {
         if (r.ok || r.type === 'opaque') {
             return r.json();
         }

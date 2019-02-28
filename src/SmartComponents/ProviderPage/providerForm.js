@@ -61,9 +61,6 @@ const temporaryHardcodedSourceSchemas = {
     }
 };
 
-console.log(JSON.stringify(temporaryHardcodedSourceSchemas.openshift));
-console.log(JSON.stringify(temporaryHardcodedSourceSchemas.amazon));
-
 /* Fall-back to hard-coded schemas */
 const sourceTypeSchema = t => (t.schema || temporaryHardcodedSourceSchemas[t.name]);
 

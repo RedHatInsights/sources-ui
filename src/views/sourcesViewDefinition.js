@@ -1,6 +1,6 @@
 export const sourcesViewDefinition = {
     displayName: 'Sources',
-    url: '/r/insights/platform/topological-inventory/v0.0/sources/',
+    url: '/sources/',
     /* [{"id":"1","name":"OCP","uid":"29e1facc-c769-48d2-914f-c6682314cf54","created_at":"2018-10-25T14:19:27.252Z",
         "updated_at":"2018-10-25T14:19:27.252Z","tenant_id":1}, {"id":"2","name":"foo","uid":null,
         "created_at":"2018-11-01T11:24:24.767Z","updated_at":"2018-11-01T11:24:24.767Z","tenant_id":1}] */
