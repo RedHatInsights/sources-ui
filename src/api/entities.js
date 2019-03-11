@@ -14,17 +14,15 @@ export function getEntities () {
 /*global require*/
 let TopologicalInventory = require('@manageiq/topological_inventory');
 
-console.log(TopologicalInventory);
-
 /*
  * hard-coded provider specific functionality
  */
-const sourceType2ProviderSpecific = source_type => {
-    switch (source_type) {
+const sourceType2ProviderSpecific = sourceType => {
+    switch (sourceType) {
         case 'openshift':
             return {
                 role: 'kubernetes',
-                source_type: 1 // suppose OpenShift is 1
+                sourceType: 1 // suppose OpenShift is 1
                 /* FIXME: replace with
                  * https://ci.foo.redhat.com:1337/r/insights/platform/topological-inventory/v0.0/source_types?name=amazon
                  * get id from there as source_type */
@@ -32,7 +30,7 @@ const sourceType2ProviderSpecific = source_type => {
         case 'amazon':
             return {
                 role: 'aws',
-                source_type: 2 // suppose AWS is 2
+                sourceType: 2 // suppose AWS is 2
             };
     }
 };
@@ -68,7 +66,7 @@ export function doCreateSource(formData) {
     let sourceData = {
         tenant_id: 1, /* FIXME: get it from somewhere. Session? */
         name: formData.source_name,
-        source_type_id: providerData.source_type
+        source_type_id: providerData.sourceType
     };
 
     return getApiInstance().createSource(sourceData).then((sourceDataOut) => {
