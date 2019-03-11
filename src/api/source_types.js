@@ -6,8 +6,7 @@ export function doLoadSourceTypes() {
         offset: 0
     };
     return getApiInstance().listSourceTypes(opts).then((data) => {
-        console.log('API called successfully. Returned data: ', data);
-        return data;
+        return data.data;
     }, (error) => {
         console.error(error);
         return [];

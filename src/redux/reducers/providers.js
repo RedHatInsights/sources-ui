@@ -27,7 +27,7 @@ const entitiesPending = (state) => ({
     expanded: null
 });
 
-const entitiesLoaded = (state, { payload: rows }) =>
+const entitiesLoaded = (state, { payload: { data: rows } }) =>
     processListInState({
         ...state,
         loaded: true,
