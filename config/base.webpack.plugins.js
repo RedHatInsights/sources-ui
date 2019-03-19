@@ -92,22 +92,14 @@ const envPlugin = new webpack.DefinePlugin({
 plugins.push(envPlugin);
 
 /**
- * Replaces any @@insights in the html files with config.insightsDeployment value.
+ * Replaces any @@insights in the html files with config.deploymentEnv value.
  * This handles the path being either insights or insightsbeta in the esi:include.
  */
 const HtmlReplaceWebpackPlugin = new(require('html-replace-webpack-plugin'))([{
-    pattern: '@@insights',
-    replacement: config.insightsDeployment
+    pattern: '@@env',
+    replacement: config.deploymentEnv
 }]);
 plugins.push(HtmlReplaceWebpackPlugin);
-
-/**
- * Replaces any instance of RELEASE in js files with config.insightsDeployment value.
- */
-const Release = new webpack.DefinePlugin({
-    RELEASE: JSON.stringify(config.insightsDeployment)
-});
-plugins.push(Release);
 
 /**
  * HMR
