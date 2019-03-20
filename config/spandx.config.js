@@ -8,7 +8,6 @@ module.exports = {
     routes: {
         '/hcm/sources': { host: `http://${localhost}:8002` },
         '/apps/sources': { host: `http://${localhost}:8002` },
-        '/apps/chrome': { host: 'https://ci.cloud.paas.upshift.redhat.com' },
-        '/r/insights/platform': { host: 'https://access.ci.cloud.paas.upshift.redhat.com' }
+        '/apps/chrome': { host: 'https://ci.cloud.paas.upshift.redhat.com' }
     }
 };
