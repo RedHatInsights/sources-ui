@@ -25,6 +25,14 @@ Note: You will need to set up the Insights environment if you want to develop
 with the starter app due to the consumption of the chroming service as well as
 setting up your global/app navigation through the API.
 
+## Running locally
+Have [insights-proxy](https://github.com/RedHatInsights/insights-proxy) installed under PROXY_PATH
+
+```shell
+SPANDX_CONFIG="./config/spandx.config.js" bash $PROXY_PATH/scripts/run.sh
+```
+
+
 ## Build app
 
 1. ```npm install```

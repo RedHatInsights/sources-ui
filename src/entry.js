@@ -4,13 +4,16 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import App from './App';
 
-// exposes webpack variable RELEASE
-/*global RELEASE:true*/
-/*eslint no-undef: "error"*/
+const pathName = window.location.pathname.split('/');
+pathName.shift();
+
+if (pathName[0] === 'beta') {
+    pathName.shift();
+}
 
 ReactDOM.render(
     <Provider store={App.getRegistry().getStore()}>
-        <Router basename={ `/${RELEASE}/platform/topological-inventory` }>
+        <Router basename={`${pathName[0]}/${pathName[1]}` }>
             <App />
         </Router>
     </Provider>,

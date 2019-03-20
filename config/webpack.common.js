@@ -9,17 +9,17 @@ const entry = process.env.NODE_ENV === 'production' ?
     path.resolve(__dirname, '../src/entry.js') :
     path.resolve(__dirname, '../src/entry-dev.js');
 
-let insightsDeployment = 'insights';
+let deploymentEnv = 'apps';
 const gitBranch = process.env.BRANCH || gitRevisionPlugin.branch();
 const betaBranch =
     gitBranch === 'ci-beta' ||
     gitBranch === 'qa-beta' ||
     gitBranch === 'prod-beta';
 if (process.env.NODE_ENV === 'production' && betaBranch) {
-    insightsDeployment = 'insightsbeta';
+    deploymentEnv = 'beta/apps';
 }
 
-const publicPath = `/${insightsDeployment}/platform/topological-inventory/`;
+const publicPath = `/${deploymentEnv}/sources/`;
 
 module.exports = {
     paths: {
@@ -33,5 +33,5 @@ module.exports = {
         static: path.resolve(__dirname, '../static'),
         publicPath
     },
-    insightsDeployment
+    deploymentEnv
 };
