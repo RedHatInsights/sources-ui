@@ -11,7 +11,7 @@
     "@manageiq/react-ui-components": "^0.11.2",
     "@manageiq/topological_inventory": "~1.2.0",
     "@patternfly/patternfly-next": "~1.0.131",
-    "@patternfly/react-core": "^1.51.6",
+    "@patternfly/react-core": "^2.9.2",
     "@patternfly/react-icons": "^2.10.0",
     "@patternfly/react-table": "0.4.18",
     "@patternfly/react-tokens": "^1.10.0",
