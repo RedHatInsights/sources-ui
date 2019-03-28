@@ -8,10 +8,12 @@ const gitRevisionPlugin = new GitRevisionPlugin({
 const entry = process.env.NODE_ENV === 'production' ?
     path.resolve(__dirname, '../src/entry.js') :
     path.resolve(__dirname, '../src/entry-dev.js');
+const { insights } = require('../package.json');
 
 let deploymentEnv = 'apps';
-const gitBranch = process.env.BRANCH || gitRevisionPlugin.branch();
+const gitBranch = process.env.TRAVIS_BRANCH || process.env.BRANCH || gitRevisionPlugin.branch();
 const betaBranch =
+    gitBranch === 'master' ||
     gitBranch === 'ci-beta' ||
     gitBranch === 'qa-beta' ||
     gitBranch === 'prod-beta';
@@ -19,7 +21,7 @@ if (process.env.NODE_ENV === 'production' && betaBranch) {
     deploymentEnv = 'beta/apps';
 }
 
-const publicPath = `/${deploymentEnv}/sources/`;
+const publicPath = `/${deploymentEnv}/${insights.appname}/`;
 
 module.exports = {
     paths: {
