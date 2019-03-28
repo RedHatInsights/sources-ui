@@ -13,6 +13,7 @@ import { Card, CardBody, CardFooter, Modal } from '@patternfly/react-core';
 
 import SourcesSimpleView from '../components/SourcesSimpleView';
 //import SourcesFilter from '../components/SourcesFilter';
+import SourcesEmptyState from '../components/SourcesEmptyState';
 
 import { providerColumns } from '../SmartComponents/ProviderPage/providerColumns';
 import { wizardForm } from '../SmartComponents/ProviderPage/providerForm';
@@ -38,6 +39,7 @@ class SourcesPage extends Component {
 
         numberOfEntities: PropTypes.number.isRequired,
         sourceTypes: PropTypes.arrayOf(PropTypes.any),
+        loaded: PropTypes.boolean,
 
         location: PropTypes.any.isRequired,
         history: PropTypes.any.isRequired
@@ -45,6 +47,7 @@ class SourcesPage extends Component {
 
     componentDidMount = () => {
         this.props.loadSourceTypes();
+        this.props.loadEntities();
     }
 
     constructor (props) {
@@ -86,10 +89,32 @@ class SourcesPage extends Component {
         this.props.pageAndSize(1, count);
     }
 
+    renderMainContent = () => (
+        <Card>
+            {/*<CardHeader>
+                <SourcesFilter columns={filterColumns} onFilter={this.onFilter}/>
+            </CardHeader>*/}
+            <CardBody>
+                <SourcesSimpleView columns={providerColumns}/>
+            </CardBody>
+            <CardFooter>
+                <Pagination
+                    itemsPerPage={this.state.itemsPerPage}
+                    page={this.state.onPage}
+                    direction='up'
+                    onSetPage={this.onSetPage}
+                    onPerPageSelect={this.onPerPageSelect}
+                    numberOfItems={this.props.numberOfEntities || 0}
+                />
+            </CardFooter>
+        </Card>
+    )
+
     render = () => {
         // const filterColumns = filter(providerColumns, c => c.value);
-
+        const { numberOfEntities } = this.props;
         const form = wizardForm(this.props.sourceTypes || []);
+        const displayEmptyState = this.props.loaded && (!numberOfEntities || numberOfEntities === 0);
 
         return (
             <React.Fragment>
@@ -115,24 +140,7 @@ class SourcesPage extends Component {
                     </Link>
                 </PageHeader>
                 <Section type='content'>
-                    <Card>
-                        {/*<CardHeader>
-                            <SourcesFilter columns={filterColumns} onFilter={this.onFilter}/>
-                        </CardHeader>*/}
-                        <CardBody>
-                            <SourcesSimpleView columns={providerColumns}/>
-                        </CardBody>
-                        <CardFooter>
-                            <Pagination
-                                itemsPerPage={this.state.itemsPerPage}
-                                page={this.state.onPage}
-                                direction='up'
-                                onSetPage={this.onSetPage}
-                                onPerPageSelect={this.onPerPageSelect}
-                                numberOfItems={this.props.numberOfEntities || 0}
-                            />
-                        </CardFooter>
-                    </Card>
+                    {displayEmptyState ? <SourcesEmptyState /> : this.renderMainContent()}
                 </Section>
             </React.Fragment>
         );
@@ -143,6 +151,6 @@ const mapDispatchToProps = dispatch => bindActionCreators(
     { addProvider, createSource, filterProviders, loadEntities,
         loadSourceTypes, pageAndSize }, dispatch);
 
-const mapStateToProps = ({ providers: { numberOfEntities, sourceTypes } }) => ({ numberOfEntities, sourceTypes });
+const mapStateToProps = ({ providers: { numberOfEntities, sourceTypes, loaded } }) => ({ numberOfEntities, sourceTypes, loaded });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesPage));
