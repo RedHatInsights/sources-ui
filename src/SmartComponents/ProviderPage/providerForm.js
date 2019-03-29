@@ -73,7 +73,7 @@ const sourceTypeSchemaWithFallback = t => (t.schema || temporaryHardcodedSourceS
 const sourceTypeSchemaHardcoded = t => temporaryHardcodedSourceSchemas[t.name];
 const sourceTypeSchemaServer = t => t.schema;
 
-const schemaMode = 1; // defaults to 0
+const schemaMode = 0; // defaults to 0
 const sourceTypeSchema = {
     0: sourceTypeSchemaWithFallback,
     1: sourceTypeSchemaHardcoded,
