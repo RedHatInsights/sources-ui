@@ -20,12 +20,12 @@ const fieldsToStep = (fields, stepName, nextStep) => ({
 const temporaryHardcodedSourceSchemas = {
     openshift: {
         title: 'Configure OpenShift',
-        /* fields: [{
+        fields: [{
             component: componentTypes.TEXT_FIELD,
             name: 'role',
-            type: 'hidden'
-        }, */
-        fields: [{
+            type: 'hidden',
+            initialValue: 'kubernetes' // value of 'role' for the endpoint
+        }, {
             component: componentTypes.TEXT_FIELD,
             name: 'url',
             label: 'URL'
@@ -42,27 +42,43 @@ const temporaryHardcodedSourceSchemas = {
                 is: true
             }
         }, {
-            component: componentTypes.TEXTAREA_FIELD,
+            component: componentTypes.TEXT_FIELD,
             name: 'token',
-            label: 'Token'
+            label: 'Token',
+            type: 'password'
         }]
     },
     amazon: {
         title: 'Configure AWS',
         fields: [{
             component: componentTypes.TEXT_FIELD,
+            name: 'role',
+            type: 'hidden',
+            initialValue: 'aws' // value of 'role' for the endpoint
+        }, {
+            component: componentTypes.TEXT_FIELD,
             name: 'user_name',
             label: 'Access Key'
         }, {
             component: componentTypes.TEXT_FIELD,
             name: 'password',
-            label: 'Secret Key'
+            label: 'Secret Key',
+            type: 'password'
         }]
     }
 };
 
-/* Fall-back to hard-coded schemas */
-const sourceTypeSchema = t => (t.schema || temporaryHardcodedSourceSchemas[t.name]);
+/* Switch between using hard-coded provider schemas and schemas from the api/source_types */
+const sourceTypeSchemaWithFallback = t => (t.schema || temporaryHardcodedSourceSchemas[t.name]);
+const sourceTypeSchemaHardcoded = t => temporaryHardcodedSourceSchemas[t.name];
+const sourceTypeSchemaServer = t => t.schema;
+
+const schemaMode = 1; // defaults to 0
+const sourceTypeSchema = {
+    0: sourceTypeSchemaWithFallback,
+    1: sourceTypeSchemaHardcoded,
+    2: sourceTypeSchemaServer
+}[schemaMode];
 
 /* return hash of form: { amazon: 'amazon', google: 'google', openshift: 'openshift' } */
 const compileStepMapper = (sourceTypes) => {
@@ -112,15 +128,14 @@ export function wizardForm(sourceTypes) {
      * */
     return {
         initialValues: {
-            role: 'kubernetes', // 'aws' for AWS EC2
-            verify_ssl: true    // for OpenShift
+            verify_ssl: true // for OpenShift
         },
         schemaType: 'default',
         showFormControls: false,
         schema: {
             fields: [{
                 component: componentTypes.WIZARD,
-                name: 'wizzard',
+                name: 'wizard',
                 fields: [firstStep(sourceTypes)].concat(
                     sourceTypes.map(t => fieldsToStep(sourceTypeSchema(t), t.name, 'summary')),
                     summaryStep()

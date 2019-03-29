@@ -49,10 +49,10 @@ export const addAlert = (message, type) => ({
     payload: { message, type }
 });
 
-export const createSource = (formData) => {
+export const createSource = (formData, sourceTypes) => {
     return {
         type: ACTION_TYPES.CREATE_SOURCE,
-        payload: doCreateSource(formData),
+        payload: doCreateSource(formData, sourceTypes),
         meta: {
             notifications: {
                 fulfilled: {

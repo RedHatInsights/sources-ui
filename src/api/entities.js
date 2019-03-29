@@ -1,5 +1,6 @@
 import { TOPOLOGICAL_INVENTORY_API_BASE } from '../Utilities/Constants';
 import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
+import find from 'lodash/find';
 
 export function getEntities () {
     return fetch(TOPOLOGICAL_INVENTORY_API_BASE + sourcesViewDefinition.url).then(r => {
@@ -13,27 +14,6 @@ export function getEntities () {
 
 /*global require*/
 let TopologicalInventory = require('@manageiq/topological_inventory');
-
-/*
- * hard-coded provider specific functionality
- */
-const sourceType2ProviderSpecific = sourceType => {
-    switch (sourceType) {
-        case 'openshift':
-            return {
-                role: 'kubernetes',
-                sourceType: 1 // suppose OpenShift is 1
-                /* FIXME: replace with
-                 * https://ci.foo.redhat.com:1337/r/insights/platform/topological-inventory/v0.0/source_types?name=amazon
-                 * get id from there as source_type */
-            };
-        case 'amazon':
-            return {
-                role: 'aws',
-                sourceType: 2 // suppose AWS is 2
-            };
-    }
-};
 
 let apiInstance;
 
@@ -57,16 +37,11 @@ export function doRemoveSource(sourceId) {
     });
 }
 
-export function doCreateSource(formData) {
-    console.log('doCreateSource', formData);
-
-    // lookup hard-coded values
-    const providerData = sourceType2ProviderSpecific(formData.source_type);
-
+export function doCreateSource(formData, sourceTypes) {
     let sourceData = {
         tenant_id: 1, /* FIXME: get it from somewhere. Session? */
         name: formData.source_name,
-        source_type_id: providerData.sourceType
+        source_type_id: find(sourceTypes, { name: formData.source_type }).id
     };
 
     return getApiInstance().createSource(sourceData).then((sourceDataOut) => {
@@ -88,7 +63,7 @@ export function doCreateSource(formData) {
         const endpointData = {
             source_id: parseInt(sourceDataOut.id, 10),
             tenant_id: parseInt(sourceDataOut.tenant_id, 10),
-            role: providerData.role, // formData.role, // 'kubernetes'
+            role: formData.role,
             scheme,
             port: parseInt(port, 10),
             host,
@@ -103,7 +78,7 @@ export function doCreateSource(formData) {
                 resource_id: parseInt(endpointDataOut.id, 10),
                 resource_type: 'Endpoint',
                 tenant_id: parseInt(sourceDataOut.tenant_id, 10),
-                password: formData.token
+                password: formData.token || formData.password
             };
 
             return getApiInstance().createAuthentication(authenticationData).then((authenticationDataOut) => {

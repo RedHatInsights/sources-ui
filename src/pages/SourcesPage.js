@@ -60,7 +60,7 @@ class SourcesPage extends Component {
     }
 
     submitProvider = (values, _formState) => {
-        this.props.createSource(values).then(() => {
+        this.props.createSource(values, this.props.sourceTypes).then(() => {
             this.props.history.replace('/');
             this.props.loadEntities();
         }).catch(error => {
