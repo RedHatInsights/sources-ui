@@ -15,7 +15,7 @@ import SourcesSimpleView from '../components/SourcesSimpleView';
 //import SourcesFilter from '../components/SourcesFilter';
 import SourcesEmptyState from '../components/SourcesEmptyState';
 
-import { providerColumns } from '../SmartComponents/ProviderPage/providerColumns';
+import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
 import { wizardForm } from '../SmartComponents/ProviderPage/providerForm';
 import SourcesFormRenderer from '../Utilities/SourcesFormRenderer';
 
@@ -95,7 +95,7 @@ class SourcesPage extends Component {
                 <SourcesFilter columns={filterColumns} onFilter={this.onFilter}/>
             </CardHeader>*/}
             <CardBody>
-                <SourcesSimpleView columns={providerColumns}/>
+                <SourcesSimpleView columns={sourcesViewDefinition.columns}/>
             </CardBody>
             <CardFooter>
                 <Pagination
@@ -151,6 +151,6 @@ const mapDispatchToProps = dispatch => bindActionCreators(
     { addProvider, createSource, filterProviders, loadEntities,
         loadSourceTypes, pageAndSize }, dispatch);
 
-const mapStateToProps = ({ providers: { numberOfEntities, sourceTypes, loaded } }) => ({ numberOfEntities, sourceTypes, loaded });
+const mapStateToProps = ({ providers: { loaded, numberOfEntities, sourceTypes } }) => ({ loaded, numberOfEntities, sourceTypes });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesPage));
