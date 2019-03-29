@@ -45,8 +45,6 @@ class SourcesSimpleView extends React.Component {
         };
     }
 
-    componentDidMount = () => this.props.loadEntities();
-
     onItemSelect = (_event, key, checked) => this.props.selectEntity(key, checked);
 
     onSort = (_event, key, direction) => {
