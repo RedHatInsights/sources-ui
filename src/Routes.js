@@ -35,11 +35,11 @@ const SourcesPage = asyncComponent(() => import(
 
 const paths = {
     sources: '/',
-    sources_new: '/new',
+    sourcesNew: '/new',
 
     providers: '/providers',
-    provider_new: '/providers/new',
-    provider_detail: '/:id',
+    providerNew: '/providers/new',
+    providerDetail: '/:id',
     topology: '/:id/topology'
 };
 
@@ -77,11 +77,11 @@ export const Routes = (props) => {
     return (
         <Switch>
             <InsightsRoute exact path={paths.sources} component={SourcesPage} rootClass='providers' />
-            <InsightsRoute exact path={paths.sources_new} component={SourcesPage} rootClass='providers' />
+            <InsightsRoute exact path={paths.sourcesNew} component={SourcesPage} rootClass='providers' />
             <InsightsRoute exact path={paths.providers} component={ProviderPage} rootClass='providers' />
-            <InsightsRoute exact path={paths.provider_new} component={ProviderPage} rootClass='providers' />
+            <InsightsRoute exact path={paths.providerNew} component={ProviderPage} rootClass='providers' />
             <InsightsRoute path={paths.topology} component={TopologyPage} rootClass='provider' />
-            <InsightsRoute exact path={paths.provider_detail} component={DetailPage} rootClass='provider' />
+            <InsightsRoute exact path={paths.providerDetail} component={DetailPage} rootClass='provider' />
             { dynamicRoutes(viewDefinitions) }
 
             {/* Finally, catch all unmatched routes */}
