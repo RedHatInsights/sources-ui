@@ -4,15 +4,13 @@ import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { PageHeader, PageHeaderTitle, Pagination, Section } from '@red-hat-insights/insights-frontend-components';
-
-//import './provider-page.scss';
 import { addProvider, createSource, filterProviders, loadEntities, loadSourceTypes } from '../redux/actions/providers';
-
 import { Button } from '@patternfly/react-core';
-import { Card, CardBody, CardFooter, Modal } from '@patternfly/react-core';
+import { Card, CardBody, CardFooter, CardHeader, Modal } from '@patternfly/react-core';
+import filter from 'lodash/filter';
 
 import SourcesSimpleView from '../components/SourcesSimpleView';
-//import SourcesFilter from '../components/SourcesFilter';
+import SourcesFilter from '../components/SourcesFilter';
 import SourcesEmptyState from '../components/SourcesEmptyState';
 
 import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
@@ -91,9 +89,11 @@ class SourcesPage extends Component {
 
     renderMainContent = () => (
         <Card>
-            {/*<CardHeader>
-                <SourcesFilter columns={filterColumns} onFilter={this.onFilter}/>
-            </CardHeader>*/}
+            <CardHeader>
+                <SourcesFilter
+                    columns={filter(sourcesViewDefinition.columns, c => c.searchable)}
+                    onFilter={this.onFilter}/>
+            </CardHeader>
             <CardBody>
                 <SourcesSimpleView columns={sourcesViewDefinition.columns}/>
             </CardBody>
@@ -108,10 +108,9 @@ class SourcesPage extends Component {
                 />
             </CardFooter>
         </Card>
-    )
+    );
 
     render = () => {
-        // const filterColumns = filter(providerColumns, c => c.value);
         const { numberOfEntities } = this.props;
         const form = wizardForm(this.props.sourceTypes || []);
         const displayEmptyState = this.props.loaded && (!numberOfEntities || numberOfEntities === 0);
