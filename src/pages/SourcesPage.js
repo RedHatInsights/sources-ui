@@ -39,7 +39,7 @@ class SourcesPage extends Component {
 
         numberOfEntities: PropTypes.number.isRequired,
         sourceTypes: PropTypes.arrayOf(PropTypes.any),
-        loaded: PropTypes.boolean,
+        loaded: PropTypes.bool.isRequired,
 
         location: PropTypes.any.isRequired,
         history: PropTypes.any.isRequired
@@ -60,7 +60,7 @@ class SourcesPage extends Component {
     }
 
     submitProvider = (values, _formState) => {
-        this.props.createSource(values).then(() => {
+        this.props.createSource(values, this.props.sourceTypes).then(() => {
             this.props.history.replace('/');
             this.props.loadEntities();
         }).catch(error => {
