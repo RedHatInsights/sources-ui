@@ -1,6 +1,6 @@
 FROM node:8-alpine
 
-ENV WORKDIR /topology-inventory-ui/
+ENV WORKDIR /sources-ui/
 RUN mkdir -p $WORKDIR
 WORKDIR $WORKDIR
 COPY . $WORKDIR
