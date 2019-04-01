@@ -1,6 +1,6 @@
 import {
     ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE,
-    ADD_PROVIDER, FILTER_PROVIDERS, CLOSE_ALERT, ADD_ALERT
+    ADD_PROVIDER, FILTER_PROVIDERS, CLOSE_ALERT, ADD_ALERT, SET_FILTER_COLUMN
 } from '../action-types-providers';
 import { getEntities, doCreateSource, doRemoveSource } from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
@@ -35,9 +35,14 @@ export const addProvider = (formData) => ({
     payload: { formData }
 });
 
-export const filterProviders = (column, value) => ({
+export const filterProviders = (value) => ({
     type: FILTER_PROVIDERS,
-    payload: { column, value }
+    payload: { value }
+});
+
+export const setProviderFilterColumn = (column) => ({
+    type: SET_FILTER_COLUMN,
+    payload: { column }
 });
 
 export const closeAlert = () => ({

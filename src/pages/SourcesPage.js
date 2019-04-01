@@ -4,7 +4,14 @@ import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { PageHeader, PageHeaderTitle, Pagination, Section } from '@red-hat-insights/insights-frontend-components';
-import { addProvider, createSource, filterProviders, loadEntities, loadSourceTypes } from '../redux/actions/providers';
+import {
+    addProvider,
+    createSource,
+    filterProviders,
+    loadEntities,
+    loadSourceTypes,
+    setProviderFilterColumn
+} from '../redux/actions/providers';
 import { Button } from '@patternfly/react-core';
 import { Card, CardBody, CardFooter, CardHeader, Modal } from '@patternfly/react-core';
 import filter from 'lodash/filter';
@@ -31,6 +38,7 @@ class SourcesPage extends Component {
         addProvider: PropTypes.func.isRequired,
         createSource: PropTypes.func.isRequired,
         filterProviders: PropTypes.func.isRequired,
+        setProviderFilterColumn: PropTypes.func.isRequired,
         loadEntities: PropTypes.func.isRequired,
         loadSourceTypes: PropTypes.func.isRequired,
         pageAndSize: PropTypes.func.isRequired,
@@ -67,9 +75,14 @@ class SourcesPage extends Component {
         });
     }
 
-    onFilter = (filterColumn, filterValue) => {
-        console.log('onFilter', filterColumn, filterValue);
-        this.props.filterProviders(filterColumn, filterValue);
+    onFilter = (filterValue) => {
+        console.log('onFilter', filterValue);
+        this.props.filterProviders(filterValue);
+    }
+
+    onFilterSelect = (_component, column) => {
+        console.log('onFilter', column);
+        this.props.setProviderFilterColumn(column.value);
     }
 
     onSetPage = (number) => {
@@ -92,7 +105,8 @@ class SourcesPage extends Component {
             <CardHeader>
                 <SourcesFilter
                     columns={filter(sourcesViewDefinition.columns, c => c.searchable)}
-                    onFilter={this.onFilter}/>
+                    onFilter={this.onFilter}
+                    onFilterSelect={this.onFilterSelect}/>
             </CardHeader>
             <CardBody>
                 <SourcesSimpleView columns={sourcesViewDefinition.columns}/>
@@ -148,7 +162,7 @@ class SourcesPage extends Component {
 
 const mapDispatchToProps = dispatch => bindActionCreators(
     { addProvider, createSource, filterProviders, loadEntities,
-        loadSourceTypes, pageAndSize }, dispatch);
+        loadSourceTypes, pageAndSize, setProviderFilterColumn }, dispatch);
 
 const mapStateToProps = ({ providers: { loaded, numberOfEntities, sourceTypes } }) => ({ loaded, numberOfEntities, sourceTypes });
 

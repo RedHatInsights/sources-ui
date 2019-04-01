@@ -7,18 +7,14 @@ class SourcesFilter extends Component {
         super(props);
     }
 
-    onFilterButtonClick = (filterValue, column) => {
-        console.log('filter click', column.value, filterValue);
-        this.props.onFilter(column.value, filterValue);
-    }
-
     render = () =>
         <SimpleTableFilter
             options={{
                 title: 'Filter By',
                 items: this.props.columns
             }}
-            onButtonClick={this.onFilterButtonClick}
+            onOptionSelect={this.props.onFilterSelect}
+            onButtonClick={this.props.onFilter}
         />
 }
 
@@ -27,7 +23,8 @@ SourcesFilter.propTypes = {
         value: PropTypes.string,
         title: PropTypes.string
     })).isRequired,
-    onFilter: PropTypes.func.isRequired
+    onFilter: PropTypes.func.isRequired,
+    onFilterSelect: PropTypes.func.isRequired
 };
 
 export default SourcesFilter;

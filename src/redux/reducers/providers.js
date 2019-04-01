@@ -1,6 +1,7 @@
 import {
     ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES,
-    PAGE_AND_SIZE, ADD_PROVIDER, FILTER_PROVIDERS//, CLOSE_ALERT, ADD_ALERT
+    PAGE_AND_SIZE, ADD_PROVIDER, FILTER_PROVIDERS, SET_FILTER_COLUMN
+    //, CLOSE_ALERT, ADD_ALERT
 } from '../action-types-providers';
 import { processList } from '../../Utilities/listHelpers';
 
@@ -84,11 +85,17 @@ const addProvider = (state, { payload: { formData } }) => {
     };
 };
 
-const filterProviders = (state, { payload: { column, value } }) =>
+const filterProviders = (state, { payload: { value } }) =>
+    processListInState({
+        ...state,
+        filterValue: value,
+        pageNumber: 1
+    });
+
+const setFilterColumn = (state, { payload: { column } }) =>
     processListInState({
         ...state,
         filterColumn: column,
-        filterValue: value,
         pageNumber: 1
     });
 
@@ -135,7 +142,8 @@ export default {
     [SORT_ENTITIES]: sortEntities,
     [PAGE_AND_SIZE]: setPageAndSize,
     [ADD_PROVIDER]: addProvider,
-    [FILTER_PROVIDERS]: filterProviders
+    [FILTER_PROVIDERS]: filterProviders,
+    [SET_FILTER_COLUMN]: setFilterColumn
 //    [CLOSE_ALERT]: closeAlert,
 //    [ADD_ALERT]: addAlert,
 };
