@@ -43,9 +43,10 @@ class SourcesPage extends Component {
         loadSourceTypes: PropTypes.func.isRequired,
         pageAndSize: PropTypes.func.isRequired,
 
+        filterValue: PropTypes.string,
+        loaded: PropTypes.bool.isRequired,
         numberOfEntities: PropTypes.number.isRequired,
         sourceTypes: PropTypes.arrayOf(PropTypes.any),
-        loaded: PropTypes.bool.isRequired,
 
         location: PropTypes.any.isRequired,
         history: PropTypes.any.isRequired
@@ -127,7 +128,9 @@ class SourcesPage extends Component {
     render = () => {
         const { numberOfEntities } = this.props;
         const form = wizardForm(this.props.sourceTypes || []);
-        const displayEmptyState = this.props.loaded && (!numberOfEntities || numberOfEntities === 0);
+        const displayEmptyState = this.props.loaded &&
+            !this.props.filterValue &&
+            (!numberOfEntities || numberOfEntities === 0);
 
         return (
             <React.Fragment>
@@ -164,6 +167,8 @@ const mapDispatchToProps = dispatch => bindActionCreators(
     { addProvider, createSource, filterProviders, loadEntities,
         loadSourceTypes, pageAndSize, setProviderFilterColumn }, dispatch);
 
-const mapStateToProps = ({ providers: { loaded, numberOfEntities, sourceTypes } }) => ({ loaded, numberOfEntities, sourceTypes });
+const mapStateToProps = ({ providers: { filterValue, loaded, numberOfEntities, sourceTypes } }) => (
+    { filterValue, loaded, numberOfEntities, sourceTypes }
+);
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesPage));
