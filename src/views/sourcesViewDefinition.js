@@ -11,7 +11,7 @@ export const sourcesViewDefinition = {
         //{ title: 'Resource version', value: 'resource_version', },
         { title: 'UID', value: 'uid' },
         { title: 'Name', value: 'name' },
-        { title: 'Source Type', value: 'source_type' },
+        { title: 'Source Type', value: 'source_type_id', formatter: 'sourceTypeFormatter' },
         // this column does not actually exist in the API, but is required by the design
         { title: 'Applications', value: 'applications' },
         //{ title: 'Tags', value: 'tags', },

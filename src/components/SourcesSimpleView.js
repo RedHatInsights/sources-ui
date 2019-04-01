@@ -11,8 +11,6 @@ import ContentLoader from 'react-content-loader';
 
 import { loadEntities, selectEntity, expandEntity, removeSource, sortEntities } from '../redux/actions/providers';
 
-import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
-
 const RowLoader = props => (
     <ContentLoader
         height={20}
@@ -33,7 +31,7 @@ class SourcesSimpleView extends React.Component {
     constructor(props) {
         super(props);
 
-        this.filteredColumns = filter(sourcesViewDefinition.columns, c => c.title);
+        this.filteredColumns = filter(this.props.columns, c => c.title);
 
         this.headers = this.filteredColumns.map(col => ({
             title: col.title,
@@ -74,11 +72,22 @@ class SourcesSimpleView extends React.Component {
         ]
     );
 
+    sourceTypeFormatter = sourceType => (this.sourceTypeMap.get(sourceType) || sourceType || '');
+
+    itemToCells = item => {
+        return this.filteredColumns.map(
+            col => (col.formatter ?
+                this[col.formatter](item[col.value]) :
+                item[col.value] || ''));
+    }
+
     render = () => {
-        const { entities, loaded } = this.props;
+        const { entities, loaded, sourceTypes } = this.props;
         const rowData = flatten(entities.map(item => (
-            [{ ...item, cells: this.filteredColumns.map(col => item[col.value] || '') }]
+            [{ ...item, cells: this.itemToCells(item) }]
         )));
+
+        this.sourceTypeMap = new Map(sourceTypes.map(t => [t.id, t.name]));
 
         if (loaded) {
             return (
@@ -123,6 +132,7 @@ SourcesSimpleView.propTypes = {
     entities: PropTypes.arrayOf(PropTypes.any),
     numberOfEntities: PropTypes.number.isRequired,
     loaded: PropTypes.bool.isRequired,
+    sourceTypes: PropTypes.arrayOf(PropTypes.any),
 
     history: PropTypes.any.isRequired
 };
@@ -130,13 +140,15 @@ SourcesSimpleView.propTypes = {
 SourcesSimpleView.defaultProps = {
     entities: [],
     numberOfEntities: 0,
-    loaded: false
+    loaded: false,
+    sourceTypes: []
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     loadEntities, selectEntity, expandEntity, sortEntities, removeSource }, dispatch);
 
-const mapStateToProps = ({ providers: { entities, numberOfEntities, loaded } }) => ({ entities, numberOfEntities, loaded });
+const mapStateToProps = ({ providers: { entities, loaded, numberOfEntities, sourceTypes } }) =>
+    ({ entities, loaded, numberOfEntities, sourceTypes });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesSimpleView));
 
