@@ -24,5 +24,6 @@ export const SORT_ENTITIES = 'SORT_ENTITIES';
 export const PAGE_AND_SIZE = 'PAGE_AND_SIZE';
 export const ADD_PROVIDER  = 'ADD_PROVIDER';
 export const FILTER_PROVIDERS  = 'FILTER_PROVIDERS';
+export const SET_FILTER_COLUMN = 'SET_FILTER_COLUMN';
 export const CLOSE_ALERT  = 'CLOSE_ALERT';
 export const ADD_ALERT  = 'ADD_ALERT';

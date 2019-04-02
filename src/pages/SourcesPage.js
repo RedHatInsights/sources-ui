@@ -4,15 +4,20 @@ import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { PageHeader, PageHeaderTitle, Pagination, Section } from '@red-hat-insights/insights-frontend-components';
-
-//import './provider-page.scss';
-import { addProvider, createSource, filterProviders, loadEntities, loadSourceTypes } from '../redux/actions/providers';
-
+import {
+    addProvider,
+    createSource,
+    filterProviders,
+    loadEntities,
+    loadSourceTypes,
+    setProviderFilterColumn
+} from '../redux/actions/providers';
 import { Button } from '@patternfly/react-core';
-import { Card, CardBody, CardFooter, Modal } from '@patternfly/react-core';
+import { Card, CardBody, CardFooter, CardHeader, Modal } from '@patternfly/react-core';
+import filter from 'lodash/filter';
 
 import SourcesSimpleView from '../components/SourcesSimpleView';
-//import SourcesFilter from '../components/SourcesFilter';
+import SourcesFilter from '../components/SourcesFilter';
 import SourcesEmptyState from '../components/SourcesEmptyState';
 
 import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
@@ -33,13 +38,15 @@ class SourcesPage extends Component {
         addProvider: PropTypes.func.isRequired,
         createSource: PropTypes.func.isRequired,
         filterProviders: PropTypes.func.isRequired,
+        setProviderFilterColumn: PropTypes.func.isRequired,
         loadEntities: PropTypes.func.isRequired,
         loadSourceTypes: PropTypes.func.isRequired,
         pageAndSize: PropTypes.func.isRequired,
 
+        filterValue: PropTypes.string,
+        loaded: PropTypes.bool.isRequired,
         numberOfEntities: PropTypes.number.isRequired,
         sourceTypes: PropTypes.arrayOf(PropTypes.any),
-        loaded: PropTypes.bool.isRequired,
 
         location: PropTypes.any.isRequired,
         history: PropTypes.any.isRequired
@@ -69,9 +76,14 @@ class SourcesPage extends Component {
         });
     }
 
-    onFilter = (filterColumn, filterValue) => {
-        console.log('onFilter', filterColumn, filterValue);
-        this.props.filterProviders(filterColumn, filterValue);
+    onFilter = (filterValue) => {
+        console.log('onFilter', filterValue);
+        this.props.filterProviders(filterValue);
+    }
+
+    onFilterSelect = (_component, column) => {
+        console.log('onFilter', column);
+        this.props.setProviderFilterColumn(column.value);
     }
 
     onSetPage = (number) => {
@@ -91,9 +103,12 @@ class SourcesPage extends Component {
 
     renderMainContent = () => (
         <Card>
-            {/*<CardHeader>
-                <SourcesFilter columns={filterColumns} onFilter={this.onFilter}/>
-            </CardHeader>*/}
+            <CardHeader>
+                <SourcesFilter
+                    columns={filter(sourcesViewDefinition.columns, c => c.searchable)}
+                    onFilter={this.onFilter}
+                    onFilterSelect={this.onFilterSelect}/>
+            </CardHeader>
             <CardBody>
                 <SourcesSimpleView columns={sourcesViewDefinition.columns}/>
             </CardBody>
@@ -108,13 +123,14 @@ class SourcesPage extends Component {
                 />
             </CardFooter>
         </Card>
-    )
+    );
 
     render = () => {
-        // const filterColumns = filter(providerColumns, c => c.value);
         const { numberOfEntities } = this.props;
         const form = wizardForm(this.props.sourceTypes || []);
-        const displayEmptyState = this.props.loaded && (!numberOfEntities || numberOfEntities === 0);
+        const displayEmptyState = this.props.loaded &&
+            !this.props.filterValue &&
+            (!numberOfEntities || numberOfEntities === 0);
 
         return (
             <React.Fragment>
@@ -149,8 +165,10 @@ class SourcesPage extends Component {
 
 const mapDispatchToProps = dispatch => bindActionCreators(
     { addProvider, createSource, filterProviders, loadEntities,
-        loadSourceTypes, pageAndSize }, dispatch);
+        loadSourceTypes, pageAndSize, setProviderFilterColumn }, dispatch);
 
-const mapStateToProps = ({ providers: { loaded, numberOfEntities, sourceTypes } }) => ({ loaded, numberOfEntities, sourceTypes });
+const mapStateToProps = ({ providers: { filterValue, loaded, numberOfEntities, sourceTypes } }) => (
+    { filterValue, loaded, numberOfEntities, sourceTypes }
+);
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesPage));

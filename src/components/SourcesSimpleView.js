@@ -9,6 +9,7 @@ import flatten from 'lodash/flatten';
 import filter from 'lodash/filter';
 import ContentLoader from 'react-content-loader';
 
+import SourceExpandedView from './SourceExpandedView';
 import { loadEntities, selectEntity, expandEntity, removeSource, sortEntities } from '../redux/actions/providers';
 
 const RowLoader = props => (
@@ -53,11 +54,11 @@ class SourcesSimpleView extends React.Component {
                 direction
             }
         });
-    }
+    };
 
-    onExpandClick = (_event, _row, rowKey) => this.props.expandEntity(rowKey, true);
+    onCollapse = (_event, i, isOpen) => this.props.expandEntity(this.sourceIndexToId(i), isOpen);
 
-    sourceIndexToId = (i) => this.props.entities[i].id;
+    sourceIndexToId = (i) => this.props.entities[i / 2].id;
 
     renderActions = () => (
         [
@@ -79,12 +80,30 @@ class SourcesSimpleView extends React.Component {
             col => (col.formatter ?
                 this[col.formatter](item[col.value]) :
                 item[col.value] || ''));
-    }
+    };
 
     render = () => {
         const { entities, loaded, sourceTypes } = this.props;
-        const rowData = flatten(entities.map(item => (
-            [{ ...item, cells: this.itemToCells(item) }]
+        const rowData = flatten(entities.map((item, index) => (
+            [
+                { // regular item
+                    ...item,
+                    isOpen: !!item.expanded,
+                    cells: this.itemToCells(item)
+                },
+                { // expanded content
+                    id: item.id + '_detail',
+                    parent: index * 2,
+                    cells: [
+                        {
+                            title: item.expanded ?
+                                <SourceExpandedView sourceId={item.id}/> :
+                                'collapsed content',
+                            colSpan: this.filteredColumns.length + 1
+                        }
+                    ]
+                }
+            ]
         )));
 
         this.sourceTypeMap = new Map(sourceTypes.map(t => [t.id, t.name]));
@@ -114,7 +133,7 @@ class SourcesSimpleView extends React.Component {
                 </tbody>
             </table>
         );
-    }
+    };
 };
 
 SourcesSimpleView.propTypes = {
