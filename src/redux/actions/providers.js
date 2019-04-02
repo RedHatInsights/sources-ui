@@ -1,3 +1,4 @@
+import { ADD_NOTIFICATION } from '@red-hat-insights/insights-frontend-components/components/Notifications';
 import {
     ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE,
     ADD_PROVIDER, FILTER_PROVIDERS, CLOSE_ALERT, ADD_ALERT, SET_FILTER_COLUMN
@@ -5,10 +6,23 @@ import {
 import { getEntities, doCreateSource, doRemoveSource } from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
 
-export const loadEntities = () => ({
-    type: ACTION_TYPES.LOAD_ENTITIES,
-    payload: getEntities()
-});
+export const loadEntities = () => (dispatch) => {
+    dispatch({ type: ACTION_TYPES.LOAD_ENTITIES_PENDING });
+
+    return getEntities({}, {}).then(response => dispatch({
+        type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
+        payload: response
+    }));
+};
+
+export const loadSourceTypes = () => (dispatch) => {
+    dispatch({ type: ACTION_TYPES.LOAD_SOURCE_TYPES_PENDING });
+
+    return doLoadSourceTypes().then(sourceTypes => dispatch({
+        type: ACTION_TYPES.LOAD_SOURCE_TYPES_FULFILLED,
+        payload: sourceTypes
+    }));
+};
 
 export const selectEntity = (id, selected) => ({
     type: SELECT_ENTITY,
@@ -54,39 +68,28 @@ export const addAlert = (message, type) => ({
     payload: { message, type }
 });
 
-export const createSource = (formData, sourceTypes) => {
-    return {
-        type: ACTION_TYPES.CREATE_SOURCE,
-        payload: doCreateSource(formData, sourceTypes),
-        meta: {
-            notifications: {
-                fulfilled: {
-                    variant: 'success',
-                    title: 'Source was created.',
-                    description: 'The new source was successfully created.'
-                }
-            }
+export const createSource = (formData, sourceTypes) => (dispatch) =>
+    doCreateSource(formData, sourceTypes).then(_finished => dispatch({
+        type: ADD_NOTIFICATION,
+        payload: {
+            variant: 'success',
+            title: 'Source was created.',
+            description: 'The new source was successfully created.'
         }
-    };
-};
+    })).catch(error => dispatch({
+        type: 'FOOBAR_REJECTED',
+        payload: error
+    }));
 
-export const removeSource = (sourceId) => {
-    return {
-        type: ACTION_TYPES.REMOVE_SOURCE,
-        payload: doRemoveSource(sourceId),
-        meta: {
-            notifications: {
-                fulfilled: {
-                    variant: 'success',
-                    title: 'Source was removed.',
-                    description: 'The selectes source was removed.'
-                }
-            }
+export const removeSource = (sourceId) => (dispatch) =>
+    doRemoveSource(sourceId).then(_finished => dispatch({
+        type: ADD_NOTIFICATION,
+        payload: {
+            variant: 'success',
+            title: 'Source was removed.',
+            description: 'The selected source was removed.'
         }
-    };
-};
-
-export const loadSourceTypes = () => ({
-    type: ACTION_TYPES.LOAD_SOURCE_TYPES,
-    payload: doLoadSourceTypes()
-});
+    })).catch(error => dispatch({
+        type: 'FOOBAR_REJECTED',
+        payload: error
+    }));
