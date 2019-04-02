@@ -2,21 +2,22 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import promiseMiddleware from 'redux-promise-middleware';
 import { ReducerRegistry, applyReducerHash } from '@red-hat-insights/insights-frontend-components';
 import {
     NotificationsPortal,
     notifications,
     notificationsMiddleware
 } from '@red-hat-insights/insights-frontend-components/components/Notifications';
-import { Routes } from './Routes';
-import './App.scss';
+
+import logger from 'redux-logger';
+import thunk from 'redux-thunk';
 
 import ReducersProviders, { defaultProvidersState } from './redux/reducers/providers';
 import ReducersListing, { defaultListingState } from './redux/reducers/listing';
 import ReducersTopology from './redux/reducers/topology';
 
-import logger from 'redux-logger';
+import { Routes } from './Routes';
+import './App.scss';
 
 let registry;
 
@@ -31,7 +32,7 @@ class App extends Component {
             registry = new ReducerRegistry(
                 {},
                 [
-                    promiseMiddleware(),
+                    thunk,
                     notificationsMiddleware({ errorTitleKey: 'error', errorDescriptionKey: 'error' }),
                     logger
                 ]

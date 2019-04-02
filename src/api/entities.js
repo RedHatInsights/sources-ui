@@ -2,7 +2,7 @@ import { TOPOLOGICAL_INVENTORY_API_BASE } from '../Utilities/Constants';
 import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
 import find from 'lodash/find';
 
-export function getEntities () {
+export function getEntities (_pagination, _filter) {
     return fetch(TOPOLOGICAL_INVENTORY_API_BASE + sourcesViewDefinition.url).then(r => {
         if (r.ok || r.type === 'opaque') {
             return r.json();
