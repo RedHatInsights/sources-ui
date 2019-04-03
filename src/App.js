@@ -53,8 +53,7 @@ class App extends Component {
 
         insights.chrome.init();
         try {
-            insights.chrome.identifyApp('topological-inventory');
-            this.appNav = insights.chrome.on('APP_NAVIGATION', event => this.props.history.push(`/${event.navId}`));
+            insights.chrome.identifyApp('sources');
         } catch (_exception) {
             this.appNav = null;
             console.warn('Failed to initialize chrome navigation.');
