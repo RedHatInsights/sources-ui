@@ -5,26 +5,25 @@ import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { PageHeader, PageHeaderTitle, Pagination, Section } from '@red-hat-insights/insights-frontend-components';
 import {
-    addProvider,
-    createSource,
     filterProviders,
     loadEntities,
     loadSourceTypes,
     setProviderFilterColumn
 } from '../redux/actions/providers';
 import { Button } from '@patternfly/react-core';
-import { Card, CardBody, CardFooter, CardHeader, Modal } from '@patternfly/react-core';
+import { Card, CardBody, CardFooter, CardHeader } from '@patternfly/react-core';
 import filter from 'lodash/filter';
 
 import SourcesSimpleView from '../components/SourcesSimpleView';
 import SourcesFilter from '../components/SourcesFilter';
 import SourcesEmptyState from '../components/SourcesEmptyState';
+import SourceEditModal from '../components/SourceEditModal';
 
 import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
-import { wizardForm } from '../SmartComponents/ProviderPage/providerForm';
-import SourcesFormRenderer from '../Utilities/SourcesFormRenderer';
 
 import { pageAndSize } from '../redux/actions/providers';
+
+import { paths } from '../Routes';
 
 /**
  * A smart component that handles all the api calls and data needed by the dumb components.
@@ -35,8 +34,6 @@ import { pageAndSize } from '../redux/actions/providers';
  */
 class SourcesPage extends Component {
     static propTypes = {
-        addProvider: PropTypes.func.isRequired,
-        createSource: PropTypes.func.isRequired,
         filterProviders: PropTypes.func.isRequired,
         setProviderFilterColumn: PropTypes.func.isRequired,
         loadEntities: PropTypes.func.isRequired,
@@ -45,10 +42,10 @@ class SourcesPage extends Component {
 
         filterValue: PropTypes.string,
         loaded: PropTypes.bool.isRequired,
-        numberOfEntities: PropTypes.number.isRequired,
-        sourceTypes: PropTypes.arrayOf(PropTypes.any),
+        numberOfEntities: PropTypes.number.isRequired, // total number of Sources
 
         location: PropTypes.any.isRequired,
+        match: PropTypes.object.isRequired,
         history: PropTypes.any.isRequired
     };
 
@@ -64,16 +61,6 @@ class SourcesPage extends Component {
             itemsPerPage: 10,
             onPage: 1
         };
-    }
-
-    submitProvider = (values, _formState) => {
-        this.props.createSource(values, this.props.sourceTypes).then(() => {
-            this.props.history.replace('/');
-            this.props.loadEntities();
-        }).catch(error => {
-            console.log('CATCH:'); console.log(error);
-            this.props.history.replace('/');
-        });
     }
 
     onFilter = (filterValue) => {
@@ -127,31 +114,19 @@ class SourcesPage extends Component {
 
     render = () => {
         const { numberOfEntities } = this.props;
-        const form = wizardForm(this.props.sourceTypes || []);
-        const displayEmptyState = this.props.loaded &&
-            !this.props.filterValue &&
-            (!numberOfEntities || numberOfEntities === 0);
+        const displayEmptyState = this.props.loaded &&      // already loaded
+            !this.props.filterValue &&                      // no filter active
+            (!numberOfEntities || numberOfEntities === 0);  // no records do display
+
+        const editorNew = this.props.location.pathname === paths.sourcesNew;
+        const editorEdit = this.props.match.path === paths.sourcesEdit;
 
         return (
             <React.Fragment>
-                <Modal
-                    title='Add a New Source'
-                    isOpen={this.props.location.pathname === '/new'}
-                    onClose={this.props.history.goBack}
-                    isLarge>
-
-                    <SourcesFormRenderer
-                        initialValues={form.initialValues}
-                        schemaType={form.schemaType}
-                        schema={form.schema}
-                        uiSchema={form.uiSchema}
-                        showFormControls={form.showFormControls}
-                        onSubmit={this.submitProvider}
-                    />
-                </Modal>
+                { editorNew || editorEdit ? <SourceEditModal /> : '' }
                 <PageHeader>
                     <PageHeaderTitle title='Sources'/>
-                    <Link to='/new'>
+                    <Link to={paths.sourcesNew}>
                         <Button className='pull-right' variant='secondary'> Add a New Source </Button>
                     </Link>
                 </PageHeader>
@@ -164,11 +139,10 @@ class SourcesPage extends Component {
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators(
-    { addProvider, createSource, filterProviders, loadEntities,
-        loadSourceTypes, pageAndSize, setProviderFilterColumn }, dispatch);
+    { filterProviders, loadEntities, loadSourceTypes, pageAndSize, setProviderFilterColumn }, dispatch);
 
-const mapStateToProps = ({ providers: { filterValue, loaded, numberOfEntities, sourceTypes } }) => (
-    { filterValue, loaded, numberOfEntities, sourceTypes }
+const mapStateToProps = ({ providers: { filterValue, loaded, numberOfEntities } }) => (
+    { filterValue, loaded, numberOfEntities }
 );
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesPage));
