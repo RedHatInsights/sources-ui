@@ -69,6 +69,12 @@ class SourcesSimpleView extends React.Component {
                         this.props.loadEntities();
                     });
                 }
+            },
+            {
+                title: 'Edit Source',
+                onClick: (_ev, i) => {
+                    this.props.history.push(`/edit/${this.sourceIndexToId(i)}`);
+                }
             }
         ]
     );
