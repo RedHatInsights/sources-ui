@@ -1,9 +1,15 @@
 import { ADD_NOTIFICATION } from '@red-hat-insights/insights-frontend-components/components/Notifications';
 import {
     ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE,
-    ADD_PROVIDER, FILTER_PROVIDERS, CLOSE_ALERT, ADD_ALERT, SET_FILTER_COLUMN
+    ADD_PROVIDER, FILTER_PROVIDERS, CLOSE_ALERT, ADD_ALERT, SET_FILTER_COLUMN,
+    SOURCE_FOR_EDIT_LOADED, SOURCE_EDIT_REQUEST
 } from '../action-types-providers';
-import { getEntities, doCreateSource, doRemoveSource } from '../../api/entities';
+import {
+    doCreateSource,
+    doLoadSourceForEdit,
+    doRemoveSource,
+    getEntities
+} from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
 
 export const loadEntities = () => (dispatch) => {
@@ -93,3 +99,15 @@ export const removeSource = (sourceId) => (dispatch) =>
         type: 'FOOBAR_REJECTED',
         payload: error
     }));
+
+export const loadSourceForEdit = sourceId => dispatch => {
+    dispatch({ type: SOURCE_EDIT_REQUEST });
+
+    return doLoadSourceForEdit(sourceId).then(sourceData => dispatch({
+        type: SOURCE_FOR_EDIT_LOADED,
+        payload: sourceData
+    })).catch(error => dispatch({
+        type: 'FOOBAR_REJECTED',
+        payload: error
+    }));
+};
