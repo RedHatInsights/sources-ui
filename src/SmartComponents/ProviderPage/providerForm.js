@@ -1,5 +1,6 @@
 import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
 import zipObject from 'lodash/zipObject';
+import find from 'lodash/find';
 
 const compileSourcesComboOptions = (sourceTypes) => (
     [{ label: 'Please Choose' }].concat(
@@ -86,7 +87,7 @@ const compileStepMapper = (sourceTypes) => {
     return zipObject(names, names);
 };
 
-const firstStep = (sourceTypes) => ({
+const firstStepNew = (sourceTypes) => ({
     title: 'Get started with adding source',
     name: 'step_1',
     stepKey: 'step_1',
@@ -111,6 +112,30 @@ const firstStep = (sourceTypes) => ({
     }]
 });
 
+const firstStepEdit = (sourceTypes, type) => ({
+    title: 'Edit a source',
+    name: 'step_1',
+    stepKey: 'step_1',
+    nextStep: type,
+    fields: [{
+        component: componentTypes.TEXT_FIELD,
+        name: 'source_name',
+        type: 'text',
+        label: 'Name'
+    }, {
+        component: componentTypes.SELECT_COMPONENT,
+        name: 'source_type',
+        label: 'Source type',
+        isRequired: true,
+        isDisabled: true,
+        readOnly: true, // make it grey ;-)
+        options: compileSourcesComboOptions(sourceTypes),
+        validate: [{
+            type: validatorTypes.REQUIRED
+        }]
+    }]
+});
+
 const summaryStep = () => ({
     fields: [{
         name: 'summary',
@@ -120,7 +145,54 @@ const summaryStep = () => ({
     name: 'summary'
 });
 
-export function wizardForm(sourceTypes) {
+const sourceTypeSteps = sourceTypes =>
+    sourceTypes.map(t => fieldsToStep(sourceTypeSchema(t), t.name, 'summary'));
+
+const endpointToUrl = endpoint => (
+    `${endpoint.scheme}://${endpoint.host}:${endpoint.port}/${endpoint.path || ''}`
+);
+
+const initialValues = source => ({
+    source_name: source.name,
+    source_type: source.source_type,
+    url: endpointToUrl(source.endpoint),
+    verify_ssl: source.endpoint.verify_ssl,
+    certificate_authority: source.endpoint.certificate_authority,
+    token: 'FIXME',
+    role: source.endpoint.role,
+    // AWS?
+    user_name: 'FIXME',
+    password: 'FIXME' // same as token
+});
+
+export function sourceEditForm(sourceTypes, source) {
+    /* editing form:
+     * 1st page: editable name + non-editable source type
+     * 2nd page: provider specific
+     * 3rd page: summary */
+
+    const sourceType = find(sourceTypes, { id: parseInt(source.source_type_id, 10) });
+    const typeName = sourceType.name;
+
+    return {
+        initialValues: initialValues({ source_type: sourceType.name, ...source }),
+        schemaType: 'default',
+        showFormControls: false,
+        schema: {
+            fields: [{
+                component: componentTypes.WIZARD,
+                name: 'wizard',
+                fields: [firstStepEdit(sourceTypes, typeName)].concat(
+                    sourceType &&
+                        fieldsToStep(sourceTypeSchema(sourceType), typeName, 'summary'),
+                    summaryStep()
+                )
+            }]
+        }
+    };
+}
+
+export function sourceNewForm(sourceTypes) {
     /* For now we assume that each source has a schema with exactly 1 step.
      *
      * We prepend a page with source type choice and name.
@@ -136,13 +208,11 @@ export function wizardForm(sourceTypes) {
             fields: [{
                 component: componentTypes.WIZARD,
                 name: 'wizard',
-                fields: [firstStep(sourceTypes)].concat(
-                    sourceTypes.map(t => fieldsToStep(sourceTypeSchema(t), t.name, 'summary')),
+                fields: [firstStepNew(sourceTypes)].concat(
+                    sourceTypeSteps(sourceTypes),
                     summaryStep()
                 )
             }]
         }
     };
 }
-
-;
