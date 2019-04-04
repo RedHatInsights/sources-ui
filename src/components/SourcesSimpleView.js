@@ -106,6 +106,7 @@ class SourcesSimpleView extends React.Component {
         if (loaded) {
             return (
                 <Table
+                    gridBreakPoint='grid-lg'
                     aria-label="List of Sources"
                     onCollapse={this.onCollapse}
                     onSort={this.onSort}
