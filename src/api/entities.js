@@ -2,16 +2,6 @@ import { TOPOLOGICAL_INVENTORY_API_BASE } from '../Utilities/Constants';
 import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
 import find from 'lodash/find';
 
-export function getEntities (_pagination, _filter) {
-    return fetch(TOPOLOGICAL_INVENTORY_API_BASE + sourcesViewDefinition.url).then(r => {
-        if (r.ok || r.type === 'opaque') {
-            return r.json();
-        }
-
-        throw new Error(`Unexpected response code ${r.status}`);
-    });
-}
-
 /*global require*/
 let TopologicalInventory = require('@manageiq/topological_inventory');
 
@@ -28,12 +18,54 @@ export function getApiInstance() {
     return apiInstance;
 }
 
+export function getEntities (_pagination, _filter) {
+    return fetch(TOPOLOGICAL_INVENTORY_API_BASE + sourcesViewDefinition.url).then(r => {
+        if (r.ok || r.type === 'opaque') {
+            return r.json();
+        }
+
+        throw new Error(`Unexpected response code ${r.status}`);
+    });
+}
+
 export function doRemoveSource(sourceId) {
     return getApiInstance().deleteSource(sourceId).then((sourceDataOut) => {
         console.log('API call deleteSource returned data: ', sourceDataOut);
     }, (_error) => {
         console.error('Source removal failed.');
         throw { error: 'Source removal failed.' };
+    });
+}
+
+export function doLoadSourceForEdit(sourceId) {
+    return getApiInstance().showSource(sourceId).then(sourceData => {
+        console.log('API call showSource returned: ', sourceData);
+
+        return getApiInstance().listSourceEndpoints(sourceId, {}).then(endpoints => {
+            console.log('API call listSourceEndpoints returned: ', endpoints);
+
+            // we take just the first endpoint
+            const endpoint = endpoints && endpoints.data && endpoints.data[0];
+
+            if (!endpoint) { // bail out
+                return sourceData;
+            }
+
+            sourceData.endpoint = endpoint;
+
+            return getApiInstance().listEndpointAuthentications(endpoint.id, {}).then(authentications => {
+                console.log('API call listEndpointAuthentications returned: ', authentications);
+
+                // we take just the first authentication
+                const authentication = authentications && authentications.data && authentications.data[0];
+
+                if (authentication) {
+                    sourceData.authentication = authentication;
+                }
+
+                return sourceData;
+            });
+        });
     });
 }
 
