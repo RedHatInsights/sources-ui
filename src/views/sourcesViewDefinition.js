@@ -9,7 +9,7 @@ export const sourcesViewDefinition = {
         //{ title: null, value: 'source_id', },
         //{ title: null, value: 'source_ref', },
         //{ title: 'Resource version', value: 'resource_version', },
-        { title: 'UID', value: 'uid' },
+        { title: null, value: 'uid' },
         { title: 'Name', value: 'name', searchable: true },
         { title: 'Source Type', value: 'source_type_id', searchable: true, formatter: 'sourceTypeFormatter' },
         // this column does not actually exist in the API, but is required by the design
