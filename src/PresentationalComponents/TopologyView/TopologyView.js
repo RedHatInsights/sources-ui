@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { TopologyCanvas } from '@manageiq/react-ui-components/dist/topology';
-import '@manageiq/react-ui-components/dist/topology.css';
+// import { TopologyCanvas } from '@manageiq/react-ui-components/dist/topology';
+// import '@manageiq/react-ui-components/dist/topology.css';
 import { Split, SplitItem } from '@patternfly/react-core';
 import PropTypes from 'prop-types';
 
@@ -31,7 +31,8 @@ class TopologyView extends Component {
     }
 
     render = () => {
-        const { nodes, edges } = this.props;
+        //const { nodes, edges } = this.props;
+        const { nodes } = this.props;
         if (nodes.length === 0) {
             return <h1>Loading</h1>;
         }
@@ -39,9 +40,11 @@ class TopologyView extends Component {
         return (
             <Split>
                 <SplitItem isMain>
+                    { /*
                     <TopologyCanvas nodes={nodes} edges={edges}
                         handleNodeClick={this.handleNodeClick}
                     />
+                    */ }
                 </SplitItem>
                 <SplitItem>
                     <NodeDetails />

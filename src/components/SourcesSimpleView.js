@@ -69,6 +69,12 @@ class SourcesSimpleView extends React.Component {
                         this.props.loadEntities();
                     });
                 }
+            },
+            {
+                title: 'Edit Source',
+                onClick: (_ev, i) => {
+                    this.props.history.push(`/edit/${this.sourceIndexToId(i)}`);
+                }
             }
         ]
     );
@@ -95,7 +101,11 @@ class SourcesSimpleView extends React.Component {
                     id: item.id + '_detail',
                     parent: index * 2,
                     cells: [
-                        item.expanded ? <SourceExpandedView source={item}/> : 'collapsed content'
+                        item.expanded ?
+                            <React.Fragment key={`${item.id}_detail`}>
+                                <SourceExpandedView source={item}/>
+                            </React.Fragment> :
+                            'collapsed content'
                     ]
                 }
             ]
@@ -106,6 +116,7 @@ class SourcesSimpleView extends React.Component {
         if (loaded) {
             return (
                 <Table
+                    gridBreakPoint='grid-lg'
                     aria-label="List of Sources"
                     onCollapse={this.onCollapse}
                     onSort={this.onSort}

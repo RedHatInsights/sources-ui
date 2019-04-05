@@ -1,7 +1,7 @@
 import {
     ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES,
-    PAGE_AND_SIZE, ADD_PROVIDER, FILTER_PROVIDERS, SET_FILTER_COLUMN
-    //, CLOSE_ALERT, ADD_ALERT
+    PAGE_AND_SIZE, ADD_PROVIDER, FILTER_PROVIDERS, SET_FILTER_COLUMN,
+    SOURCE_EDIT_REQUEST, SOURCE_FOR_EDIT_LOADED
 } from '../action-types-providers';
 import { processList } from '../../Utilities/listHelpers';
 
@@ -99,41 +99,19 @@ const setFilterColumn = (state, { payload: { column } }) =>
         pageNumber: 1
     });
 
-/*
-const closeAlert = (state) => ({
+const sourceForEditLoaded = (state, { payload }) => ({
     ...state,
-    alert: null
-})
-
-const addAlert = (state, { payload: { message, type } }) => ({
-    ...state,
-    alert: {
-        message,
-        type,
-    }
-})
-
-const createSourcePending = (state) => ({
-    ...state,
-    created: false
+    source: payload
 });
 
-const createSourceFulFilled = (state, { payload }) => {
-    const createData = payload;
-    console.log('R: createSourceFulFilled');
-
-    return processListInState({
-        ...state,
-        created: true
-    });
-};
-*/
+const sourceEditRequest = (state) => ({
+    ...state,
+    source: null
+});
 
 export default {
     [ACTION_TYPES.LOAD_ENTITIES_PENDING]: entitiesPending,
     [ACTION_TYPES.LOAD_ENTITIES_FULFILLED]: entitiesLoaded,
-    //    [ACTION_TYPES.CREATE_SOURCE_PENDING]: createSourcePending,
-    //    [ACTION_TYPES.CREATE_SOURCE_FULFILLED]: createSourceFulFilled,
     [ACTION_TYPES.LOAD_SOURCE_TYPES_PENDING]: sourceTypesPending,
     [ACTION_TYPES.LOAD_SOURCE_TYPES_FULFILLED]: sourceTypesLoaded,
 
@@ -143,7 +121,7 @@ export default {
     [PAGE_AND_SIZE]: setPageAndSize,
     [ADD_PROVIDER]: addProvider,
     [FILTER_PROVIDERS]: filterProviders,
-    [SET_FILTER_COLUMN]: setFilterColumn
-//    [CLOSE_ALERT]: closeAlert,
-//    [ADD_ALERT]: addAlert,
+    [SET_FILTER_COLUMN]: setFilterColumn,
+    [SOURCE_FOR_EDIT_LOADED]: sourceForEditLoaded,
+    [SOURCE_EDIT_REQUEST]: sourceEditRequest
 };

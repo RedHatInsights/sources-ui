@@ -33,9 +33,10 @@ const TopologyPage = asyncComponent(() => import(
 const SourcesPage = asyncComponent(() => import(
     /* webpackChunkName: "SourcesPage" */ './pages/SourcesPage'));
 
-const paths = {
+export const paths = {
     sources: '/',
     sourcesNew: '/new',
+    sourcesEdit: '/edit/:id',
 
     providers: '/providers',
     providerNew: '/providers/new',
@@ -78,6 +79,7 @@ export const Routes = (props) => {
         <Switch>
             <InsightsRoute exact path={paths.sources} component={SourcesPage} rootClass='providers' />
             <InsightsRoute exact path={paths.sourcesNew} component={SourcesPage} rootClass='providers' />
+            <InsightsRoute path={paths.sourcesEdit} component={SourcesPage} rootClass='providers' />
             <InsightsRoute exact path={paths.providers} component={ProviderPage} rootClass='providers' />
             <InsightsRoute exact path={paths.providerNew} component={ProviderPage} rootClass='providers' />
             <InsightsRoute path={paths.topology} component={TopologyPage} rootClass='provider' />
