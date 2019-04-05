@@ -8,7 +8,7 @@ import { Modal } from '@patternfly/react-core';
 
 import { sourceEditForm, sourceNewForm } from '../SmartComponents/ProviderPage/providerForm';
 import SourcesFormRenderer from '../Utilities/SourcesFormRenderer';
-import { createSource, loadEntities, loadSourceForEdit } from '../redux/actions/providers';
+import { createSource, loadEntities, loadSourceForEdit, updateSource } from '../redux/actions/providers';
 import { paths } from '../Routes';
 
 const SourceEditModal = props => {
@@ -22,22 +22,25 @@ const SourceEditModal = props => {
     }, []);
 
     const submitProvider = (values, _formState) => {
-        props.createSource(values, props.sourceTypes).then(() => {
+        const promise = editorNew ?
+            props.createSource(values, props.sourceTypes) :
+            props.updateSource(props.source, values);
+
+        promise.then(() => {
             props.history.replace('/');
             props.loadEntities();
-        }).catch(error => {
-            console.log('CATCH:'); console.log(error);
+        }).catch(_error => {
             props.history.replace('/');
         });
     };
 
-    if (! props.source) {
-        return <div>Loading...</div>
+    if (!props.sourceTypes || (!editorNew && !props.source)) {
+        return <div>Loading...</div>;
     }
 
-    const sourceTypes = props.sourceTypes || [];
-
-    const form = editorNew ? sourceNewForm(sourceTypes) : sourceEditForm(sourceTypes, props.source);
+    const form = editorNew ?
+        sourceNewForm(props.sourceTypes) :
+        sourceEditForm(props.sourceTypes, props.source);
     console.log('Form schema: ', form);
 
     return (
@@ -63,6 +66,7 @@ SourceEditModal.propTypes = {
     createSource: PropTypes.func.isRequired,
     loadSourceForEdit: PropTypes.func.isRequired,
     loadEntities: PropTypes.func.isRequired,
+    updateSource: PropTypes.func.isRequired,
 
     sourceTypes: PropTypes.arrayOf(PropTypes.any), // list of all SourceTypes
     source: PropTypes.object, // a Source for editing
@@ -73,7 +77,7 @@ SourceEditModal.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators(
-    { createSource, loadEntities, loadSourceForEdit }, dispatch);
+    { createSource, loadEntities, loadSourceForEdit, updateSource }, dispatch);
 
 const mapStateToProps = ({ providers: { source, sourceTypes } }) => (
     { source, sourceTypes }

@@ -18,7 +18,10 @@ class SourceExpandedView extends Component {
 
 SourceExpandedView.propTypes = {
     source: PropTypes.shape({
-        id: PropTypes.string.isRequired,
+        id: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.number
+        ]).isRequired,
         name: PropTypes.string.isRequired
     }).isRequired
 };

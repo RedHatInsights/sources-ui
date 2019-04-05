@@ -8,6 +8,7 @@ import {
     doCreateSource,
     doLoadSourceForEdit,
     doRemoveSource,
+    doUpdateSource,
     getEntities
 } from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
@@ -81,6 +82,19 @@ export const createSource = (formData, sourceTypes) => (dispatch) =>
             variant: 'success',
             title: 'Source was created.',
             description: 'The new source was successfully created.'
+        }
+    })).catch(error => dispatch({
+        type: 'FOOBAR_REJECTED',
+        payload: error
+    }));
+
+export const updateSource = (source, formData) => (dispatch) =>
+    doUpdateSource(source, formData).then(_finished => dispatch({
+        type: ADD_NOTIFICATION,
+        payload: {
+            variant: 'success',
+            title: 'Source was modified.',
+            description: 'The source was successfully modified.'
         }
     })).catch(error => dispatch({
         type: 'FOOBAR_REJECTED',

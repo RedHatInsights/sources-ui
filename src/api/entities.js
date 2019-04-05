@@ -69,6 +69,25 @@ export function doLoadSourceForEdit(sourceId) {
     });
 }
 
+const parseUrl = url => {
+    if (!url) {
+        return ({});
+    }
+
+    try {
+        const u = new URL(url);
+        return {
+            scheme: u.protocol.replace(/:$/, ''),
+            host: u.hostname,
+            port: u.port,
+            path: u.pathname
+        };
+    } catch (error) {
+        console.log(error);
+        return ({});
+    }
+};
+
 export function doCreateSource(formData, sourceTypes) {
     let sourceData = {
         tenant_id: 1, /* FIXME: get it from somewhere. Session? */
@@ -81,24 +100,16 @@ export function doCreateSource(formData, sourceTypes) {
 
         // For now we parse these from a single 'URL' field.
         /* TODO: need to create a component for entry of these */
-        let scheme;
-        let host;
-        let port;
-
-        if (formData.url) {
-            const parsed = formData.url.match('(https?)://(.*?):([0-9]*)?$');
-            scheme = parsed[1];
-            host = parsed[2];
-            port = parsed[3];
-        }
+        const { scheme, host, port, path } = parseUrl(formData.url);
 
         const endpointData = {
             source_id: parseInt(sourceDataOut.id, 10),
             tenant_id: parseInt(sourceDataOut.tenant_id, 10),
             role: formData.role,
             scheme,
-            port: parseInt(port, 10),
             host,
+            port: parseInt(port, 10),
+            path,
             verify_ssl: formData.verify_ssl,
             certificate_authority: formData.certificate_authority
         };
@@ -129,6 +140,58 @@ export function doCreateSource(formData, sourceTypes) {
     }, (_error) => {
         console.error('Source creation failure.');
         throw { error: 'Source creation failure.' };
-        //throw new Error(error);
+    });
+}
+
+export function doUpdateSource(source, formData) {
+    const inst = getApiInstance();
+
+    let sourceData = {
+        name: formData.source_name
+    };
+
+    return inst.updateSource(source.id, sourceData)
+    .then((sourceDataOut) => {
+        console.log('API call updateSource returned: ', sourceDataOut);
+
+        // For now we parse these from a single 'URL' field.
+        /* TODO: need to create a component for entry of these */
+        const { scheme, host, port, path } = parseUrl(formData.url);
+
+        const endpointData = {
+            scheme,
+            host,
+            port: parseInt(port, 10),
+            path,
+            verify_ssl: formData.verify_ssl,
+            certificate_authority: formData.certificate_authority
+        };
+
+        return inst.updateEndpoint(source.endpoint.id, endpointData)
+        .then((endpointDataOut) => {
+            console.log('API call updateEndpoint returned: ', endpointDataOut);
+
+            const authenticationData = {
+                // FIXME: missing USER here?
+                password: formData.token || formData.password // FIXME: unify
+            };
+
+            return inst.updateAuthentication(source.authentication.id, authenticationData)
+            .then((authenticationDataOut) => {
+                console.log('API call updateAuthentication returned: ', authenticationDataOut);
+
+                return authenticationDataOut;
+            }, (_error) => {
+                console.error('Authentication update failure.');
+                throw { error: 'Authentication update failure.' };
+            });
+        }, (_error) => {
+            console.error('Endpoint update failure.');
+            throw { error: 'Endpoint update failure.' };
+        });
+
+    }, (_error) => {
+        console.error('Source update failure.');
+        throw { error: 'Source update failure.' };
     });
 }

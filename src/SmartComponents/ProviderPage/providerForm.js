@@ -149,7 +149,7 @@ const sourceTypeSteps = sourceTypes =>
     sourceTypes.map(t => fieldsToStep(sourceTypeSchema(t), t.name, 'summary'));
 
 const endpointToUrl = endpoint => (
-    `${endpoint.scheme}://${endpoint.host}:${endpoint.port}/${endpoint.path || ''}`
+    `${endpoint.scheme}://${endpoint.host}:${endpoint.port}${endpoint.path || ''}`
 );
 
 const initialValues = source => ({
@@ -171,7 +171,7 @@ export function sourceEditForm(sourceTypes, source) {
      * 2nd page: provider specific
      * 3rd page: summary */
 
-    const sourceType = find(sourceTypes, { id: parseInt(source.source_type_id, 10) });
+    const sourceType = find(sourceTypes, { id: source.source_type_id });
     const typeName = sourceType.name;
 
     return {
