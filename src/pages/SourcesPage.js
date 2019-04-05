@@ -18,11 +18,8 @@ import SourcesSimpleView from '../components/SourcesSimpleView';
 import SourcesFilter from '../components/SourcesFilter';
 import SourcesEmptyState from '../components/SourcesEmptyState';
 import SourceEditModal from '../components/SourceEditModal';
-
 import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
-
 import { pageAndSize } from '../redux/actions/providers';
-
 import { paths } from '../Routes';
 
 /**
