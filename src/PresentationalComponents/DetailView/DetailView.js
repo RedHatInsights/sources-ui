@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Grid, GridItem } from '@patternfly/react-core';
 import { Pie } from '@red-hat-insights/insights-frontend-components';
 
-import { TagView } from '@manageiq/react-ui-components/dist/tagging-pf4';
+// import { TagView } from '@manageiq/react-ui-components/dist/tagging-pf4';
 
 class DetailView extends Component {
     render() {
@@ -22,6 +22,7 @@ class DetailView extends Component {
                     </dl>
                 </GridItem>
                 <GridItem sm={6} md={4} lg={4} xl={3}>
+                    { /*
                     <TagView assignedTags={
                         [
                             { id: 11, description: 'Environment', values: [{ id: 1, description: 'Production' }] },
@@ -31,6 +32,7 @@ class DetailView extends Component {
                                 { id: 3, description: 'PostgreSQL' }] }
                         ]
                     } />
+                    */ }
                 </GridItem>
             </Grid>
         );

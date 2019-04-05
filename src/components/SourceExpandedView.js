@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React from 'react';
 import { Grid, GridItem } from '@patternfly/react-core';
 
-const SourceExpandedView = (props) => (
+const SourceExpandedView = () => (
     <Grid>
         <GridItem sm={6} md={4} lg={4} xl={4}>
             <dl>
