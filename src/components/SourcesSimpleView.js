@@ -101,7 +101,11 @@ class SourcesSimpleView extends React.Component {
                     id: item.id + '_detail',
                     parent: index * 2,
                     cells: [
-                        item.expanded ? <SourceExpandedView source={item}/> : 'collapsed content'
+                        item.expanded ?
+                            <React.Fragment key={`${item.id}_detail`}>
+                                <SourceExpandedView source={item}/>
+                            </React.Fragment> :
+                            'collapsed content'
                     ]
                 }
             ]
