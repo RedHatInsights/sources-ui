@@ -37,6 +37,7 @@ export const paths = {
     sources: '/',
     sourcesNew: '/new',
     sourcesEdit: '/edit/:id',
+    sourcesRemove: '/remove/:id',
 
     providers: '/providers',
     providerNew: '/providers/new',
@@ -80,6 +81,7 @@ export const Routes = (props) => {
             <InsightsRoute exact path={paths.sources} component={SourcesPage} rootClass='providers' />
             <InsightsRoute exact path={paths.sourcesNew} component={SourcesPage} rootClass='providers' />
             <InsightsRoute path={paths.sourcesEdit} component={SourcesPage} rootClass='providers' />
+            <InsightsRoute path={paths.sourcesRemove} component={SourcesPage} rootClass='providers' />
             <InsightsRoute exact path={paths.providers} component={ProviderPage} rootClass='providers' />
             <InsightsRoute exact path={paths.providerNew} component={ProviderPage} rootClass='providers' />
             <InsightsRoute path={paths.topology} component={TopologyPage} rootClass='provider' />
