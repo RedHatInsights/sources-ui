@@ -24,7 +24,8 @@
     "redux-mock-store": "^1.5.3",
     "redux-thunk": "^2.3.0",
     "superagent": ">=3.7.0",
-    "unfetch": "^4.0.1"
+    "unfetch": "^4.0.1",
+    "xhr-mock": "^2.4.1"
   },
   "sassIncludes": {
     "patternfly": "node_modules/patternfly/dist/sass",

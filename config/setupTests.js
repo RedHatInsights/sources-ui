@@ -4,8 +4,10 @@ import React from 'react';
 import 'babel-polyfill';
 import toJson from 'enzyme-to-json';
 import fetchMock from 'fetch-mock';
+import mock, { once } from 'xhr-mock';
 
 import 'unfetch/polyfill'; // work around an issue in insights-ui-components
+import 'whatwg-fetch'; // fetch for Nodejs
 
 configure({ adapter: new Adapter() });
 
@@ -13,8 +15,24 @@ global.shallow = shallow;
 global.render = render;
 global.mount = mount;
 global.React = React;
-global.fetchMock = fetchMock;
 global.toJson = toJson;
 
 window.SVGPathElement = window.Element;
 //var svgjs = require('svg.js')(window)
+
+/**
+ * Setup API mock
+ */
+mock.setup();
+global.mockOnce = once;
+global.apiClientMock = mock;
+
+/**
+ * Setup fetch mock
+ */
+global.fetchMock = fetchMock;
+
+/**
+ * setup ENV vars
+ */
+process.env.BASE_PATH = '/api/';
