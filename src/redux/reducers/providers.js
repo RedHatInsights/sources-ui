@@ -9,6 +9,7 @@ export const defaultProvidersState = {
     loaded: false,
     pageSize: 10,
     pageNumber: 1, // PF numbers pages from 1. Seriously.
+    entities: [],
     numberOfEntities: 0
 };
 

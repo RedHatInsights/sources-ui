@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, withRouter, Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { PageHeader, PageHeaderTitle, Pagination, Section } from '@red-hat-insights/insights-frontend-components';
 import {
@@ -18,6 +18,7 @@ import SourcesSimpleView from '../components/SourcesSimpleView';
 import SourcesFilter from '../components/SourcesFilter';
 import SourcesEmptyState from '../components/SourcesEmptyState';
 import SourceEditModal from '../components/SourceEditModal';
+import SourceRemoveModal from '../components/SourceRemoveModal';
 import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
 import { pageAndSize } from '../redux/actions/providers';
 import { paths } from '../Routes';
@@ -120,6 +121,7 @@ class SourcesPage extends Component {
 
         return (
             <React.Fragment>
+                <Route exact path={paths.sourcesRemove} component={ SourceRemoveModal } />
                 { editorNew || editorEdit ? <SourceEditModal /> : '' }
                 <PageHeader>
                     <PageHeaderTitle title='Sources'/>
