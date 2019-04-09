@@ -2,7 +2,7 @@ import { TOPOLOGICAL_INVENTORY_API_BASE } from '../Utilities/Constants';
 // import { getApiInstance } from './entities.js';
 
 export function doLoadSourceTypes() {
-    return fetch(TOPOLOGICAL_INVENTORY_API_BASE + '/source_types')
+    return fetch(TOPOLOGICAL_INVENTORY_API_BASE + '/source_types/')
     .then(r => r.json())
     .then(data => data.data);
 
