@@ -12,9 +12,9 @@
 // ];
 export const sourcesData =
 {
-    "meta":{"count":1,"limit":100,"offset":0},
-    "links":{"first":"/api/v0.1/sources/?offset=0","last":"/api/v0.1/sources/?offset=0"},
-    "data":[
-        {"created_at":"2019-04-05T05:03:08Z","id":"19","name":"number one 1!","source_type_id":"3","tenant_id":"1","uid":"d8db7e98-70b3-4534-9a7c-57f78787dbbb","updated_at":"2019-04-05T07:28:43Z"}
+    meta: { count: 1, limit: 100, offset: 0 },
+    links: { first: '/api/v0.1/sources/?offset=0', last: '/api/v0.1/sources/?offset=0' },
+    data: [
+        { created_at: '2019-04-05T05:03:08Z', id: '19', name: 'number one 1!', source_type_id: '3', tenant_id: '1', uid: 'd8db7e98-70b3-4534-9a7c-57f78787dbbb', updated_at: '2019-04-05T07:28:43Z' }
     ]
-}
+};
