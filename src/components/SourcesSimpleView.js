@@ -63,11 +63,11 @@ class SourcesSimpleView extends React.Component {
     renderActions = () => (
         [
             {
-                title: 'Remove Source',
+                title: 'Delete',
                 onClick: (_ev, i) => this.props.history.push(`/remove/${this.sourceIndexToId(i)}`)
             },
             {
-                title: 'Edit Source',
+                title: 'Edit',
                 onClick: (_ev, i) => this.props.history.push(`/edit/${this.sourceIndexToId(i)}`)
             }
         ]

@@ -29,18 +29,21 @@ const SourceRemoveModal = ({
             hideTitle
             onClose={ onCancel }
             actions={ [
-                <Button key="cancel" variant="secondary" type="button" onClick={ onCancel }>
-                    Cancel
+                <Button key="cancel" variant="primary" type="button" onClick={ onCancel }>
+                    No, do not delete.
                 </Button>,
-                <Button key="submit" variant="primary" type="button" onClick={ onSubmit }>
-                    Confirm
+                <Button key="submit" variant="danger" type="button" onClick={ onSubmit }>
+                    Yes, delete the data.
                 </Button>
             ] }
         >
             <Bullseye>
                 <TextContent>
                     <Text component={ TextVariants.h1 }>
-                        Removing Source:  { source.name }
+                        Delete &quot;{ source.name } &quot;
+                    </Text>
+                    <Text component={ TextVariants.p }>
+                        &quot;{ source.name }&quot; credentials and data already collected from this source will be deleted.
                     </Text>
                 </TextContent>
             </Bullseye>
