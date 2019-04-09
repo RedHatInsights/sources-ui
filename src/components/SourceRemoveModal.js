@@ -7,7 +7,7 @@ import { Modal, Button, Bullseye, Text, TextContent, TextVariants } from '@patte
 import { loadEntities, removeSource } from '../redux/actions/providers';
 
 const SourceRemoveModal = ({
-    history: { goBack, push },
+    history: { push },
     removeSource,
     loadEntities,
     source
@@ -15,7 +15,7 @@ const SourceRemoveModal = ({
     const onSubmit = () => removeSource(source.id)
     .then(() => { loadEntities(); push('/'); });
 
-    const onCancel = () => goBack();
+    const onCancel = () => push('/');
 
     if (!source) {
         return null;
@@ -50,7 +50,6 @@ const SourceRemoveModal = ({
 
 SourceRemoveModal.propTypes = {
     history: PropTypes.shape({
-        goBack: PropTypes.func.isRequired,
         push: PropTypes.func.isRequired
     }).isRequired,
     removeSource: PropTypes.func.isRequired,
