@@ -11,13 +11,13 @@ export const sourcesViewDefinition = {
         //{ title: 'Resource version', value: 'resource_version', },
         { title: null, value: 'uid' },
         { title: 'Name', value: 'name', searchable: true },
-        { title: 'Source Type', value: 'source_type_id', searchable: true, formatter: 'sourceTypeFormatter' },
+        { title: 'Type', value: 'source_type_id', searchable: true, formatter: 'sourceTypeFormatter' },
         // this column does not actually exist in the API, but is required by the design
-        { title: 'Applications', value: 'applications', searchable: true },
+        { title: 'Application', value: 'applications', searchable: true },
         //{ title: 'Tags', value: 'tags', },
         //{ title: null, value: 'display_name', },
-        //{ title: 'Created at', value: 'created_at', },
-        { title: 'Updated at', value: 'updated_at' },
+        { title: 'Date addedd', value: 'created_at' },
+        //{ title: 'Updated at', value: 'updated_at' },
         //{ title: null, value: 'source_deleted_at', },
         { title: null, value: 'tenant_id' }
         //{ title: null, value: 'source_created_at', },

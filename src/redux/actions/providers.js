@@ -93,7 +93,7 @@ export const updateSource = (source, formData) => (dispatch) =>
         type: ADD_NOTIFICATION,
         payload: {
             variant: 'success',
-            title: 'Source was modified.',
+            title: `"${formData.source_name}" was modified successfully.`,
             description: 'The source was successfully modified.'
         }
     })).catch(error => dispatch({
