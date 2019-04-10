@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Modal, Button, Bullseye, Text, TextContent, TextVariants } from '@patternfly/react-core';
 import { loadEntities, removeSource } from '../redux/actions/providers';
+import { ExclamationCircleIcon } from '@patternfly/react-icons';
 
 const SourceRemoveModal = ({
     history: { push },
@@ -22,7 +23,7 @@ const SourceRemoveModal = ({
     }
 
     return (
-        <Modal
+        <Modal className="ins-c-sources__dialog--warning"
             title=" "
             isOpen
             isSmall
@@ -40,10 +41,13 @@ const SourceRemoveModal = ({
             <Bullseye>
                 <TextContent>
                     <Text component={ TextVariants.h1 }>
-                        Delete &quot;{ source.name } &quot;
+                        <span className='ins-c-source__delete-icon' >
+                            <ExclamationCircleIcon />
+                        </span>
+                        Delete { source.name }
                     </Text>
                     <Text component={ TextVariants.p }>
-                        &quot;{ source.name }&quot; credentials and data already collected from this source will be deleted.
+                        Are you sure you want to delete &quot;{ source.name }&quot;? This action cannot be undone.
                     </Text>
                 </TextContent>
             </Bullseye>
