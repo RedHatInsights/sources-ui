@@ -16,6 +16,7 @@ class SourcesFilter extends Component {
             }}
             onOptionSelect={this.props.onFilterSelect}
             onButtonClick={this.props.onFilter}
+            onFilterChange={this.props.onFilter}
         />
 }
 
