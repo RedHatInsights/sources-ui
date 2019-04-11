@@ -63,7 +63,7 @@ const temporaryHardcodedSourceSchemas = {
         }]
     },
     amazon: {
-        title: <React.Fragment>
+        title: <p>
             <span>Configure account access</span>&nbsp;
             <Popover
                 position="bottom"
@@ -88,7 +88,7 @@ const temporaryHardcodedSourceSchemas = {
             >
                 <QuestionCircleIcon />
             </Popover>
-        </React.Fragment>,
+        </p>,
         description: <React.Fragment>
             <p>
                 Create an access key in your AWS user account and enter the details below.
