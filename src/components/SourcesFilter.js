@@ -9,6 +9,7 @@ class SourcesFilter extends Component {
 
     render = () =>
         <SimpleTableFilter
+            buttonTitle={null}
             placeholder='Filter by source name'
             options={{
                 title: 'Filter By',

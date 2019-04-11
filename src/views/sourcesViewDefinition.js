@@ -16,7 +16,7 @@ export const sourcesViewDefinition = {
         { title: 'Application', value: 'applications', searchable: true },
         //{ title: 'Tags', value: 'tags', },
         //{ title: null, value: 'display_name', },
-        { title: 'Date addedd', value: 'created_at' },
+        { title: 'Date added', value: 'created_at' },
         //{ title: 'Updated at', value: 'updated_at' },
         //{ title: null, value: 'source_deleted_at', },
         { title: null, value: 'tenant_id' }

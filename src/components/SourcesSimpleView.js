@@ -56,7 +56,10 @@ class SourcesSimpleView extends React.Component {
         });
     };
 
-    onCollapse = (_event, i, isOpen) => this.props.expandEntity(this.sourceIndexToId(i), isOpen);
+    /*
+     * Uncomment to re-enable row expansion.
+     * onCollapse = (_event, i, isOpen) => this.props.expandEntity(this.sourceIndexToId(i), isOpen);
+     */
 
     sourceIndexToId = (i) => this.props.entities[i / 2].id;
 
