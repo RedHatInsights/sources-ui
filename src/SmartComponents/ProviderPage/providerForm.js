@@ -1,6 +1,9 @@
 import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
 import zipObject from 'lodash/zipObject';
 import find from 'lodash/find';
+import React from 'react';
+import { QuestionCircleIcon } from '@patternfly/react-icons';
+import { Popover } from '@patternfly/react-core';
 
 const compileSourcesComboOptions = (sourceTypes) => (
     [{ label: 'Please Choose' }].concat(
@@ -20,7 +23,15 @@ const fieldsToStep = (fields, stepName, nextStep) => ({
 
 const temporaryHardcodedSourceSchemas = {
     openshift: {
-        title: 'Configure OpenShift',
+        title: 'Enter OpenShift Container Platform information',
+        description: <React.Fragment>
+            <p>
+                Provide OpenShift Container Platform URL and SSL certificate.
+            </p>
+            <p>
+                All fields are required.
+            </p>
+        </React.Fragment>,
         fields: [{
             component: componentTypes.TEXT_FIELD,
             name: 'role',
@@ -29,19 +40,21 @@ const temporaryHardcodedSourceSchemas = {
         }, {
             component: componentTypes.TEXT_FIELD,
             name: 'url',
-            label: 'URL'
-        }, {
-            component: componentTypes.CHECKBOX,
-            name: 'verify_ssl',
-            label: 'Verify SSL'
+            label: 'URL',
+            helperText: 'For example, https://myopenshiftcluster.mycompany.com',
+            isRequired: true
         }, {
             component: componentTypes.TEXT_FIELD,
             name: 'certificate_authority',
-            label: 'Certificate Authority',
+            label: 'SSL Certificate',
             condition: {
                 when: 'verify_ssl',
                 is: true
             }
+        }, {
+            component: componentTypes.CHECKBOX,
+            name: 'verify_ssl',
+            label: 'Verify SSL'
         }, {
             component: componentTypes.TEXT_FIELD,
             name: 'token',
@@ -50,7 +63,43 @@ const temporaryHardcodedSourceSchemas = {
         }]
     },
     amazon: {
-        title: 'Configure AWS',
+        title: <React.Fragment>
+            <span>Configure account access</span>&nbsp;
+            <Popover
+                position="bottom"
+                maxWidth="50%"
+                bodyContent={
+                    <React.Fragment>
+                        <div>
+                            Red Had recommends using the Power User AWS
+                            Identity and Access Management (IAM) policy when adding an
+                            AWS account as a source. This Policy allows the user full
+                            access to API functionality and AWS services for user
+                            administration.
+                            <br />
+                            Create an access key in the <b>Security
+                            Credentials</b> area of your AWS user account. To add your
+                            account as a source, enter the access key ID and secret
+                            access key to act as your user ID and password.
+                        </div>
+                    </React.Fragment>
+                }
+                footerContent={<a href='http://foo.bar'>Learn more</a>}
+            >
+                <QuestionCircleIcon />
+            </Popover>
+        </React.Fragment>,
+        description: <React.Fragment>
+            <p>
+                Create an access key in your AWS user account and enter the details below.
+            </p>
+            <p>
+                For sufficient access and security, Red Har recommends using the Power User IAM polocy for your AWS user account.
+            </p>
+            <p>
+                All fields are required.
+            </p>
+        </React.Fragment>,
         fields: [{
             component: componentTypes.TEXT_FIELD,
             name: 'role',
@@ -59,26 +108,32 @@ const temporaryHardcodedSourceSchemas = {
         }, {
             component: componentTypes.TEXT_FIELD,
             name: 'user_name',
-            label: 'Access Key'
+            label: 'Access Key ID',
+            helperText: 'For example, AKIAIOSFODNN7EXAMPLE',
+            isRequired: true
         }, {
             component: componentTypes.TEXT_FIELD,
             name: 'password',
             label: 'Secret Key',
-            type: 'password'
+            type: 'password',
+            helperText: 'For example, wJairXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY',
+            isRequired: true
         }]
     }
 };
 
 /* Switch between using hard-coded provider schemas and schemas from the api/source_types */
+const sourceTypeSchemaHardcodedWithFallback = t => (temporaryHardcodedSourceSchemas[t.name] || t.schema);
 const sourceTypeSchemaWithFallback = t => (t.schema || temporaryHardcodedSourceSchemas[t.name]);
 const sourceTypeSchemaHardcoded = t => temporaryHardcodedSourceSchemas[t.name];
 const sourceTypeSchemaServer = t => t.schema;
 
-const schemaMode = 0; // defaults to 0
+const schemaMode = 4; // defaults to 0
 const sourceTypeSchema = {
     0: sourceTypeSchemaWithFallback,
     1: sourceTypeSchemaHardcoded,
-    2: sourceTypeSchemaServer
+    2: sourceTypeSchemaServer,
+    4: sourceTypeSchemaHardcodedWithFallback
 }[schemaMode];
 
 /* return hash of form: { amazon: 'amazon', google: 'google', openshift: 'openshift' } */
@@ -88,7 +143,16 @@ const compileStepMapper = (sourceTypes) => {
 };
 
 const firstStepNew = (sourceTypes) => ({
-    title: 'Get started with adding source',
+    title: 'Select a source type',
+    description: <React.Fragment>
+        <p>
+            To import data for an application, you need to connect to a data source.
+            To begin, input a name and select the type of source you want to collect data from.
+        </p>
+        <p>
+            All fields are required.
+        </p>
+    </React.Fragment>,
     name: 'step_1',
     stepKey: 'step_1',
     nextStep: {
@@ -99,11 +163,16 @@ const firstStepNew = (sourceTypes) => ({
         component: componentTypes.TEXT_FIELD,
         name: 'source_name',
         type: 'text',
-        label: 'Name'
+        label: 'Name',
+        helperText: 'For example, Source_1',
+        isRequired: true,
+        validate: [{
+            type: validatorTypes.REQUIRED
+        }]
     }, {
         component: componentTypes.SELECT_COMPONENT,
         name: 'source_type',
-        label: 'Source type',
+        label: 'Type',
         isRequired: true,
         options: compileSourcesComboOptions(sourceTypes),
         validate: [{

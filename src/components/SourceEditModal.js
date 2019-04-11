@@ -45,7 +45,7 @@ const SourceEditModal = props => {
 
     return (
         <Modal
-            title={editorNew ? 'Add a New Source' : 'Edit Source'}
+            title={editorNew ? 'Add a Source' : 'Edit Source'}
             isOpen
             onClose={props.history.goBack}
             isLarge>
@@ -57,6 +57,7 @@ const SourceEditModal = props => {
                 uiSchema={form.uiSchema}
                 showFormControls={form.showFormControls}
                 onSubmit={submitProvider}
+                onCancel={props.history.goBack}
             />
         </Modal>
     );
