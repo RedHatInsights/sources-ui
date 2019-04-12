@@ -11,7 +11,7 @@ class SourcesFilter extends Component {
         <SimpleTableFilter
             buttonTitle={null}
             placeholder='Filter by source name'
-            options={{
+            xoptions={{
                 title: 'Filter By',
                 items: this.props.columns
             }}
