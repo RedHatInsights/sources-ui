@@ -88,19 +88,21 @@ const parseUrl = url => {
     }
 };
 
+/*
+ * If there's an URL in the formData, parse it and use it,
+ * else use individual fields (scheme, host, port, path).
+ */
+const urlOrHost = formData => formData.url ? parseUrl(formData.url) : formData;
+
 export function doCreateSource(formData, sourceTypes) {
     let sourceData = {
-        tenant_id: 1, /* FIXME: get it from somewhere. Session? */
+        tenant_id: 1, /* FIXME: remove this */
         name: formData.source_name,
         source_type_id: find(sourceTypes, { name: formData.source_type }).id
     };
 
     return getApiInstance().createSource(sourceData).then((sourceDataOut) => {
-        console.log('API call createSource returned data: ', sourceDataOut);
-
-        // For now we parse these from a single 'URL' field.
-        /* TODO: need to create a component for entry of these */
-        const { scheme, host, port, path } = parseUrl(formData.url);
+        const { scheme, host, port, path } = urlOrHost(formData);
 
         const endpointData = {
             source_id: parseInt(sourceDataOut.id, 10),
@@ -115,8 +117,6 @@ export function doCreateSource(formData, sourceTypes) {
         };
 
         return getApiInstance().createEndpoint(endpointData).then((endpointDataOut) => {
-            console.log('API call createEndpoint returned data: ', endpointDataOut);
-
             const authenticationData = {
                 resource_id: parseInt(endpointDataOut.id, 10),
                 resource_type: 'Endpoint',
@@ -125,8 +125,6 @@ export function doCreateSource(formData, sourceTypes) {
             };
 
             return getApiInstance().createAuthentication(authenticationData).then((authenticationDataOut) => {
-                console.log('API call createAuthentication returned data: ', authenticationDataOut);
-
                 return authenticationDataOut;
             }, (_error) => {
                 console.error('Authentication creation failure.');
@@ -151,12 +149,8 @@ export function doUpdateSource(source, formData) {
     };
 
     return inst.updateSource(source.id, sourceData)
-    .then((sourceDataOut) => {
-        console.log('API call updateSource returned: ', sourceDataOut);
-
-        // For now we parse these from a single 'URL' field.
-        /* TODO: need to create a component for entry of these */
-        const { scheme, host, port, path } = parseUrl(formData.url);
+    .then((_sourceDataOut) => {
+        const { scheme, host, port, path } = urlOrHost(formData);
 
         const endpointData = {
             scheme,
@@ -168,9 +162,7 @@ export function doUpdateSource(source, formData) {
         };
 
         return inst.updateEndpoint(source.endpoint.id, endpointData)
-        .then((endpointDataOut) => {
-            console.log('API call updateEndpoint returned: ', endpointDataOut);
-
+        .then((_endpointDataOut) => {
             const authenticationData = {
                 // FIXME: missing USER here?
                 password: formData.token || formData.password // FIXME: unify
@@ -178,8 +170,6 @@ export function doUpdateSource(source, formData) {
 
             return inst.updateAuthentication(source.authentication.id, authenticationData)
             .then((authenticationDataOut) => {
-                console.log('API call updateAuthentication returned: ', authenticationDataOut);
-
                 return authenticationDataOut;
             }, (_error) => {
                 console.error('Authentication update failure.');
