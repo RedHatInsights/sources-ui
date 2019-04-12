@@ -119,6 +119,45 @@ const temporaryHardcodedSourceSchemas = {
             helperText: 'For example, wJairXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY',
             isRequired: true
         }]
+    },
+    'mock-source': {
+        title: 'Configure Mock Source',
+        fields: [
+            // Save to Endpoint
+            {
+                component: 'select-field',
+                name: 'host',
+                label: 'Config',
+                validate: [{ type: 'required-validator' }],
+                isRequired: true,
+                initialValue: 'default',
+                options: [
+                    { label: 'Multi-threaded with events', value: 'default' },
+                    { label: 'Single-threaded full refresh', value: 'simple' }
+                ]
+            },
+            // Save to endpoint
+            // FIXME: name => 'path'?
+            {
+                component: 'select-field',
+                name: 'path',
+                label: 'Amount',
+                validate: [{ type: 'required-validator' }],
+                isRequired: true,
+                initialValue: 'default',
+                options: [
+                    { label: 'All collections | Small', value: 'small' },
+                    { label: 'All collections | Medium', value: 'default' },
+                    { label: 'All collections | Large', value: 'large' },
+                    { label: 'Amazon | Small', value: 'amazon/small' },
+                    { label: 'Amazon | Medium', value: 'amazon/default' },
+                    { label: 'Amazon | Large', value: 'amazon/large' },
+                    { label: 'Openshift | Small', value: 'openshift/small' },
+                    { label: 'Openshift | Medium', value: 'openshift/default' },
+                    { label: 'Openshift | Large', value: 'openshift/large' }
+                ]
+            }
+        ]
     }
 };
 
@@ -221,18 +260,35 @@ const endpointToUrl = endpoint => (
     `${endpoint.scheme}://${endpoint.host}:${endpoint.port}${endpoint.path || ''}`
 );
 
-const initialValues = source => ({
-    source_name: source.name,
-    source_type: source.source_type,
-    url: endpointToUrl(source.endpoint),
-    verify_ssl: source.endpoint.verify_ssl,
-    certificate_authority: source.endpoint.certificate_authority,
-    token: 'FIXME',
-    role: source.endpoint.role,
-    // AWS?
-    user_name: 'FIXME',
-    password: 'FIXME' // same as token
-});
+const initialValues = source => {
+    const url = endpointToUrl(source.endpoint);
+    const {
+        scheme,
+        host,
+        port,
+        path,
+        verify_ssl,
+        certificate_authority,
+        role
+    } = source.endpoint;
+
+    return {
+        source_name: source.name,
+        source_type: source.source_type,
+        url,
+        scheme,
+        host,
+        port,
+        path,
+        verify_ssl,
+        certificate_authority,
+        role,
+        token: 'FIXME',
+        // AWS?
+        user_name: 'FIXME',
+        password: 'FIXME' // same as token
+    };
+};
 
 export function sourceEditForm(sourceTypes, source) {
     /* editing form:
