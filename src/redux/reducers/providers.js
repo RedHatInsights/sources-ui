@@ -10,7 +10,8 @@ export const defaultProvidersState = {
     pageSize: 10,
     pageNumber: 1, // PF numbers pages from 1. Seriously.
     entities: [],
-    numberOfEntities: 0
+    numberOfEntities: 0,
+    filterColumn: 'name' // temporary hard-coded filtering by name
 };
 
 const processListInState = (state) => {
