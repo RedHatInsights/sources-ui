@@ -6,7 +6,6 @@ import toJson from 'enzyme-to-json';
 import fetchMock from 'fetch-mock';
 import mock, { once } from 'xhr-mock';
 
-import 'unfetch/polyfill'; // work around an issue in insights-ui-components
 import 'whatwg-fetch'; // fetch for Nodejs
 
 configure({ adapter: new Adapter() });
