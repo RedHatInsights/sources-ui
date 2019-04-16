@@ -3,7 +3,8 @@ import zipObject from 'lodash/zipObject';
 import find from 'lodash/find';
 import React from 'react';
 import { QuestionCircleIcon } from '@patternfly/react-icons';
-import { Popover } from '@patternfly/react-core';
+import { Popover, TextContent, TextList, TextListItem } from '@patternfly/react-core';
+import SSLFormLabel from '../../components/SSLFormLabel';
 
 const compileSourcesComboOptions = (sourceTypes) => (
     [{ label: 'Please Choose' }].concat(
@@ -21,47 +22,78 @@ const fieldsToStep = (fields, stepName, nextStep) => ({
     nextStep
 });
 
+const indexedStepName = (base, index) => index === 0 ? base : `${base}_${index}`;
+
+const fieldsToSteps = (fields, stepNamePrefix, lastStep) =>
+    Array.isArray(fields) ?
+        fields.map((page, index) =>
+            fieldsToSteps(
+                page,
+                indexedStepName(stepNamePrefix, index),
+                index < fields.length - 1 ? indexedStepName(stepNamePrefix, index + 1) : lastStep)
+        ) : fieldsToStep(fields, stepNamePrefix, lastStep);
+
 const temporaryHardcodedSourceSchemas = {
-    openshift: {
-        title: 'Enter OpenShift Container Platform information',
-        description: <React.Fragment>
-            <p>
-                Provide OpenShift Container Platform URL and SSL certificate.
-            </p>
-            <p>
-                All fields are required.
-            </p>
-        </React.Fragment>,
-        fields: [{
-            component: componentTypes.TEXT_FIELD,
-            name: 'role',
-            type: 'hidden',
-            initialValue: 'kubernetes' // value of 'role' for the endpoint
+    openshift: [
+        {
+            title: 'Obtain your login credentials',
+            description: <React.Fragment>
+                <TextContent>
+                    To gather Red Hat OpenShift Container Platform data, your need to obtain the
+                    login token. <a href='http://help.me'>Learn more</a>.
+                </TextContent>
+                <TextContent>
+                    <TextList component='ul'>
+                        <TextListItem component='li' key='1'>Log in to the Red Hat OpenShift Container Platform cluster with
+                                    an account that has access to the namespace</TextListItem>
+                        <TextListItem component='li' key='2'>Run the following command to obtain your login token:
+                            <b>&nbsp;# oc sa get-token -n management-infra management-admin</b>
+                        </TextListItem>
+                        <TextListItem component='li' key='3'>Enter the token in below</TextListItem>
+                    </TextList>
+                </TextContent>
+            </React.Fragment>,
+            fields: [{
+                component: componentTypes.TEXTAREA_FIELD,
+                name: 'token',
+                label: 'Token'
+            }]
         }, {
-            component: componentTypes.TEXT_FIELD,
-            name: 'url',
-            label: 'URL',
-            helperText: 'For example, https://myopenshiftcluster.mycompany.com',
-            isRequired: true
-        }, {
-            component: componentTypes.TEXT_FIELD,
-            name: 'certificate_authority',
-            label: 'SSL Certificate',
-            condition: {
-                when: 'verify_ssl',
-                is: true
-            }
-        }, {
-            component: componentTypes.CHECKBOX,
-            name: 'verify_ssl',
-            label: 'Verify SSL'
-        }, {
-            component: componentTypes.TEXT_FIELD,
-            name: 'token',
-            label: 'Token',
-            type: 'password'
-        }]
-    },
+            title: 'Enter OpenShift Container Platform information',
+            description: <React.Fragment>
+                <p>
+                    Provide OpenShift Container Platform URL and SSL certificate.
+                </p>
+                <p>
+                    All fields are required.
+                </p>
+            </React.Fragment>,
+            fields: [{
+                component: componentTypes.TEXT_FIELD,
+                name: 'role',
+                type: 'hidden',
+                initialValue: 'kubernetes' // value of 'role' for the endpoint
+            }, {
+                component: componentTypes.TEXT_FIELD,
+                name: 'url',
+                label: 'URL',
+                helperText: 'For example, https://myopenshiftcluster.mycompany.com',
+                isRequired: true
+            }, {
+                component: componentTypes.TEXTAREA_FIELD,
+                name: 'certificate_authority',
+                label: <SSLFormLabel />,
+                condition: {
+                    when: 'verify_ssl',
+                    is: true
+                }
+            }, {
+                component: componentTypes.CHECKBOX,
+                name: 'verify_ssl',
+                label: 'Verify SSL'
+            }]
+        }
+    ],
     amazon: {
         title: <p>
             <span>Configure account access</span>&nbsp;
@@ -254,7 +286,8 @@ const summaryStep = () => ({
 });
 
 const sourceTypeSteps = sourceTypes =>
-    sourceTypes.map(t => fieldsToStep(sourceTypeSchema(t), t.name, 'summary'));
+    sourceTypes.map(t => fieldsToSteps(sourceTypeSchema(t), t.name, 'summary'))
+    .flat(1);
 
 const endpointToUrl = endpoint => (
     `${endpoint.scheme}://${endpoint.host}:${endpoint.port}${endpoint.path || ''}`
@@ -293,8 +326,8 @@ const initialValues = source => {
 export function sourceEditForm(sourceTypes, source) {
     /* editing form:
      * 1st page: editable name + non-editable source type
-     * 2nd page: provider specific
-     * 3rd page: summary */
+     * 2nd, 3rd... page: provider specific
+     * last page: summary */
 
     const sourceType = find(sourceTypes, { id: source.source_type_id });
     const typeName = sourceType.name;
@@ -309,7 +342,7 @@ export function sourceEditForm(sourceTypes, source) {
                 name: 'wizard',
                 fields: [firstStepEdit(sourceTypes, typeName)].concat(
                     sourceType &&
-                        fieldsToStep(sourceTypeSchema(sourceType), typeName, 'summary'),
+                        fieldsToSteps(sourceTypeSchema(sourceType), typeName, 'summary'),
                     summaryStep()
                 )
             }]
@@ -341,3 +374,4 @@ export function sourceNewForm(sourceTypes) {
         }
     };
 }
+
