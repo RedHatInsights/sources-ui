@@ -323,21 +323,16 @@ const initialValues = source => {
     };
 };
 
-const logIt = (msg, foo) => {
-    console.log(msg, foo);
-    return foo;
-};
-
 export function sourceEditForm(sourceTypes, source) {
     /* editing form:
      * 1st page: editable name + non-editable source type
-     * 2nd page: provider specific
-     * 3rd page: summary */
+     * 2nd, 3rd... page: provider specific
+     * last page: summary */
 
     const sourceType = find(sourceTypes, { id: source.source_type_id });
     const typeName = sourceType.name;
 
-    return logIt('form:', {
+    return {
         initialValues: initialValues({ source_type: sourceType.name, ...source }),
         schemaType: 'default',
         showFormControls: false,
@@ -352,7 +347,7 @@ export function sourceEditForm(sourceTypes, source) {
                 )
             }]
         }
-    });
+    };
 }
 
 export function sourceNewForm(sourceTypes) {
@@ -379,3 +374,4 @@ export function sourceNewForm(sourceTypes) {
         }
     };
 }
+
