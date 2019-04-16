@@ -112,4 +112,13 @@ plugins.push(HtmlReplaceWebpackPlugin);
 const HotModuleReplacementPlugin = new webpack.HotModuleReplacementPlugin();
 plugins.push(HotModuleReplacementPlugin);
 
+/*
+ * https://github.com/webpack-contrib/webpack-bundle-analyzer
+ *
+ * (disabled by default)
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
+plugins.push(new BundleAnalyzerPlugin());
+ */
+
 module.exports = { plugins };
