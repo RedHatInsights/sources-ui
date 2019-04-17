@@ -11,7 +11,7 @@ import {
     setProviderFilterColumn
 } from '../redux/actions/providers';
 import { Button } from '@patternfly/react-core';
-import { Card, CardBody, CardFooter, CardHeader, SplitItem, Split } from '@patternfly/react-core';
+import { SplitItem, Split } from '@patternfly/react-core';
 import filter from 'lodash/filter';
 
 import SourcesSimpleView from '../components/SourcesSimpleView';
@@ -70,46 +70,22 @@ class SourcesPage extends Component {
         this.props.pageAndSize(1, count);
     }
 
-    renderMainContentOld = () => (
-        <Card>
-            <CardHeader>
-                <SourcesFilter
-                    columns={filter(sourcesViewDefinition.columns, c => c.searchable)}
-                    onFilter={this.onFilter}
-                    onFilterSelect={this.onFilterSelect}/>
-            </CardHeader>
-            <CardBody>
-                <SourcesSimpleView columns={sourcesViewDefinition.columns}/>
-            </CardBody>
-            <CardFooter>
-                <Pagination
-                    itemsPerPage={this.state.itemsPerPage}
-                    page={this.state.onPage}
-                    direction='up'
-                    onSetPage={this.onSetPage}
-                    onPerPageSelect={this.onPerPageSelect}
-                    numberOfItems={this.props.numberOfEntities || 0}
-                />
-            </CardFooter>
-        </Card>
-    );
-
     renderMainContent = () => (
         <React.Fragment>
             <TableToolbar xresults={this.props.numberOfEntities}>
-                <Split gutter="md" style={{ width: '100%' }}>
+                <Split gutter="md" style={{ flexGrow: 1 }}>
                     <SplitItem>
                         <SourcesFilter
                             columns={filter(sourcesViewDefinition.columns, c => c.searchable)}
                             onFilter={this.onFilter}
                             onFilterSelect={this.onFilterSelect}/>
                     </SplitItem>
-                    <SplitItem isMain>
+                    <SplitItem>
                         <Link to={paths.sourcesNew}>
                             <Button variant='primary'> Add a New Source </Button>
                         </Link>
                     </SplitItem>
-                    <SplitItem>
+                    <SplitItem style={{ flexGrow: 1 }}>
                         <Pagination
                             itemsPerPage={this.state.itemsPerPage}
                             page={this.state.onPage}
