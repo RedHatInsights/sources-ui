@@ -282,7 +282,11 @@ const summaryStep = () => ({
         component: 'summary'
     }],
     stepKey: 'summary',
-    name: 'summary'
+    name: 'summary',
+    title: 'Confirm source details',
+    description: <TextContent>
+        Confirm the details of your source or click Back to revise.
+    </TextContent>
 });
 
 const sourceTypeSteps = sourceTypes =>
