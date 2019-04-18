@@ -8,6 +8,7 @@ import { Table, TableHeader, TableBody, sortable } from '@patternfly/react-table
 import flatten from 'lodash/flatten';
 import filter from 'lodash/filter';
 import ContentLoader from 'react-content-loader';
+import moment from 'moment';
 
 import SourceExpandedView from './SourceExpandedView';
 import { loadEntities, selectEntity, expandEntity, removeSource, sortEntities } from '../redux/actions/providers';
@@ -77,6 +78,7 @@ class SourcesSimpleView extends React.Component {
     );
 
     sourceTypeFormatter = sourceType => (this.sourceTypeMap.get(sourceType) || sourceType || '');
+    dateFormatter = str => moment(new Date(Date.parse(str))).format('DD MMM YYYY h:mm');
 
     itemToCells = item => {
         return this.filteredColumns.map(
