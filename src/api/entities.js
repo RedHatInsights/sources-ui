@@ -1,4 +1,4 @@
-import { TOPOLOGICAL_INVENTORY_API_BASE } from '../Utilities/Constants';
+import { SOURCES_API_BASE } from '../Utilities/Constants';
 import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
 import find from 'lodash/find';
 
@@ -14,12 +14,12 @@ export function getApiInstance() {
 
     apiInstance = new TopologicalInventory.DefaultApi();
     let defaultClient = TopologicalInventory.ApiClient.instance;
-    defaultClient.basePath = TOPOLOGICAL_INVENTORY_API_BASE;
+    defaultClient.basePath = SOURCES_API_BASE;
     return apiInstance;
 }
 
 export function getEntities (_pagination, _filter) {
-    return fetch(TOPOLOGICAL_INVENTORY_API_BASE + sourcesViewDefinition.url).then(r => {
+    return fetch(SOURCES_API_BASE + sourcesViewDefinition.url).then(r => {
         if (r.ok || r.type === 'opaque') {
             return r.json();
         }
