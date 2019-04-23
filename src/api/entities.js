@@ -6,6 +6,9 @@ import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
 import { SOURCES_API_BASE } from '../Utilities/Constants';
 
 const axiosInstance = axios.create();
+axiosInstance.interceptors.response.use(response => response.data || response);
+axiosInstance.interceptors.response.use(null, error => { throw { ...error.response }; });
+
 let apiInstance;
 
 export function getSourcesApi() {
