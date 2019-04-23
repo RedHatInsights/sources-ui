@@ -11,4 +11,4 @@ const calculateApiBase = b => (
     (b.endsWith('/') && `${b}v1.0`) || `${b}/sources/v1.0`
 );
 
-export const TOPOLOGICAL_INVENTORY_API_BASE = calculateApiBase(process.env.BASE_PATH || '');
+export const SOURCES_API_BASE = calculateApiBase(process.env.BASE_PATH || '');

@@ -12,7 +12,7 @@ import { sourcesData } from './sourcesData';
 import { sourceTypesData } from './sourceTypesData';
 
 import { MemoryRouter } from 'react-router-dom';
-import { TOPOLOGICAL_INVENTORY_API_BASE } from '../Utilities/Constants';
+import { SOURCES_API_BASE } from '../Utilities/Constants';
 
 describe('SourcesPage', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -37,8 +37,8 @@ describe('SourcesPage', () => {
     it('should fetch sources and source types on component mount', (done) => {
         expect.assertions(1);
         const store = mockStore(initialState);
-        fetchMock.getOnce(`${TOPOLOGICAL_INVENTORY_API_BASE}/sources/`, { data: {} });
-        fetchMock.getOnce(`${TOPOLOGICAL_INVENTORY_API_BASE}/source_types/`, { data: {} });
+        fetchMock.getOnce(`${SOURCES_API_BASE}/sources/`, { data: {} });
+        fetchMock.getOnce(`${SOURCES_API_BASE}/source_types/`, { data: {} });
 
         const expectedActions = [
             { type: 'LOAD_SOURCE_TYPES_PENDING' },
@@ -56,8 +56,8 @@ describe('SourcesPage', () => {
 
     it('renders empty state when there are no Sources', (done) => {
         const store = mockStore(initialState);
-        fetchMock.getOnce(`${TOPOLOGICAL_INVENTORY_API_BASE}/sources/`, sourcesData);
-        fetchMock.getOnce(`${TOPOLOGICAL_INVENTORY_API_BASE}/source_types/`, sourceTypesData);
+        fetchMock.getOnce(`${SOURCES_API_BASE}/sources/`, sourcesData);
+        fetchMock.getOnce(`${SOURCES_API_BASE}/source_types/`, sourceTypesData);
 
         const page = mount(<ComponentWrapper store={ store }><SourcesPage { ...initialProps } /></ComponentWrapper>);
         setImmediate(() => {
@@ -70,8 +70,8 @@ describe('SourcesPage', () => {
         const store = mockStore({
             providers: { loaded: true, rows: [], entities: [], numberOfEntities: 1 }
         });
-        fetchMock.getOnce(`${TOPOLOGICAL_INVENTORY_API_BASE}/sources/`, sourcesData);
-        fetchMock.getOnce(`${TOPOLOGICAL_INVENTORY_API_BASE}/source_types/`, sourceTypesData);
+        fetchMock.getOnce(`${SOURCES_API_BASE}/sources/`, sourcesData);
+        fetchMock.getOnce(`${SOURCES_API_BASE}/source_types/`, sourceTypesData);
 
         const page = mount(<ComponentWrapper store={ store }><SourcesPage { ...initialProps } /></ComponentWrapper>);
 

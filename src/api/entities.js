@@ -1,25 +1,24 @@
-import { TOPOLOGICAL_INVENTORY_API_BASE } from '../Utilities/Constants';
-import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
+import axios from 'axios';
+import { DefaultApi as SourcesDefaultApi } from '@redhat-cloud-services/sources-client';
 import find from 'lodash/find';
 
-/*global require*/
-let TopologicalInventory = require('@manageiq/topological_inventory');
+import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
+import { SOURCES_API_BASE } from '../Utilities/Constants';
 
+const axiosInstance = axios.create();
 let apiInstance;
 
-export function getApiInstance() {
+export function getSourcesApi() {
     if (apiInstance) {
         return apiInstance;
     }
 
-    apiInstance = new TopologicalInventory.DefaultApi();
-    let defaultClient = TopologicalInventory.ApiClient.instance;
-    defaultClient.basePath = TOPOLOGICAL_INVENTORY_API_BASE;
+    apiInstance = new SourcesDefaultApi(undefined, SOURCES_API_BASE, axiosInstance);
     return apiInstance;
 }
 
 export function getEntities (_pagination, _filter) {
-    return fetch(TOPOLOGICAL_INVENTORY_API_BASE + sourcesViewDefinition.url).then(r => {
+    return fetch(SOURCES_API_BASE + sourcesViewDefinition.url).then(r => {
         if (r.ok || r.type === 'opaque') {
             return r.json();
         }
@@ -29,7 +28,7 @@ export function getEntities (_pagination, _filter) {
 }
 
 export function doRemoveSource(sourceId) {
-    return getApiInstance().deleteSource(sourceId).then((sourceDataOut) => {
+    return getSourcesApi().deleteSource(sourceId).then((sourceDataOut) => {
         console.log('API call deleteSource returned data: ', sourceDataOut);
     }, (_error) => {
         console.error('Source removal failed.');
@@ -38,10 +37,10 @@ export function doRemoveSource(sourceId) {
 }
 
 export function doLoadSourceForEdit(sourceId) {
-    return getApiInstance().showSource(sourceId).then(sourceData => {
+    return getSourcesApi().showSource(sourceId).then(sourceData => {
         console.log('API call showSource returned: ', sourceData);
 
-        return getApiInstance().listSourceEndpoints(sourceId, {}).then(endpoints => {
+        return getSourcesApi().listSourceEndpoints(sourceId, {}).then(endpoints => {
             console.log('API call listSourceEndpoints returned: ', endpoints);
 
             // we take just the first endpoint
@@ -53,7 +52,7 @@ export function doLoadSourceForEdit(sourceId) {
 
             sourceData.endpoint = endpoint;
 
-            return getApiInstance().listEndpointAuthentications(endpoint.id, {}).then(authentications => {
+            return getSourcesApi().listEndpointAuthentications(endpoint.id, {}).then(authentications => {
                 console.log('API call listEndpointAuthentications returned: ', authentications);
 
                 // we take just the first authentication
@@ -100,7 +99,7 @@ export function doCreateSource(formData, sourceTypes) {
         source_type_id: find(sourceTypes, { name: formData.source_type }).id
     };
 
-    return getApiInstance().createSource(sourceData).then((sourceDataOut) => {
+    return getSourcesApi().createSource(sourceData).then((sourceDataOut) => {
         const { scheme, host, port, path } = urlOrHost(formData);
 
         const endpointData = {
@@ -114,14 +113,14 @@ export function doCreateSource(formData, sourceTypes) {
             certificate_authority: formData.certificate_authority
         };
 
-        return getApiInstance().createEndpoint(endpointData).then((endpointDataOut) => {
+        return getSourcesApi().createEndpoint(endpointData).then((endpointDataOut) => {
             const authenticationData = {
                 resource_id: parseInt(endpointDataOut.id, 10),
                 resource_type: 'Endpoint',
                 password: formData.token || formData.password
             };
 
-            return getApiInstance().createAuthentication(authenticationData).then((authenticationDataOut) => {
+            return getSourcesApi().createAuthentication(authenticationData).then((authenticationDataOut) => {
                 return authenticationDataOut;
             }, (_error) => {
                 console.error('Authentication creation failure.');
@@ -139,7 +138,7 @@ export function doCreateSource(formData, sourceTypes) {
 }
 
 export function doUpdateSource(source, formData) {
-    const inst = getApiInstance();
+    const inst = getSourcesApi();
 
     let sourceData = {
         name: formData.source_name
