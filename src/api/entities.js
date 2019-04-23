@@ -96,7 +96,6 @@ const urlOrHost = formData => formData.url ? parseUrl(formData.url) : formData;
 
 export function doCreateSource(formData, sourceTypes) {
     let sourceData = {
-        tenant_id: 1, /* FIXME: remove this */
         name: formData.source_name,
         source_type_id: find(sourceTypes, { name: formData.source_type }).id
     };
@@ -106,7 +105,6 @@ export function doCreateSource(formData, sourceTypes) {
 
         const endpointData = {
             source_id: parseInt(sourceDataOut.id, 10),
-            tenant_id: parseInt(sourceDataOut.tenant_id, 10),
             role: formData.role,
             scheme,
             host,
@@ -120,7 +118,6 @@ export function doCreateSource(formData, sourceTypes) {
             const authenticationData = {
                 resource_id: parseInt(endpointDataOut.id, 10),
                 resource_type: 'Endpoint',
-                tenant_id: parseInt(sourceDataOut.tenant_id, 10),
                 password: formData.token || formData.password
             };
 
