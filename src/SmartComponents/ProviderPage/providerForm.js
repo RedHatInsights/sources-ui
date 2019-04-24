@@ -37,7 +37,7 @@ const temporaryHardcodedSourceSchemas = {
     openshift: [
         {
             title: 'Add source credentials',
-            description: <React.Fragment>
+            description: <React.Fragment key='1'>
                 <TextContent>
                     Add credentials that enable communication with this source. This source requires the login token.
                 </TextContent>
@@ -65,7 +65,7 @@ const temporaryHardcodedSourceSchemas = {
             }]
         }, {
             title: 'Enter OpenShift Container Platform information',
-            description: <React.Fragment>
+            description: <React.Fragment key='2'>
                 <p>
                     Provide OpenShift Container Platform URL and SSL certificate.
                 </p>
