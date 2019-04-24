@@ -7,6 +7,7 @@ const SSLFormLabel = () => (
         SSL Certificate&nbsp;
         <span onClick={e => e.preventDefault()}>
             <Popover
+                aria-label="Help text"
                 maxWidth="50%"
                 bodyContent={
                     <TextContent>

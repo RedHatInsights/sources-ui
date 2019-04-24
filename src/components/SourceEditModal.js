@@ -41,11 +41,10 @@ const SourceEditModal = props => {
     const form = editorNew ?
         sourceNewForm(props.sourceTypes) :
         sourceEditForm(props.sourceTypes, props.source);
-    console.log('Form schema: ', form);
 
     return (
         <Modal
-            title={editorNew ? 'Add a Source' : 'Edit Source'}
+            title={editorNew ? 'Add a source' : 'Edit Source'}
             isOpen
             onClose={props.history.goBack}
             isLarge>

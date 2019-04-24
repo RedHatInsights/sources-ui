@@ -13,7 +13,7 @@ export const sourcesViewDefinition = {
         { title: 'Name', value: 'name', searchable: true },
         { title: 'Type', value: 'source_type_id', searchable: false, formatter: 'sourceTypeFormatter' },
         // this column does not actually exist in the API, but is required by the design;
-        { title: 'Application', value: 'applications', searchable: false },
+        { title: null, value: 'applications', searchable: false },
         //{ title: 'Tags', value: 'tags', },
         //{ title: null, value: 'display_name', },
         { title: 'Date added', value: 'created_at', formatter: 'dateFormatter' },
