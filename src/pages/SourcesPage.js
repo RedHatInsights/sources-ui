@@ -82,7 +82,7 @@ class SourcesPage extends Component {
                     </SplitItem>
                     <SplitItem>
                         <Link to={paths.sourcesNew}>
-                            <Button variant='primary'> Add a New Source </Button>
+                            <Button variant='primary'> Add a source </Button>
                         </Link>
                     </SplitItem>
                     <SplitItem style={{ flexGrow: 1 }}>

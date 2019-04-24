@@ -26,7 +26,7 @@ const SourcesEmptyState = () => (
                     </EmptyStateBody>
                     <Link to={paths.sourcesNew}>
                         <Button style={{ marginTop: 'var(--pf-c-empty-state--c-button--MarginTop)' }}
-                            variant="primary">Add a Source</Button>
+                            variant="primary">Add a source</Button>
                     </Link>
                 </EmptyState>
             </Bullseye>

@@ -44,7 +44,7 @@ const SourceEditModal = props => {
 
     return (
         <Modal
-            title={editorNew ? 'Add a Source' : 'Edit Source'}
+            title={editorNew ? 'Add a source' : 'Edit Source'}
             isOpen
             onClose={props.history.goBack}
             isLarge>
