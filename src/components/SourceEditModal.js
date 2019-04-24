@@ -41,7 +41,6 @@ const SourceEditModal = props => {
     const form = editorNew ?
         sourceNewForm(props.sourceTypes) :
         sourceEditForm(props.sourceTypes, props.source);
-    console.log('Form schema: ', form);
 
     return (
         <Modal

@@ -98,6 +98,7 @@ const temporaryHardcodedSourceSchemas = {
         title: <p>
             <span>Configure account access</span>&nbsp;
             <Popover
+                aria-label="Help text"
                 position="bottom"
                 maxWidth="50%"
                 bodyContent={
