@@ -78,7 +78,7 @@ class SourcesSimpleView extends React.Component {
     );
 
     sourceTypeFormatter = sourceType => (this.sourceTypeMap.get(sourceType) || sourceType || '');
-    dateFormatter = str => moment(new Date(Date.parse(str))).format('DD MMM YYYY h:mm');
+    dateFormatter = str => moment(new Date(Date.parse(str))).utc().format('DD MMM YYYY, hh:mm UTC');
 
     itemToCells = item => {
         return this.filteredColumns.map(
