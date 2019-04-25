@@ -17,3 +17,6 @@ after_script:
 - "./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT"
 after_success:
 - curl -sSL https://raw.githubusercontent.com/RedHatInsights/insights-frontend-builder-common/master/src/bootstrap.sh | bash -s
+env:
+  global:
+  - NODE_OPTIONS="--max-old-space-size=4096 --max_old_space_size=4096"
