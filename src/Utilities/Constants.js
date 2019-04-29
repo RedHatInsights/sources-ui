@@ -8,7 +8,7 @@
  * Else append the microservice path and version. This behavior is compatible with Service Catalog.
  */
 const calculateApiBase = b => (
-    (b.endsWith('/') && `${b}v0.1`) || `${b}/topological-inventory/v0.1`
+    (b.endsWith('/') && `${b}v1.0`) || `${b}/sources/v1.0`
 );
 
-export const TOPOLOGICAL_INVENTORY_API_BASE = calculateApiBase(process.env.BASE_PATH || '');
+export const SOURCES_API_BASE = calculateApiBase(process.env.BASE_PATH || '');

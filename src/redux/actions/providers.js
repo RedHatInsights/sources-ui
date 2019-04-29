@@ -1,3 +1,4 @@
+import find from 'lodash/find';
 import { ADD_NOTIFICATION } from '@red-hat-insights/insights-frontend-components/components/Notifications';
 import {
     ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE,
@@ -9,14 +10,19 @@ import {
     doLoadSourceForEdit,
     doRemoveSource,
     doUpdateSource,
-    getEntities
+    getEntities,
+    sourceTypeStrFromLocation
 } from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
 
-export const loadEntities = () => (dispatch) => {
+export const loadEntities = () => (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.LOAD_ENTITIES_PENDING });
 
-    return getEntities({}, {}).then(response => dispatch({
+    // temporarily we limit the sources offered based on URL
+    const sourceTypeStr = sourceTypeStrFromLocation();
+    const sourceType = sourceTypeStr && find(getState().providers.sourceTypes, { name: sourceTypeStr });
+
+    return getEntities({}, { prefixed: sourceType && sourceType.id }).then(response => dispatch({
         type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
         payload: response
     }));
@@ -93,7 +99,7 @@ export const updateSource = (source, formData) => (dispatch) =>
         type: ADD_NOTIFICATION,
         payload: {
             variant: 'success',
-            title: 'Source was modified.',
+            title: `"${formData.source_name}" was modified successfully.`,
             description: 'The source was successfully modified.'
         }
     })).catch(error => dispatch({

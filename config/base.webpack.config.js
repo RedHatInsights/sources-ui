@@ -3,7 +3,6 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const config = require('./webpack.common.js');
 const { resolve } = require('path');
-const pkg = require('../package.json');
 
 const webpackConfig = {
     mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
@@ -43,14 +42,7 @@ const webpackConfig = {
                     loader: 'css-loader'
                 },
                 {
-                    loader: 'sass-loader',
-                    options: {
-                        includePaths: [
-                            ...Object.values(pkg.sassIncludes).map(includePath =>
-                                resolve(__dirname, `../${includePath}`)
-                            )
-                        ]
-                    }
+                    loader: 'sass-loader'
                 }
             ]
         }, {

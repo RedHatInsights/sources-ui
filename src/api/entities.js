@@ -1,35 +1,36 @@
-import { TOPOLOGICAL_INVENTORY_API_BASE } from '../Utilities/Constants';
-import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
+import axios from 'axios';
+import { DefaultApi as SourcesDefaultApi } from '@redhat-cloud-services/sources-client';
 import find from 'lodash/find';
 
-/*global require*/
-let TopologicalInventory = require('@manageiq/topological_inventory');
+import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
+import { SOURCES_API_BASE } from '../Utilities/Constants';
+
+const axiosInstance = axios.create();
+axiosInstance.interceptors.response.use(async (config) => {
+    await window.insights.chrome.auth.getUser();
+    return config;
+});
+axiosInstance.interceptors.response.use(response => response.data || response);
+axiosInstance.interceptors.response.use(null, error => { throw { ...error.response }; });
 
 let apiInstance;
 
-export function getApiInstance() {
+export function getSourcesApi() {
     if (apiInstance) {
         return apiInstance;
     }
 
-    apiInstance = new TopologicalInventory.DefaultApi();
-    let defaultClient = TopologicalInventory.ApiClient.instance;
-    defaultClient.basePath = TOPOLOGICAL_INVENTORY_API_BASE;
+    apiInstance = new SourcesDefaultApi(undefined, SOURCES_API_BASE, axiosInstance);
     return apiInstance;
 }
 
-export function getEntities (_pagination, _filter) {
-    return fetch(TOPOLOGICAL_INVENTORY_API_BASE + sourcesViewDefinition.url).then(r => {
-        if (r.ok || r.type === 'opaque') {
-            return r.json();
-        }
-
-        throw new Error(`Unexpected response code ${r.status}`);
-    });
-}
+export const getEntities = (_pagination, filter) => {
+    const filterFragment = filter.prefixed ? `?filter[source_type_id][eq]=${filter.prefixed}` : '';
+    return axiosInstance.get(`${SOURCES_API_BASE}${sourcesViewDefinition.url}${filterFragment}`);
+};
 
 export function doRemoveSource(sourceId) {
-    return getApiInstance().deleteSource(sourceId).then((sourceDataOut) => {
+    return getSourcesApi().deleteSource(sourceId).then((sourceDataOut) => {
         console.log('API call deleteSource returned data: ', sourceDataOut);
     }, (_error) => {
         console.error('Source removal failed.');
@@ -38,10 +39,10 @@ export function doRemoveSource(sourceId) {
 }
 
 export function doLoadSourceForEdit(sourceId) {
-    return getApiInstance().showSource(sourceId).then(sourceData => {
+    return getSourcesApi().showSource(sourceId).then(sourceData => {
         console.log('API call showSource returned: ', sourceData);
 
-        return getApiInstance().listSourceEndpoints(sourceId, {}).then(endpoints => {
+        return getSourcesApi().listSourceEndpoints(sourceId, {}).then(endpoints => {
             console.log('API call listSourceEndpoints returned: ', endpoints);
 
             // we take just the first endpoint
@@ -53,7 +54,7 @@ export function doLoadSourceForEdit(sourceId) {
 
             sourceData.endpoint = endpoint;
 
-            return getApiInstance().listEndpointAuthentications(endpoint.id, {}).then(authentications => {
+            return getSourcesApi().listEndpointAuthentications(endpoint.id, {}).then(authentications => {
                 console.log('API call listEndpointAuthentications returned: ', authentications);
 
                 // we take just the first authentication
@@ -88,23 +89,23 @@ const parseUrl = url => {
     }
 };
 
+/*
+ * If there's an URL in the formData, parse it and use it,
+ * else use individual fields (scheme, host, port, path).
+ */
+const urlOrHost = formData => formData.url ? parseUrl(formData.url) : formData;
+
 export function doCreateSource(formData, sourceTypes) {
     let sourceData = {
-        tenant_id: 1, /* FIXME: get it from somewhere. Session? */
         name: formData.source_name,
         source_type_id: find(sourceTypes, { name: formData.source_type }).id
     };
 
-    return getApiInstance().createSource(sourceData).then((sourceDataOut) => {
-        console.log('API call createSource returned data: ', sourceDataOut);
-
-        // For now we parse these from a single 'URL' field.
-        /* TODO: need to create a component for entry of these */
-        const { scheme, host, port, path } = parseUrl(formData.url);
+    return getSourcesApi().createSource(sourceData).then((sourceDataOut) => {
+        const { scheme, host, port, path } = urlOrHost(formData);
 
         const endpointData = {
             source_id: parseInt(sourceDataOut.id, 10),
-            tenant_id: parseInt(sourceDataOut.tenant_id, 10),
             role: formData.role,
             scheme,
             host,
@@ -114,19 +115,14 @@ export function doCreateSource(formData, sourceTypes) {
             certificate_authority: formData.certificate_authority
         };
 
-        return getApiInstance().createEndpoint(endpointData).then((endpointDataOut) => {
-            console.log('API call createEndpoint returned data: ', endpointDataOut);
-
+        return getSourcesApi().createEndpoint(endpointData).then((endpointDataOut) => {
             const authenticationData = {
                 resource_id: parseInt(endpointDataOut.id, 10),
                 resource_type: 'Endpoint',
-                tenant_id: parseInt(sourceDataOut.tenant_id, 10),
                 password: formData.token || formData.password
             };
 
-            return getApiInstance().createAuthentication(authenticationData).then((authenticationDataOut) => {
-                console.log('API call createAuthentication returned data: ', authenticationDataOut);
-
+            return getSourcesApi().createAuthentication(authenticationData).then((authenticationDataOut) => {
                 return authenticationDataOut;
             }, (_error) => {
                 console.error('Authentication creation failure.');
@@ -144,19 +140,15 @@ export function doCreateSource(formData, sourceTypes) {
 }
 
 export function doUpdateSource(source, formData) {
-    const inst = getApiInstance();
+    const inst = getSourcesApi();
 
     let sourceData = {
         name: formData.source_name
     };
 
     return inst.updateSource(source.id, sourceData)
-    .then((sourceDataOut) => {
-        console.log('API call updateSource returned: ', sourceDataOut);
-
-        // For now we parse these from a single 'URL' field.
-        /* TODO: need to create a component for entry of these */
-        const { scheme, host, port, path } = parseUrl(formData.url);
+    .then((_sourceDataOut) => {
+        const { scheme, host, port, path } = urlOrHost(formData);
 
         const endpointData = {
             scheme,
@@ -168,9 +160,7 @@ export function doUpdateSource(source, formData) {
         };
 
         return inst.updateEndpoint(source.endpoint.id, endpointData)
-        .then((endpointDataOut) => {
-            console.log('API call updateEndpoint returned: ', endpointDataOut);
-
+        .then((_endpointDataOut) => {
             const authenticationData = {
                 // FIXME: missing USER here?
                 password: formData.token || formData.password // FIXME: unify
@@ -178,8 +168,6 @@ export function doUpdateSource(source, formData) {
 
             return inst.updateAuthentication(source.authentication.id, authenticationData)
             .then((authenticationDataOut) => {
-                console.log('API call updateAuthentication returned: ', authenticationDataOut);
-
                 return authenticationDataOut;
             }, (_error) => {
                 console.error('Authentication update failure.');
@@ -195,3 +183,8 @@ export function doUpdateSource(source, formData) {
         throw { error: 'Source update failure.' };
     });
 }
+
+export const sourceTypeStrFromLocation = () => (
+    window.appGroup === 'insights' ? 'amazon' :
+        window.appGroup === 'hybrid' ? 'openshift' : null
+);

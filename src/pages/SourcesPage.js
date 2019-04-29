@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link, withRouter, Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { PageHeader, PageHeaderTitle, Pagination, Section } from '@red-hat-insights/insights-frontend-components';
+import { TableToolbar, PageHeader, PageHeaderTitle, Pagination, Section } from '@red-hat-insights/insights-frontend-components';
 import {
     filterProviders,
     loadEntities,
@@ -11,7 +11,7 @@ import {
     setProviderFilterColumn
 } from '../redux/actions/providers';
 import { Button } from '@patternfly/react-core';
-import { Card, CardBody, CardFooter, CardHeader } from '@patternfly/react-core';
+import { SplitItem, Split } from '@patternfly/react-core';
 import filter from 'lodash/filter';
 
 import SourcesSimpleView from '../components/SourcesSimpleView';
@@ -31,26 +31,8 @@ import { paths } from '../Routes';
  * https://medium.com/@thejasonfile/dumb-components-and-smart-components-e7b33a698d43
  */
 class SourcesPage extends Component {
-    static propTypes = {
-        filterProviders: PropTypes.func.isRequired,
-        setProviderFilterColumn: PropTypes.func.isRequired,
-        loadEntities: PropTypes.func.isRequired,
-        loadSourceTypes: PropTypes.func.isRequired,
-        pageAndSize: PropTypes.func.isRequired,
-
-        filterValue: PropTypes.string,
-        loaded: PropTypes.bool.isRequired,
-        numberOfEntities: PropTypes.number.isRequired, // total number of Sources
-
-        location: PropTypes.any.isRequired,
-        match: PropTypes.object.isRequired,
-        history: PropTypes.any.isRequired
-    };
-
-    componentDidMount = () => {
-        this.props.loadSourceTypes();
-        this.props.loadEntities();
-    }
+    componentDidMount = () => this.props.loadSourceTypes()
+    .then(() => this.props.loadEntities());
 
     constructor (props) {
         super(props);
@@ -87,17 +69,34 @@ class SourcesPage extends Component {
     }
 
     renderMainContent = () => (
-        <Card>
-            <CardHeader>
-                <SourcesFilter
-                    columns={filter(sourcesViewDefinition.columns, c => c.searchable)}
-                    onFilter={this.onFilter}
-                    onFilterSelect={this.onFilterSelect}/>
-            </CardHeader>
-            <CardBody>
-                <SourcesSimpleView columns={sourcesViewDefinition.columns}/>
-            </CardBody>
-            <CardFooter>
+        <React.Fragment>
+            <TableToolbar xresults={this.props.numberOfEntities}>
+                <Split gutter="md" style={{ flexGrow: 1 }}>
+                    <SplitItem>
+                        <SourcesFilter
+                            columns={filter(sourcesViewDefinition.columns, c => c.searchable)}
+                            onFilter={this.onFilter}
+                            onFilterSelect={this.onFilterSelect}/>
+                    </SplitItem>
+                    <SplitItem>
+                        <Link to={paths.sourcesNew}>
+                            <Button variant='primary'> Add a source </Button>
+                        </Link>
+                    </SplitItem>
+                    <SplitItem style={{ flexGrow: 1 }}>
+                        <Pagination
+                            itemsPerPage={this.state.itemsPerPage}
+                            page={this.state.onPage}
+                            direction='up'
+                            onSetPage={this.onSetPage}
+                            onPerPageSelect={this.onPerPageSelect}
+                            numberOfItems={this.props.numberOfEntities || 0}
+                        />
+                    </SplitItem>
+                </Split>
+            </TableToolbar>
+            <SourcesSimpleView columns={sourcesViewDefinition.columns}/>
+            <TableToolbar>
                 <Pagination
                     itemsPerPage={this.state.itemsPerPage}
                     page={this.state.onPage}
@@ -106,8 +105,8 @@ class SourcesPage extends Component {
                     onPerPageSelect={this.onPerPageSelect}
                     numberOfItems={this.props.numberOfEntities || 0}
                 />
-            </CardFooter>
-        </Card>
+            </TableToolbar>
+        </React.Fragment>
     );
 
     render = () => {
@@ -125,9 +124,6 @@ class SourcesPage extends Component {
                 { editorNew || editorEdit ? <SourceEditModal /> : '' }
                 <PageHeader>
                     <PageHeaderTitle title='Sources'/>
-                    <Link to={paths.sourcesNew}>
-                        <Button className='pull-right' variant='secondary'> Add a New Source </Button>
-                    </Link>
                 </PageHeader>
                 <Section type='content'>
                     {displayEmptyState ? <SourcesEmptyState /> : this.renderMainContent()}
@@ -136,6 +132,22 @@ class SourcesPage extends Component {
         );
     }
 }
+
+SourcesPage.propTypes = {
+    filterProviders: PropTypes.func.isRequired,
+    setProviderFilterColumn: PropTypes.func.isRequired,
+    loadEntities: PropTypes.func.isRequired,
+    loadSourceTypes: PropTypes.func.isRequired,
+    pageAndSize: PropTypes.func.isRequired,
+
+    filterValue: PropTypes.string,
+    loaded: PropTypes.bool.isRequired,
+    numberOfEntities: PropTypes.number.isRequired, // total number of Sources
+
+    location: PropTypes.any.isRequired,
+    match: PropTypes.object.isRequired,
+    history: PropTypes.any.isRequired
+};
 
 const mapDispatchToProps = dispatch => bindActionCreators(
     { filterProviders, loadEntities, loadSourceTypes, pageAndSize, setProviderFilterColumn }, dispatch);
