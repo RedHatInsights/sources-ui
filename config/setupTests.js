@@ -35,3 +35,11 @@ global.fetchMock = fetchMock;
  * setup ENV vars
  */
 process.env.BASE_PATH = '/api/';
+
+global.insights = {
+    chrome: {
+        auth: {
+            getUser: () => new Promise(resolve => resolve(true))
+        }
+    }
+};

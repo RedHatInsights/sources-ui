@@ -37,14 +37,14 @@ describe('SourcesPage', () => {
     it('should fetch sources and source types on component mount', (done) => {
         expect.assertions(1);
         const store = mockStore(initialState);
-        fetchMock.getOnce(`${SOURCES_API_BASE}/sources/`, { data: {} });
-        fetchMock.getOnce(`${SOURCES_API_BASE}/source_types/`, { data: {} });
+        apiClientMock.get(`${SOURCES_API_BASE}/sources/`, mockOnce({ body: { data: sourcesData } }));
+        fetchMock.getOnce(`${SOURCES_API_BASE}/source_types/`, sourceTypesData);
 
         const expectedActions = [
             { type: 'LOAD_SOURCE_TYPES_PENDING' },
+            expect.objectContaining({ type: 'LOAD_SOURCE_TYPES_FULFILLED' }),
             { type: 'LOAD_ENTITIES_PENDING' },
-            expect.objectContaining({ type: 'LOAD_ENTITIES_FULFILLED' }),
-            expect.objectContaining({ type: 'LOAD_SOURCE_TYPES_FULFILLED' })
+            expect.objectContaining({ type: 'LOAD_ENTITIES_FULFILLED' })
         ];
 
         mount(<ComponentWrapper store={ store }><SourcesPage { ...initialProps } /></ComponentWrapper>);
@@ -56,7 +56,7 @@ describe('SourcesPage', () => {
 
     it('renders empty state when there are no Sources', (done) => {
         const store = mockStore(initialState);
-        fetchMock.getOnce(`${SOURCES_API_BASE}/sources/`, sourcesData);
+        apiClientMock.get(`${SOURCES_API_BASE}/sources/`, mockOnce({ body: { data: sourcesData } }));
         fetchMock.getOnce(`${SOURCES_API_BASE}/source_types/`, sourceTypesData);
 
         const page = mount(<ComponentWrapper store={ store }><SourcesPage { ...initialProps } /></ComponentWrapper>);
@@ -70,7 +70,7 @@ describe('SourcesPage', () => {
         const store = mockStore({
             providers: { loaded: true, rows: [], entities: [], numberOfEntities: 1 }
         });
-        fetchMock.getOnce(`${SOURCES_API_BASE}/sources/`, sourcesData);
+        apiClientMock.get(`${SOURCES_API_BASE}/sources/`, mockOnce({ body: { data: sourcesData } }));
         fetchMock.getOnce(`${SOURCES_API_BASE}/source_types/`, sourceTypesData);
 
         const page = mount(<ComponentWrapper store={ store }><SourcesPage { ...initialProps } /></ComponentWrapper>);

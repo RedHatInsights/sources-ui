@@ -5,8 +5,9 @@ import React from 'react';
 import { QuestionCircleIcon } from '@patternfly/react-icons';
 import { Popover, TextContent, TextList, TextListItem } from '@patternfly/react-core';
 import SSLFormLabel from '../../components/SSLFormLabel';
+import { sourceTypeStrFromLocation } from '../../api/entities';
 
-const compileSourcesComboOptions = (sourceTypes) => (
+const compileAllSourcesComboOptions = (sourceTypes) => (
     [{ label: 'Choose a type' }].concat(
         sourceTypes.map(t => ({
             value: t.name,
@@ -14,6 +15,14 @@ const compileSourcesComboOptions = (sourceTypes) => (
         }))
     )
 );
+
+const compileSourcesComboOptions = (sourceTypes) => {
+    // temporarily we limit the sources offered based on URL
+    const sourceTypeStr = sourceTypeStrFromLocation();
+
+    return compileAllSourcesComboOptions(sourceTypeStr ?
+        sourceTypes.filter(type => type.name === sourceTypeStr) : sourceTypes);
+};
 
 const fieldsToStep = (fields, stepName, nextStep) => ({
     ...fields, // expected to include title and fields

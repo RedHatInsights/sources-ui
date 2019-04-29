@@ -24,15 +24,10 @@ export function getSourcesApi() {
     return apiInstance;
 }
 
-export function getEntities (_pagination, _filter) {
-    return fetch(SOURCES_API_BASE + sourcesViewDefinition.url).then(r => {
-        if (r.ok || r.type === 'opaque') {
-            return r.json();
-        }
-
-        throw new Error(`Unexpected response code ${r.status}`);
-    });
-}
+export const getEntities = (_pagination, filter) => {
+    const filterFragment = filter.prefixed ? `?filter[source_type_id][eq]=${filter.prefixed}` : '';
+    return axiosInstance.get(`${SOURCES_API_BASE}${sourcesViewDefinition.url}${filterFragment}`);
+};
 
 export function doRemoveSource(sourceId) {
     return getSourcesApi().deleteSource(sourceId).then((sourceDataOut) => {
@@ -188,3 +183,8 @@ export function doUpdateSource(source, formData) {
         throw { error: 'Source update failure.' };
     });
 }
+
+export const sourceTypeStrFromLocation = () => (
+    window.appGroup === 'insights' ? 'amazon' :
+        window.appGroup === 'hybrid' ? 'openshift' : null
+);
