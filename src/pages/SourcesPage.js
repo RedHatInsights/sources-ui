@@ -31,10 +31,8 @@ import { paths } from '../Routes';
  * https://medium.com/@thejasonfile/dumb-components-and-smart-components-e7b33a698d43
  */
 class SourcesPage extends Component {
-    componentDidMount = () => {
-        this.props.loadSourceTypes();
-        this.props.loadEntities();
-    }
+    componentDidMount = () => this.props.loadSourceTypes()
+    .then(() => this.props.loadEntities());
 
     constructor (props) {
         super(props);
