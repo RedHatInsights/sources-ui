@@ -67,18 +67,18 @@ class SourcesSimpleView extends React.Component {
     renderActions = () => (
         [
             {
-                title: 'Delete',
-                onClick: (_ev, i) => this.props.history.push(`/remove/${this.sourceIndexToId(i)}`)
-            },
-            {
                 title: 'Edit',
                 onClick: (_ev, i) => this.props.history.push(`/edit/${this.sourceIndexToId(i)}`)
+            },
+            {
+                title: 'Delete',
+                onClick: (_ev, i) => this.props.history.push(`/remove/${this.sourceIndexToId(i)}`)
             }
         ]
     );
 
     sourceTypeFormatter = sourceType => (this.sourceTypeMap.get(sourceType) || sourceType || '');
-    dateFormatter = str => moment(new Date(Date.parse(str))).format('DD MMM YYYY h:mm');
+    dateFormatter = str => moment(new Date(Date.parse(str))).utc().format('DD MMM YYYY, hh:mm UTC');
 
     itemToCells = item => {
         return this.filteredColumns.map(

@@ -49,8 +49,6 @@ class SourcesListView extends React.Component {
         };
     }
 
-    componentDidMount = () => this.props.loadEntities();
-
     //onSelect = (_event, key, application) => {
     //    console.log('onSelect', key, application);
     //}
