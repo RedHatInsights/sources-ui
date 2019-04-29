@@ -12,7 +12,7 @@ import { sourcesData } from './sourcesData';
 import { sourceTypesData } from './sourceTypesData';
 
 import { MemoryRouter } from 'react-router-dom';
-import { TOPOLOGICAL_INVENTORY_API_BASE } from '../Utilities/Constants';
+import { SOURCES_API_BASE } from '../Utilities/Constants';
 
 describe('SourcesPage', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -37,14 +37,14 @@ describe('SourcesPage', () => {
     it('should fetch sources and source types on component mount', (done) => {
         expect.assertions(1);
         const store = mockStore(initialState);
-        fetchMock.getOnce(`${TOPOLOGICAL_INVENTORY_API_BASE}/sources/`, { data: {} });
-        fetchMock.getOnce(`${TOPOLOGICAL_INVENTORY_API_BASE}/source_types/`, { data: {} });
+        apiClientMock.get(`${SOURCES_API_BASE}/sources/`, mockOnce({ body: { data: sourcesData } }));
+        fetchMock.getOnce(`${SOURCES_API_BASE}/source_types/`, sourceTypesData);
 
         const expectedActions = [
             { type: 'LOAD_SOURCE_TYPES_PENDING' },
+            expect.objectContaining({ type: 'LOAD_SOURCE_TYPES_FULFILLED' }),
             { type: 'LOAD_ENTITIES_PENDING' },
-            expect.objectContaining({ type: 'LOAD_ENTITIES_FULFILLED' }),
-            expect.objectContaining({ type: 'LOAD_SOURCE_TYPES_FULFILLED' })
+            expect.objectContaining({ type: 'LOAD_ENTITIES_FULFILLED' })
         ];
 
         mount(<ComponentWrapper store={ store }><SourcesPage { ...initialProps } /></ComponentWrapper>);
@@ -56,8 +56,8 @@ describe('SourcesPage', () => {
 
     it('renders empty state when there are no Sources', (done) => {
         const store = mockStore(initialState);
-        fetchMock.getOnce(`${TOPOLOGICAL_INVENTORY_API_BASE}/sources/`, sourcesData);
-        fetchMock.getOnce(`${TOPOLOGICAL_INVENTORY_API_BASE}/source_types/`, sourceTypesData);
+        apiClientMock.get(`${SOURCES_API_BASE}/sources/`, mockOnce({ body: { data: sourcesData } }));
+        fetchMock.getOnce(`${SOURCES_API_BASE}/source_types/`, sourceTypesData);
 
         const page = mount(<ComponentWrapper store={ store }><SourcesPage { ...initialProps } /></ComponentWrapper>);
         setImmediate(() => {
@@ -70,8 +70,8 @@ describe('SourcesPage', () => {
         const store = mockStore({
             providers: { loaded: true, rows: [], entities: [], numberOfEntities: 1 }
         });
-        fetchMock.getOnce(`${TOPOLOGICAL_INVENTORY_API_BASE}/sources/`, sourcesData);
-        fetchMock.getOnce(`${TOPOLOGICAL_INVENTORY_API_BASE}/source_types/`, sourceTypesData);
+        apiClientMock.get(`${SOURCES_API_BASE}/sources/`, mockOnce({ body: { data: sourcesData } }));
+        fetchMock.getOnce(`${SOURCES_API_BASE}/source_types/`, sourceTypesData);
 
         const page = mount(<ComponentWrapper store={ store }><SourcesPage { ...initialProps } /></ComponentWrapper>);
 

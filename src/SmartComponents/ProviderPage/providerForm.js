@@ -5,15 +5,24 @@ import React from 'react';
 import { QuestionCircleIcon } from '@patternfly/react-icons';
 import { Popover, TextContent, TextList, TextListItem } from '@patternfly/react-core';
 import SSLFormLabel from '../../components/SSLFormLabel';
+import { sourceTypeStrFromLocation } from '../../api/entities';
 
-const compileSourcesComboOptions = (sourceTypes) => (
-    [{ label: 'Please Choose' }].concat(
+const compileAllSourcesComboOptions = (sourceTypes) => (
+    [{ label: 'Choose a type' }].concat(
         sourceTypes.map(t => ({
             value: t.name,
             label: t.product_name
         }))
     )
 );
+
+const compileSourcesComboOptions = (sourceTypes) => {
+    // temporarily we limit the sources offered based on URL
+    const sourceTypeStr = sourceTypeStrFromLocation();
+
+    return compileAllSourcesComboOptions(sourceTypeStr ?
+        sourceTypes.filter(type => type.name === sourceTypeStr) : sourceTypes);
+};
 
 const fieldsToStep = (fields, stepName, nextStep) => ({
     ...fields, // expected to include title and fields
@@ -36,20 +45,25 @@ const fieldsToSteps = (fields, stepNamePrefix, lastStep) =>
 const temporaryHardcodedSourceSchemas = {
     openshift: [
         {
-            title: 'Obtain your login credentials',
-            description: <React.Fragment>
+            title: 'Add source credentials',
+            description: <React.Fragment key='1'>
                 <TextContent>
-                    To gather Red Hat OpenShift Container Platform data, your need to obtain the
-                    login token. <a href='http://help.me'>Learn more</a>.
+                    Add credentials that enable communication with this source. This source requires the login token.
+                </TextContent>
+                <TextContent>
+                    To collect data from a Red Hat OpenShift Container Platform source,
                 </TextContent>
                 <TextContent>
                     <TextList component='ul'>
-                        <TextListItem component='li' key='1'>Log in to the Red Hat OpenShift Container Platform cluster with
-                                    an account that has access to the namespace</TextListItem>
-                        <TextListItem component='li' key='2'>Run the following command to obtain your login token:
-                            <b>&nbsp;# oc sa get-token -n management-infra management-admin</b>
+                        <TextListItem component='li' key='1'>
+                            Log in to the Red Hat OpenShift Container Platform cluster with an account
+                            that has access to the namespace
                         </TextListItem>
-                        <TextListItem component='li' key='3'>Enter the token in below</TextListItem>
+                        <TextListItem component='li' key='2'>
+                            Run the following command to obtain your login token: <b>
+                            &nbsp;# oc sa get-token -n management-infra management-admin</b>
+                        </TextListItem>
+                        <TextListItem component='li' key='3'>Copy the token and paste it in the following field.</TextListItem>
                     </TextList>
                 </TextContent>
             </React.Fragment>,
@@ -60,12 +74,9 @@ const temporaryHardcodedSourceSchemas = {
             }]
         }, {
             title: 'Enter OpenShift Container Platform information',
-            description: <React.Fragment>
+            description: <React.Fragment key='2'>
                 <p>
                     Provide OpenShift Container Platform URL and SSL certificate.
-                </p>
-                <p>
-                    All fields are required.
                 </p>
             </React.Fragment>,
             fields: [{
@@ -80,6 +91,10 @@ const temporaryHardcodedSourceSchemas = {
                 helperText: 'For example, https://myopenshiftcluster.mycompany.com',
                 isRequired: true
             }, {
+                component: componentTypes.CHECKBOX,
+                name: 'verify_ssl',
+                label: 'Verify SSL'
+            }, {
                 component: componentTypes.TEXTAREA_FIELD,
                 name: 'certificate_authority',
                 label: <SSLFormLabel />,
@@ -87,10 +102,6 @@ const temporaryHardcodedSourceSchemas = {
                     when: 'verify_ssl',
                     is: true
                 }
-            }, {
-                component: componentTypes.CHECKBOX,
-                name: 'verify_ssl',
-                label: 'Verify SSL'
             }]
         }
     ],
@@ -98,6 +109,7 @@ const temporaryHardcodedSourceSchemas = {
         title: <p>
             <span>Configure account access</span>&nbsp;
             <Popover
+                aria-label="Help text"
                 position="bottom"
                 maxWidth="50%"
                 bodyContent={
@@ -126,7 +138,7 @@ const temporaryHardcodedSourceSchemas = {
                 Create an access key in your AWS user account and enter the details below.
             </p>
             <p>
-                For sufficient access and security, Red Har recommends using the Power User IAM polocy for your AWS user account.
+                For sufficient access and security, Red Hat recommends using the Power User IAM polocy for your AWS user account.
             </p>
             <p>
                 All fields are required.
@@ -283,9 +295,9 @@ const summaryStep = () => ({
     }],
     stepKey: 'summary',
     name: 'summary',
-    title: 'Confirm source details',
+    title: 'Review source details',
     description: <TextContent>
-        Confirm the details of your source or click Back to revise.
+        Review source details and click Add source to complete source creation. Click Back to revise.
     </TextContent>
 });
 
