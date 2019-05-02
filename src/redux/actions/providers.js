@@ -17,6 +17,9 @@ import {
 } from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
 
+const mergeSourcesAndApps = (sources, apps) =>
+    sources.map(s => ({ ...s, apps: apps.filter(a => a.source_id === s.id) }));
+
 export const loadEntities = () => (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.LOAD_ENTITIES_PENDING });
 
@@ -24,10 +27,17 @@ export const loadEntities = () => (dispatch, getState) => {
     const sourceTypeStr = sourceTypeStrFromLocation();
     const sourceType = sourceTypeStr && find(getState().providers.sourceTypes, { name: sourceTypeStr });
 
-    return getEntities({}, { prefixed: sourceType && sourceType.id }).then(response => dispatch({
-        type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
-        payload: response
-    }));
+    return getEntities({}, { prefixed: sourceType && sourceType.id }).then(sources => {
+        const sourceIds = sources.data.map(s => s.id);
+
+        doLoadApplications(sourceIds.join(',')).then(applications => {
+            const merged = mergeSourcesAndApps(sources.data, applications.data);
+            dispatch({
+                type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
+                payload: merged
+            });
+        });
+    });
 };
 
 export const loadSourceTypes = () => (dispatch) => {
