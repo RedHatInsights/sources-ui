@@ -15,6 +15,7 @@
     "@redhat-cloud-services/sources-client": "^1.0.12",
     "axios": "^0.18.0",
     "classnames": "^2.2.5",
+    "js-base64": "^2.5.1",
     "react": "^16.4.0",
     "react-content-loader": "^3.4.2",
     "react-dom": "^16.4.0",
