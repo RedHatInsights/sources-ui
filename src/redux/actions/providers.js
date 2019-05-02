@@ -9,6 +9,7 @@ import {
     doCreateSource,
     doLoadApplications,
     doLoadAppTypes,
+    doLoadEndpoints,
     doLoadSourceForEdit,
     doRemoveSource,
     doUpdateSource,
@@ -28,9 +29,11 @@ export const loadEntities = () => (dispatch, getState) => {
     const sourceType = sourceTypeStr && find(getState().providers.sourceTypes, { name: sourceTypeStr });
 
     return getEntities({}, { prefixed: sourceType && sourceType.id }).then(sources => {
-        const sourceIds = sources.data.map(s => s.id);
+        const sourceIdsList = sources.data.map(s => s.id).join(',')
 
-        doLoadApplications(sourceIds.join(',')).then(applications => {
+        Promise.all([
+            doLoadEndpoints(sourceIdsList), doLoadApplications(sourceIdsList)
+        ]).then(([endpoints, applications]) => {
             const merged = mergeSourcesAndApps(sources.data, applications.data);
             dispatch({
                 type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,

@@ -44,8 +44,8 @@ export const doLoadAppTypes = () =>
 export const doLoadApplications = sourceList =>
     axiosInstance.get(`${SOURCES_API_BASE}/applications/?source_id=${sourceList}`);
 
-export function doLoadEndpoints(sourceList) {
-}
+export const doLoadEndpoints = sourceList =>
+    axiosInstance.get(`${SOURCES_API_BASE}/endpoints/?source_id=${sourceList}`);
 
 export function doRemoveSource(sourceId) {
     return getSourcesApi().deleteSource(sourceId).then((sourceDataOut) => {
