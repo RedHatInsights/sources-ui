@@ -81,13 +81,22 @@ export const addAlert = (message, type) => ({
     payload: { message, type }
 });
 
+const hardcodedSuccessMessage = {
+    openshift: 'The resource in this source are now available in Catalog',
+    aws: 'Additional recommendations based on these extra sources will now appear in Insights'
+};
+
+const successMessage = sourceType => (
+    hardcodedSuccessMessage[sourceType] || 'The new source was successfully created.'
+);
+
 export const createSource = (formData, sourceTypes) => (dispatch) =>
     doCreateSource(formData, sourceTypes).then(_finished => dispatch({
         type: ADD_NOTIFICATION,
         payload: {
             variant: 'success',
-            title: 'Source was created.',
-            description: 'The new source was successfully created.'
+            title: `${formData.source_name} was added successfully`,
+            description: successMessage(formData.source_type)
         }
     })).catch(error => dispatch({
         type: 'FOOBAR_REJECTED',
