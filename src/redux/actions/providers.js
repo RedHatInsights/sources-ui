@@ -7,6 +7,8 @@ import {
 } from '../action-types-providers';
 import {
     doCreateSource,
+    doLoadApplications,
+    doLoadAppTypes,
     doLoadSourceForEdit,
     doRemoveSource,
     doUpdateSource,
@@ -34,6 +36,15 @@ export const loadSourceTypes = () => (dispatch) => {
     return doLoadSourceTypes().then(sourceTypes => dispatch({
         type: ACTION_TYPES.LOAD_SOURCE_TYPES_FULFILLED,
         payload: sourceTypes
+    }));
+};
+
+export const loadAppTypes = () => (dispatch) => {
+    dispatch({ type: ACTION_TYPES.LOAD_APP_TYPES_PENDING });
+
+    return doLoadAppTypes().then(appTypes => dispatch({
+        type: ACTION_TYPES.LOAD_APP_TYPES_FULFILLED,
+        payload: appTypes.data
     }));
 };
 

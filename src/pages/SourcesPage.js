@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { TableToolbar, PageHeader, PageHeaderTitle, Pagination, Section } from '@red-hat-insights/insights-frontend-components';
 import {
     filterProviders,
+    loadAppTypes,
     loadEntities,
     loadSourceTypes,
     setProviderFilterColumn
@@ -32,7 +33,10 @@ import { paths } from '../Routes';
  */
 class SourcesPage extends Component {
     componentDidMount = () => this.props.loadSourceTypes()
-    .then(() => this.props.loadEntities());
+    .then(() => {
+        this.props.loadEntities();
+        this.props.loadAppTypes();
+    });
 
     constructor (props) {
         super(props);
@@ -138,6 +142,7 @@ SourcesPage.propTypes = {
     setProviderFilterColumn: PropTypes.func.isRequired,
     loadEntities: PropTypes.func.isRequired,
     loadSourceTypes: PropTypes.func.isRequired,
+    loadAppTypes: PropTypes.func.isRequired,
     pageAndSize: PropTypes.func.isRequired,
 
     filterValue: PropTypes.string,
@@ -149,11 +154,17 @@ SourcesPage.propTypes = {
     history: PropTypes.any.isRequired
 };
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-    { filterProviders, loadEntities, loadSourceTypes, pageAndSize, setProviderFilterColumn }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({
+    filterProviders,
+    loadEntities,
+    loadSourceTypes,
+    loadAppTypes,
+    pageAndSize,
+    setProviderFilterColumn }, dispatch);
 
-const mapStateToProps = ({ providers: { filterValue, loaded, numberOfEntities } }) => (
-    { filterValue, loaded, numberOfEntities }
+const mapStateToProps = (
+    { providers: { filterValue, loaded, numberOfEntities, sourceTypesLoaded } }) => (
+    { filterValue, loaded, numberOfEntities, sourceTypesLoaded }
 );
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesPage));
