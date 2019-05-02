@@ -30,7 +30,7 @@ const entitiesPending = (state) => ({
     expanded: null
 });
 
-const entitiesLoaded = (state, { payload: { data: rows } }) =>
+const entitiesLoaded = (state, { payload: rows }) =>
     processListInState({
         ...state,
         loaded: true,
@@ -39,7 +39,8 @@ const entitiesLoaded = (state, { payload: { data: rows } }) =>
 
 const sourceTypesPending = (state) => ({
     ...state,
-    sourceTypes: []
+    sourceTypes: [],
+    sourceTypesLoaded: false
 });
 
 const sourceTypesLoaded = (state, { payload: sourceTypes }) => ({

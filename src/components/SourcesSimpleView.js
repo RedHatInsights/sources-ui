@@ -88,7 +88,7 @@ class SourcesSimpleView extends React.Component {
     };
 
     render = () => {
-        const { entities, loaded, sourceTypes } = this.props;
+        const { entities, loaded, sourceTypes, sourceTypesLoaded } = this.props;
         const rowData = flatten(entities.map((item, index) => (
             [
                 { // regular item
@@ -112,7 +112,7 @@ class SourcesSimpleView extends React.Component {
 
         this.sourceTypeMap = new Map(sourceTypes.map(t => [t.id, t.name]));
 
-        if (loaded) {
+        if (loaded && sourceTypesLoaded) {
             return (
                 <Table
                     gridBreakPoint='grid-lg'
@@ -157,6 +157,7 @@ SourcesSimpleView.propTypes = {
     numberOfEntities: PropTypes.number.isRequired,
     loaded: PropTypes.bool.isRequired,
     sourceTypes: PropTypes.arrayOf(PropTypes.any),
+    sourceTypesLoaded: PropTypes.bool.isRequired,
 
     history: PropTypes.any.isRequired
 };
@@ -165,14 +166,15 @@ SourcesSimpleView.defaultProps = {
     entities: [],
     numberOfEntities: 0,
     loaded: false,
+    sourceTypesLoaded: false,
     sourceTypes: []
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     loadEntities, selectEntity, expandEntity, sortEntities, removeSource }, dispatch);
 
-const mapStateToProps = ({ providers: { entities, loaded, numberOfEntities, sourceTypes } }) =>
-    ({ entities, loaded, numberOfEntities, sourceTypes });
+const mapStateToProps = ({ providers: { entities, loaded, numberOfEntities, sourceTypes, sourceTypesLoaded } }) =>
+    ({ entities, loaded, numberOfEntities, sourceTypes, sourceTypesLoaded });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesSimpleView));
 
