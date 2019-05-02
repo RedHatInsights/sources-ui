@@ -1,11 +1,27 @@
 import axios from 'axios';
 import { DefaultApi as SourcesDefaultApi } from '@redhat-cloud-services/sources-client';
 import find from 'lodash/find';
+import { Base64 } from 'js-base64';
 
 import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
 import { SOURCES_API_BASE } from '../Utilities/Constants';
 
-const axiosInstance = axios.create();
+const axiosInstance = axios.create(
+    process.env.FAKE_IDENTITY ? {
+        headers: {
+            common: {
+                'x-rh-identity': Base64.encode(
+                    JSON.stringify(
+                        {
+                            identity: { account_number: process.env.FAKE_IDENTITY }
+                        }
+                    )
+                )
+            }
+        }
+    } : {}
+);
+
 axiosInstance.interceptors.response.use(async (config) => {
     await window.insights.chrome.auth.getUser();
     return config;
