@@ -38,7 +38,7 @@ describe('SourcesPage', () => {
         expect.assertions(1);
         const store = mockStore(initialState);
         apiClientMock.get(`${SOURCES_API_BASE}/sources/`, mockOnce({ body: { data: sourcesData } }));
-        fetchMock.getOnce(`${SOURCES_API_BASE}/source_types/`, sourceTypesData);
+        apiClientMock.get(`${SOURCES_API_BASE}/source_types`, mockOnce({ body: { data: sourceTypesData } }));
 
         const expectedActions = [
             { type: 'LOAD_SOURCE_TYPES_PENDING' },
@@ -57,7 +57,7 @@ describe('SourcesPage', () => {
     it('renders empty state when there are no Sources', (done) => {
         const store = mockStore(initialState);
         apiClientMock.get(`${SOURCES_API_BASE}/sources/`, mockOnce({ body: { data: sourcesData } }));
-        fetchMock.getOnce(`${SOURCES_API_BASE}/source_types/`, sourceTypesData);
+        apiClientMock.get(`${SOURCES_API_BASE}/source_types`, mockOnce({ body: { data: sourceTypesData } }));
 
         const page = mount(<ComponentWrapper store={ store }><SourcesPage { ...initialProps } /></ComponentWrapper>);
         setImmediate(() => {
@@ -71,7 +71,7 @@ describe('SourcesPage', () => {
             providers: { loaded: true, rows: [], entities: [], numberOfEntities: 1 }
         });
         apiClientMock.get(`${SOURCES_API_BASE}/sources/`, mockOnce({ body: { data: sourcesData } }));
-        fetchMock.getOnce(`${SOURCES_API_BASE}/source_types/`, sourceTypesData);
+        apiClientMock.get(`${SOURCES_API_BASE}/source_types`, mockOnce({ body: { data: sourceTypesData } }));
 
         const page = mount(<ComponentWrapper store={ store }><SourcesPage { ...initialProps } /></ComponentWrapper>);
 
