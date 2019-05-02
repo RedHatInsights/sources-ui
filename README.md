@@ -5,11 +5,11 @@ List of sources miniapp for Insights.
 
 :![Main screen with "Add a new Source" modal](https://raw.githubusercontent.com/martinpovolny/topological_inventory-ui/master/doc/images/sources-main-add.jpg)
 
-Includes fragments for the Topological Inventory UI for Insights.
+Includes fragments for the Sources UI for Insights.
 
-[![Build Status](https://travis-ci.org/ManageIQ/topological_inventory-ui.svg?branch=master)](https://travis-ci.org/ManageIQ/topological_inventory-ui)
-[![Maintainability](https://api.codeclimate.com/v1/badges/039360fc91bcfa8b5232/maintainability)](https://codeclimate.com/github/ManageIQ/topological_inventory-ui/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/039360fc91bcfa8b5232/test_coverage)](https://codeclimate.com/github/ManageIQ/topological_inventory-ui/test_coverage)
+[![Build Status](https://travis-ci.org/ManageIQ/sources-ui.svg?branch=master)](https://travis-ci.org/ManageIQ/sources-ui)
+[![Maintainability](https://api.codeclimate.com/v1/badges/039360fc91bcfa8b5232/maintainability)](https://codeclimate.com/github/ManageIQ/sources-ui/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/039360fc91bcfa8b5232/test_coverage)](https://codeclimate.com/github/ManageIQ/sources-ui/test_coverage)
 
 
 ## Getting Started

@@ -12,9 +12,11 @@ if (pathName[0] === 'beta') {
     release = `/${pathName.shift()}/`;
 }
 
+window.appGroup = pathName[0];
+
 ReactDOM.render(
     <Provider store={App.getRegistry().getStore()}>
-        <Router basename={`${release}${pathName[0]}/${pathName[1]}` }>
+        <Router basename={`${release}${pathName[0]}/${pathName[1]}/${pathName[2]}` }>
             <App />
         </Router>
     </Provider>,

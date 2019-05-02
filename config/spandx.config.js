@@ -6,8 +6,11 @@ const localhost = (process.env.PLATFORM === 'linux') ? 'localhost' : 'host.docke
 
 module.exports = {
     routes: {
-        '/insights/sources': { host: `http://${localhost}:8002` },
-        '/hcm/sources': { host: `http://${localhost}:8002` },
+        '/insights/settings/sources': { host: `http://${localhost}:8002` },
+        '/hybrid/settings/sources': { host: `http://${localhost}:8002` },
+
+        //'/hybrid/settings/catalog-sources': { host: `http://${localhost}:8002` },
+        //'/hybrid/settings/cost-management-sources': { host: `http://${localhost}:8002` },
         '/apps/sources': { host: `http://${localhost}:8002` }
         // '/apps/chrome': { host: 'https://ci.cloud.paas.upshift.redhat.com' } // use non-local chrome
     }

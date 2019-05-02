@@ -5,6 +5,7 @@
   },
   "globals": {
     "fetchMock": true,
+    "apiClientMock": true,
     "setImmediate": true,
     "toJson": true,
     "beforeAll": true,
@@ -13,5 +14,10 @@
     "it": true,
     "mount": true,
     "shallow": true,
-  }
+    "mockOnce": true,
+  },
+  "rules": {
+    "react/prop-types": "off",
+    "max-len": "off"
+  },
 }

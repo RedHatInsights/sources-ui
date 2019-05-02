@@ -1,30 +1,27 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, withRouter, Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { PageHeader, PageHeaderTitle, Pagination, Section } from '@red-hat-insights/insights-frontend-components';
+import { TableToolbar, PageHeader, PageHeaderTitle, Pagination, Section } from '@red-hat-insights/insights-frontend-components';
 import {
-    addProvider,
-    createSource,
     filterProviders,
     loadEntities,
     loadSourceTypes,
     setProviderFilterColumn
 } from '../redux/actions/providers';
 import { Button } from '@patternfly/react-core';
-import { Card, CardBody, CardFooter, CardHeader, Modal } from '@patternfly/react-core';
+import { SplitItem, Split } from '@patternfly/react-core';
 import filter from 'lodash/filter';
 
 import SourcesSimpleView from '../components/SourcesSimpleView';
 import SourcesFilter from '../components/SourcesFilter';
 import SourcesEmptyState from '../components/SourcesEmptyState';
-
+import SourceEditModal from '../components/SourceEditModal';
+import SourceRemoveModal from '../components/SourceRemoveModal';
 import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
-import { wizardForm } from '../SmartComponents/ProviderPage/providerForm';
-import SourcesFormRenderer from '../Utilities/SourcesFormRenderer';
-
 import { pageAndSize } from '../redux/actions/providers';
+import { paths } from '../Routes';
 
 /**
  * A smart component that handles all the api calls and data needed by the dumb components.
@@ -34,28 +31,8 @@ import { pageAndSize } from '../redux/actions/providers';
  * https://medium.com/@thejasonfile/dumb-components-and-smart-components-e7b33a698d43
  */
 class SourcesPage extends Component {
-    static propTypes = {
-        addProvider: PropTypes.func.isRequired,
-        createSource: PropTypes.func.isRequired,
-        filterProviders: PropTypes.func.isRequired,
-        setProviderFilterColumn: PropTypes.func.isRequired,
-        loadEntities: PropTypes.func.isRequired,
-        loadSourceTypes: PropTypes.func.isRequired,
-        pageAndSize: PropTypes.func.isRequired,
-
-        filterValue: PropTypes.string,
-        loaded: PropTypes.bool.isRequired,
-        numberOfEntities: PropTypes.number.isRequired,
-        sourceTypes: PropTypes.arrayOf(PropTypes.any),
-
-        location: PropTypes.any.isRequired,
-        history: PropTypes.any.isRequired
-    };
-
-    componentDidMount = () => {
-        this.props.loadSourceTypes();
-        this.props.loadEntities();
-    }
+    componentDidMount = () => this.props.loadSourceTypes()
+    .then(() => this.props.loadEntities());
 
     constructor (props) {
         super(props);
@@ -64,16 +41,6 @@ class SourcesPage extends Component {
             itemsPerPage: 10,
             onPage: 1
         };
-    }
-
-    submitProvider = (values, _formState) => {
-        this.props.createSource(values, this.props.sourceTypes).then(() => {
-            this.props.history.replace('/');
-            this.props.loadEntities();
-        }).catch(error => {
-            console.log('CATCH:'); console.log(error);
-            this.props.history.replace('/');
-        });
     }
 
     onFilter = (filterValue) => {
@@ -102,17 +69,34 @@ class SourcesPage extends Component {
     }
 
     renderMainContent = () => (
-        <Card>
-            <CardHeader>
-                <SourcesFilter
-                    columns={filter(sourcesViewDefinition.columns, c => c.searchable)}
-                    onFilter={this.onFilter}
-                    onFilterSelect={this.onFilterSelect}/>
-            </CardHeader>
-            <CardBody>
-                <SourcesSimpleView columns={sourcesViewDefinition.columns}/>
-            </CardBody>
-            <CardFooter>
+        <React.Fragment>
+            <TableToolbar xresults={this.props.numberOfEntities}>
+                <Split gutter="md" style={{ flexGrow: 1 }}>
+                    <SplitItem>
+                        <SourcesFilter
+                            columns={filter(sourcesViewDefinition.columns, c => c.searchable)}
+                            onFilter={this.onFilter}
+                            onFilterSelect={this.onFilterSelect}/>
+                    </SplitItem>
+                    <SplitItem>
+                        <Link to={paths.sourcesNew}>
+                            <Button variant='primary'> Add a source </Button>
+                        </Link>
+                    </SplitItem>
+                    <SplitItem style={{ flexGrow: 1 }}>
+                        <Pagination
+                            itemsPerPage={this.state.itemsPerPage}
+                            page={this.state.onPage}
+                            direction='up'
+                            onSetPage={this.onSetPage}
+                            onPerPageSelect={this.onPerPageSelect}
+                            numberOfItems={this.props.numberOfEntities || 0}
+                        />
+                    </SplitItem>
+                </Split>
+            </TableToolbar>
+            <SourcesSimpleView columns={sourcesViewDefinition.columns}/>
+            <TableToolbar>
                 <Pagination
                     itemsPerPage={this.state.itemsPerPage}
                     page={this.state.onPage}
@@ -121,39 +105,25 @@ class SourcesPage extends Component {
                     onPerPageSelect={this.onPerPageSelect}
                     numberOfItems={this.props.numberOfEntities || 0}
                 />
-            </CardFooter>
-        </Card>
+            </TableToolbar>
+        </React.Fragment>
     );
 
     render = () => {
         const { numberOfEntities } = this.props;
-        const form = wizardForm(this.props.sourceTypes || []);
-        const displayEmptyState = this.props.loaded &&
-            !this.props.filterValue &&
-            (!numberOfEntities || numberOfEntities === 0);
+        const displayEmptyState = this.props.loaded &&      // already loaded
+            !this.props.filterValue &&                      // no filter active
+            (!numberOfEntities || numberOfEntities === 0);  // no records do display
+
+        const editorNew = this.props.location.pathname === paths.sourcesNew;
+        const editorEdit = this.props.match.path === paths.sourcesEdit;
 
         return (
             <React.Fragment>
-                <Modal
-                    title='Add a New Source'
-                    isOpen={this.props.location.pathname === '/new'}
-                    onClose={this.props.history.goBack}
-                    isLarge>
-
-                    <SourcesFormRenderer
-                        initialValues={form.initialValues}
-                        schemaType={form.schemaType}
-                        schema={form.schema}
-                        uiSchema={form.uiSchema}
-                        showFormControls={form.showFormControls}
-                        onSubmit={this.submitProvider}
-                    />
-                </Modal>
+                <Route exact path={paths.sourcesRemove} component={ SourceRemoveModal } />
+                { editorNew || editorEdit ? <SourceEditModal /> : '' }
                 <PageHeader>
                     <PageHeaderTitle title='Sources'/>
-                    <Link to='/new'>
-                        <Button className='pull-right' variant='secondary'> Add a New Source </Button>
-                    </Link>
                 </PageHeader>
                 <Section type='content'>
                     {displayEmptyState ? <SourcesEmptyState /> : this.renderMainContent()}
@@ -163,12 +133,27 @@ class SourcesPage extends Component {
     }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-    { addProvider, createSource, filterProviders, loadEntities,
-        loadSourceTypes, pageAndSize, setProviderFilterColumn }, dispatch);
+SourcesPage.propTypes = {
+    filterProviders: PropTypes.func.isRequired,
+    setProviderFilterColumn: PropTypes.func.isRequired,
+    loadEntities: PropTypes.func.isRequired,
+    loadSourceTypes: PropTypes.func.isRequired,
+    pageAndSize: PropTypes.func.isRequired,
 
-const mapStateToProps = ({ providers: { filterValue, loaded, numberOfEntities, sourceTypes } }) => (
-    { filterValue, loaded, numberOfEntities, sourceTypes }
+    filterValue: PropTypes.string,
+    loaded: PropTypes.bool.isRequired,
+    numberOfEntities: PropTypes.number.isRequired, // total number of Sources
+
+    location: PropTypes.any.isRequired,
+    match: PropTypes.object.isRequired,
+    history: PropTypes.any.isRequired
+};
+
+const mapDispatchToProps = dispatch => bindActionCreators(
+    { filterProviders, loadEntities, loadSourceTypes, pageAndSize, setProviderFilterColumn }, dispatch);
+
+const mapStateToProps = ({ providers: { filterValue, loaded, numberOfEntities } }) => (
+    { filterValue, loaded, numberOfEntities }
 );
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesPage));

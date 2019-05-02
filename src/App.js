@@ -53,7 +53,9 @@ class App extends Component {
 
         insights.chrome.init();
         try {
-            insights.chrome.identifyApp('sources');
+            const pathName = window.location.pathname.split('/');
+            const appName = pathName[0] === 'beta' ? pathName[3] : pathName[2];
+            insights.chrome.identifyApp(appName);
         } catch (_exception) {
             this.appNav = null;
             console.warn('Failed to initialize chrome navigation.');

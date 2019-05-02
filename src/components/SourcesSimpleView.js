@@ -8,6 +8,7 @@ import { Table, TableHeader, TableBody, sortable } from '@patternfly/react-table
 import flatten from 'lodash/flatten';
 import filter from 'lodash/filter';
 import ContentLoader from 'react-content-loader';
+import moment from 'moment';
 
 import SourceExpandedView from './SourceExpandedView';
 import { loadEntities, selectEntity, expandEntity, removeSource, sortEntities } from '../redux/actions/providers';
@@ -56,24 +57,28 @@ class SourcesSimpleView extends React.Component {
         });
     };
 
-    onCollapse = (_event, i, isOpen) => this.props.expandEntity(this.sourceIndexToId(i), isOpen);
+    /*
+     * Uncomment to re-enable row expansion.
+     * onCollapse = (_event, i, isOpen) => this.props.expandEntity(this.sourceIndexToId(i), isOpen);
+     */
 
     sourceIndexToId = (i) => this.props.entities[i / 2].id;
 
     renderActions = () => (
         [
             {
-                title: 'Remove Source',
-                onClick: (_ev, i) => {
-                    this.props.removeSource(this.sourceIndexToId(i)).then(() => {
-                        this.props.loadEntities();
-                    });
-                }
+                title: 'Edit',
+                onClick: (_ev, i) => this.props.history.push(`/edit/${this.sourceIndexToId(i)}`)
+            },
+            {
+                title: 'Delete',
+                onClick: (_ev, i) => this.props.history.push(`/remove/${this.sourceIndexToId(i)}`)
             }
         ]
     );
 
     sourceTypeFormatter = sourceType => (this.sourceTypeMap.get(sourceType) || sourceType || '');
+    dateFormatter = str => moment(new Date(Date.parse(str))).utc().format('DD MMM YYYY, hh:mm UTC');
 
     itemToCells = item => {
         return this.filteredColumns.map(
@@ -95,7 +100,11 @@ class SourcesSimpleView extends React.Component {
                     id: item.id + '_detail',
                     parent: index * 2,
                     cells: [
-                        item.expanded ? <SourceExpandedView source={item}/> : 'collapsed content'
+                        item.expanded ?
+                            <React.Fragment key={`${item.id}_detail`}>
+                                <SourceExpandedView source={item}/>
+                            </React.Fragment> :
+                            'collapsed content'
                     ]
                 }
             ]
@@ -106,6 +115,7 @@ class SourcesSimpleView extends React.Component {
         if (loaded) {
             return (
                 <Table
+                    gridBreakPoint='grid-lg'
                     aria-label="List of Sources"
                     onCollapse={this.onCollapse}
                     onSort={this.onSort}

@@ -9,12 +9,15 @@ class SourcesFilter extends Component {
 
     render = () =>
         <SimpleTableFilter
-            options={{
+            buttonTitle={null}
+            placeholder='Filter by source name'
+            xoptions={{
                 title: 'Filter By',
                 items: this.props.columns
             }}
             onOptionSelect={this.props.onFilterSelect}
             onButtonClick={this.props.onFilter}
+            onFilterChange={this.props.onFilter}
         />
 }
 
