@@ -119,6 +119,7 @@ export function doCreateSource(formData, sourceTypes) {
             const authenticationData = {
                 resource_id: parseInt(endpointDataOut.id, 10),
                 resource_type: 'Endpoint',
+                username: formData.user_name,
                 password: formData.token || formData.password
             };
 
@@ -162,7 +163,7 @@ export function doUpdateSource(source, formData) {
         return inst.updateEndpoint(source.endpoint.id, endpointData)
         .then((_endpointDataOut) => {
             const authenticationData = {
-                // FIXME: missing USER here?
+                username: formData.user_name,
                 password: formData.token || formData.password // FIXME: unify
             };
 
