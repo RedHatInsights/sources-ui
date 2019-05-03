@@ -18,8 +18,14 @@ import {
 } from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
 
+const mergeSourcesOther = (sources, key, other) =>
+    sources.map(s => ({ ...s, [key]: other.filter(o => o.source_id === s.id) }));
+
 const mergeSourcesAndApps = (sources, apps) =>
     sources.map(s => ({ ...s, apps: apps.filter(a => a.source_id === s.id) }));
+
+const mergeSourcesAndEndpoints = (sources, endpoints) =>
+    sources.map(s => ({ ...s, endpoints: endpoints.filter(a => a.source_id === s.id) }));
 
 export const loadEntities = () => (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.LOAD_ENTITIES_PENDING });
@@ -34,7 +40,7 @@ export const loadEntities = () => (dispatch, getState) => {
         Promise.all([
             doLoadEndpoints(sourceIdsList), doLoadApplications(sourceIdsList)
         ]).then(([endpoints, applications]) => {
-            const merged = mergeSourcesAndApps(sources.data, applications.data);
+            const merged = mergeSourcesAndEndpoints(mergeSourcesAndApps(sources.data, applications.data), endpoints.data);
             dispatch({
                 type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
                 payload: merged
