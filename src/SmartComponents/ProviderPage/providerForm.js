@@ -310,7 +310,8 @@ const endpointToUrl = endpoint => (
 );
 
 const initialValues = source => {
-    const url = endpointToUrl(source.endpoint);
+    const url = source.endpoint ? endpointToUrl(source.endpoint) : '';
+
     const {
         scheme,
         host,
@@ -319,7 +320,7 @@ const initialValues = source => {
         verify_ssl,
         certificate_authority,
         role
-    } = source.endpoint;
+    } = source.endpoint || {};
 
     return {
         source_name: source.name,
@@ -332,10 +333,9 @@ const initialValues = source => {
         verify_ssl,
         certificate_authority,
         role,
-        token: 'FIXME',
-        // AWS?
-        user_name: 'FIXME',
-        password: 'FIXME' // same as token
+        token: '',      // never loaded (part of authentication)
+        user_name: '',  // never loaded (part of authentication)
+        password: ''    // same as token
     };
 };
 
