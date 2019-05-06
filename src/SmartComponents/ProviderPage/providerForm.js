@@ -227,7 +227,7 @@ const compileStepMapper = (sourceTypes) => {
 
 const firstStepNew = (sourceTypes) => ({
     title: 'Select a source type',
-    description: <React.Fragment>
+    description: <React.Fragment key='step1'>
         <p>
             To import data for an application, you need to connect to a data source.
             To begin, input a name and select the type of source you want to collect data from.

@@ -81,21 +81,20 @@ class SourcesSimpleView extends React.Component {
     applicationFormatter = apps => apps.map(a => this.appTypeMap.get(a.application_type_id)).join(', ');
     sourceTypeFormatter = sourceType => (this.sourceTypeMap.get(sourceType) || sourceType || '');
     dateFormatter = str => moment(new Date(Date.parse(str))).utc().format('DD MMM YYYY, hh:mm UTC');
-    nameFormatter = (name, _source) => (
+    nameFormatter = (name, source) => (
         <TextContent>
             {name}
-            <Text component={ TextVariants.h5 }>
+            <Text key={source.id} component={ TextVariants.h6 }>
                 {'foobar'}
             </Text>
         </TextContent>
     )
 
-    itemToCells = item => {
-        return this.filteredColumns.map(
+    itemToCells = item =>
+        this.filteredColumns.map(
             col => (col.formatter ?
                 this[col.formatter](item[col.value], item) :
                 item[col.value] || ''));
-    };
 
     render = () => {
         const { entities, loaded, sourceTypes, sourceTypesLoaded, appTypes } = this.props;
