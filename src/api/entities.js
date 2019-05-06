@@ -21,7 +21,7 @@ const axiosInstance = axios.create(
     } : {}
 );
 
-axiosInstance.interceptors.response.use(async (config) => {
+axiosInstance.interceptors.request.use(async (config) => {
     await window.insights.chrome.auth.getUser();
     return config;
 });
