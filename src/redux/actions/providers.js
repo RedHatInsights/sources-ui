@@ -18,14 +18,8 @@ import {
 } from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
 
-const mergeSourcesOther = (sources, key, other) =>
+const mergeSourcesOther = (sources, other, key) =>
     sources.map(s => ({ ...s, [key]: other.filter(o => o.source_id === s.id) }));
-
-const mergeSourcesAndApps = (sources, apps) =>
-    sources.map(s => ({ ...s, apps: apps.filter(a => a.source_id === s.id) }));
-
-const mergeSourcesAndEndpoints = (sources, endpoints) =>
-    sources.map(s => ({ ...s, endpoints: endpoints.filter(a => a.source_id === s.id) }));
 
 export const loadEntities = () => (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.LOAD_ENTITIES_PENDING });
@@ -35,17 +29,19 @@ export const loadEntities = () => (dispatch, getState) => {
     const sourceType = sourceTypeStr && find(getState().providers.sourceTypes, { name: sourceTypeStr });
 
     return getEntities({}, { prefixed: sourceType && sourceType.id }).then(sources => {
-        const sourceIdsList = sources.data.map(s => s.id).join(',')
+        const sourceIdsList = sources.data.map(s => s.id).join(',');
 
         Promise.all([
             doLoadEndpoints(sourceIdsList), doLoadApplications(sourceIdsList)
-        ]).then(([endpoints, applications]) => {
-            const merged = mergeSourcesAndEndpoints(mergeSourcesAndApps(sources.data, applications.data), endpoints.data);
+        ]).then(([endpoints, applications]) =>
             dispatch({
                 type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
-                payload: merged
-            });
-        });
+                payload: mergeSourcesOther(
+                    mergeSourcesOther(sources.data, applications.data, 'apps'),
+                    endpoints.data,
+                    'endpoints'
+                )
+            }));
     });
 };
 
