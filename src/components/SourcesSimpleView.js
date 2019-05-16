@@ -13,6 +13,7 @@ import moment from 'moment';
 
 import SourceExpandedView from './SourceExpandedView';
 import { loadEntities, selectEntity, expandEntity, removeSource, sortEntities } from '../redux/actions/providers';
+import { endpointToUrl } from '../SmartComponents/ProviderPage/providerForm';
 
 const RowLoader = props => (
     <ContentLoader
@@ -78,14 +79,18 @@ class SourcesSimpleView extends React.Component {
         ]
     );
 
+    sourceIsOpenShift = source => this.sourceTypeMap.get(source.source_type_id) === 'openshift';
+    formatURL = source => source.endpoints && source.endpoints[0] && endpointToUrl(source.endpoints[0]);
+
     applicationFormatter = apps => apps.map(a => this.appTypeMap.get(a.application_type_id)).join(', ');
     sourceTypeFormatter = sourceType => (this.sourceTypeMap.get(sourceType) || sourceType || '');
     dateFormatter = str => moment(new Date(Date.parse(str))).utc().format('DD MMM YYYY, hh:mm UTC');
     nameFormatter = (name, source) => (
         <TextContent>
             {name}
-            <Text key={source.id} component={ TextVariants.h6 }>
-                {'foobar'}
+            <br key={`${source.id}-br`}/>
+            <Text key={source.id} component={ TextVariants.small }>
+                {this.sourceIsOpenShift(source) && this.formatURL(source)}
             </Text>
         </TextContent>
     )

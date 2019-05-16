@@ -305,7 +305,7 @@ const sourceTypeSteps = sourceTypes =>
     sourceTypes.map(t => fieldsToSteps(sourceTypeSchema(t), t.name, 'summary'))
     .flat(1);
 
-const endpointToUrl = endpoint => (
+export const endpointToUrl = endpoint => (
     `${endpoint.scheme}://${endpoint.host}:${endpoint.port}${endpoint.path || ''}`
 );
 
