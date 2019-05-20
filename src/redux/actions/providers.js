@@ -7,6 +7,9 @@ import {
 } from '../action-types-providers';
 import {
     doCreateSource,
+    doLoadApplications,
+    doLoadAppTypes,
+    doLoadEndpoints,
     doLoadSourceForEdit,
     doRemoveSource,
     doUpdateSource,
@@ -15,6 +18,9 @@ import {
 } from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
 
+const mergeSourcesOther = (sources, other, key) =>
+    sources.map(s => ({ ...s, [key]: other.filter(o => o.source_id === s.id) }));
+
 export const loadEntities = () => (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.LOAD_ENTITIES_PENDING });
 
@@ -22,10 +28,21 @@ export const loadEntities = () => (dispatch, getState) => {
     const sourceTypeStr = sourceTypeStrFromLocation();
     const sourceType = sourceTypeStr && find(getState().providers.sourceTypes, { name: sourceTypeStr });
 
-    return getEntities({}, { prefixed: sourceType && sourceType.id }).then(response => dispatch({
-        type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
-        payload: response
-    }));
+    return getEntities({}, { prefixed: sourceType && sourceType.id }).then(sources => {
+        const sourceIdsList = sources.data.map(s => s.id).join(',');
+
+        Promise.all([
+            doLoadEndpoints(sourceIdsList), doLoadApplications(sourceIdsList)
+        ]).then(([endpoints, applications]) =>
+            dispatch({
+                type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
+                payload: mergeSourcesOther(
+                    mergeSourcesOther(sources.data, applications.data, 'apps'),
+                    endpoints.data,
+                    'endpoints'
+                )
+            }));
+    });
 };
 
 export const loadSourceTypes = () => (dispatch) => {
@@ -34,6 +51,15 @@ export const loadSourceTypes = () => (dispatch) => {
     return doLoadSourceTypes().then(sourceTypes => dispatch({
         type: ACTION_TYPES.LOAD_SOURCE_TYPES_FULFILLED,
         payload: sourceTypes
+    }));
+};
+
+export const loadAppTypes = () => (dispatch) => {
+    dispatch({ type: ACTION_TYPES.LOAD_APP_TYPES_PENDING });
+
+    return doLoadAppTypes().then(appTypes => dispatch({
+        type: ACTION_TYPES.LOAD_APP_TYPES_FULFILLED,
+        payload: appTypes.data
     }));
 };
 

@@ -35,3 +35,13 @@
     margin-top: var(--pf-global--spacer--md);
   }
 }
+
+/* temporary styling for wizard buttons in the form player */
+.wizard-button-toolbar {
+  justify-content: flex-start !important;
+  .pf-l-toolbar__group {
+    .pf-l-toolbar__item:first-child button {
+      margin-left: 0;
+    }
+  }
+}

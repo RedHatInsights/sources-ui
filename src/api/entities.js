@@ -1,12 +1,27 @@
 import axios from 'axios';
 import { DefaultApi as SourcesDefaultApi } from '@redhat-cloud-services/sources-client';
 import find from 'lodash/find';
+import { Base64 } from 'js-base64';
 
-import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
 import { SOURCES_API_BASE } from '../Utilities/Constants';
 
-const axiosInstance = axios.create();
-axiosInstance.interceptors.response.use(async (config) => {
+const axiosInstance = axios.create(
+    process.env.FAKE_IDENTITY ? {
+        headers: {
+            common: {
+                'x-rh-identity': Base64.encode(
+                    JSON.stringify(
+                        {
+                            identity: { account_number: process.env.FAKE_IDENTITY }
+                        }
+                    )
+                )
+            }
+        }
+    } : {}
+);
+
+axiosInstance.interceptors.request.use(async (config) => {
     await window.insights.chrome.auth.getUser();
     return config;
 });
@@ -15,19 +30,22 @@ axiosInstance.interceptors.response.use(null, error => { throw { ...error.respon
 
 let apiInstance;
 
-export function getSourcesApi() {
-    if (apiInstance) {
-        return apiInstance;
-    }
-
-    apiInstance = new SourcesDefaultApi(undefined, SOURCES_API_BASE, axiosInstance);
-    return apiInstance;
-}
+export const getSourcesApi = () =>
+    apiInstance || (apiInstance = new SourcesDefaultApi(undefined, SOURCES_API_BASE, axiosInstance));
 
 export const getEntities = (_pagination, filter) => {
     const filterFragment = filter.prefixed ? `?filter[source_type_id][eq]=${filter.prefixed}` : '';
-    return axiosInstance.get(`${SOURCES_API_BASE}${sourcesViewDefinition.url}${filterFragment}`);
+    return axiosInstance.get(`${SOURCES_API_BASE}/sources${filterFragment}`);
 };
+
+export const doLoadAppTypes = () =>
+    axiosInstance.get(`${SOURCES_API_BASE}/application_types`);
+
+export const doLoadApplications = sourceList =>
+    axiosInstance.get(`${SOURCES_API_BASE}/applications/?source_id=${sourceList}`);
+
+export const doLoadEndpoints = sourceList =>
+    axiosInstance.get(`${SOURCES_API_BASE}/endpoints/?source_id=${sourceList}`);
 
 export function doRemoveSource(sourceId) {
     return getSourcesApi().deleteSource(sourceId).then((sourceDataOut) => {
