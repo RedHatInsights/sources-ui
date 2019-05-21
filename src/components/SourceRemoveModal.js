@@ -1,22 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Modal, Button, Bullseye, Text, TextContent, TextVariants } from '@patternfly/react-core';
+import {
+    Modal,
+    Button,
+    Bullseye,
+    Text,
+    TextContent,
+    TextVariants,
+    TextList,
+    TextListItem,
+    Checkbox
+} from '@patternfly/react-core';
 import { loadEntities, removeSource } from '../redux/actions/providers';
-import { ExclamationCircleIcon } from '@patternfly/react-icons';
+import { WarningTriangleIcon } from '@patternfly/react-icons';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 const SourceRemoveModal = ({
     history: { push },
     removeSource,
     loadEntities,
-    source
+    source,
+    intl
 }) => {
     const onSubmit = () => removeSource(source.id)
     .then(() => { loadEntities(); push('/'); });
 
     const onCancel = () => push('/');
+
+    const [acknowledge, setAcknowledge] = useState(false);
 
     if (!source) {
         return null;
@@ -24,31 +38,86 @@ const SourceRemoveModal = ({
 
     return (
         <Modal className="ins-c-sources__dialog--warning"
-            title=" "
+            title={
+                intl.formatMessage({
+                    id: 'sources.deleteTitle',
+                    defaultMessage: `Delete {title}`
+                }, { title: source.name })
+            }
             isOpen
             isSmall
-            hideTitle
             onClose={ onCancel }
             actions={ [
-                <Button key="cancel" variant="primary" type="button" onClick={ onCancel }>
-                    No, do not delete.
+                <Button
+                    id="deleteSubmit" key="submit" variant="danger" type="button" onClick={ onSubmit } isDisabled={!acknowledge}
+                >
+                    <FormattedMessage
+                        id="sources.deleteConfirm"
+                        defaultMessage="Delete this source and its data"
+                    />
                 </Button>,
-                <Button key="submit" variant="danger" type="button" onClick={ onSubmit }>
-                    Yes, delete the data.
+                <Button id="deleteCancel" key="cancel" variant="secondary" type="button" onClick={ onCancel }>
+                    <FormattedMessage
+                        id="sources.deleteCancel"
+                        defaultMessage="Do not delete this source"
+                    />
                 </Button>
             ] }
         >
             <Bullseye>
                 <TextContent>
-                    <Text component={ TextVariants.h1 }>
-                        <span className='ins-c-source__delete-icon' >
-                            <ExclamationCircleIcon />
-                        </span>
-                        Delete { source.name }
-                    </Text>
-                    <Text component={ TextVariants.p }>
-                        Are you sure you want to delete &quot;{ source.name }&quot;? This action cannot be undone.
-                    </Text>
+                    <div className="ins-c-source__dialog--flex">
+                        <div className="ins-c-source__dialog--icon">
+                            <WarningTriangleIcon className="ins-c-source__delete-icon" />
+                        </div>
+                        <div className="ins-c-source__dialog--text">
+                            <Text component={ TextVariants.p }>
+                                <FormattedMessage
+                                    id="sources.deleteTextBody"
+                                    defaultMessage={`Are you sure that you want to delete "{ name }"?`}
+                                    values={{
+                                        name: source.name
+                                    }}
+                                />
+                            </Text>
+                            <Text component={ TextVariants.p }>
+                                <FormattedMessage
+                                    id="sources.delete-text-body-2"
+                                    defaultMessage="Deleting this source will permanently delete:"
+                                />
+                            </Text>
+                            <TextList>
+                                <TextListItem>
+                                    <FormattedMessage
+                                        id="sources.deleteTextBody3"
+                                        defaultMessage="All data collected"
+                                    />
+                                </TextListItem>
+                                <TextListItem>
+                                    <FormattedMessage
+                                        id="sources.deleteTextBody4"
+                                        defaultMessage="Any and all historical data"
+                                    />
+                                </TextListItem>
+                            </TextList>
+                            <Checkbox
+                                label={intl.formatMessage({
+                                    id: 'sources.deleteCheckboxTitle',
+                                    defaultMessage: `I acknowledge that this action cannot be undone.`
+                                })}
+                                onChange={() => setAcknowledge((value) => !value)}
+                                aria-label={
+                                    intl.formatMessage({
+                                        id: 'sources.deleteCheckboxTitle',
+                                        defaultMessage: `I acknowledge that this action cannot be undone.`
+                                    })
+                                }
+                                id="acknowledgeDelete"
+                                name="acknowledgeDelete"
+                                value={acknowledge}
+                            />
+                        </div>
+                    </div>
                 </TextContent>
             </Bullseye>
         </Modal>
@@ -64,12 +133,11 @@ SourceRemoveModal.propTypes = {
     source: PropTypes.shape({
         id: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired
-    })
+    }),
+    intl: PropTypes.object
 };
 
-const sourceDetailsFromState = (state, id) => {
-    return state.providers.entities.find(source => source.id  === id);
-};
+const sourceDetailsFromState = (state, id) => state.providers.entities.find(source => source.id  === id);
 
 const mapStateToProps = (state, { match: { params: { id } } }) => ({ source: sourceDetailsFromState(state, id) });
 
@@ -78,4 +146,4 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
     removeSource
 }, dispatch);
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SourceRemoveModal));
+export default injectIntl(withRouter(connect(mapStateToProps, mapDispatchToProps)(SourceRemoveModal)));
