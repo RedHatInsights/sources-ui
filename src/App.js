@@ -12,6 +12,9 @@ import {
 import logger from 'redux-logger';
 import thunk from 'redux-thunk';
 
+// react-int eng locale data
+import { IntlProvider } from 'react-intl';
+
 import ReducersProviders, { defaultProvidersState } from './redux/reducers/providers';
 import ReducersListing, { defaultListingState } from './redux/reducers/listing';
 import ReducersTopology from './redux/reducers/topology';
@@ -70,10 +73,12 @@ class App extends Component {
 
     render () {
         return (
-            <React.Fragment>
-                <NotificationsPortal />
-                <Routes childProps={this.props} />
-            </React.Fragment>
+            <IntlProvider locale="en">
+                <React.Fragment>
+                    <NotificationsPortal />
+                    <Routes childProps={this.props} />
+                </React.Fragment>
+            </IntlProvider>
         );
     }
 }
