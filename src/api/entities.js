@@ -123,6 +123,7 @@ export function doCreateSource(formData, sourceTypes) {
         const { scheme, host, port, path } = urlOrHost(formData);
 
         const endpointData = {
+            default: true,
             source_id: parseInt(sourceDataOut.id, 10),
             role: formData.role,
             scheme,
