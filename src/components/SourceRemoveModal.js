@@ -25,7 +25,10 @@ const SourceRemoveModal = ({
     source,
     intl
 }) => {
-    const onSubmit = () => removeSource(source.id, source.name)
+    const onSubmit = () => removeSource(source.id, intl.formatMessage({
+        id: 'sources.notificationDeleteMessage',
+        defaultMessage: `{title} was deleted successfully.`
+    }, { title: source.name }))
     .then(() => { loadEntities(); push('/'); });
 
     const onCancel = () => push('/');

@@ -1,6 +1,5 @@
 import find from 'lodash/find';
 import { ADD_NOTIFICATION } from '@red-hat-insights/insights-frontend-components/components/Notifications';
-import { IntlProvider } from 'react-intl';
 import {
     ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE,
     ADD_PROVIDER, FILTER_PROVIDERS, CLOSE_ALERT, ADD_ALERT, SET_FILTER_COLUMN,
@@ -18,9 +17,6 @@ import {
     sourceTypeStrFromLocation
 } from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
-
-const intlProvider = new IntlProvider({ locale: 'en' });
-const { intl } = intlProvider.getChildContext();
 
 const mergeSourcesOther = (sources, other, key) =>
     sources.map(s => ({ ...s, [key]: other.filter(o => o.source_id === s.id) }));
@@ -146,20 +142,18 @@ export const updateSource = (source, formData) => (dispatch) =>
         payload: error
     }));
 
-export const removeSource = (sourceId, sourceName) => (dispatch) =>
+export const removeSource = (sourceId, title) => (dispatch) =>{
+    console.log({ title });
     doRemoveSource(sourceId).then(_finished => dispatch({
         type: ADD_NOTIFICATION,
         payload: {
             variant: 'success',
-            title: intl.formatMessage({
-                id: 'sources.notificationDeleteMessage',
-                defaultMessage: `{title} was deleted successfully.`
-            }, { title: sourceName })
+            title
         }
     })).catch(error => dispatch({
         type: 'FOOBAR_REJECTED',
         payload: error
-    }));
+    }));};
 
 export const loadSourceForEdit = sourceId => dispatch => {
     dispatch({ type: SOURCE_EDIT_REQUEST });
