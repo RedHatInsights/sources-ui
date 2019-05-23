@@ -25,7 +25,7 @@ const SourceRemoveModal = ({
     source,
     intl
 }) => {
-    const onSubmit = () => removeSource(source.id)
+    const onSubmit = () => removeSource(source.id, source.name)
     .then(() => { loadEntities(); push('/'); });
 
     const onCancel = () => push('/');
