@@ -48,6 +48,11 @@
   }
 }
 
+.ins-c-sources__dialog--spinnerContainer {
+  min-height: 64px;
+  text-align: center;
+}
+
 /* temporary styling for wizard buttons in the form player */
 .wizard-button-toolbar {
   justify-content: flex-start !important;

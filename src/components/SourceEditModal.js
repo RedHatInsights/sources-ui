@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { Modal } from '@patternfly/react-core';
+import { Spinner } from '@red-hat-insights/insights-frontend-components';
 
 import { sourceEditForm, sourceNewForm } from '../SmartComponents/ProviderPage/providerForm';
 import SourcesFormRenderer from '../Utilities/SourcesFormRenderer';
@@ -35,7 +36,15 @@ const SourceEditModal = props => {
     };
 
     if (!props.sourceTypes || (!editorNew && !props.source)) {
-        return <div>Loading...</div>;
+        return <Modal
+            title={editorNew ? 'Add a source' : 'Edit Source'}
+            isOpen
+            onClose={props.history.goBack}
+            isLarge>
+            <div className="ins-c-sources__dialog--spinnerContainer">
+                <Spinner />
+            </div>
+        </Modal>;
     }
 
     const form = editorNew ?
