@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Table, TableHeader, TableBody, sortable } from '@patternfly/react-table';
 import { TextContent, Text, TextVariants } from '@patternfly/react-core';
+import { injectIntl } from 'react-intl';
 
 import flatten from 'lodash/flatten';
 import filter from 'lodash/filter';
@@ -69,12 +70,18 @@ class SourcesSimpleView extends React.Component {
     renderActions = () => (
         [
             {
-                title: 'Edit',
+                title: this.props.intl.formatMessage({
+                    id: 'sources.edit',
+                    defaultMessage: 'Edit'
+                }),
                 onClick: (_ev, i) => this.props.history.push(`/edit/${this.sourceIndexToId(i)}`)
             },
             {
-                title: 'Delete',
                 style: { color: 'var(--pf-global--danger-color--100)' },
+                title: this.props.intl.formatMessage({
+                    id: 'sources.delete',
+                    defaultMessage: 'Delete'
+                }),
                 onClick: (_ev, i) => this.props.history.push(`/remove/${this.sourceIndexToId(i)}`)
             }
         ]
@@ -132,7 +139,10 @@ class SourcesSimpleView extends React.Component {
             return (
                 <Table
                     gridBreakPoint='grid-lg'
-                    aria-label="List of Sources"
+                    aria-label={this.props.intl.formatMessage({
+                        id: 'sources.list',
+                        defaultMessage: 'List of Sources'
+                    })}
                     onCollapse={this.onCollapse}
                     onSort={this.onSort}
                     sortBy={this.state.sortBy}
@@ -176,7 +186,9 @@ SourcesSimpleView.propTypes = {
     sourceTypesLoaded: PropTypes.bool.isRequired,
     appTypes: PropTypes.arrayOf(PropTypes.any),
 
-    history: PropTypes.any.isRequired
+    history: PropTypes.any.isRequired,
+
+    intl: PropTypes.object.isRequired
 };
 
 SourcesSimpleView.defaultProps = {
@@ -194,5 +206,5 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 const mapStateToProps = ({ providers: { entities, loaded, numberOfEntities, sourceTypes, sourceTypesLoaded, appTypes } }) =>
     ({ entities, loaded, numberOfEntities, sourceTypes, sourceTypesLoaded, appTypes });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesSimpleView));
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesSimpleView)));
 
