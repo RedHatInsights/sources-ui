@@ -21,6 +21,7 @@ const SourceEditModal = ({
     loadSourceForEdit,
     source,
     sourceTypes,
+    loadEntities,
     intl
 }) => {
     const editorNew = pathname === paths.sourcesNew;
