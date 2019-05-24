@@ -148,8 +148,7 @@ export const updateSource = (source, formData, title, description) => (dispatch)
         payload: error
     }));
 
-export const removeSource = (sourceId, title) => (dispatch) =>{
-    console.log({ title });
+export const removeSource = (sourceId, title) => (dispatch) =>
     doRemoveSource(sourceId).then(_finished => dispatch({
         type: ADD_NOTIFICATION,
         payload: {
@@ -159,7 +158,7 @@ export const removeSource = (sourceId, title) => (dispatch) =>{
     })).catch(error => dispatch({
         type: 'FOOBAR_REJECTED',
         payload: error
-    }));};
+    }));
 
 export const loadSourceForEdit = sourceId => dispatch => {
     dispatch({ type: SOURCE_EDIT_REQUEST });
