@@ -107,35 +107,41 @@ export const addAlert = (message, type) => ({
     payload: { message, type }
 });
 
-const hardcodedSuccessMessage = {
-    openshift: 'The resource in this source are now available in Catalog',
-    aws: 'Additional recommendations based on these extra sources will now appear in Insights'
-};
+const hardcodedSuccessMessage = (intl) => ({
+    openshift: intl.formatMessage({
+        id: 'sources.openshiftCreated',
+        defaultMessage: 'The resource in this source are now available in Catalog' }),
+    aws: intl.formatMessage({
+        id: 'sources.amazonCreated',
+        defaultMessage: 'Additional recommendations based on these extra sources will now appear in Insights' })
+});
 
-const successMessage = sourceType => (
-    hardcodedSuccessMessage[sourceType] || 'The new source was successfully created.'
+const successMessage = (sourceType, intl) => (
+    hardcodedSuccessMessage(intl)[sourceType] || intl.formatMessage({
+        id: 'sources.newSourceCreated',
+        defaultMessage: 'The new source was successfully created.' })
 );
 
-export const createSource = (formData, sourceTypes) => (dispatch) =>
+export const createSource = (formData, sourceTypes, title, intl) => (dispatch) =>
     doCreateSource(formData, sourceTypes).then(_finished => dispatch({
         type: ADD_NOTIFICATION,
         payload: {
             variant: 'success',
-            title: `${formData.source_name} was added successfully`,
-            description: successMessage(formData.source_type)
+            title,
+            description: successMessage(formData.source_type, intl)
         }
     })).catch(error => dispatch({
         type: 'FOOBAR_REJECTED',
         payload: error
     }));
 
-export const updateSource = (source, formData) => (dispatch) =>
+export const updateSource = (source, formData, title, description) => (dispatch) =>
     doUpdateSource(source, formData).then(_finished => dispatch({
         type: ADD_NOTIFICATION,
         payload: {
             variant: 'success',
-            title: `"${formData.source_name}" was modified successfully.`,
-            description: 'The source was successfully modified.'
+            title,
+            description
         }
     })).catch(error => dispatch({
         type: 'FOOBAR_REJECTED',
