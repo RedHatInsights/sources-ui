@@ -74,6 +74,7 @@ class SourcesSimpleView extends React.Component {
             },
             {
                 title: 'Delete',
+                style: { color: 'var(--pf-global--danger-color--100)' },
                 onClick: (_ev, i) => this.props.history.push(`/remove/${this.sourceIndexToId(i)}`)
             }
         ]
