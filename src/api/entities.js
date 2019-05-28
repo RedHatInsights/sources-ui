@@ -139,7 +139,8 @@ export function doCreateSource(formData, sourceTypes) {
                 resource_id: parseInt(endpointDataOut.id, 10),
                 resource_type: 'Endpoint',
                 username: formData.user_name,
-                password: formData.token || formData.password
+                password: formData.token || formData.password,
+                authtype: formData.authtype
             };
 
             return getSourcesApi().createAuthentication(authenticationData).then((authenticationDataOut) => {

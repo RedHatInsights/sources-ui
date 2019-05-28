@@ -126,6 +126,10 @@ const temporaryHardcodedSourceSchemas = {
                 initialValue: 'kubernetes' // value of 'role' for the endpoint
             }, {
                 component: componentTypes.TEXT_FIELD,
+                name: 'authtype',
+                initialValue: 'token'
+            }, {
+                component: componentTypes.TEXT_FIELD,
                 name: 'url',
                 label: <FormattedMessage
                     id="source.url"
@@ -231,6 +235,10 @@ const temporaryHardcodedSourceSchemas = {
             name: 'role',
             type: 'hidden',
             initialValue: 'aws' // value of 'role' for the endpoint
+        }, {
+            component: componentTypes.TEXT_FIELD,
+            name: 'authtype',
+            initialValue: 'access_key_secret_key'
         }, {
             component: componentTypes.TEXT_FIELD,
             name: 'user_name',
