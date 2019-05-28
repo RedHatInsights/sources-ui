@@ -65,6 +65,6 @@ describe('SourceRemoveModal', () => {
 
         wrapper.find('button[id="deleteSubmit"]').simulate('click');
 
-        expect(actions.removeSource).toHaveBeenCalledWith('15', 'Source'); // calls removeSource with id of the source
+        expect(actions.removeSource).toHaveBeenCalledWith('15', 'Source was deleted successfully.'); // calls removeSource with id of the source and right message
     });
 });

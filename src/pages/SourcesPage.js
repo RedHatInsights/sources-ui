@@ -14,6 +14,7 @@ import {
 import { Button } from '@patternfly/react-core';
 import { SplitItem, Split } from '@patternfly/react-core';
 import filter from 'lodash/filter';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import SourcesSimpleView from '../components/SourcesSimpleView';
 import SourcesFilter from '../components/SourcesFilter';
@@ -78,20 +79,25 @@ class SourcesPage extends Component {
                 <Split gutter="md" style={{ flexGrow: 1 }}>
                     <SplitItem>
                         <SourcesFilter
-                            columns={filter(sourcesViewDefinition.columns, c => c.searchable)}
+                            columns={filter(sourcesViewDefinition.columns(this.props.intl), c => c.searchable)}
                             onFilter={this.onFilter}
                             onFilterSelect={this.onFilterSelect}/>
                     </SplitItem>
                     <SplitItem>
                         <Link to={paths.sourcesNew}>
-                            <Button variant='primary'> Add a source </Button>
+                            <Button variant='primary'>
+                                <FormattedMessage
+                                    id="sources.addSource"
+                                    defaultMessage="Add a source"
+                                />
+                            </Button>
                         </Link>
                     </SplitItem>
                     <SplitItem style={{ flexGrow: 1 }}>
                         <Pagination
                             itemsPerPage={this.state.itemsPerPage}
                             page={this.state.onPage}
-                            direction='up'
+                            direction='down'
                             onSetPage={this.onSetPage}
                             onPerPageSelect={this.onPerPageSelect}
                             numberOfItems={this.props.numberOfEntities || 0}
@@ -99,7 +105,7 @@ class SourcesPage extends Component {
                     </SplitItem>
                 </Split>
             </TableToolbar>
-            <SourcesSimpleView columns={sourcesViewDefinition.columns}/>
+            <SourcesSimpleView columns={sourcesViewDefinition.columns(this.props.intl)}/>
             <TableToolbar>
                 <Pagination
                     itemsPerPage={this.state.itemsPerPage}
@@ -127,7 +133,10 @@ class SourcesPage extends Component {
                 <Route exact path={paths.sourcesRemove} component={ SourceRemoveModal } />
                 { editorNew || editorEdit ? <SourceEditModal /> : '' }
                 <PageHeader>
-                    <PageHeaderTitle title='Sources'/>
+                    <PageHeaderTitle title={this.props.intl.formatMessage({
+                        id: 'sources.sources',
+                        defaultMessage: 'Sources'
+                    })}/>
                 </PageHeader>
                 <Section type='content'>
                     {displayEmptyState ? <SourcesEmptyState /> : this.renderMainContent()}
@@ -151,7 +160,9 @@ SourcesPage.propTypes = {
 
     location: PropTypes.any.isRequired,
     match: PropTypes.object.isRequired,
-    history: PropTypes.any.isRequired
+    history: PropTypes.any.isRequired,
+
+    intl: PropTypes.object.isRequired
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
@@ -167,4 +178,4 @@ const mapStateToProps = (
     { filterValue, loaded, numberOfEntities, sourceTypesLoaded }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesPage));
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesPage)));

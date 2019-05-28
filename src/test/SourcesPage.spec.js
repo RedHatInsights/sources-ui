@@ -1,5 +1,4 @@
 import thunk from 'redux-thunk';
-import { Provider } from 'react-redux';
 import { notificationsMiddleware } from '@red-hat-insights/insights-frontend-components/components/Notifications';
 
 import SourcesPage from '../pages/SourcesPage';
@@ -12,8 +11,9 @@ import { sourcesData } from './sourcesData';
 import { sourceTypesData } from './sourceTypesData';
 import { applicationTypesData } from './applicationTypesData';
 
-import { MemoryRouter } from 'react-router-dom';
 import { SOURCES_API_BASE } from '../Utilities/Constants';
+
+import { componentWrapperIntl } from '../Utilities/testsHelpers';
 
 describe('SourcesPage', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -26,14 +26,6 @@ describe('SourcesPage', () => {
         mockStore = configureStore(middlewares);
         initialState = { providers: { loaded: true, rows: [], entities: [], numberOfEntities: 0 } };
     });
-
-    const ComponentWrapper = ({ store, children }) => (
-        <Provider store={ store }>
-            <MemoryRouter>
-                { children }
-            </MemoryRouter>
-        </Provider>
-    );
 
     const applicationsSource19 = {
         meta: { count: 0, limit: 100, offset: 0 },
@@ -71,7 +63,7 @@ describe('SourcesPage', () => {
             expect.objectContaining({ type: 'LOAD_ENTITIES_FULFILLED' })
         ];
 
-        mount(<ComponentWrapper store={ store }><SourcesPage { ...initialProps } /></ComponentWrapper>);
+        mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
         setImmediate(() => {
             expect(store.getActions()).toEqual(expectedActions);
             done();
@@ -82,7 +74,7 @@ describe('SourcesPage', () => {
         const store = mockStore(initialState);
         mockInitialHttpRequests();
 
-        const page = mount(<ComponentWrapper store={ store }><SourcesPage { ...initialProps } /></ComponentWrapper>);
+        const page = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
         setImmediate(() => {
             expect(page.find(SourcesEmptyState)).toHaveLength(1);
             expect(page.find(SourcesFilter)).toHaveLength(0);
@@ -97,7 +89,7 @@ describe('SourcesPage', () => {
         });
         mockInitialHttpRequests();
 
-        const page = mount(<ComponentWrapper store={ store }><SourcesPage { ...initialProps } /></ComponentWrapper>);
+        const page = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
 
         setImmediate(() => {
             expect(page.find(SourcesEmptyState)).toHaveLength(0);

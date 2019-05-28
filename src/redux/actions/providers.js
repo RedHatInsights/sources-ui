@@ -1,6 +1,5 @@
 import find from 'lodash/find';
 import { ADD_NOTIFICATION } from '@red-hat-insights/insights-frontend-components/components/Notifications';
-import { IntlProvider } from 'react-intl';
 import {
     ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE,
     ADD_PROVIDER, FILTER_PROVIDERS, CLOSE_ALERT, ADD_ALERT, SET_FILTER_COLUMN,
@@ -18,9 +17,6 @@ import {
     sourceTypeStrFromLocation
 } from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
-
-const intlProvider = new IntlProvider({ locale: 'en' });
-const { intl } = intlProvider.getChildContext();
 
 const mergeSourcesOther = (sources, other, key) =>
     sources.map(s => ({ ...s, [key]: other.filter(o => o.source_id === s.id) }));
@@ -111,50 +107,53 @@ export const addAlert = (message, type) => ({
     payload: { message, type }
 });
 
-const hardcodedSuccessMessage = {
-    openshift: 'The resource in this source are now available in Catalog',
-    aws: 'Additional recommendations based on these extra sources will now appear in Insights'
-};
+const hardcodedSuccessMessage = (intl) => ({
+    openshift: intl.formatMessage({
+        id: 'sources.openshiftCreated',
+        defaultMessage: 'The resource in this source are now available in Catalog' }),
+    aws: intl.formatMessage({
+        id: 'sources.amazonCreated',
+        defaultMessage: 'Additional recommendations based on these extra sources will now appear in Insights' })
+});
 
-const successMessage = sourceType => (
-    hardcodedSuccessMessage[sourceType] || 'The new source was successfully created.'
+const successMessage = (sourceType, intl) => (
+    hardcodedSuccessMessage(intl)[sourceType] || intl.formatMessage({
+        id: 'sources.newSourceCreated',
+        defaultMessage: 'The new source was successfully created.' })
 );
 
-export const createSource = (formData, sourceTypes) => (dispatch) =>
+export const createSource = (formData, sourceTypes, title, intl) => (dispatch) =>
     doCreateSource(formData, sourceTypes).then(_finished => dispatch({
         type: ADD_NOTIFICATION,
         payload: {
             variant: 'success',
-            title: `${formData.source_name} was added successfully`,
-            description: successMessage(formData.source_type)
+            title,
+            description: successMessage(formData.source_type, intl)
         }
     })).catch(error => dispatch({
         type: 'FOOBAR_REJECTED',
         payload: error
     }));
 
-export const updateSource = (source, formData) => (dispatch) =>
+export const updateSource = (source, formData, title, description) => (dispatch) =>
     doUpdateSource(source, formData).then(_finished => dispatch({
         type: ADD_NOTIFICATION,
         payload: {
             variant: 'success',
-            title: `"${formData.source_name}" was modified successfully.`,
-            description: 'The source was successfully modified.'
+            title,
+            description
         }
     })).catch(error => dispatch({
         type: 'FOOBAR_REJECTED',
         payload: error
     }));
 
-export const removeSource = (sourceId, sourceName) => (dispatch) =>
+export const removeSource = (sourceId, title) => (dispatch) =>
     doRemoveSource(sourceId).then(_finished => dispatch({
         type: ADD_NOTIFICATION,
         payload: {
             variant: 'success',
-            title: intl.formatMessage({
-                id: 'sources.notificationDeleteMessage',
-                defaultMessage: `{title} was deleted successfully.`
-            }, { title: sourceName })
+            title
         }
     })).catch(error => dispatch({
         type: 'FOOBAR_REJECTED',
