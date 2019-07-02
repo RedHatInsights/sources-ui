@@ -205,7 +205,11 @@ export function doUpdateSource(source, formData) {
     });
 }
 
-export const sourceTypeStrFromLocation = () => (
-    window.appGroup === 'insights' ? 'amazon' :
-        window.appGroup === 'hybrid' ? 'openshift' : null
-);
+/* Source type limitation by location (URL). Now disabled.
+ *
+ *  export const sourceTypeStrFromLocation = () => (
+ *      window.appGroup === 'insights' ? 'amazon' :
+ *          window.appGroup === 'hybrid' ? 'openshift' : null
+ * );
+ */
+export const sourceTypeStrFromLocation = () => null;
