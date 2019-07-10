@@ -4,6 +4,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Table, TableHeader, TableBody, sortable } from '@patternfly/react-table';
+import { TextContent, Text, TextVariants } from '@patternfly/react-core';
+import { injectIntl } from 'react-intl';
 
 import flatten from 'lodash/flatten';
 import filter from 'lodash/filter';
@@ -12,6 +14,7 @@ import moment from 'moment';
 
 import SourceExpandedView from './SourceExpandedView';
 import { loadEntities, selectEntity, expandEntity, removeSource, sortEntities } from '../redux/actions/providers';
+import { endpointToUrl } from '../SmartComponents/ProviderPage/providerForm';
 
 const RowLoader = props => (
     <ContentLoader
@@ -67,28 +70,47 @@ class SourcesSimpleView extends React.Component {
     renderActions = () => (
         [
             {
-                title: 'Edit',
+                title: this.props.intl.formatMessage({
+                    id: 'sources.edit',
+                    defaultMessage: 'Edit'
+                }),
                 onClick: (_ev, i) => this.props.history.push(`/edit/${this.sourceIndexToId(i)}`)
             },
             {
-                title: 'Delete',
+                style: { color: 'var(--pf-global--danger-color--100)' },
+                title: this.props.intl.formatMessage({
+                    id: 'sources.delete',
+                    defaultMessage: 'Delete'
+                }),
                 onClick: (_ev, i) => this.props.history.push(`/remove/${this.sourceIndexToId(i)}`)
             }
         ]
     );
 
+    sourceIsOpenShift = source => this.sourceTypeMap.get(source.source_type_id) === 'openshift';
+    formatURL = source => source.endpoints && source.endpoints[0] && endpointToUrl(source.endpoints[0]);
+
+    applicationFormatter = apps => apps.map(a => this.appTypeMap.get(a.application_type_id)).join(', ');
     sourceTypeFormatter = sourceType => (this.sourceTypeMap.get(sourceType) || sourceType || '');
     dateFormatter = str => moment(new Date(Date.parse(str))).utc().format('DD MMM YYYY, hh:mm UTC');
+    nameFormatter = (name, source) => (
+        <TextContent>
+            {name}
+            <br key={`${source.id}-br`}/>
+            <Text key={source.id} component={ TextVariants.small }>
+                {this.sourceIsOpenShift(source) && this.formatURL(source)}
+            </Text>
+        </TextContent>
+    )
 
-    itemToCells = item => {
-        return this.filteredColumns.map(
+    itemToCells = item =>
+        this.filteredColumns.map(
             col => (col.formatter ?
-                this[col.formatter](item[col.value]) :
+                this[col.formatter](item[col.value], item) :
                 item[col.value] || ''));
-    };
 
     render = () => {
-        const { entities, loaded, sourceTypes } = this.props;
+        const { entities, loaded, sourceTypes, sourceTypesLoaded, appTypes } = this.props;
         const rowData = flatten(entities.map((item, index) => (
             [
                 { // regular item
@@ -111,12 +133,16 @@ class SourcesSimpleView extends React.Component {
         )));
 
         this.sourceTypeMap = new Map(sourceTypes.map(t => [t.id, t.name]));
+        this.appTypeMap = new Map(appTypes.map(t => [t.id, t.display_name]));
 
-        if (loaded) {
+        if (loaded && sourceTypesLoaded) {
             return (
                 <Table
                     gridBreakPoint='grid-lg'
-                    aria-label="List of Sources"
+                    aria-label={this.props.intl.formatMessage({
+                        id: 'sources.list',
+                        defaultMessage: 'List of Sources'
+                    })}
                     onCollapse={this.onCollapse}
                     onSort={this.onSort}
                     sortBy={this.state.sortBy}
@@ -157,22 +183,28 @@ SourcesSimpleView.propTypes = {
     numberOfEntities: PropTypes.number.isRequired,
     loaded: PropTypes.bool.isRequired,
     sourceTypes: PropTypes.arrayOf(PropTypes.any),
+    sourceTypesLoaded: PropTypes.bool.isRequired,
+    appTypes: PropTypes.arrayOf(PropTypes.any),
 
-    history: PropTypes.any.isRequired
+    history: PropTypes.any.isRequired,
+
+    intl: PropTypes.object.isRequired
 };
 
 SourcesSimpleView.defaultProps = {
     entities: [],
     numberOfEntities: 0,
     loaded: false,
-    sourceTypes: []
+    sourceTypesLoaded: false,
+    sourceTypes: [],
+    appTypes: []
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     loadEntities, selectEntity, expandEntity, sortEntities, removeSource }, dispatch);
 
-const mapStateToProps = ({ providers: { entities, loaded, numberOfEntities, sourceTypes } }) =>
-    ({ entities, loaded, numberOfEntities, sourceTypes });
+const mapStateToProps = ({ providers: { entities, loaded, numberOfEntities, sourceTypes, sourceTypesLoaded, appTypes } }) =>
+    ({ entities, loaded, numberOfEntities, sourceTypes, sourceTypesLoaded, appTypes });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesSimpleView));
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesSimpleView)));
 

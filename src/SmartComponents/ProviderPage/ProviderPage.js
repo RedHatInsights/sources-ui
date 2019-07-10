@@ -16,7 +16,6 @@ import SourcesListView from '../../PresentationalComponents/SourcesListView/Sour
 import SourcesFilter from '../../PresentationalComponents/SourcesListView/SourcesFilter';
 
 import { providerColumns } from '../../SmartComponents/ProviderPage/providerColumns';
-//import { wizardForm } from './providerForm';
 import SourcesFormRenderer from '../../Utilities/SourcesFormRenderer';
 
 import { pageAndSize } from '../../redux/actions/providers';
@@ -86,7 +85,7 @@ class ProviderPage extends Component {
     render = () => {
         const filterColumns = filter(providerColumns, c => c.value);
 
-        const form = null; //wizardForm;
+        const form = null;
 
         return (
             <React.Fragment>

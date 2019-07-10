@@ -9,6 +9,7 @@ import {
     EmptyStateIcon,
     EmptyStateBody
 } from '@patternfly/react-core';
+import { FormattedMessage } from 'react-intl';
 
 import { WrenchIcon } from '@patternfly/react-icons'; // FIXME: different icon
 import { Link } from 'react-router-dom';
@@ -20,13 +21,26 @@ const SourcesEmptyState = () => (
             <Bullseye>
                 <EmptyState>
                     <EmptyStateIcon icon={WrenchIcon} />
-                    <Title headingLevel="h5" size="lg">No Sources</Title>
+                    <Title headingLevel="h5" size="lg">
+                        <FormattedMessage
+                            id="sources.emptyStateTitle"
+                            defaultMessage="No Sources"
+                        />
+                    </Title>
                     <EmptyStateBody>
-                        No Sources have been defined. To start define a Source.
+                        <FormattedMessage
+                            id="sources.emptyStateBody"
+                            defaultMessage="No Sources have been defined. To start define a Source."
+                        />
                     </EmptyStateBody>
                     <Link to={paths.sourcesNew}>
                         <Button style={{ marginTop: 'var(--pf-c-empty-state--c-button--MarginTop)' }}
-                            variant="primary">Add a source</Button>
+                            variant="primary">
+                            <FormattedMessage
+                                id="sources.emptyStateButton"
+                                defaultMessage="Add a source"
+                            />
+                        </Button>
                     </Link>
                 </EmptyState>
             </Bullseye>
