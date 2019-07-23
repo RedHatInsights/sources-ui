@@ -140,7 +140,7 @@ export function doCreateSource(formData, sourceTypes) {
             const authenticationData = {
                 resource_id: String(parseInt(endpointDataOut.id, 10)),
                 resource_type: 'Endpoint',
-                username: formData.user_name,
+                username: formData.username,
                 password: formData.token || formData.password,
                 authtype: formData.authtype
             };
@@ -176,7 +176,7 @@ export function doUpdateSource(source, formData) {
         const endpointData = {
             scheme,
             host,
-            port: parseInt(port, 10),
+            port: String(parseInt(port, 10)),
             path,
             verify_ssl: formData.verify_ssl,
             certificate_authority: formData.certificate_authority
@@ -185,7 +185,7 @@ export function doUpdateSource(source, formData) {
         return inst.updateEndpoint(source.endpoint.id, endpointData)
         .then((_endpointDataOut) => {
             const authenticationData = {
-                username: formData.user_name,
+                username: formData.username,
                 password: formData.token || formData.password // FIXME: unify
             };
 
