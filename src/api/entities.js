@@ -173,10 +173,12 @@ export function doUpdateSource(source, formData) {
     .then((_sourceDataOut) => {
         const { scheme, host, port, path } = urlOrHost(formData);
 
+        const endPointPort = parseInt(port, 10);
+
         const endpointData = {
             scheme,
             host,
-            port: String(parseInt(port, 10)),
+            port: isNaN(endPointPort) ? undefined : endPointPort,
             path,
             verify_ssl: formData.verify_ssl,
             certificate_authority: formData.certificate_authority
