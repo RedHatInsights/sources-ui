@@ -241,7 +241,7 @@ const temporaryHardcodedSourceSchemas = {
             initialValue: 'access_key_secret_key'
         }, {
             component: componentTypes.TEXT_FIELD,
-            name: 'user_name',
+            name: 'username',
             label: <FormattedMessage
                 id="sources.accesKeyID"
                 defaultMessage="Access Key ID"
@@ -476,7 +476,7 @@ const initialValues = source => {
         certificate_authority,
         role,
         token: '',      // never loaded (part of authentication)
-        user_name: '',  // never loaded (part of authentication)
+        username: '',  // never loaded (part of authentication)
         password: ''    // same as token
     };
 };
