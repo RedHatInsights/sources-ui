@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Description = ({ name, content, className }) => <div className={ className } id={ name }>
+const Description = ({ name, content, className }) => (<div className={ className } id={ name }>
     { content }
-</div>;
+</div>);
 
 Description.propTypes = {
     name: PropTypes.string.isRequired,

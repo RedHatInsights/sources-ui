@@ -28,11 +28,11 @@ export default class FilterDropdown extends Component {
     ]
 
     render = () =>
-        <Dropdown
+        (<Dropdown
             onToggle={this.onToggle}
             onSelect={this.onSelect}
             toggle={<DropdownToggle onToggle={this.onToggle}>All</DropdownToggle>}
             isOpen={this.state.isOpen}
             dropdownItems={this.dropdownItems()}
-        />
+        />)
 }

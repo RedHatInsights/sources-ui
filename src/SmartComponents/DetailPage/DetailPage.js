@@ -12,12 +12,12 @@ class DetailPage extends Component {
     };
 
     render = () =>
-        <React.Fragment>
+        (<React.Fragment>
             <Section type='content'>
                 <h1>Details of a Provider</h1>
                 <DetailView sourceId={parseInt(this.props.match.params.id, 10)}/>
             </Section>
-        </React.Fragment>
+        </React.Fragment>)
 };
 
 export default withRouter(DetailPage);
