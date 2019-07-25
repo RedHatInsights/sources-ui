@@ -21,8 +21,6 @@ import { viewDefinitions } from './views/viewDefinitions';
  *         see the difference with DashboardMap and InventoryDeployments.
  *
  */
-const ProviderPage = asyncComponent(() => import(
-    /* webpackChunkName: "ProviderPage" */ './SmartComponents/ProviderPage/ProviderPage'));
 const ListingPage = asyncComponent(() => import(
     /* webpackChunkName: "ListingPage" */ './SmartComponents/ListingPage/ListingPage'));
 const DetailPage = asyncComponent(() => import(
@@ -82,8 +80,6 @@ export const Routes = (props) => {
             <InsightsRoute exact path={paths.sourcesNew} component={SourcesPage} rootClass='providers' />
             <InsightsRoute path={paths.sourcesEdit} component={SourcesPage} rootClass='providers' />
             <InsightsRoute path={paths.sourcesRemove} component={SourcesPage} rootClass='providers' />
-            <InsightsRoute exact path={paths.providers} component={ProviderPage} rootClass='providers' />
-            <InsightsRoute exact path={paths.providerNew} component={ProviderPage} rootClass='providers' />
             <InsightsRoute path={paths.topology} component={TopologyPage} rootClass='provider' />
             <InsightsRoute exact path={paths.providerDetail} component={DetailPage} rootClass='provider' />
             { dynamicRoutes(viewDefinitions) }
