@@ -15,6 +15,7 @@ import { Button } from '@patternfly/react-core';
 import { SplitItem, Split } from '@patternfly/react-core';
 import filter from 'lodash/filter';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources';
 
 import SourcesSimpleView from '../components/SourcesSimpleView';
 import SourcesFilter from '../components/SourcesFilter';
@@ -25,38 +26,21 @@ import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
 import { pageAndSize } from '../redux/actions/providers';
 import { paths } from '../Routes';
 
-/**
- * A smart component that handles all the api calls and data needed by the dumb components.
- * Smart components are usually classes.
- *
- * https://reactjs.org/docs/components-and-props.html
- * https://medium.com/@thejasonfile/dumb-components-and-smart-components-e7b33a698d43
- */
 class SourcesPage extends Component {
+    state = {
+        itemsPerPage: 10,
+        onPage: 1
+    };
+
     componentDidMount = () => this.props.loadSourceTypes()
     .then(() => {
         this.props.loadEntities();
         this.props.loadAppTypes();
     });
 
-    constructor (props) {
-        super(props);
+    onFilter = (filterValue) => this.props.filterProviders(filterValue);
 
-        this.state = {
-            itemsPerPage: 10,
-            onPage: 1
-        };
-    }
-
-    onFilter = (filterValue) => {
-        console.log('onFilter', filterValue);
-        this.props.filterProviders(filterValue);
-    }
-
-    onFilterSelect = (_component, column) => {
-        console.log('onFilter', column);
-        this.props.setProviderFilterColumn(column.value);
-    }
+    onFilterSelect = (_component, column) => this.props.setProviderFilterColumn(column.value);
 
     onSetPage = (number) => {
         this.setState({
@@ -131,7 +115,13 @@ class SourcesPage extends Component {
         return (
             <React.Fragment>
                 <Route exact path={paths.sourcesRemove} component={ SourceRemoveModal } />
-                { editorNew || editorEdit ? <SourceEditModal /> : '' }
+                { editorNew && <AddSourceWizard
+                    sourceTypes={this.props.sourceTypes}
+                    isOpen={true}
+                    onClose={() => this.props.history.replace('/')}
+                    afterSuccess={() => this.props.loadEntities()}
+                />}
+                { editorEdit && <SourceEditModal />}
                 <PageHeader>
                     <PageHeaderTitle title={this.props.intl.formatMessage({
                         id: 'sources.sources',
@@ -153,6 +143,7 @@ SourcesPage.propTypes = {
     loadSourceTypes: PropTypes.func.isRequired,
     loadAppTypes: PropTypes.func.isRequired,
     pageAndSize: PropTypes.func.isRequired,
+    sourceTypes: PropTypes.array,
 
     filterValue: PropTypes.string,
     loaded: PropTypes.bool.isRequired,
@@ -165,6 +156,10 @@ SourcesPage.propTypes = {
     intl: PropTypes.object.isRequired
 };
 
+SourcesPage.defaultProps = {
+    sourceTypes: undefined
+};
+
 const mapDispatchToProps = dispatch => bindActionCreators({
     filterProviders,
     loadEntities,
@@ -174,8 +169,8 @@ const mapDispatchToProps = dispatch => bindActionCreators({
     setProviderFilterColumn }, dispatch);
 
 const mapStateToProps = (
-    { providers: { filterValue, loaded, numberOfEntities, sourceTypesLoaded } }) => (
-    { filterValue, loaded, numberOfEntities, sourceTypesLoaded }
+    { providers: { filterValue, loaded, numberOfEntities, sourceTypesLoaded, sourceTypes } }) => (
+    { filterValue, loaded, numberOfEntities, sourceTypesLoaded, sourceTypes }
 );
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesPage)));
