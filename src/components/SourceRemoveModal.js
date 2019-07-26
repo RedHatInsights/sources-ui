@@ -117,7 +117,7 @@ const SourceRemoveModal = ({
                                 }
                                 id="acknowledgeDelete"
                                 name="acknowledgeDelete"
-                                value={acknowledge}
+                                isChecked={acknowledge}
                             />
                         </div>
                     </div>

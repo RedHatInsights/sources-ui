@@ -6,7 +6,6 @@ import {
     SOURCE_FOR_EDIT_LOADED, SOURCE_EDIT_REQUEST
 } from '../action-types-providers';
 import {
-    doCreateSource,
     doLoadApplications,
     doLoadAppTypes,
     doLoadEndpoints,
@@ -106,34 +105,6 @@ export const addAlert = (message, type) => ({
     type: ADD_ALERT,
     payload: { message, type }
 });
-
-const hardcodedSuccessMessage = (intl) => ({
-    openshift: intl.formatMessage({
-        id: 'sources.openshiftCreated',
-        defaultMessage: 'The resource in this source are now available in Catalog' }),
-    aws: intl.formatMessage({
-        id: 'sources.amazonCreated',
-        defaultMessage: 'Additional recommendations based on these extra sources will now appear in Insights' })
-});
-
-const successMessage = (sourceType, intl) => (
-    hardcodedSuccessMessage(intl)[sourceType] || intl.formatMessage({
-        id: 'sources.newSourceCreated',
-        defaultMessage: 'The new source was successfully created.' })
-);
-
-export const createSource = (formData, sourceTypes, title, intl) => (dispatch) =>
-    doCreateSource(formData, sourceTypes).then(_finished => dispatch({
-        type: ADD_NOTIFICATION,
-        payload: {
-            variant: 'success',
-            title,
-            description: successMessage(formData.source_type, intl)
-        }
-    })).catch(error => dispatch({
-        type: 'FOOBAR_REJECTED',
-        payload: error
-    }));
 
 export const updateSource = (source, formData, title, description) => (dispatch) =>
     doUpdateSource(source, formData).then(_finished => dispatch({
