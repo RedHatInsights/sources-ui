@@ -1,19 +1,27 @@
 import thunk from 'redux-thunk';
 import { notificationsMiddleware } from '@red-hat-insights/insights-frontend-components/components/Notifications';
+import ContentLoader from 'react-content-loader';
+import { IntlProvider } from 'react-intl';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { applyReducerHash } from '@red-hat-insights/insights-frontend-components';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import configureStore from 'redux-mock-store';
 
 import SourcesPage from '../pages/SourcesPage';
 import SourcesEmptyState from '../components/SourcesEmptyState';
 import SourcesFilter from '../components/SourcesFilter';
 import SourcesSimpleView from '../components/SourcesSimpleView';
 
-import configureStore from 'redux-mock-store';
-import { sourcesData } from './sourcesData';
+import { sourcesData, sourcesDataGraphQl } from './sourcesData';
 import { sourceTypesData } from './sourceTypesData';
 import { applicationTypesData } from './applicationTypesData';
 
 import { SOURCES_API_BASE } from '../Utilities/Constants';
 
 import { componentWrapperIntl } from '../Utilities/testsHelpers';
+
+import ReducersProviders, { defaultProvidersState } from '../redux/reducers/providers';
 
 describe('SourcesPage', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -47,6 +55,7 @@ describe('SourcesPage', () => {
         apiClientMock.get(`${SOURCES_API_BASE}/application_types`, mockOnce({ body: applicationTypesData }));
         apiClientMock.get(`${SOURCES_API_BASE}/applications/?source_id=19`, mockOnce({ body: applicationsSource19 }));
         apiClientMock.get(`${SOURCES_API_BASE}/endpoints/?source_id=19`, mockOnce({ body: endpointsSource19 }));
+        apiClientMock.post(`${SOURCES_API_BASE}/graphql`, mockOnce({ body: { data: { sources: sourcesDataGraphQl } } }));
     };
 
     it('should fetch sources and source types on component mount', (done) => {
@@ -56,10 +65,10 @@ describe('SourcesPage', () => {
 
         const expectedActions = [
             { type: 'LOAD_SOURCE_TYPES_PENDING' },
-            expect.objectContaining({ type: 'LOAD_SOURCE_TYPES_FULFILLED' }),
-            { type: 'LOAD_ENTITIES_PENDING' },
             { type: 'LOAD_APP_TYPES_PENDING' },
+            { type: 'LOAD_ENTITIES_PENDING' },
             expect.objectContaining({ type: 'LOAD_APP_TYPES_FULFILLED' }),
+            expect.objectContaining({ type: 'LOAD_SOURCE_TYPES_FULFILLED' }),
             expect.objectContaining({ type: 'LOAD_ENTITIES_FULFILLED' })
         ];
 
@@ -95,6 +104,28 @@ describe('SourcesPage', () => {
             expect(page.find(SourcesEmptyState)).toHaveLength(0);
             expect(page.find(SourcesFilter)).toHaveLength(1);
             expect(page.find(SourcesSimpleView)).toHaveLength(1);
+            done();
+        });
+    });
+    it('renders loading state when is loading', (done) => {
+        const store = createStore(
+            combineReducers({ providers: applyReducerHash(ReducersProviders, defaultProvidersState) }),
+            applyMiddleware(...middlewares)
+        );
+        mockInitialHttpRequests();
+
+        const page = mount(<IntlProvider locale="en">
+            <Provider store={ store }>
+                <MemoryRouter initialEntries={ ['/'] }>
+                    <Route path='/' render={() => <SourcesPage />}/>
+                </MemoryRouter>
+            </Provider>
+        </IntlProvider>);
+
+        expect(page.find(ContentLoader).length).toEqual(2);
+        setImmediate(() => {
+            page.update();
+            expect(page.find(ContentLoader).length).toEqual(0);
             done();
         });
     });

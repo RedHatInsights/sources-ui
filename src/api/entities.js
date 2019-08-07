@@ -32,19 +32,8 @@ let apiInstance;
 export const getSourcesApi = () =>
     apiInstance || (apiInstance = new SourcesDefaultApi(undefined, SOURCES_API_BASE, axiosInstance));
 
-export const getEntities = (_pagination, filter) => {
-    const filterFragment = filter.prefixed ? `?filter[source_type_id][eq]=${filter.prefixed}` : '';
-    return axiosInstance.get(`${SOURCES_API_BASE}/sources${filterFragment}`);
-};
-
 export const doLoadAppTypes = () =>
     axiosInstance.get(`${SOURCES_API_BASE}/application_types`);
-
-export const doLoadApplications = sourceList =>
-    axiosInstance.get(`${SOURCES_API_BASE}/applications/?source_id=${sourceList}`);
-
-export const doLoadEndpoints = sourceList =>
-    axiosInstance.get(`${SOURCES_API_BASE}/endpoints/?source_id=${sourceList}`);
 
 export function doRemoveSource(sourceId) {
     return getSourcesApi().deleteSource(sourceId).catch((_error) => {
@@ -154,3 +143,17 @@ export function doUpdateSource(source, formData) {
  * );
  */
 export const sourceTypeStrFromLocation = () => null;
+
+// Loads all sources with endpoints and applications infor
+export const doLoadEntities = () => getSourcesApi().postGraphQL({
+    query: `{ sources 
+        { id, 
+          created_at,
+          source_type_id,
+          name,
+          tenant,
+          uid,
+          updated_at
+          applications { application_type_id },
+          endpoints { id, scheme, host, port, path } }}`
+}).then(({ data }) => data);
