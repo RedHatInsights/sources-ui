@@ -1,35 +1,25 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
+import React, { Component, Fragment } from 'react';
 import { ReducerRegistry, applyReducerHash } from '@red-hat-insights/insights-frontend-components';
 import {
     NotificationsPortal,
     notifications,
     notificationsMiddleware
 } from '@red-hat-insights/insights-frontend-components/components/Notifications';
-
+import { Main } from '@redhat-cloud-services/frontend-components';
 import logger from 'redux-logger';
 import thunk from 'redux-thunk';
-
-// react-int eng locale data
 import { IntlProvider } from 'react-intl';
 
 import ReducersProviders, { defaultProvidersState } from './redux/reducers/providers';
 import ReducersListing, { defaultListingState } from './redux/reducers/listing';
 import ReducersTopology from './redux/reducers/topology';
 
-import { Routes } from './Routes';
+import Routes from './Routes';
 import './App.scss';
 
 let registry;
 
 class App extends Component {
-
-    constructor (props) {
-        super(props);
-    }
-
     static getRegistry () {
         if (!registry) {
             registry = new ReducerRegistry(
@@ -46,9 +36,6 @@ class App extends Component {
     }
 
     componentDidMount () {
-        console.log('getStore()');
-        console.log(App.getRegistry().getStore());
-
         App.getRegistry().register({ providers: applyReducerHash(ReducersProviders, defaultProvidersState) });
         App.getRegistry().register({ listing: applyReducerHash(ReducersListing, defaultListingState) });
         App.getRegistry().register({ topology: applyReducerHash(ReducersTopology, {}) });
@@ -60,36 +47,22 @@ class App extends Component {
             const appName = pathName[0] === 'beta' ? pathName[3] : pathName[2];
             insights.chrome.identifyApp(appName);
         } catch (_exception) {
-            this.appNav = null;
             console.warn('Failed to initialize chrome navigation.');
-        }
-    }
-
-    componentWillUnmount () {
-        if (this.appNav) {
-            this.appNav();
         }
     }
 
     render () {
         return (
             <IntlProvider locale="en">
-                <React.Fragment>
+                <Fragment>
                     <NotificationsPortal />
-                    <Routes childProps={this.props} />
-                </React.Fragment>
+                    <Main style={ { padding: 0 } } >
+                        <Routes childProps={this.props} />
+                    </Main>
+                </Fragment>
             </IntlProvider>
         );
     }
 }
 
-App.propTypes = {
-    history: PropTypes.object
-};
-
-/**
- * withRouter: https://reacttraining.com/react-router/web/api/withRouter
- * connect: https://github.com/reactjs/react-redux/blob/master/docs/api.md
- *          https://reactjs.org/docs/higher-order-components.html
- */
-export default withRouter (connect()(App));
+export default App;
