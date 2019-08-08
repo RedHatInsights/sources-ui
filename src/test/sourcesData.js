@@ -138,6 +138,12 @@ export const sourcesDataGraphQl = [
         applications: [
             {
                 application_type_id: '1'
+            },
+            {
+                application_type_id: '2'
+            },
+            {
+                application_type_id: '3'
             }
         ],
         endpoints: [

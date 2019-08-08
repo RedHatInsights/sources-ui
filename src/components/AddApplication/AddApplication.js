@@ -129,7 +129,6 @@ AddApplication.propTypes = {
         id: PropTypes.string.isRequired,
         display_name: PropTypes.string.isRequired
     })),
-    loaded: PropTypes.bool.isRequired,
     appTypesLoaded: PropTypes.bool.isRequired,
     sourceTypesLoaded: PropTypes.bool.isRequired
 };
