@@ -99,7 +99,18 @@ class SourcesSimpleView extends React.Component {
             }
         });
 
-        return applications.filter((app) => typeof app !== 'undefined').join('\n');
+        const filteredApplications = applications.filter((app) => typeof app !== 'undefined');
+
+        return (
+            <TextContent>
+                {filteredApplications.map((app, index) => (
+                    <Text key={app} component={ TextVariants.small }>
+                        {app}
+                        {index < filteredApplications.length - 1 && <br/>}
+                    </Text>
+                ))}
+            </TextContent>
+        );
     }
 
     sourceTypeFormatter = sourceType =>
