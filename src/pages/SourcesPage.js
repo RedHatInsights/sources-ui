@@ -32,11 +32,9 @@ class SourcesPage extends Component {
         onPage: 1
     };
 
-    componentDidMount = () => this.props.loadSourceTypes()
-    .then(() => {
-        this.props.loadEntities();
-        this.props.loadAppTypes();
-    });
+    componentDidMount() {
+        return Promise.all([this.props.loadSourceTypes(), this.props.loadAppTypes(), this.props.loadEntities()]);
+    }
 
     onFilter = (filterValue) => this.props.filterProviders(filterValue);
 
@@ -117,6 +115,7 @@ class SourcesPage extends Component {
                 <Route exact path={paths.sourcesRemove} component={ SourceRemoveModal } />
                 { editorNew && <AddSourceWizard
                     sourceTypes={this.props.sourceTypes}
+                    applicationTypes={this.props.appTypes}
                     isOpen={true}
                     onClose={() => this.props.history.replace('/')}
                     afterSuccess={() => this.props.loadEntities()}
@@ -144,6 +143,7 @@ SourcesPage.propTypes = {
     loadAppTypes: PropTypes.func.isRequired,
     pageAndSize: PropTypes.func.isRequired,
     sourceTypes: PropTypes.array,
+    appTypes: PropTypes.array,
 
     filterValue: PropTypes.string,
     loaded: PropTypes.bool.isRequired,
@@ -160,17 +160,20 @@ SourcesPage.defaultProps = {
     sourceTypes: undefined
 };
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-    filterProviders,
-    loadEntities,
-    loadSourceTypes,
-    loadAppTypes,
-    pageAndSize,
-    setProviderFilterColumn }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators(
+    {
+        filterProviders,
+        loadEntities,
+        loadSourceTypes,
+        loadAppTypes,
+        pageAndSize,
+        setProviderFilterColumn
+    },
+    dispatch);
 
 const mapStateToProps = (
-    { providers: { filterValue, loaded, numberOfEntities, sourceTypesLoaded, sourceTypes } }) => (
-    { filterValue, loaded, numberOfEntities, sourceTypesLoaded, sourceTypes }
+    { providers: { filterValue, loaded, numberOfEntities, sourceTypesLoaded, sourceTypes, appTypes } }) => (
+    { filterValue, loaded, numberOfEntities, sourceTypesLoaded, sourceTypes, appTypes }
 );
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesPage)));

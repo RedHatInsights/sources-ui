@@ -1,4 +1,3 @@
-import find from 'lodash/find';
 import { ADD_NOTIFICATION } from '@red-hat-insights/insights-frontend-components/components/Notifications';
 import {
     ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE,
@@ -6,41 +5,22 @@ import {
     SOURCE_FOR_EDIT_LOADED, SOURCE_EDIT_REQUEST
 } from '../action-types-providers';
 import {
-    doLoadApplications,
     doLoadAppTypes,
-    doLoadEndpoints,
     doLoadSourceForEdit,
     doRemoveSource,
     doUpdateSource,
-    getEntities,
-    sourceTypeStrFromLocation
+    doLoadEntities
 } from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
 
-const mergeSourcesOther = (sources, other, key) =>
-    sources.map(s => ({ ...s, [key]: other.filter(o => o.source_id === s.id) }));
-
-export const loadEntities = () => (dispatch, getState) => {
+export const loadEntities = () => (dispatch) => {
     dispatch({ type: ACTION_TYPES.LOAD_ENTITIES_PENDING });
 
-    // temporarily we limit the sources offered based on URL
-    const sourceTypeStr = sourceTypeStrFromLocation();
-    const sourceType = sourceTypeStr && find(getState().providers.sourceTypes, { name: sourceTypeStr });
-
-    return getEntities({}, { prefixed: sourceType && sourceType.id }).then(sources => {
-        const sourceIdsList = sources.data.map(s => s.id).join(',');
-
-        Promise.all([
-            doLoadEndpoints(sourceIdsList), doLoadApplications(sourceIdsList)
-        ]).then(([endpoints, applications]) =>
-            dispatch({
-                type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
-                payload: mergeSourcesOther(
-                    mergeSourcesOther(sources.data, applications.data, 'apps'),
-                    endpoints.data,
-                    'endpoints'
-                )
-            }));
+    return doLoadEntities().then(({ sources }) => {
+        dispatch({
+            type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
+            payload: sources
+        });
     });
 };
 

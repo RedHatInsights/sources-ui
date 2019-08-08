@@ -24,7 +24,7 @@ export const sourcesViewDefinition = {
             id: 'sources.application',
             defaultMessage: 'Application'
         }),
-        value: 'apps', searchable: false, formatter: 'applicationFormatter' },
+        value: 'applications', searchable: false, formatter: 'applicationFormatter' },
         //{ title: 'Tags', value: 'tags', },
         //{ title: null, value: 'display_name', },
         { title: intl.formatMessage({
