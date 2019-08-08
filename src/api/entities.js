@@ -157,3 +157,8 @@ export const doLoadEntities = () => getSourcesApi().postGraphQL({
           applications { application_type_id },
           endpoints { id, scheme, host, port, path } }}`
 }).then(({ data }) => data);
+
+export const doCreateApplication = (source_id, application_type_id) => getSourcesApi().createApplication({
+    source_id,
+    application_type_id
+});

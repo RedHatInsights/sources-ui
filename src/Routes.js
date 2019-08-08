@@ -18,7 +18,8 @@ export const paths = {
     sources: '/',
     sourcesNew: '/new',
     sourcesEdit: '/edit/:id',
-    sourcesRemove: '/remove/:id'
+    sourcesRemove: '/remove/:id',
+    sourcesAddApplication: '/add_application/:id'
 };
 
 const Routes = (props) => {
@@ -28,10 +29,11 @@ const Routes = (props) => {
         <div className='pf-c-page__main pf-l-page__main'>
             <Suspense fallback={<Loader/>}>
                 <Switch>
-                    <Route exact path={paths.sources} render={() => <SourcesPage />} />
-                    <Route exact path={paths.sourcesNew} render={() => <SourcesPage />} />
-                    <Route path={paths.sourcesEdit} render={() => <SourcesPage />} />
-                    <Route path={paths.sourcesRemove} render={() => <SourcesPage />} />
+                    <Route exact path={paths.sources} component={SourcesPage} />
+                    <Route exact path={paths.sourcesNew} component={SourcesPage} />
+                    <Route path={paths.sourcesEdit} component={SourcesPage} />
+                    <Route path={paths.sourcesRemove} component={SourcesPage} />
+                    <Route path={paths.sourcesAddApplication} component={SourcesPage} />
                     <Route render={() => some(paths, p => p === path) ? null : (<Redirect to={paths.providers} />)} />
                 </Switch>
             </Suspense>
