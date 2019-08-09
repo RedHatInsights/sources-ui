@@ -7,8 +7,10 @@ node_js:
 - '10'
 install:
 - npm ci
+- npm install -g codecov
 script:
 - npm run travis:verify
+- codecov
 after_success:
 - curl -sSL https://raw.githubusercontent.com/RedHatInsights/insights-frontend-builder-common/master/src/bootstrap.sh | bash -s
 env:
