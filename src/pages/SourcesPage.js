@@ -22,6 +22,7 @@ import SourcesFilter from '../components/SourcesFilter';
 import SourcesEmptyState from '../components/SourcesEmptyState';
 import SourceEditModal from '../components/SourceEditModal';
 import SourceRemoveModal from '../components/SourceRemoveModal';
+import AddApplication from '../components/AddApplication/AddApplication';
 import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
 import { pageAndSize } from '../redux/actions/providers';
 import { paths } from '../Routes';
@@ -112,6 +113,7 @@ class SourcesPage extends Component {
 
         return (
             <React.Fragment>
+                <Route exact path={paths.sourcesAddApplication} component={ AddApplication } />
                 <Route exact path={paths.sourcesRemove} component={ SourceRemoveModal } />
                 { editorNew && <AddSourceWizard
                     sourceTypes={this.props.sourceTypes}

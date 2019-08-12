@@ -64,22 +64,28 @@ class SourcesSimpleView extends React.Component {
     sourceIndexToId = (i) => this.props.entities[i / 2].id;
 
     renderActions = () => (
-        [
-            {
-                title: this.props.intl.formatMessage({
-                    id: 'sources.edit',
-                    defaultMessage: 'Edit'
-                }),
-                onClick: (_ev, i) => this.props.history.push(`/edit/${this.sourceIndexToId(i)}`)
-            },
-            {
-                style: { color: 'var(--pf-global--danger-color--100)' },
-                title: this.props.intl.formatMessage({
-                    id: 'sources.delete',
-                    defaultMessage: 'Delete'
-                }),
-                onClick: (_ev, i) => this.props.history.push(`/remove/${this.sourceIndexToId(i)}`)
-            }
+        [{
+            title: this.props.intl.formatMessage({
+                id: 'sources.addApplication',
+                defaultMessage: 'Add application'
+            }),
+            onClick: (_ev, i) => this.props.history.push(`/add_application/${this.sourceIndexToId(i)}`)
+        },
+        {
+            title: this.props.intl.formatMessage({
+                id: 'sources.edit',
+                defaultMessage: 'Edit'
+            }),
+            onClick: (_ev, i) => this.props.history.push(`/edit/${this.sourceIndexToId(i)}`)
+        },
+        {
+            style: { color: 'var(--pf-global--danger-color--100)' },
+            title: this.props.intl.formatMessage({
+                id: 'sources.delete',
+                defaultMessage: 'Delete'
+            }),
+            onClick: (_ev, i) => this.props.history.push(`/remove/${this.sourceIndexToId(i)}`)
+        }
         ]
     );
 
@@ -99,7 +105,18 @@ class SourcesSimpleView extends React.Component {
             }
         });
 
-        return applications.filter((app) => typeof app !== 'undefined').join('\n');
+        const filteredApplications = applications.filter((app) => typeof app !== 'undefined');
+
+        return (
+            <TextContent>
+                {filteredApplications.map((app, index) => (
+                    <Text key={app} component={ TextVariants.small }>
+                        {app}
+                        {index < filteredApplications.length - 1 && <br key={index}/>}
+                    </Text>
+                ))}
+            </TextContent>
+        );
     }
 
     sourceTypeFormatter = sourceType =>

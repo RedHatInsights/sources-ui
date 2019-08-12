@@ -11,7 +11,9 @@ export const defaultProvidersState = {
     pageNumber: 1, // PF numbers pages from 1. Seriously.
     entities: [],
     numberOfEntities: 0,
-    filterColumn: 'name' // temporary hard-coded filtering by name
+    filterColumn: 'name', // temporary hard-coded filtering by name
+    appTypesLoaded: false,
+    sourceTypesLoaded: false
 };
 
 const processListInState = (state) => {
