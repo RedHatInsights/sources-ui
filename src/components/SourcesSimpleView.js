@@ -66,10 +66,10 @@ class SourcesSimpleView extends React.Component {
     renderActions = () => (
         [{
             title: this.props.intl.formatMessage({
-                id: 'sources.addApplication',
-                defaultMessage: 'Add application'
+                id: 'sources.manageApps',
+                defaultMessage: 'Manage applications'
             }),
-            onClick: (_ev, i) => this.props.history.push(`/add_application/${this.sourceIndexToId(i)}`)
+            onClick: (_ev, i) => this.props.history.push(`/manage_apps/${this.sourceIndexToId(i)}`)
         },
         {
             title: this.props.intl.formatMessage({

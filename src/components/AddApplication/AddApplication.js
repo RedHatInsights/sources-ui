@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { Wizard, Text, TextVariants, TextContent } from '@patternfly/react-core';
+import { Wizard, Text, TextVariants, TextContent, Button } from '@patternfly/react-core';
 
 import { loadEntities } from '../../redux/actions/providers';
 import SourcesFormRenderer from '../../Utilities/SourcesFormRenderer';
@@ -57,13 +57,13 @@ const AddApplication = (
                 isOpen={ true }
                 onClose={() => history.push('/')}
                 title={intl.formatMessage({
-                    id: 'sources.addApp',
-                    defaultMessage: 'Add application'
+                    id: 'sources.manageApps',
+                    defaultMessage: 'Manage applications'
                 })}
                 description={
                     intl.formatMessage({
                         id: 'sources.addAppDescription',
-                        defaultMessage: 'You are importing data into this platform'
+                        defaultMessage: 'You are managing applications of this source'
                     })
                 }
                 steps={ [{
@@ -79,6 +79,14 @@ const AddApplication = (
                                 id="sources.configurationSuccessful"
                                 defaultMessage="Configuration successful"
                             />}
+                            secondaryActions={
+                                <Button variant="link" onClick={() => setState({ values: {}, state: 'wizard' })}>
+                                    <FormattedMessage
+                                        id="sources.continueManageApp"
+                                        defaultMessage="Continue managing applications"
+                                    />
+                                </Button>
+                            }
                         /> : <ErroredStep
                             onClose={() => history.push('/')}
                             message={

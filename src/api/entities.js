@@ -154,7 +154,7 @@ export const doLoadEntities = () => getSourcesApi().postGraphQL({
           tenant,
           uid,
           updated_at
-          applications { application_type_id },
+          applications { application_type_id, id },
           endpoints { id, scheme, host, port, path } }}`
 }).then(({ data }) => data);
 
@@ -162,3 +162,5 @@ export const doCreateApplication = (source_id, application_type_id) => getSource
     source_id,
     application_type_id
 });
+
+export const doDeleteApplication = (appId) => getSourcesApi().deleteApplication(appId);

@@ -18,13 +18,13 @@ const fields = (applications = [], intl) => ({
             component: componentTypes.WIZARD,
             name: 'wizard',
             title: intl.formatMessage({
-                id: 'sources.addApp',
-                defaultMessage: 'Add application'
+                id: 'sources.manageApps',
+                defaultMessage: 'Manage applications'
             }),
             inModal: true,
             description: intl.formatMessage({
                 id: 'sources.addAppDescription',
-                defaultMessage: 'You are importing data into this platform'
+                defaultMessage: 'You are managing applications of this source'
             }),
             buttonLabels: {
                 submit: intl.formatMessage({

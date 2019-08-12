@@ -122,3 +122,12 @@ export const loadSourceForEdit = sourceId => dispatch => {
         payload: error
     }));
 };
+
+export const addMessage = (title, variant, description) => (dispatch) => dispatch({
+    type: ADD_NOTIFICATION,
+    payload: {
+        title,
+        variant,
+        description
+    }
+});

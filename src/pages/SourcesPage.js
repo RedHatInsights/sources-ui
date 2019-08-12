@@ -113,7 +113,7 @@ class SourcesPage extends Component {
 
         return (
             <React.Fragment>
-                <Route exact path={paths.sourcesAddApplication} component={ AddApplication } />
+                <Route exact path={paths.sourceManageApps} component={ AddApplication } />
                 <Route exact path={paths.sourcesRemove} component={ SourceRemoveModal } />
                 { editorNew && <AddSourceWizard
                     sourceTypes={this.props.sourceTypes}
