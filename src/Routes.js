@@ -19,7 +19,7 @@ export const paths = {
     sourcesNew: '/new',
     sourcesEdit: '/edit/:id',
     sourcesRemove: '/remove/:id',
-    sourcesAddApplication: '/add_application/:id'
+    sourceManageApps: '/manage_apps/:id'
 };
 
 const Routes = (props) => {
@@ -33,7 +33,7 @@ const Routes = (props) => {
                     <Route exact path={paths.sourcesNew} component={SourcesPage} />
                     <Route path={paths.sourcesEdit} component={SourcesPage} />
                     <Route path={paths.sourcesRemove} component={SourcesPage} />
-                    <Route path={paths.sourcesAddApplication} component={SourcesPage} />
+                    <Route path={paths.sourceManageApps} component={SourcesPage} />
                     <Route render={() => some(paths, p => p === path) ? null : (<Redirect to={paths.providers} />)} />
                 </Switch>
             </Suspense>

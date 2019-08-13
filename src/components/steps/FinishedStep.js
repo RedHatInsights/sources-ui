@@ -7,12 +7,13 @@ import {
     Title,
     Button,
     EmptyStateVariant,
-    Bullseye
+    Bullseye,
+    EmptyStateSecondaryActions
 } from '@patternfly/react-core';
 import { CheckCircleIcon } from '@patternfly/react-icons';
 import { FormattedMessage } from 'react-intl';
 
-const FinishedStep = ({ onClose, title, successfulMessage }) => (
+const FinishedStep = ({ onClose, title, successfulMessage, secondaryActions }) => (
     <Bullseye>
         <EmptyState variant={ EmptyStateVariant.full }>
             <EmptyStateIcon icon={ CheckCircleIcon } color="var(--pf-global--success-color--100)" />
@@ -28,6 +29,9 @@ const FinishedStep = ({ onClose, title, successfulMessage }) => (
                     defaultMessage="Back to Sources"
                 />
             </Button>
+            {  secondaryActions && <EmptyStateSecondaryActions>
+                { secondaryActions }
+            </EmptyStateSecondaryActions> }
         </EmptyState>
     </Bullseye>
 );
@@ -35,7 +39,8 @@ const FinishedStep = ({ onClose, title, successfulMessage }) => (
 FinishedStep.propTypes = {
     onClose: PropTypes.func.isRequired,
     successfulMessage: PropTypes.node.isRequired,
-    title: PropTypes.node.isRequired
+    title: PropTypes.node.isRequired,
+    secondaryActions: PropTypes.node
 };
 
 export default FinishedStep;

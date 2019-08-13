@@ -93,7 +93,8 @@ export const sourcesDataGraphQl = [
         updated_at: '2019-08-06T12:18:25.410Z',
         applications: [
             {
-                application_type_id: '1'
+                application_type_id: '1',
+                id: '888'
             }
         ],
         endpoints: [
@@ -137,13 +138,16 @@ export const sourcesDataGraphQl = [
         updated_at: '2019-08-06T12:54:07.119Z',
         applications: [
             {
-                application_type_id: '1'
+                application_type_id: '1',
+                id: '78'
             },
             {
-                application_type_id: '2'
+                application_type_id: '2',
+                id: '104551278'
             },
             {
-                application_type_id: '3'
+                application_type_id: '3',
+                id: '1'
             }
         ],
         endpoints: [
