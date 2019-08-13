@@ -70,7 +70,7 @@ describe('AddApplication', () => {
         expect(wrapper.find(CardSelect).length).toEqual(0);
         expect(wrapper.find(Card).length).toEqual(0);
         expect(wrapper.find(Description).length).toEqual(2); // + warning that all applications have already been added
-        expect(wrapper.find(Button).at(1).text()).toEqual('Finish');
+        expect(wrapper.find(Button).at(4).text()).toEqual('Finish');
     });
 
     it('renders null when is not loaded', () => {
