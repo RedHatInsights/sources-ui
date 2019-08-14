@@ -119,8 +119,10 @@ class SourcesSimpleView extends React.Component {
         );
     }
 
-    sourceTypeFormatter = sourceType =>
-        (this.props.sourceTypes.find((type) => type.id === sourceType) || sourceType || '');
+    sourceTypeFormatter = sourceType => {
+        const type = this.props.sourceTypes.find((type) => type.id === sourceType);
+        return type.product_name || sourceType || '';
+    }
 
     dateFormatter = str => moment(new Date(Date.parse(str))).utc().format('DD MMM YYYY, hh:mm UTC');
     nameFormatter = (name, source) => (
