@@ -4,14 +4,14 @@ import { PageHeader, PageHeaderTitle, Section } from '@red-hat-insights/insights
 
 class TopologyPage extends Component {
     render = () =>
-        <React.Fragment>
+        (<React.Fragment>
             <PageHeader>
                 <PageHeaderTitle title='Topology'/>
             </PageHeader>
             <Section type='content'>
                 <TopologyView />
             </Section>
-        </React.Fragment>
+        </React.Fragment>)
 }
 
 export default TopologyPage;

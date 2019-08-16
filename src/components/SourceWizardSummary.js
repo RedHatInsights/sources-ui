@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { FormattedMessage } from 'react-intl';
 
 import { FormGroup, TextInput } from '@patternfly/react-core';
 import find from 'lodash/find';
@@ -8,7 +9,10 @@ import find from 'lodash/find';
 const openShiftSummary = ({ url, certificate_authority }) => (
     <React.Fragment>
         <FormGroup
-            label='URL'
+            label = {<FormattedMessage
+                id="sources.url"
+                defaultMessage="URL"
+            />}
             fieldId='summary-url'
         >
             <TextInput
@@ -19,7 +23,10 @@ const openShiftSummary = ({ url, certificate_authority }) => (
             />
         </FormGroup>
         <FormGroup
-            label='SSL Certificate'
+            label = {<FormattedMessage
+                id="sources.sslCertificate"
+                defaultMessage="SSL Certificate"
+            />}
             fieldId='summary-ssl-cert'
         >
             <TextInput
@@ -36,21 +43,27 @@ openShiftSummary.propTypes = {
     certificate_authority: PropTypes.string.isRequired
 };
 
-const awsSummary = ({ user_name, password }) => (
+const awsSummary = ({ username, password }) => (
     <React.Fragment>
         <FormGroup
-            label='Access Key ID'
+            label = {<FormattedMessage
+                id="sources.accesKeyID"
+                defaultMessage="Access Key ID"
+            />}
             fieldId='summary-id'
         >
             <TextInput
                 isDisabled
                 type="text"
                 id="summary-id"
-                value={user_name}
+                value={username}
             />
         </FormGroup>
         <FormGroup
-            label='Secret access key'
+            label = {<FormattedMessage
+                id="sources.secretAccessKey"
+                defaultMessage="Secret access key"
+            />}
             fieldId='summary-ssl-cert'
         >
             <TextInput
@@ -63,7 +76,7 @@ const awsSummary = ({ user_name, password }) => (
     </React.Fragment>
 );
 awsSummary.propTypes = {
-    user_name: PropTypes.string.isRequired,
+    username: PropTypes.string.isRequired,
     password: PropTypes.string.isRequired
 };
 
@@ -82,7 +95,10 @@ const SourceWizardSummary = ({ sourceTypes, formOptions }) => {
     return (
         <React.Fragment>
             <FormGroup
-                label='Name'
+                label = {<FormattedMessage
+                    id="sources.name"
+                    defaultMessage="Name"
+                />}
                 fieldId="summary-name"
             >
                 <TextInput
@@ -93,7 +109,10 @@ const SourceWizardSummary = ({ sourceTypes, formOptions }) => {
                 />
             </FormGroup>
             <FormGroup
-                label='Type'
+                label = {<FormattedMessage
+                    id="sources.type"
+                    defaultMessage="Type"
+                />}
                 fieldId="summary-type"
             >
                 <TextInput

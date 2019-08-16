@@ -1,27 +1,33 @@
-import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
-import zipObject from 'lodash/zipObject';
-import find from 'lodash/find';
 import React from 'react';
+import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
 import { QuestionCircleIcon } from '@patternfly/react-icons';
-import { Popover, TextContent, TextList, TextListItem } from '@patternfly/react-core';
+import { Popover, TextContent, TextList, TextListItem, Title } from '@patternfly/react-core';
+
 import SSLFormLabel from '../../components/SSLFormLabel';
 import { sourceTypeStrFromLocation } from '../../api/entities';
+import { FormattedMessage } from 'react-intl';
 
-const compileAllSourcesComboOptions = (sourceTypes) => (
-    [{ label: 'Choose a type' }].concat(
-        sourceTypes.map(t => ({
+const compileAllSourcesComboOptions = (sourceTypes, intl) => (
+    [
+        { label: intl.formatMessage(
+            {
+                id: 'source.chooseType',
+                defaultMessage: 'Choose a type'
+            }
+        )  },
+        ...sourceTypes.map(t => ({
             value: t.name,
             label: t.product_name
         }))
-    )
+    ]
 );
 
-const compileSourcesComboOptions = (sourceTypes) => {
+const compileSourcesComboOptions = (sourceTypes, intl) => {
     // temporarily we limit the sources offered based on URL
     const sourceTypeStr = sourceTypeStrFromLocation();
 
     return compileAllSourcesComboOptions(sourceTypeStr ?
-        sourceTypes.filter(type => type.name === sourceTypeStr) : sourceTypes);
+        sourceTypes.filter(type => type.name === sourceTypeStr) : sourceTypes, intl);
 };
 
 const fieldsToStep = (fields, stepName, nextStep) => ({
@@ -45,55 +51,105 @@ const fieldsToSteps = (fields, stepNamePrefix, lastStep) =>
 const temporaryHardcodedSourceSchemas = {
     openshift: [
         {
-            title: 'Add source credentials',
-            description: <React.Fragment key='1'>
-                <TextContent>
-                    Add credentials that enable communication with this source. This source requires the login token.
-                </TextContent>
-                <TextContent>
-                    To collect data from a Red Hat OpenShift Container Platform source,
-                </TextContent>
-                <TextContent>
-                    <TextList component='ul'>
-                        <TextListItem component='li' key='1'>
-                            Log in to the Red Hat OpenShift Container Platform cluster with an account
-                            that has access to the namespace
-                        </TextListItem>
-                        <TextListItem component='li' key='2'>
-                            Run the following command to obtain your login token: <b>
-                            &nbsp;# oc sa get-token -n management-infra management-admin</b>
-                        </TextListItem>
-                        <TextListItem component='li' key='3'>Copy the token and paste it in the following field.</TextListItem>
-                    </TextList>
-                </TextContent>
-            </React.Fragment>,
+            title: <FormattedMessage
+                id="source.addSourceCredentialTitle"
+                defaultMessage="Add source credentials"
+            />,
             fields: [{
+                component: 'description',
+                name: 'description',
+                content: <React.Fragment key='1'>
+                    <TextContent>
+                        <FormattedMessage
+                            id="source.addSourceCredentialTitle1"
+                            defaultMessage="Add credentials that enable communication with this source.
+                        This source requires the login token."
+                        />
+                    </TextContent>
+                    <TextContent>
+                        <FormattedMessage
+                            id="source.addSourceCredentialTitle2"
+                            defaultMessage="To collect data from a Red Hat OpenShift Container Platform source,"
+                        />
+                    </TextContent>
+                    <TextContent>
+                        <TextList component='ul'>
+                            <TextListItem component='li' key='1'>
+                                <FormattedMessage
+                                    id="source.addSourceCredentialBody1"
+                                    defaultMessage="Log in to the Red Hat OpenShift Container Platform cluster with an account
+                                that has access to the namespace"
+                                />
+                            </TextListItem>
+                            <TextListItem component='li' key='2'>
+                                <FormattedMessage
+                                    id="source.addSourceCredentialBody2"
+                                    defaultMessage="Run the following command to obtain your login token:"
+                                />
+                                <b>&nbsp;# oc sa get-token -n management-infra management-admin</b>
+                            </TextListItem>
+                            <TextListItem component='li' key='3'>
+                                <FormattedMessage
+                                    id="source.addSourceCredentialBody3"
+                                    defaultMessage="Copy the token and paste it in the following field."
+                                />
+                            </TextListItem>
+                        </TextList>
+                    </TextContent>
+                </React.Fragment>
+            }, {
                 component: componentTypes.TEXTAREA_FIELD,
                 name: 'token',
-                label: 'Token'
+                label: <FormattedMessage
+                    id="source.token"
+                    defaultMessage="Token"
+                />
             }]
         }, {
-            title: 'Enter OpenShift Container Platform information',
-            description: <React.Fragment key='2'>
-                <p>
-                    Provide OpenShift Container Platform URL and SSL certificate.
-                </p>
-            </React.Fragment>,
+            title: <FormattedMessage
+                id="source.openshiftPlatformTitle"
+                defaultMessage="Enter OpenShift Container Platform information"
+            />,
             fields: [{
+                component: 'description',
+                name: 'description',
+                content: <React.Fragment key='2'>
+                    <p>
+                        <FormattedMessage
+                            id="source.provideOpenshitURLSSL"
+                            defaultMessage="Provide OpenShift Container Platform URL and SSL certificate."
+                        />
+                    </p>
+                </React.Fragment>
+            },
+            {
                 component: componentTypes.TEXT_FIELD,
                 name: 'role',
                 type: 'hidden',
                 initialValue: 'kubernetes' // value of 'role' for the endpoint
             }, {
                 component: componentTypes.TEXT_FIELD,
+                name: 'authtype',
+                initialValue: 'token'
+            }, {
+                component: componentTypes.TEXT_FIELD,
                 name: 'url',
-                label: 'URL',
-                helperText: 'For example, https://myopenshiftcluster.mycompany.com',
+                label: <FormattedMessage
+                    id="source.url"
+                    defaultMessage="URL"
+                />,
+                helperText: <FormattedMessage
+                    id="source.urlHelperText"
+                    defaultMessage="For example, https://myopenshiftcluster.mycompany.com"
+                />,
                 isRequired: true
             }, {
                 component: componentTypes.CHECKBOX,
                 name: 'verify_ssl',
-                label: 'Verify SSL'
+                label: <FormattedMessage
+                    id="source.verifySSL"
+                    defaultMessage="Verify SSL"
+                />
             }, {
                 component: componentTypes.TEXTAREA_FIELD,
                 name: 'certificate_authority',
@@ -106,61 +162,116 @@ const temporaryHardcodedSourceSchemas = {
         }
     ],
     amazon: {
-        title: <p>
-            <span>Configure account access</span>&nbsp;
-            <Popover
-                aria-label="Help text"
-                position="bottom"
-                maxWidth="50%"
-                bodyContent={
-                    <React.Fragment>
-                        <div>
-                            Red Had recommends using the Power User AWS
-                            Identity and Access Management (IAM) policy when adding an
-                            AWS account as a source. This Policy allows the user full
-                            access to API functionality and AWS services for user
-                            administration.
-                            <br />
-                            Create an access key in the <b>Security
-                            Credentials</b> area of your AWS user account. To add your
-                            account as a source, enter the access key ID and secret
-                            access key to act as your user ID and password.
-                        </div>
-                    </React.Fragment>
-                }
-                footerContent={<a href='http://foo.bar'>Learn more</a>}
-            >
-                <QuestionCircleIcon />
-            </Popover>
-        </p>,
-        description: <React.Fragment>
-            <p>
-                Create an access key in your AWS user account and enter the details below.
-            </p>
-            <p>
-                For sufficient access and security, Red Hat recommends using the Power User IAM polocy for your AWS user account.
-            </p>
-            <p>
-                All fields are required.
-            </p>
-        </React.Fragment>,
+        title: <FormattedMessage
+            id="source.confAccountAccess"
+            defaultMessage="Configure account access"
+        />,
         fields: [{
+            component: 'description',
+            name: 'description',
+            content: <React.Fragment key='2'>
+                <Title headingLevel="h1" size="2xl">
+                    <FormattedMessage
+                        id="source.confAccountAccess"
+                        defaultMessage="Configure account access"
+                    /><Popover
+                        aria-label="Help text"
+                        position="bottom"
+                        maxWidth="50%"
+                        bodyContent={
+                            <React.Fragment>
+                                <div>
+                                    <FormattedMessage
+                                        id="source.confAccountAccessAWSHelp1"
+                                        defaultMessage="Red Had recommends using the Power User AWS
+                                                    Identity and Access Management (IAM) policy when adding an
+                                                    AWS account as a source. This Policy allows the user full
+                                                    access to API functionality and AWS services for user
+                                                    administration."/>
+                                    <br />
+                                    <FormattedMessage
+                                        id="source.confAccountAccessAWSHelp2"
+                                        defaultMessage="Create an access key in the"
+                                    />
+                                &nbsp;<b>
+                                        <FormattedMessage
+                                            id="source.confAccountAccessAWSHelp3"
+                                            defaultMessage="Security
+                                                    Credentials"
+                                        />
+                                    </b>&nbsp;
+                                    <FormattedMessage
+                                        id="source.confAccountAccessAWSHelp4"
+                                        defaultMessage="area of your AWS user account. To add your
+                                                    account as a source, enter the access key ID and secret
+                                                    access key to act as your user ID and password."
+                                    />
+                                </div>
+                            </React.Fragment>
+                        }
+                        footerContent={<a href='http://foo.bar'>
+                            <FormattedMessage
+                                id="source.learnMore"
+                                defaultMessage="Learn more"
+                            />
+                        </a>}
+                    >
+                        <QuestionCircleIcon />
+                    </Popover>
+                </Title>
+                <p>
+                    <FormattedMessage
+                        id="source.amazonDescription1"
+                        defaultMessage="Create an access key in your AWS user account and enter the details below."
+                    />
+                </p>
+                <p>
+                    <FormattedMessage
+                        id="source.amazonDescription2"
+                        defaultMessage="For sufficient access and security, Red Hat recommends using
+                    the Power User IAM polocy for your AWS user account."
+                    />
+                </p>
+                <p>
+                    <FormattedMessage
+                        id="source.amazonDescription3"
+                        defaultMessage="All fields are required."
+                    />
+                </p>
+            </React.Fragment>
+        }, {
             component: componentTypes.TEXT_FIELD,
             name: 'role',
             type: 'hidden',
             initialValue: 'aws' // value of 'role' for the endpoint
         }, {
             component: componentTypes.TEXT_FIELD,
-            name: 'user_name',
-            label: 'Access Key ID',
-            helperText: 'For example, AKIAIOSFODNN7EXAMPLE',
+            name: 'authtype',
+            initialValue: 'access_key_secret_key'
+        }, {
+            component: componentTypes.TEXT_FIELD,
+            name: 'username',
+            label: <FormattedMessage
+                id="sources.accesKeyID"
+                defaultMessage="Access Key ID"
+            />,
+            helperText: <FormattedMessage
+                id="sources.accesKeyIDExample"
+                defaultMessage="For example, AKIAIOSFODNN7EXAMPLE"
+            />,
             isRequired: true
         }, {
             component: componentTypes.TEXT_FIELD,
             name: 'password',
-            label: 'Secret Key',
+            label: <FormattedMessage
+                id="sources.secretKey"
+                defaultMessage="Secret Key"
+            />,
             type: 'password',
-            helperText: 'For example, wJairXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY',
+            helperText: <FormattedMessage
+                id="sources.secretKey"
+                defaultMessage="For example, wJairXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+            />,
             isRequired: true
         }]
     },
@@ -219,69 +330,33 @@ const sourceTypeSchema = {
     4: sourceTypeSchemaHardcodedWithFallback
 }[schemaMode];
 
-/* return hash of form: { amazon: 'amazon', google: 'google', openshift: 'openshift' } */
-const compileStepMapper = (sourceTypes) => {
-    const names = sourceTypes.map(t => t.name);
-    return zipObject(names, names);
-};
-
-const firstStepNew = (sourceTypes) => ({
-    title: 'Select a source type',
-    description: <React.Fragment>
-        <p>
-            To import data for an application, you need to connect to a data source.
-            To begin, input a name and select the type of source you want to collect data from.
-        </p>
-        <p>
-            All fields are required.
-        </p>
-    </React.Fragment>,
+const firstStepEdit = (sourceTypes, type, intl) => ({
+    title: <FormattedMessage
+        id="sources.editSource"
+        defaultMessage="Edit a source"
+    />,
     name: 'step_1',
-    stepKey: 'step_1',
-    nextStep: {
-        when: 'source_type',
-        stepMapper: compileStepMapper(sourceTypes)
-    },
-    fields: [{
-        component: componentTypes.TEXT_FIELD,
-        name: 'source_name',
-        type: 'text',
-        label: 'Name',
-        helperText: 'For example, Source_1',
-        isRequired: true,
-        validate: [{
-            type: validatorTypes.REQUIRED
-        }]
-    }, {
-        component: componentTypes.SELECT_COMPONENT,
-        name: 'source_type',
-        label: 'Type',
-        isRequired: true,
-        options: compileSourcesComboOptions(sourceTypes),
-        validate: [{
-            type: validatorTypes.REQUIRED
-        }]
-    }]
-});
-
-const firstStepEdit = (sourceTypes, type) => ({
-    title: 'Edit a source',
-    name: 'step_1',
-    stepKey: 'step_1',
+    stepKey: 1,
     nextStep: type,
     fields: [{
         component: componentTypes.TEXT_FIELD,
         name: 'source_name',
         type: 'text',
-        label: 'Name'
+        label: <FormattedMessage
+            id="sources.name"
+            defaultMessage="Name"
+        />
     }, {
         component: componentTypes.SELECT_COMPONENT,
         name: 'source_type',
-        label: 'Source type',
+        label: <FormattedMessage
+            id="sources.type"
+            defaultMessage="Type"
+        />,
         isRequired: true,
         isDisabled: true,
         readOnly: true, // make it grey ;-)
-        options: compileSourcesComboOptions(sourceTypes),
+        options: compileSourcesComboOptions(sourceTypes, intl),
         validate: [{
             type: validatorTypes.REQUIRED
         }]
@@ -290,27 +365,33 @@ const firstStepEdit = (sourceTypes, type) => ({
 
 const summaryStep = () => ({
     fields: [{
+        component: 'description',
+        name: 'description',
+        content: <TextContent>
+            <FormattedMessage
+                id="sources.summaryDescription"
+                defaultMessage="Review source details and click Add source to complete source creation. Click Back to revise."
+            />
+        </TextContent>
+    }, {
         name: 'summary',
         component: 'summary'
     }],
     stepKey: 'summary',
     name: 'summary',
-    title: 'Review source details',
-    description: <TextContent>
-        Review source details and click Add source to complete source creation. Click Back to revise.
-    </TextContent>
+    title: <FormattedMessage
+        id="sources.reviewSummary"
+        defaultMessage="Review source details"
+    />
 });
 
-const sourceTypeSteps = sourceTypes =>
-    sourceTypes.map(t => fieldsToSteps(sourceTypeSchema(t), t.name, 'summary'))
-    .flat(1);
-
-const endpointToUrl = endpoint => (
+export const endpointToUrl = endpoint => (
     `${endpoint.scheme}://${endpoint.host}:${endpoint.port}${endpoint.path || ''}`
 );
 
 const initialValues = source => {
-    const url = endpointToUrl(source.endpoint);
+    const url = source.endpoint ? endpointToUrl(source.endpoint) : '';
+
     const {
         scheme,
         host,
@@ -319,7 +400,7 @@ const initialValues = source => {
         verify_ssl,
         certificate_authority,
         role
-    } = source.endpoint;
+    } = source.endpoint || {};
 
     return {
         source_name: source.name,
@@ -332,20 +413,19 @@ const initialValues = source => {
         verify_ssl,
         certificate_authority,
         role,
-        token: 'FIXME',
-        // AWS?
-        user_name: 'FIXME',
-        password: 'FIXME' // same as token
+        token: '',      // never loaded (part of authentication)
+        username: '',  // never loaded (part of authentication)
+        password: ''    // same as token
     };
 };
 
-export function sourceEditForm(sourceTypes, source) {
+export function sourceEditForm(sourceTypes, source, intl) {
     /* editing form:
      * 1st page: editable name + non-editable source type
      * 2nd, 3rd... page: provider specific
      * last page: summary */
 
-    const sourceType = find(sourceTypes, { id: source.source_type_id });
+    const sourceType = sourceTypes && sourceTypes.find((type) => type.id === source.source_type_id);
     const typeName = sourceType.name;
 
     return {
@@ -356,7 +436,16 @@ export function sourceEditForm(sourceTypes, source) {
             fields: [{
                 component: componentTypes.WIZARD,
                 name: 'wizard',
-                fields: [firstStepEdit(sourceTypes, typeName)].concat(
+                inModal: true,
+                title: <FormattedMessage
+                    id="sources.editSource"
+                    defaultMessage="Edit Source"
+                />,
+                description: <FormattedMessage
+                    id="sources.sources.editSourceDescription"
+                    defaultMessage="You are editing a source"
+                />,
+                fields: [firstStepEdit(sourceTypes, typeName, intl)].concat(
                     sourceType &&
                         fieldsToSteps(sourceTypeSchema(sourceType), typeName, 'summary'),
                     summaryStep()
@@ -365,29 +454,3 @@ export function sourceEditForm(sourceTypes, source) {
         }
     };
 }
-
-export function sourceNewForm(sourceTypes) {
-    /* For now we assume that each source has a schema with exactly 1 step.
-     *
-     * We prepend a page with source type choice and name.
-     * And we append a page with a summary
-     * */
-    return {
-        initialValues: {
-            verify_ssl: true // for OpenShift
-        },
-        schemaType: 'default',
-        showFormControls: false,
-        schema: {
-            fields: [{
-                component: componentTypes.WIZARD,
-                name: 'wizard',
-                fields: [firstStepNew(sourceTypes)].concat(
-                    sourceTypeSteps(sourceTypes),
-                    summaryStep()
-                )
-            }]
-        }
-    };
-}
-

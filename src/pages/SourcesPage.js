@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { TableToolbar, PageHeader, PageHeaderTitle, Pagination, Section } from '@red-hat-insights/insights-frontend-components';
 import {
     filterProviders,
+    loadAppTypes,
     loadEntities,
     loadSourceTypes,
     setProviderFilterColumn
@@ -13,45 +14,32 @@ import {
 import { Button } from '@patternfly/react-core';
 import { SplitItem, Split } from '@patternfly/react-core';
 import filter from 'lodash/filter';
+import { FormattedMessage, injectIntl } from 'react-intl';
+import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources';
 
 import SourcesSimpleView from '../components/SourcesSimpleView';
 import SourcesFilter from '../components/SourcesFilter';
 import SourcesEmptyState from '../components/SourcesEmptyState';
 import SourceEditModal from '../components/SourceEditModal';
 import SourceRemoveModal from '../components/SourceRemoveModal';
+import AddApplication from '../components/AddApplication/AddApplication';
 import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
 import { pageAndSize } from '../redux/actions/providers';
 import { paths } from '../Routes';
 
-/**
- * A smart component that handles all the api calls and data needed by the dumb components.
- * Smart components are usually classes.
- *
- * https://reactjs.org/docs/components-and-props.html
- * https://medium.com/@thejasonfile/dumb-components-and-smart-components-e7b33a698d43
- */
 class SourcesPage extends Component {
-    componentDidMount = () => this.props.loadSourceTypes()
-    .then(() => this.props.loadEntities());
+    state = {
+        itemsPerPage: 10,
+        onPage: 1
+    };
 
-    constructor (props) {
-        super(props);
-
-        this.state = {
-            itemsPerPage: 10,
-            onPage: 1
-        };
+    componentDidMount() {
+        return Promise.all([this.props.loadSourceTypes(), this.props.loadAppTypes(), this.props.loadEntities()]);
     }
 
-    onFilter = (filterValue) => {
-        console.log('onFilter', filterValue);
-        this.props.filterProviders(filterValue);
-    }
+    onFilter = (filterValue) => this.props.filterProviders(filterValue);
 
-    onFilterSelect = (_component, column) => {
-        console.log('onFilter', column);
-        this.props.setProviderFilterColumn(column.value);
-    }
+    onFilterSelect = (_component, column) => this.props.setProviderFilterColumn(column.value);
 
     onSetPage = (number) => {
         this.setState({
@@ -74,20 +62,25 @@ class SourcesPage extends Component {
                 <Split gutter="md" style={{ flexGrow: 1 }}>
                     <SplitItem>
                         <SourcesFilter
-                            columns={filter(sourcesViewDefinition.columns, c => c.searchable)}
+                            columns={filter(sourcesViewDefinition.columns(this.props.intl), c => c.searchable)}
                             onFilter={this.onFilter}
                             onFilterSelect={this.onFilterSelect}/>
                     </SplitItem>
                     <SplitItem>
                         <Link to={paths.sourcesNew}>
-                            <Button variant='primary'> Add a source </Button>
+                            <Button variant='primary'>
+                                <FormattedMessage
+                                    id="sources.addSource"
+                                    defaultMessage="Add a source"
+                                />
+                            </Button>
                         </Link>
                     </SplitItem>
                     <SplitItem style={{ flexGrow: 1 }}>
                         <Pagination
                             itemsPerPage={this.state.itemsPerPage}
                             page={this.state.onPage}
-                            direction='up'
+                            direction='down'
                             onSetPage={this.onSetPage}
                             onPerPageSelect={this.onPerPageSelect}
                             numberOfItems={this.props.numberOfEntities || 0}
@@ -95,7 +88,7 @@ class SourcesPage extends Component {
                     </SplitItem>
                 </Split>
             </TableToolbar>
-            <SourcesSimpleView columns={sourcesViewDefinition.columns}/>
+            <SourcesSimpleView columns={sourcesViewDefinition.columns(this.props.intl)}/>
             <TableToolbar>
                 <Pagination
                     itemsPerPage={this.state.itemsPerPage}
@@ -120,10 +113,21 @@ class SourcesPage extends Component {
 
         return (
             <React.Fragment>
+                <Route exact path={paths.sourceManageApps} component={ AddApplication } />
                 <Route exact path={paths.sourcesRemove} component={ SourceRemoveModal } />
-                { editorNew || editorEdit ? <SourceEditModal /> : '' }
+                { editorNew && <AddSourceWizard
+                    sourceTypes={this.props.sourceTypes}
+                    applicationTypes={this.props.appTypes}
+                    isOpen={true}
+                    onClose={() => this.props.history.replace('/')}
+                    afterSuccess={() => this.props.loadEntities()}
+                />}
+                { editorEdit && <SourceEditModal />}
                 <PageHeader>
-                    <PageHeaderTitle title='Sources'/>
+                    <PageHeaderTitle title={this.props.intl.formatMessage({
+                        id: 'sources.sources',
+                        defaultMessage: 'Sources'
+                    })}/>
                 </PageHeader>
                 <Section type='content'>
                     {displayEmptyState ? <SourcesEmptyState /> : this.renderMainContent()}
@@ -138,7 +142,10 @@ SourcesPage.propTypes = {
     setProviderFilterColumn: PropTypes.func.isRequired,
     loadEntities: PropTypes.func.isRequired,
     loadSourceTypes: PropTypes.func.isRequired,
+    loadAppTypes: PropTypes.func.isRequired,
     pageAndSize: PropTypes.func.isRequired,
+    sourceTypes: PropTypes.array,
+    appTypes: PropTypes.array,
 
     filterValue: PropTypes.string,
     loaded: PropTypes.bool.isRequired,
@@ -146,14 +153,29 @@ SourcesPage.propTypes = {
 
     location: PropTypes.any.isRequired,
     match: PropTypes.object.isRequired,
-    history: PropTypes.any.isRequired
+    history: PropTypes.any.isRequired,
+
+    intl: PropTypes.object.isRequired
+};
+
+SourcesPage.defaultProps = {
+    sourceTypes: undefined
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators(
-    { filterProviders, loadEntities, loadSourceTypes, pageAndSize, setProviderFilterColumn }, dispatch);
+    {
+        filterProviders,
+        loadEntities,
+        loadSourceTypes,
+        loadAppTypes,
+        pageAndSize,
+        setProviderFilterColumn
+    },
+    dispatch);
 
-const mapStateToProps = ({ providers: { filterValue, loaded, numberOfEntities } }) => (
-    { filterValue, loaded, numberOfEntities }
+const mapStateToProps = (
+    { providers: { filterValue, loaded, numberOfEntities, sourceTypesLoaded, sourceTypes, appTypes } }) => (
+    { filterValue, loaded, numberOfEntities, sourceTypesLoaded, sourceTypes, appTypes }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesPage));
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesPage)));

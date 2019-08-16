@@ -1,13 +1,10 @@
 @import './src/Utilities.scss';
 @import '~@red-hat-insights/insights-frontend-components/components/Notifications.css';
+@import '~@redhat-cloud-services/frontend-components-sources/index.css';
 
 .pf-l-gallery {
   padding-bottom: 20px
   /* padding-bottom: var(--pf-c-form--section--PaddingBottom) */
-}
-
-.ins-l-content {
-  background-color: var(--pf-global--BackgroundColor--300)
 }
 
 .pf-c-backdrop > .pf-l-bullseye > .pf-l-bullseye {
@@ -28,10 +25,37 @@
 
 .ins-c-sources__dialog--warning {
   .ins-c-source__delete-icon {
-    color: var(--pf-global--danger-color--100);
+    color: var(--pf-global--warning-color--100);
     padding: var(--pf-global--spacer--md);
+    padding-top: 0;
+    width: 100%;
+    height: 100%;
   }
-  p {
-    margin-top: var(--pf-global--spacer--md);
+  .ins-c-source__dialog--flex {
+    display: flex;
+    align-items: flex-start;
+
+    .ins-c-source__dialog--icon {
+      flex: 2;
+    }
+
+    .ins-c-source__dialog--text {
+      flex: 10;
+    }
+  }
+}
+
+.ins-c-sources__dialog--spinnerContainer {
+  min-height: 64px;
+  text-align: center;
+}
+
+/* temporary styling for wizard buttons in the form player */
+.wizard-button-toolbar {
+  justify-content: flex-start !important;
+  .pf-l-toolbar__group {
+    .pf-l-toolbar__item:first-child button {
+      margin-left: 0;
+    }
   }
 }

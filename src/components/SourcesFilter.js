@@ -1,25 +1,28 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { SimpleTableFilter } from '@red-hat-insights/insights-frontend-components';
+import { injectIntl } from 'react-intl';
 
-class SourcesFilter extends Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render = () =>
-        <SimpleTableFilter
-            buttonTitle={null}
-            placeholder='Filter by source name'
-            xoptions={{
-                title: 'Filter By',
-                items: this.props.columns
-            }}
-            onOptionSelect={this.props.onFilterSelect}
-            onButtonClick={this.props.onFilter}
-            onFilterChange={this.props.onFilter}
-        />
-}
+const SourcesFilter = ({ intl, onFilterSelect, onFilter, columns }) =>
+    (<SimpleTableFilter
+        buttonTitle={null}
+        placeholder={
+            intl.formatMessage({
+                id: 'sources.filterBySourceName',
+                defaultMessage: 'Filter by source name'
+            })
+        }
+        xoptions={{
+            title: intl.formatMessage({
+                id: 'sources.filterBy',
+                defaultMessage: 'Filter by'
+            }),
+            items: columns
+        }}
+        onOptionSelect={onFilterSelect}
+        onButtonClick={onFilter}
+        onFilterChange={onFilter}
+    />);
 
 SourcesFilter.propTypes = {
     columns: PropTypes.arrayOf(PropTypes.shape({
@@ -27,7 +30,9 @@ SourcesFilter.propTypes = {
         title: PropTypes.string
     })).isRequired,
     onFilter: PropTypes.func.isRequired,
-    onFilterSelect: PropTypes.func.isRequired
+    onFilterSelect: PropTypes.func.isRequired,
+
+    intl: PropTypes.object.isRequired
 };
 
-export default SourcesFilter;
+export default injectIntl(SourcesFilter);

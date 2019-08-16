@@ -1,12 +1,26 @@
 import axios from 'axios';
 import { DefaultApi as SourcesDefaultApi } from '@redhat-cloud-services/sources-client';
-import find from 'lodash/find';
+import { Base64 } from 'js-base64';
 
-import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
 import { SOURCES_API_BASE } from '../Utilities/Constants';
 
-const axiosInstance = axios.create();
-axiosInstance.interceptors.response.use(async (config) => {
+const axiosInstance = axios.create(
+    process.env.FAKE_IDENTITY ? {
+        headers: {
+            common: {
+                'x-rh-identity': Base64.encode(
+                    JSON.stringify(
+                        {
+                            identity: { account_number: process.env.FAKE_IDENTITY }
+                        }
+                    )
+                )
+            }
+        }
+    } : {}
+);
+
+axiosInstance.interceptors.request.use(async (config) => {
     await window.insights.chrome.auth.getUser();
     return config;
 });
@@ -15,36 +29,21 @@ axiosInstance.interceptors.response.use(null, error => { throw { ...error.respon
 
 let apiInstance;
 
-export function getSourcesApi() {
-    if (apiInstance) {
-        return apiInstance;
-    }
+export const getSourcesApi = () =>
+    apiInstance || (apiInstance = new SourcesDefaultApi(undefined, SOURCES_API_BASE, axiosInstance));
 
-    apiInstance = new SourcesDefaultApi(undefined, SOURCES_API_BASE, axiosInstance);
-    return apiInstance;
-}
-
-export const getEntities = (_pagination, filter) => {
-    const filterFragment = filter.prefixed ? `?filter[source_type_id][eq]=${filter.prefixed}` : '';
-    return axiosInstance.get(`${SOURCES_API_BASE}${sourcesViewDefinition.url}${filterFragment}`);
-};
+export const doLoadAppTypes = () =>
+    axiosInstance.get(`${SOURCES_API_BASE}/application_types`);
 
 export function doRemoveSource(sourceId) {
-    return getSourcesApi().deleteSource(sourceId).then((sourceDataOut) => {
-        console.log('API call deleteSource returned data: ', sourceDataOut);
-    }, (_error) => {
-        console.error('Source removal failed.');
+    return getSourcesApi().deleteSource(sourceId).catch((_error) => {
         throw { error: 'Source removal failed.' };
     });
 }
 
 export function doLoadSourceForEdit(sourceId) {
     return getSourcesApi().showSource(sourceId).then(sourceData => {
-        console.log('API call showSource returned: ', sourceData);
-
         return getSourcesApi().listSourceEndpoints(sourceId, {}).then(endpoints => {
-            console.log('API call listSourceEndpoints returned: ', endpoints);
-
             // we take just the first endpoint
             const endpoint = endpoints && endpoints.data && endpoints.data[0];
 
@@ -55,8 +54,6 @@ export function doLoadSourceForEdit(sourceId) {
             sourceData.endpoint = endpoint;
 
             return getSourcesApi().listEndpointAuthentications(endpoint.id, {}).then(authentications => {
-                console.log('API call listEndpointAuthentications returned: ', authentications);
-
                 // we take just the first authentication
                 const authentication = authentications && authentications.data && authentications.data[0];
 
@@ -84,7 +81,6 @@ const parseUrl = url => {
             path: u.pathname
         };
     } catch (error) {
-        console.log(error);
         return ({});
     }
 };
@@ -94,50 +90,6 @@ const parseUrl = url => {
  * else use individual fields (scheme, host, port, path).
  */
 const urlOrHost = formData => formData.url ? parseUrl(formData.url) : formData;
-
-export function doCreateSource(formData, sourceTypes) {
-    let sourceData = {
-        name: formData.source_name,
-        source_type_id: find(sourceTypes, { name: formData.source_type }).id
-    };
-
-    return getSourcesApi().createSource(sourceData).then((sourceDataOut) => {
-        const { scheme, host, port, path } = urlOrHost(formData);
-
-        const endpointData = {
-            source_id: parseInt(sourceDataOut.id, 10),
-            role: formData.role,
-            scheme,
-            host,
-            port: parseInt(port, 10),
-            path,
-            verify_ssl: formData.verify_ssl,
-            certificate_authority: formData.certificate_authority
-        };
-
-        return getSourcesApi().createEndpoint(endpointData).then((endpointDataOut) => {
-            const authenticationData = {
-                resource_id: parseInt(endpointDataOut.id, 10),
-                resource_type: 'Endpoint',
-                password: formData.token || formData.password
-            };
-
-            return getSourcesApi().createAuthentication(authenticationData).then((authenticationDataOut) => {
-                return authenticationDataOut;
-            }, (_error) => {
-                console.error('Authentication creation failure.');
-                throw { error: 'Authentication creation failure.' };
-            });
-        }, (_error) => {
-            console.error('Endpoint creation failure.');
-            throw { error: 'Endpoint creation failure.' };
-        });
-
-    }, (_error) => {
-        console.error('Source creation failure.');
-        throw { error: 'Source creation failure.' };
-    });
-}
 
 export function doUpdateSource(source, formData) {
     const inst = getSourcesApi();
@@ -150,10 +102,12 @@ export function doUpdateSource(source, formData) {
     .then((_sourceDataOut) => {
         const { scheme, host, port, path } = urlOrHost(formData);
 
+        const endPointPort = parseInt(port, 10);
+
         const endpointData = {
             scheme,
             host,
-            port: parseInt(port, 10),
+            port: isNaN(endPointPort) ? undefined : endPointPort,
             path,
             verify_ssl: formData.verify_ssl,
             certificate_authority: formData.certificate_authority
@@ -162,7 +116,7 @@ export function doUpdateSource(source, formData) {
         return inst.updateEndpoint(source.endpoint.id, endpointData)
         .then((_endpointDataOut) => {
             const authenticationData = {
-                // FIXME: missing USER here?
+                username: formData.username,
                 password: formData.token || formData.password // FIXME: unify
             };
 
@@ -170,21 +124,43 @@ export function doUpdateSource(source, formData) {
             .then((authenticationDataOut) => {
                 return authenticationDataOut;
             }, (_error) => {
-                console.error('Authentication update failure.');
                 throw { error: 'Authentication update failure.' };
             });
         }, (_error) => {
-            console.error('Endpoint update failure.');
             throw { error: 'Endpoint update failure.' };
         });
 
     }, (_error) => {
-        console.error('Source update failure.');
         throw { error: 'Source update failure.' };
     });
 }
 
-export const sourceTypeStrFromLocation = () => (
-    window.appGroup === 'insights' ? 'amazon' :
-        window.appGroup === 'hybrid' ? 'openshift' : null
-);
+/* Source type limitation by location (URL). Now disabled.
+ *
+ *  export const sourceTypeStrFromLocation = () => (
+ *      window.appGroup === 'insights' ? 'amazon' :
+ *          window.appGroup === 'hybrid' ? 'openshift' : null
+ * );
+ */
+export const sourceTypeStrFromLocation = () => null;
+
+// Loads all sources with endpoints and applications infor
+export const doLoadEntities = () => getSourcesApi().postGraphQL({
+    query: `{ sources 
+        { id, 
+          created_at,
+          source_type_id,
+          name,
+          tenant,
+          uid,
+          updated_at
+          applications { application_type_id, id },
+          endpoints { id, scheme, host, port, path } }}`
+}).then(({ data }) => data);
+
+export const doCreateApplication = (source_id, application_type_id) => getSourcesApi().createApplication({
+    source_id,
+    application_type_id
+});
+
+export const doDeleteApplication = (appId) => getSourcesApi().deleteApplication(appId);
