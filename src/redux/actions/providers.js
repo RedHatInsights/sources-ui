@@ -1,4 +1,3 @@
-import find from 'lodash/find';
 import { ADD_NOTIFICATION } from '@red-hat-insights/insights-frontend-components/components/Notifications';
 import {
     ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE,
@@ -6,42 +5,22 @@ import {
     SOURCE_FOR_EDIT_LOADED, SOURCE_EDIT_REQUEST
 } from '../action-types-providers';
 import {
-    doCreateSource,
-    doLoadApplications,
     doLoadAppTypes,
-    doLoadEndpoints,
     doLoadSourceForEdit,
     doRemoveSource,
     doUpdateSource,
-    getEntities,
-    sourceTypeStrFromLocation
+    doLoadEntities
 } from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
 
-const mergeSourcesOther = (sources, other, key) =>
-    sources.map(s => ({ ...s, [key]: other.filter(o => o.source_id === s.id) }));
-
-export const loadEntities = () => (dispatch, getState) => {
+export const loadEntities = () => (dispatch) => {
     dispatch({ type: ACTION_TYPES.LOAD_ENTITIES_PENDING });
 
-    // temporarily we limit the sources offered based on URL
-    const sourceTypeStr = sourceTypeStrFromLocation();
-    const sourceType = sourceTypeStr && find(getState().providers.sourceTypes, { name: sourceTypeStr });
-
-    return getEntities({}, { prefixed: sourceType && sourceType.id }).then(sources => {
-        const sourceIdsList = sources.data.map(s => s.id).join(',');
-
-        Promise.all([
-            doLoadEndpoints(sourceIdsList), doLoadApplications(sourceIdsList)
-        ]).then(([endpoints, applications]) =>
-            dispatch({
-                type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
-                payload: mergeSourcesOther(
-                    mergeSourcesOther(sources.data, applications.data, 'apps'),
-                    endpoints.data,
-                    'endpoints'
-                )
-            }));
+    return doLoadEntities().then(({ sources }) => {
+        dispatch({
+            type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
+            payload: sources
+        });
     });
 };
 
@@ -107,34 +86,6 @@ export const addAlert = (message, type) => ({
     payload: { message, type }
 });
 
-const hardcodedSuccessMessage = (intl) => ({
-    openshift: intl.formatMessage({
-        id: 'sources.openshiftCreated',
-        defaultMessage: 'The resource in this source are now available in Catalog' }),
-    aws: intl.formatMessage({
-        id: 'sources.amazonCreated',
-        defaultMessage: 'Additional recommendations based on these extra sources will now appear in Insights' })
-});
-
-const successMessage = (sourceType, intl) => (
-    hardcodedSuccessMessage(intl)[sourceType] || intl.formatMessage({
-        id: 'sources.newSourceCreated',
-        defaultMessage: 'The new source was successfully created.' })
-);
-
-export const createSource = (formData, sourceTypes, title, intl) => (dispatch) =>
-    doCreateSource(formData, sourceTypes).then(_finished => dispatch({
-        type: ADD_NOTIFICATION,
-        payload: {
-            variant: 'success',
-            title,
-            description: successMessage(formData.source_type, intl)
-        }
-    })).catch(error => dispatch({
-        type: 'FOOBAR_REJECTED',
-        payload: error
-    }));
-
 export const updateSource = (source, formData, title, description) => (dispatch) =>
     doUpdateSource(source, formData).then(_finished => dispatch({
         type: ADD_NOTIFICATION,
@@ -171,3 +122,12 @@ export const loadSourceForEdit = sourceId => dispatch => {
         payload: error
     }));
 };
+
+export const addMessage = (title, variant, description) => (dispatch) => dispatch({
+    type: ADD_NOTIFICATION,
+    payload: {
+        title,
+        variant,
+        description
+    }
+});

@@ -13,13 +13,13 @@ class SourcesFilter extends Component {
     }
 
     render = () =>
-        <SimpleTableFilter
+        (<SimpleTableFilter
             options={{
                 title: 'Filter By',
                 items: this.props.columns
             }}
             onButtonClick={this.onFilterButtonClick}
-        />
+        />)
 }
 
 SourcesFilter.propTypes = {

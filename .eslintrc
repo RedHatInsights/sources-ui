@@ -9,6 +9,7 @@
     "prettier",
     "plugin:react/recommended"
   ],
+  "plugins": ["react"],
   "parserOptions": {
     "ecmaVersion": 7,
     "sourceType": "module"
@@ -135,6 +136,7 @@
     "yoda": [
       "error",
       "never"
-    ]
+    ],
+    "react/jsx-wrap-multilines": 2
   }
 }
