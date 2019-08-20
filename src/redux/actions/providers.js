@@ -1,4 +1,3 @@
-import find from 'lodash/find';
 import { ADD_NOTIFICATION } from '@red-hat-insights/insights-frontend-components/components/Notifications';
 import {
     ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE,
@@ -6,26 +5,23 @@ import {
     SOURCE_FOR_EDIT_LOADED, SOURCE_EDIT_REQUEST
 } from '../action-types-providers';
 import {
-    doCreateSource,
+    doLoadAppTypes,
     doLoadSourceForEdit,
     doRemoveSource,
     doUpdateSource,
-    getEntities,
-    sourceTypeStrFromLocation
+    doLoadEntities
 } from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
 
-export const loadEntities = () => (dispatch, getState) => {
+export const loadEntities = () => (dispatch) => {
     dispatch({ type: ACTION_TYPES.LOAD_ENTITIES_PENDING });
 
-    // temporarily we limit the sources offered based on URL
-    const sourceTypeStr = sourceTypeStrFromLocation();
-    const sourceType = sourceTypeStr && find(getState().providers.sourceTypes, { name: sourceTypeStr });
-
-    return getEntities({}, { prefixed: sourceType && sourceType.id }).then(response => dispatch({
-        type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
-        payload: response
-    }));
+    return doLoadEntities().then(({ sources }) => {
+        dispatch({
+            type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
+            payload: sources
+        });
+    });
 };
 
 export const loadSourceTypes = () => (dispatch) => {
@@ -34,6 +30,15 @@ export const loadSourceTypes = () => (dispatch) => {
     return doLoadSourceTypes().then(sourceTypes => dispatch({
         type: ACTION_TYPES.LOAD_SOURCE_TYPES_FULFILLED,
         payload: sourceTypes
+    }));
+};
+
+export const loadAppTypes = () => (dispatch) => {
+    dispatch({ type: ACTION_TYPES.LOAD_APP_TYPES_PENDING });
+
+    return doLoadAppTypes().then(appTypes => dispatch({
+        type: ACTION_TYPES.LOAD_APP_TYPES_FULFILLED,
+        payload: appTypes.data
     }));
 };
 
@@ -81,48 +86,25 @@ export const addAlert = (message, type) => ({
     payload: { message, type }
 });
 
-const hardcodedSuccessMessage = {
-    openshift: 'The resource in this source are now available in Catalog',
-    aws: 'Additional recommendations based on these extra sources will now appear in Insights'
-};
-
-const successMessage = sourceType => (
-    hardcodedSuccessMessage[sourceType] || 'The new source was successfully created.'
-);
-
-export const createSource = (formData, sourceTypes) => (dispatch) =>
-    doCreateSource(formData, sourceTypes).then(_finished => dispatch({
-        type: ADD_NOTIFICATION,
-        payload: {
-            variant: 'success',
-            title: `${formData.source_name} was added successfully`,
-            description: successMessage(formData.source_type)
-        }
-    })).catch(error => dispatch({
-        type: 'FOOBAR_REJECTED',
-        payload: error
-    }));
-
-export const updateSource = (source, formData) => (dispatch) =>
+export const updateSource = (source, formData, title, description) => (dispatch) =>
     doUpdateSource(source, formData).then(_finished => dispatch({
         type: ADD_NOTIFICATION,
         payload: {
             variant: 'success',
-            title: `"${formData.source_name}" was modified successfully.`,
-            description: 'The source was successfully modified.'
+            title,
+            description
         }
     })).catch(error => dispatch({
         type: 'FOOBAR_REJECTED',
         payload: error
     }));
 
-export const removeSource = (sourceId) => (dispatch) =>
+export const removeSource = (sourceId, title) => (dispatch) =>
     doRemoveSource(sourceId).then(_finished => dispatch({
         type: ADD_NOTIFICATION,
         payload: {
             variant: 'success',
-            title: 'Source was removed.',
-            description: 'The selected source was removed.'
+            title
         }
     })).catch(error => dispatch({
         type: 'FOOBAR_REJECTED',
@@ -140,3 +122,12 @@ export const loadSourceForEdit = sourceId => dispatch => {
         payload: error
     }));
 };
+
+export const addMessage = (title, variant, description) => (dispatch) => dispatch({
+    type: ADD_NOTIFICATION,
+    payload: {
+        title,
+        variant,
+        description
+    }
+});

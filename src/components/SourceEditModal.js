@@ -3,67 +3,95 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { injectIntl } from 'react-intl';
 
-import { Modal } from '@patternfly/react-core';
+import { Wizard } from '@patternfly/react-core';
+import { Spinner } from '@red-hat-insights/insights-frontend-components';
 
-import { sourceEditForm, sourceNewForm } from '../SmartComponents/ProviderPage/providerForm';
+import { sourceEditForm } from '../SmartComponents/ProviderPage/providerForm';
 import SourcesFormRenderer from '../Utilities/SourcesFormRenderer';
-import { createSource, loadEntities, loadSourceForEdit, updateSource } from '../redux/actions/providers';
-import { paths } from '../Routes';
+import { loadEntities, loadSourceForEdit, updateSource } from '../redux/actions/providers';
 
-const SourceEditModal = props => {
-
-    const editorNew = props.location.pathname === paths.sourcesNew;
-
+const SourceEditModal = ({
+    match: { params: { id } },
+    updateSource,
+    history,
+    loadSourceForEdit,
+    source,
+    sourceTypes,
+    loadEntities,
+    intl
+}) => {
     useEffect(() => {
-        if (!editorNew) {
-            props.loadSourceForEdit(parseInt(props.match.params.id, 10));
-        }
+        loadSourceForEdit(parseInt(id, 10));
     }, []);
 
-    const submitProvider = (values, _formState) => {
-        const promise = editorNew ?
-            props.createSource(values, props.sourceTypes) :
-            props.updateSource(props.source, values);
+    const submitProvider = (values) => updateSource(
+        source,
+        values,
+        intl.formatMessage({
+            id: 'sources.modifiedNotificationTitle',
+            defaultMessage: `"{ name }" was modified successfully.`
+        }, { name: values.source_name  }),
+        intl.formatMessage({
+            id: 'sources.modifiedNotificationDescription',
+            defaultMessage: 'The source was successfully modified.'
+        }))
+    .then(() => {
+        history.replace('/');
+        loadEntities();
+    }).catch(_error => {
+        history.replace('/');
+    });
 
-        promise.then(() => {
-            props.history.replace('/');
-            props.loadEntities();
-        }).catch(_error => {
-            props.history.replace('/');
-        });
-    };
+    let form;
 
-    if (!props.sourceTypes || (!editorNew && !props.source)) {
-        return <div>Loading...</div>;
+    if (sourceTypes && source) {
+        form = sourceEditForm(sourceTypes, source, intl);
     }
 
-    const form = editorNew ?
-        sourceNewForm(props.sourceTypes) :
-        sourceEditForm(props.sourceTypes, props.source);
+    if (!sourceTypes || !source) {
+        return (
+            <Wizard
+                isOpen={ true }
+                onClose={ history.goBack }
+                title={
+                    intl.formatMessage({
+                        id: 'sources.editSource',
+                        defaultMessage: 'Edit Source'
+                    })
+                }
+                description={
+                    intl.formatMessage({
+                        id: 'sources.editSourceDescription',
+                        defaultMessage: 'You are editing a source'
+                    })
+                }
+                steps={ [{
+                    name: 'Loading',
+                    component: <div className="ins-c-sources__dialog--spinnerContainer">
+                        <Spinner />
+                    </div>,
+                    isFinishedStep: true
+                }] }
+            />
+        );
+    }
 
     return (
-        <Modal
-            title={editorNew ? 'Add a source' : 'Edit Source'}
-            isOpen
-            onClose={props.history.goBack}
-            isLarge>
-
-            <SourcesFormRenderer
-                initialValues={form.initialValues}
-                schemaType={form.schemaType}
-                schema={form.schema}
-                uiSchema={form.uiSchema}
-                showFormControls={form.showFormControls}
-                onSubmit={submitProvider}
-                onCancel={props.history.goBack}
-            />
-        </Modal>
+        <SourcesFormRenderer
+            initialValues={form.initialValues}
+            schemaType={form.schemaType}
+            schema={form.schema}
+            uiSchema={form.uiSchema}
+            showFormControls={form.showFormControls}
+            onSubmit={submitProvider}
+            onCancel={history.goBack}
+        />
     );
 };
 
 SourceEditModal.propTypes = {
-    createSource: PropTypes.func.isRequired,
     loadSourceForEdit: PropTypes.func.isRequired,
     loadEntities: PropTypes.func.isRequired,
     updateSource: PropTypes.func.isRequired,
@@ -73,14 +101,16 @@ SourceEditModal.propTypes = {
 
     location: PropTypes.any.isRequired,
     match: PropTypes.object.isRequired,
-    history: PropTypes.any.isRequired
+    history: PropTypes.any.isRequired,
+
+    intl: PropTypes.object.isRequired
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators(
-    { createSource, loadEntities, loadSourceForEdit, updateSource }, dispatch);
+    { loadEntities, loadSourceForEdit, updateSource }, dispatch);
 
 const mapStateToProps = ({ providers: { source, sourceTypes } }) => (
     { source, sourceTypes }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SourceEditModal));
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withRouter(SourceEditModal)));

@@ -2,7 +2,8 @@ const asyncActions = [
     'LOAD_ENTITIES',
     'CREATE_SOURCE',
     'REMOVE_SOURCE',
-    'LOAD_SOURCE_TYPES'
+    'LOAD_SOURCE_TYPES',
+    'LOAD_APP_TYPES'
 ].reduce((acc, curr) => [
     ... acc,
     ...[curr, `${curr}_PENDING`, `${curr}_FULFILLED`, `${curr}_REJECTED`]

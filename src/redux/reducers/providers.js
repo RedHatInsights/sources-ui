@@ -11,7 +11,9 @@ export const defaultProvidersState = {
     pageNumber: 1, // PF numbers pages from 1. Seriously.
     entities: [],
     numberOfEntities: 0,
-    filterColumn: 'name' // temporary hard-coded filtering by name
+    filterColumn: 'name', // temporary hard-coded filtering by name
+    appTypesLoaded: false,
+    sourceTypesLoaded: false
 };
 
 const processListInState = (state) => {
@@ -30,7 +32,7 @@ const entitiesPending = (state) => ({
     expanded: null
 });
 
-const entitiesLoaded = (state, { payload: { data: rows } }) =>
+const entitiesLoaded = (state, { payload: rows }) =>
     processListInState({
         ...state,
         loaded: true,
@@ -39,12 +41,26 @@ const entitiesLoaded = (state, { payload: { data: rows } }) =>
 
 const sourceTypesPending = (state) => ({
     ...state,
-    sourceTypes: []
+    sourceTypes: [],
+    sourceTypesLoaded: false
 });
 
 const sourceTypesLoaded = (state, { payload: sourceTypes }) => ({
     ...state,
-    sourceTypes
+    sourceTypes,
+    sourceTypesLoaded: true
+});
+
+const appTypesPending = (state) => ({
+    ...state,
+    appTypes: [],
+    appTypesLoaded: false
+});
+
+const appTypesLoaded = (state, { payload: appTypes }) => ({
+    ...state,
+    appTypes,
+    appTypesLoaded: true
 });
 
 const selectEntity = (state, { payload: { id, selected } }) => ({
@@ -116,6 +132,8 @@ export default {
     [ACTION_TYPES.LOAD_ENTITIES_FULFILLED]: entitiesLoaded,
     [ACTION_TYPES.LOAD_SOURCE_TYPES_PENDING]: sourceTypesPending,
     [ACTION_TYPES.LOAD_SOURCE_TYPES_FULFILLED]: sourceTypesLoaded,
+    [ACTION_TYPES.LOAD_APP_TYPES_PENDING]: appTypesPending,
+    [ACTION_TYPES.LOAD_APP_TYPES_FULFILLED]: appTypesLoaded,
 
     [SELECT_ENTITY]: selectEntity,
     [EXPAND_ENTITY]: expandEntity,
