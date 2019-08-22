@@ -4,7 +4,8 @@ import { mount } from 'enzyme';
 import { notificationsMiddleware } from '@red-hat-insights/insights-frontend-components/components/Notifications';
 import { Route } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
-import { Text } from '@patternfly/react-core';
+import { Text, Button } from '@patternfly/react-core';
+import { MemoryRouter } from 'react-router-dom';
 import * as redux from 'redux';
 
 import * as actions from '../redux/actions/providers';
@@ -34,7 +35,7 @@ describe('SourceRemoveModal', () => {
             );
 
             expect(wrapper.find('input')).toHaveLength(1); // checkbox
-            expect(wrapper.find('button')).toHaveLength(3); // cancel modal, cancel delete, delete
+            expect(wrapper.find(Button)).toHaveLength(3); // cancel modal, cancel delete, delete
             expect(wrapper.find('button[id="deleteSubmit"]').props().disabled).toEqual(true); // delete is disabled
         });
 
@@ -86,8 +87,20 @@ describe('SourceRemoveModal', () => {
             const application = applicationTypesData.data.find((app) => app.id === source.applications[0].application_type_id);
 
             expect(wrapper.find('input')).toHaveLength(0); // checkbox
-            expect(wrapper.find('button')).toHaveLength(2); // cancel modal, cancel delete
+            expect(wrapper.find(Button)).toHaveLength(3); // cancel modal, cancel delete, connected apps
             expect(wrapper.find(Text).at(2).text().includes(application.display_name)).toEqual(true); // application in the list
+        });
+
+        it('clicks on connected apps', () => {
+            const wrapper = mount(componentWrapperIntl(
+                <Route path="/remove/:id" render={ (...args) => <SourceRemoveModal { ...args } /> } />,
+                store,
+                ['/remove/406'])
+            );
+
+            wrapper.find(Button).at(1).simulate('click'); // Click on redirect
+
+            expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual('/manage_apps/406');
         });
     });
 });

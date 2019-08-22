@@ -85,12 +85,18 @@ const SourceRemoveModal = ({
                     applications have been removed from this source."
                 />
             </Text>
-            <Text component={ TextVariants.p } style={{ marginBottom: 0 }}>
-                <FormattedMessage
-                    id="sources.connectedApps"
-                    defaultMessage="Connected applications:"
-                />
-            </Text>
+            <Button
+                variant="link"
+                isInline
+                onClick={ (_ev) => push(`/manage_apps/${source.id}`)}
+            >
+                <Text component={ TextVariants.p } style={{ marginBottom: 0 }}>
+                    <FormattedMessage
+                        id="sources.connectedApps"
+                        defaultMessage="Connected applications:"
+                    />
+                </Text>
+            </Button>
             { appNames }
         </React.Fragment>
     ) : (
