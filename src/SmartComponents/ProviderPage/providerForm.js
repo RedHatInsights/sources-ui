@@ -174,10 +174,9 @@ const temporaryHardcodedSourceSchemas = {
                     <FormattedMessage
                         id="source.confAccountAccess"
                         defaultMessage="Configure account access"
-                    /><Popover
+                    />&nbsp;<Popover
                         aria-label="Help text"
                         position="bottom"
-                        maxWidth="50%"
                         bodyContent={
                             <React.Fragment>
                                 <div>
