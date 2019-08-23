@@ -8,11 +8,11 @@ import { Text, Button } from '@patternfly/react-core';
 import { MemoryRouter } from 'react-router-dom';
 import * as redux from 'redux';
 
-import * as actions from '../redux/actions/providers';
-import SourceRemoveModal from '../components/SourceRemoveModal';
-import { componentWrapperIntl } from '../Utilities/testsHelpers';
-import { sourcesDataGraphQl } from './sourcesData';
-import { applicationTypesData } from './applicationTypesData';
+import * as actions from '../../redux/actions/providers';
+import SourceRemoveModal from '../../components/SourceRemoveModal';
+import { componentWrapperIntl } from '../../Utilities/testsHelpers';
+import { sourcesDataGraphQl } from '../sourcesData';
+import { applicationTypesData } from '../applicationTypesData';
 
 describe('SourceRemoveModal', () => {
     const middlewares = [thunk, notificationsMiddleware()];

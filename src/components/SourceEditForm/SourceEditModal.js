@@ -8,9 +8,9 @@ import { injectIntl } from 'react-intl';
 import { Wizard } from '@patternfly/react-core';
 import { Spinner } from '@red-hat-insights/insights-frontend-components';
 
-import { sourceEditForm } from '../SmartComponents/ProviderPage/providerForm';
-import SourcesFormRenderer from '../Utilities/SourcesFormRenderer';
-import { loadEntities, loadSourceForEdit, updateSource } from '../redux/actions/providers';
+import { sourceEditForm } from './editSourceSchema';
+import SourcesFormRenderer from '../../Utilities/SourcesFormRenderer';
+import { loadEntities, loadSourceForEdit, updateSource } from '../../redux/actions/providers';
 
 const SourceEditModal = ({
     match: { params: { id } },
