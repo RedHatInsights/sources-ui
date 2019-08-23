@@ -3,7 +3,7 @@ import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-re
 import { QuestionCircleIcon } from '@patternfly/react-icons';
 import { Popover, TextContent, TextList, TextListItem, Title } from '@patternfly/react-core';
 
-import SSLFormLabel from '../../components/SSLFormLabel';
+import SSLFormLabel from '../SSLFormLabel';
 import { sourceTypeStrFromLocation } from '../../api/entities';
 import { FormattedMessage } from 'react-intl';
 

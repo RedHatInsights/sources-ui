@@ -20,7 +20,7 @@ import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sour
 import SourcesSimpleView from '../components/SourcesSimpleView';
 import SourcesFilter from '../components/SourcesFilter';
 import SourcesEmptyState from '../components/SourcesEmptyState';
-import SourceEditModal from '../components/SourceEditModal';
+import SourceEditModal from '../components/SourceEditForm/SourceEditModal';
 import SourceRemoveModal from '../components/SourceRemoveModal';
 import AddApplication from '../components/AddApplication/AddApplication';
 import { sourcesViewDefinition } from '../views/sourcesViewDefinition';

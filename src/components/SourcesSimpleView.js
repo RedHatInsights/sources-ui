@@ -11,7 +11,7 @@ import ContentLoader from 'react-content-loader';
 import moment from 'moment';
 
 import { loadEntities, sortEntities } from '../redux/actions/providers';
-import { endpointToUrl } from '../SmartComponents/ProviderPage/providerForm';
+import { endpointToUrl } from '../components/SourceEditForm/editSourceSchema';
 
 const RowLoader = props => (
     <ContentLoader
