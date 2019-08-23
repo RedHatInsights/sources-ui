@@ -10,8 +10,7 @@ import { injectIntl } from 'react-intl';
 import ContentLoader from 'react-content-loader';
 import moment from 'moment';
 
-import SourceExpandedView from './SourceExpandedView';
-import { loadEntities, expandEntity, sortEntities } from '../redux/actions/providers';
+import { loadEntities, sortEntities } from '../redux/actions/providers';
 import { endpointToUrl } from '../SmartComponents/ProviderPage/providerForm';
 
 const RowLoader = props => (
@@ -55,11 +54,6 @@ class SourcesSimpleView extends React.Component {
             }
         });
     };
-
-    /*
-     * Uncomment to re-enable row expansion.
-     * onCollapse = (_event, i, isOpen) => this.props.expandEntity(this.sourceIndexToId(i), isOpen);
-     */
 
     sourceIndexToId = (i) => this.props.entities[i / 2].id;
 
@@ -155,23 +149,12 @@ class SourcesSimpleView extends React.Component {
             );
         }
 
-        const rowData = entities.reduce((acc, item, index) => ([
+        const rowData = entities.reduce((acc, item) => ([
             ...acc,
             { // regular item
                 ...item,
                 isOpen: !!item.expanded,
                 cells: this.itemToCells(item)
-            },
-            { // expanded content
-                id: item.id + '_detail',
-                parent: index * 2,
-                cells: [
-                    item.expanded ?
-                        <React.Fragment key={`${item.id}_detail`}>
-                            <SourceExpandedView source={item}/>
-                        </React.Fragment> :
-                        'collapsed content'
-                ]
             }
         ]), []);
 
@@ -182,7 +165,6 @@ class SourcesSimpleView extends React.Component {
                     id: 'sources.list',
                     defaultMessage: 'List of Sources'
                 })}
-                onCollapse={this.onCollapse}
                 onSort={this.onSort}
                 sortBy={this.state.sortBy}
                 rows={rowData}
@@ -203,7 +185,6 @@ SourcesSimpleView.propTypes = {
     })).isRequired,
 
     loadEntities: PropTypes.func.isRequired,
-    expandEntity: PropTypes.func.isRequired,
     sortEntities: PropTypes.func.isRequired,
 
     entities: PropTypes.arrayOf(PropTypes.any),
@@ -229,7 +210,7 @@ SourcesSimpleView.defaultProps = {
     appTypes: []
 };
 
-const mapDispatchToProps = dispatch => bindActionCreators({ loadEntities, expandEntity, sortEntities }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ loadEntities, sortEntities }, dispatch);
 
 const mapStateToProps = ({
     providers: { entities, loaded, numberOfEntities, sourceTypes, sourceTypesLoaded, appTypes, appTypesLoaded }
