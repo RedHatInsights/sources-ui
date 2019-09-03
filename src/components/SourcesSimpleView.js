@@ -55,7 +55,7 @@ class SourcesSimpleView extends React.Component {
         });
     };
 
-    sourceIndexToId = (i) => this.props.entities[i / 2].id;
+    sourceIndexToId = (i) => this.props.entities[i].id;
 
     renderActions = () => (
         [{
