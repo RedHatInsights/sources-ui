@@ -61,7 +61,7 @@ export function doLoadSourceForEdit(sourceId) {
                     sourceData.authentication = authentication;
                 }
 
-                return sourceData;
+                return { ...sourceData, source: { name: sourceData.name } };
             });
         });
     });
@@ -92,15 +92,9 @@ const parseUrl = url => {
 const urlOrHost = formData => formData.url ? parseUrl(formData.url) : formData;
 
 export function doUpdateSource(source, formData) {
-    const inst = getSourcesApi();
-
-    let sourceData = {
-        name: formData.source_name
-    };
-
-    return inst.updateSource(source.id, sourceData)
+    return getSourcesApi().updateSource(source.id, formData.source)
     .then((_sourceDataOut) => {
-        const { scheme, host, port, path } = urlOrHost(formData);
+        const { scheme, host, port, path } = urlOrHost(formData.endpoint);
 
         const endPointPort = parseInt(port, 10);
 
@@ -109,18 +103,12 @@ export function doUpdateSource(source, formData) {
             host,
             port: isNaN(endPointPort) ? undefined : endPointPort,
             path,
-            verify_ssl: formData.verify_ssl,
-            certificate_authority: formData.certificate_authority
+            ...formData.endpoint
         };
 
-        return inst.updateEndpoint(source.endpoint.id, endpointData)
+        return getSourcesApi().updateEndpoint(source.endpoint.id, endpointData)
         .then((_endpointDataOut) => {
-            const authenticationData = {
-                username: formData.username,
-                password: formData.token || formData.password // FIXME: unify
-            };
-
-            return inst.updateAuthentication(source.authentication.id, authenticationData)
+            return getSourcesApi().updateAuthentication(source.authentication.id, formData.authentication)
             .then((authenticationDataOut) => {
                 return authenticationDataOut;
             }, (_error) => {
@@ -146,8 +134,8 @@ export const sourceTypeStrFromLocation = () => null;
 
 // Loads all sources with endpoints and applications infor
 export const doLoadEntities = () => getSourcesApi().postGraphQL({
-    query: `{ sources 
-        { id, 
+    query: `{ sources
+        { id,
           created_at,
           source_type_id,
           name,
