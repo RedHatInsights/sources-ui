@@ -8,7 +8,7 @@ import { injectIntl } from 'react-intl';
 
 import { sortEntities } from '../../redux/actions/providers';
 import { formatters } from './formatters';
-import { PlaceHolderTable } from './loaders';
+import { PlaceHolderTable, RowWrapperLoader } from './loaders';
 import { prepareEntities } from '../../Utilities/filteringSorting';
 
 const itemToCells = (item, columns, sourceTypes, appTypes) =>
@@ -22,7 +22,8 @@ const renderSources = (entities, columns, sourceTypes, appTypes) =>
         {
             ...item,
             isOpen: !!item.expanded,
-            cells: itemToCells(item, columns, sourceTypes, appTypes)
+            cells: itemToCells(item, columns, sourceTypes, appTypes),
+            disableActions: !!item.isDeleting
         }
     ]), []);
 
@@ -139,6 +140,7 @@ const SourcesSimpleView = ({
             rows={state.rows}
             cells={state.cells}
             actions={actions}
+            rowWrapper={RowWrapperLoader}
         >
             <TableHeader />
             <TableBody />
