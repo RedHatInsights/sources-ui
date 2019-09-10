@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { Table, TableHeader, TableBody, sortable } from '@patternfly/react-table';
 import { injectIntl } from 'react-intl';
 
-import { loadEntities, sortEntities } from '../../redux/actions/providers';
+import { sortEntities } from '../../redux/actions/providers';
 import { formatters } from './formatters';
 import { PlaceHolderTable } from './loaders';
 import { prepareEntities } from '../../Utilities/filteringSorting';
@@ -151,10 +151,7 @@ SourcesSimpleView.propTypes = {
         value: PropTypes.string,
         title: PropTypes.string
     })).isRequired,
-
-    loadEntities: PropTypes.func.isRequired,
     sortEntities: PropTypes.func.isRequired,
-
     entities: PropTypes.arrayOf(PropTypes.any),
     numberOfEntities: PropTypes.number.isRequired,
     loaded: PropTypes.bool.isRequired,
@@ -168,9 +165,7 @@ SourcesSimpleView.propTypes = {
     filterValue: PropTypes.string,
     sortBy: PropTypes.string,
     sortDirection: PropTypes.string,
-
     history: PropTypes.any.isRequired,
-
     intl: PropTypes.object.isRequired
 };
 
@@ -184,13 +179,9 @@ SourcesSimpleView.defaultProps = {
     appTypes: []
 };
 
-const mapDispatchToProps = dispatch => bindActionCreators({ loadEntities, sortEntities }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ sortEntities }, dispatch);
 
-const mapStateToProps = ({
-    providers:
-    { ...props }
-}) =>
-    (props);
+const mapStateToProps = ({ providers: { ...props } }) => (props);
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesSimpleView)));
 

@@ -8,3 +8,7 @@ export const applicationTypesData =
         { created_at: '2019-04-30T10:56:21Z', display_name: 'Topological Inventory', id: '3', name: '/insights/platform/topological-inventory', updated_at: '2019-04-30T10:56:21Z' }
     ]
 };
+
+export const CATALOG_INDEX = 0;
+export const COSTMANAGEMENET_INDEX = 1;
+export const TOPOLOGICALINVENTORY_INDEX = 2;

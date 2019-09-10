@@ -6,7 +6,7 @@ import { endpointToUrl } from '../../components/SourceEditForm/editSourceSchema'
 
 export const sourceIsOpenShift = (source, sourceTypes) => {
     const type = sourceTypes.find((type) => type.id === source.source_type_id);
-    return type ? type.name === 'openshift' : false;
+    return type && type.name === 'openshift';
 };
 
 export const formatURL = source => source.endpoints && source.endpoints[0] && endpointToUrl(source.endpoints[0]);
@@ -36,7 +36,7 @@ export const applicationFormatter = (apps, _item, { appTypes }) => {
 
 export const sourceTypeFormatter = (sourceType, _item, { sourceTypes }) => {
     const type = sourceTypes.find((type) => type.id === sourceType);
-    return type.product_name || sourceType || '';
+    return (type && type.product_name) || sourceType || '';
 };
 
 export const dateFormatter = str => moment(new Date(Date.parse(str))).utc().format('DD MMM YYYY, hh:mm UTC');
