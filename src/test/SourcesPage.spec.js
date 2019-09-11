@@ -11,7 +11,7 @@ import configureStore from 'redux-mock-store';
 import SourcesPage from '../pages/SourcesPage';
 import SourcesEmptyState from '../components/SourcesEmptyState';
 import SourcesFilter from '../components/SourcesFilter';
-import SourcesSimpleView from '../components/SourcesSimpleView';
+import SourcesSimpleView from '../components/SourcesSimpleView/SourcesSimpleView';
 
 import { sourcesData, sourcesDataGraphQl } from './sourcesData';
 import { sourceTypesData } from './sourceTypesData';
@@ -32,7 +32,18 @@ describe('SourcesPage', () => {
     beforeEach(() => {
         initialProps = {};
         mockStore = configureStore(middlewares);
-        initialState = { providers: { loaded: true, rows: [], entities: [], numberOfEntities: 0 } };
+        initialState = {
+            providers:
+            {
+                loaded: true,
+                rows: [],
+                entities: [],
+                numberOfEntities: 0,
+                pageNumber: 1,
+                pageSize: 10,
+                filterColumn: 'name'
+            }
+        };
     });
 
     const applicationsSource19 = {
@@ -94,7 +105,7 @@ describe('SourcesPage', () => {
 
     it('renders table and filtering', (done) => {
         const store = mockStore({
-            providers: { loaded: true, rows: [], entities: [], numberOfEntities: 1 }
+            providers: { ...initialState.providers, numberOfEntities: 1 }
         });
         mockInitialHttpRequests();
 
