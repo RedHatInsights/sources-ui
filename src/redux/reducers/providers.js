@@ -31,6 +31,11 @@ const entitiesLoaded = (state, { payload: rows }) => ({
     numberOfEntities: rows.length
 });
 
+const entitiesRejected = (state, { payload: { error } }) => ({
+    ...state,
+    fetchingError: error
+});
+
 const sourceTypesPending = (state) => ({
     ...state,
     sourceTypes: [],
@@ -90,6 +95,7 @@ const sourceEditRequest = (state) => ({
 export default {
     [ACTION_TYPES.LOAD_ENTITIES_PENDING]: entitiesPending,
     [ACTION_TYPES.LOAD_ENTITIES_FULFILLED]: entitiesLoaded,
+    [ACTION_TYPES.LOAD_ENTITIES_REJECTED]: entitiesRejected,
     [ACTION_TYPES.LOAD_SOURCE_TYPES_PENDING]: sourceTypesPending,
     [ACTION_TYPES.LOAD_SOURCE_TYPES_FULFILLED]: sourceTypesLoaded,
     [ACTION_TYPES.LOAD_APP_TYPES_PENDING]: appTypesPending,

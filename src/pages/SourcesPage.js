@@ -102,7 +102,8 @@ class SourcesPage extends Component {
             intl,
             match,
             location,
-            loaded
+            loaded,
+            fetchingError
         } = this.props;
 
         const numberOfFilteredEntities = (
@@ -140,7 +141,13 @@ class SourcesPage extends Component {
                     })}/>
                 </PageHeader>
                 <Section type='content'>
-                    {displayEmptyState ? <SourcesEmptyState /> : this.renderMainContent(numberOfFilteredEntities, currentPage)}
+                    { (displayEmptyState || fetchingError) ?
+                        <SourcesEmptyState
+                            title={fetchingError ? fetchingError.title : undefined}
+                            body={fetchingError ? fetchingError.detail : undefined}
+                        />
+                        :
+                        this.renderMainContent(numberOfFilteredEntities, currentPage)}
                 </Section>
             </React.Fragment>
         );
@@ -161,6 +168,7 @@ SourcesPage.propTypes = {
     numberOfEntities: PropTypes.number.isRequired,
     pageSize: PropTypes.number.isRequired,
     pageNumber: PropTypes.number.isRequired,
+    fetchingError: PropTypes.object,
 
     filterValue: PropTypes.string,
     loaded: PropTypes.bool.isRequired,
@@ -198,10 +206,23 @@ const mapStateToProps = (
         entities,
         pageSize,
         pageNumber,
+        fetchingError,
         ...others
     }
     }) => (
-    { filterValue, loaded, numberOfEntities, sourceTypesLoaded, sourceTypes, appTypes, entities, pageSize, pageNumber, others }
+    {
+        filterValue,
+        loaded,
+        numberOfEntities,
+        sourceTypesLoaded,
+        sourceTypes,
+        appTypes,
+        entities,
+        pageSize,
+        pageNumber,
+        fetchingError,
+        others
+    }
 );
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesPage)));
