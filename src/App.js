@@ -24,7 +24,7 @@ class App extends Component {
                 {},
                 [
                     thunk,
-                    notificationsMiddleware({ errorTitleKey: 'error', errorDescriptionKey: 'error' }),
+                    notificationsMiddleware({ errorTitleKey: 'error.title', errorDescriptionKey: 'error.detail' }),
                     logger
                 ]
             );

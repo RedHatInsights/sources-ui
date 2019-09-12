@@ -91,6 +91,38 @@ describe('SourcesPage', () => {
     });
 
     it('renders empty state when there are no Sources', (done) => {
+        const error = {
+            detail: 'Detail of error',
+            title: 'Error title'
+        };
+
+        initialState = {
+            providers: {
+                ...initialState.providers,
+                fetchingError: {
+                    detail: error.detail,
+                    title: error.title
+                }
+            }
+        };
+
+        const store = mockStore(initialState);
+        mockInitialHttpRequests();
+
+        const page = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
+        setImmediate(() => {
+            expect(page.find(SourcesEmptyState)).toHaveLength(1);
+            expect(page.find(SourcesFilter)).toHaveLength(0);
+            expect(page.find(SourcesSimpleView)).toHaveLength(0);
+            expect(page.find(SourcesEmptyState).props()).toEqual({
+                body: error.detail,
+                title: error.title
+            });
+            done();
+        });
+    });
+
+    it('renders empty state when there is fetching error', (done) => {
         const store = mockStore(initialState);
         mockInitialHttpRequests();
 

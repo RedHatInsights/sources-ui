@@ -25,7 +25,10 @@ export const loadEntities = () => (dispatch) => {
             type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
             payload: sources
         });
-    });
+    }).catch(error => dispatch({
+        type: ACTION_TYPES.LOAD_ENTITIES_REJECTED,
+        payload: { error: { detail: error.data, title: 'Fetching data failed, try refresh page' } }
+    }));
 };
 
 export const loadSourceTypes = () => (dispatch) => {
