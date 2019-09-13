@@ -6,7 +6,7 @@ import { Table, TableHeader, TableBody, RowWrapper } from '@patternfly/react-tab
 import { MemoryRouter } from 'react-router-dom';
 
 import SourcesSimpleView from '../../../components/SourcesSimpleView/SourcesSimpleView';
-import { PlaceHolderTable } from '../../../components/SourcesSimpleView/loaders';
+import { PlaceHolderTable, RowWrapperLoader, RowLoader } from '../../../components/SourcesSimpleView/loaders';
 
 import { sourcesDataGraphQl } from '../../sourcesData';
 import { sourceTypesData } from '../../sourceTypesData';
@@ -68,6 +68,34 @@ describe('SourcesSimpleView', () => {
     });
 
     it('renders table when loaded', (done) => {
+        initialState = {
+            providers: {
+                ...initialState.providers,
+                ...loadedProps,
+                entities: [
+                    {
+                        ...sourcesDataGraphQl[0],
+                        isDeleting: true
+                    },
+                    ...sourcesDataGraphQl.slice(1)
+                ]
+            }
+        };
+
+        const store = mockStore(initialState);
+        const wrapper = mount(componentWrapperIntl(<SourcesSimpleView { ...initialProps } />, store));
+
+        setTimeout(() => {
+            setTimeout(() => {
+                wrapper.update();
+                expect(wrapper.find(RowWrapperLoader)).toHaveLength(sourcesDataGraphQl.length);
+                expect(wrapper.find(RowLoader)).toHaveLength(1);
+                done();
+            });
+        });
+    });
+
+    it('renders removing row', (done) => {
         initialState = {
             providers: {
                 ...initialState.providers,
