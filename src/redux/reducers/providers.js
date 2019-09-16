@@ -92,6 +92,22 @@ const sourceEditRequest = (state) => ({
     source: null
 });
 
+const sourceEditRemovePending = (state, { meta }) => ({
+    ...state,
+    entities: state.entities.map(entity => entity.id === meta.sourceId ? { ...entity, isDeleting: true } : entity)
+});
+
+const sourceEditRemoveFulfilled = (state, { meta }) => ({
+    ...state,
+    entities: state.entities.map(entity => entity.id === meta.sourceId ? undefined : entity).filter(x => x),
+    numberOfEntities: state.numberOfEntities - 1
+});
+
+const sourceEditRemoveRejected = (state, { meta }) => ({
+    ...state,
+    entities: state.entities.map(entity => entity.id === meta.sourceId ? { ...entity, isDeleting: undefined } : entity)
+});
+
 export default {
     [ACTION_TYPES.LOAD_ENTITIES_PENDING]: entitiesPending,
     [ACTION_TYPES.LOAD_ENTITIES_FULFILLED]: entitiesLoaded,
@@ -100,6 +116,9 @@ export default {
     [ACTION_TYPES.LOAD_SOURCE_TYPES_FULFILLED]: sourceTypesLoaded,
     [ACTION_TYPES.LOAD_APP_TYPES_PENDING]: appTypesPending,
     [ACTION_TYPES.LOAD_APP_TYPES_FULFILLED]: appTypesLoaded,
+    [ACTION_TYPES.REMOVE_SOURCE_PENDING]: sourceEditRemovePending,
+    [ACTION_TYPES.REMOVE_SOURCE_FULFILLED]: sourceEditRemoveFulfilled,
+    [ACTION_TYPES.REMOVE_SOURCE_REJECTED]: sourceEditRemoveRejected,
 
     [SORT_ENTITIES]: sortEntities,
     [PAGE_AND_SIZE]: setPageAndSize,

@@ -9,6 +9,7 @@ import { Main } from '@redhat-cloud-services/frontend-components';
 import logger from 'redux-logger';
 import thunk from 'redux-thunk';
 import { IntlProvider } from 'react-intl';
+import promise from 'redux-promise-middleware';
 
 import ReducersProviders, { defaultProvidersState } from './redux/reducers/providers';
 
@@ -25,7 +26,8 @@ class App extends Component {
                 [
                     thunk,
                     notificationsMiddleware({ errorTitleKey: 'error.title', errorDescriptionKey: 'error.detail' }),
-                    logger
+                    logger,
+                    promise
                 ]
             );
         }

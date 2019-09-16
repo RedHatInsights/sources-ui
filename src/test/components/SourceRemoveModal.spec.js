@@ -71,6 +71,7 @@ describe('SourceRemoveModal', () => {
 
             const source = sourcesDataGraphQl.find((s) => s.id === '14');
 
+            expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual('/'); // modal was closed
             expect(actions.removeSource).toHaveBeenCalledWith('14', `${source.name} was deleted successfully.`); // calls removeSource with id of the source and right message
         });
     });
