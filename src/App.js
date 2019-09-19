@@ -1,10 +1,10 @@
 import React, { Component, Fragment } from 'react';
-import { ReducerRegistry, applyReducerHash } from '@red-hat-insights/insights-frontend-components';
+import ReducerRegistry, { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/files/ReducerRegistry';
 import {
     NotificationsPortal,
     notifications,
     notificationsMiddleware
-} from '@red-hat-insights/insights-frontend-components/components/Notifications';
+} from '@redhat-cloud-services/frontend-components-notifications';
 import { Main } from '@redhat-cloud-services/frontend-components';
 import logger from 'redux-logger';
 import thunk from 'redux-thunk';

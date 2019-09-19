@@ -1,10 +1,10 @@
 import thunk from 'redux-thunk';
-import { notificationsMiddleware } from '@red-hat-insights/insights-frontend-components/components/Notifications';
+import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import ContentLoader from 'react-content-loader';
 import { IntlProvider } from 'react-intl';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { applyReducerHash } from '@red-hat-insights/insights-frontend-components';
+import { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/files/ReducerRegistry';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import configureStore from 'redux-mock-store';
 
