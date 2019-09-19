@@ -1,6 +1,6 @@
 import React from 'react';
 import thunk from 'redux-thunk';
-import { notificationsMiddleware } from '@red-hat-insights/insights-frontend-components/components/Notifications';
+import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import configureStore from 'redux-mock-store';
 import { Table, TableHeader, TableBody, RowWrapper } from '@patternfly/react-table';
 import { MemoryRouter } from 'react-router-dom';

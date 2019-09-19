@@ -2,7 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { TextListItem } from '@patternfly/react-core';
 import { Route } from 'react-router-dom';
-import { notificationsMiddleware } from '@red-hat-insights/insights-frontend-components/components/Notifications';
+import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 

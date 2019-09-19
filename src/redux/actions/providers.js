@@ -1,4 +1,4 @@
-import { ADD_NOTIFICATION } from '@red-hat-insights/insights-frontend-components/components/Notifications';
+import { ADD_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications';
 import {
     ACTION_TYPES,
     SORT_ENTITIES,

@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 
 import { Wizard } from '@patternfly/react-core';
-import { Spinner } from '@red-hat-insights/insights-frontend-components';
+import { Spinner } from '@redhat-cloud-services/frontend-components';
 
 import { sourceEditForm } from './editSourceSchema';
 import SourcesFormRenderer from '../../Utilities/SourcesFormRenderer';
