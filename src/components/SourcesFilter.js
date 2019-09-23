@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { SimpleTableFilter } from '@red-hat-insights/insights-frontend-components';
+import { SimpleTableFilter } from '@redhat-cloud-services/frontend-components';
 import { injectIntl } from 'react-intl';
 
 const SourcesFilter = ({ intl, onFilterSelect, onFilter, columns }) =>
-    <SimpleTableFilter
+    (<SimpleTableFilter
         buttonTitle={null}
         placeholder={
             intl.formatMessage({
@@ -22,7 +22,7 @@ const SourcesFilter = ({ intl, onFilterSelect, onFilter, columns }) =>
         onOptionSelect={onFilterSelect}
         onButtonClick={onFilter}
         onFilterChange={onFilter}
-    />;
+    />);
 
 SourcesFilter.propTypes = {
     columns: PropTypes.arrayOf(PropTypes.shape({

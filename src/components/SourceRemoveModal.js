@@ -6,7 +6,9 @@ import { bindActionCreators } from 'redux';
 import {
     Modal,
     Button,
-    Bullseye,
+    Split,
+    SplitItem,
+    Stack,
     Text,
     TextContent,
     TextVariants,
@@ -14,22 +16,24 @@ import {
     TextListItem,
     Checkbox
 } from '@patternfly/react-core';
-import { loadEntities, removeSource } from '../redux/actions/providers';
-import { WarningTriangleIcon } from '@patternfly/react-icons';
+import { removeSource } from '../redux/actions/providers';
+import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 const SourceRemoveModal = ({
     history: { push },
     removeSource,
-    loadEntities,
     source,
-    intl
+    intl,
+    appTypes
 }) => {
-    const onSubmit = () => removeSource(source.id, intl.formatMessage({
-        id: 'sources.notificationDeleteMessage',
-        defaultMessage: `{title} was deleted successfully.`
-    }, { title: source.name }))
-    .then(() => { loadEntities(); push('/'); });
+    const onSubmit = () => {
+        push('/');
+        return removeSource(source.id, intl.formatMessage({
+            id: 'sources.notificationDeleteMessage',
+            defaultMessage: `{title} was deleted successfully.`
+        }, { title: source.name }));
+    };
 
     const onCancel = () => push('/');
 
@@ -38,6 +42,115 @@ const SourceRemoveModal = ({
     if (!source) {
         return null;
     }
+
+    const appNames = source.applications.map((app) => {
+        const type = appTypes.find((appType) => appType.id === app.application_type_id);
+
+        if (type) {
+            return type.display_name;
+        }
+    }).map((name) => (
+        <Text key={name} component={TextVariants.p} style={{ marginBottom: 0 }}>
+            - {name}
+        </Text>
+    ));
+
+    const actions = source.applications.length > 0 ? [
+        <Button id="deleteCancel" key="cancel" variant="secondary" type="button" onClick={ onCancel }>
+            <FormattedMessage
+                id="sources.close"
+                defaultMessage="Close"
+            />
+        </Button>
+    ] : [
+        <Button
+            id="deleteSubmit" key="submit" variant="danger" type="button" onClick={ onSubmit } isDisabled={!acknowledge}
+        >
+            <FormattedMessage
+                id="sources.deleteConfirm"
+                defaultMessage="Delete this source and its data"
+            />
+        </Button>,
+        <Button id="deleteCancel" key="cancel" variant="secondary" type="button" onClick={ onCancel }>
+            <FormattedMessage
+                id="sources.deleteCancel"
+                defaultMessage="Do not delete this source"
+            />
+        </Button>
+    ];
+
+    const body = source.applications.length > 0 ? (
+        <React.Fragment>
+            <Text component={ TextVariants.p }>
+                <FormattedMessage
+                    id="sources.deleteTextBodyWithApp"
+                    defaultMessage="This action cannot be enacted until all assigned
+                    applications have been removed from this source."
+                />
+            </Text>
+            <Button
+                variant="link"
+                isInline
+                onClick={ (_ev) => push(`/manage_apps/${source.id}`)}
+            >
+                <Text component={ TextVariants.p } style={{ marginBottom: 0 }}>
+                    <FormattedMessage
+                        id="sources.connectedApps"
+                        defaultMessage="Connected applications:"
+                    />
+                </Text>
+            </Button>
+            { appNames }
+        </React.Fragment>
+    ) : (
+        <React.Fragment>
+            <Text component={ TextVariants.p }>
+                <FormattedMessage
+                    id="sources.deleteTextBody"
+                    defaultMessage={`Are you sure that you want to delete "{ name }"?`}
+                    values={{
+                        name: source.name
+                    }}
+                />
+            </Text>
+            <Text component={ TextVariants.p }>
+                <FormattedMessage
+                    id="sources.delete-text-body-2"
+                    defaultMessage="Deleting this source will permanently delete:"
+                />
+            </Text>
+            <TextList>
+                <TextListItem>
+                    <FormattedMessage
+                        id="sources.deleteTextBody3"
+                        defaultMessage="All data collected"
+                    />
+                </TextListItem>
+                <TextListItem>
+                    <FormattedMessage
+                        id="sources.deleteTextBody4"
+                        defaultMessage="Any and all historical data"
+                    />
+                </TextListItem>
+            </TextList>
+            <Checkbox
+                label={intl.formatMessage({
+                    id: 'sources.deleteCheckboxTitle',
+                    defaultMessage: `I acknowledge that this action cannot be undone.`
+                })}
+                onChange={() => setAcknowledge((value) => !value)}
+                aria-label={
+                    intl.formatMessage({
+                        id: 'sources.deleteCheckboxTitle',
+                        defaultMessage: `I acknowledge that this action cannot be undone.`
+                    })
+                }
+                id="acknowledgeDelete"
+                name="acknowledgeDelete"
+                isChecked={acknowledge}
+            />
+        </React.Fragment>
+    );
 
     return (
         <Modal className="ins-c-sources__dialog--warning"
@@ -50,89 +163,31 @@ const SourceRemoveModal = ({
             isOpen
             isSmall
             onClose={ onCancel }
-            actions={ [
-                <Button
-                    id="deleteSubmit" key="submit" variant="danger" type="button" onClick={ onSubmit } isDisabled={!acknowledge}
-                >
-                    <FormattedMessage
-                        id="sources.deleteConfirm"
-                        defaultMessage="Delete this source and its data"
-                    />
-                </Button>,
-                <Button id="deleteCancel" key="cancel" variant="secondary" type="button" onClick={ onCancel }>
-                    <FormattedMessage
-                        id="sources.deleteCancel"
-                        defaultMessage="Do not delete this source"
-                    />
-                </Button>
-            ] }
+            actions={ actions }
         >
-            <Bullseye>
-                <TextContent>
-                    <div className="ins-c-source__dialog--flex">
-                        <div className="ins-c-source__dialog--icon">
-                            <WarningTriangleIcon className="ins-c-source__delete-icon" />
-                        </div>
-                        <div className="ins-c-source__dialog--text">
-                            <Text component={ TextVariants.p }>
-                                <FormattedMessage
-                                    id="sources.deleteTextBody"
-                                    defaultMessage={`Are you sure that you want to delete "{ name }"?`}
-                                    values={{
-                                        name: source.name
-                                    }}
-                                />
-                            </Text>
-                            <Text component={ TextVariants.p }>
-                                <FormattedMessage
-                                    id="sources.delete-text-body-2"
-                                    defaultMessage="Deleting this source will permanently delete:"
-                                />
-                            </Text>
-                            <TextList>
-                                <TextListItem>
-                                    <FormattedMessage
-                                        id="sources.deleteTextBody3"
-                                        defaultMessage="All data collected"
-                                    />
-                                </TextListItem>
-                                <TextListItem>
-                                    <FormattedMessage
-                                        id="sources.deleteTextBody4"
-                                        defaultMessage="Any and all historical data"
-                                    />
-                                </TextListItem>
-                            </TextList>
-                            <Checkbox
-                                label={intl.formatMessage({
-                                    id: 'sources.deleteCheckboxTitle',
-                                    defaultMessage: `I acknowledge that this action cannot be undone.`
-                                })}
-                                onChange={() => setAcknowledge((value) => !value)}
-                                aria-label={
-                                    intl.formatMessage({
-                                        id: 'sources.deleteCheckboxTitle',
-                                        defaultMessage: `I acknowledge that this action cannot be undone.`
-                                    })
-                                }
-                                id="acknowledgeDelete"
-                                name="acknowledgeDelete"
-                                value={acknowledge}
-                            />
-                        </div>
-                    </div>
-                </TextContent>
-            </Bullseye>
+            <Split gutter="md">
+                <SplitItem><ExclamationTriangleIcon size="xl" className="ins-m-alert ins-c-source__delete-icon" /></SplitItem>
+                <SplitItem isFilled>
+                    <Stack gutter="md">
+                        <TextContent>
+                            { body }
+                        </TextContent>
+                    </Stack>
+                </SplitItem>
+            </Split>
         </Modal>
     );
 };
 
 SourceRemoveModal.propTypes = {
+    appTypes: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        display_name: PropTypes.string.isRequired
+    })),
     history: PropTypes.shape({
         push: PropTypes.func.isRequired
     }).isRequired,
     removeSource: PropTypes.func.isRequired,
-    loadEntities: PropTypes.func.isRequired,
     source: PropTypes.shape({
         id: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired
@@ -140,13 +195,9 @@ SourceRemoveModal.propTypes = {
     intl: PropTypes.object
 };
 
-const sourceDetailsFromState = (state, id) => state.providers.entities.find(source => source.id  === id);
+const mapStateToProps = ({ providers: { entities, appTypes } }, { match: { params: { id } } }) =>
+    ({ source: entities.find(source => source.id  === id), appTypes });
 
-const mapStateToProps = (state, { match: { params: { id } } }) => ({ source: sourceDetailsFromState(state, id) });
-
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-    loadEntities,
-    removeSource
-}, dispatch);
+const mapDispatchToProps = (dispatch) => bindActionCreators({ removeSource }, dispatch);
 
 export default injectIntl(withRouter(connect(mapStateToProps, mapDispatchToProps)(SourceRemoveModal)));

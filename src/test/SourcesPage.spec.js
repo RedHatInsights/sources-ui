@@ -1,19 +1,28 @@
 import thunk from 'redux-thunk';
-import { notificationsMiddleware } from '@red-hat-insights/insights-frontend-components/components/Notifications';
+import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
+import ContentLoader from 'react-content-loader';
+import { IntlProvider } from 'react-intl';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/files/ReducerRegistry';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import configureStore from 'redux-mock-store';
 
 import SourcesPage from '../pages/SourcesPage';
 import SourcesEmptyState from '../components/SourcesEmptyState';
 import SourcesFilter from '../components/SourcesFilter';
-import SourcesSimpleView from '../components/SourcesSimpleView';
+import SourcesSimpleView from '../components/SourcesSimpleView/SourcesSimpleView';
 
-import configureStore from 'redux-mock-store';
-import { sourcesData } from './sourcesData';
+import { sourcesData, sourcesDataGraphQl } from './sourcesData';
 import { sourceTypesData } from './sourceTypesData';
 import { applicationTypesData } from './applicationTypesData';
 
 import { SOURCES_API_BASE } from '../Utilities/Constants';
 
 import { componentWrapperIntl } from '../Utilities/testsHelpers';
+
+import ReducersProviders, { defaultProvidersState } from '../redux/reducers/providers';
+import { FILTER_PROVIDERS } from '../redux/action-types-providers';
 
 describe('SourcesPage', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -24,7 +33,18 @@ describe('SourcesPage', () => {
     beforeEach(() => {
         initialProps = {};
         mockStore = configureStore(middlewares);
-        initialState = { providers: { loaded: true, rows: [], entities: [], numberOfEntities: 0 } };
+        initialState = {
+            providers:
+            {
+                loaded: true,
+                rows: [],
+                entities: [],
+                numberOfEntities: 0,
+                pageNumber: 1,
+                pageSize: 10,
+                filterColumn: 'name'
+            }
+        };
     });
 
     const applicationsSource19 = {
@@ -47,6 +67,7 @@ describe('SourcesPage', () => {
         apiClientMock.get(`${SOURCES_API_BASE}/application_types`, mockOnce({ body: applicationTypesData }));
         apiClientMock.get(`${SOURCES_API_BASE}/applications/?source_id=19`, mockOnce({ body: applicationsSource19 }));
         apiClientMock.get(`${SOURCES_API_BASE}/endpoints/?source_id=19`, mockOnce({ body: endpointsSource19 }));
+        apiClientMock.post(`${SOURCES_API_BASE}/graphql`, mockOnce({ body: { data: { sources: sourcesDataGraphQl } } }));
     };
 
     it('should fetch sources and source types on component mount', (done) => {
@@ -56,10 +77,10 @@ describe('SourcesPage', () => {
 
         const expectedActions = [
             { type: 'LOAD_SOURCE_TYPES_PENDING' },
-            expect.objectContaining({ type: 'LOAD_SOURCE_TYPES_FULFILLED' }),
-            { type: 'LOAD_ENTITIES_PENDING' },
             { type: 'LOAD_APP_TYPES_PENDING' },
+            { type: 'LOAD_ENTITIES_PENDING' },
             expect.objectContaining({ type: 'LOAD_APP_TYPES_FULFILLED' }),
+            expect.objectContaining({ type: 'LOAD_SOURCE_TYPES_FULFILLED' }),
             expect.objectContaining({ type: 'LOAD_ENTITIES_FULFILLED' })
         ];
 
@@ -71,6 +92,38 @@ describe('SourcesPage', () => {
     });
 
     it('renders empty state when there are no Sources', (done) => {
+        const error = {
+            detail: 'Detail of error',
+            title: 'Error title'
+        };
+
+        initialState = {
+            providers: {
+                ...initialState.providers,
+                fetchingError: {
+                    detail: error.detail,
+                    title: error.title
+                }
+            }
+        };
+
+        const store = mockStore(initialState);
+        mockInitialHttpRequests();
+
+        const page = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
+        setImmediate(() => {
+            expect(page.find(SourcesEmptyState)).toHaveLength(1);
+            expect(page.find(SourcesFilter)).toHaveLength(0);
+            expect(page.find(SourcesSimpleView)).toHaveLength(0);
+            expect(page.find(SourcesEmptyState).props()).toEqual({
+                body: error.detail,
+                title: error.title
+            });
+            done();
+        });
+    });
+
+    it('renders empty state when there is fetching error', (done) => {
         const store = mockStore(initialState);
         mockInitialHttpRequests();
 
@@ -85,7 +138,7 @@ describe('SourcesPage', () => {
 
     it('renders table and filtering', (done) => {
         const store = mockStore({
-            providers: { loaded: true, rows: [], entities: [], numberOfEntities: 1 }
+            providers: { ...initialState.providers, numberOfEntities: 1 }
         });
         mockInitialHttpRequests();
 
@@ -95,6 +148,54 @@ describe('SourcesPage', () => {
             expect(page.find(SourcesEmptyState)).toHaveLength(0);
             expect(page.find(SourcesFilter)).toHaveLength(1);
             expect(page.find(SourcesSimpleView)).toHaveLength(1);
+            done();
+        });
+    });
+
+    it('renders loading state when is loading', (done) => {
+        const store = createStore(
+            combineReducers({ providers: applyReducerHash(ReducersProviders, defaultProvidersState) }),
+            applyMiddleware(...middlewares)
+        );
+        mockInitialHttpRequests();
+
+        const page = mount(<IntlProvider locale="en">
+            <Provider store={ store }>
+                <MemoryRouter initialEntries={ ['/'] }>
+                    <Route path='/' render={() => <SourcesPage />}/>
+                </MemoryRouter>
+            </Provider>
+        </IntlProvider>);
+
+        expect(page.find(ContentLoader).length).toEqual(2);
+        setImmediate(() => {
+            page.update();
+            expect(page.find(ContentLoader).length).toEqual(0);
+            done();
+        });
+    });
+
+    it('should call onFilterSelect', (done) => {
+        const FILTER_INPUT_INDEX = 0;
+
+        const store = mockStore({
+            providers: { ...initialState.providers, numberOfEntities: 1 }
+        });
+        mockInitialHttpRequests();
+
+        const wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
+
+        setImmediate(() => {
+            wrapper.update();
+            const filterInput = wrapper.find('input').at(FILTER_INPUT_INDEX);
+
+            filterInput.simulate('change', { target: { value: 'Pepa' } });
+            expect(store.getActions().slice(-1)[0]).toEqual({
+                payload: {
+                    value: 'Pepa'
+                },
+                type: FILTER_PROVIDERS
+            });
             done();
         });
     });
