@@ -5,7 +5,8 @@ import {
     FILTER_PROVIDERS,
     SET_FILTER_COLUMN,
     SOURCE_EDIT_REQUEST,
-    SOURCE_FOR_EDIT_LOADED
+    SOURCE_FOR_EDIT_LOADED,
+    ADD_APP_TO_SOURCE
 } from '../action-types-providers';
 
 export const defaultProvidersState = {
@@ -144,6 +145,16 @@ const appRemovingRejected = (state, { meta }) => ({
         : entity)
 });
 
+const addAppToSource = (state, { payload: { sourceId, app } }) => ({
+    ...state,
+    entities: state.entities.map(entity => entity.id === sourceId ?
+        {
+            ...entity,
+            applications: [...entity.applications, app]
+        }
+        : entity)
+});
+
 export default {
     [ACTION_TYPES.LOAD_ENTITIES_PENDING]: entitiesPending,
     [ACTION_TYPES.LOAD_ENTITIES_FULFILLED]: entitiesLoaded,
@@ -164,5 +175,6 @@ export default {
     [FILTER_PROVIDERS]: filterProviders,
     [SET_FILTER_COLUMN]: setFilterColumn,
     [SOURCE_FOR_EDIT_LOADED]: sourceForEditLoaded,
-    [SOURCE_EDIT_REQUEST]: sourceEditRequest
+    [SOURCE_EDIT_REQUEST]: sourceEditRequest,
+    [ADD_APP_TO_SOURCE]: addAppToSource
 };

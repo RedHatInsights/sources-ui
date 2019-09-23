@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Wizard, Text, TextVariants, TextContent, Button } from '@patternfly/react-core';
 
-import { loadEntities } from '../../redux/actions/providers';
+import { addAppToSource } from '../../redux/actions/providers';
 import SourcesFormRenderer from '../../Utilities/SourcesFormRenderer';
 import createSchema from './AddApplicationSchema';
 import LoadingStep from '../steps/LoadingStep';
@@ -24,7 +24,7 @@ const initialState = {
 const reducer = (state, payload) => ({ ...state, ...payload });
 
 const AddApplication = (
-    { source, appTypes, history, loadEntities, intl, appTypesLoaded, sourceTypesLoaded, sourceTypes }
+    { source, appTypes, history, addAppToSource, intl, appTypesLoaded, sourceTypesLoaded, sourceTypes }
 ) => {
     const [state, setState] = useReducer(reducer, initialState);
 
@@ -51,9 +51,9 @@ const AddApplication = (
 
     const onSubmit = ({ application }) => {
         setState({ state: 'loading' });
-        return doCreateApplication(source.id, application).then(() => {
+        return doCreateApplication(source.id, application).then((app) => {
             setState({ state: 'finished' });
-            loadEntities();
+            addAppToSource(source.id, app);
         })
         .catch(({ data: { errors: [{ detail }] } }) => {
             setState({
@@ -140,7 +140,7 @@ AddApplication.propTypes = {
     history: PropTypes.shape({
         push: PropTypes.func.isRequired
     }).isRequired,
-    loadEntities: PropTypes.func.isRequired,
+    addAppToSource: PropTypes.func.isRequired,
     source: PropTypes.shape({
         id: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired
@@ -167,6 +167,6 @@ const mapStateToProps = (
         { source: entities.find(source => source.id  === id), appTypes, appTypesLoaded, sourceTypesLoaded, sourceTypes }
     );
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({ loadEntities }, dispatch);
+const mapDispatchToProps = (dispatch) => bindActionCreators({ addAppToSource }, dispatch);
 
 export default injectIntl(withRouter(connect(mapStateToProps, mapDispatchToProps)(AddApplication)));

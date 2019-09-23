@@ -6,7 +6,8 @@ import {
     FILTER_PROVIDERS,
     SET_FILTER_COLUMN,
     SOURCE_FOR_EDIT_LOADED,
-    SOURCE_EDIT_REQUEST
+    SOURCE_EDIT_REQUEST,
+    ADD_APP_TO_SOURCE
 } from '../action-types-providers';
 import {
     doLoadAppTypes,
@@ -136,3 +137,11 @@ export const removeApplication = (appId, sourceId, successTitle, errorTitle) => 
         }
     });
 };
+
+export const addAppToSource = (sourceId, app) => ({
+    type: ADD_APP_TO_SOURCE,
+    payload: {
+        sourceId,
+        app
+    }
+});
