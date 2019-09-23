@@ -129,6 +129,7 @@ const SourcesPage = ({
                 isOpen={true}
                 onClose={() => history.push('/')}
                 afterSuccess={() => loadEntities()}
+                hideSourcesButton={true}
             />}
             { editorEdit && <SourceEditModal />}
             <PageHeader>
