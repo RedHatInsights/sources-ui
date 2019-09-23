@@ -24,7 +24,7 @@ const initialState = {
 const reducer = (state, payload) => ({ ...state, ...payload });
 
 const AddApplication = (
-    { source, appTypes, history, loadEntities, intl, appTypesLoaded, sourceTypesLoaded }
+    { source, appTypes, history, loadEntities, intl, appTypesLoaded, sourceTypesLoaded, sourceTypes }
 ) => {
     const [state, setState] = useReducer(reducer, initialState);
 
@@ -33,7 +33,11 @@ const AddApplication = (
     }
 
     const appIds = source.applications.reduce((acc, app) => [...acc, app.application_type_id], []);
-    const filteredAppTypes = appTypes.filter((type) => !appIds.includes(type.id));
+    const sourceType = sourceTypes.find((type) => type.id === source.source_type_id);
+    const sourceTypeName = sourceType && sourceType.name;
+    const filteredAppTypes = appTypes.filter((type) =>
+        !appIds.includes(type.id) && type.supported_source_types.includes(sourceTypeName)
+    );
     const schema = createSchema(filteredAppTypes.map((type) => ({ value: type.id, label: type.display_name })), intl);
 
     const onSubmit = ({ application }) => {
@@ -135,18 +139,23 @@ AddApplication.propTypes = {
     intl: PropTypes.object,
     appTypes: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
-        display_name: PropTypes.string.isRequired
+        display_name: PropTypes.string.isRequired,
+        supported_source_types: PropTypes.arrayOf(PropTypes.string)
+    })),
+    sourceTypes: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        product_name: PropTypes.string.isRequired
     })),
     appTypesLoaded: PropTypes.bool.isRequired,
     sourceTypesLoaded: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = (
-    { providers: { entities, appTypes, appTypesLoaded, sourceTypesLoaded } },
+    { providers: { entities, appTypes, appTypesLoaded, sourceTypesLoaded, sourceTypes } },
     { match: { params: { id } } }
 ) =>
     (
-        { source: entities.find(source => source.id  === id), appTypes, appTypesLoaded, sourceTypesLoaded }
+        { source: entities.find(source => source.id  === id), appTypes, appTypesLoaded, sourceTypesLoaded, sourceTypes }
     );
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({ loadEntities }, dispatch);

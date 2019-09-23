@@ -52,7 +52,8 @@ const fields = (applications = [], intl) => ({
                         component: 'description',
                         name: 'description',
                         content: <AddApplicationDescription />
-                    }, applications.length > 0 ? {
+                    },
+                    applications.length > 0 ? {
                         component: 'card-select',
                         name: 'application',
                         options: applications,
@@ -76,7 +77,7 @@ const fields = (applications = [], intl) => ({
                             <Text component={ TextVariants.p }>
                                 <FormattedMessage
                                     id="sources.allApplicationsAssigned"
-                                    defaultMessage="All available applications have already been added to this source."
+                                    defaultMessage="All available applications have already been added to this source or there is no available application for this source type."
                                 />
                             </Text>
                         </TextContent>
