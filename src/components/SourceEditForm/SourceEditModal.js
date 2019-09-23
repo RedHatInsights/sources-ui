@@ -8,9 +8,9 @@ import { injectIntl } from 'react-intl';
 import { Wizard } from '@patternfly/react-core';
 import { Spinner } from '@red-hat-insights/insights-frontend-components';
 
-import { sourceEditForm } from '../SmartComponents/ProviderPage/providerForm';
-import SourcesFormRenderer from '../Utilities/SourcesFormRenderer';
-import { loadEntities, loadSourceForEdit, updateSource } from '../redux/actions/providers';
+import { sourceEditForm } from './editSourceSchema';
+import SourcesFormRenderer from '../../Utilities/SourcesFormRenderer';
+import { loadEntities, loadSourceForEdit, updateSource } from '../../redux/actions/providers';
 
 const SourceEditModal = ({
     match: { params: { id } },
@@ -32,7 +32,7 @@ const SourceEditModal = ({
         intl.formatMessage({
             id: 'sources.modifiedNotificationTitle',
             defaultMessage: `"{ name }" was modified successfully.`
-        }, { name: values.source_name  }),
+        }, { name: values.source.name }),
         intl.formatMessage({
             id: 'sources.modifiedNotificationDescription',
             defaultMessage: 'The source was successfully modified.'
@@ -47,7 +47,7 @@ const SourceEditModal = ({
     let form;
 
     if (sourceTypes && source) {
-        form = sourceEditForm(sourceTypes, source, intl);
+        form = sourceEditForm(sourceTypes, source);
     }
 
     if (!sourceTypes || !source) {
@@ -58,7 +58,7 @@ const SourceEditModal = ({
                 title={
                     intl.formatMessage({
                         id: 'sources.editSource',
-                        defaultMessage: 'Edit Source'
+                        defaultMessage: 'Edit a source'
                     })
                 }
                 description={
@@ -86,7 +86,7 @@ const SourceEditModal = ({
             uiSchema={form.uiSchema}
             showFormControls={form.showFormControls}
             onSubmit={submitProvider}
-            onCancel={history.goBack}
+            onCancel={() => history.push('/')}
         />
     );
 };

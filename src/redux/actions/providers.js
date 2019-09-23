@@ -1,8 +1,12 @@
 import { ADD_NOTIFICATION } from '@red-hat-insights/insights-frontend-components/components/Notifications';
 import {
-    ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE,
-    ADD_PROVIDER, FILTER_PROVIDERS, CLOSE_ALERT, ADD_ALERT, SET_FILTER_COLUMN,
-    SOURCE_FOR_EDIT_LOADED, SOURCE_EDIT_REQUEST
+    ACTION_TYPES,
+    SORT_ENTITIES,
+    PAGE_AND_SIZE,
+    FILTER_PROVIDERS,
+    SET_FILTER_COLUMN,
+    SOURCE_FOR_EDIT_LOADED,
+    SOURCE_EDIT_REQUEST
 } from '../action-types-providers';
 import {
     doLoadAppTypes,
@@ -21,7 +25,10 @@ export const loadEntities = () => (dispatch) => {
             type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
             payload: sources
         });
-    });
+    }).catch(error => dispatch({
+        type: ACTION_TYPES.LOAD_ENTITIES_REJECTED,
+        payload: { error: { detail: error.data, title: 'Fetching data failed, try refresh page' } }
+    }));
 };
 
 export const loadSourceTypes = () => (dispatch) => {
@@ -42,16 +49,6 @@ export const loadAppTypes = () => (dispatch) => {
     }));
 };
 
-export const selectEntity = (id, selected) => ({
-    type: SELECT_ENTITY,
-    payload: { id, selected }
-});
-
-export const expandEntity = (id, expanded) => ({
-    type: EXPAND_ENTITY,
-    payload: { id, expanded }
-});
-
 export const sortEntities = (column, direction) => ({
     type: SORT_ENTITIES,
     payload: { column, direction }
@@ -62,11 +59,6 @@ export const pageAndSize = (page, size) => ({
     payload: { page, size }
 });
 
-export const addProvider = (formData) => ({
-    type: ADD_PROVIDER,
-    payload: { formData }
-});
-
 export const filterProviders = (value) => ({
     type: FILTER_PROVIDERS,
     payload: { value }
@@ -75,15 +67,6 @@ export const filterProviders = (value) => ({
 export const setProviderFilterColumn = (column) => ({
     type: SET_FILTER_COLUMN,
     payload: { column }
-});
-
-export const closeAlert = () => ({
-    type: CLOSE_ALERT
-});
-
-export const addAlert = (message, type) => ({
-    type: ADD_ALERT,
-    payload: { message, type }
 });
 
 export const updateSource = (source, formData, title, description) => (dispatch) =>

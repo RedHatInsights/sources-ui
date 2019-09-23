@@ -11,8 +11,6 @@ import thunk from 'redux-thunk';
 import { IntlProvider } from 'react-intl';
 
 import ReducersProviders, { defaultProvidersState } from './redux/reducers/providers';
-import ReducersListing, { defaultListingState } from './redux/reducers/listing';
-import ReducersTopology from './redux/reducers/topology';
 
 import Routes from './Routes';
 import './App.scss';
@@ -26,7 +24,7 @@ class App extends Component {
                 {},
                 [
                     thunk,
-                    notificationsMiddleware({ errorTitleKey: 'error', errorDescriptionKey: 'error' }),
+                    notificationsMiddleware({ errorTitleKey: 'error.title', errorDescriptionKey: 'error.detail' }),
                     logger
                 ]
             );
@@ -37,8 +35,6 @@ class App extends Component {
 
     componentDidMount () {
         App.getRegistry().register({ providers: applyReducerHash(ReducersProviders, defaultProvidersState) });
-        App.getRegistry().register({ listing: applyReducerHash(ReducersListing, defaultListingState) });
-        App.getRegistry().register({ topology: applyReducerHash(ReducersTopology, {}) });
         App.getRegistry().register({ notifications });
 
         insights.chrome.init();
