@@ -13,7 +13,8 @@ import {
     doLoadSourceForEdit,
     doRemoveSource,
     doUpdateSource,
-    doLoadEntities
+    doLoadEntities,
+    doDeleteApplication
 } from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
 
@@ -117,3 +118,21 @@ export const addMessage = (title, variant, description) => (dispatch) => dispatc
         description
     }
 });
+
+export const removeApplication = (appId, sourceId, successTitle, errorTitle) => (dispatch) => {
+    dispatch({
+        type: ACTION_TYPES.REMOVE_APPLICATION,
+        payload: () => doDeleteApplication(appId, errorTitle),
+        meta: {
+            appId,
+            sourceId,
+            notifications: {
+                fulfilled: {
+                    variant: 'success',
+                    title: successTitle,
+                    dismissable: false
+                }
+            }
+        }
+    });
+};

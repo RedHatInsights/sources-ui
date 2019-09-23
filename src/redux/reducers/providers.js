@@ -108,6 +108,42 @@ const sourceEditRemoveRejected = (state, { meta }) => ({
     entities: state.entities.map(entity => entity.id === meta.sourceId ? { ...entity, isDeleting: undefined } : entity)
 });
 
+const appRemovingPending = (state, { meta }) => ({
+    ...state,
+    entities: state.entities.map(entity => entity.id === meta.sourceId ?
+        {
+            ...entity,
+            applications: entity.applications.map((app) => app.id === meta.appId ? ({
+                ...app,
+                isDeleting: true
+            }) : app)
+        }
+        : entity)
+});
+
+const appRemovingFulfilled = (state, { meta }) => ({
+    ...state,
+    entities: state.entities.map(entity => entity.id === meta.sourceId ?
+        {
+            ...entity,
+            applications: entity.applications.filter((app) => app.id !== meta.appId)
+        }
+        : entity)
+});
+
+const appRemovingRejected = (state, { meta }) => ({
+    ...state,
+    entities: state.entities.map(entity => entity.id === meta.sourceId ?
+        {
+            ...entity,
+            applications: entity.applications.map((app) => app.id === meta.appId ? ({
+                ...app,
+                isDeleting: undefined
+            }) : app)
+        }
+        : entity)
+});
+
 export default {
     [ACTION_TYPES.LOAD_ENTITIES_PENDING]: entitiesPending,
     [ACTION_TYPES.LOAD_ENTITIES_FULFILLED]: entitiesLoaded,
@@ -119,6 +155,9 @@ export default {
     [ACTION_TYPES.REMOVE_SOURCE_PENDING]: sourceEditRemovePending,
     [ACTION_TYPES.REMOVE_SOURCE_FULFILLED]: sourceEditRemoveFulfilled,
     [ACTION_TYPES.REMOVE_SOURCE_REJECTED]: sourceEditRemoveRejected,
+    [ACTION_TYPES.REMOVE_APPLICATION_PENDING]: appRemovingPending,
+    [ACTION_TYPES.REMOVE_APPLICATION_FULFILLED]: appRemovingFulfilled,
+    [ACTION_TYPES.REMOVE_APPLICATION_REJECTED]: appRemovingRejected,
 
     [SORT_ENTITIES]: sortEntities,
     [PAGE_AND_SIZE]: setPageAndSize,

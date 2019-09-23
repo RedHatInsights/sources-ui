@@ -32,13 +32,22 @@ const AddApplication = (
         return null;
     }
 
-    const appIds = source.applications.reduce((acc, app) => [...acc, app.application_type_id], []);
+    const appIds = source.applications.filter(({ isDeleting }) => !isDeleting).reduce((acc, app) => [...acc, app.application_type_id], []);
+
     const sourceType = sourceTypes.find((type) => type.id === source.source_type_id);
     const sourceTypeName = sourceType && sourceType.name;
     const filteredAppTypes = appTypes.filter((type) =>
         !appIds.includes(type.id) && type.supported_source_types.includes(sourceTypeName)
     );
-    const schema = createSchema(filteredAppTypes.map((type) => ({ value: type.id, label: type.display_name })), intl);
+
+    const schema = createSchema(filteredAppTypes.map((type) => {
+        const hasDeletingApp = source.applications.find(app => app.application_type_id === type.id);
+        const label = `${type.display_name} ${hasDeletingApp ? `(${intl.formatMessage({
+            id: 'sources.currentlyRemoving',
+            defaultMessage: 'Currently removing'
+        })})` : ''}`;
+        return ({ value: type.id, label, isDisabled: hasDeletingApp ? true : false });
+    }), intl);
 
     const onSubmit = ({ application }) => {
         setState({ state: 'loading' });

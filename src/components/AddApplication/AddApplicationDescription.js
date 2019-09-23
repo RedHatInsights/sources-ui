@@ -19,6 +19,7 @@ const AddApplicationDescription = ({ appTypes, source, sourceTypes }) => {
 
     const sourceType = sourceTypes.find((type) => type.id === source.source_type_id);
     const appNames = source.applications
+    .filter((app) => !app.isDeleting)
     .map((app) => {
         const type = appTypes.find((appType) => appType.id === app.application_type_id);
 
@@ -57,6 +58,7 @@ const AddApplicationDescription = ({ appTypes, source, sourceTypes }) => {
             {removingApp.id && <RemoveAppModal
                 app={removingApp}
                 onCancel={() => setApplicationRemove({})}
+                sourceId={source.id}
             />}
             <TextContent>
                 <Grid gutter="md">

@@ -151,4 +151,7 @@ export const doCreateApplication = (source_id, application_type_id) => getSource
     application_type_id
 });
 
-export const doDeleteApplication = (appId) => getSourcesApi().deleteApplication(appId);
+export const doDeleteApplication = (appId, errorMessage) =>
+    getSourcesApi()
+    .deleteApplication(appId)
+    .catch(({ data: { errors: [{ detail }] } }) => { throw { error: { title: errorMessage, detail } };});
