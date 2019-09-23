@@ -6,7 +6,9 @@ import { bindActionCreators } from 'redux';
 import {
     Modal,
     Button,
-    Bullseye,
+    Split,
+    SplitItem,
+    Stack,
     Text,
     TextContent,
     TextVariants,
@@ -14,23 +16,24 @@ import {
     TextListItem,
     Checkbox
 } from '@patternfly/react-core';
-import { loadEntities, removeSource } from '../redux/actions/providers';
-import { WarningTriangleIcon } from '@patternfly/react-icons';
+import { removeSource } from '../redux/actions/providers';
+import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 const SourceRemoveModal = ({
     history: { push },
     removeSource,
-    loadEntities,
     source,
     intl,
     appTypes
 }) => {
-    const onSubmit = () => removeSource(source.id, intl.formatMessage({
-        id: 'sources.notificationDeleteMessage',
-        defaultMessage: `{title} was deleted successfully.`
-    }, { title: source.name }))
-    .then(() => { loadEntities(); push('/'); });
+    const onSubmit = () => {
+        push('/');
+        return removeSource(source.id, intl.formatMessage({
+            id: 'sources.notificationDeleteMessage',
+            defaultMessage: `{title} was deleted successfully.`
+        }, { title: source.name }));
+    };
 
     const onCancel = () => push('/');
 
@@ -162,18 +165,16 @@ const SourceRemoveModal = ({
             onClose={ onCancel }
             actions={ actions }
         >
-            <Bullseye>
-                <TextContent>
-                    <div className="ins-c-source__dialog--flex">
-                        <div className="ins-c-source__dialog--icon">
-                            <WarningTriangleIcon className="ins-c-source__delete-icon" />
-                        </div>
-                        <div className="ins-c-source__dialog--text">
+            <Split gutter="md">
+                <SplitItem><ExclamationTriangleIcon size="xl" className="ins-m-alert ins-c-source__delete-icon" /></SplitItem>
+                <SplitItem isFilled>
+                    <Stack gutter="md">
+                        <TextContent>
                             { body }
-                        </div>
-                    </div>
-                </TextContent>
-            </Bullseye>
+                        </TextContent>
+                    </Stack>
+                </SplitItem>
+            </Split>
         </Modal>
     );
 };
@@ -187,7 +188,6 @@ SourceRemoveModal.propTypes = {
         push: PropTypes.func.isRequired
     }).isRequired,
     removeSource: PropTypes.func.isRequired,
-    loadEntities: PropTypes.func.isRequired,
     source: PropTypes.shape({
         id: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired
@@ -198,9 +198,6 @@ SourceRemoveModal.propTypes = {
 const mapStateToProps = ({ providers: { entities, appTypes } }, { match: { params: { id } } }) =>
     ({ source: entities.find(source => source.id  === id), appTypes });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-    loadEntities,
-    removeSource
-}, dispatch);
+const mapDispatchToProps = (dispatch) => bindActionCreators({ removeSource }, dispatch);
 
 export default injectIntl(withRouter(connect(mapStateToProps, mapDispatchToProps)(SourceRemoveModal)));

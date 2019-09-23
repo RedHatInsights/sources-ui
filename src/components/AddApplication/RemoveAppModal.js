@@ -6,10 +6,12 @@ import { bindActionCreators } from 'redux';
 import {
     Button,
     Modal,
-    Bullseye,
-    TextContent
+    TextContent,
+    Stack,
+    SplitItem,
+    Split
 } from '@patternfly/react-core';
-import { WarningTriangleIcon } from '@patternfly/react-icons';
+import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 import { loadEntities, addMessage } from '../../redux/actions/providers';
 import { doDeleteApplication } from '../../api/entities';
 import LoadingStep from '../steps/LoadingStep';
@@ -72,13 +74,11 @@ const RemoveAppModal = ({ app, onCancel, loadEntities, addMessage, intl }) => {
                         defaultMessage="The application is being removed."
                     />
                 }/> :
-                <Bullseye>
-                    <TextContent>
-                        <div className="ins-c-source__dialog--flex">
-                            <div className="ins-c-source__dialog--icon">
-                                <WarningTriangleIcon className="ins-c-source__delete-icon" />
-                            </div>
-                            <div className="ins-c-source__dialog--text">
+                <Split gutter="md">
+                    <SplitItem><ExclamationTriangleIcon size="xl" className="ins-m-alert ins-c-source__delete-icon" /></SplitItem>
+                    <SplitItem isFilled>
+                        <Stack gutter="md">
+                            <TextContent>
                                 <FormattedMessage
                                     id="sources.deleteAppWarning"
                                     defaultMessage={`Are you sure to remove { appName } from this source?`}
@@ -86,10 +86,10 @@ const RemoveAppModal = ({ app, onCancel, loadEntities, addMessage, intl }) => {
                                         appName: app.display_name
                                     }}
                                 />
-                            </div>
-                        </div>
-                    </TextContent>
-                </Bullseye>
+                            </TextContent>
+                        </Stack>
+                    </SplitItem>
+                </Split>
             }
         </Modal>
     );

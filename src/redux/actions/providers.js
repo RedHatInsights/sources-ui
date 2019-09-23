@@ -1,4 +1,4 @@
-import { ADD_NOTIFICATION } from '@red-hat-insights/insights-frontend-components/components/Notifications';
+import { ADD_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications';
 import {
     ACTION_TYPES,
     SORT_ENTITIES,
@@ -82,17 +82,20 @@ export const updateSource = (source, formData, title, description) => (dispatch)
         payload: error
     }));
 
-export const removeSource = (sourceId, title) => (dispatch) =>
-    doRemoveSource(sourceId).then(_finished => dispatch({
-        type: ADD_NOTIFICATION,
-        payload: {
-            variant: 'success',
-            title
+export const removeSource = (sourceId, title) => ({
+    type: ACTION_TYPES.REMOVE_SOURCE,
+    payload: () => doRemoveSource(sourceId),
+    meta: {
+        sourceId,
+        notifications: {
+            fulfilled: {
+                variant: 'success',
+                title,
+                dismissable: false
+            }
         }
-    })).catch(error => dispatch({
-        type: 'FOOBAR_REJECTED',
-        payload: error
-    }));
+    }
+});
 
 export const loadSourceForEdit = sourceId => dispatch => {
     dispatch({ type: SOURCE_EDIT_REQUEST });

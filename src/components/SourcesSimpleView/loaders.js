@@ -1,5 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ContentLoader from 'react-content-loader';
+import { RowWrapper } from '@patternfly/react-table';
 
 export const RowLoader = props => (
     <ContentLoader
@@ -25,3 +27,11 @@ export const PlaceHolderTable = () => (
         </tbody>
     </table>
 );
+
+export const RowWrapperLoader = ({ row: { isDeleting, ...row }, ...initialProps }) => (
+    isDeleting ? <tr><td colSpan="5"><RowLoader /></td></tr> : <RowWrapper {...initialProps} row={row}/>
+);
+
+RowWrapperLoader.propTypes = {
+    row: PropTypes.object.isRequired
+};

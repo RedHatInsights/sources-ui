@@ -1,10 +1,10 @@
 import thunk from 'redux-thunk';
-import { notificationsMiddleware } from '@red-hat-insights/insights-frontend-components/components/Notifications';
+import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import ContentLoader from 'react-content-loader';
 import { IntlProvider } from 'react-intl';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { applyReducerHash } from '@red-hat-insights/insights-frontend-components';
+import { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/files/ReducerRegistry';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import configureStore from 'redux-mock-store';
 
@@ -22,6 +22,7 @@ import { SOURCES_API_BASE } from '../Utilities/Constants';
 import { componentWrapperIntl } from '../Utilities/testsHelpers';
 
 import ReducersProviders, { defaultProvidersState } from '../redux/reducers/providers';
+import { FILTER_PROVIDERS } from '../redux/action-types-providers';
 
 describe('SourcesPage', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -150,6 +151,7 @@ describe('SourcesPage', () => {
             done();
         });
     });
+
     it('renders loading state when is loading', (done) => {
         const store = createStore(
             combineReducers({ providers: applyReducerHash(ReducersProviders, defaultProvidersState) }),
@@ -169,6 +171,31 @@ describe('SourcesPage', () => {
         setImmediate(() => {
             page.update();
             expect(page.find(ContentLoader).length).toEqual(0);
+            done();
+        });
+    });
+
+    it('should call onFilterSelect', (done) => {
+        const FILTER_INPUT_INDEX = 0;
+
+        const store = mockStore({
+            providers: { ...initialState.providers, numberOfEntities: 1 }
+        });
+        mockInitialHttpRequests();
+
+        const wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
+
+        setImmediate(() => {
+            wrapper.update();
+            const filterInput = wrapper.find('input').at(FILTER_INPUT_INDEX);
+
+            filterInput.simulate('change', { target: { value: 'Pepa' } });
+            expect(store.getActions().slice(-1)[0]).toEqual({
+                payload: {
+                    value: 'Pepa'
+                },
+                type: FILTER_PROVIDERS
+            });
             done();
         });
     });
