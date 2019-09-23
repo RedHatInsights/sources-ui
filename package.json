@@ -6,14 +6,14 @@
     "appname": "sources"
   },
   "dependencies": {
-    "@data-driven-forms/pf4-component-mapper": "^1.16.1",
-    "@data-driven-forms/react-form-renderer": "^1.16.1",
+    "@data-driven-forms/pf4-component-mapper": "^1.16.6",
+    "@data-driven-forms/react-form-renderer": "^1.16.6",
     "@patternfly/react-core": "^3.87.3",
     "@patternfly/react-icons": "^3.10.14",
     "@patternfly/react-table": "^2.17.5",
     "@redhat-cloud-services/frontend-components": "^0.0.18",
     "@redhat-cloud-services/frontend-components-notifications": "^0.0.7",
-    "@redhat-cloud-services/frontend-components-sources": "^0.0.7",
+    "@redhat-cloud-services/frontend-components-sources": "^0.0.8",
     "@redhat-cloud-services/frontend-components-utilities": "^0.0.9",
     "@redhat-cloud-services/sources-client": "^1.0.33",
     "axios": "^0.18.0",
