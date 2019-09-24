@@ -57,8 +57,8 @@ const fields = (applications = [], intl) => ({
                         name: 'application',
                         options: applications,
                         label: intl.formatMessage({
-                            id: 'sources.addApp',
-                            defaultMessage: 'Add application'
+                            id: 'sources.chooseAppToAdd',
+                            defaultMessage: 'Choose an application to add'
                         }),
                         DefaultIcon: () => <React.Fragment />, // eslint-disable-line
                         isRequired: true,
