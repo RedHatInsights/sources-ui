@@ -18,7 +18,8 @@ const AddApplicationDescription = ({ appTypes, source, sourceTypes }) => {
     const [removingApp, setApplicationRemove] = useState({});
 
     const sourceType = sourceTypes.find((type) => type.id === source.source_type_id);
-    const appNames = source.applications.map((app) => {
+    const appNames = source.applications
+    .map((app) => {
         const type = appTypes.find((appType) => appType.id === app.application_type_id);
 
         if (type) {
@@ -28,6 +29,7 @@ const AddApplicationDescription = ({ appTypes, source, sourceTypes }) => {
             };
         }
     })
+    .sort((a, b) => a.display_name.localeCompare(b.display_name))
     .map(({ display_name, id }) => (
         <Grid key={id}>
             <GridItem md={4}>

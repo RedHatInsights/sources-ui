@@ -24,8 +24,8 @@ export const applicationFormatter = (apps, _item, { appTypes }) => {
 
     return (
         <TextContent>
-            {filteredApplications.map((app, index) => (
-                <Text key={app} component={ TextVariants.small }>
+            {filteredApplications.sort((a, b) => a.localeCompare(b)).map((app, index) => (
+                <Text key={app}>
                     {app}
                     {index < filteredApplications.length - 1 && <br key={index}/>}
                 </Text>
