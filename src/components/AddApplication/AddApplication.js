@@ -32,7 +32,8 @@ const AddApplication = (
         return null;
     }
 
-    const appIds = source.applications.filter(({ isDeleting }) => !isDeleting).reduce((acc, app) => [...acc, app.application_type_id], []);
+    const appIds = source.applications.filter(({ isDeleting }) => !isDeleting)
+    .reduce((acc, app) => [...acc, app.application_type_id], []);
 
     const sourceType = sourceTypes.find((type) => type.id === source.source_type_id);
     const sourceTypeName = sourceType && sourceType.name;

@@ -77,7 +77,8 @@ const fields = (applications = [], intl) => ({
                             <Text component={ TextVariants.p }>
                                 <FormattedMessage
                                     id="sources.allApplicationsAssigned"
-                                    defaultMessage="All available applications have already been added to this source or there is no available application for this source type."
+                                    defaultMessage="All available applications have already been added to this source
+                                    or there is no available application for this source type."
                                 />
                             </Text>
                         </TextContent>
