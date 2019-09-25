@@ -6,14 +6,16 @@ import {
     FILTER_PROVIDERS,
     SET_FILTER_COLUMN,
     SOURCE_FOR_EDIT_LOADED,
-    SOURCE_EDIT_REQUEST
+    SOURCE_EDIT_REQUEST,
+    ADD_APP_TO_SOURCE
 } from '../action-types-providers';
 import {
     doLoadAppTypes,
     doLoadSourceForEdit,
     doRemoveSource,
     doUpdateSource,
-    doLoadEntities
+    doLoadEntities,
+    doDeleteApplication
 } from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
 
@@ -115,5 +117,31 @@ export const addMessage = (title, variant, description) => (dispatch) => dispatc
         title,
         variant,
         description
+    }
+});
+
+export const removeApplication = (appId, sourceId, successTitle, errorTitle) => (dispatch) => {
+    dispatch({
+        type: ACTION_TYPES.REMOVE_APPLICATION,
+        payload: () => doDeleteApplication(appId, errorTitle),
+        meta: {
+            appId,
+            sourceId,
+            notifications: {
+                fulfilled: {
+                    variant: 'success',
+                    title: successTitle,
+                    dismissable: false
+                }
+            }
+        }
+    });
+};
+
+export const addAppToSource = (sourceId, app) => ({
+    type: ADD_APP_TO_SOURCE,
+    payload: {
+        sourceId,
+        app
     }
 });

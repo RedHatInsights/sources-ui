@@ -8,8 +8,6 @@ import * as redux from 'redux';
 
 import RemoveAppModal from '../../../components/AddApplication/RemoveAppModal';
 import * as actions from '../../../redux/actions/providers';
-import * as entities from '../../../api/entities';
-import LoadingStep from '../../../components/steps/LoadingStep';
 
 describe('RemoveAppModal', () => {
     let store;
@@ -17,16 +15,22 @@ describe('RemoveAppModal', () => {
     let initialProps;
     let spyOnCancel;
 
+    const APP_ID = '187894151315';
+    const SOURCE_ID = '15';
+    const SUCCESS_MSG = expect.any(String);
+    const ERROR_MSG = expect.any(String);
+
     beforeEach(() => {
         mockStore = configureStore();
         store = mockStore();
         spyOnCancel = jest.fn();
         initialProps = {
             app: {
-                id: '187894151315',
+                id: APP_ID,
                 display_name: 'Catalog'
             },
-            onCancel: spyOnCancel
+            onCancel: spyOnCancel,
+            sourceId: SOURCE_ID
         };
     });
 
@@ -63,11 +67,9 @@ describe('RemoveAppModal', () => {
         expect(spyOnCancel).toHaveBeenCalled();
     });
 
-    it('calls a submit, show loading step and calls cancel', (done) => {
+    it('calls a submit and calls cancel', (done) => {
         redux.bindActionCreators = jest.fn(x => x);
-        entities.doDeleteApplication = jest.fn(() => new Promise((resolve) => resolve('OK')));
-        actions.loadEntities = jest.fn(() => new Promise((resolve) => resolve('OK')));
-        actions.addMessage = jest.fn();
+        actions.removeApplication = jest.fn(() => new Promise((resolve) => resolve('OK')));
 
         const wrapper = mount(
             <IntlProvider locale="en">
@@ -79,50 +81,8 @@ describe('RemoveAppModal', () => {
 
         wrapper.find(Button).at(1).simulate('click');
 
-        expect(entities.doDeleteApplication).toHaveBeenCalledWith('187894151315');
-        expect(spyOnCancel).not.toHaveBeenCalled();
-        expect(actions.addMessage).not.toHaveBeenCalled();
-        wrapper.update();
-        expect(wrapper.find(LoadingStep).length).toEqual(1);
-
-        setImmediate(() => {
-            expect(actions.addMessage).toHaveBeenCalledWith(expect.any(String), 'success');
-            expect(spyOnCancel).toHaveBeenCalled();
-            done();
-        });
-    });
-
-    it('calls a submit, show error message', (done) => {
-        const message = 'Something went terribly wrong';
-        redux.bindActionCreators = jest.fn(x => x);
-        entities.doDeleteApplication = jest.fn(() => new Promise((resolve, reject) => reject({
-            data: {
-                errors: [{
-                    detail: message
-                }]
-            }
-        })));
-        actions.addMessage = jest.fn();
-
-        const wrapper = mount(
-            <IntlProvider locale="en">
-                <Provider store={ store }>
-                    <RemoveAppModal {...initialProps} />
-                </Provider>
-            </IntlProvider>
-        );
-
-        wrapper.find(Button).at(1).simulate('click');
-
-        expect(entities.doDeleteApplication).toHaveBeenCalledWith('187894151315');
-        expect(spyOnCancel).not.toHaveBeenCalled();
-        expect(actions.addMessage).not.toHaveBeenCalled();
-
-        setImmediate(() => {
-            wrapper.update();
-            expect(actions.addMessage).toHaveBeenCalledWith(expect.any(String), 'danger', message);
-            expect(spyOnCancel).toHaveBeenCalled();
-            done();
-        });
+        expect(actions.removeApplication).toHaveBeenCalledWith(APP_ID, SOURCE_ID, SUCCESS_MSG, ERROR_MSG);
+        expect(spyOnCancel).toHaveBeenCalled();
+        done();
     });
 });
