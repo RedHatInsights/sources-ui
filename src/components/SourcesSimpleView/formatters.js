@@ -2,7 +2,16 @@ import React from 'react';
 import moment from 'moment';
 import { Text, TextContent, TextVariants } from '@patternfly/react-core';
 
-import { endpointToUrl } from '../../components/SourceEditForm/editSourceSchema';
+export const defaultPort = (scheme) => ({
+    http: '80',
+    https: '443'
+}[scheme]);
+
+export const schemaToPort = (schema, port) => port && String(port) !== defaultPort(schema) ? `:${port}` : '';
+
+export const endpointToUrl = ({ scheme, host, path, port }) => (
+    `${scheme}://${host}${schemaToPort(scheme, port)}${path || ''}`
+);
 
 export const sourceIsOpenShift = (source, sourceTypes) => {
     const type = sourceTypes.find((type) => type.id === source.source_type_id);
