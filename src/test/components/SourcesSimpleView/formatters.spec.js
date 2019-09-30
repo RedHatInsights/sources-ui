@@ -6,7 +6,10 @@ import {
     sourceTypeFormatter,
     applicationFormatter,
     formatURL,
-    sourceIsOpenShift
+    sourceIsOpenShift,
+    defaultPort,
+    schemaToPort,
+    endpointToUrl
 } from '../../../components/SourcesSimpleView/formatters';
 import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX } from '../../sourceTypesData';
 import { sourcesDataGraphQl, SOURCE_CATALOGAPP_INDEX, SOURCE_ALL_APS_INDEX, SOURCE_NO_APS_INDEX, SOURCE_ENDPOINT_URL_INDEX } from '../../sourcesData';
@@ -111,7 +114,61 @@ describe('formatters', () => {
 
     describe('formatURL', () => {
         it('returns URL', () => {
-            expect(formatURL(sourcesDataGraphQl[SOURCE_ENDPOINT_URL_INDEX])).toEqual('https://myopenshiftcluster.mycompany.com:null/');
+            expect(formatURL(sourcesDataGraphQl[SOURCE_ENDPOINT_URL_INDEX])).toEqual('https://myopenshiftcluster.mycompany.com/');
+        });
+    });
+
+    describe('defaultPort', () => {
+        it('returns default port 80 for HTTP', () => {
+            expect(defaultPort('http')).toEqual('80');
+        });
+
+        it('returns default port 443 for HTTPs', () => {
+            expect(defaultPort('https')).toEqual('443');
+        });
+
+        it('returns undefined port 443 for uknown scheme', () => {
+            expect(defaultPort('mttp')).toEqual(undefined);
+        });
+    });
+
+    describe('schemaToPort', () => {
+        it('correctly parses port', () => {
+            expect(schemaToPort('https', 444)).toEqual(':444');
+        });
+
+        it('correctly parses string port', () => {
+            expect(schemaToPort('https', '444')).toEqual(':444');
+        });
+
+        it('correctly parses default port', () => {
+            expect(schemaToPort('https', 443)).toEqual('');
+        });
+
+        it('correctly parses undefined port', () => {
+            expect(schemaToPort('https', undefined)).toEqual('');
+        });
+    });
+
+    describe('endpointToUrl', () => {
+        let endpoint;
+        const CUSTOM_PORT = 123456789;
+
+        beforeEach(() => {
+            endpoint = {
+                scheme: 'https',
+                port: 443,
+                path: '/',
+                host: 'my.best.page'
+            };
+        });
+
+        it('correctly parses URL with default port', () => {
+            expect(endpointToUrl(endpoint)).toEqual('https://my.best.page/');
+        });
+
+        it('correctly parses URL with custom port', () => {
+            expect(endpointToUrl({ ...endpoint, port: CUSTOM_PORT })).toEqual(`https://my.best.page:${CUSTOM_PORT}/`);
         });
     });
 });
