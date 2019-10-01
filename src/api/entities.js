@@ -27,6 +27,13 @@ axiosInstance.interceptors.request.use(async (config) => {
 });
 axiosInstance.interceptors.response.use(response => response.data || response);
 axiosInstance.interceptors.response.use(null, error => { throw { ...error.response }; });
+axiosInstance.interceptors.response.use(response => {
+    if (response.errors && response.errors.length > 0) {
+        return Promise.reject({ detail: response.errors[0].message });
+    }
+
+    return response;
+});
 
 let apiInstance;
 
