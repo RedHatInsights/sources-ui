@@ -56,7 +56,7 @@ const SourceRemoveModal = ({
     ));
 
     const actions = source.applications.length > 0 ? [
-        <Button id="deleteCancel" key="cancel" variant="secondary" type="button" onClick={ onCancel }>
+        <Button id="deleteCancel" key="cancel" variant="link" type="button" onClick={ onCancel }>
             <FormattedMessage
                 id="sources.close"
                 defaultMessage="Close"
@@ -71,7 +71,7 @@ const SourceRemoveModal = ({
                 defaultMessage="Delete this source and its data"
             />
         </Button>,
-        <Button id="deleteCancel" key="cancel" variant="secondary" type="button" onClick={ onCancel }>
+        <Button id="deleteCancel" key="cancel" variant="link" type="button" onClick={ onCancel }>
             <FormattedMessage
                 id="sources.deleteCancel"
                 defaultMessage="Do not delete this source"
@@ -164,6 +164,7 @@ const SourceRemoveModal = ({
             isSmall
             onClose={ onCancel }
             actions={ actions }
+            isFooterLeftAligned
         >
             <Split gutter="md">
                 <SplitItem><ExclamationTriangleIcon size="xl" className="ins-m-alert ins-c-source__delete-icon" /></SplitItem>
