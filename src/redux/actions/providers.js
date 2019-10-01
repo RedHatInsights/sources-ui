@@ -7,25 +7,31 @@ import {
     SET_FILTER_COLUMN,
     ADD_APP_TO_SOURCE,
     UNDO_ADD_SOURCE,
-    CLEAR_ADD_SOURCE
+    CLEAR_ADD_SOURCE,
+    SET_COUNT
 } from '../action-types-providers';
 import {
     doLoadAppTypes,
     doRemoveSource,
     doLoadEntities,
-    doDeleteApplication
+    doDeleteApplication,
+    doLoadCountOfSources
 } from '../../api/entities';
 import { doUpdateSource } from '../../api/doUpdateSource';
 import { doLoadSourceTypes } from '../../api/source_types';
 
-export const loadEntities = (options) => (dispatch) => {
+export const loadEntities = (options) => (dispatch, getState) => {
+    const { pageSize, pageNumber, sortBy, sortDirection } = getState().providers;
+
     dispatch({ type: ACTION_TYPES.LOAD_ENTITIES_PENDING });
 
-    return doLoadEntities().then(({ sources }) => {
+    doLoadCountOfSources().then(({ meta: { count } }) => dispatch({ type: SET_COUNT, payload: { count } }));
+
+    return doLoadEntities({ pageSize, pageNumber, sortBy, sortDirection }).then(({ sources }) => {
         dispatch({
             type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
             payload: sources,
-            ...options
+            options
         });
     }).catch(error => dispatch({
         type: ACTION_TYPES.LOAD_ENTITIES_REJECTED,
@@ -51,15 +57,23 @@ export const loadAppTypes = () => (dispatch) => {
     }));
 };
 
-export const sortEntities = (column, direction) => ({
-    type: SORT_ENTITIES,
-    payload: { column, direction }
-});
+export const sortEntities = (column, direction) => (dispatch) => {
+    dispatch({
+        type: SORT_ENTITIES,
+        payload: { column, direction }
+    });
 
-export const pageAndSize = (page, size) => ({
-    type: PAGE_AND_SIZE,
-    payload: { page, size }
-});
+    return dispatch(loadEntities());
+};
+
+export const pageAndSize = (page, size) => (dispatch) => {
+    dispatch({
+        type: PAGE_AND_SIZE,
+        payload: { page, size }
+    });
+
+    return dispatch(loadEntities());
+};
 
 export const filterProviders = (value) => ({
     type: FILTER_PROVIDERS,

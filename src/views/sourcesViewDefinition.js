@@ -33,7 +33,7 @@ export const sourcesViewDefinition = {
         value: 'applications',
         searchable: false,
         formatter: 'applicationFormatter',
-        sortable: true
+        sortable: false
     }, {
         title: intl.formatMessage({
             id: 'sources.addedDate',

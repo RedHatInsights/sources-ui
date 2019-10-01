@@ -49,8 +49,11 @@ export const doLoadSourceForEdit = sourceId => Promise.all([
     }));
 });
 
-export const doLoadEntities = () => getSourcesApi().postGraphQL({
-    query: `{ sources
+export const parseFiltering = (sortBy, sortDirection) =>
+    sortBy ? `, sort_by:"${sortBy}:${sortDirection}"` : '';
+
+export const doLoadEntities = ({ pageSize, pageNumber, sortBy, sortDirection }) => getSourcesApi().postGraphQL({
+    query: `{ sources(limit:${pageSize}, offset:${(pageNumber - 1) * pageSize}${parseFiltering(sortBy, sortDirection)})
         {
             id,
             created_at,
@@ -75,3 +78,5 @@ export const doDeleteApplication = (appId, errorMessage) =>
     getSourcesApi()
     .deleteApplication(appId)
     .catch(({ errors: [{ detail }] }) => { throw { error: { title: errorMessage, detail } };});
+
+export const doLoadCountOfSources = () => getSourcesApi().listSources(0);

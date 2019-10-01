@@ -21,7 +21,6 @@ import SourceRemoveModal from '../components/SourceRemoveModal';
 import AddApplication from '../components/AddApplication/AddApplication';
 import { pageAndSize, addMessage } from '../redux/actions/providers';
 import { paths } from '../Routes';
-import { prepareEntities } from '../Utilities/filteringSorting';
 import UndoButtonAdd from '../components/UndoButton/UndoButtonAdd';
 import isEmpty from 'lodash/isEmpty';
 
@@ -63,15 +62,12 @@ const SourcesPage = () => {
         loaded,
         numberOfEntities,
         appTypes,
-        entities,
         pageSize,
         pageNumber,
         fetchingError,
         addSourceInitialValues,
-        sortBy,
-        sortDirection,
-        filterColumn,
-        sourceTypes
+        sourceTypes,
+        entities
     } = useSelector(({ providers }) => providers, shallowEqual);
 
     const dispatch = useDispatch();
@@ -84,18 +80,9 @@ const SourcesPage = () => {
 
     const onPerPageSelect = (count) => dispatch(pageAndSize(1, count));
 
-    const numberOfFilteredEntities = (
-        filterValue && filterValue !== '' ?
-            prepareEntities(
-                entities,
-                { sourceTypes, sortBy, sortDirection, filterColumn, filterValue, pageSize, pageNumber }
-            ).length
-            : numberOfEntities
-    );
+    const maximumPageNumber = Math.ceil(numberOfEntities / pageSize);
 
-    const maximumPageNumber = Math.ceil(numberOfFilteredEntities / pageSize);
-
-    if (loaded && pageNumber > maximumPageNumber) {
+    if (entities.length > 0 && loaded && pageNumber > Math.max(maximumPageNumber, 1)) {
         onSetPage(maximumPageNumber > 0 ? maximumPageNumber : 1);
     }
 
@@ -103,7 +90,7 @@ const SourcesPage = () => {
         <React.Fragment>
             <PrimaryToolbar
                 pagination={{
-                    itemCount: numberOfFilteredEntities || 0,
+                    itemCount: numberOfEntities || 0,
                     page: pageNumber,
                     perPage: pageSize,
                     onSetPage: (_e, page) => onSetPage(page),
@@ -139,7 +126,7 @@ const SourcesPage = () => {
             <SourcesSimpleView />
             <PrimaryToolbar
                 pagination={{
-                    itemCount: numberOfFilteredEntities || 0,
+                    itemCount: numberOfEntities || 0,
                     page: pageNumber,
                     perPage: pageSize,
                     onSetPage: (_e, page) => onSetPage(page),
@@ -152,7 +139,7 @@ const SourcesPage = () => {
         </React.Fragment>
     );
 
-    const noEntities = !numberOfFilteredEntities || numberOfFilteredEntities === 0;
+    const noEntities = !numberOfEntities || numberOfEntities === 0;
     const displayEmptyState = loaded && !filterValue && noEntities;
 
     return (

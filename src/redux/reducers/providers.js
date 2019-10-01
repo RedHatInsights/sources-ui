@@ -6,7 +6,8 @@ import {
     SET_FILTER_COLUMN,
     ADD_APP_TO_SOURCE,
     UNDO_ADD_SOURCE,
-    CLEAR_ADD_SOURCE
+    CLEAR_ADD_SOURCE,
+    SET_COUNT
 } from '../action-types-providers';
 
 export const defaultProvidersState = {
@@ -30,8 +31,7 @@ export const entitiesLoaded = (state, { payload: rows, ...rest }) => ({
     ...state,
     ...rest,
     loaded: true,
-    entities: rows,
-    numberOfEntities: rows.length
+    entities: rows
 });
 
 const entitiesRejected = (state, { payload: { error } }) => ({
@@ -157,6 +157,11 @@ export const clearAddSource = (state) => ({
     addSourceInitialValues: {}
 });
 
+const setCount = (state, { payload: { count } }) => ({
+    ...state,
+    numberOfEntities: count
+});
+
 export default {
     [ACTION_TYPES.LOAD_ENTITIES_PENDING]: entitiesPending,
     [ACTION_TYPES.LOAD_ENTITIES_FULFILLED]: entitiesLoaded,
@@ -178,5 +183,7 @@ export default {
     [SET_FILTER_COLUMN]: setFilterColumn,
     [ADD_APP_TO_SOURCE]: addAppToSource,
     [UNDO_ADD_SOURCE]: undoAddSource,
-    [CLEAR_ADD_SOURCE]: clearAddSource
+    [CLEAR_ADD_SOURCE]: clearAddSource,
+    [ADD_APP_TO_SOURCE]: addAppToSource,
+    [SET_COUNT]: setCount
 };

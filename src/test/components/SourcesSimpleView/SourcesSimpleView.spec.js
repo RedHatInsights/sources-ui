@@ -15,6 +15,7 @@ import { applicationTypesData } from '../../applicationTypesData';
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import { sortByCompare } from '../../../Utilities/filteringSorting';
 import * as actions from '../../../redux/actions/providers';
+import * as API from '../../../api/entities';
 
 describe('SourcesSimpleView', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -47,6 +48,8 @@ describe('SourcesSimpleView', () => {
             appTypes: applicationTypesData.data,
             sourceTypes: sourceTypesData.data
         };
+        API.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: sourcesDataGraphQl }));
+        API.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: sourcesDataGraphQl.length } }));
     });
 
     it('renders loading state', () => {

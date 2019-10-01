@@ -26,11 +26,13 @@ describe('SourcesPage', () => {
     const middlewares = [thunk, notificationsMiddleware()];
     let initialProps;
     let store;
+    let wrapper;
 
     beforeEach(() => {
         initialProps = {};
 
         api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: sourcesDataGraphQl }));
+        api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: sourcesDataGraphQl.length } }));
         api.doLoadAppTypes = jest.fn().mockImplementation(() => Promise.resolve(applicationTypesData));
         typesApi.doLoadSourceTypes =  jest.fn().mockImplementation(() => Promise.resolve(sourceTypesData.data));
 
@@ -40,72 +42,68 @@ describe('SourcesPage', () => {
         );
     });
 
-    it('should fetch sources and source types on component mount', (done) => {
-        const wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
+    it('should fetch sources and source types on component mount', async () => {
+        await act(async() => {
+            wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
+        });
 
         expect(api.doLoadEntities).toHaveBeenCalled();
         expect(api.doLoadAppTypes).toHaveBeenCalled();
         expect(typesApi.doLoadSourceTypes).toHaveBeenCalled();
 
-        setImmediate(() => {
-            wrapper.update();
-            expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
-            expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
-            expect(wrapper.find(SourcesSimpleView)).toHaveLength(1);
-            done();
-        });
+        wrapper.update();
+        expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
+        expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
+        expect(wrapper.find(SourcesSimpleView)).toHaveLength(1);
     });
 
-    it('renders empty state when there are no Sources', (done) => {
+    it('renders empty state when there are no Sources', async () => {
         api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
+        api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
 
-        const wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
-
-        setImmediate(() => {
-            wrapper.update();
-            expect(wrapper.find(SourcesEmptyState)).toHaveLength(1);
-            expect(wrapper.find(PrimaryToolbar)).toHaveLength(0);
-            expect(wrapper.find(SourcesSimpleView)).toHaveLength(0);
-            done();
+        await act(async() => {
+            wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
         });
+
+        wrapper.update();
+        expect(wrapper.find(SourcesEmptyState)).toHaveLength(1);
+        expect(wrapper.find(PrimaryToolbar)).toHaveLength(0);
+        expect(wrapper.find(SourcesSimpleView)).toHaveLength(0);
     });
 
-    it('renders empty state when there is fetching error', (done) => {
+    it('renders empty state when there is fetching error', async () => {
         const ERROR_MESSAGE = 'ERROR_MESSAGE';
         api.doLoadEntities = jest.fn().mockImplementation(() => Promise.reject({ detail: ERROR_MESSAGE }));
 
-        const wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
-
-        setImmediate(() => {
-            wrapper.update();
-            expect(wrapper.find(SourcesEmptyState)).toHaveLength(1);
-            expect(wrapper.find(PrimaryToolbar)).toHaveLength(0);
-            expect(wrapper.find(SourcesSimpleView)).toHaveLength(0);
-            expect(wrapper.text().includes(ERROR_MESSAGE)).toEqual(true);
-            done();
+        await act(async() => {
+            wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
         });
+
+        wrapper.update();
+        expect(wrapper.find(SourcesEmptyState)).toHaveLength(1);
+        expect(wrapper.find(PrimaryToolbar)).toHaveLength(0);
+        expect(wrapper.find(SourcesSimpleView)).toHaveLength(0);
+        expect(wrapper.text().includes(ERROR_MESSAGE)).toEqual(true);
     });
 
-    it('renders table and filtering', (done) => {
-        const wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
-
-        setImmediate(() => {
-            expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
-            expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
-            expect(wrapper.find(SourcesSimpleView)).toHaveLength(1);
-            done();
+    it('renders table and filtering', async () => {
+        await act(async() => {
+            wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
         });
+
+        expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
+        expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
+        expect(wrapper.find(SourcesSimpleView)).toHaveLength(1);
     });
 
-    it('renders loading state when is loading', (done) => {
-        const wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
+    it('renders loading state when is loading', async () => {
+        await act(async() => {
+            wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
+        });
 
         expect(wrapper.find(ContentLoader).length).toEqual(2);
-        setImmediate(() => {
-            wrapper.update();
-            expect(wrapper.find(ContentLoader).length).toEqual(0);
-            done();
-        });
+        wrapper.update();
+        expect(wrapper.find(ContentLoader).length).toEqual(0);
     });
 
     describe('filtering', () => {

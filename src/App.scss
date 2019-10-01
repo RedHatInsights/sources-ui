@@ -15,7 +15,8 @@
 .sources-placeholder-table {
   background: white;
   width: 100%;
-  border: 1px solid rgb(204,204,204);
+  border-top: 1px solid rgb(204,204,204);
+  border-bottom: 1px solid rgb(204,204,204);
   border-collapse: collapse;
   td {
     display: block;
