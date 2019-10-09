@@ -11,6 +11,10 @@ const entry = process.env.NODE_ENV === 'production' ?
 const { insights } = require('../package.json');
 
 let deploymentEnv = 'apps';
+if (process.env.BETA === 'true') {
+    deploymentEnv = 'beta/apps';
+}
+
 const gitBranch = process.env.TRAVIS_BRANCH || process.env.BRANCH || gitRevisionPlugin.branch();
 const betaBranch =
     gitBranch === 'master' ||

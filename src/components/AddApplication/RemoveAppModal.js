@@ -40,6 +40,7 @@ const RemoveAppModal = ({ app, onCancel, intl, removeApplication, sourceId }) =>
             isOpen={true}
             isSmall
             onClose={onCancel}
+            isFooterLeftAligned
             actions={[
                 <Button
                     id="deleteSubmit" key="submit" variant="danger" type="button" onClick={ onSubmit }
@@ -49,7 +50,7 @@ const RemoveAppModal = ({ app, onCancel, intl, removeApplication, sourceId }) =>
                         defaultMessage="Remove"
                     />
                 </Button>,
-                <Button id="deleteCancel" key="cancel" variant="secondary" type="button" onClick={ onCancel }>
+                <Button id="deleteCancel" key="cancel" variant="link" type="button" onClick={ onCancel }>
                     <FormattedMessage
                         id="sources.cancel"
                         defaultMessage="Cancel"

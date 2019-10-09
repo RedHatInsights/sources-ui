@@ -3,6 +3,7 @@ import { DefaultApi as SourcesDefaultApi } from '@redhat-cloud-services/sources-
 import { Base64 } from 'js-base64';
 
 import { SOURCES_API_BASE } from '../Utilities/Constants';
+import { defaultPort } from '../components/SourcesSimpleView/formatters';
 
 const axiosInstance = axios.create(
     process.env.FAKE_IDENTITY ? {
@@ -26,6 +27,13 @@ axiosInstance.interceptors.request.use(async (config) => {
 });
 axiosInstance.interceptors.response.use(response => response.data || response);
 axiosInstance.interceptors.response.use(null, error => { throw { ...error.response }; });
+axiosInstance.interceptors.response.use(response => {
+    if (response.errors && response.errors.length > 0) {
+        return Promise.reject({ detail: response.errors[0].message });
+    }
+
+    return response;
+});
 
 let apiInstance;
 
@@ -41,31 +49,28 @@ export function doRemoveSource(sourceId) {
     });
 }
 
-export function doLoadSourceForEdit(sourceId) {
-    return getSourcesApi().showSource(sourceId).then(sourceData => {
-        return getSourcesApi().listSourceEndpoints(sourceId, {}).then(endpoints => {
-            // we take just the first endpoint
-            const endpoint = endpoints && endpoints.data && endpoints.data[0];
+export const doLoadSourceForEdit = sourceId => Promise.all([
+    getSourcesApi().showSource(sourceId),
+    getSourcesApi().listSourceEndpoints(sourceId, {})
+]).then(([sourceData, endpoints]) => {
+    const endpoint = endpoints && endpoints.data && endpoints.data[0];
 
-            if (!endpoint) { // bail out
-                return sourceData;
-            }
+    if (!endpoint) { // bail out
+        return sourceData;
+    }
 
-            sourceData.endpoint = endpoint;
+    sourceData.endpoint = endpoint;
 
-            return getSourcesApi().listEndpointAuthentications(endpoint.id, {}).then(authentications => {
-                // we take just the first authentication
-                const authentication = authentications && authentications.data && authentications.data[0];
+    return getSourcesApi().listEndpointAuthentications(endpoint.id, {}).then(authentications => {
+        const authentication = authentications && authentications.data && authentications.data[0];
 
-                if (authentication) {
-                    sourceData.authentication = authentication;
-                }
+        if (authentication) {
+            sourceData.authentication = authentication;
+        }
 
-                return { ...sourceData, source: { name: sourceData.name } };
-            });
-        });
+        return { ...sourceData, source: { name: sourceData.name } };
     });
-}
+});
 
 const parseUrl = url => {
     if (!url) {
@@ -77,7 +82,7 @@ const parseUrl = url => {
         return {
             scheme: u.protocol.replace(/:$/, ''),
             host: u.hostname,
-            port: u.port,
+            port: u.port === '' ? defaultPort(u.protocol.replace(/:$/, '')) : u.port,
             path: u.pathname
         };
     } catch (error) {
@@ -85,65 +90,47 @@ const parseUrl = url => {
     }
 };
 
-/*
- * If there's an URL in the formData, parse it and use it,
- * else use individual fields (scheme, host, port, path).
- */
-const urlOrHost = formData => formData.url ? parseUrl(formData.url) : formData;
+const urlOrHost = formData => formData.url ? parseUrl(formData.url) : formData.endpoint ? formData.endpoint : formData;
 
-export function doUpdateSource(source, formData) {
-    return getSourcesApi().updateSource(source.id, formData.source)
-    .then((_sourceDataOut) => {
-        const { scheme, host, port, path } = urlOrHost(formData.endpoint);
+export const doUpdateSource = (source, formData) => {
+    const { scheme, host, port, path } = urlOrHost(formData);
+    const endPointPort = parseInt(port, 10);
 
-        const endPointPort = parseInt(port, 10);
+    const endpointData = {
+        scheme,
+        host,
+        path,
+        port: isNaN(endPointPort) ? undefined : endPointPort,
+        ...formData.endpoint
+    };
 
-        const endpointData = {
-            scheme,
-            host,
-            port: isNaN(endPointPort) ? undefined : endPointPort,
-            path,
-            ...formData.endpoint
-        };
-
-        return getSourcesApi().updateEndpoint(source.endpoint.id, endpointData)
-        .then((_endpointDataOut) => {
-            return getSourcesApi().updateAuthentication(source.authentication.id, 'formData.authentication')
-            .then((authenticationDataOut) => {
-                return authenticationDataOut;
-            }, (error) => {
-                throw { error: { title: 'Authentication update failure.', detail: error.data } };
-            });
-        }, (error) => {
+    return Promise.all([
+        getSourcesApi().updateSource(source.id, formData.source).catch((error) => {
+            throw { error: { title: 'Source update failure.', detail: error.data } };
+        }),
+        getSourcesApi().updateEndpoint(source.endpoint.id, endpointData).catch((error) => {
             throw { error: { title: 'Endpoint update failure.', detail: error.data } };
-        });
+        }),
+        getSourcesApi().updateAuthentication(source.authentication.id, formData.authentication).catch((error) => {
+            throw { error: { title: 'Authentication update failure.', detail: error.data } };
+        })
+    ]);
+};
 
-    }, (error) => {
-        throw { error: { title: 'Source update failure.', detail: error.data } };
-    });
-}
-
-/* Source type limitation by location (URL). Now disabled.
- *
- *  export const sourceTypeStrFromLocation = () => (
- *      window.appGroup === 'insights' ? 'amazon' :
- *          window.appGroup === 'hybrid' ? 'openshift' : null
- * );
- */
-export const sourceTypeStrFromLocation = () => null;
-
-// Loads all sources with endpoints and applications infor
 export const doLoadEntities = () => getSourcesApi().postGraphQL({
     query: `{ sources
-        { id,
-          created_at,
-          source_type_id,
-          name,
-          tenant,
-          uid,
-          updated_at
-          applications { application_type_id, id },
-          endpoints { id, scheme, host, port, path } }}`
+        {
+            id,
+            created_at,
+            source_type_id,
+            name,
+            tenant,
+            uid,
+            updated_at
+            applications { application_type_id, id },
+            endpoints { id, scheme, host, port, path }
+        }
+    }`
 }).then(({ data }) => data);
 
 export const doCreateApplication = (source_id, application_type_id) => getSourcesApi().createApplication({
