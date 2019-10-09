@@ -1,10 +1,10 @@
 import React from 'react';
 import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
 import { TextContent } from '@patternfly/react-core';
-import { temporaryHardcodedSourceSchemas } from '@redhat-cloud-services/frontend-components-sources';
-
-import { sourceTypeStrFromLocation } from '../../api/entities';
+import { temporaryHardcodedSourceSchemas, asyncValidator } from '@redhat-cloud-services/frontend-components-sources';
 import { FormattedMessage } from 'react-intl';
+
+import { endpointToUrl } from '../SourcesSimpleView/formatters';
 
 const compileAllSourcesComboOptions = (sourceTypes) => (
     [
@@ -14,14 +14,6 @@ const compileAllSourcesComboOptions = (sourceTypes) => (
         }))
     ]
 );
-
-const compileSourcesComboOptions = (sourceTypes) => {
-    // temporarily we limit the sources offered based on URL
-    const sourceTypeStr = sourceTypeStrFromLocation();
-
-    return compileAllSourcesComboOptions(sourceTypeStr ?
-        sourceTypes.filter(type => type.name === sourceTypeStr) : sourceTypes);
-};
 
 const fieldsToStep = (fields, stepName, nextStep) => ({
     ...fields, // expected to include title and fields
@@ -58,7 +50,7 @@ const sourceTypeSchema = {
     4: sourceTypeSchemaHardcodedWithFallback
 }[schemaMode];
 
-const firstStepEdit = (sourceTypes, type) => ({
+const firstStepEdit = (sourceTypes, type, sourceId) => ({
     title: <FormattedMessage
         id="sources.editSource"
         defaultMessage="Edit a source"
@@ -73,7 +65,11 @@ const firstStepEdit = (sourceTypes, type) => ({
         label: <FormattedMessage
             id="sources.name"
             defaultMessage="Name"
-        />
+        />,
+        validate: [
+            (value) => asyncValidator(value, sourceId)
+        ],
+        isRequired: true
     }, {
         component: componentTypes.SELECT_COMPONENT,
         name: 'source_type',
@@ -84,7 +80,7 @@ const firstStepEdit = (sourceTypes, type) => ({
         isRequired: true,
         isDisabled: true,
         readOnly: true, // make it grey ;-)
-        options: compileSourcesComboOptions(sourceTypes),
+        options: compileAllSourcesComboOptions(sourceTypes),
         validate: [{
             type: validatorTypes.REQUIRED
         }]
@@ -104,7 +100,8 @@ const summaryStep = (sourceTypes) => ({
     }, {
         name: 'summary',
         component: 'summary',
-        sourceTypes
+        sourceTypes,
+        showApp: false
     }],
     stepKey: 'summary',
     name: 'summary',
@@ -113,10 +110,6 @@ const summaryStep = (sourceTypes) => ({
         defaultMessage="Review source details"
     />
 });
-
-export const endpointToUrl = endpoint => (
-    `${endpoint.scheme}://${endpoint.host}:${endpoint.port}${endpoint.path || ''}`
-);
 
 const initialValues = source => {
     const url = source.endpoint ? endpointToUrl(source.endpoint) : '';
@@ -131,11 +124,6 @@ const initialValues = source => {
 };
 
 export function sourceEditForm(sourceTypes, source) {
-    /* editing form:
-     * 1st page: editable name + non-editable source type
-     * 2nd, 3rd... page: provider specific
-     * last page: summary */
-
     const sourceType = sourceTypes && sourceTypes.find((type) => type.id === source.source_type_id);
     const typeName = sourceType.name;
 
@@ -160,7 +148,7 @@ export function sourceEditForm(sourceTypes, source) {
                     defaultMessage="You are editing a source"
                 />,
                 fields: [
-                    firstStepEdit(sourceTypes, typeName),
+                    firstStepEdit(sourceTypes, typeName, source.id),
                     ...structuredSteps,
                     summaryStep(sourceTypes)
                 ]
