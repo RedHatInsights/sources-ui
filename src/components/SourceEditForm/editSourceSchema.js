@@ -121,7 +121,11 @@ export function sourceEditForm(sourceTypes, source, applicationTypes) {
                 },
                 fields: [
                     firstStepEdit(sourceTypes, typeName, source.id),
-                    ...schemaBuilder(sourceTypes.filter(({ name }) => name === typeName), applicationTypes, DISABLE_AUTH_TYPE_SELECTION),
+                    ...schemaBuilder(
+                        sourceTypes.filter(({ name }) => name === typeName),
+                        applicationTypes,
+                        DISABLE_AUTH_TYPE_SELECTION
+                    ),
                     summaryStep(sourceTypes)
                 ]
             }]
