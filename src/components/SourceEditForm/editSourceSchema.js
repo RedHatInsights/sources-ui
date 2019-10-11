@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { endpointToUrl } from '../SourcesSimpleView/formatters';
 
-const compileAllSourcesComboOptions = (sourceTypes) => (
+export const compileAllSourcesComboOptions = (sourceTypes) => (
     [
         ...sourceTypes.map(t => ({
             value: t.name,
@@ -78,7 +78,7 @@ const summaryStep = (sourceTypes, applicationTypes) => ({
     />
 });
 
-const initialValues = source => {
+export const initialValues = source => {
     const url = source.endpoint ? endpointToUrl(source.endpoint) : '';
 
     return {
