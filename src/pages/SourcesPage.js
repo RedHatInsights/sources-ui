@@ -128,7 +128,7 @@ const SourcesPage = ({
                 applicationTypes={appTypes}
                 isOpen={true}
                 onClose={() => history.push('/')}
-                afterSuccess={() => loadEntities()}
+                afterSuccess={() => loadEntities({ pageNumber: 1, sortBy: 'created_at', sortDirection: 'desc' })}
                 hideSourcesButton={true}
             />}
             { editorEdit && <SourceEditModal />}
