@@ -11,7 +11,7 @@ import {
 
 export const defaultProvidersState = {
     loaded: false,
-    pageSize: 10,
+    pageSize: 50,
     pageNumber: 1, // PF numbers pages from 1. Seriously.
     entities: [],
     numberOfEntities: 0,
@@ -25,8 +25,9 @@ const entitiesPending = (state) => ({
     loaded: false
 });
 
-const entitiesLoaded = (state, { payload: rows }) => ({
+export const entitiesLoaded = (state, { payload: rows, ...rest }) => ({
     ...state,
+    ...rest,
     loaded: true,
     entities: rows,
     numberOfEntities: rows.length

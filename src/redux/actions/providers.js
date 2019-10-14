@@ -19,13 +19,14 @@ import {
 } from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
 
-export const loadEntities = () => (dispatch) => {
+export const loadEntities = (options) => (dispatch) => {
     dispatch({ type: ACTION_TYPES.LOAD_ENTITIES_PENDING });
 
     return doLoadEntities().then(({ sources }) => {
         dispatch({
             type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
-            payload: sources
+            payload: sources,
+            ...options
         });
     }).catch(error => dispatch({
         type: ACTION_TYPES.LOAD_ENTITIES_REJECTED,
