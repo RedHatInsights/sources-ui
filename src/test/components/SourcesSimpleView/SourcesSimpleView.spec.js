@@ -2,7 +2,7 @@ import React from 'react';
 import thunk from 'redux-thunk';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import configureStore from 'redux-mock-store';
-import { Table, TableHeader, TableBody, RowWrapper } from '@patternfly/react-table';
+import { Table, TableHeader, TableBody, RowWrapper, BodyCell } from '@patternfly/react-table';
 import { MemoryRouter } from 'react-router-dom';
 
 import SourcesSimpleView from '../../../components/SourcesSimpleView/SourcesSimpleView';
@@ -67,7 +67,7 @@ describe('SourcesSimpleView', () => {
         expect(wrapper.find(PlaceHolderTable)).toHaveLength(1);
     });
 
-    it('renders table when loaded', (done) => {
+    it('renders removing row', (done) => {
         initialState = {
             providers: {
                 ...initialState.providers,
@@ -95,7 +95,8 @@ describe('SourcesSimpleView', () => {
         });
     });
 
-    it('renders removing row', (done) => {
+    it('renders table when loaded', (done) => {
+        const BODY_CELL_CLASSNAME = 'ins-c-sources__row-vertical-centered';
         initialState = {
             providers: {
                 ...initialState.providers,
@@ -114,6 +115,7 @@ describe('SourcesSimpleView', () => {
                 expect(wrapper.find(TableHeader)).toHaveLength(1);
                 expect(wrapper.find(TableBody)).toHaveLength(1);
                 expect(wrapper.find(RowWrapper)).toHaveLength(sourcesDataGraphQl.length);
+                expect(wrapper.find(BodyCell).first().props().className).toEqual(BODY_CELL_CLASSNAME);
                 done();
             });
         });
