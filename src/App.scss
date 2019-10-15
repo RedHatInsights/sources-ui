@@ -35,5 +35,7 @@
 }
 
 .ins-c-sources__row-vertical-centered {
-  vertical-align: middle !important;
+  td {
+    vertical-align: middle !important;
+  }
 }

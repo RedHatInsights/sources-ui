@@ -13,10 +13,7 @@ import { prepareEntities } from '../../Utilities/filteringSorting';
 
 const itemToCells = (item, columns, sourceTypes, appTypes) => columns.filter(column => column.title)
 .map(col => ({
-    title: col.formatter ? formatters(col.formatter)(item[col.value], item, { sourceTypes, appTypes }) : item[col.value] || '',
-    props: {
-        className: 'ins-c-sources__row-vertical-centered'
-    }
+    title: col.formatter ? formatters(col.formatter)(item[col.value], item, { sourceTypes, appTypes }) : item[col.value] || ''
 }));
 
 const renderSources = (entities, columns, sourceTypes, appTypes) =>
