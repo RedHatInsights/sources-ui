@@ -10,8 +10,9 @@ import { sortEntities } from '../../redux/actions/providers';
 import { formatters } from './formatters';
 import { PlaceHolderTable, RowWrapperLoader } from './loaders';
 import { prepareEntities } from '../../Utilities/filteringSorting';
+import { sourcesViewDefinition } from '../../views/sourcesViewDefinition';
 
-const itemToCells = (item, columns, sourceTypes, appTypes) => columns.filter(column => column.title)
+const itemToCells = (item, columns, sourceTypes, appTypes) => columns.filter(column => column.title || column.hidden)
 .map(col => ({
     title: col.formatter ? formatters(col.formatter)(item[col.value], item, { sourceTypes, appTypes }) : item[col.value] || ''
 }));
@@ -33,12 +34,46 @@ const initialState = (columns) => ({
     rows: [],
     sortBy: {},
     isLoaded: false,
-    cells: columns.filter(column => column.title).map(column => ({
+    cells: columns.filter(column => column.title || column.hidden).map(column => ({
         title: column.title,
         value: column.value,
-        transforms: [sortable]
+        ...(column.sortable && { transforms: [sortable] })
     }))
 });
+
+export const insertEditAction = (actions, intl, push) => actions.splice(1, 0, {
+    title: intl.formatMessage({
+        id: 'sources.edit',
+        defaultMessage: 'Edit'
+    }),
+    onClick: (_ev, _i, { id }) => push(`/edit/${id}`)
+});
+
+export const actionResolver = (intl, push) => (rowData) => {
+    const actions = [{
+        title: intl.formatMessage({
+            id: 'sources.manageApps',
+            defaultMessage: 'Manage applications'
+        }),
+        onClick: (_ev, _i, { id }) => push(`/manage_apps/${id}`)
+    },
+    {
+        style: { color: 'var(--pf-global--danger-color--100)' },
+        title: intl.formatMessage({
+            id: 'sources.delete',
+            defaultMessage: 'Delete'
+        }),
+        onClick: (_ev, _i, { id }) => push(`/remove/${id}`)
+    }];
+
+    const isSourceEditable = !rowData.imported;
+
+    if (isSourceEditable) {
+        insertEditAction(actions, intl, push);
+    }
+
+    return actions;
+};
 
 const SourcesSimpleView = ({
     entities,
@@ -49,7 +84,6 @@ const SourcesSimpleView = ({
     intl,
     pageSize,
     pageNumber,
-    columns,
     sourceTypes,
     appTypes,
     sortEntities,
@@ -58,6 +92,7 @@ const SourcesSimpleView = ({
     filterColumn,
     filterValue
 }) => {
+    const columns = sourcesViewDefinition.columns(intl);
     const [state, dispatch] = useReducer(reducer, initialState(columns));
 
     const refreshSources = (additionalOptions) => dispatch({
@@ -106,29 +141,6 @@ const SourcesSimpleView = ({
         return <PlaceHolderTable />;
     }
 
-    const actions = [{
-        title: intl.formatMessage({
-            id: 'sources.manageApps',
-            defaultMessage: 'Manage applications'
-        }),
-        onClick: (_ev, _i, { id }) => push(`/manage_apps/${id}`)
-    },
-    {
-        title: intl.formatMessage({
-            id: 'sources.edit',
-            defaultMessage: 'Edit'
-        }),
-        onClick: (_ev, _i, { id }) => push(`/edit/${id}`)
-    },
-    {
-        style: { color: 'var(--pf-global--danger-color--100)' },
-        title: intl.formatMessage({
-            id: 'sources.delete',
-            defaultMessage: 'Delete'
-        }),
-        onClick: (_ev, _i, { id }) => push(`/remove/${id}`)
-    }];
-
     return (
         <Table
             gridBreakPoint='grid-lg'
@@ -140,7 +152,7 @@ const SourcesSimpleView = ({
             sortBy={state.sortBy}
             rows={state.rows}
             cells={state.cells}
-            actions={actions}
+            actionResolver={actionResolver(intl, push)}
             rowWrapper={RowWrapperLoader}
         >
             <TableHeader />
@@ -150,10 +162,6 @@ const SourcesSimpleView = ({
 };
 
 SourcesSimpleView.propTypes = {
-    columns: PropTypes.arrayOf(PropTypes.shape({
-        value: PropTypes.string,
-        title: PropTypes.string
-    })).isRequired,
     sortEntities: PropTypes.func.isRequired,
     entities: PropTypes.arrayOf(PropTypes.any),
     numberOfEntities: PropTypes.number.isRequired,
@@ -187,4 +195,3 @@ const mapDispatchToProps = dispatch => bindActionCreators({ sortEntities }, disp
 const mapStateToProps = ({ providers: { ...props } }) => (props);
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesSimpleView)));
-
