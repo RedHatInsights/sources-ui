@@ -13,7 +13,7 @@ import {
     ButtonVariant
 } from '@patternfly/react-core';
 
-const ApplicationList = ({ appTypes, source, setApplicationToRemove }) => {
+const ApplicationList = ({ appTypes, source, setApplicationToRemove, breakpoints, namePrefix }) => {
     const sourceAppsNames = source.applications
     .map(({ application_type_id }) => appTypes.find(({ id }) => id === application_type_id).display_name);
 
@@ -34,12 +34,12 @@ const ApplicationList = ({ appTypes, source, setApplicationToRemove }) => {
     .map(({ display_name, id, dependent_applications }) => (
         <TextContent key={id}>
             <Grid>
-                <GridItem md={4}>
+                <GridItem md={breakpoints.display_name || 4}>
                     <Text component={TextVariants.p} style={{ marginBottom: 0 }}>
-                        { display_name }
+                        { namePrefix }{ display_name }
                     </Text>
                 </GridItem>
-                <GridItem md={8} className="ins-c-sources__remove-app">
+                <GridItem md={breakpoints.remove || 8} className="ins-c-sources__remove-app">
                     <Button
                         variant={ButtonVariant.link}
                         isInline
@@ -66,7 +66,16 @@ ApplicationList.propTypes = {
         source_type_id: PropTypes.string.isRequired,
         application_type_id: PropTypes.number
     }).isRequired,
-    setApplicationToRemove: PropTypes.func.isRequired
+    setApplicationToRemove: PropTypes.func.isRequired,
+    breakpoints: PropTypes.shape({
+        display_name: PropTypes.number,
+        remove: PropTypes.number
+    }),
+    namePrefix: PropTypes.node
+};
+
+ApplicationList.defaultProps = {
+    breakpoints: {}
 };
 
 const mapStateToProps = ({ providers: { entities, appTypes } }, { match: { params: { id } } }) =>

@@ -20,12 +20,14 @@ import { removeSource } from '../redux/actions/providers';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
+import ApplicationList from './ApplicationsList/ApplicationList';
+import RemoveAppModal from './AddApplication/RemoveAppModal';
+
 const SourceRemoveModal = ({
     history: { push },
     removeSource,
     source,
-    intl,
-    appTypes
+    intl
 }) => {
     const onSubmit = () => {
         push('/');
@@ -38,22 +40,13 @@ const SourceRemoveModal = ({
     const onCancel = () => push('/');
 
     const [acknowledge, setAcknowledge] = useState(false);
+    const [removingApp, setApplicationToRemove] = useState({});
 
     if (!source) {
         return null;
     }
 
-    const appNames = source.applications.map((app) => {
-        const type = appTypes.find((appType) => appType.id === app.application_type_id);
-
-        if (type) {
-            return type.display_name;
-        }
-    }).map((name) => (
-        <Text key={name} component={TextVariants.p} style={{ marginBottom: 0 }}>
-            - {name}
-        </Text>
-    ));
+    const sourceHasActiveApp = source.applications.some((app) => !app.isDeleting);
 
     const actions = source.applications.length > 0 ? [
         <Button id="deleteCancel" key="cancel" variant="link" type="button" onClick={ onCancel }>
@@ -100,7 +93,18 @@ const SourceRemoveModal = ({
                     />
                 </Text>
             </Button>
-            { appNames }
+            {
+                sourceHasActiveApp ? <ApplicationList
+                    breakpoints={{ display_name: 8, remove: 4 }}
+                    setApplicationToRemove={setApplicationToRemove}
+                    namePrefix='- '
+                /> : <Text component={ TextVariants.p }>
+                    <FormattedMessage
+                        id="sources.connectedApps"
+                        defaultMessage="Connected applications are being removed."
+                    />
+                </Text>
+            }
         </React.Fragment>
     ) : (
         <React.Fragment>
@@ -166,6 +170,10 @@ const SourceRemoveModal = ({
             actions={ actions }
             isFooterLeftAligned
         >
+            {removingApp.id && <RemoveAppModal
+                app={removingApp}
+                onCancel={() => setApplicationToRemove({})}
+            />}
             <Split gutter="md">
                 <SplitItem><ExclamationTriangleIcon size="xl" className="ins-m-alert ins-c-source__delete-icon" /></SplitItem>
                 <SplitItem isFilled>
@@ -196,8 +204,8 @@ SourceRemoveModal.propTypes = {
     intl: PropTypes.object
 };
 
-const mapStateToProps = ({ providers: { entities, appTypes } }, { match: { params: { id } } }) =>
-    ({ source: entities.find(source => source.id  === id), appTypes });
+const mapStateToProps = ({ providers: { entities } }, { match: { params: { id } } }) =>
+    ({ source: entities.find(source => source.id  === id) });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({ removeSource }, dispatch);
 

@@ -18,14 +18,13 @@ const AddApplicationDescription = ({ source, sourceTypes }) => {
     const [removingApp, setApplicationToRemove] = useState({});
 
     const sourceType = sourceTypes.find((type) => type.id === source.source_type_id);
-    const apps = source.applications.filter((app) => !app.isDeleting)
+    const apps = source.applications.filter((app) => !app.isDeleting);
 
     return (
         <React.Fragment>
             {removingApp.id && <RemoveAppModal
                 app={removingApp}
                 onCancel={() => setApplicationToRemove({})}
-                sourceId={source.id}
             />}
             <TextContent>
                 <Grid gutter="md">

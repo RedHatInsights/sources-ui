@@ -14,9 +14,11 @@ import {
     TextVariants
 } from '@patternfly/react-core';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
+import { withRouter } from 'react-router-dom';
+
 import { removeApplication } from '../../redux/actions/providers';
 
-const RemoveAppModal = ({ app, onCancel, intl, removeApplication, sourceId, appTypes }) => {
+const RemoveAppModal = ({ app, onCancel, intl, removeApplication, source, appTypes }) => {
     const dependentApps = app.dependent_applications.map(appName => {
         const appType = appTypes.find(({ name }) => name === appName);
 
@@ -38,7 +40,7 @@ const RemoveAppModal = ({ app, onCancel, intl, removeApplication, sourceId, appT
             name: app.display_name
         });
         onCancel();
-        return removeApplication(app.id, sourceId, titleSuccess, titleError);
+        return removeApplication(app.id, source.id, titleSuccess, titleError);
     };
 
     return (
@@ -109,7 +111,9 @@ RemoveAppModal.propTypes = {
     intl: PropTypes.shape({
         formatMessage: PropTypes.func.isRequired
     }).isRequired,
-    sourceId: PropTypes.string.isRequired,
+    source: PropTypes.shape({
+        id: PropTypes.string.isRequired
+    }).isRequired,
     appTypes: PropTypes.arrayOf(PropTypes.shape({
         display_name: PropTypes.string.isRequired
     })).isRequired
@@ -117,6 +121,12 @@ RemoveAppModal.propTypes = {
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({ removeApplication }, dispatch);
 
-const mapStateToProps = ({ providers: { appTypes } }) => ({ appTypes });
+const mapStateToProps = (
+    { providers: { entities, appTypes } },
+    { match: { params: { id } } }
+) => ({
+    appTypes,
+    source: entities.find(source => source.id  === id)
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(RemoveAppModal));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(injectIntl(RemoveAppModal)));

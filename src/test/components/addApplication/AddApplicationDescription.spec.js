@@ -13,6 +13,7 @@ import { sourceTypesData } from '../../sourceTypesData';
 import { sourcesDataGraphQl } from '../../sourcesData';
 import { applicationTypesData } from '../../applicationTypesData';
 import RemoveAppModal from '../../../components/AddApplication/RemoveAppModal';
+import ApplicationList from '../../../components/ApplicationsList/ApplicationList';
 
 describe('AddApplicationDescription', () => {
     let store;
@@ -44,6 +45,7 @@ describe('AddApplicationDescription', () => {
 
         expect(wrapper.find(Text).at(3).text()).toEqual(source.name);
         expect(wrapper.find(Text).at(4).text()).toEqual(sourceType.product_name);
+        expect(wrapper.find(ApplicationList).length).toEqual(0);
         expect(wrapper.find(FormattedMessage).last().text()).toEqual('No applications');
         expect(wrapper.find(Button).length).toEqual(0);
     });
@@ -57,11 +59,10 @@ describe('AddApplicationDescription', () => {
 
         const source = sourcesDataGraphQl.find((x) => x.id === '406');
         const sourceType = sourceTypesData.data.find((x) => x.id === source.source_type_id);
-        const applicationType = applicationTypesData.data.find((x) => x.id === source.applications[0].application_type_id);
 
         expect(wrapper.find(Text).at(3).text()).toEqual(source.name);
         expect(wrapper.find(Text).at(4).text()).toEqual(sourceType.product_name);
-        expect(wrapper.find(Text).at(5).text()).toEqual(applicationType.display_name);
+        expect(wrapper.find(ApplicationList).length).toEqual(1);
         expect(wrapper.find(Button).length).toEqual(1);
     });
 
@@ -74,15 +75,10 @@ describe('AddApplicationDescription', () => {
 
         const source = sourcesDataGraphQl.find((x) => x.id === '408');
         const sourceType = sourceTypesData.data.find((x) => x.id === source.source_type_id);
-        const applicationType = applicationTypesData.data.find((x) => x.id === source.applications[0].application_type_id);
-        const applicationType1 = applicationTypesData.data.find((x) => x.id === source.applications[1].application_type_id);
-        const applicationType2 = applicationTypesData.data.find((x) => x.id === source.applications[2].application_type_id);
 
         expect(wrapper.find(Text).at(3).text()).toEqual(source.name);
         expect(wrapper.find(Text).at(4).text()).toEqual(sourceType.product_name);
-        expect(wrapper.find(Text).at(5).text()).toEqual(applicationType.display_name);
-        expect(wrapper.find(Text).at(6).text()).toEqual(applicationType1.display_name);
-        expect(wrapper.find(Text).at(7).text()).toEqual(applicationType2.display_name);
+        expect(wrapper.find(ApplicationList).length).toEqual(1);
         expect(wrapper.find(Button).length).toEqual(3);
     });
 
@@ -101,5 +97,42 @@ describe('AddApplicationDescription', () => {
         wrapper.update();
         expect(wrapper.find(RemoveAppModal).length).toEqual(1);
         expect(wrapper.find(Title).first().text().includes(applicationType.display_name)).toEqual(true);
+    });
+
+    it('show remove app modal and close it', () => {
+        const wrapper = mount(componentWrapperIntl(
+            <Route path="/add_application/:id" render={ (...args) => <AddApplicationDescription { ...args }/> } />,
+            store,
+            ['/add_application/406']
+        ));
+
+        expect(wrapper.find(RemoveAppModal).length).toEqual(0);
+
+        wrapper.find(Button).first().simulate('click');
+        wrapper.update();
+        expect(wrapper.find(RemoveAppModal).length).toEqual(1);
+
+        wrapper.find(Button).at(0).simulate('click');
+        wrapper.update();
+        expect(wrapper.find(RemoveAppModal).length).toEqual(0);
+    });
+
+    it('renders correctly when SourceType does not exist', () => {
+        const NOT_FOUND_MSG = 'Type not found';
+        store = mockStore({
+            providers: {
+                entities: sourcesDataGraphQl,
+                appTypes: applicationTypesData.data,
+                sourceTypes: []
+            }
+        });
+
+        const wrapper = mount(componentWrapperIntl(
+            <Route path="/add_application/:id" render={ (...args) => <AddApplicationDescription { ...args }/> } />,
+            store,
+            initialEntry
+        ));
+
+        expect(wrapper.find(Text).at(4).text()).toEqual(NOT_FOUND_MSG);
     });
 });
