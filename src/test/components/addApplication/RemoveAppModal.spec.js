@@ -33,7 +33,11 @@ describe('RemoveAppModal', () => {
 
     beforeEach(() => {
         mockStore = configureStore();
-        store = mockStore();
+        store = mockStore({
+            providers: {
+                appTypes: []
+            }
+        });
         spyOnCancel = jest.fn();
         initialProps = {
             app: {
@@ -42,8 +46,7 @@ describe('RemoveAppModal', () => {
                 dependent_applications: []
             },
             onCancel: spyOnCancel,
-            sourceId: SOURCE_ID,
-            appTypes: []
+            sourceId: SOURCE_ID
         };
     });
 
@@ -75,10 +78,16 @@ describe('RemoveAppModal', () => {
             sourceAppsNames: ATTACHED_APPS
         };
 
+        store = mockStore({
+            providers: {
+                appTypes: APP_TYPES
+            }
+        });
+
         const wrapper = mount(
             <IntlProvider locale="en">
                 <Provider store={ store }>
-                    <RemoveAppModal {...initialProps} app={app} appTypes={APP_TYPES}/>
+                    <RemoveAppModal {...initialProps} app={app}/>
                 </Provider>
             </IntlProvider>
         );
@@ -96,10 +105,16 @@ describe('RemoveAppModal', () => {
             sourceAppsNames: ATTACHED_APPS
         };
 
+        store = mockStore({
+            providers: {
+                appTypes: APP_TYPES
+            }
+        });
+
         const wrapper = mount(
             <IntlProvider locale="en">
                 <Provider store={ store }>
-                    <RemoveAppModal {...initialProps} app={app} appTypes={APP_TYPES}/>
+                    <RemoveAppModal {...initialProps} app={app}/>
                 </Provider>
             </IntlProvider>
         );

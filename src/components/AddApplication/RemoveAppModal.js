@@ -117,4 +117,6 @@ RemoveAppModal.propTypes = {
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({ removeApplication }, dispatch);
 
-export default connect(null, mapDispatchToProps)(injectIntl(RemoveAppModal));
+const mapStateToProps = ({ providers: { appTypes } }) => ({ appTypes });
+
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(RemoveAppModal));
