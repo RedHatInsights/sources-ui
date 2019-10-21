@@ -106,13 +106,13 @@ export const doUpdateSource = (source, formData) => {
 
     return Promise.all([
         getSourcesApi().updateSource(source.id, formData.source).catch((error) => {
-            throw { error: { title: 'Source update failure.', detail: error.data } };
+            throw { error: { title: 'Source update failure.', detail: error.data.errors[0].detail } };
         }),
         getSourcesApi().updateEndpoint(source.endpoint.id, endpointData).catch((error) => {
-            throw { error: { title: 'Endpoint update failure.', detail: error.data } };
+            throw { error: { title: 'Endpoint update failure.', detail: error.data.errors[0].detail } };
         }),
         getSourcesApi().updateAuthentication(source.authentication.id, formData.authentication).catch((error) => {
-            throw { error: { title: 'Authentication update failure.', detail: error.data } };
+            throw { error: { title: 'Authentication update failure.', detail: error.data.errors[0].detail } };
         })
     ]);
 };
