@@ -17,8 +17,8 @@ const compileAllSourcesComboOptions = (sourceTypes) => (
 
 const firstStepEdit = (sourceTypes, type, sourceId) => ({
     title: <FormattedMessage
-        id="sources.editSource"
-        defaultMessage="Edit a source"
+        id="sources.editSourceName"
+        defaultMessage="Edit source name"
     />,
     name: 'step_1',
     stepKey: 1,
@@ -119,6 +119,8 @@ export function sourceEditForm(sourceTypes, source, applicationTypes) {
                         defaultMessage="Finish"
                     />
                 },
+                showTitles: true,
+                predictSteps: true,
                 fields: [
                     firstStepEdit(sourceTypes, typeName, source.id),
                     ...schemaBuilder(

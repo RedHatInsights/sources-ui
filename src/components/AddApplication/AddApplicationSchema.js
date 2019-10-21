@@ -3,8 +3,7 @@ import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-re
 import {
     TextContent,
     Text,
-    TextVariants,
-    Title
+    TextVariants
 } from '@patternfly/react-core';
 import AddApplicationDescription from './AddApplicationDescription';
 import { FormattedMessage } from 'react-intl';
@@ -22,6 +21,8 @@ const fields = (applications = [], intl) => ({
                 defaultMessage: 'Manage applications'
             }),
             inModal: true,
+            predictSteps: true,
+            showTitles: true,
             description: intl.formatMessage({
                 id: 'sources.addAppDescription',
                 defaultMessage: 'You are managing applications of this source'
@@ -93,16 +94,11 @@ const fields = (applications = [], intl) => ({
                         component: 'description',
                         name: 'description-summary',
                         content: <TextContent>
-                            <Title headingLevel="h3" size="2xl">
-                                <FormattedMessage
-                                    id="sources.review"
-                                    defaultMessage="Review"
-                                />
-                            </Title>
                             <Text component={ TextVariants.p }>
                                 <FormattedMessage
-                                    id="sources.reviewGuide"
-                                    defaultMessage="Review the information below and click Finish to configure your project."
+                                    id="sources.reviewAddAppSummary"
+                                    // eslint-disable-next-line max-len
+                                    defaultMessage="Review the information below and click Finish to add the application to your source."
                                 /> <br />
                                 <FormattedMessage
                                     id="sources.backGuide"
