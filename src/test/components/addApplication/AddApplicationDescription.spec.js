@@ -42,8 +42,8 @@ describe('AddApplicationDescription', () => {
         const source = sourcesDataGraphQl.find((x) => x.id === '23');
         const sourceType = sourceTypesData.data.find((x) => x.id === source.source_type_id);
 
-        expect(wrapper.find(Text).at(4).text()).toEqual(source.name);
-        expect(wrapper.find(Text).at(5).text()).toEqual(sourceType.product_name);
+        expect(wrapper.find(Text).at(3).text()).toEqual(source.name);
+        expect(wrapper.find(Text).at(4).text()).toEqual(sourceType.product_name);
         expect(wrapper.find(FormattedMessage).last().text()).toEqual('No applications');
         expect(wrapper.find(Button).length).toEqual(0);
     });
@@ -59,9 +59,9 @@ describe('AddApplicationDescription', () => {
         const sourceType = sourceTypesData.data.find((x) => x.id === source.source_type_id);
         const applicationType = applicationTypesData.data.find((x) => x.id === source.applications[0].application_type_id);
 
-        expect(wrapper.find(Text).at(4).text()).toEqual(source.name);
-        expect(wrapper.find(Text).at(5).text()).toEqual(sourceType.product_name);
-        expect(wrapper.find(Text).at(6).text()).toEqual(applicationType.display_name);
+        expect(wrapper.find(Text).at(3).text()).toEqual(source.name);
+        expect(wrapper.find(Text).at(4).text()).toEqual(sourceType.product_name);
+        expect(wrapper.find(Text).at(5).text()).toEqual(applicationType.display_name);
         expect(wrapper.find(Button).length).toEqual(1);
     });
 
@@ -78,11 +78,11 @@ describe('AddApplicationDescription', () => {
         const applicationType1 = applicationTypesData.data.find((x) => x.id === source.applications[1].application_type_id);
         const applicationType2 = applicationTypesData.data.find((x) => x.id === source.applications[2].application_type_id);
 
-        expect(wrapper.find(Text).at(4).text()).toEqual(source.name);
-        expect(wrapper.find(Text).at(5).text()).toEqual(sourceType.product_name);
-        expect(wrapper.find(Text).at(6).text()).toEqual(applicationType.display_name);
-        expect(wrapper.find(Text).at(7).text()).toEqual(applicationType1.display_name);
-        expect(wrapper.find(Text).at(8).text()).toEqual(applicationType2.display_name);
+        expect(wrapper.find(Text).at(3).text()).toEqual(source.name);
+        expect(wrapper.find(Text).at(4).text()).toEqual(sourceType.product_name);
+        expect(wrapper.find(Text).at(5).text()).toEqual(applicationType.display_name);
+        expect(wrapper.find(Text).at(6).text()).toEqual(applicationType1.display_name);
+        expect(wrapper.find(Text).at(7).text()).toEqual(applicationType2.display_name);
         expect(wrapper.find(Button).length).toEqual(3);
     });
 

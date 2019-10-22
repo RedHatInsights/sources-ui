@@ -67,14 +67,6 @@ const AddApplicationDescription = ({ appTypes, source, sourceTypes }) => {
             />}
             <TextContent>
                 <Grid gutter="md">
-                    <GridItem md={12}>
-                        <Text component={TextVariants.h1}>
-                            <FormattedMessage
-                                id="sources.selectApp"
-                                defaultMessage="Select application"
-                            />
-                        </Text>
-                    </GridItem>
                     <GridItem md={2}>
                         <Text component={TextVariants.h4}>
                             <FormattedMessage
