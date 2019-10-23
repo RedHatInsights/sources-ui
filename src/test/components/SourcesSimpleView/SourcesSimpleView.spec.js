@@ -67,7 +67,7 @@ describe('SourcesSimpleView', () => {
         expect(wrapper.find(PlaceHolderTable)).toHaveLength(1);
     });
 
-    it('renders table when loaded', (done) => {
+    it('renders removing row', (done) => {
         initialState = {
             providers: {
                 ...initialState.providers,
@@ -95,7 +95,8 @@ describe('SourcesSimpleView', () => {
         });
     });
 
-    it('renders removing row', (done) => {
+    it('renders table when loaded', (done) => {
+        const ROW_WRAPPER_CLASSNAME = 'ins-c-sources__row-vertical-centered';
         initialState = {
             providers: {
                 ...initialState.providers,
@@ -114,6 +115,7 @@ describe('SourcesSimpleView', () => {
                 expect(wrapper.find(TableHeader)).toHaveLength(1);
                 expect(wrapper.find(TableBody)).toHaveLength(1);
                 expect(wrapper.find(RowWrapper)).toHaveLength(sourcesDataGraphQl.length);
+                expect(wrapper.find(RowWrapper).first().props().className).toEqual(ROW_WRAPPER_CLASSNAME);
                 done();
             });
         });

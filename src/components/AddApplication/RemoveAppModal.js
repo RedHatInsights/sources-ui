@@ -9,12 +9,20 @@ import {
     TextContent,
     Stack,
     SplitItem,
-    Split
+    Split,
+    Text,
+    TextVariants
 } from '@patternfly/react-core';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 import { removeApplication } from '../../redux/actions/providers';
 
-const RemoveAppModal = ({ app, onCancel, intl, removeApplication, sourceId }) => {
+const RemoveAppModal = ({ app, onCancel, intl, removeApplication, sourceId, appTypes }) => {
+    const dependentApps = app.dependent_applications.map(appName => {
+        const appType = appTypes.find(({ name }) => name === appName);
+
+        return appType ? app.sourceAppsNames.includes(appType.display_name) ? appType.display_name : undefined : undefined;
+    }).filter(x => x);
+
     const onSubmit = () => {
         const titleSuccess = intl.formatMessage({
             id: 'sources.removeAppWarning',
@@ -63,13 +71,24 @@ const RemoveAppModal = ({ app, onCancel, intl, removeApplication, sourceId }) =>
                 <SplitItem isFilled>
                     <Stack gutter="md">
                         <TextContent>
-                            <FormattedMessage
-                                id="sources.deleteAppWarning"
-                                defaultMessage={`Are you sure to remove { appName } from this source?`}
-                                values={{
-                                    appName: app.display_name
-                                }}
-                            />
+                            <Text component={TextVariants.p}>
+                                <FormattedMessage
+                                    id="sources.deleteAppWarning"
+                                    defaultMessage={`Are you sure to remove { appName } from this source?`}
+                                    values={{
+                                        appName: app.display_name
+                                    }}
+                                />
+                            </Text>
+                            {dependentApps.length > 0 && <Text component={TextVariants.p}>
+                                <FormattedMessage
+                                    id="sources.deleteAppDetails"
+                                    defaultMessage={`This change will affect these applications: { apps }.`}
+                                    values={{
+                                        apps: dependentApps
+                                    }}
+                                />
+                            </Text>}
                         </TextContent>
                     </Stack>
                 </SplitItem>
@@ -81,14 +100,19 @@ const RemoveAppModal = ({ app, onCancel, intl, removeApplication, sourceId }) =>
 RemoveAppModal.propTypes = {
     app: PropTypes.shape({
         id: PropTypes.string.isRequired,
-        display_name: PropTypes.string.isRequired
+        display_name: PropTypes.string.isRequired,
+        dependent_applications: PropTypes.arrayOf(PropTypes.string),
+        sourceAppsNames: PropTypes.arrayOf(PropTypes.string)
     }).isRequired,
     onCancel: PropTypes.func.isRequired,
     removeApplication: PropTypes.func.isRequired,
     intl: PropTypes.shape({
         formatMessage: PropTypes.func.isRequired
     }).isRequired,
-    sourceId: PropTypes.string.isRequired
+    sourceId: PropTypes.string.isRequired,
+    appTypes: PropTypes.arrayOf(PropTypes.shape({
+        display_name: PropTypes.string.isRequired
+    })).isRequired
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({ removeApplication }, dispatch);

@@ -1,7 +1,7 @@
 import React from 'react';
 import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
-import { TextContent } from '@patternfly/react-core';
-import { temporaryHardcodedSourceSchemas, asyncValidator } from '@redhat-cloud-services/frontend-components-sources';
+import { TextContent, Title } from '@patternfly/react-core';
+import { schemaBuilder, asyncValidator } from '@redhat-cloud-services/frontend-components-sources';
 import { FormattedMessage } from 'react-intl';
 
 import { endpointToUrl } from '../SourcesSimpleView/formatters';
@@ -15,45 +15,10 @@ const compileAllSourcesComboOptions = (sourceTypes) => (
     ]
 );
 
-const fieldsToStep = (fields, stepName, nextStep) => ({
-    ...fields, // expected to include title and fields
-    name: stepName,
-    stepKey: stepName,
-    nextStep
-});
-
-const indexedStepName = (base, index) => index === 0 ? base : `${base}_${index}`;
-
-const fieldsToSteps = (fields, stepNamePrefix, lastStep) =>
-    Array.isArray(fields) ?
-        fields.map((page, index) =>
-            fieldsToSteps(
-                page,
-                indexedStepName(stepNamePrefix, index),
-                index < fields.length - 1 ? indexedStepName(stepNamePrefix, index + 1) : lastStep)
-        ) : fieldsToStep(fields, stepNamePrefix, lastStep);
-
-/* Switch between using hard-coded provider schemas and schemas from the api/source_types */
-const sourceTypeSchemaHardcodedWithFallback = t => (
-    temporaryHardcodedSourceSchemas[t.name] ||
-    { ...t.schema, fields: t.schema.fields.sort((_a, b) => b.type === 'hidden' ? -1 : 0) }
-);
-const sourceTypeSchemaWithFallback = t => (t.schema || temporaryHardcodedSourceSchemas[t.name]);
-const sourceTypeSchemaHardcoded = t => temporaryHardcodedSourceSchemas[t.name];
-const sourceTypeSchemaServer = t => t.schema;
-
-const schemaMode = 4; // defaults to 0
-const sourceTypeSchema = {
-    0: sourceTypeSchemaWithFallback,
-    1: sourceTypeSchemaHardcoded,
-    2: sourceTypeSchemaServer,
-    4: sourceTypeSchemaHardcodedWithFallback
-}[schemaMode];
-
 const firstStepEdit = (sourceTypes, type, sourceId) => ({
     title: <FormattedMessage
-        id="sources.editSource"
-        defaultMessage="Edit a source"
+        id="sources.editSourceName"
+        defaultMessage="Edit source name"
     />,
     name: 'step_1',
     stepKey: 1,
@@ -87,21 +52,23 @@ const firstStepEdit = (sourceTypes, type, sourceId) => ({
     }]
 });
 
-const summaryStep = (sourceTypes) => ({
+const summaryStep = (sourceTypes, applicationTypes) => ({
     fields: [{
         component: 'description',
         name: 'description',
         content: <TextContent>
+            <Title headingLevel="h3" size="2xl">Review source details</Title>
             <FormattedMessage
                 id="sources.summaryDescription"
-                defaultMessage="Review source details and click Add source to complete source creation. Click Back to revise."
+                defaultMessage="Review source details and click Finish to complete source editing. Click Back to revise."
             />
         </TextContent>
     }, {
         name: 'summary',
         component: 'summary',
         sourceTypes,
-        showApp: false
+        showApp: false,
+        applicationTypes
     }],
     stepKey: 'summary',
     name: 'summary',
@@ -116,6 +83,7 @@ const initialValues = source => {
 
     return {
         url,
+        auth_select: source.authentication.authtype,
         endpoint: source.endpoint,
         authentication: source.authentication,
         source: source.source,
@@ -123,12 +91,10 @@ const initialValues = source => {
     };
 };
 
-export function sourceEditForm(sourceTypes, source) {
+export function sourceEditForm(sourceTypes, source, applicationTypes) {
     const sourceType = sourceTypes && sourceTypes.find((type) => type.id === source.source_type_id);
     const typeName = sourceType.name;
-
-    const sourceTypeSteps = fieldsToSteps(sourceTypeSchema(sourceType), typeName, 'summary');
-    const structuredSteps = Array.isArray(sourceTypeSteps) ? sourceTypeSteps : [sourceTypeSteps];
+    const DISABLE_AUTH_TYPE_SELECTION = true;
 
     return {
         initialValues: initialValues({ source_type: sourceType.name, ...source }),
@@ -141,15 +107,27 @@ export function sourceEditForm(sourceTypes, source) {
                 inModal: true,
                 title: <FormattedMessage
                     id="sources.editSource"
-                    defaultMessage="Edit Source"
+                    defaultMessage="Edit a source"
                 />,
                 description: <FormattedMessage
-                    id="sources.sources.editSourceDescription"
+                    id="sources.editSourceDescription"
                     defaultMessage="You are editing a source"
                 />,
+                buttonLabels: {
+                    submit: <FormattedMessage
+                        id="sources.finish"
+                        defaultMessage="Finish"
+                    />
+                },
+                showTitles: true,
+                predictSteps: true,
                 fields: [
                     firstStepEdit(sourceTypes, typeName, source.id),
-                    ...structuredSteps,
+                    ...schemaBuilder(
+                        sourceTypes.filter(({ name }) => name === typeName),
+                        applicationTypes,
+                        DISABLE_AUTH_TYPE_SELECTION
+                    ),
                     summaryStep(sourceTypes)
                 ]
             }]

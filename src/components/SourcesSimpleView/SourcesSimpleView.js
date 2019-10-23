@@ -11,10 +11,10 @@ import { formatters } from './formatters';
 import { PlaceHolderTable, RowWrapperLoader } from './loaders';
 import { prepareEntities } from '../../Utilities/filteringSorting';
 
-const itemToCells = (item, columns, sourceTypes, appTypes) =>
-    columns.filter(column => column.title)
-    .map(col => col.formatter ? formatters(col.formatter)(item[col.value], item, { sourceTypes, appTypes }) :
-        item[col.value] || '');
+const itemToCells = (item, columns, sourceTypes, appTypes) => columns.filter(column => column.title)
+.map(col => ({
+    title: col.formatter ? formatters(col.formatter)(item[col.value], item, { sourceTypes, appTypes }) : item[col.value] || ''
+}));
 
 const renderSources = (entities, columns, sourceTypes, appTypes) =>
     entities.reduce((acc, item) => ([

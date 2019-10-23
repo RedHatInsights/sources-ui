@@ -96,11 +96,13 @@ describe('formatters', () => {
         });
 
         it('returns empty application list', () => {
+            const EMPTY_LIST_PLACEHOLDER = '--';
             const result = JSON.stringify(applicationFormatter(sourcesDataGraphQl[SOURCE_NO_APS_INDEX].applications, undefined, { appTypes: applicationTypesData.data }));
 
             expect(result.includes(applicationTypesData.data[CATALOG_INDEX].display_name)).toEqual(false);
             expect(result.includes(applicationTypesData.data[COSTMANAGEMENET_INDEX].display_name)).toEqual(false);
             expect(result.includes(applicationTypesData.data[TOPOLOGICALINVENTORY_INDEX].display_name)).toEqual(false);
+            expect(result.includes(EMPTY_LIST_PLACEHOLDER)).toEqual(true);
         });
 
         it('returns application list with one item (catalog)', () => {
