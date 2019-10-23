@@ -28,8 +28,9 @@ export const PlaceHolderTable = () => (
     </table>
 );
 
-export const RowWrapperLoader = ({ row: { isDeleting, ...row }, ...initialProps }) => (
-    isDeleting ? <tr><td colSpan="5"><RowLoader /></td></tr> : <RowWrapper {...initialProps} row={row}/>
+export const RowWrapperLoader = ({ row: { isDeleting, ...row }, ...initialProps }) => (isDeleting ?
+    <tr><td colSpan="5"><RowLoader /></td></tr> :
+    <RowWrapper {...initialProps} row={row} className='ins-c-sources__row-vertical-centered'/>
 );
 
 RowWrapperLoader.propTypes = {

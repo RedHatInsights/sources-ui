@@ -20,6 +20,9 @@ const SourceEditModal = ({
     source,
     sourceTypes,
     loadEntities,
+    appTypes,
+    sourceTypesLoaded,
+    appTypesLoaded,
     intl
 }) => {
     useEffect(() => {
@@ -44,13 +47,7 @@ const SourceEditModal = ({
         history.replace('/');
     });
 
-    let form;
-
-    if (sourceTypes && source) {
-        form = sourceEditForm(sourceTypes, source);
-    }
-
-    if (!sourceTypes || !source) {
+    if (!appTypesLoaded || !sourceTypesLoaded || !source) {
         return (
             <Wizard
                 isOpen={ true }
@@ -78,6 +75,8 @@ const SourceEditModal = ({
         );
     }
 
+    const form = sourceEditForm(sourceTypes, source, appTypes);
+
     return (
         <SourcesFormRenderer
             initialValues={form.initialValues}
@@ -97,7 +96,10 @@ SourceEditModal.propTypes = {
     updateSource: PropTypes.func.isRequired,
 
     sourceTypes: PropTypes.arrayOf(PropTypes.any), // list of all SourceTypes
+    appTypes: PropTypes.arrayOf(PropTypes.any),
     source: PropTypes.object, // a Source for editing
+    sourceTypesLoaded: PropTypes.bool.isRequired,
+    appTypesLoaded: PropTypes.bool.isRequired,
 
     location: PropTypes.any.isRequired,
     match: PropTypes.object.isRequired,
@@ -109,8 +111,8 @@ SourceEditModal.propTypes = {
 const mapDispatchToProps = dispatch => bindActionCreators(
     { loadEntities, loadSourceForEdit, updateSource }, dispatch);
 
-const mapStateToProps = ({ providers: { source, sourceTypes } }) => (
-    { source, sourceTypes }
+const mapStateToProps = ({ providers: { source, sourceTypes, appTypes, sourceTypesLoaded, appTypesLoaded } }) => (
+    { source, sourceTypes, appTypes, sourceTypesLoaded, appTypesLoaded }
 );
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withRouter(SourceEditModal)));

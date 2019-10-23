@@ -33,12 +33,12 @@ export const applicationFormatter = (apps, _item, { appTypes }) => {
 
     return (
         <TextContent>
-            {filteredApplications.sort((a, b) => a.localeCompare(b)).map((app, index) => (
-                <Text key={app}>
+            {filteredApplications.length > 0 ? filteredApplications.sort((a, b) => a.localeCompare(b)).map((app, index) => (
+                <Text key={app} className="pf-u-mb-0-on-sm">
                     {app}
                     {index < filteredApplications.length - 1 && <br key={index}/>}
                 </Text>
-            ))}
+            )) : '--'}
         </TextContent>
     );
 };

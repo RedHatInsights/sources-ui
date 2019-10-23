@@ -33,3 +33,9 @@
   min-height: 64px;
   text-align: center;
 }
+
+.ins-c-sources__row-vertical-centered {
+  td {
+    vertical-align: middle !important;
+  }
+}

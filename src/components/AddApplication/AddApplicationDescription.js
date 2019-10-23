@@ -17,6 +17,9 @@ import RemoveAppModal from './RemoveAppModal';
 const AddApplicationDescription = ({ appTypes, source, sourceTypes }) => {
     const [removingApp, setApplicationRemove] = useState({});
 
+    const sourceAppsNames = source.applications
+    .map(({ application_type_id }) => appTypes.find(({ id }) => id === application_type_id).display_name);
+
     const sourceType = sourceTypes.find((type) => type.id === source.source_type_id);
     const appNames = source.applications
     .filter((app) => !app.isDeleting)
@@ -26,12 +29,13 @@ const AddApplicationDescription = ({ appTypes, source, sourceTypes }) => {
         if (type) {
             return {
                 display_name: type.display_name,
-                id: app.id
+                id: app.id,
+                dependent_applications: type.dependent_applications
             };
         }
     })
     .sort((a, b) => a.display_name.localeCompare(b.display_name))
-    .map(({ display_name, id }) => (
+    .map(({ display_name, id, dependent_applications }) => (
         <Grid key={id}>
             <GridItem md={4}>
                 <Text component={TextVariants.p} style={{ marginBottom: 0 }}>
@@ -42,7 +46,7 @@ const AddApplicationDescription = ({ appTypes, source, sourceTypes }) => {
                 <Button
                     variant={ButtonVariant.link}
                     isInline
-                    onClick={() => setApplicationRemove({ id, display_name })}
+                    onClick={() => setApplicationRemove({ id, display_name, dependent_applications, sourceAppsNames })}
                 >
                     <FormattedMessage
                         id="sources.remove"
@@ -59,17 +63,10 @@ const AddApplicationDescription = ({ appTypes, source, sourceTypes }) => {
                 app={removingApp}
                 onCancel={() => setApplicationRemove({})}
                 sourceId={source.id}
+                appTypes={appTypes}
             />}
             <TextContent>
                 <Grid gutter="md">
-                    <GridItem md={12}>
-                        <Text component={TextVariants.h1}>
-                            <FormattedMessage
-                                id="sources.selectApp"
-                                defaultMessage="Select application"
-                            />
-                        </Text>
-                    </GridItem>
                     <GridItem md={2}>
                         <Text component={TextVariants.h4}>
                             <FormattedMessage
