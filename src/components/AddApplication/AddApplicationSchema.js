@@ -52,7 +52,7 @@ const fields = (applications = [], intl) => ({
                     fields: [{
                         component: 'description',
                         name: 'description',
-                        content: <AddApplicationDescription />
+                        Content: AddApplicationDescription
                     },
                     applications.length > 0 ? {
                         component: 'card-select',
@@ -74,7 +74,8 @@ const fields = (applications = [], intl) => ({
                             type: validatorTypes.REQUIRED
                         }],
                         validateOnMount: true,
-                        content: <TextContent>
+                        // eslint-disable-next-line react/display-name
+                        Content: () => (<TextContent>
                             <Text component={ TextVariants.p }>
                                 <FormattedMessage
                                     id="sources.allApplicationsAssigned"
@@ -82,7 +83,7 @@ const fields = (applications = [], intl) => ({
                                     or there is no available application for this source type."
                                 />
                             </Text>
-                        </TextContent>
+                        </TextContent>)
                     }]
                 }, {
                     title: intl.formatMessage({
@@ -93,7 +94,8 @@ const fields = (applications = [], intl) => ({
                     fields: [{
                         component: 'description',
                         name: 'description-summary',
-                        content: <TextContent>
+                        // eslint-disable-next-line react/display-name
+                        Content: () => (<TextContent>
                             <Text component={ TextVariants.p }>
                                 <FormattedMessage
                                     id="sources.reviewAddAppSummary"
@@ -105,7 +107,7 @@ const fields = (applications = [], intl) => ({
                                     defaultMessage="Use the Back button to make changes."
                                 />
                             </Text>
-                        </TextContent>
+                        </TextContent>)
                     }, {
                         component: 'add-application-summary',
                         name: 'summary'

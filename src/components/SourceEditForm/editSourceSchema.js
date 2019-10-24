@@ -1,6 +1,6 @@
 import React from 'react';
 import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
-import { TextContent, Title } from '@patternfly/react-core';
+import { TextContent } from '@patternfly/react-core';
 import { schemaBuilder, asyncValidator } from '@redhat-cloud-services/frontend-components-sources';
 import { FormattedMessage } from 'react-intl';
 
@@ -56,13 +56,13 @@ const summaryStep = (sourceTypes, applicationTypes) => ({
     fields: [{
         component: 'description',
         name: 'description',
-        content: <TextContent>
-            <Title headingLevel="h3" size="2xl">Review source details</Title>
+        // eslint-disable-next-line react/display-name
+        Content: () => (<TextContent>
             <FormattedMessage
                 id="sources.summaryDescription"
                 defaultMessage="Review source details and click Finish to complete source editing. Click Back to revise."
             />
-        </TextContent>
+        </TextContent>)
     }, {
         name: 'summary',
         component: 'summary',
