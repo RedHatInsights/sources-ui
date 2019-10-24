@@ -22,6 +22,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 
 import ApplicationList from './ApplicationsList/ApplicationList';
 import RemoveAppModal from './AddApplication/RemoveAppModal';
+import RedirectNoId from './RedirectNoId/RedirectNoId';
 
 const SourceRemoveModal = ({
     history: { push },
@@ -29,6 +30,10 @@ const SourceRemoveModal = ({
     source,
     intl
 }) => {
+    if (!source) {
+        return <RedirectNoId/>;
+    }
+
     const onSubmit = () => {
         push('/');
         return removeSource(source.id, intl.formatMessage({
@@ -41,10 +46,6 @@ const SourceRemoveModal = ({
 
     const [acknowledge, setAcknowledge] = useState(false);
     const [removingApp, setApplicationToRemove] = useState({});
-
-    if (!source) {
-        return null;
-    }
 
     const sourceHasActiveApp = source.applications.some((app) => !app.isDeleting);
 

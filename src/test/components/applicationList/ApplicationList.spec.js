@@ -10,6 +10,7 @@ import ApplicationList from '../../../components/ApplicationsList/ApplicationLis
 import { sourceTypesData } from '../../sourceTypesData';
 import { sourcesDataGraphQl, SOURCE_ALL_APS_ID, SOURCE_ONE_APS_ID } from '../../sourcesData';
 import { applicationTypesData } from '../../applicationTypesData';
+import RedirectNoId from '../../../components/RedirectNoId/RedirectNoId';
 
 describe('ApplicationList', () => {
     let store;
@@ -56,6 +57,27 @@ describe('ApplicationList', () => {
 
         expect(wrapper.find(Text).first().text()).toEqual(applicationType.display_name);
         expect(wrapper.find(Button)).toHaveLength(1);
+    });
+
+    it('renders RedirectNoId with source', () => {
+        initialEntry = [`${PATH}${SOURCE_ONE_APS_ID}`];
+
+        initialStore = {
+            providers: {
+                entities: [],
+                appTypes: applicationTypesData.data,
+                sourceTypes: sourceTypesData.data
+            }
+        };
+        store = mockStore(initialStore);
+
+        const wrapper = mount(componentWrapperIntl(
+            <Route path="/manage_apps/:id" render={ (...args) => <ApplicationList {...initialProps} { ...args }/> } />,
+            store,
+            initialEntry
+        ));
+
+        expect(wrapper.find(RedirectNoId)).toHaveLength(1);
     });
 
     it('renders correctly with prefix', () => {

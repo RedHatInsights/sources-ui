@@ -10,6 +10,7 @@ import RemoveAppModal from '../../../components/AddApplication/RemoveAppModal';
 import * as actions from '../../../redux/actions/providers';
 import { paths } from '../../../Routes';
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
+import RedirectNoId from '../../../components/RedirectNoId/RedirectNoId';
 
 describe('RemoveAppModal', () => {
     let store;
@@ -74,6 +75,25 @@ describe('RemoveAppModal', () => {
         expect(wrapper.find(FormattedMessage).length).toEqual(3);
         expect(wrapper.find(Button).at(1).text()).toEqual('Remove');
         expect(wrapper.find(Button).last().text()).toEqual('Cancel');
+    });
+
+    it('renders correctly RedirectNoId with no source', () => {
+        initialStore = {
+            providers: {
+                appTypes: [],
+                entities: []
+            }
+        };
+
+        store = mockStore(initialStore);
+
+        const wrapper = mount(componentWrapperIntl(
+            <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps} /> } />,
+            store,
+            initialEntry
+        ));
+
+        expect(wrapper.find(RedirectNoId)).toHaveLength(1);
     });
 
     it('renders correctly with attached dependent applications', () => {

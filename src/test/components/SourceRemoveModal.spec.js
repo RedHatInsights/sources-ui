@@ -15,6 +15,7 @@ import { sourcesDataGraphQl } from '../sourcesData';
 import { applicationTypesData } from '../applicationTypesData';
 import RemoveAppModal from '../../components/AddApplication/RemoveAppModal';
 import ApplicationList from '../../components/ApplicationsList/ApplicationList';
+import RedirectNoId from '../../components/RedirectNoId/RedirectNoId';
 
 describe('SourceRemoveModal', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -41,7 +42,7 @@ describe('SourceRemoveModal', () => {
             expect(wrapper.find('button[id="deleteSubmit"]').props().disabled).toEqual(true); // delete is disabled
         });
 
-        it('renders null when no source', () => {
+        it('renders redirect app when no source', () => {
             store = mockStore({
                 providers: { entities: [], appTypes: applicationTypesData.data }
             });
@@ -52,7 +53,7 @@ describe('SourceRemoveModal', () => {
                 ['/remove/14'])
             );
 
-            expect(wrapper.html()).toEqual('');
+            expect(wrapper.find(RedirectNoId)).toHaveLength(1);
         });
 
         it('enables submit button', () => {

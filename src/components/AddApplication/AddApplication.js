@@ -15,6 +15,8 @@ import FinishedStep from '../steps/FinishedStep';
 
 import { doCreateApplication } from '../../api/entities';
 
+import RedirectNoId from '../RedirectNoId/RedirectNoId';
+
 const initialState = {
     state: 'wizard',
     error: '',
@@ -29,7 +31,7 @@ const AddApplication = (
     const [state, setState] = useReducer(reducer, initialState);
 
     if (!source || !appTypesLoaded || !sourceTypesLoaded) {
-        return null;
+        return <RedirectNoId />;
     }
 
     const appIds = source.applications.filter(({ isDeleting }) => !isDeleting)

@@ -14,6 +14,7 @@ import { sourcesDataGraphQl } from '../../sourcesData';
 import { applicationTypesData } from '../../applicationTypesData';
 import RemoveAppModal from '../../../components/AddApplication/RemoveAppModal';
 import ApplicationList from '../../../components/ApplicationsList/ApplicationList';
+import RedirectNoId from '../../../components/RedirectNoId/RedirectNoId';
 
 describe('AddApplicationDescription', () => {
     let store;
@@ -48,6 +49,24 @@ describe('AddApplicationDescription', () => {
         expect(wrapper.find(ApplicationList).length).toEqual(0);
         expect(wrapper.find(FormattedMessage).last().text()).toEqual('No applications');
         expect(wrapper.find(Button).length).toEqual(0);
+    });
+
+    it('renders RedirectNoId', () => {
+        store = mockStore({
+            providers: {
+                entities: [],
+                appTypes: applicationTypesData.data,
+                sourceTypes: sourceTypesData.data
+            }
+        });
+
+        const wrapper = mount(componentWrapperIntl(
+            <Route path="/add_application/:id" render={ (...args) => <AddApplicationDescription { ...args }/> } />,
+            store,
+            initialEntry
+        ));
+
+        expect(wrapper.find(RedirectNoId)).toHaveLength(1);
     });
 
     it('renders correctly with application', () => {

@@ -13,9 +13,18 @@ import {
     ButtonVariant
 } from '@patternfly/react-core';
 
+import RedirectNoId from '../RedirectNoId/RedirectNoId';
+
 const ApplicationList = ({ appTypes, source, setApplicationToRemove, breakpoints, namePrefix }) => {
+    if (!source) {
+        return <RedirectNoId/>;
+    }
+
     const sourceAppsNames = source.applications
-    .map(({ application_type_id }) => appTypes.find(({ id }) => id === application_type_id).display_name);
+    .map(({ application_type_id }) => {
+        const appType = appTypes.find(({ id }) => id === application_type_id);
+        return appType ? appType.display_name : undefined;
+    });
 
     return source.applications
     .filter((app) => !app.isDeleting)

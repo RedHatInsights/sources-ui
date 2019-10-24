@@ -13,9 +13,14 @@ import {
 
 import RemoveAppModal from './RemoveAppModal';
 import ApplicationList from '../ApplicationsList/ApplicationList';
+import RedirectNoId from '../RedirectNoId/RedirectNoId';
 
 const AddApplicationDescription = ({ source, sourceTypes }) => {
     const [removingApp, setApplicationToRemove] = useState({});
+
+    if (!source) {
+        return <RedirectNoId />;
+    }
 
     const sourceType = sourceTypes.find((type) => type.id === source.source_type_id);
     const apps = source.applications.filter((app) => !app.isDeleting);

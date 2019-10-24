@@ -17,8 +17,13 @@ import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 import { withRouter } from 'react-router-dom';
 
 import { removeApplication } from '../../redux/actions/providers';
+import RedirectNoId from '../RedirectNoId/RedirectNoId';
 
 const RemoveAppModal = ({ app, onCancel, intl, removeApplication, source, appTypes }) => {
+    if (!source) {
+        return <RedirectNoId/>;
+    }
+
     const dependentApps = app.dependent_applications.map(appName => {
         const appType = appTypes.find(({ name }) => name === appName);
 

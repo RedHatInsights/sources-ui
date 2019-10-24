@@ -22,6 +22,7 @@ import FinishedStep from '../../../components/steps/FinishedStep';
 import ErroredStep from '../../../components/steps/ErroredStep';
 import LoadingStep from '../../../components/steps/LoadingStep';
 import { paths } from '../../../Routes';
+import RedirectNoId from '../../../components/RedirectNoId/RedirectNoId';
 
 describe('AddApplication', () => {
     let store;
@@ -92,6 +93,27 @@ describe('AddApplication', () => {
         ));
 
         expect(wrapper).toEqual({});
+    });
+
+    it('render RedirectNoId when no source', () => {
+        store = mockStore({
+            providers: {
+                entities: [],
+                appTypes: applicationTypesData.data,
+                sourceTypes: sourceTypesData.data,
+                appTypesLoaded: true,
+                sourceTypesLoaded: true
+            }
+        });
+
+        const wrapper = mount(componentWrapperIntl(
+            <Route path={paths.sourceManageApps} render={ (...args) => <AddApplication { ...args }/> } />,
+            store,
+            initialEntry
+        ));
+
+        expect(wrapper).toEqual({});
+        expect(wrapper.find(RedirectNoId)).toHaveLength(1);
     });
 
     it('renders review', () => {

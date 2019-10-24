@@ -117,7 +117,8 @@ export const addMessage = (title, variant, description) => (dispatch) => dispatc
     payload: {
         title,
         variant,
-        description
+        description,
+        dismissable: true
     }
 });
 
