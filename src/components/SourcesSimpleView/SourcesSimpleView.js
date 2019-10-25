@@ -69,7 +69,8 @@ const SourcesSimpleView = ({
                 filterColumn,
                 filterValue,
                 pageNumber,
-                pageSize
+                pageSize,
+                sourceTypes
             }
         ),
         ...additionalOptions
