@@ -2,18 +2,23 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { Modal, Button, Text } from '@patternfly/react-core';
 import configureStore from 'redux-mock-store';
-import { IntlProvider, FormattedMessage } from 'react-intl';
-import { Provider } from 'react-redux';
+import { FormattedMessage } from 'react-intl';
 import * as redux from 'redux';
+import { Route } from 'react-router-dom';
 
 import RemoveAppModal from '../../../components/AddApplication/RemoveAppModal';
 import * as actions from '../../../redux/actions/providers';
+import { paths } from '../../../Routes';
+import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
+import RedirectNoId from '../../../components/RedirectNoId/RedirectNoId';
 
 describe('RemoveAppModal', () => {
     let store;
     let mockStore;
     let initialProps;
     let spyOnCancel;
+    let initialEntry;
+    let initialStore;
 
     const APP_ID = '187894151315';
     const SOURCE_ID = '15';
@@ -31,9 +36,17 @@ describe('RemoveAppModal', () => {
         { name: APP2, display_name: APP2_DISPLAY_NAME }
     ];
 
+    const PATH = '/manage_apps/';
+
     beforeEach(() => {
+        initialStore = {
+            providers: {
+                appTypes: [],
+                entities: [{ id: SOURCE_ID }]
+            }
+        };
         mockStore = configureStore();
-        store = mockStore();
+        store = mockStore(initialStore);
         spyOnCancel = jest.fn();
         initialProps = {
             app: {
@@ -41,10 +54,9 @@ describe('RemoveAppModal', () => {
                 display_name: 'Catalog',
                 dependent_applications: []
             },
-            onCancel: spyOnCancel,
-            sourceId: SOURCE_ID,
-            appTypes: []
+            onCancel: spyOnCancel
         };
+        initialEntry = [`${PATH}${SOURCE_ID}`];
     });
 
     afterEach(() => {
@@ -52,19 +64,36 @@ describe('RemoveAppModal', () => {
     });
 
     it('renders correctly', () => {
-        const wrapper = mount(
-            <IntlProvider locale="en">
-                <Provider store={ store }>
-                    <RemoveAppModal {...initialProps} />
-                </Provider>
-            </IntlProvider>
-        );
+        const wrapper = mount(componentWrapperIntl(
+            <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps} /> } />,
+            store,
+            initialEntry
+        ));
 
         expect(wrapper.find(Modal).length).toEqual(1);
         expect(wrapper.find(Button).length).toEqual(3); // modal cancel, remove, cancel
         expect(wrapper.find(FormattedMessage).length).toEqual(3);
         expect(wrapper.find(Button).at(1).text()).toEqual('Remove');
         expect(wrapper.find(Button).last().text()).toEqual('Cancel');
+    });
+
+    it('renders correctly RedirectNoId with no source', () => {
+        initialStore = {
+            providers: {
+                appTypes: [],
+                entities: []
+            }
+        };
+
+        store = mockStore(initialStore);
+
+        const wrapper = mount(componentWrapperIntl(
+            <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps} /> } />,
+            store,
+            initialEntry
+        ));
+
+        expect(wrapper.find(RedirectNoId)).toHaveLength(1);
     });
 
     it('renders correctly with attached dependent applications', () => {
@@ -75,13 +104,18 @@ describe('RemoveAppModal', () => {
             sourceAppsNames: ATTACHED_APPS
         };
 
-        const wrapper = mount(
-            <IntlProvider locale="en">
-                <Provider store={ store }>
-                    <RemoveAppModal {...initialProps} app={app} appTypes={APP_TYPES}/>
-                </Provider>
-            </IntlProvider>
-        );
+        store = mockStore({
+            providers: {
+                ...initialStore.providers,
+                appTypes: APP_TYPES
+            }
+        });
+
+        const wrapper = mount(componentWrapperIntl(
+            <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps} app={app}/> } />,
+            store,
+            initialEntry
+        ));
 
         expect(wrapper.find(Text)).toHaveLength(2);
         expect(wrapper.find(Text).last().html().includes(APP1_DISPLAY_NAME)).toEqual(true);
@@ -96,13 +130,18 @@ describe('RemoveAppModal', () => {
             sourceAppsNames: ATTACHED_APPS
         };
 
-        const wrapper = mount(
-            <IntlProvider locale="en">
-                <Provider store={ store }>
-                    <RemoveAppModal {...initialProps} app={app} appTypes={APP_TYPES}/>
-                </Provider>
-            </IntlProvider>
-        );
+        store = mockStore({
+            providers: {
+                ...initialStore.providers,
+                appTypes: APP_TYPES
+            }
+        });
+
+        const wrapper = mount(componentWrapperIntl(
+            <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps} app={app}/> } />,
+            store,
+            initialEntry
+        ));
 
         expect(wrapper.find(Text)).toHaveLength(1);
         expect(wrapper.find(Text).last().html().includes(APP1_DISPLAY_NAME)).toEqual(false);
@@ -110,13 +149,11 @@ describe('RemoveAppModal', () => {
     });
 
     it('calls cancel', () => {
-        const wrapper = mount(
-            <IntlProvider locale="en">
-                <Provider store={ store }>
-                    <RemoveAppModal {...initialProps} />
-                </Provider>
-            </IntlProvider>
-        );
+        const wrapper = mount(componentWrapperIntl(
+            <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps}/> } />,
+            store,
+            initialEntry
+        ));
 
         wrapper.find(Button).last().simulate('click');
         expect(spyOnCancel).toHaveBeenCalled();
@@ -126,13 +163,11 @@ describe('RemoveAppModal', () => {
         redux.bindActionCreators = jest.fn(x => x);
         actions.removeApplication = jest.fn(() => new Promise((resolve) => resolve('OK')));
 
-        const wrapper = mount(
-            <IntlProvider locale="en">
-                <Provider store={ store }>
-                    <RemoveAppModal {...initialProps} />
-                </Provider>
-            </IntlProvider>
-        );
+        const wrapper = mount(componentWrapperIntl(
+            <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps}/> } />,
+            store,
+            initialEntry
+        ));
 
         wrapper.find(Button).at(1).simulate('click');
 
