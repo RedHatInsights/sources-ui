@@ -72,8 +72,8 @@ export const setProviderFilterColumn = (column) => ({
     payload: { column }
 });
 
-export const updateSource = (source, formData, title, description) => (dispatch) =>
-    doUpdateSource(source, formData).then(_finished => dispatch({
+export const updateSource = (source, formData, title, description, errorTitles) => (dispatch) =>
+    doUpdateSource(source, formData, errorTitles).then(_finished => dispatch({
         type: ADD_NOTIFICATION,
         payload: {
             variant: 'success',
