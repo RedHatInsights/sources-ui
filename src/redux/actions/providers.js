@@ -72,13 +72,14 @@ export const setProviderFilterColumn = (column) => ({
     payload: { column }
 });
 
-export const updateSource = (source, formData, title, description) => (dispatch) =>
-    doUpdateSource(source, formData).then(_finished => dispatch({
+export const updateSource = (source, formData, title, description, errorTitles) => (dispatch) =>
+    doUpdateSource(source, formData, errorTitles).then(_finished => dispatch({
         type: ADD_NOTIFICATION,
         payload: {
             variant: 'success',
             title,
-            description
+            description,
+            dismissable: true
         }
     })).catch(error => dispatch({
         type: 'FOOBAR_REJECTED',
@@ -94,7 +95,7 @@ export const removeSource = (sourceId, title) => ({
             fulfilled: {
                 variant: 'success',
                 title,
-                dismissable: false
+                dismissable: true
             }
         }
     }
@@ -133,7 +134,7 @@ export const removeApplication = (appId, sourceId, successTitle, errorTitle) => 
                 fulfilled: {
                     variant: 'success',
                     title: successTitle,
-                    dismissable: false
+                    dismissable: true
                 }
             }
         }
