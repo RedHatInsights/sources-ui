@@ -35,7 +35,7 @@ const initialState = (columns) => ({
     sortBy: {},
     isLoaded: false,
     cells: columns.filter(column => column.title || column.hidden).map(column => ({
-        title: column.title,
+        title: column.title || '',
         value: column.value,
         ...(column.sortable && { transforms: [sortable] })
     }))
