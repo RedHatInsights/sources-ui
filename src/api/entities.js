@@ -126,7 +126,8 @@ export const doLoadEntities = () => getSourcesApi().postGraphQL({
             name,
             tenant,
             uid,
-            updated_at
+            updated_at,
+            imported,
             applications { application_type_id, id },
             endpoints { id, scheme, host, port, path }
         }

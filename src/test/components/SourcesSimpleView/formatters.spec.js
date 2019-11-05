@@ -5,15 +5,19 @@ import {
     dateFormatter,
     sourceTypeFormatter,
     applicationFormatter,
+    importedFormatter,
     formatURL,
     sourceIsOpenShift,
     defaultPort,
     schemaToPort,
-    endpointToUrl
+    endpointToUrl,
+    importsTexts
 } from '../../../components/SourcesSimpleView/formatters';
 import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX } from '../../sourceTypesData';
 import { sourcesDataGraphQl, SOURCE_CATALOGAPP_INDEX, SOURCE_ALL_APS_INDEX, SOURCE_NO_APS_INDEX, SOURCE_ENDPOINT_URL_INDEX } from '../../sourcesData';
 import { applicationTypesData, CATALOG_INDEX, TOPOLOGICALINVENTORY_INDEX, COSTMANAGEMENET_INDEX } from '../../applicationTypesData';
+import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
+import { Badge, Tooltip } from '@patternfly/react-core';
 
 describe('formatters', () => {
     describe('formatters', () => {
@@ -25,26 +29,34 @@ describe('formatters', () => {
             expect(formatters('dateFormatter')).toEqual(dateFormatter);
         });
 
-        it('returns nameFormatter', () => {
+        it('returns sourceTypeFormatter', () => {
             expect(formatters('sourceTypeFormatter')).toEqual(sourceTypeFormatter);
         });
 
-        it('returns nameFormatter', () => {
+        it('returns applicationFormatter', () => {
             expect(formatters('applicationFormatter')).toEqual(applicationFormatter);
         });
 
-        it('returns nameFormatter', () => {
-            expect(formatters('nameFormatter')).toEqual(nameFormatter);
+        it('returns importedFormatter', () => {
+            expect(formatters('importedFormatter')).toEqual(importedFormatter);
         });
 
         it('returns defaultFormatter when non-sense', () => {
-            expect(formatters('peknaKravina')).toEqual(defaultFormatter);
+            const nonsenseFormatter = 'peknaKravina';
+            const value = 'some value';
+            expect(formatters(nonsenseFormatter)(value)).toEqual(`undefined ${nonsenseFormatter} formatter of value: ${value}`);
         });
     });
 
     describe('defaultFormatter', () => {
-        it('returns value in string', () => {
-            expect(defaultFormatter('ahoj').includes('ahoj')).toEqual(true);
+        it('returns string message', () => {
+            const VALUE = 'ahoj';
+            const NAME = 'dateFormatter';
+
+            const result = defaultFormatter(NAME)(VALUE);
+
+            expect(result.includes(NAME)).toEqual(true);
+            expect(result.includes(VALUE)).toEqual(true);
         });
     });
 
@@ -83,6 +95,26 @@ describe('formatters', () => {
             expect(JSON.stringify(nameFormatter(sourcesDataGraphQl[0].name, sourcesDataGraphQl[0], { sourceTypes: sourceTypesData.data }))
             .includes(sourcesDataGraphQl[0].name))
             .toEqual(true);
+        });
+    });
+
+    describe('importedFormatter', () => {
+        it('returns null when undefined value', () => {
+            expect(importedFormatter(undefined)).toEqual(null);
+        });
+
+        it('returns only imported badge', () => {
+            const wrapper = mount(componentWrapperIntl(importedFormatter('value with no text'), {}));
+
+            expect(wrapper.find(Badge)).toHaveLength(1);
+            expect(wrapper.find(Tooltip)).toHaveLength(0);
+        });
+
+        it('returns imported badge with tooltip', () => {
+            const wrapper = mount(componentWrapperIntl(importedFormatter('cfme'), {}));
+
+            expect(wrapper.find(Badge)).toHaveLength(1);
+            expect(wrapper.find(Tooltip)).toHaveLength(1);
         });
     });
 
@@ -149,6 +181,20 @@ describe('formatters', () => {
 
         it('correctly parses undefined port', () => {
             expect(schemaToPort('https', undefined)).toEqual('');
+        });
+    });
+
+    describe('importsTexts', () => {
+        it('returns object for cfme', () => {
+            expect(importsTexts('cfme')).toEqual(expect.any(Object));
+        });
+
+        it('returns object for CFME', () => {
+            expect(importsTexts('CFME')).toEqual(expect.any(Object));
+        });
+
+        it('returns default undefined', () => {
+            expect(importsTexts('nonsense')).toEqual(undefined);
         });
     });
 

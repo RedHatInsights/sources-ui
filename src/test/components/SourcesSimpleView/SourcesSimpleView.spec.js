@@ -5,7 +5,7 @@ import configureStore from 'redux-mock-store';
 import { Table, TableHeader, TableBody, RowWrapper } from '@patternfly/react-table';
 import { MemoryRouter } from 'react-router-dom';
 
-import SourcesSimpleView from '../../../components/SourcesSimpleView/SourcesSimpleView';
+import SourcesSimpleView, { insertEditAction, actionResolver } from '../../../components/SourcesSimpleView/SourcesSimpleView';
 import { PlaceHolderTable, RowWrapperLoader, RowLoader } from '../../../components/SourcesSimpleView/loaders';
 
 import { sourcesDataGraphQl } from '../../sourcesData';
@@ -16,16 +16,6 @@ import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import { sortByCompare } from '../../../Utilities/filteringSorting';
 import * as actions from '../../../redux/actions/providers';
 
-export const columns = [
-    { title: null, value: 'id' },
-    { title: null, value: 'uid' },
-    { title: 'Name', value: 'name', searchable: true, formatter: 'nameFormatter' },
-    { title: 'Type', value: 'source_type_id', searchable: false, formatter: 'sourceTypeFormatter' },
-    { title: 'Application', value: 'applications', searchable: false, formatter: 'applicationFormatter' },
-    { title: 'Date added', value: 'created_at', formatter: 'dateFormatter' },
-    { title: null, value: 'tenant_id' }
-];
-
 describe('SourcesSimpleView', () => {
     const middlewares = [thunk, notificationsMiddleware()];
     let loadedProps;
@@ -34,7 +24,7 @@ describe('SourcesSimpleView', () => {
     let initialState;
 
     beforeEach(() => {
-        initialProps = { columns };
+        initialProps = {};
         mockStore = configureStore(middlewares);
         initialState = {
             providers:
@@ -260,6 +250,60 @@ describe('SourcesSimpleView', () => {
                 expect(spy).toHaveBeenCalledWith('source_type_id', 'asc');
 
                 done();
+            });
+        });
+    });
+
+    describe('helper functions', () => {
+        const INTL_MOCK = { formatMessage: ({ defaultMessage }) => defaultMessage };
+        const pushMock = jest.fn();
+
+        describe('insertEditAction', () => {
+            it('inserts edit item to index 1', () => {
+                const ACTIONS = ['first', 'second'];
+
+                insertEditAction(ACTIONS, INTL_MOCK, pushMock);
+
+                expect(ACTIONS).toHaveLength(3);
+                expect(ACTIONS[1]).toEqual(expect.objectContaining({
+                    title: expect.any(String),
+                    onClick: expect.any(Function)
+                }));
+            });
+        });
+
+        describe('actionResolver', () => {
+            const actionObject = (title) => expect.objectContaining({
+                title: title ? expect.stringContaining(title) : expect.any(String)
+            });
+
+            const MANAGE_APP_TITLE = 'Manage applications';
+            const EDIT_TITLE = 'Edit';
+            const DELETE_TITLE = 'Delete';
+
+            it('create actions for editable source', () => {
+                const EDITABLE_DATA = { imported: undefined };
+
+                const actions = actionResolver(INTL_MOCK, pushMock)(EDITABLE_DATA);
+
+                expect(actions).toHaveLength(3);
+                expect(actions).toEqual(expect.arrayContaining([
+                    actionObject(MANAGE_APP_TITLE),
+                    actionObject(EDIT_TITLE),
+                    actionObject(DELETE_TITLE)
+                ]));
+            });
+
+            it('create actions for uneditable source', () => {
+                const UNEDITABLE_DATA = { imported: true };
+
+                const actions = actionResolver(INTL_MOCK, pushMock)(UNEDITABLE_DATA);
+
+                expect(actions).toHaveLength(2);
+                expect(actions).toEqual(expect.arrayContaining([
+                    actionObject(MANAGE_APP_TITLE),
+                    actionObject(DELETE_TITLE)
+                ]));
             });
         });
     });

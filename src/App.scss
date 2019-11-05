@@ -39,3 +39,9 @@
     vertical-align: middle !important;
   }
 }
+
+.ins-c-sources__help-cursor {
+  &:hover {
+    cursor: help;
+  }
+}

@@ -1,11 +1,19 @@
 import React from 'react';
 import moment from 'moment';
-import { Text, TextContent, TextVariants } from '@patternfly/react-core';
+import { Text, TextContent, TextVariants, Badge, Tooltip } from '@patternfly/react-core';
+import { FormattedMessage } from 'react-intl';
 
 export const defaultPort = (scheme) => ({
     http: '80',
     https: '443'
 }[scheme]);
+
+export const importsTexts = (value) => ({
+    cfme: <FormattedMessage
+        id="sources.cloudformImportTooltip"
+        defaultMessage="This source can be managed from your connected CloudForms application."
+    />
+}[value.toLowerCase()]);
 
 export const schemaToPort = (schema, port) => port && String(port) !== defaultPort(schema) ? `:${port}` : '';
 
@@ -59,11 +67,38 @@ export const nameFormatter = (name, source, { sourceTypes }) => (
     </TextContent>
 );
 
-export const defaultFormatter = (value) => `undefined formatter for: ${value}`;
+export const defaultFormatter = (name) => (value) => `undefined ${name} formatter of value: ${value}`;
+
+export const importedFormatter = (value) => {
+    if (!value) {
+        return null;
+    }
+
+    const text = importsTexts(value);
+
+    if (text) {
+        return (<Tooltip content={text}>
+            <Badge isRead className='ins-c-sources__help-cursor'>
+                <FormattedMessage
+                    id="sources.imported"
+                    defaultMessage="imported"
+                />
+            </Badge>
+        </Tooltip>);
+    }
+
+    return (<Badge isRead>
+        <FormattedMessage
+            id="sources.imported"
+            defaultMessage="imported"
+        />
+    </Badge>);
+};
 
 export const formatters = (name) => ({
     nameFormatter,
     dateFormatter,
     applicationFormatter,
-    sourceTypeFormatter
-}[name] || defaultFormatter);
+    sourceTypeFormatter,
+    importedFormatter
+}[name] || defaultFormatter(name));
