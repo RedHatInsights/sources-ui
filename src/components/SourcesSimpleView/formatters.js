@@ -78,7 +78,7 @@ export const importedFormatter = (value) => {
 
     if (text) {
         return (<Tooltip content={text}>
-            <Badge isRead>
+            <Badge isRead className='ins-c-sources__help-cursor'>
                 <FormattedMessage
                     id="sources.imported"
                     defaultMessage="imported"
