@@ -26,7 +26,7 @@ const SourcesEmptyState = ({ title, body }) => (
                         {title ? title :
                             <FormattedMessage
                                 id="sources.emptyStateTitle"
-                                defaultMessage="No Sources"
+                                defaultMessage="No sources"
                             />
                         }
                     </Title>
@@ -34,7 +34,7 @@ const SourcesEmptyState = ({ title, body }) => (
                         {body ? body :
                             <FormattedMessage
                                 id="sources.emptyStateBody"
-                                defaultMessage="No Sources have been defined. To start define a Source."
+                                defaultMessage="No sources have been defined. To start define a source."
                             />
                         }
                     </EmptyStateBody>

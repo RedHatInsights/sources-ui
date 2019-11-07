@@ -11,7 +11,13 @@ import {
     TextListItemVariants
 } from '@patternfly/react-core';
 
+import RedirectNoId from '../RedirectNoId/RedirectNoId';
+
 const Summary = ({ formOptions, sourceTypes, appTypes, source }) => {
+    if (!source) {
+        return <RedirectNoId />;
+    }
+
     const type = sourceTypes.find((sourceType) => sourceType.id === source.source_type_id);
     const applicationId = formOptions.getState().values.application;
     const application = appTypes.find((app) => app.id === applicationId);

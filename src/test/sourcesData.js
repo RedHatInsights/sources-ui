@@ -169,3 +169,4 @@ export const SOURCE_NO_APS_ID = '23';
 export const SOURCE_ENDPOINT_URL_INDEX = 3;
 export const SOURCE_CATALOGAPP_INDEX = 3;
 export const SOURCE_ALL_APS_ID = '408';
+export const SOURCE_ONE_APS_ID = '406';

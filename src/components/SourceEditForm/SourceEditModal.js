@@ -39,7 +39,21 @@ const SourceEditModal = ({
         intl.formatMessage({
             id: 'sources.modifiedNotificationDescription',
             defaultMessage: 'The source was successfully modified.'
-        }))
+        }),
+        {
+            authentication: intl.formatMessage({
+                id: 'sources.sourceEditAuthFailure',
+                defaultMessage: 'Authentication update failure.'
+            }),
+            source: intl.formatMessage({
+                id: 'sources.sourceEditFailure',
+                defaultMessage: 'Source update failure.'
+            }),
+            endpoint: intl.formatMessage({
+                id: 'sources.sourceEditEndpointFailure',
+                defaultMessage: 'Endpoint update failure.'
+            })
+        })
     .then(() => {
         history.replace('/');
         loadEntities();

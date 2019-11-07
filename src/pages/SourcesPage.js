@@ -99,7 +99,7 @@ const SourcesPage = ({
                     </SplitItem>
                 </Split>
             </TableToolbar>
-            <SourcesSimpleView columns={sourcesViewDefinition.columns(intl)}/>
+            <SourcesSimpleView />
             <TableToolbar>
                 <Pagination
                     itemsPerPage={pageSize}
