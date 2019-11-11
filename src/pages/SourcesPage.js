@@ -9,7 +9,8 @@ import {
     loadAppTypes,
     loadEntities,
     loadSourceTypes,
-    setProviderFilterColumn
+    setProviderFilterColumn,
+    clearAddSource
 } from '../redux/actions/providers';
 import { Button } from '@patternfly/react-core';
 import { SplitItem, Split } from '@patternfly/react-core';
@@ -24,9 +25,40 @@ import SourceEditModal from '../components/SourceEditForm/SourceEditModal';
 import SourceRemoveModal from '../components/SourceRemoveModal';
 import AddApplication from '../components/AddApplication/AddApplication';
 import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
-import { pageAndSize } from '../redux/actions/providers';
+import { pageAndSize, addMessage } from '../redux/actions/providers';
 import { paths } from '../Routes';
 import { prepareEntities } from '../Utilities/filteringSorting';
+import UndoButtonAdd from '../components/UndoButton/UndoButtonAdd';
+import isEmpty from 'lodash/isEmpty';
+
+export const onCloseAddSourceWizard = ({ values, clearAddSource, addMessage, history, intl }) => {
+    if (values && !isEmpty(values)) {
+        const messageId = Date.now();
+        addMessage(
+            intl.formatMessage({
+                id: 'sources.addWizardCanceled',
+                defaultMessage: 'Adding a source was cancelled'
+            }),
+            'success',
+            <FormattedMessage
+                id="sources.undoMistake"
+                defaultMessage={ `{undo} if this was a mistake.` }
+                values={ { undo: <UndoButtonAdd messageId={messageId} values={values} /> } }
+            />,
+            messageId
+        );
+    }
+
+    clearAddSource();
+    history.push('/');
+};
+
+export const afterSuccessLoadParameters = { pageNumber: 1, sortBy: 'created_at', sortDirection: 'desc' };
+
+export const afterSuccess = ({ clearAddSource, loadEntities }) => {
+    clearAddSource();
+    loadEntities(afterSuccessLoadParameters);
+};
 
 const SourcesPage = ({
     entities,
@@ -48,7 +80,10 @@ const SourcesPage = ({
     loadAppTypes,
     filterProviders,
     pageAndSize,
-    setProviderFilterColumn
+    setProviderFilterColumn,
+    addMessage,
+    clearAddSource,
+    addSourceInitialValues
 }) => {
     useEffect(() => {
         Promise.all([loadSourceTypes(), loadAppTypes(), loadEntities()]);
@@ -127,9 +162,10 @@ const SourcesPage = ({
                 sourceTypes={sourceTypes}
                 applicationTypes={appTypes}
                 isOpen={true}
-                onClose={() => history.push('/')}
-                afterSuccess={() => loadEntities({ pageNumber: 1, sortBy: 'created_at', sortDirection: 'desc' })}
+                onClose={(values) => onCloseAddSourceWizard({ values, clearAddSource, addMessage, history, intl })}
+                afterSuccess={() => afterSuccess({ clearAddSource, loadEntities })}
                 hideSourcesButton={true}
+                initialValues={addSourceInitialValues}
             />}
             { editorEdit && <SourceEditModal />}
             <PageHeader>
@@ -166,9 +202,11 @@ SourcesPage.propTypes = {
     pageSize: PropTypes.number.isRequired,
     pageNumber: PropTypes.number.isRequired,
     fetchingError: PropTypes.object,
-
+    addMessage: PropTypes.func.isRequired,
     filterValue: PropTypes.string,
     loaded: PropTypes.bool.isRequired,
+    clearAddSource: PropTypes.func.isRequired,
+    addSourceInitialValues: PropTypes.object,
 
     location: PropTypes.any.isRequired,
     match: PropTypes.object.isRequired,
@@ -188,24 +226,28 @@ const mapDispatchToProps = dispatch => bindActionCreators(
         loadSourceTypes,
         loadAppTypes,
         pageAndSize,
-        setProviderFilterColumn
+        setProviderFilterColumn,
+        addMessage,
+        clearAddSource
     },
     dispatch);
 
 const mapStateToProps = (
-    { providers: {
-        filterValue,
-        loaded,
-        numberOfEntities,
-        sourceTypesLoaded,
-        sourceTypes,
-        appTypes,
-        entities,
-        pageSize,
-        pageNumber,
-        fetchingError,
-        ...others
-    }
+    {
+        providers: {
+            filterValue,
+            loaded,
+            numberOfEntities,
+            sourceTypesLoaded,
+            sourceTypes,
+            appTypes,
+            entities,
+            pageSize,
+            pageNumber,
+            fetchingError,
+            addSourceInitialValues,
+            ...others
+        }
     }) => (
     {
         filterValue,
@@ -218,6 +260,7 @@ const mapStateToProps = (
         pageSize,
         pageNumber,
         fetchingError,
+        addSourceInitialValues,
         others
     }
 );

@@ -6,7 +6,9 @@ import {
     SET_FILTER_COLUMN,
     SOURCE_EDIT_REQUEST,
     SOURCE_FOR_EDIT_LOADED,
-    ADD_APP_TO_SOURCE
+    ADD_APP_TO_SOURCE,
+    UNDO_ADD_SOURCE,
+    CLEAR_ADD_SOURCE
 } from '../action-types-providers';
 
 export const defaultProvidersState = {
@@ -17,7 +19,8 @@ export const defaultProvidersState = {
     numberOfEntities: 0,
     filterColumn: 'name', // temporary hard-coded filtering by name
     appTypesLoaded: false,
-    sourceTypesLoaded: false
+    sourceTypesLoaded: false,
+    addSourceInitialValues: {}
 };
 
 const entitiesPending = (state) => ({
@@ -156,6 +159,16 @@ const addAppToSource = (state, { payload: { sourceId, app } }) => ({
         : entity)
 });
 
+export const undoAddSource = (state, { payload: { values } }) => ({
+    ...state,
+    addSourceInitialValues: values
+});
+
+export const clearAddSource = (state) => ({
+    ...state,
+    addSourceInitialValues: {}
+});
+
 export default {
     [ACTION_TYPES.LOAD_ENTITIES_PENDING]: entitiesPending,
     [ACTION_TYPES.LOAD_ENTITIES_FULFILLED]: entitiesLoaded,
@@ -177,5 +190,7 @@ export default {
     [SET_FILTER_COLUMN]: setFilterColumn,
     [SOURCE_FOR_EDIT_LOADED]: sourceForEditLoaded,
     [SOURCE_EDIT_REQUEST]: sourceEditRequest,
-    [ADD_APP_TO_SOURCE]: addAppToSource
+    [ADD_APP_TO_SOURCE]: addAppToSource,
+    [UNDO_ADD_SOURCE]: undoAddSource,
+    [CLEAR_ADD_SOURCE]: clearAddSource
 };

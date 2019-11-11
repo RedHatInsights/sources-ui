@@ -1,4 +1,4 @@
-import { entitiesLoaded, defaultProvidersState } from '../../redux/reducers/providers';
+import { entitiesLoaded, defaultProvidersState, undoAddSource, clearAddSource } from '../../redux/reducers/providers';
 
 describe('redux > sources reducer', () => {
     describe('entitiesLoaded', () => {
@@ -32,6 +32,33 @@ describe('redux > sources reducer', () => {
                 expect.objectContaining({
                     ...EXPECTED_STATE,
                     ...ADDITIONAL_OPTIONS
+                })
+            );
+        });
+    });
+
+    describe('undoAddSource', () => {
+        it('sets values', () => {
+            const VALUES = { name: 'aa', source: { id: 1 } };
+
+            expect(undoAddSource(defaultProvidersState, { payload: { values: VALUES } })).toEqual(
+                expect.objectContaining({
+                    ...defaultProvidersState,
+                    addSourceInitialValues: VALUES
+                })
+            );
+        });
+    });
+
+    describe('clearAddSource', () => {
+        it('sets values to null', () => {
+            const EMPTY_OBJECT = {};
+            const NOT_EMPTY = { cosi: '133' };
+
+            expect(clearAddSource({ ...defaultProvidersState, addSourceInitialValues: NOT_EMPTY })).toEqual(
+                expect.objectContaining({
+                    ...defaultProvidersState,
+                    addSourceInitialValues: EMPTY_OBJECT
                 })
             );
         });

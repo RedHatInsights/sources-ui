@@ -4,7 +4,7 @@ import ContentLoader from 'react-content-loader';
 import { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/files/ReducerRegistry';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 
-import SourcesPage from '../pages/SourcesPage';
+import SourcesPage, { onCloseAddSourceWizard, afterSuccess, afterSuccessLoadParameters } from '../pages/SourcesPage';
 import SourcesEmptyState from '../components/SourcesEmptyState';
 import SourcesFilter from '../components/SourcesFilter';
 import SourcesSimpleView from '../components/SourcesSimpleView/SourcesSimpleView';
@@ -119,6 +119,74 @@ describe('SourcesPage', () => {
 
             expect(store.getState().providers.filterValue).toEqual(SEARCH_TERM);
             done();
+        });
+    });
+
+    describe('helpers', () => {
+        describe('onCloseAddSourceWizard', () => {
+            let args;
+
+            beforeEach(() => {
+                args = {
+                    values: { some_value: 'aa' },
+                    intl: {
+                        formatMessage: ({ defaultMessage }) => defaultMessage
+                    },
+                    addMessage: jest.fn(),
+                    clearAddSource: jest.fn(),
+                    history: {
+                        push: jest.fn()
+                    }
+                };
+            });
+
+            it('create notifications when values', () => {
+                const tmpDate = Date.now;
+
+                const TIMESTAMP = 12345313512;
+
+                Date.now = () => TIMESTAMP;
+
+                const EXPECTED_TITLE = expect.any(String);
+                const EXPECTED_VARIANT = expect.any(String);
+                const EXPECTED_DEESCRIPTION = expect.any(Object);
+                const EXPECTED_CUSTOM_ID = TIMESTAMP;
+
+                onCloseAddSourceWizard(args);
+
+                expect(args.addMessage).toHaveBeenCalledWith(
+                    EXPECTED_TITLE,
+                    EXPECTED_VARIANT,
+                    EXPECTED_DEESCRIPTION,
+                    EXPECTED_CUSTOM_ID
+                );
+                expect(args.clearAddSource).toHaveBeenCalled();
+                expect(args.history.push).toHaveBeenCalled();
+
+                Date.now = tmpDate;
+            });
+
+            it('only clear and change path when no values', () => {
+                onCloseAddSourceWizard({ ...args, values: {} });
+
+                expect(args.addMessage).not.toHaveBeenCalled();
+                expect(args.clearAddSource).toHaveBeenCalled();
+                expect(args.history.push).toHaveBeenCalled();
+            });
+        });
+
+        describe('afterSuccess', () => {
+            it('calls function', () => {
+                const args = {
+                    clearAddSource: jest.fn(),
+                    loadEntities: jest.fn()
+                };
+
+                afterSuccess(args);
+
+                expect(args.clearAddSource).toHaveBeenCalled();
+                expect(args.loadEntities).toHaveBeenCalledWith(afterSuccessLoadParameters);
+            });
         });
     });
 });
