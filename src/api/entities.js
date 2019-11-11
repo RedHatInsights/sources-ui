@@ -1,33 +1,10 @@
-import axios from 'axios';
+import axiosInstanceInsights from '@redhat-cloud-services/frontend-components-utilities/files/interceptors';
 import { DefaultApi as SourcesDefaultApi } from '@redhat-cloud-services/sources-client';
-import { Base64 } from 'js-base64';
 
 import { SOURCES_API_BASE } from '../Utilities/Constants';
 import { defaultPort } from '../components/SourcesSimpleView/formatters';
 
-const axiosInstance = axios.create(
-    process.env.FAKE_IDENTITY ? {
-        headers: {
-            common: {
-                'x-rh-identity': Base64.encode(
-                    JSON.stringify(
-                        {
-                            identity: { account_number: process.env.FAKE_IDENTITY }
-                        }
-                    )
-                )
-            }
-        }
-    } : {}
-);
-
-axiosInstance.interceptors.request.use(async (config) => {
-    await window.insights.chrome.auth.getUser();
-    return config;
-});
-axiosInstance.interceptors.response.use(response => response.data || response);
-axiosInstance.interceptors.response.use(null, error => { throw { ...error.response }; });
-axiosInstance.interceptors.response.use(response => {
+axiosInstanceInsights.interceptors.response.use(response => {
     if (response.errors && response.errors.length > 0) {
         return Promise.reject({ detail: response.errors[0].message });
     }
@@ -38,14 +15,14 @@ axiosInstance.interceptors.response.use(response => {
 let apiInstance;
 
 export const getSourcesApi = () =>
-    apiInstance || (apiInstance = new SourcesDefaultApi(undefined, SOURCES_API_BASE, axiosInstance));
+    apiInstance || (apiInstance = new SourcesDefaultApi(undefined, SOURCES_API_BASE, axiosInstanceInsights));
 
 export const doLoadAppTypes = () =>
-    axiosInstance.get(`${SOURCES_API_BASE}/application_types`);
+    axiosInstanceInsights.get(`${SOURCES_API_BASE}/application_types`);
 
 export function doRemoveSource(sourceId) {
-    return getSourcesApi().deleteSource(sourceId).catch((data) => {
-        throw { error: { detail: data.data.errors[0].detail } };
+    return getSourcesApi().deleteSource(sourceId).catch((error) => {
+        throw { error: { detail: error.errors[0].detail } };
     });
 }
 
@@ -106,13 +83,13 @@ export const doUpdateSource = (source, formData, errorTitles) => {
 
     return Promise.all([
         getSourcesApi().updateSource(source.id, formData.source).catch((error) => {
-            throw { error: { title: errorTitles.source, detail: error.data.errors[0].detail } };
+            throw { error: { title: errorTitles.source, detail: error.errors[0].detail } };
         }),
         getSourcesApi().updateEndpoint(source.endpoint.id, endpointData).catch((error) => {
-            throw { error: { title: errorTitles.endpoint, detail: error.data.errors[0].detail } };
+            throw { error: { title: errorTitles.endpoint, detail: error.errors[0].detail } };
         }),
         getSourcesApi().updateAuthentication(source.authentication.id, formData.authentication).catch((error) => {
-            throw { error: { title: errorTitles.authentication, detail: error.data.errors[0].detail } };
+            throw { error: { title: errorTitles.authentication, detail: error.errors[0].detail } };
         })
     ]);
 };
@@ -142,4 +119,4 @@ export const doCreateApplication = (source_id, application_type_id) => getSource
 export const doDeleteApplication = (appId, errorMessage) =>
     getSourcesApi()
     .deleteApplication(appId)
-    .catch(({ data: { errors: [{ detail }] } }) => { throw { error: { title: errorMessage, detail } };});
+    .catch(({ errors: [{ detail }] }) => { throw { error: { title: errorMessage, detail } };});

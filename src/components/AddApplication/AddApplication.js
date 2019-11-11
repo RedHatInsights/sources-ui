@@ -58,7 +58,7 @@ const AddApplication = (
             setState({ state: 'finished' });
             addAppToSource(source.id, app);
         })
-        .catch(({ data: { errors: [{ detail }] } }) => {
+        .catch(({ errors: [{ detail }] }) => {
             setState({
                 state: 'errored',
                 error: detail,

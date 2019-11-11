@@ -159,7 +159,7 @@ describe('AddApplication', () => {
 
         redux.bindActionCreators = jest.fn(x => x);
         entities.doCreateApplication = jest.fn(() => new Promise((_resolve, reject) => reject(
-            { data: { errors: [{ detail: ERROR_MESSAGE }] } }
+            { errors: [{ detail: ERROR_MESSAGE }] }
         )));
 
         const wrapper = mount(componentWrapperIntl(
