@@ -1,27 +1,39 @@
-import { ADD_NOTIFICATION } from '@red-hat-insights/insights-frontend-components/components/Notifications';
+import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications';
 import {
-    ACTION_TYPES, SELECT_ENTITY, EXPAND_ENTITY, SORT_ENTITIES, PAGE_AND_SIZE,
-    ADD_PROVIDER, FILTER_PROVIDERS, CLOSE_ALERT, ADD_ALERT, SET_FILTER_COLUMN,
-    SOURCE_FOR_EDIT_LOADED, SOURCE_EDIT_REQUEST
+    ACTION_TYPES,
+    SORT_ENTITIES,
+    PAGE_AND_SIZE,
+    FILTER_PROVIDERS,
+    SET_FILTER_COLUMN,
+    SOURCE_FOR_EDIT_LOADED,
+    SOURCE_EDIT_REQUEST,
+    ADD_APP_TO_SOURCE,
+    UNDO_ADD_SOURCE,
+    CLEAR_ADD_SOURCE
 } from '../action-types-providers';
 import {
     doLoadAppTypes,
     doLoadSourceForEdit,
     doRemoveSource,
     doUpdateSource,
-    doLoadEntities
+    doLoadEntities,
+    doDeleteApplication
 } from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
 
-export const loadEntities = () => (dispatch) => {
+export const loadEntities = (options) => (dispatch) => {
     dispatch({ type: ACTION_TYPES.LOAD_ENTITIES_PENDING });
 
     return doLoadEntities().then(({ sources }) => {
         dispatch({
             type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
-            payload: sources
+            payload: sources,
+            ...options
         });
-    });
+    }).catch(error => dispatch({
+        type: ACTION_TYPES.LOAD_ENTITIES_REJECTED,
+        payload: { error: { detail: error.detail || error.data, title: 'Fetching data failed, try refresh page' } }
+    }));
 };
 
 export const loadSourceTypes = () => (dispatch) => {
@@ -42,16 +54,6 @@ export const loadAppTypes = () => (dispatch) => {
     }));
 };
 
-export const selectEntity = (id, selected) => ({
-    type: SELECT_ENTITY,
-    payload: { id, selected }
-});
-
-export const expandEntity = (id, expanded) => ({
-    type: EXPAND_ENTITY,
-    payload: { id, expanded }
-});
-
 export const sortEntities = (column, direction) => ({
     type: SORT_ENTITIES,
     payload: { column, direction }
@@ -60,11 +62,6 @@ export const sortEntities = (column, direction) => ({
 export const pageAndSize = (page, size) => ({
     type: PAGE_AND_SIZE,
     payload: { page, size }
-});
-
-export const addProvider = (formData) => ({
-    type: ADD_PROVIDER,
-    payload: { formData }
 });
 
 export const filterProviders = (value) => ({
@@ -77,39 +74,34 @@ export const setProviderFilterColumn = (column) => ({
     payload: { column }
 });
 
-export const closeAlert = () => ({
-    type: CLOSE_ALERT
-});
-
-export const addAlert = (message, type) => ({
-    type: ADD_ALERT,
-    payload: { message, type }
-});
-
-export const updateSource = (source, formData, title, description) => (dispatch) =>
-    doUpdateSource(source, formData).then(_finished => dispatch({
+export const updateSource = (source, formData, title, description, errorTitles) => (dispatch) =>
+    doUpdateSource(source, formData, errorTitles).then(_finished => dispatch({
         type: ADD_NOTIFICATION,
         payload: {
             variant: 'success',
             title,
-            description
+            description,
+            dismissable: true
         }
     })).catch(error => dispatch({
         type: 'FOOBAR_REJECTED',
         payload: error
     }));
 
-export const removeSource = (sourceId, title) => (dispatch) =>
-    doRemoveSource(sourceId).then(_finished => dispatch({
-        type: ADD_NOTIFICATION,
-        payload: {
-            variant: 'success',
-            title
+export const removeSource = (sourceId, title) => ({
+    type: ACTION_TYPES.REMOVE_SOURCE,
+    payload: () => doRemoveSource(sourceId),
+    meta: {
+        sourceId,
+        notifications: {
+            fulfilled: {
+                variant: 'success',
+                title,
+                dismissable: true
+            }
         }
-    })).catch(error => dispatch({
-        type: 'FOOBAR_REJECTED',
-        payload: error
-    }));
+    }
+});
 
 export const loadSourceForEdit = sourceId => dispatch => {
     dispatch({ type: SOURCE_EDIT_REQUEST });
@@ -123,11 +115,53 @@ export const loadSourceForEdit = sourceId => dispatch => {
     }));
 };
 
-export const addMessage = (title, variant, description) => (dispatch) => dispatch({
+export const addMessage = (title, variant, description, customId) => (dispatch) => dispatch({
     type: ADD_NOTIFICATION,
     payload: {
         title,
         variant,
-        description
+        description,
+        dismissable: true,
+        customId
     }
+});
+
+export const removeMessage = (id) => (dispatch) => dispatch({
+    type: REMOVE_NOTIFICATION,
+    payload: id
+});
+
+export const removeApplication = (appId, sourceId, successTitle, errorTitle) => (dispatch) => {
+    dispatch({
+        type: ACTION_TYPES.REMOVE_APPLICATION,
+        payload: () => doDeleteApplication(appId, errorTitle),
+        meta: {
+            appId,
+            sourceId,
+            notifications: {
+                fulfilled: {
+                    variant: 'success',
+                    title: successTitle,
+                    dismissable: true
+                }
+            }
+        }
+    });
+};
+
+export const addAppToSource = (sourceId, app) => ({
+    type: ADD_APP_TO_SOURCE,
+    payload: {
+        sourceId,
+        app
+    }
+});
+
+export const undoAddSource = (values) => ({
+    type: UNDO_ADD_SOURCE,
+    payload: { values }
+});
+
+export const clearAddSource = () => ({
+    type: CLEAR_ADD_SOURCE
 });

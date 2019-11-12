@@ -3,8 +3,7 @@ import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-re
 import {
     TextContent,
     Text,
-    TextVariants,
-    Title
+    TextVariants
 } from '@patternfly/react-core';
 import AddApplicationDescription from './AddApplicationDescription';
 import { FormattedMessage } from 'react-intl';
@@ -22,6 +21,8 @@ const fields = (applications = [], intl) => ({
                 defaultMessage: 'Manage applications'
             }),
             inModal: true,
+            predictSteps: true,
+            showTitles: true,
             description: intl.formatMessage({
                 id: 'sources.addAppDescription',
                 defaultMessage: 'You are managing applications of this source'
@@ -51,14 +52,15 @@ const fields = (applications = [], intl) => ({
                     fields: [{
                         component: 'description',
                         name: 'description',
-                        content: <AddApplicationDescription />
-                    }, applications.length > 0 ? {
+                        Content: AddApplicationDescription
+                    },
+                    applications.length > 0 ? {
                         component: 'card-select',
                         name: 'application',
                         options: applications,
                         label: intl.formatMessage({
-                            id: 'sources.addApp',
-                            defaultMessage: 'Add application'
+                            id: 'sources.chooseAppToAdd',
+                            defaultMessage: 'Choose an application to add'
                         }),
                         DefaultIcon: () => <React.Fragment />, // eslint-disable-line
                         isRequired: true,
@@ -72,14 +74,16 @@ const fields = (applications = [], intl) => ({
                             type: validatorTypes.REQUIRED
                         }],
                         validateOnMount: true,
-                        content: <TextContent>
+                        // eslint-disable-next-line react/display-name
+                        Content: () => (<TextContent>
                             <Text component={ TextVariants.p }>
                                 <FormattedMessage
                                     id="sources.allApplicationsAssigned"
-                                    defaultMessage="All available applications have already been added to this source."
+                                    defaultMessage="All available applications have already been added to this source
+                                    or there is no available application for this source type."
                                 />
                             </Text>
-                        </TextContent>
+                        </TextContent>)
                     }]
                 }, {
                     title: intl.formatMessage({
@@ -90,24 +94,20 @@ const fields = (applications = [], intl) => ({
                     fields: [{
                         component: 'description',
                         name: 'description-summary',
-                        content: <TextContent>
-                            <Title headingLevel="h3" size="2xl">
-                                <FormattedMessage
-                                    id="sources.review"
-                                    defaultMessage="Review"
-                                />
-                            </Title>
+                        // eslint-disable-next-line react/display-name
+                        Content: () => (<TextContent>
                             <Text component={ TextVariants.p }>
                                 <FormattedMessage
-                                    id="sources.reviewGuide"
-                                    defaultMessage="Review the information below and click Finish to configure your project."
+                                    id="sources.reviewAddAppSummary"
+                                    // eslint-disable-next-line max-len
+                                    defaultMessage="Review the information below and click Finish to add the application to your source."
                                 /> <br />
                                 <FormattedMessage
                                     id="sources.backGuide"
                                     defaultMessage="Use the Back button to make changes."
                                 />
                             </Text>
-                        </TextContent>
+                        </TextContent>)
                     }, {
                         component: 'add-application-summary',
                         name: 'summary'

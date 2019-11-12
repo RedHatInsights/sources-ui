@@ -1,132 +1,192 @@
 import thunk from 'redux-thunk';
-import { notificationsMiddleware } from '@red-hat-insights/insights-frontend-components/components/Notifications';
+import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import ContentLoader from 'react-content-loader';
-import { IntlProvider } from 'react-intl';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { applyReducerHash } from '@red-hat-insights/insights-frontend-components';
+import { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/files/ReducerRegistry';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import configureStore from 'redux-mock-store';
 
-import SourcesPage from '../pages/SourcesPage';
+import SourcesPage, { onCloseAddSourceWizard, afterSuccess, afterSuccessLoadParameters } from '../pages/SourcesPage';
 import SourcesEmptyState from '../components/SourcesEmptyState';
 import SourcesFilter from '../components/SourcesFilter';
-import SourcesSimpleView from '../components/SourcesSimpleView';
+import SourcesSimpleView from '../components/SourcesSimpleView/SourcesSimpleView';
 
-import { sourcesData, sourcesDataGraphQl } from './sourcesData';
+import { sourcesDataGraphQl } from './sourcesData';
 import { sourceTypesData } from './sourceTypesData';
 import { applicationTypesData } from './applicationTypesData';
-
-import { SOURCES_API_BASE } from '../Utilities/Constants';
 
 import { componentWrapperIntl } from '../Utilities/testsHelpers';
 
 import ReducersProviders, { defaultProvidersState } from '../redux/reducers/providers';
+import * as api from '../api/entities';
+import * as typesApi from '../api/source_types';
 
 describe('SourcesPage', () => {
     const middlewares = [thunk, notificationsMiddleware()];
-    let mockStore;
     let initialProps;
-    let initialState;
+    let store;
 
     beforeEach(() => {
         initialProps = {};
-        mockStore = configureStore(middlewares);
-        initialState = { providers: { loaded: true, rows: [], entities: [], numberOfEntities: 0 } };
+
+        api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: sourcesDataGraphQl }));
+        api.doLoadAppTypes = jest.fn().mockImplementation(() => Promise.resolve(applicationTypesData));
+        typesApi.doLoadSourceTypes =  jest.fn().mockImplementation(() => Promise.resolve(sourceTypesData.data));
+
+        store = createStore(
+            combineReducers({ providers: applyReducerHash(ReducersProviders, defaultProvidersState) }),
+            applyMiddleware(...middlewares)
+        );
     });
 
-    const applicationsSource19 = {
-        meta: { count: 0, limit: 100, offset: 0 },
-        links: { first: '/api/v1.0/applications/?offset=0\u00219source_id=19', last: '/api/v1.0/applications/?offset=0\u00219source_id=19' },
-        data: []
-    };
-
-    const endpointsSource19 = {
-        meta: { count: 1, limit: 100, offset: 0 },
-        links: { first: '/api/v1.0/endpoints/?offset=0\u00219source_id=19', last: '/api/v1.0/endpoints/?offset=0\u00219source_id=19' },
-        data: [
-            { certificate_authority: 'asfasfasf', created_at: '2019-05-02T12:44:12Z', default: false, host: 'bar.bar', id: '4', path: '/', port: 3300, role: 'kubernetes', scheme: 'http', source_id: '6', updated_at: '2019-05-02T12:44:12Z', verify_ssl: true, tenant: 'martinpovolny' }
-        ]
-    };
-
-    const mockInitialHttpRequests = () => {
-        apiClientMock.get(`${SOURCES_API_BASE}/sources`, mockOnce({ body: sourcesData }));
-        apiClientMock.get(`${SOURCES_API_BASE}/source_types`, mockOnce({ body: sourceTypesData }));
-        apiClientMock.get(`${SOURCES_API_BASE}/application_types`, mockOnce({ body: applicationTypesData }));
-        apiClientMock.get(`${SOURCES_API_BASE}/applications/?source_id=19`, mockOnce({ body: applicationsSource19 }));
-        apiClientMock.get(`${SOURCES_API_BASE}/endpoints/?source_id=19`, mockOnce({ body: endpointsSource19 }));
-        apiClientMock.post(`${SOURCES_API_BASE}/graphql`, mockOnce({ body: { data: { sources: sourcesDataGraphQl } } }));
-    };
-
     it('should fetch sources and source types on component mount', (done) => {
-        expect.assertions(1);
-        const store = mockStore(initialState);
-        mockInitialHttpRequests();
+        const wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
 
-        const expectedActions = [
-            { type: 'LOAD_SOURCE_TYPES_PENDING' },
-            { type: 'LOAD_APP_TYPES_PENDING' },
-            { type: 'LOAD_ENTITIES_PENDING' },
-            expect.objectContaining({ type: 'LOAD_APP_TYPES_FULFILLED' }),
-            expect.objectContaining({ type: 'LOAD_SOURCE_TYPES_FULFILLED' }),
-            expect.objectContaining({ type: 'LOAD_ENTITIES_FULFILLED' })
-        ];
+        expect(api.doLoadEntities).toHaveBeenCalled();
+        expect(api.doLoadAppTypes).toHaveBeenCalled();
+        expect(typesApi.doLoadSourceTypes).toHaveBeenCalled();
 
-        mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
         setImmediate(() => {
-            expect(store.getActions()).toEqual(expectedActions);
+            wrapper.update();
+            expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
+            expect(wrapper.find(SourcesFilter)).toHaveLength(1);
+            expect(wrapper.find(SourcesSimpleView)).toHaveLength(1);
             done();
         });
     });
 
     it('renders empty state when there are no Sources', (done) => {
-        const store = mockStore(initialState);
-        mockInitialHttpRequests();
+        api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
 
-        const page = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
+        const wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
+
         setImmediate(() => {
-            expect(page.find(SourcesEmptyState)).toHaveLength(1);
-            expect(page.find(SourcesFilter)).toHaveLength(0);
-            expect(page.find(SourcesSimpleView)).toHaveLength(0);
+            wrapper.update();
+            expect(wrapper.find(SourcesEmptyState)).toHaveLength(1);
+            expect(wrapper.find(SourcesFilter)).toHaveLength(0);
+            expect(wrapper.find(SourcesSimpleView)).toHaveLength(0);
+            done();
+        });
+    });
+
+    it('renders empty state when there is fetching error', (done) => {
+        const ERROR_MESSAGE = 'ERROR_MESSAGE';
+        api.doLoadEntities = jest.fn().mockImplementation(() => Promise.reject({ detail: ERROR_MESSAGE }));
+
+        const wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
+
+        setImmediate(() => {
+            wrapper.update();
+            expect(wrapper.find(SourcesEmptyState)).toHaveLength(1);
+            expect(wrapper.find(SourcesFilter)).toHaveLength(0);
+            expect(wrapper.find(SourcesSimpleView)).toHaveLength(0);
+            expect(wrapper.find('SourcesPage').props().fetchingError.detail).toEqual(ERROR_MESSAGE);
             done();
         });
     });
 
     it('renders table and filtering', (done) => {
-        const store = mockStore({
-            providers: { loaded: true, rows: [], entities: [], numberOfEntities: 1 }
-        });
-        mockInitialHttpRequests();
-
-        const page = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
+        const wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
 
         setImmediate(() => {
-            expect(page.find(SourcesEmptyState)).toHaveLength(0);
-            expect(page.find(SourcesFilter)).toHaveLength(1);
-            expect(page.find(SourcesSimpleView)).toHaveLength(1);
+            expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
+            expect(wrapper.find(SourcesFilter)).toHaveLength(1);
+            expect(wrapper.find(SourcesSimpleView)).toHaveLength(1);
             done();
         });
     });
+
     it('renders loading state when is loading', (done) => {
-        const store = createStore(
-            combineReducers({ providers: applyReducerHash(ReducersProviders, defaultProvidersState) }),
-            applyMiddleware(...middlewares)
-        );
-        mockInitialHttpRequests();
+        const wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
 
-        const page = mount(<IntlProvider locale="en">
-            <Provider store={ store }>
-                <MemoryRouter initialEntries={ ['/'] }>
-                    <Route path='/' render={() => <SourcesPage />}/>
-                </MemoryRouter>
-            </Provider>
-        </IntlProvider>);
-
-        expect(page.find(ContentLoader).length).toEqual(2);
+        expect(wrapper.find(ContentLoader).length).toEqual(2);
         setImmediate(() => {
-            page.update();
-            expect(page.find(ContentLoader).length).toEqual(0);
+            wrapper.update();
+            expect(wrapper.find(ContentLoader).length).toEqual(0);
             done();
+        });
+    });
+
+    it('should call onFilterSelect', (done) => {
+        const SEARCH_TERM = 'Pepa';
+        const FILTER_INPUT_INDEX = 0;
+
+        const wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
+
+        setImmediate(() => {
+            wrapper.update();
+            const filterInput = wrapper.find('input').at(FILTER_INPUT_INDEX);
+
+            filterInput.simulate('change', { target: { value: SEARCH_TERM } });
+
+            expect(store.getState().providers.filterValue).toEqual(SEARCH_TERM);
+            done();
+        });
+    });
+
+    describe('helpers', () => {
+        describe('onCloseAddSourceWizard', () => {
+            let args;
+
+            beforeEach(() => {
+                args = {
+                    values: { some_value: 'aa' },
+                    intl: {
+                        formatMessage: ({ defaultMessage }) => defaultMessage
+                    },
+                    addMessage: jest.fn(),
+                    clearAddSource: jest.fn(),
+                    history: {
+                        push: jest.fn()
+                    }
+                };
+            });
+
+            it('create notifications when values', () => {
+                const tmpDate = Date.now;
+
+                const TIMESTAMP = 12345313512;
+
+                Date.now = () => TIMESTAMP;
+
+                const EXPECTED_TITLE = expect.any(String);
+                const EXPECTED_VARIANT = expect.any(String);
+                const EXPECTED_DEESCRIPTION = expect.any(Object);
+                const EXPECTED_CUSTOM_ID = TIMESTAMP;
+
+                onCloseAddSourceWizard(args);
+
+                expect(args.addMessage).toHaveBeenCalledWith(
+                    EXPECTED_TITLE,
+                    EXPECTED_VARIANT,
+                    EXPECTED_DEESCRIPTION,
+                    EXPECTED_CUSTOM_ID
+                );
+                expect(args.clearAddSource).toHaveBeenCalled();
+                expect(args.history.push).toHaveBeenCalled();
+
+                Date.now = tmpDate;
+            });
+
+            it('only clear and change path when no values', () => {
+                onCloseAddSourceWizard({ ...args, values: {} });
+
+                expect(args.addMessage).not.toHaveBeenCalled();
+                expect(args.clearAddSource).toHaveBeenCalled();
+                expect(args.history.push).toHaveBeenCalled();
+            });
+        });
+
+        describe('afterSuccess', () => {
+            it('calls function', () => {
+                const args = {
+                    clearAddSource: jest.fn(),
+                    loadEntities: jest.fn()
+                };
+
+                afterSuccess(args);
+
+                expect(args.clearAddSource).toHaveBeenCalled();
+                expect(args.loadEntities).toHaveBeenCalledWith(afterSuccessLoadParameters);
+            });
         });
     });
 });
