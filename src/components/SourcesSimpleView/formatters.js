@@ -1,7 +1,7 @@
 import React from 'react';
-import moment from 'moment';
 import { Text, TextContent, TextVariants, Badge, Tooltip } from '@patternfly/react-core';
 import { FormattedMessage } from 'react-intl';
+import { DateFormat } from '@redhat-cloud-services/frontend-components';
 
 export const defaultPort = (scheme) => ({
     http: '80',
@@ -56,7 +56,16 @@ export const sourceTypeFormatter = (sourceType, _item, { sourceTypes }) => {
     return (type && type.product_name) || sourceType || '';
 };
 
-export const dateFormatter = str => moment(new Date(Date.parse(str))).utc().format('DD MMM YYYY, hh:mm UTC');
+export const dateFormatter = str => (
+    <Text
+        style={ { marginBottom: 0 } }
+        component={ TextVariants.small }
+        className='ins-c-sources__help-cursor'
+    >
+        <DateFormat type='relative' date={str} />
+    </Text>
+);
+
 export const nameFormatter = (name, source, { sourceTypes }) => (
     <TextContent>
         {name}

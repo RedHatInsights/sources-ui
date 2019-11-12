@@ -18,6 +18,7 @@ import { sourcesDataGraphQl, SOURCE_CATALOGAPP_INDEX, SOURCE_ALL_APS_INDEX, SOUR
 import { applicationTypesData, CATALOG_INDEX, TOPOLOGICALINVENTORY_INDEX, COSTMANAGEMENET_INDEX } from '../../applicationTypesData';
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import { Badge, Tooltip } from '@patternfly/react-core';
+import { DateFormat } from '@redhat-cloud-services/frontend-components';
 
 describe('formatters', () => {
     describe('formatters', () => {
@@ -86,7 +87,9 @@ describe('formatters', () => {
 
     describe('dateFormatter', () => {
         it('returns parsed date', () => {
-            expect(dateFormatter(sourcesDataGraphQl[0].created_at)).toEqual('23 Apr 2019, 06:21 UTC');
+            const wrapper = mount(dateFormatter(sourcesDataGraphQl[0].created_at));
+
+            expect(wrapper.find(DateFormat)).toHaveLength(1);
         });
     });
 
