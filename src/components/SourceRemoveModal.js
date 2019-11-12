@@ -6,7 +6,9 @@ import { bindActionCreators } from 'redux';
 import {
     Modal,
     Button,
-    Bullseye,
+    Split,
+    SplitItem,
+    Stack,
     Text,
     TextContent,
     TextVariants,
@@ -14,46 +16,42 @@ import {
     TextListItem,
     Checkbox
 } from '@patternfly/react-core';
-import { loadEntities, removeSource } from '../redux/actions/providers';
-import { WarningTriangleIcon } from '@patternfly/react-icons';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { removeSource } from '../redux/actions/providers';
+import { ExclamationTriangleIcon } from '@patternfly/react-icons';
+import { FormattedMessage, useIntl } from 'react-intl';
+
+import ApplicationList from './ApplicationsList/ApplicationList';
+import RemoveAppModal from './AddApplication/RemoveAppModal';
+import RedirectNoId from './RedirectNoId/RedirectNoId';
 
 const SourceRemoveModal = ({
     history: { push },
     removeSource,
-    loadEntities,
-    source,
-    intl,
-    appTypes
+    source
 }) => {
-    const onSubmit = () => removeSource(source.id, intl.formatMessage({
-        id: 'sources.notificationDeleteMessage',
-        defaultMessage: `{title} was deleted successfully.`
-    }, { title: source.name }))
-    .then(() => { loadEntities(); push('/'); });
+    const intl = useIntl();
+
+    if (!source) {
+        return <RedirectNoId/>;
+    }
+
+    const onSubmit = () => {
+        push('/');
+        return removeSource(source.id, intl.formatMessage({
+            id: 'sources.notificationDeleteMessage',
+            defaultMessage: `{title} was deleted successfully.`
+        }, { title: source.name }));
+    };
 
     const onCancel = () => push('/');
 
     const [acknowledge, setAcknowledge] = useState(false);
+    const [removingApp, setApplicationToRemove] = useState({});
 
-    if (!source) {
-        return null;
-    }
-
-    const appNames = source.applications.map((app) => {
-        const type = appTypes.find((appType) => appType.id === app.application_type_id);
-
-        if (type) {
-            return type.display_name;
-        }
-    }).map((name) => (
-        <Text key={name} component={TextVariants.p} style={{ marginBottom: 0 }}>
-            - {name}
-        </Text>
-    ));
+    const sourceHasActiveApp = source.applications.some((app) => !app.isDeleting);
 
     const actions = source.applications.length > 0 ? [
-        <Button id="deleteCancel" key="cancel" variant="secondary" type="button" onClick={ onCancel }>
+        <Button id="deleteCancel" key="cancel" variant="link" type="button" onClick={ onCancel }>
             <FormattedMessage
                 id="sources.close"
                 defaultMessage="Close"
@@ -68,7 +66,7 @@ const SourceRemoveModal = ({
                 defaultMessage="Delete this source and its data"
             />
         </Button>,
-        <Button id="deleteCancel" key="cancel" variant="secondary" type="button" onClick={ onCancel }>
+        <Button id="deleteCancel" key="cancel" variant="link" type="button" onClick={ onCancel }>
             <FormattedMessage
                 id="sources.deleteCancel"
                 defaultMessage="Do not delete this source"
@@ -85,13 +83,30 @@ const SourceRemoveModal = ({
                     applications have been removed from this source."
                 />
             </Text>
-            <Text component={ TextVariants.p } style={{ marginBottom: 0 }}>
-                <FormattedMessage
-                    id="sources.connectedApps"
-                    defaultMessage="Connected applications:"
-                />
-            </Text>
-            { appNames }
+            <Button
+                variant="link"
+                isInline
+                onClick={ (_ev) => push(`/manage_apps/${source.id}`)}
+            >
+                <Text component={ TextVariants.p } style={{ marginBottom: 0 }}>
+                    <FormattedMessage
+                        id="sources.connectedApps"
+                        defaultMessage="Connected applications:"
+                    />
+                </Text>
+            </Button>
+            {
+                sourceHasActiveApp ? <ApplicationList
+                    breakpoints={{ display_name: 8, remove: 4 }}
+                    setApplicationToRemove={setApplicationToRemove}
+                    namePrefix='- '
+                /> : <Text component={ TextVariants.p }>
+                    <FormattedMessage
+                        id="sources.connectedApps"
+                        defaultMessage="Connected applications are being removed."
+                    />
+                </Text>
+            }
         </React.Fragment>
     ) : (
         <React.Fragment>
@@ -155,19 +170,22 @@ const SourceRemoveModal = ({
             isSmall
             onClose={ onCancel }
             actions={ actions }
+            isFooterLeftAligned
         >
-            <Bullseye>
-                <TextContent>
-                    <div className="ins-c-source__dialog--flex">
-                        <div className="ins-c-source__dialog--icon">
-                            <WarningTriangleIcon className="ins-c-source__delete-icon" />
-                        </div>
-                        <div className="ins-c-source__dialog--text">
+            {removingApp.id && <RemoveAppModal
+                app={removingApp}
+                onCancel={() => setApplicationToRemove({})}
+            />}
+            <Split gutter="md">
+                <SplitItem><ExclamationTriangleIcon size="xl" className="ins-m-alert ins-c-source__delete-icon" /></SplitItem>
+                <SplitItem isFilled>
+                    <Stack gutter="md">
+                        <TextContent>
                             { body }
-                        </div>
-                    </div>
-                </TextContent>
-            </Bullseye>
+                        </TextContent>
+                    </Stack>
+                </SplitItem>
+            </Split>
         </Modal>
     );
 };
@@ -181,20 +199,15 @@ SourceRemoveModal.propTypes = {
         push: PropTypes.func.isRequired
     }).isRequired,
     removeSource: PropTypes.func.isRequired,
-    loadEntities: PropTypes.func.isRequired,
     source: PropTypes.shape({
         id: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired
-    }),
-    intl: PropTypes.object
+    })
 };
 
-const mapStateToProps = ({ providers: { entities, appTypes } }, { match: { params: { id } } }) =>
-    ({ source: entities.find(source => source.id  === id), appTypes });
+const mapStateToProps = ({ providers: { entities } }, { match: { params: { id } } }) =>
+    ({ source: entities.find(source => source.id  === id) });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-    loadEntities,
-    removeSource
-}, dispatch);
+const mapDispatchToProps = (dispatch) => bindActionCreators({ removeSource }, dispatch);
 
-export default injectIntl(withRouter(connect(mapStateToProps, mapDispatchToProps)(SourceRemoveModal)));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SourceRemoveModal));

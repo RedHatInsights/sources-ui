@@ -8,64 +8,31 @@ import {
     TextVariants,
     Grid,
     GridItem,
-    Text,
-    Button,
-    ButtonVariant
+    Text
 } from '@patternfly/react-core';
-import RemoveAppModal from './RemoveAppModal';
 
-const AddApplicationDescription = ({ appTypes, source, sourceTypes }) => {
-    const [removingApp, setApplicationRemove] = useState({});
+import RemoveAppModal from './RemoveAppModal';
+import ApplicationList from '../ApplicationsList/ApplicationList';
+import RedirectNoId from '../RedirectNoId/RedirectNoId';
+
+const AddApplicationDescription = ({ source, sourceTypes }) => {
+    const [removingApp, setApplicationToRemove] = useState({});
+
+    if (!source) {
+        return <RedirectNoId />;
+    }
 
     const sourceType = sourceTypes.find((type) => type.id === source.source_type_id);
-    const appNames = source.applications.map((app) => {
-        const type = appTypes.find((appType) => appType.id === app.application_type_id);
-
-        if (type) {
-            return {
-                display_name: type.display_name,
-                id: app.id
-            };
-        }
-    })
-    .map(({ display_name, id }) => (
-        <Grid key={id}>
-            <GridItem md={4}>
-                <Text component={TextVariants.p} style={{ marginBottom: 0 }}>
-                    { display_name }
-                </Text>
-            </GridItem>
-            <GridItem md={8} className="ins-c-sources__remove-app">
-                <Button
-                    variant={ButtonVariant.link}
-                    isInline
-                    onClick={() => setApplicationRemove({ id, display_name })}
-                >
-                    <FormattedMessage
-                        id="sources.remove"
-                        defaultMessage="Remove"
-                    />
-                </Button>
-            </GridItem>
-        </Grid>
-    ));
+    const apps = source.applications.filter((app) => !app.isDeleting);
 
     return (
         <React.Fragment>
             {removingApp.id && <RemoveAppModal
                 app={removingApp}
-                onCancel={() => setApplicationRemove({})}
+                onCancel={() => setApplicationToRemove({})}
             />}
             <TextContent>
                 <Grid gutter="md">
-                    <GridItem md={12}>
-                        <Text component={TextVariants.h1}>
-                            <FormattedMessage
-                                id="sources.selectApp"
-                                defaultMessage="Select application"
-                            />
-                        </Text>
-                    </GridItem>
                     <GridItem md={2}>
                         <Text component={TextVariants.h4}>
                             <FormattedMessage
@@ -104,7 +71,7 @@ const AddApplicationDescription = ({ appTypes, source, sourceTypes }) => {
                         </Text>
                     </GridItem>
                     <GridItem md={8}>
-                        {appNames.length > 0 ? appNames : <FormattedMessage
+                        {apps.length > 0 ? <ApplicationList setApplicationToRemove={setApplicationToRemove}/> : <FormattedMessage
                             id="sources.noApps"
                             defaultMessage="No applications"
                         />}
@@ -131,7 +98,7 @@ AddApplicationDescription.propTypes = {
     })
 };
 
-const mapStateToProps = ({ providers: { entities, appTypes, sourceTypes } }, { match: { params: { id } } }) =>
-    ({ source: entities.find(source => source.id  === id), appTypes, sourceTypes });
+const mapStateToProps = ({ providers: { entities, sourceTypes } }, { match: { params: { id } } }) =>
+    ({ source: entities.find(source => source.id  === id), sourceTypes });
 
 export default withRouter(connect(mapStateToProps)(AddApplicationDescription));

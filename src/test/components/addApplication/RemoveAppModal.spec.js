@@ -1,33 +1,62 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { Modal, Button } from '@patternfly/react-core';
+import { Modal, Button, Text } from '@patternfly/react-core';
 import configureStore from 'redux-mock-store';
-import { IntlProvider, FormattedMessage } from 'react-intl';
-import { Provider } from 'react-redux';
+import { FormattedMessage } from 'react-intl';
 import * as redux from 'redux';
+import { Route } from 'react-router-dom';
 
 import RemoveAppModal from '../../../components/AddApplication/RemoveAppModal';
 import * as actions from '../../../redux/actions/providers';
-import * as entities from '../../../api/entities';
-import LoadingStep from '../../../components/steps/LoadingStep';
+import { paths } from '../../../Routes';
+import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
+import RedirectNoId from '../../../components/RedirectNoId/RedirectNoId';
 
 describe('RemoveAppModal', () => {
     let store;
     let mockStore;
     let initialProps;
     let spyOnCancel;
+    let initialEntry;
+    let initialStore;
+
+    const APP_ID = '187894151315';
+    const SOURCE_ID = '15';
+    const SUCCESS_MSG = expect.any(String);
+    const ERROR_MSG = expect.any(String);
+
+    const APP1 = 'APP_1';
+    const APP2 = 'APP_2';
+    const APP1_DISPLAY_NAME = 'APP_1';
+    const APP2_DISPLAY_NAME = 'APP_2';
+    const DEPENDENT_APPS = [APP1, APP2];
+
+    const APP_TYPES = [
+        { name: APP1, display_name: APP1_DISPLAY_NAME },
+        { name: APP2, display_name: APP2_DISPLAY_NAME }
+    ];
+
+    const PATH = '/manage_apps/';
 
     beforeEach(() => {
+        initialStore = {
+            providers: {
+                appTypes: [],
+                entities: [{ id: SOURCE_ID }]
+            }
+        };
         mockStore = configureStore();
-        store = mockStore();
+        store = mockStore(initialStore);
         spyOnCancel = jest.fn();
         initialProps = {
             app: {
-                id: '187894151315',
-                display_name: 'Catalog'
+                id: APP_ID,
+                display_name: 'Catalog',
+                dependent_applications: []
             },
             onCancel: spyOnCancel
         };
+        initialEntry = [`${PATH}${SOURCE_ID}`];
     });
 
     afterEach(() => {
@@ -35,13 +64,11 @@ describe('RemoveAppModal', () => {
     });
 
     it('renders correctly', () => {
-        const wrapper = mount(
-            <IntlProvider locale="en">
-                <Provider store={ store }>
-                    <RemoveAppModal {...initialProps} />
-                </Provider>
-            </IntlProvider>
-        );
+        const wrapper = mount(componentWrapperIntl(
+            <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps} /> } />,
+            store,
+            initialEntry
+        ));
 
         expect(wrapper.find(Modal).length).toEqual(1);
         expect(wrapper.find(Button).length).toEqual(3); // modal cancel, remove, cancel
@@ -50,79 +77,102 @@ describe('RemoveAppModal', () => {
         expect(wrapper.find(Button).last().text()).toEqual('Cancel');
     });
 
+    it('renders correctly RedirectNoId with no source', () => {
+        initialStore = {
+            providers: {
+                appTypes: [],
+                entities: []
+            }
+        };
+
+        store = mockStore(initialStore);
+
+        const wrapper = mount(componentWrapperIntl(
+            <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps} /> } />,
+            store,
+            initialEntry
+        ));
+
+        expect(wrapper.find(RedirectNoId)).toHaveLength(1);
+    });
+
+    it('renders correctly with attached dependent applications', () => {
+        const ATTACHED_APPS = [APP1_DISPLAY_NAME, APP2_DISPLAY_NAME];
+        const app = {
+            ...initialProps.app,
+            dependent_applications: DEPENDENT_APPS,
+            sourceAppsNames: ATTACHED_APPS
+        };
+
+        store = mockStore({
+            providers: {
+                ...initialStore.providers,
+                appTypes: APP_TYPES
+            }
+        });
+
+        const wrapper = mount(componentWrapperIntl(
+            <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps} app={app}/> } />,
+            store,
+            initialEntry
+        ));
+
+        expect(wrapper.find(Text)).toHaveLength(2);
+        expect(wrapper.find(Text).last().html().includes(APP1_DISPLAY_NAME)).toEqual(true);
+        expect(wrapper.find(Text).last().html().includes(APP2_DISPLAY_NAME)).toEqual(true);
+    });
+
+    it('renders correctly with unattached dependent applications', () => {
+        const ATTACHED_APPS = [];
+        const app = {
+            ...initialProps.app,
+            dependent_applications: DEPENDENT_APPS,
+            sourceAppsNames: ATTACHED_APPS
+        };
+
+        store = mockStore({
+            providers: {
+                ...initialStore.providers,
+                appTypes: APP_TYPES
+            }
+        });
+
+        const wrapper = mount(componentWrapperIntl(
+            <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps} app={app}/> } />,
+            store,
+            initialEntry
+        ));
+
+        expect(wrapper.find(Text)).toHaveLength(1);
+        expect(wrapper.find(Text).last().html().includes(APP1_DISPLAY_NAME)).toEqual(false);
+        expect(wrapper.find(Text).last().html().includes(APP2_DISPLAY_NAME)).toEqual(false);
+    });
+
     it('calls cancel', () => {
-        const wrapper = mount(
-            <IntlProvider locale="en">
-                <Provider store={ store }>
-                    <RemoveAppModal {...initialProps} />
-                </Provider>
-            </IntlProvider>
-        );
+        const wrapper = mount(componentWrapperIntl(
+            <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps}/> } />,
+            store,
+            initialEntry
+        ));
 
         wrapper.find(Button).last().simulate('click');
         expect(spyOnCancel).toHaveBeenCalled();
     });
 
-    it('calls a submit, show loading step and calls cancel', (done) => {
+    it('calls a submit and calls cancel', (done) => {
         redux.bindActionCreators = jest.fn(x => x);
-        entities.doDeleteApplication = jest.fn(() => new Promise((resolve) => resolve('OK')));
-        actions.loadEntities = jest.fn(() => new Promise((resolve) => resolve('OK')));
-        actions.addMessage = jest.fn();
+        actions.removeApplication = jest.fn(() => new Promise((resolve) => resolve('OK')));
 
-        const wrapper = mount(
-            <IntlProvider locale="en">
-                <Provider store={ store }>
-                    <RemoveAppModal {...initialProps} />
-                </Provider>
-            </IntlProvider>
-        );
+        const wrapper = mount(componentWrapperIntl(
+            <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps}/> } />,
+            store,
+            initialEntry
+        ));
 
         wrapper.find(Button).at(1).simulate('click');
 
-        expect(entities.doDeleteApplication).toHaveBeenCalledWith('187894151315');
-        expect(spyOnCancel).not.toHaveBeenCalled();
-        expect(actions.addMessage).not.toHaveBeenCalled();
-        wrapper.update();
-        expect(wrapper.find(LoadingStep).length).toEqual(1);
-
-        setImmediate(() => {
-            expect(actions.addMessage).toHaveBeenCalledWith(expect.any(String), 'success');
-            expect(spyOnCancel).toHaveBeenCalled();
-            done();
-        });
-    });
-
-    it('calls a submit, show error message', (done) => {
-        const message = 'Something went terribly wrong';
-        redux.bindActionCreators = jest.fn(x => x);
-        entities.doDeleteApplication = jest.fn(() => new Promise((resolve, reject) => reject({
-            data: {
-                errors: [{
-                    detail: message
-                }]
-            }
-        })));
-        actions.addMessage = jest.fn();
-
-        const wrapper = mount(
-            <IntlProvider locale="en">
-                <Provider store={ store }>
-                    <RemoveAppModal {...initialProps} />
-                </Provider>
-            </IntlProvider>
-        );
-
-        wrapper.find(Button).at(1).simulate('click');
-
-        expect(entities.doDeleteApplication).toHaveBeenCalledWith('187894151315');
-        expect(spyOnCancel).not.toHaveBeenCalled();
-        expect(actions.addMessage).not.toHaveBeenCalled();
-
-        setImmediate(() => {
-            wrapper.update();
-            expect(actions.addMessage).toHaveBeenCalledWith(expect.any(String), 'danger', message);
-            expect(spyOnCancel).toHaveBeenCalled();
-            done();
-        });
+        expect(actions.removeApplication).toHaveBeenCalledWith(APP_ID, SOURCE_ID, SUCCESS_MSG, ERROR_MSG);
+        expect(spyOnCancel).toHaveBeenCalled();
+        done();
     });
 });

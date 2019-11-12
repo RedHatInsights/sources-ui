@@ -1,44 +1,53 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { useIntl, FormattedMessage } from 'react-intl';
 import { bindActionCreators } from 'redux';
 import {
     Button,
     Modal,
-    Bullseye,
-    TextContent
+    TextContent,
+    Stack,
+    SplitItem,
+    Split,
+    Text,
+    TextVariants
 } from '@patternfly/react-core';
-import { WarningTriangleIcon } from '@patternfly/react-icons';
-import { loadEntities, addMessage } from '../../redux/actions/providers';
-import { doDeleteApplication } from '../../api/entities';
-import LoadingStep from '../steps/LoadingStep';
+import { ExclamationTriangleIcon } from '@patternfly/react-icons';
+import { withRouter } from 'react-router-dom';
 
-const RemoveAppModal = ({ app, onCancel, loadEntities, addMessage, intl }) => {
-    const [isLoading, setLoading] = useState(false);
+import { removeApplication } from '../../redux/actions/providers';
+import RedirectNoId from '../RedirectNoId/RedirectNoId';
+
+const RemoveAppModal = ({ app, onCancel, removeApplication, source, appTypes }) => {
+    const intl = useIntl();
+
+    if (!source) {
+        return <RedirectNoId/>;
+    }
+
+    const dependentApps = app.dependent_applications.map(appName => {
+        const appType = appTypes.find(({ name }) => name === appName);
+
+        return appType ? app.sourceAppsNames.includes(appType.display_name) ? appType.display_name : undefined : undefined;
+    }).filter(x => x);
 
     const onSubmit = () => {
-        setLoading(true);
-        return doDeleteApplication(app.id).then(() =>
-            loadEntities().then(() => {
-                addMessage(intl.formatMessage({
-                    id: 'sources.removeAppWarning',
-                    defaultMessage: `{ name } was removed from this source.`
-                },
-                {
-                    name: app.display_name
-                }), 'success');
-                onCancel();
-            })
-        ).catch(({ data: { errors: [{ detail }] } }) =>{
-            addMessage(intl.formatMessage({
-                id: 'sources.removeAppError',
-                defaultMessage: `Removing of { name } application from this source was unsuccessful.`
-            }, {
-                name: app.display_name
-            }), 'danger', detail);
-            onCancel();
+        const titleSuccess = intl.formatMessage({
+            id: 'sources.removeAppWarning',
+            defaultMessage: `{ name } was removed from this source.`
+        },
+        {
+            name: app.display_name
         });
+        const titleError = intl.formatMessage({
+            id: 'sources.removeAppError',
+            defaultMessage: `Removing of { name } application from this source was unsuccessful.`
+        }, {
+            name: app.display_name
+        });
+        onCancel();
+        return removeApplication(app.id, source.id, titleSuccess, titleError);
     };
 
     return (
@@ -48,7 +57,8 @@ const RemoveAppModal = ({ app, onCancel, loadEntities, addMessage, intl }) => {
             isOpen={true}
             isSmall
             onClose={onCancel}
-            actions={isLoading ? [] : [
+            isFooterLeftAligned
+            actions={[
                 <Button
                     id="deleteSubmit" key="submit" variant="danger" type="button" onClick={ onSubmit }
                 >
@@ -57,7 +67,7 @@ const RemoveAppModal = ({ app, onCancel, loadEntities, addMessage, intl }) => {
                         defaultMessage="Remove"
                     />
                 </Button>,
-                <Button id="deleteCancel" key="cancel" variant="secondary" type="button" onClick={ onCancel }>
+                <Button id="deleteCancel" key="cancel" variant="link" type="button" onClick={ onCancel }>
                     <FormattedMessage
                         id="sources.cancel"
                         defaultMessage="Cancel"
@@ -65,20 +75,12 @@ const RemoveAppModal = ({ app, onCancel, loadEntities, addMessage, intl }) => {
                 </Button>
             ]}
         >
-            {isLoading ?
-                <LoadingStep customText={
-                    <FormattedMessage
-                        id="sources.appIsBeingRemoved"
-                        defaultMessage="The application is being removed."
-                    />
-                }/> :
-                <Bullseye>
-                    <TextContent>
-                        <div className="ins-c-source__dialog--flex">
-                            <div className="ins-c-source__dialog--icon">
-                                <WarningTriangleIcon className="ins-c-source__delete-icon" />
-                            </div>
-                            <div className="ins-c-source__dialog--text">
+            <Split gutter="md">
+                <SplitItem><ExclamationTriangleIcon size="xl" className="ins-m-alert ins-c-source__delete-icon" /></SplitItem>
+                <SplitItem isFilled>
+                    <Stack gutter="md">
+                        <TextContent>
+                            <Text component={TextVariants.p}>
                                 <FormattedMessage
                                     id="sources.deleteAppWarning"
                                     defaultMessage={`Are you sure to remove { appName } from this source?`}
@@ -86,11 +88,20 @@ const RemoveAppModal = ({ app, onCancel, loadEntities, addMessage, intl }) => {
                                         appName: app.display_name
                                     }}
                                 />
-                            </div>
-                        </div>
-                    </TextContent>
-                </Bullseye>
-            }
+                            </Text>
+                            {dependentApps.length > 0 && <Text component={TextVariants.p}>
+                                <FormattedMessage
+                                    id="sources.deleteAppDetails"
+                                    defaultMessage={`This change will affect these applications: { apps }.`}
+                                    values={{
+                                        apps: dependentApps
+                                    }}
+                                />
+                            </Text>}
+                        </TextContent>
+                    </Stack>
+                </SplitItem>
+            </Split>
         </Modal>
     );
 };
@@ -98,16 +109,28 @@ const RemoveAppModal = ({ app, onCancel, loadEntities, addMessage, intl }) => {
 RemoveAppModal.propTypes = {
     app: PropTypes.shape({
         id: PropTypes.string.isRequired,
-        display_name: PropTypes.string.isRequired
+        display_name: PropTypes.string.isRequired,
+        dependent_applications: PropTypes.arrayOf(PropTypes.string),
+        sourceAppsNames: PropTypes.arrayOf(PropTypes.string)
     }).isRequired,
     onCancel: PropTypes.func.isRequired,
-    loadEntities: PropTypes.func.isRequired,
-    addMessage: PropTypes.func.isRequired,
-    intl: PropTypes.shape({
-        formatMessage: PropTypes.func.isRequired
-    }).isRequired
+    removeApplication: PropTypes.func.isRequired,
+    source: PropTypes.shape({
+        id: PropTypes.string.isRequired
+    }).isRequired,
+    appTypes: PropTypes.arrayOf(PropTypes.shape({
+        display_name: PropTypes.string.isRequired
+    })).isRequired
 };
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({ loadEntities, addMessage }, dispatch);
+const mapDispatchToProps = (dispatch) => bindActionCreators({ removeApplication }, dispatch);
 
-export default connect(null, mapDispatchToProps)(injectIntl(RemoveAppModal));
+const mapStateToProps = (
+    { providers: { entities, appTypes } },
+    { match: { params: { id } } }
+) => ({
+    appTypes,
+    source: entities.find(source => source.id  === id)
+});
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(RemoveAppModal));
