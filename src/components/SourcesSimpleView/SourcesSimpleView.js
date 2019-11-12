@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Table, TableHeader, TableBody, sortable } from '@patternfly/react-table';
-import { injectIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 import { sortEntities } from '../../redux/actions/providers';
 import { formatters } from './formatters';
@@ -81,7 +81,6 @@ const SourcesSimpleView = ({
     sourceTypesLoaded,
     appTypesLoaded,
     history: { push },
-    intl,
     pageSize,
     pageNumber,
     sourceTypes,
@@ -92,6 +91,7 @@ const SourcesSimpleView = ({
     filterColumn,
     filterValue
 }) => {
+    const intl = useIntl();
     const columns = sourcesViewDefinition.columns(intl);
     const [state, dispatch] = useReducer(reducer, initialState(columns));
 
@@ -176,8 +176,7 @@ SourcesSimpleView.propTypes = {
     filterValue: PropTypes.string,
     sortBy: PropTypes.string,
     sortDirection: PropTypes.string,
-    history: PropTypes.any.isRequired,
-    intl: PropTypes.object.isRequired
+    history: PropTypes.any.isRequired
 };
 
 SourcesSimpleView.defaultProps = {
@@ -194,4 +193,4 @@ const mapDispatchToProps = dispatch => bindActionCreators({ sortEntities }, disp
 
 const mapStateToProps = ({ providers: { ...props } }) => (props);
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesSimpleView)));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesSimpleView));

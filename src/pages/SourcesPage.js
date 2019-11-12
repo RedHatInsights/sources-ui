@@ -15,7 +15,7 @@ import {
 import { Button } from '@patternfly/react-core';
 import { SplitItem, Split } from '@patternfly/react-core';
 import filter from 'lodash/filter';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources';
 
 import SourcesSimpleView from '../components/SourcesSimpleView/SourcesSimpleView';
@@ -71,7 +71,6 @@ const SourcesPage = ({
     appTypes,
     history,
     loadEntities,
-    intl,
     match,
     location,
     loaded,
@@ -85,6 +84,8 @@ const SourcesPage = ({
     clearAddSource,
     addSourceInitialValues
 }) => {
+    const intl = useIntl();
+
     useEffect(() => {
         Promise.all([loadSourceTypes(), loadAppTypes(), loadEntities()]);
     }, []);
@@ -210,9 +211,7 @@ SourcesPage.propTypes = {
 
     location: PropTypes.any.isRequired,
     match: PropTypes.object.isRequired,
-    history: PropTypes.any.isRequired,
-
-    intl: PropTypes.object.isRequired
+    history: PropTypes.any.isRequired
 };
 
 SourcesPage.defaultProps = {
@@ -265,4 +264,4 @@ const mapStateToProps = (
     }
 );
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesPage)));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesPage));

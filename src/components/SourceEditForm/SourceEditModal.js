@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { injectIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 import { Wizard } from '@patternfly/react-core';
 import { Spinner } from '@redhat-cloud-services/frontend-components';
@@ -22,9 +22,10 @@ const SourceEditModal = ({
     loadEntities,
     appTypes,
     sourceTypesLoaded,
-    appTypesLoaded,
-    intl
+    appTypesLoaded
 }) => {
+    const intl = useIntl();
+
     useEffect(() => {
         loadSourceForEdit(parseInt(id, 10));
     }, []);
@@ -117,9 +118,7 @@ SourceEditModal.propTypes = {
 
     location: PropTypes.any.isRequired,
     match: PropTypes.object.isRequired,
-    history: PropTypes.any.isRequired,
-
-    intl: PropTypes.object.isRequired
+    history: PropTypes.any.isRequired
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators(
@@ -129,4 +128,4 @@ const mapStateToProps = ({ providers: { source, sourceTypes, appTypes, sourceTyp
     { source, sourceTypes, appTypes, sourceTypesLoaded, appTypesLoaded }
 );
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withRouter(SourceEditModal)));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SourceEditModal));

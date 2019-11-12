@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { Wizard, Text, TextVariants, TextContent, Button } from '@patternfly/react-core';
 
 import { addAppToSource } from '../../redux/actions/providers';
@@ -26,8 +26,9 @@ const initialState = {
 const reducer = (state, payload) => ({ ...state, ...payload });
 
 const AddApplication = (
-    { source, appTypes, history, addAppToSource, intl, appTypesLoaded, sourceTypesLoaded, sourceTypes }
+    { source, appTypes, history, addAppToSource, appTypesLoaded, sourceTypesLoaded, sourceTypes }
 ) => {
+    const intl = useIntl();
     const [state, setState] = useReducer(reducer, initialState);
 
     if (!source || !appTypesLoaded || !sourceTypesLoaded) {
@@ -148,7 +149,6 @@ AddApplication.propTypes = {
         id: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired
     }),
-    intl: PropTypes.object,
     appTypes: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
         display_name: PropTypes.string.isRequired,
@@ -172,4 +172,4 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({ addAppToSource }, dispatch);
 
-export default injectIntl(withRouter(connect(mapStateToProps, mapDispatchToProps)(AddApplication)));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AddApplication));
