@@ -18,7 +18,7 @@ import {
 } from '@patternfly/react-core';
 import { removeSource } from '../redux/actions/providers';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import ApplicationList from './ApplicationsList/ApplicationList';
 import RemoveAppModal from './AddApplication/RemoveAppModal';
@@ -27,9 +27,10 @@ import RedirectNoId from './RedirectNoId/RedirectNoId';
 const SourceRemoveModal = ({
     history: { push },
     removeSource,
-    source,
-    intl
+    source
 }) => {
+    const intl = useIntl();
+
     if (!source) {
         return <RedirectNoId/>;
     }
@@ -201,8 +202,7 @@ SourceRemoveModal.propTypes = {
     source: PropTypes.shape({
         id: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired
-    }),
-    intl: PropTypes.object
+    })
 };
 
 const mapStateToProps = ({ providers: { entities } }, { match: { params: { id } } }) =>
@@ -210,4 +210,4 @@ const mapStateToProps = ({ providers: { entities } }, { match: { params: { id } 
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({ removeSource }, dispatch);
 
-export default injectIntl(withRouter(connect(mapStateToProps, mapDispatchToProps)(SourceRemoveModal)));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SourceRemoveModal));

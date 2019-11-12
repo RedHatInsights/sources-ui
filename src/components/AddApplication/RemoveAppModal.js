@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { useIntl, FormattedMessage } from 'react-intl';
 import { bindActionCreators } from 'redux';
 import {
     Button,
@@ -19,7 +19,9 @@ import { withRouter } from 'react-router-dom';
 import { removeApplication } from '../../redux/actions/providers';
 import RedirectNoId from '../RedirectNoId/RedirectNoId';
 
-const RemoveAppModal = ({ app, onCancel, intl, removeApplication, source, appTypes }) => {
+const RemoveAppModal = ({ app, onCancel, removeApplication, source, appTypes }) => {
+    const intl = useIntl();
+
     if (!source) {
         return <RedirectNoId/>;
     }
@@ -113,9 +115,6 @@ RemoveAppModal.propTypes = {
     }).isRequired,
     onCancel: PropTypes.func.isRequired,
     removeApplication: PropTypes.func.isRequired,
-    intl: PropTypes.shape({
-        formatMessage: PropTypes.func.isRequired
-    }).isRequired,
     source: PropTypes.shape({
         id: PropTypes.string.isRequired
     }).isRequired,
@@ -134,4 +133,4 @@ const mapStateToProps = (
     source: entities.find(source => source.id  === id)
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(injectIntl(RemoveAppModal)));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(RemoveAppModal));
