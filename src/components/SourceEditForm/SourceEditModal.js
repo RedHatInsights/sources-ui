@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
@@ -12,25 +11,25 @@ import { sourceEditForm } from './editSourceSchema';
 import SourcesFormRenderer from '../../Utilities/SourcesFormRenderer';
 import { loadEntities, loadSourceForEdit, updateSource } from '../../redux/actions/providers';
 
-const SourceEditModal = ({
-    match: { params: { id } },
-    updateSource,
-    history,
-    loadSourceForEdit,
-    source,
-    sourceTypes,
-    loadEntities,
-    appTypes,
-    sourceTypesLoaded,
-    appTypesLoaded
-}) => {
+const SourceEditModal = ({ match: { params: { id } }, history }) => {
+    const [loading, setLoading] = useState(true);
     const intl = useIntl();
 
+    const {
+        source,
+        sourceTypes,
+        appTypes,
+        sourceTypesLoaded,
+        appTypesLoaded
+    } = useSelector(({ providers }) => providers, shallowEqual);
+
+    const dispatch = useDispatch();
+
     useEffect(() => {
-        loadSourceForEdit(parseInt(id, 10));
+        dispatch(loadSourceForEdit(id)).then(() => setLoading(false));
     }, []);
 
-    const submitProvider = (values) => updateSource(
+    const submitProvider = (values) => dispatch(updateSource(
         source,
         values,
         intl.formatMessage({
@@ -54,15 +53,15 @@ const SourceEditModal = ({
                 id: 'sources.sourceEditEndpointFailure',
                 defaultMessage: 'Endpoint update failure.'
             })
-        })
+        }))
     .then(() => {
-        history.replace('/');
-        loadEntities();
+        history.push('/');
+        dispatch(loadEntities());
     }).catch(_error => {
-        history.replace('/');
+        history.push('/');
     });
 
-    if (!appTypesLoaded || !sourceTypesLoaded || !source) {
+    if (!appTypesLoaded || !sourceTypesLoaded || !source || loading) {
         return (
             <Wizard
                 isOpen={ true }
@@ -106,26 +105,8 @@ const SourceEditModal = ({
 };
 
 SourceEditModal.propTypes = {
-    loadSourceForEdit: PropTypes.func.isRequired,
-    loadEntities: PropTypes.func.isRequired,
-    updateSource: PropTypes.func.isRequired,
-
-    sourceTypes: PropTypes.arrayOf(PropTypes.any), // list of all SourceTypes
-    appTypes: PropTypes.arrayOf(PropTypes.any),
-    source: PropTypes.object, // a Source for editing
-    sourceTypesLoaded: PropTypes.bool.isRequired,
-    appTypesLoaded: PropTypes.bool.isRequired,
-
-    location: PropTypes.any.isRequired,
     match: PropTypes.object.isRequired,
     history: PropTypes.any.isRequired
 };
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-    { loadEntities, loadSourceForEdit, updateSource }, dispatch);
-
-const mapStateToProps = ({ providers: { source, sourceTypes, appTypes, sourceTypesLoaded, appTypesLoaded } }) => (
-    { source, sourceTypes, appTypes, sourceTypesLoaded, appTypesLoaded }
-);
-
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SourceEditModal));
+export default withRouter(SourceEditModal);

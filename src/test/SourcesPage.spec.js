@@ -19,6 +19,8 @@ import ReducersProviders, { defaultProvidersState } from '../redux/reducers/prov
 import * as api from '../api/entities';
 import * as typesApi from '../api/source_types';
 
+import * as actions from '../redux/actions/providers';
+
 describe('SourcesPage', () => {
     const middlewares = [thunk, notificationsMiddleware()];
     let initialProps;
@@ -78,7 +80,7 @@ describe('SourcesPage', () => {
             expect(wrapper.find(SourcesEmptyState)).toHaveLength(1);
             expect(wrapper.find(SourcesFilter)).toHaveLength(0);
             expect(wrapper.find(SourcesSimpleView)).toHaveLength(0);
-            expect(wrapper.find('SourcesPage').props().fetchingError.detail).toEqual(ERROR_MESSAGE);
+            expect(wrapper.text().includes(ERROR_MESSAGE)).toEqual(true);
             done();
         });
     });
@@ -132,12 +134,14 @@ describe('SourcesPage', () => {
                     intl: {
                         formatMessage: ({ defaultMessage }) => defaultMessage
                     },
-                    addMessage: jest.fn(),
-                    clearAddSource: jest.fn(),
+                    dispatch: jest.fn(),
                     history: {
                         push: jest.fn()
                     }
                 };
+
+                actions.addMessage = jest.fn();
+                actions.clearAddSource = jest.fn();
             });
 
             it('create notifications when values', () => {
@@ -154,38 +158,39 @@ describe('SourcesPage', () => {
 
                 onCloseAddSourceWizard(args);
 
-                expect(args.addMessage).toHaveBeenCalledWith(
+                expect(actions.addMessage).toHaveBeenCalledWith(
                     EXPECTED_TITLE,
                     EXPECTED_VARIANT,
                     EXPECTED_DEESCRIPTION,
                     EXPECTED_CUSTOM_ID
                 );
-                expect(args.clearAddSource).toHaveBeenCalled();
+                expect(actions.clearAddSource).toHaveBeenCalled();
                 expect(args.history.push).toHaveBeenCalled();
 
                 Date.now = tmpDate;
             });
 
-            it('only clear and change path when no values', () => {
+            it('only clear and change path when no values/empty', () => {
                 onCloseAddSourceWizard({ ...args, values: {} });
 
-                expect(args.addMessage).not.toHaveBeenCalled();
-                expect(args.clearAddSource).toHaveBeenCalled();
+                expect(actions.addMessage).not.toHaveBeenCalled();
+                expect(actions.clearAddSource).toHaveBeenCalled();
                 expect(args.history.push).toHaveBeenCalled();
             });
         });
 
         describe('afterSuccess', () => {
             it('calls function', () => {
-                const args = {
-                    clearAddSource: jest.fn(),
-                    loadEntities: jest.fn()
-                };
+                const dispatch = jest.fn();
 
-                afterSuccess(args);
+                actions.loadEntities = jest.fn();
+                actions.clearAddSource = jest.fn();
 
-                expect(args.clearAddSource).toHaveBeenCalled();
-                expect(args.loadEntities).toHaveBeenCalledWith(afterSuccessLoadParameters);
+                afterSuccess(dispatch);
+
+                expect(dispatch.mock.calls.length).toBe(2);
+                expect(actions.loadEntities).toHaveBeenCalledWith(afterSuccessLoadParameters);
+                expect(actions.loadEntities).toHaveBeenCalled();
             });
         });
     });

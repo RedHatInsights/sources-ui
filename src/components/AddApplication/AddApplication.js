@@ -1,8 +1,7 @@
 import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Wizard, Text, TextVariants, TextContent, Button } from '@patternfly/react-core';
 
@@ -16,6 +15,7 @@ import FinishedStep from '../steps/FinishedStep';
 import { doCreateApplication } from '../../api/entities';
 
 import RedirectNoId from '../RedirectNoId/RedirectNoId';
+import { useSource } from '../../hooks/useSource';
 
 const initialState = {
     state: 'wizard',
@@ -25,10 +25,20 @@ const initialState = {
 
 const reducer = (state, payload) => ({ ...state, ...payload });
 
-const AddApplication = (
-    { source, appTypes, history, addAppToSource, appTypesLoaded, sourceTypesLoaded, sourceTypes }
-) => {
+const AddApplication = ({ history, match: { params: { id } } }) => {
     const intl = useIntl();
+
+    const {
+        appTypes,
+        sourceTypesLoaded,
+        appTypesLoaded,
+        sourceTypes
+    } = useSelector(({ providers }) => providers, shallowEqual);
+
+    const source = useSource(id);
+
+    const dispatch = useDispatch();
+
     const [state, setState] = useReducer(reducer, initialState);
 
     if (!source || !appTypesLoaded || !sourceTypesLoaded) {
@@ -57,7 +67,7 @@ const AddApplication = (
         setState({ state: 'loading' });
         return doCreateApplication(source.id, application).then((app) => {
             setState({ state: 'finished' });
-            addAppToSource(source.id, app);
+            dispatch(addAppToSource(source.id, app));
         })
         .catch(({ errors: [{ detail }] }) => {
             setState({
@@ -144,32 +154,11 @@ AddApplication.propTypes = {
     history: PropTypes.shape({
         push: PropTypes.func.isRequired
     }).isRequired,
-    addAppToSource: PropTypes.func.isRequired,
-    source: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired
-    }),
-    appTypes: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        display_name: PropTypes.string.isRequired,
-        supported_source_types: PropTypes.arrayOf(PropTypes.string)
-    })),
-    sourceTypes: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        product_name: PropTypes.string.isRequired
-    })),
-    appTypesLoaded: PropTypes.bool.isRequired,
-    sourceTypesLoaded: PropTypes.bool.isRequired
+    match: PropTypes.shape({
+        params: PropTypes.shape({
+            id: PropTypes.string.isRequired
+        }).isRequired
+    }).isRequired
 };
 
-const mapStateToProps = (
-    { providers: { entities, appTypes, appTypesLoaded, sourceTypesLoaded, sourceTypes } },
-    { match: { params: { id } } }
-) =>
-    (
-        { source: entities.find(source => source.id  === id), appTypes, appTypesLoaded, sourceTypesLoaded, sourceTypes }
-    );
-
-const mapDispatchToProps = (dispatch) => bindActionCreators({ addAppToSource }, dispatch);
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AddApplication));
+export default withRouter(AddApplication);
