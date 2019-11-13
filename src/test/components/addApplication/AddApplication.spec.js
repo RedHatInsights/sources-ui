@@ -6,7 +6,6 @@ import { notificationsMiddleware } from '@redhat-cloud-services/frontend-compone
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { CardSelect } from '@redhat-cloud-services/frontend-components-sources';
-import * as redux from 'redux';
 
 import SourcesFormRenderer from '../../../Utilities/SourcesFormRenderer';
 import * as entities from '../../../api/entities';
@@ -132,7 +131,6 @@ describe('AddApplication', () => {
     });
 
     it('calls on submit function', (done) => {
-        redux.bindActionCreators = jest.fn(x => x);
         entities.doCreateApplication = jest.fn(() => new Promise((resolve) => resolve('OK')));
 
         const wrapper = mount(componentWrapperIntl(
@@ -157,7 +155,6 @@ describe('AddApplication', () => {
     it('catch errors after submit', (done) => {
         const ERROR_MESSAGE = 'Something went wrong :(';
 
-        redux.bindActionCreators = jest.fn(x => x);
         entities.doCreateApplication = jest.fn(() => new Promise((_resolve, reject) => reject(
             { errors: [{ detail: ERROR_MESSAGE }] }
         )));
@@ -183,7 +180,6 @@ describe('AddApplication', () => {
     });
 
     it('show loading step', () => {
-        redux.bindActionCreators = jest.fn(x => x);
         entities.doCreateApplication = jest.fn(() => new Promise((resolve) => resolve('OK')));
 
         const wrapper = mount(componentWrapperIntl(

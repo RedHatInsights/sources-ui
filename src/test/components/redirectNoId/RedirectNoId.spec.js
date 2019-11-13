@@ -5,7 +5,6 @@ import { mount } from 'enzyme';
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import RedirectNoId from '../../../components/RedirectNoId/RedirectNoId';
 import * as actions from '../../../redux/actions/providers';
-import * as redux from 'redux';
 
 describe('RedirectNoId', () => {
     let initialStore;
@@ -35,7 +34,6 @@ describe('RedirectNoId', () => {
     });
 
     it('Renders redirect and creates message if loaded', () => {
-        redux.bindActionCreators = jest.fn(x => x);
         actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'ADD_MESSAGE' }));
 
         initialStore = mockStore({
