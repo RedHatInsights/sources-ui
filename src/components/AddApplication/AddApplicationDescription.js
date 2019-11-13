@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import {
@@ -15,8 +15,13 @@ import RemoveAppModal from './RemoveAppModal';
 import ApplicationList from '../ApplicationsList/ApplicationList';
 import RedirectNoId from '../RedirectNoId/RedirectNoId';
 
-const AddApplicationDescription = ({ source, sourceTypes }) => {
+const AddApplicationDescription = ({ match: { params: { id } } }) => {
     const [removingApp, setApplicationToRemove] = useState({});
+
+    const sourceTypes = useSelector(({ providers }) => providers.sourceTypes);
+    const entities = useSelector(({ providers }) => providers.entities);
+
+    const source = entities.find(source => source.id  === id);
 
     if (!source) {
         return <RedirectNoId />;
@@ -83,22 +88,11 @@ const AddApplicationDescription = ({ source, sourceTypes }) => {
 };
 
 AddApplicationDescription.propTypes = {
-    sourceTypes: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        product_name: PropTypes.string.isRequired
-    })),
-    appTypes: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        display_name: PropTypes.string.isRequired
-    })),
-    source: PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        source_type_id: PropTypes.string.isRequired,
-        application_type_id: PropTypes.number
-    })
+    match: PropTypes.shape({
+        params: PropTypes.shape({
+            id: PropTypes.string.isRequired
+        }).isRequired
+    }).isRequired
 };
 
-const mapStateToProps = ({ providers: { entities, sourceTypes } }, { match: { params: { id } } }) =>
-    ({ source: entities.find(source => source.id  === id), sourceTypes });
-
-export default withRouter(connect(mapStateToProps)(AddApplicationDescription));
+export default withRouter(AddApplicationDescription);
