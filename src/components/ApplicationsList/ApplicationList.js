@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import {
@@ -15,7 +15,12 @@ import {
 
 import RedirectNoId from '../RedirectNoId/RedirectNoId';
 
-const ApplicationList = ({ appTypes, source, setApplicationToRemove, breakpoints, namePrefix }) => {
+const ApplicationList = ({ setApplicationToRemove, breakpoints, namePrefix, match: { params: { id } }  }) => {
+    const entities = useSelector(({ providers }) => providers.entities);
+    const appTypes = useSelector(({ providers }) => providers.appTypes);
+
+    const source = entities.find(source => source.id  === id);
+
     if (!source) {
         return <RedirectNoId/>;
     }
@@ -66,14 +71,10 @@ const ApplicationList = ({ appTypes, source, setApplicationToRemove, breakpoints
 };
 
 ApplicationList.propTypes = {
-    appTypes: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        display_name: PropTypes.string.isRequired
-    })).isRequired,
-    source: PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        source_type_id: PropTypes.string.isRequired,
-        application_type_id: PropTypes.number
+    match: PropTypes.shape({
+        params: PropTypes.shape({
+            id: PropTypes.string.isRequired
+        }).isRequired
     }).isRequired,
     setApplicationToRemove: PropTypes.func.isRequired,
     breakpoints: PropTypes.shape({
@@ -87,7 +88,4 @@ ApplicationList.defaultProps = {
     breakpoints: {}
 };
 
-const mapStateToProps = ({ providers: { entities, appTypes } }, { match: { params: { id } } }) =>
-    ({ source: entities.find(source => source.id  === id), appTypes });
-
-export default withRouter(connect(mapStateToProps)(ApplicationList));
+export default withRouter(ApplicationList);
