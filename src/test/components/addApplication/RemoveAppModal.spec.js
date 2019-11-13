@@ -161,7 +161,7 @@ describe('RemoveAppModal', () => {
 
     it('calls a submit and calls cancel', (done) => {
         redux.bindActionCreators = jest.fn(x => x);
-        actions.removeApplication = jest.fn(() => new Promise((resolve) => resolve('OK')));
+        actions.removeApplication = jest.fn().mockImplementation(() => ({ type: 'REMOVE_APP' }));
 
         const wrapper = mount(componentWrapperIntl(
             <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps}/> } />,

@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useIntl, FormattedMessage } from 'react-intl';
-import { bindActionCreators } from 'redux';
 import {
     Button,
     Modal,
@@ -19,8 +18,15 @@ import { withRouter } from 'react-router-dom';
 import { removeApplication } from '../../redux/actions/providers';
 import RedirectNoId from '../RedirectNoId/RedirectNoId';
 
-const RemoveAppModal = ({ app, onCancel, removeApplication, source, appTypes }) => {
+const RemoveAppModal = ({ app, onCancel, match: { params: { id } } }) => {
     const intl = useIntl();
+
+    const entities = useSelector(({ providers }) => providers.entities);
+    const appTypes = useSelector(({ providers }) => providers.appTypes);
+
+    const source = entities.find(source => source.id  === id);
+
+    const dispatch = useDispatch();
 
     if (!source) {
         return <RedirectNoId/>;
@@ -47,7 +53,7 @@ const RemoveAppModal = ({ app, onCancel, removeApplication, source, appTypes }) 
             name: app.display_name
         });
         onCancel();
-        return removeApplication(app.id, source.id, titleSuccess, titleError);
+        return dispatch(removeApplication(app.id, source.id, titleSuccess, titleError));
     };
 
     return (
@@ -114,23 +120,11 @@ RemoveAppModal.propTypes = {
         sourceAppsNames: PropTypes.arrayOf(PropTypes.string)
     }).isRequired,
     onCancel: PropTypes.func.isRequired,
-    removeApplication: PropTypes.func.isRequired,
-    source: PropTypes.shape({
-        id: PropTypes.string.isRequired
-    }).isRequired,
-    appTypes: PropTypes.arrayOf(PropTypes.shape({
-        display_name: PropTypes.string.isRequired
-    })).isRequired
+    match: PropTypes.shape({
+        params: PropTypes.shape({
+            id: PropTypes.string.isRequired
+        }).isRequired
+    }).isRequired
 };
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({ removeApplication }, dispatch);
-
-const mapStateToProps = (
-    { providers: { entities, appTypes } },
-    { match: { params: { id } } }
-) => ({
-    appTypes,
-    source: entities.find(source => source.id  === id)
-});
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(RemoveAppModal));
+export default withRouter(RemoveAppModal);
