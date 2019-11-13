@@ -14,12 +14,11 @@ import {
 } from '@patternfly/react-core';
 
 import RedirectNoId from '../RedirectNoId/RedirectNoId';
+import { useSource } from '../../hooks/useSource';
 
 const ApplicationList = ({ setApplicationToRemove, breakpoints, namePrefix, match: { params: { id } }  }) => {
-    const entities = useSelector(({ providers }) => providers.entities);
     const appTypes = useSelector(({ providers }) => providers.appTypes);
-
-    const source = entities.find(source => source.id  === id);
+    const source = useSource(id);
 
     if (!source) {
         return <RedirectNoId/>;

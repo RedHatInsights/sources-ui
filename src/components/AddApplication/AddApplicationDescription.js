@@ -14,14 +14,13 @@ import {
 import RemoveAppModal from './RemoveAppModal';
 import ApplicationList from '../ApplicationsList/ApplicationList';
 import RedirectNoId from '../RedirectNoId/RedirectNoId';
+import { useSource } from '../../hooks/useSource';
 
 const AddApplicationDescription = ({ match: { params: { id } } }) => {
     const [removingApp, setApplicationToRemove] = useState({});
 
     const sourceTypes = useSelector(({ providers }) => providers.sourceTypes);
-    const entities = useSelector(({ providers }) => providers.entities);
-
-    const source = entities.find(source => source.id  === id);
+    const source = useSource(id);
 
     if (!source) {
         return <RedirectNoId />;

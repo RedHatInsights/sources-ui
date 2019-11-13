@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
     Modal,
     Button,
@@ -22,17 +22,16 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import ApplicationList from './ApplicationsList/ApplicationList';
 import RemoveAppModal from './AddApplication/RemoveAppModal';
 import RedirectNoId from './RedirectNoId/RedirectNoId';
+import { useSource } from '../hooks/useSource';
 
 const SourceRemoveModal = ({ history: { push }, match: { params: { id } } }) => {
     const [acknowledge, setAcknowledge] = useState(false);
     const [removingApp, setApplicationToRemove] = useState({});
 
     const intl = useIntl();
+    const source = useSource(id);
 
-    const entities = useSelector(({ providers }) => providers.entities);
     const dispatch = useDispatch();
-
-    const source = entities.find(source => source.id  === id);
 
     if (!source) {
         return <RedirectNoId/>;

@@ -15,6 +15,7 @@ import FinishedStep from '../steps/FinishedStep';
 import { doCreateApplication } from '../../api/entities';
 
 import RedirectNoId from '../RedirectNoId/RedirectNoId';
+import { useSource } from '../../hooks/useSource';
 
 const initialState = {
     state: 'wizard',
@@ -28,14 +29,13 @@ const AddApplication = ({ history, match: { params: { id } } }) => {
     const intl = useIntl();
 
     const {
-        entities,
         appTypes,
         sourceTypesLoaded,
         appTypesLoaded,
         sourceTypes
     } = useSelector(({ providers }) => providers, shallowEqual);
 
-    const source = entities.find(source => source.id  === id);
+    const source = useSource(id);
 
     const dispatch = useDispatch();
 

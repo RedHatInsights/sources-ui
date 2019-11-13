@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useSelector, useDispatch, shallowEqual } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useIntl, FormattedMessage } from 'react-intl';
 import {
     Button,
@@ -17,13 +17,13 @@ import { withRouter } from 'react-router-dom';
 
 import { removeApplication } from '../../redux/actions/providers';
 import RedirectNoId from '../RedirectNoId/RedirectNoId';
+import { useSource } from '../../hooks/useSource';
 
 const RemoveAppModal = ({ app, onCancel, match: { params: { id } } }) => {
     const intl = useIntl();
 
-    const { appTypes, entities } = useSelector(({ providers }) => providers, shallowEqual);
-
-    const source = entities.find(source => source.id  === id);
+    const appTypes = useSelector(({ providers }) => providers.appTypes);
+    const source = useSource(id);
 
     const dispatch = useDispatch();
 

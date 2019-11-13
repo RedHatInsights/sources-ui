@@ -12,11 +12,11 @@ import {
 } from '@patternfly/react-core';
 
 import RedirectNoId from '../RedirectNoId/RedirectNoId';
+import { useSource } from '../../hooks/useSource';
 
 const Summary = ({ formOptions, match: { params: { id } }  }) => {
-    const { entities, sourceTypes, appTypes } = useSelector(({ providers }) => providers, shallowEqual);
-
-    const source = entities.find(source => source.id  === id);
+    const { sourceTypes, appTypes } = useSelector(({ providers }) => providers, shallowEqual);
+    const source = useSource(id);
 
     if (!source) {
         return <RedirectNoId />;

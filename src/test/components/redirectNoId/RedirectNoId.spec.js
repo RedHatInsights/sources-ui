@@ -21,7 +21,7 @@ describe('RedirectNoId', () => {
 
     it('Renders null if not loaded', () => {
         initialStore = mockStore({
-            providers: { loaded: false }
+            providers: { loaded: false, appTypesLoaded: true, sourceTypesLoaded: true }
         });
 
         const wrapper = mount(componentWrapperIntl(
@@ -37,7 +37,7 @@ describe('RedirectNoId', () => {
         actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'ADD_MESSAGE' }));
 
         initialStore = mockStore({
-            providers: { loaded: true }
+            providers: { loaded: true, appTypesLoaded: true, sourceTypesLoaded: true }
         });
 
         const wrapper = mount(componentWrapperIntl(

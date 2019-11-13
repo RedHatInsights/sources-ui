@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { withRouter, Redirect } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 
@@ -9,10 +9,12 @@ import { addMessage } from '../../redux/actions/providers';
 const RedirectNoId = ({ match: { params: { id } }  }) => {
     const intl = useIntl();
 
-    const loaded = useSelector(({ providers }) => providers.loaded);
+    const { loaded, appTypesLoaded, sourceTypesLoaded } = useSelector(({ providers }) => providers, shallowEqual);
     const dispatch = useDispatch();
 
-    if (loaded) {
+    const applicationIsLoaded = loaded && appTypesLoaded && sourceTypesLoaded;
+
+    if (applicationIsLoaded) {
         dispatch(addMessage(
             intl.formatMessage({
                 id: 'sources.sourceNotFoundTitle',
