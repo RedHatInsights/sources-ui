@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Table, TableHeader, TableBody, sortable } from '@patternfly/react-table';
 import { useIntl } from 'react-intl';
@@ -79,18 +79,20 @@ const SourcesSimpleView = ({ history: { push } }) => {
     const columns = sourcesViewDefinition.columns(intl);
     const [state, dispatch] = useReducer(reducer, initialState(columns));
 
-    const filterValue = useSelector(({ providers }) => providers.filterValue);
-    const loaded = useSelector(({ providers }) => providers.loaded);
-    const appTypes = useSelector(({ providers }) => providers.appTypes);
-    const entities = useSelector(({ providers }) => providers.entities);
-    const pageSize = useSelector(({ providers }) => providers.pageSize);
-    const pageNumber = useSelector(({ providers }) => providers.pageNumber);
-    const sortBy = useSelector(({ providers }) => providers.sortBy);
-    const sortDirection = useSelector(({ providers }) => providers.sortDirection);
-    const filterColumn = useSelector(({ providers }) => providers.filterColumn);
-    const sourceTypes = useSelector(({ providers }) => providers.sourceTypes);
-    const sourceTypesLoaded = useSelector(({ providers }) => providers.sourceTypesLoaded);
-    const appTypesLoaded = useSelector(({ providers }) => providers.appTypesLoaded);
+    const {
+        filterValue,
+        loaded,
+        appTypes,
+        entities,
+        pageSize,
+        pageNumber,
+        sortBy,
+        sortDirection,
+        filterColumn,
+        sourceTypes,
+        sourceTypesLoaded,
+        appTypesLoaded
+    } = useSelector(({ providers }) => providers, shallowEqual);
 
     const reduxDispatch = useDispatch();
 

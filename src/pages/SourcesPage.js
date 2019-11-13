@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { Link, withRouter, Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { TableToolbar, PageHeader, PageHeaderTitle, Pagination, Section } from '@redhat-cloud-services/frontend-components';
@@ -62,19 +62,21 @@ const SourcesPage = ({
 }) => {
     const intl = useIntl();
 
-    const filterValue = useSelector(({ providers }) => providers.filterValue);
-    const loaded = useSelector(({ providers }) => providers.loaded);
-    const numberOfEntities = useSelector(({ providers }) => providers.numberOfEntities);
-    const appTypes = useSelector(({ providers }) => providers.appTypes);
-    const entities = useSelector(({ providers }) => providers.entities);
-    const pageSize = useSelector(({ providers }) => providers.pageSize);
-    const pageNumber = useSelector(({ providers }) => providers.pageNumber);
-    const fetchingError = useSelector(({ providers }) => providers.fetchingError);
-    const addSourceInitialValues = useSelector(({ providers }) => providers.addSourceInitialValues);
-    const sortBy = useSelector(({ providers }) => providers.sortBy);
-    const sortDirection = useSelector(({ providers }) => providers.sortDirection);
-    const filterColumn = useSelector(({ providers }) => providers.filterColumn);
-    const sourceTypes = useSelector(({ providers }) => providers.sourceTypes);
+    const {
+        filterValue,
+        loaded,
+        numberOfEntities,
+        appTypes,
+        entities,
+        pageSize,
+        pageNumber,
+        fetchingError,
+        addSourceInitialValues,
+        sortBy,
+        sortDirection,
+        filterColumn,
+        sourceTypes
+    } = useSelector(({ providers }) => providers, shallowEqual);
 
     const dispatch = useDispatch();
 

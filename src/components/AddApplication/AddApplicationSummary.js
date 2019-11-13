@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useSelector, shallowEqual } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import {
@@ -14,9 +14,7 @@ import {
 import RedirectNoId from '../RedirectNoId/RedirectNoId';
 
 const Summary = ({ formOptions, match: { params: { id } }  }) => {
-    const entities = useSelector(({ providers }) => providers.entities);
-    const sourceTypes = useSelector(({ providers }) => providers.sourceTypes);
-    const appTypes = useSelector(({ providers }) => providers.appTypes);
+    const { entities, sourceTypes, appTypes } = useSelector(({ providers }) => providers, shallowEqual);
 
     const source = entities.find(source => source.id  === id);
 

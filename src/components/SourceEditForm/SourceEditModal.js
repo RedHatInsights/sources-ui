@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
@@ -15,11 +15,13 @@ const SourceEditModal = ({ match: { params: { id } }, history }) => {
     const [loading, setLoading] = useState(true);
     const intl = useIntl();
 
-    const source = useSelector(({ providers }) => providers.source);
-    const sourceTypes = useSelector(({ providers }) => providers.sourceTypes);
-    const appTypes = useSelector(({ providers }) => providers.appTypes);
-    const sourceTypesLoaded = useSelector(({ providers }) => providers.sourceTypesLoaded);
-    const appTypesLoaded = useSelector(({ providers }) => providers.appTypesLoaded);
+    const {
+        source,
+        sourceTypes,
+        appTypes,
+        sourceTypesLoaded,
+        appTypesLoaded
+    } = useSelector(({ providers }) => providers, shallowEqual);
 
     const dispatch = useDispatch();
 

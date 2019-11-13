@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Wizard, Text, TextVariants, TextContent, Button } from '@patternfly/react-core';
 
@@ -27,11 +27,13 @@ const reducer = (state, payload) => ({ ...state, ...payload });
 const AddApplication = ({ history, match: { params: { id } } }) => {
     const intl = useIntl();
 
-    const entities = useSelector(({ providers }) => providers.entities);
-    const appTypes = useSelector(({ providers }) => providers.appTypes);
-    const sourceTypesLoaded = useSelector(({ providers }) => providers.sourceTypesLoaded);
-    const appTypesLoaded = useSelector(({ providers }) => providers.appTypesLoaded);
-    const sourceTypes = useSelector(({ providers }) => providers.sourceTypes);
+    const {
+        entities,
+        appTypes,
+        sourceTypesLoaded,
+        appTypesLoaded,
+        sourceTypes
+    } = useSelector(({ providers }) => providers, shallowEqual);
 
     const source = entities.find(source => source.id  === id);
 

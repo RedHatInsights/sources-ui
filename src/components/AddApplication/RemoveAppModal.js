@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { useIntl, FormattedMessage } from 'react-intl';
 import {
     Button,
@@ -21,8 +21,7 @@ import RedirectNoId from '../RedirectNoId/RedirectNoId';
 const RemoveAppModal = ({ app, onCancel, match: { params: { id } } }) => {
     const intl = useIntl();
 
-    const entities = useSelector(({ providers }) => providers.entities);
-    const appTypes = useSelector(({ providers }) => providers.appTypes);
+    const { appTypes, entities } = useSelector(({ providers }) => providers, shallowEqual);
 
     const source = entities.find(source => source.id  === id);
 
