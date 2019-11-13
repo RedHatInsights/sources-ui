@@ -73,7 +73,7 @@ describe('SourceRemoveModal', () => {
 
         it('calls submit action', () => {
             redux.bindActionCreators = jest.fn(x => x);
-            actions.removeSource = jest.fn(() => new Promise(() => ({})));
+            actions.removeSource = jest.fn().mockImplementation(() => ({ type: 'REMOVE' }));
 
             const wrapper = mount(componentWrapperIntl(
                 <Route path="/remove/:id" render={ (...args) => <SourceRemoveModal { ...args } /> } />,
