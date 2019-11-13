@@ -1,7 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Table, TableHeader, TableBody, sortable } from '@patternfly/react-table';
 import { useIntl } from 'react-intl';
@@ -75,25 +74,25 @@ export const actionResolver = (intl, push) => (rowData) => {
     return actions;
 };
 
-const SourcesSimpleView = ({
-    entities,
-    loaded,
-    sourceTypesLoaded,
-    appTypesLoaded,
-    history: { push },
-    pageSize,
-    pageNumber,
-    sourceTypes,
-    appTypes,
-    sortEntities,
-    sortBy,
-    sortDirection,
-    filterColumn,
-    filterValue
-}) => {
+const SourcesSimpleView = ({ history: { push } }) => {
     const intl = useIntl();
     const columns = sourcesViewDefinition.columns(intl);
     const [state, dispatch] = useReducer(reducer, initialState(columns));
+
+    const filterValue = useSelector(({ providers }) => providers.filterValue);
+    const loaded = useSelector(({ providers }) => providers.loaded);
+    const appTypes = useSelector(({ providers }) => providers.appTypes);
+    const entities = useSelector(({ providers }) => providers.entities);
+    const pageSize = useSelector(({ providers }) => providers.pageSize);
+    const pageNumber = useSelector(({ providers }) => providers.pageNumber);
+    const sortBy = useSelector(({ providers }) => providers.sortBy);
+    const sortDirection = useSelector(({ providers }) => providers.sortDirection);
+    const filterColumn = useSelector(({ providers }) => providers.filterColumn);
+    const sourceTypes = useSelector(({ providers }) => providers.sourceTypes);
+    const sourceTypesLoaded = useSelector(({ providers }) => providers.sourceTypesLoaded);
+    const appTypesLoaded = useSelector(({ providers }) => providers.appTypesLoaded);
+
+    const reduxDispatch = useDispatch();
 
     const refreshSources = (additionalOptions) => dispatch({
         rows: prepareEntities(
@@ -148,7 +147,7 @@ const SourcesSimpleView = ({
                 id: 'sources.list',
                 defaultMessage: 'List of Sources'
             })}
-            onSort={(_event, key, direction) => sortEntities(state.cells[key].value, direction)}
+            onSort={(_event, key, direction) => reduxDispatch(sortEntities(state.cells[key].value, direction))}
             sortBy={state.sortBy}
             rows={state.rows}
             cells={state.cells}
@@ -162,35 +161,7 @@ const SourcesSimpleView = ({
 };
 
 SourcesSimpleView.propTypes = {
-    sortEntities: PropTypes.func.isRequired,
-    entities: PropTypes.arrayOf(PropTypes.any),
-    numberOfEntities: PropTypes.number.isRequired,
-    loaded: PropTypes.bool.isRequired,
-    sourceTypes: PropTypes.arrayOf(PropTypes.any),
-    sourceTypesLoaded: PropTypes.bool,
-    appTypesLoaded: PropTypes.bool,
-    appTypes: PropTypes.arrayOf(PropTypes.any),
-    pageSize: PropTypes.number.isRequired,
-    pageNumber: PropTypes.number.isRequired,
-    filterColumn: PropTypes.string,
-    filterValue: PropTypes.string,
-    sortBy: PropTypes.string,
-    sortDirection: PropTypes.string,
     history: PropTypes.any.isRequired
 };
 
-SourcesSimpleView.defaultProps = {
-    entities: [],
-    numberOfEntities: 0,
-    loaded: false,
-    sourceTypesLoaded: false,
-    appTypesLoaded: false,
-    sourceTypes: [],
-    appTypes: []
-};
-
-const mapDispatchToProps = dispatch => bindActionCreators({ sortEntities }, dispatch);
-
-const mapStateToProps = ({ providers: { ...props } }) => (props);
-
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesSimpleView));
+export default withRouter(SourcesSimpleView);
