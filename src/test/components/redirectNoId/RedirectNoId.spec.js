@@ -36,7 +36,7 @@ describe('RedirectNoId', () => {
 
     it('Renders redirect and creates message if loaded', () => {
         redux.bindActionCreators = jest.fn(x => x);
-        actions.addMessage = jest.fn();
+        actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'ADD_MESSAGE' }));
 
         initialStore = mockStore({
             providers: { loaded: true }
