@@ -6,8 +6,7 @@ const localhost = (process.env.PLATFORM === 'linux') ? 'localhost' : 'host.docke
 
 module.exports = {
     routes: {
-        '/insights/settings/sources': { host: `http://${localhost}:8002` },
-        '/beta/hybrid/settings/sources': { host: `http://${localhost}:8002` },
+        '/beta/settings/sources': { host: `http://${localhost}:8002` },
         '/beta/apps/sources': { host: `http://${localhost}:8002` },
         '/apps/sources': { host: `http://${localhost}:8002` }
     }
