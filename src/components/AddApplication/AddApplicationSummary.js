@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector, shallowEqual } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import {
@@ -12,8 +12,12 @@ import {
 } from '@patternfly/react-core';
 
 import RedirectNoId from '../RedirectNoId/RedirectNoId';
+import { useSource } from '../../hooks/useSource';
 
-const Summary = ({ formOptions, sourceTypes, appTypes, source }) => {
+const Summary = ({ formOptions, match: { params: { id } }  }) => {
+    const { sourceTypes, appTypes } = useSelector(({ providers }) => providers, shallowEqual);
+    const source = useSource(id);
+
     if (!source) {
         return <RedirectNoId />;
     }
@@ -58,22 +62,11 @@ Summary.propTypes = {
     formOptions: PropTypes.shape({
         getState: PropTypes.func.isRequired
     }),
-    sourceTypes: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        product_name: PropTypes.string.isRequired
-    })),
-    appTypes: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        display_name: PropTypes.string.isRequired
-    })),
-    source: PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        source_type_id: PropTypes.string.isRequired,
-        application_type_id: PropTypes.number
-    })
+    match: PropTypes.shape({
+        params: PropTypes.shape({
+            id: PropTypes.string.isRequired
+        }).isRequired
+    }).isRequired
 };
 
-const mapStateToProps = ({ providers: { entities, appTypes, sourceTypes } }, { match: { params: { id } } }) =>
-    ({ source: entities.find(source => source.id  === id), appTypes, sourceTypes });
-
-export default withRouter(connect(mapStateToProps)(Summary));
+export default withRouter(Summary);

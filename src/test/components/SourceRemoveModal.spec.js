@@ -6,7 +6,6 @@ import { Route } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import { Text, Button } from '@patternfly/react-core';
 import { MemoryRouter } from 'react-router-dom';
-import * as redux from 'redux';
 
 import * as actions from '../../redux/actions/providers';
 import SourceRemoveModal from '../../components/SourceRemoveModal';
@@ -72,8 +71,7 @@ describe('SourceRemoveModal', () => {
         });
 
         it('calls submit action', () => {
-            redux.bindActionCreators = jest.fn(x => x);
-            actions.removeSource = jest.fn(() => new Promise(() => ({})));
+            actions.removeSource = jest.fn().mockImplementation(() => ({ type: 'REMOVE' }));
 
             const wrapper = mount(componentWrapperIntl(
                 <Route path="/remove/:id" render={ (...args) => <SourceRemoveModal { ...args } /> } />,
