@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { useDispatch } from 'react-redux';
 import {
     Modal,
     Button,
@@ -23,13 +22,16 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import ApplicationList from './ApplicationsList/ApplicationList';
 import RemoveAppModal from './AddApplication/RemoveAppModal';
 import RedirectNoId from './RedirectNoId/RedirectNoId';
+import { useSource } from '../hooks/useSource';
 
-const SourceRemoveModal = ({
-    history: { push },
-    removeSource,
-    source
-}) => {
+const SourceRemoveModal = ({ history: { push }, match: { params: { id } } }) => {
+    const [acknowledge, setAcknowledge] = useState(false);
+    const [removingApp, setApplicationToRemove] = useState({});
+
     const intl = useIntl();
+    const source = useSource(id);
+
+    const dispatch = useDispatch();
 
     if (!source) {
         return <RedirectNoId/>;
@@ -37,16 +39,13 @@ const SourceRemoveModal = ({
 
     const onSubmit = () => {
         push('/');
-        return removeSource(source.id, intl.formatMessage({
+        dispatch(removeSource(source.id, intl.formatMessage({
             id: 'sources.notificationDeleteMessage',
             defaultMessage: `{title} was deleted successfully.`
-        }, { title: source.name }));
+        }, { title: source.name })));
     };
 
     const onCancel = () => push('/');
-
-    const [acknowledge, setAcknowledge] = useState(false);
-    const [removingApp, setApplicationToRemove] = useState({});
 
     const sourceHasActiveApp = source.applications.some((app) => !app.isDeleting);
 
@@ -191,23 +190,14 @@ const SourceRemoveModal = ({
 };
 
 SourceRemoveModal.propTypes = {
-    appTypes: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        display_name: PropTypes.string.isRequired
-    })),
     history: PropTypes.shape({
         push: PropTypes.func.isRequired
     }).isRequired,
-    removeSource: PropTypes.func.isRequired,
-    source: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired
-    })
+    match: PropTypes.shape({
+        params: PropTypes.shape({
+            id: PropTypes.string.isRequired
+        }).isRequired
+    }).isRequired
 };
 
-const mapStateToProps = ({ providers: { entities } }, { match: { params: { id } } }) =>
-    ({ source: entities.find(source => source.id  === id) });
-
-const mapDispatchToProps = (dispatch) => bindActionCreators({ removeSource }, dispatch);
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SourceRemoveModal));
+export default withRouter(SourceRemoveModal);
