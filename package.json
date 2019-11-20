@@ -9,7 +9,7 @@
     "@data-driven-forms/pf4-component-mapper": "^1.22.11",
     "@data-driven-forms/react-form-renderer": "^1.22.11",
     "@patternfly/react-core": "^3.120.5",
-    "@patternfly/react-icons": "^3.14.18",
+    "@patternfly/react-icons": "^3.14.19",
     "@patternfly/react-table": "^2.24.17",
     "@redhat-cloud-services/frontend-components": "^0.0.40",
     "@redhat-cloud-services/frontend-components-notifications": "^0.0.7",
