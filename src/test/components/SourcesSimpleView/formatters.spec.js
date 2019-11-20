@@ -16,8 +16,9 @@ import {
 import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX } from '../../sourceTypesData';
 import { sourcesDataGraphQl, SOURCE_CATALOGAPP_INDEX, SOURCE_ALL_APS_INDEX, SOURCE_NO_APS_INDEX, SOURCE_ENDPOINT_URL_INDEX } from '../../sourcesData';
 import { applicationTypesData, CATALOG_INDEX, TOPOLOGICALINVENTORY_INDEX, COSTMANAGEMENET_INDEX } from '../../applicationTypesData';
-import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import { Badge, Tooltip } from '@patternfly/react-core';
+import { DateFormat } from '@redhat-cloud-services/frontend-components';
+import { IntlProvider } from 'react-intl';
 
 describe('formatters', () => {
     describe('formatters', () => {
@@ -86,7 +87,9 @@ describe('formatters', () => {
 
     describe('dateFormatter', () => {
         it('returns parsed date', () => {
-            expect(dateFormatter(sourcesDataGraphQl[0].created_at)).toEqual('23 Apr 2019, 06:21 UTC');
+            const wrapper = mount(dateFormatter(sourcesDataGraphQl[0].created_at));
+
+            expect(wrapper.find(DateFormat)).toHaveLength(1);
         });
     });
 
@@ -104,14 +107,14 @@ describe('formatters', () => {
         });
 
         it('returns only imported badge', () => {
-            const wrapper = mount(componentWrapperIntl(importedFormatter('value with no text'), {}));
+            const wrapper = mount(<IntlProvider>{importedFormatter('value with no text')}</IntlProvider>);
 
             expect(wrapper.find(Badge)).toHaveLength(1);
             expect(wrapper.find(Tooltip)).toHaveLength(0);
         });
 
         it('returns imported badge with tooltip', () => {
-            const wrapper = mount(componentWrapperIntl(importedFormatter('cfme'), {}));
+            const wrapper = mount(<IntlProvider>{importedFormatter('cfme')}</IntlProvider>);
 
             expect(wrapper.find(Badge)).toHaveLength(1);
             expect(wrapper.find(Tooltip)).toHaveLength(1);

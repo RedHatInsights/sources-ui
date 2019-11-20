@@ -1,20 +1,17 @@
 import React, { useEffect } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { Link, withRouter, Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { TableToolbar, PageHeader, PageHeaderTitle, Pagination, Section } from '@redhat-cloud-services/frontend-components';
 import {
-    filterProviders,
     loadAppTypes,
     loadEntities,
     loadSourceTypes,
-    setProviderFilterColumn
+    clearAddSource
 } from '../redux/actions/providers';
 import { Button } from '@patternfly/react-core';
 import { SplitItem, Split } from '@patternfly/react-core';
-import filter from 'lodash/filter';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources';
 
 import SourcesSimpleView from '../components/SourcesSimpleView/SourcesSimpleView';
@@ -23,44 +20,80 @@ import SourcesEmptyState from '../components/SourcesEmptyState';
 import SourceEditModal from '../components/SourceEditForm/SourceEditModal';
 import SourceRemoveModal from '../components/SourceRemoveModal';
 import AddApplication from '../components/AddApplication/AddApplication';
-import { sourcesViewDefinition } from '../views/sourcesViewDefinition';
-import { pageAndSize } from '../redux/actions/providers';
+import { pageAndSize, addMessage } from '../redux/actions/providers';
 import { paths } from '../Routes';
 import { prepareEntities } from '../Utilities/filteringSorting';
+import UndoButtonAdd from '../components/UndoButton/UndoButtonAdd';
+import isEmpty from 'lodash/isEmpty';
+
+export const onCloseAddSourceWizard = ({ values, dispatch, history, intl }) => {
+    if (values && !isEmpty(values)) {
+        const messageId = Date.now();
+        dispatch(addMessage(
+            intl.formatMessage({
+                id: 'sources.addWizardCanceled',
+                defaultMessage: 'Adding a source was cancelled'
+            }),
+            'success',
+            <FormattedMessage
+                id="sources.undoMistake"
+                defaultMessage={ `{undo} if this was a mistake.` }
+                values={ { undo: <UndoButtonAdd messageId={messageId} values={values} /> } }
+            />,
+            messageId
+        ));
+    }
+
+    dispatch(clearAddSource());
+    history.push('/');
+};
+
+export const afterSuccessLoadParameters = { pageNumber: 1, sortBy: 'created_at', sortDirection: 'desc' };
+
+export const afterSuccess = (dispatch) => {
+    dispatch(clearAddSource());
+    dispatch(loadEntities(afterSuccessLoadParameters));
+};
 
 const SourcesPage = ({
-    entities,
-    others,
-    filterValue,
-    numberOfEntities,
-    pageSize,
-    pageNumber,
-    sourceTypes,
-    appTypes,
     history,
-    loadEntities,
-    intl,
     match,
-    location,
-    loaded,
-    fetchingError,
-    loadSourceTypes,
-    loadAppTypes,
-    filterProviders,
-    pageAndSize,
-    setProviderFilterColumn
+    location
 }) => {
+    const intl = useIntl();
+
+    const {
+        filterValue,
+        loaded,
+        numberOfEntities,
+        appTypes,
+        entities,
+        pageSize,
+        pageNumber,
+        fetchingError,
+        addSourceInitialValues,
+        sortBy,
+        sortDirection,
+        filterColumn,
+        sourceTypes
+    } = useSelector(({ providers }) => providers, shallowEqual);
+
+    const dispatch = useDispatch();
+
     useEffect(() => {
-        Promise.all([loadSourceTypes(), loadAppTypes(), loadEntities()]);
+        Promise.all([dispatch(loadSourceTypes()), dispatch(loadAppTypes()), dispatch(loadEntities())]);
     }, []);
 
-    const onSetPage = (number) => pageAndSize(number, pageSize);
+    const onSetPage = (number) => dispatch(pageAndSize(number, pageSize));
 
-    const onPerPageSelect = (count) => pageAndSize(1, count);
+    const onPerPageSelect = (count) => dispatch(pageAndSize(1, count));
 
     const numberOfFilteredEntities = (
         filterValue && filterValue !== '' ?
-            prepareEntities(entities, { ...others, filterValue, pageSize, pageNumber }).length
+            prepareEntities(
+                entities,
+                { sourceTypes, sortBy, sortDirection, filterColumn, filterValue, pageSize, pageNumber }
+            ).length
             : numberOfEntities
     );
 
@@ -72,10 +105,7 @@ const SourcesPage = ({
             <TableToolbar xresults={numberOfFilteredEntities}>
                 <Split gutter="md" style={{ flexGrow: 1 }}>
                     <SplitItem>
-                        <SourcesFilter
-                            columns={filter(sourcesViewDefinition.columns(intl), c => c.searchable)}
-                            onFilter={filterProviders}
-                            onFilterSelect={(_component, column) => setProviderFilterColumn(column.value)}/>
+                        <SourcesFilter />
                     </SplitItem>
                     <SplitItem>
                         <Link to={paths.sourcesNew}>
@@ -127,9 +157,10 @@ const SourcesPage = ({
                 sourceTypes={sourceTypes}
                 applicationTypes={appTypes}
                 isOpen={true}
-                onClose={() => history.push('/')}
-                afterSuccess={() => loadEntities({ pageNumber: 1, sortBy: 'created_at', sortDirection: 'desc' })}
+                onClose={(values) => onCloseAddSourceWizard({ values, dispatch, history, intl })}
+                afterSuccess={() => afterSuccess(dispatch)}
                 hideSourcesButton={true}
+                initialValues={addSourceInitialValues}
             />}
             { editorEdit && <SourceEditModal />}
             <PageHeader>
@@ -152,74 +183,9 @@ const SourcesPage = ({
 };
 
 SourcesPage.propTypes = {
-    filterProviders: PropTypes.func.isRequired,
-    setProviderFilterColumn: PropTypes.func.isRequired,
-    loadEntities: PropTypes.func.isRequired,
-    loadSourceTypes: PropTypes.func.isRequired,
-    loadAppTypes: PropTypes.func.isRequired,
-    pageAndSize: PropTypes.func.isRequired,
-    sourceTypes: PropTypes.array,
-    appTypes: PropTypes.array,
-    entities: PropTypes.array,
-    others: PropTypes.object,
-    numberOfEntities: PropTypes.number.isRequired,
-    pageSize: PropTypes.number.isRequired,
-    pageNumber: PropTypes.number.isRequired,
-    fetchingError: PropTypes.object,
-
-    filterValue: PropTypes.string,
-    loaded: PropTypes.bool.isRequired,
-
     location: PropTypes.any.isRequired,
     match: PropTypes.object.isRequired,
-    history: PropTypes.any.isRequired,
-
-    intl: PropTypes.object.isRequired
+    history: PropTypes.any.isRequired
 };
 
-SourcesPage.defaultProps = {
-    sourceTypes: undefined
-};
-
-const mapDispatchToProps = dispatch => bindActionCreators(
-    {
-        filterProviders,
-        loadEntities,
-        loadSourceTypes,
-        loadAppTypes,
-        pageAndSize,
-        setProviderFilterColumn
-    },
-    dispatch);
-
-const mapStateToProps = (
-    { providers: {
-        filterValue,
-        loaded,
-        numberOfEntities,
-        sourceTypesLoaded,
-        sourceTypes,
-        appTypes,
-        entities,
-        pageSize,
-        pageNumber,
-        fetchingError,
-        ...others
-    }
-    }) => (
-    {
-        filterValue,
-        loaded,
-        numberOfEntities,
-        sourceTypesLoaded,
-        sourceTypes,
-        appTypes,
-        entities,
-        pageSize,
-        pageNumber,
-        fetchingError,
-        others
-    }
-);
-
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withRouter(SourcesPage)));
+export default withRouter(SourcesPage);

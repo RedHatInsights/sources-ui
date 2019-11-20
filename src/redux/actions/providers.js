@@ -1,4 +1,4 @@
-import { ADD_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications';
+import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications';
 import {
     ACTION_TYPES,
     SORT_ENTITIES,
@@ -7,7 +7,9 @@ import {
     SET_FILTER_COLUMN,
     SOURCE_FOR_EDIT_LOADED,
     SOURCE_EDIT_REQUEST,
-    ADD_APP_TO_SOURCE
+    ADD_APP_TO_SOURCE,
+    UNDO_ADD_SOURCE,
+    CLEAR_ADD_SOURCE
 } from '../action-types-providers';
 import {
     doLoadAppTypes,
@@ -113,14 +115,20 @@ export const loadSourceForEdit = sourceId => dispatch => {
     }));
 };
 
-export const addMessage = (title, variant, description) => (dispatch) => dispatch({
+export const addMessage = (title, variant, description, customId) => (dispatch) => dispatch({
     type: ADD_NOTIFICATION,
     payload: {
         title,
         variant,
         description,
-        dismissable: true
+        dismissable: true,
+        customId
     }
+});
+
+export const removeMessage = (id) => (dispatch) => dispatch({
+    type: REMOVE_NOTIFICATION,
+    payload: id
 });
 
 export const removeApplication = (appId, sourceId, successTitle, errorTitle) => (dispatch) => {
@@ -147,4 +155,13 @@ export const addAppToSource = (sourceId, app) => ({
         sourceId,
         app
     }
+});
+
+export const undoAddSource = (values) => ({
+    type: UNDO_ADD_SOURCE,
+    payload: { values }
+});
+
+export const clearAddSource = () => ({
+    type: CLEAR_ADD_SOURCE
 });
