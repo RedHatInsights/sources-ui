@@ -1,8 +1,8 @@
 # Sources
 ![Main screen with "Add a new Source" wizard](doc/images/sources-main-add.jpg)
 
-[![Build Status](https://travis-ci.org/ManageIQ/sources-ui.svg?branch=master)](https://travis-ci.org/ManageIQ/sources-ui)
-[![Test Coverage](https://codecov.io/gh/ManageIQ/sources-ui/branch/master/graph/badge.svg)](https://codecov.io/gh/ManageIQ/sources-ui)
+[![Build Status](https://travis-ci.org/RedHatInsights/sources-ui.svg?branch=master)](https://travis-ci.org/RedHatInsights/sources-ui)
+[![Test Coverage](https://codecov.io/gh/RedHatInsights/sources-ui/branch/master/graph/badge.svg)](https://codecov.io/gh/RedHatInsights/sources-ui)
 
 List of Sources for Red Hat Cloud Services.
 
@@ -96,7 +96,7 @@ This application use a [AddSourceWizard](https://github.com/RedHatInsights/front
 
 # API
 
-- [Sources API](https://github.com/ManageIQ/sources-api)
+- [Sources API](https://github.com/RedHatInsights/sources-api)
 
 ## Sources Javascript API client
 

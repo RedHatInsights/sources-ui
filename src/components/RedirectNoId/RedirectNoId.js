@@ -1,17 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { withRouter, Redirect } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 
 import { addMessage } from '../../redux/actions/providers';
 
-const RedirectNoId = ({ loaded, sourceId, addMessage }) => {
+const RedirectNoId = ({ match: { params: { id } }  }) => {
     const intl = useIntl();
 
-    if (loaded) {
-        addMessage(
+    const { loaded, appTypesLoaded, sourceTypesLoaded } = useSelector(({ providers }) => providers, shallowEqual);
+    const dispatch = useDispatch();
+
+    const applicationIsLoaded = loaded && appTypesLoaded && sourceTypesLoaded;
+
+    if (applicationIsLoaded) {
+        dispatch(addMessage(
             intl.formatMessage({
                 id: 'sources.sourceNotFoundTitle',
                 defaultMessage: 'Requested source was not found'
@@ -20,8 +24,8 @@ const RedirectNoId = ({ loaded, sourceId, addMessage }) => {
             intl.formatMessage({
                 id: 'sources.sourceNotFoundTitleDescription',
                 defaultMessage: 'Source with { id } was not found. Try it again later.'
-            }, { id: sourceId })
-        );
+            }, { id })
+        ));
 
         return <Redirect to="/" />;
     }
@@ -30,14 +34,11 @@ const RedirectNoId = ({ loaded, sourceId, addMessage }) => {
 };
 
 RedirectNoId.propTypes = {
-    sourceId: PropTypes.string.isRequired,
-    loaded: PropTypes.bool,
-    addMessage: PropTypes.func.isRequired
+    match: PropTypes.shape({
+        params: PropTypes.shape({
+            id: PropTypes.string.isRequired
+        }).isRequired
+    }).isRequired
 };
 
-const mapStateToProps = ({ providers: { loaded } }, { match: { params: { id } } }) =>
-    ({ loaded, sourceId: id });
-
-const mapDispatchToProps = (dispatch) => bindActionCreators({ addMessage }, dispatch);
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(RedirectNoId));
+export default withRouter(RedirectNoId);
