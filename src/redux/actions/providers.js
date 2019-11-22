@@ -5,20 +5,17 @@ import {
     PAGE_AND_SIZE,
     FILTER_PROVIDERS,
     SET_FILTER_COLUMN,
-    SOURCE_FOR_EDIT_LOADED,
-    SOURCE_EDIT_REQUEST,
     ADD_APP_TO_SOURCE,
     UNDO_ADD_SOURCE,
     CLEAR_ADD_SOURCE
 } from '../action-types-providers';
 import {
     doLoadAppTypes,
-    doLoadSourceForEdit,
     doRemoveSource,
-    doUpdateSource,
     doLoadEntities,
     doDeleteApplication
 } from '../../api/entities';
+import { doUpdateSource } from '../../api/doUpdateSource';
 import { doLoadSourceTypes } from '../../api/source_types';
 
 export const loadEntities = (options) => (dispatch) => {
@@ -102,18 +99,6 @@ export const removeSource = (sourceId, title) => ({
         }
     }
 });
-
-export const loadSourceForEdit = sourceId => dispatch => {
-    dispatch({ type: SOURCE_EDIT_REQUEST });
-
-    return doLoadSourceForEdit(sourceId).then(sourceData => dispatch({
-        type: SOURCE_FOR_EDIT_LOADED,
-        payload: sourceData
-    })).catch(error => dispatch({
-        type: 'FOOBAR_REJECTED',
-        payload: error
-    }));
-};
 
 export const addMessage = (title, variant, description, customId) => (dispatch) => dispatch({
     type: ADD_NOTIFICATION,

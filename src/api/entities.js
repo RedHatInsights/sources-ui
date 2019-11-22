@@ -1,8 +1,7 @@
 import axiosInstanceInsights from '@redhat-cloud-services/frontend-components-utilities/files/interceptors';
 import { DefaultApi as SourcesDefaultApi } from '@redhat-cloud-services/sources-client';
 
-import { SOURCES_API_BASE } from '../Utilities/Constants';
-import { defaultPort } from '../components/SourcesSimpleView/formatters';
+import { SOURCES_API_BASE } from './constants';
 
 axiosInstanceInsights.interceptors.response.use(response => {
     if (response.errors && response.errors.length > 0) {
@@ -11,6 +10,8 @@ axiosInstanceInsights.interceptors.response.use(response => {
 
     return response;
 });
+
+export { axiosInstanceInsights as axiosInstance };
 
 let apiInstance;
 
@@ -28,71 +29,25 @@ export function doRemoveSource(sourceId) {
 
 export const doLoadSourceForEdit = sourceId => Promise.all([
     getSourcesApi().showSource(sourceId),
-    getSourcesApi().listSourceEndpoints(sourceId, {})
-]).then(([sourceData, endpoints]) => {
+    getSourcesApi().listSourceEndpoints(sourceId),
+    getSourcesApi().listSourceApplications(sourceId)
+]).then(([sourceData, endpoints, applications]) => {
     const endpoint = endpoints && endpoints.data && endpoints.data[0];
 
     if (!endpoint) { // bail out
-        return sourceData;
-    }
-
-    sourceData.endpoint = endpoint;
-
-    return getSourcesApi().listEndpointAuthentications(endpoint.id, {}).then(authentications => {
-        const authentication = authentications && authentications.data && authentications.data[0];
-
-        if (authentication) {
-            sourceData.authentication = authentication;
-        }
-
-        return { ...sourceData, source: { name: sourceData.name } };
-    });
-});
-
-const parseUrl = url => {
-    if (!url) {
-        return ({});
-    }
-
-    try {
-        const u = new URL(url);
         return {
-            scheme: u.protocol.replace(/:$/, ''),
-            host: u.hostname,
-            port: u.port === '' ? defaultPort(u.protocol.replace(/:$/, '')) : u.port,
-            path: u.pathname
+            source: sourceData,
+            applications: applications.data
         };
-    } catch (error) {
-        return ({});
     }
-};
 
-const urlOrHost = formData => formData.url ? parseUrl(formData.url) : formData.endpoint ? formData.endpoint : formData;
-
-export const doUpdateSource = (source, formData, errorTitles) => {
-    const { scheme, host, port, path } = urlOrHost(formData);
-    const endPointPort = parseInt(port, 10);
-
-    const endpointData = {
-        scheme,
-        host,
-        path,
-        port: isNaN(endPointPort) ? undefined : endPointPort,
-        ...formData.endpoint
-    };
-
-    return Promise.all([
-        getSourcesApi().updateSource(source.id, formData.source).catch((error) => {
-            throw { error: { title: errorTitles.source, detail: error.errors[0].detail } };
-        }),
-        getSourcesApi().updateEndpoint(source.endpoint.id, endpointData).catch((error) => {
-            throw { error: { title: errorTitles.endpoint, detail: error.errors[0].detail } };
-        }),
-        getSourcesApi().updateAuthentication(source.authentication.id, formData.authentication).catch((error) => {
-            throw { error: { title: errorTitles.authentication, detail: error.errors[0].detail } };
-        })
-    ]);
-};
+    return getSourcesApi().listEndpointAuthentications(endpoint.id).then(authentications => ({
+        source: sourceData,
+        endpoints: endpoints.data,
+        authentications: authentications.data,
+        applications: applications.data
+    }));
+});
 
 export const doLoadEntities = () => getSourcesApi().postGraphQL({
     query: `{ sources
