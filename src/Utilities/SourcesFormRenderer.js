@@ -6,6 +6,7 @@ import { mapperExtension } from '@redhat-cloud-services/frontend-components-sour
 
 import Description from '../components/Description';
 import AddApplicationSummary from '../components/AddApplication/AddApplicationSummary';
+import EditField from '../components/editField/EditField';
 
 const SourcesFormRenderer = props => (
     <FormRenderer
@@ -14,7 +15,8 @@ const SourcesFormRenderer = props => (
             ...formFieldsMapper,
             ...mapperExtension,
             description: Description,
-            'add-application-summary': AddApplicationSummary
+            'add-application-summary': AddApplicationSummary,
+            'edit-field': EditField
         }}
         {...props} />
 );
