@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
-import { Link, withRouter, Route } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import { PageHeader, PageHeaderTitle, Section } from '@redhat-cloud-services/frontend-components';
+import { Link, useHistory, useRouteMatch, useLocation, Route } from 'react-router-dom';
 import {
     loadAppTypes,
     loadEntities,
@@ -55,11 +54,10 @@ export const afterSuccess = (dispatch) => {
     dispatch(loadEntities(afterSuccessLoadParameters));
 };
 
-const SourcesPage = ({
-    history,
-    match,
-    location
-}) => {
+const SourcesPage = () => {
+    const history = useHistory();
+    const match = useRouteMatch();
+    const location = useLocation();
     const intl = useIntl();
 
     const {
@@ -195,10 +193,4 @@ const SourcesPage = ({
     );
 };
 
-SourcesPage.propTypes = {
-    location: PropTypes.any.isRequired,
-    match: PropTypes.object.isRequired,
-    history: PropTypes.any.isRequired
-};
-
-export default withRouter(SourcesPage);
+export default SourcesPage;

@@ -1,7 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
-import PropTypes from 'prop-types';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Table, TableHeader, TableBody, sortable } from '@patternfly/react-table';
 import { useIntl } from 'react-intl';
 
@@ -74,7 +73,8 @@ export const actionResolver = (intl, push) => (rowData) => {
     return actions;
 };
 
-const SourcesSimpleView = ({ history: { push } }) => {
+const SourcesSimpleView = () => {
+    const { push } = useHistory();
     const intl = useIntl();
     const columns = sourcesViewDefinition.columns(intl);
     const [state, dispatch] = useReducer(reducer, initialState(columns));
@@ -162,8 +162,4 @@ const SourcesSimpleView = ({ history: { push } }) => {
     );
 };
 
-SourcesSimpleView.propTypes = {
-    history: PropTypes.any.isRequired
-};
-
-export default withRouter(SourcesSimpleView);
+export default SourcesSimpleView;
