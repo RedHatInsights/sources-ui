@@ -20,6 +20,7 @@ import * as api from '../api/entities';
 import * as typesApi from '../api/source_types';
 
 import * as actions from '../redux/actions/providers';
+import { act } from 'react-dom/test-utils';
 
 describe('SourcesPage', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -107,20 +108,30 @@ describe('SourcesPage', () => {
         });
     });
 
-    it('should call onFilterSelect', (done) => {
+    describe('filtering', () => {
         const SEARCH_TERM = 'Pepa';
         const FILTER_INPUT_INDEX = 0;
 
-        const wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
+        let wrapper;
+        const filterInput = (wrapper) => wrapper.find('input').at(FILTER_INPUT_INDEX);;
 
-        setImmediate(() => {
+        beforeEach(async () => {
+            await act(async() => {
+                wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
+            });
             wrapper.update();
-            const filterInput = wrapper.find('input').at(FILTER_INPUT_INDEX);
 
-            filterInput.simulate('change', { target: { value: SEARCH_TERM } });
+            filterInput(wrapper).simulate('change', { target: { value: SEARCH_TERM } });
 
+            wrapper.update();
+        });
+
+        it('should call onFilterSelect', async () => {
             expect(store.getState().providers.filterValue).toEqual(SEARCH_TERM);
-            done();
+        });
+
+        it('filtered value is shown in the input', () => {
+            expect(filterInput(wrapper).props().value).toEqual(SEARCH_TERM);
         });
     });
 
