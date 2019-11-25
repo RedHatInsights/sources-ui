@@ -2,20 +2,20 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { Link, withRouter, Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { TableToolbar, PageHeader, PageHeaderTitle, Pagination, Section } from '@redhat-cloud-services/frontend-components';
+import { PageHeader, PageHeaderTitle, Section } from '@redhat-cloud-services/frontend-components';
 import {
     loadAppTypes,
     loadEntities,
     loadSourceTypes,
-    clearAddSource
+    clearAddSource,
+    filterProviders
 } from '../redux/actions/providers';
 import { Button } from '@patternfly/react-core';
-import { SplitItem, Split } from '@patternfly/react-core';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources';
+import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components';
 
 import SourcesSimpleView from '../components/SourcesSimpleView/SourcesSimpleView';
-import SourcesFilter from '../components/SourcesFilter';
 import SourcesEmptyState from '../components/SourcesEmptyState';
 import SourceEditModal from '../components/SourceEditForm/SourceEditModal';
 import SourceRemoveModal from '../components/SourceRemoveModal';
@@ -97,18 +97,26 @@ const SourcesPage = ({
             : numberOfEntities
     );
 
-    const maximumPageNumber = (numberOfFilteredEntities / pageSize) + 1;
-    const currentPage = pageNumber > maximumPageNumber ? maximumPageNumber : pageNumber;
+    const maximumPageNumber = Math.ceil(numberOfFilteredEntities / pageSize);
+
+    if (loaded && pageNumber > maximumPageNumber) {
+        onSetPage(maximumPageNumber);
+    }
 
     const mainContent = () => (
         <React.Fragment>
-            <TableToolbar xresults={numberOfFilteredEntities}>
-                <Split gutter="md" style={{ flexGrow: 1 }}>
-                    <SplitItem>
-                        <SourcesFilter />
-                    </SplitItem>
-                    <SplitItem>
-                        <Link to={paths.sourcesNew}>
+            <PrimaryToolbar
+                pagination={{
+                    itemCount: numberOfFilteredEntities || 0,
+                    page: pageNumber,
+                    perPage: pageSize,
+                    onSetPage: (_e, page) => onSetPage(page),
+                    onPerPageSelect: (_e, perPage) => onPerPageSelect(perPage),
+                    isCompact: false
+                }}
+                actionsConfig={{
+                    actions: [
+                        <Link to={paths.sourcesNew} key="addSourceButton">
                             <Button variant='primary'>
                                 <FormattedMessage
                                     id="sources.addSource"
@@ -116,30 +124,35 @@ const SourcesPage = ({
                                 />
                             </Button>
                         </Link>
-                    </SplitItem>
-                    <SplitItem style={{ flexGrow: 1 }}>
-                        <Pagination
-                            itemsPerPage={pageSize}
-                            page={currentPage}
-                            direction='down'
-                            onSetPage={onSetPage}
-                            onPerPageSelect={onPerPageSelect}
-                            numberOfItems={numberOfFilteredEntities || 0}
-                        />
-                    </SplitItem>
-                </Split>
-            </TableToolbar>
+                    ]
+                } }
+                filterConfig={{
+                    items: [{
+                        label: intl.formatMessage({
+                            id: 'sources.filterBySourceName',
+                            defaultMessage: 'name'
+                        }),
+                        value: filterValue,
+                        filterValues: {
+                            onChange: (_event, newSelection, _clickedGroup, _clickedItem) =>
+                                dispatch(filterProviders(newSelection))
+                        }
+                    }]
+                }}
+            />
             <SourcesSimpleView />
-            <TableToolbar>
-                <Pagination
-                    itemsPerPage={pageSize}
-                    page={currentPage}
-                    direction='up'
-                    onSetPage={onSetPage}
-                    onPerPageSelect={onPerPageSelect}
-                    numberOfItems={numberOfFilteredEntities || 0}
-                />
-            </TableToolbar>
+            <PrimaryToolbar
+                pagination={{
+                    itemCount: numberOfFilteredEntities || 0,
+                    page: pageNumber,
+                    perPage: pageSize,
+                    onSetPage: (_e, page) => onSetPage(page),
+                    onPerPageSelect: (_e, perPage) => onPerPageSelect(perPage),
+                    isCompact: false,
+                    dropDirection: 'up',
+                    variant: 'bottom'
+                }}
+            />
         </React.Fragment>
     );
 

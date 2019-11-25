@@ -3,10 +3,10 @@ import { notificationsMiddleware } from '@redhat-cloud-services/frontend-compone
 import ContentLoader from 'react-content-loader';
 import { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/files/ReducerRegistry';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components';
 
 import SourcesPage, { onCloseAddSourceWizard, afterSuccess, afterSuccessLoadParameters } from '../pages/SourcesPage';
 import SourcesEmptyState from '../components/SourcesEmptyState';
-import SourcesFilter from '../components/SourcesFilter';
 import SourcesSimpleView from '../components/SourcesSimpleView/SourcesSimpleView';
 
 import { sourcesDataGraphQl } from './sourcesData';
@@ -49,7 +49,7 @@ describe('SourcesPage', () => {
         setImmediate(() => {
             wrapper.update();
             expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
-            expect(wrapper.find(SourcesFilter)).toHaveLength(1);
+            expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
             expect(wrapper.find(SourcesSimpleView)).toHaveLength(1);
             done();
         });
@@ -63,7 +63,7 @@ describe('SourcesPage', () => {
         setImmediate(() => {
             wrapper.update();
             expect(wrapper.find(SourcesEmptyState)).toHaveLength(1);
-            expect(wrapper.find(SourcesFilter)).toHaveLength(0);
+            expect(wrapper.find(PrimaryToolbar)).toHaveLength(0);
             expect(wrapper.find(SourcesSimpleView)).toHaveLength(0);
             done();
         });
@@ -78,7 +78,7 @@ describe('SourcesPage', () => {
         setImmediate(() => {
             wrapper.update();
             expect(wrapper.find(SourcesEmptyState)).toHaveLength(1);
-            expect(wrapper.find(SourcesFilter)).toHaveLength(0);
+            expect(wrapper.find(PrimaryToolbar)).toHaveLength(0);
             expect(wrapper.find(SourcesSimpleView)).toHaveLength(0);
             expect(wrapper.text().includes(ERROR_MESSAGE)).toEqual(true);
             done();
@@ -90,7 +90,7 @@ describe('SourcesPage', () => {
 
         setImmediate(() => {
             expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
-            expect(wrapper.find(SourcesFilter)).toHaveLength(1);
+            expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
             expect(wrapper.find(SourcesSimpleView)).toHaveLength(1);
             done();
         });
