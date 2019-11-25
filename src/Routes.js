@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 
 const SourcesPage = lazy(() => import('./pages/SourcesPage'));
@@ -23,14 +23,7 @@ export const paths = {
 const Routes = () =>  (
     <div className='pf-c-page__main pf-l-page__main'>
         <Suspense fallback={<Loader/>}>
-            <Switch>
-                <Route exact path={paths.sources} component={SourcesPage} />
-                <Route exact path={paths.sourcesNew} component={SourcesPage} />
-                <Route path={paths.sourcesEdit} component={SourcesPage} />
-                <Route path={paths.sourcesRemove} component={SourcesPage} />
-                <Route path={paths.sourceManageApps} component={SourcesPage} />
-                <Route render={() => <Redirect to={paths.sources} />} />
-            </Switch>
+            <Route path={paths.sources} component={SourcesPage} />
         </Suspense>
     </div>
 );
