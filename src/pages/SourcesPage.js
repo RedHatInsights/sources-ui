@@ -96,7 +96,7 @@ const SourcesPage = () => {
     const maximumPageNumber = Math.ceil(numberOfFilteredEntities / pageSize);
 
     if (loaded && pageNumber > maximumPageNumber) {
-        onSetPage(maximumPageNumber);
+        onSetPage(maximumPageNumber > 0 ? maximumPageNumber : 1);
     }
 
     const mainContent = () => (
@@ -125,13 +125,13 @@ const SourcesPage = () => {
                 filterConfig={{
                     items: [{
                         label: intl.formatMessage({
-                            id: 'sources.filterBySourceName',
+                            id: 'sources.name',
                             defaultMessage: 'name'
                         }),
-                        value: filterValue,
                         filterValues: {
                             onChange: (_event, newSelection, _clickedGroup, _clickedItem) =>
-                                dispatch(filterProviders(newSelection))
+                                dispatch(filterProviders(newSelection)),
+                            value: filterValue
                         }
                     }]
                 }}
