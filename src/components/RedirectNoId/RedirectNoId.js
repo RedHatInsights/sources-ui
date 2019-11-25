@@ -1,12 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import { withRouter, Redirect } from 'react-router-dom';
+import { useParams, Redirect } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 
 import { addMessage } from '../../redux/actions/providers';
 
-const RedirectNoId = ({ match: { params: { id } }  }) => {
+const RedirectNoId = () => {
+    const { id } = useParams();
     const intl = useIntl();
 
     const { loaded, appTypesLoaded, sourceTypesLoaded } = useSelector(({ providers }) => providers, shallowEqual);
@@ -33,12 +33,4 @@ const RedirectNoId = ({ match: { params: { id } }  }) => {
     return null;
 };
 
-RedirectNoId.propTypes = {
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            id: PropTypes.string.isRequired
-        }).isRequired
-    }).isRequired
-};
-
-export default withRouter(RedirectNoId);
+export default RedirectNoId;

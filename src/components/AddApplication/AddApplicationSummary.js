@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, shallowEqual } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import {
     TextContent,
@@ -14,7 +14,8 @@ import {
 import RedirectNoId from '../RedirectNoId/RedirectNoId';
 import { useSource } from '../../hooks/useSource';
 
-const Summary = ({ formOptions, match: { params: { id } }  }) => {
+const Summary = ({ formOptions }) => {
+    const { id } = useParams();
     const { sourceTypes, appTypes } = useSelector(({ providers }) => providers, shallowEqual);
     const source = useSource(id);
 
@@ -61,12 +62,7 @@ const Summary = ({ formOptions, match: { params: { id } }  }) => {
 Summary.propTypes = {
     formOptions: PropTypes.shape({
         getState: PropTypes.func.isRequired
-    }),
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            id: PropTypes.string.isRequired
-        }).isRequired
-    }).isRequired
+    })
 };
 
-export default withRouter(Summary);
+export default Summary;

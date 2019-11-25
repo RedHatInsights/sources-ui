@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
-import { Link, withRouter, Route } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import { PageHeader, PageHeaderTitle, Section } from '@redhat-cloud-services/frontend-components';
+import { Link, useHistory, Route } from 'react-router-dom';
 import {
     loadAppTypes,
     loadEntities,
@@ -55,11 +54,8 @@ export const afterSuccess = (dispatch) => {
     dispatch(loadEntities(afterSuccessLoadParameters));
 };
 
-const SourcesPage = ({
-    history,
-    match,
-    location
-}) => {
+const SourcesPage = () => {
+    const history = useHistory();
     const intl = useIntl();
 
     const {
@@ -159,14 +155,11 @@ const SourcesPage = ({
     const noEntities = !numberOfFilteredEntities || numberOfFilteredEntities === 0;
     const displayEmptyState = loaded && !filterValue && noEntities;
 
-    const editorNew = location.pathname === paths.sourcesNew;
-    const editorEdit = match.path === paths.sourcesEdit;
-
     return (
         <React.Fragment>
             <Route exact path={paths.sourceManageApps} component={ AddApplication } />
             <Route exact path={paths.sourcesRemove} component={ SourceRemoveModal } />
-            { editorNew && <AddSourceWizard
+            <Route exact path={paths.sourcesNew} render={ () => (<AddSourceWizard
                 sourceTypes={sourceTypes}
                 applicationTypes={appTypes}
                 isOpen={true}
@@ -174,8 +167,8 @@ const SourcesPage = ({
                 afterSuccess={() => afterSuccess(dispatch)}
                 hideSourcesButton={true}
                 initialValues={addSourceInitialValues}
-            />}
-            { editorEdit && <SourceEditModal />}
+            />) } />
+            <Route exact path={paths.sourcesEdit} component={ SourceEditModal } />
             <PageHeader>
                 <PageHeaderTitle title={intl.formatMessage({
                     id: 'sources.sources',
@@ -195,10 +188,4 @@ const SourcesPage = ({
     );
 };
 
-SourcesPage.propTypes = {
-    location: PropTypes.any.isRequired,
-    match: PropTypes.object.isRequired,
-    history: PropTypes.any.isRequired
-};
-
-export default withRouter(SourcesPage);
+export default SourcesPage;
