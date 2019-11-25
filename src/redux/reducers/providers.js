@@ -4,8 +4,6 @@ import {
     PAGE_AND_SIZE,
     FILTER_PROVIDERS,
     SET_FILTER_COLUMN,
-    SOURCE_EDIT_REQUEST,
-    SOURCE_FOR_EDIT_LOADED,
     ADD_APP_TO_SOURCE,
     UNDO_ADD_SOURCE,
     CLEAR_ADD_SOURCE
@@ -85,16 +83,6 @@ const filterProviders = (state, { payload: { value } }) =>({
 const setFilterColumn = (state, { payload: { column } }) => ({
     ...state,
     filterColumn: column
-});
-
-const sourceForEditLoaded = (state, { payload }) => ({
-    ...state,
-    source: payload
-});
-
-const sourceEditRequest = (state) => ({
-    ...state,
-    source: null
 });
 
 const sourceEditRemovePending = (state, { meta }) => ({
@@ -188,8 +176,6 @@ export default {
     [PAGE_AND_SIZE]: setPageAndSize,
     [FILTER_PROVIDERS]: filterProviders,
     [SET_FILTER_COLUMN]: setFilterColumn,
-    [SOURCE_FOR_EDIT_LOADED]: sourceForEditLoaded,
-    [SOURCE_EDIT_REQUEST]: sourceEditRequest,
     [ADD_APP_TO_SOURCE]: addAppToSource,
     [UNDO_ADD_SOURCE]: undoAddSource,
     [CLEAR_ADD_SOURCE]: clearAddSource

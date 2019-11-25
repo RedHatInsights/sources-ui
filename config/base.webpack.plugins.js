@@ -56,7 +56,8 @@ const LodashWebpackPlugin = new (require('lodash-webpack-plugin'))({
     currying: true,
     flattening: true,
     placeholders: true,
-    shorthands: true
+    shorthands: true,
+    paths: true
 });
 plugins.push(LodashWebpackPlugin);
 
