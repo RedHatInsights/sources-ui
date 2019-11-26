@@ -52,7 +52,7 @@ export const modifyAuthSchemas = (fields, id, editing, setEdit) => fields.map((f
 });
 
 export const authenticationFields = (authentications, sourceType, editing, setEdit) => {
-    if (!authentications || authentications.length === 0) {
+    if (!authentications || authentications.length === 0 || !sourceType.schema || !sourceType.schema.authentication) {
         return [];
     }
 

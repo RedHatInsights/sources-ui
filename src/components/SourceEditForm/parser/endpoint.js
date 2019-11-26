@@ -9,7 +9,7 @@ export const getEnhancedEndpointField = (sourceType, name) =>
     get(hardcodedSchemas, [sourceType, 'endpoint', name], {});
 
 export const endpointFields = (sourceType, editing, setEdit) => {
-    if (!sourceType.schema.endpoint || sourceType.schema.endpoint.hidden) {
+    if (!sourceType.schema || !sourceType.schema.endpoint || sourceType.schema.endpoint.hidden) {
         return undefined;
     }
 
