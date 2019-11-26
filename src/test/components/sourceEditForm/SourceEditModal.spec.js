@@ -17,6 +17,7 @@ import { Modal, Button, FormGroup, TextInput } from '@patternfly/react-core';
 import * as api from '../../../api/entities';
 import EditFieldProvider from '../../../components/editField/EditField';
 import * as submit from '../../../components/SourceEditForm/onSubmit';
+import * as redirect from '../../../components/SourceEditForm/importedRedirect';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources', () => ({
     asyncValidator: jest.fn()
@@ -77,6 +78,42 @@ describe('SourceEditModal', () => {
         expect(wrapper.find(Modal)).toHaveLength(1);
         expect(wrapper.find(EditFieldProvider).length).toBeGreaterThan(0);
         expect(wrapper.find(Button)).toHaveLength(BUTTONS.length);
+    });
+
+    it('calls redirectWhenImported when imported source', async() => {
+        const DISPATCH = expect.any(Function);
+        const INTL = expect.any(Object);
+        const HISTORY = expect.any(Object);
+        const SOURCE_NAME = 'some name';
+
+        redirect.redirectWhenImported = jest.fn();
+
+        api.doLoadSourceForEdit = jest.fn().mockImplementation(() => Promise.resolve({
+            source: {
+                name: SOURCE_NAME,
+                source_type_id: OPENSHIFT_ID,
+                imported: 'cfme'
+            },
+            applications: [],
+            endpoints: [],
+            authentications: []
+        }));
+
+        await act(async() => {
+            wrapper = mount(componentWrapperIntl(
+                <Route path={paths.sourcesEdit} render={ (...args) => <SourceEditModal { ...args }/> } />,
+                store,
+                initialEntry
+            ));
+        });
+        wrapper.update();
+
+        expect(redirect.redirectWhenImported).toHaveBeenCalledWith(
+            DISPATCH,
+            INTL,
+            HISTORY,
+            SOURCE_NAME
+        );
     });
 
     it('change editField component for name', async() => {

@@ -1,7 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { useParams, useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import { Modal, GridItem, Grid } from '@patternfly/react-core';
 import { Spinner } from '@redhat-cloud-services/frontend-components';
@@ -15,6 +14,8 @@ import Header from './Header';
 import { prepareInitialValues } from './helpers';
 import { onSubmit } from './onSubmit';
 
+import { redirectWhenImported } from './importedRedirect';
+
 const initialState = {
     loading: true,
     editing: {},
@@ -26,8 +27,10 @@ const initialState = {
 
 const reducer = (state, payload) => ({ ...state, ...payload });
 
-const SourceEditModal = ({ match: { params: { id } }, history }) => {
+const SourceEditModal = () => {
     const [state, setState] = useReducer(reducer, initialState);
+    const { id } = useParams();
+    const history = useHistory();
 
     const { loading, editing, source, initialValues, sourceType, schema } = state;
 
@@ -44,6 +47,10 @@ const SourceEditModal = ({ match: { params: { id } }, history }) => {
 
     useEffect(() => {
         doLoadSourceForEdit(id).then((source) => {
+            if (source.source.imported) {
+                redirectWhenImported(dispatch, intl, history, source.source.name);
+            }
+
             setState({ source });
         });
     }, []);
@@ -132,9 +139,4 @@ const SourceEditModal = ({ match: { params: { id } }, history }) => {
     );
 };
 
-SourceEditModal.propTypes = {
-    match: PropTypes.object.isRequired,
-    history: PropTypes.any.isRequired
-};
-
-export default withRouter(SourceEditModal);
+export default SourceEditModal;
