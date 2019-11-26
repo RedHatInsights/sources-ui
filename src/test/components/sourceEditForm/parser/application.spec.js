@@ -131,19 +131,39 @@ describe('application edit form parser', () => {
         });
 
         describe('applicationsFields', () => {
-            it('returns CM fields', () => {
-                const AUTHENTICATIONS = [{ authtype: 'arn' }];
+            let CM_GROUP;
+            let EXPECTED_RESULT;
 
-                const CM_GROUP = {
+            beforeEach(() => {
+                CM_GROUP = {
                     component: componentTypes.SUB_FORM,
                     title: COSTMANAGEMENT_APP.display_name,
                     name: COSTMANAGEMENT_APP.display_name,
                     fields: modifyFields(BILLING_SOURCE_FIELDS, EDITING, SET_EDIT)
                 };
 
-                const EXPECTED_RESULT = [
+                EXPECTED_RESULT = [
                     CM_GROUP
                 ];
+            });
+
+            it('returns CM fields', () => {
+                const AUTHENTICATIONS = [{ authtype: 'arn' }];
+
+                const result = applicationsFields(
+                    APPLICATIONS,
+                    SOURCE_TYPE,
+                    EDITING,
+                    SET_EDIT,
+                    APP_TYPES,
+                    AUTHENTICATIONS,
+                );
+
+                expect(result).toEqual(EXPECTED_RESULT);
+            });
+
+            it('returns CM fields with no authentications', () => {
+                const AUTHENTICATIONS = undefined;
 
                 const result = applicationsFields(
                     APPLICATIONS,

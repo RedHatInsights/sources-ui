@@ -31,6 +31,24 @@ describe('endpoint edit form parser', () => {
             expect(endpointFields(SOURCE_TYPE, EDITING, SET_EDIT)).toEqual(undefined);
         });
 
+        it('returns nothing when no schema', () => {
+            SOURCE_TYPE = {
+                schema: undefined
+            };
+
+            expect(endpointFields(SOURCE_TYPE, EDITING, SET_EDIT)).toEqual(undefined);
+        });
+
+        it('returns nothing when no schema.endpoint', () => {
+            SOURCE_TYPE = {
+                schema: {
+                    endpoint: undefined
+                }
+            };
+
+            expect(endpointFields(SOURCE_TYPE, EDITING, SET_EDIT)).toEqual(undefined);
+        });
+
         it('returns endpoint SUBFORM', () => {
             const FIELDS = [
                 { name: 'field1' },

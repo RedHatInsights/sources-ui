@@ -73,31 +73,59 @@ describe('edit form helpers', () => {
         });
 
         it('prepares initial values with empty authetications', () => {
-            const SOURCE_WITH_URL = {
+            const SOURCE_WITH_NO_AUTHS = {
                 ...SOURCE,
                 authentications: []
             };
 
-            const EXPECTED_INITIAL_VALUES_WITH_URL = {
+            const EXPECTED_INITIAL_VALUES_WITH_NO_AUTHS = {
                 ...EXPECTED_INITIAL_VALUES,
                 authentications: {}
             };
 
-            expect(prepareInitialValues(SOURCE_WITH_URL, SOURCE_TYPE_NAME)).toEqual(EXPECTED_INITIAL_VALUES_WITH_URL);
+            expect(prepareInitialValues(SOURCE_WITH_NO_AUTHS, SOURCE_TYPE_NAME)).toEqual(EXPECTED_INITIAL_VALUES_WITH_NO_AUTHS);
+        });
+
+        it('prepares initial values with undefined authetications', () => {
+            const SOURCE_WITH_UNDEF_AUTHS = {
+                ...SOURCE,
+                authentications: undefined
+            };
+
+            const EXPECTED_INITIAL_VALUES_WITH_UNDEF_AUTHS = {
+                ...EXPECTED_INITIAL_VALUES,
+                authentications: {}
+            };
+
+            expect(prepareInitialValues(SOURCE_WITH_UNDEF_AUTHS, SOURCE_TYPE_NAME)).toEqual(EXPECTED_INITIAL_VALUES_WITH_UNDEF_AUTHS);
         });
 
         it('prepares initial values with empty endpoint', () => {
-            const SOURCE_WITH_URL = {
+            const SOURCE_WITH_NO_ENDPOINTS = {
                 ...SOURCE,
                 endpoints: []
             };
 
-            const EXPECTED_INITIAL_VALUES_WITH_URL = {
+            const EXPECTED_INITIAL_VALUES_WITH_NO_ENDPOINTS = {
                 ...EXPECTED_INITIAL_VALUES,
                 endpoint: undefined
             };
 
-            expect(prepareInitialValues(SOURCE_WITH_URL, SOURCE_TYPE_NAME)).toEqual(EXPECTED_INITIAL_VALUES_WITH_URL);
+            expect(prepareInitialValues(SOURCE_WITH_NO_ENDPOINTS, SOURCE_TYPE_NAME)).toEqual(EXPECTED_INITIAL_VALUES_WITH_NO_ENDPOINTS);
+        });
+
+        it('prepares initial values with undefined endpoints', () => {
+            const SOURCE_WITH_UNDEF_ENDPOINTS = {
+                ...SOURCE,
+                endpoints: undefined
+            };
+
+            const EXPECTED_INITIAL_VALUES_WITH_UNDEF_ENDPOINTS = {
+                ...EXPECTED_INITIAL_VALUES,
+                endpoint: undefined
+            };
+
+            expect(prepareInitialValues(SOURCE_WITH_UNDEF_ENDPOINTS, SOURCE_TYPE_NAME)).toEqual(EXPECTED_INITIAL_VALUES_WITH_UNDEF_ENDPOINTS);
         });
     });
 });

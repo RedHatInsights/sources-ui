@@ -279,5 +279,43 @@ describe('authentication edit source parser', () => {
                 { ...unsupportedAuthTypeField(UNSUPPORTED_AUTHTYPE), Content: expect.any(Function) }
             ]);
         });
+
+        it('returns empty array when source type does not have schema', () => {
+            const EMPTY_ARRAY = [];
+
+            const SOURCE_TYPE_WITHOUT_SCHEMA = {
+                ...SOURCE_TYPE,
+                schema: undefined
+            };
+
+            const result = authenticationFields(
+                AUTHENTICATIONS,
+                SOURCE_TYPE_WITHOUT_SCHEMA,
+                EDITING,
+                SET_EDIT
+            );
+
+            expect(result).toEqual(EMPTY_ARRAY);
+        });
+
+        it('returns empty array when source type does not have schema.authentication', () => {
+            const EMPTY_ARRAY = [];
+
+            const SOURCE_TYPE_WITHOUT_SCHEMA_AUTH = {
+                ...SOURCE_TYPE,
+                schema: {
+                    authentication: undefined
+                }
+            };
+
+            const result = authenticationFields(
+                AUTHENTICATIONS,
+                SOURCE_TYPE_WITHOUT_SCHEMA_AUTH,
+                EDITING,
+                SET_EDIT
+            );
+
+            expect(result).toEqual(EMPTY_ARRAY);
+        });
     });
 });

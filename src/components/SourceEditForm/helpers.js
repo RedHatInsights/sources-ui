@@ -15,7 +15,7 @@ export const selectOnlyEditedValues = (values, editing) => {
     return filteredValues;
 };
 
-export const prepareInitialValues = ({ source, endpoints: [endpoint], authentications }, sourceTypeName) => {
+export const prepareInitialValues = ({ source, endpoints, authentications }, sourceTypeName) => {
     const auhenticationsFinal = {};
 
     if (authentications && authentications.length > 0) {
@@ -24,7 +24,12 @@ export const prepareInitialValues = ({ source, endpoints: [endpoint], authentica
         });
     }
 
+    let endpoint;
     let url;
+
+    if (endpoints && endpoints.length > 0) {
+        endpoint = endpoints[0];
+    }
 
     if (endpoint) {
         url = (endpoint.scheme || endpoint.host || endpoint.path || endpoint.port) ? endpointToUrl(endpoint) : undefined;
