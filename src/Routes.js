@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { Route } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
+import ErrorBoundary from './components/ErrorBoundary';
 
 const SourcesPage = lazy(() => import('./pages/SourcesPage'));
 
@@ -22,9 +23,11 @@ export const paths = {
 
 const Routes = () =>  (
     <div className='pf-c-page__main pf-l-page__main'>
-        <Suspense fallback={<Loader/>}>
-            <Route path={paths.sources} component={SourcesPage} />
-        </Suspense>
+        <ErrorBoundary>
+            <Suspense fallback={<Loader/>}>
+                <Route path={paths.sources} component={SourcesPage} />
+            </Suspense>
+        </ErrorBoundary>
     </div>
 );
 
