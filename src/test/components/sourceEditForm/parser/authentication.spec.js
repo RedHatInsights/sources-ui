@@ -10,6 +10,7 @@ import {
     modifyAuthSchemas,
     removeRequiredValidator
 } from '../../../../components/SourceEditForm/parser/authentication';
+import { unsupportedAuthTypeField } from '../../../../components/SourceEditForm/parser/unsupportedAuthType';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources', () => ({
     hardcodedSchemas: {
@@ -260,6 +261,22 @@ describe('authentication edit source parser', () => {
 
             expect(result).toEqual([
                 ARN_GROUP
+            ]);
+        });
+
+        it('returns unsupported authentication type when unsupported', () => {
+            const UNSUPPORTED_AUTHTYPE = 'openshift_default';
+            const UNSUPPORTED_AUTHENTICATIONS = [{ authtype: UNSUPPORTED_AUTHTYPE, id: ID }];
+
+            const result = authenticationFields(
+                UNSUPPORTED_AUTHENTICATIONS,
+                SOURCE_TYPE,
+                EDITING,
+                SET_EDIT
+            );
+
+            expect(result).toEqual([
+                { ...unsupportedAuthTypeField(UNSUPPORTED_AUTHTYPE), Content: expect.any(Function) }
             ]);
         });
     });
