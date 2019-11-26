@@ -58,7 +58,7 @@ export const costManagementFields = (applications = [], sourceType, editing, set
     });
 };
 
-export const applicationsFields = (applications, sourceType, editing, setEdit, appTypes, authentications) => ([
+export const applicationsFields = (applications, sourceType, editing, setEdit, appTypes, authentications = []) => ([
     costManagementFields(
         applications,
         sourceType,
