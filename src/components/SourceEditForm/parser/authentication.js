@@ -2,8 +2,10 @@ import React from 'react';
 import get from 'lodash/get';
 import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
 import { hardcodedSchemas } from '@redhat-cloud-services/frontend-components-sources';
-import { EDIT_FIELD_NAME } from '../../editField/EditField';
 import { FormattedMessage } from 'react-intl';
+
+import { EDIT_FIELD_NAME } from '../../editField/EditField';
+import { unsupportedAuthTypeField } from './unsupportedAuthType';
 
 export const createAuthFieldName = (fieldName, id) => `authentications.a${id}.${fieldName.replace('authentication.', '')}`;
 
@@ -56,6 +58,11 @@ export const authenticationFields = (authentications, sourceType, editing, setEd
 
     return authentications.map((auth) => {
         const schemaAuth = sourceType.schema.authentication.find(({ type }) => type === auth.authtype);
+
+        if (!schemaAuth) {
+            return unsupportedAuthTypeField(auth.authtype);
+        }
+
         const additionalStepKeys = getAdditionalAuthSteps(sourceType.name, auth.authtype);
 
         const enhancedFields = schemaAuth.fields
