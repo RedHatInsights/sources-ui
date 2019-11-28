@@ -101,7 +101,7 @@ describe('SourcesPage', () => {
             wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
         });
 
-        expect(wrapper.find(ContentLoader).length).toEqual(2);
+        expect(wrapper.find(ContentLoader).length).toEqual(12);
         wrapper.update();
         expect(wrapper.find(ContentLoader).length).toEqual(0);
     });
