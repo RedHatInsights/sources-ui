@@ -49,11 +49,17 @@ export const doLoadSourceForEdit = sourceId => Promise.all([
     }));
 });
 
-export const parseFiltering = (sortBy, sortDirection) =>
+export const pagination = (pageSize, pageNumber) =>
+    `limit:${pageSize}, offset:${(pageNumber - 1) * pageSize}`;
+
+export const sorting = (sortBy, sortDirection) =>
     sortBy ? `, sort_by:"${sortBy}:${sortDirection}"` : '';
 
-export const doLoadEntities = ({ pageSize, pageNumber, sortBy, sortDirection }) => getSourcesApi().postGraphQL({
-    query: `{ sources(limit:${pageSize}, offset:${(pageNumber - 1) * pageSize}${parseFiltering(sortBy, sortDirection)})
+export const filtering = (filterValue) =>
+    filterValue ? `, filter: { name: { contains_i: "${filterValue}"} }` : '';
+
+export const doLoadEntities = ({ pageSize, pageNumber, sortBy, sortDirection, filterValue }) => getSourcesApi().postGraphQL({
+    query: `{ sources(${pagination(pageSize, pageNumber)}${sorting(sortBy, sortDirection)}${filtering(filterValue)})
         {
             id,
             created_at,
@@ -79,4 +85,9 @@ export const doDeleteApplication = (appId, errorMessage) =>
     .deleteApplication(appId)
     .catch(({ errors: [{ detail }] }) => { throw { error: { title: errorMessage, detail } };});
 
-export const doLoadCountOfSources = () => getSourcesApi().listSources(0);
+export const doLoadCountOfSources1 = (filterValue) => getSourcesApi().listSources(
+    0, 100, { name: { contains_i: filterValue } }
+);
+
+export const doLoadCountOfSources = (filterValue = '') =>
+    axiosInstanceInsights.get(`${SOURCES_API_BASE}/sources?filter[name][contains_i]=${filterValue}`);

@@ -21,19 +21,18 @@ import { doUpdateSource } from '../../api/doUpdateSource';
 import { doLoadSourceTypes } from '../../api/source_types';
 
 export const loadEntities = (options) => (dispatch, getState) => {
-    const { pageSize, pageNumber, sortBy, sortDirection } = getState().providers;
+    const { pageSize, pageNumber, sortBy, sortDirection, filterValue } = getState().providers;
 
     dispatch({ type: ACTION_TYPES.LOAD_ENTITIES_PENDING });
 
-    doLoadCountOfSources().then(({ meta: { count } }) => dispatch({ type: SET_COUNT, payload: { count } }));
-
-    return doLoadEntities({ pageSize, pageNumber, sortBy, sortDirection }).then(({ sources }) => {
-        dispatch({
-            type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
-            payload: sources,
-            options
-        });
-    }).catch(error => dispatch({
+    return Promise.all([
+        doLoadEntities({ pageSize, pageNumber, sortBy, sortDirection, filterValue }),
+        doLoadCountOfSources(filterValue).then(({ meta: { count } }) => dispatch({ type: SET_COUNT, payload: { count } }))
+    ]).then(([{ sources }]) => dispatch({
+        type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
+        payload: sources,
+        options
+    })).catch(error => dispatch({
         type: ACTION_TYPES.LOAD_ENTITIES_REJECTED,
         payload: { error: { detail: error.detail || error.data, title: 'Fetching data failed, try refresh page' } }
     }));

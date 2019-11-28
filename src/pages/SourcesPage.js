@@ -13,6 +13,7 @@ import { Button } from '@patternfly/react-core';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources';
 import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components';
+import awesomeDebounce from 'awesome-debounce-promise';
 
 import SourcesSimpleView from '../components/SourcesSimpleView/SourcesSimpleView';
 import SourcesEmptyState from '../components/SourcesEmptyState';
@@ -45,6 +46,8 @@ export const onCloseAddSourceWizard = ({ values, dispatch, history, intl }) => {
     dispatch(clearAddSource());
     history.push('/');
 };
+
+export const debouncedFiltering = awesomeDebounce((refresh) => refresh(), 500);
 
 export const afterSuccessLoadParameters = { pageNumber: 1, sortBy: 'created_at', sortDirection: 'desc' };
 
@@ -116,8 +119,10 @@ const SourcesPage = () => {
                             defaultMessage: 'name'
                         }),
                         filterValues: {
-                            onChange: (_event, newSelection, _clickedGroup, _clickedItem) =>
-                                dispatch(filterProviders(newSelection)),
+                            onChange: (_event, value) => {
+                                dispatch(filterProviders(value));
+                                debouncedFiltering(() => dispatch(loadEntities()));
+                            },
                             value: filterValue
                         }
                     }]
