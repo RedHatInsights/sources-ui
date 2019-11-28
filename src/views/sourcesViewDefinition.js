@@ -24,7 +24,7 @@ export const sourcesViewDefinition = {
         value: 'source_type_id',
         searchable: false,
         formatter: 'sourceTypeFormatter',
-        sortable: true
+        sortable: false
     }, {
         title: intl.formatMessage({
             id: 'sources.application',
