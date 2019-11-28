@@ -20,10 +20,13 @@ import {
 import { doUpdateSource } from '../../api/doUpdateSource';
 import { doLoadSourceTypes } from '../../api/source_types';
 
-export const loadEntities = (options) => (dispatch, getState) => {
+export const loadEntities = (options, optionsPending) => (dispatch, getState) => {
     const { pageSize, pageNumber, sortBy, sortDirection, filterValue } = getState().providers;
 
-    dispatch({ type: ACTION_TYPES.LOAD_ENTITIES_PENDING });
+    dispatch({
+        type: ACTION_TYPES.LOAD_ENTITIES_PENDING,
+        options: optionsPending
+    });
 
     return Promise.all([
         doLoadEntities({ pageSize, pageNumber, sortBy, sortDirection, filterValue }),
@@ -98,21 +101,6 @@ export const updateSource = (source, formData, title, description, errorTitles) 
         payload: error
     }));
 
-export const removeSource = (sourceId, title) => ({
-    type: ACTION_TYPES.REMOVE_SOURCE,
-    payload: () => doRemoveSource(sourceId),
-    meta: {
-        sourceId,
-        notifications: {
-            fulfilled: {
-                variant: 'success',
-                title,
-                dismissable: true
-            }
-        }
-    }
-});
-
 export const addMessage = (title, variant, description, customId) => (dispatch) => dispatch({
     type: ADD_NOTIFICATION,
     payload: {
@@ -123,6 +111,32 @@ export const addMessage = (title, variant, description, customId) => (dispatch) 
         customId
     }
 });
+
+export const removeSource = (sourceId, title) => (dispatch) => {
+    dispatch({
+        type: ACTION_TYPES.REMOVE_SOURCE_PENDING,
+        meta: {
+            sourceId
+        }
+    });
+
+    return doRemoveSource(sourceId).then(() => dispatch(loadEntities({}, { loaded: true })))
+    .then(() => {
+        dispatch({
+            type: ACTION_TYPES.REMOVE_SOURCE_FULFILLED,
+            meta: {
+                sourceId
+            }
+        });
+        dispatch(addMessage(title, 'success'));
+    })
+    .catch(() => dispatch({
+        type: ACTION_TYPES.REMOVE_SOURCE_REJECTED,
+        meta: {
+            sourceId
+        }
+    }));
+};
 
 export const removeMessage = (id) => (dispatch) => dispatch({
     type: REMOVE_NOTIFICATION,

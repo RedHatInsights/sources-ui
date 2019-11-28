@@ -22,16 +22,17 @@ export const defaultProvidersState = {
     addSourceInitialValues: {}
 };
 
-const entitiesPending = (state) => ({
+const entitiesPending = (state, { options }) => ({
     ...state,
-    loaded: false
+    loaded: false,
+    ...options
 });
 
-export const entitiesLoaded = (state, { payload: rows, ...rest }) => ({
+export const entitiesLoaded = (state, { payload: rows, options }) => ({
     ...state,
-    ...rest,
     loaded: true,
-    entities: rows
+    entities: rows,
+    ...options
 });
 
 const entitiesRejected = (state, { payload: { error } }) => ({

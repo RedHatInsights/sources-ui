@@ -21,11 +21,9 @@ export const getSourcesApi = () =>
 export const doLoadAppTypes = () =>
     axiosInstanceInsights.get(`${SOURCES_API_BASE}/application_types`);
 
-export function doRemoveSource(sourceId) {
-    return getSourcesApi().deleteSource(sourceId).catch((error) => {
-        throw { error: { detail: error.errors[0].detail } };
-    });
-}
+export const doRemoveSource = (sourceId) => getSourcesApi().deleteSource(sourceId).catch((error) => {
+    throw { error: { detail: error.errors[0].detail } };
+});
 
 export const doLoadSourceForEdit = sourceId => Promise.all([
     getSourcesApi().showSource(sourceId),
