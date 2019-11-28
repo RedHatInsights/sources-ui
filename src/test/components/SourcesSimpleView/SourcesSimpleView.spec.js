@@ -5,6 +5,7 @@ import configureStore from 'redux-mock-store';
 import { Table, TableHeader, TableBody, RowWrapper } from '@patternfly/react-table';
 import { MemoryRouter } from 'react-router-dom';
 import { RowLoader } from '@redhat-cloud-services/frontend-components-utilities/files/helpers';
+import { act } from 'react-dom/test-utils';
 
 import SourcesSimpleView, { insertEditAction, actionResolver } from '../../../components/SourcesSimpleView/SourcesSimpleView';
 import { PlaceHolderTable, RowWrapperLoader } from '../../../components/SourcesSimpleView/loaders';
@@ -113,6 +114,52 @@ describe('SourcesSimpleView', () => {
                 done();
             });
         });
+    });
+
+    it('re-renders when entities changed', async () => {
+        let wrapper;
+
+        initialState = {
+            providers: {
+                ...initialState.providers,
+                ...loadedProps
+            }
+        };
+
+        const initialStateUpdated = ({
+            providers: {
+                ...initialState.providers,
+                entities: [sourcesDataGraphQl[0]],
+                numberOfEntities: 1
+            }
+        });
+
+        const store = mockStore(
+            jest.fn()
+            .mockImplementationOnce(() => initialState)
+            .mockImplementationOnce(() => initialState)
+            .mockImplementationOnce(() => initialState)
+            .mockImplementationOnce(() => initialState)
+            .mockImplementationOnce(() => initialState)
+            // 5 initial renders :()
+            .mockImplementation(() => initialStateUpdated)
+        );
+
+        await act(async () => {
+            wrapper = mount(componentWrapperIntl(<SourcesSimpleView { ...initialProps } />, store));
+        });
+
+        wrapper.update();
+        expect(wrapper.find(RowWrapper)).toHaveLength(sourcesDataGraphQl.length);
+
+        // trigger render
+        await act(async () => {
+            wrapper.find('button').first().simulate('click');
+        });
+
+        wrapper.update();
+
+        expect(wrapper.find(RowWrapper)).toHaveLength(1);
     });
 
     it('renders sorted table by name DESC', (done) => {
