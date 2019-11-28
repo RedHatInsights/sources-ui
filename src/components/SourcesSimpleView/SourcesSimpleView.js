@@ -15,7 +15,7 @@ const itemToCells = (item, columns, sourceTypes, appTypes) => columns.filter(col
 }));
 
 const renderSources = (entities, columns, sourceTypes, appTypes) =>
-    entities.reduce((acc, item) => ([
+    entities.filter(({ hidden }) => !hidden).reduce((acc, item) => ([
         ...acc,
         {
             ...item,

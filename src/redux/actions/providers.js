@@ -8,7 +8,8 @@ import {
     ADD_APP_TO_SOURCE,
     UNDO_ADD_SOURCE,
     CLEAR_ADD_SOURCE,
-    SET_COUNT
+    SET_COUNT,
+    ADD_HIDDEN_SOURCE
 } from '../action-types-providers';
 import {
     doLoadAppTypes,
@@ -176,4 +177,11 @@ export const undoAddSource = (values) => ({
 
 export const clearAddSource = () => ({
     type: CLEAR_ADD_SOURCE
+});
+
+export const addHiddenSource = (source) => ({
+    type: ADD_HIDDEN_SOURCE,
+    payload: {
+        source
+    }
 });

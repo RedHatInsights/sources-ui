@@ -89,3 +89,20 @@ export const doLoadCountOfSources1 = (filterValue) => getSourcesApi().listSource
 
 export const doLoadCountOfSources = (filterValue = '') =>
     axiosInstanceInsights.get(`${SOURCES_API_BASE}/sources?filter[name][contains_i]=${filterValue}`);
+
+export const doLoadSource = (id) => getSourcesApi().postGraphQL({
+    query: `{ sources(filter: { id: { eq: ${id}}})
+            {
+                id,
+                created_at,
+                source_type_id,
+                name,
+                tenant,
+                uid,
+                updated_at,
+                imported,
+                applications { application_type_id, id },
+                endpoints { id, scheme, host, port, path }
+            }
+        }`
+}).then(({ data }) => data);

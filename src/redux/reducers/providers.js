@@ -7,7 +7,8 @@ import {
     ADD_APP_TO_SOURCE,
     UNDO_ADD_SOURCE,
     CLEAR_ADD_SOURCE,
-    SET_COUNT
+    SET_COUNT,
+    ADD_HIDDEN_SOURCE
 } from '../action-types-providers';
 
 export const defaultProvidersState = {
@@ -93,8 +94,7 @@ const sourceEditRemovePending = (state, { meta }) => ({
 
 const sourceEditRemoveFulfilled = (state, { meta }) => ({
     ...state,
-    entities: state.entities.map(entity => entity.id === meta.sourceId ? undefined : entity).filter(x => x),
-    numberOfEntities: state.numberOfEntities - 1
+    entities: state.entities.map(entity => entity.id === meta.sourceId ? undefined : entity).filter(x => x)
 });
 
 const sourceEditRemoveRejected = (state, { meta }) => ({
@@ -163,6 +163,14 @@ const setCount = (state, { payload: { count } }) => ({
     numberOfEntities: count
 });
 
+export const addHiddenSource = (state, { payload: { source } }) => ({
+    ...state,
+    entities: [
+        ...state.entities,
+        { ...source, hidden: true }
+    ]
+});
+
 export default {
     [ACTION_TYPES.LOAD_ENTITIES_PENDING]: entitiesPending,
     [ACTION_TYPES.LOAD_ENTITIES_FULFILLED]: entitiesLoaded,
@@ -186,5 +194,6 @@ export default {
     [UNDO_ADD_SOURCE]: undoAddSource,
     [CLEAR_ADD_SOURCE]: clearAddSource,
     [ADD_APP_TO_SOURCE]: addAppToSource,
-    [SET_COUNT]: setCount
+    [SET_COUNT]: setCount,
+    [ADD_HIDDEN_SOURCE]: addHiddenSource
 };
