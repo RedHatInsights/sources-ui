@@ -79,9 +79,9 @@ const SourcesPage = () => {
         Promise.all([dispatch(loadSourceTypes()), dispatch(loadAppTypes()), dispatch(loadEntities())]);
     }, []);
 
-    const onSetPage = (number) => dispatch(pageAndSize(number, pageSize));
+    const onSetPage = (_e, page) => dispatch(pageAndSize(page, pageSize));
 
-    const onPerPageSelect = (count) => dispatch(pageAndSize(1, count));
+    const onPerPageSelect = (_e, perPage) => dispatch(pageAndSize(1, perPage));
 
     const maximumPageNumber = Math.ceil(numberOfEntities / pageSize);
 
@@ -96,8 +96,8 @@ const SourcesPage = () => {
                     itemCount: numberOfEntities || 0,
                     page: pageNumber,
                     perPage: pageSize,
-                    onSetPage: (_e, page) => onSetPage(page),
-                    onPerPageSelect: (_e, perPage) => onPerPageSelect(perPage),
+                    onSetPage,
+                    onPerPageSelect,
                     isCompact: false
                 }}
                 actionsConfig={{
@@ -134,8 +134,8 @@ const SourcesPage = () => {
                     itemCount: numberOfEntities || 0,
                     page: pageNumber,
                     perPage: pageSize,
-                    onSetPage: (_e, page) => onSetPage(page),
-                    onPerPageSelect: (_e, perPage) => onPerPageSelect(perPage),
+                    onSetPage,
+                    onPerPageSelect,
                     isCompact: false,
                     dropDirection: 'up',
                     variant: 'bottom'
