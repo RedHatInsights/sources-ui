@@ -11,7 +11,10 @@ import {
     defaultPort,
     schemaToPort,
     endpointToUrl,
-    importsTexts
+    importsTexts,
+    availabilityFormatter,
+    getStatusIcon,
+    getStatusText
 } from '../../../components/SourcesSimpleView/formatters';
 import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX } from '../../sourceTypesData';
 import { sourcesDataGraphQl, SOURCE_CATALOGAPP_INDEX, SOURCE_ALL_APS_INDEX, SOURCE_NO_APS_INDEX, SOURCE_ENDPOINT_URL_INDEX } from '../../sourcesData';
@@ -19,6 +22,7 @@ import { applicationTypesData, CATALOG_INDEX, TOPOLOGICALINVENTORY_INDEX, COSTMA
 import { Badge, Tooltip } from '@patternfly/react-core';
 import { DateFormat } from '@redhat-cloud-services/frontend-components';
 import { IntlProvider } from 'react-intl';
+import { CheckCircleIcon, ExclamationCircleIcon, QuestionCircleIcon, ExclamationTriangleIcon } from '@patternfly/react-icons';
 
 describe('formatters', () => {
     describe('formatters', () => {
@@ -40,6 +44,10 @@ describe('formatters', () => {
 
         it('returns importedFormatter', () => {
             expect(formatters('importedFormatter')).toEqual(importedFormatter);
+        });
+
+        it('returns availabilityFormatter', () => {
+            expect(formatters('availabilityFormatter')).toEqual(availabilityFormatter);
         });
 
         it('returns defaultFormatter when non-sense', () => {
@@ -220,6 +228,60 @@ describe('formatters', () => {
 
         it('correctly parses URL with custom port', () => {
             expect(endpointToUrl({ ...endpoint, port: CUSTOM_PORT })).toEqual(`https://my.best.page:${CUSTOM_PORT}/`);
+        });
+    });
+
+    describe('getStatusIcon', () => {
+        it('returns OK icon', () => {
+            const wrapper = mount(getStatusIcon('available'));
+
+            expect(wrapper.find(CheckCircleIcon)).toHaveLength(1);
+        });
+
+        it('returns WARNING icon', () => {
+            const wrapper = mount(getStatusIcon('partially_available'));
+
+            expect(wrapper.find(ExclamationTriangleIcon)).toHaveLength(1);
+        });
+
+        it('returns DANGER icon', () => {
+            const wrapper = mount(getStatusIcon('unavailable'));
+
+            expect(wrapper.find(ExclamationCircleIcon)).toHaveLength(1);
+        });
+
+        it('returns unknown by default', () => {
+            const wrapper = mount(getStatusIcon('some nonsense'));
+
+            expect(wrapper.find(QuestionCircleIcon)).toHaveLength(1);
+        });
+    });
+
+    describe('getStatusText', () => {
+        const wrapperWithIntl = (children) => <IntlProvider locale="en">{children}</IntlProvider>;
+
+        it('returns OK text', () => {
+            const wrapper = mount(wrapperWithIntl(getStatusText('available')));
+
+            expect(wrapper.text()).toEqual('Available');
+        });
+
+        it('returns WARNING text', () => {
+            const wrapper = mount(wrapperWithIntl(getStatusText('partially_available')));
+
+            expect(wrapper.text()).toEqual('Partially available');
+        });
+
+        it('returns DANGER text', () => {
+            const wrapper = mount(wrapperWithIntl(getStatusText('unavailable')));
+
+            expect(wrapper.text()).toEqual('Unavailable');
+        });
+
+        it('returns unknown by default', () => {
+            const wrapper = mount(wrapperWithIntl(getStatusText('some nonsense')));
+
+            expect(wrapper.text()).toEqual('Unknown');
         });
     });
 });

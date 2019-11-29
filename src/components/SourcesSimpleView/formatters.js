@@ -1,7 +1,8 @@
 import React from 'react';
-import { Text, TextContent, TextVariants, Badge, Tooltip } from '@patternfly/react-core';
+import { Text, TextContent, TextVariants, Badge, Tooltip, Popover } from '@patternfly/react-core';
 import { FormattedMessage } from 'react-intl';
 import { DateFormat } from '@redhat-cloud-services/frontend-components';
+import { CheckCircleIcon, QuestionCircleIcon, ExclamationTriangleIcon, TimesCircleIcon } from '@patternfly/react-icons';
 
 export const defaultPort = (scheme) => ({
     http: '80',
@@ -59,7 +60,7 @@ export const sourceTypeFormatter = (sourceType, _item, { sourceTypes }) => {
 export const dateFormatter = str => (
     <Text
         style={ { marginBottom: 0 } }
-        component={ TextVariants.small }
+        component={ TextVariants.p }
         className='ins-c-sources__help-cursor'
     >
         <DateFormat type='relative' date={str} />
@@ -104,10 +105,53 @@ export const importedFormatter = (value) => {
     </Badge>);
 };
 
+export const getStatusIcon = (status) => ({
+    unavailable: <TimesCircleIcon className="ins-c-sources__availability-not-ok"/>,
+    available: <CheckCircleIcon className="ins-c-sources__availability-ok"/>,
+    partially_available: <ExclamationTriangleIcon className="ins-c-sources__availability-partially"/>
+}[status] || <QuestionCircleIcon className="ins-c-sources__availability-unknown"/>);
+
+export const getStatusText = (status) => ({
+    unavailable: <FormattedMessage
+        id="sources.unavailable"
+        defaultMessage="Unavailable"
+    />,
+    available: <FormattedMessage
+        id="sources.ok"
+        defaultMessage="OK"
+    />,
+    partially_available: <FormattedMessage
+        id="sources.partiallyAvailable"
+        defaultMessage="Partially available"
+    />
+}[status] || <FormattedMessage
+    id="sources.unknown"
+    defaultMessage="Unknown"
+/>);
+
+export const getStatusTooltipText = (status) => ({
+    unavailable: 'We found these errors: ARN NEJDE (Cost Management)',
+    available: 'Everything works fine - all applications are connected.',
+    partially_available: 'We found these errors: ARN NEJDE (Cost Management)'
+}[status] || 'Status has not been verified.');
+
+export const availabilityFormatter = (status) => (<TextContent>
+    <Popover
+        aria-label="Headless Popover"
+        bodyContent={<h1>{getStatusTooltipText(status)}</h1>}
+    >
+        <Text key={status} component={ TextVariants.p }>
+            {getStatusIcon(status)}&nbsp;
+            {getStatusText(status)}
+        </Text>
+    </Popover>
+</TextContent>);
+
 export const formatters = (name) => ({
     nameFormatter,
     dateFormatter,
     applicationFormatter,
     sourceTypeFormatter,
-    importedFormatter
+    importedFormatter,
+    availabilityFormatter
 }[name] || defaultFormatter(name));
