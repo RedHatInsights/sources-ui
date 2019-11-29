@@ -82,14 +82,6 @@ const ExtractCssWebpackPlugin = new (require('mini-css-extract-plugin'))({
 plugins.push(ExtractCssWebpackPlugin);
 
 /**
- * Copies files from the specified locations to the corresponding destinations.
- */
-const CopyFilesWebpackPlugin = new (require('copy-webpack-plugin'))([
-    { from: path.resolve(__dirname, '../static/images'), to: 'images' }
-]);
-plugins.push(CopyFilesWebpackPlugin);
-
-/**
  * Makes build-time env vars available to the client-side as constants
  */
 const envPlugin = new webpack.DefinePlugin({
