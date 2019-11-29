@@ -3,15 +3,16 @@ import { notificationsMiddleware } from '@redhat-cloud-services/frontend-compone
 import ContentLoader from 'react-content-loader';
 import { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/files/ReducerRegistry';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components';
+import { PrimaryToolbar, ConditionalFilter } from '@redhat-cloud-services/frontend-components';
 import { act } from 'react-dom/test-utils';
+import { Chip, Select } from '@patternfly/react-core';
 
 import SourcesPage from '../../pages/SourcesPage';
 import SourcesEmptyState from '../../components/SourcesEmptyState';
 import SourcesSimpleView from '../../components/SourcesSimpleView/SourcesSimpleView';
 
 import { sourcesDataGraphQl } from '../sourcesData';
-import { sourceTypesData } from '../sourceTypesData';
+import { sourceTypesData, OPENSHIFT_ID } from '../sourceTypesData';
 import { applicationTypesData } from '../applicationTypesData';
 
 import { componentWrapperIntl } from '../../Utilities/testsHelpers';
@@ -132,8 +133,63 @@ describe('SourcesPage', () => {
             }, 500);
         });
 
+        it('should call onFilterSelect with type', (done) => {
+            setTimeout(() => {
+                wrapper.update();
+                expect(wrapper.find(Chip)).toHaveLength(1);
+
+                // Switch to source type in conditional filter
+                wrapper.find(ConditionalFilter).setState({ stateValue: 1 });
+                wrapper.update();
+
+                const checkboxDropdownProps = wrapper.find(Select).last().props();
+
+                // Select openshift
+                const EVENT = {};
+                checkboxDropdownProps.onSelect(EVENT, OPENSHIFT_ID);
+                wrapper.update();
+
+                expect(wrapper.find(Chip)).toHaveLength(2);
+                expect(store.getState().providers.filterValue).toEqual({
+                    name: SEARCH_TERM,
+                    source_type_id: [OPENSHIFT_ID]
+                });
+                done();
+            }, 500);
+        });
+
         it('filtered value is shown in the input', () => {
             expect(filterInput(wrapper).props().value).toEqual(SEARCH_TERM);
+        });
+
+        it('should remove the name badge when clicking on remove icon', (done) => {
+            setTimeout(async () => {
+                wrapper.update();
+
+                expect(wrapper.find(Chip)).toHaveLength(1);
+
+                await act(async () => wrapper.find(Chip).simulate('click'));
+                wrapper.update();
+
+                expect(wrapper.find(Chip)).toHaveLength(0);
+                done();
+            }, 500);
+        });
+
+        it('should remove the name badge when clicking on Clear filters button', (done) => {
+            const clearFillterButtonSelector = '.pf-m-link';
+
+            setTimeout(async () => {
+                wrapper.update();
+
+                expect(wrapper.find(clearFillterButtonSelector)).toHaveLength(1);
+
+                await act(async () => wrapper.find(clearFillterButtonSelector).simulate('click'));
+                wrapper.update();
+
+                expect(wrapper.find(clearFillterButtonSelector)).toHaveLength(0);
+                done();
+            }, 500);
         });
     });
 });
