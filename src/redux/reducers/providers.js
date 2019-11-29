@@ -76,7 +76,7 @@ const setPageAndSize = (state, { payload: { page, size } }) => ({
     pageNumber: page
 });
 
-const filterProviders = (state, { payload: { value } }) =>({
+export const filterProviders = (state, { payload: { value } }) =>({
     ...state,
     filterValue: {
         ...state.filterValue,

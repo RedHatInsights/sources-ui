@@ -7,7 +7,8 @@ import {
     pageAndSize,
     loadEntities,
     sortEntities,
-    removeSource
+    removeSource,
+    filterProviders
 } from '../../redux/actions/providers';
 import {
     UNDO_ADD_SOURCE,
@@ -16,7 +17,8 @@ import {
     PAGE_AND_SIZE,
     ACTION_TYPES,
     SET_COUNT,
-    SORT_ENTITIES
+    SORT_ENTITIES,
+    FILTER_PROVIDERS
 } from '../../redux/action-types-providers';
 import { REMOVE_NOTIFICATION, ADD_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications';
 import * as updateSourceApi from '../../api/doUpdateSource';
@@ -71,6 +73,19 @@ describe('redux actions', () => {
             expect.objectContaining({
                 type: REMOVE_NOTIFICATION,
                 payload: ID
+            })
+        );
+    });
+
+    it('filterProviders creates an object', () => {
+        const filterValue = { name: 'name' };
+
+        expect(filterProviders(filterValue)).toEqual(
+            expect.objectContaining({
+                type: FILTER_PROVIDERS,
+                payload: {
+                    value: filterValue
+                }
             })
         );
     });

@@ -1,4 +1,4 @@
-import { entitiesLoaded, defaultProvidersState, undoAddSource, clearAddSource } from '../../redux/reducers/providers';
+import { entitiesLoaded, defaultProvidersState, undoAddSource, clearAddSource, filterProviders } from '../../redux/reducers/providers';
 
 describe('redux > sources reducer', () => {
     describe('entitiesLoaded', () => {
@@ -60,6 +60,18 @@ describe('redux > sources reducer', () => {
                     addSourceInitialValues: EMPTY_OBJECT
                 })
             );
+        });
+    });
+
+    describe('filterProviders', () => {
+        it('sets filter value', () => {
+            const value = { name: 'name' };
+            expect(filterProviders(defaultProvidersState, { payload: { value } })).toEqual({
+                ...defaultProvidersState,
+                filterValue: {
+                    name: 'name'
+                }
+            });
         });
     });
 });
