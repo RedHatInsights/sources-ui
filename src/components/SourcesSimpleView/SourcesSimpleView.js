@@ -7,7 +7,6 @@ import { useIntl } from 'react-intl';
 import { sortEntities } from '../../redux/actions/providers';
 import { formatters } from './formatters';
 import { PlaceHolderTable, RowWrapperLoader } from './loaders';
-import { prepareEntities } from '../../Utilities/filteringSorting';
 import { sourcesViewDefinition } from '../../views/sourcesViewDefinition';
 
 const itemToCells = (item, columns, sourceTypes, appTypes) => columns.filter(column => column.title || column.hidden)
@@ -16,7 +15,7 @@ const itemToCells = (item, columns, sourceTypes, appTypes) => columns.filter(col
 }));
 
 const renderSources = (entities, columns, sourceTypes, appTypes) =>
-    entities.reduce((acc, item) => ([
+    entities.filter(({ hidden }) => !hidden).reduce((acc, item) => ([
         ...acc,
         {
             ...item,
@@ -80,63 +79,36 @@ const SourcesSimpleView = () => {
     const [state, dispatch] = useReducer(reducer, initialState(columns));
 
     const {
-        filterValue,
         loaded,
         appTypes,
         entities,
-        pageSize,
-        pageNumber,
-        sortBy,
-        sortDirection,
-        filterColumn,
         sourceTypes,
         sourceTypesLoaded,
-        appTypesLoaded
+        appTypesLoaded,
+        sortBy,
+        sortDirection
     } = useSelector(({ providers }) => providers, shallowEqual);
 
     const reduxDispatch = useDispatch();
 
-    const refreshSources = (additionalOptions) => dispatch({
-        rows: prepareEntities(
-            renderSources(entities, columns, sourceTypes, appTypes),
-            {
-                sortBy,
-                sortDirection,
-                filterColumn,
-                filterValue,
-                pageNumber,
-                pageSize,
-                sourceTypes
-            }
-        ),
-        ...additionalOptions
+    const refreshSources = () => dispatch({
+        rows: renderSources(entities, columns, sourceTypes, appTypes)
     });
 
     useEffect(() => {
         if (loaded && sourceTypesLoaded && appTypesLoaded) {
             dispatch({ isLoaded: true });
+            refreshSources();
         } else {
             dispatch({ isLoaded: false });
         }
     }, [loaded, sourceTypesLoaded, appTypesLoaded]);
 
     useEffect(() => {
-        refreshSources({
-            sortBy: {
-                index: state.cells.map(cell => cell.value).indexOf(sortBy), direction: sortDirection
-            }
-        });
-    }, [sortDirection, sortBy]);
-
-    useEffect(() => {
-        refreshSources();
-    }, [filterValue, filterColumn]);
-
-    useEffect(() => {
         if (state.isLoaded) {
             refreshSources();
         }
-    }, [entities, pageSize, pageNumber, state.isLoaded]);
+    }, [entities]);
 
     if (!state.isLoaded) {
         return <PlaceHolderTable />;
@@ -150,7 +122,10 @@ const SourcesSimpleView = () => {
                 defaultMessage: 'List of Sources'
             })}
             onSort={(_event, key, direction) => reduxDispatch(sortEntities(state.cells[key].value, direction))}
-            sortBy={state.sortBy}
+            sortBy={{
+                index: state.cells.map(cell => cell.value).indexOf(sortBy),
+                direction: sortDirection
+            }}
             rows={state.rows}
             cells={state.cells}
             actionResolver={actionResolver(intl, push)}

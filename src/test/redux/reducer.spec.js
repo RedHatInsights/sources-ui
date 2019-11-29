@@ -8,7 +8,6 @@ describe('redux > sources reducer', () => {
         const EXPECTED_STATE = {
             ...defaultProvidersState,
             entities: SOURCES,
-            numberOfEntities: SOURCES.length,
             loaded: true
         };
 

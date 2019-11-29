@@ -21,11 +21,9 @@ export const getSourcesApi = () =>
 export const doLoadAppTypes = () =>
     axiosInstanceInsights.get(`${SOURCES_API_BASE}/application_types`);
 
-export function doRemoveSource(sourceId) {
-    return getSourcesApi().deleteSource(sourceId).catch((error) => {
-        throw { error: { detail: error.errors[0].detail } };
-    });
-}
+export const doRemoveSource = (sourceId) => getSourcesApi().deleteSource(sourceId).catch((error) => {
+    throw { error: { detail: error.errors[0].detail } };
+});
 
 export const doLoadSourceForEdit = sourceId => Promise.all([
     getSourcesApi().showSource(sourceId),
@@ -49,8 +47,17 @@ export const doLoadSourceForEdit = sourceId => Promise.all([
     }));
 });
 
-export const doLoadEntities = () => getSourcesApi().postGraphQL({
-    query: `{ sources
+export const pagination = (pageSize, pageNumber) =>
+    `limit:${pageSize}, offset:${(pageNumber - 1) * pageSize}`;
+
+export const sorting = (sortBy, sortDirection) =>
+    sortBy ? `, sort_by:"${sortBy}:${sortDirection}"` : '';
+
+export const filtering = (filterValue) =>
+    filterValue ? `, filter: { name: { contains_i: "${filterValue}"} }` : '';
+
+export const doLoadEntities = ({ pageSize, pageNumber, sortBy, sortDirection, filterValue }) => getSourcesApi().postGraphQL({
+    query: `{ sources(${pagination(pageSize, pageNumber)}${sorting(sortBy, sortDirection)}${filtering(filterValue)})
         {
             id,
             created_at,
@@ -75,3 +82,27 @@ export const doDeleteApplication = (appId, errorMessage) =>
     getSourcesApi()
     .deleteApplication(appId)
     .catch(({ errors: [{ detail }] }) => { throw { error: { title: errorMessage, detail } };});
+
+export const doLoadCountOfSources1 = (filterValue) => getSourcesApi().listSources(
+    0, 100, { name: { contains_i: filterValue } }
+);
+
+export const doLoadCountOfSources = (filterValue = '') =>
+    axiosInstanceInsights.get(`${SOURCES_API_BASE}/sources?filter[name][contains_i]=${filterValue}`);
+
+export const doLoadSource = (id) => getSourcesApi().postGraphQL({
+    query: `{ sources(filter: { id: { eq: ${id}}})
+            {
+                id,
+                created_at,
+                source_type_id,
+                name,
+                tenant,
+                uid,
+                updated_at,
+                imported,
+                applications { application_type_id, id },
+                endpoints { id, scheme, host, port, path }
+            }
+        }`
+}).then(({ data }) => data);

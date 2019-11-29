@@ -6,7 +6,9 @@ import {
     SET_FILTER_COLUMN,
     ADD_APP_TO_SOURCE,
     UNDO_ADD_SOURCE,
-    CLEAR_ADD_SOURCE
+    CLEAR_ADD_SOURCE,
+    SET_COUNT,
+    ADD_HIDDEN_SOURCE
 } from '../action-types-providers';
 
 export const defaultProvidersState = {
@@ -21,17 +23,17 @@ export const defaultProvidersState = {
     addSourceInitialValues: {}
 };
 
-const entitiesPending = (state) => ({
+const entitiesPending = (state, { options }) => ({
     ...state,
-    loaded: false
+    loaded: false,
+    ...options
 });
 
-export const entitiesLoaded = (state, { payload: rows, ...rest }) => ({
+export const entitiesLoaded = (state, { payload: rows, options }) => ({
     ...state,
-    ...rest,
     loaded: true,
     entities: rows,
-    numberOfEntities: rows.length
+    ...options
 });
 
 const entitiesRejected = (state, { payload: { error } }) => ({
@@ -92,8 +94,7 @@ const sourceEditRemovePending = (state, { meta }) => ({
 
 const sourceEditRemoveFulfilled = (state, { meta }) => ({
     ...state,
-    entities: state.entities.map(entity => entity.id === meta.sourceId ? undefined : entity).filter(x => x),
-    numberOfEntities: state.numberOfEntities - 1
+    entities: state.entities.map(entity => entity.id === meta.sourceId ? undefined : entity).filter(x => x)
 });
 
 const sourceEditRemoveRejected = (state, { meta }) => ({
@@ -157,6 +158,19 @@ export const clearAddSource = (state) => ({
     addSourceInitialValues: {}
 });
 
+const setCount = (state, { payload: { count } }) => ({
+    ...state,
+    numberOfEntities: count
+});
+
+export const addHiddenSource = (state, { payload: { source } }) => ({
+    ...state,
+    entities: [
+        ...state.entities,
+        { ...source, hidden: true }
+    ]
+});
+
 export default {
     [ACTION_TYPES.LOAD_ENTITIES_PENDING]: entitiesPending,
     [ACTION_TYPES.LOAD_ENTITIES_FULFILLED]: entitiesLoaded,
@@ -178,5 +192,8 @@ export default {
     [SET_FILTER_COLUMN]: setFilterColumn,
     [ADD_APP_TO_SOURCE]: addAppToSource,
     [UNDO_ADD_SOURCE]: undoAddSource,
-    [CLEAR_ADD_SOURCE]: clearAddSource
+    [CLEAR_ADD_SOURCE]: clearAddSource,
+    [ADD_APP_TO_SOURCE]: addAppToSource,
+    [SET_COUNT]: setCount,
+    [ADD_HIDDEN_SOURCE]: addHiddenSource
 };
