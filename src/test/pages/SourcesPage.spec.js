@@ -4,24 +4,21 @@ import ContentLoader from 'react-content-loader';
 import { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/files/ReducerRegistry';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components';
-
-import SourcesPage from '../pages/SourcesPage';
-import { onCloseAddSourceWizard, afterSuccess, afterSuccessLoadParameters } from '../pages/SourcesPage/helpers';
-import SourcesEmptyState from '../components/SourcesEmptyState';
-import SourcesSimpleView from '../components/SourcesSimpleView/SourcesSimpleView';
-
-import { sourcesDataGraphQl } from './sourcesData';
-import { sourceTypesData } from './sourceTypesData';
-import { applicationTypesData } from './applicationTypesData';
-
-import { componentWrapperIntl } from '../Utilities/testsHelpers';
-
-import ReducersProviders, { defaultProvidersState } from '../redux/reducers/providers';
-import * as api from '../api/entities';
-import * as typesApi from '../api/source_types';
-
-import * as actions from '../redux/actions/providers';
 import { act } from 'react-dom/test-utils';
+
+import SourcesPage from '../../pages/SourcesPage';
+import SourcesEmptyState from '../../components/SourcesEmptyState';
+import SourcesSimpleView from '../../components/SourcesSimpleView/SourcesSimpleView';
+
+import { sourcesDataGraphQl } from '../sourcesData';
+import { sourceTypesData } from '../sourceTypesData';
+import { applicationTypesData } from '../applicationTypesData';
+
+import { componentWrapperIntl } from '../../Utilities/testsHelpers';
+
+import ReducersProviders, { defaultProvidersState } from '../../redux/reducers/providers';
+import * as api from '../../api/entities';
+import * as typesApi from '../../api/source_types';
 
 describe('SourcesPage', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -137,77 +134,6 @@ describe('SourcesPage', () => {
 
         it('filtered value is shown in the input', () => {
             expect(filterInput(wrapper).props().value).toEqual(SEARCH_TERM);
-        });
-    });
-
-    describe('helpers', () => {
-        describe('onCloseAddSourceWizard', () => {
-            let args;
-
-            beforeEach(() => {
-                args = {
-                    values: { some_value: 'aa' },
-                    intl: {
-                        formatMessage: ({ defaultMessage }) => defaultMessage
-                    },
-                    dispatch: jest.fn(),
-                    history: {
-                        push: jest.fn()
-                    }
-                };
-
-                actions.addMessage = jest.fn();
-                actions.clearAddSource = jest.fn();
-            });
-
-            it('create notifications when values', () => {
-                const tmpDate = Date.now;
-
-                const TIMESTAMP = 12345313512;
-
-                Date.now = () => TIMESTAMP;
-
-                const EXPECTED_TITLE = expect.any(String);
-                const EXPECTED_VARIANT = expect.any(String);
-                const EXPECTED_DEESCRIPTION = expect.any(Object);
-                const EXPECTED_CUSTOM_ID = TIMESTAMP;
-
-                onCloseAddSourceWizard(args);
-
-                expect(actions.addMessage).toHaveBeenCalledWith(
-                    EXPECTED_TITLE,
-                    EXPECTED_VARIANT,
-                    EXPECTED_DEESCRIPTION,
-                    EXPECTED_CUSTOM_ID
-                );
-                expect(actions.clearAddSource).toHaveBeenCalled();
-                expect(args.history.push).toHaveBeenCalled();
-
-                Date.now = tmpDate;
-            });
-
-            it('only clear and change path when no values/empty', () => {
-                onCloseAddSourceWizard({ ...args, values: {} });
-
-                expect(actions.addMessage).not.toHaveBeenCalled();
-                expect(actions.clearAddSource).toHaveBeenCalled();
-                expect(args.history.push).toHaveBeenCalled();
-            });
-        });
-
-        describe('afterSuccess', () => {
-            it('calls function', () => {
-                const dispatch = jest.fn();
-
-                actions.loadEntities = jest.fn();
-                actions.clearAddSource = jest.fn();
-
-                afterSuccess(dispatch);
-
-                expect(dispatch.mock.calls.length).toBe(2);
-                expect(actions.loadEntities).toHaveBeenCalledWith(afterSuccessLoadParameters);
-                expect(actions.loadEntities).toHaveBeenCalled();
-            });
         });
     });
 });
