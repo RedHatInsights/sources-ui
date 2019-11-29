@@ -15,7 +15,6 @@ import { sourceTypesData } from '../../sourceTypesData';
 import { applicationTypesData } from '../../applicationTypesData';
 
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
-import { sortByCompare } from '../../../Utilities/filteringSorting';
 import * as actions from '../../../redux/actions/providers';
 import * as API from '../../../api/entities';
 
@@ -160,60 +159,6 @@ describe('SourcesSimpleView', () => {
         wrapper.update();
 
         expect(wrapper.find(RowWrapper)).toHaveLength(1);
-    });
-
-    it('renders sorted table by name DESC', (done) => {
-        const DIRECTION = 'desc';
-        const SORTBY = 'name';
-
-        initialState = {
-            providers: {
-                ...initialState.providers,
-                ...loadedProps,
-                sortDirection: DIRECTION,
-                sortBy: SORTBY
-            }
-        };
-
-        const store = mockStore(initialState);
-        const wrapper = mount(componentWrapperIntl(<SourcesSimpleView { ...initialProps } />, store));
-
-        setTimeout(() => {
-            setTimeout(() => {
-                wrapper.update();
-                expect(wrapper.find(RowWrapper)).toHaveLength(sourcesDataGraphQl.length);
-                expect(wrapper.find(RowWrapper).first().text().includes(sourcesDataGraphQl.sort(sortByCompare(SORTBY, DIRECTION))[0].name));
-                expect(wrapper.find(RowWrapper).last().text().includes(sourcesDataGraphQl.sort(sortByCompare(SORTBY, DIRECTION)).slice(-1)[0].name));
-                done();
-            });
-        });
-    });
-
-    it('renders sorted table by name ASC', (done) => {
-        const DIRECTION = 'asc';
-        const SORTBY = 'name';
-
-        initialState = {
-            providers: {
-                ...initialState.providers,
-                ...loadedProps,
-                sortDirection: DIRECTION,
-                sortBy: SORTBY
-            }
-        };
-
-        const store = mockStore(initialState);
-        const wrapper = mount(componentWrapperIntl(<SourcesSimpleView { ...initialProps } />, store));
-
-        setTimeout(() => {
-            setTimeout(() => {
-                wrapper.update();
-                expect(wrapper.find(RowWrapper)).toHaveLength(sourcesDataGraphQl.length);
-                expect(wrapper.find(RowWrapper).first().text().includes(sourcesDataGraphQl.sort(sortByCompare(SORTBY, DIRECTION))[0].name));
-                expect(wrapper.find(RowWrapper).last().text().includes(sourcesDataGraphQl.sort(sortByCompare(SORTBY, DIRECTION)).slice(-1)[0].name));
-                done();
-            });
-        });
     });
 
     describe('actions', () => {
