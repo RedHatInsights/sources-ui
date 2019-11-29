@@ -5,7 +5,8 @@ import { applyReducerHash } from '@redhat-cloud-services/frontend-components-uti
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components';
 
-import SourcesPage, { onCloseAddSourceWizard, afterSuccess, afterSuccessLoadParameters } from '../pages/SourcesPage';
+import SourcesPage from '../pages/SourcesPage';
+import { onCloseAddSourceWizard, afterSuccess, afterSuccessLoadParameters } from '../pages/SourcesPage/helpers';
 import SourcesEmptyState from '../components/SourcesEmptyState';
 import SourcesSimpleView from '../components/SourcesSimpleView/SourcesSimpleView';
 
@@ -119,15 +120,19 @@ describe('SourcesPage', () => {
             });
             wrapper.update();
 
-            filterInput(wrapper).simulate('change', { target: { value: SEARCH_TERM } });
-
+            await act(async() => {
+                filterInput(wrapper).simulate('change', { target: { value: SEARCH_TERM } });
+            });
             wrapper.update();
         });
 
-        it('should call onFilterSelect', async () => {
-            expect(store.getState().providers.filterValue).toEqual({
-                name: SEARCH_TERM
-            });
+        it('should call onFilterSelect', (done) => {
+            setTimeout(() => {
+                expect(store.getState().providers.filterValue).toEqual({
+                    name: SEARCH_TERM
+                });
+                done();
+            }, 500);
         });
 
         it('filtered value is shown in the input', () => {
