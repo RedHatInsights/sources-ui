@@ -64,6 +64,12 @@ describe('api helpers', () => {
             );
         });
 
+        it('creates empty filtering query when empty array [GRAPHQL]', () => {
+            const filterValue = { source_type_id: [] };
+
+            expect(filtering(filterValue)).toEqual('');
+        });
+
         it('creates empty filtering query param [GRAPHQL]', () => {
             expect(filtering()).toEqual('');
         });
@@ -86,6 +92,12 @@ describe('api helpers', () => {
             expect(restFilterGenerator(filterValue)).toEqual(
                 `${EXPECTED_NAME_QUERY_REST}&${EXPECTED_TYPE_QUERY_REST}`
             );
+        });
+
+        it('creates empty filtering query when source_type_id is empty array [REST]', () => {
+            const filterValue = { source_type_id: [] };
+
+            expect(restFilterGenerator(filterValue)).toEqual('');
         });
 
         it('creates empty filtering query param [REST]', () => {

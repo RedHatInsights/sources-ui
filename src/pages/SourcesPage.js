@@ -63,9 +63,49 @@ export const setFilter = (column, value, dispatch) => dispatch(filterProviders({
     [column]: value
 }));
 
+export const chipsFormatters = (key, filterValue, sourceTypes) => ({
+    name: () => ({ name: filterValue[key], key }),
+    source_type_id: () => ({
+        category: 'Source Type',
+        key,
+        chips: filterValue[key].map(id => {
+            const sourceType = sourceTypes.find((type) => type.id === id);
+
+            return ({ name: sourceType ? sourceType.product_name : id, value: id });
+        })
+    })
+}[key] || (() => ({ name: key })));
+
+export const prepareChips = (filterValue, sourceTypes) =>
+    Object.keys(filterValue)
+    .map((key) =>
+        filterValue[key] && filterValue[key].length > 0 ? chipsFormatters(key, filterValue, sourceTypes)() : undefined
+    )
+    .filter(Boolean);
+
+export const removeChips = (chips, filterValue, deleteAll) => {
+    if (deleteAll) {
+        return (
+            Object.keys(filterValue).reduce((acc, curr) => ({
+                ...acc,
+                [curr]: undefined
+            }), {})
+        );
+    }
+
+    const chip = chips[0];
+
+    return ({
+        ...filterValue,
+        [chip.key]: chip.chips ? filterValue[chip.key].filter((value) => value !== chip.chips[0].value) : undefined
+    });
+};
+
 const SourcesPage = () => {
     const [showEmptyState, setShowEmptyState] = useState(false);
     const [checkEmptyState, setCheckEmptyState] = useState(false);
+    const [filter, setFilterValue] = useState();
+
     const history = useHistory();
     const intl = useIntl();
 
@@ -94,6 +134,12 @@ const SourcesPage = () => {
             setShowEmptyState(entities.length === 0);
         }
     }, [checkEmptyState]);
+
+    useEffect(() => {
+        if (checkEmptyState) {
+            dispatch(loadEntities());
+        }
+    }, [filterValue]);
 
     const onSetPage = (_e, page) => dispatch(pageAndSize(page, pageSize));
 
@@ -136,10 +182,10 @@ const SourcesPage = () => {
                         }),
                         filterValues: {
                             onChange: (_event, value) => {
-                                setFilter('name', value, dispatch);
-                                debouncedFiltering(() => dispatch(loadEntities()));
+                                setFilterValue(value);
+                                debouncedFiltering(() => setFilter('name', value, dispatch));
                             },
-                            value: filterValue.name
+                            value: filter
                         }
                     }, {
                         label: intl.formatMessage({
@@ -148,18 +194,17 @@ const SourcesPage = () => {
                         }),
                         type: 'checkbox',
                         filterValues: {
-                            onChange: (_event, value) => {
-                                setFilter('source_type_id', value, dispatch);
-                                dispatch(loadEntities());
-                            },
+                            onChange: (_event, value) =>
+                                setFilter('source_type_id', value, dispatch),
                             items: prepareSourceTypeSelection(sourceTypes || []),
                             value: filterValue.source_type_id
                         }
                     }]
                 }}
                 activeFiltersConfig={{
-                    filters: [],
-                    onDelete: console.log
+                    filters: prepareChips(filterValue, sourceTypes),
+                    onDelete: (_event, chips, deleteAll) =>
+                        dispatch(filterProviders(removeChips(chips, filterValue, deleteAll)))
                 }}
             />
             <SourcesSimpleView />
