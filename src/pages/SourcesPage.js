@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { PageHeader, PageHeaderTitle, Section } from '@redhat-cloud-services/frontend-components';
 import { Link, useHistory, Route } from 'react-router-dom';
@@ -56,7 +56,16 @@ export const afterSuccess = (dispatch) => {
     dispatch(loadEntities(afterSuccessLoadParameters));
 };
 
+export const prepareSourceTypeSelection = (sourceTypes) =>
+    sourceTypes.map(({ id, product_name }) => ({ label: product_name, value: id }));
+
+export const setFilter = (column, value, dispatch) => dispatch(filterProviders({
+    [column]: value
+}));
+
 const SourcesPage = () => {
+    const [showEmptyState, setShowEmptyState] = useState(false);
+    const [checkEmptyState, setCheckEmptyState] = useState(false);
     const history = useHistory();
     const intl = useIntl();
 
@@ -76,8 +85,15 @@ const SourcesPage = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        Promise.all([dispatch(loadSourceTypes()), dispatch(loadAppTypes()), dispatch(loadEntities())]);
+        Promise.all([dispatch(loadSourceTypes()), dispatch(loadAppTypes()), dispatch(loadEntities())])
+        .then(() => setCheckEmptyState(true));
     }, []);
+
+    useEffect(() => {
+        if (checkEmptyState) {
+            setShowEmptyState(entities.length === 0);
+        }
+    }, [checkEmptyState]);
 
     const onSetPage = (_e, page) => dispatch(pageAndSize(page, pageSize));
 
@@ -116,16 +132,34 @@ const SourcesPage = () => {
                     items: [{
                         label: intl.formatMessage({
                             id: 'sources.name',
-                            defaultMessage: 'name'
+                            defaultMessage: 'Name'
                         }),
                         filterValues: {
                             onChange: (_event, value) => {
-                                dispatch(filterProviders(value));
+                                setFilter('name', value, dispatch);
                                 debouncedFiltering(() => dispatch(loadEntities()));
                             },
-                            value: filterValue
+                            value: filterValue.name
+                        }
+                    }, {
+                        label: intl.formatMessage({
+                            id: 'sources.type',
+                            defaultMessage: 'Type'
+                        }),
+                        type: 'checkbox',
+                        filterValues: {
+                            onChange: (_event, value) => {
+                                setFilter('source_type_id', value, dispatch);
+                                dispatch(loadEntities());
+                            },
+                            items: prepareSourceTypeSelection(sourceTypes || []),
+                            value: filterValue.source_type_id
                         }
                     }]
+                }}
+                activeFiltersConfig={{
+                    filters: [],
+                    onDelete: console.log
                 }}
             />
             <SourcesSimpleView />
@@ -143,9 +177,6 @@ const SourcesPage = () => {
             />
         </React.Fragment>
     );
-
-    const noEntities = !numberOfEntities || numberOfEntities === 0;
-    const displayEmptyState = loaded && !filterValue && noEntities;
 
     return (
         <React.Fragment>
@@ -168,7 +199,7 @@ const SourcesPage = () => {
                 })}/>
             </PageHeader>
             <Section type='content'>
-                { (displayEmptyState || fetchingError) ?
+                { (showEmptyState || fetchingError) ?
                     <SourcesEmptyState
                         title={fetchingError ? fetchingError.title : undefined}
                         body={fetchingError ? fetchingError.detail : undefined}

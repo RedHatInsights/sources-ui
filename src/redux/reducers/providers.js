@@ -3,7 +3,6 @@ import {
     SORT_ENTITIES,
     PAGE_AND_SIZE,
     FILTER_PROVIDERS,
-    SET_FILTER_COLUMN,
     ADD_APP_TO_SOURCE,
     UNDO_ADD_SOURCE,
     CLEAR_ADD_SOURCE,
@@ -14,13 +13,13 @@ import {
 export const defaultProvidersState = {
     loaded: false,
     pageSize: 50,
-    pageNumber: 1, // PF numbers pages from 1. Seriously.
+    pageNumber: 1,
     entities: [],
     numberOfEntities: 0,
-    filterColumn: 'name', // temporary hard-coded filtering by name
     appTypesLoaded: false,
     sourceTypesLoaded: false,
-    addSourceInitialValues: {}
+    addSourceInitialValues: {},
+    filterValue: {}
 };
 
 const entitiesPending = (state, { options }) => ({
@@ -79,12 +78,10 @@ const setPageAndSize = (state, { payload: { page, size } }) => ({
 
 const filterProviders = (state, { payload: { value } }) =>({
     ...state,
-    filterValue: value
-});
-
-const setFilterColumn = (state, { payload: { column } }) => ({
-    ...state,
-    filterColumn: column
+    filterValue: {
+        ...state.filterValue,
+        ...value
+    }
 });
 
 const sourceEditRemovePending = (state, { meta }) => ({
@@ -189,7 +186,6 @@ export default {
     [SORT_ENTITIES]: sortEntities,
     [PAGE_AND_SIZE]: setPageAndSize,
     [FILTER_PROVIDERS]: filterProviders,
-    [SET_FILTER_COLUMN]: setFilterColumn,
     [ADD_APP_TO_SOURCE]: addAppToSource,
     [UNDO_ADD_SOURCE]: undoAddSource,
     [CLEAR_ADD_SOURCE]: clearAddSource,

@@ -36,8 +36,7 @@ describe('SourcesSimpleView', () => {
                 entities: [],
                 numberOfEntities: 0,
                 pageNumber: 1,
-                pageSize: 10,
-                filterColumn: 'name'
+                pageSize: 10
             }
         };
         loadedProps = {

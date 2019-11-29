@@ -125,7 +125,9 @@ describe('SourcesPage', () => {
         });
 
         it('should call onFilterSelect', async () => {
-            expect(store.getState().providers.filterValue).toEqual(SEARCH_TERM);
+            expect(store.getState().providers.filterValue).toEqual({
+                name: SEARCH_TERM
+            });
         });
 
         it('filtered value is shown in the input', () => {
