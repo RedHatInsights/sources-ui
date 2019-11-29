@@ -22,13 +22,11 @@ export const paths = {
 };
 
 const Routes = () =>  (
-    <div className='pf-c-page__main pf-l-page__main'>
-        <ErrorBoundary>
-            <Suspense fallback={<Loader/>}>
-                <Route path={paths.sources} component={SourcesPage} />
-            </Suspense>
-        </ErrorBoundary>
-    </div>
+    <ErrorBoundary>
+        <Suspense fallback={<Loader/>}>
+            <Route path={paths.sources} component={SourcesPage} />
+        </Suspense>
+    </ErrorBoundary>
 );
 
 export default Routes;
