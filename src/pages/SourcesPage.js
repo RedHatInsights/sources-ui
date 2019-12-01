@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { PageHeader, PageHeaderTitle, Section } from '@redhat-cloud-services/frontend-components';
 import { Link, useHistory, Route } from 'react-router-dom';
@@ -6,57 +6,36 @@ import {
     loadAppTypes,
     loadEntities,
     loadSourceTypes,
-    clearAddSource,
     filterProviders
 } from '../redux/actions/providers';
 import { Button } from '@patternfly/react-core';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources';
 import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components';
-import awesomeDebounce from 'awesome-debounce-promise';
 
 import SourcesSimpleView from '../components/SourcesSimpleView/SourcesSimpleView';
 import SourcesEmptyState from '../components/SourcesEmptyState';
 import SourceEditModal from '../components/SourceEditForm/SourceEditModal';
 import SourceRemoveModal from '../components/SourceRemoveModal';
 import AddApplication from '../components/AddApplication/AddApplication';
-import { pageAndSize, addMessage } from '../redux/actions/providers';
+import { pageAndSize } from '../redux/actions/providers';
 import { paths } from '../Routes';
-import UndoButtonAdd from '../components/UndoButton/UndoButtonAdd';
-import isEmpty from 'lodash/isEmpty';
 
-export const onCloseAddSourceWizard = ({ values, dispatch, history, intl }) => {
-    if (values && !isEmpty(values)) {
-        const messageId = Date.now();
-        dispatch(addMessage(
-            intl.formatMessage({
-                id: 'sources.addWizardCanceled',
-                defaultMessage: 'Adding a source was cancelled'
-            }),
-            'success',
-            <FormattedMessage
-                id="sources.undoMistake"
-                defaultMessage={ `{undo} if this was a mistake.` }
-                values={ { undo: <UndoButtonAdd messageId={messageId} values={values} /> } }
-            />,
-            messageId
-        ));
-    }
-
-    dispatch(clearAddSource());
-    history.push('/');
-};
-
-export const debouncedFiltering = awesomeDebounce((refresh) => refresh(), 500);
-
-export const afterSuccessLoadParameters = { pageNumber: 1, sortBy: 'created_at', sortDirection: 'desc' };
-
-export const afterSuccess = (dispatch) => {
-    dispatch(clearAddSource());
-    dispatch(loadEntities(afterSuccessLoadParameters));
-};
+import {
+    prepareChips,
+    removeChips,
+    setFilter,
+    debouncedFiltering,
+    prepareSourceTypeSelection,
+    afterSuccess,
+    onCloseAddSourceWizard
+} from './SourcesPage/helpers';
 
 const SourcesPage = () => {
+    const [showEmptyState, setShowEmptyState] = useState(false);
+    const [checkEmptyState, setCheckEmptyState] = useState(false);
+    const [filter, setFilterValue] = useState();
+
     const history = useHistory();
     const intl = useIntl();
 
@@ -76,8 +55,21 @@ const SourcesPage = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        Promise.all([dispatch(loadSourceTypes()), dispatch(loadAppTypes()), dispatch(loadEntities())]);
+        Promise.all([dispatch(loadSourceTypes()), dispatch(loadAppTypes()), dispatch(loadEntities())])
+        .then(() => setCheckEmptyState(true));
     }, []);
+
+    useEffect(() => {
+        if (checkEmptyState) {
+            setShowEmptyState(entities.length === 0);
+        }
+    }, [checkEmptyState]);
+
+    useEffect(() => {
+        if (checkEmptyState) {
+            dispatch(loadEntities());
+        }
+    }, [filterValue]);
 
     const onSetPage = (_e, page) => dispatch(pageAndSize(page, pageSize));
 
@@ -116,16 +108,33 @@ const SourcesPage = () => {
                     items: [{
                         label: intl.formatMessage({
                             id: 'sources.name',
-                            defaultMessage: 'name'
+                            defaultMessage: 'Name'
                         }),
                         filterValues: {
                             onChange: (_event, value) => {
-                                dispatch(filterProviders(value));
-                                debouncedFiltering(() => dispatch(loadEntities()));
+                                setFilterValue(value);
+                                debouncedFiltering(() => setFilter('name', value, dispatch));
                             },
-                            value: filterValue
+                            value: filter
+                        }
+                    }, {
+                        label: intl.formatMessage({
+                            id: 'sources.type',
+                            defaultMessage: 'Type'
+                        }),
+                        type: 'checkbox',
+                        filterValues: {
+                            onChange: (_event, value) =>
+                                setFilter('source_type_id', value, dispatch),
+                            items: prepareSourceTypeSelection(sourceTypes || []),
+                            value: filterValue.source_type_id
                         }
                     }]
+                }}
+                activeFiltersConfig={{
+                    filters: prepareChips(filterValue, sourceTypes),
+                    onDelete: (_event, chips, deleteAll) =>
+                        dispatch(filterProviders(removeChips(chips, filterValue, deleteAll, setFilterValue)))
                 }}
             />
             <SourcesSimpleView />
@@ -143,9 +152,6 @@ const SourcesPage = () => {
             />
         </React.Fragment>
     );
-
-    const noEntities = !numberOfEntities || numberOfEntities === 0;
-    const displayEmptyState = loaded && !filterValue && noEntities;
 
     return (
         <React.Fragment>
@@ -168,7 +174,7 @@ const SourcesPage = () => {
                 })}/>
             </PageHeader>
             <Section type='content'>
-                { (displayEmptyState || fetchingError) ?
+                { (showEmptyState || fetchingError) ?
                     <SourcesEmptyState
                         title={fetchingError ? fetchingError.title : undefined}
                         body={fetchingError ? fetchingError.detail : undefined}

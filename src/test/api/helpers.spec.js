@@ -1,4 +1,4 @@
-import { pagination, filtering, sorting } from '../../api/entities';
+import { pagination, filtering, sorting, restFilterGenerator } from '../../api/entities';
 
 describe('api helpers', () => {
     describe('pagination', () => {
@@ -31,16 +31,77 @@ describe('api helpers', () => {
     });
 
     describe('filtering', () => {
-        it('creates filtering query param', () => {
-            const NAME = 'jonas';
+        const NAME = 'jonas';
+        const SOURCE_TYPE_ID = ['1', '09090'];
 
-            expect(filtering(NAME)).toEqual(
-                ', filter: { name: { contains_i: "jonas"} }'
+        const EXPECTED_NAME_QUERY = `name: { contains_i: "${NAME}" }`;
+        const EXPECTED_TYPE_QUERY = 'source_type_id: { eq: ["1", "09090"] }';
+
+        const EXPECTED_NAME_QUERY_REST = `filter[name][contains_i]=${NAME}`;
+        const EXPECTED_TYPE_QUERY_REST = `filter[source_type_id][]=1&filter[source_type_id][]=09090`;
+
+        it('creates filtering query name param [GRAPHQL]', () => {
+            const filterValue = { name: NAME };
+
+            expect(filtering(filterValue)).toEqual(
+                `, filter: { ${EXPECTED_NAME_QUERY} }`
             );
         });
 
-        it('creates empty filtering query param', () => {
+        it('creates filtering query source_type_id param [GRAPHQL]', () => {
+            const filterValue = { source_type_id: SOURCE_TYPE_ID };
+
+            expect(filtering(filterValue)).toEqual(
+                `, filter: { ${EXPECTED_TYPE_QUERY} }`
+            );
+        });
+
+        it('creates filtering query combined param [GRAPHQL]', () => {
+            const filterValue = { source_type_id: SOURCE_TYPE_ID, name: NAME };
+
+            expect(filtering(filterValue)).toEqual(
+                `, filter: { ${EXPECTED_NAME_QUERY}, ${EXPECTED_TYPE_QUERY} }`
+            );
+        });
+
+        it('creates empty filtering query when empty array [GRAPHQL]', () => {
+            const filterValue = { source_type_id: [] };
+
+            expect(filtering(filterValue)).toEqual('');
+        });
+
+        it('creates empty filtering query param [GRAPHQL]', () => {
             expect(filtering()).toEqual('');
+        });
+
+        it('creates filtering query name param [REST]', () => {
+            const filterValue = { name: NAME };
+
+            expect(restFilterGenerator(filterValue)).toEqual(EXPECTED_NAME_QUERY_REST);
+        });
+
+        it('creates filtering query source_type_id param [REST]', () => {
+            const filterValue = { source_type_id: SOURCE_TYPE_ID };
+
+            expect(restFilterGenerator(filterValue)).toEqual(EXPECTED_TYPE_QUERY_REST);
+        });
+
+        it('creates filtering query combined param [REST]', () => {
+            const filterValue = { source_type_id: SOURCE_TYPE_ID, name: NAME };
+
+            expect(restFilterGenerator(filterValue)).toEqual(
+                `${EXPECTED_NAME_QUERY_REST}&${EXPECTED_TYPE_QUERY_REST}`
+            );
+        });
+
+        it('creates empty filtering query when source_type_id is empty array [REST]', () => {
+            const filterValue = { source_type_id: [] };
+
+            expect(restFilterGenerator(filterValue)).toEqual('');
+        });
+
+        it('creates empty filtering query param [REST]', () => {
+            expect(restFilterGenerator()).toEqual('');
         });
     });
 

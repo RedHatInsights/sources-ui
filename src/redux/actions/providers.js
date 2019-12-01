@@ -4,7 +4,6 @@ import {
     SORT_ENTITIES,
     PAGE_AND_SIZE,
     FILTER_PROVIDERS,
-    SET_FILTER_COLUMN,
     ADD_APP_TO_SOURCE,
     UNDO_ADD_SOURCE,
     CLEAR_ADD_SOURCE,
@@ -81,11 +80,6 @@ export const pageAndSize = (page, size) => (dispatch) => {
 export const filterProviders = (value) => ({
     type: FILTER_PROVIDERS,
     payload: { value }
-});
-
-export const setProviderFilterColumn = (column) => ({
-    type: SET_FILTER_COLUMN,
-    payload: { column }
 });
 
 export const updateSource = (source, formData, title, description, errorTitles) => (dispatch) =>
