@@ -20,21 +20,20 @@ import {
 import { doUpdateSource } from '../../api/doUpdateSource';
 import { doLoadSourceTypes } from '../../api/source_types';
 
-export const loadEntities = (options, optionsPending) => (dispatch, getState) => {
-    const { pageSize, pageNumber, sortBy, sortDirection, filterValue } = getState().providers;
-
+export const loadEntities = (options) => (dispatch, getState) => {
     dispatch({
         type: ACTION_TYPES.LOAD_ENTITIES_PENDING,
-        options: optionsPending
+        options
     });
+
+    const { pageSize, pageNumber, sortBy, sortDirection, filterValue } = getState().providers;
 
     return Promise.all([
         doLoadEntities({ pageSize, pageNumber, sortBy, sortDirection, filterValue }),
         doLoadCountOfSources(filterValue).then(({ meta: { count } }) => dispatch({ type: SET_COUNT, payload: { count } }))
     ]).then(([{ sources }]) => dispatch({
         type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
-        payload: sources,
-        options
+        payload: sources
     })).catch(error => dispatch({
         type: ACTION_TYPES.LOAD_ENTITIES_REJECTED,
         payload: { error: { detail: error.detail || error.data, title: 'Fetching data failed, try refresh page' } }
@@ -115,7 +114,7 @@ export const removeSource = (sourceId, title) => (dispatch) => {
         }
     });
 
-    return doRemoveSource(sourceId).then(() => dispatch(loadEntities({}, { loaded: true })))
+    return doRemoveSource(sourceId).then(() => dispatch(loadEntities({ loaded: true })))
     .then(() => {
         dispatch({
             type: ACTION_TYPES.REMOVE_SOURCE_FULFILLED,

@@ -196,12 +196,11 @@ describe('redux actions', () => {
             });
             expect(dispatch.mock.calls[2][0]).toEqual({
                 type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
-                payload: sources,
-                options: undefined
+                payload: sources
             });
         });
 
-        it('passes options to fulfilled', async () => {
+        it('passes options to pending', async () => {
             const options = { custom: 'custom' };
 
             await loadEntities(options)(dispatch, getState);
@@ -210,28 +209,6 @@ describe('redux actions', () => {
 
             expect(dispatch.mock.calls[0][0]).toEqual({
                 type: ACTION_TYPES.LOAD_ENTITIES_PENDING,
-                options: undefined
-            });
-            expect(dispatch.mock.calls[1][0]).toEqual({
-                type: SET_COUNT,
-                payload: { count }
-            });
-            expect(dispatch.mock.calls[2][0]).toEqual({
-                type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
-                payload: sources,
-                options
-            });
-        });
-
-        it('passes options to pending', async () => {
-            const options = { custom: 'custom' };
-
-            await loadEntities({}, options)(dispatch, getState);
-
-            expect(dispatch.mock.calls).toHaveLength(3);
-
-            expect(dispatch.mock.calls[0][0]).toEqual({
-                type: ACTION_TYPES.LOAD_ENTITIES_PENDING,
                 options
             });
             expect(dispatch.mock.calls[1][0]).toEqual({
@@ -240,8 +217,7 @@ describe('redux actions', () => {
             });
             expect(dispatch.mock.calls[2][0]).toEqual({
                 type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
-                payload: sources,
-                options: {}
+                payload: sources
             });
         });
 
