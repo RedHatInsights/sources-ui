@@ -14,7 +14,8 @@ import {
     importsTexts,
     availabilityFormatter,
     getStatusIcon,
-    getStatusText
+    getStatusText,
+    getStatusTooltipText
 } from '../../../components/SourcesSimpleView/formatters';
 import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX } from '../../sourceTypesData';
 import { sourcesDataGraphQl, SOURCE_CATALOGAPP_INDEX, SOURCE_ALL_APS_INDEX, SOURCE_NO_APS_INDEX, SOURCE_ENDPOINT_URL_INDEX } from '../../sourcesData';
@@ -282,6 +283,66 @@ describe('formatters', () => {
             const wrapper = mount(wrapperWithIntl(getStatusText('some nonsense')));
 
             expect(wrapper.text()).toEqual('Unknown');
+        });
+    });
+
+    describe('getStatusTooltipText', () => {
+        const wrapperWithIntl = (children) => <IntlProvider locale="en">{children}</IntlProvider>;
+
+        it('returns OK text', () => {
+            const wrapper = mount(wrapperWithIntl(getStatusTooltipText('available')));
+
+            expect(wrapper.text()).toEqual('OK');
+        });
+
+        it('returns WARNING text', () => {
+            const wrapper = mount(wrapperWithIntl(getStatusTooltipText('partially_available')));
+
+            expect(wrapper.text()).toEqual('Partially available');
+        });
+
+        it('returns DANGER text', () => {
+            const wrapper = mount(wrapperWithIntl(getStatusTooltipText('unavailable')));
+
+            expect(wrapper.text()).toEqual('Unavailable');
+        });
+
+        it('returns unknown by default', () => {
+            const wrapper = mount(wrapperWithIntl(getStatusTooltipText('some nonsense')));
+
+            expect(wrapper.text()).toEqual('Unknown');
+        });
+    });
+
+    describe('availabilityFormatter', () => {
+        const wrapperWithIntl = (children) => <IntlProvider locale="en">{children}</IntlProvider>;
+
+        it('returns OK text', () => {
+            const wrapper = mount(wrapperWithIntl(availabilityFormatter('available')));
+
+            expect(wrapper.find(CheckCircleIcon)).toHaveLength(1);
+            expect(wrapper.text().includes('OK')).toEqual(true);
+        });
+
+        it('returns WARNING text', () => {
+            const wrapper = mount(wrapperWithIntl(availabilityFormatter('partially_available')));
+
+            expect(wrapper.find(ExclamationTriangleIcon)).toHaveLength(1);
+            expect(wrapper.text().includes('Partially available')).toEqual(true);
+        });
+
+        it('returns DANGER text', () => {
+            const wrapper = mount(wrapperWithIntl(availabilityFormatter('unavailable')));
+
+            expect(wrapper.find(TimesCircleIcon)).toHaveLength(1);
+            expect(wrapper.text().includes('Unavailable')).toEqual(true);
+        });
+
+        it('returns unknown by default', () => {
+            const wrapper = mount(wrapperWithIntl(availabilityFormatter('some nonsense')));
+
+            expect(wrapper.find(QuestionCircleIcon)).toHaveLength(1);
+            expect(wrapper.text().includes('Unknown')).toEqual(true);
         });
     });
 });

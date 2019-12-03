@@ -129,16 +129,62 @@ export const getStatusText = (status) => ({
     defaultMessage="Unknown"
 />);
 
-export const getStatusTooltipText = (status) => ({
-    unavailable: 'We found these errors: ARN NEJDE (Cost Management)',
-    available: 'Everything works fine - all applications are connected.',
-    partially_available: 'We found these errors: ARN NEJDE (Cost Management)'
-}[status] || 'Status has not been verified.');
+export const formatAvailibilityErrors = (source, appTypes) => {
+    if (source.applications && source.applications.length > 0) {
+        return source.applications.map(
+            ({ application_type_id, availability_status_error }) => {
+                const application = appTypes.find(({ id }) => id === application_type_id);
+                const applicationName = application ? application.display_name : '';
 
-export const availabilityFormatter = (status) => (<TextContent>
+                if (availability_status_error) {
+                    return `${availability_status_error} \n ${applicationName ? `(${applicationName})` : ''}`;
+                }
+
+                return (<FormattedMessage
+                    key="availability_status_error"
+                    id="sources.unknownAppError"
+                    defaultMessage="Unknown application error ({ appName })"
+                    values={{ appName: applicationName }}
+                />);
+            }
+        ).join(' ');
+    }
+
+    return (<FormattedMessage
+        key="availability_status_error"
+        id="sources.unknownAppError"
+        defaultMessage="Unknown source error."
+    />);
+};
+
+export const getStatusTooltipText = (status, source, appTypes) => ({
+    unavailable: <React.Fragment>
+        <FormattedMessage
+            id="sources.appStatusPartiallyOK"
+            defaultMessage="We found these errors:"
+        />&nbsp;
+        {formatAvailibilityErrors(source, appTypes)}
+    </React.Fragment>,
+    available: <FormattedMessage
+        id="sources.appStatusOK"
+        defaultMessage="Everything works fine - all applications are connected"
+    />,
+    partially_available: <React.Fragment>
+        <FormattedMessage
+            id="sources.appStatusPartiallyOK"
+            defaultMessage="We found these errors:"
+        />
+        {formatAvailibilityErrors(source, appTypes)}
+    </React.Fragment>
+}[status] || <FormattedMessage
+    id="sources.appStatusUnknown"
+    defaultMessage="Status has not been verified."
+/>);
+
+export const availabilityFormatter = (status, source, { appTypes }) => (<TextContent>
     <Popover
         aria-label="Headless Popover"
-        bodyContent={<h1>{getStatusTooltipText(status)}</h1>}
+        bodyContent={<h1>{getStatusTooltipText(status, source, appTypes)}</h1>}
     >
         <Text key={status} component={ TextVariants.p }>
             {getStatusIcon(status)}&nbsp;
