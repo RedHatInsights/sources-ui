@@ -132,7 +132,7 @@ export const getStatusText = (status) => ({
 export const formatAvailibilityErrors = (source, appTypes) => {
     if (source.applications && source.applications.length > 0) {
         return source.applications.map(
-            ({ application_type_id, availability_status_error }) => {
+            ({ application_type_id, availability_status_error }, index) => {
                 const application = appTypes.find(({ id }) => id === application_type_id);
                 const applicationName = application ? application.display_name : '';
 
@@ -141,7 +141,7 @@ export const formatAvailibilityErrors = (source, appTypes) => {
                 }
 
                 return (<FormattedMessage
-                    key="availability_status_error"
+                    key={availability_status_error || index}
                     id="sources.unknownAppError"
                     defaultMessage="Unknown application error ({ appName }) "
                     values={{ appName: applicationName }}
@@ -187,7 +187,7 @@ export const availabilityFormatter = (status, source, { appTypes }) => source.ap
             aria-label="Headless Popover"
             bodyContent={<h1>{getStatusTooltipText(status, source, appTypes)}</h1>}
         >
-            <Text key={status} component={ TextVariants.p }>
+            <Text key={status} component={ TextVariants.span }>
                 {getStatusIcon(status)}&nbsp;
                 {getStatusText(status)}
             </Text>
