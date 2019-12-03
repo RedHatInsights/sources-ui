@@ -183,17 +183,19 @@ export const getStatusTooltipText = (status, source, appTypes) => ({
 
 export const availabilityFormatter = (status, source, { appTypes }) => source.applications && source.applications.length > 0 ?
     (<TextContent>
-        <Popover
-            aria-label="Headless Popover"
-            bodyContent={<h1>{getStatusTooltipText(status, source, appTypes)}</h1>}
-        >
-            <Text key={status} component={ TextVariants.span }>
-                {getStatusIcon(status)}&nbsp;
-                {getStatusText(status)}
-            </Text>
-        </Popover>
+        <Text key={status} component={ TextVariants.p }>
+            <Popover
+                aria-label="Headless Popover"
+                bodyContent={<h1>{getStatusTooltipText(status, source, appTypes)}</h1>}
+            >
+                <span>
+                    {getStatusIcon(status)}&nbsp;
+                    {getStatusText(status)}
+                </span>
+            </Popover>
+        </Text>
     </TextContent>) :
-    '-';
+    '--';
 
 export const formatters = (name) => ({
     nameFormatter,

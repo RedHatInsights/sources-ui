@@ -386,7 +386,7 @@ describe('formatters', () => {
             it('returns - when no apps attached', () => {
                 const wrapper = mount(wrapperWithIntl(availabilityFormatter('some nonsense', SOURCE, { appTypes: APPTYPES })));
 
-                expect(wrapper.text().includes('-')).toEqual(true);
+                expect(wrapper.text().includes('--')).toEqual(true);
             });
         });
 
