@@ -143,11 +143,11 @@ export const formatAvailibilityErrors = (source, appTypes) => {
                 return (<FormattedMessage
                     key="availability_status_error"
                     id="sources.unknownAppError"
-                    defaultMessage="Unknown application error ({ appName })"
+                    defaultMessage="Unknown application error ({ appName }) "
                     values={{ appName: applicationName }}
                 />);
             }
-        ).join(' ');
+        );
     }
 
     return (<FormattedMessage
@@ -167,7 +167,7 @@ export const getStatusTooltipText = (status, source, appTypes) => ({
     </React.Fragment>,
     available: <FormattedMessage
         id="sources.appStatusOK"
-        defaultMessage="Everything works fine - all applications are connected"
+        defaultMessage="Everything works fine - all applications are connected."
     />,
     partially_available: <React.Fragment>
         <FormattedMessage
