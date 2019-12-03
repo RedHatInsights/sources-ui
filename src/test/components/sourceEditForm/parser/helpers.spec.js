@@ -26,5 +26,14 @@ describe('source edit form parser helpers', () => {
 
             expect(modifyFields(FIELDS, EDITING, SET_EDIT)).toEqual(FIELDS);
         });
+
+        it('do not change switch and checkbox components', () => {
+            const EDITING = {};
+            const SET_EDIT = jest.fn();
+
+            const FIELDS = [{ component: componentTypes.SWITCH, name: NAME }, { component: componentTypes.CHECKBOX, name: NAME }];
+
+            expect(modifyFields(FIELDS, EDITING, SET_EDIT)).toEqual(FIELDS);
+        });
     });
 });
