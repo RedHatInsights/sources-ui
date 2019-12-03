@@ -22,7 +22,7 @@ import { applicationTypesData, CATALOG_INDEX, TOPOLOGICALINVENTORY_INDEX, COSTMA
 import { Badge, Tooltip } from '@patternfly/react-core';
 import { DateFormat } from '@redhat-cloud-services/frontend-components';
 import { IntlProvider } from 'react-intl';
-import { CheckCircleIcon, ExclamationCircleIcon, QuestionCircleIcon, ExclamationTriangleIcon } from '@patternfly/react-icons';
+import { CheckCircleIcon, TimesCircleIcon, QuestionCircleIcon, ExclamationTriangleIcon } from '@patternfly/react-icons';
 
 describe('formatters', () => {
     describe('formatters', () => {
@@ -247,7 +247,7 @@ describe('formatters', () => {
         it('returns DANGER icon', () => {
             const wrapper = mount(getStatusIcon('unavailable'));
 
-            expect(wrapper.find(ExclamationCircleIcon)).toHaveLength(1);
+            expect(wrapper.find(TimesCircleIcon)).toHaveLength(1);
         });
 
         it('returns unknown by default', () => {
@@ -263,7 +263,7 @@ describe('formatters', () => {
         it('returns OK text', () => {
             const wrapper = mount(wrapperWithIntl(getStatusText('available')));
 
-            expect(wrapper.text()).toEqual('Available');
+            expect(wrapper.text()).toEqual('OK');
         });
 
         it('returns WARNING text', () => {
