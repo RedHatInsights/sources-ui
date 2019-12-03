@@ -80,3 +80,19 @@
   text-overflow: ellipsis;
   vertical-align: middle;
 }
+
+.ins-c-sources__availability-ok {
+  color: var(--pf-global--success-color--100);
+}
+
+.ins-c-sources__availability-partially {
+  color: var(--pf-global--warning-color--100);
+}
+
+.ins-c-sources__availability-not-ok {
+  color: var(--pf-global--danger-color--100);
+}
+
+.ins-c-sources__availability-unknown {
+  color: var(--pf-global--icon--Color--light);
+}

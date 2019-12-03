@@ -49,5 +49,14 @@ export const sourcesViewDefinition = {
         hidden: true,
         value: 'imported',
         formatter: 'importedFormatter'
+    }, {
+        title: intl.formatMessage({
+            id: 'sources.status',
+            defaultMessage: 'Status'
+        }),
+        value: 'availability_status',
+        searchable: true,
+        formatter: 'availabilityFormatter',
+        sortable: true
     }])
 };
