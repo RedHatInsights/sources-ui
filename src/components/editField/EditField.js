@@ -29,7 +29,7 @@ const EditField = ({ isRequired, label, helperText, hideLabel, meta, input, type
             onClick={setEdit ? () => setEdit(input.name) : undefined}
         >
             <div className={`pf-c-form__horizontal-group ins-c-sources__edit-field-group ${setEdit ? 'clickable' : ''}`}>
-                <TextContent className="ins-c-sources__edit-field-group-text-content">
+                <TextContent className={`ins-c-sources__edit-field-group-text-content ${setEdit ? 'clickable' : ''}`}>
                     <span className="ins-c-sources__edit-field-value pf-u-mr-sm">
                         {value ? value : setEdit ? emptyText : ''}
                     </span>

@@ -64,8 +64,10 @@
     vertical-align: middle;
     color: var(--pf-global--disabled-color--100);
 
-    &:hover {
-      color: var(--pf-global--Color--100);
+    &.clickable {
+      &:hover {
+        color: var(--pf-global--Color--100);
+      }
     }
   }
 }
