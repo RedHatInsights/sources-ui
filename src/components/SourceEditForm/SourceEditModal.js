@@ -2,7 +2,7 @@ import React, { useEffect, useReducer } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { useParams, useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
-import { Modal, GridItem, Grid } from '@patternfly/react-core';
+import { Modal } from '@patternfly/react-core';
 import { Spinner } from '@redhat-cloud-services/frontend-components';
 import { layoutMapper } from '@data-driven-forms/pf4-component-mapper';
 
@@ -115,26 +115,22 @@ const SourceEditModal = () => {
             isLarge
             onClose={() => history.push('/')}
         >
-            <Grid>
-                <GridItem sm={12} md={6}>
-                    <SourcesFormRenderer
-                        onCancel={() => history.push('/')}
-                        schema={schema}
-                        onSubmit={(values) => onSubmit(values, editing, dispatch, source, intl, history.push)}
-                        layoutMapper={{
-                            ...layoutMapper,
-                            FormWrapper: HorizontalFormWrapper
-                        }}
-                        canReset
-                        onReset={() => setState({ editing: {} })}
-                        initialValues={initialValues}
-                        buttonsLabels={{ submitLabel: intl.formatMessage({
-                            id: 'sources.save',
-                            defaultMessage: 'Save'
-                        }) }}
-                    />
-                </GridItem>
-            </Grid>
+            <SourcesFormRenderer
+                onCancel={() => history.push('/')}
+                schema={schema}
+                onSubmit={(values) => onSubmit(values, editing, dispatch, source, intl, history.push)}
+                layoutMapper={{
+                    ...layoutMapper,
+                    FormWrapper: HorizontalFormWrapper
+                }}
+                canReset
+                onReset={() => setState({ editing: {} })}
+                initialValues={initialValues}
+                buttonsLabels={{ submitLabel: intl.formatMessage({
+                    id: 'sources.save',
+                    defaultMessage: 'Save'
+                }) }}
+            />
         </Modal>
     );
 };
