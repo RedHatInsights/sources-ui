@@ -118,7 +118,9 @@ const SourceEditModal = () => {
             <SourcesFormRenderer
                 onCancel={() => history.push('/')}
                 schema={schema}
-                onSubmit={(values) => onSubmit(values, editing, dispatch, source, intl, history.push)}
+                onSubmit={
+                    (values, formApi) => onSubmit(values, formApi.getState().dirtyFields, dispatch, source, intl, history.push)
+                }
                 layoutMapper={{
                     ...layoutMapper,
                     FormWrapper: HorizontalFormWrapper
