@@ -351,32 +351,42 @@ describe('formatters', () => {
         });
 
         describe('availabilityFormatter', () => {
+            const SOURCE_WITH_APP = {
+                applications: [{}]
+            };
+
             it('returns OK text', () => {
-                const wrapper = mount(wrapperWithIntl(availabilityFormatter('available', SOURCE, APPTYPES)));
+                const wrapper = mount(wrapperWithIntl(availabilityFormatter('available', SOURCE_WITH_APP, { appTypes: APPTYPES })));
 
                 expect(wrapper.find(CheckCircleIcon)).toHaveLength(1);
                 expect(wrapper.text().includes('OK')).toEqual(true);
             });
 
             it('returns WARNING text', () => {
-                const wrapper = mount(wrapperWithIntl(availabilityFormatter('partially_available', SOURCE, APPTYPES)));
+                const wrapper = mount(wrapperWithIntl(availabilityFormatter('partially_available', SOURCE_WITH_APP, { appTypes: APPTYPES })));
 
                 expect(wrapper.find(ExclamationTriangleIcon)).toHaveLength(1);
                 expect(wrapper.text().includes('Partially available')).toEqual(true);
             });
 
             it('returns DANGER text', () => {
-                const wrapper = mount(wrapperWithIntl(availabilityFormatter('unavailable', SOURCE, APPTYPES)));
+                const wrapper = mount(wrapperWithIntl(availabilityFormatter('unavailable', SOURCE_WITH_APP, { appTypes: APPTYPES })));
 
                 expect(wrapper.find(TimesCircleIcon)).toHaveLength(1);
                 expect(wrapper.text().includes('Unavailable')).toEqual(true);
             });
 
             it('returns unknown by default', () => {
-                const wrapper = mount(wrapperWithIntl(availabilityFormatter('some nonsense', SOURCE, APPTYPES)));
+                const wrapper = mount(wrapperWithIntl(availabilityFormatter('some nonsense', SOURCE_WITH_APP, { appTypes: APPTYPES })));
 
                 expect(wrapper.find(QuestionCircleIcon)).toHaveLength(1);
                 expect(wrapper.text().includes('Unknown')).toEqual(true);
+            });
+
+            it('returns - when no apps attached', () => {
+                const wrapper = mount(wrapperWithIntl(availabilityFormatter('some nonsense', SOURCE, { appTypes: APPTYPES })));
+
+                expect(wrapper.text().includes('-')).toEqual(true);
             });
         });
 

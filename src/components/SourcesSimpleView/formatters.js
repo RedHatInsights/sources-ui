@@ -181,17 +181,19 @@ export const getStatusTooltipText = (status, source, appTypes) => ({
     defaultMessage="Status has not been verified."
 />);
 
-export const availabilityFormatter = (status, source, { appTypes }) => (<TextContent>
-    <Popover
-        aria-label="Headless Popover"
-        bodyContent={<h1>{getStatusTooltipText(status, source, appTypes)}</h1>}
-    >
-        <Text key={status} component={ TextVariants.p }>
-            {getStatusIcon(status)}&nbsp;
-            {getStatusText(status)}
-        </Text>
-    </Popover>
-</TextContent>);
+export const availabilityFormatter = (status, source, { appTypes }) => source.applications && source.applications.length > 0 ?
+    (<TextContent>
+        <Popover
+            aria-label="Headless Popover"
+            bodyContent={<h1>{getStatusTooltipText(status, source, appTypes)}</h1>}
+        >
+            <Text key={status} component={ TextVariants.p }>
+                {getStatusIcon(status)}&nbsp;
+                {getStatusText(status)}
+            </Text>
+        </Popover>
+    </TextContent>) :
+    '-';
 
 export const formatters = (name) => ({
     nameFormatter,
