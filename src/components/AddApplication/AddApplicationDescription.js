@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import {
     TextContent,
@@ -16,7 +15,8 @@ import ApplicationList from '../ApplicationsList/ApplicationList';
 import RedirectNoId from '../RedirectNoId/RedirectNoId';
 import { useSource } from '../../hooks/useSource';
 
-const AddApplicationDescription = ({ match: { params: { id } } }) => {
+const AddApplicationDescription = () => {
+    const { id } = useParams();
     const [removingApp, setApplicationToRemove] = useState({});
 
     const sourceTypes = useSelector(({ providers }) => providers.sourceTypes);
@@ -86,12 +86,4 @@ const AddApplicationDescription = ({ match: { params: { id } } }) => {
     );
 };
 
-AddApplicationDescription.propTypes = {
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            id: PropTypes.string.isRequired
-        }).isRequired
-    }).isRequired
-};
-
-export default withRouter(AddApplicationDescription);
+export default AddApplicationDescription;

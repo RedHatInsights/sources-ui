@@ -1,4 +1,4 @@
-import { entitiesLoaded, defaultProvidersState, undoAddSource, clearAddSource } from '../../redux/reducers/providers';
+import { entitiesLoaded, defaultProvidersState, undoAddSource, clearAddSource, filterProviders } from '../../redux/reducers/providers';
 
 describe('redux > sources reducer', () => {
     describe('entitiesLoaded', () => {
@@ -8,7 +8,6 @@ describe('redux > sources reducer', () => {
         const EXPECTED_STATE = {
             ...defaultProvidersState,
             entities: SOURCES,
-            numberOfEntities: SOURCES.length,
             loaded: true
         };
 
@@ -61,6 +60,34 @@ describe('redux > sources reducer', () => {
                     addSourceInitialValues: EMPTY_OBJECT
                 })
             );
+        });
+    });
+
+    describe('filterProviders', () => {
+        const value = { name: 'name' };
+
+        it('sets filter value', () => {
+            expect(filterProviders(defaultProvidersState, { payload: { value } })).toEqual({
+                ...defaultProvidersState,
+                filterValue: {
+                    name: 'name'
+                }
+            });
+        });
+
+        it('switch to the first page', () => {
+            const stateOnSecondPage = {
+                ...defaultProvidersState,
+                pageNumber: 12
+            };
+
+            expect(filterProviders(stateOnSecondPage, { payload: { value } })).toEqual({
+                ...defaultProvidersState,
+                filterValue: {
+                    name: 'name'
+                },
+                pageNumber: 1
+            });
         });
     });
 });

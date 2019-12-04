@@ -15,7 +15,8 @@
 .sources-placeholder-table {
   background: white;
   width: 100%;
-  border: 1px solid rgb(204,204,204);
+  border-top: 1px solid rgb(204,204,204);
+  border-bottom: 1px solid rgb(204,204,204);
   border-collapse: collapse;
   td {
     display: block;
@@ -44,4 +45,54 @@
   &:hover {
     cursor: help;
   }
+}
+
+.ins-c-sources__edit-field-group {
+  min-height: 36px;
+  display: table;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+
+  &.clickable {
+    cursor: pointer;
+  }
+
+  .ins-c-sources__edit-field-group-text-content {
+    display: table-cell;
+    vertical-align: middle;
+    color: var(--pf-global--disabled-color--100);
+
+    &.clickable {
+      &:hover {
+        color: var(--pf-global--Color--100);
+      }
+    }
+  }
+}
+
+.ins-c-sources__edit-field-value {
+  display: inline-block;
+  max-width: calc(100% - 24px);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+.ins-c-sources__availability-ok {
+  color: var(--pf-global--success-color--100);
+}
+
+.ins-c-sources__availability-partially {
+  color: var(--pf-global--warning-color--100);
+}
+
+.ins-c-sources__availability-not-ok {
+  color: var(--pf-global--danger-color--100);
+}
+
+.ins-c-sources__availability-unknown {
+  color: var(--pf-global--icon--Color--light);
 }

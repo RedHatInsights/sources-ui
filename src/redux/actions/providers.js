@@ -4,33 +4,37 @@ import {
     SORT_ENTITIES,
     PAGE_AND_SIZE,
     FILTER_PROVIDERS,
-    SET_FILTER_COLUMN,
-    SOURCE_FOR_EDIT_LOADED,
-    SOURCE_EDIT_REQUEST,
     ADD_APP_TO_SOURCE,
     UNDO_ADD_SOURCE,
-    CLEAR_ADD_SOURCE
+    CLEAR_ADD_SOURCE,
+    SET_COUNT,
+    ADD_HIDDEN_SOURCE
 } from '../action-types-providers';
 import {
     doLoadAppTypes,
-    doLoadSourceForEdit,
     doRemoveSource,
-    doUpdateSource,
     doLoadEntities,
-    doDeleteApplication
+    doDeleteApplication,
+    doLoadCountOfSources
 } from '../../api/entities';
+import { doUpdateSource } from '../../api/doUpdateSource';
 import { doLoadSourceTypes } from '../../api/source_types';
 
-export const loadEntities = (options) => (dispatch) => {
-    dispatch({ type: ACTION_TYPES.LOAD_ENTITIES_PENDING });
+export const loadEntities = (options) => (dispatch, getState) => {
+    dispatch({
+        type: ACTION_TYPES.LOAD_ENTITIES_PENDING,
+        options
+    });
 
-    return doLoadEntities().then(({ sources }) => {
-        dispatch({
-            type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
-            payload: sources,
-            ...options
-        });
-    }).catch(error => dispatch({
+    const { pageSize, pageNumber, sortBy, sortDirection, filterValue } = getState().providers;
+
+    return Promise.all([
+        doLoadEntities({ pageSize, pageNumber, sortBy, sortDirection, filterValue }),
+        doLoadCountOfSources(filterValue).then(({ meta: { count } }) => dispatch({ type: SET_COUNT, payload: { count } }))
+    ]).then(([{ sources }]) => dispatch({
+        type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
+        payload: sources
+    })).catch(error => dispatch({
         type: ACTION_TYPES.LOAD_ENTITIES_REJECTED,
         payload: { error: { detail: error.detail || error.data, title: 'Fetching data failed, try refresh page' } }
     }));
@@ -54,25 +58,32 @@ export const loadAppTypes = () => (dispatch) => {
     }));
 };
 
-export const sortEntities = (column, direction) => ({
-    type: SORT_ENTITIES,
-    payload: { column, direction }
-});
+export const sortEntities = (column, direction) => (dispatch) => {
+    dispatch({
+        type: SORT_ENTITIES,
+        payload: { column, direction }
+    });
 
-export const pageAndSize = (page, size) => ({
-    type: PAGE_AND_SIZE,
-    payload: { page, size }
-});
+    return dispatch(loadEntities());
+};
 
-export const filterProviders = (value) => ({
-    type: FILTER_PROVIDERS,
-    payload: { value }
-});
+export const pageAndSize = (page, size) => (dispatch) => {
+    dispatch({
+        type: PAGE_AND_SIZE,
+        payload: { page, size }
+    });
 
-export const setProviderFilterColumn = (column) => ({
-    type: SET_FILTER_COLUMN,
-    payload: { column }
-});
+    return dispatch(loadEntities());
+};
+
+export const filterProviders = (value) => (dispatch) => {
+    dispatch(({
+        type: FILTER_PROVIDERS,
+        payload: { value }
+    }));
+
+    return dispatch(loadEntities());
+};
 
 export const updateSource = (source, formData, title, description, errorTitles) => (dispatch) =>
     doUpdateSource(source, formData, errorTitles).then(_finished => dispatch({
@@ -88,33 +99,6 @@ export const updateSource = (source, formData, title, description, errorTitles) 
         payload: error
     }));
 
-export const removeSource = (sourceId, title) => ({
-    type: ACTION_TYPES.REMOVE_SOURCE,
-    payload: () => doRemoveSource(sourceId),
-    meta: {
-        sourceId,
-        notifications: {
-            fulfilled: {
-                variant: 'success',
-                title,
-                dismissable: true
-            }
-        }
-    }
-});
-
-export const loadSourceForEdit = sourceId => dispatch => {
-    dispatch({ type: SOURCE_EDIT_REQUEST });
-
-    return doLoadSourceForEdit(sourceId).then(sourceData => dispatch({
-        type: SOURCE_FOR_EDIT_LOADED,
-        payload: sourceData
-    })).catch(error => dispatch({
-        type: 'FOOBAR_REJECTED',
-        payload: error
-    }));
-};
-
 export const addMessage = (title, variant, description, customId) => (dispatch) => dispatch({
     type: ADD_NOTIFICATION,
     payload: {
@@ -125,6 +109,32 @@ export const addMessage = (title, variant, description, customId) => (dispatch) 
         customId
     }
 });
+
+export const removeSource = (sourceId, title) => (dispatch) => {
+    dispatch({
+        type: ACTION_TYPES.REMOVE_SOURCE_PENDING,
+        meta: {
+            sourceId
+        }
+    });
+
+    return doRemoveSource(sourceId).then(() => dispatch(loadEntities({ loaded: true })))
+    .then(() => {
+        dispatch({
+            type: ACTION_TYPES.REMOVE_SOURCE_FULFILLED,
+            meta: {
+                sourceId
+            }
+        });
+        dispatch(addMessage(title, 'success'));
+    })
+    .catch(() => dispatch({
+        type: ACTION_TYPES.REMOVE_SOURCE_REJECTED,
+        meta: {
+            sourceId
+        }
+    }));
+};
 
 export const removeMessage = (id) => (dispatch) => dispatch({
     type: REMOVE_NOTIFICATION,
@@ -164,4 +174,11 @@ export const undoAddSource = (values) => ({
 
 export const clearAddSource = () => ({
     type: CLEAR_ADD_SOURCE
+});
+
+export const addHiddenSource = (source) => ({
+    type: ADD_HIDDEN_SOURCE,
+    payload: {
+        source
+    }
 });

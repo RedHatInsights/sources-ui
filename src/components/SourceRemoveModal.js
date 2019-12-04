@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import {
     Modal,
@@ -24,7 +23,10 @@ import RemoveAppModal from './AddApplication/RemoveAppModal';
 import RedirectNoId from './RedirectNoId/RedirectNoId';
 import { useSource } from '../hooks/useSource';
 
-const SourceRemoveModal = ({ history: { push }, match: { params: { id } } }) => {
+const SourceRemoveModal = () => {
+    const { id } = useParams();
+    const { push } = useHistory();
+
     const [acknowledge, setAcknowledge] = useState(false);
     const [removingApp, setApplicationToRemove] = useState({});
 
@@ -189,15 +191,4 @@ const SourceRemoveModal = ({ history: { push }, match: { params: { id } } }) => 
     );
 };
 
-SourceRemoveModal.propTypes = {
-    history: PropTypes.shape({
-        push: PropTypes.func.isRequired
-    }).isRequired,
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            id: PropTypes.string.isRequired
-        }).isRequired
-    }).isRequired
-};
-
-export default withRouter(SourceRemoveModal);
+export default SourceRemoveModal;

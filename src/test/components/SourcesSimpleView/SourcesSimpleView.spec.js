@@ -4,17 +4,19 @@ import { notificationsMiddleware } from '@redhat-cloud-services/frontend-compone
 import configureStore from 'redux-mock-store';
 import { Table, TableHeader, TableBody, RowWrapper } from '@patternfly/react-table';
 import { MemoryRouter } from 'react-router-dom';
+import { RowLoader } from '@redhat-cloud-services/frontend-components-utilities/files/helpers';
+import { act } from 'react-dom/test-utils';
 
 import SourcesSimpleView, { insertEditAction, actionResolver } from '../../../components/SourcesSimpleView/SourcesSimpleView';
-import { PlaceHolderTable, RowWrapperLoader, RowLoader } from '../../../components/SourcesSimpleView/loaders';
+import { PlaceHolderTable, RowWrapperLoader } from '../../../components/SourcesSimpleView/loaders';
 
 import { sourcesDataGraphQl } from '../../sourcesData';
 import { sourceTypesData } from '../../sourceTypesData';
 import { applicationTypesData } from '../../applicationTypesData';
 
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
-import { sortByCompare } from '../../../Utilities/filteringSorting';
 import * as actions from '../../../redux/actions/providers';
+import * as API from '../../../api/entities';
 
 describe('SourcesSimpleView', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -34,8 +36,7 @@ describe('SourcesSimpleView', () => {
                 entities: [],
                 numberOfEntities: 0,
                 pageNumber: 1,
-                pageSize: 10,
-                filterColumn: 'name'
+                pageSize: 10
             }
         };
         loadedProps = {
@@ -47,6 +48,8 @@ describe('SourcesSimpleView', () => {
             appTypes: applicationTypesData.data,
             sourceTypes: sourceTypesData.data
         };
+        API.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: sourcesDataGraphQl }));
+        API.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: sourcesDataGraphQl.length } }));
     });
 
     it('renders loading state', () => {
@@ -111,58 +114,50 @@ describe('SourcesSimpleView', () => {
         });
     });
 
-    it('renders sorted table by name DESC', (done) => {
-        const DIRECTION = 'desc';
-        const SORTBY = 'name';
+    it('re-renders when entities changed', async () => {
+        let wrapper;
 
         initialState = {
             providers: {
                 ...initialState.providers,
-                ...loadedProps,
-                sortDirection: DIRECTION,
-                sortBy: SORTBY
+                ...loadedProps
             }
         };
 
-        const store = mockStore(initialState);
-        const wrapper = mount(componentWrapperIntl(<SourcesSimpleView { ...initialProps } />, store));
-
-        setTimeout(() => {
-            setTimeout(() => {
-                wrapper.update();
-                expect(wrapper.find(RowWrapper)).toHaveLength(sourcesDataGraphQl.length);
-                expect(wrapper.find(RowWrapper).first().text().includes(sourcesDataGraphQl.sort(sortByCompare(SORTBY, DIRECTION))[0].name));
-                expect(wrapper.find(RowWrapper).last().text().includes(sourcesDataGraphQl.sort(sortByCompare(SORTBY, DIRECTION)).slice(-1)[0].name));
-                done();
-            });
-        });
-    });
-
-    it('renders sorted table by name ASC', (done) => {
-        const DIRECTION = 'asc';
-        const SORTBY = 'name';
-
-        initialState = {
+        const initialStateUpdated = ({
             providers: {
                 ...initialState.providers,
-                ...loadedProps,
-                sortDirection: DIRECTION,
-                sortBy: SORTBY
+                entities: [sourcesDataGraphQl[0]],
+                numberOfEntities: 1
             }
-        };
-
-        const store = mockStore(initialState);
-        const wrapper = mount(componentWrapperIntl(<SourcesSimpleView { ...initialProps } />, store));
-
-        setTimeout(() => {
-            setTimeout(() => {
-                wrapper.update();
-                expect(wrapper.find(RowWrapper)).toHaveLength(sourcesDataGraphQl.length);
-                expect(wrapper.find(RowWrapper).first().text().includes(sourcesDataGraphQl.sort(sortByCompare(SORTBY, DIRECTION))[0].name));
-                expect(wrapper.find(RowWrapper).last().text().includes(sourcesDataGraphQl.sort(sortByCompare(SORTBY, DIRECTION)).slice(-1)[0].name));
-                done();
-            });
         });
+
+        const store = mockStore(
+            jest.fn()
+            .mockImplementationOnce(() => initialState)
+            .mockImplementationOnce(() => initialState)
+            .mockImplementationOnce(() => initialState)
+            .mockImplementationOnce(() => initialState)
+            .mockImplementationOnce(() => initialState)
+            // 5 initial renders :()
+            .mockImplementation(() => initialStateUpdated)
+        );
+
+        await act(async () => {
+            wrapper = mount(componentWrapperIntl(<SourcesSimpleView { ...initialProps } />, store));
+        });
+
+        wrapper.update();
+        expect(wrapper.find(RowWrapper)).toHaveLength(sourcesDataGraphQl.length);
+
+        // trigger render
+        await act(async () => {
+            wrapper.find('button').first().simulate('click');
+        });
+
+        wrapper.update();
+
+        expect(wrapper.find(RowWrapper)).toHaveLength(1);
     });
 
     describe('actions', () => {
@@ -247,7 +242,7 @@ describe('SourcesSimpleView', () => {
 
                 wrapper.update();
                 wrapper.find('button').at(1).simulate('click');
-                expect(spy).toHaveBeenCalledWith('source_type_id', 'asc');
+                expect(spy).toHaveBeenCalledWith('created_at', 'asc');
 
                 done();
             });

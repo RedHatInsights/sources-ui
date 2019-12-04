@@ -2,14 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@patternfly/react-core';
 import { useSelector, useDispatch } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 
 import { removeMessage, undoAddSource } from '../../redux/actions/providers';
 import { paths } from '../../Routes';
 import { refreshPage } from './refreshPage';
 
-const UndoButton = ({ messageId, history, values }) => {
+const UndoButton = ({ messageId, values }) => {
+    const history = useHistory();
     const dispatch = useDispatch();
     const notifications = useSelector(({ notifications }) => notifications);
 
@@ -39,9 +40,8 @@ const UndoButton = ({ messageId, history, values }) => {
     );};
 
 UndoButton.propTypes = {
-    history: PropTypes.any.isRequired,
     messageId: PropTypes.number.isRequired,
     values: PropTypes.object.isRequired
 };
 
-export default withRouter(UndoButton);
+export default UndoButton;

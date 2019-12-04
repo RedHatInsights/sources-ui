@@ -11,14 +11,27 @@ import {
     defaultPort,
     schemaToPort,
     endpointToUrl,
-    importsTexts
+    importsTexts,
+    availabilityFormatter,
+    getStatusIcon,
+    getStatusText,
+    getStatusTooltipText,
+    formatAvailibilityErrors
 } from '../../../components/SourcesSimpleView/formatters';
 import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX } from '../../sourceTypesData';
 import { sourcesDataGraphQl, SOURCE_CATALOGAPP_INDEX, SOURCE_ALL_APS_INDEX, SOURCE_NO_APS_INDEX, SOURCE_ENDPOINT_URL_INDEX } from '../../sourcesData';
-import { applicationTypesData, CATALOG_INDEX, TOPOLOGICALINVENTORY_INDEX, COSTMANAGEMENET_INDEX } from '../../applicationTypesData';
+import {
+    applicationTypesData,
+    CATALOG_INDEX,
+    TOPOLOGICALINVENTORY_INDEX,
+    COSTMANAGEMENET_INDEX,
+    COSTMANAGEMENT_APP,
+    CATALOG_APP
+} from '../../applicationTypesData';
 import { Badge, Tooltip } from '@patternfly/react-core';
 import { DateFormat } from '@redhat-cloud-services/frontend-components';
 import { IntlProvider } from 'react-intl';
+import { CheckCircleIcon, TimesCircleIcon, QuestionCircleIcon, ExclamationTriangleIcon } from '@patternfly/react-icons';
 
 describe('formatters', () => {
     describe('formatters', () => {
@@ -40,6 +53,10 @@ describe('formatters', () => {
 
         it('returns importedFormatter', () => {
             expect(formatters('importedFormatter')).toEqual(importedFormatter);
+        });
+
+        it('returns availabilityFormatter', () => {
+            expect(formatters('availabilityFormatter')).toEqual(availabilityFormatter);
         });
 
         it('returns defaultFormatter when non-sense', () => {
@@ -220,6 +237,204 @@ describe('formatters', () => {
 
         it('correctly parses URL with custom port', () => {
             expect(endpointToUrl({ ...endpoint, port: CUSTOM_PORT })).toEqual(`https://my.best.page:${CUSTOM_PORT}/`);
+        });
+    });
+
+    describe('availability status', () => {
+        const wrapperWithIntl = (children) => <IntlProvider locale="en">{children}</IntlProvider>;
+        const SOURCE = {};
+        const APPTYPES = applicationTypesData.data;
+
+        describe('getStatusIcon', () => {
+            it('returns OK icon', () => {
+                const wrapper = mount(getStatusIcon('available'));
+
+                expect(wrapper.find(CheckCircleIcon)).toHaveLength(1);
+            });
+
+            it('returns WARNING icon', () => {
+                const wrapper = mount(getStatusIcon('partially_available'));
+
+                expect(wrapper.find(ExclamationTriangleIcon)).toHaveLength(1);
+            });
+
+            it('returns DANGER icon', () => {
+                const wrapper = mount(getStatusIcon('unavailable'));
+
+                expect(wrapper.find(TimesCircleIcon)).toHaveLength(1);
+            });
+
+            it('returns unknown by default', () => {
+                const wrapper = mount(getStatusIcon('some nonsense'));
+
+                expect(wrapper.find(QuestionCircleIcon)).toHaveLength(1);
+            });
+        });
+
+        describe('getStatusText', () => {
+            it('returns OK text', () => {
+                const wrapper = mount(wrapperWithIntl(getStatusText('available')));
+
+                expect(wrapper.text()).toEqual('OK');
+            });
+
+            it('returns WARNING text', () => {
+                const wrapper = mount(wrapperWithIntl(getStatusText('partially_available')));
+
+                expect(wrapper.text()).toEqual('Partially available');
+            });
+
+            it('returns DANGER text', () => {
+                const wrapper = mount(wrapperWithIntl(getStatusText('unavailable')));
+
+                expect(wrapper.text()).toEqual('Unavailable');
+            });
+
+            it('returns unknown by default', () => {
+                const wrapper = mount(wrapperWithIntl(getStatusText('some nonsense')));
+
+                expect(wrapper.text()).toEqual('Unknown');
+            });
+        });
+
+        describe('getStatusTooltipText', () => {
+            it('returns OK text', () => {
+                const wrapper = mount(wrapperWithIntl(getStatusTooltipText('available', SOURCE, APPTYPES)));
+
+                expect(wrapper.text()).toEqual('Everything works fine - all applications are connected.');
+            });
+
+            it('returns WARNING text', () => {
+                const ERRORMESSAGE = 'some error';
+
+                const SOURCE_WITH_ERROR = {
+                    applications: [{
+                        application_type_id: COSTMANAGEMENT_APP.id,
+                        availability_status_error: ERRORMESSAGE
+                    }]
+                };
+
+                const wrapper = mount(wrapperWithIntl(getStatusTooltipText('partially_available', SOURCE_WITH_ERROR, APPTYPES)));
+
+                expect(wrapper.text().includes(ERRORMESSAGE)).toEqual(true);
+                expect(wrapper.text().includes(COSTMANAGEMENT_APP.display_name)).toEqual(true);
+            });
+
+            it('returns DANGER text', () => {
+                const ERRORMESSAGE = 'some error';
+                const ERRORMESSAGE2 = 'different type of error';
+
+                const SOURCE_WITH_ERRORS = {
+                    applications: [{
+                        application_type_id: COSTMANAGEMENT_APP.id,
+                        availability_status_error: ERRORMESSAGE
+                    }, {
+                        application_type_id: CATALOG_APP.id,
+                        availability_status_error: ERRORMESSAGE2
+                    }]
+                };
+
+                const wrapper = mount(wrapperWithIntl(getStatusTooltipText('unavailable', SOURCE_WITH_ERRORS, APPTYPES)));
+
+                expect(wrapper.text().includes(ERRORMESSAGE)).toEqual(true);
+                expect(wrapper.text().includes(COSTMANAGEMENT_APP.display_name)).toEqual(true);
+
+                expect(wrapper.text().includes(ERRORMESSAGE2)).toEqual(true);
+                expect(wrapper.text().includes(CATALOG_APP.display_name)).toEqual(true);
+            });
+
+            it('returns unknown by default', () => {
+                const wrapper = mount(wrapperWithIntl(getStatusTooltipText('some nonsense', SOURCE, APPTYPES)));
+
+                expect(wrapper.text()).toEqual('Status has not been verified.');
+            });
+        });
+
+        describe('availabilityFormatter', () => {
+            const SOURCE_WITH_APP = {
+                applications: [{}]
+            };
+
+            it('returns OK text', () => {
+                const wrapper = mount(wrapperWithIntl(availabilityFormatter('available', SOURCE_WITH_APP, { appTypes: APPTYPES })));
+
+                expect(wrapper.find(CheckCircleIcon)).toHaveLength(1);
+                expect(wrapper.text().includes('OK')).toEqual(true);
+            });
+
+            it('returns WARNING text', () => {
+                const wrapper = mount(wrapperWithIntl(availabilityFormatter('partially_available', SOURCE_WITH_APP, { appTypes: APPTYPES })));
+
+                expect(wrapper.find(ExclamationTriangleIcon)).toHaveLength(1);
+                expect(wrapper.text().includes('Partially available')).toEqual(true);
+            });
+
+            it('returns DANGER text', () => {
+                const wrapper = mount(wrapperWithIntl(availabilityFormatter('unavailable', SOURCE_WITH_APP, { appTypes: APPTYPES })));
+
+                expect(wrapper.find(TimesCircleIcon)).toHaveLength(1);
+                expect(wrapper.text().includes('Unavailable')).toEqual(true);
+            });
+
+            it('returns unknown by default', () => {
+                const wrapper = mount(wrapperWithIntl(availabilityFormatter('some nonsense', SOURCE_WITH_APP, { appTypes: APPTYPES })));
+
+                expect(wrapper.find(QuestionCircleIcon)).toHaveLength(1);
+                expect(wrapper.text().includes('Unknown')).toEqual(true);
+            });
+
+            it('returns - when no apps attached', () => {
+                const wrapper = mount(wrapperWithIntl(availabilityFormatter('some nonsense', SOURCE, { appTypes: APPTYPES })));
+
+                expect(wrapper.text().includes('--')).toEqual(true);
+            });
+        });
+
+        describe('formatAvailibilityErrors', () => {
+            const ERRORMESSAGE = 'some error';
+
+            const SOURCE_WITH_ERROR = {
+                applications: [{
+                    application_type_id: COSTMANAGEMENT_APP.id,
+                    availability_status_error: ERRORMESSAGE
+                }]
+            };
+
+            it('returns application error', () => {
+                const wrapper = mount(wrapperWithIntl(formatAvailibilityErrors(SOURCE_WITH_ERROR, APPTYPES)));
+
+                expect(wrapper.text().includes(ERRORMESSAGE)).toEqual(true);
+                expect(wrapper.text().includes(COSTMANAGEMENT_APP.display_name)).toEqual(true);
+            });
+
+            it('returns application error with unfound appnam', () => {
+                const EMPTY_APP_TYPES = [];
+
+                const wrapper = mount(wrapperWithIntl(formatAvailibilityErrors(SOURCE_WITH_ERROR, EMPTY_APP_TYPES)));
+
+                expect(wrapper.text().includes(ERRORMESSAGE)).toEqual(true);
+                expect(wrapper.text().includes(COSTMANAGEMENT_APP.display_name)).toEqual(false);
+            });
+
+            it('returns unknown application error', () => {
+                const SOURCE_WITH_UNDEF_ERROR = {
+                    applications: [{
+                        application_type_id: COSTMANAGEMENT_APP.id,
+                        availability_status_error: null
+                    }]
+                };
+
+                const wrapper = mount(wrapperWithIntl(formatAvailibilityErrors(SOURCE_WITH_UNDEF_ERROR, APPTYPES)));
+
+                expect(wrapper.text().includes('Unknown application error')).toEqual(true);
+                expect(wrapper.text().includes(COSTMANAGEMENT_APP.display_name)).toEqual(true);
+            });
+
+            it('returns unknown source error', () => {
+                const wrapper = mount(wrapperWithIntl(formatAvailibilityErrors(SOURCE, APPTYPES)));
+
+                expect(wrapper.text().includes('Unknown source error.')).toEqual(true);
+            });
         });
     });
 });

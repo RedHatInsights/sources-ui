@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import {
     TextContent,
@@ -16,7 +16,8 @@ import {
 import RedirectNoId from '../RedirectNoId/RedirectNoId';
 import { useSource } from '../../hooks/useSource';
 
-const ApplicationList = ({ setApplicationToRemove, breakpoints, namePrefix, match: { params: { id } }  }) => {
+const ApplicationList = ({ setApplicationToRemove, breakpoints, namePrefix }) => {
+    const { id } = useParams();
     const appTypes = useSelector(({ providers }) => providers.appTypes);
     const source = useSource(id);
 
@@ -70,11 +71,6 @@ const ApplicationList = ({ setApplicationToRemove, breakpoints, namePrefix, matc
 };
 
 ApplicationList.propTypes = {
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            id: PropTypes.string.isRequired
-        }).isRequired
-    }).isRequired,
     setApplicationToRemove: PropTypes.func.isRequired,
     breakpoints: PropTypes.shape({
         display_name: PropTypes.number,
@@ -87,4 +83,4 @@ ApplicationList.defaultProps = {
     breakpoints: {}
 };
 
-export default withRouter(ApplicationList);
+export default ApplicationList;

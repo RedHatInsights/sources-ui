@@ -24,7 +24,7 @@ export const sourcesViewDefinition = {
         value: 'source_type_id',
         searchable: false,
         formatter: 'sourceTypeFormatter',
-        sortable: true
+        sortable: false
     }, {
         title: intl.formatMessage({
             id: 'sources.application',
@@ -33,7 +33,7 @@ export const sourcesViewDefinition = {
         value: 'applications',
         searchable: false,
         formatter: 'applicationFormatter',
-        sortable: true
+        sortable: false
     }, {
         title: intl.formatMessage({
             id: 'sources.addedDate',
@@ -49,5 +49,14 @@ export const sourcesViewDefinition = {
         hidden: true,
         value: 'imported',
         formatter: 'importedFormatter'
+    }, {
+        title: intl.formatMessage({
+            id: 'sources.status',
+            defaultMessage: 'Status'
+        }),
+        value: 'availability_status',
+        searchable: true,
+        formatter: 'availabilityFormatter',
+        sortable: true
     }])
 };

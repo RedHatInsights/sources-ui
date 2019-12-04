@@ -2,8 +2,9 @@ import React from 'react';
 import { mount } from 'enzyme';
 import ContentLoader from 'react-content-loader';
 import { RowWrapper } from '@patternfly/react-table';
+import { RowLoader } from '@redhat-cloud-services/frontend-components-utilities/files/helpers';
 
-import { PlaceHolderTable, RowLoader, RowWrapperLoader } from '../../../components/SourcesSimpleView/loaders';
+import { PlaceHolderTable, RowWrapperLoader } from '../../../components/SourcesSimpleView/loaders';
 
 describe('loaders', () => {
     describe('PlaceholderTable', () => {
@@ -11,7 +12,7 @@ describe('loaders', () => {
             const wrapper = mount(<PlaceHolderTable />);
 
             expect(wrapper.find('table').length).toEqual(1);
-            expect(wrapper.find(RowLoader).length).toEqual(2);
+            expect(wrapper.find(RowLoader).length).toEqual(12);
         });
     });
 
