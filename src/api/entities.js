@@ -84,7 +84,7 @@ export const doLoadEntities = ({ pageSize, pageNumber, sortBy, sortDirection, fi
             updated_at,
             imported,
             availability_status,
-            applications { application_type_id, id, availability_status_error },
+            applications { application_type_id, id, availability_status_error, availability_status },
             endpoints { id, scheme, host, port, path }
         }
     }`
