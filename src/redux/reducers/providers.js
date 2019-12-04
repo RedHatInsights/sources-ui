@@ -81,7 +81,8 @@ export const filterProviders = (state, { payload: { value } }) =>({
     filterValue: {
         ...state.filterValue,
         ...value
-    }
+    },
+    pageNumber: 1
 });
 
 const sourceEditRemovePending = (state, { meta }) => ({

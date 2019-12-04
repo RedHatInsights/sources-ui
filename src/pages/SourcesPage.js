@@ -65,12 +65,6 @@ const SourcesPage = () => {
         }
     }, [checkEmptyState]);
 
-    useEffect(() => {
-        if (checkEmptyState) {
-            dispatch(loadEntities());
-        }
-    }, [filterValue]);
-
     const onSetPage = (_e, page) => dispatch(pageAndSize(page, pageSize));
 
     const onPerPageSelect = (_e, perPage) => dispatch(pageAndSize(1, perPage));

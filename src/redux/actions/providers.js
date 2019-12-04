@@ -76,10 +76,14 @@ export const pageAndSize = (page, size) => (dispatch) => {
     return dispatch(loadEntities());
 };
 
-export const filterProviders = (value) => ({
-    type: FILTER_PROVIDERS,
-    payload: { value }
-});
+export const filterProviders = (value) => (dispatch) => {
+    dispatch(({
+        type: FILTER_PROVIDERS,
+        payload: { value }
+    }));
+
+    return dispatch(loadEntities());
+};
 
 export const updateSource = (source, formData, title, description, errorTitles) => (dispatch) =>
     doUpdateSource(source, formData, errorTitles).then(_finished => dispatch({
