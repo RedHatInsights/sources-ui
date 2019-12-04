@@ -77,17 +77,19 @@ describe('redux actions', () => {
         );
     });
 
-    it('filterProviders creates an object', () => {
+    it('filterProviders creates an object', async () => {
         const filterValue = { name: 'name' };
 
-        expect(filterProviders(filterValue)).toEqual(
-            expect.objectContaining({
-                type: FILTER_PROVIDERS,
-                payload: {
-                    value: filterValue
-                }
-            })
-        );
+        await filterProviders(filterValue)(dispatch);
+
+        expect(dispatch.mock.calls).toHaveLength(2);
+        expect(dispatch.mock.calls[0][0]).toEqual({
+            type: FILTER_PROVIDERS,
+            payload: {
+                value: filterValue
+            }
+        });
+        expect(dispatch.mock.calls[1][0]).toEqual(expect.any(Function));
     });
 
     describe('updateSource', () => {
