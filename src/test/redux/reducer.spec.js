@@ -64,13 +64,29 @@ describe('redux > sources reducer', () => {
     });
 
     describe('filterProviders', () => {
+        const value = { name: 'name' };
+
         it('sets filter value', () => {
-            const value = { name: 'name' };
             expect(filterProviders(defaultProvidersState, { payload: { value } })).toEqual({
                 ...defaultProvidersState,
                 filterValue: {
                     name: 'name'
                 }
+            });
+        });
+
+        it('switch to the first page', () => {
+            const stateOnSecondPage = {
+                ...defaultProvidersState,
+                pageNumber: 12
+            };
+
+            expect(filterProviders(stateOnSecondPage, { payload: { value } })).toEqual({
+                ...defaultProvidersState,
+                filterValue: {
+                    name: 'name'
+                },
+                pageNumber: 1
             });
         });
     });
