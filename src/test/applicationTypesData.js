@@ -50,3 +50,5 @@ export const applicationTypesData =
 export const CATALOG_INDEX = 0;
 export const COSTMANAGEMENET_INDEX = 1;
 export const TOPOLOGICALINVENTORY_INDEX = 2;
+export const COSTMANAGEMENT_APP = applicationTypesData.data[1];
+export const CATALOG_APP = applicationTypesData.data[0];

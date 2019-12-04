@@ -1,6 +1,5 @@
 import React, { useReducer } from 'react';
-import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Wizard, Text, TextVariants, TextContent, Button } from '@patternfly/react-core';
@@ -25,8 +24,10 @@ const initialState = {
 
 const reducer = (state, payload) => ({ ...state, ...payload });
 
-const AddApplication = ({ history, match: { params: { id } } }) => {
+const AddApplication = () => {
     const intl = useIntl();
+    const { id } = useParams();
+    const history = useHistory();
 
     const {
         appTypes,
@@ -150,15 +151,4 @@ const AddApplication = ({ history, match: { params: { id } } }) => {
     );
 };
 
-AddApplication.propTypes = {
-    history: PropTypes.shape({
-        push: PropTypes.func.isRequired
-    }).isRequired,
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            id: PropTypes.string.isRequired
-        }).isRequired
-    }).isRequired
-};
-
-export default withRouter(AddApplication);
+export default AddApplication;

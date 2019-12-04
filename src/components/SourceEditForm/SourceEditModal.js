@@ -1,22 +1,42 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { useParams, useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
-
-import { Wizard } from '@patternfly/react-core';
+import { Modal } from '@patternfly/react-core';
 import { Spinner } from '@redhat-cloud-services/frontend-components';
+import { layoutMapper } from '@data-driven-forms/pf4-component-mapper';
 
-import { sourceEditForm } from './editSourceSchema';
 import SourcesFormRenderer from '../../Utilities/SourcesFormRenderer';
-import { loadEntities, loadSourceForEdit, updateSource } from '../../redux/actions/providers';
+import { parseSourceToSchema } from './parser/parseSourceToSchema';
+import { doLoadSourceForEdit } from '../../api/entities';
+import HorizontalFormWrapper from './HorizontalFormWrapper';
+import Header from './Header';
+import { prepareInitialValues } from './helpers';
+import { onSubmit } from './onSubmit';
 
-const SourceEditModal = ({ match: { params: { id } }, history }) => {
-    const [loading, setLoading] = useState(true);
+import { redirectWhenImported } from './importedRedirect';
+
+const initialState = {
+    loading: true,
+    editing: {},
+    source: undefined,
+    initialValues: {},
+    sourceType: undefined,
+    schema: undefined
+};
+
+const reducer = (state, payload) => ({ ...state, ...payload });
+
+const SourceEditModal = () => {
+    const [state, setState] = useReducer(reducer, initialState);
+    const { id } = useParams();
+    const history = useHistory();
+
+    const { loading, editing, source, initialValues, sourceType, schema } = state;
+
     const intl = useIntl();
 
     const {
-        source,
         sourceTypes,
         appTypes,
         sourceTypesLoaded,
@@ -26,87 +46,95 @@ const SourceEditModal = ({ match: { params: { id } }, history }) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(loadSourceForEdit(id)).then(() => setLoading(false));
+        doLoadSourceForEdit(id).then((source) => {
+            if (source.source.imported) {
+                redirectWhenImported(dispatch, intl, history, source.source.name);
+            }
+
+            setState({ source });
+        });
     }, []);
 
-    const submitProvider = (values) => dispatch(updateSource(
-        source,
-        values,
-        intl.formatMessage({
-            id: 'sources.modifiedNotificationTitle',
-            defaultMessage: `"{ name }" was modified successfully.`
-        }, { name: values.source.name }),
-        intl.formatMessage({
-            id: 'sources.modifiedNotificationDescription',
-            defaultMessage: 'The source was successfully modified.'
-        }),
-        {
-            authentication: intl.formatMessage({
-                id: 'sources.sourceEditAuthFailure',
-                defaultMessage: 'Authentication update failure.'
-            }),
-            source: intl.formatMessage({
-                id: 'sources.sourceEditFailure',
-                defaultMessage: 'Source update failure.'
-            }),
-            endpoint: intl.formatMessage({
-                id: 'sources.sourceEditEndpointFailure',
-                defaultMessage: 'Endpoint update failure.'
-            })
-        }))
-    .then(() => {
-        history.push('/');
-        dispatch(loadEntities());
-    }).catch(_error => {
-        history.push('/');
+    const setEdit = (name) => setState({
+        editing: {
+            ...editing,
+            [name]: !editing[name]
+        }
     });
 
-    if (!appTypesLoaded || !sourceTypesLoaded || !source || loading) {
+    useEffect(() => {
+        if (source && appTypesLoaded && sourceTypesLoaded) {
+            const sourceType = sourceTypes.find(({ id }) => id === source.source.source_type_id);
+
+            setState({
+                sourceType,
+                initialValues: prepareInitialValues(source, sourceType.product_name),
+                schema: parseSourceToSchema(source, editing, setEdit, sourceType, appTypes),
+                loading: false
+            });
+        }
+    }, [appTypesLoaded, source, sourceTypesLoaded]);
+
+    useEffect(() => {
+        if (source && !loading) {
+            setState({
+                schema: parseSourceToSchema(source, editing, setEdit, sourceType, appTypes)
+            });
+        }
+    }, [editing]);
+
+    const isLoading = !appTypesLoaded || !sourceTypesLoaded || loading;
+
+    if (isLoading) {
         return (
-            <Wizard
-                isOpen={ true }
-                onClose={ history.goBack }
-                title={
-                    intl.formatMessage({
-                        id: 'sources.editSource',
-                        defaultMessage: 'Edit a source'
-                    })
-                }
-                description={
-                    intl.formatMessage({
-                        id: 'sources.editSourceDescription',
-                        defaultMessage: 'You are editing a source'
-                    })
-                }
-                steps={ [{
-                    name: 'Loading',
-                    component: <div className="ins-c-sources__dialog--spinnerContainer">
-                        <Spinner />
-                    </div>,
-                    isFinishedStep: true
-                }] }
-            />
+            <Modal
+                title={intl.formatMessage({
+                    id: 'sources.editSource',
+                    defaultMessage: 'Edit a source.'
+                })}
+                header={<Header />}
+                isOpen={true}
+                isLarge
+                onClose={() => history.push('/')}
+            >
+                <div className="ins-c-sources__dialog--spinnerContainer">
+                    <Spinner />
+                </div>
+            </Modal>
         );
     }
 
-    const form = sourceEditForm(sourceTypes, source, appTypes);
-
     return (
-        <SourcesFormRenderer
-            initialValues={form.initialValues}
-            schemaType={form.schemaType}
-            schema={form.schema}
-            uiSchema={form.uiSchema}
-            showFormControls={form.showFormControls}
-            onSubmit={submitProvider}
-            onCancel={() => history.push('/')}
-        />
+        <Modal
+            title={intl.formatMessage({
+                id: 'sources.editSource',
+                defaultMessage: 'Edit a source.'
+            })}
+            header={<Header />}
+            isOpen={true}
+            isLarge
+            onClose={() => history.push('/')}
+        >
+            <SourcesFormRenderer
+                onCancel={() => history.push('/')}
+                schema={schema}
+                onSubmit={
+                    (values, formApi) => onSubmit(values, formApi.getState().dirtyFields, dispatch, source, intl, history.push)
+                }
+                layoutMapper={{
+                    ...layoutMapper,
+                    FormWrapper: HorizontalFormWrapper
+                }}
+                canReset
+                onReset={() => setState({ editing: {} })}
+                initialValues={initialValues}
+                buttonsLabels={{ submitLabel: intl.formatMessage({
+                    id: 'sources.save',
+                    defaultMessage: 'Save'
+                }) }}
+            />
+        </Modal>
     );
 };
 
-SourceEditModal.propTypes = {
-    match: PropTypes.object.isRequired,
-    history: PropTypes.any.isRequired
-};
-
-export default withRouter(SourceEditModal);
+export default SourceEditModal;

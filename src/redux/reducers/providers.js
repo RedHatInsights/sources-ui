@@ -3,37 +3,36 @@ import {
     SORT_ENTITIES,
     PAGE_AND_SIZE,
     FILTER_PROVIDERS,
-    SET_FILTER_COLUMN,
-    SOURCE_EDIT_REQUEST,
-    SOURCE_FOR_EDIT_LOADED,
     ADD_APP_TO_SOURCE,
     UNDO_ADD_SOURCE,
-    CLEAR_ADD_SOURCE
+    CLEAR_ADD_SOURCE,
+    SET_COUNT,
+    ADD_HIDDEN_SOURCE
 } from '../action-types-providers';
 
 export const defaultProvidersState = {
     loaded: false,
     pageSize: 50,
-    pageNumber: 1, // PF numbers pages from 1. Seriously.
+    pageNumber: 1,
     entities: [],
     numberOfEntities: 0,
-    filterColumn: 'name', // temporary hard-coded filtering by name
     appTypesLoaded: false,
     sourceTypesLoaded: false,
-    addSourceInitialValues: {}
+    addSourceInitialValues: {},
+    filterValue: {}
 };
 
-const entitiesPending = (state) => ({
+const entitiesPending = (state, { options }) => ({
     ...state,
-    loaded: false
+    loaded: false,
+    ...options
 });
 
-export const entitiesLoaded = (state, { payload: rows, ...rest }) => ({
+export const entitiesLoaded = (state, { payload: rows, options }) => ({
     ...state,
-    ...rest,
     loaded: true,
     entities: rows,
-    numberOfEntities: rows.length
+    ...options
 });
 
 const entitiesRejected = (state, { payload: { error } }) => ({
@@ -77,24 +76,13 @@ const setPageAndSize = (state, { payload: { page, size } }) => ({
     pageNumber: page
 });
 
-const filterProviders = (state, { payload: { value } }) =>({
+export const filterProviders = (state, { payload: { value } }) =>({
     ...state,
-    filterValue: value
-});
-
-const setFilterColumn = (state, { payload: { column } }) => ({
-    ...state,
-    filterColumn: column
-});
-
-const sourceForEditLoaded = (state, { payload }) => ({
-    ...state,
-    source: payload
-});
-
-const sourceEditRequest = (state) => ({
-    ...state,
-    source: null
+    filterValue: {
+        ...state.filterValue,
+        ...value
+    },
+    pageNumber: 1
 });
 
 const sourceEditRemovePending = (state, { meta }) => ({
@@ -104,8 +92,7 @@ const sourceEditRemovePending = (state, { meta }) => ({
 
 const sourceEditRemoveFulfilled = (state, { meta }) => ({
     ...state,
-    entities: state.entities.map(entity => entity.id === meta.sourceId ? undefined : entity).filter(x => x),
-    numberOfEntities: state.numberOfEntities - 1
+    entities: state.entities.map(entity => entity.id === meta.sourceId ? undefined : entity).filter(x => x)
 });
 
 const sourceEditRemoveRejected = (state, { meta }) => ({
@@ -169,6 +156,19 @@ export const clearAddSource = (state) => ({
     addSourceInitialValues: {}
 });
 
+const setCount = (state, { payload: { count } }) => ({
+    ...state,
+    numberOfEntities: count
+});
+
+export const addHiddenSource = (state, { payload: { source } }) => ({
+    ...state,
+    entities: [
+        ...state.entities,
+        { ...source, hidden: true }
+    ]
+});
+
 export default {
     [ACTION_TYPES.LOAD_ENTITIES_PENDING]: entitiesPending,
     [ACTION_TYPES.LOAD_ENTITIES_FULFILLED]: entitiesLoaded,
@@ -187,10 +187,10 @@ export default {
     [SORT_ENTITIES]: sortEntities,
     [PAGE_AND_SIZE]: setPageAndSize,
     [FILTER_PROVIDERS]: filterProviders,
-    [SET_FILTER_COLUMN]: setFilterColumn,
-    [SOURCE_FOR_EDIT_LOADED]: sourceForEditLoaded,
-    [SOURCE_EDIT_REQUEST]: sourceEditRequest,
     [ADD_APP_TO_SOURCE]: addAppToSource,
     [UNDO_ADD_SOURCE]: undoAddSource,
-    [CLEAR_ADD_SOURCE]: clearAddSource
+    [CLEAR_ADD_SOURCE]: clearAddSource,
+    [ADD_APP_TO_SOURCE]: addAppToSource,
+    [SET_COUNT]: setCount,
+    [ADD_HIDDEN_SOURCE]: addHiddenSource
 };
