@@ -32,7 +32,7 @@ export const doUpdateSource = (source, formData, errorTitles) => {
         }));
     }
 
-    if (formData.endpoint) {
+    if (formData.endpoint || formData.url) {
         const { scheme, host, port, path } = urlOrHost(formData);
         const endPointPort = parseInt(port, 10);
 
