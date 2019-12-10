@@ -115,6 +115,23 @@ describe('doUpdateSource', () => {
         expect(authenticationSpy).not.toHaveBeenCalled();
     });
 
+    it('sends endpoint values only with URL', () => {
+        FORM_DATA = {
+            url: URL
+        };
+
+        const EXPECTED_ENDPOINT_VALUES_ONLY_WITH_URL = {
+            ...EXPECTED_URL_OBJECT,
+            port: Number(PORT)
+        };
+
+        doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
+
+        expect(sourceSpy).not.toHaveBeenCalled();
+        expect(endpointSpy).toHaveBeenCalledWith(ENDPOINT_ID, EXPECTED_ENDPOINT_VALUES_ONLY_WITH_URL);
+        expect(authenticationSpy).not.toHaveBeenCalled();
+    });
+
     it('sends authentication values', () => {
         const AUTH_ID = '1234234243';
         const AUTHENTICATION_VALUES = { password: '123456' };
