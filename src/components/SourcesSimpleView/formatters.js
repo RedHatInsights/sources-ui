@@ -171,7 +171,8 @@ export const getStatusTooltipText = (status, source, appTypes) => ({
         <FormattedMessage
             id="sources.appStatusPartiallyOK"
             defaultMessage="We found these errors:"
-        />&nbsp;
+        />
+        <br />
         {formatAvailibilityErrors(source, appTypes)}
     </React.Fragment>,
     available: <FormattedMessage
@@ -183,6 +184,7 @@ export const getStatusTooltipText = (status, source, appTypes) => ({
             id="sources.appStatusPartiallyOK"
             defaultMessage="We found these errors:"
         />
+        <br />
         {formatAvailibilityErrors(source, appTypes)}
     </React.Fragment>
 }[status] || <FormattedMessage
@@ -190,21 +192,32 @@ export const getStatusTooltipText = (status, source, appTypes) => ({
     defaultMessage="Status has not been verified."
 />);
 
-export const availabilityFormatter = (status, source, { appTypes }) => source.applications && source.applications.length > 0 ?
-    (<TextContent>
+export const availabilityFormatter = (status, source, { appTypes }) => {
+    const noApps = !source.applications || source.applications.length === 0;
+
+    const statusContent = noApps ? '--' : (<React.Fragment>
+        {getStatusIcon(status)}&nbsp;
+        {getStatusText(status)}
+    </React.Fragment>);
+
+    const tooltipText = noApps ? (<FormattedMessage
+        id="sources.noAppConnected"
+        defaultMessage="No application connected."
+    />) : getStatusTooltipText(status, source, appTypes);
+
+    return (<TextContent className="clickable">
         <Text key={status} component={ TextVariants.p }>
             <Popover
-                aria-label="Headless Popover"
-                bodyContent={<h1>{getStatusTooltipText(status, source, appTypes)}</h1>}
+                aria-label={`${status} popover`}
+                bodyContent={<h1>{tooltipText}</h1>}
             >
                 <span>
-                    {getStatusIcon(status)}&nbsp;
-                    {getStatusText(status)}
+                    {statusContent}
                 </span>
             </Popover>
         </Text>
-    </TextContent>) :
-    '--';
+    </TextContent>);
+};
 
 export const formatters = (name) => ({
     nameFormatter,
