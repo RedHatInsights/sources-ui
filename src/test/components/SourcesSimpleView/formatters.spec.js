@@ -28,7 +28,7 @@ import {
     COSTMANAGEMENT_APP,
     CATALOG_APP
 } from '../../applicationTypesData';
-import { Badge, Tooltip } from '@patternfly/react-core';
+import { Badge, Tooltip, Popover } from '@patternfly/react-core';
 import { DateFormat } from '@redhat-cloud-services/frontend-components';
 import { IntlProvider } from 'react-intl';
 import { CheckCircleIcon, TimesCircleIcon, QuestionCircleIcon, ExclamationTriangleIcon } from '@patternfly/react-icons';
@@ -406,10 +406,11 @@ describe('formatters', () => {
                 expect(wrapper.text().includes('Unknown')).toEqual(true);
             });
 
-            it('returns - when no apps attached', () => {
+            it('returns -- when no apps attached', () => {
                 const wrapper = mount(wrapperWithIntl(availabilityFormatter('some nonsense', SOURCE, { appTypes: APPTYPES })));
 
                 expect(wrapper.text().includes('--')).toEqual(true);
+                expect(wrapper.find(Popover).text().includes('No application')).toEqual(true);
             });
         });
 
