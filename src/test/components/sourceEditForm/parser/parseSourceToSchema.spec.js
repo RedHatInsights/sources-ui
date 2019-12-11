@@ -16,7 +16,8 @@ describe('parseSourceToSchema', () => {
         SOURCE = {
             source: { id: 'adsad' },
             authentications: [{ type: 'arn' }],
-            applications: []
+            applications: [],
+            endpoints: [{}]
         };
         EDITING = {};
         SET_EDIT = jest.fn();
@@ -72,13 +73,85 @@ describe('parseSourceToSchema', () => {
             EDITING,
             SET_EDIT,
             APP_TYPES,
-            SOURCE.authentications,
+            SOURCE,
         );
         expect(end.endpointFields).toHaveBeenCalledWith(
             SOURCE_TYPE,
             EDITING,
             SET_EDIT
         );
+    });
+
+    it('calls all subsections without endpoint', () => {
+        const SOURCE_WITH_NO_ENDPOINT = {
+            ...SOURCE,
+            endpoints: undefined
+        };
+
+        parseSourceToSchema(
+            SOURCE_WITH_NO_ENDPOINT,
+            EDITING,
+            SET_EDIT,
+            SOURCE_TYPE,
+            APP_TYPES
+        );
+
+        expect(gen.genericInfo).toHaveBeenCalledWith(
+            EDITING,
+            SET_EDIT,
+            SOURCE.source.id
+        );
+        expect(auth.authenticationFields).toHaveBeenCalledWith(
+            SOURCE.authentications,
+            SOURCE_TYPE,
+            EDITING,
+            SET_EDIT
+        );
+        expect(app.applicationsFields).toHaveBeenCalledWith(
+            SOURCE.applications,
+            SOURCE_TYPE,
+            EDITING,
+            SET_EDIT,
+            APP_TYPES,
+            SOURCE_WITH_NO_ENDPOINT,
+        );
+        expect(end.endpointFields).not.toHaveBeenCalled();
+    });
+
+    it('calls all subsections without endpoint of empty array', () => {
+        const SOURCE_WITH_NO_ENDPOINT = {
+            ...SOURCE,
+            endpoints: []
+        };
+
+        parseSourceToSchema(
+            SOURCE_WITH_NO_ENDPOINT,
+            EDITING,
+            SET_EDIT,
+            SOURCE_TYPE,
+            APP_TYPES
+        );
+
+        expect(gen.genericInfo).toHaveBeenCalledWith(
+            EDITING,
+            SET_EDIT,
+            SOURCE.source.id
+        );
+        expect(auth.authenticationFields).toHaveBeenCalledWith(
+            SOURCE.authentications,
+            SOURCE_TYPE,
+            EDITING,
+            SET_EDIT
+        );
+        expect(app.applicationsFields).toHaveBeenCalledWith(
+            SOURCE.applications,
+            SOURCE_TYPE,
+            EDITING,
+            SET_EDIT,
+            APP_TYPES,
+            SOURCE_WITH_NO_ENDPOINT,
+        );
+        expect(end.endpointFields).not.toHaveBeenCalled();
     });
 
     it('returns filtered fields', () => {
