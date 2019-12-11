@@ -1,7 +1,14 @@
-import { componentTypes } from '@data-driven-forms/react-form-renderer';
-import { getBillingSourceFields, getEnhancedBillingSourceField, costManagementFields, applicationsFields } from '../../../../components/SourceEditForm/parser/application';
+import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
+import {
+    getBillingSourceFields,
+    getEnhancedBillingSourceField,
+    costManagementFields,
+    applicationsFields,
+    appendClusterIdentifier
+} from '../../../../components/SourceEditForm/parser/application';
 import { applicationTypesData, COSTMANAGEMENT_APP } from '../../../applicationTypesData';
 import { modifyFields } from '../../../../components/SourceEditForm/parser/helpers';
+import { EDIT_FIELD_NAME } from '../../../../components/editField/EditField';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources', () => ({
     hardcodedSchemas: {
@@ -36,7 +43,7 @@ describe('application edit form parser', () => {
         let EDITING;
         let SET_EDIT;
         let SOURCE_TYPE;
-        let AUTHENTICATION_TYPES;
+        let SOURCE;
 
         beforeEach(() => {
             APPLICATIONS = [{ application_type_id: COSTMANAGEMENT_APP.id }];
@@ -52,7 +59,7 @@ describe('application edit form parser', () => {
                     }
                 }
             };
-            AUTHENTICATION_TYPES = ['arn'];
+            SOURCE = { authentications: [{ authtype: 'arn' }] };
         });
 
         afterEach(() => {
@@ -70,7 +77,7 @@ describe('application edit form parser', () => {
                 SET_EDIT,
                 SOURCE_TYPE,
                 APPLICATION_TYPES_WITHOUT_CM,
-                AUTHENTICATION_TYPES,
+                SOURCE,
             );
 
             expect(result).toEqual(EXPECTED_RESULT);
@@ -87,7 +94,7 @@ describe('application edit form parser', () => {
                 SET_EDIT,
                 SOURCE_TYPE,
                 APP_TYPES,
-                AUTHENTICATION_TYPES,
+                SOURCE,
             );
 
             expect(result).toEqual(EXPECTED_RESULT);
@@ -104,7 +111,7 @@ describe('application edit form parser', () => {
                 SET_EDIT,
                 SOURCE_TYPE,
                 APP_TYPES,
-                AUTHENTICATION_TYPES,
+                SOURCE,
             );
 
             expect(result).toEqual(EXPECTED_RESULT);
@@ -124,7 +131,7 @@ describe('application edit form parser', () => {
                 EDITING,
                 SET_EDIT,
                 APP_TYPES,
-                AUTHENTICATION_TYPES,
+                SOURCE,
             );
 
             expect(result).toEqual(EXPECTED_RESULT);
@@ -148,22 +155,20 @@ describe('application edit form parser', () => {
             });
 
             it('returns CM fields', () => {
-                const AUTHENTICATIONS = [{ authtype: 'arn' }];
-
                 const result = applicationsFields(
                     APPLICATIONS,
                     SOURCE_TYPE,
                     EDITING,
                     SET_EDIT,
                     APP_TYPES,
-                    AUTHENTICATIONS,
+                    SOURCE,
                 );
 
                 expect(result).toEqual(EXPECTED_RESULT);
             });
 
             it('returns CM fields with no authentications', () => {
-                const AUTHENTICATIONS = undefined;
+                const SOURCE_WITH_NO_AUTHS = {};
 
                 const result = applicationsFields(
                     APPLICATIONS,
@@ -171,7 +176,7 @@ describe('application edit form parser', () => {
                     EDITING,
                     SET_EDIT,
                     APP_TYPES,
-                    AUTHENTICATIONS,
+                    SOURCE_WITH_NO_AUTHS,
                 );
 
                 expect(result).toEqual(EXPECTED_RESULT);
@@ -238,6 +243,42 @@ describe('application edit form parser', () => {
                 const EMPTY_OBJECT = {};
 
                 expect(getEnhancedBillingSourceField('aws', 'password', [])).toEqual(EMPTY_OBJECT);
+            });
+        });
+
+        describe('appendClusterIdentifier', () => {
+            const EDITING = {};
+            const SET_EDIT = jest.fn();
+            const SOURCE_TYPE = { name: 'openshift' };
+
+            it('returns cluster identifier field when type is openshift', () => {
+                expect(appendClusterIdentifier(EDITING, SET_EDIT, SOURCE_TYPE)).toEqual([{
+                    name: 'source.source_ref',
+                    label: expect.any(Object),
+                    isRequired: true,
+                    setEdit: SET_EDIT,
+                    validate: [{ type: validatorTypes.REQUIRED }],
+                    component: EDIT_FIELD_NAME
+                }]);
+            });
+
+            it('dont return cluster identifier field when type is not openshift', () => {
+                const AWS_SOURCE_TYPE = { name: 'aws' };
+
+                expect(appendClusterIdentifier(EDITING, SET_EDIT, AWS_SOURCE_TYPE)).toEqual([]);
+            });
+
+            it('returns cluster identifier field when type is openshift and its being edited', () => {
+                const EDITING_REF = { 'source.source_ref': true };
+
+                expect(appendClusterIdentifier(EDITING_REF, SET_EDIT, SOURCE_TYPE)).toEqual([{
+                    name: 'source.source_ref',
+                    label: expect.any(Object),
+                    isRequired: true,
+                    setEdit: undefined,
+                    validate: [{ type: validatorTypes.REQUIRED }],
+                    component: componentTypes.TEXT_FIELD
+                }]);
             });
         });
     });
