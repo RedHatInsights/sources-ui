@@ -39,7 +39,9 @@ describe('doLoadSourceForEdit', () => {
             bucket: 'nugget'
         },
         authentication: {
-            subscription: '23234232'
+            credentials: {
+                subscription: '23234232'
+            }
         }
     };
 
@@ -138,7 +140,7 @@ describe('doLoadSourceForEdit', () => {
             source: SOURCE_DATA,
             applications: [],
             billing_source: CM_SOURCE_DATA.billing_source,
-            credentials: CM_SOURCE_DATA.authentication
+            credentials: CM_SOURCE_DATA.authentication.credentials
         });
     });
 
@@ -163,7 +165,7 @@ describe('doLoadSourceForEdit', () => {
             source: SOURCE_DATA,
             applications: [],
             billing_source: CM_SOURCE_DATA.billing_source,
-            credentials: CM_SOURCE_DATA.authentication,
+            credentials: CM_SOURCE_DATA.authentication.credentials,
             endpoints: ENDPOINT_DATA.data,
             authentications: AUTHENTICATION_DATA.data
         });

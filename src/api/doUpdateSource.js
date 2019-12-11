@@ -65,7 +65,9 @@ export const doUpdateSource = (source, formData, errorTitles) => {
 
         if (formData.credentials) {
             cmDataOut = {
-                credentials: formData.credentials
+                authentication: {
+                    credentials: formData.credentials
+                }
             };
         }
 

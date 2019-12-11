@@ -10,12 +10,16 @@ export const APP_NAMES = {
     COST_MANAGAMENT: '/insights/platform/cost-management'
 };
 
-export const getBillingSourceFields = (authentication) =>
+export const cmFieldsPrefixes = ['billing_source', 'credentials'];
+
+export const isCMField = ({ name }) => cmFieldsPrefixes.some((prefix) => name.startsWith(prefix));
+
+export const getCMFields = (authentication) =>
     Object.keys(authentication)
-    .map((key) => authentication[key].fields.filter(({ name }) => name.startsWith('billing_source')))
+    .map((key) => authentication[key].fields.filter(isCMField))
     .flatMap((x) => x);
 
-export const getEnhancedBillingSourceField = (sourceType, name, authenticationsTypes) => {
+export const getEnhancedCMField = (sourceType, name, authenticationsTypes) => {
     let field = undefined;
 
     authenticationsTypes.forEach((type) => {
@@ -66,13 +70,13 @@ export const costManagementFields = (
         return undefined;
     }
 
-    const billingSourceFields = getBillingSourceFields(sourceType.schema.authentication);
+    const billingSourceFields = getCMFields(sourceType.schema.authentication);
 
     const authenticationsTypes = source.authentications ? source.authentications.map(({ authtype }) => authtype) : [];
 
     const enhandcedFields = billingSourceFields.map((field) => ({
         ...field,
-        ...getEnhancedBillingSourceField(sourceType.name, field.name, authenticationsTypes)
+        ...getEnhancedCMField(sourceType.name, field.name, authenticationsTypes)
     }));
 
     return ({
