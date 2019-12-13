@@ -134,6 +134,15 @@ describe('Source page helpers', () => {
                 { label: 'Last type', value: '12' }
             ]);
         });
+
+        it('selection is sorted alphabetically', () => {
+            const sourceTypes = [{ id: '12', product_name: 'Last type' }, { id: '23', product_name: 'First type' }];
+
+            expect(prepareSourceTypeSelection(sourceTypes)).toEqual([
+                { label: 'First type', value: '23' },
+                { label: 'Last type', value: '12' }
+            ]);
+        });
     });
 
     describe('removeChips', () => {
