@@ -21,7 +21,7 @@ export const getAdditionalAuthSteps = (sourceType, authtype) =>
     get(hardcodedSchemas, [sourceType, 'authentication', authtype, 'generic', 'includeStepKeyFields'], []);
 
 export const modifyAuthSchemas = (fields, id, editing, setEdit) => fields.map((field) => {
-    const editedName = createAuthFieldName(field.name, id);
+    const editedName = field.name.startsWith('authentication') ? createAuthFieldName(field.name, id) : field.name;
     const isEditing = editing[editedName];
 
     const finalField = ({
