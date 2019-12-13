@@ -43,7 +43,8 @@ export const afterSuccess = (dispatch) => {
 };
 
 export const prepareSourceTypeSelection = (sourceTypes) =>
-    sourceTypes.map(({ id, product_name }) => ({ label: product_name, value: id }));
+    sourceTypes.map(({ id, product_name }) => ({ label: product_name, value: id }))
+    .sort((a, b) => a.label.localeCompare(b.label));
 
 export const setFilter = (column, value, dispatch) => dispatch(filterProviders({
     [column]: value
