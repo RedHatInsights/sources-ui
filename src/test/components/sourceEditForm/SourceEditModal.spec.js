@@ -14,7 +14,7 @@ import { applicationTypesData } from '../../applicationTypesData';
 import { sourceTypesData, OPENSHIFT_ID } from '../../sourceTypesData';
 import { sourcesDataGraphQl } from '../../sourcesData';
 import { Modal, Button, FormGroup, TextInput } from '@patternfly/react-core';
-import * as api from '../../../api/entities';
+import * as editApi from '../../../api/doLoadSourceForEdit';
 import EditFieldProvider from '../../../components/editField/EditField';
 import * as submit from '../../../components/SourceEditForm/onSubmit';
 import * as redirect from '../../../components/SourceEditForm/importedRedirect';
@@ -54,7 +54,7 @@ describe('SourceEditModal', () => {
             }
         });
 
-        api.doLoadSourceForEdit = jest.fn().mockImplementation(() => Promise.resolve({
+        editApi.doLoadSourceForEdit = jest.fn().mockImplementation(() => Promise.resolve({
             source: {
                 name: 'Name',
                 source_type_id: OPENSHIFT_ID
@@ -88,7 +88,7 @@ describe('SourceEditModal', () => {
 
         redirect.redirectWhenImported = jest.fn();
 
-        api.doLoadSourceForEdit = jest.fn().mockImplementation(() => Promise.resolve({
+        editApi.doLoadSourceForEdit = jest.fn().mockImplementation(() => Promise.resolve({
             source: {
                 name: SOURCE_NAME,
                 source_type_id: OPENSHIFT_ID,

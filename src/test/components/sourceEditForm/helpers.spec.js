@@ -127,5 +127,21 @@ describe('edit form helpers', () => {
 
             expect(prepareInitialValues(SOURCE_WITH_UNDEF_ENDPOINTS, SOURCE_TYPE_NAME)).toEqual(EXPECTED_INITIAL_VALUES_WITH_UNDEF_ENDPOINTS);
         });
+
+        it('prepares initial values with cost management values', () => {
+            const SOURCE_WITH_UNDEF_ENDPOINTS = {
+                ...SOURCE,
+                billing_source: { bucket: 'bucket' },
+                credentials: { subscription_id: '122' }
+            };
+
+            const EXPECTED_INITIAL_VALUES_WITH_UNDEF_ENDPOINTS = {
+                ...EXPECTED_INITIAL_VALUES,
+                billing_source: { bucket: 'bucket' },
+                credentials: { subscription_id: '122' }
+            };
+
+            expect(prepareInitialValues(SOURCE_WITH_UNDEF_ENDPOINTS, SOURCE_TYPE_NAME)).toEqual(EXPECTED_INITIAL_VALUES_WITH_UNDEF_ENDPOINTS);
+        });
     });
 });

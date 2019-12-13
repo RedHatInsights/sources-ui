@@ -66,7 +66,8 @@ describe('editSourceModal - on submit', () => {
             {
                 authentication: EXPECTED_TRANSLATED_MESSAGE,
                 source: EXPECTED_TRANSLATED_MESSAGE,
-                endpoint: EXPECTED_TRANSLATED_MESSAGE
+                endpoint: EXPECTED_TRANSLATED_MESSAGE,
+                costManagement: EXPECTED_TRANSLATED_MESSAGE
             }
         );
         expect(PUSH).toHaveBeenCalledWith(paths.sources);
