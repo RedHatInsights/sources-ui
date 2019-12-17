@@ -1,13 +1,5 @@
 export const sourcesViewDefinition = {
-    displayName: 'Sources',
-    url: '/sources/',
     columns: (intl) => ([{
-        title: null,
-        value: 'id'
-    }, {
-        title: null,
-        value: 'uid'
-    }, {
         title: intl.formatMessage({
             id: 'sources.name',
             defaultMessage: 'Name'
@@ -43,9 +35,6 @@ export const sourcesViewDefinition = {
         formatter: 'dateFormatter',
         sortable: true
     }, {
-        title: null,
-        value: 'tenant_id'
-    }, {
         hidden: true,
         value: 'imported',
         formatter: 'importedFormatter'
@@ -60,3 +49,8 @@ export const sourcesViewDefinition = {
         sortable: true
     }])
 };
+
+const KEBAB_COLUMN = 1;
+const COUNT_OF_COLUMNS = sourcesViewDefinition.columns({ formatMessage: () => '' }).length;
+
+export const COLUMN_COUNT = COUNT_OF_COLUMNS + KEBAB_COLUMN;
