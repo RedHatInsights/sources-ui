@@ -215,6 +215,12 @@ describe('SourceEditModal', () => {
 
         expect(wrapper.find(EditFieldProvider)).toHaveLength(UNEDITED_FIELDS - 1);
 
+        await act(async() => {
+            wrapper.find('input').instance().value = 'new value';
+            wrapper.find('input').simulate('change');
+        });
+        wrapper.update();
+
         const resetButton = wrapper.find(Button).at(RESET_POS);
 
         await act(async() => {

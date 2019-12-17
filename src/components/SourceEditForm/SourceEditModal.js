@@ -126,6 +126,7 @@ const SourceEditModal = () => {
                     FormWrapper: HorizontalFormWrapper
                 }}
                 canReset
+                disableSubmit={['submitting']}
                 onReset={() => setState({ editing: {} })}
                 initialValues={initialValues}
                 buttonsLabels={{ submitLabel: intl.formatMessage({

@@ -18,7 +18,8 @@ const SourcesFormRenderer = props => (
             'add-application-summary': AddApplicationSummary,
             'edit-field': EditField
         }}
-        {...props} />
+        {...props}
+    />
 );
 
 export default SourcesFormRenderer;
