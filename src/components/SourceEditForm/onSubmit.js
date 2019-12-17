@@ -34,6 +34,4 @@ export const onSubmit = (values, editing, dispatch, source, intl, push) => dispa
 .then(() => {
     push(paths.sources);
     dispatch(loadEntities());
-}).catch(_error => {
-    push(paths.sources);
 });

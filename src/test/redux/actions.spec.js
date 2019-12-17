@@ -121,14 +121,18 @@ describe('redux actions', () => {
             const ERROR = { detail: 'blabla' };
             updateSourceApi.doUpdateSource = jest.fn().mockImplementation(() => Promise.reject(ERROR));
 
-            const result = await updateSource(SOURCE, FORM_DATA, TITLE, DESCRIPTION, ERROR_TTITLES)(dispatch);
-
-            expect(result).toEqual(
-                expect.objectContaining({
-                    type: 'FOOBAR_REJECTED',
-                    payload: ERROR
-                })
-            );
+            expect.assertions(2);
+            try {
+                await updateSource(SOURCE, FORM_DATA, TITLE, DESCRIPTION, ERROR_TTITLES)(dispatch);
+            } catch (error) {
+                expect(dispatch).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        type: 'FOOBAR_REJECTED',
+                        payload: ERROR
+                    })
+                );
+                expect(error).toEqual(ERROR);
+            }
         });
     });
 

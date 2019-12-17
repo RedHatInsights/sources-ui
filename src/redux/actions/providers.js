@@ -94,10 +94,14 @@ export const updateSource = (source, formData, title, description, errorTitles) 
             description,
             dismissable: true
         }
-    })).catch(error => dispatch({
-        type: 'FOOBAR_REJECTED',
-        payload: error
-    }));
+    })).catch(error => {
+        dispatch({
+            type: 'FOOBAR_REJECTED',
+            payload: error
+        });
+
+        throw error;
+    });
 
 export const addMessage = (title, variant, description, customId) => (dispatch) => dispatch({
     type: ADD_NOTIFICATION,

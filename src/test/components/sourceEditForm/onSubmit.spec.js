@@ -78,16 +78,20 @@ describe('editSourceModal - on submit', () => {
         actions.updateSource = jest.fn().mockImplementation(() => Promise.reject('FAILS'));
         actions.loadEntities = jest.fn();
 
-        await onSubmit(
-            VALUES,
-            EDITING,
-            DISPATCH,
-            SOURCE,
-            INTL,
-            PUSH
-        );
+        expect.assertions(2);
 
-        expect(PUSH).toHaveBeenCalledWith(paths.sources);
-        expect(actions.loadEntities).not.toHaveBeenCalled();
+        try {
+            await onSubmit(
+                VALUES,
+                EDITING,
+                DISPATCH,
+                SOURCE,
+                INTL,
+                PUSH
+            );
+        } catch {
+            expect(PUSH).not.toHaveBeenCalled();
+            expect(actions.loadEntities).not.toHaveBeenCalled();
+        }
     });
 });
