@@ -16,7 +16,6 @@ import { sourcesDataGraphQl, SOURCE_ALL_APS_ID, SOURCE_NO_APS_ID } from '../../s
 import { applicationTypesData } from '../../applicationTypesData';
 import AddApplicationDescription from '../../../components/AddApplication/AddApplicationDescription';
 import Description from '../../../components/Description';
-import AddApplicationSummary from '../../../components/AddApplication/AddApplicationSummary';
 import FinishedStep from '../../../components/steps/FinishedStep';
 import ErroredStep from '../../../components/steps/ErroredStep';
 import LoadingStep from '../../../components/steps/LoadingStep';
@@ -127,7 +126,6 @@ describe('AddApplication', () => {
         wrapper.update();
 
         expect(wrapper.find(Button).at(1).text()).toEqual('Finish');
-        expect(wrapper.find(AddApplicationSummary).length).toEqual(1);
     });
 
     it('calls on submit function', (done) => {

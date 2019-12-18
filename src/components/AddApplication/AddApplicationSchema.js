@@ -1,5 +1,4 @@
 import React from 'react';
-import { useSelector, shallowEqual } from 'react-redux';
 import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
 import {
     TextContent,
@@ -7,57 +6,10 @@ import {
     TextVariants
 } from '@patternfly/react-core';
 import { FormattedMessage } from 'react-intl';
-import { useParams } from 'react-router-dom';
-import { useSource } from '../../hooks/useSource';
 import { schemaBuilder } from '@redhat-cloud-services/frontend-components-sources';
 
 import AddApplicationDescription from './AddApplicationDescription';
-
-export const checkAuthTypeMemo = () => {
-    let previousAuthType;
-
-    return (newAuthType) => {
-        if (previousAuthType === newAuthType) {
-            return false;
-        }
-
-        previousAuthType = newAuthType;
-        return true;
-    };
-};
-
-const checkAuthType = checkAuthTypeMemo();
-
-export const AuthTypeSetter = ({ formOptions, authenticationValues }) => {
-    const { id } = useParams();
-    const { appTypes, sourceTypes } = useSelector(({ providers }) => providers, shallowEqual);
-
-    const source = useSource(id);
-    const sourceType = sourceTypes.find(({ id }) => id === source.source_type_id);
-
-    const application = appTypes.find(({ id }) => id === formOptions.getState().values.application);
-    const supported_auth_type = application ? application.supported_authentication_types[sourceType.name][0] : '';
-
-    if (checkAuthType(supported_auth_type)) {
-        formOptions.change('supported_auth_type', supported_auth_type);
-
-        const hasAuthenticationAlready = authenticationValues.find(({ authtype }) => authtype === supported_auth_type);
-
-        if (hasAuthenticationAlready) {
-            formOptions.change('authentication', hasAuthenticationAlready);
-        } else {
-            formOptions.change('authentication', undefined);
-        }
-    }
-
-    return (<React.Fragment>
-        <pre>
-            {JSON.stringify(formOptions.getState().values, null, 2)}
-            <br />
-            {JSON.stringify(authenticationValues, null, 2)}
-        </pre>
-    </React.Fragment>);
-};
+import { AuthTypeSetter } from './AuthTypeSetter';
 
 export const NoAvailableApplicationDescription = () => (<TextContent>
     <Text component={ TextVariants.p }>
@@ -114,7 +66,8 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
                                 sourceType.name,
                                 auth.type,
                                 hasEndpointStep,
-                                auth.fields, appType.name
+                                auth.fields,
+                                appType.name
                             )
                         );
                     }

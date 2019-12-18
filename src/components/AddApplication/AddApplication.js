@@ -4,31 +4,33 @@ import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Wizard, Text, TextVariants, TextContent, Button } from '@patternfly/react-core';
 
-import { addAppToSource } from '../../redux/actions/providers';
+import { loadEntities } from '../../redux/actions/providers';
 import SourcesFormRenderer from '../../Utilities/SourcesFormRenderer';
 import createSchema from './AddApplicationSchema';
 import LoadingStep from '../steps/LoadingStep';
 import ErroredStep from '../steps/ErroredStep';
 import FinishedStep from '../steps/FinishedStep';
 
-import { doCreateApplication, getSourcesApi } from '../../api/entities';
+import { getSourcesApi } from '../../api/entities';
 
 import RedirectNoId from '../RedirectNoId/RedirectNoId';
 import { useSource } from '../../hooks/useSource';
 import { endpointToUrl } from '../SourcesSimpleView/formatters';
 import { paths } from '../../Routes';
 
-export const onSubmit = ({ application }, { setState, dispatch, source }) => {
+import { doAttachApp } from '../../api/doAttachApp';
+
+export const onSubmit = (values, formApi, authenticationInitialValues, dispatch, setState) => {
     setState({ state: 'loading' });
-    return doCreateApplication(source.id, application).then((app) => {
+    return doAttachApp(values, formApi, authenticationInitialValues).then(() => {
         setState({ state: 'finished' });
-        dispatch(addAppToSource(source.id, app));
+        dispatch(loadEntities());
     })
-    .catch(({ errors: [{ detail }] }) => {
+    .catch(error => {
         setState({
             state: 'errored',
-            error: detail,
-            values: { application }
+            error,
+            values: formApi.getState().values
         });
     });
 };
@@ -67,11 +69,11 @@ const AddApplication = () => {
             .listEndpointAuthentications(source.endpoints[0].id)
             .then(({ data }) => setState({
                 authenticationsValues: data,
-                state: 'wizard',
+                state: state.state !== 'finished' ? 'wizard' : 'finished',
                 values: { source, endpoint: source.endpoints[0], url: endpointToUrl(source.endpoints[0]) }
             }));
         } else if (source) {
-            setState({ state: 'wizard', values: { source } });
+            setState({ state: state.state !== 'finished' ? 'wizard' : 'finished', values: { source } });
         }
     }, [source]);
 
@@ -133,7 +135,13 @@ const AddApplication = () => {
 
     const goToSources = () => history.push(paths.sources);
 
-    const onSubmitWrapper = (values) => onSubmit(values, { setState, dispatch, source });
+    const onSubmitWrapper = (values, formApi) => onSubmit(
+        values,
+        formApi,
+        state.authenticationsValues,
+        dispatch,
+        setState
+    );
 
     const onSubmitFinal = filteredAppTypes.length > 0 ? onSubmitWrapper : goToSources;
 
