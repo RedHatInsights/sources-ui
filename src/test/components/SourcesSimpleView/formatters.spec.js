@@ -28,7 +28,7 @@ import {
     COSTMANAGEMENT_APP,
     CATALOG_APP
 } from '../../applicationTypesData';
-import { Badge, Tooltip } from '@patternfly/react-core';
+import { Badge, Tooltip, Popover } from '@patternfly/react-core';
 import { DateFormat } from '@redhat-cloud-services/frontend-components';
 import { IntlProvider } from 'react-intl';
 import { CheckCircleIcon, TimesCircleIcon, QuestionCircleIcon, ExclamationTriangleIcon } from '@patternfly/react-icons';
@@ -298,6 +298,9 @@ describe('formatters', () => {
         });
 
         describe('getStatusTooltipText', () => {
+            const ERRORMESSAGE = 'some error';
+            const ERRORMESSAGE2 = 'different type of error';
+
             it('returns OK text', () => {
                 const wrapper = mount(wrapperWithIntl(getStatusTooltipText('available', SOURCE, APPTYPES)));
 
@@ -305,12 +308,11 @@ describe('formatters', () => {
             });
 
             it('returns WARNING text', () => {
-                const ERRORMESSAGE = 'some error';
-
                 const SOURCE_WITH_ERROR = {
                     applications: [{
                         application_type_id: COSTMANAGEMENT_APP.id,
-                        availability_status_error: ERRORMESSAGE
+                        availability_status_error: ERRORMESSAGE,
+                        availability_status: 'unavailable'
                     }]
                 };
 
@@ -321,14 +323,13 @@ describe('formatters', () => {
             });
 
             it('returns DANGER text', () => {
-                const ERRORMESSAGE = 'some error';
-                const ERRORMESSAGE2 = 'different type of error';
-
                 const SOURCE_WITH_ERRORS = {
                     applications: [{
                         application_type_id: COSTMANAGEMENT_APP.id,
-                        availability_status_error: ERRORMESSAGE
+                        availability_status_error: ERRORMESSAGE,
+                        availability_status: 'unavailable'
                     }, {
+                        availability_status: 'unavailable',
                         application_type_id: CATALOG_APP.id,
                         availability_status_error: ERRORMESSAGE2
                     }]
@@ -343,6 +344,28 @@ describe('formatters', () => {
                 expect(wrapper.text().includes(CATALOG_APP.display_name)).toEqual(true);
             });
 
+            it('returns DANGER text only for first', () => {
+                const SOURCE_WITH_ERRORS = {
+                    applications: [{
+                        application_type_id: COSTMANAGEMENT_APP.id,
+                        availability_status_error: ERRORMESSAGE,
+                        availability_status: 'unavailable'
+                    }, {
+                        availability_status: null,
+                        application_type_id: CATALOG_APP.id,
+                        availability_status_error: ERRORMESSAGE2
+                    }]
+                };
+
+                const wrapper = mount(wrapperWithIntl(getStatusTooltipText('unavailable', SOURCE_WITH_ERRORS, APPTYPES)));
+
+                expect(wrapper.text().includes(ERRORMESSAGE)).toEqual(true);
+                expect(wrapper.text().includes(COSTMANAGEMENT_APP.display_name)).toEqual(true);
+
+                expect(wrapper.text().includes(ERRORMESSAGE2)).toEqual(false);
+                expect(wrapper.text().includes(CATALOG_APP.display_name)).toEqual(false);
+            });
+
             it('returns unknown by default', () => {
                 const wrapper = mount(wrapperWithIntl(getStatusTooltipText('some nonsense', SOURCE, APPTYPES)));
 
@@ -352,7 +375,7 @@ describe('formatters', () => {
 
         describe('availabilityFormatter', () => {
             const SOURCE_WITH_APP = {
-                applications: [{}]
+                applications: [{ availability_status: 'unavailable' }]
             };
 
             it('returns OK text', () => {
@@ -383,10 +406,11 @@ describe('formatters', () => {
                 expect(wrapper.text().includes('Unknown')).toEqual(true);
             });
 
-            it('returns - when no apps attached', () => {
+            it('returns -- when no apps attached', () => {
                 const wrapper = mount(wrapperWithIntl(availabilityFormatter('some nonsense', SOURCE, { appTypes: APPTYPES })));
 
                 expect(wrapper.text().includes('--')).toEqual(true);
+                expect(wrapper.find(Popover).text().includes('No application')).toEqual(true);
             });
         });
 
@@ -396,7 +420,8 @@ describe('formatters', () => {
             const SOURCE_WITH_ERROR = {
                 applications: [{
                     application_type_id: COSTMANAGEMENT_APP.id,
-                    availability_status_error: ERRORMESSAGE
+                    availability_status_error: ERRORMESSAGE,
+                    availability_status: 'unavailable'
                 }]
             };
 
@@ -420,7 +445,8 @@ describe('formatters', () => {
                 const SOURCE_WITH_UNDEF_ERROR = {
                     applications: [{
                         application_type_id: COSTMANAGEMENT_APP.id,
-                        availability_status_error: null
+                        availability_status_error: null,
+                        availability_status: 'unavailable'
                     }]
                 };
 
@@ -434,6 +460,21 @@ describe('formatters', () => {
                 const wrapper = mount(wrapperWithIntl(formatAvailibilityErrors(SOURCE, APPTYPES)));
 
                 expect(wrapper.text().includes('Unknown source error.')).toEqual(true);
+            });
+
+            it('returns unknown error', () => {
+                const SOURCE_WITH_UNDEF_ERROR = {
+                    applications: [{
+                        application_type_id: COSTMANAGEMENT_APP.id,
+                        availability_status_error: null,
+                        availability_status: null
+                    }]
+                };
+
+                const wrapper = mount(wrapperWithIntl(formatAvailibilityErrors(SOURCE_WITH_UNDEF_ERROR, APPTYPES)));
+
+                expect(wrapper.text().includes('Unknown error')).toEqual(true);
+                expect(wrapper.text().includes(COSTMANAGEMENT_APP.display_name)).toEqual(false);
             });
         });
     });

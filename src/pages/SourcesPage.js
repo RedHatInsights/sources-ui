@@ -105,6 +105,10 @@ const SourcesPage = () => {
                             defaultMessage: 'Name'
                         }),
                         filterValues: {
+                            'aria-label': intl.formatMessage({
+                                id: 'sources.filterByName',
+                                defaultMessage: 'Filter by name'
+                            }),
                             onChange: (_event, value) => {
                                 setFilterValue(value);
                                 debouncedFiltering(() => setFilter('name', value, dispatch));

@@ -131,21 +131,30 @@ export const getStatusText = (status) => ({
 
 export const formatAvailibilityErrors = (source, appTypes) => {
     if (source.applications && source.applications.length > 0) {
+        if (!source.applications.some(({ availability_status }) => availability_status === 'unavailable')) {
+            return (<FormattedMessage
+                id="sources.unknownError"
+                defaultMessage="Unknown error"
+            />);
+        }
+
         return source.applications.map(
-            ({ application_type_id, availability_status_error }, index) => {
-                const application = appTypes.find(({ id }) => id === application_type_id);
-                const applicationName = application ? application.display_name : '';
+            ({ application_type_id, availability_status_error, availability_status }, index) => {
+                if (availability_status === 'unavailable') {
+                    const application = appTypes.find(({ id }) => id === application_type_id);
+                    const applicationName = application ? application.display_name : '';
 
-                if (availability_status_error) {
-                    return `${availability_status_error} \n ${applicationName ? `(${applicationName})` : ''}`;
+                    if (availability_status_error) {
+                        return `${availability_status_error} \n ${applicationName ? `(${applicationName})` : ''}`;
+                    }
+
+                    return (<FormattedMessage
+                        key={availability_status_error || index}
+                        id="sources.unknownAppError"
+                        defaultMessage="Unknown application error ({ appName }) "
+                        values={{ appName: applicationName }}
+                    />);
                 }
-
-                return (<FormattedMessage
-                    key={availability_status_error || index}
-                    id="sources.unknownAppError"
-                    defaultMessage="Unknown application error ({ appName }) "
-                    values={{ appName: applicationName }}
-                />);
             }
         );
     }
@@ -162,7 +171,8 @@ export const getStatusTooltipText = (status, source, appTypes) => ({
         <FormattedMessage
             id="sources.appStatusPartiallyOK"
             defaultMessage="We found these errors:"
-        />&nbsp;
+        />
+        <br />
         {formatAvailibilityErrors(source, appTypes)}
     </React.Fragment>,
     available: <FormattedMessage
@@ -174,6 +184,7 @@ export const getStatusTooltipText = (status, source, appTypes) => ({
             id="sources.appStatusPartiallyOK"
             defaultMessage="We found these errors:"
         />
+        <br />
         {formatAvailibilityErrors(source, appTypes)}
     </React.Fragment>
 }[status] || <FormattedMessage
@@ -181,21 +192,32 @@ export const getStatusTooltipText = (status, source, appTypes) => ({
     defaultMessage="Status has not been verified."
 />);
 
-export const availabilityFormatter = (status, source, { appTypes }) => source.applications && source.applications.length > 0 ?
-    (<TextContent>
+export const availabilityFormatter = (status, source, { appTypes }) => {
+    const noApps = !source.applications || source.applications.length === 0;
+
+    const statusContent = noApps ? '--' : (<React.Fragment>
+        {getStatusIcon(status)}&nbsp;
+        {getStatusText(status)}
+    </React.Fragment>);
+
+    const tooltipText = noApps ? (<FormattedMessage
+        id="sources.noAppConnected"
+        defaultMessage="No application connected."
+    />) : getStatusTooltipText(status, source, appTypes);
+
+    return (<TextContent className="clickable">
         <Text key={status} component={ TextVariants.p }>
             <Popover
-                aria-label="Headless Popover"
-                bodyContent={<h1>{getStatusTooltipText(status, source, appTypes)}</h1>}
+                aria-label={`${status} popover`}
+                bodyContent={<h1>{tooltipText}</h1>}
             >
                 <span>
-                    {getStatusIcon(status)}&nbsp;
-                    {getStatusText(status)}
+                    {statusContent}
                 </span>
             </Popover>
         </Text>
-    </TextContent>) :
-    '--';
+    </TextContent>);
+};
 
 export const formatters = (name) => ({
     nameFormatter,

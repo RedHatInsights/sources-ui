@@ -1,5 +1,6 @@
 import { defaultPort } from '../components/SourcesSimpleView/formatters';
 import { getSourcesApi } from './entities';
+import { patchCmValues } from './patchCmValues';
 
 export const parseUrl = url => {
     if (!url) {
@@ -32,7 +33,7 @@ export const doUpdateSource = (source, formData, errorTitles) => {
         }));
     }
 
-    if (formData.endpoint) {
+    if (formData.endpoint || formData.url) {
         const { scheme, host, port, path } = urlOrHost(formData);
         const endPointPort = parseInt(port, 10);
 
@@ -57,6 +58,29 @@ export const doUpdateSource = (source, formData, errorTitles) => {
                 throw { error: { title: errorTitles.authentication, detail: error.errors[0].detail } };
             }));
         });
+    }
+
+    if (formData.billing_source || formData.credentials) {
+        let cmDataOut = {};
+
+        if (formData.credentials) {
+            cmDataOut = {
+                authentication: {
+                    credentials: formData.credentials
+                }
+            };
+        }
+
+        if (formData.billing_source) {
+            cmDataOut = {
+                ...cmDataOut,
+                billing_source: formData.billing_source
+            };
+        }
+
+        promises.push(patchCmValues(source.source.id, cmDataOut).catch((error) => {
+            throw { error: { title: errorTitles.costManagement, detail: error.errors[0].detail } };
+        }));
     }
 
     return Promise.all(promises);

@@ -25,28 +25,6 @@ export const doRemoveSource = (sourceId) => getSourcesApi().deleteSource(sourceI
     throw { error: { detail: error.errors[0].detail } };
 });
 
-export const doLoadSourceForEdit = sourceId => Promise.all([
-    getSourcesApi().showSource(sourceId),
-    getSourcesApi().listSourceEndpoints(sourceId),
-    getSourcesApi().listSourceApplications(sourceId)
-]).then(([sourceData, endpoints, applications]) => {
-    const endpoint = endpoints && endpoints.data && endpoints.data[0];
-
-    if (!endpoint) { // bail out
-        return {
-            source: sourceData,
-            applications: applications.data
-        };
-    }
-
-    return getSourcesApi().listEndpointAuthentications(endpoint.id).then(authentications => ({
-        source: sourceData,
-        endpoints: endpoints.data,
-        authentications: authentications.data,
-        applications: applications.data
-    }));
-});
-
 export const pagination = (pageSize, pageNumber) =>
     `limit:${pageSize}, offset:${(pageNumber - 1) * pageSize}`;
 
@@ -84,7 +62,7 @@ export const doLoadEntities = ({ pageSize, pageNumber, sortBy, sortDirection, fi
             updated_at,
             imported,
             availability_status,
-            applications { application_type_id, id, availability_status_error },
+            applications { application_type_id, id, availability_status_error, availability_status },
             endpoints { id, scheme, host, port, path }
         }
     }`

@@ -8,7 +8,7 @@ import { layoutMapper } from '@data-driven-forms/pf4-component-mapper';
 
 import SourcesFormRenderer from '../../Utilities/SourcesFormRenderer';
 import { parseSourceToSchema } from './parser/parseSourceToSchema';
-import { doLoadSourceForEdit } from '../../api/entities';
+import { doLoadSourceForEdit } from '../../api/doLoadSourceForEdit';
 import HorizontalFormWrapper from './HorizontalFormWrapper';
 import Header from './Header';
 import { prepareInitialValues } from './helpers';
@@ -126,6 +126,7 @@ const SourceEditModal = () => {
                     FormWrapper: HorizontalFormWrapper
                 }}
                 canReset
+                disableSubmit={['submitting']}
                 onReset={() => setState({ editing: {} })}
                 initialValues={initialValues}
                 buttonsLabels={{ submitLabel: intl.formatMessage({
