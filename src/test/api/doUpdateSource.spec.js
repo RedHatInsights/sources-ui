@@ -211,7 +211,7 @@ describe('doUpdateSource', () => {
                 credentials: CREDENTIALS_VALUES
             };
 
-            const EXPECTED_CM_DATA = { ...FORM_DATA };
+            const EXPECTED_CM_DATA = { authentication: FORM_DATA };
 
             doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
 
@@ -227,7 +227,12 @@ describe('doUpdateSource', () => {
                 credentials: CREDENTIALS_VALUES
             };
 
-            const EXPECTED_CM_DATA = { ...FORM_DATA };
+            const EXPECTED_CM_DATA = {
+                billing_source: BILLING_SOURCE_VALUES,
+                authentication: {
+                    credentials: CREDENTIALS_VALUES
+                }
+            };
 
             doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
 

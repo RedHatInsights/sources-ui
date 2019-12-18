@@ -1,10 +1,11 @@
 import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
 import {
-    getBillingSourceFields,
-    getEnhancedBillingSourceField,
+    getCMFields,
+    getEnhancedCMField,
     costManagementFields,
     applicationsFields,
-    appendClusterIdentifier
+    appendClusterIdentifier,
+    isCMField
 } from '../../../../components/SourceEditForm/parser/application';
 import { applicationTypesData, COSTMANAGEMENT_APP } from '../../../applicationTypesData';
 import { modifyFields } from '../../../../components/SourceEditForm/parser/helpers';
@@ -185,7 +186,21 @@ describe('application edit form parser', () => {
     });
 
     describe('helpers', () => {
-        describe('getBillingSourceFields', () => {
+        describe('isCMField', () => {
+            it('billing_source.* is true', () => {
+                expect(isCMField({ name: 'billing_source.name' })).toEqual(true);
+            });
+
+            it('credentials.* is true', () => {
+                expect(isCMField({ name: 'credentials.name' })).toEqual(true);
+            });
+
+            it('nonsense.* is false', () => {
+                expect(isCMField({ name: 'nonsense.name' })).toEqual(false);
+            });
+        });
+
+        describe('getCMFields', () => {
             it('return only billing source fields', () => {
                 const BILLING_SOURCE_FIELD_1 = { name: 'billing_source.bucket' };
                 const BILLING_SOURCE_FIELD_2 = { name: 'billing_source.rodeo' };
@@ -210,39 +225,39 @@ describe('application edit form parser', () => {
                     BILLING_SOURCE_FIELD_2
                 ];
 
-                expect(getBillingSourceFields(AUTHENTICATION)).toEqual(BILLING_SOURCE_FIELDS);
+                expect(getCMFields(AUTHENTICATION)).toEqual(BILLING_SOURCE_FIELDS);
             });
         });
 
-        describe('getEnhancedBillingSourceField', () => {
+        describe('getEnhancedCMField', () => {
             it('returns field', () => {
                 const FIELD = { name: 'superpassword' };
 
-                expect(getEnhancedBillingSourceField('aws', 'password', ['arn'])).toEqual(FIELD);
+                expect(getEnhancedCMField('aws', 'password', ['arn'])).toEqual(FIELD);
             });
 
             it('returns field from multiple applications', () => {
                 const FIELD = { name: 'ultrapassword' };
 
-                expect(getEnhancedBillingSourceField('aws', 'username', ['arn'])).toEqual(FIELD);
+                expect(getEnhancedCMField('aws', 'username', ['arn'])).toEqual(FIELD);
             });
 
             it('returns field from multiple auth_types (find first)', () => {
                 const FIELD = { name: 'superpassword' };
 
-                expect(getEnhancedBillingSourceField('aws', 'password', ['arn', 'secret'])).toEqual(FIELD);
+                expect(getEnhancedCMField('aws', 'password', ['arn', 'secret'])).toEqual(FIELD);
             });
 
             it('returns field from multiple auth_types (not first)', () => {
                 const FIELD = { name: 'remember' };
 
-                expect(getEnhancedBillingSourceField('aws', 'remember', ['arn', 'secret'])).toEqual(FIELD);
+                expect(getEnhancedCMField('aws', 'remember', ['arn', 'secret'])).toEqual(FIELD);
             });
 
             it('returns empty object when no field', () => {
                 const EMPTY_OBJECT = {};
 
-                expect(getEnhancedBillingSourceField('aws', 'password', [])).toEqual(EMPTY_OBJECT);
+                expect(getEnhancedCMField('aws', 'password', [])).toEqual(EMPTY_OBJECT);
             });
         });
 

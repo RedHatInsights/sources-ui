@@ -18,7 +18,7 @@ export const doLoadSourceForEdit = sourceId => Promise.all([
         basicValues = {
             ...basicValues,
             billing_source: costManagement.billing_source,
-            credentials: costManagement.authentication
+            credentials: costManagement.authentication.credentials
         };
     }
 
