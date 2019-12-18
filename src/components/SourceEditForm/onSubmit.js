@@ -25,11 +25,13 @@ export const onSubmit = (values, editing, dispatch, source, intl, push) => dispa
         endpoint: intl.formatMessage({
             id: 'sources.sourceEditEndpointFailure',
             defaultMessage: 'Endpoint update failure.'
+        }),
+        costManagement: intl.formatMessage({
+            id: 'sources.sourceCostmanagementFailure',
+            defaultMessage: 'Cost Management update failure.'
         })
     }))
 .then(() => {
     push(paths.sources);
     dispatch(loadEntities());
-}).catch(_error => {
-    push(paths.sources);
 });

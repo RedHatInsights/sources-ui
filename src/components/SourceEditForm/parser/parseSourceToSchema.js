@@ -7,7 +7,7 @@ export const parseSourceToSchema = (source, editing, setEdit, sourceType, appTyp
     fields: [
         ...genericInfo(editing, setEdit, source.source.id),
         ...authenticationFields(source.authentications, sourceType, editing, setEdit),
-        ...applicationsFields(source.applications, sourceType, editing, setEdit, appTypes, source.authentications),
-        endpointFields(sourceType, editing, setEdit)
+        ...applicationsFields(source.applications, sourceType, editing, setEdit, appTypes, source),
+        source.endpoints && source.endpoints.length > 0 ? endpointFields(sourceType, editing, setEdit) : false
     ].filter(Boolean)
 });

@@ -1,5 +1,6 @@
 import * as api from '../../api/entities';
 import { doUpdateSource, parseUrl, urlOrHost } from '../../api/doUpdateSource';
+import * as cmApi from '../../api/patchCmValues';
 
 describe('doUpdateSource', () => {
     const HOST = 'mycluster.net';
@@ -29,7 +30,8 @@ describe('doUpdateSource', () => {
     const ERROR_TITLES = {
         authentication: 'authentication error',
         source: 'source error',
-        endpoint: 'endpoint error'
+        endpoint: 'endpoint error',
+        costManagement: 'cost management error'
     };
 
     let FORM_DATA;
@@ -37,23 +39,27 @@ describe('doUpdateSource', () => {
     let sourceSpy;
     let endpointSpy;
     let authenticationSpy;
+    let patchCostManagementSpy;
 
     beforeEach(() => {
         sourceSpy = jest.fn().mockImplementation(() => Promise.resolve('ok'));
         endpointSpy = jest.fn().mockImplementation(() => Promise.resolve('ok'));
         authenticationSpy = jest.fn().mockImplementation(() => Promise.resolve('ok'));
+        patchCostManagementSpy = jest.fn().mockImplementation(() => Promise.resolve('ok'));
 
         api.getSourcesApi = () => ({
             updateSource: sourceSpy,
             updateEndpoint: endpointSpy,
             updateAuthentication: authenticationSpy
         });
+        cmApi.patchCmValues = patchCostManagementSpy;
     });
 
     afterEach(() => {
         sourceSpy.mockReset();
         endpointSpy.mockReset();
         authenticationSpy.mockReset();
+        patchCostManagementSpy.mockReset();
     });
 
     it('sends nothing', () => {
@@ -64,6 +70,7 @@ describe('doUpdateSource', () => {
         expect(sourceSpy).not.toHaveBeenCalled();
         expect(endpointSpy).not.toHaveBeenCalled();
         expect(authenticationSpy).not.toHaveBeenCalled();
+        expect(patchCostManagementSpy).not.toHaveBeenCalled();
     });
 
     it('sends source values', () => {
@@ -78,6 +85,7 @@ describe('doUpdateSource', () => {
         expect(sourceSpy).toHaveBeenCalledWith(SOURCE_ID, SOURCE_VALUES);
         expect(endpointSpy).not.toHaveBeenCalled();
         expect(authenticationSpy).not.toHaveBeenCalled();
+        expect(patchCostManagementSpy).not.toHaveBeenCalled();
     });
 
     it('sends endpoint values', () => {
@@ -92,6 +100,7 @@ describe('doUpdateSource', () => {
         expect(sourceSpy).not.toHaveBeenCalled();
         expect(endpointSpy).toHaveBeenCalledWith(ENDPOINT_ID, ENDPOINT_VALUES);
         expect(authenticationSpy).not.toHaveBeenCalled();
+        expect(patchCostManagementSpy).not.toHaveBeenCalled();
     });
 
     it('sends endpoint values with URL', () => {
@@ -113,6 +122,25 @@ describe('doUpdateSource', () => {
         expect(sourceSpy).not.toHaveBeenCalled();
         expect(endpointSpy).toHaveBeenCalledWith(ENDPOINT_ID, EXPECTED_ENDPOINT_VALUES_WITH_URL);
         expect(authenticationSpy).not.toHaveBeenCalled();
+        expect(patchCostManagementSpy).not.toHaveBeenCalled();
+    });
+
+    it('sends endpoint values only with URL', () => {
+        FORM_DATA = {
+            url: URL
+        };
+
+        const EXPECTED_ENDPOINT_VALUES_ONLY_WITH_URL = {
+            ...EXPECTED_URL_OBJECT,
+            port: Number(PORT)
+        };
+
+        doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
+
+        expect(sourceSpy).not.toHaveBeenCalled();
+        expect(endpointSpy).toHaveBeenCalledWith(ENDPOINT_ID, EXPECTED_ENDPOINT_VALUES_ONLY_WITH_URL);
+        expect(authenticationSpy).not.toHaveBeenCalled();
+        expect(patchCostManagementSpy).not.toHaveBeenCalled();
     });
 
     it('sends authentication values', () => {
@@ -128,6 +156,7 @@ describe('doUpdateSource', () => {
         expect(sourceSpy).not.toHaveBeenCalled();
         expect(endpointSpy).not.toHaveBeenCalled();
         expect(authenticationSpy).toHaveBeenCalledWith(AUTH_ID, AUTHENTICATION_VALUES);
+        expect(patchCostManagementSpy).not.toHaveBeenCalled();
     });
 
     it('sends multiple authentication values', () => {
@@ -147,6 +176,7 @@ describe('doUpdateSource', () => {
 
         expect(sourceSpy).not.toHaveBeenCalled();
         expect(endpointSpy).not.toHaveBeenCalled();
+        expect(patchCostManagementSpy).not.toHaveBeenCalled();
 
         expect(authenticationSpy.mock.calls.length).toEqual(Object.keys(FORM_DATA.authentications).length);
 
@@ -155,6 +185,63 @@ describe('doUpdateSource', () => {
 
         expect(authenticationSpy.mock.calls[1][0]).toBe(AUTH_ID_2);
         expect(authenticationSpy.mock.calls[1][1]).toBe(AUTHENTICATION_VALUES_2);
+    });
+
+    describe('cost management endpoint', () => {
+        const BILLING_SOURCE_VALUES = { bucket: '123456' };
+        const CREDENTIALS_VALUES = { subscription_id: '123456' };
+
+        it('sends billing_source values', () => {
+            FORM_DATA = {
+                billing_source: BILLING_SOURCE_VALUES
+            };
+
+            const EXPECTED_CM_DATA = { ...FORM_DATA };
+
+            doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
+
+            expect(sourceSpy).not.toHaveBeenCalled();
+            expect(endpointSpy).not.toHaveBeenCalled();
+            expect(authenticationSpy).not.toHaveBeenCalled();
+            expect(patchCostManagementSpy).toHaveBeenCalledWith(SOURCE_ID, EXPECTED_CM_DATA);
+        });
+
+        it('sends credentials values', () => {
+            FORM_DATA = {
+                credentials: CREDENTIALS_VALUES
+            };
+
+            const EXPECTED_CM_DATA = { authentication: FORM_DATA };
+
+            doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
+
+            expect(sourceSpy).not.toHaveBeenCalled();
+            expect(endpointSpy).not.toHaveBeenCalled();
+            expect(authenticationSpy).not.toHaveBeenCalled();
+            expect(patchCostManagementSpy).toHaveBeenCalledWith(SOURCE_ID, EXPECTED_CM_DATA);
+        });
+
+        it('sends credentials + billing_source values', () => {
+            FORM_DATA = {
+                billing_source: BILLING_SOURCE_VALUES,
+                credentials: CREDENTIALS_VALUES
+            };
+
+            const EXPECTED_CM_DATA = {
+                billing_source: BILLING_SOURCE_VALUES,
+                authentication: {
+                    credentials: CREDENTIALS_VALUES
+                }
+            };
+
+            doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
+
+            expect(sourceSpy).not.toHaveBeenCalled();
+            expect(endpointSpy).not.toHaveBeenCalled();
+            expect(authenticationSpy).not.toHaveBeenCalled();
+            expect(patchCostManagementSpy).toHaveBeenCalledWith(SOURCE_ID, EXPECTED_CM_DATA);
+        });
+
     });
 
     describe('failures', () => {
@@ -181,6 +268,7 @@ describe('doUpdateSource', () => {
 
             try {
                 await doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
+                throw ('should not be here');
             } catch (error) {
                 expect(error).toEqual(EXPECTED_ERROR);
             }
@@ -202,6 +290,7 @@ describe('doUpdateSource', () => {
 
             try {
                 await doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
+                throw ('should not be here');
             } catch (error) {
                 expect(error).toEqual(EXPECTED_ERROR);
             }
@@ -224,6 +313,27 @@ describe('doUpdateSource', () => {
 
             try {
                 await doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
+                throw ('should not be here');
+            } catch (error) {
+                expect(error).toEqual(EXPECTED_ERROR);
+            }
+        });
+
+        it('handle CM failure', async () => {
+            cmApi.patchCmValues = jest.fn().mockImplementation(() => Promise.reject(ERROR_OBJECT));
+
+            const EXPECTED_ERROR = { error: {
+                detail: ERROR_TEXT,
+                title: ERROR_TITLES.costManagement
+            } };
+
+            FORM_DATA = {
+                billing_source: { bucket: 'aaa' }
+            };
+
+            try {
+                await doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
+                throw ('should not be here');
             } catch (error) {
                 expect(error).toEqual(EXPECTED_ERROR);
             }

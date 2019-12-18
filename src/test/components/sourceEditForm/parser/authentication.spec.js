@@ -105,7 +105,7 @@ describe('authentication edit source parser', () => {
         let FIELD_NAME;
 
         beforeEach(() => {
-            FIELD_NAME = 'sasas';
+            FIELD_NAME = 'authentication.sasas';
             FIELDS = [
                 { name: FIELD_NAME, component: componentTypes.TEXT_FIELD }
             ];
@@ -130,6 +130,28 @@ describe('authentication edit source parser', () => {
                 ...FIELDS[0],
                 component: EDIT_FIELD_NAME,
                 name: createAuthFieldName(FIELD_NAME, ID),
+                setEdit: SET_EDIT
+            }]);
+        });
+
+        it('does not change name for non-authentication values', () => {
+            const NOT_AUTH_NAME = 'source.source_ref';
+
+            FIELDS = [
+                { name: NOT_AUTH_NAME, component: componentTypes.TEXT_FIELD }
+            ];
+
+            const result = modifyAuthSchemas(
+                FIELDS,
+                ID,
+                EDITING,
+                SET_EDIT
+            );
+
+            expect(result).toEqual([{
+                ...FIELDS[0],
+                component: EDIT_FIELD_NAME,
+                name: NOT_AUTH_NAME,
                 setEdit: SET_EDIT
             }]);
         });

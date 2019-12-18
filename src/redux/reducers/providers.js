@@ -19,7 +19,9 @@ export const defaultProvidersState = {
     appTypesLoaded: false,
     sourceTypesLoaded: false,
     addSourceInitialValues: {},
-    filterValue: {}
+    filterValue: {},
+    sortBy: 'created_at',
+    sortDirection: 'desc'
 };
 
 const entitiesPending = (state, { options }) => ({

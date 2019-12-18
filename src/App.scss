@@ -55,10 +55,6 @@
   height: 100%;
   width: 100%;
 
-  &.clickable {
-    cursor: pointer;
-  }
-
   .ins-c-sources__edit-field-group-text-content {
     display: table-cell;
     vertical-align: middle;
@@ -95,4 +91,8 @@
 
 .ins-c-sources__availability-unknown {
   color: var(--pf-global--icon--Color--light);
+}
+
+.clickable {
+  cursor: pointer;
 }

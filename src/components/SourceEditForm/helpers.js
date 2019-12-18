@@ -15,7 +15,7 @@ export const selectOnlyEditedValues = (values, editing) => {
     return filteredValues;
 };
 
-export const prepareInitialValues = ({ source, endpoints, authentications }, sourceTypeName) => {
+export const prepareInitialValues = ({ endpoints, authentications, ...rest }, sourceTypeName) => {
     const auhenticationsFinal = {};
 
     if (authentications && authentications.length > 0) {
@@ -36,10 +36,10 @@ export const prepareInitialValues = ({ source, endpoints, authentications }, sou
     }
 
     return ({
-        source,
         source_type: sourceTypeName,
         endpoint,
         authentications: auhenticationsFinal,
-        url
+        url,
+        ...rest
     });
 };

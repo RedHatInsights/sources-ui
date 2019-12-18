@@ -5,6 +5,7 @@ import { RowWrapper } from '@patternfly/react-table';
 import { RowLoader } from '@redhat-cloud-services/frontend-components-utilities/files/helpers';
 
 import { PlaceHolderTable, RowWrapperLoader } from '../../../components/SourcesSimpleView/loaders';
+import { COLUMN_COUNT } from '../../../views/sourcesViewDefinition';
 
 describe('loaders', () => {
     describe('PlaceholderTable', () => {
@@ -34,6 +35,7 @@ describe('loaders', () => {
 
             expect(wrapper.find(RowLoader).length).toEqual(1);
             expect(wrapper.find(RowWrapper).length).toEqual(0);
+            expect(wrapper.find('td').props().colSpan).toEqual(COLUMN_COUNT);
         });
 
         it('renders rowWrapper when item is not deleting', () => {
