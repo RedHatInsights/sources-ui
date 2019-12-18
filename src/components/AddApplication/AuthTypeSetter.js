@@ -44,13 +44,7 @@ export const AuthTypeSetter = ({ formOptions, authenticationValues }) => {
         }
     }
 
-    return (<React.Fragment>
-        <pre>
-            {JSON.stringify(formOptions.getState().values, null, 2)}
-            <br />
-            {JSON.stringify(authenticationValues, null, 2)}
-        </pre>
-    </React.Fragment>);
+    return (<React.Fragment />);
 };
 
 AuthTypeSetter.propTypes = {

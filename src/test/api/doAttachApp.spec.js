@@ -1,5 +1,43 @@
 import { convertToUndefined } from '../../api/doAttachApp';
 
+describe('doAttachApp', () => {
+    it('only app is changed', async () => {
+
+    });
+
+    it('only source is changed', async () => {
+
+    });
+
+    it('only endpoint is changed', async () => {
+
+    });
+
+    it('url is changed', async () => {
+
+    });
+
+    it('only auth is changed', async () => {
+
+    });
+
+    it('auth is created', async () => {
+
+    });
+
+    it('endpoint and app is created', async () => {
+
+    });
+
+    it('cost management is attached and values are updated', async () => {
+
+    });
+
+    it('handle error', async () => {
+
+    });
+});
+
 describe('convertToUndefined', () => {
     it('converts a object with undefined to null', () => {
         const values = {
