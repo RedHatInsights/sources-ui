@@ -7,4 +7,16 @@ describe('horizontal form wrapper', () => {
 
         expect(wrapper.find(Form).props().isHorizontal).toEqual(true);
     });
+
+    it('calls preventDefault on submit', () => {
+        const wrapper = mount(<HorizontalFormWrapper />);
+
+        const mockEvent = {
+            preventDefault: jest.fn()
+        };
+
+        wrapper.find(Form).props().onSubmit(mockEvent);
+
+        expect(mockEvent.preventDefault).toHaveBeenCalled();
+    });
 });
