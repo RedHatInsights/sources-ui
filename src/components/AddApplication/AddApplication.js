@@ -114,7 +114,7 @@ const AddApplication = () => {
 
     const goToSources = () => history.push(paths.sources);
 
-    if (!appTypesLoaded || !sourceTypesLoaded || !loaded || state.state === 'loading' || state.state === 'submitting') {
+    if (!appTypesLoaded || !sourceTypesLoaded || !loaded) {
         return  (
             <WizardBody
                 goToSources={goToSources}
@@ -125,6 +125,15 @@ const AddApplication = () => {
 
     if (!source) {
         return <RedirectNoId />;
+    }
+
+    if (state.state === 'loading' || state.state === 'submitting') {
+        return  (
+            <WizardBody
+                goToSources={goToSources}
+                step={<LoadingStep />}
+            />
+        );
     }
 
     if (state.state !== 'wizard') {
@@ -172,7 +181,8 @@ const AddApplication = () => {
         setState
     );
 
-    const onSubmitFinal = filteredAppTypes.length > 0 ? onSubmitWrapper : goToSources;
+    const hasAvailableApps = filteredAppTypes.length > 0;
+    const onSubmitFinal = hasAvailableApps ? onSubmitWrapper : goToSources;
 
     return (
         <SourcesFormRenderer

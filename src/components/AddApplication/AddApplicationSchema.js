@@ -37,10 +37,12 @@ export const ApplicationSummary = () => (<TextContent>
 </TextContent>);
 
 const fields = (applications = [], intl, sourceTypes, applicationTypes, authenticationValues, source) => {
-    let nextStep = 'summary';
+    const hasAvailableApps = applications.length > 0;
+
+    let nextStep = hasAvailableApps ? 'summary' : undefined;
     let authenticationFields = [];
 
-    if (!source.imported) {
+    if (!source.imported && hasAvailableApps) {
         const sourceType = sourceTypes.find(({ id }) => id === source.source_type_id);
 
         const appendEndpoint = sourceType.schema.endpoint.hidden ? sourceType.schema.endpoint.fields : [];
@@ -91,7 +93,7 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
         };
     }
 
-    const applicationSelection = applications.length > 0 ? {
+    const applicationSelection = hasAvailableApps ? {
         component: 'card-select',
         name: 'application.application_type_id',
         options: applications,
