@@ -21,6 +21,7 @@ import { paths } from '../../Routes';
 import { doAttachApp } from '../../api/doAttachApp';
 
 let selectedApp = undefined; // this has to be not-state value, because it shouldn't re-render the component when changes
+const saveSelectedApp = ({ values: { application } }) => selectedApp = application;
 
 export const onSubmit = (values, formApi, authenticationInitialValues, dispatch, setState) => {
     setState({ state: 'submitting' });
@@ -33,8 +34,7 @@ export const onSubmit = (values, formApi, authenticationInitialValues, dispatch,
     })
     .catch(error => setState({
         state: 'errored',
-        error,
-        values: formApi.getState().values
+        error
     }));
 };
 
@@ -74,9 +74,7 @@ const AddApplication = () => {
     useEffect(() => {
         if (source) {
             // When app is only removed, there is no need to reload values
-            console.log(state.sourceAppsLength, source.applications.length, state.sourceAppsLength <= source.applications.length);
-
-            const removeAppAction = state.sourceAppsLength > source.applications.length;
+            const removeAppAction = state.sourceAppsLength >= source.applications.length && state.sourceAppsLength > 0;
 
             setState({ sourceAppsLength: source.applications.length });
 
@@ -184,11 +182,7 @@ const AddApplication = () => {
             onCancel={goToSources}
             initialValues={state.values}
             subscription={{ values: true }}
-            onStateUpdate={({ values: { application } }) => selectedApp = application}
-            //onStateUpdate={({ values }) => {
-            //    console.log(values);
-            //    selectedApp = values.application;
-            //}}
+            onStateUpdate={saveSelectedApp}
         />
     );
 };
