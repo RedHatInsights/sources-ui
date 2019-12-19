@@ -110,7 +110,6 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
         validate: [{
             type: validatorTypes.REQUIRED
         }],
-        validateOnMount: true,
         Content: NoAvailableApplicationDescription
     };
 
@@ -163,7 +162,8 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
                                 component: 'description',
                                 name: 'authtypesetter',
                                 Content: AuthTypeSetter,
-                                authenticationValues
+                                authenticationValues,
+                                hideField: true
                             }]
                     }, {
                         title: intl.formatMessage({

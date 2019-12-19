@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, shallowEqual } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -44,7 +44,7 @@ export const AuthTypeSetter = ({ formOptions, authenticationValues }) => {
         }
     }
 
-    return (<React.Fragment />);
+    return null;
 };
 
 AuthTypeSetter.propTypes = {

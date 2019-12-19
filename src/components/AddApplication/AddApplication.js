@@ -20,26 +20,30 @@ import { paths } from '../../Routes';
 
 import { doAttachApp } from '../../api/doAttachApp';
 
+let selectedApp = undefined; // this has to be not-state value, because it shouldn't re-render the component when changes
+
 export const onSubmit = (values, formApi, authenticationInitialValues, dispatch, setState) => {
-    setState({ state: 'loading' });
-    return doAttachApp(values, formApi, authenticationInitialValues).then(() => {
-        setState({ state: 'finished' });
-        dispatch(loadEntities());
+    setState({ state: 'submitting' });
+
+    return doAttachApp(values, formApi, authenticationInitialValues)
+    .then(async () => {
+        await dispatch(loadEntities());
+        selectedApp = undefined;
+        return setState({ state: 'finished' });
     })
-    .catch(error => {
-        setState({
-            state: 'errored',
-            error,
-            values: formApi.getState().values
-        });
-    });
+    .catch(error => setState({
+        state: 'errored',
+        error,
+        values: formApi.getState().values
+    }));
 };
 
 const initialState = {
     state: 'loading',
     error: '',
     values: {},
-    authenticationsValues: []
+    authenticationsValues: [],
+    sourceAppsLength: 0
 };
 
 const reducer = (state, payload) => ({ ...state, ...payload });
@@ -64,29 +68,55 @@ const AddApplication = () => {
     const [state, setState] = useReducer(reducer, initialState);
 
     useEffect(() => {
-        if (source && source.endpoints && source.endpoints[0]) {
-            getSourcesApi()
-            .listEndpointAuthentications(source.endpoints[0].id)
-            .then(({ data }) => setState({
-                authenticationsValues: data,
-                state: state.state === 'loading' ? 'wizard' : state.state,
-                values: {
-                    source,
-                    endpoint: source.endpoints[0],
-                    url: endpointToUrl(source.endpoints[0])
+        selectedApp = undefined;
+    }, []);
+
+    useEffect(() => {
+        if (source) {
+            // When app is only removed, there is no need to reload values
+            console.log(state.sourceAppsLength, source.applications.length, state.sourceAppsLength <= source.applications.length);
+
+            const removeAppAction = state.sourceAppsLength > source.applications.length;
+
+            setState({ sourceAppsLength: source.applications.length });
+
+            if (!removeAppAction) {
+                if (source.endpoints && source.endpoints[0]) {
+                    getSourcesApi()
+                    .listEndpointAuthentications(source.endpoints[0].id)
+                    .then(({ data }) => setState({
+                        authenticationsValues: data,
+                        values: {
+                            source,
+                            endpoint: source.endpoints[0],
+                            url: endpointToUrl(source.endpoints[0]),
+                            application: selectedApp
+                        }
+                    }))
+                    .then(() => {
+                        if (state.state === 'loading') {
+                            setState({
+                                state: 'wizard'
+                            });
+                        }
+                    });
+                } else {
+                    setState({
+                        values: { source, application: selectedApp }
+                    });
+                    if (state.state === 'loading') {
+                        setState({
+                            state: 'wizard'
+                        });
+                    }
                 }
-            }));
-        } else if (source) {
-            setState({
-                state: state.state === 'loading' ? 'wizard' : state.state,
-                values: { source }
-            });
+            }
         }
     }, [source]);
 
     const goToSources = () => history.push(paths.sources);
 
-    if (!appTypesLoaded || !sourceTypesLoaded || !loaded || state.state === 'loading') {
+    if (!appTypesLoaded || !sourceTypesLoaded || !loaded || state.state === 'loading' || state.state === 'submitting') {
         return  (
             <WizardBody
                 goToSources={goToSources}
@@ -97,6 +127,15 @@ const AddApplication = () => {
 
     if (!source) {
         return <RedirectNoId />;
+    }
+
+    if (state.state !== 'wizard') {
+        const shownStep = state.state === 'finished' ? (<FinishedStep setState={setState} goToSources={goToSources}/>) :
+            (<ErroredStep setState={setState} goToSources={goToSources} error={state.error}/>);
+
+        return (
+            <WizardBody goToSources={goToSources} step={shownStep} />
+        );
     }
 
     const appIds = source.applications.filter(({ isDeleting }) => !isDeleting)
@@ -137,15 +176,6 @@ const AddApplication = () => {
 
     const onSubmitFinal = filteredAppTypes.length > 0 ? onSubmitWrapper : goToSources;
 
-    if (state.state !== 'wizard') {
-        const shownStep = state.state === 'finished' ? (<FinishedStep setState={setState} goToSources={goToSources}/>) :
-            (<ErroredStep setState={setState} goToSources={goToSources} error={state.error}/>);
-
-        return (
-            <WizardBody goToSources={goToSources} step={shownStep} />
-        );
-    }
-
     return (
         <SourcesFormRenderer
             schema={schema}
@@ -154,6 +184,11 @@ const AddApplication = () => {
             onCancel={goToSources}
             initialValues={state.values}
             subscription={{ values: true }}
+            onStateUpdate={({ values: { application } }) => selectedApp = application}
+            //onStateUpdate={({ values }) => {
+            //    console.log(values);
+            //    selectedApp = values.application;
+            //}}
         />
     );
 };

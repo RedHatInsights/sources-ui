@@ -107,7 +107,6 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues) 
             data = billing_source ? { ...data, billing_source } : data;
             await patchSource({ id: sourceId, ...data });
         }
-
     } catch (error) {
         const errorMessage = await handleError(error);
         throw errorMessage;
