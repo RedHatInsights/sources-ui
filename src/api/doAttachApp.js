@@ -1,5 +1,8 @@
 import { addedDiff, updatedDiff } from 'deep-object-diff';
 import { patchSource, handleError } from '@redhat-cloud-services/frontend-components-sources';
+import isEmpty from 'lodash/isEmpty';
+import merge from 'lodash/merge';
+import cloneDeep from 'lodash/cloneDeep';
 
 import { getSourcesApi, doCreateApplication } from './entities';
 import { urlOrHost } from './doUpdateSource';
@@ -18,6 +21,22 @@ export const convertToUndefined = (value) => {
     }
 
     return value;
+};
+
+// modification of https://stackoverflow.com/a/38340374
+export const removeEmpty = (obj) => {
+    Object.keys(obj).forEach(key => {
+        if (obj[key] && typeof obj[key] === 'object') {
+            if (isEmpty(obj[key])) {
+                delete obj[key];
+            } else {
+                removeEmpty(obj[key]);
+            }
+        } else if (typeof obj[key] === 'undefined') {
+            delete obj[key];
+        }
+    });
+    return obj;
 };
 
 export const doAttachApp = async (values, formApi, authenticationInitialValues) => {
@@ -39,16 +58,18 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues) 
     const newAddedAuthValues = addedDiff(authInitialValues, authentication);
     const updatedAuthValues = updatedDiff(authInitialValues, authentication);
 
-    const filteredValues = {
-        ...newAddedValues,
-        ...convertToUndefined(updatedValues),
+    const filteredValues = removeEmpty({
+        ...merge(cloneDeep(newAddedValues), convertToUndefined(updatedValues)),
         authentication: {
-            ...newAddedAuthValues,
-            ...convertToUndefined(updatedAuthValues)
+            ...merge(cloneDeep(newAddedAuthValues), convertToUndefined(updatedAuthValues))
         }
-    };
+    });
 
     try {
+        if (!allFormValues.source || !allFormValues.source.id) {
+            throw 'Missing source id';
+        }
+
         const sourceId = allFormValues.source.id;
         let endpointId = allFormValues.endpoint ? allFormValues.endpoint.id : undefined;
 
@@ -84,7 +105,7 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues) 
         if (filteredValues.authentication) {
             if (selectedAuthId) {
                 promises.push(getSourcesApi().updateAuthentication(selectedAuthId, filteredValues.authentication));
-            } else {
+            } else if (endpointId) {
                 const authenticationData = {
                     ...filteredValues.authentication,
                     resource_id: endpointId,
@@ -95,7 +116,9 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues) 
             }
         }
 
-        promises.push(doCreateApplication(sourceId, filteredValues.application.application_type_id));
+        if (filteredValues.application && filteredValues.application.application_type_id) {
+            promises.push(doCreateApplication(sourceId, filteredValues.application.application_type_id));
+        }
 
         await Promise.all(promises);
 
