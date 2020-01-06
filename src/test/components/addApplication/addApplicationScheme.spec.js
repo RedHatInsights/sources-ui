@@ -1,4 +1,4 @@
-import addApplicationSchema from '../../../components/AddApplication/AddApplicationSchema';
+import addApplicationSchema, { hasAlreadySupportedAuthType } from '../../../components/AddApplication/AddApplicationSchema';
 import { sourceTypesData, OPENSHIFT_ID } from '../../sourceTypesData';
 import { applicationTypesData, COSTMANAGEMENT_APP } from '../../applicationTypesData';
 
@@ -94,6 +94,35 @@ describe('AddApplicationSchema', () => {
                     ]
                 })
             ]
+        });
+    });
+
+    describe('hasAlreadySupportedAuthType', () => {
+        const sourceTypeName = 'openshift';
+        const appType = {
+            supported_authentication_types: {
+                [sourceTypeName]: ['token']
+            }
+        };
+
+        it('has already auth type', () => {
+            const authValues = [{
+                authtype: 'token'
+            }];
+
+            expect(hasAlreadySupportedAuthType(authValues, appType, sourceTypeName)).toEqual(authValues[0]);
+        });
+
+        it('doesnot have already auth type', () => {
+            const authValues = [];
+
+            expect(hasAlreadySupportedAuthType(authValues, appType, sourceTypeName)).toEqual(undefined);
+        });
+
+        it('undefined authValues', () => {
+            const authValues = undefined;
+
+            expect(hasAlreadySupportedAuthType(authValues, appType, sourceTypeName)).toEqual(undefined);
         });
     });
 });

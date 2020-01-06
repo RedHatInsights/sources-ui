@@ -7,6 +7,7 @@ import {
 } from '@patternfly/react-core';
 import { FormattedMessage } from 'react-intl';
 import { schemaBuilder } from '@redhat-cloud-services/frontend-components-sources';
+import get from 'lodash/get';
 
 import AddApplicationDescription from './AddApplicationDescription';
 import { AuthTypeSetter } from './AuthTypeSetter';
@@ -36,6 +37,9 @@ export const ApplicationSummary = () => (<TextContent>
     </Text>
 </TextContent>);
 
+export const hasAlreadySupportedAuthType = (authValues = [], appType, sourceTypeName) =>
+    authValues.find(({ authtype }) => authtype === get(appType, `supported_authentication_types.${sourceTypeName}[0]`));
+
 const fields = (applications = [], intl, sourceTypes, applicationTypes, authenticationValues, source) => {
     const hasAvailableApps = applications.length > 0;
 
@@ -50,8 +54,16 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
 
         applicationTypes.forEach(appType => {
             if (appType.supported_source_types.includes(sourceType.name)) {
+                const doNotRequirePasswords = hasAlreadySupportedAuthType(authenticationValues, appType, sourceType.name);
+
                 authenticationFields.push(
-                    schemaBuilder.createSpecificAuthTypeSelection(sourceType, appType, appendEndpoint, false)
+                    schemaBuilder.createSpecificAuthTypeSelection(
+                        sourceType,
+                        appType,
+                        appendEndpoint,
+                        false,
+                        doNotRequirePasswords
+                    )
                 );
             }
         });
@@ -62,6 +74,8 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
                     const appAdditionalSteps = schemaBuilder.getAdditionalSteps(sourceType.name, auth.type, appType.name);
 
                     if (appAdditionalSteps.length > 0) {
+                        const doNotRequirePasswords = hasAlreadySupportedAuthType(authenticationValues, appType, sourceType.name);
+
                         authenticationFields.push(
                             ...schemaBuilder.createAdditionalSteps(
                                 appAdditionalSteps,
@@ -69,7 +83,8 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
                                 auth.type,
                                 hasEndpointStep,
                                 auth.fields,
-                                appType.name
+                                appType.name,
+                                doNotRequirePasswords
                             )
                         );
                     }
