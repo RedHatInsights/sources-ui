@@ -18,17 +18,13 @@ export const checkAuthTypeMemo = () => {
     };
 };
 
-export const AuthTypeSetter = ({ formOptions, authenticationValues }) => {
-    const [checkAuthType] = useState(() => checkAuthTypeMemo());
-
-    const { id } = useParams();
-    const { appTypes, sourceTypes } = useSelector(({ providers }) => providers, shallowEqual);
-
-    const source = useSource(id);
+export const innerSetter = ({ sourceTypes, source, appTypes, formOptions, checkAuthType, authenticationValues }) => {
     const sourceType = sourceTypes.find(({ id }) => id === source.source_type_id);
 
+    const formValues = formOptions.getState();
+
     const application = appTypes.find(
-        ({ id }) => id === get(formOptions.getState().values, 'application.application_type_id', undefined)
+        ({ id }) => id === get(formValues, 'values.application.application_type_id', undefined)
     );
     const supported_auth_type = application ? application.supported_authentication_types[sourceType.name][0] : '';
 
@@ -43,6 +39,17 @@ export const AuthTypeSetter = ({ formOptions, authenticationValues }) => {
             formOptions.change('authentication', undefined);
         }
     }
+};
+
+export const AuthTypeSetter = ({ formOptions, authenticationValues }) => {
+    const [checkAuthType] = useState(() => checkAuthTypeMemo());
+
+    const { id } = useParams();
+    const { appTypes, sourceTypes } = useSelector(({ providers }) => providers, shallowEqual);
+
+    const source = useSource(id);
+
+    innerSetter({ sourceTypes, checkAuthType, formOptions, authenticationValues, appTypes, source });
 
     return null;
 };

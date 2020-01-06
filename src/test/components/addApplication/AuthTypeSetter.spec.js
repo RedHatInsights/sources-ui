@@ -6,27 +6,24 @@ import { Route } from 'react-router-dom';
 
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import { sourceTypesData, OPENSHIFT_ID } from '../../sourceTypesData';
-import { SOURCE_ALL_APS_ID, SOURCE_NO_APS_ID } from '../../sourcesData';
-import { applicationTypesData, COSTMANAGEMENT_APP, TOPOLOGICALINVENTORY_APP } from '../../applicationTypesData';
-import { AuthTypeSetter } from '../../../components/AddApplication/AuthTypeSetter';
+import { AuthTypeSetter, checkAuthTypeMemo, innerSetter } from '../../../components/AddApplication/AuthTypeSetter';
 import { paths } from '../../../Routes';
 
 describe('AuthTypeSetter', () => {
     let store;
-    let initialEntry;
     let mockStore;
-    let SOURCE_ID;
 
     const middlewares = [thunk, notificationsMiddleware()];
 
     let initialProps;
     let formOptions;
-    let authenticationValues;
+    let changeSpy;
 
     const AUTH_VALUES1 = {
         id: '23231',
         password: 'password',
-        name: 'lojza'
+        name: 'lojza',
+        authtype: 'token'
     };
 
     const AUTH_VALUES2 = {
@@ -35,57 +32,53 @@ describe('AuthTypeSetter', () => {
             extra: {
                 tenant: 'US-EAST1'
             }
-        }
+        },
+        authtype: 'token_extra'
     };
 
-    let changeSpy;
+    const authenticationValues = [AUTH_VALUES1, AUTH_VALUES2];
+
+    const appTypes = [{
+        id: '6898778',
+        supported_authentication_types: {
+            openshift: ['token']
+        }
+    }, {
+        id: '986421686456',
+        supported_authentication_types: {
+            openshift: ['token_extra']
+        }
+    }];
+
+    const SOURCE_ID = '232232';
+
+    const SOURCE = {
+        id: SOURCE_ID,
+        source_type_id: OPENSHIFT_ID,
+        applications: []
+    };
+
+    const initialEntry = [`/manage_apps/${SOURCE_ID}`];
 
     beforeEach(() => {
-        SOURCE_ID = '232232';
-
         mockStore = configureStore(middlewares);
         store = mockStore({
             providers: {
-                entities: [{
-                    id: SOURCE_ID,
-                    source_type_id: OPENSHIFT_ID,
-                    applications: []
-                }, {
-                    id: SOURCE_ALL_APS_ID,
-                    source_type_id: OPENSHIFT_ID,
-                    applications: [{
-                        application_type_id: COSTMANAGEMENT_APP.id
-                    }, {
-                        application_type_id: TOPOLOGICALINVENTORY_APP.id
-                    }]
-                }],
-                appTypes: [{
-                    id: '6898778',
-                    supported_authentication_types: {
-                        openshift: ['token']
-                    }
-                }, {
-                    id: '986421686456',
-                    supported_authentication_types: {
-                        openshift: ['token_extra']
-                    }
-                }],
+                entities: [SOURCE],
+                appTypes,
                 sourceTypes: sourceTypesData.data,
                 appTypesLoaded: true,
                 sourceTypesLoaded: true,
                 loaded: true
             }
         });
-        initialEntry = [`/manage_apps/${SOURCE_ID}`];
 
-        changeSpy = jest.fn().mockImplementation(console.log);
+        changeSpy = jest.fn().mockImplementation();
 
         formOptions = {
-            getState: () => ({ values: { } }),
+            getState: jest.fn().mockImplementation(() => ({})),
             change: changeSpy
         };
-
-        authenticationValues = [AUTH_VALUES1, AUTH_VALUES2];
 
         initialProps = {
             formOptions,
@@ -93,8 +86,8 @@ describe('AuthTypeSetter', () => {
         };
     });
 
-    it('sets authentication when authentication_type is changed', () => {
-        const wrapper = mount(componentWrapperIntl(
+    it('sets authentication when authentication_type on undefined', () => {
+        mount(componentWrapperIntl(
             <Route path={paths.sourceManageApps} render={ (...args) => <AuthTypeSetter { ...args } {...initialProps}/> } />,
             store,
             initialEntry
@@ -107,18 +100,98 @@ describe('AuthTypeSetter', () => {
         expect(changeSpy.mock.calls[1][1]).toBe(undefined);
 
         expect(changeSpy.mock.calls.length).toEqual(2);
+    });
 
-        console.log(wrapper.debug());
-
-        wrapper.find(AuthTypeSetter).props().formOptions = {
-            getState: () => ({ values: { application: { application_type_id: '6898778' } } }),
+    it('sets authentication when authentication_type on token', () => {
+        formOptions = {
+            getState: jest.fn().mockImplementation(() => ({ values: { application: { application_type_id: '6898778' } } })),
             change: changeSpy
         };
 
-        wrapper.update();
+        initialProps = {
+            formOptions,
+            authenticationValues
+        };
 
-        expect(changeSpy.mock.calls.length).toEqual(3);
-        expect(changeSpy.mock.calls[2][0]).toBe('supported_auth_type');
-        expect(changeSpy.mock.calls[2][1]).toBe('');
+        mount(componentWrapperIntl(
+            <Route path={paths.sourceManageApps} render={ (...args) => <AuthTypeSetter { ...args } {...initialProps}/> } />,
+            store,
+            initialEntry
+        ));
+
+        expect(changeSpy.mock.calls[0][0]).toBe('supported_auth_type');
+        expect(changeSpy.mock.calls[0][1]).toBe('token');
+
+        expect(changeSpy.mock.calls[1][0]).toBe('authentication');
+        expect(changeSpy.mock.calls[1][1]).toBe(AUTH_VALUES1);
+
+        expect(changeSpy.mock.calls.length).toEqual(2);
+    });
+
+    describe('inner function tests', () => {
+        it('changes when types are changed', () => {
+            const checkAuthType = checkAuthTypeMemo();
+
+            let args = {
+                sourceTypes: sourceTypesData.data,
+                checkAuthType,
+                formOptions: {
+                    getState: jest.fn()
+                    .mockImplementationOnce(() => ({ }))
+                    .mockImplementationOnce(() => ({ values: { application: { application_type_id: '6898778' } } }))
+                    .mockImplementationOnce(() => ({ values: { application: { application_type_id: '986421686456' } } }))
+                    .mockImplementationOnce(() => ({ values: { application: { application_type_id: '986421686456' } } }))
+                    .mockImplementationOnce(() => ({ })),
+                    change: changeSpy
+                },
+                authenticationValues,
+                appTypes,
+                source: SOURCE
+            };
+
+            innerSetter(args);
+
+            expect(changeSpy.mock.calls[0][0]).toBe('supported_auth_type');
+            expect(changeSpy.mock.calls[0][1]).toBe('');
+
+            expect(changeSpy.mock.calls[1][0]).toBe('authentication');
+            expect(changeSpy.mock.calls[1][1]).toBe(undefined);
+
+            expect(changeSpy.mock.calls.length).toEqual(2);
+
+            innerSetter(args);
+
+            expect(changeSpy.mock.calls[2][0]).toBe('supported_auth_type');
+            expect(changeSpy.mock.calls[2][1]).toBe('token');
+
+            expect(changeSpy.mock.calls[3][0]).toBe('authentication');
+            expect(changeSpy.mock.calls[3][1]).toBe(AUTH_VALUES1);
+
+            expect(changeSpy.mock.calls.length).toEqual(4);
+
+            innerSetter(args);
+
+            expect(changeSpy.mock.calls[4][0]).toBe('supported_auth_type');
+            expect(changeSpy.mock.calls[4][1]).toBe('token_extra');
+
+            expect(changeSpy.mock.calls[5][0]).toBe('authentication');
+            expect(changeSpy.mock.calls[5][1]).toBe(AUTH_VALUES2);
+
+            expect(changeSpy.mock.calls.length).toEqual(6);
+
+            innerSetter(args);
+
+            expect(changeSpy.mock.calls.length).toEqual(6);
+
+            innerSetter(args);
+
+            expect(changeSpy.mock.calls[6][0]).toBe('supported_auth_type');
+            expect(changeSpy.mock.calls[6][1]).toBe('');
+
+            expect(changeSpy.mock.calls[7][0]).toBe('authentication');
+            expect(changeSpy.mock.calls[7][1]).toBe(undefined);
+
+            expect(changeSpy.mock.calls.length).toEqual(8);
+        });
     });
 });
