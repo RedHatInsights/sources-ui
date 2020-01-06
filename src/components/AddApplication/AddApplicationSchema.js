@@ -82,10 +82,6 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
         }
 
         nextStep = ({ values: { application } }) => {
-            if (applications.length === 0) {
-                return undefined;
-            }
-
             const app = application ? application : {};
             const appId = app.application_type_id ? app.application_type_id : '';
 
