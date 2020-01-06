@@ -17,7 +17,7 @@ const FinishedStepAttach = ({ setState, goToSources }) => (
             defaultMessage="Configuration successful"
         />}
         secondaryActions={
-            <Button variant="link" onClick={() => setState({ values: {}, state: 'wizard' })}>
+            <Button variant="link" onClick={() => setState({ state: 'wizard' })}>
                 <FormattedMessage
                     id="sources.continueManageApp"
                     defaultMessage="Continue managing applications"

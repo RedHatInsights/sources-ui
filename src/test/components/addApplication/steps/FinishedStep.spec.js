@@ -38,6 +38,6 @@ describe('AddApplication wizard - Finished step', () => {
 
         wrapper.find(Button).last().simulate('click');
 
-        expect(setState).toHaveBeenCalledWith({ values: {}, state: 'wizard' });
+        expect(setState).toHaveBeenCalledWith({ state: 'wizard' });
     });
 });
