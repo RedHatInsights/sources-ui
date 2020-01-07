@@ -1,4 +1,4 @@
-import { entitiesLoaded, defaultProvidersState, undoAddSource, clearAddSource, filterProviders } from '../../redux/reducers/providers';
+import { entitiesLoaded, defaultProvidersState, undoAddSource, clearAddSource, filterProviders, clearFilters } from '../../redux/reducers/providers';
 
 describe('redux > sources reducer', () => {
     describe('entitiesLoaded', () => {
@@ -86,6 +86,25 @@ describe('redux > sources reducer', () => {
                 filterValue: {
                     name: 'name'
                 },
+                pageNumber: 1
+            });
+        });
+    });
+
+    describe('clearFilters', () => {
+        const state = {
+            ...defaultProvidersState,
+            filterValue: {
+                xxx: 'yyy',
+                name: [1, 2, 3]
+            },
+            pageNumber: 12
+        };
+
+        it('clears filter', () => {
+            expect(clearFilters(state)).toEqual({
+                ...defaultProvidersState,
+                filterValue: {},
                 pageNumber: 1
             });
         });

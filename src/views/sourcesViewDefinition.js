@@ -1,5 +1,5 @@
 export const sourcesViewDefinition = {
-    columns: (intl) => ([{
+    columns: (intl, notSortable = false) => ([{
         title: intl.formatMessage({
             id: 'sources.name',
             defaultMessage: 'Name'
@@ -7,7 +7,7 @@ export const sourcesViewDefinition = {
         value: 'name',
         searchable: true,
         formatter: 'nameFormatter',
-        sortable: true
+        sortable: !notSortable
     }, {
         title: intl.formatMessage({
             id: 'sources.type',
@@ -33,7 +33,7 @@ export const sourcesViewDefinition = {
         }),
         value: 'created_at',
         formatter: 'dateFormatter',
-        sortable: true
+        sortable: !notSortable
     }, {
         hidden: true,
         value: 'imported',
@@ -46,7 +46,7 @@ export const sourcesViewDefinition = {
         value: 'availability_status',
         searchable: true,
         formatter: 'availabilityFormatter',
-        sortable: true
+        sortable: !notSortable
     }])
 };
 

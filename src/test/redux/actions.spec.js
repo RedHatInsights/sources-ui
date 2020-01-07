@@ -8,7 +8,8 @@ import {
     loadEntities,
     sortEntities,
     removeSource,
-    filterProviders
+    filterProviders,
+    clearFilters
 } from '../../redux/actions/providers';
 import {
     UNDO_ADD_SOURCE,
@@ -18,7 +19,8 @@ import {
     ACTION_TYPES,
     SET_COUNT,
     SORT_ENTITIES,
-    FILTER_PROVIDERS
+    FILTER_PROVIDERS,
+    CLEAR_FILTERS
 } from '../../redux/action-types-providers';
 import { REMOVE_NOTIFICATION, ADD_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications';
 import * as updateSourceApi from '../../api/doUpdateSource';
@@ -299,5 +301,13 @@ describe('redux actions', () => {
                 }
             });
         });
+    });
+
+    it('clearFilters creates an object', async () => {
+        await clearFilters()(dispatch);
+
+        expect(dispatch.mock.calls).toHaveLength(2);
+        expect(dispatch.mock.calls[0][0]).toEqual({ type: CLEAR_FILTERS });
+        expect(dispatch.mock.calls[1][0]).toEqual(expect.any(Function));
     });
 });
