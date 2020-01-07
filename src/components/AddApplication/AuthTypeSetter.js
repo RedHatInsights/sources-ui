@@ -26,7 +26,7 @@ export const innerSetter = ({ sourceTypes, source, appTypes, formOptions, checkA
     const application = appTypes.find(
         ({ id }) => id === get(formValues, 'values.application.application_type_id', undefined)
     );
-    const supported_auth_type = application ? application.supported_authentication_types[sourceType.name][0] : '';
+    const supported_auth_type = get(application, `supported_authentication_types[${sourceType.name}][0]`, '');
 
     if (checkAuthType(supported_auth_type)) {
         formOptions.change('supported_auth_type', supported_auth_type);
