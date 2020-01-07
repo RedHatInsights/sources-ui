@@ -13,7 +13,7 @@
     "@patternfly/react-table": "^2.24.64",
     "@redhat-cloud-services/frontend-components": "^0.0.43",
     "@redhat-cloud-services/frontend-components-notifications": "^0.0.7",
-    "@redhat-cloud-services/frontend-components-sources": "^0.0.27",
+    "@redhat-cloud-services/frontend-components-sources": "^0.0.29",
     "@redhat-cloud-services/frontend-components-utilities": "^0.0.15",
     "@redhat-cloud-services/sources-client": "^1.0.45",
     "deep-object-diff": "^1.1.0",
