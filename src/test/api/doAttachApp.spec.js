@@ -691,4 +691,15 @@ describe('removeEmpty', () => {
             }
         });
     });
+
+    it('do not send authentication', () => {
+        expect(removeEmpty({
+            billing_source: { bucket: 'njmbnmbn' },
+            application: { application_type_id: '2' },
+            authentication: {}
+        })).toEqual({
+            billing_source: { bucket: 'njmbnmbn' },
+            application: { application_type_id: '2' }
+        });
+    });
 });

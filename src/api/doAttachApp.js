@@ -102,7 +102,7 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues) 
             }
         }
 
-        if (filteredValues.authentication) {
+        if (filteredValues.authentication && !isEmpty(filteredValues.authentication)) {
             if (selectedAuthId) {
                 promises.push(getSourcesApi().updateAuthentication(selectedAuthId, filteredValues.authentication));
             } else if (endpointId) {
