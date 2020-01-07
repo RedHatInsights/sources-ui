@@ -20,6 +20,7 @@ import { componentWrapperIntl } from '../../Utilities/testsHelpers';
 import ReducersProviders, { defaultProvidersState } from '../../redux/reducers/providers';
 import * as api from '../../api/entities';
 import * as typesApi from '../../api/source_types';
+import EmptyStateTable from '../../components/SourcesSimpleView/EmptyStateTable';
 
 describe('SourcesPage', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -189,6 +190,31 @@ describe('SourcesPage', () => {
 
                 expect(wrapper.find(clearFillterButtonSelector)).toHaveLength(0);
                 done();
+            }, 500);
+        });
+
+        it('renders emptyStateTable when no entities found', (done) => {
+            setTimeout(async () => {
+                wrapper.update();
+
+                api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
+                api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+
+                const totalNonsense = '122#$@#%#^$#@!^$#^$#^546454abcerd';
+
+                await act(async() => {
+                    filterInput(wrapper).simulate('change', { target: { value: totalNonsense } });
+                });
+
+                setTimeout(() => {
+                    wrapper.update();
+                    expect(store.getState().providers.filterValue).toEqual({
+                        name: totalNonsense
+                    });
+                    expect(store.getState().providers.numberOfEntities).toEqual(0);
+                    expect(wrapper.find(EmptyStateTable)).toHaveLength(1);
+                    done();
+                }, 500);
             }, 500);
         });
     });

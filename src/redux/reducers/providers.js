@@ -7,7 +7,8 @@ import {
     UNDO_ADD_SOURCE,
     CLEAR_ADD_SOURCE,
     SET_COUNT,
-    ADD_HIDDEN_SOURCE
+    ADD_HIDDEN_SOURCE,
+    CLEAR_FILTERS
 } from '../action-types-providers';
 
 export const defaultProvidersState = {
@@ -171,6 +172,12 @@ export const addHiddenSource = (state, { payload: { source } }) => ({
     ]
 });
 
+export const clearFilters = (state) =>({
+    ...state,
+    filterValue: {},
+    pageNumber: 1
+});
+
 export default {
     [ACTION_TYPES.LOAD_ENTITIES_PENDING]: entitiesPending,
     [ACTION_TYPES.LOAD_ENTITIES_FULFILLED]: entitiesLoaded,
@@ -194,5 +201,6 @@ export default {
     [CLEAR_ADD_SOURCE]: clearAddSource,
     [ADD_APP_TO_SOURCE]: addAppToSource,
     [SET_COUNT]: setCount,
-    [ADD_HIDDEN_SOURCE]: addHiddenSource
+    [ADD_HIDDEN_SOURCE]: addHiddenSource,
+    [CLEAR_FILTERS]: clearFilters
 };

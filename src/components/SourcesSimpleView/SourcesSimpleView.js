@@ -7,7 +7,8 @@ import { useIntl } from 'react-intl';
 import { sortEntities } from '../../redux/actions/providers';
 import { formatters } from './formatters';
 import { PlaceHolderTable, RowWrapperLoader } from './loaders';
-import { sourcesViewDefinition } from '../../views/sourcesViewDefinition';
+import { sourcesViewDefinition, COLUMN_COUNT } from '../../views/sourcesViewDefinition';
+import EmptyStateTable from './EmptyStateTable';
 
 const itemToCells = (item, columns, sourceTypes, appTypes) => columns.filter(column => column.title || column.hidden)
 .map(col => ({
@@ -25,17 +26,19 @@ const renderSources = (entities, columns, sourceTypes, appTypes) =>
         }
     ]), []);
 
+export const prepareColumnsCells = columns => columns.filter(column => column.title || column.hidden).map(column => ({
+    title: column.title || '',
+    value: column.value,
+    ...(column.sortable && { transforms: [sortable] })
+}));
+
 const reducer = (state, payload) => ({ ...state, ...payload });
 
 const initialState = (columns) => ({
     rows: [],
     sortBy: {},
     isLoaded: false,
-    cells: columns.filter(column => column.title || column.hidden).map(column => ({
-        title: column.title || '',
-        value: column.value,
-        ...(column.sortable && { transforms: [sortable] })
-    }))
+    cells: prepareColumnsCells(columns)
 });
 
 export const insertEditAction = (actions, intl, push) => actions.splice(1, 0, {
@@ -75,8 +78,6 @@ export const actionResolver = (intl, push) => (rowData) => {
 const SourcesSimpleView = () => {
     const { push } = useHistory();
     const intl = useIntl();
-    const columns = sourcesViewDefinition.columns(intl);
-    const [state, dispatch] = useReducer(reducer, initialState(columns));
 
     const {
         loaded,
@@ -86,14 +87,23 @@ const SourcesSimpleView = () => {
         sourceTypesLoaded,
         appTypesLoaded,
         sortBy,
-        sortDirection
+        sortDirection,
+        numberOfEntities
     } = useSelector(({ providers }) => providers, shallowEqual);
 
     const reduxDispatch = useDispatch();
 
-    const refreshSources = () => dispatch({
-        rows: renderSources(entities, columns, sourceTypes, appTypes)
-    });
+    const [state, dispatch] = useReducer(reducer, initialState(sourcesViewDefinition.columns(intl)));
+
+    const refreshSources = () => {
+        const notSortable = numberOfEntities === 0;
+        const columns = sourcesViewDefinition.columns(intl, notSortable);
+
+        return dispatch({
+            rows: renderSources(entities, columns, sourceTypes, appTypes),
+            cells: prepareColumnsCells(columns)
+        });
+    };
 
     useEffect(() => {
         if (loaded && sourceTypesLoaded && appTypesLoaded) {
@@ -114,6 +124,17 @@ const SourcesSimpleView = () => {
         return <PlaceHolderTable />;
     }
 
+    let shownRows = state.rows;
+    if (numberOfEntities === 0) {
+        shownRows = [{
+            heightAuto: true,
+            cells: [{
+                props: { colSpan: COLUMN_COUNT },
+                title: <EmptyStateTable />
+            }]
+        }];
+    }
+
     return (
         <Table
             gridBreakPoint='grid-lg'
@@ -126,9 +147,9 @@ const SourcesSimpleView = () => {
                 index: state.cells.map(cell => cell.value).indexOf(sortBy),
                 direction: sortDirection
             }}
-            rows={state.rows}
+            rows={shownRows}
             cells={state.cells}
-            actionResolver={actionResolver(intl, push)}
+            actionResolver={numberOfEntities > 0 ? actionResolver(intl, push) : undefined}
             rowWrapper={RowWrapperLoader}
         >
             <TableHeader />

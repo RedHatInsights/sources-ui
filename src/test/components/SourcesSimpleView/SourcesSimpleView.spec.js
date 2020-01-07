@@ -2,13 +2,14 @@ import React from 'react';
 import thunk from 'redux-thunk';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import configureStore from 'redux-mock-store';
-import { Table, TableHeader, TableBody, RowWrapper } from '@patternfly/react-table';
+import { Table, TableHeader, TableBody, RowWrapper, sortable } from '@patternfly/react-table';
 import { MemoryRouter } from 'react-router-dom';
 import { RowLoader } from '@redhat-cloud-services/frontend-components-utilities/files/helpers';
 import { act } from 'react-dom/test-utils';
 
-import SourcesSimpleView, { insertEditAction, actionResolver } from '../../../components/SourcesSimpleView/SourcesSimpleView';
+import SourcesSimpleView, { insertEditAction, actionResolver, prepareColumnsCells } from '../../../components/SourcesSimpleView/SourcesSimpleView';
 import { PlaceHolderTable, RowWrapperLoader } from '../../../components/SourcesSimpleView/loaders';
+import EmptyStateTable from '../../../components/SourcesSimpleView/EmptyStateTable';
 
 import { sourcesDataGraphQl } from '../../sourcesData';
 import { sourceTypesData } from '../../sourceTypesData';
@@ -112,6 +113,33 @@ describe('SourcesSimpleView', () => {
                 done();
             });
         });
+    });
+
+    it('renders empty state table', async () => {
+        initialState = {
+            providers: {
+                ...initialState.providers,
+                ...loadedProps,
+                entities: [],
+                numberOfEntities: 0,
+                filterValue: {
+                    name: 'not-existing-name'
+                }
+            }
+        };
+
+        const store = mockStore(initialState);
+        let wrapper;
+
+        await act(async () => {
+            wrapper = mount(componentWrapperIntl(<SourcesSimpleView { ...initialProps } />, store));
+        });
+        wrapper.update();
+
+        expect(wrapper.find(EmptyStateTable)).toHaveLength(1);
+        expect(wrapper.find(Table)).toHaveLength(1);
+        expect(wrapper.find(TableHeader)).toHaveLength(1);
+        expect(wrapper.find(TableBody)).toHaveLength(1);
     });
 
     it('re-renders when entities changed', async () => {
@@ -264,6 +292,35 @@ describe('SourcesSimpleView', () => {
                     title: expect.any(String),
                     onClick: expect.any(Function)
                 }));
+            });
+        });
+
+        describe('prepareColumnsCells', () => {
+            it('prepares columns cells', () => {
+                const columns = [
+                    {
+                        title: 'name',
+                        value: 'name',
+                        searchable: true,
+                        formatter: 'nameFormatter',
+                        sortable: false
+                    },
+                    {
+                        title: 'date',
+                        value: 'date',
+                        nonsense: true,
+                        sortable: true
+                    }
+                ];
+
+                expect(prepareColumnsCells(columns)).toEqual([{
+                    title: 'name',
+                    value: 'name'
+                }, {
+                    title: 'date',
+                    value: 'date',
+                    transforms: [sortable]
+                }]);
             });
         });
 

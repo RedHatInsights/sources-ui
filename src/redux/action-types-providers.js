@@ -25,3 +25,4 @@ export const UNDO_ADD_SOURCE = 'UNDO_ADDD_SOURCE';
 export const CLEAR_ADD_SOURCE = 'CLEAR_ADD_SOURCE';
 export const SET_COUNT = 'SET_COUNT';
 export const ADD_HIDDEN_SOURCE = 'ADD_HIDDEN_SOURCE';
+export const CLEAR_FILTERS = 'CLEAR_FILTERS';

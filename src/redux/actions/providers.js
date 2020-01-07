@@ -8,7 +8,8 @@ import {
     UNDO_ADD_SOURCE,
     CLEAR_ADD_SOURCE,
     SET_COUNT,
-    ADD_HIDDEN_SOURCE
+    ADD_HIDDEN_SOURCE,
+    CLEAR_FILTERS
 } from '../action-types-providers';
 import {
     doLoadAppTypes,
@@ -186,3 +187,11 @@ export const addHiddenSource = (source) => ({
         source
     }
 });
+
+export const clearFilters = () => (dispatch) => {
+    dispatch({
+        type: CLEAR_FILTERS
+    });
+
+    return dispatch(loadEntities());
+};
