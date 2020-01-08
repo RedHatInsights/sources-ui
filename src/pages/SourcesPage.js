@@ -30,6 +30,7 @@ import {
     afterSuccess,
     onCloseAddSourceWizard
 } from './SourcesPage/helpers';
+import PaginationLoader from './SourcesPage/PaginationLoader';
 
 const SourcesPage = () => {
     const [showEmptyState, setShowEmptyState] = useState(false);
@@ -75,17 +76,25 @@ const SourcesPage = () => {
         onSetPage(maximumPageNumber > 0 ? maximumPageNumber : 1);
     }
 
+    const paginationConfig = {
+        itemCount: numberOfEntities,
+        page: pageNumber,
+        perPage: pageSize,
+        onSetPage,
+        onPerPageSelect,
+        isCompact: false
+    };
+
+    const paginationConfigBottom = {
+        ...paginationConfig,
+        dropDirection: 'up',
+        variant: 'bottom'
+    };
+
     const mainContent = () => (
         <React.Fragment>
             <PrimaryToolbar
-                pagination={{
-                    itemCount: numberOfEntities || 0,
-                    page: pageNumber,
-                    perPage: pageSize,
-                    onSetPage,
-                    onPerPageSelect,
-                    isCompact: false
-                }}
+                pagination={!loaded ? <PaginationLoader /> : numberOfEntities > 0 ? paginationConfig : undefined}
                 actionsConfig={{
                     actions: [
                         <Link to={paths.sourcesNew} key="addSourceButton">
@@ -137,16 +146,7 @@ const SourcesPage = () => {
             />
             <SourcesSimpleView />
             <PrimaryToolbar
-                pagination={{
-                    itemCount: numberOfEntities || 0,
-                    page: pageNumber,
-                    perPage: pageSize,
-                    onSetPage,
-                    onPerPageSelect,
-                    isCompact: false,
-                    dropDirection: 'up',
-                    variant: 'bottom'
-                }}
+                pagination={!loaded ? <PaginationLoader /> : numberOfEntities > 0 ? paginationConfigBottom : undefined}
             />
         </React.Fragment>
     );

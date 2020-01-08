@@ -5,7 +5,7 @@ import { applyReducerHash } from '@redhat-cloud-services/frontend-components-uti
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { PrimaryToolbar, ConditionalFilter } from '@redhat-cloud-services/frontend-components';
 import { act } from 'react-dom/test-utils';
-import { Chip, Select } from '@patternfly/react-core';
+import { Chip, Select, Pagination } from '@patternfly/react-core';
 
 import SourcesPage from '../../pages/SourcesPage';
 import SourcesEmptyState from '../../components/SourcesEmptyState';
@@ -21,6 +21,7 @@ import ReducersProviders, { defaultProvidersState } from '../../redux/reducers/p
 import * as api from '../../api/entities';
 import * as typesApi from '../../api/source_types';
 import EmptyStateTable from '../../components/SourcesSimpleView/EmptyStateTable';
+import PaginationLoader from '../../pages/SourcesPage/PaginationLoader';
 
 describe('SourcesPage', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -55,6 +56,7 @@ describe('SourcesPage', () => {
         expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
         expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
         expect(wrapper.find(SourcesSimpleView)).toHaveLength(1);
+        expect(wrapper.find(Pagination)).toHaveLength(2);
     });
 
     it('renders empty state when there are no Sources', async () => {
@@ -94,6 +96,7 @@ describe('SourcesPage', () => {
         expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
         expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
         expect(wrapper.find(SourcesSimpleView)).toHaveLength(1);
+        expect(wrapper.find(PaginationLoader)).toHaveLength(2);
     });
 
     it('renders loading state when is loading', async () => {
@@ -101,7 +104,11 @@ describe('SourcesPage', () => {
             wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
         });
 
-        expect(wrapper.find(ContentLoader).length).toEqual(12);
+        const paginationLoadersCount = 2;
+        const rowLoadersCount = 12;
+        const loadersCount = rowLoadersCount + paginationLoadersCount;
+
+        expect(wrapper.find(ContentLoader).length).toEqual(loadersCount);
         wrapper.update();
         expect(wrapper.find(ContentLoader).length).toEqual(0);
     });
@@ -213,6 +220,7 @@ describe('SourcesPage', () => {
                     });
                     expect(store.getState().providers.numberOfEntities).toEqual(0);
                     expect(wrapper.find(EmptyStateTable)).toHaveLength(1);
+                    expect(wrapper.find(Pagination)).toHaveLength(0);
                     done();
                 }, 500);
             }, 500);
