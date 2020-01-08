@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, shallowEqual } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import { useSource } from '../../hooks/useSource';
 import get from 'lodash/get';
 
@@ -44,10 +43,9 @@ export const innerSetter = ({ sourceTypes, source, appTypes, formOptions, checkA
 export const AuthTypeSetter = ({ formOptions, authenticationValues }) => {
     const [checkAuthType] = useState(() => checkAuthTypeMemo());
 
-    const { id } = useParams();
     const { appTypes, sourceTypes } = useSelector(({ providers }) => providers, shallowEqual);
 
-    const source = useSource(id);
+    const source = useSource();
 
     innerSetter({ sourceTypes, checkAuthType, formOptions, authenticationValues, appTypes, source });
 

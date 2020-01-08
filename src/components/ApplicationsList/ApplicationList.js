@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import {
     TextContent,
@@ -17,9 +16,8 @@ import RedirectNoId from '../RedirectNoId/RedirectNoId';
 import { useSource } from '../../hooks/useSource';
 
 const ApplicationList = ({ setApplicationToRemove, breakpoints, namePrefix }) => {
-    const { id } = useParams();
     const appTypes = useSelector(({ providers }) => providers.appTypes);
-    const source = useSource(id);
+    const source = useSource();
 
     if (!source) {
         return <RedirectNoId/>;

@@ -1,5 +1,11 @@
 import * as redux from 'react-redux';
+
 import { useSource } from '../../hooks/useSource';
+
+jest.mock('react-router-dom', () => ({
+    __esModule: true,
+    useParams: jest.fn().mockImplementation(() => ({ id: '121311231' }))
+}));
 
 describe('useSource', () => {
     let INPUT_FN = expect.any(Function);
@@ -26,6 +32,6 @@ describe('useSource', () => {
     });
 
     it('returns object', () => {
-        expect(useSource(ID)).toEqual(ENTITY);
+        expect(useSource()).toEqual(ENTITY);
     });
 });
