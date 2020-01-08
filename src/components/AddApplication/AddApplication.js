@@ -1,5 +1,5 @@
 import React, { useReducer, useEffect } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { useIntl } from 'react-intl';
 
@@ -50,7 +50,6 @@ const reducer = (state, payload) => ({ ...state, ...payload });
 
 const AddApplication = () => {
     const intl = useIntl();
-    const { id } = useParams();
     const history = useHistory();
 
     const {
@@ -61,7 +60,7 @@ const AddApplication = () => {
         loaded
     } = useSelector(({ providers }) => providers, shallowEqual);
 
-    const source = useSource(id);
+    const source = useSource();
 
     const dispatch = useDispatch();
 
