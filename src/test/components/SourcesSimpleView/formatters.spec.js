@@ -1,3 +1,4 @@
+import ReactDOMServer from 'react-dom/server';
 import {
     formatters,
     defaultFormatter,
@@ -410,7 +411,7 @@ describe('formatters', () => {
                 const wrapper = mount(wrapperWithIntl(availabilityFormatter('some nonsense', SOURCE, { appTypes: APPTYPES })));
 
                 expect(wrapper.text().includes('--')).toEqual(true);
-                expect(wrapper.find(Popover).text().includes('No application')).toEqual(true);
+                expect(ReactDOMServer.renderToStaticMarkup(wrapper.find(Popover).props().bodyContent)).toEqual('<h1>No application connected.</h1>');
             });
         });
 
