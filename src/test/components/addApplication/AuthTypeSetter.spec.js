@@ -63,7 +63,7 @@ describe('AuthTypeSetter', () => {
     beforeEach(() => {
         mockStore = configureStore(middlewares);
         store = mockStore({
-            providers: {
+            sources: {
                 entities: [SOURCE],
                 appTypes,
                 sourceTypes: sourceTypesData.data,

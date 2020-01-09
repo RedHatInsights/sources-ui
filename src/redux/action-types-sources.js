@@ -19,7 +19,7 @@ export const ACTION_TYPES = [
 
 export const SORT_ENTITIES = 'SORT_ENTITIES';
 export const PAGE_AND_SIZE = 'PAGE_AND_SIZE';
-export const FILTER_PROVIDERS  = 'FILTER_PROVIDERS';
+export const FILTER_SOURCES  = 'FILTER_SOURCES';
 export const ADD_APP_TO_SOURCE = 'ADD_APP_TO_SOURCE';
 export const UNDO_ADD_SOURCE = 'UNDO_ADDD_SOURCE';
 export const CLEAR_ADD_SOURCE = 'CLEAR_ADD_SOURCE';

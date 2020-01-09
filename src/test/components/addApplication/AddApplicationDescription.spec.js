@@ -26,7 +26,7 @@ describe('AddApplicationDescription', () => {
         initialEntry = ['/add_application/23'];
         mockStore = configureStore(middlewares);
         store = mockStore({
-            providers: {
+            sources: {
                 entities: sourcesDataGraphQl,
                 appTypes: applicationTypesData.data,
                 sourceTypes: sourceTypesData.data
@@ -53,7 +53,7 @@ describe('AddApplicationDescription', () => {
 
     it('renders RedirectNoId', () => {
         store = mockStore({
-            providers: {
+            sources: {
                 entities: [],
                 appTypes: applicationTypesData.data,
                 sourceTypes: sourceTypesData.data
@@ -139,7 +139,7 @@ describe('AddApplicationDescription', () => {
     it('renders correctly when SourceType does not exist', () => {
         const NOT_FOUND_MSG = 'Type not found';
         store = mockStore({
-            providers: {
+            sources: {
                 entities: sourcesDataGraphQl,
                 appTypes: applicationTypesData.data,
                 sourceTypes: []

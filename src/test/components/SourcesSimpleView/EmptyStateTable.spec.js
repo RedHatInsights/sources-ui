@@ -3,7 +3,7 @@ import { Bullseye, Button, EmptyState, EmptyStateBody } from '@patternfly/react-
 
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import EmptyStateTable from '../../../components/SourcesSimpleView/EmptyStateTable';
-import * as actions from '../../../redux/actions/providers';
+import * as actions from '../../../redux/actions/sources';
 
 describe('EmptyStateTable', () => {
     it('render correctly', () => {

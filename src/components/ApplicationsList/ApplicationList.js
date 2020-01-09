@@ -16,7 +16,7 @@ import RedirectNoId from '../RedirectNoId/RedirectNoId';
 import { useSource } from '../../hooks/useSource';
 
 const ApplicationList = ({ setApplicationToRemove, breakpoints, namePrefix }) => {
-    const appTypes = useSelector(({ providers }) => providers.appTypes);
+    const appTypes = useSelector(({ sources }) => sources.appTypes);
     const source = useSource();
 
     if (!source) {

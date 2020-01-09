@@ -43,7 +43,7 @@ export const innerSetter = ({ sourceTypes, source, appTypes, formOptions, checkA
 export const AuthTypeSetter = ({ formOptions, authenticationValues }) => {
     const [checkAuthType] = useState(() => checkAuthTypeMemo());
 
-    const { appTypes, sourceTypes } = useSelector(({ providers }) => providers, shallowEqual);
+    const { appTypes, sourceTypes } = useSelector(({ sources }) => sources, shallowEqual);
 
     const source = useSource();
 

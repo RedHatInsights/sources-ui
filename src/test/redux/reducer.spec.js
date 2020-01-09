@@ -1,23 +1,23 @@
-import * as sourcesReducer from '../../redux/reducers/providers';
+import * as sourcesReducer from '../../redux/reducers/sources';
 
 describe('redux > sources reducer', () => {
     const SOURCE_ID = '5646874215432';
     const APP_ID = '55654';
 
-    const defaultProvidersState = sourcesReducer.defaultProvidersState;
+    const defaultSourcesState = sourcesReducer.defaultSourcesState;
 
     describe('entitiesLoaded', () => {
         const SOURCES = [{ id: '1', name: 'name1' }, { id: '2', name: 'name2' }];
         const DATA = { payload: SOURCES };
 
         const EXPECTED_STATE = {
-            ...defaultProvidersState,
+            ...defaultSourcesState,
             entities: SOURCES,
             loaded: true
         };
 
         it('loads the entities', () => {
-            expect(sourcesReducer.entitiesLoaded(defaultProvidersState, DATA)).toEqual(
+            expect(sourcesReducer.entitiesLoaded(defaultSourcesState, DATA)).toEqual(
                 expect.objectContaining(EXPECTED_STATE)
             );
         });
@@ -32,7 +32,7 @@ describe('redux > sources reducer', () => {
                 ...ADDITIONAL_OPTIONS
             };
 
-            expect(sourcesReducer.entitiesLoaded(defaultProvidersState, NEW_DATA)).toEqual(
+            expect(sourcesReducer.entitiesLoaded(defaultSourcesState, NEW_DATA)).toEqual(
                 expect.objectContaining({
                     ...EXPECTED_STATE,
                     ...ADDITIONAL_OPTIONS
@@ -45,9 +45,9 @@ describe('redux > sources reducer', () => {
         it('sets values', () => {
             const VALUES = { name: 'aa', source: { id: 1 } };
 
-            expect(sourcesReducer.undoAddSource(defaultProvidersState, { payload: { values: VALUES } })).toEqual(
+            expect(sourcesReducer.undoAddSource(defaultSourcesState, { payload: { values: VALUES } })).toEqual(
                 expect.objectContaining({
-                    ...defaultProvidersState,
+                    ...defaultSourcesState,
                     addSourceInitialValues: VALUES
                 })
             );
@@ -59,21 +59,21 @@ describe('redux > sources reducer', () => {
             const EMPTY_OBJECT = {};
             const NOT_EMPTY = { cosi: '133' };
 
-            expect(sourcesReducer.clearAddSource({ ...defaultProvidersState, addSourceInitialValues: NOT_EMPTY })).toEqual(
+            expect(sourcesReducer.clearAddSource({ ...defaultSourcesState, addSourceInitialValues: NOT_EMPTY })).toEqual(
                 expect.objectContaining({
-                    ...defaultProvidersState,
+                    ...defaultSourcesState,
                     addSourceInitialValues: EMPTY_OBJECT
                 })
             );
         });
     });
 
-    describe('filterProviders', () => {
+    describe('filterSources', () => {
         const value = { name: 'name' };
 
         it('sets filter value', () => {
-            expect(sourcesReducer.filterProviders(defaultProvidersState, { payload: { value } })).toEqual({
-                ...defaultProvidersState,
+            expect(sourcesReducer.filterSources(defaultSourcesState, { payload: { value } })).toEqual({
+                ...defaultSourcesState,
                 filterValue: {
                     name: 'name'
                 }
@@ -82,12 +82,12 @@ describe('redux > sources reducer', () => {
 
         it('switch to the first page', () => {
             const stateOnSecondPage = {
-                ...defaultProvidersState,
+                ...defaultSourcesState,
                 pageNumber: 12
             };
 
-            expect(sourcesReducer.filterProviders(stateOnSecondPage, { payload: { value } })).toEqual({
-                ...defaultProvidersState,
+            expect(sourcesReducer.filterSources(stateOnSecondPage, { payload: { value } })).toEqual({
+                ...defaultSourcesState,
                 filterValue: {
                     name: 'name'
                 },
@@ -98,7 +98,7 @@ describe('redux > sources reducer', () => {
 
     describe('clearFilters', () => {
         const state = {
-            ...defaultProvidersState,
+            ...defaultSourcesState,
             filterValue: {
                 xxx: 'yyy',
                 name: [1, 2, 3]
@@ -108,7 +108,7 @@ describe('redux > sources reducer', () => {
 
         it('clears filter', () => {
             expect(sourcesReducer.clearFilters(state)).toEqual({
-                ...defaultProvidersState,
+                ...defaultSourcesState,
                 filterValue: {},
                 pageNumber: 1
             });
@@ -120,8 +120,8 @@ describe('redux > sources reducer', () => {
             custom: 'custom'
         } };
 
-        expect(sourcesReducer.entitiesPending(defaultProvidersState, payload)).toEqual({
-            ...defaultProvidersState,
+        expect(sourcesReducer.entitiesPending(defaultSourcesState, payload)).toEqual({
+            ...defaultSourcesState,
             loaded: false,
             custom: 'custom'
         });
@@ -130,15 +130,15 @@ describe('redux > sources reducer', () => {
     it('entitiesRejected sets fetching error', () => {
         const payload = { payload: { error: 'error' } };
 
-        expect(sourcesReducer.entitiesRejected(defaultProvidersState, payload)).toEqual({
-            ...defaultProvidersState,
+        expect(sourcesReducer.entitiesRejected(defaultSourcesState, payload)).toEqual({
+            ...defaultSourcesState,
             fetchingError: 'error'
         });
     });
 
     it('sourceTypesPending sets empty sourceTypes', () => {
-        expect(sourcesReducer.sourceTypesPending(defaultProvidersState)).toEqual({
-            ...defaultProvidersState,
+        expect(sourcesReducer.sourceTypesPending(defaultSourcesState)).toEqual({
+            ...defaultSourcesState,
             sourceTypes: [],
             sourceTypesLoaded: false
         });
@@ -148,16 +148,16 @@ describe('redux > sources reducer', () => {
         const SOURCE_TYPES = ['aaa', 'bbb'];
         const payload = { payload: SOURCE_TYPES };
 
-        expect(sourcesReducer.sourceTypesLoaded(defaultProvidersState, payload)).toEqual({
-            ...defaultProvidersState,
+        expect(sourcesReducer.sourceTypesLoaded(defaultSourcesState, payload)).toEqual({
+            ...defaultSourcesState,
             sourceTypes: SOURCE_TYPES,
             sourceTypesLoaded: true
         });
     });
 
     it('appTypesPending sets empty appTypes', () => {
-        expect(sourcesReducer.appTypesPending(defaultProvidersState)).toEqual({
-            ...defaultProvidersState,
+        expect(sourcesReducer.appTypesPending(defaultSourcesState)).toEqual({
+            ...defaultSourcesState,
             appTypes: [],
             appTypesLoaded: false
         });
@@ -167,8 +167,8 @@ describe('redux > sources reducer', () => {
         const APP_TYPES = ['aaa', 'bbb'];
         const payload = { payload: APP_TYPES };
 
-        expect(sourcesReducer.appTypesLoaded(defaultProvidersState, payload)).toEqual({
-            ...defaultProvidersState,
+        expect(sourcesReducer.appTypesLoaded(defaultSourcesState, payload)).toEqual({
+            ...defaultSourcesState,
             appTypes: APP_TYPES,
             appTypesLoaded: true
         });
@@ -179,8 +179,8 @@ describe('redux > sources reducer', () => {
         const direction = 'asc';
         const payload = { payload: { column, direction } };
 
-        expect(sourcesReducer.sortEntities(defaultProvidersState, payload)).toEqual({
-            ...defaultProvidersState,
+        expect(sourcesReducer.sortEntities(defaultSourcesState, payload)).toEqual({
+            ...defaultSourcesState,
             sortBy: column,
             sortDirection: direction
         });
@@ -191,8 +191,8 @@ describe('redux > sources reducer', () => {
         const page = 6;
         const payload = { payload: { page, size } };
 
-        expect(sourcesReducer.setPageAndSize(defaultProvidersState, payload)).toEqual({
-            ...defaultProvidersState,
+        expect(sourcesReducer.setPageAndSize(defaultSourcesState, payload)).toEqual({
+            ...defaultSourcesState,
             pageSize: size,
             pageNumber: page
         });
@@ -206,7 +206,7 @@ describe('redux > sources reducer', () => {
         };
 
         const defaultState = {
-            ...defaultProvidersState,
+            ...defaultSourcesState,
             entities: [
                 { id: '1235', name: 'do not remove this' },
                 { id: SOURCE_ID, name: 'delete this' }
@@ -215,7 +215,7 @@ describe('redux > sources reducer', () => {
 
         it('pending marks source for deletion', () => {
             expect(sourcesReducer.sourceEditRemovePending(defaultState, payload)).toEqual({
-                ...defaultProvidersState,
+                ...defaultSourcesState,
                 entities: [
                     { id: '1235', name: 'do not remove this' },
                     { id: SOURCE_ID, name: 'delete this', isDeleting: true }
@@ -225,7 +225,7 @@ describe('redux > sources reducer', () => {
 
         it('fullfiled deletes the source', () => {
             expect(sourcesReducer.sourceEditRemoveFulfilled(defaultState, payload)).toEqual({
-                ...defaultProvidersState,
+                ...defaultSourcesState,
                 entities: [
                     { id: '1235', name: 'do not remove this' }
                 ]
@@ -234,7 +234,7 @@ describe('redux > sources reducer', () => {
 
         it('rejected unmarks the deleted source', () => {
             const defaultState = {
-                ...defaultProvidersState,
+                ...defaultSourcesState,
                 entities: [
                     { id: '1235', name: 'do not remove this' },
                     { id: SOURCE_ID, name: 'delete this', isDeleting: true }
@@ -242,7 +242,7 @@ describe('redux > sources reducer', () => {
             };
 
             expect(sourcesReducer.sourceEditRemoveRejected(defaultState, payload)).toEqual({
-                ...defaultProvidersState,
+                ...defaultSourcesState,
                 entities: [
                     { id: '1235', name: 'do not remove this' },
                     { id: SOURCE_ID, name: 'delete this', isDeleting: undefined }
@@ -260,7 +260,7 @@ describe('redux > sources reducer', () => {
         };
 
         const defaultState = {
-            ...defaultProvidersState,
+            ...defaultSourcesState,
             entities: [
                 { id: '1235', name: 'no apps' },
                 {
@@ -276,7 +276,7 @@ describe('redux > sources reducer', () => {
 
         it('pending marks deleted app', () => {
             expect(sourcesReducer.appRemovingPending(defaultState, payload)).toEqual({
-                ...defaultProvidersState,
+                ...defaultSourcesState,
                 entities: [
                     { id: '1235', name: 'no apps' },
                     {
@@ -293,7 +293,7 @@ describe('redux > sources reducer', () => {
 
         it('fullfiled removes deleted app', () => {
             expect(sourcesReducer.appRemovingFulfilled(defaultState, payload)).toEqual({
-                ...defaultProvidersState,
+                ...defaultSourcesState,
                 entities: [
                     { id: '1235', name: 'no apps' },
                     {
@@ -309,7 +309,7 @@ describe('redux > sources reducer', () => {
 
         it('rejected unmarks deleted app', () => {
             const defaultState = {
-                ...defaultProvidersState,
+                ...defaultSourcesState,
                 entities: [
                     { id: '1235', name: 'no apps' },
                     {
@@ -324,7 +324,7 @@ describe('redux > sources reducer', () => {
             };
 
             expect(sourcesReducer.appRemovingRejected(defaultState, payload)).toEqual({
-                ...defaultProvidersState,
+                ...defaultSourcesState,
                 entities: [
                     { id: '1235', name: 'no apps' },
                     {
@@ -342,7 +342,7 @@ describe('redux > sources reducer', () => {
 
     it('addAppToSource adds app to source', () => {
         const defaultState = {
-            ...defaultProvidersState,
+            ...defaultSourcesState,
             entities: [
                 { id: '1235', name: 'no apps' },
                 {
@@ -359,7 +359,7 @@ describe('redux > sources reducer', () => {
         const payload = { payload: { sourceId: SOURCE_ID, app: { id: '785412' } } };
 
         expect(sourcesReducer.addAppToSource(defaultState, payload)).toEqual({
-            ...defaultProvidersState,
+            ...defaultSourcesState,
             entities: [
                 { id: '1235', name: 'no apps' },
                 {
@@ -379,8 +379,8 @@ describe('redux > sources reducer', () => {
         const COUNT = 2165;
         const payload = { payload: { count: COUNT } };
 
-        expect(sourcesReducer.setCount(defaultProvidersState, payload)).toEqual({
-            ...defaultProvidersState,
+        expect(sourcesReducer.setCount(defaultSourcesState, payload)).toEqual({
+            ...defaultSourcesState,
             numberOfEntities: COUNT
         });
     });

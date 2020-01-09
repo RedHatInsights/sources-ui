@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 
-import { removeMessage, undoAddSource } from '../../redux/actions/providers';
+import { removeMessage, undoAddSource } from '../../redux/actions/sources';
 import { paths } from '../../Routes';
 import { refreshPage } from './refreshPage';
 

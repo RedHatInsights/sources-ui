@@ -1,5 +1,5 @@
 import { onSubmit } from '../../../components/SourceEditForm/onSubmit';
-import * as actions from '../../../redux/actions/providers';
+import * as actions from '../../../redux/actions/sources';
 import { paths } from '../../../Routes';
 
 describe('editSourceModal - on submit', () => {

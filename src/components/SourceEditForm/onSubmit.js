@@ -1,5 +1,5 @@
 import { selectOnlyEditedValues } from './helpers';
-import { updateSource, loadEntities } from '../../redux/actions/providers';
+import { updateSource, loadEntities } from '../../redux/actions/sources';
 import { paths } from '../../Routes';
 
 export const onSubmit = (values, editing, dispatch, source, intl, push) => dispatch(updateSource(

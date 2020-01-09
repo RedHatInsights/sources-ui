@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { addMessage } from '../redux/actions/providers';
+import { addMessage } from '../redux/actions/sources';
 
 class ErrorBoundary extends Component {
     state = {

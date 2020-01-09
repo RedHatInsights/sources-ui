@@ -8,10 +8,10 @@ import {
     loadEntities,
     sortEntities,
     removeSource,
-    filterProviders,
+    filterSources,
     clearFilters,
     removeApplication
-} from '../../redux/actions/providers';
+} from '../../redux/actions/sources';
 import {
     UNDO_ADD_SOURCE,
     CLEAR_ADD_SOURCE,
@@ -20,9 +20,9 @@ import {
     ACTION_TYPES,
     SET_COUNT,
     SORT_ENTITIES,
-    FILTER_PROVIDERS,
+    FILTER_SOURCES,
     CLEAR_FILTERS
-} from '../../redux/action-types-providers';
+} from '../../redux/action-types-sources';
 import { REMOVE_NOTIFICATION, ADD_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications';
 import * as updateSourceApi from '../../api/doUpdateSource';
 import * as api from '../../api/entities';
@@ -80,14 +80,14 @@ describe('redux actions', () => {
         );
     });
 
-    it('filterProviders creates an object', async () => {
+    it('filterSources creates an object', async () => {
         const filterValue = { name: 'name' };
 
-        await filterProviders(filterValue)(dispatch);
+        await filterSources(filterValue)(dispatch);
 
         expect(dispatch.mock.calls).toHaveLength(2);
         expect(dispatch.mock.calls[0][0]).toEqual({
-            type: FILTER_PROVIDERS,
+            type: FILTER_SOURCES,
             payload: {
                 value: filterValue
             }
@@ -178,7 +178,7 @@ describe('redux actions', () => {
         const [pageSize, pageNumber, sortBy, sortDirection, filterValue] = [15, 10, 'name', 'desc', 'pepa'];
 
         const getState = () => ({
-            providers: {
+            sources: {
                 pageSize, pageNumber, sortBy, sortDirection, filterValue
             }
         });
