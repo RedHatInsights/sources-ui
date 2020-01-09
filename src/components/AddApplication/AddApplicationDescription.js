@@ -17,7 +17,7 @@ import { useSource } from '../../hooks/useSource';
 const AddApplicationDescription = () => {
     const [removingApp, setApplicationToRemove] = useState({});
 
-    const sourceTypes = useSelector(({ providers }) => providers.sourceTypes);
+    const sourceTypes = useSelector(({ sources }) => sources.sourceTypes);
     const source = useSource();
 
     if (!source) {

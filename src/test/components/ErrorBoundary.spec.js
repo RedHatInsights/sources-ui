@@ -4,7 +4,7 @@ import { componentWrapperIntl } from '../../Utilities/testsHelpers';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import * as actions from '../../redux/actions/providers';
+import * as actions from '../../redux/actions/sources';
 
 describe('Error Boundary', () => {
     it('renders children', () => {

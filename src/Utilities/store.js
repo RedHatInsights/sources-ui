@@ -4,7 +4,7 @@ import logger from 'redux-logger';
 import thunk from 'redux-thunk';
 import promise from 'redux-promise-middleware';
 
-import ReducersProviders, { defaultProvidersState } from '../redux/reducers/providers';
+import SourcesReducer, { defaultSourcesState } from '../redux/reducers/sources';
 
 export const getStore = (includeLogger) => {
     const middlewares = [
@@ -19,7 +19,7 @@ export const getStore = (includeLogger) => {
 
     const registry = new ReducerRegistry({}, middlewares);
 
-    registry.register({ providers: applyReducerHash(ReducersProviders, defaultProvidersState) });
+    registry.register({ sources: applyReducerHash(SourcesReducer, defaultSourcesState) });
     registry.register({ notifications });
 
     return registry.getStore();

@@ -2,16 +2,16 @@ import {
     ACTION_TYPES,
     SORT_ENTITIES,
     PAGE_AND_SIZE,
-    FILTER_PROVIDERS,
+    FILTER_SOURCES,
     ADD_APP_TO_SOURCE,
     UNDO_ADD_SOURCE,
     CLEAR_ADD_SOURCE,
     SET_COUNT,
     ADD_HIDDEN_SOURCE,
     CLEAR_FILTERS
-} from '../action-types-providers';
+} from '../action-types-sources';
 
-export const defaultProvidersState = {
+export const defaultSourcesState = {
     loaded: false,
     pageSize: 50,
     pageNumber: 1,
@@ -79,7 +79,7 @@ export const setPageAndSize = (state, { payload: { page, size } }) => ({
     pageNumber: page
 });
 
-export const filterProviders = (state, { payload: { value } }) =>({
+export const filterSources = (state, { payload: { value } }) =>({
     ...state,
     filterValue: {
         ...state.filterValue,
@@ -195,7 +195,7 @@ export default {
 
     [SORT_ENTITIES]: sortEntities,
     [PAGE_AND_SIZE]: setPageAndSize,
-    [FILTER_PROVIDERS]: filterProviders,
+    [FILTER_SOURCES]: filterSources,
     [ADD_APP_TO_SOURCE]: addAppToSource,
     [UNDO_ADD_SOURCE]: undoAddSource,
     [CLEAR_ADD_SOURCE]: clearAddSource,

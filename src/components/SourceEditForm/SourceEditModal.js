@@ -41,7 +41,7 @@ const SourceEditModal = () => {
         appTypes,
         sourceTypesLoaded,
         appTypesLoaded
-    } = useSelector(({ providers }) => providers, shallowEqual);
+    } = useSelector(({ sources }) => sources, shallowEqual);
 
     const dispatch = useDispatch();
 

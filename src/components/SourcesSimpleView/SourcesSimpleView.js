@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { Table, TableHeader, TableBody, sortable } from '@patternfly/react-table';
 import { useIntl } from 'react-intl';
 
-import { sortEntities } from '../../redux/actions/providers';
+import { sortEntities } from '../../redux/actions/sources';
 import { formatters } from './formatters';
 import { PlaceHolderTable, RowWrapperLoader } from './loaders';
 import { sourcesViewDefinition, COLUMN_COUNT } from '../../views/sourcesViewDefinition';
@@ -89,7 +89,7 @@ const SourcesSimpleView = () => {
         sortBy,
         sortDirection,
         numberOfEntities
-    } = useSelector(({ providers }) => providers, shallowEqual);
+    } = useSelector(({ sources }) => sources, shallowEqual);
 
     const reduxDispatch = useDispatch();
 

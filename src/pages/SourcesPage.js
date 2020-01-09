@@ -6,8 +6,8 @@ import {
     loadAppTypes,
     loadEntities,
     loadSourceTypes,
-    filterProviders
-} from '../redux/actions/providers';
+    filterSources
+} from '../redux/actions/sources';
 import { Button } from '@patternfly/react-core';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources';
@@ -18,7 +18,7 @@ import SourcesEmptyState from '../components/SourcesEmptyState';
 import SourceEditModal from '../components/SourceEditForm/SourceEditModal';
 import SourceRemoveModal from '../components/SourceRemoveModal';
 import AddApplication from '../components/AddApplication/AddApplication';
-import { pageAndSize } from '../redux/actions/providers';
+import { pageAndSize } from '../redux/actions/sources';
 import { paths } from '../Routes';
 
 import {
@@ -51,7 +51,7 @@ const SourcesPage = () => {
         addSourceInitialValues,
         sourceTypes,
         entities
-    } = useSelector(({ providers }) => providers, shallowEqual);
+    } = useSelector(({ sources }) => sources, shallowEqual);
 
     const dispatch = useDispatch();
 
@@ -141,7 +141,7 @@ const SourcesPage = () => {
                 activeFiltersConfig={{
                     filters: prepareChips(filterValue, sourceTypes),
                     onDelete: (_event, chips, deleteAll) =>
-                        dispatch(filterProviders(removeChips(chips, filterValue, deleteAll, setFilterValue)))
+                        dispatch(filterSources(removeChips(chips, filterValue, deleteAll, setFilterValue)))
                 }}
             />
             <SourcesSimpleView />

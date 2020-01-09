@@ -16,7 +16,7 @@ import { sourceTypesData } from '../../sourceTypesData';
 import { applicationTypesData } from '../../applicationTypesData';
 
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
-import * as actions from '../../../redux/actions/providers';
+import * as actions from '../../../redux/actions/sources';
 import * as API from '../../../api/entities';
 
 describe('SourcesSimpleView', () => {
@@ -30,7 +30,7 @@ describe('SourcesSimpleView', () => {
         initialProps = {};
         mockStore = configureStore(middlewares);
         initialState = {
-            providers:
+            sources:
             {
                 loaded: true,
                 rows: [],
@@ -63,8 +63,8 @@ describe('SourcesSimpleView', () => {
 
     it('renders removing row', (done) => {
         initialState = {
-            providers: {
-                ...initialState.providers,
+            sources: {
+                ...initialState.sources,
                 ...loadedProps,
                 entities: [
                     {
@@ -92,8 +92,8 @@ describe('SourcesSimpleView', () => {
     it('renders table when loaded', (done) => {
         const ROW_WRAPPER_CLASSNAME = 'ins-c-sources__row-vertical-centered';
         initialState = {
-            providers: {
-                ...initialState.providers,
+            sources: {
+                ...initialState.sources,
                 ...loadedProps
             }
         };
@@ -118,8 +118,8 @@ describe('SourcesSimpleView', () => {
 
     it('renders empty state table', async () => {
         initialState = {
-            providers: {
-                ...initialState.providers,
+            sources: {
+                ...initialState.sources,
                 ...loadedProps,
                 entities: [],
                 numberOfEntities: 0,
@@ -148,15 +148,15 @@ describe('SourcesSimpleView', () => {
         let wrapper;
 
         initialState = {
-            providers: {
-                ...initialState.providers,
+            sources: {
+                ...initialState.sources,
                 ...loadedProps
             }
         };
 
         const initialStateUpdated = ({
-            providers: {
-                ...initialState.providers,
+            sources: {
+                ...initialState.sources,
                 entities: [sourcesDataGraphQl[0]],
                 numberOfEntities: 1
             }
@@ -198,8 +198,8 @@ describe('SourcesSimpleView', () => {
 
         beforeEach(() => {
             initialState = {
-                providers: {
-                    ...initialState.providers,
+                sources: {
+                    ...initialState.sources,
                     ...loadedProps
                 }
             };
@@ -255,8 +255,8 @@ describe('SourcesSimpleView', () => {
         const spy = jest.spyOn(actions, 'sortEntities');
 
         initialState = {
-            providers: {
-                ...initialState.providers,
+            sources: {
+                ...initialState.sources,
                 ...loadedProps
             }
         };

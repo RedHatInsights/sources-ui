@@ -14,7 +14,7 @@ describe('useSource', () => {
     const ENTITY = { id: ID, additionalInfo: 'abcd' };
 
     const MOCK_STORE = {
-        providers: {
+        sources: {
             entities: [
                 ENTITY
             ]

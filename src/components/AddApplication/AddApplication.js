@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { useIntl } from 'react-intl';
 
-import { loadEntities } from '../../redux/actions/providers';
+import { loadEntities } from '../../redux/actions/sources';
 import SourcesFormRenderer from '../../Utilities/SourcesFormRenderer';
 import createSchema from './AddApplicationSchema';
 import LoadingStep from '../steps/LoadingStep';
@@ -58,7 +58,7 @@ const AddApplication = () => {
         appTypesLoaded,
         sourceTypes,
         loaded
-    } = useSelector(({ providers }) => providers, shallowEqual);
+    } = useSelector(({ sources }) => sources, shallowEqual);
 
     const source = useSource();
 

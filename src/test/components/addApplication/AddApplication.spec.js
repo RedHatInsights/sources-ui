@@ -34,7 +34,7 @@ describe('AddApplication', () => {
         initialEntry = [`${PATH}${SOURCE_NO_APS_ID}`];
         mockStore = configureStore(middlewares);
         store = mockStore({
-            providers: {
+            sources: {
                 entities: [{
                     id: SOURCE_NO_APS_ID,
                     source_type_id: OPENSHIFT_ID,
@@ -89,7 +89,7 @@ describe('AddApplication', () => {
         const ENDPOINT_ID = '21312';
 
         store = mockStore({
-            providers: {
+            sources: {
                 entities: [{
                     id: SOURCE_NO_APS_ID,
                     source_type_id: OPENSHIFT_ID,
@@ -154,7 +154,7 @@ describe('AddApplication', () => {
 
     it('renders loading state when is not loaded', async () => {
         store = mockStore({
-            providers: {
+            sources: {
                 entities: [],
                 appTypes: applicationTypesData.data,
                 sourceTypes: sourceTypesData.data,
@@ -180,7 +180,7 @@ describe('AddApplication', () => {
         entities.doLoadSource = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
 
         store = mockStore({
-            providers: {
+            sources: {
                 entities: [],
                 appTypes: applicationTypesData.data,
                 sourceTypes: sourceTypesData.data,
@@ -207,7 +207,7 @@ describe('AddApplication', () => {
     describe('imported source - not need to edit any value', () => {
         beforeEach(() => {
             store = mockStore({
-                providers: {
+                sources: {
                     entities: [{
                         id: SOURCE_NO_APS_ID,
                         source_type_id: OPENSHIFT_ID,

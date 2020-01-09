@@ -6,9 +6,9 @@ import isEmpty from 'lodash/isEmpty';
 import {
     loadEntities,
     clearAddSource,
-    filterProviders,
+    filterSources,
     addMessage
-} from '../../redux/actions/providers';
+} from '../../redux/actions/sources';
 import UndoButtonAdd from '../../components/UndoButton/UndoButtonAdd';
 
 export const onCloseAddSourceWizard = ({ values, dispatch, history, intl }) => {
@@ -46,7 +46,7 @@ export const prepareSourceTypeSelection = (sourceTypes) =>
     sourceTypes.map(({ id, product_name }) => ({ label: product_name, value: id }))
     .sort((a, b) => a.label.localeCompare(b.label));
 
-export const setFilter = (column, value, dispatch) => dispatch(filterProviders({
+export const setFilter = (column, value, dispatch) => dispatch(filterSources({
     [column]: value
 }));
 

@@ -20,7 +20,7 @@ import { applicationTypesData } from '../applicationTypesData';
 
 import { componentWrapperIntl } from '../../Utilities/testsHelpers';
 
-import ReducersProviders, { defaultProvidersState } from '../../redux/reducers/providers';
+import ReducersProviders, { defaultSourcesState } from '../../redux/reducers/sources';
 import * as api from '../../api/entities';
 import * as typesApi from '../../api/source_types';
 import EmptyStateTable from '../../components/SourcesSimpleView/EmptyStateTable';
@@ -43,7 +43,7 @@ describe('SourcesPage', () => {
         typesApi.doLoadSourceTypes =  jest.fn().mockImplementation(() => Promise.resolve(sourceTypesData.data));
 
         store = createStore(
-            combineReducers({ providers: applyReducerHash(ReducersProviders, defaultProvidersState) }),
+            combineReducers({ sources: applyReducerHash(ReducersProviders, defaultSourcesState) }),
             applyMiddleware(...middlewares)
         );
     });
@@ -122,8 +122,8 @@ describe('SourcesPage', () => {
 
     it('renders and decreased page number if it is too great', async () => {
         store = createStore(
-            combineReducers({ providers: applyReducerHash(ReducersProviders, {
-                ...defaultProvidersState,
+            combineReducers({ sources: applyReducerHash(ReducersProviders, {
+                ...defaultSourcesState,
                 pageNumber: 20
             }) }),
             applyMiddleware(...middlewares)
@@ -225,7 +225,7 @@ describe('SourcesPage', () => {
 
         it('should call onFilterSelect', (done) => {
             setTimeout(() => {
-                expect(store.getState().providers.filterValue).toEqual({
+                expect(store.getState().sources.filterValue).toEqual({
                     name: SEARCH_TERM
                 });
                 done();
@@ -249,7 +249,7 @@ describe('SourcesPage', () => {
                 wrapper.update();
 
                 expect(wrapper.find(Chip)).toHaveLength(2);
-                expect(store.getState().providers.filterValue).toEqual({
+                expect(store.getState().sources.filterValue).toEqual({
                     name: SEARCH_TERM,
                     source_type_id: [OPENSHIFT_ID]
                 });
@@ -306,10 +306,10 @@ describe('SourcesPage', () => {
 
                 setTimeout(() => {
                     wrapper.update();
-                    expect(store.getState().providers.filterValue).toEqual({
+                    expect(store.getState().sources.filterValue).toEqual({
                         name: totalNonsense
                     });
-                    expect(store.getState().providers.numberOfEntities).toEqual(0);
+                    expect(store.getState().sources.numberOfEntities).toEqual(0);
                     expect(wrapper.find(EmptyStateTable)).toHaveLength(1);
                     expect(wrapper.find(Pagination)).toHaveLength(0);
                     done();
