@@ -73,7 +73,7 @@ const SourcesPage = () => {
     const maximumPageNumber = Math.ceil(numberOfEntities / pageSize);
 
     if (entities.length > 0 && loaded && pageNumber > Math.max(maximumPageNumber, 1)) {
-        onSetPage(maximumPageNumber > 0 ? maximumPageNumber : 1);
+        onSetPage(maximumPageNumber);
     }
 
     const paginationConfig = {

@@ -6,6 +6,9 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { PrimaryToolbar, ConditionalFilter } from '@redhat-cloud-services/frontend-components';
 import { act } from 'react-dom/test-utils';
 import { Chip, Select, Pagination } from '@patternfly/react-core';
+import { MemoryRouter, Link } from 'react-router-dom';
+import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources';
+import { RowLoader } from '@redhat-cloud-services/frontend-components-utilities/files/helpers';
 
 import SourcesPage from '../../pages/SourcesPage';
 import SourcesEmptyState from '../../components/SourcesEmptyState';
@@ -22,6 +25,8 @@ import * as api from '../../api/entities';
 import * as typesApi from '../../api/source_types';
 import EmptyStateTable from '../../components/SourcesSimpleView/EmptyStateTable';
 import PaginationLoader from '../../pages/SourcesPage/PaginationLoader';
+import { paths } from '../../Routes';
+import * as helpers from '../../pages/SourcesPage/helpers';
 
 describe('SourcesPage', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -57,6 +62,7 @@ describe('SourcesPage', () => {
         expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
         expect(wrapper.find(SourcesSimpleView)).toHaveLength(1);
         expect(wrapper.find(Pagination)).toHaveLength(2);
+        expect(wrapper.find(PaginationLoader)).toHaveLength(0);
     });
 
     it('renders empty state when there are no Sources', async () => {
@@ -88,7 +94,7 @@ describe('SourcesPage', () => {
         expect(wrapper.text().includes(ERROR_MESSAGE)).toEqual(true);
     });
 
-    it('renders table and filtering', async () => {
+    it('renders table and filtering - loading', async () => {
         await act(async() => {
             wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
         });
@@ -97,6 +103,87 @@ describe('SourcesPage', () => {
         expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
         expect(wrapper.find(SourcesSimpleView)).toHaveLength(1);
         expect(wrapper.find(PaginationLoader)).toHaveLength(2);
+    });
+
+    it('renders addSourceWizard', async () => {
+        await act(async() => {
+            wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
+        });
+        wrapper.update();
+
+        await act(async() => {
+            wrapper.find(Link).first().simulate('click', { button: 0 });
+        });
+        wrapper.update();
+
+        expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(paths.sourcesNew);
+        expect(wrapper.find(AddSourceWizard)).toHaveLength(1);
+    });
+
+    it('renders and decreased page number if it is too great', async () => {
+        store = createStore(
+            combineReducers({ providers: applyReducerHash(ReducersProviders, {
+                ...defaultProvidersState,
+                pageNumber: 20
+            }) }),
+            applyMiddleware(...middlewares)
+        );
+
+        await act(async() => {
+            wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
+        });
+        wrapper.update();
+
+        const paginationInput = wrapper.find('.pf-c-pagination__nav-page-select').first().find('input').first();
+
+        expect(paginationInput.props().value).toEqual(1);
+    });
+
+    it('closes addSourceWizard', async () => {
+        helpers.onCloseAddSourceWizard = jest.fn();
+
+        await act(async() => {
+            wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
+        });
+        wrapper.update();
+
+        await act(async() => {
+            wrapper.find(Link).first().simulate('click', { button: 0 });
+        });
+        wrapper.update();
+
+        await act(async() => {
+            wrapper.find(AddSourceWizard).props().onClose();
+        });
+        wrapper.update();
+
+        expect(helpers.onCloseAddSourceWizard).toHaveBeenCalledWith({
+            values: undefined,
+            intl: expect.any(Object),
+            dispatch: expect.any(Function),
+            history: expect.any(Object)
+        });
+    });
+
+    it('afterSuccess addSourceWizard', async () => {
+        helpers.afterSuccess = jest.fn();
+
+        await act(async() => {
+            wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
+        });
+        wrapper.update();
+
+        await act(async() => {
+            wrapper.find(Link).first().simulate('click', { button: 0 });
+        });
+        wrapper.update();
+
+        await act(async() => {
+            wrapper.find(AddSourceWizard).props().afterSuccess();
+        });
+        wrapper.update();
+
+        expect(helpers.afterSuccess).toHaveBeenCalledWith(expect.any(Function));
     });
 
     it('renders loading state when is loading', async () => {
@@ -108,9 +195,13 @@ describe('SourcesPage', () => {
         const rowLoadersCount = 12;
         const loadersCount = rowLoadersCount + paginationLoadersCount;
 
-        expect(wrapper.find(ContentLoader).length).toEqual(loadersCount);
+        expect(wrapper.find(RowLoader)).toHaveLength(rowLoadersCount);
+        expect(wrapper.find(PaginationLoader)).toHaveLength(paginationLoadersCount);
+        expect(wrapper.find(ContentLoader)).toHaveLength(loadersCount);
         wrapper.update();
-        expect(wrapper.find(ContentLoader).length).toEqual(0);
+        expect(wrapper.find(RowLoader)).toHaveLength(0);
+        expect(wrapper.find(PaginationLoader)).toHaveLength(0);
+        expect(wrapper.find(ContentLoader)).toHaveLength(0);
     });
 
     describe('filtering', () => {
