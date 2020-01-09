@@ -9,7 +9,8 @@ import {
     sortEntities,
     removeSource,
     filterProviders,
-    clearFilters
+    clearFilters,
+    removeApplication
 } from '../../redux/actions/providers';
 import {
     UNDO_ADD_SOURCE,
@@ -309,5 +310,42 @@ describe('redux actions', () => {
         expect(dispatch.mock.calls).toHaveLength(2);
         expect(dispatch.mock.calls[0][0]).toEqual({ type: CLEAR_FILTERS });
         expect(dispatch.mock.calls[1][0]).toEqual(expect.any(Function));
+    });
+
+    it('removeApplication calls doDeleteApplication (redux-promise)', async () => {
+        const appId = '123';
+        const sourceId = '54655';
+        const successTitle = 'success title';
+        const errorTitle = 'errorTitle';
+
+        api.doDeleteApplication = jest.fn().mockImplementation(() => Promise.resolve('OK'));
+
+        await removeApplication(appId, sourceId, successTitle, errorTitle)(dispatch);
+
+        expect(dispatch.mock.calls).toHaveLength(1);
+
+        expect(dispatch.mock.calls[0][0]).toEqual({
+            type: ACTION_TYPES.REMOVE_APPLICATION,
+            payload: expect.any(Function),
+            meta: {
+                appId,
+                sourceId,
+                notifications: {
+                    fulfilled: {
+                        variant: 'success',
+                        title: successTitle,
+                        dismissable: true
+                    }
+                }
+            }
+        });
+
+        const resultObject = dispatch.mock.calls[0][0];
+
+        expect(api.doDeleteApplication).not.toHaveBeenCalled();
+
+        await resultObject.payload();
+
+        expect(api.doDeleteApplication).toHaveBeenCalledWith(appId, errorTitle);
     });
 });
