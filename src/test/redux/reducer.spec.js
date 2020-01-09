@@ -1,6 +1,11 @@
-import { entitiesLoaded, defaultProvidersState, undoAddSource, clearAddSource, filterProviders, clearFilters } from '../../redux/reducers/providers';
+import * as sourcesReducer from '../../redux/reducers/providers';
 
 describe('redux > sources reducer', () => {
+    const SOURCE_ID = '5646874215432';
+    const APP_ID = '55654';
+
+    const defaultProvidersState = sourcesReducer.defaultProvidersState;
+
     describe('entitiesLoaded', () => {
         const SOURCES = [{ id: '1', name: 'name1' }, { id: '2', name: 'name2' }];
         const DATA = { payload: SOURCES };
@@ -12,7 +17,7 @@ describe('redux > sources reducer', () => {
         };
 
         it('loads the entities', () => {
-            expect(entitiesLoaded(defaultProvidersState, DATA)).toEqual(
+            expect(sourcesReducer.entitiesLoaded(defaultProvidersState, DATA)).toEqual(
                 expect.objectContaining(EXPECTED_STATE)
             );
         });
@@ -27,7 +32,7 @@ describe('redux > sources reducer', () => {
                 ...ADDITIONAL_OPTIONS
             };
 
-            expect(entitiesLoaded(defaultProvidersState, NEW_DATA)).toEqual(
+            expect(sourcesReducer.entitiesLoaded(defaultProvidersState, NEW_DATA)).toEqual(
                 expect.objectContaining({
                     ...EXPECTED_STATE,
                     ...ADDITIONAL_OPTIONS
@@ -40,7 +45,7 @@ describe('redux > sources reducer', () => {
         it('sets values', () => {
             const VALUES = { name: 'aa', source: { id: 1 } };
 
-            expect(undoAddSource(defaultProvidersState, { payload: { values: VALUES } })).toEqual(
+            expect(sourcesReducer.undoAddSource(defaultProvidersState, { payload: { values: VALUES } })).toEqual(
                 expect.objectContaining({
                     ...defaultProvidersState,
                     addSourceInitialValues: VALUES
@@ -54,7 +59,7 @@ describe('redux > sources reducer', () => {
             const EMPTY_OBJECT = {};
             const NOT_EMPTY = { cosi: '133' };
 
-            expect(clearAddSource({ ...defaultProvidersState, addSourceInitialValues: NOT_EMPTY })).toEqual(
+            expect(sourcesReducer.clearAddSource({ ...defaultProvidersState, addSourceInitialValues: NOT_EMPTY })).toEqual(
                 expect.objectContaining({
                     ...defaultProvidersState,
                     addSourceInitialValues: EMPTY_OBJECT
@@ -67,7 +72,7 @@ describe('redux > sources reducer', () => {
         const value = { name: 'name' };
 
         it('sets filter value', () => {
-            expect(filterProviders(defaultProvidersState, { payload: { value } })).toEqual({
+            expect(sourcesReducer.filterProviders(defaultProvidersState, { payload: { value } })).toEqual({
                 ...defaultProvidersState,
                 filterValue: {
                     name: 'name'
@@ -81,7 +86,7 @@ describe('redux > sources reducer', () => {
                 pageNumber: 12
             };
 
-            expect(filterProviders(stateOnSecondPage, { payload: { value } })).toEqual({
+            expect(sourcesReducer.filterProviders(stateOnSecondPage, { payload: { value } })).toEqual({
                 ...defaultProvidersState,
                 filterValue: {
                     name: 'name'
@@ -102,11 +107,281 @@ describe('redux > sources reducer', () => {
         };
 
         it('clears filter', () => {
-            expect(clearFilters(state)).toEqual({
+            expect(sourcesReducer.clearFilters(state)).toEqual({
                 ...defaultProvidersState,
                 filterValue: {},
                 pageNumber: 1
             });
+        });
+    });
+
+    it('entitiesPending sets loaded to false and includes options', () => {
+        const payload = { options: {
+            custom: 'custom'
+        } };
+
+        expect(sourcesReducer.entitiesPending(defaultProvidersState, payload)).toEqual({
+            ...defaultProvidersState,
+            loaded: false,
+            custom: 'custom'
+        });
+    });
+
+    it('entitiesRejected sets fetching error', () => {
+        const payload = { payload: { error: 'error' } };
+
+        expect(sourcesReducer.entitiesRejected(defaultProvidersState, payload)).toEqual({
+            ...defaultProvidersState,
+            fetchingError: 'error'
+        });
+    });
+
+    it('sourceTypesPending sets empty sourceTypes', () => {
+        expect(sourcesReducer.sourceTypesPending(defaultProvidersState)).toEqual({
+            ...defaultProvidersState,
+            sourceTypes: [],
+            sourceTypesLoaded: false
+        });
+    });
+
+    it('sourceTypesPending sets sourceTypes', () => {
+        const SOURCE_TYPES = ['aaa', 'bbb'];
+        const payload = { payload: SOURCE_TYPES };
+
+        expect(sourcesReducer.sourceTypesLoaded(defaultProvidersState, payload)).toEqual({
+            ...defaultProvidersState,
+            sourceTypes: SOURCE_TYPES,
+            sourceTypesLoaded: true
+        });
+    });
+
+    it('appTypesPending sets empty appTypes', () => {
+        expect(sourcesReducer.appTypesPending(defaultProvidersState)).toEqual({
+            ...defaultProvidersState,
+            appTypes: [],
+            appTypesLoaded: false
+        });
+    });
+
+    it('appTypesPending sets appTypes', () => {
+        const APP_TYPES = ['aaa', 'bbb'];
+        const payload = { payload: APP_TYPES };
+
+        expect(sourcesReducer.appTypesLoaded(defaultProvidersState, payload)).toEqual({
+            ...defaultProvidersState,
+            appTypes: APP_TYPES,
+            appTypesLoaded: true
+        });
+    });
+
+    it('sortEntities sets sortBy and sortDirection', () => {
+        const column = 'name';
+        const direction = 'asc';
+        const payload = { payload: { column, direction } };
+
+        expect(sourcesReducer.sortEntities(defaultProvidersState, payload)).toEqual({
+            ...defaultProvidersState,
+            sortBy: column,
+            sortDirection: direction
+        });
+    });
+
+    it('setPageAndSize sets pageSize and pageNumber', () => {
+        const size = 100;
+        const page = 6;
+        const payload = { payload: { page, size } };
+
+        expect(sourcesReducer.setPageAndSize(defaultProvidersState, payload)).toEqual({
+            ...defaultProvidersState,
+            pageSize: size,
+            pageNumber: page
+        });
+    });
+
+    describe('source removing', () => {
+        const payload = {
+            meta: {
+                sourceId: SOURCE_ID
+            }
+        };
+
+        const defaultState = {
+            ...defaultProvidersState,
+            entities: [
+                { id: '1235', name: 'do not remove this' },
+                { id: SOURCE_ID, name: 'delete this' }
+            ]
+        };
+
+        it('pending marks source for deletion', () => {
+            expect(sourcesReducer.sourceEditRemovePending(defaultState, payload)).toEqual({
+                ...defaultProvidersState,
+                entities: [
+                    { id: '1235', name: 'do not remove this' },
+                    { id: SOURCE_ID, name: 'delete this', isDeleting: true }
+                ]
+            });
+        });
+
+        it('fullfiled deletes the source', () => {
+            expect(sourcesReducer.sourceEditRemoveFulfilled(defaultState, payload)).toEqual({
+                ...defaultProvidersState,
+                entities: [
+                    { id: '1235', name: 'do not remove this' }
+                ]
+            });
+        });
+
+        it('rejected unmarks the deleted source', () => {
+            const defaultState = {
+                ...defaultProvidersState,
+                entities: [
+                    { id: '1235', name: 'do not remove this' },
+                    { id: SOURCE_ID, name: 'delete this', isDeleting: true }
+                ]
+            };
+
+            expect(sourcesReducer.sourceEditRemoveRejected(defaultState, payload)).toEqual({
+                ...defaultProvidersState,
+                entities: [
+                    { id: '1235', name: 'do not remove this' },
+                    { id: SOURCE_ID, name: 'delete this', isDeleting: undefined }
+                ]
+            });
+        });
+    });
+
+    describe('appRemoving', () => {
+        const payload = {
+            meta: {
+                sourceId: SOURCE_ID,
+                appId: APP_ID
+            }
+        };
+
+        const defaultState = {
+            ...defaultProvidersState,
+            entities: [
+                { id: '1235', name: 'no apps' },
+                {
+                    id: SOURCE_ID,
+                    name: 'delete app here',
+                    applications: [
+                        { id: APP_ID },
+                        { id: '5468751684715684651165465465465' }
+                    ]
+                }
+            ]
+        };
+
+        it('pending marks deleted app', () => {
+            expect(sourcesReducer.appRemovingPending(defaultState, payload)).toEqual({
+                ...defaultProvidersState,
+                entities: [
+                    { id: '1235', name: 'no apps' },
+                    {
+                        id: SOURCE_ID,
+                        name: 'delete app here',
+                        applications: [
+                            { id: APP_ID, isDeleting: true  },
+                            { id: '5468751684715684651165465465465' }
+                        ]
+                    }
+                ]
+            });
+        });
+
+        it('fullfiled removes deleted app', () => {
+            expect(sourcesReducer.appRemovingFulfilled(defaultState, payload)).toEqual({
+                ...defaultProvidersState,
+                entities: [
+                    { id: '1235', name: 'no apps' },
+                    {
+                        id: SOURCE_ID,
+                        name: 'delete app here',
+                        applications: [
+                            { id: '5468751684715684651165465465465' }
+                        ]
+                    }
+                ]
+            });
+        });
+
+        it('rejected unmarks deleted app', () => {
+            const defaultState = {
+                ...defaultProvidersState,
+                entities: [
+                    { id: '1235', name: 'no apps' },
+                    {
+                        id: SOURCE_ID,
+                        name: 'delete app here',
+                        applications: [
+                            { id: APP_ID, isDeleting: true },
+                            { id: '5468751684715684651165465465465' }
+                        ]
+                    }
+                ]
+            };
+
+            expect(sourcesReducer.appRemovingRejected(defaultState, payload)).toEqual({
+                ...defaultProvidersState,
+                entities: [
+                    { id: '1235', name: 'no apps' },
+                    {
+                        id: SOURCE_ID,
+                        name: 'delete app here',
+                        applications: [
+                            { id: APP_ID, isDeleting: undefined },
+                            { id: '5468751684715684651165465465465' }
+                        ]
+                    }
+                ]
+            });
+        });
+    });
+
+    it('addAppToSource adds app to source', () => {
+        const defaultState = {
+            ...defaultProvidersState,
+            entities: [
+                { id: '1235', name: 'no apps' },
+                {
+                    id: SOURCE_ID,
+                    name: 'delete app here',
+                    applications: [
+                        { id: APP_ID },
+                        { id: '5468751684715684651165465465465' }
+                    ]
+                }
+            ]
+        };
+
+        const payload = { payload: { sourceId: SOURCE_ID, app: { id: '785412' } } };
+
+        expect(sourcesReducer.addAppToSource(defaultState, payload)).toEqual({
+            ...defaultProvidersState,
+            entities: [
+                { id: '1235', name: 'no apps' },
+                {
+                    id: SOURCE_ID,
+                    name: 'delete app here',
+                    applications: [
+                        { id: APP_ID },
+                        { id: '5468751684715684651165465465465' },
+                        { id: '785412' }
+                    ]
+                }
+            ]
+        });
+    });
+
+    it('setCount sets count', () => {
+        const COUNT = 2165;
+        const payload = { payload: { count: COUNT } };
+
+        expect(sourcesReducer.setCount(defaultProvidersState, payload)).toEqual({
+            ...defaultProvidersState,
+            numberOfEntities: COUNT
         });
     });
 });
