@@ -8,6 +8,7 @@ import { act } from 'react-dom/test-utils';
 import { Chip, Select, Pagination } from '@patternfly/react-core';
 import { MemoryRouter, Link } from 'react-router-dom';
 import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources';
+import { RowLoader } from '@redhat-cloud-services/frontend-components-utilities/files/helpers';
 
 import SourcesPage from '../../pages/SourcesPage';
 import SourcesEmptyState from '../../components/SourcesEmptyState';
@@ -119,6 +120,25 @@ describe('SourcesPage', () => {
         expect(wrapper.find(AddSourceWizard)).toHaveLength(1);
     });
 
+    it('renders and decreased page number if it is too great', async () => {
+        store = createStore(
+            combineReducers({ providers: applyReducerHash(ReducersProviders, {
+                ...defaultProvidersState,
+                pageNumber: 20
+            }) }),
+            applyMiddleware(...middlewares)
+        );
+
+        await act(async() => {
+            wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
+        });
+        wrapper.update();
+
+        const paginationInput = wrapper.find('.pf-c-pagination__nav-page-select').first().find('input').first();
+
+        expect(paginationInput.props().value).toEqual(1);
+    });
+
     it('closes addSourceWizard', async () => {
         helpers.onCloseAddSourceWizard = jest.fn();
 
@@ -175,9 +195,13 @@ describe('SourcesPage', () => {
         const rowLoadersCount = 12;
         const loadersCount = rowLoadersCount + paginationLoadersCount;
 
-        expect(wrapper.find(ContentLoader).length).toEqual(loadersCount);
+        expect(wrapper.find(RowLoader)).toHaveLength(rowLoadersCount);
+        expect(wrapper.find(PaginationLoader)).toHaveLength(paginationLoadersCount);
+        expect(wrapper.find(ContentLoader)).toHaveLength(loadersCount);
         wrapper.update();
-        expect(wrapper.find(ContentLoader).length).toEqual(0);
+        expect(wrapper.find(RowLoader)).toHaveLength(0);
+        expect(wrapper.find(PaginationLoader)).toHaveLength(0);
+        expect(wrapper.find(ContentLoader)).toHaveLength(0);
     });
 
     describe('filtering', () => {
