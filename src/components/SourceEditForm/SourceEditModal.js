@@ -125,6 +125,7 @@ const SourceEditModal = () => {
                     ...layoutMapper,
                     FormWrapper: HorizontalFormWrapper
                 }}
+                clearedValue={null}
                 canReset
                 disableSubmit={['submitting']}
                 onReset={() => setState({ editing: {} })}
