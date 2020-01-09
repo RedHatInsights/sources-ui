@@ -2,7 +2,7 @@ import React from 'react';
 import thunk from 'redux-thunk';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import configureStore from 'redux-mock-store';
-import { Table, TableHeader, TableBody, RowWrapper, sortable } from '@patternfly/react-table';
+import { Table, TableHeader, TableBody, RowWrapper, sortable, ActionsColumn } from '@patternfly/react-table';
 import { MemoryRouter } from 'react-router-dom';
 import { RowLoader } from '@redhat-cloud-services/frontend-components-utilities/files/helpers';
 import { act } from 'react-dom/test-utils';
@@ -109,6 +109,7 @@ describe('SourcesSimpleView', () => {
                 expect(wrapper.find(TableHeader)).toHaveLength(1);
                 expect(wrapper.find(TableBody)).toHaveLength(1);
                 expect(wrapper.find(RowWrapper)).toHaveLength(sourcesDataGraphQl.length);
+                expect(wrapper.find(ActionsColumn)).toHaveLength(sourcesDataGraphQl.length);
                 expect(wrapper.find(RowWrapper).first().props().className).toEqual(ROW_WRAPPER_CLASSNAME);
                 done();
             });
@@ -140,6 +141,7 @@ describe('SourcesSimpleView', () => {
         expect(wrapper.find(Table)).toHaveLength(1);
         expect(wrapper.find(TableHeader)).toHaveLength(1);
         expect(wrapper.find(TableBody)).toHaveLength(1);
+        expect(wrapper.find(ActionsColumn)).toHaveLength(0);
     });
 
     it('re-renders when entities changed', async () => {
