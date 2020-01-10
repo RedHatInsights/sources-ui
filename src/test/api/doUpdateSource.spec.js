@@ -143,6 +143,26 @@ describe('doUpdateSource', () => {
         expect(patchCostManagementSpy).not.toHaveBeenCalled();
     });
 
+    it('sends endpoint values removed url', () => {
+        FORM_DATA = {
+            url: null
+        };
+
+        const EXPECTED_ENDPOINT_VALUES_ONLY_WITH_URL = {
+            scheme: null,
+            host: null,
+            port: null,
+            path: null
+        };
+
+        doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
+
+        expect(sourceSpy).not.toHaveBeenCalled();
+        expect(endpointSpy).toHaveBeenCalledWith(ENDPOINT_ID, EXPECTED_ENDPOINT_VALUES_ONLY_WITH_URL);
+        expect(authenticationSpy).not.toHaveBeenCalled();
+        expect(patchCostManagementSpy).not.toHaveBeenCalled();
+    });
+
     it('sends authentication values', () => {
         const AUTH_ID = '1234234243';
         const AUTHENTICATION_VALUES = { password: '123456' };
@@ -368,6 +388,15 @@ describe('doUpdateSource', () => {
 
                 expect(parseUrl(WRONG_URL)).toEqual(EMPTY_OBJECT);
             });
+
+            it('parses null (removed)', () => {
+                expect(parseUrl(null)).toEqual({
+                    scheme: null,
+                    host: null,
+                    port: null,
+                    path: null
+                });
+            });
         });
 
         describe('urlOrHost', () => {
@@ -382,6 +411,15 @@ describe('doUpdateSource', () => {
 
             it('returns parsed url', () => {
                 expect(urlOrHost({ url: URL })).toEqual(EXPECTED_URL_OBJECT);
+            });
+
+            it('returns remove url', () => {
+                expect(urlOrHost({ url: null })).toEqual({
+                    scheme: null,
+                    host: null,
+                    port: null,
+                    path: null
+                });
             });
         });
     });
