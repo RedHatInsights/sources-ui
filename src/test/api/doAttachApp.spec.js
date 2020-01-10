@@ -268,11 +268,9 @@ describe('doAttachApp', () => {
         expect(authUpdate).not.toHaveBeenCalled();
         expect(endpointUpdate).toHaveBeenCalledWith(ENDPOINT_ID, {
             port: 2323,
-            default: true,
             host: undefined,
             path: undefined,
-            scheme: undefined,
-            source_id: SOURCE_ID
+            scheme: undefined
         });
         expect(authCreate).not.toHaveBeenCalled();
         expect(endpointCreate).not.toHaveBeenCalled();
@@ -302,12 +300,35 @@ describe('doAttachApp', () => {
         expect(authUpdate).not.toHaveBeenCalled();
         expect(endpointUpdate).toHaveBeenCalledWith(ENDPOINT_ID, {
             port: undefined,
-            default: true,
             host: undefined,
             path: undefined,
-            scheme: undefined,
-            source_id: SOURCE_ID
+            scheme: undefined
         });
+        expect(authCreate).not.toHaveBeenCalled();
+        expect(endpointCreate).not.toHaveBeenCalled();
+        expect(appCreate).not.toHaveBeenCalled();
+    });
+
+    it('empty endpoint', async () => {
+        FORM_API = prepareFormApi({
+            source: {
+                id: SOURCE_ID
+            },
+            endpoint: {
+                id: ENDPOINT_ID
+            }
+        });
+
+        VALUES = {
+            endpoint: { }
+        };
+
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT);
+
+        expect(mockPatchSourceSpy).not.toHaveBeenCalled();
+        expect(sourceUpdate).not.toHaveBeenCalled();
+        expect(authUpdate).not.toHaveBeenCalled();
+        expect(endpointUpdate).not.toHaveBeenCalled();
         expect(authCreate).not.toHaveBeenCalled();
         expect(endpointCreate).not.toHaveBeenCalled();
         expect(appCreate).not.toHaveBeenCalled();
@@ -334,11 +355,9 @@ describe('doAttachApp', () => {
         expect(authUpdate).not.toHaveBeenCalled();
         expect(endpointUpdate).toHaveBeenCalledWith(ENDPOINT_ID, {
             port: 8989,
-            default: true,
             host: 'redhat.com',
             path: '/mypage',
-            scheme: 'https',
-            source_id: SOURCE_ID
+            scheme: 'https'
         });
         expect(authCreate).not.toHaveBeenCalled();
         expect(endpointCreate).not.toHaveBeenCalled();
