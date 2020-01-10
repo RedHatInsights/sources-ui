@@ -250,6 +250,12 @@ describe('formatters', () => {
         it('correctly parses URL with custom port', () => {
             expect(endpointToUrl({ ...endpoint, port: CUSTOM_PORT })).toEqual(`https://my.best.page:${CUSTOM_PORT}/`);
         });
+
+        it('correctly parses this specific endpoint', () => {
+            endpoint = { id: '123', scheme: 'https', host: 'redhat.com' };
+
+            expect(endpointToUrl(endpoint)).toEqual('https://redhat.com');
+        });
     });
 
     describe('availability status', () => {

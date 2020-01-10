@@ -21,7 +21,7 @@ export const schemaToPort = (schema, port) => port && String(port) !== defaultPo
 export const endpointToUrl = (endpoint) => {
     const onlyTrueEndpointValues = Object.keys(endpoint).reduce((acc, curr) => ({ ...acc, [curr]: endpoint[curr] || '' }), {});
 
-    const { scheme, host, path, port } = onlyTrueEndpointValues;
+    const { scheme = '', host = '', path = '', port = '' } = onlyTrueEndpointValues;
 
     const url = `${scheme}://${host}${schemaToPort(scheme, port)}${path}`;
 
