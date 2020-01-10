@@ -18,9 +18,19 @@ export const importsTexts = (value) => ({
 
 export const schemaToPort = (schema, port) => port && String(port) !== defaultPort(schema) ? `:${port}` : '';
 
-export const endpointToUrl = ({ scheme, host, path, port }) => (
-    `${scheme}://${host}${schemaToPort(scheme, port)}${path || ''}`
-);
+export const endpointToUrl = (endpoint) => {
+    const onlyTrueEndpointValues = Object.keys(endpoint).reduce((acc, curr) => ({ ...acc, [curr]: endpoint[curr] || '' }), {});
+
+    const { scheme, host, path, port } = onlyTrueEndpointValues;
+
+    const url = `${scheme}://${host}${schemaToPort(scheme, port)}${path}`;
+
+    if (url === '://') {
+        return;
+    }
+
+    return url;
+};
 
 export const sourceIsOpenShift = (source, sourceTypes) => {
     const type = sourceTypes.find((type) => type.id === source.source_type_id);

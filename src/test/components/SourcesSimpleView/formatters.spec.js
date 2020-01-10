@@ -232,6 +232,17 @@ describe('formatters', () => {
             };
         });
 
+        it('returns undefined when there are no positive values', () => {
+            endpoint = {
+                scheme: null,
+                port: undefined,
+                path: false,
+                host: ''
+            };
+
+            expect(endpointToUrl(endpoint)).toEqual(undefined);
+        });
+
         it('correctly parses URL with default port', () => {
             expect(endpointToUrl(endpoint)).toEqual('https://my.best.page/');
         });
