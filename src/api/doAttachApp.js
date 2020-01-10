@@ -75,29 +75,36 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues) 
 
         const promises = [];
 
-        if (filteredValues.source) {
+        if (filteredValues.source && !isEmpty(filteredValues.source)) {
             promises.push(getSourcesApi().updateSource(sourceId, filteredValues.source));
         }
 
-        if (filteredValues.endpoint || filteredValues.url) {
+        const hasModifiedEndpoint = filteredValues.endpoint && !isEmpty(filteredValues.endpoint);
+        const hasModifiedUrl = filteredValues.url && !isEmpty(filteredValues.url);
+
+        if (hasModifiedEndpoint || hasModifiedUrl) {
             const { scheme, host, port, path } = urlOrHost(filteredValues);
 
             const endPointPort = parseInt(port, 10);
 
-            const endpointData = {
+            const endpointData = removeEmpty({
                 ...filteredValues.endpoint,
-                default: true,
-                source_id: sourceId,
                 scheme,
                 host,
                 port: isNaN(endPointPort) ? undefined : endPointPort,
                 path
-            };
+            });
 
             if (endpointId) {
                 promises.push(getSourcesApi().updateEndpoint(endpointId, endpointData));
             } else {
-                const endpoint = await getSourcesApi().createEndpoint(endpointData);
+                const createEndpointData = {
+                    ...endpointData,
+                    default: true,
+                    source_id: sourceId
+                };
+
+                const endpoint = await getSourcesApi().createEndpoint(createEndpointData);
                 endpointId = endpoint.id;
             }
         }
