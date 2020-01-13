@@ -105,6 +105,25 @@ describe('SourcesPage', () => {
         expect(wrapper.find(PaginationLoader)).toHaveLength(2);
     });
 
+    it('renders table and filtering - loading with paginationClicked: true, do not show paginationLoader', async () => {
+        const modifiedState = { ...defaultSourcesState, paginationClicked: true, numberOfEntities: 5 };
+
+        store = createStore(
+            combineReducers({ sources: applyReducerHash(ReducersProviders, modifiedState) }),
+            applyMiddleware(...middlewares)
+        );
+
+        await act(async() => {
+            wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
+        });
+
+        expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
+        expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
+        expect(wrapper.find(SourcesSimpleView)).toHaveLength(1);
+        expect(wrapper.find(PaginationLoader)).toHaveLength(0);
+        expect(wrapper.find(Pagination)).toHaveLength(2);
+    });
+
     it('renders addSourceWizard', async () => {
         await act(async() => {
             wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));

@@ -50,7 +50,8 @@ const SourcesPage = () => {
         fetchingError,
         addSourceInitialValues,
         sourceTypes,
-        entities
+        entities,
+        paginationClicked
     } = useSelector(({ sources }) => sources, shallowEqual);
 
     const dispatch = useDispatch();
@@ -97,10 +98,12 @@ const SourcesPage = () => {
         variant: 'bottom'
     };
 
+    const showPaginationLoader = !loaded && !paginationClicked;
+
     const mainContent = () => (
         <React.Fragment>
             <PrimaryToolbar
-                pagination={!loaded ? <PaginationLoader /> : numberOfEntities > 0 ? paginationConfig : undefined}
+                pagination={showPaginationLoader ? <PaginationLoader /> : numberOfEntities > 0 ? paginationConfig : undefined}
                 actionsConfig={{
                     actions: [
                         <Link to={paths.sourcesNew} key="addSourceButton">
@@ -152,7 +155,10 @@ const SourcesPage = () => {
             />
             <SourcesSimpleView />
             <PrimaryToolbar
-                pagination={!loaded ? <PaginationLoader /> : numberOfEntities > 0 ? paginationConfigBottom : undefined}
+                pagination={
+                    showPaginationLoader ? <PaginationLoader />
+                        : numberOfEntities > 0 ? paginationConfigBottom : undefined
+                }
             />
         </React.Fragment>
     );

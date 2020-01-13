@@ -74,7 +74,7 @@ export const pageAndSize = (page, size) => (dispatch) => {
         payload: { page, size }
     });
 
-    return dispatch(loadEntities());
+    return dispatch(loadEntities({ paginationClicked: true }));
 };
 
 export const filterSources = (value) => (dispatch) => {
