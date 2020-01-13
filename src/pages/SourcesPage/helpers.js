@@ -70,9 +70,8 @@ export const prepareChips = (filterValue, sourceTypes) =>
     )
     .filter(Boolean);
 
-export const removeChips = (chips, filterValue, deleteAll, setFilterValue) => {
+export const removeChips = (chips, filterValue, deleteAll) => {
     if (deleteAll) {
-        setFilterValue('');
         return (
             Object.keys(filterValue).reduce((acc, curr) => ({
                 ...acc,

@@ -153,14 +153,11 @@ describe('Source page helpers', () => {
 
         it('deletes all chips', () => {
             const DELETE_ALL = true;
-            const clearFilterValue = jest.fn();
 
-            expect(removeChips([], filterValue, DELETE_ALL, clearFilterValue)).toEqual({
+            expect(removeChips([], filterValue, DELETE_ALL)).toEqual({
                 name: undefined,
                 source_type_id: undefined
             });
-
-            expect(clearFilterValue).toHaveBeenCalledWith('');
         });
 
         it('deletes name chip chips', () => {

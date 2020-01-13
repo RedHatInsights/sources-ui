@@ -66,6 +66,12 @@ const SourcesPage = () => {
         }
     }, [checkEmptyState]);
 
+    useEffect(() => {
+        if (filter !== filterValue.name) {
+            setFilterValue(filterValue.name);
+        }
+    }, [filterValue.name]);
+
     const onSetPage = (_e, page) => dispatch(pageAndSize(page, pageSize));
 
     const onPerPageSelect = (_e, perPage) => dispatch(pageAndSize(1, perPage));
@@ -141,7 +147,7 @@ const SourcesPage = () => {
                 activeFiltersConfig={{
                     filters: prepareChips(filterValue, sourceTypes),
                     onDelete: (_event, chips, deleteAll) =>
-                        dispatch(filterSources(removeChips(chips, filterValue, deleteAll, setFilterValue)))
+                        dispatch(filterSources(removeChips(chips, filterValue, deleteAll)))
                 }}
             />
             <SourcesSimpleView />
