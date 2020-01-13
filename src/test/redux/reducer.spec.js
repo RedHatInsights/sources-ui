@@ -123,7 +123,20 @@ describe('redux > sources reducer', () => {
         expect(sourcesReducer.entitiesPending(defaultSourcesState, payload)).toEqual({
             ...defaultSourcesState,
             loaded: false,
-            custom: 'custom'
+            custom: 'custom',
+            paginationClicked: false
+        });
+    });
+
+    it('entitiesPending sets loaded to false and overwrites paginationClicked', () => {
+        const payload = { options: {
+            paginationClicked: true
+        } };
+
+        expect(sourcesReducer.entitiesPending(defaultSourcesState, payload)).toEqual({
+            ...defaultSourcesState,
+            loaded: false,
+            paginationClicked: true
         });
     });
 

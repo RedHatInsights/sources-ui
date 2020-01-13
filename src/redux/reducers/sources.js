@@ -28,6 +28,7 @@ export const defaultSourcesState = {
 export const entitiesPending = (state, { options }) => ({
     ...state,
     loaded: false,
+    paginationClicked: false,
     ...options
 });
 
