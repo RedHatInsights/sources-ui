@@ -17,7 +17,8 @@ import {
     getStatusIcon,
     getStatusText,
     getStatusTooltipText,
-    formatAvailibilityErrors
+    formatAvailibilityErrors,
+    sourceTypeIconFormatter
 } from '../../../components/SourcesSimpleView/formatters';
 import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX } from '../../sourceTypesData';
 import { sourcesDataGraphQl, SOURCE_CATALOGAPP_INDEX, SOURCE_ALL_APS_INDEX, SOURCE_NO_APS_INDEX, SOURCE_ENDPOINT_URL_INDEX } from '../../sourcesData';
@@ -29,7 +30,7 @@ import {
     COSTMANAGEMENT_APP,
     CATALOG_APP
 } from '../../applicationTypesData';
-import { Badge, Tooltip, Popover } from '@patternfly/react-core';
+import { Badge, Tooltip, Popover, Bullseye } from '@patternfly/react-core';
 import { DateFormat } from '@redhat-cloud-services/frontend-components';
 import { IntlProvider } from 'react-intl';
 import { CheckCircleIcon, TimesCircleIcon, QuestionCircleIcon, ExclamationTriangleIcon } from '@patternfly/react-icons';
@@ -58,6 +59,10 @@ describe('formatters', () => {
 
         it('returns availabilityFormatter', () => {
             expect(formatters('availabilityFormatter')).toEqual(availabilityFormatter);
+        });
+
+        it('returns sourceTypeIconFormatter', () => {
+            expect(formatters('sourceTypeIconFormatter')).toEqual(sourceTypeIconFormatter);
         });
 
         it('returns defaultFormatter when non-sense', () => {
@@ -100,6 +105,30 @@ describe('formatters', () => {
 
         it('returns empty string when no sourceType', () => {
             expect(sourceTypeFormatter(undefined, undefined, { sourceTypes: sourceTypesData.data })).toEqual('');
+        });
+    });
+
+    describe('sourceTypeIconFormatter', () => {
+        it('returns icon', () => {
+            const OPENSHIFT = sourceTypesData.data.find(x => x.id === OPENSHIFT_ID);
+
+            const wrapper = mount(sourceTypeIconFormatter(OPENSHIFT_ID, undefined, { sourceTypes: sourceTypesData.data }));
+
+            const imgProps = wrapper.find('img').props();
+
+            expect(wrapper.find(Bullseye)).toHaveLength(1);
+            expect(imgProps.src).toEqual(OPENSHIFT.icon_url);
+            expect(imgProps.alt).toEqual(OPENSHIFT.product_name);
+        });
+
+        it('returns null when no iconUrl', () => {
+            expect(
+                sourceTypeIconFormatter(OPENSHIFT_ID, undefined, { sourceTypes: [{ ...sourceTypesData.data[OPENSHIFT_INDEX], icon_url: undefined }] })
+            ).toEqual(null);
+        });
+
+        it('returns null when no sourceType', () => {
+            expect(sourceTypeIconFormatter(undefined, undefined, { sourceTypes: sourceTypesData.data })).toEqual(null);
         });
     });
 

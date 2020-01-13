@@ -7,7 +7,7 @@ import { useIntl } from 'react-intl';
 import { sortEntities } from '../../redux/actions/sources';
 import { formatters } from './formatters';
 import { PlaceHolderTable, RowWrapperLoader } from './loaders';
-import { sourcesViewDefinition, COLUMN_COUNT } from '../../views/sourcesViewDefinition';
+import { sourcesColumns, COLUMN_COUNT } from '../../views/sourcesViewDefinition';
 import EmptyStateTable from './EmptyStateTable';
 
 const itemToCells = (item, columns, sourceTypes, appTypes) => columns.filter(column => column.title || column.hidden)
@@ -93,11 +93,11 @@ const SourcesSimpleView = () => {
 
     const reduxDispatch = useDispatch();
 
-    const [state, dispatch] = useReducer(reducer, initialState(sourcesViewDefinition.columns(intl)));
+    const [state, dispatch] = useReducer(reducer, initialState(sourcesColumns(intl)));
 
     const refreshSources = () => {
         const notSortable = numberOfEntities === 0;
-        const columns = sourcesViewDefinition.columns(intl, notSortable);
+        const columns = sourcesColumns(intl, notSortable);
 
         return dispatch({
             rows: renderSources(entities, columns, sourceTypes, appTypes),
