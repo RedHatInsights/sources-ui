@@ -22,8 +22,6 @@ export const NoAvailableApplicationDescription = () => (<TextContent>
     </Text>
 </TextContent>);
 
-export const EmptyIcon = () => <React.Fragment />;
-
 export const ApplicationSummary = () => (<TextContent>
     <Text component={ TextVariants.p }>
         <FormattedMessage
@@ -112,7 +110,7 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
             id: 'sources.chooseAppToAdd',
             defaultMessage: 'Choose an application to add'
         }),
-        DefaultIcon: EmptyIcon,
+        DefaultIcon: null,
         isRequired: true,
         validate: [{
             type: validatorTypes.REQUIRED
