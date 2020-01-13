@@ -5,7 +5,7 @@ import { applyReducerHash } from '@redhat-cloud-services/frontend-components-uti
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { PrimaryToolbar, ConditionalFilter } from '@redhat-cloud-services/frontend-components';
 import { act } from 'react-dom/test-utils';
-import { Chip, Select, Pagination } from '@patternfly/react-core';
+import { Chip, Select, Pagination, Button } from '@patternfly/react-core';
 import { MemoryRouter, Link } from 'react-router-dom';
 import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources';
 import { RowLoader } from '@redhat-cloud-services/frontend-components-utilities/files/helpers';
@@ -205,6 +205,7 @@ describe('SourcesPage', () => {
     });
 
     describe('filtering', () => {
+        const EMPTY_VALUE = '';
         const SEARCH_TERM = 'Pepa';
         const FILTER_INPUT_INDEX = 0;
 
@@ -271,6 +272,8 @@ describe('SourcesPage', () => {
                 wrapper.update();
 
                 expect(wrapper.find(Chip)).toHaveLength(0);
+                expect(filterInput(wrapper).props().value).toEqual(EMPTY_VALUE);
+
                 done();
             }, 500);
         });
@@ -312,6 +315,35 @@ describe('SourcesPage', () => {
                     expect(store.getState().sources.numberOfEntities).toEqual(0);
                     expect(wrapper.find(EmptyStateTable)).toHaveLength(1);
                     expect(wrapper.find(Pagination)).toHaveLength(0);
+                    done();
+                }, 500);
+            }, 500);
+        });
+
+        it('clears filter value in the name input when clicking on clears all filter in empty table state', (done) => {
+            setTimeout(async () => {
+                wrapper.update();
+
+                api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
+                api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+
+                const totalNonsense = '122#$@#%#^$#@!^$#^$#^546454abcerd';
+
+                await act(async() => {
+                    filterInput(wrapper).simulate('change', { target: { value: totalNonsense } });
+                });
+
+                setTimeout(async () => {
+                    wrapper.update();
+
+                    expect(filterInput(wrapper).props().value).toEqual(totalNonsense);
+
+                    await act(async() => {
+                        wrapper.find(Button).last().simulate('click');
+                    });
+                    wrapper.update();
+
+                    expect(filterInput(wrapper).props().value).toEqual(EMPTY_VALUE);
                     done();
                 }, 500);
             }, 500);
