@@ -27,6 +27,13 @@ const EditField = ({ isRequired, label, helperText, hideLabel, meta, input, type
             helperText={ helperText }
             helperTextInvalid={ error }
             onClick={setEdit ? () => setEdit(input.name) : undefined}
+            tabIndex={0}
+            onKeyPress={(e) => {
+                if (e.charCode === 32 && setEdit) {
+                    e.preventDefault();
+                    setEdit(input.name);
+                }
+            }}
         >
             <div className={`pf-c-form__horizontal-group ins-c-sources__edit-field-group ${setEdit ? 'clickable' : ''}`}>
                 <TextContent className={`ins-c-sources__edit-field-group-text-content ${setEdit ? 'clickable' : ''}`}>
