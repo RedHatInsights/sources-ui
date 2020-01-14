@@ -28,7 +28,8 @@ import {
     debouncedFiltering,
     prepareSourceTypeSelection,
     afterSuccess,
-    onCloseAddSourceWizard
+    onCloseAddSourceWizard,
+    loadedTypes
 } from './SourcesPage/helpers';
 import PaginationLoader from './SourcesPage/PaginationLoader';
 
@@ -51,7 +52,9 @@ const SourcesPage = () => {
         addSourceInitialValues,
         sourceTypes,
         entities,
-        paginationClicked
+        paginationClicked,
+        appTypesLoaded,
+        sourceTypesLoaded
     } = useSelector(({ sources }) => sources, shallowEqual);
 
     const dispatch = useDispatch();
@@ -168,8 +171,8 @@ const SourcesPage = () => {
             <Route exact path={paths.sourceManageApps} component={ AddApplication } />
             <Route exact path={paths.sourcesRemove} component={ SourceRemoveModal } />
             <Route exact path={paths.sourcesNew} render={ () => (<AddSourceWizard
-                sourceTypes={sourceTypes}
-                applicationTypes={appTypes}
+                sourceTypes={loadedTypes(sourceTypes, sourceTypesLoaded)}
+                applicationTypes={loadedTypes(appTypes, appTypesLoaded)}
                 isOpen={true}
                 onClose={(values) => onCloseAddSourceWizard({ values, dispatch, history, intl })}
                 afterSuccess={() => afterSuccess(dispatch)}
