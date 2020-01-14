@@ -5,7 +5,8 @@ import {
     chipsFormatters,
     prepareSourceTypeSelection,
     removeChips,
-    prepareChips
+    prepareChips,
+    loadedTypes
 } from '../../../pages/SourcesPage/helpers';
 
 import * as actions from '../../../redux/actions/sources';
@@ -188,6 +189,32 @@ describe('Source page helpers', () => {
                 chipsFormatters('name', filterValue, sourceTypesData.data)(),
                 chipsFormatters('source_type_id', filterValue, sourceTypesData.data)()
             ]);
+        });
+    });
+
+    describe('loadedTypes', () => {
+        let types;
+        let loaded;
+
+        it('returns types when loaded and length > 0', () => {
+            types = [1, 2];
+            loaded = true;
+
+            expect(loadedTypes(types, loaded)).toEqual(types);
+        });
+
+        it('returns undefined when not loaded', () => {
+            types = [1, 2];
+            loaded = false;
+
+            expect(loadedTypes(types, loaded)).toEqual(undefined);
+        });
+
+        it('returns undefined when length < 0', () => {
+            types = [];
+            loaded = true;
+
+            expect(loadedTypes(types, loaded)).toEqual(undefined);
         });
     });
 });

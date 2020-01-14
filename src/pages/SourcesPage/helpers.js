@@ -87,3 +87,5 @@ export const removeChips = (chips, filterValue, deleteAll) => {
         [chip.key]: chip.chips ? filterValue[chip.key].filter((value) => value !== chip.chips[0].value) : undefined
     });
 };
+
+export const loadedTypes = (types, loaded) => loaded && types.length > 0 ? types : undefined;
