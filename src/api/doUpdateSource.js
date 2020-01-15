@@ -3,6 +3,15 @@ import { getSourcesApi } from './entities';
 import { patchCmValues } from './patchCmValues';
 
 export const parseUrl = url => {
+    if (url === null) {
+        return {
+            scheme: null,
+            host: null,
+            port: null,
+            path: null
+        };
+    }
+
     if (!url) {
         return ({});
     }
@@ -22,7 +31,8 @@ export const parseUrl = url => {
     }
 };
 
-export const urlOrHost = formData => formData.url ? parseUrl(formData.url) : formData.endpoint ? formData.endpoint : formData;
+export const urlOrHost = formData =>
+    formData.url || formData.url === null ? parseUrl(formData.url) : formData.endpoint ? formData.endpoint : formData;
 
 export const doUpdateSource = (source, formData, errorTitles) => {
     const promises = [];
@@ -33,15 +43,15 @@ export const doUpdateSource = (source, formData, errorTitles) => {
         }));
     }
 
-    if (formData.endpoint || formData.url) {
+    if (formData.endpoint || formData.url || formData.url === null) {
         const { scheme, host, port, path } = urlOrHost(formData);
-        const endPointPort = parseInt(port, 10);
+        const endPointPort = port === null ? null : parseInt(port, 10);
 
         const endpointData = {
             scheme,
             host,
             path,
-            port: isNaN(endPointPort) ? undefined : endPointPort,
+            port: endPointPort === null ? null : isNaN(endPointPort) ? undefined : endPointPort,
             ...formData.endpoint
         };
 

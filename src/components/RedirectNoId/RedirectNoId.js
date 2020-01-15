@@ -3,14 +3,14 @@ import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { useParams, Redirect } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 
-import { addMessage, addHiddenSource } from '../../redux/actions/providers';
+import { addMessage, addHiddenSource } from '../../redux/actions/sources';
 import { doLoadSource } from '../../api/entities';
 
 const RedirectNoId = () => {
     const { id } = useParams();
     const intl = useIntl();
 
-    const { loaded, appTypesLoaded, sourceTypesLoaded } = useSelector(({ providers }) => providers, shallowEqual);
+    const { loaded, appTypesLoaded, sourceTypesLoaded } = useSelector(({ sources }) => sources, shallowEqual);
     const dispatch = useDispatch();
 
     const [applicationIsLoaded, setIsApplicationLoaded] = useState(false);

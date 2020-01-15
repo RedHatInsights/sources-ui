@@ -8,8 +8,10 @@ import {
     loadEntities,
     sortEntities,
     removeSource,
-    filterProviders
-} from '../../redux/actions/providers';
+    filterSources,
+    clearFilters,
+    removeApplication
+} from '../../redux/actions/sources';
 import {
     UNDO_ADD_SOURCE,
     CLEAR_ADD_SOURCE,
@@ -18,8 +20,9 @@ import {
     ACTION_TYPES,
     SET_COUNT,
     SORT_ENTITIES,
-    FILTER_PROVIDERS
-} from '../../redux/action-types-providers';
+    FILTER_SOURCES,
+    CLEAR_FILTERS
+} from '../../redux/action-types-sources';
 import { REMOVE_NOTIFICATION, ADD_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications';
 import * as updateSourceApi from '../../api/doUpdateSource';
 import * as api from '../../api/entities';
@@ -77,14 +80,14 @@ describe('redux actions', () => {
         );
     });
 
-    it('filterProviders creates an object', async () => {
+    it('filterSources creates an object', async () => {
         const filterValue = { name: 'name' };
 
-        await filterProviders(filterValue)(dispatch);
+        await filterSources(filterValue)(dispatch);
 
         expect(dispatch.mock.calls).toHaveLength(2);
         expect(dispatch.mock.calls[0][0]).toEqual({
-            type: FILTER_PROVIDERS,
+            type: FILTER_SOURCES,
             payload: {
                 value: filterValue
             }
@@ -175,7 +178,7 @@ describe('redux actions', () => {
         const [pageSize, pageNumber, sortBy, sortDirection, filterValue] = [15, 10, 'name', 'desc', 'pepa'];
 
         const getState = () => ({
-            providers: {
+            sources: {
                 pageSize, pageNumber, sortBy, sortDirection, filterValue
             }
         });
@@ -299,5 +302,50 @@ describe('redux actions', () => {
                 }
             });
         });
+    });
+
+    it('clearFilters creates an object', async () => {
+        await clearFilters()(dispatch);
+
+        expect(dispatch.mock.calls).toHaveLength(2);
+        expect(dispatch.mock.calls[0][0]).toEqual({ type: CLEAR_FILTERS });
+        expect(dispatch.mock.calls[1][0]).toEqual(expect.any(Function));
+    });
+
+    it('removeApplication calls doDeleteApplication (redux-promise)', async () => {
+        const appId = '123';
+        const sourceId = '54655';
+        const successTitle = 'success title';
+        const errorTitle = 'errorTitle';
+
+        api.doDeleteApplication = jest.fn().mockImplementation(() => Promise.resolve('OK'));
+
+        await removeApplication(appId, sourceId, successTitle, errorTitle)(dispatch);
+
+        expect(dispatch.mock.calls).toHaveLength(1);
+
+        expect(dispatch.mock.calls[0][0]).toEqual({
+            type: ACTION_TYPES.REMOVE_APPLICATION,
+            payload: expect.any(Function),
+            meta: {
+                appId,
+                sourceId,
+                notifications: {
+                    fulfilled: {
+                        variant: 'success',
+                        title: successTitle,
+                        dismissable: true
+                    }
+                }
+            }
+        });
+
+        const resultObject = dispatch.mock.calls[0][0];
+
+        expect(api.doDeleteApplication).not.toHaveBeenCalled();
+
+        await resultObject.payload();
+
+        expect(api.doDeleteApplication).toHaveBeenCalledWith(appId, errorTitle);
     });
 });

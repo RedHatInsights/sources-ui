@@ -13,18 +13,16 @@ import {
     TextVariants
 } from '@patternfly/react-core';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
-import { useParams } from 'react-router-dom';
 
-import { removeApplication } from '../../redux/actions/providers';
+import { removeApplication } from '../../redux/actions/sources';
 import RedirectNoId from '../RedirectNoId/RedirectNoId';
 import { useSource } from '../../hooks/useSource';
 
 const RemoveAppModal = ({ app, onCancel }) => {
-    const { id } = useParams();
     const intl = useIntl();
 
-    const appTypes = useSelector(({ providers }) => providers.appTypes);
-    const source = useSource(id);
+    const appTypes = useSelector(({ sources }) => sources.appTypes);
+    const source = useSource();
 
     const dispatch = useDispatch();
 

@@ -6,8 +6,8 @@ import {
     loadAppTypes,
     loadEntities,
     loadSourceTypes,
-    filterProviders
-} from '../redux/actions/providers';
+    filterSources
+} from '../redux/actions/sources';
 import { Button } from '@patternfly/react-core';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources';
@@ -18,7 +18,7 @@ import SourcesEmptyState from '../components/SourcesEmptyState';
 import SourceEditModal from '../components/SourceEditForm/SourceEditModal';
 import SourceRemoveModal from '../components/SourceRemoveModal';
 import AddApplication from '../components/AddApplication/AddApplication';
-import { pageAndSize } from '../redux/actions/providers';
+import { pageAndSize } from '../redux/actions/sources';
 import { paths } from '../Routes';
 
 import {
@@ -28,8 +28,10 @@ import {
     debouncedFiltering,
     prepareSourceTypeSelection,
     afterSuccess,
-    onCloseAddSourceWizard
+    onCloseAddSourceWizard,
+    loadedTypes
 } from './SourcesPage/helpers';
+import PaginationLoader from './SourcesPage/PaginationLoader';
 
 const SourcesPage = () => {
     const [showEmptyState, setShowEmptyState] = useState(false);
@@ -49,8 +51,11 @@ const SourcesPage = () => {
         fetchingError,
         addSourceInitialValues,
         sourceTypes,
-        entities
-    } = useSelector(({ providers }) => providers, shallowEqual);
+        entities,
+        paginationClicked,
+        appTypesLoaded,
+        sourceTypesLoaded
+    } = useSelector(({ sources }) => sources, shallowEqual);
 
     const dispatch = useDispatch();
 
@@ -65,6 +70,12 @@ const SourcesPage = () => {
         }
     }, [checkEmptyState]);
 
+    useEffect(() => {
+        if (filter !== filterValue.name) {
+            setFilterValue(filterValue.name);
+        }
+    }, [filterValue.name]);
+
     const onSetPage = (_e, page) => dispatch(pageAndSize(page, pageSize));
 
     const onPerPageSelect = (_e, perPage) => dispatch(pageAndSize(1, perPage));
@@ -72,20 +83,30 @@ const SourcesPage = () => {
     const maximumPageNumber = Math.ceil(numberOfEntities / pageSize);
 
     if (entities.length > 0 && loaded && pageNumber > Math.max(maximumPageNumber, 1)) {
-        onSetPage(maximumPageNumber > 0 ? maximumPageNumber : 1);
+        onSetPage(maximumPageNumber);
     }
+
+    const paginationConfig = {
+        itemCount: numberOfEntities,
+        page: pageNumber,
+        perPage: pageSize,
+        onSetPage,
+        onPerPageSelect,
+        isCompact: false
+    };
+
+    const paginationConfigBottom = {
+        ...paginationConfig,
+        dropDirection: 'up',
+        variant: 'bottom'
+    };
+
+    const showPaginationLoader = !loaded && !paginationClicked;
 
     const mainContent = () => (
         <React.Fragment>
             <PrimaryToolbar
-                pagination={{
-                    itemCount: numberOfEntities || 0,
-                    page: pageNumber,
-                    perPage: pageSize,
-                    onSetPage,
-                    onPerPageSelect,
-                    isCompact: false
-                }}
+                pagination={showPaginationLoader ? <PaginationLoader /> : numberOfEntities > 0 ? paginationConfig : undefined}
                 actionsConfig={{
                     actions: [
                         <Link to={paths.sourcesNew} key="addSourceButton">
@@ -132,21 +153,15 @@ const SourcesPage = () => {
                 activeFiltersConfig={{
                     filters: prepareChips(filterValue, sourceTypes),
                     onDelete: (_event, chips, deleteAll) =>
-                        dispatch(filterProviders(removeChips(chips, filterValue, deleteAll, setFilterValue)))
+                        dispatch(filterSources(removeChips(chips, filterValue, deleteAll)))
                 }}
             />
             <SourcesSimpleView />
             <PrimaryToolbar
-                pagination={{
-                    itemCount: numberOfEntities || 0,
-                    page: pageNumber,
-                    perPage: pageSize,
-                    onSetPage,
-                    onPerPageSelect,
-                    isCompact: false,
-                    dropDirection: 'up',
-                    variant: 'bottom'
-                }}
+                pagination={
+                    showPaginationLoader ? <PaginationLoader />
+                        : numberOfEntities > 0 ? paginationConfigBottom : undefined
+                }
             />
         </React.Fragment>
     );
@@ -156,8 +171,8 @@ const SourcesPage = () => {
             <Route exact path={paths.sourceManageApps} component={ AddApplication } />
             <Route exact path={paths.sourcesRemove} component={ SourceRemoveModal } />
             <Route exact path={paths.sourcesNew} render={ () => (<AddSourceWizard
-                sourceTypes={sourceTypes}
-                applicationTypes={appTypes}
+                sourceTypes={loadedTypes(sourceTypes, sourceTypesLoaded)}
+                applicationTypes={loadedTypes(appTypes, appTypesLoaded)}
                 isOpen={true}
                 onClose={(values) => onCloseAddSourceWizard({ values, dispatch, history, intl })}
                 afterSuccess={() => afterSuccess(dispatch)}

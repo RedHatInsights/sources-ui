@@ -1,5 +1,5 @@
 import { paths } from '../../Routes';
-import { addMessage } from '../../redux/actions/providers';
+import { addMessage } from '../../redux/actions/sources';
 
 export const redirectWhenImported = (dispatch, intl, history, name) => {
     dispatch(addMessage(

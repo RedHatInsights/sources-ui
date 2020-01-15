@@ -3,13 +3,15 @@ import { DefaultApi as SourcesDefaultApi } from '@redhat-cloud-services/sources-
 
 import { SOURCES_API_BASE } from './constants';
 
-axiosInstanceInsights.interceptors.response.use(response => {
+export const graphQlErrorInterceptor = response => {
     if (response.errors && response.errors.length > 0) {
         return Promise.reject({ detail: response.errors[0].message });
     }
 
     return response;
-});
+};
+
+axiosInstanceInsights.interceptors.response.use(graphQlErrorInterceptor);
 
 export { axiosInstanceInsights as axiosInstance };
 
@@ -50,21 +52,23 @@ export const filtering = (filterValue = {}) => {;
     return '';
 };
 
+export const graphQlAttributes = `
+    id,
+    created_at,
+    source_type_id,
+    name,
+    tenant,
+    uid,
+    updated_at,
+    imported,
+    availability_status,
+    applications { application_type_id, id, availability_status_error, availability_status },
+    endpoints { id, scheme, host, port, path }
+`;
+
 export const doLoadEntities = ({ pageSize, pageNumber, sortBy, sortDirection, filterValue }) => getSourcesApi().postGraphQL({
     query: `{ sources(${pagination(pageSize, pageNumber)}${sorting(sortBy, sortDirection)}${filtering(filterValue)})
-        {
-            id,
-            created_at,
-            source_type_id,
-            name,
-            tenant,
-            uid,
-            updated_at,
-            imported,
-            availability_status,
-            applications { application_type_id, id, availability_status_error, availability_status },
-            endpoints { id, scheme, host, port, path }
-        }
+        { ${graphQlAttributes} }
     }`
 }).then(({ data }) => data);
 
@@ -101,17 +105,6 @@ export const doLoadCountOfSources = (filterValue = {}) =>
 
 export const doLoadSource = (id) => getSourcesApi().postGraphQL({
     query: `{ sources(filter: { id: { eq: ${id}}})
-            {
-                id,
-                created_at,
-                source_type_id,
-                name,
-                tenant,
-                uid,
-                updated_at,
-                imported,
-                applications { application_type_id, id },
-                endpoints { id, scheme, host, port, path }
-            }
+            { ${graphQlAttributes} }
         }`
 }).then(({ data }) => data);

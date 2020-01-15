@@ -45,7 +45,7 @@ describe('SourceEditModal', () => {
         initialEntry = [PATH];
         mockStore = configureStore(middlewares);
         store = mockStore({
-            providers: {
+            sources: {
                 entities: sourcesDataGraphQl,
                 appTypes: applicationTypesData.data,
                 sourceTypes: sourceTypesData.data,
@@ -233,7 +233,7 @@ describe('SourceEditModal', () => {
 
     it('renders loading modal', async() => {
         store = mockStore({
-            providers: {
+            sources: {
                 entities: sourcesDataGraphQl,
                 appTypes: applicationTypesData.data,
                 sourceTypes: sourceTypesData.data,
@@ -257,7 +257,7 @@ describe('SourceEditModal', () => {
 
     it('calls onClose from loading screen', async() => {
         store = mockStore({
-            providers: {
+            sources: {
                 entities: sourcesDataGraphQl,
                 appTypes: applicationTypesData.data,
                 sourceTypes: sourceTypesData.data,

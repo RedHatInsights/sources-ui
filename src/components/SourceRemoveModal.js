@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import {
     Modal,
@@ -14,7 +14,7 @@ import {
     TextListItem,
     Checkbox
 } from '@patternfly/react-core';
-import { removeSource } from '../redux/actions/providers';
+import { removeSource } from '../redux/actions/sources';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 
@@ -24,14 +24,13 @@ import RedirectNoId from './RedirectNoId/RedirectNoId';
 import { useSource } from '../hooks/useSource';
 
 const SourceRemoveModal = () => {
-    const { id } = useParams();
     const { push } = useHistory();
 
     const [acknowledge, setAcknowledge] = useState(false);
     const [removingApp, setApplicationToRemove] = useState({});
 
     const intl = useIntl();
-    const source = useSource(id);
+    const source = useSource();
 
     const dispatch = useDispatch();
 

@@ -5,7 +5,7 @@ import { act } from 'react-dom/test-utils';
 
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import RedirectNoId from '../../../components/RedirectNoId/RedirectNoId';
-import * as actions from '../../../redux/actions/providers';
+import * as actions from '../../../redux/actions/sources';
 import * as api from '../../../api/entities';
 
 describe('RedirectNoId', () => {
@@ -26,7 +26,7 @@ describe('RedirectNoId', () => {
 
     it('Renders null if not loaded', () => {
         initialStore = mockStore({
-            providers: { loaded: false, appTypesLoaded: true, sourceTypesLoaded: true }
+            sources: { loaded: false, appTypesLoaded: true, sourceTypesLoaded: true }
         });
 
         const wrapper = mount(componentWrapperIntl(
@@ -43,7 +43,7 @@ describe('RedirectNoId', () => {
         api.doLoadSource = jest.fn().mockImplementation(() => Promise.resolve({  sources: [] }));
 
         initialStore = mockStore({
-            providers: { loaded: true, appTypesLoaded: true, sourceTypesLoaded: true }
+            sources: { loaded: true, appTypesLoaded: true, sourceTypesLoaded: true }
         });
 
         await act(async () => {
@@ -66,7 +66,7 @@ describe('RedirectNoId', () => {
         api.doLoadSource = jest.fn().mockImplementation(() => Promise.resolve({  sources: [SOURCE] }));
 
         initialStore = mockStore({
-            providers: { loaded: true, appTypesLoaded: true, sourceTypesLoaded: true }
+            sources: { loaded: true, appTypesLoaded: true, sourceTypesLoaded: true }
         });
 
         await act(async () => {

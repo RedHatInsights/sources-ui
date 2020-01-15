@@ -4,8 +4,6 @@ import FormRenderer from '@data-driven-forms/react-form-renderer';
 import { layoutMapper, formFieldsMapper } from '@data-driven-forms/pf4-component-mapper';
 import { mapperExtension } from '@redhat-cloud-services/frontend-components-sources';
 
-import Description from '../components/Description';
-import AddApplicationSummary from '../components/AddApplication/AddApplicationSummary';
 import EditField from '../components/editField/EditField';
 
 const SourcesFormRenderer = props => (
@@ -14,8 +12,6 @@ const SourcesFormRenderer = props => (
         formFieldsMapper={{
             ...formFieldsMapper,
             ...mapperExtension,
-            description: Description,
-            'add-application-summary': AddApplicationSummary,
             'edit-field': EditField
         }}
         {...props}

@@ -7,7 +7,7 @@ import configureStore from 'redux-mock-store';
 import { Text, Button } from '@patternfly/react-core';
 import { MemoryRouter } from 'react-router-dom';
 
-import * as actions from '../../redux/actions/providers';
+import * as actions from '../../redux/actions/sources';
 import SourceRemoveModal from '../../components/SourceRemoveModal';
 import { componentWrapperIntl } from '../../Utilities/testsHelpers';
 import { sourcesDataGraphQl } from '../sourcesData';
@@ -24,7 +24,7 @@ describe('SourceRemoveModal', () => {
     beforeEach(() => {
         mockStore = configureStore(middlewares);
         store = mockStore({
-            providers: { entities: sourcesDataGraphQl, appTypes: applicationTypesData.data }
+            sources: { entities: sourcesDataGraphQl, appTypes: applicationTypesData.data }
         });
     });
 
@@ -43,7 +43,7 @@ describe('SourceRemoveModal', () => {
 
         it('renders redirect app when no source', () => {
             store = mockStore({
-                providers: { entities: [], appTypes: applicationTypesData.data }
+                sources: { entities: [], appTypes: applicationTypesData.data }
             });
 
             const wrapper = mount(componentWrapperIntl(
@@ -145,7 +145,7 @@ describe('SourceRemoveModal', () => {
         it('renders correctly when app is being deleted', () => {
             const APPS_BEING_REMOVED_MSG = 'Connected applications are being removed.';
             store = mockStore({
-                providers: { entities: [{
+                sources: { entities: [{
                     ...sourcesDataGraphQl.find((s) => s.id === '406'),
                     applications: [{
                         ...sourcesDataGraphQl.find((s) => s.id === '406').applications,

@@ -6,13 +6,13 @@ import { applyReducerHash } from '@redhat-cloud-services/frontend-components-uti
 
 import UndoButtonAdd from '../../../components/UndoButton/UndoButtonAdd';
 import * as refresh from '../../../components/UndoButton/refreshPage';
-import ReducersProviders, { defaultProvidersState } from '../../../redux/reducers/providers';
+import ReducersProviders, { defaultSourcesState } from '../../../redux/reducers/sources';
 
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import { Button } from '@patternfly/react-core';
 import { paths } from '../../../Routes';
 import { MemoryRouter } from 'react-router-dom';
-import { addMessage } from '../../../redux/actions/providers';
+import { addMessage } from '../../../redux/actions/sources';
 
 describe('UndoButton', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -38,7 +38,7 @@ describe('UndoButton', () => {
         };
 
         store = createStore(
-            combineReducers({ providers: applyReducerHash(ReducersProviders, defaultProvidersState), notifications }),
+            combineReducers({ sources: applyReducerHash(ReducersProviders, defaultSourcesState), notifications }),
             applyMiddleware(...middlewares)
         );
     });
@@ -66,7 +66,7 @@ describe('UndoButton', () => {
         clickOnButton(wrapper);
 
         expect(wasRedirectedToWizard(wrapper)).toEqual(true);
-        expect(store.getState().providers.addSourceInitialValues).toEqual(values);
+        expect(store.getState().sources.addSourceInitialValues).toEqual(values);
         expect(store.getState().notifications).toHaveLength(0);
     });
 

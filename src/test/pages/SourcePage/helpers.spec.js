@@ -5,10 +5,11 @@ import {
     chipsFormatters,
     prepareSourceTypeSelection,
     removeChips,
-    prepareChips
+    prepareChips,
+    loadedTypes
 } from '../../../pages/SourcesPage/helpers';
 
-import * as actions from '../../../redux/actions/providers';
+import * as actions from '../../../redux/actions/sources';
 import { sourceTypesData } from '../../sourceTypesData';
 
 describe('Source page helpers', () => {
@@ -153,14 +154,11 @@ describe('Source page helpers', () => {
 
         it('deletes all chips', () => {
             const DELETE_ALL = true;
-            const clearFilterValue = jest.fn();
 
-            expect(removeChips([], filterValue, DELETE_ALL, clearFilterValue)).toEqual({
+            expect(removeChips([], filterValue, DELETE_ALL)).toEqual({
                 name: undefined,
                 source_type_id: undefined
             });
-
-            expect(clearFilterValue).toHaveBeenCalledWith('');
         });
 
         it('deletes name chip chips', () => {
@@ -191,6 +189,32 @@ describe('Source page helpers', () => {
                 chipsFormatters('name', filterValue, sourceTypesData.data)(),
                 chipsFormatters('source_type_id', filterValue, sourceTypesData.data)()
             ]);
+        });
+    });
+
+    describe('loadedTypes', () => {
+        let types;
+        let loaded;
+
+        it('returns types when loaded and length > 0', () => {
+            types = [1, 2];
+            loaded = true;
+
+            expect(loadedTypes(types, loaded)).toEqual(types);
+        });
+
+        it('returns undefined when not loaded', () => {
+            types = [1, 2];
+            loaded = false;
+
+            expect(loadedTypes(types, loaded)).toEqual(undefined);
+        });
+
+        it('returns undefined when length < 0', () => {
+            types = [];
+            loaded = true;
+
+            expect(loadedTypes(types, loaded)).toEqual(undefined);
         });
     });
 });

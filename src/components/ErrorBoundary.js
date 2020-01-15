@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import * as Sentry from '@sentry/browser';
 
-import { addMessage } from '../redux/actions/providers';
+import { addMessage } from '../redux/actions/sources';
 
 class ErrorBoundary extends Component {
     state = {
@@ -13,11 +14,12 @@ class ErrorBoundary extends Component {
         return { error, errorInfo };
     }
 
-    componentDidCatch(error, errorInfo) {
+    componentDidCatch(error) {
+        const sentryId = Sentry.captureException(error);
         this.props.dispatch(addMessage(
-            error.toString(),
+            `${error.toString()} (Sentry ID: ${sentryId})`,
             'danger',
-            errorInfo.componentStack
+            error.stack
         ));
     }
 
