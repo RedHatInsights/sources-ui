@@ -1,5 +1,5 @@
 import { redirectWhenImported } from '../../../components/SourceEditForm/importedRedirect';
-import * as actions from '../../../redux/actions/providers';
+import * as actions from '../../../redux/actions/sources';
 import { paths } from '../../../Routes';
 
 describe('redirectWhenImported', () => {

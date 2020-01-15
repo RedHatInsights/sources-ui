@@ -3,8 +3,9 @@ import ErrorBoundary from '../../components/ErrorBoundary';
 import { componentWrapperIntl } from '../../Utilities/testsHelpers';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import * as sentry from '@sentry/browser';
 
-import * as actions from '../../redux/actions/providers';
+import * as actions from '../../redux/actions/sources';
 
 describe('Error Boundary', () => {
     it('renders children', () => {
@@ -16,7 +17,11 @@ describe('Error Boundary', () => {
     });
 
     it('dispatch message', () => {
-        const COMPONENT_STACK = expect.any(String);
+        const SENTRY_ID = '2132s1ad5s1ad5sa1d51sfd321sa';
+        sentry.captureException = jest.fn().mockImplementation(() => SENTRY_ID);
+
+        const ERROR_TO_STRING = expect.any(String);
+        const ERROR_STACK = expect.any(String);
         const tmpLog = console.error;
 
         console.error = jest.fn();
@@ -38,10 +43,16 @@ describe('Error Boundary', () => {
 
         expect(wrapper.text()).toEqual('Error occurred');
         expect(actions.addMessage).toHaveBeenCalledWith(
-            ERROR.toString(),
+            ERROR_TO_STRING,
             'danger',
-            COMPONENT_STACK
+            ERROR_STACK
         );
+
+        expect(actions.addMessage.mock.calls[0][0].includes(ERROR.toString()));
+        expect(actions.addMessage.mock.calls[0][0].includes('Sentry ID'));
+        expect(actions.addMessage.mock.calls[0][0].includes(SENTRY_ID));
+
+        expect(sentry.captureException).toHaveBeenCalledWith(ERROR);
 
         console.error = tmpLog;
     });

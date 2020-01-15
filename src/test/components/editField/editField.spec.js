@@ -9,6 +9,8 @@ describe('Edit field', () => {
     const NAME = 'name1234';
     const VALUE = 'password';
 
+    const SPACE_CODE = 32;
+
     beforeEach(() => {
         initialProps = {
             FieldProvider: MockFieldProvider,
@@ -135,5 +137,59 @@ describe('Edit field', () => {
         wrapper.find(FormGroup).simulate('click');
 
         expect(setEdit).toHaveBeenCalledWith(NAME);
+    });
+
+    it('calls setEdit with field name by pressing space', () => {
+        const setEdit = jest.fn();
+
+        const wrapper = mount(<EditField
+            {...initialProps}
+            setEdit={setEdit}
+        />);
+
+        const event = {
+            charCode: SPACE_CODE,
+            preventDefault: jest.fn()
+        };
+
+        wrapper.find(FormGroup).simulate('keypress', event);
+
+        expect(setEdit).toHaveBeenCalledWith(NAME);
+        expect(event.preventDefault).toHaveBeenCalled();
+    });
+
+    it('do not call setEdit with field name by pressing different key than space', () => {
+        const setEdit = jest.fn();
+
+        const wrapper = mount(<EditField
+            {...initialProps}
+            setEdit={setEdit}
+        />);
+
+        const event = {
+            charCode: 31,
+            preventDefault: jest.fn()
+        };
+
+        wrapper.find(FormGroup).simulate('keypress', event);
+
+        expect(setEdit).not.toHaveBeenCalled();
+        expect(event.preventDefault).not.toHaveBeenCalled();
+    });
+
+    it('do nothing when setEdit is not set', () => {
+        const wrapper = mount(<EditField
+            {...initialProps}
+            setEdit={undefined}
+        />);
+
+        const event = {
+            charCode: SPACE_CODE,
+            preventDefault: jest.fn()
+        };
+
+        wrapper.find(FormGroup).simulate('keypress', event);
+
+        expect(event.preventDefault).not.toHaveBeenCalled();
     });
 });

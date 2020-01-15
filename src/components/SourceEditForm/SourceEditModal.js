@@ -41,7 +41,7 @@ const SourceEditModal = () => {
         appTypes,
         sourceTypesLoaded,
         appTypesLoaded
-    } = useSelector(({ providers }) => providers, shallowEqual);
+    } = useSelector(({ sources }) => sources, shallowEqual);
 
     const dispatch = useDispatch();
 
@@ -125,6 +125,7 @@ const SourceEditModal = () => {
                     ...layoutMapper,
                     FormWrapper: HorizontalFormWrapper
                 }}
+                clearedValue={null}
                 canReset
                 disableSubmit={['submitting']}
                 onReset={() => setState({ editing: {} })}

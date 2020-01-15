@@ -6,9 +6,9 @@ import isEmpty from 'lodash/isEmpty';
 import {
     loadEntities,
     clearAddSource,
-    filterProviders,
+    filterSources,
     addMessage
-} from '../../redux/actions/providers';
+} from '../../redux/actions/sources';
 import UndoButtonAdd from '../../components/UndoButton/UndoButtonAdd';
 
 export const onCloseAddSourceWizard = ({ values, dispatch, history, intl }) => {
@@ -46,7 +46,7 @@ export const prepareSourceTypeSelection = (sourceTypes) =>
     sourceTypes.map(({ id, product_name }) => ({ label: product_name, value: id }))
     .sort((a, b) => a.label.localeCompare(b.label));
 
-export const setFilter = (column, value, dispatch) => dispatch(filterProviders({
+export const setFilter = (column, value, dispatch) => dispatch(filterSources({
     [column]: value
 }));
 
@@ -70,9 +70,8 @@ export const prepareChips = (filterValue, sourceTypes) =>
     )
     .filter(Boolean);
 
-export const removeChips = (chips, filterValue, deleteAll, setFilterValue) => {
+export const removeChips = (chips, filterValue, deleteAll) => {
     if (deleteAll) {
-        setFilterValue('');
         return (
             Object.keys(filterValue).reduce((acc, curr) => ({
                 ...acc,
@@ -88,3 +87,5 @@ export const removeChips = (chips, filterValue, deleteAll, setFilterValue) => {
         [chip.key]: chip.chips ? filterValue[chip.key].filter((value) => value !== chip.chips[0].value) : undefined
     });
 };
+
+export const loadedTypes = (types, loaded) => loaded && types.length > 0 ? types : undefined;

@@ -24,7 +24,7 @@ describe('ApplicationList', () => {
 
     beforeEach(() => {
         initialStore = {
-            providers: {
+            sources: {
                 entities: sourcesDataGraphQl,
                 appTypes: applicationTypesData.data,
                 sourceTypes: sourceTypesData.data
@@ -63,7 +63,7 @@ describe('ApplicationList', () => {
         initialEntry = [`${PATH}${SOURCE_ONE_APS_ID}`];
 
         initialStore = {
-            providers: {
+            sources: {
                 entities: [],
                 appTypes: applicationTypesData.data,
                 sourceTypes: sourceTypesData.data

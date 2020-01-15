@@ -1,10 +1,10 @@
 import { getDevStore, getProdStore } from '../../Utilities/store';
-import { defaultProvidersState } from '../../redux/reducers/providers';
+import { defaultSourcesState } from '../../redux/reducers/sources';
 
 describe('store creator', () => {
     const EXPECTED_DEFAULT_STATE = {
         notifications: [],
-        providers: defaultProvidersState
+        sources: defaultSourcesState
     };
 
     it('creates DevStore', () => {

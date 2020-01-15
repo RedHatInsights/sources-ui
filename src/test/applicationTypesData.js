@@ -23,7 +23,7 @@ export const applicationTypesData =
             updated_at: '2019-04-30T10:56:21Z',
             supported_authentication_types: {
                 amazon: ['arn'],
-                azure: ['username_password'],
+                azure: ['tenant_id_client_id_client_secret'],
                 openshift: ['token']
             },
             supported_source_types: ['amazon', 'azure', 'openshift'],
@@ -38,7 +38,7 @@ export const applicationTypesData =
             supported_authentication_types: {
                 amazon: ['access_key_secret_key'],
                 'ansible-tower': ['username_password'],
-                azure: ['username_password'],
+                azure: ['tenant_id_client_id_client_secret'],
                 openshift: ['token']
             },
             supported_source_types: ['amazon', 'ansible-tower', 'azure', 'openshift'],
@@ -52,3 +52,4 @@ export const COSTMANAGEMENET_INDEX = 1;
 export const TOPOLOGICALINVENTORY_INDEX = 2;
 export const COSTMANAGEMENT_APP = applicationTypesData.data[1];
 export const CATALOG_APP = applicationTypesData.data[0];
+export const TOPOLOGICALINVENTORY_APP = applicationTypesData.data[2];

@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import { Route } from 'react-router-dom';
 
 import RemoveAppModal from '../../../components/AddApplication/RemoveAppModal';
-import * as actions from '../../../redux/actions/providers';
+import * as actions from '../../../redux/actions/sources';
 import { paths } from '../../../Routes';
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import RedirectNoId from '../../../components/RedirectNoId/RedirectNoId';
@@ -39,7 +39,7 @@ describe('RemoveAppModal', () => {
 
     beforeEach(() => {
         initialStore = {
-            providers: {
+            sources: {
                 appTypes: [],
                 entities: [{ id: SOURCE_ID }]
             }
@@ -78,7 +78,7 @@ describe('RemoveAppModal', () => {
 
     it('renders correctly RedirectNoId with no source', () => {
         initialStore = {
-            providers: {
+            sources: {
                 appTypes: [],
                 entities: []
             }
@@ -104,8 +104,8 @@ describe('RemoveAppModal', () => {
         };
 
         store = mockStore({
-            providers: {
-                ...initialStore.providers,
+            sources: {
+                ...initialStore.sources,
                 appTypes: APP_TYPES
             }
         });
@@ -130,8 +130,8 @@ describe('RemoveAppModal', () => {
         };
 
         store = mockStore({
-            providers: {
-                ...initialStore.providers,
+            sources: {
+                ...initialStore.sources,
                 appTypes: APP_TYPES
             }
         });

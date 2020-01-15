@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TextContent, TextVariants, Badge, Tooltip, Popover } from '@patternfly/react-core';
+import { Text, TextContent, TextVariants, Badge, Tooltip, Popover, Bullseye } from '@patternfly/react-core';
 import { FormattedMessage } from 'react-intl';
 import { DateFormat } from '@redhat-cloud-services/frontend-components';
 import { CheckCircleIcon, QuestionCircleIcon, ExclamationTriangleIcon, TimesCircleIcon } from '@patternfly/react-icons';
@@ -18,9 +18,19 @@ export const importsTexts = (value) => ({
 
 export const schemaToPort = (schema, port) => port && String(port) !== defaultPort(schema) ? `:${port}` : '';
 
-export const endpointToUrl = ({ scheme, host, path, port }) => (
-    `${scheme}://${host}${schemaToPort(scheme, port)}${path || ''}`
-);
+export const endpointToUrl = (endpoint) => {
+    const onlyTrueEndpointValues = Object.keys(endpoint).reduce((acc, curr) => ({ ...acc, [curr]: endpoint[curr] || '' }), {});
+
+    const { scheme = '', host = '', path = '', port = '' } = onlyTrueEndpointValues;
+
+    const url = `${scheme}://${host}${schemaToPort(scheme, port)}${path}`;
+
+    if (url === '://') {
+        return;
+    }
+
+    return url;
+};
 
 export const sourceIsOpenShift = (source, sourceTypes) => {
     const type = sourceTypes.find((type) => type.id === source.source_type_id);
@@ -219,11 +229,24 @@ export const availabilityFormatter = (status, source, { appTypes }) => {
     </TextContent>);
 };
 
+export const sourceTypeIconFormatter = (sourceTypeId, _item, { sourceTypes }) => {
+    const sourceType = sourceTypes.find(({ id }) => id === sourceTypeId);
+
+    if (!sourceType || !sourceType.icon_url) {
+        return null;
+    }
+
+    return (<Bullseye>
+        <img src={sourceType.icon_url} alt={sourceType.product_name} className="ins-c-sources__icon" />
+    </Bullseye>);
+};
+
 export const formatters = (name) => ({
     nameFormatter,
     dateFormatter,
     applicationFormatter,
     sourceTypeFormatter,
     importedFormatter,
-    availabilityFormatter
+    availabilityFormatter,
+    sourceTypeIconFormatter
 }[name] || defaultFormatter(name));

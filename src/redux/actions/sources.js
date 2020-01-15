@@ -3,13 +3,14 @@ import {
     ACTION_TYPES,
     SORT_ENTITIES,
     PAGE_AND_SIZE,
-    FILTER_PROVIDERS,
+    FILTER_SOURCES,
     ADD_APP_TO_SOURCE,
     UNDO_ADD_SOURCE,
     CLEAR_ADD_SOURCE,
     SET_COUNT,
-    ADD_HIDDEN_SOURCE
-} from '../action-types-providers';
+    ADD_HIDDEN_SOURCE,
+    CLEAR_FILTERS
+} from '../action-types-sources';
 import {
     doLoadAppTypes,
     doRemoveSource,
@@ -26,7 +27,7 @@ export const loadEntities = (options) => (dispatch, getState) => {
         options
     });
 
-    const { pageSize, pageNumber, sortBy, sortDirection, filterValue } = getState().providers;
+    const { pageSize, pageNumber, sortBy, sortDirection, filterValue } = getState().sources;
 
     return Promise.all([
         doLoadEntities({ pageSize, pageNumber, sortBy, sortDirection, filterValue }),
@@ -73,12 +74,12 @@ export const pageAndSize = (page, size) => (dispatch) => {
         payload: { page, size }
     });
 
-    return dispatch(loadEntities());
+    return dispatch(loadEntities({ paginationClicked: true }));
 };
 
-export const filterProviders = (value) => (dispatch) => {
+export const filterSources = (value) => (dispatch) => {
     dispatch(({
-        type: FILTER_PROVIDERS,
+        type: FILTER_SOURCES,
         payload: { value }
     }));
 
@@ -186,3 +187,11 @@ export const addHiddenSource = (source) => ({
         source
     }
 });
+
+export const clearFilters = () => (dispatch) => {
+    dispatch({
+        type: CLEAR_FILTERS
+    });
+
+    return dispatch(loadEntities());
+};
