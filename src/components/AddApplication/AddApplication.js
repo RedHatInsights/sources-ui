@@ -194,6 +194,7 @@ const AddApplication = () => {
             initialValues={state.values}
             subscription={{ values: true }}
             onStateUpdate={saveSelectedApp}
+            clearedValue={null}
         />
     );
 };
