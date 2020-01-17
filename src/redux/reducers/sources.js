@@ -12,7 +12,7 @@ import {
 } from '../action-types-sources';
 
 export const defaultSourcesState = {
-    loaded: false,
+    loaded: 0,
     pageSize: 50,
     pageNumber: 1,
     entities: [],
@@ -27,14 +27,14 @@ export const defaultSourcesState = {
 
 export const entitiesPending = (state, { options }) => ({
     ...state,
-    loaded: false,
+    loaded: state.loaded + 1,
     paginationClicked: false,
     ...options
 });
 
 export const entitiesLoaded = (state, { payload: rows, options }) => ({
     ...state,
-    loaded: true,
+    loaded: state.loaded - 1,
     entities: rows,
     ...options
 });

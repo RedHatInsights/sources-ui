@@ -15,6 +15,7 @@ import { getSourcesApi } from '../../api/entities';
 
 import RedirectNoId from '../RedirectNoId/RedirectNoId';
 import { useSource } from '../../hooks/useSource';
+import { useIsLoaded } from '../../hooks/useIsLoaded';
 import { endpointToUrl } from '../SourcesSimpleView/formatters';
 import { paths } from '../../Routes';
 
@@ -52,12 +53,13 @@ const AddApplication = () => {
     const intl = useIntl();
     const history = useHistory();
 
+    const loaded = useIsLoaded();
+
     const {
         appTypes,
         sourceTypesLoaded,
         appTypesLoaded,
-        sourceTypes,
-        loaded
+        sourceTypes
     } = useSelector(({ sources }) => sources, shallowEqual);
 
     const source = useSource();

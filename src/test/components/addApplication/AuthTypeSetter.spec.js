@@ -69,7 +69,7 @@ describe('AuthTypeSetter', () => {
                 sourceTypes: sourceTypesData.data,
                 appTypesLoaded: true,
                 sourceTypesLoaded: true,
-                loaded: true
+                loaded: 0
             }
         });
 
