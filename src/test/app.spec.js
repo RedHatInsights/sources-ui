@@ -4,6 +4,7 @@ import React from 'react';
 import { NotificationsPortal } from '@redhat-cloud-services/frontend-components-notifications';
 import { Main } from '@redhat-cloud-services/frontend-components';
 import { act } from 'react-dom/test-utils';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 import App from '../App';
 import { componentWrapperIntl } from '../Utilities/testsHelpers';
@@ -81,5 +82,7 @@ describe('App spec js', () => {
         expect(wrapper.find(NotificationsPortal)).toHaveLength(1);
         expect(wrapper.find(Main)).toHaveLength(1);
         expect(wrapper.find(Routes)).toHaveLength(1);
+        expect(wrapper.find(Router)).toHaveLength(1);
+        expect(wrapper.find(Router).props().basename).toEqual('//');
     });
 });
