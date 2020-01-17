@@ -13,11 +13,13 @@ describe('redux > sources reducer', () => {
         const EXPECTED_STATE = {
             ...defaultSourcesState,
             entities: SOURCES,
-            loaded: true
+            loaded: 0
         };
 
+        const unloadedInitialState = { ...defaultSourcesState, loaded: 1 };
+
         it('loads the entities', () => {
-            expect(sourcesReducer.entitiesLoaded(defaultSourcesState, DATA)).toEqual(
+            expect(sourcesReducer.entitiesLoaded(unloadedInitialState, DATA)).toEqual(
                 expect.objectContaining(EXPECTED_STATE)
             );
         });
@@ -32,7 +34,7 @@ describe('redux > sources reducer', () => {
                 ...ADDITIONAL_OPTIONS
             };
 
-            expect(sourcesReducer.entitiesLoaded(defaultSourcesState, NEW_DATA)).toEqual(
+            expect(sourcesReducer.entitiesLoaded(unloadedInitialState, NEW_DATA)).toEqual(
                 expect.objectContaining({
                     ...EXPECTED_STATE,
                     ...ADDITIONAL_OPTIONS
@@ -122,7 +124,7 @@ describe('redux > sources reducer', () => {
 
         expect(sourcesReducer.entitiesPending(defaultSourcesState, payload)).toEqual({
             ...defaultSourcesState,
-            loaded: false,
+            loaded: 1,
             custom: 'custom',
             paginationClicked: false
         });
@@ -135,7 +137,7 @@ describe('redux > sources reducer', () => {
 
         expect(sourcesReducer.entitiesPending(defaultSourcesState, payload)).toEqual({
             ...defaultSourcesState,
-            loaded: false,
+            loaded: 1,
             paginationClicked: true
         });
     });

@@ -106,7 +106,7 @@ describe('SourcesPage', () => {
     });
 
     it('renders table and filtering - loading with paginationClicked: true, do not show paginationLoader', async () => {
-        const modifiedState = { ...defaultSourcesState, paginationClicked: true, numberOfEntities: 5 };
+        const modifiedState = { ...defaultSourcesState, loaded: 1, paginationClicked: true, numberOfEntities: 5 };
 
         store = createStore(
             combineReducers({ sources: applyReducerHash(ReducersProviders, modifiedState) }),

@@ -9,6 +9,7 @@ import { formatters } from './formatters';
 import { PlaceHolderTable, RowWrapperLoader } from './loaders';
 import { sourcesColumns, COLUMN_COUNT } from '../../views/sourcesViewDefinition';
 import EmptyStateTable from './EmptyStateTable';
+import { useIsLoaded } from '../../hooks/useIsLoaded';
 
 const itemToCells = (item, columns, sourceTypes, appTypes) => columns.filter(column => column.title || column.hidden)
 .map(col => ({
@@ -79,8 +80,9 @@ const SourcesSimpleView = () => {
     const { push } = useHistory();
     const intl = useIntl();
 
+    const loaded = useIsLoaded();
+
     const {
-        loaded,
         appTypes,
         entities,
         sourceTypes,
@@ -90,7 +92,6 @@ const SourcesSimpleView = () => {
         sortDirection,
         numberOfEntities
     } = useSelector(({ sources }) => sources, shallowEqual);
-
     const reduxDispatch = useDispatch();
 
     const [state, dispatch] = useReducer(reducer, initialState(sourcesColumns(intl)));

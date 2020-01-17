@@ -32,18 +32,20 @@ import {
     loadedTypes
 } from './SourcesPage/helpers';
 import PaginationLoader from './SourcesPage/PaginationLoader';
+import { useIsLoaded } from '../hooks/useIsLoaded';
 
 const SourcesPage = () => {
     const [showEmptyState, setShowEmptyState] = useState(false);
     const [checkEmptyState, setCheckEmptyState] = useState(false);
     const [filter, setFilterValue] = useState();
 
+    const loaded = useIsLoaded();
+
     const history = useHistory();
     const intl = useIntl();
 
     const {
         filterValue,
-        loaded,
         numberOfEntities,
         appTypes,
         pageSize,
@@ -101,7 +103,7 @@ const SourcesPage = () => {
         variant: 'bottom'
     };
 
-    const showPaginationLoader = !loaded && !paginationClicked;
+    const showPaginationLoader = (!loaded || !appTypesLoaded || !sourceTypesLoaded) && !paginationClicked;
 
     const mainContent = () => (
         <React.Fragment>

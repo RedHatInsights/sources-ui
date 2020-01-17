@@ -32,7 +32,7 @@ describe('SourcesSimpleView', () => {
         initialState = {
             sources:
             {
-                loaded: true,
+                loaded: 0,
                 rows: [],
                 entities: [],
                 numberOfEntities: 0,
@@ -41,7 +41,7 @@ describe('SourcesSimpleView', () => {
             }
         };
         loadedProps = {
-            loaded: true,
+            loaded: 0,
             appTypesLoaded: true,
             sourceTypesLoaded: true,
             entities: sourcesDataGraphQl,
@@ -162,16 +162,8 @@ describe('SourcesSimpleView', () => {
             }
         });
 
-        const store = mockStore(
-            jest.fn()
-            .mockImplementationOnce(() => initialState)
-            .mockImplementationOnce(() => initialState)
-            .mockImplementationOnce(() => initialState)
-            .mockImplementationOnce(() => initialState)
-            .mockImplementationOnce(() => initialState)
-            // 5 initial renders :()
-            .mockImplementation(() => initialStateUpdated)
-        );
+        let mockStoreFn = jest.fn().mockImplementation(() => initialState);
+        const store = mockStore(mockStoreFn);
 
         await act(async () => {
             wrapper = mount(componentWrapperIntl(<SourcesSimpleView { ...initialProps } />, store));
@@ -179,6 +171,8 @@ describe('SourcesSimpleView', () => {
 
         wrapper.update();
         expect(wrapper.find(RowWrapper)).toHaveLength(sourcesDataGraphQl.length);
+
+        mockStoreFn.mockImplementation(() => initialStateUpdated);
 
         // trigger render
         await act(async () => {

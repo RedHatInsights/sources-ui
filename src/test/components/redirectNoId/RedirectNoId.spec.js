@@ -26,7 +26,7 @@ describe('RedirectNoId', () => {
 
     it('Renders null if not loaded', () => {
         initialStore = mockStore({
-            sources: { loaded: false, appTypesLoaded: true, sourceTypesLoaded: true }
+            sources: { loaded: 1, appTypesLoaded: true, sourceTypesLoaded: true }
         });
 
         const wrapper = mount(componentWrapperIntl(
@@ -43,7 +43,7 @@ describe('RedirectNoId', () => {
         api.doLoadSource = jest.fn().mockImplementation(() => Promise.resolve({  sources: [] }));
 
         initialStore = mockStore({
-            sources: { loaded: true, appTypesLoaded: true, sourceTypesLoaded: true }
+            sources: { loaded: 0, appTypesLoaded: true, sourceTypesLoaded: true }
         });
 
         await act(async () => {
@@ -66,7 +66,7 @@ describe('RedirectNoId', () => {
         api.doLoadSource = jest.fn().mockImplementation(() => Promise.resolve({  sources: [SOURCE] }));
 
         initialStore = mockStore({
-            sources: { loaded: true, appTypesLoaded: true, sourceTypesLoaded: true }
+            sources: { loaded: 0, appTypesLoaded: true, sourceTypesLoaded: true }
         });
 
         await act(async () => {

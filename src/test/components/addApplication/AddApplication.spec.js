@@ -52,7 +52,7 @@ describe('AddApplication', () => {
                 sourceTypes: sourceTypesData.data,
                 appTypesLoaded: true,
                 sourceTypesLoaded: true,
-                loaded: true
+                loaded: 0
             }
         });
         entities.getSourcesApi = () => ({
@@ -110,7 +110,7 @@ describe('AddApplication', () => {
                 sourceTypes: sourceTypesData.data,
                 appTypesLoaded: true,
                 sourceTypesLoaded: true,
-                loaded: true
+                loaded: 0
             }
         });
 
@@ -186,7 +186,7 @@ describe('AddApplication', () => {
                 sourceTypes: sourceTypesData.data,
                 appTypesLoaded: true,
                 sourceTypesLoaded: true,
-                loaded: true
+                loaded: 0
             }
         });
 
@@ -218,7 +218,7 @@ describe('AddApplication', () => {
                     sourceTypes: sourceTypesData.data,
                     appTypesLoaded: true,
                     sourceTypesLoaded: true,
-                    loaded: true
+                    loaded: 0
                 }
             });
         });

@@ -5,12 +5,15 @@ import { useIntl } from 'react-intl';
 
 import { addMessage, addHiddenSource } from '../../redux/actions/sources';
 import { doLoadSource } from '../../api/entities';
+import { useIsLoaded } from '../../hooks/useIsLoaded';
 
 const RedirectNoId = () => {
     const { id } = useParams();
     const intl = useIntl();
 
-    const { loaded, appTypesLoaded, sourceTypesLoaded } = useSelector(({ sources }) => sources, shallowEqual);
+    const loaded = useIsLoaded();
+
+    const { appTypesLoaded, sourceTypesLoaded } = useSelector(({ sources }) => sources, shallowEqual);
     const dispatch = useDispatch();
 
     const [applicationIsLoaded, setIsApplicationLoaded] = useState(false);
