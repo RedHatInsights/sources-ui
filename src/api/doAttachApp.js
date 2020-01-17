@@ -7,22 +7,6 @@ import cloneDeep from 'lodash/cloneDeep';
 import { getSourcesApi, doCreateApplication } from './entities';
 import { urlOrHost } from './doUpdateSource';
 
-export const convertToUndefined = (value) => {
-    if (typeof value === 'undefined') {
-        return null;
-    }
-
-    if (Array.isArray(value)) {
-        return value.map((val) => convertToUndefined(val));
-    }
-
-    if (typeof value === 'object') {
-        return Object.keys(value).reduce((acc, curr) => ({ ...acc, [curr]: convertToUndefined(value[curr]) }), {});
-    }
-
-    return value;
-};
-
 // modification of https://stackoverflow.com/a/38340374
 export const removeEmpty = (obj) => {
     Object.keys(obj).forEach(key => {
@@ -59,9 +43,9 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues) 
     const updatedAuthValues = updatedDiff(authInitialValues, authentication);
 
     const filteredValues = removeEmpty({
-        ...merge(cloneDeep(newAddedValues), convertToUndefined(updatedValues)),
+        ...merge(cloneDeep(newAddedValues), updatedValues),
         authentication: {
-            ...merge(cloneDeep(newAddedAuthValues), convertToUndefined(updatedAuthValues))
+            ...merge(cloneDeep(newAddedAuthValues), updatedAuthValues)
         }
     });
 
