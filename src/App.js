@@ -13,6 +13,12 @@ const App = (props) => {
         insights.chrome.init();
         try {
             insights.chrome.identifyApp('sources');
+
+            insights.chrome.auth.getUser().then((user) => {
+                if (!user.identity.user.is_org_admin) {
+                    alert('User is not org admin');
+                }
+            });
         } catch (_exception) {
             // eslint-disable-next-line no-console
             console.warn('Failed to initialize chrome navigation.');
