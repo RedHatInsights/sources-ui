@@ -33,7 +33,9 @@
     "collectCoverage": true,
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}",
-      "!src/**/stories/*"
+      "!src/**/stories/*",
+      "!src/entry.js",
+      "!src/entry-dev.js"
     ],
     "setupFiles": [
       "<rootDir>/config/setupTests.js"
