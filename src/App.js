@@ -8,6 +8,9 @@ import { getBaseName } from '@redhat-cloud-services/frontend-components-utilitie
 import Routes from './Routes';
 import './App.scss';
 
+import ErrorBoundary from './components/ErrorBoundary';
+import PermissionsChecker from './components/PermissionsChecker';
+
 const App = (props) => {
     useEffect(() => {
         insights.chrome.init();
@@ -24,9 +27,13 @@ const App = (props) => {
             <IntlProvider locale="en">
                 <React.Fragment>
                     <NotificationsPortal />
-                    <Main style={ { padding: 0 } } >
-                        <Routes childProps={props} />
-                    </Main>
+                    <ErrorBoundary>
+                        <PermissionsChecker>
+                            <Main style={ { padding: 0 } } >
+                                <Routes childProps={props} />
+                            </Main>
+                        </PermissionsChecker>
+                    </ErrorBoundary>
                 </React.Fragment>
             </IntlProvider>
         </Router>

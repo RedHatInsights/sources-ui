@@ -10,6 +10,8 @@ import App from '../App';
 import { componentWrapperIntl } from '../Utilities/testsHelpers';
 import Routes from '../Routes';
 import { getProdStore } from '../Utilities/store';
+import PermissionsChecker from '../components/PermissionsChecker';
+import ErrorBoundary from '../components/ErrorBoundary';
 
 jest.mock('../pages/SourcesPage', () => ({
     __esModule: true,
@@ -84,5 +86,7 @@ describe('App spec js', () => {
         expect(wrapper.find(Routes)).toHaveLength(1);
         expect(wrapper.find(Router)).toHaveLength(1);
         expect(wrapper.find(Router).props().basename).toEqual('//');
+        expect(wrapper.find(PermissionsChecker)).toHaveLength(1);
+        expect(wrapper.find(ErrorBoundary)).toHaveLength(1);
     });
 });
