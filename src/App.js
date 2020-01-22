@@ -8,17 +8,14 @@ import { getBaseName } from '@redhat-cloud-services/frontend-components-utilitie
 import Routes from './Routes';
 import './App.scss';
 
+import ErrorBoundary from './components/ErrorBoundary';
+import PermissionsChecker from './components/PermissionsChecker';
+
 const App = (props) => {
     useEffect(() => {
         insights.chrome.init();
         try {
             insights.chrome.identifyApp('sources');
-
-            insights.chrome.auth.getUser().then((user) => {
-                if (!user.identity.user.is_org_admin) {
-                    alert('User is not org admin');
-                }
-            });
         } catch (_exception) {
             // eslint-disable-next-line no-console
             console.warn('Failed to initialize chrome navigation.');
@@ -26,16 +23,20 @@ const App = (props) => {
     }, []);
 
     return (
-        <Router basename={getBaseName(location.pathname)}>
-            <IntlProvider locale="en">
-                <React.Fragment>
-                    <NotificationsPortal />
-                    <Main style={ { padding: 0 } } >
-                        <Routes childProps={props} />
-                    </Main>
-                </React.Fragment>
-            </IntlProvider>
-        </Router>
+        <ErrorBoundary>
+            <Router basename={getBaseName(location.pathname)}>
+                <IntlProvider locale="en">
+                    <React.Fragment>
+                        <NotificationsPortal />
+                        <PermissionsChecker>
+                            <Main style={ { padding: 0 } } >
+                                <Routes childProps={props} />
+                            </Main>
+                        </PermissionsChecker>
+                    </React.Fragment>
+                </IntlProvider>
+            </Router>
+        </ErrorBoundary>
     );
 };
 
