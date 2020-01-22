@@ -23,20 +23,20 @@ const App = (props) => {
     }, []);
 
     return (
-        <ErrorBoundary>
-            <Router basename={getBaseName(location.pathname)}>
-                <IntlProvider locale="en">
-                    <React.Fragment>
-                        <NotificationsPortal />
+        <Router basename={getBaseName(location.pathname)}>
+            <IntlProvider locale="en">
+                <React.Fragment>
+                    <NotificationsPortal />
+                    <ErrorBoundary>
                         <PermissionsChecker>
                             <Main style={ { padding: 0 } } >
                                 <Routes childProps={props} />
                             </Main>
                         </PermissionsChecker>
-                    </React.Fragment>
-                </IntlProvider>
-            </Router>
-        </ErrorBoundary>
+                    </ErrorBoundary>
+                </React.Fragment>
+            </IntlProvider>
+        </Router>
     );
 };
 
