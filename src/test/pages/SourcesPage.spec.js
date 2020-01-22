@@ -1,6 +1,5 @@
 import thunk from 'redux-thunk';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
-import ContentLoader from 'react-content-loader';
 import { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/files/ReducerRegistry';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { PrimaryToolbar, ConditionalFilter } from '@redhat-cloud-services/frontend-components';
@@ -212,15 +211,12 @@ describe('SourcesPage', () => {
 
         const paginationLoadersCount = 2;
         const rowLoadersCount = 12;
-        const loadersCount = rowLoadersCount + paginationLoadersCount;
 
         expect(wrapper.find(RowLoader)).toHaveLength(rowLoadersCount);
         expect(wrapper.find(PaginationLoader)).toHaveLength(paginationLoadersCount);
-        expect(wrapper.find(ContentLoader)).toHaveLength(loadersCount);
         wrapper.update();
         expect(wrapper.find(RowLoader)).toHaveLength(0);
         expect(wrapper.find(PaginationLoader)).toHaveLength(0);
-        expect(wrapper.find(ContentLoader)).toHaveLength(0);
     });
 
     describe('filtering', () => {
@@ -281,7 +277,26 @@ describe('SourcesPage', () => {
             expect(filterInput(wrapper).props().value).toEqual(SEARCH_TERM);
         });
 
-        it('should remove the name badge when clicking on remove icon', (done) => {
+        it('should remove the name badge when clicking on remove icon in chip', (done) => {
+            setTimeout(async () => {
+                wrapper.update();
+
+                expect(wrapper.find(Chip)).toHaveLength(1);
+
+                const chipButtonPosition = 5;
+                const chipButton = wrapper.find(Button).at(chipButtonPosition);
+
+                await act(async () => chipButton.simulate('click'));
+                wrapper.update();
+
+                expect(wrapper.find(Chip)).toHaveLength(0);
+                expect(filterInput(wrapper).props().value).toEqual(EMPTY_VALUE);
+
+                done();
+            }, 500);
+        });
+
+        it('should not remove the name badge when clicking on chip', (done) => {
             setTimeout(async () => {
                 wrapper.update();
 
@@ -290,8 +305,8 @@ describe('SourcesPage', () => {
                 await act(async () => wrapper.find(Chip).simulate('click'));
                 wrapper.update();
 
-                expect(wrapper.find(Chip)).toHaveLength(0);
-                expect(filterInput(wrapper).props().value).toEqual(EMPTY_VALUE);
+                expect(wrapper.find(Chip)).toHaveLength(1);
+                expect(filterInput(wrapper).props().value).toEqual(SEARCH_TERM);
 
                 done();
             }, 500);
