@@ -13,7 +13,7 @@ import { paths } from '../../../Routes';
 import { applicationTypesData } from '../../applicationTypesData';
 import { sourceTypesData, OPENSHIFT_ID } from '../../sourceTypesData';
 import { sourcesDataGraphQl } from '../../sourcesData';
-import { Modal, Button, FormGroup, TextInput } from '@patternfly/react-core';
+import { Modal, Button, FormGroup, TextInput, Form } from '@patternfly/react-core';
 import * as editApi from '../../../api/doLoadSourceForEdit';
 import EditFieldProvider from '../../../components/editField/EditField';
 import * as submit from '../../../components/SourceEditForm/onSubmit';
@@ -34,7 +34,6 @@ describe('SourceEditModal', () => {
 
     const BUTTONS = ['closeIcon', 'submit', 'reset', 'cancel'];
 
-    const SUBMIT_POS = BUTTONS.indexOf('submit');
     const CANCEL_POS = BUTTONS.indexOf('cancel');
     const RESET_POS = BUTTONS.indexOf('reset');
     const ONCLOSE_POS = BUTTONS.indexOf('closeIcon');
@@ -166,10 +165,10 @@ describe('SourceEditModal', () => {
         });
         wrapper.update();
 
-        const submitButton = wrapper.find(Button).at(SUBMIT_POS);
+        const form = wrapper.find(Form);
 
         await act(async() => {
-            submitButton.simulate('click');
+            form.simulate('submit');
         });
 
         expect(submit.onSubmit).toHaveBeenCalledWith(
