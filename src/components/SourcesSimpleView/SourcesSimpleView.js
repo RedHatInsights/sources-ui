@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { Table, TableHeader, TableBody, sortable } from '@patternfly/react-table';
 import { useIntl } from 'react-intl';
 
-import { sortEntities } from '../../redux/actions/sources';
+import { sortEntities } from '../../redux/sources/actions';
 import { formatters } from './formatters';
 import { PlaceHolderTable, RowWrapperLoader } from './loaders';
 import { sourcesColumns, COLUMN_COUNT } from '../../views/sourcesViewDefinition';

@@ -6,13 +6,13 @@ import { applyReducerHash } from '@redhat-cloud-services/frontend-components-uti
 
 import UndoButtonAdd from '../../../components/UndoButton/UndoButtonAdd';
 import * as refresh from '../../../components/UndoButton/refreshPage';
-import ReducersProviders, { defaultSourcesState } from '../../../redux/reducers/sources';
+import ReducersProviders, { defaultSourcesState } from '../../../redux/sources/reducer';
 
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import { Button } from '@patternfly/react-core';
 import { paths } from '../../../Routes';
 import { MemoryRouter } from 'react-router-dom';
-import { addMessage } from '../../../redux/actions/sources';
+import { addMessage } from '../../../redux/sources/actions';
 
 describe('UndoButton', () => {
     const middlewares = [thunk, notificationsMiddleware()];

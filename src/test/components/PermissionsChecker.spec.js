@@ -2,7 +2,7 @@ import { act } from 'react-dom/test-utils';
 
 import { componentWrapperIntl } from '../../Utilities/testsHelpers';
 import PermissionsChecker from '../../components/PermissionsChecker';
-import * as actions from '../../redux/actions/sources';
+import * as actions from '../../redux/sources/actions';
 
 describe('PermissionChecker', () => {
     let Children;

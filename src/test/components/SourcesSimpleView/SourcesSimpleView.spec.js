@@ -16,7 +16,7 @@ import { sourceTypesData } from '../../sourceTypesData';
 import { applicationTypesData } from '../../applicationTypesData';
 
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
-import * as actions from '../../../redux/actions/sources';
+import * as actions from '../../../redux/sources/actions';
 import * as API from '../../../api/entities';
 
 describe('SourcesSimpleView', () => {

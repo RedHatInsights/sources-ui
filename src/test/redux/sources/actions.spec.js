@@ -11,7 +11,7 @@ import {
     filterSources,
     clearFilters,
     removeApplication
-} from '../../redux/actions/sources';
+} from '../../../redux/sources/actions';
 import {
     UNDO_ADD_SOURCE,
     CLEAR_ADD_SOURCE,
@@ -22,10 +22,10 @@ import {
     SORT_ENTITIES,
     FILTER_SOURCES,
     CLEAR_FILTERS
-} from '../../redux/action-types-sources';
+} from '../../../redux/sources/actions-types';
 import { REMOVE_NOTIFICATION, ADD_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications';
-import * as updateSourceApi from '../../api/doUpdateSource';
-import * as api from '../../api/entities';
+import * as updateSourceApi from '../../../api/doUpdateSource';
+import * as api from '../../../api/entities';
 
 describe('redux actions', () => {
     let dispatch;

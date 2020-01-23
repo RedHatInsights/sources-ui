@@ -7,7 +7,7 @@ import {
     loadEntities,
     loadSourceTypes,
     filterSources
-} from '../redux/actions/sources';
+} from '../redux/sources/actions';
 import { Button } from '@patternfly/react-core';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources';
@@ -18,7 +18,7 @@ import SourcesEmptyState from '../components/SourcesEmptyState';
 import SourceEditModal from '../components/SourceEditForm/SourceEditModal';
 import SourceRemoveModal from '../components/SourceRemoveModal';
 import AddApplication from '../components/AddApplication/AddApplication';
-import { pageAndSize } from '../redux/actions/sources';
+import { pageAndSize } from '../redux/sources/actions';
 import { paths } from '../Routes';
 
 import {

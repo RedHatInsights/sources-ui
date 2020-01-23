@@ -8,7 +8,7 @@ import {
     clearAddSource,
     filterSources,
     addMessage
-} from '../../redux/actions/sources';
+} from '../../redux/sources/actions';
 import UndoButtonAdd from '../../components/UndoButton/UndoButtonAdd';
 
 export const onCloseAddSourceWizard = ({ values, dispatch, history, intl }) => {

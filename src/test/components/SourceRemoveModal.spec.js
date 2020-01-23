@@ -7,7 +7,7 @@ import configureStore from 'redux-mock-store';
 import { Text, Button } from '@patternfly/react-core';
 import { MemoryRouter } from 'react-router-dom';
 
-import * as actions from '../../redux/actions/sources';
+import * as actions from '../../redux/sources/actions';
 import SourceRemoveModal from '../../components/SourceRemoveModal';
 import { componentWrapperIntl } from '../../Utilities/testsHelpers';
 import { sourcesDataGraphQl } from '../sourcesData';

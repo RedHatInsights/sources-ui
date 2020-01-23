@@ -1,4 +1,4 @@
-import * as sourcesReducer from '../../redux/reducers/sources';
+import * as sourcesReducer from '../../../redux/sources/reducer';
 
 describe('redux > sources reducer', () => {
     const SOURCE_ID = '5646874215432';

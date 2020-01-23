@@ -14,7 +14,7 @@ import {
 } from '@patternfly/react-core';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 
-import { removeApplication } from '../../redux/actions/sources';
+import { removeApplication } from '../../redux/sources/actions';
 import RedirectNoId from '../RedirectNoId/RedirectNoId';
 import { useSource } from '../../hooks/useSource';
 
