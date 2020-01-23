@@ -19,7 +19,7 @@ import { applicationTypesData } from '../applicationTypesData';
 
 import { componentWrapperIntl } from '../../Utilities/testsHelpers';
 
-import ReducersProviders, { defaultSourcesState } from '../../redux/reducers/sources';
+import ReducersProviders, { defaultSourcesState } from '../../redux/sources/reducer';
 import * as api from '../../api/entities';
 import * as typesApi from '../../api/source_types';
 import EmptyStateTable from '../../components/SourcesSimpleView/EmptyStateTable';

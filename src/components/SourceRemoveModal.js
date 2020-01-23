@@ -14,7 +14,7 @@ import {
     TextListItem,
     Checkbox
 } from '@patternfly/react-core';
-import { removeSource } from '../redux/actions/sources';
+import { removeSource } from '../redux/sources/actions';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 

@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import { Route } from 'react-router-dom';
 
 import RemoveAppModal from '../../../components/AddApplication/RemoveAppModal';
-import * as actions from '../../../redux/actions/sources';
+import * as actions from '../../../redux/sources/actions';
 import { paths } from '../../../Routes';
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import RedirectNoId from '../../../components/RedirectNoId/RedirectNoId';

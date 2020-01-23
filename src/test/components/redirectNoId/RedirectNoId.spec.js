@@ -5,7 +5,7 @@ import { act } from 'react-dom/test-utils';
 
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import RedirectNoId from '../../../components/RedirectNoId/RedirectNoId';
-import * as actions from '../../../redux/actions/sources';
+import * as actions from '../../../redux/sources/actions';
 import * as api from '../../../api/entities';
 
 describe('RedirectNoId', () => {

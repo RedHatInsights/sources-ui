@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as Sentry from '@sentry/browser';
 
-import { addMessage } from '../redux/actions/sources';
+import { addMessage } from '../redux/sources/actions';
 
 class ErrorBoundary extends Component {
     state = {

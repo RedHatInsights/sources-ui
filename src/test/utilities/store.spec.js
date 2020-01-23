@@ -1,5 +1,5 @@
 import { getDevStore, getProdStore } from '../../Utilities/store';
-import { defaultSourcesState } from '../../redux/reducers/sources';
+import { defaultSourcesState } from '../../redux/sources/reducer';
 
 describe('store creator', () => {
     const EXPECTED_DEFAULT_STATE = {

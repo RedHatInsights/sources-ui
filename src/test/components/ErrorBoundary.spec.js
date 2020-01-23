@@ -5,7 +5,7 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import * as sentry from '@sentry/browser';
 
-import * as actions from '../../redux/actions/sources';
+import * as actions from '../../redux/sources/actions';
 
 describe('Error Boundary', () => {
     it('renders children', () => {

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 
-import { addMessage } from '../redux/actions/sources';
+import { addMessage } from '../redux/sources/actions';
 
 const PermissionsChecker = ({ children }) => {
     const intl = useIntl();

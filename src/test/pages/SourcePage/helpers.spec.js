@@ -9,7 +9,7 @@ import {
     loadedTypes
 } from '../../../pages/SourcesPage/helpers';
 
-import * as actions from '../../../redux/actions/sources';
+import * as actions from '../../../redux/sources/actions';
 import { sourceTypesData } from '../../sourceTypesData';
 
 describe('Source page helpers', () => {

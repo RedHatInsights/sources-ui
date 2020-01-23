@@ -4,7 +4,7 @@ import logger from 'redux-logger';
 import thunk from 'redux-thunk';
 import promise from 'redux-promise-middleware';
 
-import SourcesReducer, { defaultSourcesState } from '../redux/reducers/sources';
+import SourcesReducer, { defaultSourcesState } from '../redux/sources/reducer';
 
 export const getStore = (includeLogger) => {
     const middlewares = [

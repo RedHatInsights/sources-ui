@@ -9,7 +9,7 @@ import {
     SET_COUNT,
     ADD_HIDDEN_SOURCE,
     CLEAR_FILTERS
-} from '../action-types-sources';
+} from './actions-types';
 
 export const defaultSourcesState = {
     loaded: 0,

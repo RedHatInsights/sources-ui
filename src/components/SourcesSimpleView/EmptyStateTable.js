@@ -4,7 +4,7 @@ import { SearchIcon } from '@patternfly/react-icons';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch } from 'react-redux';
 
-import { clearFilters } from '../../redux/actions/sources';
+import { clearFilters } from '../../redux/sources/actions';
 
 const EmptyStateTable = () => {
     const dispatch = useDispatch();
