@@ -5,6 +5,7 @@ import thunk from 'redux-thunk';
 import promise from 'redux-promise-middleware';
 
 import SourcesReducer, { defaultSourcesState } from '../redux/sources/reducer';
+import UserReducer, { defaultUserState } from '../redux/user/reducer';
 
 export const getStore = (includeLogger) => {
     const middlewares = [
@@ -20,6 +21,7 @@ export const getStore = (includeLogger) => {
     const registry = new ReducerRegistry({}, middlewares);
 
     registry.register({ sources: applyReducerHash(SourcesReducer, defaultSourcesState) });
+    registry.register({ user: applyReducerHash(UserReducer, defaultUserState) });
     registry.register({ notifications });
 
     return registry.getStore();
