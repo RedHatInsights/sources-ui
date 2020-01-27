@@ -187,6 +187,8 @@ describe('SourcesPage', () => {
         });
         wrapper.update();
 
+        expect(wrapper.find(RedirectNotAdmin)).toHaveLength(1);
+
         await act(async() => {
             wrapper.find(AddSourceWizard).props().onClose();
         });
