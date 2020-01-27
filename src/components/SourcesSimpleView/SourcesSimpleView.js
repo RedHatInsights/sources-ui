@@ -10,6 +10,7 @@ import { PlaceHolderTable, RowWrapperLoader } from './loaders';
 import { sourcesColumns, COLUMN_COUNT } from '../../views/sourcesViewDefinition';
 import EmptyStateTable from './EmptyStateTable';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
+import { useIsOrgAdmin } from '../../hooks/useIsOrgAdmin';
 
 const itemToCells = (item, columns, sourceTypes, appTypes) => columns.filter(column => column.title || column.hidden)
 .map(col => ({
@@ -81,6 +82,7 @@ const SourcesSimpleView = () => {
     const intl = useIntl();
 
     const loaded = useIsLoaded();
+    const isOrgAdmin = useIsOrgAdmin();
 
     const {
         appTypes,
@@ -150,7 +152,7 @@ const SourcesSimpleView = () => {
             }}
             rows={shownRows}
             cells={state.cells}
-            actionResolver={numberOfEntities > 0 ? actionResolver(intl, push) : undefined}
+            actionResolver={isOrgAdmin && numberOfEntities > 0 ? actionResolver(intl, push) : undefined}
             rowWrapper={RowWrapperLoader}
         >
             <TableHeader />

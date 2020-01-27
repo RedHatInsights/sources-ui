@@ -30,14 +30,16 @@ describe('SourcesSimpleView', () => {
         initialProps = {};
         mockStore = configureStore(middlewares);
         initialState = {
-            sources:
-            {
+            sources: {
                 loaded: 0,
                 rows: [],
                 entities: [],
                 numberOfEntities: 0,
                 pageNumber: 1,
                 pageSize: 10
+            },
+            user: {
+                isOrgAdmin: true
             }
         };
         loadedProps = {
@@ -63,6 +65,7 @@ describe('SourcesSimpleView', () => {
 
     it('renders removing row', (done) => {
         initialState = {
+            ...initialState,
             sources: {
                 ...initialState.sources,
                 ...loadedProps,
@@ -92,6 +95,7 @@ describe('SourcesSimpleView', () => {
     it('renders table when loaded', (done) => {
         const ROW_WRAPPER_CLASSNAME = 'ins-c-sources__row-vertical-centered';
         initialState = {
+            ...initialState,
             sources: {
                 ...initialState.sources,
                 ...loadedProps
@@ -116,8 +120,38 @@ describe('SourcesSimpleView', () => {
         });
     });
 
+    it('renders table when loaded and its not org admin - no action column', async () => {
+        const ROW_WRAPPER_CLASSNAME = 'ins-c-sources__row-vertical-centered';
+        initialState = {
+            user: {
+                isOrgAdmin: false
+            },
+            sources: {
+                ...initialState.sources,
+                ...loadedProps
+            }
+        };
+
+        const store = mockStore(initialState);
+        let wrapper;
+
+        await act(async () => {
+            wrapper = mount(componentWrapperIntl(<SourcesSimpleView { ...initialProps } />, store));
+        });
+        wrapper.update();
+
+        expect(wrapper.find(PlaceHolderTable)).toHaveLength(0);
+        expect(wrapper.find(Table)).toHaveLength(1);
+        expect(wrapper.find(TableHeader)).toHaveLength(1);
+        expect(wrapper.find(TableBody)).toHaveLength(1);
+        expect(wrapper.find(RowWrapper)).toHaveLength(sourcesDataGraphQl.length);
+        expect(wrapper.find(ActionsColumn)).toHaveLength(0);
+        expect(wrapper.find(RowWrapper).first().props().className).toEqual(ROW_WRAPPER_CLASSNAME);
+    });
+
     it('renders empty state table', async () => {
         initialState = {
+            ...initialState,
             sources: {
                 ...initialState.sources,
                 ...loadedProps,
@@ -148,6 +182,7 @@ describe('SourcesSimpleView', () => {
         let wrapper;
 
         initialState = {
+            ...initialState,
             sources: {
                 ...initialState.sources,
                 ...loadedProps
@@ -155,6 +190,7 @@ describe('SourcesSimpleView', () => {
         };
 
         const initialStateUpdated = ({
+            ...initialState,
             sources: {
                 ...initialState.sources,
                 entities: [sourcesDataGraphQl[0]],
@@ -192,6 +228,7 @@ describe('SourcesSimpleView', () => {
 
         beforeEach(() => {
             initialState = {
+                ...initialState,
                 sources: {
                     ...initialState.sources,
                     ...loadedProps
@@ -249,6 +286,7 @@ describe('SourcesSimpleView', () => {
         const spy = jest.spyOn(actions, 'sortEntities');
 
         initialState = {
+            ...initialState,
             sources: {
                 ...initialState.sources,
                 ...loadedProps
