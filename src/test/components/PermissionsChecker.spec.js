@@ -2,62 +2,28 @@ import { act } from 'react-dom/test-utils';
 
 import { componentWrapperIntl } from '../../Utilities/testsHelpers';
 import PermissionsChecker from '../../components/PermissionsChecker';
-import * as actions from '../../redux/sources/actions';
+import * as actions from '../../redux/user/actions';
 
 describe('PermissionChecker', () => {
-    let Children;
-    let wrapper;
-
-    beforeEach(() => {
+    it('load userIsOrgAdmin on mount', async () => {
         // eslint-disable-next-line react/display-name
-        Children = () => <h1>App</h1>;
-        actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'type' }));
-    });
+        const Children = () => <h1>App</h1>;
+        actions.loadOrgAdmin = jest.fn().mockImplementation(() => ({ type: 'type' }));
 
-    it('user is org admin - just show children', async () => {
+        let wrapper;
         await act(async () => {
             wrapper = mount(componentWrapperIntl(<PermissionsChecker>
                 <Children />
             </PermissionsChecker>));
         });
 
-        expect(wrapper.find(Children)).toHaveLength(1);
-        expect(actions.addMessage).not.toHaveBeenCalled();
-    });
-
-    it('user is not org admin - show notification', async () => {
-        const insightsTmp = global.insights;
-
-        global.insights = {
-            chrome: {
-                auth: {
-                    getUser: () => new Promise(resolve => resolve({
-                        identity: {
-                            user: {
-                                is_org_admin: false
-                            }
-                        }
-                    }))
-                }
-            }
-        };
-
-        await act(async () => {
-            wrapper = mount(componentWrapperIntl(<PermissionsChecker>
-                <Children />
-            </PermissionsChecker>));
-        });
-
-        const ERROR_TITLE = expect.any(String);
-        const ERROR_DESC = expect.any(String);
+        const TITLE = expect.any(String);
+        const DESCRIPTION = expect.any(String);
 
         expect(wrapper.find(Children)).toHaveLength(1);
-        expect(actions.addMessage).toHaveBeenCalledWith(
-            ERROR_TITLE,
-            'danger',
-            ERROR_DESC,
+        expect(actions.loadOrgAdmin).toHaveBeenCalledWith(
+            TITLE,
+            DESCRIPTION,
         );
-
-        global.insights = insightsTmp;
     });
 });
