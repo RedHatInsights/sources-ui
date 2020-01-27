@@ -34,7 +34,7 @@ export const entitiesPending = (state, { options }) => ({
 
 export const entitiesLoaded = (state, { payload: rows, options }) => ({
     ...state,
-    loaded: state.loaded - 1,
+    loaded: Math.max(state.loaded - 1, 0),
     entities: rows,
     ...options
 });

@@ -23,6 +23,19 @@ describe('useIsLoaded', () => {
         expect(redux.useSelector).toHaveBeenCalledWith(inputFn);
     });
 
+    it('returns true when is loaded below zero (fallback check)', () => {
+        mockStore = {
+            sources: { loaded: -15 }
+        };
+
+        redux.useSelector = jest.fn().mockImplementation(fn => fn(mockStore));
+
+        const result = useIsLoaded();
+
+        expect(result).toEqual(true);
+        expect(redux.useSelector).toHaveBeenCalledWith(inputFn);
+    });
+
     it('returns false when is not loaded', () => {
         mockStore = {
             sources: { loaded: 1 }
