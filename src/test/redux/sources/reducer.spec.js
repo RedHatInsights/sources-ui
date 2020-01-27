@@ -41,6 +41,12 @@ describe('redux > sources reducer', () => {
                 })
             );
         });
+
+        it('when loaded is below zero, set zero', () => {
+            expect(sourcesReducer.entitiesLoaded(EXPECTED_STATE, DATA)).toEqual(
+                expect.objectContaining(EXPECTED_STATE)
+            );
+        });
     });
 
     describe('undoAddSource', () => {
