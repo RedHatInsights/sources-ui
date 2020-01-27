@@ -13,7 +13,7 @@ import SourcesPage from '../../pages/SourcesPage';
 import SourcesEmptyState from '../../components/SourcesEmptyState';
 import SourcesSimpleView from '../../components/SourcesSimpleView/SourcesSimpleView';
 
-import { sourcesDataGraphQl } from '../sourcesData';
+import { sourcesDataGraphQl, SOURCE_ALL_APS_ID } from '../sourcesData';
 import { sourceTypesData, OPENSHIFT_ID } from '../sourceTypesData';
 import { applicationTypesData } from '../applicationTypesData';
 
@@ -26,6 +26,11 @@ import EmptyStateTable from '../../components/SourcesSimpleView/EmptyStateTable'
 import PaginationLoader from '../../pages/SourcesPage/PaginationLoader';
 import { paths } from '../../Routes';
 import * as helpers from '../../pages/SourcesPage/helpers';
+import UserReducer from '../../redux/user/reducer';
+import RedirectNotAdmin from '../../components/RedirectNotAdmin/RedirectNotAdmin';
+import * as AddApplication from '../../components/AddApplication/AddApplication';
+import * as SourceEditModal from '../../components/SourceEditForm/SourceEditModal';
+import * as SourceRemoveModal from '../../components/SourceRemoveModal';
 
 describe('SourcesPage', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -42,7 +47,10 @@ describe('SourcesPage', () => {
         typesApi.doLoadSourceTypes =  jest.fn().mockImplementation(() => Promise.resolve(sourceTypesData.data));
 
         store = createStore(
-            combineReducers({ sources: applyReducerHash(ReducersProviders, defaultSourcesState) }),
+            combineReducers({
+                sources: applyReducerHash(ReducersProviders, defaultSourcesState),
+                user: applyReducerHash(UserReducer, { isOrgAdmin: true })
+            }),
             applyMiddleware(...middlewares)
         );
     });
@@ -62,6 +70,9 @@ describe('SourcesPage', () => {
         expect(wrapper.find(SourcesSimpleView)).toHaveLength(1);
         expect(wrapper.find(Pagination)).toHaveLength(2);
         expect(wrapper.find(PaginationLoader)).toHaveLength(0);
+        expect(wrapper.find(PrimaryToolbar).first().props().actionsConfig).toEqual({ actions: expect.any(Array) });
+        expect(wrapper.find(PrimaryToolbar).last().props().actionsConfig).toEqual(undefined);
+        expect(wrapper.find(RedirectNotAdmin)).toHaveLength(0);
     });
 
     it('renders empty state when there are no Sources', async () => {
@@ -108,7 +119,10 @@ describe('SourcesPage', () => {
         const modifiedState = { ...defaultSourcesState, loaded: 1, paginationClicked: true, numberOfEntities: 5 };
 
         store = createStore(
-            combineReducers({ sources: applyReducerHash(ReducersProviders, modifiedState) }),
+            combineReducers({
+                sources: applyReducerHash(ReducersProviders, modifiedState),
+                user: applyReducerHash(UserReducer, { isOrgAdmin: true })
+            }),
             applyMiddleware(...middlewares)
         );
 
@@ -140,10 +154,13 @@ describe('SourcesPage', () => {
 
     it('renders and decreased page number if it is too great', async () => {
         store = createStore(
-            combineReducers({ sources: applyReducerHash(ReducersProviders, {
-                ...defaultSourcesState,
-                pageNumber: 20
-            }) }),
+            combineReducers({
+                sources: applyReducerHash(ReducersProviders, {
+                    ...defaultSourcesState,
+                    pageNumber: 20
+                }),
+                user: applyReducerHash(UserReducer, { isOrgAdmin: true })
+            }),
             applyMiddleware(...middlewares)
         );
 
@@ -381,6 +398,84 @@ describe('SourcesPage', () => {
                     done();
                 }, 500);
             }, 500);
+        });
+    });
+
+    describe('not org admin', () => {
+        beforeEach(async () => {
+            store = createStore(
+                combineReducers({
+                    sources: applyReducerHash(ReducersProviders, defaultSourcesState),
+                    user: applyReducerHash(UserReducer, { isOrgAdmin: false })
+                }),
+                applyMiddleware(...middlewares)
+            );
+
+            await act(async() => {
+                wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
+            });
+            wrapper.update();
+        });
+
+        it('should fetch sources and source types on component mount', async () => {
+            expect(api.doLoadEntities).toHaveBeenCalled();
+            expect(api.doLoadAppTypes).toHaveBeenCalled();
+            expect(typesApi.doLoadSourceTypes).toHaveBeenCalled();
+
+            expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
+            expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
+            expect(wrapper.find(SourcesSimpleView)).toHaveLength(1);
+            expect(wrapper.find(Pagination)).toHaveLength(2);
+            expect(wrapper.find(PaginationLoader)).toHaveLength(0);
+            expect(wrapper.find(PrimaryToolbar).first().props().actionsConfig).toEqual(undefined);
+            expect(wrapper.find(PrimaryToolbar).last().props().actionsConfig).toEqual(undefined);
+            expect(wrapper.find(RedirectNotAdmin)).toHaveLength(0);
+        });
+    });
+
+    describe('routes', () => {
+        let initialEntry;
+
+        it('renders remove', async () => {
+            // eslint-disable-next-line react/display-name
+            SourceRemoveModal.default = () => <h1>remove modal mock</h1>;
+            initialEntry = [`/remove/${SOURCE_ALL_APS_ID}`];
+
+            await act(async() => {
+                wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
+            });
+            wrapper.update();
+
+            expect(wrapper.find(RedirectNotAdmin)).toHaveLength(1);
+            expect(wrapper.find(SourceRemoveModal.default)).toHaveLength(1);
+        });
+
+        it('renders manageApps', async () => {
+            // eslint-disable-next-line react/display-name
+            AddApplication.default = () => <h1>managing apps mock</h1>;
+            initialEntry = [`/manage_apps/${SOURCE_ALL_APS_ID}`];
+
+            await act(async() => {
+                wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
+            });
+            wrapper.update();
+
+            expect(wrapper.find(RedirectNotAdmin)).toHaveLength(1);
+            expect(wrapper.find(AddApplication.default)).toHaveLength(1);
+        });
+
+        it('renders edit', async () => {
+            // eslint-disable-next-line react/display-name
+            SourceEditModal.default = () => <h1>edit modal mock</h1>;
+            initialEntry = [`/edit/${SOURCE_ALL_APS_ID}`];
+
+            await act(async() => {
+                wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
+            });
+            wrapper.update();
+
+            expect(wrapper.find(RedirectNotAdmin)).toHaveLength(1);
+            expect(wrapper.find(SourceEditModal.default)).toHaveLength(1);
         });
     });
 });

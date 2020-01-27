@@ -33,6 +33,8 @@ import {
 } from './SourcesPage/helpers';
 import PaginationLoader from './SourcesPage/PaginationLoader';
 import { useIsLoaded } from '../hooks/useIsLoaded';
+import RedirectNotAdmin from '../components/RedirectNotAdmin/RedirectNotAdmin';
+import { useIsOrgAdmin } from '../hooks/useIsOrgAdmin';
 
 const SourcesPage = () => {
     const [showEmptyState, setShowEmptyState] = useState(false);
@@ -40,6 +42,7 @@ const SourcesPage = () => {
     const [filter, setFilterValue] = useState();
 
     const loaded = useIsLoaded();
+    const isOrgAdmin = useIsOrgAdmin();
 
     const history = useHistory();
     const intl = useIntl();
@@ -109,7 +112,7 @@ const SourcesPage = () => {
         <React.Fragment>
             <PrimaryToolbar
                 pagination={showPaginationLoader ? <PaginationLoader /> : numberOfEntities > 0 ? paginationConfig : undefined}
-                actionsConfig={{
+                actionsConfig={isOrgAdmin ? {
                     actions: [
                         <Link to={paths.sourcesNew} key="addSourceButton">
                             <Button variant='primary'>
@@ -120,7 +123,7 @@ const SourcesPage = () => {
                             </Button>
                         </Link>
                     ]
-                } }
+                } : undefined}
                 filterConfig={{
                     items: [{
                         label: intl.formatMessage({
@@ -170,18 +173,42 @@ const SourcesPage = () => {
 
     return (
         <React.Fragment>
-            <Route exact path={paths.sourceManageApps} component={ AddApplication } />
-            <Route exact path={paths.sourcesRemove} component={ SourceRemoveModal } />
-            <Route exact path={paths.sourcesNew} render={ () => (<AddSourceWizard
-                sourceTypes={loadedTypes(sourceTypes, sourceTypesLoaded)}
-                applicationTypes={loadedTypes(appTypes, appTypesLoaded)}
-                isOpen={true}
-                onClose={(values) => onCloseAddSourceWizard({ values, dispatch, history, intl })}
-                afterSuccess={() => afterSuccess(dispatch)}
-                hideSourcesButton={true}
-                initialValues={addSourceInitialValues}
-            />) } />
-            <Route exact path={paths.sourcesEdit} component={ SourceEditModal } />
+            <Route
+                exact path={paths.sourceManageApps}
+                render={ () => (<React.Fragment>
+                    <RedirectNotAdmin />
+                    <AddApplication/>
+                </React.Fragment>) }
+            />
+            <Route
+                exact path={paths.sourcesRemove}
+                render={ () => (<React.Fragment>
+                    <RedirectNotAdmin />
+                    <SourceRemoveModal />
+                </React.Fragment>) }
+            />
+            <Route
+                exact path={paths.sourcesNew}
+                render={ () => (<React.Fragment>
+                    <RedirectNotAdmin />
+                    <AddSourceWizard
+                        sourceTypes={loadedTypes(sourceTypes, sourceTypesLoaded)}
+                        applicationTypes={loadedTypes(appTypes, appTypesLoaded)}
+                        isOpen={true}
+                        onClose={(values) => onCloseAddSourceWizard({ values, dispatch, history, intl })}
+                        afterSuccess={() => afterSuccess(dispatch)}
+                        hideSourcesButton={true}
+                        initialValues={addSourceInitialValues}
+                    />
+                </React.Fragment>) }
+            />
+            <Route
+                exact path={paths.sourcesEdit}
+                render={ () => (<React.Fragment>
+                    <RedirectNotAdmin />
+                    <SourceEditModal />
+                </React.Fragment>) }
+            />
             <PageHeader>
                 <PageHeaderTitle title={intl.formatMessage({
                     id: 'sources.sources',
