@@ -10,6 +10,7 @@ import {
     addMessage
 } from '../../redux/sources/actions';
 import UndoButtonAdd from '../../components/UndoButton/UndoButtonAdd';
+import { routes } from '../../Routes';
 
 export const onCloseAddSourceWizard = ({ values, dispatch, history, intl }) => {
     if (values && !isEmpty(values)) {
@@ -30,7 +31,7 @@ export const onCloseAddSourceWizard = ({ values, dispatch, history, intl }) => {
     }
 
     dispatch(clearAddSource());
-    history.push('/');
+    history.push(routes.sources.path);
 };
 
 export const debouncedFiltering = awesomeDebounce((refresh) => refresh(), 500);

@@ -7,13 +7,14 @@ import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import RedirectNoId from '../../../components/RedirectNoId/RedirectNoId';
 import * as actions from '../../../redux/sources/actions';
 import * as api from '../../../api/entities';
+import { routes } from '../../../Routes';
 
 describe('RedirectNoId', () => {
     let initialStore;
     let initialEntry;
     let mockStore;
 
-    const wasRedirectedToRoot = (wrapper) => wrapper.find(MemoryRouter).instance().history.location.pathname === '/';
+    const wasRedirectedToRoot = (wrapper) => wrapper.find(MemoryRouter).instance().history.location.pathname === routes.sources.path;
 
     beforeEach(() => {
         initialEntry = ['/remove/1'];

@@ -14,6 +14,7 @@ import { sourcesDataGraphQl } from '../sourcesData';
 import { applicationTypesData } from '../applicationTypesData';
 import RemoveAppModal from '../../components/AddApplication/RemoveAppModal';
 import ApplicationList from '../../components/ApplicationsList/ApplicationList';
+import { routes } from '../../Routes';
 
 describe('SourceRemoveModal', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -71,7 +72,7 @@ describe('SourceRemoveModal', () => {
 
             const source = sourcesDataGraphQl.find((s) => s.id === '14');
 
-            expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual('/'); // modal was closed
+            expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sources.path); // modal was closed
             expect(actions.removeSource).toHaveBeenCalledWith('14', `${source.name} was deleted successfully.`); // calls removeSource with id of the source and right message
         });
     });

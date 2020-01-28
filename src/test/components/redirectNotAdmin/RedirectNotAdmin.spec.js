@@ -6,13 +6,14 @@ import { act } from 'react-dom/test-utils';
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import * as actions from '../../../redux/sources/actions';
 import RedirectNotAdmin from '../../../components/RedirectNotAdmin/RedirectNotAdmin';
+import { routes } from '../../../Routes';
 
 describe('RedirectNotAdmin', () => {
     let initialStore;
     let initialEntry;
     let mockStore;
 
-    const wasRedirectedToRoot = (wrapper) => wrapper.find(MemoryRouter).instance().history.location.pathname === '/';
+    const wasRedirectedToRoot = (wrapper) => wrapper.find(MemoryRouter).instance().history.location.pathname === routes.sources.path;
 
     beforeEach(() => {
         initialEntry = ['/remove/1'];
