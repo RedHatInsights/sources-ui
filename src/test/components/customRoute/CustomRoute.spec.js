@@ -28,7 +28,6 @@ describe('CustomRoute', () => {
         expect(wrapper.find(Route).props().exact).toEqual(true);
         expect(wrapper.find(Route).props().path).toEqual(route.path);
         expect(wrapper.find(Route).props().component).toEqual(undefined);
-        expect(wrapper.find(Route).props().render).toEqual(expect.any(Function));
         expect(wrapper.find(PokusComponent)).toHaveLength(0);
         expect(wrapper.find(RedirectNotAdmin)).toHaveLength(0);
         expect(wrapper.find(RedirectNoId)).toHaveLength(0);

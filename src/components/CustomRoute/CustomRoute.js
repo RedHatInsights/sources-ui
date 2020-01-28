@@ -30,19 +30,13 @@ CustomRouteInternal.propTypes = {
     children: PropTypes.node.isRequired
 };
 
-const CustomRoute = ({ route, componentProps, Component, ...props }) => {
-    return (
-        <Route
-            {...props}
-            path={route.path}
-            render={() => (
-                <CustomRouteInternal route={route}>
-                    <Component  {...componentProps}/>
-                </CustomRouteInternal>
-            )}
-        />
-    );
-};
+const CustomRoute = ({ route, componentProps, Component, ...props }) =>  (
+    <Route {...props} path={route.path}>
+        <CustomRouteInternal route={route}>
+            <Component  {...componentProps}/>
+        </CustomRouteInternal>
+    </Route>
+);
 
 CustomRoute.propTypes = {
     route: PropTypes.shape({
