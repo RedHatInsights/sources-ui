@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import thunk from 'redux-thunk';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/files/ReducerRegistry';
@@ -438,8 +439,9 @@ describe('SourcesPage', () => {
     describe('routes', () => {
         let initialEntry;
 
+        const wasRedirectedToRoot = (wrapper) => wrapper.find(MemoryRouter).instance().history.location.pathname === routes.sources.path;
+
         it('renders remove', async () => {
-            // eslint-disable-next-line react/display-name
             SourceRemoveModal.default = () => <h1>remove modal mock</h1>;
             initialEntry = [`/remove/${SOURCE_ALL_APS_ID}`];
 
@@ -453,7 +455,6 @@ describe('SourcesPage', () => {
         });
 
         it('renders manageApps', async () => {
-            // eslint-disable-next-line react/display-name
             AddApplication.default = () => <h1>managing apps mock</h1>;
             initialEntry = [`/manage_apps/${SOURCE_ALL_APS_ID}`];
 
@@ -467,7 +468,6 @@ describe('SourcesPage', () => {
         });
 
         it('renders edit', async () => {
-            // eslint-disable-next-line react/display-name
             SourceEditModal.default = () => <h1>edit modal mock</h1>;
             initialEntry = [`/edit/${SOURCE_ALL_APS_ID}`];
 
@@ -478,6 +478,93 @@ describe('SourcesPage', () => {
 
             expect(wrapper.find(RedirectNotAdmin)).toHaveLength(1);
             expect(wrapper.find(SourceEditModal.default)).toHaveLength(1);
+        });
+
+        describe('id not found, redirect back to sources', () => {
+            const NONSENSE_ID = '&88{}#558';
+
+            beforeEach(() => {
+                api.doLoadSource = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
+            });
+
+            it('when remove', async () => {
+                SourceRemoveModal.default = () => <h1>remove modal mock</h1>;
+                initialEntry = [`/remove/${NONSENSE_ID}`];
+
+                await act(async() => {
+                    wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
+                });
+                wrapper.update();
+
+                expect(wrapper.find(RedirectNotAdmin)).toHaveLength(0);
+                expect(wrapper.find(SourceRemoveModal.default)).toHaveLength(0);
+                expect(wasRedirectedToRoot(wrapper)).toEqual(true);
+            });
+
+            it('when manageApps', async () => {
+                AddApplication.default = () => <h1>managing apps mock</h1>;
+                initialEntry = [`/manage_apps/${NONSENSE_ID}`];
+
+                await act(async() => {
+                    wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
+                });
+                wrapper.update();
+
+                expect(wrapper.find(RedirectNotAdmin)).toHaveLength(0);
+                expect(wrapper.find(AddApplication.default)).toHaveLength(0);
+                expect(wasRedirectedToRoot(wrapper)).toEqual(true);
+            });
+        });
+
+        describe('not org admin, redirect back to sources', () => {
+            beforeEach(() => {
+                store = createStore(
+                    combineReducers({
+                        sources: applyReducerHash(ReducersProviders, defaultSourcesState),
+                        user: applyReducerHash(UserReducer, { isOrgAdmin: false })
+                    }),
+                    applyMiddleware(...middlewares)
+                );
+            });
+
+            it('when remove', async () => {
+                SourceRemoveModal.default = () => <h1>remove modal mock</h1>;
+                initialEntry = [`/remove/${SOURCE_ALL_APS_ID}`];
+
+                await act(async() => {
+                    wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
+                });
+                wrapper.update();
+
+                expect(wrapper.find(SourceRemoveModal.default)).toHaveLength(0);
+                expect(wasRedirectedToRoot(wrapper)).toEqual(true);
+            });
+
+            it('when manageApps', async () => {
+                AddApplication.default = () => <h1>managing apps mock</h1>;
+                initialEntry = [`/manage_apps/${SOURCE_ALL_APS_ID}`];
+
+                await act(async() => {
+                    wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
+                });
+                wrapper.update();
+
+                expect(wrapper.find(AddApplication.default)).toHaveLength(0);
+                expect(wasRedirectedToRoot(wrapper)).toEqual(true);
+            });
+
+            it('when edit', async () => {
+                SourceEditModal.default = () => <h1>edit modal mock</h1>;
+                initialEntry = [`/edit/${SOURCE_ALL_APS_ID}`];
+
+                await act(async() => {
+                    wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
+                });
+                wrapper.update();
+
+                expect(wrapper.find(SourceEditModal.default)).toHaveLength(0);
+                expect(wasRedirectedToRoot(wrapper)).toEqual(true);
+            });
         });
     });
 });
