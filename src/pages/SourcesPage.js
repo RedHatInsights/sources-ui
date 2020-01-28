@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { PageHeader, PageHeaderTitle, Section } from '@redhat-cloud-services/frontend-components';
-import { Link, useHistory, Route } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import {
     loadAppTypes,
     loadEntities,
@@ -19,7 +19,7 @@ import SourceEditModal from '../components/SourceEditForm/SourceEditModal';
 import SourceRemoveModal from '../components/SourceRemoveModal';
 import AddApplication from '../components/AddApplication/AddApplication';
 import { pageAndSize } from '../redux/sources/actions';
-import { paths } from '../Routes';
+import { routes } from '../Routes';
 
 import {
     prepareChips,
@@ -33,8 +33,8 @@ import {
 } from './SourcesPage/helpers';
 import PaginationLoader from './SourcesPage/PaginationLoader';
 import { useIsLoaded } from '../hooks/useIsLoaded';
-import RedirectNotAdmin from '../components/RedirectNotAdmin/RedirectNotAdmin';
 import { useIsOrgAdmin } from '../hooks/useIsOrgAdmin';
+import CustomRoute from '../components/CustomRoute/CustomRoute';
 
 const SourcesPage = () => {
     const [showEmptyState, setShowEmptyState] = useState(false);
@@ -114,7 +114,7 @@ const SourcesPage = () => {
                 pagination={showPaginationLoader ? <PaginationLoader /> : numberOfEntities > 0 ? paginationConfig : undefined}
                 actionsConfig={isOrgAdmin ? {
                     actions: [
-                        <Link to={paths.sourcesNew} key="addSourceButton">
+                        <Link to={routes.sourcesNew.path} key="addSourceButton">
                             <Button variant='primary'>
                                 <FormattedMessage
                                     id="sources.addSource"
@@ -173,42 +173,23 @@ const SourcesPage = () => {
 
     return (
         <React.Fragment>
-            <Route
-                exact path={paths.sourceManageApps}
-                render={ () => (<React.Fragment>
-                    <RedirectNotAdmin />
-                    <AddApplication/>
-                </React.Fragment>) }
+            <CustomRoute exact route={routes.sourceManageApps} Component={AddApplication}/>
+            <CustomRoute exact route={routes.sourcesRemove} Component={SourceRemoveModal}/>
+            <CustomRoute
+                exact
+                route={routes.sourcesNew}
+                Component={AddSourceWizard}
+                componentProps={{
+                    sourceTypes: loadedTypes(sourceTypes, sourceTypesLoaded),
+                    applicationTypes: loadedTypes(appTypes, appTypesLoaded),
+                    isOpen: true,
+                    onClose: (values) => onCloseAddSourceWizard({ values, dispatch, history, intl }),
+                    afterSuccess: () => afterSuccess(dispatch),
+                    hideSourcesButton: true,
+                    initialValues: addSourceInitialValues
+                }}
             />
-            <Route
-                exact path={paths.sourcesRemove}
-                render={ () => (<React.Fragment>
-                    <RedirectNotAdmin />
-                    <SourceRemoveModal />
-                </React.Fragment>) }
-            />
-            <Route
-                exact path={paths.sourcesNew}
-                render={ () => (<React.Fragment>
-                    <RedirectNotAdmin />
-                    <AddSourceWizard
-                        sourceTypes={loadedTypes(sourceTypes, sourceTypesLoaded)}
-                        applicationTypes={loadedTypes(appTypes, appTypesLoaded)}
-                        isOpen={true}
-                        onClose={(values) => onCloseAddSourceWizard({ values, dispatch, history, intl })}
-                        afterSuccess={() => afterSuccess(dispatch)}
-                        hideSourcesButton={true}
-                        initialValues={addSourceInitialValues}
-                    />
-                </React.Fragment>) }
-            />
-            <Route
-                exact path={paths.sourcesEdit}
-                render={ () => (<React.Fragment>
-                    <RedirectNotAdmin />
-                    <SourceEditModal />
-                </React.Fragment>) }
-            />
+            <CustomRoute exact route={routes.sourcesEdit} Component={SourceEditModal}/>
             <PageHeader>
                 <PageHeaderTitle title={intl.formatMessage({
                     id: 'sources.sources',

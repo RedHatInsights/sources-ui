@@ -24,7 +24,7 @@ import * as api from '../../api/entities';
 import * as typesApi from '../../api/source_types';
 import EmptyStateTable from '../../components/SourcesSimpleView/EmptyStateTable';
 import PaginationLoader from '../../pages/SourcesPage/PaginationLoader';
-import { paths } from '../../Routes';
+import { routes } from '../../Routes';
 import * as helpers from '../../pages/SourcesPage/helpers';
 import UserReducer from '../../redux/user/reducer';
 import RedirectNotAdmin from '../../components/RedirectNotAdmin/RedirectNotAdmin';
@@ -148,7 +148,7 @@ describe('SourcesPage', () => {
         });
         wrapper.update();
 
-        expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(paths.sourcesNew);
+        expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
         expect(wrapper.find(AddSourceWizard)).toHaveLength(1);
     });
 

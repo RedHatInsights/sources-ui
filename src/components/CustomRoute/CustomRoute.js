@@ -9,7 +9,7 @@ import RedirectNoId from '../RedirectNoId/RedirectNoId';
 const CustomRouteInternal = ({ route, children }) => {
     const source = useSource();
 
-    if (!source) {
+    if (!source && route.redirectNoId) {
         return <RedirectNoId />;
     }
 

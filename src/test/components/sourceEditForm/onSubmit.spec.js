@@ -1,6 +1,6 @@
 import { onSubmit } from '../../../components/SourceEditForm/onSubmit';
 import * as actions from '../../../redux/sources/actions';
-import { paths } from '../../../Routes';
+import { routes } from '../../../Routes';
 
 describe('editSourceModal - on submit', () => {
     let VALUES;
@@ -70,7 +70,7 @@ describe('editSourceModal - on submit', () => {
                 costManagement: EXPECTED_TRANSLATED_MESSAGE
             }
         );
-        expect(PUSH).toHaveBeenCalledWith(paths.sources);
+        expect(PUSH).toHaveBeenCalledWith(routes.sources.path);
         expect(actions.loadEntities).toHaveBeenCalled();
     });
 

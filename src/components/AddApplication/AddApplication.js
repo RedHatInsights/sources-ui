@@ -17,7 +17,7 @@ import RedirectNoId from '../RedirectNoId/RedirectNoId';
 import { useSource } from '../../hooks/useSource';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
 import { endpointToUrl } from '../SourcesSimpleView/formatters';
-import { paths } from '../../Routes';
+import { routes } from '../../Routes';
 
 import { doAttachApp } from '../../api/doAttachApp';
 
@@ -113,7 +113,7 @@ const AddApplication = () => {
         }
     }, [source]);
 
-    const goToSources = () => history.push(paths.sources);
+    const goToSources = () => history.push(routes.sources.path);
 
     if (!appTypesLoaded || !sourceTypesLoaded || !loaded) {
         return  (

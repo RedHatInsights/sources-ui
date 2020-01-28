@@ -1,4 +1,4 @@
-import { paths } from '../../Routes';
+import { routes } from '../../Routes';
 import { addMessage } from '../../redux/sources/actions';
 
 export const redirectWhenImported = (dispatch, intl, history, name) => {
@@ -13,5 +13,5 @@ export const redirectWhenImported = (dispatch, intl, history, name) => {
             defaultMessage: 'Imported sources cannot be edited.'
         }),
     ));
-    history.push(paths.sources);
+    history.push(routes.sources.path);
 };

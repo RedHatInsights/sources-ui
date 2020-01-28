@@ -7,7 +7,7 @@ import { Route } from 'react-router-dom';
 
 import RemoveAppModal from '../../../components/AddApplication/RemoveAppModal';
 import * as actions from '../../../redux/sources/actions';
-import { paths } from '../../../Routes';
+import { routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import RedirectNoId from '../../../components/RedirectNoId/RedirectNoId';
 
@@ -64,7 +64,7 @@ describe('RemoveAppModal', () => {
 
     it('renders correctly', () => {
         const wrapper = mount(componentWrapperIntl(
-            <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps} /> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps} /> } />,
             store,
             initialEntry
         ));
@@ -87,7 +87,7 @@ describe('RemoveAppModal', () => {
         store = mockStore(initialStore);
 
         const wrapper = mount(componentWrapperIntl(
-            <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps} /> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps} /> } />,
             store,
             initialEntry
         ));
@@ -111,7 +111,7 @@ describe('RemoveAppModal', () => {
         });
 
         const wrapper = mount(componentWrapperIntl(
-            <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps} app={app}/> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps} app={app}/> } />,
             store,
             initialEntry
         ));
@@ -137,7 +137,7 @@ describe('RemoveAppModal', () => {
         });
 
         const wrapper = mount(componentWrapperIntl(
-            <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps} app={app}/> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps} app={app}/> } />,
             store,
             initialEntry
         ));
@@ -149,7 +149,7 @@ describe('RemoveAppModal', () => {
 
     it('calls cancel', () => {
         const wrapper = mount(componentWrapperIntl(
-            <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps}/> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps}/> } />,
             store,
             initialEntry
         ));
@@ -162,7 +162,7 @@ describe('RemoveAppModal', () => {
         actions.removeApplication = jest.fn().mockImplementation(() => ({ type: 'REMOVE_APP' }));
 
         const wrapper = mount(componentWrapperIntl(
-            <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps}/> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps}/> } />,
             store,
             initialEntry
         ));
