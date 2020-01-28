@@ -14,7 +14,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { WrenchIcon } from '@patternfly/react-icons';
 import { Link } from 'react-router-dom';
-import { paths } from '../Routes';
+import { routes } from '../Routes';
 import { useIsOrgAdmin } from '../hooks/useIsOrgAdmin';
 
 const SourcesEmptyState = ({ title, body }) => {
@@ -45,7 +45,7 @@ const SourcesEmptyState = ({ title, body }) => {
                                 defaultMessage="To define a source, you have to be an organisation admin."
                             />}
                         </EmptyStateBody>
-                        {isOrgAdmin && <Link to={paths.sourcesNew}>
+                        {isOrgAdmin && <Link to={routes.sourcesNew.path}>
                             <Button style={{ marginTop: 'var(--pf-c-empty-state--c-button--MarginTop)' }}
                                 variant="primary">
                                 <FormattedMessage

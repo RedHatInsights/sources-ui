@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { Button, EmptyStateBody } from '@patternfly/react-core';
-import { Route, MemoryRouter } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -19,7 +19,7 @@ import { SOURCE_ALL_APS_ID, SOURCE_NO_APS_ID } from '../../sourcesData';
 import { applicationTypesData, COSTMANAGEMENT_APP, TOPOLOGICALINVENTORY_APP } from '../../applicationTypesData';
 import AddApplicationDescription from '../../../components/AddApplication/AddApplicationDescription';
 import LoadingStep from '../../../components/steps/LoadingStep';
-import { paths } from '../../../Routes';
+import { routes } from '../../../Routes';
 import FinishedStep from '../../../components/steps/FinishedStep';
 import ErroredStepAttach from '../../../components/AddApplication/steps/ErroredStep';
 
@@ -65,7 +65,7 @@ describe('AddApplication', () => {
 
         await act(async () => {
             wrapper = mount(componentWrapperIntl(
-                <Route path={paths.sourceManageApps} render={ (...args) => <AddApplication { ...args }/> } />,
+                <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplication { ...args }/> } />,
                 store,
                 initialEntry
             ));
@@ -118,7 +118,7 @@ describe('AddApplication', () => {
 
         await act(async () => {
             wrapper = mount(componentWrapperIntl(
-                <Route path={paths.sourceManageApps} render={ (...args) => <AddApplication { ...args }/> } />,
+                <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplication { ...args }/> } />,
                 store,
                 initialEntry
             ));
@@ -138,7 +138,7 @@ describe('AddApplication', () => {
 
         await act(async () => {
             wrapper = mount(componentWrapperIntl(
-                <Route path={paths.sourceManageApps} render={ (...args) => <AddApplication { ...args }/> } />,
+                <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplication { ...args }/> } />,
                 store,
                 [`${PATH}${SOURCE_ALL_APS_ID}`]
             ));
@@ -167,41 +167,13 @@ describe('AddApplication', () => {
 
         await act(async () => {
             wrapper = mount(componentWrapperIntl(
-                <Route path={paths.sourceManageApps} render={ (...args) => <AddApplication { ...args }/> } />,
+                <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplication { ...args }/> } />,
                 store,
                 initialEntry
             ));
         });
 
         expect(wrapper.find(LoadingStep)).toHaveLength(1);
-    });
-
-    it('redirects to table when the source does not exist', async () => {
-        entities.doLoadSource = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
-
-        store = mockStore({
-            sources: {
-                entities: [],
-                appTypes: applicationTypesData.data,
-                sourceTypes: sourceTypesData.data,
-                appTypesLoaded: true,
-                sourceTypesLoaded: true,
-                loaded: 0
-            }
-        });
-
-        let wrapper;
-
-        await act(async () => {
-            wrapper = mount(componentWrapperIntl(
-                <Route path={paths.sourceManageApps} render={ (...args) => <AddApplication { ...args }/> } />,
-                store,
-                initialEntry
-            ));
-        });
-        wrapper.update();
-
-        expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(paths.sources);
     });
 
     describe('imported source - not need to edit any value', () => {
@@ -225,7 +197,7 @@ describe('AddApplication', () => {
 
         it('renders review', () => {
             const wrapper = mount(componentWrapperIntl(
-                <Route path={paths.sourceManageApps} render={ (...args) => <AddApplication { ...args }/> } />,
+                <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplication { ...args }/> } />,
                 store,
                 initialEntry
             ));
@@ -245,7 +217,7 @@ describe('AddApplication', () => {
             entities.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
 
             const wrapper = mount(componentWrapperIntl(
-                <Route path={paths.sourceManageApps} render={ (...args) => <AddApplication { ...args }/> } />,
+                <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplication { ...args }/> } />,
                 store,
                 initialEntry
             ));
@@ -286,7 +258,7 @@ describe('AddApplication', () => {
             attachSource.doAttachApp = jest.fn().mockImplementation(() => new Promise((res, reject) => reject(ERROR_MESSAGE)));
 
             const wrapper = mount(componentWrapperIntl(
-                <Route path={paths.sourceManageApps} render={ (...args) => <AddApplication { ...args }/> } />,
+                <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplication { ...args }/> } />,
                 store,
                 initialEntry
             ));
@@ -326,7 +298,7 @@ describe('AddApplication', () => {
             attachSource.doAttachApp = jest.fn().mockImplementation(() => Promise.resolve('ok'));
 
             const wrapper = mount(componentWrapperIntl(
-                <Route path={paths.sourceManageApps} render={ (...args) => <AddApplication { ...args }/> } />,
+                <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplication { ...args }/> } />,
                 store,
                 initialEntry
             ));

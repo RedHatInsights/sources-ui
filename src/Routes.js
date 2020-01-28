@@ -12,17 +12,33 @@ const Loader = () => (
     </ContentLoader>
 );
 
-export const paths = {
-    sources: '/',
-    sourcesNew: '/new',
-    sourcesEdit: '/edit/:id',
-    sourcesRemove: '/remove/:id',
-    sourceManageApps: '/manage_apps/:id'
+export const routes = {
+    sources: {
+        path: '/'
+    },
+    sourcesNew: {
+        path: '/new',
+        writeAccess: true
+    },
+    sourcesEdit: {
+        path: '/edit/:id',
+        writeAccess: true
+    },
+    sourcesRemove: {
+        path: '/remove/:id',
+        redirectNoId: true,
+        writeAccess: true
+    },
+    sourceManageApps: {
+        path: '/manage_apps/:id',
+        redirectNoId: true,
+        writeAccess: true
+    }
 };
 
 const Routes = () =>  (
     <Suspense fallback={<Loader/>}>
-        <Route path={paths.sources} component={SourcesPage} />
+        <Route path={routes.sources.path} component={SourcesPage} />
     </Suspense>
 );
 

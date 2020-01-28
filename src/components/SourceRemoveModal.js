@@ -20,8 +20,8 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import ApplicationList from './ApplicationsList/ApplicationList';
 import RemoveAppModal from './AddApplication/RemoveAppModal';
-import RedirectNoId from './RedirectNoId/RedirectNoId';
 import { useSource } from '../hooks/useSource';
+import { routes } from '../Routes';
 
 const SourceRemoveModal = () => {
     const { push } = useHistory();
@@ -34,24 +34,20 @@ const SourceRemoveModal = () => {
 
     const dispatch = useDispatch();
 
-    if (!source) {
-        return <RedirectNoId/>;
-    }
+    const returnToSources = () => push(routes.sources.path);
 
     const onSubmit = () => {
-        push('/');
+        returnToSources();
         dispatch(removeSource(source.id, intl.formatMessage({
             id: 'sources.notificationDeleteMessage',
             defaultMessage: `{title} was deleted successfully.`
         }, { title: source.name })));
     };
 
-    const onCancel = () => push('/');
-
     const sourceHasActiveApp = source.applications.some((app) => !app.isDeleting);
 
     const actions = source.applications.length > 0 ? [
-        <Button id="deleteCancel" key="cancel" variant="link" type="button" onClick={ onCancel }>
+        <Button id="deleteCancel" key="cancel" variant="link" type="button" onClick={ returnToSources }>
             <FormattedMessage
                 id="sources.close"
                 defaultMessage="Close"
@@ -66,7 +62,7 @@ const SourceRemoveModal = () => {
                 defaultMessage="Delete this source and its data"
             />
         </Button>,
-        <Button id="deleteCancel" key="cancel" variant="link" type="button" onClick={ onCancel }>
+        <Button id="deleteCancel" key="cancel" variant="link" type="button" onClick={ returnToSources }>
             <FormattedMessage
                 id="sources.deleteCancel"
                 defaultMessage="Do not delete this source"
@@ -168,7 +164,7 @@ const SourceRemoveModal = () => {
             }
             isOpen
             isSmall
-            onClose={ onCancel }
+            onClose={ returnToSources }
             actions={ actions }
             isFooterLeftAligned
         >

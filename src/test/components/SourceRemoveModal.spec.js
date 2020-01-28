@@ -14,7 +14,7 @@ import { sourcesDataGraphQl } from '../sourcesData';
 import { applicationTypesData } from '../applicationTypesData';
 import RemoveAppModal from '../../components/AddApplication/RemoveAppModal';
 import ApplicationList from '../../components/ApplicationsList/ApplicationList';
-import RedirectNoId from '../../components/RedirectNoId/RedirectNoId';
+import { routes } from '../../Routes';
 
 describe('SourceRemoveModal', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -39,20 +39,6 @@ describe('SourceRemoveModal', () => {
             expect(wrapper.find('input')).toHaveLength(1); // checkbox
             expect(wrapper.find(Button)).toHaveLength(3); // cancel modal, cancel delete, delete
             expect(wrapper.find('button[id="deleteSubmit"]').props().disabled).toEqual(true); // delete is disabled
-        });
-
-        it('renders redirect app when no source', () => {
-            store = mockStore({
-                sources: { entities: [], appTypes: applicationTypesData.data }
-            });
-
-            const wrapper = mount(componentWrapperIntl(
-                <Route path="/remove/:id" render={ (...args) => <SourceRemoveModal { ...args } /> } />,
-                store,
-                ['/remove/14'])
-            );
-
-            expect(wrapper.find(RedirectNoId)).toHaveLength(1);
         });
 
         it('enables submit button', () => {
@@ -86,7 +72,7 @@ describe('SourceRemoveModal', () => {
 
             const source = sourcesDataGraphQl.find((s) => s.id === '14');
 
-            expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual('/'); // modal was closed
+            expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sources.path); // modal was closed
             expect(actions.removeSource).toHaveBeenCalledWith('14', `${source.name} was deleted successfully.`); // calls removeSource with id of the source and right message
         });
     });

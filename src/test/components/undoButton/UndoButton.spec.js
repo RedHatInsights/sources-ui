@@ -10,7 +10,7 @@ import ReducersProviders, { defaultSourcesState } from '../../../redux/sources/r
 
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import { Button } from '@patternfly/react-core';
-import { paths } from '../../../Routes';
+import { routes } from '../../../Routes';
 import { MemoryRouter } from 'react-router-dom';
 import { addMessage } from '../../../redux/sources/actions';
 
@@ -48,7 +48,7 @@ describe('UndoButton', () => {
         wrapper.update();
     };
 
-    const wasRedirectedToWizard = (wrapper) => wrapper.find(MemoryRouter).instance().history.location.pathname === paths.sourcesNew;
+    const wasRedirectedToWizard = (wrapper) => wrapper.find(MemoryRouter).instance().history.location.pathname === routes.sourcesNew.path;
 
     it('renders correctly', () => {
         const wrapper = mount(componentWrapperIntl(<UndoButtonAdd {...initialProps} />, store));
@@ -59,7 +59,7 @@ describe('UndoButton', () => {
     it('should set values and redirect to the wizard path', () => {
         store.dispatch(addMessage(TITLE, VARIANT, DESCRIPTION, messageId));
 
-        const wrapper = mount(componentWrapperIntl(<UndoButtonAdd {...initialProps} />, store, [paths.sources]));
+        const wrapper = mount(componentWrapperIntl(<UndoButtonAdd {...initialProps} />, store, [routes.sources.path]));
 
         expect(store.getState().notifications).toHaveLength(1);
 
@@ -71,7 +71,7 @@ describe('UndoButton', () => {
     });
 
     it('should pass when no message', () => {
-        const wrapper = mount(componentWrapperIntl(<UndoButtonAdd {...initialProps} />, store, [paths.sources]));
+        const wrapper = mount(componentWrapperIntl(<UndoButtonAdd {...initialProps} />, store, [routes.sources.path]));
 
         clickOnButton(wrapper);
 
@@ -81,7 +81,7 @@ describe('UndoButton', () => {
     it('should set refresh the page when on wizard', () => {
         refresh.refreshPage = jest.fn();
 
-        const wrapper = mount(componentWrapperIntl(<UndoButtonAdd {...initialProps} />, store, [paths.sourcesNew]));
+        const wrapper = mount(componentWrapperIntl(<UndoButtonAdd {...initialProps} />, store, [routes.sourcesNew.path]));
 
         clickOnButton(wrapper);
 

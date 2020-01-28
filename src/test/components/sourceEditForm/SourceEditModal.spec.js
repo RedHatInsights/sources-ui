@@ -9,7 +9,7 @@ import { Spinner } from '@redhat-cloud-services/frontend-components';
 
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import SourceEditModal from '../../../components/SourceEditForm/SourceEditModal';
-import { paths } from '../../../Routes';
+import { routes } from '../../../Routes';
 import { applicationTypesData } from '../../applicationTypesData';
 import { sourceTypesData, OPENSHIFT_ID } from '../../sourceTypesData';
 import { sourcesDataGraphQl } from '../../sourcesData';
@@ -65,7 +65,7 @@ describe('SourceEditModal', () => {
 
         await act(async() => {
             wrapper = mount(componentWrapperIntl(
-                <Route path={paths.sourcesEdit} render={ (...args) => <SourceEditModal { ...args }/> } />,
+                <Route path={routes.sourcesEdit.path} render={ (...args) => <SourceEditModal { ...args }/> } />,
                 store,
                 initialEntry
             ));
@@ -100,7 +100,7 @@ describe('SourceEditModal', () => {
 
         await act(async() => {
             wrapper = mount(componentWrapperIntl(
-                <Route path={paths.sourcesEdit} render={ (...args) => <SourceEditModal { ...args }/> } />,
+                <Route path={routes.sourcesEdit.path} render={ (...args) => <SourceEditModal { ...args }/> } />,
                 store,
                 initialEntry
             ));
@@ -189,7 +189,7 @@ describe('SourceEditModal', () => {
         });
         wrapper.update();
 
-        expect(getCurrentAddress(wrapper)).toEqual(paths.sources);
+        expect(getCurrentAddress(wrapper)).toEqual(routes.sources.path);
     });
 
     it('calls onCancel via cancel button and returns to root', async () => {
@@ -200,7 +200,7 @@ describe('SourceEditModal', () => {
         });
         wrapper.update();
 
-        expect(getCurrentAddress(wrapper)).toEqual(paths.sources);
+        expect(getCurrentAddress(wrapper)).toEqual(routes.sources.path);
     });
 
     it('calls onRetry and resets edited fields', async () => {
@@ -243,7 +243,7 @@ describe('SourceEditModal', () => {
 
         await act(async() => {
             wrapper = mount(componentWrapperIntl(
-                <Route path={paths.sourcesEdit} render={ (...args) => <SourceEditModal { ...args }/> } />,
+                <Route path={routes.sourcesEdit.path} render={ (...args) => <SourceEditModal { ...args }/> } />,
                 store,
                 initialEntry
             ));
@@ -267,7 +267,7 @@ describe('SourceEditModal', () => {
 
         await act(async() => {
             wrapper = mount(componentWrapperIntl(
-                <Route path={paths.sourcesEdit} render={ (...args) => <SourceEditModal { ...args }/> } />,
+                <Route path={routes.sourcesEdit.path} render={ (...args) => <SourceEditModal { ...args }/> } />,
                 store,
                 initialEntry
             ));
@@ -281,6 +281,6 @@ describe('SourceEditModal', () => {
         });
         wrapper.update();
 
-        expect(getCurrentAddress(wrapper)).toEqual(paths.sources);
+        expect(getCurrentAddress(wrapper)).toEqual(routes.sources.path);
     });
 });
