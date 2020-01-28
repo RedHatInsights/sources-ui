@@ -7,7 +7,7 @@ import { useSource } from '../../hooks/useSource';
 import RedirectNoId from '../RedirectNoId/RedirectNoId';
 
 const CustomRouteInternal = ({ route, children }) => {
-    const source = useSource();
+    const source = route.redirectNoId ? useSource() : undefined;
 
     if (!source && route.redirectNoId) {
         return <RedirectNoId />;
