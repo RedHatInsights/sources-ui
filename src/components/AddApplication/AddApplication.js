@@ -13,7 +13,6 @@ import WizardBody from './WizardBody';
 
 import { getSourcesApi } from '../../api/entities';
 
-import RedirectNoId from '../RedirectNoId/RedirectNoId';
 import { useSource } from '../../hooks/useSource';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
 import { endpointToUrl } from '../SourcesSimpleView/formatters';
@@ -122,10 +121,6 @@ const AddApplication = () => {
                 step={<LoadingStep />}
             />
         );
-    }
-
-    if (!source) {
-        return <RedirectNoId />;
     }
 
     if (state.state === 'loading' || state.state === 'submitting') {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { Button, EmptyStateBody } from '@patternfly/react-core';
-import { Route, MemoryRouter } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -174,34 +174,6 @@ describe('AddApplication', () => {
         });
 
         expect(wrapper.find(LoadingStep)).toHaveLength(1);
-    });
-
-    it('redirects to table when the source does not exist', async () => {
-        entities.doLoadSource = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
-
-        store = mockStore({
-            sources: {
-                entities: [],
-                appTypes: applicationTypesData.data,
-                sourceTypes: sourceTypesData.data,
-                appTypesLoaded: true,
-                sourceTypesLoaded: true,
-                loaded: 0
-            }
-        });
-
-        let wrapper;
-
-        await act(async () => {
-            wrapper = mount(componentWrapperIntl(
-                <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplication { ...args }/> } />,
-                store,
-                initialEntry
-            ));
-        });
-        wrapper.update();
-
-        expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sources.path);
     });
 
     describe('imported source - not need to edit any value', () => {

@@ -20,7 +20,6 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import ApplicationList from './ApplicationsList/ApplicationList';
 import RemoveAppModal from './AddApplication/RemoveAppModal';
-import RedirectNoId from './RedirectNoId/RedirectNoId';
 import { useSource } from '../hooks/useSource';
 
 const SourceRemoveModal = () => {
@@ -33,10 +32,6 @@ const SourceRemoveModal = () => {
     const source = useSource();
 
     const dispatch = useDispatch();
-
-    if (!source) {
-        return <RedirectNoId/>;
-    }
 
     const onSubmit = () => {
         push('/');
