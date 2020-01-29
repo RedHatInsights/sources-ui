@@ -1,7 +1,6 @@
 import React, { Suspense, lazy } from 'react';
 import { Route } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
-import ErrorBoundary from './components/ErrorBoundary';
 
 const SourcesPage = lazy(() => import('./pages/SourcesPage'));
 
@@ -13,20 +12,34 @@ const Loader = () => (
     </ContentLoader>
 );
 
-export const paths = {
-    sources: '/',
-    sourcesNew: '/new',
-    sourcesEdit: '/edit/:id',
-    sourcesRemove: '/remove/:id',
-    sourceManageApps: '/manage_apps/:id'
+export const routes = {
+    sources: {
+        path: '/'
+    },
+    sourcesNew: {
+        path: '/new',
+        writeAccess: true
+    },
+    sourcesEdit: {
+        path: '/edit/:id',
+        writeAccess: true
+    },
+    sourcesRemove: {
+        path: '/remove/:id',
+        redirectNoId: true,
+        writeAccess: true
+    },
+    sourceManageApps: {
+        path: '/manage_apps/:id',
+        redirectNoId: true,
+        writeAccess: true
+    }
 };
 
 const Routes = () =>  (
-    <ErrorBoundary>
-        <Suspense fallback={<Loader/>}>
-            <Route path={paths.sources} component={SourcesPage} />
-        </Suspense>
-    </ErrorBoundary>
+    <Suspense fallback={<Loader/>}>
+        <Route path={routes.sources.path} component={SourcesPage} />
+    </Suspense>
 );
 
 export default Routes;

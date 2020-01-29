@@ -15,6 +15,7 @@ import { prepareInitialValues } from './helpers';
 import { onSubmit } from './onSubmit';
 
 import { redirectWhenImported } from './importedRedirect';
+import { routes } from '../../Routes';
 
 const initialState = {
     loading: true,
@@ -85,6 +86,8 @@ const SourceEditModal = () => {
 
     const isLoading = !appTypesLoaded || !sourceTypesLoaded || loading;
 
+    const returnToSources = () => history.push(routes.sources.path);
+
     if (isLoading) {
         return (
             <Modal
@@ -95,7 +98,7 @@ const SourceEditModal = () => {
                 header={<Header />}
                 isOpen={true}
                 isLarge
-                onClose={() => history.push('/')}
+                onClose={returnToSources}
             >
                 <div className="ins-c-sources__dialog--spinnerContainer">
                     <Spinner />
@@ -113,10 +116,10 @@ const SourceEditModal = () => {
             header={<Header />}
             isOpen={true}
             isLarge
-            onClose={() => history.push('/')}
+            onClose={returnToSources}
         >
             <SourcesFormRenderer
-                onCancel={() => history.push('/')}
+                onCancel={returnToSources}
                 schema={schema}
                 onSubmit={
                     (values, formApi) => onSubmit(values, formApi.getState().dirtyFields, dispatch, source, intl, history.push)

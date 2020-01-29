@@ -12,16 +12,11 @@ import {
     ButtonVariant
 } from '@patternfly/react-core';
 
-import RedirectNoId from '../RedirectNoId/RedirectNoId';
 import { useSource } from '../../hooks/useSource';
 
 const ApplicationList = ({ setApplicationToRemove, breakpoints, namePrefix }) => {
     const appTypes = useSelector(({ sources }) => sources.appTypes);
     const source = useSource();
-
-    if (!source) {
-        return <RedirectNoId/>;
-    }
 
     const sourceAppsNames = source.applications
     .map(({ application_type_id }) => {

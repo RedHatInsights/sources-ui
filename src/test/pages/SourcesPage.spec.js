@@ -1,6 +1,6 @@
+/* eslint-disable react/display-name */
 import thunk from 'redux-thunk';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
-import ContentLoader from 'react-content-loader';
 import { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/files/ReducerRegistry';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { PrimaryToolbar, ConditionalFilter } from '@redhat-cloud-services/frontend-components';
@@ -14,19 +14,24 @@ import SourcesPage from '../../pages/SourcesPage';
 import SourcesEmptyState from '../../components/SourcesEmptyState';
 import SourcesSimpleView from '../../components/SourcesSimpleView/SourcesSimpleView';
 
-import { sourcesDataGraphQl } from '../sourcesData';
+import { sourcesDataGraphQl, SOURCE_ALL_APS_ID } from '../sourcesData';
 import { sourceTypesData, OPENSHIFT_ID } from '../sourceTypesData';
 import { applicationTypesData } from '../applicationTypesData';
 
 import { componentWrapperIntl } from '../../Utilities/testsHelpers';
 
-import ReducersProviders, { defaultSourcesState } from '../../redux/reducers/sources';
+import ReducersProviders, { defaultSourcesState } from '../../redux/sources/reducer';
 import * as api from '../../api/entities';
 import * as typesApi from '../../api/source_types';
 import EmptyStateTable from '../../components/SourcesSimpleView/EmptyStateTable';
 import PaginationLoader from '../../pages/SourcesPage/PaginationLoader';
-import { paths } from '../../Routes';
+import { routes } from '../../Routes';
 import * as helpers from '../../pages/SourcesPage/helpers';
+import UserReducer from '../../redux/user/reducer';
+import RedirectNotAdmin from '../../components/RedirectNotAdmin/RedirectNotAdmin';
+import * as AddApplication from '../../components/AddApplication/AddApplication';
+import * as SourceEditModal from '../../components/SourceEditForm/SourceEditModal';
+import * as SourceRemoveModal from '../../components/SourceRemoveModal';
 
 describe('SourcesPage', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -43,7 +48,10 @@ describe('SourcesPage', () => {
         typesApi.doLoadSourceTypes =  jest.fn().mockImplementation(() => Promise.resolve(sourceTypesData.data));
 
         store = createStore(
-            combineReducers({ sources: applyReducerHash(ReducersProviders, defaultSourcesState) }),
+            combineReducers({
+                sources: applyReducerHash(ReducersProviders, defaultSourcesState),
+                user: applyReducerHash(UserReducer, { isOrgAdmin: true })
+            }),
             applyMiddleware(...middlewares)
         );
     });
@@ -63,6 +71,9 @@ describe('SourcesPage', () => {
         expect(wrapper.find(SourcesSimpleView)).toHaveLength(1);
         expect(wrapper.find(Pagination)).toHaveLength(2);
         expect(wrapper.find(PaginationLoader)).toHaveLength(0);
+        expect(wrapper.find(PrimaryToolbar).first().props().actionsConfig).toEqual({ actions: expect.any(Array) });
+        expect(wrapper.find(PrimaryToolbar).last().props().actionsConfig).toEqual(undefined);
+        expect(wrapper.find(RedirectNotAdmin)).toHaveLength(0);
     });
 
     it('renders empty state when there are no Sources', async () => {
@@ -106,10 +117,13 @@ describe('SourcesPage', () => {
     });
 
     it('renders table and filtering - loading with paginationClicked: true, do not show paginationLoader', async () => {
-        const modifiedState = { ...defaultSourcesState, paginationClicked: true, numberOfEntities: 5 };
+        const modifiedState = { ...defaultSourcesState, loaded: 1, paginationClicked: true, numberOfEntities: 5 };
 
         store = createStore(
-            combineReducers({ sources: applyReducerHash(ReducersProviders, modifiedState) }),
+            combineReducers({
+                sources: applyReducerHash(ReducersProviders, modifiedState),
+                user: applyReducerHash(UserReducer, { isOrgAdmin: true })
+            }),
             applyMiddleware(...middlewares)
         );
 
@@ -135,16 +149,19 @@ describe('SourcesPage', () => {
         });
         wrapper.update();
 
-        expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(paths.sourcesNew);
+        expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
         expect(wrapper.find(AddSourceWizard)).toHaveLength(1);
     });
 
     it('renders and decreased page number if it is too great', async () => {
         store = createStore(
-            combineReducers({ sources: applyReducerHash(ReducersProviders, {
-                ...defaultSourcesState,
-                pageNumber: 20
-            }) }),
+            combineReducers({
+                sources: applyReducerHash(ReducersProviders, {
+                    ...defaultSourcesState,
+                    pageNumber: 20
+                }),
+                user: applyReducerHash(UserReducer, { isOrgAdmin: true })
+            }),
             applyMiddleware(...middlewares)
         );
 
@@ -171,6 +188,8 @@ describe('SourcesPage', () => {
         });
         wrapper.update();
 
+        expect(wrapper.find(RedirectNotAdmin)).toHaveLength(1);
+
         await act(async() => {
             wrapper.find(AddSourceWizard).props().onClose();
         });
@@ -187,6 +206,8 @@ describe('SourcesPage', () => {
     it('afterSuccess addSourceWizard', async () => {
         helpers.afterSuccess = jest.fn();
 
+        const source = { id: '544615', name: 'name of created source' };
+
         await act(async() => {
             wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
         });
@@ -198,11 +219,11 @@ describe('SourcesPage', () => {
         wrapper.update();
 
         await act(async() => {
-            wrapper.find(AddSourceWizard).props().afterSuccess();
+            wrapper.find(AddSourceWizard).props().afterSuccess(source);
         });
         wrapper.update();
 
-        expect(helpers.afterSuccess).toHaveBeenCalledWith(expect.any(Function));
+        expect(helpers.afterSuccess).toHaveBeenCalledWith(expect.any(Function), source);
     });
 
     it('renders loading state when is loading', async () => {
@@ -212,15 +233,12 @@ describe('SourcesPage', () => {
 
         const paginationLoadersCount = 2;
         const rowLoadersCount = 12;
-        const loadersCount = rowLoadersCount + paginationLoadersCount;
 
         expect(wrapper.find(RowLoader)).toHaveLength(rowLoadersCount);
         expect(wrapper.find(PaginationLoader)).toHaveLength(paginationLoadersCount);
-        expect(wrapper.find(ContentLoader)).toHaveLength(loadersCount);
         wrapper.update();
         expect(wrapper.find(RowLoader)).toHaveLength(0);
         expect(wrapper.find(PaginationLoader)).toHaveLength(0);
-        expect(wrapper.find(ContentLoader)).toHaveLength(0);
     });
 
     describe('filtering', () => {
@@ -281,7 +299,26 @@ describe('SourcesPage', () => {
             expect(filterInput(wrapper).props().value).toEqual(SEARCH_TERM);
         });
 
-        it('should remove the name badge when clicking on remove icon', (done) => {
+        it('should remove the name badge when clicking on remove icon in chip', (done) => {
+            setTimeout(async () => {
+                wrapper.update();
+
+                expect(wrapper.find(Chip)).toHaveLength(1);
+
+                const chipButtonPosition = 5;
+                const chipButton = wrapper.find(Button).at(chipButtonPosition);
+
+                await act(async () => chipButton.simulate('click'));
+                wrapper.update();
+
+                expect(wrapper.find(Chip)).toHaveLength(0);
+                expect(filterInput(wrapper).props().value).toEqual(EMPTY_VALUE);
+
+                done();
+            }, 500);
+        });
+
+        it('should not remove the name badge when clicking on chip', (done) => {
             setTimeout(async () => {
                 wrapper.update();
 
@@ -290,8 +327,8 @@ describe('SourcesPage', () => {
                 await act(async () => wrapper.find(Chip).simulate('click'));
                 wrapper.update();
 
-                expect(wrapper.find(Chip)).toHaveLength(0);
-                expect(filterInput(wrapper).props().value).toEqual(EMPTY_VALUE);
+                expect(wrapper.find(Chip)).toHaveLength(1);
+                expect(filterInput(wrapper).props().value).toEqual(SEARCH_TERM);
 
                 done();
             }, 500);
@@ -366,6 +403,170 @@ describe('SourcesPage', () => {
                     done();
                 }, 500);
             }, 500);
+        });
+    });
+
+    describe('not org admin', () => {
+        beforeEach(async () => {
+            store = createStore(
+                combineReducers({
+                    sources: applyReducerHash(ReducersProviders, defaultSourcesState),
+                    user: applyReducerHash(UserReducer, { isOrgAdmin: false })
+                }),
+                applyMiddleware(...middlewares)
+            );
+
+            await act(async() => {
+                wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
+            });
+            wrapper.update();
+        });
+
+        it('should fetch sources and source types on component mount', async () => {
+            expect(api.doLoadEntities).toHaveBeenCalled();
+            expect(api.doLoadAppTypes).toHaveBeenCalled();
+            expect(typesApi.doLoadSourceTypes).toHaveBeenCalled();
+
+            expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
+            expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
+            expect(wrapper.find(SourcesSimpleView)).toHaveLength(1);
+            expect(wrapper.find(Pagination)).toHaveLength(2);
+            expect(wrapper.find(PaginationLoader)).toHaveLength(0);
+            expect(wrapper.find(PrimaryToolbar).first().props().actionsConfig).toEqual(undefined);
+            expect(wrapper.find(PrimaryToolbar).last().props().actionsConfig).toEqual(undefined);
+            expect(wrapper.find(RedirectNotAdmin)).toHaveLength(0);
+        });
+    });
+
+    describe('routes', () => {
+        let initialEntry;
+
+        const wasRedirectedToRoot = (wrapper) => wrapper.find(MemoryRouter).instance().history.location.pathname === routes.sources.path;
+
+        it('renders remove', async () => {
+            SourceRemoveModal.default = () => <h1>remove modal mock</h1>;
+            initialEntry = [`/remove/${SOURCE_ALL_APS_ID}`];
+
+            await act(async() => {
+                wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
+            });
+            wrapper.update();
+
+            expect(wrapper.find(RedirectNotAdmin)).toHaveLength(1);
+            expect(wrapper.find(SourceRemoveModal.default)).toHaveLength(1);
+        });
+
+        it('renders manageApps', async () => {
+            AddApplication.default = () => <h1>managing apps mock</h1>;
+            initialEntry = [`/manage_apps/${SOURCE_ALL_APS_ID}`];
+
+            await act(async() => {
+                wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
+            });
+            wrapper.update();
+
+            expect(wrapper.find(RedirectNotAdmin)).toHaveLength(1);
+            expect(wrapper.find(AddApplication.default)).toHaveLength(1);
+        });
+
+        it('renders edit', async () => {
+            SourceEditModal.default = () => <h1>edit modal mock</h1>;
+            initialEntry = [`/edit/${SOURCE_ALL_APS_ID}`];
+
+            await act(async() => {
+                wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
+            });
+            wrapper.update();
+
+            expect(wrapper.find(RedirectNotAdmin)).toHaveLength(1);
+            expect(wrapper.find(SourceEditModal.default)).toHaveLength(1);
+        });
+
+        describe('id not found, redirect back to sources', () => {
+            const NONSENSE_ID = '&88{}#558';
+
+            beforeEach(() => {
+                api.doLoadSource = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
+            });
+
+            it('when remove', async () => {
+                SourceRemoveModal.default = () => <h1>remove modal mock</h1>;
+                initialEntry = [`/remove/${NONSENSE_ID}`];
+
+                await act(async() => {
+                    wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
+                });
+                wrapper.update();
+
+                expect(wrapper.find(RedirectNotAdmin)).toHaveLength(0);
+                expect(wrapper.find(SourceRemoveModal.default)).toHaveLength(0);
+                expect(wasRedirectedToRoot(wrapper)).toEqual(true);
+            });
+
+            it('when manageApps', async () => {
+                AddApplication.default = () => <h1>managing apps mock</h1>;
+                initialEntry = [`/manage_apps/${NONSENSE_ID}`];
+
+                await act(async() => {
+                    wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
+                });
+                wrapper.update();
+
+                expect(wrapper.find(RedirectNotAdmin)).toHaveLength(0);
+                expect(wrapper.find(AddApplication.default)).toHaveLength(0);
+                expect(wasRedirectedToRoot(wrapper)).toEqual(true);
+            });
+        });
+
+        describe('not org admin, redirect back to sources', () => {
+            beforeEach(() => {
+                store = createStore(
+                    combineReducers({
+                        sources: applyReducerHash(ReducersProviders, defaultSourcesState),
+                        user: applyReducerHash(UserReducer, { isOrgAdmin: false })
+                    }),
+                    applyMiddleware(...middlewares)
+                );
+            });
+
+            it('when remove', async () => {
+                SourceRemoveModal.default = () => <h1>remove modal mock</h1>;
+                initialEntry = [`/remove/${SOURCE_ALL_APS_ID}`];
+
+                await act(async() => {
+                    wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
+                });
+                wrapper.update();
+
+                expect(wrapper.find(SourceRemoveModal.default)).toHaveLength(0);
+                expect(wasRedirectedToRoot(wrapper)).toEqual(true);
+            });
+
+            it('when manageApps', async () => {
+                AddApplication.default = () => <h1>managing apps mock</h1>;
+                initialEntry = [`/manage_apps/${SOURCE_ALL_APS_ID}`];
+
+                await act(async() => {
+                    wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
+                });
+                wrapper.update();
+
+                expect(wrapper.find(AddApplication.default)).toHaveLength(0);
+                expect(wasRedirectedToRoot(wrapper)).toEqual(true);
+            });
+
+            it('when edit', async () => {
+                SourceEditModal.default = () => <h1>edit modal mock</h1>;
+                initialEntry = [`/edit/${SOURCE_ALL_APS_ID}`];
+
+                await act(async() => {
+                    wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
+                });
+                wrapper.update();
+
+                expect(wrapper.find(SourceEditModal.default)).toHaveLength(0);
+                expect(wasRedirectedToRoot(wrapper)).toEqual(true);
+            });
         });
     });
 });

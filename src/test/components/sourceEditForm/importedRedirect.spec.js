@@ -1,6 +1,6 @@
 import { redirectWhenImported } from '../../../components/SourceEditForm/importedRedirect';
-import * as actions from '../../../redux/actions/sources';
-import { paths } from '../../../Routes';
+import * as actions from '../../../redux/sources/actions';
+import { routes } from '../../../Routes';
 
 describe('redirectWhenImported', () => {
     const DISPATCH = jest.fn();
@@ -26,6 +26,6 @@ describe('redirectWhenImported', () => {
             'danger',
             EXPECT_DESCRIPTION,
         );
-        expect(HISTORY.push).toHaveBeenCalledWith(paths.sources);
+        expect(HISTORY.push).toHaveBeenCalledWith(routes.sources.path);
     });
 });

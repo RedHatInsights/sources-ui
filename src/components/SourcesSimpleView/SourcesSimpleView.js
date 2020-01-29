@@ -4,11 +4,13 @@ import { useHistory } from 'react-router-dom';
 import { Table, TableHeader, TableBody, sortable } from '@patternfly/react-table';
 import { useIntl } from 'react-intl';
 
-import { sortEntities } from '../../redux/actions/sources';
+import { sortEntities } from '../../redux/sources/actions';
 import { formatters } from './formatters';
 import { PlaceHolderTable, RowWrapperLoader } from './loaders';
 import { sourcesColumns, COLUMN_COUNT } from '../../views/sourcesViewDefinition';
 import EmptyStateTable from './EmptyStateTable';
+import { useIsLoaded } from '../../hooks/useIsLoaded';
+import { useIsOrgAdmin } from '../../hooks/useIsOrgAdmin';
 
 const itemToCells = (item, columns, sourceTypes, appTypes) => columns.filter(column => column.title || column.hidden)
 .map(col => ({
@@ -79,8 +81,10 @@ const SourcesSimpleView = () => {
     const { push } = useHistory();
     const intl = useIntl();
 
+    const loaded = useIsLoaded();
+    const isOrgAdmin = useIsOrgAdmin();
+
     const {
-        loaded,
         appTypes,
         entities,
         sourceTypes,
@@ -90,7 +94,6 @@ const SourcesSimpleView = () => {
         sortDirection,
         numberOfEntities
     } = useSelector(({ sources }) => sources, shallowEqual);
-
     const reduxDispatch = useDispatch();
 
     const [state, dispatch] = useReducer(reducer, initialState(sourcesColumns(intl)));
@@ -149,7 +152,7 @@ const SourcesSimpleView = () => {
             }}
             rows={shownRows}
             cells={state.cells}
-            actionResolver={numberOfEntities > 0 ? actionResolver(intl, push) : undefined}
+            actionResolver={isOrgAdmin && numberOfEntities > 0 ? actionResolver(intl, push) : undefined}
             rowWrapper={RowWrapperLoader}
         >
             <TableHeader />

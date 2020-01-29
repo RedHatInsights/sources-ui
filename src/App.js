@@ -2,9 +2,14 @@ import React, { useEffect } from 'react';
 import { NotificationsPortal } from '@redhat-cloud-services/frontend-components-notifications';
 import { Main } from '@redhat-cloud-services/frontend-components';
 import { IntlProvider } from 'react-intl';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { getBaseName } from '@redhat-cloud-services/frontend-components-utilities/files/helpers';
 
 import Routes from './Routes';
 import './App.scss';
+
+import ErrorBoundary from './components/ErrorBoundary';
+import PermissionsChecker from './components/PermissionsChecker';
 
 const App = (props) => {
     useEffect(() => {
@@ -18,14 +23,20 @@ const App = (props) => {
     }, []);
 
     return (
-        <IntlProvider locale="en">
-            <React.Fragment>
-                <NotificationsPortal />
-                <Main style={ { padding: 0 } } >
-                    <Routes childProps={props} />
-                </Main>
-            </React.Fragment>
-        </IntlProvider>
+        <Router basename={getBaseName(location.pathname)}>
+            <IntlProvider locale="en">
+                <React.Fragment>
+                    <NotificationsPortal />
+                    <ErrorBoundary>
+                        <PermissionsChecker>
+                            <Main style={ { padding: 0 } } >
+                                <Routes childProps={props} />
+                            </Main>
+                        </PermissionsChecker>
+                    </ErrorBoundary>
+                </React.Fragment>
+            </IntlProvider>
+        </Router>
     );
 };
 

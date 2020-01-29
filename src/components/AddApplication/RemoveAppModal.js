@@ -14,8 +14,7 @@ import {
 } from '@patternfly/react-core';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 
-import { removeApplication } from '../../redux/actions/sources';
-import RedirectNoId from '../RedirectNoId/RedirectNoId';
+import { removeApplication } from '../../redux/sources/actions';
 import { useSource } from '../../hooks/useSource';
 
 const RemoveAppModal = ({ app, onCancel }) => {
@@ -25,10 +24,6 @@ const RemoveAppModal = ({ app, onCancel }) => {
     const source = useSource();
 
     const dispatch = useDispatch();
-
-    if (!source) {
-        return <RedirectNoId/>;
-    }
 
     const dependentApps = app.dependent_applications.map(appName => {
         const appType = appTypes.find(({ name }) => name === appName);

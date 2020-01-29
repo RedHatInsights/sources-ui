@@ -4,11 +4,14 @@ import React from 'react';
 import { NotificationsPortal } from '@redhat-cloud-services/frontend-components-notifications';
 import { Main } from '@redhat-cloud-services/frontend-components';
 import { act } from 'react-dom/test-utils';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 import App from '../App';
 import { componentWrapperIntl } from '../Utilities/testsHelpers';
 import Routes from '../Routes';
 import { getProdStore } from '../Utilities/store';
+import * as PermissionsChecker from '../components/PermissionsChecker';
+import ErrorBoundary from '../components/ErrorBoundary';
 
 jest.mock('../pages/SourcesPage', () => ({
     __esModule: true,
@@ -26,6 +29,8 @@ describe('App spec js', () => {
     beforeEach(() => {
         initSpy = jest.fn();
         identifyAppSpy = jest.fn();
+
+        PermissionsChecker.default = ({ children }) => <h1>{children}</h1>;
 
         insights = {
             chrome: {
@@ -81,5 +86,9 @@ describe('App spec js', () => {
         expect(wrapper.find(NotificationsPortal)).toHaveLength(1);
         expect(wrapper.find(Main)).toHaveLength(1);
         expect(wrapper.find(Routes)).toHaveLength(1);
+        expect(wrapper.find(Router)).toHaveLength(1);
+        expect(wrapper.find(Router).props().basename).toEqual('//');
+        expect(wrapper.find(PermissionsChecker.default)).toHaveLength(1);
+        expect(wrapper.find(ErrorBoundary)).toHaveLength(1);
     });
 });
