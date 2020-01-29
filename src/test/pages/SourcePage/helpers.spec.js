@@ -11,6 +11,7 @@ import {
 
 import * as actions from '../../../redux/sources/actions';
 import { sourceTypesData } from '../../sourceTypesData';
+import * as sourcesApi from '../../../api/checkSourceStatus';
 
 describe('Source page helpers', () => {
     describe('onCloseAddSourceWizard', () => {
@@ -68,17 +69,22 @@ describe('Source page helpers', () => {
     });
 
     describe('afterSuccess', () => {
-        it('calls function', () => {
+        it('calls function and checks source availibility status', () => {
             const dispatch = jest.fn();
+            const source = { id: '154586' };
+
+            sourcesApi.checkSourceStatus = jest.fn();
 
             actions.loadEntities = jest.fn();
             actions.clearAddSource = jest.fn();
 
-            afterSuccess(dispatch);
+            afterSuccess(dispatch, source);
 
             expect(dispatch.mock.calls.length).toBe(2);
             expect(actions.loadEntities).toHaveBeenCalledWith(afterSuccessLoadParameters);
             expect(actions.loadEntities).toHaveBeenCalled();
+
+            expect(sourcesApi.checkSourceStatus).toHaveBeenCalledWith(source.id);
         });
     });
 
