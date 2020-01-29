@@ -206,6 +206,8 @@ describe('SourcesPage', () => {
     it('afterSuccess addSourceWizard', async () => {
         helpers.afterSuccess = jest.fn();
 
+        const source = { id: '544615', name: 'name of created source' };
+
         await act(async() => {
             wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
         });
@@ -217,11 +219,11 @@ describe('SourcesPage', () => {
         wrapper.update();
 
         await act(async() => {
-            wrapper.find(AddSourceWizard).props().afterSuccess();
+            wrapper.find(AddSourceWizard).props().afterSuccess(source);
         });
         wrapper.update();
 
-        expect(helpers.afterSuccess).toHaveBeenCalledWith(expect.any(Function));
+        expect(helpers.afterSuccess).toHaveBeenCalledWith(expect.any(Function), source);
     });
 
     it('renders loading state when is loading', async () => {

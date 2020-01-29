@@ -184,7 +184,7 @@ const SourcesPage = () => {
                     applicationTypes: loadedTypes(appTypes, appTypesLoaded),
                     isOpen: true,
                     onClose: (values) => onCloseAddSourceWizard({ values, dispatch, history, intl }),
-                    afterSuccess: () => afterSuccess(dispatch),
+                    afterSuccess: (source) => afterSuccess(dispatch, source),
                     hideSourcesButton: true,
                     initialValues: addSourceInitialValues
                 }}
