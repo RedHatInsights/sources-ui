@@ -1,7 +1,8 @@
 import React from 'react';
-import { Text, TextContent, TextVariants, Badge, Tooltip } from '@patternfly/react-core';
+import { Text, TextContent, TextVariants, Badge, Tooltip, Popover, Bullseye } from '@patternfly/react-core';
 import { FormattedMessage } from 'react-intl';
 import { DateFormat } from '@redhat-cloud-services/frontend-components';
+import { CheckCircleIcon, QuestionCircleIcon, ExclamationTriangleIcon, TimesCircleIcon } from '@patternfly/react-icons';
 
 export const defaultPort = (scheme) => ({
     http: '80',
@@ -17,9 +18,19 @@ export const importsTexts = (value) => ({
 
 export const schemaToPort = (schema, port) => port && String(port) !== defaultPort(schema) ? `:${port}` : '';
 
-export const endpointToUrl = ({ scheme, host, path, port }) => (
-    `${scheme}://${host}${schemaToPort(scheme, port)}${path || ''}`
-);
+export const endpointToUrl = (endpoint) => {
+    const onlyTrueEndpointValues = Object.keys(endpoint).reduce((acc, curr) => ({ ...acc, [curr]: endpoint[curr] || '' }), {});
+
+    const { scheme = '', host = '', path = '', port = '' } = onlyTrueEndpointValues;
+
+    const url = `${scheme}://${host}${schemaToPort(scheme, port)}${path}`;
+
+    if (url === '://') {
+        return;
+    }
+
+    return url;
+};
 
 export const sourceIsOpenShift = (source, sourceTypes) => {
     const type = sourceTypes.find((type) => type.id === source.source_type_id);
@@ -59,7 +70,7 @@ export const sourceTypeFormatter = (sourceType, _item, { sourceTypes }) => {
 export const dateFormatter = str => (
     <Text
         style={ { marginBottom: 0 } }
-        component={ TextVariants.small }
+        component={ TextVariants.p }
         className='ins-c-sources__help-cursor'
     >
         <DateFormat type='relative' date={str} />
@@ -104,10 +115,138 @@ export const importedFormatter = (value) => {
     </Badge>);
 };
 
+export const getStatusIcon = (status) => ({
+    unavailable: <TimesCircleIcon className="ins-c-sources__availability-not-ok"/>,
+    available: <CheckCircleIcon className="ins-c-sources__availability-ok"/>,
+    partially_available: <ExclamationTriangleIcon className="ins-c-sources__availability-partially"/>
+}[status] || <QuestionCircleIcon className="ins-c-sources__availability-unknown"/>);
+
+export const getStatusText = (status) => ({
+    unavailable: <FormattedMessage
+        id="sources.unavailable"
+        defaultMessage="Unavailable"
+    />,
+    available: <FormattedMessage
+        id="sources.ok"
+        defaultMessage="OK"
+    />,
+    partially_available: <FormattedMessage
+        id="sources.partiallyAvailable"
+        defaultMessage="Partially available"
+    />
+}[status] || <FormattedMessage
+    id="sources.unknown"
+    defaultMessage="Unknown"
+/>);
+
+export const formatAvailibilityErrors = (source, appTypes) => {
+    if (source.applications && source.applications.length > 0) {
+        if (!source.applications.some(({ availability_status }) => availability_status === 'unavailable')) {
+            return (<FormattedMessage
+                id="sources.unknownError"
+                defaultMessage="Unknown error"
+            />);
+        }
+
+        return source.applications.map(
+            ({ application_type_id, availability_status_error, availability_status }, index) => {
+                if (availability_status === 'unavailable') {
+                    const application = appTypes.find(({ id }) => id === application_type_id);
+                    const applicationName = application ? application.display_name : '';
+
+                    if (availability_status_error) {
+                        return `${availability_status_error} \n ${applicationName ? `(${applicationName})` : ''}`;
+                    }
+
+                    return (<FormattedMessage
+                        key={availability_status_error || index}
+                        id="sources.unknownAppError"
+                        defaultMessage="Unknown application error ({ appName }) "
+                        values={{ appName: applicationName }}
+                    />);
+                }
+            }
+        );
+    }
+
+    return (<FormattedMessage
+        key="availability_status_error"
+        id="sources.unknownAppError"
+        defaultMessage="Unknown source error."
+    />);
+};
+
+export const getStatusTooltipText = (status, source, appTypes) => ({
+    unavailable: <React.Fragment>
+        <FormattedMessage
+            id="sources.appStatusPartiallyOK"
+            defaultMessage="We found these errors:"
+        />
+        <br />
+        {formatAvailibilityErrors(source, appTypes)}
+    </React.Fragment>,
+    available: <FormattedMessage
+        id="sources.appStatusOK"
+        defaultMessage="Everything works fine - all applications are connected."
+    />,
+    partially_available: <React.Fragment>
+        <FormattedMessage
+            id="sources.appStatusPartiallyOK"
+            defaultMessage="We found these errors:"
+        />
+        <br />
+        {formatAvailibilityErrors(source, appTypes)}
+    </React.Fragment>
+}[status] || <FormattedMessage
+    id="sources.appStatusUnknown"
+    defaultMessage="Status has not been verified."
+/>);
+
+export const availabilityFormatter = (status, source, { appTypes }) => {
+    const noApps = !source.applications || source.applications.length === 0;
+
+    const statusContent = noApps ? '--' : (<React.Fragment>
+        {getStatusIcon(status)}&nbsp;
+        {getStatusText(status)}
+    </React.Fragment>);
+
+    const tooltipText = noApps ? (<FormattedMessage
+        id="sources.noAppConnected"
+        defaultMessage="No application connected."
+    />) : getStatusTooltipText(status, source, appTypes);
+
+    return (<TextContent className="clickable">
+        <Text key={status} component={ TextVariants.p }>
+            <Popover
+                aria-label={`${status} popover`}
+                bodyContent={<h1>{tooltipText}</h1>}
+            >
+                <span>
+                    {statusContent}
+                </span>
+            </Popover>
+        </Text>
+    </TextContent>);
+};
+
+export const sourceTypeIconFormatter = (sourceTypeId, _item, { sourceTypes }) => {
+    const sourceType = sourceTypes.find(({ id }) => id === sourceTypeId);
+
+    if (!sourceType || !sourceType.icon_url) {
+        return null;
+    }
+
+    return (<Bullseye>
+        <img src={sourceType.icon_url} alt={sourceType.product_name} className="ins-c-sources__icon" />
+    </Bullseye>);
+};
+
 export const formatters = (name) => ({
     nameFormatter,
     dateFormatter,
     applicationFormatter,
     sourceTypeFormatter,
-    importedFormatter
+    importedFormatter,
+    availabilityFormatter,
+    sourceTypeIconFormatter
 }[name] || defaultFormatter(name));

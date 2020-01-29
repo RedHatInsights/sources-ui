@@ -56,7 +56,8 @@ const LodashWebpackPlugin = new (require('lodash-webpack-plugin'))({
     currying: true,
     flattening: true,
     placeholders: true,
-    shorthands: true
+    shorthands: true,
+    paths: true
 });
 plugins.push(LodashWebpackPlugin);
 
@@ -79,14 +80,6 @@ const ExtractCssWebpackPlugin = new (require('mini-css-extract-plugin'))({
     filename: 'css/[name].css'
 });
 plugins.push(ExtractCssWebpackPlugin);
-
-/**
- * Copies files from the specified locations to the corresponding destinations.
- */
-const CopyFilesWebpackPlugin = new (require('copy-webpack-plugin'))([
-    { from: path.resolve(__dirname, '../static/images'), to: 'images' }
-]);
-plugins.push(CopyFilesWebpackPlugin);
 
 /**
  * Makes build-time env vars available to the client-side as constants

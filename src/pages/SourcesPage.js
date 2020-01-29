@@ -1,114 +1,120 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
-import { Link, withRouter, Route } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { TableToolbar, PageHeader, PageHeaderTitle, Pagination, Section } from '@redhat-cloud-services/frontend-components';
+import { PageHeader, PageHeaderTitle, Section } from '@redhat-cloud-services/frontend-components';
+import { Link, useHistory } from 'react-router-dom';
 import {
     loadAppTypes,
     loadEntities,
     loadSourceTypes,
-    clearAddSource
-} from '../redux/actions/providers';
+    filterSources
+} from '../redux/sources/actions';
 import { Button } from '@patternfly/react-core';
-import { SplitItem, Split } from '@patternfly/react-core';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources';
+import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components';
 
 import SourcesSimpleView from '../components/SourcesSimpleView/SourcesSimpleView';
-import SourcesFilter from '../components/SourcesFilter';
 import SourcesEmptyState from '../components/SourcesEmptyState';
 import SourceEditModal from '../components/SourceEditForm/SourceEditModal';
 import SourceRemoveModal from '../components/SourceRemoveModal';
 import AddApplication from '../components/AddApplication/AddApplication';
-import { pageAndSize, addMessage } from '../redux/actions/providers';
-import { paths } from '../Routes';
-import { prepareEntities } from '../Utilities/filteringSorting';
-import UndoButtonAdd from '../components/UndoButton/UndoButtonAdd';
-import isEmpty from 'lodash/isEmpty';
+import { pageAndSize } from '../redux/sources/actions';
+import { routes } from '../Routes';
 
-export const onCloseAddSourceWizard = ({ values, dispatch, history, intl }) => {
-    if (values && !isEmpty(values)) {
-        const messageId = Date.now();
-        dispatch(addMessage(
-            intl.formatMessage({
-                id: 'sources.addWizardCanceled',
-                defaultMessage: 'Adding a source was cancelled'
-            }),
-            'success',
-            <FormattedMessage
-                id="sources.undoMistake"
-                defaultMessage={ `{undo} if this was a mistake.` }
-                values={ { undo: <UndoButtonAdd messageId={messageId} values={values} /> } }
-            />,
-            messageId
-        ));
-    }
+import {
+    prepareChips,
+    removeChips,
+    setFilter,
+    debouncedFiltering,
+    prepareSourceTypeSelection,
+    afterSuccess,
+    onCloseAddSourceWizard,
+    loadedTypes
+} from './SourcesPage/helpers';
+import PaginationLoader from './SourcesPage/PaginationLoader';
+import { useIsLoaded } from '../hooks/useIsLoaded';
+import { useIsOrgAdmin } from '../hooks/useIsOrgAdmin';
+import CustomRoute from '../components/CustomRoute/CustomRoute';
 
-    dispatch(clearAddSource());
-    history.push('/');
-};
+const SourcesPage = () => {
+    const [showEmptyState, setShowEmptyState] = useState(false);
+    const [checkEmptyState, setCheckEmptyState] = useState(false);
+    const [filter, setFilterValue] = useState();
 
-export const afterSuccessLoadParameters = { pageNumber: 1, sortBy: 'created_at', sortDirection: 'desc' };
+    const loaded = useIsLoaded();
+    const isOrgAdmin = useIsOrgAdmin();
 
-export const afterSuccess = (dispatch) => {
-    dispatch(clearAddSource());
-    dispatch(loadEntities(afterSuccessLoadParameters));
-};
-
-const SourcesPage = ({
-    history,
-    match,
-    location
-}) => {
+    const history = useHistory();
     const intl = useIntl();
 
     const {
         filterValue,
-        loaded,
         numberOfEntities,
         appTypes,
-        entities,
         pageSize,
         pageNumber,
         fetchingError,
         addSourceInitialValues,
-        sortBy,
-        sortDirection,
-        filterColumn,
-        sourceTypes
-    } = useSelector(({ providers }) => providers, shallowEqual);
+        sourceTypes,
+        entities,
+        paginationClicked,
+        appTypesLoaded,
+        sourceTypesLoaded
+    } = useSelector(({ sources }) => sources, shallowEqual);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        Promise.all([dispatch(loadSourceTypes()), dispatch(loadAppTypes()), dispatch(loadEntities())]);
+        Promise.all([dispatch(loadSourceTypes()), dispatch(loadAppTypes()), dispatch(loadEntities())])
+        .then(() => setCheckEmptyState(true));
     }, []);
 
-    const onSetPage = (number) => dispatch(pageAndSize(number, pageSize));
+    useEffect(() => {
+        if (checkEmptyState) {
+            setShowEmptyState(entities.length === 0);
+        }
+    }, [checkEmptyState]);
 
-    const onPerPageSelect = (count) => dispatch(pageAndSize(1, count));
+    useEffect(() => {
+        if (filter !== filterValue.name) {
+            setFilterValue(filterValue.name);
+        }
+    }, [filterValue.name]);
 
-    const numberOfFilteredEntities = (
-        filterValue && filterValue !== '' ?
-            prepareEntities(
-                entities,
-                { sourceTypes, sortBy, sortDirection, filterColumn, filterValue, pageSize, pageNumber }
-            ).length
-            : numberOfEntities
-    );
+    const onSetPage = (_e, page) => dispatch(pageAndSize(page, pageSize));
 
-    const maximumPageNumber = (numberOfFilteredEntities / pageSize) + 1;
-    const currentPage = pageNumber > maximumPageNumber ? maximumPageNumber : pageNumber;
+    const onPerPageSelect = (_e, perPage) => dispatch(pageAndSize(1, perPage));
+
+    const maximumPageNumber = Math.ceil(numberOfEntities / pageSize);
+
+    if (entities.length > 0 && loaded && pageNumber > Math.max(maximumPageNumber, 1)) {
+        onSetPage(maximumPageNumber);
+    }
+
+    const paginationConfig = {
+        itemCount: numberOfEntities,
+        page: pageNumber,
+        perPage: pageSize,
+        onSetPage,
+        onPerPageSelect,
+        isCompact: false
+    };
+
+    const paginationConfigBottom = {
+        ...paginationConfig,
+        dropDirection: 'up',
+        variant: 'bottom'
+    };
+
+    const showPaginationLoader = (!loaded || !appTypesLoaded || !sourceTypesLoaded) && !paginationClicked;
 
     const mainContent = () => (
         <React.Fragment>
-            <TableToolbar xresults={numberOfFilteredEntities}>
-                <Split gutter="md" style={{ flexGrow: 1 }}>
-                    <SplitItem>
-                        <SourcesFilter />
-                    </SplitItem>
-                    <SplitItem>
-                        <Link to={paths.sourcesNew}>
+            <PrimaryToolbar
+                pagination={showPaginationLoader ? <PaginationLoader /> : numberOfEntities > 0 ? paginationConfig : undefined}
+                actionsConfig={isOrgAdmin ? {
+                    actions: [
+                        <Link to={routes.sourcesNew.path} key="addSourceButton">
                             <Button variant='primary'>
                                 <FormattedMessage
                                     id="sources.addSource"
@@ -116,53 +122,74 @@ const SourcesPage = ({
                                 />
                             </Button>
                         </Link>
-                    </SplitItem>
-                    <SplitItem style={{ flexGrow: 1 }}>
-                        <Pagination
-                            itemsPerPage={pageSize}
-                            page={currentPage}
-                            direction='down'
-                            onSetPage={onSetPage}
-                            onPerPageSelect={onPerPageSelect}
-                            numberOfItems={numberOfFilteredEntities || 0}
-                        />
-                    </SplitItem>
-                </Split>
-            </TableToolbar>
+                    ]
+                } : undefined}
+                filterConfig={{
+                    items: [{
+                        label: intl.formatMessage({
+                            id: 'sources.name',
+                            defaultMessage: 'Name'
+                        }),
+                        filterValues: {
+                            'aria-label': intl.formatMessage({
+                                id: 'sources.filterByName',
+                                defaultMessage: 'Filter by name'
+                            }),
+                            onChange: (_event, value) => {
+                                setFilterValue(value);
+                                debouncedFiltering(() => setFilter('name', value, dispatch));
+                            },
+                            value: filter
+                        }
+                    }, {
+                        label: intl.formatMessage({
+                            id: 'sources.type',
+                            defaultMessage: 'Type'
+                        }),
+                        type: 'checkbox',
+                        filterValues: {
+                            onChange: (_event, value) =>
+                                setFilter('source_type_id', value, dispatch),
+                            items: prepareSourceTypeSelection(sourceTypes || []),
+                            value: filterValue.source_type_id
+                        }
+                    }]
+                }}
+                activeFiltersConfig={{
+                    filters: prepareChips(filterValue, sourceTypes),
+                    onDelete: (_event, chips, deleteAll) =>
+                        dispatch(filterSources(removeChips(chips, filterValue, deleteAll)))
+                }}
+            />
             <SourcesSimpleView />
-            <TableToolbar>
-                <Pagination
-                    itemsPerPage={pageSize}
-                    page={currentPage}
-                    direction='up'
-                    onSetPage={onSetPage}
-                    onPerPageSelect={onPerPageSelect}
-                    numberOfItems={numberOfFilteredEntities || 0}
-                />
-            </TableToolbar>
+            <PrimaryToolbar
+                pagination={
+                    showPaginationLoader ? <PaginationLoader />
+                        : numberOfEntities > 0 ? paginationConfigBottom : undefined
+                }
+            />
         </React.Fragment>
     );
 
-    const noEntities = !numberOfFilteredEntities || numberOfFilteredEntities === 0;
-    const displayEmptyState = loaded && !filterValue && noEntities;
-
-    const editorNew = location.pathname === paths.sourcesNew;
-    const editorEdit = match.path === paths.sourcesEdit;
-
     return (
         <React.Fragment>
-            <Route exact path={paths.sourceManageApps} component={ AddApplication } />
-            <Route exact path={paths.sourcesRemove} component={ SourceRemoveModal } />
-            { editorNew && <AddSourceWizard
-                sourceTypes={sourceTypes}
-                applicationTypes={appTypes}
-                isOpen={true}
-                onClose={(values) => onCloseAddSourceWizard({ values, dispatch, history, intl })}
-                afterSuccess={() => afterSuccess(dispatch)}
-                hideSourcesButton={true}
-                initialValues={addSourceInitialValues}
-            />}
-            { editorEdit && <SourceEditModal />}
+            <CustomRoute exact route={routes.sourceManageApps} Component={AddApplication}/>
+            <CustomRoute exact route={routes.sourcesRemove} Component={SourceRemoveModal}/>
+            <CustomRoute
+                exact
+                route={routes.sourcesNew}
+                Component={AddSourceWizard}
+                componentProps={{
+                    sourceTypes: loadedTypes(sourceTypes, sourceTypesLoaded),
+                    applicationTypes: loadedTypes(appTypes, appTypesLoaded),
+                    isOpen: true,
+                    onClose: (values) => onCloseAddSourceWizard({ values, dispatch, history, intl }),
+                    afterSuccess: () => afterSuccess(dispatch),
+                    hideSourcesButton: true,
+                    initialValues: addSourceInitialValues
+                }}
+            />
+            <CustomRoute exact route={routes.sourcesEdit} Component={SourceEditModal}/>
             <PageHeader>
                 <PageHeaderTitle title={intl.formatMessage({
                     id: 'sources.sources',
@@ -170,7 +197,7 @@ const SourcesPage = ({
                 })}/>
             </PageHeader>
             <Section type='content'>
-                { (displayEmptyState || fetchingError) ?
+                { (showEmptyState || fetchingError) ?
                     <SourcesEmptyState
                         title={fetchingError ? fetchingError.title : undefined}
                         body={fetchingError ? fetchingError.detail : undefined}
@@ -182,10 +209,4 @@ const SourcesPage = ({
     );
 };
 
-SourcesPage.propTypes = {
-    location: PropTypes.any.isRequired,
-    match: PropTypes.object.isRequired,
-    history: PropTypes.any.isRequired
-};
-
-export default withRouter(SourcesPage);
+export default SourcesPage;

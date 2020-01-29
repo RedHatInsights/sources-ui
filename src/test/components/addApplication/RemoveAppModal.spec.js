@@ -6,10 +6,9 @@ import { FormattedMessage } from 'react-intl';
 import { Route } from 'react-router-dom';
 
 import RemoveAppModal from '../../../components/AddApplication/RemoveAppModal';
-import * as actions from '../../../redux/actions/providers';
-import { paths } from '../../../Routes';
+import * as actions from '../../../redux/sources/actions';
+import { routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
-import RedirectNoId from '../../../components/RedirectNoId/RedirectNoId';
 
 describe('RemoveAppModal', () => {
     let store;
@@ -39,7 +38,7 @@ describe('RemoveAppModal', () => {
 
     beforeEach(() => {
         initialStore = {
-            providers: {
+            sources: {
                 appTypes: [],
                 entities: [{ id: SOURCE_ID }]
             }
@@ -64,7 +63,7 @@ describe('RemoveAppModal', () => {
 
     it('renders correctly', () => {
         const wrapper = mount(componentWrapperIntl(
-            <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps} /> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps} /> } />,
             store,
             initialEntry
         ));
@@ -76,25 +75,6 @@ describe('RemoveAppModal', () => {
         expect(wrapper.find(Button).last().text()).toEqual('Cancel');
     });
 
-    it('renders correctly RedirectNoId with no source', () => {
-        initialStore = {
-            providers: {
-                appTypes: [],
-                entities: []
-            }
-        };
-
-        store = mockStore(initialStore);
-
-        const wrapper = mount(componentWrapperIntl(
-            <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps} /> } />,
-            store,
-            initialEntry
-        ));
-
-        expect(wrapper.find(RedirectNoId)).toHaveLength(1);
-    });
-
     it('renders correctly with attached dependent applications', () => {
         const ATTACHED_APPS = [APP1_DISPLAY_NAME, APP2_DISPLAY_NAME];
         const app = {
@@ -104,14 +84,14 @@ describe('RemoveAppModal', () => {
         };
 
         store = mockStore({
-            providers: {
-                ...initialStore.providers,
+            sources: {
+                ...initialStore.sources,
                 appTypes: APP_TYPES
             }
         });
 
         const wrapper = mount(componentWrapperIntl(
-            <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps} app={app}/> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps} app={app}/> } />,
             store,
             initialEntry
         ));
@@ -130,14 +110,14 @@ describe('RemoveAppModal', () => {
         };
 
         store = mockStore({
-            providers: {
-                ...initialStore.providers,
+            sources: {
+                ...initialStore.sources,
                 appTypes: APP_TYPES
             }
         });
 
         const wrapper = mount(componentWrapperIntl(
-            <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps} app={app}/> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps} app={app}/> } />,
             store,
             initialEntry
         ));
@@ -149,7 +129,7 @@ describe('RemoveAppModal', () => {
 
     it('calls cancel', () => {
         const wrapper = mount(componentWrapperIntl(
-            <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps}/> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps}/> } />,
             store,
             initialEntry
         ));
@@ -162,7 +142,7 @@ describe('RemoveAppModal', () => {
         actions.removeApplication = jest.fn().mockImplementation(() => ({ type: 'REMOVE_APP' }));
 
         const wrapper = mount(componentWrapperIntl(
-            <Route path={paths.sourceManageApps} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps}/> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps}/> } />,
             store,
             initialEntry
         ));

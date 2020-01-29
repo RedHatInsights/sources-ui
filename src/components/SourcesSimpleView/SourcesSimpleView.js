@@ -1,15 +1,16 @@
 import React, { useEffect, useReducer } from 'react';
-import PropTypes from 'prop-types';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Table, TableHeader, TableBody, sortable } from '@patternfly/react-table';
 import { useIntl } from 'react-intl';
 
-import { sortEntities } from '../../redux/actions/providers';
+import { sortEntities } from '../../redux/sources/actions';
 import { formatters } from './formatters';
 import { PlaceHolderTable, RowWrapperLoader } from './loaders';
-import { prepareEntities } from '../../Utilities/filteringSorting';
-import { sourcesViewDefinition } from '../../views/sourcesViewDefinition';
+import { sourcesColumns, COLUMN_COUNT } from '../../views/sourcesViewDefinition';
+import EmptyStateTable from './EmptyStateTable';
+import { useIsLoaded } from '../../hooks/useIsLoaded';
+import { useIsOrgAdmin } from '../../hooks/useIsOrgAdmin';
 
 const itemToCells = (item, columns, sourceTypes, appTypes) => columns.filter(column => column.title || column.hidden)
 .map(col => ({
@@ -17,7 +18,7 @@ const itemToCells = (item, columns, sourceTypes, appTypes) => columns.filter(col
 }));
 
 const renderSources = (entities, columns, sourceTypes, appTypes) =>
-    entities.reduce((acc, item) => ([
+    entities.filter(({ hidden }) => !hidden).reduce((acc, item) => ([
         ...acc,
         {
             ...item,
@@ -27,17 +28,19 @@ const renderSources = (entities, columns, sourceTypes, appTypes) =>
         }
     ]), []);
 
+export const prepareColumnsCells = columns => columns.filter(column => column.title || column.hidden).map(column => ({
+    title: column.title || '',
+    value: column.value,
+    ...(column.sortable && { transforms: [sortable] })
+}));
+
 const reducer = (state, payload) => ({ ...state, ...payload });
 
 const initialState = (columns) => ({
     rows: [],
     sortBy: {},
     isLoaded: false,
-    cells: columns.filter(column => column.title || column.hidden).map(column => ({
-        title: column.title || '',
-        value: column.value,
-        ...(column.sortable && { transforms: [sortable] })
-    }))
+    cells: prepareColumnsCells(columns)
 });
 
 export const insertEditAction = (actions, intl, push) => actions.splice(1, 0, {
@@ -74,72 +77,65 @@ export const actionResolver = (intl, push) => (rowData) => {
     return actions;
 };
 
-const SourcesSimpleView = ({ history: { push } }) => {
+const SourcesSimpleView = () => {
+    const { push } = useHistory();
     const intl = useIntl();
-    const columns = sourcesViewDefinition.columns(intl);
-    const [state, dispatch] = useReducer(reducer, initialState(columns));
+
+    const loaded = useIsLoaded();
+    const isOrgAdmin = useIsOrgAdmin();
 
     const {
-        filterValue,
-        loaded,
         appTypes,
         entities,
-        pageSize,
-        pageNumber,
-        sortBy,
-        sortDirection,
-        filterColumn,
         sourceTypes,
         sourceTypesLoaded,
-        appTypesLoaded
-    } = useSelector(({ providers }) => providers, shallowEqual);
-
+        appTypesLoaded,
+        sortBy,
+        sortDirection,
+        numberOfEntities
+    } = useSelector(({ sources }) => sources, shallowEqual);
     const reduxDispatch = useDispatch();
 
-    const refreshSources = (additionalOptions) => dispatch({
-        rows: prepareEntities(
-            renderSources(entities, columns, sourceTypes, appTypes),
-            {
-                sortBy,
-                sortDirection,
-                filterColumn,
-                filterValue,
-                pageNumber,
-                pageSize,
-                sourceTypes
-            }
-        ),
-        ...additionalOptions
-    });
+    const [state, dispatch] = useReducer(reducer, initialState(sourcesColumns(intl)));
+
+    const refreshSources = () => {
+        const notSortable = numberOfEntities === 0;
+        const columns = sourcesColumns(intl, notSortable);
+
+        return dispatch({
+            rows: renderSources(entities, columns, sourceTypes, appTypes),
+            cells: prepareColumnsCells(columns)
+        });
+    };
 
     useEffect(() => {
         if (loaded && sourceTypesLoaded && appTypesLoaded) {
             dispatch({ isLoaded: true });
+            refreshSources();
         } else {
             dispatch({ isLoaded: false });
         }
     }, [loaded, sourceTypesLoaded, appTypesLoaded]);
 
     useEffect(() => {
-        refreshSources({
-            sortBy: {
-                index: state.cells.map(cell => cell.value).indexOf(sortBy), direction: sortDirection
-            }
-        });
-    }, [sortDirection, sortBy]);
-
-    useEffect(() => {
-        refreshSources();
-    }, [filterValue, filterColumn]);
-
-    useEffect(() => {
         if (state.isLoaded) {
             refreshSources();
         }
-    }, [entities, pageSize, pageNumber, state.isLoaded]);
+    }, [entities]);
 
     if (!state.isLoaded) {
         return <PlaceHolderTable />;
+    }
+
+    let shownRows = state.rows;
+    if (numberOfEntities === 0) {
+        shownRows = [{
+            heightAuto: true,
+            cells: [{
+                props: { colSpan: COLUMN_COUNT },
+                title: <EmptyStateTable />
+            }]
+        }];
     }
 
     return (
@@ -150,10 +146,13 @@ const SourcesSimpleView = ({ history: { push } }) => {
                 defaultMessage: 'List of Sources'
             })}
             onSort={(_event, key, direction) => reduxDispatch(sortEntities(state.cells[key].value, direction))}
-            sortBy={state.sortBy}
-            rows={state.rows}
+            sortBy={{
+                index: state.cells.map(cell => cell.value).indexOf(sortBy),
+                direction: sortDirection
+            }}
+            rows={shownRows}
             cells={state.cells}
-            actionResolver={actionResolver(intl, push)}
+            actionResolver={isOrgAdmin && numberOfEntities > 0 ? actionResolver(intl, push) : undefined}
             rowWrapper={RowWrapperLoader}
         >
             <TableHeader />
@@ -162,8 +161,4 @@ const SourcesSimpleView = ({ history: { push } }) => {
     );
 };
 
-SourcesSimpleView.propTypes = {
-    history: PropTypes.any.isRequired
-};
-
-export default withRouter(SourcesSimpleView);
+export default SourcesSimpleView;

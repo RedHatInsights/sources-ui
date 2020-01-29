@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import {
     Modal,
@@ -15,42 +14,40 @@ import {
     TextListItem,
     Checkbox
 } from '@patternfly/react-core';
-import { removeSource } from '../redux/actions/providers';
+import { removeSource } from '../redux/sources/actions';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import ApplicationList from './ApplicationsList/ApplicationList';
 import RemoveAppModal from './AddApplication/RemoveAppModal';
-import RedirectNoId from './RedirectNoId/RedirectNoId';
 import { useSource } from '../hooks/useSource';
+import { routes } from '../Routes';
 
-const SourceRemoveModal = ({ history: { push }, match: { params: { id } } }) => {
+const SourceRemoveModal = () => {
+    const { push } = useHistory();
+
     const [acknowledge, setAcknowledge] = useState(false);
     const [removingApp, setApplicationToRemove] = useState({});
 
     const intl = useIntl();
-    const source = useSource(id);
+    const source = useSource();
 
     const dispatch = useDispatch();
 
-    if (!source) {
-        return <RedirectNoId/>;
-    }
+    const returnToSources = () => push(routes.sources.path);
 
     const onSubmit = () => {
-        push('/');
+        returnToSources();
         dispatch(removeSource(source.id, intl.formatMessage({
             id: 'sources.notificationDeleteMessage',
             defaultMessage: `{title} was deleted successfully.`
         }, { title: source.name })));
     };
 
-    const onCancel = () => push('/');
-
     const sourceHasActiveApp = source.applications.some((app) => !app.isDeleting);
 
     const actions = source.applications.length > 0 ? [
-        <Button id="deleteCancel" key="cancel" variant="link" type="button" onClick={ onCancel }>
+        <Button id="deleteCancel" key="cancel" variant="link" type="button" onClick={ returnToSources }>
             <FormattedMessage
                 id="sources.close"
                 defaultMessage="Close"
@@ -65,7 +62,7 @@ const SourceRemoveModal = ({ history: { push }, match: { params: { id } } }) => 
                 defaultMessage="Delete this source and its data"
             />
         </Button>,
-        <Button id="deleteCancel" key="cancel" variant="link" type="button" onClick={ onCancel }>
+        <Button id="deleteCancel" key="cancel" variant="link" type="button" onClick={ returnToSources }>
             <FormattedMessage
                 id="sources.deleteCancel"
                 defaultMessage="Do not delete this source"
@@ -167,7 +164,7 @@ const SourceRemoveModal = ({ history: { push }, match: { params: { id } } }) => 
             }
             isOpen
             isSmall
-            onClose={ onCancel }
+            onClose={ returnToSources }
             actions={ actions }
             isFooterLeftAligned
         >
@@ -189,15 +186,4 @@ const SourceRemoveModal = ({ history: { push }, match: { params: { id } } }) => 
     );
 };
 
-SourceRemoveModal.propTypes = {
-    history: PropTypes.shape({
-        push: PropTypes.func.isRequired
-    }).isRequired,
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            id: PropTypes.string.isRequired
-        }).isRequired
-    }).isRequired
-};
-
-export default withRouter(SourceRemoveModal);
+export default SourceRemoveModal;

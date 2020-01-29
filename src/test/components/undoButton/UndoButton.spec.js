@@ -6,13 +6,13 @@ import { applyReducerHash } from '@redhat-cloud-services/frontend-components-uti
 
 import UndoButtonAdd from '../../../components/UndoButton/UndoButtonAdd';
 import * as refresh from '../../../components/UndoButton/refreshPage';
-import ReducersProviders, { defaultProvidersState } from '../../../redux/reducers/providers';
+import ReducersProviders, { defaultSourcesState } from '../../../redux/sources/reducer';
 
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import { Button } from '@patternfly/react-core';
-import { paths } from '../../../Routes';
+import { routes } from '../../../Routes';
 import { MemoryRouter } from 'react-router-dom';
-import { addMessage } from '../../../redux/actions/providers';
+import { addMessage } from '../../../redux/sources/actions';
 
 describe('UndoButton', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -38,7 +38,7 @@ describe('UndoButton', () => {
         };
 
         store = createStore(
-            combineReducers({ providers: applyReducerHash(ReducersProviders, defaultProvidersState), notifications }),
+            combineReducers({ sources: applyReducerHash(ReducersProviders, defaultSourcesState), notifications }),
             applyMiddleware(...middlewares)
         );
     });
@@ -48,7 +48,7 @@ describe('UndoButton', () => {
         wrapper.update();
     };
 
-    const wasRedirectedToWizard = (wrapper) => wrapper.find(MemoryRouter).instance().history.location.pathname === paths.sourcesNew;
+    const wasRedirectedToWizard = (wrapper) => wrapper.find(MemoryRouter).instance().history.location.pathname === routes.sourcesNew.path;
 
     it('renders correctly', () => {
         const wrapper = mount(componentWrapperIntl(<UndoButtonAdd {...initialProps} />, store));
@@ -59,19 +59,19 @@ describe('UndoButton', () => {
     it('should set values and redirect to the wizard path', () => {
         store.dispatch(addMessage(TITLE, VARIANT, DESCRIPTION, messageId));
 
-        const wrapper = mount(componentWrapperIntl(<UndoButtonAdd {...initialProps} />, store, [paths.sources]));
+        const wrapper = mount(componentWrapperIntl(<UndoButtonAdd {...initialProps} />, store, [routes.sources.path]));
 
         expect(store.getState().notifications).toHaveLength(1);
 
         clickOnButton(wrapper);
 
         expect(wasRedirectedToWizard(wrapper)).toEqual(true);
-        expect(store.getState().providers.addSourceInitialValues).toEqual(values);
+        expect(store.getState().sources.addSourceInitialValues).toEqual(values);
         expect(store.getState().notifications).toHaveLength(0);
     });
 
     it('should pass when no message', () => {
-        const wrapper = mount(componentWrapperIntl(<UndoButtonAdd {...initialProps} />, store, [paths.sources]));
+        const wrapper = mount(componentWrapperIntl(<UndoButtonAdd {...initialProps} />, store, [routes.sources.path]));
 
         clickOnButton(wrapper);
 
@@ -81,7 +81,7 @@ describe('UndoButton', () => {
     it('should set refresh the page when on wizard', () => {
         refresh.refreshPage = jest.fn();
 
-        const wrapper = mount(componentWrapperIntl(<UndoButtonAdd {...initialProps} />, store, [paths.sourcesNew]));
+        const wrapper = mount(componentWrapperIntl(<UndoButtonAdd {...initialProps} />, store, [routes.sourcesNew.path]));
 
         clickOnButton(wrapper);
 
