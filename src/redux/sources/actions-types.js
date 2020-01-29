@@ -1,21 +1,17 @@
-const asyncActions = [
+export const ACTION_TYPES = [
     'LOAD_ENTITIES',
     'CREATE_SOURCE',
     'REMOVE_SOURCE',
     'LOAD_SOURCE_TYPES',
     'LOAD_APP_TYPES',
     'REMOVE_APPLICATION'
-].reduce((acc, curr) => [
-    ... acc,
-    ...[curr, `${curr}_PENDING`, `${curr}_FULFILLED`, `${curr}_REJECTED`]
-], []);
-
-export const ACTION_TYPES = [
-    ...asyncActions
-].reduce((acc, curr) => {
-    acc[curr] = curr;
-    return acc;
-}, {});
+].reduce((acc, curr) => ({
+    ...acc,
+    [curr]: curr,
+    [`${curr}_PENDING`]: `${curr}_PENDING`,
+    [`${curr}_FULFILLED`]: `${curr}_FULFILLED`,
+    [`${curr}_REJECTED`]: `${curr}_REJECTED`
+}), {});
 
 export const SORT_ENTITIES = 'SORT_ENTITIES';
 export const PAGE_AND_SIZE = 'PAGE_AND_SIZE';

@@ -11,7 +11,6 @@ import {
 
 import RemoveAppModal from './RemoveAppModal';
 import ApplicationList from '../ApplicationsList/ApplicationList';
-import RedirectNoId from '../RedirectNoId/RedirectNoId';
 import { useSource } from '../../hooks/useSource';
 
 const AddApplicationDescription = () => {
@@ -19,10 +18,6 @@ const AddApplicationDescription = () => {
 
     const sourceTypes = useSelector(({ sources }) => sources.sourceTypes);
     const source = useSource();
-
-    if (!source) {
-        return <RedirectNoId />;
-    }
 
     const sourceType = sourceTypes.find((type) => type.id === source.source_type_id);
     const apps = source.applications.filter((app) => !app.isDeleting);

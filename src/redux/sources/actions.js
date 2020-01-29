@@ -10,7 +10,7 @@ import {
     SET_COUNT,
     ADD_HIDDEN_SOURCE,
     CLEAR_FILTERS
-} from '../action-types-sources';
+} from './actions-types';
 import {
     doLoadAppTypes,
     doRemoveSource,
@@ -123,7 +123,7 @@ export const removeSource = (sourceId, title) => (dispatch) => {
         }
     });
 
-    return doRemoveSource(sourceId).then(() => dispatch(loadEntities({ loaded: true })))
+    return doRemoveSource(sourceId).then(() => dispatch(loadEntities({ loaded: 0 })))
     .then(() => {
         dispatch({
             type: ACTION_TYPES.REMOVE_SOURCE_FULFILLED,

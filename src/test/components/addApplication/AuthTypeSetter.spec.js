@@ -7,7 +7,7 @@ import { Route } from 'react-router-dom';
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import { sourceTypesData, OPENSHIFT_ID } from '../../sourceTypesData';
 import { AuthTypeSetter, checkAuthTypeMemo, innerSetter } from '../../../components/AddApplication/AuthTypeSetter';
-import { paths } from '../../../Routes';
+import { routes } from '../../../Routes';
 
 describe('AuthTypeSetter', () => {
     let store;
@@ -69,7 +69,7 @@ describe('AuthTypeSetter', () => {
                 sourceTypes: sourceTypesData.data,
                 appTypesLoaded: true,
                 sourceTypesLoaded: true,
-                loaded: true
+                loaded: 0
             }
         });
 
@@ -88,7 +88,7 @@ describe('AuthTypeSetter', () => {
 
     it('sets authentication when authentication_type on undefined', () => {
         mount(componentWrapperIntl(
-            <Route path={paths.sourceManageApps} render={ (...args) => <AuthTypeSetter { ...args } {...initialProps}/> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) => <AuthTypeSetter { ...args } {...initialProps}/> } />,
             store,
             initialEntry
         ));
@@ -114,7 +114,7 @@ describe('AuthTypeSetter', () => {
         };
 
         mount(componentWrapperIntl(
-            <Route path={paths.sourceManageApps} render={ (...args) => <AuthTypeSetter { ...args } {...initialProps}/> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) => <AuthTypeSetter { ...args } {...initialProps}/> } />,
             store,
             initialEntry
         ));

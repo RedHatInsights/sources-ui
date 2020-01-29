@@ -1,4 +1,4 @@
-import { convertToUndefined, doAttachApp, removeEmpty } from '../../api/doAttachApp';
+import { doAttachApp, removeEmpty } from '../../api/doAttachApp';
 import * as api from '../../api/entities';
 import * as cm from '@redhat-cloud-services/frontend-components-sources';
 
@@ -153,9 +153,10 @@ describe('doAttachApp', () => {
         VALUES = {
             source: {
                 source_ref: '2323',
-                cat: undefined,
+                cat: null,
                 name: '8989',
-                original: 'new'
+                original: 'new',
+                emptyValue: undefined
             }
         };
 
@@ -199,7 +200,7 @@ describe('doAttachApp', () => {
         VALUES = {
             source: {
                 source_ref: '2323',
-                cat: undefined,
+                cat: null,
                 name: '8989',
                 original: 'new',
                 modified: {
@@ -213,7 +214,7 @@ describe('doAttachApp', () => {
                     },
                     this: {
                         is: {
-                            removed: undefined
+                            removed: null
                         }
                     }
                 }
@@ -419,7 +420,7 @@ describe('doAttachApp', () => {
             authentication: {
                 password: 'pepa',
                 user_name: 'lojza',
-                removed: undefined
+                removed: null
             }
         };
 
@@ -609,90 +610,6 @@ describe('doAttachApp', () => {
         expect(authCreate).not.toHaveBeenCalledWith();
         expect(endpointCreate).not.toHaveBeenCalledWith();
         expect(appCreate).not.toHaveBeenCalled();
-    });
-});
-
-describe('convertToUndefined', () => {
-    it('converts a object with undefined to null', () => {
-        const values = {
-            authentication: undefined,
-            endpoint: {
-                url: undefined,
-                port: 123
-            },
-            name: 'pepa'
-        };
-
-        const EXPECTED_OBJECT = {
-            authentication: null,
-            endpoint: {
-                url: null,
-                port: 123
-            },
-            name: 'pepa'
-        };
-
-        expect(convertToUndefined(values)).toEqual(EXPECTED_OBJECT);
-    });
-
-    it('converts a object with array to null', () => {
-        const values = {
-            authentication: undefined,
-            endpoint: [
-                undefined,
-                1232
-            ],
-            name: 'pepa'
-        };
-
-        const EXPECTED_OBJECT = {
-            authentication: null,
-            endpoint: [
-                null,
-                1232
-            ],
-            name: 'pepa'
-        };
-
-        expect(convertToUndefined(values)).toEqual(EXPECTED_OBJECT);
-    });
-
-    it('does not convert anything', () => {
-        const values = {
-            authentication: {
-                extra: {
-                    azure: {
-                        id: 12
-                    }
-                }
-            }
-        };
-
-        expect(convertToUndefined(values)).toEqual(values);
-    });
-
-    it('nested conversion', () => {
-        const values = {
-            authentication: {
-                extra: {
-                    azure: {
-                        id: undefined
-                    }
-                }
-            }
-        };
-
-        const EXPECTED_OBJECT = {
-            authentication: {
-                extra: {
-                    azure: {
-                        id: null
-                    }
-                }
-            }
-        };
-
-        expect(convertToUndefined(values)).toEqual(EXPECTED_OBJECT);
     });
 });
 

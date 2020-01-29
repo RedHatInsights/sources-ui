@@ -1,4 +1,6 @@
+import { routes } from '../../Routes';
+
 export const refreshPage = history => {
-    history.push('/');
+    history.push(routes.sources.path);
     history.goBack();
 };

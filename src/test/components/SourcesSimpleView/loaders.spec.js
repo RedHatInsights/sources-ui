@@ -1,6 +1,5 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import ContentLoader from 'react-content-loader';
 import { RowWrapper } from '@patternfly/react-table';
 import { RowLoader } from '@redhat-cloud-services/frontend-components-utilities/files/helpers';
 
@@ -14,14 +13,6 @@ describe('loaders', () => {
 
             expect(wrapper.find('table').length).toEqual(1);
             expect(wrapper.find(RowLoader).length).toEqual(12);
-        });
-    });
-
-    describe('RowLoader', () => {
-        it('renders correctly', () => {
-            const wrapper = mount(<RowLoader />);
-
-            expect(wrapper.find(ContentLoader).length).toEqual(1);
         });
     });
 

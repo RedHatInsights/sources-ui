@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { useIntl } from 'react-intl';
 
-import { loadEntities } from '../../redux/actions/sources';
+import { loadEntities } from '../../redux/sources/actions';
 import SourcesFormRenderer from '../../Utilities/SourcesFormRenderer';
 import createSchema from './AddApplicationSchema';
 import LoadingStep from '../steps/LoadingStep';
@@ -13,10 +13,10 @@ import WizardBody from './WizardBody';
 
 import { getSourcesApi } from '../../api/entities';
 
-import RedirectNoId from '../RedirectNoId/RedirectNoId';
 import { useSource } from '../../hooks/useSource';
+import { useIsLoaded } from '../../hooks/useIsLoaded';
 import { endpointToUrl } from '../SourcesSimpleView/formatters';
-import { paths } from '../../Routes';
+import { routes } from '../../Routes';
 
 import { doAttachApp } from '../../api/doAttachApp';
 
@@ -52,12 +52,13 @@ const AddApplication = () => {
     const intl = useIntl();
     const history = useHistory();
 
+    const loaded = useIsLoaded();
+
     const {
         appTypes,
         sourceTypesLoaded,
         appTypesLoaded,
-        sourceTypes,
-        loaded
+        sourceTypes
     } = useSelector(({ sources }) => sources, shallowEqual);
 
     const source = useSource();
@@ -111,7 +112,7 @@ const AddApplication = () => {
         }
     }, [source]);
 
-    const goToSources = () => history.push(paths.sources);
+    const goToSources = () => history.push(routes.sources.path);
 
     if (!appTypesLoaded || !sourceTypesLoaded || !loaded) {
         return  (
@@ -120,10 +121,6 @@ const AddApplication = () => {
                 step={<LoadingStep />}
             />
         );
-    }
-
-    if (!source) {
-        return <RedirectNoId />;
     }
 
     if (state.state === 'loading' || state.state === 'submitting') {
@@ -192,6 +189,7 @@ const AddApplication = () => {
             initialValues={state.values}
             subscription={{ values: true }}
             onStateUpdate={saveSelectedApp}
+            clearedValue={null}
         />
     );
 };
