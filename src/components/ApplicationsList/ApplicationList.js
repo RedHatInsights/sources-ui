@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import {
     TextContent,
@@ -13,16 +12,11 @@ import {
     ButtonVariant
 } from '@patternfly/react-core';
 
-import RedirectNoId from '../RedirectNoId/RedirectNoId';
 import { useSource } from '../../hooks/useSource';
 
-const ApplicationList = ({ setApplicationToRemove, breakpoints, namePrefix, match: { params: { id } }  }) => {
-    const appTypes = useSelector(({ providers }) => providers.appTypes);
-    const source = useSource(id);
-
-    if (!source) {
-        return <RedirectNoId/>;
-    }
+const ApplicationList = ({ setApplicationToRemove, breakpoints, namePrefix }) => {
+    const appTypes = useSelector(({ sources }) => sources.appTypes);
+    const source = useSource();
 
     const sourceAppsNames = source.applications
     .map(({ application_type_id }) => {
@@ -70,11 +64,6 @@ const ApplicationList = ({ setApplicationToRemove, breakpoints, namePrefix, matc
 };
 
 ApplicationList.propTypes = {
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            id: PropTypes.string.isRequired
-        }).isRequired
-    }).isRequired,
     setApplicationToRemove: PropTypes.func.isRequired,
     breakpoints: PropTypes.shape({
         display_name: PropTypes.number,
@@ -87,4 +76,4 @@ ApplicationList.defaultProps = {
     breakpoints: {}
 };
 
-export default withRouter(ApplicationList);
+export default ApplicationList;

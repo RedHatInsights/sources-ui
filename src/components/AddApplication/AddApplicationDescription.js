@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import {
     TextContent,
@@ -13,18 +11,13 @@ import {
 
 import RemoveAppModal from './RemoveAppModal';
 import ApplicationList from '../ApplicationsList/ApplicationList';
-import RedirectNoId from '../RedirectNoId/RedirectNoId';
 import { useSource } from '../../hooks/useSource';
 
-const AddApplicationDescription = ({ match: { params: { id } } }) => {
+const AddApplicationDescription = () => {
     const [removingApp, setApplicationToRemove] = useState({});
 
-    const sourceTypes = useSelector(({ providers }) => providers.sourceTypes);
-    const source = useSource(id);
-
-    if (!source) {
-        return <RedirectNoId />;
-    }
+    const sourceTypes = useSelector(({ sources }) => sources.sourceTypes);
+    const source = useSource();
 
     const sourceType = sourceTypes.find((type) => type.id === source.source_type_id);
     const apps = source.applications.filter((app) => !app.isDeleting);
@@ -86,12 +79,4 @@ const AddApplicationDescription = ({ match: { params: { id } } }) => {
     );
 };
 
-AddApplicationDescription.propTypes = {
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            id: PropTypes.string.isRequired
-        }).isRequired
-    }).isRequired
-};
-
-export default withRouter(AddApplicationDescription);
+export default AddApplicationDescription;

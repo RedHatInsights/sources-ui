@@ -13,23 +13,17 @@ import {
     TextVariants
 } from '@patternfly/react-core';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
-import { withRouter } from 'react-router-dom';
 
-import { removeApplication } from '../../redux/actions/providers';
-import RedirectNoId from '../RedirectNoId/RedirectNoId';
+import { removeApplication } from '../../redux/sources/actions';
 import { useSource } from '../../hooks/useSource';
 
-const RemoveAppModal = ({ app, onCancel, match: { params: { id } } }) => {
+const RemoveAppModal = ({ app, onCancel }) => {
     const intl = useIntl();
 
-    const appTypes = useSelector(({ providers }) => providers.appTypes);
-    const source = useSource(id);
+    const appTypes = useSelector(({ sources }) => sources.appTypes);
+    const source = useSource();
 
     const dispatch = useDispatch();
-
-    if (!source) {
-        return <RedirectNoId/>;
-    }
 
     const dependentApps = app.dependent_applications.map(appName => {
         const appType = appTypes.find(({ name }) => name === appName);
@@ -118,12 +112,7 @@ RemoveAppModal.propTypes = {
         dependent_applications: PropTypes.arrayOf(PropTypes.string),
         sourceAppsNames: PropTypes.arrayOf(PropTypes.string)
     }).isRequired,
-    onCancel: PropTypes.func.isRequired,
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            id: PropTypes.string.isRequired
-        }).isRequired
-    }).isRequired
+    onCancel: PropTypes.func.isRequired
 };
 
-export default withRouter(RemoveAppModal);
+export default RemoveAppModal;

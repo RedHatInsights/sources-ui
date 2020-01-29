@@ -1,9 +1,10 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import ContentLoader from 'react-content-loader';
 import { RowWrapper } from '@patternfly/react-table';
+import { RowLoader } from '@redhat-cloud-services/frontend-components-utilities/files/helpers';
 
-import { PlaceHolderTable, RowLoader, RowWrapperLoader } from '../../../components/SourcesSimpleView/loaders';
+import { PlaceHolderTable, RowWrapperLoader } from '../../../components/SourcesSimpleView/loaders';
+import { COLUMN_COUNT } from '../../../views/sourcesViewDefinition';
 
 describe('loaders', () => {
     describe('PlaceholderTable', () => {
@@ -11,15 +12,7 @@ describe('loaders', () => {
             const wrapper = mount(<PlaceHolderTable />);
 
             expect(wrapper.find('table').length).toEqual(1);
-            expect(wrapper.find(RowLoader).length).toEqual(2);
-        });
-    });
-
-    describe('RowLoader', () => {
-        it('renders correctly', () => {
-            const wrapper = mount(<RowLoader />);
-
-            expect(wrapper.find(ContentLoader).length).toEqual(1);
+            expect(wrapper.find(RowLoader).length).toEqual(12);
         });
     });
 
@@ -33,6 +26,7 @@ describe('loaders', () => {
 
             expect(wrapper.find(RowLoader).length).toEqual(1);
             expect(wrapper.find(RowWrapper).length).toEqual(0);
+            expect(wrapper.find('td').props().colSpan).toEqual(COLUMN_COUNT);
         });
 
         it('renders rowWrapper when item is not deleting', () => {

@@ -38,8 +38,15 @@ process.env.BASE_PATH = '/api';
 
 global.insights = {
     chrome: {
+        identifyApp: () => ({}),
         auth: {
-            getUser: () => new Promise(resolve => resolve(true))
+            getUser: () => new Promise(resolve => resolve({
+                identity: {
+                    user: {
+                        is_org_admin: true
+                    }
+                }
+            }))
         }
     }
 };

@@ -7,14 +7,14 @@ import configureStore from 'redux-mock-store';
 import { Text, Button } from '@patternfly/react-core';
 import { MemoryRouter } from 'react-router-dom';
 
-import * as actions from '../../redux/actions/providers';
+import * as actions from '../../redux/sources/actions';
 import SourceRemoveModal from '../../components/SourceRemoveModal';
 import { componentWrapperIntl } from '../../Utilities/testsHelpers';
 import { sourcesDataGraphQl } from '../sourcesData';
 import { applicationTypesData } from '../applicationTypesData';
 import RemoveAppModal from '../../components/AddApplication/RemoveAppModal';
 import ApplicationList from '../../components/ApplicationsList/ApplicationList';
-import RedirectNoId from '../../components/RedirectNoId/RedirectNoId';
+import { routes } from '../../Routes';
 
 describe('SourceRemoveModal', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -24,7 +24,7 @@ describe('SourceRemoveModal', () => {
     beforeEach(() => {
         mockStore = configureStore(middlewares);
         store = mockStore({
-            providers: { entities: sourcesDataGraphQl, appTypes: applicationTypesData.data }
+            sources: { entities: sourcesDataGraphQl, appTypes: applicationTypesData.data }
         });
     });
 
@@ -39,20 +39,6 @@ describe('SourceRemoveModal', () => {
             expect(wrapper.find('input')).toHaveLength(1); // checkbox
             expect(wrapper.find(Button)).toHaveLength(3); // cancel modal, cancel delete, delete
             expect(wrapper.find('button[id="deleteSubmit"]').props().disabled).toEqual(true); // delete is disabled
-        });
-
-        it('renders redirect app when no source', () => {
-            store = mockStore({
-                providers: { entities: [], appTypes: applicationTypesData.data }
-            });
-
-            const wrapper = mount(componentWrapperIntl(
-                <Route path="/remove/:id" render={ (...args) => <SourceRemoveModal { ...args } /> } />,
-                store,
-                ['/remove/14'])
-            );
-
-            expect(wrapper.find(RedirectNoId)).toHaveLength(1);
         });
 
         it('enables submit button', () => {
@@ -86,7 +72,7 @@ describe('SourceRemoveModal', () => {
 
             const source = sourcesDataGraphQl.find((s) => s.id === '14');
 
-            expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual('/'); // modal was closed
+            expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sources.path); // modal was closed
             expect(actions.removeSource).toHaveBeenCalledWith('14', `${source.name} was deleted successfully.`); // calls removeSource with id of the source and right message
         });
     });
@@ -145,7 +131,7 @@ describe('SourceRemoveModal', () => {
         it('renders correctly when app is being deleted', () => {
             const APPS_BEING_REMOVED_MSG = 'Connected applications are being removed.';
             store = mockStore({
-                providers: { entities: [{
+                sources: { entities: [{
                     ...sourcesDataGraphQl.find((s) => s.id === '406'),
                     applications: [{
                         ...sourcesDataGraphQl.find((s) => s.id === '406').applications,
