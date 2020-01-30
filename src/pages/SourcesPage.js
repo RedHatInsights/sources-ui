@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { PageHeader, PageHeaderTitle, Section } from '@redhat-cloud-services/frontend-components';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import {
     loadAppTypes,
     loadEntities,
@@ -35,6 +35,7 @@ import PaginationLoader from './SourcesPage/PaginationLoader';
 import { useIsLoaded } from '../hooks/useIsLoaded';
 import { useIsOrgAdmin } from '../hooks/useIsOrgAdmin';
 import CustomRoute from '../components/CustomRoute/CustomRoute';
+import { updateQuery, parseQuery } from '../Utilities/urlQuery';
 
 const SourcesPage = () => {
     const [showEmptyState, setShowEmptyState] = useState(false);
@@ -45,7 +46,10 @@ const SourcesPage = () => {
     const isOrgAdmin = useIsOrgAdmin();
 
     const history = useHistory();
+    const location = useLocation();
     const intl = useIntl();
+
+    const sources = useSelector(({ sources }) => sources, shallowEqual);
 
     const {
         filterValue,
@@ -60,26 +64,33 @@ const SourcesPage = () => {
         paginationClicked,
         appTypesLoaded,
         sourceTypesLoaded
-    } = useSelector(({ sources }) => sources, shallowEqual);
+    } = sources;
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        Promise.all([dispatch(loadSourceTypes()), dispatch(loadAppTypes()), dispatch(loadEntities())])
+        Promise.all([dispatch(loadSourceTypes()), dispatch(loadAppTypes()), dispatch(loadEntities(parseQuery()))])
         .then(() => setCheckEmptyState(true));
     }, []);
 
+    const hasSomeFilter = Object.entries(filterValue).map(([_key, value]) => value).filter(Boolean).length > 0;
+
     useEffect(() => {
         if (checkEmptyState) {
-            setShowEmptyState(entities.length === 0);
+            setShowEmptyState(numberOfEntities === 0 && !hasSomeFilter);
+            updateQuery(sources);
         }
-    }, [checkEmptyState]);
+    }, [location, checkEmptyState]);
 
     useEffect(() => {
         if (filter !== filterValue.name) {
             setFilterValue(filterValue.name);
         }
-    }, [filterValue.name]);
+
+        if (checkEmptyState) {
+            setShowEmptyState(numberOfEntities === 0 && !hasSomeFilter);
+        }
+    }, [filterValue]);
 
     const onSetPage = (_e, page) => dispatch(pageAndSize(page, pageSize));
 
