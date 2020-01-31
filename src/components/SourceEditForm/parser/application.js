@@ -42,7 +42,7 @@ export const appendClusterIdentifier = (editing, setEdit, sourceType) =>
         name: 'source.source_ref',
         label: <FormattedMessage
             id="sources.clusterIdentifier"
-            defaultMessage="Cluster Identifier"
+            defaultMessage="Cluster identifier"
         />,
         isRequired: true,
         setEdit: editing['source.source_ref'] ? undefined : setEdit,
