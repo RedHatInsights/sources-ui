@@ -21,7 +21,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import ApplicationList from './ApplicationsList/ApplicationList';
 import RemoveAppModal from './AddApplication/RemoveAppModal';
 import { useSource } from '../hooks/useSource';
-import { routes } from '../Routes';
+import { routes, replaceRouteId } from '../Routes';
 
 const SourceRemoveModal = () => {
     const { push } = useHistory();
@@ -82,7 +82,7 @@ const SourceRemoveModal = () => {
             <Button
                 variant="link"
                 isInline
-                onClick={ (_ev) => push(`/manage_apps/${source.id}`)}
+                onClick={ (_ev) => push(replaceRouteId(routes.sourceManageApps.path, source.id))}
             >
                 <Text component={ TextVariants.p } style={{ marginBottom: 0 }}>
                     <FormattedMessage

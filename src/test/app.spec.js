@@ -87,7 +87,7 @@ describe('App spec js', () => {
         expect(wrapper.find(Main)).toHaveLength(1);
         expect(wrapper.find(Routes)).toHaveLength(1);
         expect(wrapper.find(Router)).toHaveLength(1);
-        expect(wrapper.find(Router).props().basename).toEqual('//');
+        expect(wrapper.find(Router).props().basename).toEqual('/');
         expect(wrapper.find(PermissionsChecker.default)).toHaveLength(1);
         expect(wrapper.find(ErrorBoundary)).toHaveLength(1);
     });

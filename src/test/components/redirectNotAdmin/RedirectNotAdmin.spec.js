@@ -6,7 +6,7 @@ import { act } from 'react-dom/test-utils';
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import * as actions from '../../../redux/sources/actions';
 import RedirectNotAdmin from '../../../components/RedirectNotAdmin/RedirectNotAdmin';
-import { routes } from '../../../Routes';
+import { routes, replaceRouteId } from '../../../Routes';
 
 describe('RedirectNotAdmin', () => {
     let initialStore;
@@ -16,7 +16,7 @@ describe('RedirectNotAdmin', () => {
     const wasRedirectedToRoot = (wrapper) => wrapper.find(MemoryRouter).instance().history.location.pathname === routes.sources.path;
 
     beforeEach(() => {
-        initialEntry = ['/remove/1'];
+        initialEntry = [replaceRouteId(routes.sourcesRemove.path, '1')];
 
         mockStore = configureStore();
 
@@ -27,7 +27,7 @@ describe('RedirectNotAdmin', () => {
         initialStore = mockStore({ user: { isOrgAdmin: true } });
 
         const wrapper = mount(componentWrapperIntl(
-            <Route path="/remove/:id" render={ (...args) => <RedirectNotAdmin { ...args } /> } />,
+            <Route path={routes.sourcesRemove.path} render={ (...args) => <RedirectNotAdmin { ...args } /> } />,
             initialStore,
             initialEntry
         ));
@@ -39,7 +39,7 @@ describe('RedirectNotAdmin', () => {
         initialStore = mockStore({ user: { isOrgAdmin: undefined } });
 
         const wrapper = mount(componentWrapperIntl(
-            <Route path="/remove/:id" render={ (...args) => <RedirectNotAdmin { ...args } /> } />,
+            <Route path={routes.sourcesRemove.path} render={ (...args) => <RedirectNotAdmin { ...args } /> } />,
             initialStore,
             initialEntry
         ));
@@ -56,7 +56,7 @@ describe('RedirectNotAdmin', () => {
 
         await act(async () => {
             wrapper = mount(componentWrapperIntl(
-                <Route path="/remove/:id" render={ (...args) => <RedirectNotAdmin { ...args } /> } />,
+                <Route path={routes.sourcesRemove.path} render={ (...args) => <RedirectNotAdmin { ...args } /> } />,
                 initialStore,
                 initialEntry
             ));

@@ -10,6 +10,7 @@ import ApplicationList from '../../../components/ApplicationsList/ApplicationLis
 import { sourceTypesData } from '../../sourceTypesData';
 import { sourcesDataGraphQl, SOURCE_ALL_APS_ID, SOURCE_ONE_APS_ID } from '../../sourcesData';
 import { applicationTypesData } from '../../applicationTypesData';
+import { replaceRouteId, routes } from '../../../Routes';
 
 describe('ApplicationList', () => {
     let store;
@@ -18,8 +19,6 @@ describe('ApplicationList', () => {
     let spySetApp;
     let initialEntry;
     let initialStore;
-
-    const PATH = '/manage_apps/';
 
     beforeEach(() => {
         initialStore = {
@@ -43,10 +42,10 @@ describe('ApplicationList', () => {
     });
 
     it('renders correctly with application', () => {
-        initialEntry = [`${PATH}${SOURCE_ONE_APS_ID}`];
+        initialEntry = [replaceRouteId(routes.sourceManageApps.path, SOURCE_ONE_APS_ID)];
 
         const wrapper = mount(componentWrapperIntl(
-            <Route path="/manage_apps/:id" render={ (...args) => <ApplicationList {...initialProps} { ...args }/> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) => <ApplicationList {...initialProps} { ...args }/> } />,
             store,
             initialEntry
         ));
@@ -60,10 +59,10 @@ describe('ApplicationList', () => {
 
     it('renders correctly with prefix', () => {
         const PREFIX = '##';
-        initialEntry = [`${PATH}${SOURCE_ONE_APS_ID}`];
+        initialEntry = [replaceRouteId(routes.sourceManageApps.path, SOURCE_ONE_APS_ID)];
 
         const wrapper = mount(componentWrapperIntl(
-            <Route path="/manage_apps/:id" render={ (...args) => <ApplicationList {...initialProps} { ...args } namePrefix={PREFIX}/> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) => <ApplicationList {...initialProps} { ...args } namePrefix={PREFIX}/> } />,
             store,
             initialEntry
         ));
@@ -75,10 +74,10 @@ describe('ApplicationList', () => {
     });
 
     it('renders correctly with applications', () => {
-        initialEntry = [`${PATH}${SOURCE_ALL_APS_ID}`];
+        initialEntry = [replaceRouteId(routes.sourceManageApps.path, SOURCE_ALL_APS_ID)];
 
         const wrapper = mount(componentWrapperIntl(
-            <Route path="/manage_apps/:id" render={ (...args) => <ApplicationList {...initialProps} { ...args }/> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) => <ApplicationList {...initialProps} { ...args }/> } />,
             store,
             initialEntry
         ));

@@ -7,7 +7,7 @@ import { Route } from 'react-router-dom';
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import { sourceTypesData, OPENSHIFT_ID } from '../../sourceTypesData';
 import { AuthTypeSetter, checkAuthTypeMemo, innerSetter } from '../../../components/AddApplication/AuthTypeSetter';
-import { routes } from '../../../Routes';
+import { routes, replaceRouteId } from '../../../Routes';
 
 describe('AuthTypeSetter', () => {
     let store;
@@ -58,7 +58,7 @@ describe('AuthTypeSetter', () => {
         applications: []
     };
 
-    const initialEntry = [`/manage_apps/${SOURCE_ID}`];
+    const initialEntry = [replaceRouteId(routes.sourceManageApps.path, SOURCE_ID)];
 
     beforeEach(() => {
         mockStore = configureStore(middlewares);

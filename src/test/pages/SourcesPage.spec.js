@@ -25,7 +25,7 @@ import * as api from '../../api/entities';
 import * as typesApi from '../../api/source_types';
 import EmptyStateTable from '../../components/SourcesSimpleView/EmptyStateTable';
 import PaginationLoader from '../../pages/SourcesPage/PaginationLoader';
-import { routes } from '../../Routes';
+import { routes, replaceRouteId } from '../../Routes';
 import * as helpers from '../../pages/SourcesPage/helpers';
 import UserReducer from '../../redux/user/reducer';
 import RedirectNotAdmin from '../../components/RedirectNotAdmin/RedirectNotAdmin';
@@ -445,7 +445,7 @@ describe('SourcesPage', () => {
 
         it('renders remove', async () => {
             SourceRemoveModal.default = () => <h1>remove modal mock</h1>;
-            initialEntry = [`/remove/${SOURCE_ALL_APS_ID}`];
+            initialEntry = [replaceRouteId(routes.sourcesRemove.path, SOURCE_ALL_APS_ID)];
 
             await act(async() => {
                 wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
@@ -458,7 +458,7 @@ describe('SourcesPage', () => {
 
         it('renders manageApps', async () => {
             AddApplication.default = () => <h1>managing apps mock</h1>;
-            initialEntry = [`/manage_apps/${SOURCE_ALL_APS_ID}`];
+            initialEntry = [replaceRouteId(routes.sourceManageApps.path, SOURCE_ALL_APS_ID)];
 
             await act(async() => {
                 wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
@@ -471,7 +471,7 @@ describe('SourcesPage', () => {
 
         it('renders edit', async () => {
             SourceEditModal.default = () => <h1>edit modal mock</h1>;
-            initialEntry = [`/edit/${SOURCE_ALL_APS_ID}`];
+            initialEntry = [replaceRouteId(routes.sourcesEdit.path, SOURCE_ALL_APS_ID)];
 
             await act(async() => {
                 wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
@@ -491,7 +491,7 @@ describe('SourcesPage', () => {
 
             it('when remove', async () => {
                 SourceRemoveModal.default = () => <h1>remove modal mock</h1>;
-                initialEntry = [`/remove/${NONSENSE_ID}`];
+                initialEntry = [replaceRouteId(routes.sourcesRemove.path, NONSENSE_ID)];
 
                 await act(async() => {
                     wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
@@ -505,7 +505,7 @@ describe('SourcesPage', () => {
 
             it('when manageApps', async () => {
                 AddApplication.default = () => <h1>managing apps mock</h1>;
-                initialEntry = [`/manage_apps/${NONSENSE_ID}`];
+                initialEntry = [replaceRouteId(routes.sourceManageApps.path, NONSENSE_ID)];
 
                 await act(async() => {
                     wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
@@ -531,7 +531,7 @@ describe('SourcesPage', () => {
 
             it('when remove', async () => {
                 SourceRemoveModal.default = () => <h1>remove modal mock</h1>;
-                initialEntry = [`/remove/${SOURCE_ALL_APS_ID}`];
+                initialEntry = [replaceRouteId(routes.sourcesRemove.path, SOURCE_ALL_APS_ID)];
 
                 await act(async() => {
                     wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
@@ -544,7 +544,7 @@ describe('SourcesPage', () => {
 
             it('when manageApps', async () => {
                 AddApplication.default = () => <h1>managing apps mock</h1>;
-                initialEntry = [`/manage_apps/${SOURCE_ALL_APS_ID}`];
+                initialEntry = [replaceRouteId(routes.sourceManageApps.path, SOURCE_ALL_APS_ID)];
 
                 await act(async() => {
                     wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
@@ -557,7 +557,7 @@ describe('SourcesPage', () => {
 
             it('when edit', async () => {
                 SourceEditModal.default = () => <h1>edit modal mock</h1>;
-                initialEntry = [`/edit/${SOURCE_ALL_APS_ID}`];
+                initialEntry = [replaceRouteId(routes.sourcesEdit.path, SOURCE_ALL_APS_ID)];
 
                 await act(async() => {
                     wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));

@@ -14,6 +14,7 @@ import { sourcesDataGraphQl } from '../../sourcesData';
 import { applicationTypesData } from '../../applicationTypesData';
 import RemoveAppModal from '../../../components/AddApplication/RemoveAppModal';
 import ApplicationList from '../../../components/ApplicationsList/ApplicationList';
+import { routes, replaceRouteId } from '../../../Routes';
 
 describe('AddApplicationDescription', () => {
     let store;
@@ -22,7 +23,7 @@ describe('AddApplicationDescription', () => {
     let mockStore;
 
     beforeEach(() => {
-        initialEntry = ['/add_application/23'];
+        initialEntry = [replaceRouteId(routes.sourceManageApps.path, '23')];
         mockStore = configureStore(middlewares);
         store = mockStore({
             sources: {
@@ -35,7 +36,7 @@ describe('AddApplicationDescription', () => {
 
     it('renders correctly', () => {
         const wrapper = mount(componentWrapperIntl(
-            <Route path="/add_application/:id" render={ (...args) => <AddApplicationDescription { ...args }/> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplicationDescription { ...args }/> } />,
             store,
             initialEntry
         ));
@@ -52,9 +53,9 @@ describe('AddApplicationDescription', () => {
 
     it('renders correctly with application', () => {
         const wrapper = mount(componentWrapperIntl(
-            <Route path="/add_application/:id" render={ (...args) => <AddApplicationDescription { ...args }/> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplicationDescription { ...args }/> } />,
             store,
-            ['/add_application/406']
+            [replaceRouteId(routes.sourceManageApps.path, '406')]
         ));
 
         const source = sourcesDataGraphQl.find((x) => x.id === '406');
@@ -68,9 +69,9 @@ describe('AddApplicationDescription', () => {
 
     it('renders correctly with applications', () => {
         const wrapper = mount(componentWrapperIntl(
-            <Route path="/add_application/:id" render={ (...args) => <AddApplicationDescription { ...args }/> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplicationDescription { ...args }/> } />,
             store,
-            ['/add_application/408']
+            [replaceRouteId(routes.sourceManageApps.path, '408')]
         ));
 
         const source = sourcesDataGraphQl.find((x) => x.id === '408');
@@ -84,9 +85,9 @@ describe('AddApplicationDescription', () => {
 
     it('show remove app modal', () => {
         const wrapper = mount(componentWrapperIntl(
-            <Route path="/add_application/:id" render={ (...args) => <AddApplicationDescription { ...args }/> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplicationDescription { ...args }/> } />,
             store,
-            ['/add_application/406']
+            [replaceRouteId(routes.sourceManageApps.path, '406')]
         ));
 
         const source = sourcesDataGraphQl.find((x) => x.id === '406');
@@ -101,9 +102,9 @@ describe('AddApplicationDescription', () => {
 
     it('show remove app modal and close it', () => {
         const wrapper = mount(componentWrapperIntl(
-            <Route path="/add_application/:id" render={ (...args) => <AddApplicationDescription { ...args }/> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplicationDescription { ...args }/> } />,
             store,
-            ['/add_application/406']
+            [replaceRouteId(routes.sourceManageApps.path, '406')]
         ));
 
         expect(wrapper.find(RemoveAppModal).length).toEqual(0);
@@ -128,7 +129,7 @@ describe('AddApplicationDescription', () => {
         });
 
         const wrapper = mount(componentWrapperIntl(
-            <Route path="/add_application/:id" render={ (...args) => <AddApplicationDescription { ...args }/> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplicationDescription { ...args }/> } />,
             store,
             initialEntry
         ));

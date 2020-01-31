@@ -18,6 +18,7 @@ import { applicationTypesData } from '../../applicationTypesData';
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import * as actions from '../../../redux/sources/actions';
 import * as API from '../../../api/entities';
+import { replaceRouteId, routes } from '../../../Routes';
 
 describe('SourcesSimpleView', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -247,7 +248,8 @@ describe('SourcesSimpleView', () => {
                     wrapper.update();
                     wrapper.find('.pf-c-dropdown__menu-item').at(EDIT_SOURCE_INDEX).simulate('click');
 
-                    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(`/edit/${sourcesDataGraphQl[0].id}`);
+                    const expectedPath = replaceRouteId(routes.sourcesEdit.path, sourcesDataGraphQl[0].id);
+                    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(expectedPath);
                     done();
                 });
             });
@@ -261,7 +263,8 @@ describe('SourcesSimpleView', () => {
                     wrapper.update();
                     wrapper.find('.pf-c-dropdown__menu-item').at(DELETE_SOURCE_INDEX).simulate('click');
 
-                    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(`/remove/${sourcesDataGraphQl[0].id}`);
+                    const expectedPath = replaceRouteId(routes.sourcesRemove.path, sourcesDataGraphQl[0].id);
+                    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(expectedPath);
                     done();
                 });
             });
@@ -275,7 +278,8 @@ describe('SourcesSimpleView', () => {
                     wrapper.update();
                     wrapper.find('.pf-c-dropdown__menu-item').at(MANAGE_APPS_INDEX).simulate('click');
 
-                    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(`/manage_apps/${sourcesDataGraphQl[0].id}`);
+                    const expectedPath = replaceRouteId(routes.sourceManageApps.path, sourcesDataGraphQl[0].id);
+                    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(expectedPath);
                     done();
                 });
             });
