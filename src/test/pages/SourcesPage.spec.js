@@ -329,8 +329,7 @@ describe('SourcesPage', () => {
 
                 expect(wrapper.find(Chip)).toHaveLength(1);
 
-                const chipButtonPosition = 5;
-                const chipButton = wrapper.find(Button).at(chipButtonPosition);
+                const chipButton = wrapper.find(Chip).find(Button);
 
                 await act(async () => chipButton.simulate('click'));
                 wrapper.update();
