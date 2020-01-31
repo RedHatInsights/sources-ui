@@ -32,6 +32,7 @@ import RedirectNotAdmin from '../../components/RedirectNotAdmin/RedirectNotAdmin
 import * as AddApplication from '../../components/AddApplication/AddApplication';
 import * as SourceEditModal from '../../components/SourceEditForm/SourceEditModal';
 import * as SourceRemoveModal from '../../components/SourceRemoveModal';
+import * as urlQuery from '../../Utilities/urlQuery';
 
 describe('SourcesPage', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -54,6 +55,9 @@ describe('SourcesPage', () => {
             }),
             applyMiddleware(...middlewares)
         );
+
+        urlQuery.updateQuery = jest.fn();
+        urlQuery.parseQuery = jest.fn();
     });
 
     it('should fetch sources and source types on component mount', async () => {
@@ -74,6 +78,20 @@ describe('SourcesPage', () => {
         expect(wrapper.find(PrimaryToolbar).first().props().actionsConfig).toEqual({ actions: expect.any(Array) });
         expect(wrapper.find(PrimaryToolbar).last().props().actionsConfig).toEqual(undefined);
         expect(wrapper.find(RedirectNotAdmin)).toHaveLength(0);
+
+        expect(urlQuery.parseQuery.mock.calls).toHaveLength(1);
+        expect(urlQuery.updateQuery.mock.calls).toHaveLength(1);
+        expect(urlQuery.updateQuery).toHaveBeenCalledWith({
+            ...defaultSourcesState,
+            loaded: 0,
+            appTypesLoaded: true,
+            sourceTypesLoaded: true,
+            sourceTypes: sourceTypesData.data,
+            appTypes: applicationTypesData.data,
+            numberOfEntities: sourcesDataGraphQl.length,
+            entities: sourcesDataGraphQl,
+            paginationClicked: false
+        });
     });
 
     it('renders empty state when there are no Sources', async () => {
@@ -213,10 +231,16 @@ describe('SourcesPage', () => {
         });
         wrapper.update();
 
+        expect(urlQuery.parseQuery.mock.calls).toHaveLength(1);
+        expect(urlQuery.updateQuery.mock.calls).toHaveLength(1);
+
         await act(async() => {
             wrapper.find(Link).first().simulate('click', { button: 0 });
         });
         wrapper.update();
+
+        expect(urlQuery.parseQuery.mock.calls).toHaveLength(1);
+        expect(urlQuery.updateQuery.mock.calls).toHaveLength(2);
 
         await act(async() => {
             wrapper.find(AddSourceWizard).props().afterSuccess(source);
@@ -376,7 +400,7 @@ describe('SourcesPage', () => {
             }, 500);
         });
 
-        it('clears filter value in the name input when clicking on clears all filter in empty table state', (done) => {
+        it('show empty state table after clicking on clears all filter in empty table state', (done) => {
             setTimeout(async () => {
                 wrapper.update();
 
@@ -393,6 +417,38 @@ describe('SourcesPage', () => {
                     wrapper.update();
 
                     expect(filterInput(wrapper).props().value).toEqual(totalNonsense);
+
+                    await act(async() => {
+                        wrapper.find(Button).last().simulate('click');
+                    });
+                    wrapper.update();
+
+                    expect(wrapper.find(SourcesEmptyState)).toHaveLength(1);
+                    done();
+                }, 500);
+            }, 500);
+        });
+
+        it('clears filter value in the name input when clicking on clears all filter in empty table state and show table', (done) => {
+            setTimeout(async () => {
+                wrapper.update();
+
+                api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
+                api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+
+                const totalNonsense = '122#$@#%#^$#@!^$#^$#^546454abcerd';
+
+                await act(async() => {
+                    filterInput(wrapper).simulate('change', { target: { value: totalNonsense } });
+                });
+
+                setTimeout(async () => {
+                    wrapper.update();
+
+                    expect(filterInput(wrapper).props().value).toEqual(totalNonsense);
+
+                    api.doLoadEntities.mockImplementation(() => Promise.resolve({ sources: sourcesDataGraphQl }));
+                    api.doLoadCountOfSources.mockImplementation(() => Promise.resolve({ meta: { count: sourcesDataGraphQl.length } }));
 
                     await act(async() => {
                         wrapper.find(Button).last().simulate('click');
