@@ -60,7 +60,6 @@ const SourcesPage = () => {
         fetchingError,
         addSourceInitialValues,
         sourceTypes,
-        entities,
         paginationClicked,
         appTypesLoaded,
         sourceTypesLoaded
@@ -77,7 +76,7 @@ const SourcesPage = () => {
 
     useEffect(() => {
         if (checkEmptyState) {
-            setShowEmptyState(numberOfEntities === 0 && !hasSomeFilter);
+            setShowEmptyState(loaded && numberOfEntities === 0 && !hasSomeFilter);
             updateQuery(sources);
         }
     }, [location, checkEmptyState]);
@@ -86,11 +85,13 @@ const SourcesPage = () => {
         if (filter !== filterValue.name) {
             setFilterValue(filterValue.name);
         }
+    }, [filterValue.name]);
 
-        if (checkEmptyState) {
+    useEffect(() => {
+        if (checkEmptyState && loaded) {
             setShowEmptyState(numberOfEntities === 0 && !hasSomeFilter);
         }
-    }, [filterValue]);
+    }, [filterValue, loaded]);
 
     const onSetPage = (_e, page) => dispatch(pageAndSize(page, pageSize));
 
@@ -98,8 +99,8 @@ const SourcesPage = () => {
 
     const maximumPageNumber = Math.ceil(numberOfEntities / pageSize);
 
-    if (entities.length > 0 && loaded && pageNumber > Math.max(maximumPageNumber, 1)) {
-        onSetPage(maximumPageNumber);
+    if (loaded && numberOfEntities > 0 && pageNumber > Math.max(maximumPageNumber, 1)) {
+        onSetPage({}, maximumPageNumber);
     }
 
     const paginationConfig = {
