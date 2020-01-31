@@ -7,7 +7,7 @@ import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import RedirectNoId from '../../../components/RedirectNoId/RedirectNoId';
 import * as actions from '../../../redux/sources/actions';
 import * as api from '../../../api/entities';
-import { routes } from '../../../Routes';
+import { routes, replaceRouteId } from '../../../Routes';
 
 describe('RedirectNoId', () => {
     let initialStore;
@@ -17,7 +17,7 @@ describe('RedirectNoId', () => {
     const wasRedirectedToRoot = (wrapper) => wrapper.find(MemoryRouter).instance().history.location.pathname === routes.sources.path;
 
     beforeEach(() => {
-        initialEntry = ['/remove/1'];
+        initialEntry = [replaceRouteId(routes.sourcesRemove.path, '1')];
 
         mockStore = configureStore();
 
@@ -31,7 +31,7 @@ describe('RedirectNoId', () => {
         });
 
         const wrapper = mount(componentWrapperIntl(
-            <Route path="/remove/:id" render={ (...args) => <RedirectNoId { ...args } /> } />,
+            <Route path={routes.sourcesRemove.path} render={ (...args) => <RedirectNoId { ...args } /> } />,
             initialStore,
             initialEntry
         ));
@@ -49,7 +49,7 @@ describe('RedirectNoId', () => {
 
         await act(async () => {
             wrapper = mount(componentWrapperIntl(
-                <Route path="/remove/:id" render={ (...args) => <RedirectNoId { ...args } /> } />,
+                <Route path={routes.sourcesRemove.path} render={ (...args) => <RedirectNoId { ...args } /> } />,
                 initialStore,
                 initialEntry
             ));
@@ -72,7 +72,7 @@ describe('RedirectNoId', () => {
 
         await act(async () => {
             mount(componentWrapperIntl(
-                <Route path="/remove/:id" render={ (...args) => <RedirectNoId { ...args } /> } />,
+                <Route path={routes.sourcesRemove.path} render={ (...args) => <RedirectNoId { ...args } /> } />,
                 initialStore,
                 initialEntry
             ));

@@ -11,6 +11,7 @@ import { sourcesColumns, COLUMN_COUNT } from '../../views/sourcesViewDefinition'
 import EmptyStateTable from './EmptyStateTable';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
 import { useIsOrgAdmin } from '../../hooks/useIsOrgAdmin';
+import { replaceRouteId, routes } from '../../Routes';
 
 const itemToCells = (item, columns, sourceTypes, appTypes) => columns.filter(column => column.title || column.hidden)
 .map(col => ({
@@ -48,7 +49,7 @@ export const insertEditAction = (actions, intl, push) => actions.splice(1, 0, {
         id: 'sources.edit',
         defaultMessage: 'Edit'
     }),
-    onClick: (_ev, _i, { id }) => push(`/edit/${id}`)
+    onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesEdit.path, id))
 });
 
 export const actionResolver = (intl, push) => (rowData) => {
@@ -57,7 +58,7 @@ export const actionResolver = (intl, push) => (rowData) => {
             id: 'sources.manageApps',
             defaultMessage: 'Manage applications'
         }),
-        onClick: (_ev, _i, { id }) => push(`/manage_apps/${id}`)
+        onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourceManageApps.path, id))
     },
     {
         style: { color: 'var(--pf-global--danger-color--100)' },
@@ -65,7 +66,7 @@ export const actionResolver = (intl, push) => (rowData) => {
             id: 'sources.delete',
             defaultMessage: 'Delete'
         }),
-        onClick: (_ev, _i, { id }) => push(`/remove/${id}`)
+        onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesRemove.path, id))
     }];
 
     const isSourceEditable = !rowData.imported;

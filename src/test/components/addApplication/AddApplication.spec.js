@@ -19,7 +19,7 @@ import { SOURCE_ALL_APS_ID, SOURCE_NO_APS_ID } from '../../sourcesData';
 import { applicationTypesData, COSTMANAGEMENT_APP, TOPOLOGICALINVENTORY_APP } from '../../applicationTypesData';
 import AddApplicationDescription from '../../../components/AddApplication/AddApplicationDescription';
 import LoadingStep from '../../../components/steps/LoadingStep';
-import { routes } from '../../../Routes';
+import { routes, replaceRouteId } from '../../../Routes';
 import FinishedStep from '../../../components/steps/FinishedStep';
 import ErroredStepAttach from '../../../components/AddApplication/steps/ErroredStep';
 
@@ -28,10 +28,9 @@ describe('AddApplication', () => {
     let initialEntry;
     let mockStore;
     const middlewares = [thunk, notificationsMiddleware()];
-    const PATH = '/manage_apps/';
 
     beforeEach(() => {
-        initialEntry = [`${PATH}${SOURCE_NO_APS_ID}`];
+        initialEntry = [replaceRouteId(routes.sourceManageApps.path, SOURCE_NO_APS_ID)];
         mockStore = configureStore(middlewares);
         store = mockStore({
             sources: {
@@ -140,7 +139,7 @@ describe('AddApplication', () => {
             wrapper = mount(componentWrapperIntl(
                 <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplication { ...args }/> } />,
                 store,
-                [`${PATH}${SOURCE_ALL_APS_ID}`]
+                [replaceRouteId(routes.sourceManageApps.path, SOURCE_ALL_APS_ID)]
             ));
         });
         wrapper.update();
