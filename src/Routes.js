@@ -14,31 +14,33 @@ const Loader = () => (
 
 export const routes = {
     sources: {
-        path: '/'
+        path: '/sources'
     },
     sourcesNew: {
-        path: '/new',
+        path: '/sources/new',
         writeAccess: true
     },
     sourcesEdit: {
-        path: '/edit/:id',
+        path: '/sources/edit/:id',
         writeAccess: true
     },
     sourcesRemove: {
-        path: '/remove/:id',
+        path: '/sources/remove/:id',
         redirectNoId: true,
         writeAccess: true
     },
     sourceManageApps: {
-        path: '/manage_apps/:id',
+        path: '/sources/manage_apps/:id',
         redirectNoId: true,
         writeAccess: true
     }
 };
 
+export const replaceRouteId = (path, id) => path.replace(':id', id);
+
 const Routes = () =>  (
     <Suspense fallback={<Loader/>}>
-        <Route path={routes.sources.path} component={SourcesPage} />
+        <Route component={SourcesPage} />
     </Suspense>
 );
 
