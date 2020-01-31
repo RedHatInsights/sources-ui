@@ -28,21 +28,29 @@ describe('store creator', () => {
         let next;
         let action;
         let sources;
+        let options;
 
         beforeEach(() => {
             next = jest.fn();
             queries.updateQuery = jest.fn();
-        });
-
-        it('calls update url when app is loaded and type is load_entities_fulfilled', () => {
             sources = {
                 pageSize: 1,
                 pageNumber: 125,
                 loaded: true
             };
+        });
+
+        it('calls update url when load_entities_pending', () => {
+            options = {
+                pageSize: 2,
+                filterValue: {
+                    name: 'johny smith'
+                }
+            };
 
             action = {
-                type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED
+                type: ACTION_TYPES.LOAD_ENTITIES_PENDING,
+                options
             };
 
             store = {
@@ -51,36 +59,18 @@ describe('store creator', () => {
 
             urlQueryMiddleware(store)(next)(action);
 
-            expect(next).toHaveBeenCalledWith(action);
-            expect(queries.updateQuery).toHaveBeenCalledWith(sources);
-        });
-
-        it('does not call update url when app is not loaded and type is load_entities_fulfilled', () => {
-            sources = {
-                loaded: false
+            const combinedState = {
+                ...sources,
+                ...options
             };
 
+            expect(next).toHaveBeenCalledWith(action);
+            expect(queries.updateQuery).toHaveBeenCalledWith(combinedState);
+        });
+
+        it('does not call update url when action is not load_entities_pending', () => {
             action = {
                 type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED
-            };
-
-            store = {
-                getState: () => ({ sources })
-            };
-
-            urlQueryMiddleware(store)(next)(action);
-
-            expect(next).toHaveBeenCalledWith(action);
-            expect(queries.updateQuery).not.toHaveBeenCalledWith(sources);
-        });
-
-        it('does not call update url when app is loaded and type is not load_entities_fulfilled', () => {
-            sources = {
-                loaded: false
-            };
-
-            action = {
-                type: ACTION_TYPES.LOAD_ENTITIES_PENDING
             };
 
             store = {

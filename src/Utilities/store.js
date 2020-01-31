@@ -12,8 +12,8 @@ import { ACTION_TYPES } from '../redux/sources/actions-types';
 export const urlQueryMiddleware = store => next => action => {
     const sources = store.getState().sources;
 
-    if (sources.loaded && action.type === ACTION_TYPES.LOAD_ENTITIES_FULFILLED) {
-        updateQuery(sources);
+    if (action.type === ACTION_TYPES.LOAD_ENTITIES_PENDING) {
+        updateQuery({ ...sources, ...action.options });
     }
 
     next(action);
