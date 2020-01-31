@@ -15,7 +15,7 @@ const Header = () => (
         <GridItem xs={12}>
             <FormattedMessage
                 id="sources.editSourceDescription"
-                defaultMessage="You are editing a source"
+                defaultMessage="You are editing a source."
             />
         </GridItem>
     </Grid>
