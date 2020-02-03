@@ -15,14 +15,14 @@ const EmptyStateTable = () => {
                 <EmptyStateIcon icon={SearchIcon} />
                 <Title headingLevel="h2" size="lg">
                     <FormattedMessage
-                        defaultMessage="No results found"
+                        defaultMessage="No sources found"
                         id="sources.noResultsFoundTitle"
                     />
                 </Title>
                 <EmptyStateBody>
                     <FormattedMessage
-                        defaultMessage="No results match the filter criteria. Remove
-                    all filters or clear all filters to show results."
+                        defaultMessage="No sources match the filter criteria. Remove
+                    all filters or clear all filters to show sources."
                         id="sources.noResultsFoundDescription"
                     />
                 </EmptyStateBody>
