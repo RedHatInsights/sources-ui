@@ -62,8 +62,9 @@ export const graphQlAttributes = `
     updated_at,
     imported,
     availability_status,
+    source_ref,
     applications { application_type_id, id, availability_status_error, availability_status },
-    endpoints { id, scheme, host, port, path }
+    endpoints { id, scheme, host, port, path, receptor_node, role, certificate_authority, verify_ssl }
 `;
 
 export const doLoadEntities = ({ pageSize, pageNumber, sortBy, sortDirection, filterValue }) => getSourcesApi().postGraphQL({

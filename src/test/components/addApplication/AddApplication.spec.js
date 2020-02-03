@@ -176,15 +176,19 @@ describe('AddApplication', () => {
     });
 
     describe('imported source - not need to edit any value', () => {
+        let initialValues;
+        let source;
+
         beforeEach(() => {
+            source = {
+                id: SOURCE_NO_APS_ID,
+                source_type_id: OPENSHIFT_ID,
+                applications: [],
+                imported: 'cfme'
+            };
             store = mockStore({
                 sources: {
-                    entities: [{
-                        id: SOURCE_NO_APS_ID,
-                        source_type_id: OPENSHIFT_ID,
-                        applications: [],
-                        imported: 'cfme'
-                    }],
+                    entities: [source],
                     appTypes: applicationTypesData.data,
                     sourceTypes: sourceTypesData.data,
                     appTypesLoaded: true,
@@ -192,6 +196,7 @@ describe('AddApplication', () => {
                     loaded: 0
                 }
             });
+            initialValues = { application: undefined, source };
         });
 
         it('renders review', () => {
@@ -247,6 +252,7 @@ describe('AddApplication', () => {
                 formValues,
                 formApi,
                 authenticationValues,
+                initialValues
             );
             expect(wrapper.find(FinishedStep).length).toEqual(1);
         });
@@ -288,6 +294,7 @@ describe('AddApplication', () => {
                 formValues,
                 formApi,
                 authenticationValues,
+                initialValues
             );
             expect(wrapper.find(ErroredStepAttach).length).toEqual(1);
             expect(wrapper.find(EmptyStateBody).text().includes(ERROR_MESSAGE)).toEqual(true);

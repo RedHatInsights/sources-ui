@@ -23,10 +23,10 @@ import { doAttachApp } from '../../api/doAttachApp';
 let selectedApp = undefined; // this has to be not-state value, because it shouldn't re-render the component when changes
 const saveSelectedApp = ({ values: { application } }) => selectedApp = application;
 
-export const onSubmit = (values, formApi, authenticationInitialValues, dispatch, setState) => {
+export const onSubmit = (values, formApi, authenticationInitialValues, dispatch, setState, initialValues) => {
     setState({ state: 'submitting' });
 
-    return doAttachApp(values, formApi, authenticationInitialValues)
+    return doAttachApp(values, formApi, authenticationInitialValues, initialValues)
     .then(async () => {
         await dispatch(loadEntities());
         selectedApp = undefined;
@@ -174,7 +174,8 @@ const AddApplication = () => {
         formApi,
         state.authenticationsValues,
         dispatch,
-        setState
+        setState,
+        state.values
     );
 
     const hasAvailableApps = filteredAppTypes.length > 0;
