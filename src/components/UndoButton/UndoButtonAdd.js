@@ -9,7 +9,7 @@ import { removeMessage, undoAddSource } from '../../redux/sources/actions';
 import { routes } from '../../Routes';
 import { refreshPage } from './refreshPage';
 
-const UndoButton = ({ messageId, values }) => {
+const UndoButton = ({ messageId, values, path }) => {
     const history = useHistory();
     const dispatch = useDispatch();
     const notifications = useSelector(({ notifications }) => notifications);
@@ -24,12 +24,12 @@ const UndoButton = ({ messageId, values }) => {
 
             dispatch(undoAddSource(values));
 
-            const isOnWizard = history.location.pathname === routes.sourcesNew.path;
+            const isOnWizard = history.location.pathname === path;
 
             if (isOnWizard) {
                 refreshPage(history);
             } else {
-                history.push(routes.sourcesNew.path);
+                history.push(path);
             }
         }}>
             <FormattedMessage
@@ -41,7 +41,12 @@ const UndoButton = ({ messageId, values }) => {
 
 UndoButton.propTypes = {
     messageId: PropTypes.number.isRequired,
-    values: PropTypes.object.isRequired
+    values: PropTypes.object.isRequired,
+    path: PropTypes.string
+};
+
+UndoButton.defaultProps = {
+    path: routes.sourcesNew.path
 };
 
 export default UndoButton;
