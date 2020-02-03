@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 
-import { removeMessage, undoAddSource } from '../../redux/sources/actions';
+import { removeMessage, undoValues } from '../../redux/sources/actions';
 import { routes } from '../../Routes';
 import { refreshPage } from './refreshPage';
 
@@ -22,7 +22,7 @@ const UndoButton = ({ messageId, values, path }) => {
                 dispatch(removeMessage(notification.id));
             }
 
-            dispatch(undoAddSource(values));
+            dispatch(undoValues(values));
 
             const isOnWizard = history.location.pathname === path;
 

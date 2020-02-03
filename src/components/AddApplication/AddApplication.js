@@ -64,7 +64,7 @@ const AddApplication = () => {
         sourceTypesLoaded,
         appTypesLoaded,
         sourceTypes,
-        addSourceInitialValues
+        undoValues
     } = useSelector(({ sources }) => sources, shallowEqual);
 
     const source = useSource();
@@ -191,7 +191,7 @@ const AddApplication = () => {
 
     const onCancel = (values) => onCanelAddApplication({ values, dispatch, intl, sourceId: source.id, history });
 
-    const finalValues = merge(cloneDeep(state.initialValues), merge(cloneDeep(addSourceInitialValues), state.values));
+    const finalValues = merge(cloneDeep(state.initialValues), merge(cloneDeep(undoValues), state.values));
 
     return (
         <SourcesFormRenderer

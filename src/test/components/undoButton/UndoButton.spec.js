@@ -66,7 +66,7 @@ describe('UndoButton', () => {
         clickOnButton(wrapper);
 
         expect(wasRedirectedToWizard(wrapper)).toEqual(true);
-        expect(store.getState().sources.addSourceInitialValues).toEqual(values);
+        expect(store.getState().sources.undoValues).toEqual(values);
         expect(store.getState().notifications).toHaveLength(0);
     });
 

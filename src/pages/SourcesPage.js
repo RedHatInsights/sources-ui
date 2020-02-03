@@ -58,7 +58,7 @@ const SourcesPage = () => {
         pageSize,
         pageNumber,
         fetchingError,
-        addSourceInitialValues,
+        undoValues,
         sourceTypes,
         paginationClicked,
         appTypesLoaded,
@@ -198,7 +198,7 @@ const SourcesPage = () => {
                     onClose: (values) => onCloseAddSourceWizard({ values, dispatch, history, intl }),
                     afterSuccess: (source) => afterSuccess(dispatch, source),
                     hideSourcesButton: true,
-                    initialValues: addSourceInitialValues
+                    initialValues: undoValues
                 }}
             />
             <CustomRoute exact route={routes.sourcesEdit} Component={SourceEditModal}/>

@@ -49,14 +49,14 @@ describe('redux > sources reducer', () => {
         });
     });
 
-    describe('undoAddSource', () => {
+    describe('undoValues', () => {
         it('sets values', () => {
             const VALUES = { name: 'aa', source: { id: 1 } };
 
-            expect(sourcesReducer.undoAddSource(defaultSourcesState, { payload: { values: VALUES } })).toEqual(
+            expect(sourcesReducer.undoValues(defaultSourcesState, { payload: { values: VALUES } })).toEqual(
                 expect.objectContaining({
                     ...defaultSourcesState,
-                    addSourceInitialValues: VALUES
+                    undoValues: VALUES
                 })
             );
         });
@@ -67,10 +67,10 @@ describe('redux > sources reducer', () => {
             const EMPTY_OBJECT = {};
             const NOT_EMPTY = { cosi: '133' };
 
-            expect(sourcesReducer.clearAddSource({ ...defaultSourcesState, addSourceInitialValues: NOT_EMPTY })).toEqual(
+            expect(sourcesReducer.clearAddSource({ ...defaultSourcesState, undoValues: NOT_EMPTY })).toEqual(
                 expect.objectContaining({
                     ...defaultSourcesState,
-                    addSourceInitialValues: EMPTY_OBJECT
+                    undoValues: EMPTY_OBJECT
                 })
             );
         });
