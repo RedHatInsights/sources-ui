@@ -17,7 +17,7 @@ const WizardBodyAttach = ({ step, goToSources }) => {
             description={
                 intl.formatMessage({
                     id: 'sources.addAppDescription',
-                    defaultMessage: 'You are managing applications of this source'
+                    defaultMessage: 'You are managing applications of this source.'
                 })
             }
             steps={ [{
