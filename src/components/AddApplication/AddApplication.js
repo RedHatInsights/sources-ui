@@ -2,6 +2,8 @@ import React, { useReducer, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { useIntl } from 'react-intl';
+import merge from 'lodash/merge';
+import cloneDeep from 'lodash/cloneDeep';
 
 import { loadEntities } from '../../redux/sources/actions';
 import SourcesFormRenderer from '../../Utilities/SourcesFormRenderer';
@@ -23,10 +25,10 @@ import { doAttachApp } from '../../api/doAttachApp';
 let selectedApp = undefined; // this has to be not-state value, because it shouldn't re-render the component when changes
 const saveSelectedApp = ({ values: { application } }) => selectedApp = application;
 
-export const onSubmit = (values, formApi, authenticationInitialValues, dispatch, setState) => {
+export const onSubmit = (values, formApi, authenticationInitialValues, dispatch, setState, initialValues) => {
     setState({ state: 'submitting' });
 
-    return doAttachApp(values, formApi, authenticationInitialValues)
+    return doAttachApp(values, formApi, authenticationInitialValues, initialValues)
     .then(async () => {
         await dispatch(loadEntities());
         selectedApp = undefined;
@@ -34,7 +36,8 @@ export const onSubmit = (values, formApi, authenticationInitialValues, dispatch,
     })
     .catch(error => setState({
         state: 'errored',
-        error
+        error,
+        values
     }));
 };
 
@@ -43,7 +46,8 @@ const initialState = {
     error: '',
     values: {},
     authenticationsValues: [],
-    sourceAppsLength: 0
+    sourceAppsLength: 0,
+    initialValues: {}
 };
 
 const reducer = (state, payload) => ({ ...state, ...payload });
@@ -84,11 +88,12 @@ const AddApplication = () => {
                     .listEndpointAuthentications(source.endpoints[0].id)
                     .then(({ data }) => setState({
                         authenticationsValues: data,
-                        values: {
+                        initialValues: {
                             source,
                             endpoint: source.endpoints[0],
                             url: endpointToUrl(source.endpoints[0]),
-                            application: selectedApp
+                            application: selectedApp,
+                            values: {}
                         }
                     }))
                     .then(() => {
@@ -100,7 +105,8 @@ const AddApplication = () => {
                     });
                 } else {
                     setState({
-                        values: { source, application: selectedApp }
+                        initialValues: { source, application: selectedApp },
+                        values: {}
                     });
                     if (state.state === 'loading') {
                         setState({
@@ -174,11 +180,14 @@ const AddApplication = () => {
         formApi,
         state.authenticationsValues,
         dispatch,
-        setState
+        setState,
+        state.initialValues
     );
 
     const hasAvailableApps = filteredAppTypes.length > 0;
     const onSubmitFinal = hasAvailableApps ? onSubmitWrapper : goToSources;
+
+    const finalValues = merge(cloneDeep(state.initialValues), state.values);
 
     return (
         <SourcesFormRenderer
@@ -186,7 +195,7 @@ const AddApplication = () => {
             showFormControls={false}
             onSubmit={onSubmitFinal}
             onCancel={goToSources}
-            initialValues={state.values}
+            initialValues={finalValues}
             subscription={{ values: true }}
             onStateUpdate={saveSelectedApp}
             clearedValue={null}
