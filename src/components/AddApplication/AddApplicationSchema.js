@@ -136,6 +136,7 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
                 inModal: true,
                 predictSteps: true,
                 showTitles: true,
+                crossroads: ['application.application_type_id'],
                 description: intl.formatMessage({
                     id: 'sources.addAppDescription',
                     defaultMessage: 'You are managing applications of this source.'
