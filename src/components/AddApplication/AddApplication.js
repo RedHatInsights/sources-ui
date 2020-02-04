@@ -21,6 +21,7 @@ import { endpointToUrl } from '../SourcesSimpleView/formatters';
 import { routes } from '../../Routes';
 
 import { doAttachApp } from '../../api/doAttachApp';
+import { onCancelAddApplication } from './onCancel';
 
 let selectedApp = undefined; // this has to be not-state value, because it shouldn't re-render the component when changes
 const saveSelectedApp = ({ values: { application } }) => selectedApp = application;
@@ -62,7 +63,8 @@ const AddApplication = () => {
         appTypes,
         sourceTypesLoaded,
         appTypesLoaded,
-        sourceTypes
+        sourceTypes,
+        undoValues
     } = useSelector(({ sources }) => sources, shallowEqual);
 
     const source = useSource();
@@ -166,13 +168,16 @@ const AddApplication = () => {
         return ({ value: type.id, label, isDisabled: hasDeletingApp ? true : false });
     });
 
+    const usersModifiedValues = merge(cloneDeep(undoValues), state.values);
+
     const schema = createSchema(
         availableAppTypes,
         intl,
         sourceTypes,
         appTypes,
         state.authenticationsValues,
-        source
+        source,
+        usersModifiedValues
     );
 
     const onSubmitWrapper = (values, formApi) => onSubmit(
@@ -187,14 +192,16 @@ const AddApplication = () => {
     const hasAvailableApps = filteredAppTypes.length > 0;
     const onSubmitFinal = hasAvailableApps ? onSubmitWrapper : goToSources;
 
-    const finalValues = merge(cloneDeep(state.initialValues), state.values);
+    const onCancel = (values) => onCancelAddApplication({ values, dispatch, intl, sourceId: source.id, history });
+
+    const finalValues = merge(cloneDeep(state.initialValues), usersModifiedValues);
 
     return (
         <SourcesFormRenderer
             schema={schema}
             showFormControls={false}
             onSubmit={onSubmitFinal}
-            onCancel={goToSources}
+            onCancel={onCancel}
             initialValues={finalValues}
             subscription={{ values: true }}
             onStateUpdate={saveSelectedApp}
