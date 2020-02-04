@@ -168,13 +168,16 @@ const AddApplication = () => {
         return ({ value: type.id, label, isDisabled: hasDeletingApp ? true : false });
     });
 
+    const usersModifiedValues = merge(cloneDeep(undoValues), state.values);
+
     const schema = createSchema(
         availableAppTypes,
         intl,
         sourceTypes,
         appTypes,
         state.authenticationsValues,
-        source
+        source,
+        usersModifiedValues
     );
 
     const onSubmitWrapper = (values, formApi) => onSubmit(
@@ -191,7 +194,7 @@ const AddApplication = () => {
 
     const onCancel = (values) => onCancelAddApplication({ values, dispatch, intl, sourceId: source.id, history });
 
-    const finalValues = merge(cloneDeep(state.initialValues), merge(cloneDeep(undoValues), state.values));
+    const finalValues = merge(cloneDeep(state.initialValues), usersModifiedValues);
 
     return (
         <SourcesFormRenderer

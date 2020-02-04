@@ -38,7 +38,7 @@ export const ApplicationSummary = () => (<TextContent>
 export const hasAlreadySupportedAuthType = (authValues = [], appType, sourceTypeName) =>
     authValues.find(({ authtype }) => authtype === get(appType, `supported_authentication_types.${sourceTypeName}[0]`));
 
-const fields = (applications = [], intl, sourceTypes, applicationTypes, authenticationValues, source) => {
+const fields = (applications = [], intl, sourceTypes, applicationTypes, authenticationValues, source, modifiedValues) => {
     const hasAvailableApps = applications.length > 0;
 
     let nextStep = hasAvailableApps ? 'summary' : undefined;
@@ -174,7 +174,8 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
                                 name: 'authtypesetter',
                                 Content: AuthTypeSetter,
                                 authenticationValues,
-                                hideField: true
+                                hideField: true,
+                                modifiedValues
                             }]
                     }, {
                         title: intl.formatMessage({
