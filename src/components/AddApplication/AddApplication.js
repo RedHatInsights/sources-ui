@@ -21,7 +21,7 @@ import { endpointToUrl } from '../SourcesSimpleView/formatters';
 import { routes } from '../../Routes';
 
 import { doAttachApp } from '../../api/doAttachApp';
-import { onCanelAddApplication } from './onCancel';
+import { onCancelAddApplication } from './onCancel';
 
 let selectedApp = undefined; // this has to be not-state value, because it shouldn't re-render the component when changes
 const saveSelectedApp = ({ values: { application } }) => selectedApp = application;
@@ -189,7 +189,7 @@ const AddApplication = () => {
     const hasAvailableApps = filteredAppTypes.length > 0;
     const onSubmitFinal = hasAvailableApps ? onSubmitWrapper : goToSources;
 
-    const onCancel = (values) => onCanelAddApplication({ values, dispatch, intl, sourceId: source.id, history });
+    const onCancel = (values) => onCancelAddApplication({ values, dispatch, intl, sourceId: source.id, history });
 
     const finalValues = merge(cloneDeep(state.initialValues), merge(cloneDeep(undoValues), state.values));
 

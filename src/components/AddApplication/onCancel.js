@@ -8,7 +8,7 @@ import {
 import UndoButtonAdd from '../../components/UndoButton/UndoButtonAdd';
 import { routes, replaceRouteId } from '../../Routes';
 
-export const onCanelAddApplication = ({ values, dispatch, history, intl, sourceId }) => {
+export const onCancelAddApplication = ({ values, dispatch, history, intl, sourceId }) => {
     if (values && values.application) {
         const messageId = Date.now();
         dispatch(addMessage(
