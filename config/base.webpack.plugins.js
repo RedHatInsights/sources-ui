@@ -48,20 +48,6 @@ const CleanWebpackPlugin = new (require('clean-webpack-plugin'))(['dist']);
 plugins.push(CleanWebpackPlugin);
 
 /**
- * Selects the specific lodash functions.
- *
- * @type {var}
- */
-const LodashWebpackPlugin = new (require('lodash-webpack-plugin'))({
-    currying: true,
-    flattening: true,
-    placeholders: true,
-    shorthands: true,
-    paths: true
-});
-plugins.push(LodashWebpackPlugin);
-
-/**
  * Optimizes bundle size
  *
  * @type {var}
