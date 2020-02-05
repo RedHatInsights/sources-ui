@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/files/ReducerRegistry';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import { PrimaryToolbar, ConditionalFilter } from '@redhat-cloud-services/frontend-components';
+import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/components/PrimaryToolbar';
 import { act } from 'react-dom/test-utils';
 import { Chip, Select, Pagination, Button } from '@patternfly/react-core';
 import { MemoryRouter, Link } from 'react-router-dom';
@@ -300,7 +300,7 @@ describe('SourcesPage', () => {
                 expect(wrapper.find(Chip)).toHaveLength(1);
 
                 // Switch to source type in conditional filter
-                wrapper.find(ConditionalFilter).setState({ stateValue: 1 });
+                wrapper.find('ConditionalFilter').setState({ stateValue: 1 });
                 wrapper.update();
 
                 const checkboxDropdownProps = wrapper.find(Select).last().props();

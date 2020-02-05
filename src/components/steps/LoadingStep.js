@@ -7,7 +7,7 @@ import { EmptyStateBody } from '@patternfly/react-core/dist/js/components/EmptyS
 import { EmptyStateSecondaryActions } from '@patternfly/react-core/dist/js/components/EmptyState/EmptyStateSecondaryActions';
 import { Bullseye } from '@patternfly/react-core/dist/js/layouts/Bullseye/Bullseye';
 
-import Spinner from '@redhat-cloud-services/frontend-components/components/Spinner';
+import { Spinner } from '@redhat-cloud-services/frontend-components/components/Spinner';
 import { FormattedMessage } from 'react-intl';
 
 const LoadingStep = ({ onClose, customText }) => (
