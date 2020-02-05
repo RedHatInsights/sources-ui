@@ -8,7 +8,7 @@ import {
     loadSourceTypes,
     filterSources
 } from '../redux/sources/actions';
-import { Button } from '@patternfly/react-core';
+import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources';
 import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components';

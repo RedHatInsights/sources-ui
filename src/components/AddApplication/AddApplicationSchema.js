@@ -1,10 +1,9 @@
 import React from 'react';
 import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
-import {
-    TextContent,
-    Text,
-    TextVariants
-} from '@patternfly/react-core';
+
+import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
+import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
+
 import { FormattedMessage } from 'react-intl';
 import { schemaBuilder } from '@redhat-cloud-services/frontend-components-sources';
 import get from 'lodash/get';

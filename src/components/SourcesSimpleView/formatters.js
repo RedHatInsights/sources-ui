@@ -1,5 +1,12 @@
 import React from 'react';
-import { Text, TextContent, TextVariants, Badge, Tooltip, Popover, Bullseye } from '@patternfly/react-core';
+
+import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
+import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
+import { Bullseye } from '@patternfly/react-core/dist/js/layouts/Bullseye/Bullseye';
+import { Badge } from '@patternfly/react-core/dist/js/components/Badge/Badge';
+import { Popover } from '@patternfly/react-core/dist/js/components/Popover/Popover';
+import { Tooltip } from '@patternfly/react-core/dist/js/components/Tooltip/Tooltip';
+
 import { FormattedMessage } from 'react-intl';
 import { DateFormat } from '@redhat-cloud-services/frontend-components';
 import { CheckCircleIcon, QuestionCircleIcon, ExclamationTriangleIcon, TimesCircleIcon } from '@patternfly/react-icons';

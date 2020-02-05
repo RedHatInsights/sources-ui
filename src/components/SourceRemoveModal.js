@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import {
-    Modal,
-    Button,
-    Split,
-    SplitItem,
-    Stack,
-    Text,
-    TextContent,
-    TextVariants,
-    TextList,
-    TextListItem,
-    Checkbox
-} from '@patternfly/react-core';
+
+import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
+import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
+import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
+import { Split } from '@patternfly/react-core/dist/js/layouts/Split/Split';
+import { SplitItem } from '@patternfly/react-core/dist/js/layouts/Split/SplitItem';
+import { Stack } from '@patternfly/react-core/dist/js/layouts/Stack/Stack';
+import { Modal } from '@patternfly/react-core/dist/js/components/Modal/Modal';
+import { Checkbox } from '@patternfly/react-core/dist/js/components/Checkbox/Checkbox';
+import { TextList } from '@patternfly/react-core/dist/js/components/Text/TextList';
+import { TextListItem } from '@patternfly/react-core/dist/js/components/Text/TextListItem';
+
 import { removeSource } from '../redux/sources/actions';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 import { FormattedMessage, useIntl } from 'react-intl';

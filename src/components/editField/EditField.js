@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormGroup, TextContent } from '@patternfly/react-core';
 import { PencilAltIcon } from '@patternfly/react-icons';
+
+import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
+import { FormGroup } from '@patternfly/react-core/dist/js/components/Form/FormGroup';
 
 export const EDIT_FIELD_NAME = 'edit-field';
 

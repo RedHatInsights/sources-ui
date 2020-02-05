@@ -1,7 +1,7 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
 import { useIntl } from 'react-intl';
-import { Wizard } from '@patternfly/react-core';
+import { Wizard } from '@patternfly/react-core/dist/js/components/Wizard/Wizard';
 
 const WizardBodyAttach = ({ step, goToSources }) => {
     const intl = useIntl();
