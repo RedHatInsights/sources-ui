@@ -1,6 +1,9 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { GridItem, Title, TitleLevel, Grid } from '@patternfly/react-core';
+
+import { Grid } from '@patternfly/react-core/dist/js/layouts/Grid/Grid';
+import { GridItem } from '@patternfly/react-core/dist/js/layouts/Grid/GridItem';
+import { Title, TitleLevel } from '@patternfly/react-core/dist/js/components/Title/Title';
 
 const Header = () => (
     <Grid>

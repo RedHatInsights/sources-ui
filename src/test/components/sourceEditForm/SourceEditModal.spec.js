@@ -5,7 +5,7 @@ import { notificationsMiddleware } from '@redhat-cloud-services/frontend-compone
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { act } from 'react-dom/test-utils';
-import { Spinner } from '@redhat-cloud-services/frontend-components';
+import { Spinner } from '@redhat-cloud-services/frontend-components/components/Spinner';
 
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import SourceEditModal from '../../../components/SourceEditForm/SourceEditModal';

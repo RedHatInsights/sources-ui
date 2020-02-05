@@ -2,17 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useIntl, FormattedMessage } from 'react-intl';
-import {
-    Button,
-    Modal,
-    TextContent,
-    Stack,
-    SplitItem,
-    Split,
-    Text,
-    TextVariants
-} from '@patternfly/react-core';
-import { ExclamationTriangleIcon } from '@patternfly/react-icons';
+
+import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
+import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
+import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
+import { Split } from '@patternfly/react-core/dist/js/layouts/Split/Split';
+import { SplitItem } from '@patternfly/react-core/dist/js/layouts/Split/SplitItem';
+import { Stack } from '@patternfly/react-core/dist/js/layouts/Stack/Stack';
+import { Modal } from '@patternfly/react-core/dist/js/components/Modal/Modal';
+
+import ExclamationTriangleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-triangle-icon';
 
 import { removeApplication } from '../../redux/sources/actions';
 import { useSource } from '../../hooks/useSource';

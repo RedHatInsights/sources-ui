@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 import React from 'react';
 import { NotificationsPortal } from '@redhat-cloud-services/frontend-components-notifications';
-import { Main } from '@redhat-cloud-services/frontend-components';
+import { Main } from '@redhat-cloud-services/frontend-components/components/Main';
 import { act } from 'react-dom/test-utils';
 import { BrowserRouter as Router } from 'react-router-dom';
 
