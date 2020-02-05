@@ -16,7 +16,6 @@ const plugins = [
         exclude: /(node_modules|bower_components)/i,
         filename: `sourcemaps/[name].js.map`
     }),
-    new(require('clean-webpack-plugin'))(['dist']),
     new(require('mini-css-extract-plugin'))({
         chunkFilename: 'css/[name].css',
         filename: 'css/[name].css'
