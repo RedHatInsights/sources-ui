@@ -9,7 +9,7 @@ import { EmptyStateSecondaryActions } from '@patternfly/react-core/dist/js/compo
 import { Bullseye } from '@patternfly/react-core/dist/js/layouts/Bullseye/Bullseye';
 import { Title } from '@patternfly/react-core/dist/js/components/Title/Title';
 
-import { CheckCircleIcon } from '@patternfly/react-icons';
+import CheckCircleIcon from '@patternfly/react-icons/dist/js/icons/check-circle-icon';
 import { FormattedMessage } from 'react-intl';
 
 const FinishedStep = ({ onClose, title, successfulMessage, secondaryActions }) => (

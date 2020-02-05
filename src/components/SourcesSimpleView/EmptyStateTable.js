@@ -6,8 +6,7 @@ import { EmptyStateIcon } from '@patternfly/react-core/dist/js/components/EmptyS
 import { EmptyStateBody } from '@patternfly/react-core/dist/js/components/EmptyState/EmptyStateBody';
 import { Bullseye } from '@patternfly/react-core/dist/js/layouts/Bullseye/Bullseye';
 import { Title } from '@patternfly/react-core/dist/js/components/Title/Title';
-
-import { SearchIcon } from '@patternfly/react-icons';
+import SearchIcon from '@patternfly/react-icons/dist/js/icons/search-icon';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch } from 'react-redux';
 

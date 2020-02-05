@@ -11,7 +11,7 @@ import { SplitItem } from '@patternfly/react-core/dist/js/layouts/Split/SplitIte
 import { Stack } from '@patternfly/react-core/dist/js/layouts/Stack/Stack';
 import { Modal } from '@patternfly/react-core/dist/js/components/Modal/Modal';
 
-import { ExclamationTriangleIcon } from '@patternfly/react-icons';
+import ExclamationTriangleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-triangle-icon';
 
 import { removeApplication } from '../../redux/sources/actions';
 import { useSource } from '../../hooks/useSource';

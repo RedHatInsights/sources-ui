@@ -8,8 +8,12 @@ import { Popover } from '@patternfly/react-core/dist/js/components/Popover/Popov
 import { Tooltip } from '@patternfly/react-core/dist/js/components/Tooltip/Tooltip';
 
 import { FormattedMessage } from 'react-intl';
-import { DateFormat } from '@redhat-cloud-services/frontend-components';
-import { CheckCircleIcon, QuestionCircleIcon, ExclamationTriangleIcon, TimesCircleIcon } from '@patternfly/react-icons';
+import DateFormat from '@redhat-cloud-services/frontend-components/components/DateFormat';
+
+import ExclamationTriangleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-triangle-icon';
+import CheckCircleIcon from '@patternfly/react-icons/dist/js/icons/check-circle-icon';
+import QuestionCircleIcon from '@patternfly/react-icons/dist/js/icons/question-circle-icon';
+import TimesCircleIcon from '@patternfly/react-icons/dist/js/icons/times-circle-icon';
 
 export const defaultPort = (scheme) => ({
     http: '80',

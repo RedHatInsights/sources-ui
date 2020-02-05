@@ -11,7 +11,8 @@ import { CardBody } from '@patternfly/react-core/dist/js/components/Card/CardBod
 import { Bullseye } from '@patternfly/react-core/dist/js/layouts/Bullseye/Bullseye';
 import { Title } from '@patternfly/react-core/dist/js/components/Title/Title';
 
-import { WrenchIcon } from '@patternfly/react-icons';
+import WrenchIcon from '@patternfly/react-icons/dist/js/icons/wrench-icon';
+
 import { Link } from 'react-router-dom';
 import { routes } from '../Routes';
 import { useIsOrgAdmin } from '../hooks/useIsOrgAdmin';

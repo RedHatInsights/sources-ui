@@ -9,7 +9,7 @@ import { EmptyStateSecondaryActions } from '@patternfly/react-core/dist/js/compo
 import { Bullseye } from '@patternfly/react-core/dist/js/layouts/Bullseye/Bullseye';
 import { Title } from '@patternfly/react-core/dist/js/components/Title/Title';
 
-import { ErrorCircleOIcon } from '@patternfly/react-icons';
+import ErrorCircleOIcon from '@patternfly/react-icons/dist/js/icons/error-circle-o-icon';
 import { FormattedMessage } from 'react-intl';
 
 const ErroredStep = ({ onClose, onRetry, message, title }) => (

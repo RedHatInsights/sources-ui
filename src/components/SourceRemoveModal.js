@@ -14,7 +14,7 @@ import { TextList } from '@patternfly/react-core/dist/js/components/Text/TextLis
 import { TextListItem } from '@patternfly/react-core/dist/js/components/Text/TextListItem';
 
 import { removeSource } from '../redux/sources/actions';
-import { ExclamationTriangleIcon } from '@patternfly/react-icons';
+import ExclamationTriangleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-triangle-icon';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import ApplicationList from './ApplicationsList/ApplicationList';

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
-import { PageHeader, PageHeaderTitle, Section } from '@redhat-cloud-services/frontend-components';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import {
     loadAppTypes,
@@ -11,7 +10,10 @@ import {
 import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources';
-import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components';
+
+import PrimaryToolbar from '@redhat-cloud-services/frontend-components/components/PrimaryToolbar';
+import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/PageHeader';
+import Section from '@redhat-cloud-services/frontend-components/components/Section';
 
 import SourcesSimpleView from '../components/SourcesSimpleView/SourcesSimpleView';
 import SourcesEmptyState from '../components/SourcesEmptyState';
