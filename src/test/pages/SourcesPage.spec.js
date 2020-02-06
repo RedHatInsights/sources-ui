@@ -8,7 +8,6 @@ import { act } from 'react-dom/test-utils';
 import { Chip, Select, Pagination, Button } from '@patternfly/react-core';
 import { MemoryRouter, Link } from 'react-router-dom';
 import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources';
-import { RowLoader } from '@redhat-cloud-services/frontend-components-utilities/files/helpers';
 
 import SourcesPage from '../../pages/SourcesPage';
 import SourcesEmptyState from '../../components/SourcesEmptyState';
@@ -33,6 +32,8 @@ import * as AddApplication from '../../components/AddApplication/AddApplication'
 import * as SourceEditModal from '../../components/SourceEditForm/SourceEditModal';
 import * as SourceRemoveModal from '../../components/SourceRemoveModal';
 import * as urlQuery from '../../Utilities/urlQuery';
+import { PlaceHolderTable } from '../../components/SourcesSimpleView/loaders';
+import { Table } from '@patternfly/react-table';
 
 describe('SourcesPage', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -255,14 +256,11 @@ describe('SourcesPage', () => {
             wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
         });
 
-        const paginationLoadersCount = 2;
-        const rowLoadersCount = 12;
-
-        expect(wrapper.find(RowLoader)).toHaveLength(rowLoadersCount);
-        expect(wrapper.find(PaginationLoader)).toHaveLength(paginationLoadersCount);
+        expect(wrapper.find(PlaceHolderTable)).toHaveLength(1);
+        expect(wrapper.find(Table)).toHaveLength(1);
         wrapper.update();
-        expect(wrapper.find(RowLoader)).toHaveLength(0);
-        expect(wrapper.find(PaginationLoader)).toHaveLength(0);
+        expect(wrapper.find(PlaceHolderTable)).toHaveLength(0);
+        expect(wrapper.find(Table)).toHaveLength(1);
     });
 
     describe('filtering', () => {

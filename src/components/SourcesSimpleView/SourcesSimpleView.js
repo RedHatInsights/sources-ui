@@ -97,10 +97,19 @@ const SourcesSimpleView = () => {
     } = useSelector(({ sources }) => sources, shallowEqual);
     const reduxDispatch = useDispatch();
 
-    const [state, dispatch] = useReducer(reducer, initialState(sourcesColumns(intl)));
+    const notSortable = numberOfEntities === 0 || !loaded;
+
+    const [state, dispatch] = useReducer(reducer, initialState(sourcesColumns(intl, notSortable)));
+
+    const refreshColumns = () => {
+        const columns = sourcesColumns(intl, notSortable);
+
+        return dispatch({
+            cells: prepareColumnsCells(columns)
+        });
+    };
 
     const refreshSources = () => {
-        const notSortable = numberOfEntities === 0;
         const columns = sourcesColumns(intl, notSortable);
 
         return dispatch({
@@ -115,6 +124,7 @@ const SourcesSimpleView = () => {
             refreshSources();
         } else {
             dispatch({ isLoaded: false });
+            refreshColumns();
         }
     }, [loaded, sourceTypesLoaded, appTypesLoaded]);
 
@@ -124,17 +134,21 @@ const SourcesSimpleView = () => {
         }
     }, [entities]);
 
-    if (!state.isLoaded) {
-        return <PlaceHolderTable />;
-    }
-
     let shownRows = state.rows;
-    if (numberOfEntities === 0) {
+    if (numberOfEntities === 0 && state.isLoaded) {
         shownRows = [{
             heightAuto: true,
             cells: [{
                 props: { colSpan: COLUMN_COUNT },
                 title: <EmptyStateTable />
+            }]
+        }];
+    } else if (!loaded || !appTypesLoaded || !sourceTypesLoaded) {
+        shownRows = [{
+            heightAuto: true,
+            cells: [{
+                props: { colSpan: COLUMN_COUNT, className: 'sources-placeholder-row' },
+                title: <PlaceHolderTable />
             }]
         }];
     }
@@ -153,7 +167,7 @@ const SourcesSimpleView = () => {
             }}
             rows={shownRows}
             cells={state.cells}
-            actionResolver={isOrgAdmin && numberOfEntities > 0 ? actionResolver(intl, push) : undefined}
+            actionResolver={loaded && isOrgAdmin && numberOfEntities > 0 ? actionResolver(intl, push) : undefined}
             rowWrapper={RowWrapperLoader}
         >
             <TableHeader />
