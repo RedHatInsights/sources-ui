@@ -2,6 +2,8 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { RowWrapper } from '@patternfly/react-table';
 import { RowLoader } from '@redhat-cloud-services/frontend-components-utilities/files/helpers';
+import { Spinner } from '@patternfly/react-core/dist/js/components/Spinner';
+import { Bullseye } from '@patternfly/react-core/dist/js/layouts/Bullseye';
 
 import { PlaceHolderTable, RowWrapperLoader } from '../../../components/SourcesSimpleView/loaders';
 import { COLUMN_COUNT } from '../../../views/sourcesViewDefinition';
@@ -11,8 +13,8 @@ describe('loaders', () => {
         it('renders correctly', () => {
             const wrapper = mount(<PlaceHolderTable />);
 
-            expect(wrapper.find('table').length).toEqual(1);
-            expect(wrapper.find(RowLoader).length).toEqual(12);
+            expect(wrapper.find(Spinner)).toHaveLength(1);
+            expect(wrapper.find(Bullseye)).toHaveLength(1);
         });
     });
 

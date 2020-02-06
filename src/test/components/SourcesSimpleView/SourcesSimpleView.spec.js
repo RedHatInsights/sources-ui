@@ -19,6 +19,7 @@ import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import * as actions from '../../../redux/sources/actions';
 import * as API from '../../../api/entities';
 import { replaceRouteId, routes } from '../../../Routes';
+import { defaultSourcesState } from '../../../redux/sources/reducer';
 
 describe('SourcesSimpleView', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -31,14 +32,7 @@ describe('SourcesSimpleView', () => {
         initialProps = {};
         mockStore = configureStore(middlewares);
         initialState = {
-            sources: {
-                loaded: 0,
-                rows: [],
-                entities: [],
-                numberOfEntities: 0,
-                pageNumber: 1,
-                pageSize: 10
-            },
+            sources: defaultSourcesState,
             user: {
                 isOrgAdmin: true
             }
@@ -60,7 +54,6 @@ describe('SourcesSimpleView', () => {
         const store = mockStore(initialState);
         const wrapper = mount(componentWrapperIntl(<SourcesSimpleView { ...initialProps } />, store));
 
-        expect(wrapper.find(Table)).toHaveLength(0);
         expect(wrapper.find(PlaceHolderTable)).toHaveLength(1);
     });
 

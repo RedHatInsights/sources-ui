@@ -11,17 +11,10 @@
   flex: 1
 }
 
-/* styling for sources placeholder table */
-.sources-placeholder-table {
-  background: white;
-  width: 100%;
-  border-top: 1px solid rgb(204,204,204);
-  border-bottom: 1px solid rgb(204,204,204);
-  border-collapse: collapse;
-  td {
-    display: block;
-    padding: 10px;
-  }
+.ins-c-sources__sources-placeholder-loader {
+  margin: 0px;
+  padding: 0px;
+  min-height: 500px;
 }
 
 .ins-c-sources__dialog--warning {
