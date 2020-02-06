@@ -6,6 +6,8 @@ import { Table, TableHeader, TableBody, RowWrapper, sortable, ActionsColumn } fr
 import { MemoryRouter } from 'react-router-dom';
 import { RowLoader } from '@redhat-cloud-services/frontend-components-utilities/files/helpers';
 import { act } from 'react-dom/test-utils';
+import ArrowsAltVIcon from '@patternfly/react-icons/dist/js/icons/arrows-alt-v-icon';
+import LongArrowAltDownIcon from '@patternfly/react-icons/dist/js/icons/long-arrow-alt-down-icon';
 
 import SourcesSimpleView, { insertEditAction, actionResolver, prepareColumnsCells } from '../../../components/SourcesSimpleView/SourcesSimpleView';
 import { PlaceHolderTable, RowWrapperLoader } from '../../../components/SourcesSimpleView/loaders';
@@ -20,6 +22,7 @@ import * as actions from '../../../redux/sources/actions';
 import * as API from '../../../api/entities';
 import { replaceRouteId, routes } from '../../../Routes';
 import { defaultSourcesState } from '../../../redux/sources/reducer';
+import { sourcesColumns } from '../../../views/sourcesViewDefinition';
 
 describe('SourcesSimpleView', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -55,6 +58,8 @@ describe('SourcesSimpleView', () => {
         const wrapper = mount(componentWrapperIntl(<SourcesSimpleView { ...initialProps } />, store));
 
         expect(wrapper.find(PlaceHolderTable)).toHaveLength(1);
+        expect(wrapper.find(ArrowsAltVIcon)).toHaveLength(0);
+        expect(wrapper.find(LongArrowAltDownIcon)).toHaveLength(0);
     });
 
     it('renders removing row', (done) => {
@@ -99,6 +104,9 @@ describe('SourcesSimpleView', () => {
         const store = mockStore(initialState);
         const wrapper = mount(componentWrapperIntl(<SourcesSimpleView { ...initialProps } />, store));
 
+        const activeSortingIcon = 1;
+        const expectSortableColumns = sourcesColumns({ formatMessage: () => {} }).filter(x => x.sortable).length - activeSortingIcon;
+
         setTimeout(() => {
             setTimeout(() => {
                 wrapper.update();
@@ -109,6 +117,8 @@ describe('SourcesSimpleView', () => {
                 expect(wrapper.find(RowWrapper)).toHaveLength(sourcesDataGraphQl.length);
                 expect(wrapper.find(ActionsColumn)).toHaveLength(sourcesDataGraphQl.length);
                 expect(wrapper.find(RowWrapper).first().props().className).toEqual(ROW_WRAPPER_CLASSNAME);
+                expect(wrapper.find(LongArrowAltDownIcon)).toHaveLength(1);
+                expect(wrapper.find(ArrowsAltVIcon)).toHaveLength(expectSortableColumns);
                 done();
             });
         });
@@ -170,6 +180,7 @@ describe('SourcesSimpleView', () => {
         expect(wrapper.find(TableHeader)).toHaveLength(1);
         expect(wrapper.find(TableBody)).toHaveLength(1);
         expect(wrapper.find(ActionsColumn)).toHaveLength(0);
+        expect(wrapper.find(ArrowsAltVIcon)).toHaveLength(0);
     });
 
     it('re-renders when entities changed', async () => {
