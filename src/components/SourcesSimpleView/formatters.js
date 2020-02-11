@@ -126,22 +126,27 @@ export const importedFormatter = (value) => {
     </Badge>);
 };
 
+export const AVAILABLE = 'available';
+export const UNAVAILABLE = 'unavailable';
+export const UNKNOWN = 'unknown';
+export const PARTIALLY_UNAVAILABLE = 'partially_available';
+
 export const getStatusIcon = (status) => ({
-    unavailable: <TimesCircleIcon className="ins-c-sources__availability-not-ok"/>,
-    available: <CheckCircleIcon className="ins-c-sources__availability-ok"/>,
-    partially_available: <ExclamationTriangleIcon className="ins-c-sources__availability-partially"/>
+    [UNAVAILABLE]: <TimesCircleIcon className="ins-c-sources__availability-not-ok"/>,
+    [AVAILABLE]: <CheckCircleIcon className="ins-c-sources__availability-ok"/>,
+    [PARTIALLY_UNAVAILABLE]: <ExclamationTriangleIcon className="ins-c-sources__availability-partially"/>
 }[status] || <QuestionCircleIcon className="ins-c-sources__availability-unknown"/>);
 
 export const getStatusText = (status) => ({
-    unavailable: <FormattedMessage
+    [UNAVAILABLE]: <FormattedMessage
         id="sources.unavailable"
         defaultMessage="Unavailable"
     />,
-    available: <FormattedMessage
+    [AVAILABLE]: <FormattedMessage
         id="sources.ok"
         defaultMessage="OK"
     />,
-    partially_available: <FormattedMessage
+    [PARTIALLY_UNAVAILABLE]: <FormattedMessage
         id="sources.partiallyAvailable"
         defaultMessage="Partially available"
     />
@@ -150,90 +155,171 @@ export const getStatusText = (status) => ({
     defaultMessage="Unknown"
 />);
 
-export const formatAvailibilityErrors = (source, appTypes) => {
-    if (source.applications && source.applications.length > 0) {
-        if (!source.applications.some(({ availability_status }) => availability_status === 'unavailable')) {
-            return (<FormattedMessage
-                id="sources.unknownError"
-                defaultMessage="Unknown error"
-            />);
-        }
+export const UnknownError = () => (<FormattedMessage
+    id="sources.unknownError"
+    defaultMessage="unavailable"
+/>);
 
-        return source.applications.map(
-            ({ application_type_id, availability_status_error, availability_status }, index) => {
-                if (availability_status === 'unavailable') {
-                    const application = appTypes.find(({ id }) => id === application_type_id);
-                    const applicationName = application ? application.display_name : '';
-
-                    if (availability_status_error) {
-                        return `${availability_status_error} \n ${applicationName ? `(${applicationName})` : ''}`;
-                    }
-
-                    return (<FormattedMessage
-                        key={availability_status_error || index}
-                        id="sources.unknownAppError"
-                        defaultMessage="Unknown application error ({ appName }) "
-                        values={{ appName: applicationName }}
-                    />);
-                }
-            }
-        );
-    }
-
-    return (<FormattedMessage
-        key="availability_status_error"
-        id="sources.unknownAppError"
-        defaultMessage="Unknown source error."
-    />);
-};
-
-export const getStatusTooltipText = (status, source, appTypes) => ({
-    unavailable: <React.Fragment>
+export const formatAvailibilityErrors = (appTypes, errors) => (<React.Fragment>
+    {errors.source && <React.Fragment>
         <FormattedMessage
-            id="sources.appStatusPartiallyOK"
-            defaultMessage="We found these errors:"
+            id="sources.sourceError"
+            defaultMessage="Source's status: { error }"
+            values={{ error: errors.source  }}
         />
         <br />
-        {formatAvailibilityErrors(source, appTypes)}
+    </React.Fragment>}
+    {errors.endpoint && <React.Fragment>
+        <FormattedMessage
+            id="sources.endpointError"
+            defaultMessage="Endpoint error: { error }"
+            values={{ error: errors.endpoint }}
+        />
+        <br />
+    </React.Fragment>}
+    {errors.authentications && <FormattedMessage
+        id="sources.authErrors"
+        defaultMessage="Authentication {count, plural, one {status} other {statuses}} : { errors }"
+        values={{
+            count: errors.authentications.length,
+            errors: errors.authentications.map(({ error, type }) => (<React.Fragment key={type}>
+                <FormattedMessage
+                    id="sources.errorAuthTemplate"
+                    defaultMessage="{ type }: { error }"
+                    values={{ error, type  }}
+                />
+                <br />
+            </React.Fragment>))  }}
+    />}
+    {errors.applications && <FormattedMessage
+        id="sources.appErrors"
+        defaultMessage="Application {count, plural, one {status} other {statutes}}: { errors }"
+        values={{
+            count: errors.applications.length,
+            errors: errors.applications.map(({ error, id }) => (<React.Fragment key={id}>
+                <FormattedMessage
+                    id="sources.errorAppTemplate"
+                    defaultMessage="{ app }: { error }"
+                    values={{ error, app: appTypes.find((app) => app.id === id)?.display_name || id }}
+                />
+                <br />
+            </React.Fragment>))
+        }}
+    />}
+</React.Fragment>);
+
+export const getStatusTooltipText = (status, appTypes, errors = {}) => ({
+    [UNAVAILABLE]: <React.Fragment>
+        <FormattedMessage
+            id="sources.appStatusPartiallyOK"
+            defaultMessage="We found {count, plural, one {this error} other {these errors}}."
+            values={{ count: Object.keys(errors).length }}
+        />
+        <hr />
+        {formatAvailibilityErrors(appTypes, errors)}
     </React.Fragment>,
-    available: <FormattedMessage
+    [AVAILABLE]: <FormattedMessage
         id="sources.appStatusOK"
-        defaultMessage="Everything works fine - all applications are connected."
+        defaultMessage="Everything works fine."
     />,
-    partially_available: <React.Fragment>
+    [PARTIALLY_UNAVAILABLE]: <React.Fragment>
         <FormattedMessage
             id="sources.appStatusPartiallyOK"
-            defaultMessage="We found these errors:"
+            defaultMessage="We found {count, plural, one {this error} other {these errors}}."
+            values={{ count: Object.keys(errors).length }}
         />
-        <br />
-        {formatAvailibilityErrors(source, appTypes)}
+        <hr />
+        {formatAvailibilityErrors(appTypes, errors)}
     </React.Fragment>
 }[status] || <FormattedMessage
     id="sources.appStatusUnknown"
     defaultMessage="Status has not been verified."
 />);
 
-export const availabilityFormatter = (status, source, { appTypes }) => {
-    const noApps = !source.applications || source.applications.length === 0;
+export const getAllErrors = (
+    { availability_status, availability_status_error, applications = [], endpoint = { authentications: [] } }
+) => {
+    let errors = {};
+    let statusesCount = 0;
+    let errorsCount = 0;
 
-    const statusContent = noApps ? '--' : (<React.Fragment>
-        {getStatusIcon(status)}&nbsp;
-        {getStatusText(status)}
-    </React.Fragment>);
+    if (availability_status === UNAVAILABLE) {
+        errors = {
+            ...errors,
+            source: availability_status_error || <UnknownError />
+        };
+        statusesCount++;
+        errorsCount++;
+    } else if (availability_status === AVAILABLE) {
+        statusesCount++;
+    }
 
-    const tooltipText = noApps ? (<FormattedMessage
-        id="sources.noAppConnected"
-        defaultMessage="No application connected."
-    />) : getStatusTooltipText(status, source, appTypes);
+    applications.map((app) => {
+        if (app.availability_status === UNAVAILABLE) {
+            errors = {
+                ...errors,
+                applications: [
+                    ...(errors.applications ? errors.applications : []),
+                    { id: app.application_type_id, error: app.availability_status_error || <UnknownError /> }
+                ]
+            };
+            statusesCount++;
+            errorsCount++;
+        } else if (app.availability_status === AVAILABLE) {
+            statusesCount++;
+        }
+    });
+
+    if (endpoint.availability_status === UNAVAILABLE) {
+        errors = {
+            ...errors,
+            endpoint: endpoint.availability_status_error || <UnknownError />
+        };
+        statusesCount++;
+        errorsCount++;
+    } else if (endpoint.availability_status === AVAILABLE) {
+        statusesCount++;
+    }
+
+    if (endpoint.authentications) {
+        endpoint.authentications.map((auth) => {
+            if (auth.availability_status === UNAVAILABLE) {
+                errors = {
+                    ...errors,
+                    authentications: [
+                        ...(errors.authentications ? errors.authentications : []),
+                        { type: auth.authtype, error: auth.availability_status_error || <UnknownError /> }
+                    ]
+                };
+                statusesCount++;
+                errorsCount++;
+            } else if (auth.availability_status === AVAILABLE) {
+                statusesCount++;
+            }
+        });
+    }
+
+    return {
+        errors,
+        status: errorsCount === 0  ?
+            statusesCount === 0 ? UNKNOWN : AVAILABLE
+            : errorsCount === statusesCount ? UNAVAILABLE : PARTIALLY_UNAVAILABLE
+    };
+};
+
+export const availabilityFormatter = (_status, source, { appTypes }) => {
+    const meta = getAllErrors(source);
+    const status = meta.status;
 
     return (<TextContent className="clickable">
         <Text key={status} component={ TextVariants.p }>
             <Popover
                 aria-label={`${status} popover`}
-                bodyContent={<h1>{tooltipText}</h1>}
+                bodyContent={<h1>{getStatusTooltipText(status, appTypes, meta.errors)}</h1>}
             >
                 <span>
-                    {statusContent}
+                    {getStatusIcon(status)}&nbsp;
+                    {getStatusText(status)}
                 </span>
             </Popover>
         </Text>

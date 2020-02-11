@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import axiosInstanceInsights from '@redhat-cloud-services/frontend-components-utilities/files/interceptors';
 import { DefaultApi as SourcesDefaultApi } from '@redhat-cloud-services/sources-client';
 
@@ -64,7 +65,7 @@ export const graphQlAttributes = `
     availability_status,
     source_ref,
     applications { application_type_id, id, availability_status_error, availability_status },
-    endpoints { id, scheme, host, port, path, receptor_node, role, certificate_authority, verify_ssl }
+    endpoints { id, scheme, host, port, path, receptor_node, role, certificate_authority, verify_ssl, availability_status_error, availability_status, authentications { authtype, availability_status, availability_status_error } }
 `;
 
 export const doLoadEntities = ({ pageSize, pageNumber, sortBy, sortDirection, filterValue }) => getSourcesApi().postGraphQL({
