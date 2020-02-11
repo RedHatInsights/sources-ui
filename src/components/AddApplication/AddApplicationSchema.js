@@ -162,6 +162,7 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
                             defaultMessage: 'Select application'
                         }),
                         stepKey: 1,
+                        name: 'selectAppStep',
                         fields: [
                             {
                                 component: 'description',
@@ -183,6 +184,7 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
                             defaultMessage: 'Review'
                         }),
                         stepKey: 'summary',
+                        name: 'summary',
                         fields: [{
                             component: 'description',
                             name: 'description-summary',
