@@ -155,7 +155,7 @@ export const getStatusText = (status) => ({
     defaultMessage="Unknown"
 />);
 
-const UnknownError = () => (<FormattedMessage
+export const UnknownError = () => (<FormattedMessage
     id="sources.unknownError"
     defaultMessage="unavailable"
 />);
@@ -208,7 +208,7 @@ export const formatAvailibilityErrors = (appTypes, errors) => (<React.Fragment>
     />}
 </React.Fragment>);
 
-export const getStatusTooltipText = (status, appTypes, errors) => ({
+export const getStatusTooltipText = (status, appTypes, errors = {}) => ({
     [UNAVAILABLE]: <React.Fragment>
         <FormattedMessage
             id="sources.appStatusPartiallyOK"
@@ -241,6 +241,7 @@ export const getAllErrors = (
 ) => {
     let errors = {};
     let statusesCount = 0;
+    let errorsCount = 0;
 
     if (availability_status === UNAVAILABLE) {
         errors = {
@@ -248,6 +249,7 @@ export const getAllErrors = (
             source: availability_status_error || <UnknownError />
         };
         statusesCount++;
+        errorsCount++;
     } else if (availability_status === AVAILABLE) {
         statusesCount++;
     }
@@ -262,41 +264,40 @@ export const getAllErrors = (
                 ]
             };
             statusesCount++;
+            errorsCount++;
         } else if (app.availability_status === AVAILABLE) {
             statusesCount++;
         }
     });
 
-    if (endpoint) {
-        if (endpoint.availability_status === UNAVAILABLE) {
-            errors = {
-                ...errors,
-                endpoint: endpoint.availability_status_error || <UnknownError />
-            };
-            statusesCount++;
-        } else if (endpoint.availability_status === AVAILABLE) {
-            statusesCount++;
-        }
-
-        if (endpoint.authentications) {
-            endpoint.authentications.map((auth) => {
-                if (auth.availability_status === UNAVAILABLE) {
-                    errors = {
-                        ...errors,
-                        authentications: [
-                            ...(errors.authentications ? errors.authentications : []),
-                            { type: auth.authtype, error: auth.availability_status_error || <UnknownError /> }
-                        ]
-                    };
-                    statusesCount++;
-                } else if (auth.availability_status === AVAILABLE) {
-                    statusesCount++;
-                }
-            });
-        }
+    if (endpoint.availability_status === UNAVAILABLE) {
+        errors = {
+            ...errors,
+            endpoint: endpoint.availability_status_error || <UnknownError />
+        };
+        statusesCount++;
+        errorsCount++;
+    } else if (endpoint.availability_status === AVAILABLE) {
+        statusesCount++;
     }
 
-    const errorsCount = Object.keys(errors).length;
+    if (endpoint.authentications) {
+        endpoint.authentications.map((auth) => {
+            if (auth.availability_status === UNAVAILABLE) {
+                errors = {
+                    ...errors,
+                    authentications: [
+                        ...(errors.authentications ? errors.authentications : []),
+                        { type: auth.authtype, error: auth.availability_status_error || <UnknownError /> }
+                    ]
+                };
+                statusesCount++;
+                errorsCount++;
+            } else if (auth.availability_status === AVAILABLE) {
+                statusesCount++;
+            }
+        });
+    }
 
     return {
         errors,

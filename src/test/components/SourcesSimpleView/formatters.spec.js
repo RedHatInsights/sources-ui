@@ -1,4 +1,3 @@
-import ReactDOMServer from 'react-dom/server';
 import {
     formatters,
     defaultFormatter,
@@ -21,9 +20,9 @@ import {
     sourceTypeIconFormatter,
     getAllErrors,
     AVAILABLE,
-    UNKNOWN,
     PARTIALLY_UNAVAILABLE,
-    UNAVAILABLE
+    UNAVAILABLE,
+    UnknownError
 } from '../../../components/SourcesSimpleView/formatters';
 import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX } from '../../sourceTypesData';
 import { sourcesDataGraphQl, SOURCE_CATALOGAPP_INDEX, SOURCE_ALL_APS_INDEX, SOURCE_NO_APS_INDEX, SOURCE_ENDPOINT_URL_INDEX } from '../../sourcesData';
@@ -35,7 +34,7 @@ import {
     COSTMANAGEMENT_APP,
     CATALOG_APP
 } from '../../applicationTypesData';
-import { Badge, Tooltip, Popover, Bullseye } from '@patternfly/react-core';
+import { Badge, Tooltip, Bullseye } from '@patternfly/react-core';
 import { DateFormat } from '@redhat-cloud-services/frontend-components/components/DateFormat';
 import { IntlProvider } from 'react-intl';
 import { CheckCircleIcon, TimesCircleIcon, QuestionCircleIcon, ExclamationTriangleIcon } from '@patternfly/react-icons';
@@ -294,7 +293,6 @@ describe('formatters', () => {
 
     describe('availability status', () => {
         const wrapperWithIntl = (children) => <IntlProvider locale="en">{children}</IntlProvider>;
-        const SOURCE = {};
         const APPTYPES = applicationTypesData.data;
 
         describe('getStatusIcon', () => {
@@ -354,21 +352,20 @@ describe('formatters', () => {
             const ERRORMESSAGE2 = 'different type of error';
 
             it('returns OK text', () => {
-                const wrapper = mount(wrapperWithIntl(getStatusTooltipText('available', SOURCE, APPTYPES)));
+                const wrapper = mount(wrapperWithIntl(getStatusTooltipText(AVAILABLE, APPTYPES)));
 
-                expect(wrapper.text()).toEqual('Everything works fine - all applications are connected.');
+                expect(wrapper.text()).toEqual('Everything works fine.');
             });
 
             it('returns WARNING text', () => {
                 const SOURCE_WITH_ERROR = {
                     applications: [{
-                        application_type_id: COSTMANAGEMENT_APP.id,
-                        availability_status_error: ERRORMESSAGE,
-                        availability_status: 'unavailable'
+                        id: COSTMANAGEMENT_APP.id,
+                        error: ERRORMESSAGE
                     }]
                 };
 
-                const wrapper = mount(wrapperWithIntl(getStatusTooltipText('partially_available', SOURCE_WITH_ERROR, APPTYPES)));
+                const wrapper = mount(wrapperWithIntl(getStatusTooltipText(PARTIALLY_UNAVAILABLE, APPTYPES, SOURCE_WITH_ERROR)));
 
                 expect(wrapper.text().includes(ERRORMESSAGE)).toEqual(true);
                 expect(wrapper.text().includes(COSTMANAGEMENT_APP.display_name)).toEqual(true);
@@ -377,17 +374,15 @@ describe('formatters', () => {
             it('returns DANGER text', () => {
                 const SOURCE_WITH_ERRORS = {
                     applications: [{
-                        application_type_id: COSTMANAGEMENT_APP.id,
-                        availability_status_error: ERRORMESSAGE,
-                        availability_status: 'unavailable'
+                        id: COSTMANAGEMENT_APP.id,
+                        error: ERRORMESSAGE
                     }, {
-                        availability_status: 'unavailable',
-                        application_type_id: CATALOG_APP.id,
-                        availability_status_error: ERRORMESSAGE2
+                        id: CATALOG_APP.id,
+                        error: ERRORMESSAGE2
                     }]
                 };
 
-                const wrapper = mount(wrapperWithIntl(getStatusTooltipText('unavailable', SOURCE_WITH_ERRORS, APPTYPES)));
+                const wrapper = mount(wrapperWithIntl(getStatusTooltipText(UNAVAILABLE, APPTYPES, SOURCE_WITH_ERRORS)));
 
                 expect(wrapper.text().includes(ERRORMESSAGE)).toEqual(true);
                 expect(wrapper.text().includes(COSTMANAGEMENT_APP.display_name)).toEqual(true);
@@ -396,89 +391,69 @@ describe('formatters', () => {
                 expect(wrapper.text().includes(CATALOG_APP.display_name)).toEqual(true);
             });
 
-            it('returns DANGER text only for first', () => {
-                const SOURCE_WITH_ERRORS = {
-                    applications: [{
-                        application_type_id: COSTMANAGEMENT_APP.id,
-                        availability_status_error: ERRORMESSAGE,
-                        availability_status: 'unavailable'
-                    }, {
-                        availability_status: null,
-                        application_type_id: CATALOG_APP.id,
-                        availability_status_error: ERRORMESSAGE2
-                    }]
-                };
-
-                const wrapper = mount(wrapperWithIntl(getStatusTooltipText('unavailable', SOURCE_WITH_ERRORS, APPTYPES)));
-
-                expect(wrapper.text().includes(ERRORMESSAGE)).toEqual(true);
-                expect(wrapper.text().includes(COSTMANAGEMENT_APP.display_name)).toEqual(true);
-
-                expect(wrapper.text().includes(ERRORMESSAGE2)).toEqual(false);
-                expect(wrapper.text().includes(CATALOG_APP.display_name)).toEqual(false);
-            });
-
             it('returns unknown by default', () => {
-                const wrapper = mount(wrapperWithIntl(getStatusTooltipText('some nonsense', SOURCE, APPTYPES)));
+                const wrapper = mount(wrapperWithIntl(getStatusTooltipText('some nonsense', APPTYPES)));
 
                 expect(wrapper.text()).toEqual('Status has not been verified.');
             });
         });
 
         describe('availabilityFormatter', () => {
-            const SOURCE_WITH_APP = {
-                applications: [{ availability_status: 'unavailable' }]
-            };
-
             it('returns OK text', () => {
-                const wrapper = mount(wrapperWithIntl(availabilityFormatter('available', SOURCE_WITH_APP, { appTypes: APPTYPES })));
+                const SOURCE = {
+                    applications: [{ availability_status: AVAILABLE }]
+                };
+
+                const wrapper = mount(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES })));
 
                 expect(wrapper.find(CheckCircleIcon)).toHaveLength(1);
                 expect(wrapper.text().includes('OK')).toEqual(true);
             });
 
             it('returns WARNING text', () => {
-                const wrapper = mount(wrapperWithIntl(availabilityFormatter('partially_available', SOURCE_WITH_APP, { appTypes: APPTYPES })));
+                const SOURCE = {
+                    availability_status: UNAVAILABLE, applications: [{ availability_status: AVAILABLE }]
+                };
+
+                const wrapper = mount(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES })));
 
                 expect(wrapper.find(ExclamationTriangleIcon)).toHaveLength(1);
                 expect(wrapper.text().includes('Partially available')).toEqual(true);
             });
 
             it('returns DANGER text', () => {
-                const wrapper = mount(wrapperWithIntl(availabilityFormatter('unavailable', SOURCE_WITH_APP, { appTypes: APPTYPES })));
+                const SOURCE = {
+                    applications: [{ availability_status: UNAVAILABLE }]
+                };
+
+                const wrapper = mount(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES })));
 
                 expect(wrapper.find(TimesCircleIcon)).toHaveLength(1);
                 expect(wrapper.text().includes('Unavailable')).toEqual(true);
             });
 
             it('returns unknown by default', () => {
-                const wrapper = mount(wrapperWithIntl(availabilityFormatter('some nonsense', SOURCE_WITH_APP, { appTypes: APPTYPES })));
+                const SOURCE = {};
+
+                const wrapper = mount(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES })));
 
                 expect(wrapper.find(QuestionCircleIcon)).toHaveLength(1);
                 expect(wrapper.text().includes('Unknown')).toEqual(true);
             });
-
-            it('returns -- when no apps attached', () => {
-                const wrapper = mount(wrapperWithIntl(availabilityFormatter('some nonsense', SOURCE, { appTypes: APPTYPES })));
-
-                expect(wrapper.text().includes('--')).toEqual(true);
-                expect(ReactDOMServer.renderToStaticMarkup(wrapper.find(Popover).props().bodyContent)).toEqual('<h1>No application connected.</h1>');
-            });
         });
 
-        describe.skip('formatAvailibilityErrors', () => {
+        describe('formatAvailibilityErrors', () => {
             const ERRORMESSAGE = 'some error';
 
             const SOURCE_WITH_ERROR = {
                 applications: [{
-                    application_type_id: COSTMANAGEMENT_APP.id,
-                    availability_status_error: ERRORMESSAGE,
-                    availability_status: 'unavailable'
+                    id: COSTMANAGEMENT_APP.id,
+                    error: ERRORMESSAGE
                 }]
             };
 
             it('returns application error', () => {
-                const wrapper = mount(wrapperWithIntl(formatAvailibilityErrors(SOURCE_WITH_ERROR, APPTYPES)));
+                const wrapper = mount(wrapperWithIntl(formatAvailibilityErrors(APPTYPES, SOURCE_WITH_ERROR)));
 
                 expect(wrapper.text().includes(ERRORMESSAGE)).toEqual(true);
                 expect(wrapper.text().includes(COSTMANAGEMENT_APP.display_name)).toEqual(true);
@@ -487,50 +462,49 @@ describe('formatters', () => {
             it('returns application error with unfound appnam', () => {
                 const EMPTY_APP_TYPES = [];
 
-                const wrapper = mount(wrapperWithIntl(formatAvailibilityErrors(SOURCE_WITH_ERROR, EMPTY_APP_TYPES)));
+                const wrapper = mount(wrapperWithIntl(formatAvailibilityErrors(EMPTY_APP_TYPES, SOURCE_WITH_ERROR)));
 
                 expect(wrapper.text().includes(ERRORMESSAGE)).toEqual(true);
                 expect(wrapper.text().includes(COSTMANAGEMENT_APP.display_name)).toEqual(false);
+                expect(wrapper.text().includes(COSTMANAGEMENT_APP.id)).toEqual(true);
             });
 
-            it('returns unknown application error', () => {
-                const SOURCE_WITH_UNDEF_ERROR = {
-                    applications: [{
-                        application_type_id: COSTMANAGEMENT_APP.id,
-                        availability_status_error: null,
-                        availability_status: 'unavailable'
+            it('returns authentication errors', () => {
+                const SOURCE_WITHAUTH_ERROR = {
+                    authentications: [{
+                        type: 'token',
+                        error: ERRORMESSAGE
                     }]
                 };
 
-                const wrapper = mount(wrapperWithIntl(formatAvailibilityErrors(SOURCE_WITH_UNDEF_ERROR, APPTYPES)));
+                const wrapper = mount(wrapperWithIntl(formatAvailibilityErrors(APPTYPES, SOURCE_WITHAUTH_ERROR)));
 
-                expect(wrapper.text().includes('Unknown application error')).toEqual(true);
-                expect(wrapper.text().includes(COSTMANAGEMENT_APP.display_name)).toEqual(true);
+                expect(wrapper.text().includes(ERRORMESSAGE)).toEqual(true);
+                expect(wrapper.text().includes('token')).toEqual(true);
             });
 
-            it('returns unknown source error', () => {
-                const wrapper = mount(wrapperWithIntl(formatAvailibilityErrors(SOURCE, APPTYPES)));
-
-                expect(wrapper.text().includes('Unknown source error.')).toEqual(true);
-            });
-
-            it('returns unknown error', () => {
-                const SOURCE_WITH_UNDEF_ERROR = {
-                    applications: [{
-                        application_type_id: COSTMANAGEMENT_APP.id,
-                        availability_status_error: null,
-                        availability_status: null
-                    }]
+            it('returns endpoint errors', () => {
+                const SOURCE_WITH_ENDPOINT_ERROR = {
+                    endpoint: ERRORMESSAGE
                 };
 
-                const wrapper = mount(wrapperWithIntl(formatAvailibilityErrors(SOURCE_WITH_UNDEF_ERROR, APPTYPES)));
+                const wrapper = mount(wrapperWithIntl(formatAvailibilityErrors(APPTYPES, SOURCE_WITH_ENDPOINT_ERROR)));
 
-                expect(wrapper.text().includes('Unknown error')).toEqual(true);
-                expect(wrapper.text().includes(COSTMANAGEMENT_APP.display_name)).toEqual(false);
+                expect(wrapper.text().includes(ERRORMESSAGE)).toEqual(true);
+            });
+
+            it('returns source errors', () => {
+                const SOURCE_WITH_SOURCE_ERROR = {
+                    source: ERRORMESSAGE
+                };
+
+                const wrapper = mount(wrapperWithIntl(formatAvailibilityErrors(APPTYPES, SOURCE_WITH_SOURCE_ERROR)));
+
+                expect(wrapper.text().includes(ERRORMESSAGE)).toEqual(true);
             });
         });
 
-        describe.only('getAllErrors', () => {
+        describe('getAllErrors', () => {
             const errorMsg = 'This is error msg';
 
             it('available source', () => {
@@ -595,6 +569,24 @@ describe('formatters', () => {
                 });
             });
 
+            it('partially available source with endpoint - no error', () => {
+                expect(getAllErrors(
+                    { availability_status: AVAILABLE, endpoint: { availability_status: UNAVAILABLE, availability_status_error: '' } }
+                )).toEqual({
+                    errors: { endpoint: <UnknownError /> },
+                    status: PARTIALLY_UNAVAILABLE
+                });
+            });
+
+            it('partially available source with endpoint - no error for source status', () => {
+                expect(getAllErrors(
+                    { availability_status: UNAVAILABLE, availability_status_error: '', endpoint: { availability_status: AVAILABLE } }
+                )).toEqual({
+                    errors: { source: <UnknownError /> },
+                    status: PARTIALLY_UNAVAILABLE
+                });
+            });
+
             it('partially available source with unavailable source', () => {
                 expect(getAllErrors(
                     { availability_status: UNAVAILABLE, availability_status_error: errorMsg, endpoint: { availability_status: AVAILABLE } }
@@ -604,7 +596,7 @@ describe('formatters', () => {
                 });
             });
 
-            it('partially source with authentications', () => {
+            it('partially available source with authentications', () => {
                 expect(getAllErrors({
                     availability_status: AVAILABLE,
                     endpoint: { availability_status: AVAILABLE, authentications: [{ authtype: 'token', availability_status: UNAVAILABLE, availability_status_error: errorMsg }] }
@@ -614,7 +606,7 @@ describe('formatters', () => {
                 });
             });
 
-            it('partially source with authentications - 2', () => {
+            it('partially available source with authentications - 2', () => {
                 expect(getAllErrors({
                     availability_status: AVAILABLE,
                     endpoint: { availability_status: '', authentications: [{ authtype: 'token', availability_status: UNAVAILABLE, availability_status_error: errorMsg }] }
@@ -624,7 +616,20 @@ describe('formatters', () => {
                 });
             });
 
-            it('partially source with apps', () => {
+            it('partially available source with multiple authentications', () => {
+                expect(getAllErrors({
+                    availability_status: AVAILABLE,
+                    endpoint: { availability_status: '', authentications: [
+                        { authtype: 'token', availability_status: UNAVAILABLE, availability_status_error: errorMsg },
+                        { authtype: 'lojza', availability_status: UNAVAILABLE, availability_status_error: undefined }
+                    ] }
+                })).toEqual({
+                    errors: { authentications: [{ type: 'token', error: errorMsg }, { type: 'lojza', error: <UnknownError /> }] },
+                    status: PARTIALLY_UNAVAILABLE
+                });
+            });
+
+            it('partially available source with apps', () => {
                 expect(getAllErrors({
                     availability_status: AVAILABLE,
                     endpoint: { availability_status: AVAILABLE, authentications: [{ availability_status: AVAILABLE }] },
@@ -670,6 +675,20 @@ describe('formatters', () => {
                     applications: [{ availability_status: '' }, { application_type_id: '151', availability_status: UNAVAILABLE, availability_status_error: errorMsg }]
                 })).toEqual({
                     errors: { applications: [{ id: '151', error: errorMsg }] },
+                    status: UNAVAILABLE
+                });
+            });
+
+            it('unavailable source with multiple apps', () => {
+                expect(getAllErrors({
+                    availability_status: '',
+                    endpoint: { availability_status: '', authentications: [{ availability_status: '' }] },
+                    applications: [
+                        { application_type_id: '151', availability_status: UNAVAILABLE, availability_status_error: errorMsg },
+                        { application_type_id: '5646', availability_status: UNAVAILABLE, availability_status_error: undefined }
+                    ]
+                })).toEqual({
+                    errors: { applications: [{ id: '151', error: errorMsg }, { id: '5646', error: <UnknownError /> }] },
                     status: UNAVAILABLE
                 });
             });
