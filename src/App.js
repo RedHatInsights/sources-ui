@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { NotificationsPortal } from '@redhat-cloud-services/frontend-components-notifications';
-import { Main } from '@redhat-cloud-services/frontend-components';
+import { Main } from '@redhat-cloud-services/frontend-components/components/Main';
 import { IntlProvider } from 'react-intl';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { getBaseName } from '@redhat-cloud-services/frontend-components-utilities/files/helpers';
@@ -11,7 +11,7 @@ import './App.scss';
 import ErrorBoundary from './components/ErrorBoundary';
 import PermissionsChecker from './components/PermissionsChecker';
 
-const App = (props) => {
+const App = () => {
     useEffect(() => {
         insights.chrome.init();
         try {
@@ -23,14 +23,14 @@ const App = (props) => {
     }, []);
 
     return (
-        <Router basename={getBaseName(location.pathname)}>
+        <Router basename={getBaseName(location.pathname, 1)}>
             <IntlProvider locale="en">
                 <React.Fragment>
                     <NotificationsPortal />
                     <ErrorBoundary>
                         <PermissionsChecker>
                             <Main style={ { padding: 0 } } >
-                                <Routes childProps={props} />
+                                <Routes />
                             </Main>
                         </PermissionsChecker>
                     </ErrorBoundary>

@@ -42,8 +42,7 @@ export const sourcesColumns = (intl, notSortable = false) => ([{
         defaultMessage: 'Status'
     }),
     value: 'availability_status',
-    formatter: 'availabilityFormatter',
-    sortable: !notSortable
+    formatter: 'availabilityFormatter'
 }]);
 
 const KEBAB_COLUMN = 1;

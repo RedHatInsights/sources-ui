@@ -2,15 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
-import {
-    TextContent,
-    TextVariants,
-    Grid,
-    GridItem,
-    Text,
-    Button,
-    ButtonVariant
-} from '@patternfly/react-core';
+
+import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
+import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
+import { Button, ButtonVariant } from '@patternfly/react-core/dist/js/components/Button/Button';
+import { Grid } from '@patternfly/react-core/dist/js/layouts/Grid/Grid';
+import { GridItem } from '@patternfly/react-core/dist/js/layouts/Grid/GridItem';
 
 import { useSource } from '../../hooks/useSource';
 

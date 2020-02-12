@@ -1,18 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-    Bullseye,
-    Card,
-    CardBody,
-    Title,
-    Button,
-    EmptyState,
-    EmptyStateIcon,
-    EmptyStateBody
-} from '@patternfly/react-core';
 import { FormattedMessage } from 'react-intl';
 
-import { WrenchIcon } from '@patternfly/react-icons';
+import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
+import { EmptyState } from '@patternfly/react-core/dist/js/components/EmptyState/EmptyState';
+import { EmptyStateIcon } from '@patternfly/react-core/dist/js/components/EmptyState/EmptyStateIcon';
+import { EmptyStateBody } from '@patternfly/react-core/dist/js/components/EmptyState/EmptyStateBody';
+import { Card } from '@patternfly/react-core/dist/js/components/Card/Card';
+import { CardBody } from '@patternfly/react-core/dist/js/components/Card/CardBody';
+import { Bullseye } from '@patternfly/react-core/dist/js/layouts/Bullseye/Bullseye';
+import { Title } from '@patternfly/react-core/dist/js/components/Title/Title';
+
+import WrenchIcon from '@patternfly/react-icons/dist/js/icons/wrench-icon';
+
 import { Link } from 'react-router-dom';
 import { routes } from '../Routes';
 import { useIsOrgAdmin } from '../hooks/useIsOrgAdmin';

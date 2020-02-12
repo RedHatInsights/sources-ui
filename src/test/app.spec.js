@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 import React from 'react';
 import { NotificationsPortal } from '@redhat-cloud-services/frontend-components-notifications';
-import { Main } from '@redhat-cloud-services/frontend-components';
+import { Main } from '@redhat-cloud-services/frontend-components/components/Main';
 import { act } from 'react-dom/test-utils';
 import { BrowserRouter as Router } from 'react-router-dom';
 
@@ -87,7 +87,7 @@ describe('App spec js', () => {
         expect(wrapper.find(Main)).toHaveLength(1);
         expect(wrapper.find(Routes)).toHaveLength(1);
         expect(wrapper.find(Router)).toHaveLength(1);
-        expect(wrapper.find(Router).props().basename).toEqual('//');
+        expect(wrapper.find(Router).props().basename).toEqual('/');
         expect(wrapper.find(PermissionsChecker.default)).toHaveLength(1);
         expect(wrapper.find(ErrorBoundary)).toHaveLength(1);
     });

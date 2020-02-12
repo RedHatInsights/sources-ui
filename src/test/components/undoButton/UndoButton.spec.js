@@ -66,7 +66,7 @@ describe('UndoButton', () => {
         clickOnButton(wrapper);
 
         expect(wasRedirectedToWizard(wrapper)).toEqual(true);
-        expect(store.getState().sources.addSourceInitialValues).toEqual(values);
+        expect(store.getState().sources.undoValues).toEqual(values);
         expect(store.getState().notifications).toHaveLength(0);
     });
 
@@ -86,5 +86,46 @@ describe('UndoButton', () => {
         clickOnButton(wrapper);
 
         expect(refresh.refreshPage).toHaveBeenCalled();
+    });
+
+    describe('custom path', () => {
+        let wasRedirectedToCustomPath;
+        let customPath;
+
+        beforeEach(() => {
+            customPath = '/custom/path/12';
+
+            initialProps = {
+                ...initialProps,
+                path: customPath
+            };
+
+            wasRedirectedToCustomPath = (wrapper) => wrapper.find(MemoryRouter).instance().history.location.pathname === customPath;
+        });
+
+        it('should set values and redirect to the wizard path', () => {
+            store.dispatch(addMessage(TITLE, VARIANT, DESCRIPTION, messageId));
+
+            const wrapper = mount(componentWrapperIntl(<UndoButtonAdd {...initialProps} />, store, [routes.sources.path]));
+
+            expect(store.getState().notifications).toHaveLength(1);
+
+            clickOnButton(wrapper);
+
+            expect(wasRedirectedToCustomPath(wrapper)).toEqual(true);
+            expect(store.getState().sources.undoValues).toEqual(values);
+            expect(store.getState().notifications).toHaveLength(0);
+        });
+
+        it('should set refresh the page when on wizard', () => {
+            refresh.refreshPage = jest.fn();
+
+            const wrapper = mount(componentWrapperIntl(<UndoButtonAdd {...initialProps} />, store, [customPath]));
+
+            clickOnButton(wrapper);
+
+            expect(refresh.refreshPage).toHaveBeenCalled();
+            expect(wasRedirectedToCustomPath(wrapper)).toEqual(true);
+        });
     });
 });

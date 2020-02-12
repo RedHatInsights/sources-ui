@@ -5,6 +5,7 @@ import { useIntl } from 'react-intl';
 
 import { addMessage } from '../../redux/sources/actions';
 import { useIsOrgAdmin } from '../../hooks/useIsOrgAdmin';
+import { routes } from '../../Routes';
 
 const RedirectNotAdmin = () => {
     const intl = useIntl();
@@ -28,7 +29,7 @@ const RedirectNotAdmin = () => {
             'danger',
             description
         ));
-        return <Redirect to="/" />;
+        return <Redirect to={routes.sources.path} />;
     }
 
     return null;

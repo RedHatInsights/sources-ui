@@ -6,6 +6,7 @@ import { useIntl } from 'react-intl';
 import { addMessage, addHiddenSource } from '../../redux/sources/actions';
 import { doLoadSource } from '../../api/entities';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
+import { routes } from '../../Routes';
 
 const RedirectNoId = () => {
     const { id } = useParams();
@@ -39,7 +40,7 @@ const RedirectNoId = () => {
                 defaultMessage: 'Source with { id } was not found. Try it again later.'
             }, { id })
         ));
-        return <Redirect to="/" />;
+        return <Redirect to={routes.sources.path} />;
     }
 
     return null;
