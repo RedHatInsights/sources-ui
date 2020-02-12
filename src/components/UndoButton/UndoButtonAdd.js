@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from '@patternfly/react-core';
+import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 
-import { removeMessage, undoAddSource } from '../../redux/sources/actions';
+import { removeMessage, undoValues } from '../../redux/sources/actions';
 import { routes } from '../../Routes';
 import { refreshPage } from './refreshPage';
 
-const UndoButton = ({ messageId, values }) => {
+const UndoButton = ({ messageId, values, path }) => {
     const history = useHistory();
     const dispatch = useDispatch();
     const notifications = useSelector(({ notifications }) => notifications);
@@ -22,14 +22,14 @@ const UndoButton = ({ messageId, values }) => {
                 dispatch(removeMessage(notification.id));
             }
 
-            dispatch(undoAddSource(values));
+            dispatch(undoValues(values));
 
-            const isOnWizard = history.location.pathname === routes.sourcesNew.path;
+            const isOnWizard = history.location.pathname === path;
 
             if (isOnWizard) {
                 refreshPage(history);
             } else {
-                history.push(routes.sourcesNew.path);
+                history.push(path);
             }
         }}>
             <FormattedMessage
@@ -41,7 +41,12 @@ const UndoButton = ({ messageId, values }) => {
 
 UndoButton.propTypes = {
     messageId: PropTypes.number.isRequired,
-    values: PropTypes.object.isRequired
+    values: PropTypes.object.isRequired,
+    path: PropTypes.string
+};
+
+UndoButton.defaultProps = {
+    path: routes.sourcesNew.path
 };
 
 export default UndoButton;

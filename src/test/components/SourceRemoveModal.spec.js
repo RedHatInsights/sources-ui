@@ -14,7 +14,7 @@ import { sourcesDataGraphQl } from '../sourcesData';
 import { applicationTypesData } from '../applicationTypesData';
 import RemoveAppModal from '../../components/AddApplication/RemoveAppModal';
 import ApplicationList from '../../components/ApplicationsList/ApplicationList';
-import { routes } from '../../Routes';
+import { routes, replaceRouteId } from '../../Routes';
 
 describe('SourceRemoveModal', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -31,9 +31,9 @@ describe('SourceRemoveModal', () => {
     describe('source with no application', () => {
         it('renders correctly', () => {
             const wrapper = mount(componentWrapperIntl(
-                <Route path="/remove/:id" render={ (...args) => <SourceRemoveModal { ...args } /> } />,
+                <Route path={routes.sourcesRemove.path} render={ (...args) => <SourceRemoveModal { ...args } /> } />,
                 store,
-                ['/remove/14'])
+                [replaceRouteId(routes.sourcesRemove.path, '14')])
             );
 
             expect(wrapper.find('input')).toHaveLength(1); // checkbox
@@ -43,9 +43,9 @@ describe('SourceRemoveModal', () => {
 
         it('enables submit button', () => {
             const wrapper = mount(componentWrapperIntl(
-                <Route path="/remove/:id" render={ (...args) => <SourceRemoveModal { ...args } /> } />,
+                <Route path={routes.sourcesRemove.path} render={ (...args) => <SourceRemoveModal { ...args } /> } />,
                 store,
-                ['/remove/14'])
+                [replaceRouteId(routes.sourcesRemove.path, '14')])
             );
 
             expect(wrapper.find('button[id="deleteSubmit"]').props().disabled).toEqual(true); // delete is disabled
@@ -60,9 +60,9 @@ describe('SourceRemoveModal', () => {
             actions.removeSource = jest.fn().mockImplementation(() => ({ type: 'REMOVE' }));
 
             const wrapper = mount(componentWrapperIntl(
-                <Route path="/remove/:id" render={ (...args) => <SourceRemoveModal { ...args } /> } />,
+                <Route path={routes.sourcesRemove.path} render={ (...args) => <SourceRemoveModal { ...args } /> } />,
                 store,
-                ['/remove/14'])
+                [replaceRouteId(routes.sourcesRemove.path, '14')])
             );
 
             wrapper.find('input').simulate('change', { target: { checked: true } }); // click on checkbox
@@ -83,9 +83,9 @@ describe('SourceRemoveModal', () => {
 
         it('renders correctly', () => {
             const wrapper = mount(componentWrapperIntl(
-                <Route path="/remove/:id" render={ (...args) => <SourceRemoveModal { ...args } /> } />,
+                <Route path={routes.sourcesRemove.path} render={ (...args) => <SourceRemoveModal { ...args } /> } />,
                 store,
-                ['/remove/406'])
+                [replaceRouteId(routes.sourcesRemove.path, '406')])
             );
 
             const source = sourcesDataGraphQl.find((s) => s.id === '406');
@@ -99,22 +99,22 @@ describe('SourceRemoveModal', () => {
 
         it('clicks on connected apps', () => {
             const wrapper = mount(componentWrapperIntl(
-                <Route path="/remove/:id" render={ (...args) => <SourceRemoveModal { ...args } /> } />,
+                <Route path={routes.sourcesRemove.path} render={ (...args) => <SourceRemoveModal { ...args } /> } />,
                 store,
-                ['/remove/406'])
+                [replaceRouteId(routes.sourcesRemove.path, '406')])
             );
 
             wrapper.find(Button).at(CONNECTED_APPS_BUTTON).simulate('click'); // Click on redirect
 
-            expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual('/manage_apps/406');
+            expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(replaceRouteId(routes.sourceManageApps.path, '406'));
         });
 
         it('click on remove app and close it', () => {
             const REMOVE_APP_CLOSE_BUTTON = 1;
             const wrapper = mount(componentWrapperIntl(
-                <Route path="/remove/:id" render={ (...args) => <SourceRemoveModal { ...args } /> } />,
+                <Route path={routes.sourcesRemove.path} render={ (...args) => <SourceRemoveModal { ...args } /> } />,
                 store,
-                ['/remove/406'])
+                [replaceRouteId(routes.sourcesRemove.path, '406')])
             );
 
             expect(wrapper.find(RemoveAppModal)).toHaveLength(0);
@@ -142,9 +142,9 @@ describe('SourceRemoveModal', () => {
             });
 
             const wrapper = mount(componentWrapperIntl(
-                <Route path="/remove/:id" render={ (...args) => <SourceRemoveModal { ...args } /> } />,
+                <Route path={routes.sourcesRemove.path} render={ (...args) => <SourceRemoveModal { ...args } /> } />,
                 store,
-                ['/remove/406'])
+                [replaceRouteId(routes.sourcesRemove.path, '406')])
             );
 
             expect(wrapper.find(ApplicationList)).toHaveLength(0);

@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-    EmptyState,
-    EmptyStateVariant,
-    EmptyStateBody,
-    EmptyStateSecondaryActions,
-    Button,
-    Bullseye
-} from '@patternfly/react-core';
-import { Spinner } from '@redhat-cloud-services/frontend-components';
+
+import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
+import { EmptyState, EmptyStateVariant } from '@patternfly/react-core/dist/js/components/EmptyState/EmptyState';
+import { EmptyStateBody } from '@patternfly/react-core/dist/js/components/EmptyState/EmptyStateBody';
+import { EmptyStateSecondaryActions } from '@patternfly/react-core/dist/js/components/EmptyState/EmptyStateSecondaryActions';
+import { Bullseye } from '@patternfly/react-core/dist/js/layouts/Bullseye/Bullseye';
+
+import { Spinner } from '@redhat-cloud-services/frontend-components/components/Spinner';
 import { FormattedMessage } from 'react-intl';
 
 const LoadingStep = ({ onClose, customText }) => (

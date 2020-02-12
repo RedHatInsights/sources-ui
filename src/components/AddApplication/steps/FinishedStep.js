@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage  } from 'react-intl';
 import { PropTypes } from 'prop-types';
-import { Button } from '@patternfly/react-core';
+import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
 
 import FinishedStep from '../../steps/FinishedStep';
 

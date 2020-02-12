@@ -1,10 +1,8 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import {
-    TextContent,
-    Text,
-    TextVariants
-} from '@patternfly/react-core';
+
+import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
+import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
 
 export const unsupportedAuthTypeField = (type) => ({
     component: 'description',

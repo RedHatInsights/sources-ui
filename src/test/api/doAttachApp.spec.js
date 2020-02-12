@@ -4,8 +4,7 @@ import * as cm from '@redhat-cloud-services/frontend-components-sources';
 
 const prepareFormApi = (values) => ({
     getState: () => ({
-        values,
-        initialValues: values
+        values
     })
 });
 
@@ -32,6 +31,7 @@ describe('doAttachApp', () => {
     let APP_ID;
     let ENDPOINT_ID;
     let RETURNED_ENDPOINT;
+    let INITIAL_VALUES;
 
     let mockPatchSourceSpy;
 
@@ -63,11 +63,12 @@ describe('doAttachApp', () => {
 
         SOURCE_ID = '23278326';
         VALUES = {};
-        FORM_API = prepareFormApi({
+        INITIAL_VALUES = {
             source: {
                 id: SOURCE_ID
             }
-        });
+        };
+        FORM_API = prepareFormApi(INITIAL_VALUES);
         AUTHENTICATION_INIT = [];
         APP_ID = '878776767';
         ENDPOINT_ID = '99998887776655';
@@ -88,7 +89,7 @@ describe('doAttachApp', () => {
         FORM_API = prepareFormApi({});
 
         try {
-            await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT);
+            await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
         } catch (error) {
             expect(error).toEqual('Missing source id');
 
@@ -109,7 +110,7 @@ describe('doAttachApp', () => {
             }
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).not.toHaveBeenCalled();
@@ -127,7 +128,7 @@ describe('doAttachApp', () => {
             }
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).toHaveBeenCalledWith(SOURCE_ID, {
@@ -141,14 +142,16 @@ describe('doAttachApp', () => {
     });
 
     it('only source is changed and only modified (removed) values are sent to the endpoint', async () => {
-        FORM_API = prepareFormApi({
+        INITIAL_VALUES = {
             source: {
                 id: SOURCE_ID,
                 source_ref: '2323',
                 cat: 'dog',
                 original: 'old'
             }
-        });
+        };
+
+        FORM_API = prepareFormApi(INITIAL_VALUES);
 
         VALUES = {
             source: {
@@ -160,7 +163,7 @@ describe('doAttachApp', () => {
             }
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).toHaveBeenCalledWith(SOURCE_ID, {
@@ -176,7 +179,7 @@ describe('doAttachApp', () => {
     });
 
     it('only source is changed and only modified (removed) values are sent to the endpoint with super nesting', async () => {
-        FORM_API = prepareFormApi({
+        INITIAL_VALUES = {
             source: {
                 id: SOURCE_ID,
                 source_ref: '2323',
@@ -195,7 +198,9 @@ describe('doAttachApp', () => {
                     }
                 }
             }
-        });
+        };
+
+        FORM_API = prepareFormApi(INITIAL_VALUES);
 
         VALUES = {
             source: {
@@ -221,7 +226,7 @@ describe('doAttachApp', () => {
             }
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).toHaveBeenCalledWith(SOURCE_ID, {
@@ -247,14 +252,16 @@ describe('doAttachApp', () => {
     });
 
     it('only endpoint is changed', async () => {
-        FORM_API = prepareFormApi({
+        INITIAL_VALUES = {
             source: {
                 id: SOURCE_ID
             },
             endpoint: {
                 id: ENDPOINT_ID
             }
-        });
+        };
+
+        FORM_API = prepareFormApi(INITIAL_VALUES);
 
         VALUES = {
             endpoint: {
@@ -262,7 +269,7 @@ describe('doAttachApp', () => {
             }
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).not.toHaveBeenCalled();
@@ -279,14 +286,16 @@ describe('doAttachApp', () => {
     });
 
     it('only endpoint is changed - port is nonsense', async () => {
-        FORM_API = prepareFormApi({
+        INITIAL_VALUES = {
             source: {
                 id: SOURCE_ID
             },
             endpoint: {
                 id: ENDPOINT_ID
             }
-        });
+        };
+
+        FORM_API = prepareFormApi(INITIAL_VALUES);
 
         VALUES = {
             endpoint: {
@@ -294,7 +303,7 @@ describe('doAttachApp', () => {
             }
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).not.toHaveBeenCalled();
@@ -311,20 +320,22 @@ describe('doAttachApp', () => {
     });
 
     it('empty endpoint', async () => {
-        FORM_API = prepareFormApi({
+        INITIAL_VALUES = {
             source: {
                 id: SOURCE_ID
             },
             endpoint: {
                 id: ENDPOINT_ID
             }
-        });
+        };
+
+        FORM_API = prepareFormApi(INITIAL_VALUES);
 
         VALUES = {
             endpoint: { }
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).not.toHaveBeenCalled();
@@ -336,20 +347,22 @@ describe('doAttachApp', () => {
     });
 
     it('url is changed', async () => {
-        FORM_API = prepareFormApi({
+        INITIAL_VALUES = {
             source: {
                 id: SOURCE_ID
             },
             endpoint: {
                 id: ENDPOINT_ID
             }
-        });
+        };
+
+        FORM_API = prepareFormApi(INITIAL_VALUES);
 
         VALUES = {
             url: 'https://redhat.com:8989/mypage'
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).not.toHaveBeenCalled();
@@ -368,7 +381,7 @@ describe('doAttachApp', () => {
     it('only auth is changed', async () => {
         const AUTH_ID = '654789';
 
-        FORM_API = prepareFormApi({
+        INITIAL_VALUES = {
             source: {
                 id: SOURCE_ID
             },
@@ -378,7 +391,9 @@ describe('doAttachApp', () => {
             authentication: {
                 id: AUTH_ID
             }
-        });
+        };
+
+        FORM_API = prepareFormApi(INITIAL_VALUES);
 
         VALUES = {
             authentication: {
@@ -390,7 +405,7 @@ describe('doAttachApp', () => {
             id: AUTH_ID
         }];
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).not.toHaveBeenCalled();
@@ -404,7 +419,7 @@ describe('doAttachApp', () => {
     it('only auth is changed and only modified (removed) values are sent to to the endpoint', async () => {
         const AUTH_ID = '654789';
 
-        FORM_API = prepareFormApi({
+        INITIAL_VALUES = {
             source: {
                 id: SOURCE_ID
             },
@@ -414,7 +429,9 @@ describe('doAttachApp', () => {
             authentication: {
                 id: AUTH_ID
             }
-        });
+        };
+
+        FORM_API = prepareFormApi(INITIAL_VALUES);
 
         VALUES = {
             authentication: {
@@ -430,7 +447,7 @@ describe('doAttachApp', () => {
             removed: 'this was removed'
         }];
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).not.toHaveBeenCalled();
@@ -445,14 +462,16 @@ describe('doAttachApp', () => {
     });
 
     it('auth is created', async () => {
-        FORM_API = prepareFormApi({
+        INITIAL_VALUES = {
             source: {
                 id: SOURCE_ID
             },
             endpoint: {
                 id: ENDPOINT_ID
             }
-        });
+        };
+
+        FORM_API = prepareFormApi(INITIAL_VALUES);
 
         VALUES = {
             authentication: {
@@ -460,7 +479,7 @@ describe('doAttachApp', () => {
             }
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).not.toHaveBeenCalled();
@@ -480,7 +499,7 @@ describe('doAttachApp', () => {
             url: 'https://redhat.com:8989/mypage'
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).not.toHaveBeenCalled();
@@ -506,7 +525,7 @@ describe('doAttachApp', () => {
             }
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).not.toHaveBeenCalled();
@@ -535,7 +554,7 @@ describe('doAttachApp', () => {
             }
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).not.toHaveBeenCalled();
@@ -553,7 +572,7 @@ describe('doAttachApp', () => {
             nonsense: 'Z7SHADZUSAgd'
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).toHaveBeenCalledWith({
             id: SOURCE_ID,
@@ -576,7 +595,7 @@ describe('doAttachApp', () => {
             nonsense: 'Z7SHADZUSAgd'
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).toHaveBeenCalledWith({
             id: SOURCE_ID,
@@ -596,7 +615,7 @@ describe('doAttachApp', () => {
             nonsense: 'Z7SHADZUSAgd'
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).toHaveBeenCalledWith({
             id: SOURCE_ID,

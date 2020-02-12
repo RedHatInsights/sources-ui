@@ -1,7 +1,7 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
 import { useIntl } from 'react-intl';
-import { Wizard } from '@patternfly/react-core';
+import { Wizard } from '@patternfly/react-core/dist/js/components/Wizard/Wizard';
 
 const WizardBodyAttach = ({ step, goToSources }) => {
     const intl = useIntl();
@@ -17,7 +17,7 @@ const WizardBodyAttach = ({ step, goToSources }) => {
             description={
                 intl.formatMessage({
                     id: 'sources.addAppDescription',
-                    defaultMessage: 'You are managing applications of this source'
+                    defaultMessage: 'You are managing applications of this source.'
                 })
             }
             steps={ [{

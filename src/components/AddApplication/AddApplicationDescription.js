@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
-import {
-    TextContent,
-    TextVariants,
-    Grid,
-    GridItem,
-    Text
-} from '@patternfly/react-core';
+
+import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
+import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
+import { Grid, GridItem } from '@patternfly/react-core/dist/js/layouts/Grid/index';
 
 import RemoveAppModal from './RemoveAppModal';
 import ApplicationList from '../ApplicationsList/ApplicationList';

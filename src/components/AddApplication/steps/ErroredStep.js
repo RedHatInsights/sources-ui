@@ -3,7 +3,9 @@ import { FormattedMessage  } from 'react-intl';
 import { PropTypes } from 'prop-types';
 
 import ErroredStep from '../../steps/ErroredStep';
-import { TextContent, Text, TextVariants } from '@patternfly/react-core';
+
+import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
+import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
 
 const ErroredStepAttach = ({ setState, goToSources, error }) => (<ErroredStep
     onClose={goToSources}

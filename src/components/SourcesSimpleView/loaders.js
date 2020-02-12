@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import { RowWrapper } from '@patternfly/react-table';
 import { RowLoader } from '@redhat-cloud-services/frontend-components-utilities/files/helpers';
 import { COLUMN_COUNT } from '../../views/sourcesViewDefinition';
+import { Spinner } from '@patternfly/react-core/dist/js/components/Spinner';
+import { Bullseye } from '@patternfly/react-core/dist/js/layouts/Bullseye';
 
 export const PlaceHolderTable = () => (
-    <table className="sources-placeholder-table pf-m-compact ins-entity-table">
-        <tbody>
-            {new Array(12).fill(null).map((_, idx) => <tr key={idx}><td><RowLoader /></td></tr>)}
-        </tbody>
-    </table>
+    <Bullseye className="ins-c-sources__sources-placeholder-loader">
+        <Spinner size="xl"/>
+    </Bullseye>
 );
 
 export const RowWrapperLoader = ({ row: { isDeleting, ...row }, ...initialProps }) => (isDeleting ?

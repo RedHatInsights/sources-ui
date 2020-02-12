@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { useSelector, shallowEqual } from 'react-redux';
 import { useSource } from '../../hooks/useSource';
 import get from 'lodash/get';
+import merge from 'lodash/merge';
+import cloneDeep from 'lodash/cloneDeep';
 
 export const checkAuthTypeMemo = () => {
     let previousAuthType;
@@ -17,7 +19,15 @@ export const checkAuthTypeMemo = () => {
     };
 };
 
-export const innerSetter = ({ sourceTypes, source, appTypes, formOptions, checkAuthType, authenticationValues }) => {
+export const innerSetter = ({
+    sourceTypes,
+    source,
+    appTypes,
+    formOptions,
+    checkAuthType,
+    authenticationValues,
+    modifiedValues
+}) => {
     const sourceType = sourceTypes.find(({ id }) => id === source.source_type_id);
 
     const formValues = formOptions.getState();
@@ -33,21 +43,30 @@ export const innerSetter = ({ sourceTypes, source, appTypes, formOptions, checkA
         const hasAuthenticationAlready = authenticationValues.find(({ authtype }) => authtype === supported_auth_type);
 
         if (hasAuthenticationAlready) {
-            formOptions.change('authentication', hasAuthenticationAlready);
+            if (modifiedValues && modifiedValues.authentication) {
+                const newAuthenticationValues = merge(cloneDeep(hasAuthenticationAlready), modifiedValues.authentication);
+                formOptions.change('authentication', newAuthenticationValues);
+            } else {
+                formOptions.change('authentication', hasAuthenticationAlready);
+            }
         } else {
-            formOptions.change('authentication', undefined);
+            if (modifiedValues && modifiedValues.authentication) {
+                formOptions.change('authentication', modifiedValues.authentication);
+            } else {
+                formOptions.change('authentication', undefined);
+            }
         }
     }
 };
 
-export const AuthTypeSetter = ({ formOptions, authenticationValues }) => {
+export const AuthTypeSetter = ({ formOptions, authenticationValues, modifiedValues }) => {
     const [checkAuthType] = useState(() => checkAuthTypeMemo());
 
     const { appTypes, sourceTypes } = useSelector(({ sources }) => sources, shallowEqual);
 
     const source = useSource();
 
-    innerSetter({ sourceTypes, checkAuthType, formOptions, authenticationValues, appTypes, source });
+    innerSetter({ sourceTypes, checkAuthType, formOptions, authenticationValues, appTypes, source, modifiedValues });
 
     return null;
 };
@@ -57,5 +76,6 @@ AuthTypeSetter.propTypes = {
         getState: PropTypes.func.isRequired,
         change: PropTypes.func.isRequired
     }).isRequired,
-    authenticationValues: PropTypes.arrayOf(PropTypes.object)
+    authenticationValues: PropTypes.arrayOf(PropTypes.object),
+    modifiedValues: PropTypes.object
 };

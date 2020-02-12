@@ -1,16 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-    EmptyStateBody,
-    EmptyState,
-    EmptyStateIcon,
-    Title,
-    Button,
-    EmptyStateVariant,
-    Bullseye,
-    EmptyStateSecondaryActions
-} from '@patternfly/react-core';
-import { CheckCircleIcon } from '@patternfly/react-icons';
+
+import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
+import { EmptyState, EmptyStateVariant } from '@patternfly/react-core/dist/js/components/EmptyState/EmptyState';
+import { EmptyStateIcon } from '@patternfly/react-core/dist/js/components/EmptyState/EmptyStateIcon';
+import { EmptyStateBody } from '@patternfly/react-core/dist/js/components/EmptyState/EmptyStateBody';
+import { EmptyStateSecondaryActions } from '@patternfly/react-core/dist/js/components/EmptyState/EmptyStateSecondaryActions';
+import { Bullseye } from '@patternfly/react-core/dist/js/layouts/Bullseye/Bullseye';
+import { Title } from '@patternfly/react-core/dist/js/components/Title/Title';
+
+import CheckCircleIcon from '@patternfly/react-icons/dist/js/icons/check-circle-icon';
 import { FormattedMessage } from 'react-intl';
 
 const FinishedStep = ({ onClose, title, successfulMessage, secondaryActions }) => (
