@@ -1,25 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
-import { PageHeader, PageHeaderTitle, Section } from '@redhat-cloud-services/frontend-components';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import {
     loadAppTypes,
     loadEntities,
     loadSourceTypes,
     filterSources
 } from '../redux/sources/actions';
-import { Button } from '@patternfly/react-core';
+import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources';
-import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components';
+
+import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/components/PrimaryToolbar';
+import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/PageHeader';
+import { Section } from '@redhat-cloud-services/frontend-components/components/Section';
 
 import SourcesSimpleView from '../components/SourcesSimpleView/SourcesSimpleView';
 import SourcesEmptyState from '../components/SourcesEmptyState';
-import SourceEditModal from '../components/SourceEditForm/SourceEditModal';
-import SourceRemoveModal from '../components/SourceRemoveModal';
-import AddApplication from '../components/AddApplication/AddApplication';
 import { pageAndSize } from '../redux/sources/actions';
 import { routes } from '../Routes';
+
+const SourceEditModal = lazy(() => import(/* webpackChunkName: "edit" */ '../components/SourceEditForm/SourceEditModal'));
+const SourceRemoveModal = lazy(() => import(/* webpackChunkName: "remove" */ '../components/SourceRemoveModal'));
+const AddApplication = lazy(() => import(/* webpackChunkName: "addApp" */ '../components/AddApplication/AddApplication'));
+const AddSourceWizard = lazy(() => import(
+    /* webpackChunkName: "addSource" */ '@redhat-cloud-services/frontend-components-sources'
+).then(module => ({ default: module.AddSourceWizard })));
 
 import {
     prepareChips,
@@ -35,6 +40,7 @@ import PaginationLoader from './SourcesPage/PaginationLoader';
 import { useIsLoaded } from '../hooks/useIsLoaded';
 import { useIsOrgAdmin } from '../hooks/useIsOrgAdmin';
 import CustomRoute from '../components/CustomRoute/CustomRoute';
+import { updateQuery, parseQuery } from '../Utilities/urlQuery';
 
 const SourcesPage = () => {
     const [showEmptyState, setShowEmptyState] = useState(false);
@@ -45,7 +51,10 @@ const SourcesPage = () => {
     const isOrgAdmin = useIsOrgAdmin();
 
     const history = useHistory();
+    const location = useLocation();
     const intl = useIntl();
+
+    const sources = useSelector(({ sources }) => sources, shallowEqual);
 
     const {
         filterValue,
@@ -54,26 +63,28 @@ const SourcesPage = () => {
         pageSize,
         pageNumber,
         fetchingError,
-        addSourceInitialValues,
+        undoValues,
         sourceTypes,
-        entities,
         paginationClicked,
         appTypesLoaded,
         sourceTypesLoaded
-    } = useSelector(({ sources }) => sources, shallowEqual);
+    } = sources;
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        Promise.all([dispatch(loadSourceTypes()), dispatch(loadAppTypes()), dispatch(loadEntities())])
+        Promise.all([dispatch(loadSourceTypes()), dispatch(loadAppTypes()), dispatch(loadEntities(parseQuery()))])
         .then(() => setCheckEmptyState(true));
     }, []);
 
+    const hasSomeFilter = Object.entries(filterValue).map(([_key, value]) => value).filter(Boolean).length > 0;
+
     useEffect(() => {
         if (checkEmptyState) {
-            setShowEmptyState(entities.length === 0);
+            setShowEmptyState(loaded && numberOfEntities === 0 && !hasSomeFilter);
+            updateQuery(sources);
         }
-    }, [checkEmptyState]);
+    }, [location, checkEmptyState]);
 
     useEffect(() => {
         if (filter !== filterValue.name) {
@@ -81,14 +92,20 @@ const SourcesPage = () => {
         }
     }, [filterValue.name]);
 
+    useEffect(() => {
+        if (checkEmptyState && loaded) {
+            setShowEmptyState(numberOfEntities === 0 && !hasSomeFilter);
+        }
+    }, [filterValue, loaded]);
+
     const onSetPage = (_e, page) => dispatch(pageAndSize(page, pageSize));
 
     const onPerPageSelect = (_e, perPage) => dispatch(pageAndSize(1, perPage));
 
     const maximumPageNumber = Math.ceil(numberOfEntities / pageSize);
 
-    if (entities.length > 0 && loaded && pageNumber > Math.max(maximumPageNumber, 1)) {
-        onSetPage(maximumPageNumber);
+    if (loaded && numberOfEntities > 0 && pageNumber > Math.max(maximumPageNumber, 1)) {
+        onSetPage({}, maximumPageNumber);
     }
 
     const paginationConfig = {
@@ -96,14 +113,14 @@ const SourcesPage = () => {
         page: pageNumber,
         perPage: pageSize,
         onSetPage,
-        onPerPageSelect,
-        isCompact: false
+        onPerPageSelect
     };
 
     const paginationConfigBottom = {
         ...paginationConfig,
         dropDirection: 'up',
-        variant: 'bottom'
+        variant: 'bottom',
+        isCompact: false
     };
 
     const showPaginationLoader = (!loaded || !appTypesLoaded || !sourceTypesLoaded) && !paginationClicked;
@@ -173,23 +190,25 @@ const SourcesPage = () => {
 
     return (
         <React.Fragment>
-            <CustomRoute exact route={routes.sourceManageApps} Component={AddApplication}/>
-            <CustomRoute exact route={routes.sourcesRemove} Component={SourceRemoveModal}/>
-            <CustomRoute
-                exact
-                route={routes.sourcesNew}
-                Component={AddSourceWizard}
-                componentProps={{
-                    sourceTypes: loadedTypes(sourceTypes, sourceTypesLoaded),
-                    applicationTypes: loadedTypes(appTypes, appTypesLoaded),
-                    isOpen: true,
-                    onClose: (values) => onCloseAddSourceWizard({ values, dispatch, history, intl }),
-                    afterSuccess: () => afterSuccess(dispatch),
-                    hideSourcesButton: true,
-                    initialValues: addSourceInitialValues
-                }}
-            />
-            <CustomRoute exact route={routes.sourcesEdit} Component={SourceEditModal}/>
+            <Suspense fallback={null}>
+                <CustomRoute exact route={routes.sourceManageApps} Component={AddApplication}/>
+                <CustomRoute exact route={routes.sourcesRemove} Component={SourceRemoveModal}/>
+                <CustomRoute
+                    exact
+                    route={routes.sourcesNew}
+                    Component={AddSourceWizard}
+                    componentProps={{
+                        sourceTypes: loadedTypes(sourceTypes, sourceTypesLoaded),
+                        applicationTypes: loadedTypes(appTypes, appTypesLoaded),
+                        isOpen: true,
+                        onClose: (values) => onCloseAddSourceWizard({ values, dispatch, history, intl }),
+                        afterSuccess: (source) => afterSuccess(dispatch, source),
+                        hideSourcesButton: true,
+                        initialValues: undoValues
+                    }}
+                />
+                <CustomRoute exact route={routes.sourcesEdit} Component={SourceEditModal}/>
+            </Suspense>
             <PageHeader>
                 <PageHeaderTitle title={intl.formatMessage({
                     id: 'sources.sources',

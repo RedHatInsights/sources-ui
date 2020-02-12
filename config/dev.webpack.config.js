@@ -1,6 +1,5 @@
 /* global require, module */
 
-const _ = require('lodash');
 const webpackConfig = require('./base.webpack.config');
 const config = require('./webpack.common.js');
 const history = require('connect-history-api-fallback');
@@ -16,7 +15,7 @@ webpackConfig.serve = {
     add: app => app.use(convert(history({})))
 };
 
-module.exports = _.merge({},
-    webpackConfig,
-    require('./dev.webpack.plugins.js')
-);
+module.exports = {
+    ...webpackConfig,
+    ...require('./dev.webpack.plugins.js')
+};

@@ -2,9 +2,10 @@ import React, { useEffect, useReducer } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { useParams, useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
-import { Modal } from '@patternfly/react-core';
-import { Spinner } from '@redhat-cloud-services/frontend-components';
+import { Spinner } from '@redhat-cloud-services/frontend-components/components/Spinner';
+
 import { layoutMapper } from '@data-driven-forms/pf4-component-mapper';
+import { Modal } from '@patternfly/react-core/dist/js/components/Modal/Modal';
 
 import SourcesFormRenderer from '../../Utilities/SourcesFormRenderer';
 import { parseSourceToSchema } from './parser/parseSourceToSchema';

@@ -5,11 +5,11 @@ import { notificationsMiddleware } from '@redhat-cloud-services/frontend-compone
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { act } from 'react-dom/test-utils';
-import { Spinner } from '@redhat-cloud-services/frontend-components';
+import { Spinner } from '@redhat-cloud-services/frontend-components/components/Spinner';
 
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import SourceEditModal from '../../../components/SourceEditForm/SourceEditModal';
-import { routes } from '../../../Routes';
+import { routes, replaceRouteId } from '../../../Routes';
 import { applicationTypesData } from '../../applicationTypesData';
 import { sourceTypesData, OPENSHIFT_ID } from '../../sourceTypesData';
 import { sourcesDataGraphQl } from '../../sourcesData';
@@ -30,7 +30,6 @@ describe('SourceEditModal', () => {
     let wrapper;
 
     const middlewares = [thunk, notificationsMiddleware()];
-    const PATH = '/edit/14';
 
     const BUTTONS = ['closeIcon', 'submit', 'reset', 'cancel'];
 
@@ -41,7 +40,7 @@ describe('SourceEditModal', () => {
     const getCurrentAddress = wrapper => wrapper.find(MemoryRouter).instance().history.location.pathname;
 
     beforeEach(async () => {
-        initialEntry = [PATH];
+        initialEntry = [replaceRouteId(routes.sourcesEdit.path, '14')];
         mockStore = configureStore(middlewares);
         store = mockStore({
             sources: {

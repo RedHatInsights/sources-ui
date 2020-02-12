@@ -11,6 +11,7 @@ import {
 } from '../../redux/sources/actions';
 import UndoButtonAdd from '../../components/UndoButton/UndoButtonAdd';
 import { routes } from '../../Routes';
+import { checkSourceStatus } from '../../api/checkSourceStatus';
 
 export const onCloseAddSourceWizard = ({ values, dispatch, history, intl }) => {
     if (values && !isEmpty(values)) {
@@ -38,7 +39,8 @@ export const debouncedFiltering = awesomeDebounce((refresh) => refresh(), 500);
 
 export const afterSuccessLoadParameters = { pageNumber: 1, sortBy: 'created_at', sortDirection: 'desc' };
 
-export const afterSuccess = (dispatch) => {
+export const afterSuccess = (dispatch, source) => {
+    checkSourceStatus(source.id);
     dispatch(clearAddSource());
     dispatch(loadEntities(afterSuccessLoadParameters));
 };

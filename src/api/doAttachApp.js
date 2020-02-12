@@ -23,10 +23,9 @@ export const removeEmpty = (obj) => {
     return obj;
 };
 
-export const doAttachApp = async (values, formApi, authenticationInitialValues) => {
+export const doAttachApp = async (values, formApi, authenticationInitialValues, initialValues) => {
     const formState = formApi.getState();
 
-    const initialValues = formState.initialValues;
     const allFormValues = formState.values;
 
     const selectedAuthId = allFormValues.authentication ? allFormValues.authentication.id : undefined;

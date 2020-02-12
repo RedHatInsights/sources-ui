@@ -6,6 +6,8 @@ import { Table, TableHeader, TableBody, RowWrapper, sortable, ActionsColumn } fr
 import { MemoryRouter } from 'react-router-dom';
 import { RowLoader } from '@redhat-cloud-services/frontend-components-utilities/files/helpers';
 import { act } from 'react-dom/test-utils';
+import ArrowsAltVIcon from '@patternfly/react-icons/dist/js/icons/arrows-alt-v-icon';
+import LongArrowAltDownIcon from '@patternfly/react-icons/dist/js/icons/long-arrow-alt-down-icon';
 
 import SourcesSimpleView, { insertEditAction, actionResolver, prepareColumnsCells } from '../../../components/SourcesSimpleView/SourcesSimpleView';
 import { PlaceHolderTable, RowWrapperLoader } from '../../../components/SourcesSimpleView/loaders';
@@ -18,6 +20,9 @@ import { applicationTypesData } from '../../applicationTypesData';
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import * as actions from '../../../redux/sources/actions';
 import * as API from '../../../api/entities';
+import { replaceRouteId, routes } from '../../../Routes';
+import { defaultSourcesState } from '../../../redux/sources/reducer';
+import { sourcesColumns } from '../../../views/sourcesViewDefinition';
 
 describe('SourcesSimpleView', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -30,14 +35,7 @@ describe('SourcesSimpleView', () => {
         initialProps = {};
         mockStore = configureStore(middlewares);
         initialState = {
-            sources: {
-                loaded: 0,
-                rows: [],
-                entities: [],
-                numberOfEntities: 0,
-                pageNumber: 1,
-                pageSize: 10
-            },
+            sources: defaultSourcesState,
             user: {
                 isOrgAdmin: true
             }
@@ -59,8 +57,9 @@ describe('SourcesSimpleView', () => {
         const store = mockStore(initialState);
         const wrapper = mount(componentWrapperIntl(<SourcesSimpleView { ...initialProps } />, store));
 
-        expect(wrapper.find(Table)).toHaveLength(0);
         expect(wrapper.find(PlaceHolderTable)).toHaveLength(1);
+        expect(wrapper.find(ArrowsAltVIcon)).toHaveLength(0);
+        expect(wrapper.find(LongArrowAltDownIcon)).toHaveLength(0);
     });
 
     it('renders removing row', (done) => {
@@ -105,6 +104,9 @@ describe('SourcesSimpleView', () => {
         const store = mockStore(initialState);
         const wrapper = mount(componentWrapperIntl(<SourcesSimpleView { ...initialProps } />, store));
 
+        const activeSortingIcon = 1;
+        const expectSortableColumns = sourcesColumns({ formatMessage: () => {} }).filter(x => x.sortable).length - activeSortingIcon;
+
         setTimeout(() => {
             setTimeout(() => {
                 wrapper.update();
@@ -115,6 +117,8 @@ describe('SourcesSimpleView', () => {
                 expect(wrapper.find(RowWrapper)).toHaveLength(sourcesDataGraphQl.length);
                 expect(wrapper.find(ActionsColumn)).toHaveLength(sourcesDataGraphQl.length);
                 expect(wrapper.find(RowWrapper).first().props().className).toEqual(ROW_WRAPPER_CLASSNAME);
+                expect(wrapper.find(LongArrowAltDownIcon)).toHaveLength(1);
+                expect(wrapper.find(ArrowsAltVIcon)).toHaveLength(expectSortableColumns);
                 done();
             });
         });
@@ -176,6 +180,7 @@ describe('SourcesSimpleView', () => {
         expect(wrapper.find(TableHeader)).toHaveLength(1);
         expect(wrapper.find(TableBody)).toHaveLength(1);
         expect(wrapper.find(ActionsColumn)).toHaveLength(0);
+        expect(wrapper.find(ArrowsAltVIcon)).toHaveLength(0);
     });
 
     it('re-renders when entities changed', async () => {
@@ -247,7 +252,8 @@ describe('SourcesSimpleView', () => {
                     wrapper.update();
                     wrapper.find('.pf-c-dropdown__menu-item').at(EDIT_SOURCE_INDEX).simulate('click');
 
-                    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(`/edit/${sourcesDataGraphQl[0].id}`);
+                    const expectedPath = replaceRouteId(routes.sourcesEdit.path, sourcesDataGraphQl[0].id);
+                    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(expectedPath);
                     done();
                 });
             });
@@ -261,7 +267,8 @@ describe('SourcesSimpleView', () => {
                     wrapper.update();
                     wrapper.find('.pf-c-dropdown__menu-item').at(DELETE_SOURCE_INDEX).simulate('click');
 
-                    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(`/remove/${sourcesDataGraphQl[0].id}`);
+                    const expectedPath = replaceRouteId(routes.sourcesRemove.path, sourcesDataGraphQl[0].id);
+                    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(expectedPath);
                     done();
                 });
             });
@@ -275,7 +282,8 @@ describe('SourcesSimpleView', () => {
                     wrapper.update();
                     wrapper.find('.pf-c-dropdown__menu-item').at(MANAGE_APPS_INDEX).simulate('click');
 
-                    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(`/manage_apps/${sourcesDataGraphQl[0].id}`);
+                    const expectedPath = replaceRouteId(routes.sourceManageApps.path, sourcesDataGraphQl[0].id);
+                    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(expectedPath);
                     done();
                 });
             });

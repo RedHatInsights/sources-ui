@@ -9,7 +9,7 @@ export const genericInfo = (editing, setEdit, sourceId) => ([
         name: 'source.name',
         label: <FormattedMessage
             id="sources.sourceName"
-            defaultMessage="Source Name"
+            defaultMessage="Source name"
         />,
         component: editing['source.name'] ? componentTypes.TEXT_FIELD : EDIT_FIELD_NAME,
         setEdit: editing['source.name'] ? undefined : setEdit,
@@ -21,7 +21,7 @@ export const genericInfo = (editing, setEdit, sourceId) => ([
         name: 'source_type',
         label: <FormattedMessage
             id="sources.sourceType"
-            defaultMessage="Source Type"
+            defaultMessage="Source type"
         />,
         isReadOnly: true,
         component: EDIT_FIELD_NAME

@@ -6,12 +6,25 @@ import promise from 'redux-promise-middleware';
 
 import SourcesReducer, { defaultSourcesState } from '../redux/sources/reducer';
 import UserReducer, { defaultUserState } from '../redux/user/reducer';
+import { updateQuery } from './urlQuery';
+import { ACTION_TYPES } from '../redux/sources/actions-types';
+
+export const urlQueryMiddleware = store => next => action => {
+    if (action.type === ACTION_TYPES.LOAD_ENTITIES_PENDING) {
+        const sources = store.getState().sources;
+
+        updateQuery({ ...sources, ...action.options });
+    }
+
+    next(action);
+};
 
 export const getStore = (includeLogger) => {
     const middlewares = [
         thunk,
         notificationsMiddleware({ errorTitleKey: 'error.title', errorDescriptionKey: 'error.detail' }),
-        promise
+        promise,
+        urlQueryMiddleware
     ];
 
     if (includeLogger) {
