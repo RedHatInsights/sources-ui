@@ -19,19 +19,19 @@ import { SOURCE_ALL_APS_ID, SOURCE_NO_APS_ID } from '../../sourcesData';
 import { applicationTypesData, COSTMANAGEMENT_APP, TOPOLOGICALINVENTORY_APP } from '../../applicationTypesData';
 import AddApplicationDescription from '../../../components/AddApplication/AddApplicationDescription';
 import LoadingStep from '../../../components/steps/LoadingStep';
-import { routes } from '../../../Routes';
+import { routes, replaceRouteId } from '../../../Routes';
 import FinishedStep from '../../../components/steps/FinishedStep';
 import ErroredStepAttach from '../../../components/AddApplication/steps/ErroredStep';
+import * as onCancel from '../../../components/AddApplication/onCancel';
 
 describe('AddApplication', () => {
     let store;
     let initialEntry;
     let mockStore;
     const middlewares = [thunk, notificationsMiddleware()];
-    const PATH = '/manage_apps/';
 
     beforeEach(() => {
-        initialEntry = [`${PATH}${SOURCE_NO_APS_ID}`];
+        initialEntry = [replaceRouteId(routes.sourceManageApps.path, SOURCE_NO_APS_ID)];
         mockStore = configureStore(middlewares);
         store = mockStore({
             sources: {
@@ -140,7 +140,7 @@ describe('AddApplication', () => {
             wrapper = mount(componentWrapperIntl(
                 <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplication { ...args }/> } />,
                 store,
-                [`${PATH}${SOURCE_ALL_APS_ID}`]
+                [replaceRouteId(routes.sourceManageApps.path, SOURCE_ALL_APS_ID)]
             ));
         });
         wrapper.update();
@@ -176,16 +176,335 @@ describe('AddApplication', () => {
         expect(wrapper.find(LoadingStep)).toHaveLength(1);
     });
 
-    describe('imported source - not need to edit any value', () => {
-        beforeEach(() => {
+    describe('custom type - integration tests', () => {
+        const customSourceType = {
+            name: 'custom_type',
+            product_name: 'Custom Type',
+            id: '6844',
+            schema: {
+                authentication: [
+                    {
+                        type: 'receptor',
+                        name: 'receptor',
+                        fields: [{
+                            component: 'text-field',
+                            label: 'Another value',
+                            name: 'source.nested.another_value'
+                        }, {
+                            component: 'text-field',
+                            label: 'Receptor ID',
+                            name: 'source.nested.source_ref'
+                        }]
+                    }
+                ],
+                endpoint: {
+                    hidden: true,
+                    fields: [{ name: 'endpoint_id', hideField: true, component: 'text-field' }]
+                }
+            }
+        };
+
+        const application = {
+            name: 'custom-app',
+            display_name: 'Custom app',
+            id: '15654165',
+            supported_source_types: ['custom_type'],
+            supported_authentication_types: { custom_type: ['receptor'] }
+        };
+
+        const another_value = 'do not remove this when retry';
+
+        const source = {
+            id: SOURCE_NO_APS_ID,
+            source_type_id: customSourceType.id,
+            applications: [],
+            nested: {
+                source_ref: 'original',
+                another_value
+            }
+        };
+
+        let wrapper;
+
+        beforeEach(async () => {
             store = mockStore({
                 sources: {
-                    entities: [{
-                        id: SOURCE_NO_APS_ID,
-                        source_type_id: OPENSHIFT_ID,
-                        applications: [],
-                        imported: 'cfme'
-                    }],
+                    entities: [source],
+                    appTypes: [application],
+                    sourceTypes: [customSourceType],
+                    appTypesLoaded: true,
+                    sourceTypesLoaded: true,
+                    loaded: 0
+                }
+            });
+
+            await act(async () => {
+                wrapper = mount(componentWrapperIntl(
+                    <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplication { ...args }/> } />,
+                    store,
+                    initialEntry
+                ));
+            });
+            wrapper.update();
+        });
+
+        it('loads with undo values', async () => {
+            const undoValue = 'undoValue';
+            const preserveAuthenticationChanges = {
+                doNotChange: 'this'
+            };
+
+            store = mockStore({
+                sources: {
+                    entities: [source],
+                    appTypes: [application],
+                    sourceTypes: [customSourceType],
+                    appTypesLoaded: true,
+                    sourceTypesLoaded: true,
+                    loaded: 0,
+                    undoValues: {
+                        source: {
+                            nested: {
+                                source_ref: undoValue
+                            }
+                        },
+                        authentication: preserveAuthenticationChanges
+                    }
+                }
+            });
+
+            await act(async () => {
+                wrapper = mount(componentWrapperIntl(
+                    <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplication { ...args }/> } />,
+                    store,
+                    initialEntry
+                ));
+            });
+            wrapper.update();
+
+            await act(async () => {
+                const firstAppCard = wrapper.find('Card').first();
+                firstAppCard.simulate('click');
+            });
+            wrapper.update();
+
+            await act(async () => {
+                const nextButton = wrapper.find(Button).at(1);
+                nextButton.simulate('click');
+            });
+            wrapper.update();
+
+            const sourceRefInput = wrapper.find('input').last();
+            expect(sourceRefInput.instance().value).toEqual(undoValue);
+
+            await act(async () => {
+                const nextButton = wrapper.find(Button).at(1);
+                nextButton.simulate('click');
+            });
+            wrapper.update();
+
+            const ERROR = 'VERY UGLY ERROR';
+            attachSource.doAttachApp = jest.fn().mockImplementation(() => Promise.reject(ERROR));
+
+            await act(async () => {
+                const submitButton = wrapper.find(Button).at(1);
+                submitButton.simulate('click');
+            });
+            wrapper.update();
+
+            expect(wrapper.find(ErroredStepAttach)).toHaveLength(1);
+            expect(wrapper.find(ErroredStepAttach).props().error).toEqual(ERROR);
+            expect(attachSource.doAttachApp).toHaveBeenCalled();
+
+            await act(async () => {
+                const retryButton = wrapper.find(Button).at(2);
+                retryButton.simulate('click');
+            });
+            wrapper.update();
+
+            await act(async () => {
+                const nextButton = wrapper.find(Button).at(1);
+                nextButton.simulate('click');
+            });
+            wrapper.update();
+
+            await act(async () => {
+                const nextButton = wrapper.find(Button).at(1);
+                nextButton.simulate('click');
+            });
+            wrapper.update();
+
+            entities.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
+            entities.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+            attachSource.doAttachApp = jest.fn().mockImplementation(() => Promise.resolve('OK'));
+
+            await act(async () => {
+                const submitButton = wrapper.find(Button).at(1);
+                submitButton.simulate('click');
+            });
+            wrapper.update();
+
+            expect(wrapper.find(ErroredStepAttach)).toHaveLength(0);
+            expect(wrapper.find(FinishedStep)).toHaveLength(1);
+
+            expect(attachSource.doAttachApp.mock.calls[0][1].getState().values).toEqual({
+                application: { application_type_id: application.id },
+                endpoint_id: undefined,
+                noEndpoint: '',
+                source: { ...source, nested: { source_ref: undoValue, another_value } },
+                supported_auth_type: 'receptor',
+                authentication: preserveAuthenticationChanges
+            });
+        });
+
+        it('calls onCancel function', async () => {
+            await act(async () => {
+                const firstAppCard = wrapper.find('Card').first();
+                firstAppCard.simulate('click');
+            });
+            wrapper.update();
+
+            await act(async () => {
+                const nextButton = wrapper.find(Button).at(1);
+                nextButton.simulate('click');
+            });
+            wrapper.update();
+
+            const value = 'SOURCE_REF_CHANGED';
+
+            await act(async () => {
+                const sourceRefInput = wrapper.find('input').last();
+                sourceRefInput.instance().value = value;
+                sourceRefInput.simulate('change');
+            });
+            wrapper.update();
+
+            onCancel.onCancelAddApplication = jest.fn().mockImplementation(() => Promise.resolve('OK'));
+
+            await act(async () => {
+                const closeButton = wrapper.find(Button).at(0);
+                closeButton.simulate('click');
+            });
+            wrapper.update();
+
+            expect(onCancel.onCancelAddApplication).toHaveBeenCalledWith({
+                values: {
+                    application: {
+                        application_type_id: application.id
+                    },
+                    source: {
+                        ...source,
+                        nested: {
+                            ...source.nested,
+                            source_ref: value
+                        }
+                    },
+                    supported_auth_type: application.supported_authentication_types.custom_type[0],
+                    noEndpoint: ''
+                },
+                dispatch: expect.any(Function),
+                history: expect.objectContaining({ push: expect.any(Function) }),
+                intl: expect.objectContaining({ formatMessage: expect.any(Function) }),
+                sourceId: source.id
+            });
+        });
+
+        it('sets values on retry and do not erase nested original values', async () => {
+            await act(async () => {
+                const firstAppCard = wrapper.find('Card').first();
+                firstAppCard.simulate('click');
+            });
+            wrapper.update();
+
+            await act(async () => {
+                const nextButton = wrapper.find(Button).at(1);
+                nextButton.simulate('click');
+            });
+            wrapper.update();
+
+            const value = 'SOURCE_REF_CHANGED';
+
+            await act(async () => {
+                const sourceRefInput = wrapper.find('input').last();
+                sourceRefInput.instance().value = value;
+                sourceRefInput.simulate('change');
+            });
+            wrapper.update();
+
+            await act(async () => {
+                const nextButton = wrapper.find(Button).at(1);
+                nextButton.simulate('click');
+            });
+            wrapper.update();
+
+            const ERROR = 'VERY UGLY ERROR';
+            attachSource.doAttachApp = jest.fn().mockImplementation(() => Promise.reject(ERROR));
+
+            await act(async () => {
+                const submitButton = wrapper.find(Button).at(1);
+                submitButton.simulate('click');
+            });
+            wrapper.update();
+
+            expect(wrapper.find(ErroredStepAttach)).toHaveLength(1);
+            expect(wrapper.find(ErroredStepAttach).props().error).toEqual(ERROR);
+            expect(attachSource.doAttachApp).toHaveBeenCalled();
+
+            await act(async () => {
+                const retryButton = wrapper.find(Button).at(2);
+                retryButton.simulate('click');
+            });
+            wrapper.update();
+
+            await act(async () => {
+                const nextButton = wrapper.find(Button).at(1);
+                nextButton.simulate('click');
+            });
+            wrapper.update();
+
+            await act(async () => {
+                const nextButton = wrapper.find(Button).at(1);
+                nextButton.simulate('click');
+            });
+            wrapper.update();
+
+            entities.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
+            entities.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+            attachSource.doAttachApp = jest.fn().mockImplementation(() => Promise.resolve('OK'));
+
+            await act(async () => {
+                const submitButton = wrapper.find(Button).at(1);
+                submitButton.simulate('click');
+            });
+            wrapper.update();
+
+            expect(wrapper.find(ErroredStepAttach)).toHaveLength(0);
+            expect(wrapper.find(FinishedStep)).toHaveLength(1);
+
+            expect(attachSource.doAttachApp.mock.calls[0][0]).toEqual({
+                application: { application_type_id: application.id },
+                endpoint_id: undefined,
+                noEndpoint: '',
+                source: { nested: { source_ref: value, another_value } }
+            });
+        });
+    });
+
+    describe('imported source - not need to edit any value', () => {
+        let initialValues;
+        let source;
+
+        beforeEach(() => {
+            source = {
+                id: SOURCE_NO_APS_ID,
+                source_type_id: OPENSHIFT_ID,
+                applications: [],
+                imported: 'cfme'
+            };
+
+            store = mockStore({
+                sources: {
+                    entities: [source],
                     appTypes: applicationTypesData.data,
                     sourceTypes: sourceTypesData.data,
                     appTypesLoaded: true,
@@ -193,17 +512,26 @@ describe('AddApplication', () => {
                     loaded: 0
                 }
             });
+            initialValues = { application: undefined, source };
         });
 
-        it('renders review', () => {
+        it('renders review', async () => {
             const wrapper = mount(componentWrapperIntl(
                 <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplication { ...args }/> } />,
                 store,
                 initialEntry
             ));
 
-            wrapper.find('Card').first().simulate('click');
-            wrapper.find(Button).at(1).simulate('click');
+            await act(async () => {
+                const firstAppCard = wrapper.find('Card').first();
+                firstAppCard.simulate('click');
+            });
+            wrapper.update();
+
+            await act(async () => {
+                const nextButton = wrapper.find(Button).at(1);
+                nextButton.simulate('click');
+            });
             wrapper.update();
 
             expect(wrapper.find(SummaryStep)).toHaveLength(1);
@@ -248,6 +576,7 @@ describe('AddApplication', () => {
                 formValues,
                 formApi,
                 authenticationValues,
+                initialValues
             );
             expect(wrapper.find(FinishedStep).length).toEqual(1);
         });
@@ -289,6 +618,7 @@ describe('AddApplication', () => {
                 formValues,
                 formApi,
                 authenticationValues,
+                initialValues
             );
             expect(wrapper.find(ErroredStepAttach).length).toEqual(1);
             expect(wrapper.find(EmptyStateBody).text().includes(ERROR_MESSAGE)).toEqual(true);

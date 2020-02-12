@@ -7,7 +7,7 @@ import { Route } from 'react-router-dom';
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 import { sourceTypesData, OPENSHIFT_ID } from '../../sourceTypesData';
 import { AuthTypeSetter, checkAuthTypeMemo, innerSetter } from '../../../components/AddApplication/AuthTypeSetter';
-import { routes } from '../../../Routes';
+import { routes, replaceRouteId } from '../../../Routes';
 
 describe('AuthTypeSetter', () => {
     let store;
@@ -58,7 +58,7 @@ describe('AuthTypeSetter', () => {
         applications: []
     };
 
-    const initialEntry = [`/manage_apps/${SOURCE_ID}`];
+    const initialEntry = [replaceRouteId(routes.sourceManageApps.path, SOURCE_ID)];
 
     beforeEach(() => {
         mockStore = configureStore(middlewares);
@@ -93,11 +93,11 @@ describe('AuthTypeSetter', () => {
             initialEntry
         ));
 
-        expect(changeSpy.mock.calls[0][0]).toBe('supported_auth_type');
-        expect(changeSpy.mock.calls[0][1]).toBe('');
+        expect(changeSpy.mock.calls[0][0]).toEqual('supported_auth_type');
+        expect(changeSpy.mock.calls[0][1]).toEqual('');
 
-        expect(changeSpy.mock.calls[1][0]).toBe('authentication');
-        expect(changeSpy.mock.calls[1][1]).toBe(undefined);
+        expect(changeSpy.mock.calls[1][0]).toEqual('authentication');
+        expect(changeSpy.mock.calls[1][1]).toEqual(undefined);
 
         expect(changeSpy.mock.calls.length).toEqual(2);
     });
@@ -119,11 +119,11 @@ describe('AuthTypeSetter', () => {
             initialEntry
         ));
 
-        expect(changeSpy.mock.calls[0][0]).toBe('supported_auth_type');
-        expect(changeSpy.mock.calls[0][1]).toBe('token');
+        expect(changeSpy.mock.calls[0][0]).toEqual('supported_auth_type');
+        expect(changeSpy.mock.calls[0][1]).toEqual('token');
 
-        expect(changeSpy.mock.calls[1][0]).toBe('authentication');
-        expect(changeSpy.mock.calls[1][1]).toBe(AUTH_VALUES1);
+        expect(changeSpy.mock.calls[1][0]).toEqual('authentication');
+        expect(changeSpy.mock.calls[1][1]).toEqual(AUTH_VALUES1);
 
         expect(changeSpy.mock.calls.length).toEqual(2);
     });
@@ -151,47 +151,108 @@ describe('AuthTypeSetter', () => {
 
             innerSetter(args);
 
-            expect(changeSpy.mock.calls[0][0]).toBe('supported_auth_type');
-            expect(changeSpy.mock.calls[0][1]).toBe('');
+            expect(changeSpy.mock.calls[0][0]).toEqual('supported_auth_type');
+            expect(changeSpy.mock.calls[0][1]).toEqual('');
 
-            expect(changeSpy.mock.calls[1][0]).toBe('authentication');
-            expect(changeSpy.mock.calls[1][1]).toBe(undefined);
+            expect(changeSpy.mock.calls[1][0]).toEqual('authentication');
+            expect(changeSpy.mock.calls[1][1]).toEqual(undefined);
 
             expect(changeSpy.mock.calls.length).toEqual(2);
 
             innerSetter(args);
 
-            expect(changeSpy.mock.calls[2][0]).toBe('supported_auth_type');
-            expect(changeSpy.mock.calls[2][1]).toBe('token');
+            expect(changeSpy.mock.calls[2][0]).toEqual('supported_auth_type');
+            expect(changeSpy.mock.calls[2][1]).toEqual('token');
 
-            expect(changeSpy.mock.calls[3][0]).toBe('authentication');
-            expect(changeSpy.mock.calls[3][1]).toBe(AUTH_VALUES1);
+            expect(changeSpy.mock.calls[3][0]).toEqual('authentication');
+            expect(changeSpy.mock.calls[3][1]).toEqual(AUTH_VALUES1);
 
             expect(changeSpy.mock.calls.length).toEqual(4);
 
             innerSetter(args);
 
-            expect(changeSpy.mock.calls[4][0]).toBe('supported_auth_type');
-            expect(changeSpy.mock.calls[4][1]).toBe('token_extra');
+            expect(changeSpy.mock.calls[4][0]).toEqual('supported_auth_type');
+            expect(changeSpy.mock.calls[4][1]).toEqual('token_extra');
 
-            expect(changeSpy.mock.calls[5][0]).toBe('authentication');
-            expect(changeSpy.mock.calls[5][1]).toBe(AUTH_VALUES2);
-
-            expect(changeSpy.mock.calls.length).toEqual(6);
-
-            innerSetter(args);
+            expect(changeSpy.mock.calls[5][0]).toEqual('authentication');
+            expect(changeSpy.mock.calls[5][1]).toEqual(AUTH_VALUES2);
 
             expect(changeSpy.mock.calls.length).toEqual(6);
 
             innerSetter(args);
 
-            expect(changeSpy.mock.calls[6][0]).toBe('supported_auth_type');
-            expect(changeSpy.mock.calls[6][1]).toBe('');
+            expect(changeSpy.mock.calls.length).toEqual(6);
 
-            expect(changeSpy.mock.calls[7][0]).toBe('authentication');
-            expect(changeSpy.mock.calls[7][1]).toBe(undefined);
+            innerSetter(args);
+
+            expect(changeSpy.mock.calls[6][0]).toEqual('supported_auth_type');
+            expect(changeSpy.mock.calls[6][1]).toEqual('');
+
+            expect(changeSpy.mock.calls[7][0]).toEqual('authentication');
+            expect(changeSpy.mock.calls[7][1]).toEqual(undefined);
 
             expect(changeSpy.mock.calls.length).toEqual(8);
+        });
+
+        it('changes state with modified values', () => {
+            const checkAuthType = checkAuthTypeMemo();
+
+            const authenticationValuesNested = [
+                {
+                    ...AUTH_VALUES1,
+                    nested: {
+                        password: '7897456'
+                    }
+                }
+            ];
+
+            let args = {
+                sourceTypes: sourceTypesData.data,
+                checkAuthType,
+                formOptions: {
+                    getState: jest.fn()
+                    .mockImplementationOnce(() => ({ }))
+                    .mockImplementationOnce(() => ({ values: { application: { application_type_id: '6898778' } } }))
+                    .mockImplementationOnce(() => ({ values: { application: { application_type_id: '986421686456' } } }))
+                    .mockImplementationOnce(() => ({ values: { application: { application_type_id: '986421686456' } } }))
+                    .mockImplementationOnce(() => ({ })),
+                    change: changeSpy
+                },
+                authenticationValues: authenticationValuesNested,
+                appTypes,
+                source: SOURCE,
+                modifiedValues: {
+                    nested: true,
+                    authentication: {
+                        password: '123456'
+                    }
+                }
+            };
+
+            innerSetter(args);
+
+            expect(changeSpy.mock.calls[0][0]).toEqual('supported_auth_type');
+            expect(changeSpy.mock.calls[0][1]).toEqual('');
+
+            expect(changeSpy.mock.calls[1][0]).toEqual('authentication');
+            expect(changeSpy.mock.calls[1][1]).toEqual(args.modifiedValues.authentication);
+
+            expect(changeSpy.mock.calls.length).toEqual(2);
+
+            innerSetter(args);
+
+            expect(changeSpy.mock.calls[2][0]).toEqual('supported_auth_type');
+            expect(changeSpy.mock.calls[2][1]).toEqual('token');
+
+            expect(changeSpy.mock.calls[3][0]).toEqual('authentication');
+            expect(changeSpy.mock.calls[3][1]).toEqual({
+                ...authenticationValuesNested[0],
+                ...args.modifiedValues.authentication
+            });
+
+            expect(changeSpy.mock.calls.length).toEqual(4);
+
+            innerSetter(args);
         });
     });
 });

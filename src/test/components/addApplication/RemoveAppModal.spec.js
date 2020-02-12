@@ -7,7 +7,7 @@ import { Route } from 'react-router-dom';
 
 import RemoveAppModal from '../../../components/AddApplication/RemoveAppModal';
 import * as actions from '../../../redux/sources/actions';
-import { routes } from '../../../Routes';
+import { routes, replaceRouteId } from '../../../Routes';
 import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
 
 describe('RemoveAppModal', () => {
@@ -34,8 +34,6 @@ describe('RemoveAppModal', () => {
         { name: APP2, display_name: APP2_DISPLAY_NAME }
     ];
 
-    const PATH = '/manage_apps/';
-
     beforeEach(() => {
         initialStore = {
             sources: {
@@ -54,7 +52,7 @@ describe('RemoveAppModal', () => {
             },
             onCancel: spyOnCancel
         };
-        initialEntry = [`${PATH}${SOURCE_ID}`];
+        initialEntry = [replaceRouteId(routes.sourceManageApps.path, SOURCE_ID)];
     });
 
     afterEach(() => {

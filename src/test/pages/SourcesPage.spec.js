@@ -3,12 +3,11 @@ import thunk from 'redux-thunk';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/files/ReducerRegistry';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import { PrimaryToolbar, ConditionalFilter } from '@redhat-cloud-services/frontend-components';
+import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/components/PrimaryToolbar';
 import { act } from 'react-dom/test-utils';
 import { Chip, Select, Pagination, Button } from '@patternfly/react-core';
 import { MemoryRouter, Link } from 'react-router-dom';
 import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources';
-import { RowLoader } from '@redhat-cloud-services/frontend-components-utilities/files/helpers';
 
 import SourcesPage from '../../pages/SourcesPage';
 import SourcesEmptyState from '../../components/SourcesEmptyState';
@@ -25,13 +24,16 @@ import * as api from '../../api/entities';
 import * as typesApi from '../../api/source_types';
 import EmptyStateTable from '../../components/SourcesSimpleView/EmptyStateTable';
 import PaginationLoader from '../../pages/SourcesPage/PaginationLoader';
-import { routes } from '../../Routes';
+import { routes, replaceRouteId } from '../../Routes';
 import * as helpers from '../../pages/SourcesPage/helpers';
 import UserReducer from '../../redux/user/reducer';
 import RedirectNotAdmin from '../../components/RedirectNotAdmin/RedirectNotAdmin';
 import * as AddApplication from '../../components/AddApplication/AddApplication';
 import * as SourceEditModal from '../../components/SourceEditForm/SourceEditModal';
 import * as SourceRemoveModal from '../../components/SourceRemoveModal';
+import * as urlQuery from '../../Utilities/urlQuery';
+import { PlaceHolderTable } from '../../components/SourcesSimpleView/loaders';
+import { Table } from '@patternfly/react-table';
 
 describe('SourcesPage', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -54,6 +56,9 @@ describe('SourcesPage', () => {
             }),
             applyMiddleware(...middlewares)
         );
+
+        urlQuery.updateQuery = jest.fn();
+        urlQuery.parseQuery = jest.fn();
     });
 
     it('should fetch sources and source types on component mount', async () => {
@@ -74,6 +79,20 @@ describe('SourcesPage', () => {
         expect(wrapper.find(PrimaryToolbar).first().props().actionsConfig).toEqual({ actions: expect.any(Array) });
         expect(wrapper.find(PrimaryToolbar).last().props().actionsConfig).toEqual(undefined);
         expect(wrapper.find(RedirectNotAdmin)).toHaveLength(0);
+
+        expect(urlQuery.parseQuery.mock.calls).toHaveLength(1);
+        expect(urlQuery.updateQuery.mock.calls).toHaveLength(1);
+        expect(urlQuery.updateQuery).toHaveBeenCalledWith({
+            ...defaultSourcesState,
+            loaded: 0,
+            appTypesLoaded: true,
+            sourceTypesLoaded: true,
+            sourceTypes: sourceTypesData.data,
+            appTypes: applicationTypesData.data,
+            numberOfEntities: sourcesDataGraphQl.length,
+            entities: sourcesDataGraphQl,
+            paginationClicked: false
+        });
     });
 
     it('renders empty state when there are no Sources', async () => {
@@ -206,22 +225,30 @@ describe('SourcesPage', () => {
     it('afterSuccess addSourceWizard', async () => {
         helpers.afterSuccess = jest.fn();
 
+        const source = { id: '544615', name: 'name of created source' };
+
         await act(async() => {
             wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
         });
         wrapper.update();
+
+        expect(urlQuery.parseQuery.mock.calls).toHaveLength(1);
+        expect(urlQuery.updateQuery.mock.calls).toHaveLength(1);
 
         await act(async() => {
             wrapper.find(Link).first().simulate('click', { button: 0 });
         });
         wrapper.update();
 
+        expect(urlQuery.parseQuery.mock.calls).toHaveLength(1);
+        expect(urlQuery.updateQuery.mock.calls).toHaveLength(2);
+
         await act(async() => {
-            wrapper.find(AddSourceWizard).props().afterSuccess();
+            wrapper.find(AddSourceWizard).props().afterSuccess(source);
         });
         wrapper.update();
 
-        expect(helpers.afterSuccess).toHaveBeenCalledWith(expect.any(Function));
+        expect(helpers.afterSuccess).toHaveBeenCalledWith(expect.any(Function), source);
     });
 
     it('renders loading state when is loading', async () => {
@@ -229,14 +256,11 @@ describe('SourcesPage', () => {
             wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
         });
 
-        const paginationLoadersCount = 2;
-        const rowLoadersCount = 12;
-
-        expect(wrapper.find(RowLoader)).toHaveLength(rowLoadersCount);
-        expect(wrapper.find(PaginationLoader)).toHaveLength(paginationLoadersCount);
+        expect(wrapper.find(PlaceHolderTable)).toHaveLength(1);
+        expect(wrapper.find(Table)).toHaveLength(1);
         wrapper.update();
-        expect(wrapper.find(RowLoader)).toHaveLength(0);
-        expect(wrapper.find(PaginationLoader)).toHaveLength(0);
+        expect(wrapper.find(PlaceHolderTable)).toHaveLength(0);
+        expect(wrapper.find(Table)).toHaveLength(1);
     });
 
     describe('filtering', () => {
@@ -274,7 +298,7 @@ describe('SourcesPage', () => {
                 expect(wrapper.find(Chip)).toHaveLength(1);
 
                 // Switch to source type in conditional filter
-                wrapper.find(ConditionalFilter).setState({ stateValue: 1 });
+                wrapper.find('ConditionalFilter').setState({ stateValue: 1 });
                 wrapper.update();
 
                 const checkboxDropdownProps = wrapper.find(Select).last().props();
@@ -303,8 +327,7 @@ describe('SourcesPage', () => {
 
                 expect(wrapper.find(Chip)).toHaveLength(1);
 
-                const chipButtonPosition = 5;
-                const chipButton = wrapper.find(Button).at(chipButtonPosition);
+                const chipButton = wrapper.find(Chip).find(Button);
 
                 await act(async () => chipButton.simulate('click'));
                 wrapper.update();
@@ -374,7 +397,7 @@ describe('SourcesPage', () => {
             }, 500);
         });
 
-        it('clears filter value in the name input when clicking on clears all filter in empty table state', (done) => {
+        it('show empty state table after clicking on clears all filter in empty table state', (done) => {
             setTimeout(async () => {
                 wrapper.update();
 
@@ -391,6 +414,38 @@ describe('SourcesPage', () => {
                     wrapper.update();
 
                     expect(filterInput(wrapper).props().value).toEqual(totalNonsense);
+
+                    await act(async() => {
+                        wrapper.find(Button).last().simulate('click');
+                    });
+                    wrapper.update();
+
+                    expect(wrapper.find(SourcesEmptyState)).toHaveLength(1);
+                    done();
+                }, 500);
+            }, 500);
+        });
+
+        it('clears filter value in the name input when clicking on clears all filter in empty table state and show table', (done) => {
+            setTimeout(async () => {
+                wrapper.update();
+
+                api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
+                api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+
+                const totalNonsense = '122#$@#%#^$#@!^$#^$#^546454abcerd';
+
+                await act(async() => {
+                    filterInput(wrapper).simulate('change', { target: { value: totalNonsense } });
+                });
+
+                setTimeout(async () => {
+                    wrapper.update();
+
+                    expect(filterInput(wrapper).props().value).toEqual(totalNonsense);
+
+                    api.doLoadEntities.mockImplementation(() => Promise.resolve({ sources: sourcesDataGraphQl }));
+                    api.doLoadCountOfSources.mockImplementation(() => Promise.resolve({ meta: { count: sourcesDataGraphQl.length } }));
 
                     await act(async() => {
                         wrapper.find(Button).last().simulate('click');
@@ -443,7 +498,7 @@ describe('SourcesPage', () => {
 
         it('renders remove', async () => {
             SourceRemoveModal.default = () => <h1>remove modal mock</h1>;
-            initialEntry = [`/remove/${SOURCE_ALL_APS_ID}`];
+            initialEntry = [replaceRouteId(routes.sourcesRemove.path, SOURCE_ALL_APS_ID)];
 
             await act(async() => {
                 wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
@@ -456,7 +511,7 @@ describe('SourcesPage', () => {
 
         it('renders manageApps', async () => {
             AddApplication.default = () => <h1>managing apps mock</h1>;
-            initialEntry = [`/manage_apps/${SOURCE_ALL_APS_ID}`];
+            initialEntry = [replaceRouteId(routes.sourceManageApps.path, SOURCE_ALL_APS_ID)];
 
             await act(async() => {
                 wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
@@ -469,7 +524,7 @@ describe('SourcesPage', () => {
 
         it('renders edit', async () => {
             SourceEditModal.default = () => <h1>edit modal mock</h1>;
-            initialEntry = [`/edit/${SOURCE_ALL_APS_ID}`];
+            initialEntry = [replaceRouteId(routes.sourcesEdit.path, SOURCE_ALL_APS_ID)];
 
             await act(async() => {
                 wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
@@ -489,7 +544,7 @@ describe('SourcesPage', () => {
 
             it('when remove', async () => {
                 SourceRemoveModal.default = () => <h1>remove modal mock</h1>;
-                initialEntry = [`/remove/${NONSENSE_ID}`];
+                initialEntry = [replaceRouteId(routes.sourcesRemove.path, NONSENSE_ID)];
 
                 await act(async() => {
                     wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
@@ -503,7 +558,7 @@ describe('SourcesPage', () => {
 
             it('when manageApps', async () => {
                 AddApplication.default = () => <h1>managing apps mock</h1>;
-                initialEntry = [`/manage_apps/${NONSENSE_ID}`];
+                initialEntry = [replaceRouteId(routes.sourceManageApps.path, NONSENSE_ID)];
 
                 await act(async() => {
                     wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
@@ -529,7 +584,7 @@ describe('SourcesPage', () => {
 
             it('when remove', async () => {
                 SourceRemoveModal.default = () => <h1>remove modal mock</h1>;
-                initialEntry = [`/remove/${SOURCE_ALL_APS_ID}`];
+                initialEntry = [replaceRouteId(routes.sourcesRemove.path, SOURCE_ALL_APS_ID)];
 
                 await act(async() => {
                     wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
@@ -542,7 +597,7 @@ describe('SourcesPage', () => {
 
             it('when manageApps', async () => {
                 AddApplication.default = () => <h1>managing apps mock</h1>;
-                initialEntry = [`/manage_apps/${SOURCE_ALL_APS_ID}`];
+                initialEntry = [replaceRouteId(routes.sourceManageApps.path, SOURCE_ALL_APS_ID)];
 
                 await act(async() => {
                     wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));
@@ -555,7 +610,7 @@ describe('SourcesPage', () => {
 
             it('when edit', async () => {
                 SourceEditModal.default = () => <h1>edit modal mock</h1>;
-                initialEntry = [`/edit/${SOURCE_ALL_APS_ID}`];
+                initialEntry = [replaceRouteId(routes.sourcesEdit.path, SOURCE_ALL_APS_ID)];
 
                 await act(async() => {
                     wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store, initialEntry));

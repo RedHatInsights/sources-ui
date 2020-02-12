@@ -1,10 +1,9 @@
 import React from 'react';
 import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
-import {
-    TextContent,
-    Text,
-    TextVariants
-} from '@patternfly/react-core';
+
+import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
+import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
+
 import { FormattedMessage } from 'react-intl';
 import { schemaBuilder } from '@redhat-cloud-services/frontend-components-sources';
 import get from 'lodash/get';
@@ -38,7 +37,7 @@ export const ApplicationSummary = () => (<TextContent>
 export const hasAlreadySupportedAuthType = (authValues = [], appType, sourceTypeName) =>
     authValues.find(({ authtype }) => authtype === get(appType, `supported_authentication_types.${sourceTypeName}[0]`));
 
-const fields = (applications = [], intl, sourceTypes, applicationTypes, authenticationValues, source) => {
+const fields = (applications = [], intl, sourceTypes, applicationTypes, authenticationValues, source, modifiedValues) => {
     const hasAvailableApps = applications.length > 0;
 
     let nextStep = hasAvailableApps ? 'summary' : undefined;
@@ -136,9 +135,10 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
                 inModal: true,
                 predictSteps: true,
                 showTitles: true,
+                crossroads: ['application.application_type_id'],
                 description: intl.formatMessage({
                     id: 'sources.addAppDescription',
-                    defaultMessage: 'You are managing applications of this source'
+                    defaultMessage: 'You are managing applications of this source.'
                 }),
                 buttonLabels: {
                     submit: intl.formatMessage({
@@ -162,6 +162,7 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
                             defaultMessage: 'Select application'
                         }),
                         stepKey: 1,
+                        name: 'selectAppStep',
                         fields: [
                             {
                                 component: 'description',
@@ -174,7 +175,8 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
                                 name: 'authtypesetter',
                                 Content: AuthTypeSetter,
                                 authenticationValues,
-                                hideField: true
+                                hideField: true,
+                                modifiedValues
                             }]
                     }, {
                         title: intl.formatMessage({
@@ -182,6 +184,7 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
                             defaultMessage: 'Review'
                         }),
                         stepKey: 'summary',
+                        name: 'summary',
                         fields: [{
                             component: 'description',
                             name: 'description-summary',

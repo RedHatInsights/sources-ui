@@ -1,5 +1,5 @@
 import {
-    undoAddSource,
+    undoValues,
     clearAddSource,
     removeMessage,
     updateSource,
@@ -13,7 +13,7 @@ import {
     removeApplication
 } from '../../../redux/sources/actions';
 import {
-    UNDO_ADD_SOURCE,
+    UNDO_VALUES,
     CLEAR_ADD_SOURCE,
     ADD_HIDDEN_SOURCE,
     PAGE_AND_SIZE,
@@ -38,7 +38,7 @@ describe('redux actions', () => {
         dispatch.mockReset();
     });
 
-    it('undoAddSource creates an object', () => {
+    it('undoValues creates an object', () => {
         const SOURCE = { name: 'Stuart' };
         expect(addHiddenSource(SOURCE)).toEqual(
             expect.objectContaining({
@@ -50,11 +50,11 @@ describe('redux actions', () => {
         );
     });
 
-    it('undoAddSource creates an object', () => {
+    it('undoValues creates an object', () => {
         const VALUES = { name: 'Stuart' };
-        expect(undoAddSource(VALUES)).toEqual(
+        expect(undoValues(VALUES)).toEqual(
             expect.objectContaining({
-                type: UNDO_ADD_SOURCE,
+                type: UNDO_VALUES,
                 payload: {
                     values: VALUES
                 }

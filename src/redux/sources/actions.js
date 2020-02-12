@@ -5,7 +5,7 @@ import {
     PAGE_AND_SIZE,
     FILTER_SOURCES,
     ADD_APP_TO_SOURCE,
-    UNDO_ADD_SOURCE,
+    UNDO_VALUES,
     CLEAR_ADD_SOURCE,
     SET_COUNT,
     ADD_HIDDEN_SOURCE,
@@ -172,8 +172,8 @@ export const addAppToSource = (sourceId, app) => ({
     }
 });
 
-export const undoAddSource = (values) => ({
-    type: UNDO_ADD_SOURCE,
+export const undoValues = (values) => ({
+    type: UNDO_VALUES,
     payload: { values }
 });
 
