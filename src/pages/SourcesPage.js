@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import {
@@ -9,7 +9,6 @@ import {
 } from '../redux/sources/actions';
 import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources';
 
 import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/components/PrimaryToolbar';
 import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/PageHeader';
@@ -17,11 +16,15 @@ import { Section } from '@redhat-cloud-services/frontend-components/components/S
 
 import SourcesSimpleView from '../components/SourcesSimpleView/SourcesSimpleView';
 import SourcesEmptyState from '../components/SourcesEmptyState';
-import SourceEditModal from '../components/SourceEditForm/SourceEditModal';
-import SourceRemoveModal from '../components/SourceRemoveModal';
-import AddApplication from '../components/AddApplication/AddApplication';
 import { pageAndSize } from '../redux/sources/actions';
 import { routes } from '../Routes';
+
+const SourceEditModal = lazy(() => import(/* webpackChunkName: "edit" */ '../components/SourceEditForm/SourceEditModal'));
+const SourceRemoveModal = lazy(() => import(/* webpackChunkName: "remove" */ '../components/SourceRemoveModal'));
+const AddApplication = lazy(() => import(/* webpackChunkName: "addApp" */ '../components/AddApplication/AddApplication'));
+const AddSourceWizard = lazy(() => import(
+    /* webpackChunkName: "addSource" */ '@redhat-cloud-services/frontend-components-sources'
+).then(module => ({ default: module.AddSourceWizard })));
 
 import {
     prepareChips,
@@ -187,23 +190,25 @@ const SourcesPage = () => {
 
     return (
         <React.Fragment>
-            <CustomRoute exact route={routes.sourceManageApps} Component={AddApplication}/>
-            <CustomRoute exact route={routes.sourcesRemove} Component={SourceRemoveModal}/>
-            <CustomRoute
-                exact
-                route={routes.sourcesNew}
-                Component={AddSourceWizard}
-                componentProps={{
-                    sourceTypes: loadedTypes(sourceTypes, sourceTypesLoaded),
-                    applicationTypes: loadedTypes(appTypes, appTypesLoaded),
-                    isOpen: true,
-                    onClose: (values) => onCloseAddSourceWizard({ values, dispatch, history, intl }),
-                    afterSuccess: (source) => afterSuccess(dispatch, source),
-                    hideSourcesButton: true,
-                    initialValues: undoValues
-                }}
-            />
-            <CustomRoute exact route={routes.sourcesEdit} Component={SourceEditModal}/>
+            <Suspense fallback={null}>
+                <CustomRoute exact route={routes.sourceManageApps} Component={AddApplication}/>
+                <CustomRoute exact route={routes.sourcesRemove} Component={SourceRemoveModal}/>
+                <CustomRoute
+                    exact
+                    route={routes.sourcesNew}
+                    Component={AddSourceWizard}
+                    componentProps={{
+                        sourceTypes: loadedTypes(sourceTypes, sourceTypesLoaded),
+                        applicationTypes: loadedTypes(appTypes, appTypesLoaded),
+                        isOpen: true,
+                        onClose: (values) => onCloseAddSourceWizard({ values, dispatch, history, intl }),
+                        afterSuccess: (source) => afterSuccess(dispatch, source),
+                        hideSourcesButton: true,
+                        initialValues: undoValues
+                    }}
+                />
+                <CustomRoute exact route={routes.sourcesEdit} Component={SourceEditModal}/>
+            </Suspense>
             <PageHeader>
                 <PageHeaderTitle title={intl.formatMessage({
                     id: 'sources.sources',
