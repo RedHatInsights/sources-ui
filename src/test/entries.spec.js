@@ -1,16 +1,17 @@
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 
-import { DevEntry, ProdEntry } from '../entries';
+import { ProdEntry } from '../entries';
+import { DevEntry } from '../entries-dev';
 import * as app from '../App';
 import * as stores from '../Utilities/store';
-
+import * as getDevStore from '../Utilities/getDevStore';
+;
 describe('entries test', () => {
     let store;
-
     beforeEach(() => {
         store = configureStore()({});
-        stores.getDevStore = jest.fn().mockImplementation(() => store);
+        getDevStore.getDevStore = jest.fn().mockImplementation(() => store);
         stores.getProdStore = jest.fn().mockImplementation(() => store);
 
         // eslint-disable-next-line react/display-name
@@ -22,7 +23,7 @@ describe('entries test', () => {
 
         expect(wrapper.find(Provider)).toHaveLength(1);
         expect(wrapper.find('h1')).toHaveLength(1);
-        expect(stores.getDevStore).toHaveBeenCalled();
+        expect(getDevStore.getDevStore).toHaveBeenCalled();
         expect(stores.getProdStore).not.toHaveBeenCalled();
     });
 
@@ -31,7 +32,7 @@ describe('entries test', () => {
 
         expect(wrapper.find(Provider)).toHaveLength(1);
         expect(wrapper.find('h1')).toHaveLength(1);
-        expect(stores.getDevStore).not.toHaveBeenCalled();
+        expect(getDevStore.getDevStore).not.toHaveBeenCalled();
         expect(stores.getProdStore).toHaveBeenCalled();
     });
 });
