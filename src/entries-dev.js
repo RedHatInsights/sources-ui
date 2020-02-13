@@ -1,8 +1,8 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import App from './App';
-import { getProdStore } from './Utilities/store';
+import { getDevStore } from './Utilities/getDevStore';
 
-export const ProdEntry = () => (<Provider store={getProdStore()}>
+export const DevEntry = () => (<Provider store={getDevStore()}>
     <App />
 </Provider>);
