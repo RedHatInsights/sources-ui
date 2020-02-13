@@ -3,13 +3,13 @@ import { NotificationsPortal } from '@redhat-cloud-services/frontend-components-
 import { Main } from '@redhat-cloud-services/frontend-components/components/Main';
 import { IntlProvider } from 'react-intl';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { getBaseName } from '@redhat-cloud-services/frontend-components-utilities/files/helpers';
 
 import Routes from './Routes';
 import './App.scss';
 
 import ErrorBoundary from './components/ErrorBoundary';
 import PermissionsChecker from './components/PermissionsChecker';
+import { getBaseName } from './frontend-components-copies/getBaseName';
 
 const App = () => {
     useEffect(() => {

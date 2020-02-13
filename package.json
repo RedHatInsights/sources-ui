@@ -15,6 +15,8 @@
     "@redhat-cloud-services/frontend-components-notifications": "1.0.1",
     "@redhat-cloud-services/frontend-components-sources": "1.0.2",
     "@redhat-cloud-services/frontend-components-utilities": "1.0.0",
+    "@sentry/minimal": "5.12.0",
+    "axios": "0.19.2",
     "deep-object-diff": "^1.1.0",
     "lodash": "^4.17.15",
     "react": "^16.12.0",
@@ -33,7 +35,8 @@
       "src/**/*.{js,jsx}",
       "!src/**/stories/*",
       "!src/entry.js",
-      "!src/entry-dev.js"
+      "!src/entry-dev.js",
+      "!src/frontend-components-copies/*"
     ],
     "setupFiles": [
       "<rootDir>/config/setupTests.js"
