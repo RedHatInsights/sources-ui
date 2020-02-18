@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
-import axiosInstanceInsights from '@redhat-cloud-services/frontend-components-utilities/files/interceptors';
+import axios from 'axios';
+import * as interceptors from '../frontend-components-copies/interceptors';
 
 import { SOURCES_API_BASE } from './constants';
 
@@ -11,6 +12,12 @@ export const graphQlErrorInterceptor = response => {
     return response;
 };
 
+const axiosInstanceInsights = axios.create();
+axiosInstanceInsights.interceptors.request.use(interceptors.authInterceptor);
+axiosInstanceInsights.interceptors.response.use(interceptors.responseDataInterceptor);
+axiosInstanceInsights.interceptors.response.use(null, interceptors.interceptor401);
+axiosInstanceInsights.interceptors.response.use(null, interceptors.interceptor500);
+axiosInstanceInsights.interceptors.response.use(null, interceptors.errorInterceptor);
 axiosInstanceInsights.interceptors.response.use(graphQlErrorInterceptor);
 
 export { axiosInstanceInsights as axiosInstance };
