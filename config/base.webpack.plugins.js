@@ -18,7 +18,8 @@ const plugins = [
     }),
     new(require('mini-css-extract-plugin'))({
         chunkFilename: 'css/[name].css',
-        filename: 'css/[name].css'
+        filename: 'css/[name].css',
+        ignoreOrder: true
     }),
     new webpack.DefinePlugin({
         'process.env.BASE_PATH': JSON.stringify(process.env.BASE_PATH || '/api'),
