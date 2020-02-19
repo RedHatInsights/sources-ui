@@ -45,7 +45,7 @@ CustomRoute.propTypes = {
         writeAccess: PropTypes.bool
     }).isRequired,
     componentProps: PropTypes.any,
-    Component: PropTypes.func.isRequired
+    Component: PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired
 };
 
 export default CustomRoute;
