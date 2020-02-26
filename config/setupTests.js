@@ -50,3 +50,5 @@ global.insights = {
         }
     }
 };
+
+Element.prototype.scrollTo = () => {};

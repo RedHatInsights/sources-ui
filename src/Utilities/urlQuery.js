@@ -63,7 +63,7 @@ export const parseQuery = () => {
         fetchOptions = {
             ...fetchOptions,
             pageNumber: parseInt(pageNumber, 10),
-            pageSize: parseInt(pageSize, 10)
+            pageSize: Math.min(parseInt(pageSize, 10), 100)
         };
     }
 

@@ -96,7 +96,7 @@ const SourcesPage = () => {
         if (checkEmptyState && loaded) {
             setShowEmptyState(numberOfEntities === 0 && !hasSomeFilter);
         }
-    }, [filterValue, loaded]);
+    }, [loaded]);
 
     const onSetPage = (_e, page) => dispatch(pageAndSize(page, pageSize));
 
