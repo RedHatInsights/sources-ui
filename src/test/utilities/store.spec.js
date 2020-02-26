@@ -1,8 +1,9 @@
-import { getDevStore, getProdStore, urlQueryMiddleware } from '../../Utilities/store';
+import { getProdStore, urlQueryMiddleware } from '../../Utilities/store';
 import { defaultSourcesState } from '../../redux/sources/reducer';
 import { defaultUserState } from '../../redux/user/reducer';
 import * as queries from '../../Utilities/urlQuery';
 import { ACTION_TYPES } from '../../redux/sources/actions-types';
+import { getDevStore } from '../../Utilities/getDevStore';
 
 describe('store creator', () => {
     const EXPECTED_DEFAULT_STATE = {

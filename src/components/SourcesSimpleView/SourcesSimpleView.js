@@ -49,7 +49,8 @@ export const insertEditAction = (actions, intl, push) => actions.splice(1, 0, {
         id: 'sources.edit',
         defaultMessage: 'Edit'
     }),
-    onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesEdit.path, id))
+    onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesEdit.path, id)),
+    component: 'button'
 });
 
 export const actionResolver = (intl, push) => (rowData) => {
@@ -58,7 +59,8 @@ export const actionResolver = (intl, push) => (rowData) => {
             id: 'sources.manageApps',
             defaultMessage: 'Manage applications'
         }),
-        onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourceManageApps.path, id))
+        onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourceManageApps.path, id)),
+        component: 'button'
     },
     {
         style: { color: 'var(--pf-global--danger-color--100)' },
@@ -66,7 +68,8 @@ export const actionResolver = (intl, push) => (rowData) => {
             id: 'sources.delete',
             defaultMessage: 'Delete'
         }),
-        onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesRemove.path, id))
+        onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesRemove.path, id)),
+        component: 'button'
     }];
 
     const isSourceEditable = !rowData.imported;

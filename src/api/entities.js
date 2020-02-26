@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
-import axiosInstanceInsights from '@redhat-cloud-services/frontend-components-utilities/files/interceptors';
-import { DefaultApi as SourcesDefaultApi } from '@redhat-cloud-services/sources-client';
+import axios from 'axios';
+import * as interceptors from '../frontend-components-copies/interceptors';
 
 import { SOURCES_API_BASE } from './constants';
 
@@ -12,17 +12,36 @@ export const graphQlErrorInterceptor = response => {
     return response;
 };
 
+const axiosInstanceInsights = axios.create();
+axiosInstanceInsights.interceptors.request.use(interceptors.authInterceptor);
+axiosInstanceInsights.interceptors.response.use(interceptors.responseDataInterceptor);
+axiosInstanceInsights.interceptors.response.use(null, interceptors.interceptor401);
+axiosInstanceInsights.interceptors.response.use(null, interceptors.interceptor500);
+axiosInstanceInsights.interceptors.response.use(null, interceptors.errorInterceptor);
 axiosInstanceInsights.interceptors.response.use(graphQlErrorInterceptor);
 
 export { axiosInstanceInsights as axiosInstance };
 
-let apiInstance;
+export const getSourcesApi = () => ({
+    checkAvailabilitySource: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE}/sources/${id}/check_availability`),
+    updateSource: (id, data) => axiosInstanceInsights.patch(`${SOURCES_API_BASE}/sources/${id}`, data),
+    updateEndpoint: (id, data) => axiosInstanceInsights.patch(`${SOURCES_API_BASE}/endpoints/${id}`, data),
+    createEndpoint: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE}/endpoints`, data),
+    updateAuthentication: (id, data) => axiosInstanceInsights.patch(`${SOURCES_API_BASE}/authentications/${id}`, data),
+    createAuthentication: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE}/authentications`, data),
+    showSource: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE}/sources/${id}`),
+    listSourceEndpoints: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE}/sources/${id}/endpoints`),
+    listSourceApplications: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE}/sources/${id}/applications`),
+    listEndpointAuthentications: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE}/endpoints/${id}/authentications`),
+    deleteSource: (id) => axiosInstanceInsights.delete(`${SOURCES_API_BASE}/sources/${id}`),
+    createApplication: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE}/applications`, data),
+    postGraphQL: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE}/graphql`, data),
+    listSourceTypes: () => axiosInstanceInsights.get(`${SOURCES_API_BASE}/source_types`),
+    doLoadAppTypes: () => axiosInstanceInsights.get(`${SOURCES_API_BASE}/application_types`),
+    deleteApplication: (id) => axiosInstanceInsights.delete(`${SOURCES_API_BASE}/applications/${id}`)
+});
 
-export const getSourcesApi = () =>
-    apiInstance || (apiInstance = new SourcesDefaultApi(undefined, SOURCES_API_BASE, axiosInstanceInsights));
-
-export const doLoadAppTypes = () =>
-    axiosInstanceInsights.get(`${SOURCES_API_BASE}/application_types`);
+export const doLoadAppTypes = () => getSourcesApi().doLoadAppTypes();
 
 export const doRemoveSource = (sourceId) => getSourcesApi().deleteSource(sourceId).catch((error) => {
     throw { error: { detail: error.errors[0].detail } };

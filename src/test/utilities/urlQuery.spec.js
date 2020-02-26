@@ -148,6 +148,17 @@ describe('urlQuery helpers', () => {
                 });
             });
 
+            it('maximum pageSize is 100', () => {
+                window.location.search = '?limit=400&offset=0';
+
+                const result = parseQuery();
+
+                expect(result).toEqual({
+                    pageNumber: 1,
+                    pageSize: 100
+                });
+            });
+
             it('handles pagination', () => {
                 window.location.search = '?limit=50&offset=50';
 
