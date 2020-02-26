@@ -1,6 +1,5 @@
 import ReducerRegistry, { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/files/ReducerRegistry';
 import { notifications, notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
-import logger from 'redux-logger';
 import thunk from 'redux-thunk';
 import promise from 'redux-promise-middleware';
 
@@ -19,17 +18,14 @@ export const urlQueryMiddleware = store => next => action => {
     next(action);
 };
 
-export const getStore = (includeLogger) => {
+export const getStore = (addMiddlewares = []) => {
     const middlewares = [
         thunk,
         notificationsMiddleware({ errorTitleKey: 'error.title', errorDescriptionKey: 'error.detail' }),
         promise,
-        urlQueryMiddleware
+        urlQueryMiddleware,
+        ...addMiddlewares
     ];
-
-    if (includeLogger) {
-        middlewares.push(logger);
-    }
 
     const registry = new ReducerRegistry({}, middlewares);
 
@@ -40,5 +36,4 @@ export const getStore = (includeLogger) => {
     return registry.getStore();
 };
 
-export const getDevStore = () => getStore(true);
-export const getProdStore = () => getStore(false);
+export const getProdStore = () => getStore();
