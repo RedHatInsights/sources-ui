@@ -11,7 +11,7 @@
   ],
   "plugins": ["react"],
   "parserOptions": {
-    "ecmaVersion": 7,
+    "ecmaVersion": 11,
     "sourceType": "module"
   },
   "globals": {
@@ -21,9 +21,14 @@
     "render": true,
     "React": true
   },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
   "rules": {
     "array-bracket-spacing": 2,
-    "comma-dangle": 2,
+    "comma-dangle": 0,
     "comma-spacing": [
       2,
       {
@@ -83,6 +88,9 @@
       }
     ],
     "no-undef": 2,
+    "no-useless-catch": 2,
+    "no-async-promise-executor": 2,
+    "no-misleading-character-class": 2,
     "no-unused-vars": [
 	2,
 	{ "argsIgnorePattern": "^_" }

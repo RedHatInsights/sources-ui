@@ -42,6 +42,96 @@ describe('entities spec', () => {
             expect(result).toEqual(OK_RESPONSE);
         });
 
+        describe('getSourcesApi', () => {
+            const DATA = { data: 'some data' };
+
+            it('updateSource', async () => {
+                const method = 'Patch';
+                mock[`on${method}`](`/api/sources/v1.0/sources/${SOURCE_ID}`).reply(200, OK_RESPONSE);
+
+                const result = await api.getSourcesApi().updateSource(SOURCE_ID, DATA);
+
+                expect(result).toEqual(OK_RESPONSE);
+                expect(mock.history[method.toLowerCase()][0].data).toEqual(JSON.stringify(DATA));
+            });
+
+            it('updateEndpoint', async () => {
+                const method = 'Patch';
+                mock[`on${method}`](`/api/sources/v1.0/endpoints/${SOURCE_ID}`).reply(200, OK_RESPONSE);
+
+                const result = await api.getSourcesApi().updateEndpoint(SOURCE_ID, DATA);
+
+                expect(result).toEqual(OK_RESPONSE);
+                expect(mock.history[method.toLowerCase()][0].data).toEqual(JSON.stringify(DATA));
+            });
+
+            it('createEndpoint', async () => {
+                const method = 'Post';
+                mock[`on${method}`](`/api/sources/v1.0/endpoints`).reply(200, OK_RESPONSE);
+
+                const result = await api.getSourcesApi().createEndpoint(DATA);
+
+                expect(result).toEqual(OK_RESPONSE);
+                expect(mock.history[method.toLowerCase()][0].data).toEqual(JSON.stringify(DATA));
+            });
+
+            it('updateAuthentication', async () => {
+                const method = 'Patch';
+                mock[`on${method}`](`/api/sources/v1.0/authentications/${SOURCE_ID}`).reply(200, OK_RESPONSE);
+
+                const result = await api.getSourcesApi().updateAuthentication(SOURCE_ID, DATA);
+
+                expect(result).toEqual(OK_RESPONSE);
+                expect(mock.history[method.toLowerCase()][0].data).toEqual(JSON.stringify(DATA));
+            });
+
+            it('createAuthentication', async () => {
+                const method = 'Post';
+                mock[`on${method}`](`/api/sources/v1.0/authentications`).reply(200, OK_RESPONSE);
+
+                const result = await api.getSourcesApi().createAuthentication(DATA);
+
+                expect(result).toEqual(OK_RESPONSE);
+                expect(mock.history[method.toLowerCase()][0].data).toEqual(JSON.stringify(DATA));
+            });
+
+            it('showSource', async () => {
+                const method = 'Get';
+                mock[`on${method}`](`/api/sources/v1.0/sources/${SOURCE_ID}`).reply(200, OK_RESPONSE);
+
+                const result = await api.getSourcesApi().showSource(SOURCE_ID);
+
+                expect(result).toEqual(OK_RESPONSE);
+            });
+
+            it('listSourceEndpoints', async () => {
+                const method = 'Get';
+                mock[`on${method}`](`/api/sources/v1.0/sources/${SOURCE_ID}/endpoints`).reply(200, OK_RESPONSE);
+
+                const result = await api.getSourcesApi().listSourceEndpoints(SOURCE_ID);
+
+                expect(result).toEqual(OK_RESPONSE);
+            });
+
+            it('listSourceApplications', async () => {
+                const method = 'Get';
+                mock[`on${method}`](`/api/sources/v1.0/sources/${SOURCE_ID}/applications`).reply(200, OK_RESPONSE);
+
+                const result = await api.getSourcesApi().listSourceApplications(SOURCE_ID);
+
+                expect(result).toEqual(OK_RESPONSE);
+            });
+
+            it('listEndpointAuthentications', async () => {
+                const method = 'Get';
+                mock[`on${method}`](`/api/sources/v1.0/endpoints/${SOURCE_ID}/authentications`).reply(200, OK_RESPONSE);
+
+                const result = await api.getSourcesApi().listEndpointAuthentications(SOURCE_ID);
+
+                expect(result).toEqual(OK_RESPONSE);
+            });
+        });
+
         it('doRemoveSource fails', async () => {
             expect.assertions(1);
 
