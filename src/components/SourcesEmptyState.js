@@ -40,10 +40,13 @@ const SourcesEmptyState = ({ title, body }) => {
                                     id="sources.emptyStateBody"
                                     defaultMessage="No sources have been defined. To start define a source."
                                 />}
-                            {!isOrgAdmin && <FormattedMessage
-                                id="sources.emptyStateBodyNotAdmin"
-                                defaultMessage="To define a source, you have to be an organisation admin."
-                            />}
+                            {!isOrgAdmin && <React.Fragment>
+                                <br />
+                                <FormattedMessage
+                                    id="sources.emptyStateBodyNotAdmin"
+                                    defaultMessage="To define a source, you have to be an organisation admin."
+                                />
+                            </React.Fragment>}
                         </EmptyStateBody>
                         {isOrgAdmin && <Link to={routes.sourcesNew.path}>
                             <Button style={{ marginTop: 'var(--pf-c-empty-state--c-button--MarginTop)' }}
