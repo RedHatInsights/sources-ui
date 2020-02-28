@@ -32,6 +32,7 @@ describe('SourcesEmptyState', () => {
         expect(wrapper.find(Title)).toHaveLength(1);
         expect(wrapper.find(CardBody)).toHaveLength(1);
         expect(wrapper.find(Bullseye)).toHaveLength(1);
+        expect(wrapper.find('br')).toHaveLength(0);
     });
 
     it('renders correctly with custom props', () => {
@@ -54,5 +55,6 @@ describe('SourcesEmptyState', () => {
         expect(wrapper.find(Title)).toHaveLength(1);
         expect(wrapper.find(CardBody)).toHaveLength(1);
         expect(wrapper.find(Bullseye)).toHaveLength(1);
+        expect(wrapper.find('br')).toHaveLength(1);
     });
 });
