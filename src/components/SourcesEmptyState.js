@@ -53,7 +53,7 @@ const SourcesEmptyState = ({ title, body }) => {
                                 variant="primary">
                                 <FormattedMessage
                                     id="sources.emptyStateButton"
-                                    defaultMessage="Add a source"
+                                    defaultMessage="Add source"
                                 />
                             </Button>
                         </Link>}
