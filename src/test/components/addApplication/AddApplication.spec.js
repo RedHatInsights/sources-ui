@@ -75,7 +75,7 @@ describe('AddApplication', () => {
         expect(wrapper.find(SourcesFormRenderer).length).toEqual(1);
         expect(wrapper.find(AddApplicationDescription).length).toEqual(1);
         expect(wrapper.find(CardSelect).length).toEqual(1);
-        expect(wrapper.find('Card').length).toEqual(2); // one app is not compatible
+        expect(wrapper.find('Card').length).toEqual(1); // one app is not compatible, one app is topology inventory
         expect(wrapper.find(Button).at(1).text()).toEqual('Next');
     });
 
@@ -129,7 +129,7 @@ describe('AddApplication', () => {
         expect(wrapper.find(SourcesFormRenderer).length).toEqual(1);
         expect(wrapper.find(AddApplicationDescription).length).toEqual(1);
         expect(wrapper.find(CardSelect).length).toEqual(1);
-        expect(wrapper.find('Card').length).toEqual(2);
+        expect(wrapper.find('Card').length).toEqual(1);
         expect(wrapper.find(Button).at(1).text()).toEqual('Next');
     });
 
