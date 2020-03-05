@@ -257,4 +257,38 @@ describe('entities spec', () => {
             expect(api.graphQlErrorInterceptor(response)).toEqual(response);
         });
     });
+
+    describe('403 error interceptor', () => {
+        it('is 403 error', async () => {
+            const response = {
+                errors: [{
+                    detail: ERROR_DETAIL,
+                    status: 403
+                }],
+                data: []
+            };
+
+            try {
+                await api.interceptor403(response);
+            } catch (error) {
+                expect(error).toEqual({ detail: ERROR_DETAIL, title: 'Forbidden access' });
+            }
+        });
+
+        it('is not 403 error', async () => {
+            const response = {
+                errors: [{
+                    detail: ERROR_DETAIL,
+                    status: 405
+                }],
+                data: []
+            };
+
+            try {
+                await api.interceptor403(response);
+            } catch (error) {
+                expect(error).toEqual(response);
+            }
+        });
+    });
 });
