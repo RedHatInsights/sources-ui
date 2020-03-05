@@ -249,6 +249,27 @@ describe('redux actions', () => {
                 payload: { error: { detail: ERROR_DETAIL, title: expect.any(String) } }
             });
         });
+
+        it('handles failure with custom title', async () => {
+            const ERROR_DETAIL = 'aaa';
+            const ERROR_TITLE = 'some title';
+            const ERROR = { detail: ERROR_DETAIL, title: ERROR_TITLE };
+
+            api.doLoadEntities = jest.fn().mockImplementation(() => Promise.reject(ERROR));
+
+            await loadEntities()(dispatch, getState);
+
+            expect(dispatch.mock.calls).toHaveLength(3);
+
+            expect(dispatch.mock.calls[0][0]).toEqual({
+                type: ACTION_TYPES.LOAD_ENTITIES_PENDING,
+                options: undefined
+            });
+            expect(dispatch.mock.calls[2][0]).toEqual({
+                type: ACTION_TYPES.LOAD_ENTITIES_REJECTED,
+                payload: { error: { detail: ERROR_DETAIL, title: ERROR_TITLE } }
+            });
+        });
     });
 
     describe('doRemoveSource', () => {
