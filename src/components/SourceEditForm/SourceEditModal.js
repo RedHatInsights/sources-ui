@@ -94,7 +94,7 @@ const SourceEditModal = () => {
             <Modal
                 title={intl.formatMessage({
                     id: 'sources.editSource',
-                    defaultMessage: 'Edit a source.'
+                    defaultMessage: 'Edit source.'
                 })}
                 header={<Header />}
                 isOpen={true}
@@ -112,7 +112,7 @@ const SourceEditModal = () => {
         <Modal
             title={intl.formatMessage({
                 id: 'sources.editSource',
-                defaultMessage: 'Edit a source.'
+                defaultMessage: 'Edit source.'
             })}
             header={<Header />}
             isOpen={true}
