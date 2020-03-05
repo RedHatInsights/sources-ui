@@ -350,7 +350,7 @@ describe('AddApplication', () => {
             expect(attachSource.doAttachApp.mock.calls[0][1].getState().values).toEqual({
                 application: { application_type_id: application.id },
                 endpoint_id: undefined,
-                noEndpoint: '',
+                noEndpoint: false,
                 source: { ...source, nested: { source_ref: undoValue, another_value } },
                 supported_auth_type: 'receptor',
                 authentication: preserveAuthenticationChanges
@@ -400,7 +400,7 @@ describe('AddApplication', () => {
                         }
                     },
                     supported_auth_type: application.supported_authentication_types.custom_type[0],
-                    noEndpoint: ''
+                    noEndpoint: false
                 },
                 dispatch: expect.any(Function),
                 history: expect.objectContaining({ push: expect.any(Function) }),
@@ -484,7 +484,7 @@ describe('AddApplication', () => {
             expect(attachSource.doAttachApp.mock.calls[0][0]).toEqual({
                 application: { application_type_id: application.id },
                 endpoint_id: undefined,
-                noEndpoint: '',
+                noEndpoint: false,
                 source: { nested: { source_ref: value, another_value } }
             });
         });
