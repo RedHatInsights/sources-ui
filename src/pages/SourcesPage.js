@@ -135,7 +135,7 @@ const SourcesPage = () => {
                             <Button variant='primary'>
                                 <FormattedMessage
                                     id="sources.addSource"
-                                    defaultMessage="Add a source"
+                                    defaultMessage="Add source"
                                 />
                             </Button>
                         </Link>

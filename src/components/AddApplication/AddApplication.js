@@ -4,6 +4,7 @@ import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { useIntl } from 'react-intl';
 import merge from 'lodash/merge';
 import cloneDeep from 'lodash/cloneDeep';
+import { filterApps } from '@redhat-cloud-services/frontend-components-sources';
 
 import { loadEntities } from '../../redux/sources/actions';
 import SourcesFormRenderer from '../../Utilities/SourcesFormRenderer';
@@ -156,7 +157,7 @@ const AddApplication = () => {
     const sourceTypeName = sourceType && sourceType.name;
     const filteredAppTypes = appTypes.filter((type) =>
         !appIds.includes(type.id) && type.supported_source_types.includes(sourceTypeName)
-    );
+    ).filter(filterApps);
 
     const availableAppTypes = filteredAppTypes.map((type) => {
         const hasDeletingApp = source.applications.find(app => app.application_type_id === type.id);

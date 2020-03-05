@@ -11,7 +11,7 @@ const Header = () => (
             <Title headingLevel={TitleLevel.h1} size="3xl">
                 <FormattedMessage
                     id="sources.editSource"
-                    defaultMessage="Edit a source"
+                    defaultMessage="Edit source"
                 />
             </Title>
         </GridItem>
