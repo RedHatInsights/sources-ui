@@ -2,7 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { EmptyStateBody, Button } from '@patternfly/react-core';
 import { IntlProvider } from 'react-intl';
-import { Spinner } from '@redhat-cloud-services/frontend-components/components/Spinner';
+import { Spinner } from '@patternfly/react-core/dist/js/components/Spinner';
 
 import LoadingStep from '../../../components/steps/LoadingStep';
 
