@@ -3,8 +3,6 @@ import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
 import 'babel-polyfill';
 import toJson from 'enzyme-to-json';
-import fetchMock from 'fetch-mock';
-import mock, { once } from 'xhr-mock';
 
 import 'whatwg-fetch'; // fetch for Nodejs
 
@@ -18,18 +16,6 @@ global.toJson = toJson;
 
 window.SVGPathElement = window.Element;
 //var svgjs = require('svg.js')(window)
-
-/**
- * Setup API mock
- */
-mock.setup();
-global.mockOnce = once;
-global.apiClientMock = mock;
-
-/**
- * Setup fetch mock
- */
-global.fetchMock = fetchMock;
 
 /**
  * setup ENV vars
