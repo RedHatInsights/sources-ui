@@ -24,6 +24,7 @@ This application allows to
 - [Data-driven forms](#data-driven-forms)
 - [Insights Components](#insights-components)
   - [AddSourceWizard](#addsourcewizard)
+  - [Updating steps in the wizard](#updating-steps-in-the-wizard)
 - [API](#api)
   - [Sources Javascript API client](#sources-javascript-api-client)
 - [Technologies](#technologies)
@@ -93,6 +94,10 @@ Insights Platform will deliver components and static assets through [npm](https:
 ## AddSourceWizard
 
 This application use a [AddSourceWizard](https://github.com/RedHatInsights/frontend-components/tree/master/packages/sources), which provides the Wizard component. For creating the DDF schema, it uses information provided by Sources API and components included in the AddSourceWizard package.
+
+## Updating steps in the wizard
+
+- See [Technologies](doc/update-wizard.md).
 
 # API
 
