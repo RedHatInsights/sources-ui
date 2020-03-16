@@ -60,6 +60,8 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
 
         if (filteredValues.source && !isEmpty(filteredValues.source)) {
             promises.push(getSourcesApi().updateSource(sourceId, filteredValues.source));
+        } else {
+            promises.push(Promise.resolve(undefined));
         }
 
         const hasModifiedEndpoint = filteredValues.endpoint && !isEmpty(filteredValues.endpoint);
@@ -81,6 +83,8 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
             if (endpointId) {
                 promises.push(getSourcesApi().updateEndpoint(endpointId, endpointData));
             } else {
+                promises.push(Promise.resolve(undefined));
+
                 const createEndpointData = {
                     ...endpointData,
                     default: true,
@@ -90,6 +94,8 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
                 const endpoint = await getSourcesApi().createEndpoint(createEndpointData);
                 endpointId = endpoint.id;
             }
+        } else {
+            promises.push(Promise.resolve(undefined));
         }
 
         if (filteredValues.authentication && !isEmpty(filteredValues.authentication)) {
@@ -104,13 +110,31 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
 
                 promises.push(getSourcesApi().createAuthentication(authenticationData));
             }
+        } else {
+            promises.push(Promise.resolve(undefined));
         }
 
         if (filteredValues.application && filteredValues.application.application_type_id) {
             promises.push(doCreateApplication(sourceId, filteredValues.application.application_type_id));
+        } else {
+            promises.push(Promise.resolve(undefined));
         }
 
-        await Promise.all(promises);
+        // eslint-disable-next-line no-unused-vars
+        const [_sourceDataOut, _endpointDataOut, authenticationDataOut, applicationDataOut] = await Promise.all(promises);
+
+        const authenticationId = selectedAuthId ? selectedAuthId : authenticationDataOut ? authenticationDataOut.id : undefined;
+
+        const promisesSecondRound = [];
+
+        if (applicationDataOut && applicationDataOut.id && authenticationId) {
+            const authAppData = {
+                application_id: applicationDataOut.id,
+                authentication_id: authenticationId
+            };
+
+            promisesSecondRound.push(getSourcesApi().createAuthApp(authAppData));
+        }
 
         const isAttachingCostManagement = filteredValues.credentials || filteredValues.billing_source;
         if (isAttachingCostManagement) {
@@ -118,8 +142,10 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
             let data = {};
             data = credentials ? { authentication: { credentials } } : {};
             data = billing_source ? { ...data, billing_source } : data;
-            await patchSource({ id: sourceId, ...data });
+            promisesSecondRound.push(patchSource({ id: sourceId, ...data }));
         }
+
+        await Promise.all(promisesSecondRound);
     } catch (error) {
         const errorMessage = await handleError(error);
         throw errorMessage;
