@@ -130,6 +130,16 @@ describe('entities spec', () => {
 
                 expect(result).toEqual(OK_RESPONSE);
             });
+
+            it('createAuthApp', async () => {
+                mock.onPost(`/api/sources/v2.0/application_authentications`).reply(200, OK_RESPONSE);
+
+                const result = await api.getSourcesApi().createAuthApp({ application_type: 'app_id', authentication_id: 'auth_id' });
+
+                expect(result).toEqual(OK_RESPONSE);
+
+                expect(mock.history.post[0].data).toEqual('{"application_type":"app_id","authentication_id":"auth_id"}');
+            });
         });
 
         it('doRemoveSource fails', async () => {
