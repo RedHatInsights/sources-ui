@@ -9,13 +9,13 @@ import { EmptyStateSecondaryActions } from '@patternfly/react-core/dist/js/compo
 import { Bullseye } from '@patternfly/react-core/dist/js/layouts/Bullseye/Bullseye';
 import { Title } from '@patternfly/react-core/dist/js/components/Title/Title';
 
-import ErrorCircleOIcon from '@patternfly/react-icons/dist/js/icons/error-circle-o-icon';
+import TimesCircleIcon from '@patternfly/react-icons/dist/js/icons/times-circle-icon';
 import { FormattedMessage } from 'react-intl';
 
 const ErroredStep = ({ onClose, onRetry, message, title }) => (
     <Bullseye>
         <EmptyState variant={ EmptyStateVariant.full }>
-            <EmptyStateIcon icon={ ErrorCircleOIcon } color="var(--pf-global--danger-color--100)" />
+            <EmptyStateIcon icon={ TimesCircleIcon } color="var(--pf-global--danger-color--100)" />
             <Title headingLevel="h5" size="lg">
                 { title }
             </Title>

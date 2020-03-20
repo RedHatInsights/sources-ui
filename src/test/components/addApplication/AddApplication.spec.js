@@ -133,7 +133,7 @@ describe('AddApplication', () => {
         expect(wrapper.find(Button).at(1).text()).toEqual('Next');
     });
 
-    it('renders correctly when there is no free application - finish button instead of next', async () => {
+    it('renders correctly when there is no free application - close button instead of next', async () => {
         let wrapper;
 
         await act(async () => {
@@ -149,7 +149,7 @@ describe('AddApplication', () => {
         expect(wrapper.find(AddApplicationDescription).length).toEqual(1);
         expect(wrapper.find(CardSelect).length).toEqual(0);
         expect(wrapper.find('Card').length).toEqual(0);
-        expect(wrapper.find(Button).at(3).text()).toEqual('Finish');
+        expect(wrapper.find(Button).at(3).text()).toEqual('Close');
     });
 
     it('renders loading state when is not loaded', async () => {
@@ -535,7 +535,7 @@ describe('AddApplication', () => {
             wrapper.update();
 
             expect(wrapper.find(SummaryStep)).toHaveLength(1);
-            expect(wrapper.find(Button).at(1).text()).toEqual('Finish');
+            expect(wrapper.find(Button).at(1).text()).toEqual('Add');
         });
 
         it('calls on submit function', async () => {
