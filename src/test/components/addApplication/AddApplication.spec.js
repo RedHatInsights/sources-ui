@@ -625,7 +625,9 @@ describe('AddApplication', () => {
         });
 
         it('show loading step', async () => {
-            attachSource.doAttachApp = jest.fn().mockImplementation(() => Promise.resolve('ok'));
+            attachSource.doAttachApp = jest.fn().mockImplementation(() => new Promise(
+                (resolve) => setTimeout(() => resolve('ok'), 2))
+            );
 
             const wrapper = mount(componentWrapperIntl(
                 <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplication { ...args }/> } />,
@@ -644,7 +646,12 @@ describe('AddApplication', () => {
             });
             wrapper.update();
 
-            wrapper.find(Button).at(1).simulate('click');
+            jest.useFakeTimers();
+            await act(async () => {
+                wrapper.find(Button).at(1).simulate('click');
+            });
+            jest.useRealTimers();
+
             wrapper.update();
 
             expect(wrapper.find(LoadingStep).length).toEqual(1);
