@@ -43,9 +43,9 @@ describe('AddApplication', () => {
                     id: SOURCE_ALL_APS_ID,
                     source_type_id: OPENSHIFT_ID,
                     applications: [{
-                        application_type_id: COSTMANAGEMENT_APP.id
+                        application_type_id: COSTMANAGEMENT_APP.id, id: '13242323'
                     }, {
-                        application_type_id: TOPOLOGICALINVENTORY_APP.id
+                        application_type_id: TOPOLOGICALINVENTORY_APP.id, id: '878253887'
                     }]
                 }],
                 appTypes: applicationTypesData.data,
@@ -101,9 +101,9 @@ describe('AddApplication', () => {
                     id: SOURCE_ALL_APS_ID,
                     source_type_id: OPENSHIFT_ID,
                     applications: [{
-                        application_type_id: COSTMANAGEMENT_APP.id
+                        application_type_id: COSTMANAGEMENT_APP.id, id: '13242323'
                     }, {
-                        application_type_id: TOPOLOGICALINVENTORY_APP.id
+                        application_type_id: TOPOLOGICALINVENTORY_APP.id, id: '132423232342323'
                     }]
                 }],
                 appTypes: applicationTypesData.data,
