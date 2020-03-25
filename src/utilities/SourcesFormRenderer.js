@@ -4,7 +4,7 @@ import FormRenderer from '@data-driven-forms/react-form-renderer';
 import { layoutMapper, formFieldsMapper } from '@data-driven-forms/pf4-component-mapper';
 import { mapperExtension } from '@redhat-cloud-services/frontend-components-sources';
 
-import EditField from '../components/editField/EditField';
+import EditField from '../components/EditField/EditField';
 
 const SourcesFormRenderer = props => (
     <FormRenderer

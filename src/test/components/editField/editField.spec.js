@@ -1,5 +1,5 @@
 import { MockFieldProvider } from '../../__mocks__/helpers';
-import EditField from '../../../components/editField/EditField';
+import EditField from '../../../components/EditField/EditField';
 import { FormGroup } from '@patternfly/react-core';
 import { PencilAltIcon } from '@patternfly/react-icons';
 

@@ -9,7 +9,7 @@ import {
 } from '../../../../components/SourceEditForm/parser/application';
 import { applicationTypesData, COSTMANAGEMENT_APP } from '../../../__mocks__/applicationTypesData';
 import { modifyFields } from '../../../../components/SourceEditForm/parser/helpers';
-import { EDIT_FIELD_NAME } from '../../../../components/editField/EditField';
+import { EDIT_FIELD_NAME } from '../../../../components/EditField/EditField';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources', () => ({
     hardcodedSchemas: {

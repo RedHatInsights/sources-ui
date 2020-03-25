@@ -1,7 +1,7 @@
 import { componentTypes } from '@data-driven-forms/react-form-renderer';
 
 import { genericInfo } from '../../../../components/SourceEditForm/parser/genericInfo';
-import { EDIT_FIELD_NAME } from '../../../../components/editField/EditField';
+import { EDIT_FIELD_NAME } from '../../../../components/EditField/EditField';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources', () => ({
     asyncValidator: jest.fn().mockImplementation(() => jest.fn())

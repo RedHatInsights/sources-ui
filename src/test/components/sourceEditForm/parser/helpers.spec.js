@@ -1,6 +1,6 @@
 import { componentTypes } from '@data-driven-forms/react-form-renderer';
 import { modifyFields } from '../../../../components/SourceEditForm/parser/helpers';
-import { EDIT_FIELD_NAME } from '../../../../components/editField/EditField';
+import { EDIT_FIELD_NAME } from '../../../../components/EditField/EditField';
 
 describe('source edit form parser helpers', () => {
     describe('modifyFields', () => {

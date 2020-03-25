@@ -15,7 +15,7 @@ import { sourceTypesData, OPENSHIFT_ID } from '../../__mocks__/sourceTypesData';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
 import { Modal, Button, FormGroup, TextInput, Form } from '@patternfly/react-core';
 import * as editApi from '../../../api/doLoadSourceForEdit';
-import EditFieldProvider from '../../../components/editField/EditField';
+import EditFieldProvider from '../../../components/EditField/EditField';
 import * as submit from '../../../components/SourceEditForm/onSubmit';
 import * as redirect from '../../../components/SourceEditForm/importedRedirect';
 

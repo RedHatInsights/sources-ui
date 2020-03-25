@@ -1,6 +1,6 @@
 import { validatorTypes, componentTypes } from '@data-driven-forms/react-form-renderer';
 
-import { EDIT_FIELD_NAME } from '../../../../components/editField/EditField';
+import { EDIT_FIELD_NAME } from '../../../../components/EditField/EditField';
 import {
     createAuthFieldName,
     getLastPartOfName,
