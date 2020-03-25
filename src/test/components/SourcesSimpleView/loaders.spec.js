@@ -24,7 +24,13 @@ describe('loaders', () => {
         };
 
         it('renders loader when item is deleting', () => {
-            const wrapper = mount(<RowWrapperLoader row={{ ...row, isDeleting: true }} />);
+            const wrapper = mount(
+                <table>
+                    <tbody>
+                        <RowWrapperLoader row={{ ...row, isDeleting: true }} />
+                    </tbody>
+                </table>
+            );
 
             expect(wrapper.find(RowLoader).length).toEqual(1);
             expect(wrapper.find(RowWrapper).length).toEqual(0);
@@ -32,7 +38,13 @@ describe('loaders', () => {
         });
 
         it('renders rowWrapper when item is not deleting', () => {
-            const wrapper = mount(<RowWrapperLoader row={row} />);
+            const wrapper = mount(
+                <table>
+                    <tbody>
+                        <RowWrapperLoader row={row} />
+                    </tbody>
+                </table>
+            );
 
             expect(wrapper.find(RowLoader).length).toEqual(0);
             expect(wrapper.find(RowWrapper).length).toEqual(1);
