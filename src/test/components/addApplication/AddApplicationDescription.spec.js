@@ -9,9 +9,9 @@ import { FormattedMessage } from 'react-intl';
 
 import AddApplicationDescription from '../../../components/AddApplication/AddApplicationDescription';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import { sourceTypesData } from '../../sourceTypesData';
-import { sourcesDataGraphQl } from '../../sourcesData';
-import { applicationTypesData } from '../../applicationTypesData';
+import { sourceTypesData } from '../../__mocks__/sourceTypesData';
+import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
+import { applicationTypesData } from '../../__mocks__/applicationTypesData';
 import RemoveAppModal from '../../../components/AddApplication/RemoveAppModal';
 import ApplicationList from '../../../components/ApplicationsList/ApplicationList';
 import { routes, replaceRouteId } from '../../../Routes';

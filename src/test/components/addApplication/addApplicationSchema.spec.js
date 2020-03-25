@@ -1,6 +1,6 @@
 import addApplicationSchema, { hasAlreadySupportedAuthType } from '../../../components/AddApplication/AddApplicationSchema';
-import { sourceTypesData, OPENSHIFT_ID } from '../../sourceTypesData';
-import { applicationTypesData, COSTMANAGEMENT_APP } from '../../applicationTypesData';
+import { sourceTypesData, OPENSHIFT_ID } from '../../__mocks__/sourceTypesData';
+import { applicationTypesData, COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
 
 describe('AddApplicationSchema', () => {
     const intl = { formatMessage: ({ defaultMessage }) => defaultMessage };

@@ -13,9 +13,9 @@ import SourcesSimpleView, { insertEditAction, actionResolver, prepareColumnsCell
 import { PlaceHolderTable, RowWrapperLoader } from '../../../components/SourcesSimpleView/loaders';
 import EmptyStateTable from '../../../components/SourcesSimpleView/EmptyStateTable';
 
-import { sourcesDataGraphQl } from '../../sourcesData';
-import { sourceTypesData } from '../../sourceTypesData';
-import { applicationTypesData } from '../../applicationTypesData';
+import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
+import { sourceTypesData } from '../../__mocks__/sourceTypesData';
+import { applicationTypesData } from '../../__mocks__/applicationTypesData';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import * as actions from '../../../redux/sources/actions';

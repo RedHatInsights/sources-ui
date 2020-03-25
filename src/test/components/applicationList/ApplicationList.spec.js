@@ -7,9 +7,9 @@ import { Text } from '@patternfly/react-core';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import ApplicationList from '../../../components/ApplicationsList/ApplicationList';
-import { sourceTypesData } from '../../sourceTypesData';
-import { sourcesDataGraphQl, SOURCE_ALL_APS_ID, SOURCE_ONE_APS_ID } from '../../sourcesData';
-import { applicationTypesData } from '../../applicationTypesData';
+import { sourceTypesData } from '../../__mocks__/sourceTypesData';
+import { sourcesDataGraphQl, SOURCE_ALL_APS_ID, SOURCE_ONE_APS_ID } from '../../__mocks__/sourcesData';
+import { applicationTypesData } from '../../__mocks__/applicationTypesData';
 import { replaceRouteId, routes } from '../../../Routes';
 
 describe('ApplicationList', () => {

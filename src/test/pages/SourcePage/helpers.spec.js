@@ -10,7 +10,7 @@ import {
 } from '../../../pages/SourcesPage/helpers';
 
 import * as actions from '../../../redux/sources/actions';
-import { sourceTypesData } from '../../sourceTypesData';
+import { sourceTypesData } from '../../__mocks__/sourceTypesData';
 import * as sourcesApi from '../../../api/checkSourceStatus';
 
 describe('Source page helpers', () => {

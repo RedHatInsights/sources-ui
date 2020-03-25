@@ -13,9 +13,9 @@ import SourcesPage from '../../pages/SourcesPage';
 import SourcesEmptyState from '../../components/SourcesEmptyState';
 import SourcesSimpleView from '../../components/SourcesSimpleView/SourcesSimpleView';
 
-import { sourcesDataGraphQl, SOURCE_ALL_APS_ID } from '../sourcesData';
-import { sourceTypesData, OPENSHIFT_ID } from '../sourceTypesData';
-import { applicationTypesData } from '../applicationTypesData';
+import { sourcesDataGraphQl, SOURCE_ALL_APS_ID } from '../__mocks__/sourcesData';
+import { sourceTypesData, OPENSHIFT_ID } from '../__mocks__/sourceTypesData';
+import { applicationTypesData } from '../__mocks__/applicationTypesData';
 
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
 

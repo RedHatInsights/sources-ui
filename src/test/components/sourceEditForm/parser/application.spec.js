@@ -7,7 +7,7 @@ import {
     appendClusterIdentifier,
     isCMField
 } from '../../../../components/SourceEditForm/parser/application';
-import { applicationTypesData, COSTMANAGEMENT_APP } from '../../../applicationTypesData';
+import { applicationTypesData, COSTMANAGEMENT_APP } from '../../../__mocks__/applicationTypesData';
 import { modifyFields } from '../../../../components/SourceEditForm/parser/helpers';
 import { EDIT_FIELD_NAME } from '../../../../components/editField/EditField';
 

@@ -14,9 +14,9 @@ import * as attachSource from '../../../api/doAttachApp';
 
 import AddApplication from '../../../components/AddApplication/AddApplication';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import { sourceTypesData, OPENSHIFT_ID } from '../../sourceTypesData';
-import { SOURCE_ALL_APS_ID, SOURCE_NO_APS_ID } from '../../sourcesData';
-import { applicationTypesData, COSTMANAGEMENT_APP, TOPOLOGICALINVENTORY_APP } from '../../applicationTypesData';
+import { sourceTypesData, OPENSHIFT_ID } from '../../__mocks__/sourceTypesData';
+import { SOURCE_ALL_APS_ID, SOURCE_NO_APS_ID } from '../../__mocks__/sourcesData';
+import { applicationTypesData, COSTMANAGEMENT_APP, TOPOLOGICALINVENTORY_APP } from '../../__mocks__/applicationTypesData';
 import AddApplicationDescription from '../../../components/AddApplication/AddApplicationDescription';
 import LoadingStep from '../../../components/steps/LoadingStep';
 import { routes, replaceRouteId } from '../../../Routes';

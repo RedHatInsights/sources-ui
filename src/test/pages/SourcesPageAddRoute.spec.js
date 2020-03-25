@@ -10,9 +10,9 @@ import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sour
 
 import SourcesPage from '../../pages/SourcesPage';
 
-import { sourcesDataGraphQl } from '../sourcesData';
-import { sourceTypesData } from '../sourceTypesData';
-import { applicationTypesData } from '../applicationTypesData';
+import { sourcesDataGraphQl } from '../__mocks__/sourcesData';
+import { sourceTypesData } from '../__mocks__/sourceTypesData';
+import { applicationTypesData } from '../__mocks__/applicationTypesData';
 
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
 

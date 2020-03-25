@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 import { Route } from 'react-router-dom';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import { sourceTypesData, OPENSHIFT_ID } from '../../sourceTypesData';
+import { sourceTypesData, OPENSHIFT_ID } from '../../__mocks__/sourceTypesData';
 import { AuthTypeSetter, checkAuthTypeMemo, innerSetter } from '../../../components/AddApplication/AuthTypeSetter';
 import { routes, replaceRouteId } from '../../../Routes';
 
