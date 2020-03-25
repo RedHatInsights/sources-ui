@@ -1,5 +1,5 @@
 import { unsupportedAuthTypeField } from '../../../../components/SourceEditForm/parser/unsupportedAuthType';
-import { componentWrapperIntl } from '../../../../Utilities/testsHelpers';
+import { componentWrapperIntl } from '../../../../utilities/testsHelpers';
 import { Text } from '@patternfly/react-core';
 
 describe('unsupportedAuthTypeField', () => {

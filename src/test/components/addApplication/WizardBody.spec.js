@@ -1,6 +1,6 @@
 import { Wizard } from '@patternfly/react-core';
 
-import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
+import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import WizardBodyAttach from '../../../components/AddApplication/WizardBody';
 
 const Step = () => <div>Ahoooj</div>;

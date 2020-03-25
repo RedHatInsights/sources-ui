@@ -1,6 +1,6 @@
 import { act } from 'react-dom/test-utils';
 
-import { componentWrapperIntl } from '../../Utilities/testsHelpers';
+import { componentWrapperIntl } from '../../utilities/testsHelpers';
 import PermissionsChecker from '../../components/PermissionsChecker';
 import * as actions from '../../redux/user/actions';
 

@@ -9,7 +9,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import * as actions from '../../redux/sources/actions';
 import SourceRemoveModal from '../../components/SourceRemoveModal';
-import { componentWrapperIntl } from '../../Utilities/testsHelpers';
+import { componentWrapperIntl } from '../../utilities/testsHelpers';
 import { sourcesDataGraphQl } from '../sourcesData';
 import { applicationTypesData } from '../applicationTypesData';
 import RemoveAppModal from '../../components/AddApplication/RemoveAppModal';

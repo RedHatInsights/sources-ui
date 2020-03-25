@@ -14,7 +14,7 @@ import { sourcesDataGraphQl } from '../sourcesData';
 import { sourceTypesData } from '../sourceTypesData';
 import { applicationTypesData } from '../applicationTypesData';
 
-import { componentWrapperIntl } from '../../Utilities/testsHelpers';
+import { componentWrapperIntl } from '../../utilities/testsHelpers';
 
 import ReducersProviders, { defaultSourcesState } from '../../redux/sources/reducer';
 import * as api from '../../api/entities';

@@ -3,7 +3,7 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
-import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
+import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import CustomRoute from '../../../components/CustomRoute/CustomRoute';
 import RedirectNotAdmin from '../../../components/RedirectNotAdmin/RedirectNotAdmin';
 import * as RedirectNoId from '../../../components/RedirectNoId/RedirectNoId';

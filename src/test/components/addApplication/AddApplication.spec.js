@@ -8,12 +8,12 @@ import thunk from 'redux-thunk';
 import { CardSelect, SummaryStep } from '@redhat-cloud-services/frontend-components-sources';
 import { act } from 'react-dom/test-utils';
 
-import SourcesFormRenderer from '../../../Utilities/SourcesFormRenderer';
+import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
 import * as entities from '../../../api/entities';
 import * as attachSource from '../../../api/doAttachApp';
 
 import AddApplication from '../../../components/AddApplication/AddApplication';
-import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
+import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { sourceTypesData, OPENSHIFT_ID } from '../../sourceTypesData';
 import { SOURCE_ALL_APS_ID, SOURCE_NO_APS_ID } from '../../sourcesData';
 import { applicationTypesData, COSTMANAGEMENT_APP, TOPOLOGICALINVENTORY_APP } from '../../applicationTypesData';

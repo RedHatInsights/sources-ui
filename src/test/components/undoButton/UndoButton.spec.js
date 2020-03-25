@@ -8,7 +8,7 @@ import UndoButtonAdd from '../../../components/UndoButton/UndoButtonAdd';
 import * as refresh from '../../../components/UndoButton/refreshPage';
 import ReducersProviders, { defaultSourcesState } from '../../../redux/sources/reducer';
 
-import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
+import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { Button } from '@patternfly/react-core';
 import { routes } from '../../../Routes';
 import { MemoryRouter } from 'react-router-dom';

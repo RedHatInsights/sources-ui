@@ -1,4 +1,4 @@
-import { parseQuery, updateQuery } from '../../Utilities/urlQuery';
+import { parseQuery, updateQuery } from '../../utilities/urlQuery';
 
 describe('urlQuery helpers', () => {
     let tmpLocation;

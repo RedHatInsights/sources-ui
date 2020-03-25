@@ -4,8 +4,8 @@ import configureStore from 'redux-mock-store';
 import { ProdEntry } from '../entries';
 import { DevEntry } from '../entries-dev';
 import * as app from '../App';
-import * as stores from '../Utilities/store';
-import * as getDevStore from '../Utilities/getDevStore';
+import * as stores from '../utilities/store';
+import * as getDevStore from '../utilities/getDevStore';
 ;
 describe('entries test', () => {
     let store;

@@ -8,7 +8,7 @@ import { Route } from 'react-router-dom';
 import RemoveAppModal from '../../../components/AddApplication/RemoveAppModal';
 import * as actions from '../../../redux/sources/actions';
 import { routes, replaceRouteId } from '../../../Routes';
-import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
+import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 
 describe('RemoveAppModal', () => {
     let store;

@@ -8,7 +8,7 @@ import thunk from 'redux-thunk';
 import { FormattedMessage } from 'react-intl';
 
 import AddApplicationDescription from '../../../components/AddApplication/AddApplicationDescription';
-import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
+import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { sourceTypesData } from '../../sourceTypesData';
 import { sourcesDataGraphQl } from '../../sourcesData';
 import { applicationTypesData } from '../../applicationTypesData';

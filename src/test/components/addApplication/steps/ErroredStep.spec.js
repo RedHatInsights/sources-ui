@@ -1,7 +1,7 @@
 import { FormattedMessage } from 'react-intl';
 import { Text, Button } from '@patternfly/react-core';
 
-import { componentWrapperIntl } from '../../../../Utilities/testsHelpers';
+import { componentWrapperIntl } from '../../../../utilities/testsHelpers';
 import ErroredStepAttach from '../../../../components/AddApplication/steps/ErroredStep';
 import ErroredStep from '../../../../components/steps/ErroredStep';
 

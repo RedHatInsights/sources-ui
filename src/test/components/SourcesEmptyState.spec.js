@@ -10,7 +10,7 @@ import {
     EmptyStateBody
 } from '@patternfly/react-core';
 import configureStore from 'redux-mock-store';
-import { componentWrapperIntl } from '../../Utilities/testsHelpers';
+import { componentWrapperIntl } from '../../utilities/testsHelpers';
 
 describe('SourcesEmptyState', () => {
     let mockStore;

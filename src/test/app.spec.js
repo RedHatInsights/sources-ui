@@ -7,9 +7,9 @@ import { act } from 'react-dom/test-utils';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import App from '../App';
-import { componentWrapperIntl } from '../Utilities/testsHelpers';
+import { componentWrapperIntl } from '../utilities/testsHelpers';
 import Routes from '../Routes';
-import { getProdStore } from '../Utilities/store';
+import { getProdStore } from '../utilities/store';
 import * as PermissionsChecker from '../components/PermissionsChecker';
 import ErrorBoundary from '../components/ErrorBoundary';
 

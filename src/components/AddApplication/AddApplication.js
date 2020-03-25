@@ -7,7 +7,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import { filterApps } from '@redhat-cloud-services/frontend-components-sources';
 
 import { loadEntities } from '../../redux/sources/actions';
-import SourcesFormRenderer from '../../Utilities/SourcesFormRenderer';
+import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
 import createSchema from './AddApplicationSchema';
 import LoadingStep from '../steps/LoadingStep';
 import ErroredStep from './steps/ErroredStep';

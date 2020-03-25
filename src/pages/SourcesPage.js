@@ -40,7 +40,7 @@ import PaginationLoader from './SourcesPage/PaginationLoader';
 import { useIsLoaded } from '../hooks/useIsLoaded';
 import { useIsOrgAdmin } from '../hooks/useIsOrgAdmin';
 import CustomRoute from '../components/CustomRoute/CustomRoute';
-import { updateQuery, parseQuery } from '../Utilities/urlQuery';
+import { updateQuery, parseQuery } from '../utilities/urlQuery';
 
 const SourcesPage = () => {
     const [showEmptyState, setShowEmptyState] = useState(false);

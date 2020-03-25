@@ -17,7 +17,7 @@ import { sourcesDataGraphQl, SOURCE_ALL_APS_ID } from '../sourcesData';
 import { sourceTypesData, OPENSHIFT_ID } from '../sourceTypesData';
 import { applicationTypesData } from '../applicationTypesData';
 
-import { componentWrapperIntl } from '../../Utilities/testsHelpers';
+import { componentWrapperIntl } from '../../utilities/testsHelpers';
 
 import ReducersProviders, { defaultSourcesState } from '../../redux/sources/reducer';
 import * as api from '../../api/entities';
@@ -31,7 +31,7 @@ import RedirectNotAdmin from '../../components/RedirectNotAdmin/RedirectNotAdmin
 import * as AddApplication from '../../components/AddApplication/AddApplication';
 import * as SourceEditModal from '../../components/SourceEditForm/SourceEditModal';
 import * as SourceRemoveModal from '../../components/SourceRemoveModal';
-import * as urlQuery from '../../Utilities/urlQuery';
+import * as urlQuery from '../../utilities/urlQuery';
 import { PlaceHolderTable } from '../../components/SourcesSimpleView/loaders';
 import { Table } from '@patternfly/react-table';
 

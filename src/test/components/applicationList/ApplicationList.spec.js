@@ -5,7 +5,7 @@ import configureStore from 'redux-mock-store';
 import { Route } from 'react-router-dom';
 import { Text } from '@patternfly/react-core';
 
-import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
+import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import ApplicationList from '../../../components/ApplicationsList/ApplicationList';
 import { sourceTypesData } from '../../sourceTypesData';
 import { sourcesDataGraphQl, SOURCE_ALL_APS_ID, SOURCE_ONE_APS_ID } from '../../sourcesData';

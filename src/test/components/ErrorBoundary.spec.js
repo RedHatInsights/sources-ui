@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import ErrorBoundary from '../../components/ErrorBoundary';
-import { componentWrapperIntl } from '../../Utilities/testsHelpers';
+import { componentWrapperIntl } from '../../utilities/testsHelpers';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import * as sentry from '@sentry/browser';

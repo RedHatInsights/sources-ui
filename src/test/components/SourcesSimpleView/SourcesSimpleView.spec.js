@@ -17,7 +17,7 @@ import { sourcesDataGraphQl } from '../../sourcesData';
 import { sourceTypesData } from '../../sourceTypesData';
 import { applicationTypesData } from '../../applicationTypesData';
 
-import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
+import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import * as actions from '../../../redux/sources/actions';
 import * as API from '../../../api/entities';
 import { replaceRouteId, routes } from '../../../Routes';

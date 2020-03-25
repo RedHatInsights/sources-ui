@@ -1,4 +1,4 @@
-import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
+import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import Header from '../../../components/SourceEditForm/Header';
 import { Grid } from '@patternfly/react-core';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';

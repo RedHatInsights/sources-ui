@@ -1,7 +1,7 @@
 import React from 'react';
 import { Bullseye, Button, EmptyState, EmptyStateBody } from '@patternfly/react-core';
 
-import { componentWrapperIntl } from '../../../Utilities/testsHelpers';
+import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import EmptyStateTable from '../../../components/SourcesSimpleView/EmptyStateTable';
 import * as actions from '../../../redux/sources/actions';
 
