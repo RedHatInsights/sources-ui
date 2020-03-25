@@ -2,7 +2,7 @@ import { getProdStore, urlQueryMiddleware } from '../../utilities/store';
 import { defaultSourcesState } from '../../redux/sources/reducer';
 import { defaultUserState } from '../../redux/user/reducer';
 import * as queries from '../../utilities/urlQuery';
-import { ACTION_TYPES } from '../../redux/sources/actions-types';
+import { ACTION_TYPES } from '../../redux/sources/actionTypes';
 import { getDevStore } from '../../utilities/getDevStore';
 
 describe('store creator', () => {

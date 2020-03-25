@@ -1,5 +1,5 @@
 import userReducer, { defaultUserState } from '../../../redux/user/reducer';
-import { ACTION_TYPES } from '../../../redux/user/actions-types';
+import { ACTION_TYPES } from '../../../redux/user/actionTypes';
 
 describe('userReducer', () => {
     let result;

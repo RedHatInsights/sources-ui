@@ -1,6 +1,6 @@
 import { loadOrgAdmin } from '../../../redux/user/actions';
 import * as sourcesActions from '../../../redux/sources/actions';
-import { ACTION_TYPES } from '../../../redux/user/actions-types';
+import { ACTION_TYPES } from '../../../redux/user/actionTypes';
 
 describe('user reducer actions', () => {
     const TITLE = 'TIIITLE';

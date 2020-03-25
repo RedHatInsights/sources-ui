@@ -22,7 +22,7 @@ import {
     SORT_ENTITIES,
     FILTER_SOURCES,
     CLEAR_FILTERS
-} from '../../../redux/sources/actions-types';
+} from '../../../redux/sources/actionTypes';
 import { REMOVE_NOTIFICATION, ADD_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications';
 import * as updateSourceApi from '../../../api/doUpdateSource';
 import * as api from '../../../api/entities';
