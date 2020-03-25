@@ -312,7 +312,7 @@ describe('SourcesTable', () => {
 
                 wrapper.update();
                 wrapper.find('button').at(1).simulate('click');
-                expect(spy).toHaveBeenCalledWith('created_at', 'asc');
+                expect(spy).toHaveBeenCalledWith('source_type_id', 'asc');
 
                 done();
             });

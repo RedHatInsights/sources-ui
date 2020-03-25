@@ -8,7 +8,7 @@ export const sourcesColumns = (intl, notSortable = false) => ([{
     sortable: !notSortable
 }, {
     hidden: true,
-    value: 'source_type_id',
+    value: 'source_type_icon',
     formatter: 'sourceTypeIconFormatter'
 }, {
     title: intl.formatMessage({
@@ -16,14 +16,16 @@ export const sourcesColumns = (intl, notSortable = false) => ([{
         defaultMessage: 'Type'
     }),
     value: 'source_type_id',
-    formatter: 'sourceTypeFormatter'
+    formatter: 'sourceTypeFormatter',
+    sortable: !notSortable
 }, {
     title: intl.formatMessage({
         id: 'sources.application',
         defaultMessage: 'Application'
     }),
     value: 'applications',
-    formatter: 'applicationFormatter'
+    formatter: 'applicationFormatter',
+    sortable: !notSortable
 }, {
     title: intl.formatMessage({
         id: 'sources.addedDate',

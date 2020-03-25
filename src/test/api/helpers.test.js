@@ -106,12 +106,39 @@ describe('api helpers', () => {
     });
 
     describe('sorting', () => {
+        it('creates sorting query param - empty sort_by', () => {
+            const SORT_BY = '';
+            const SORT_DIRECTION = 'desc';
+
+            expect(sorting(SORT_BY, SORT_DIRECTION)).toEqual(
+                ''
+            );
+        });
+
         it('creates sorting query param', () => {
             const SORT_BY = 'name';
             const SORT_DIRECTION = 'desc';
 
             expect(sorting(SORT_BY, SORT_DIRECTION)).toEqual(
-                ', sort_by:"name:desc"'
+                ',sort_by:{name:"desc"}'
+            );
+        });
+
+        it('creates sorting query param for source_type_id', () => {
+            const SORT_BY = 'source_type_id';
+            const SORT_DIRECTION = 'desc';
+
+            expect(sorting(SORT_BY, SORT_DIRECTION)).toEqual(
+                ',sort_by:{source_type:{product_name:"desc"}}'
+            );
+        });
+
+        it('creates sorting query param for applications', () => {
+            const SORT_BY = 'applications';
+            const SORT_DIRECTION = 'desc';
+
+            expect(sorting(SORT_BY, SORT_DIRECTION)).toEqual(
+                ',sort_by:{applications:{__count:"desc"}}'
             );
         });
 

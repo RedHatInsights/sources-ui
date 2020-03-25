@@ -2,7 +2,7 @@
 import axios from 'axios';
 import * as interceptors from '../frontend-components-copies/interceptors';
 
-import { SOURCES_API_BASE, SOURCES_API_BASE_V2 } from './constants';
+import { SOURCES_API_BASE, SOURCES_API_BASE_V2, SOURCES_API_BASE_V3 } from './constants';
 
 export const graphQlErrorInterceptor = response => {
     if (response.errors && response.errors.length > 0) {
@@ -44,7 +44,7 @@ export const getSourcesApi = () => ({
     listEndpointAuthentications: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE}/endpoints/${id}/authentications`),
     deleteSource: (id) => axiosInstanceInsights.delete(`${SOURCES_API_BASE}/sources/${id}`),
     createApplication: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE}/applications`, data),
-    postGraphQL: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE}/graphql`, data),
+    postGraphQL: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/graphql`, data),
     listSourceTypes: () => axiosInstanceInsights.get(`${SOURCES_API_BASE}/source_types`),
     doLoadAppTypes: () => axiosInstanceInsights.get(`${SOURCES_API_BASE}/application_types`),
     deleteApplication: (id) => axiosInstanceInsights.delete(`${SOURCES_API_BASE}/applications/${id}`),
@@ -60,8 +60,21 @@ export const doRemoveSource = (sourceId) => getSourcesApi().deleteSource(sourceI
 export const pagination = (pageSize, pageNumber) =>
     `limit:${pageSize}, offset:${(pageNumber - 1) * pageSize}`;
 
-export const sorting = (sortBy, sortDirection) =>
-    sortBy ? `, sort_by:"${sortBy}:${sortDirection}"` : '';
+export const sorting = (sortBy, sortDirection) => {
+    if (!sortBy) {
+        return '';
+    }
+
+    if (sortBy === 'source_type_id') {
+        return `,sort_by:{source_type:{product_name:"${sortDirection}"}}`;
+    }
+
+    if (sortBy === 'applications') {
+        return `,sort_by:{applications:{__count:"${sortDirection}"}}`;
+    }
+
+    return `,sort_by:{${sortBy}:"${sortDirection}"}`;
+};
 
 export const filtering = (filterValue = {}) => {;
     let filterQueries = [];
@@ -87,7 +100,6 @@ export const graphQlAttributes = `
     created_at,
     source_type_id,
     name,
-    tenant,
     uid,
     updated_at,
     imported,
