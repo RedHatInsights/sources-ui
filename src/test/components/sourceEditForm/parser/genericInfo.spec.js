@@ -48,7 +48,6 @@ describe('generic info edit form parser', () => {
             name: 'source.name',
             label: expect.any(Object),
             component: componentTypes.TEXT_FIELD,
-            setEdit: undefined,
             validate: [
                 expect.any(Function)
             ],
