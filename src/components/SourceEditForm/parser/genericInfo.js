@@ -12,7 +12,7 @@ export const genericInfo = (editing, setEdit, sourceId) => ([
             defaultMessage="Source name"
         />,
         component: editing['source.name'] ? componentTypes.TEXT_FIELD : EDIT_FIELD_NAME,
-        setEdit: editing['source.name'] ? undefined : setEdit,
+        ...(editing['source.name'] ? {} : { setEdit }),
         validate: [
             (value) => asyncValidator(value, sourceId)
         ],

@@ -45,7 +45,7 @@ export const appendClusterIdentifier = (editing, setEdit, sourceType) =>
             defaultMessage="Cluster identifier"
         />,
         isRequired: true,
-        setEdit: editing['source.source_ref'] ? undefined : setEdit,
+        ...(editing['source.source_ref'] ? {} : { setEdit }),
         validate: [{ type: validatorTypes.REQUIRED }],
         component: editing['source.source_ref'] ? componentTypes.TEXT_FIELD : EDIT_FIELD_NAME
     }] : [];

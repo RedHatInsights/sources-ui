@@ -104,9 +104,11 @@ const SourcesPage = () => {
 
     const maximumPageNumber = Math.ceil(numberOfEntities / pageSize);
 
-    if (loaded && numberOfEntities > 0 && pageNumber > Math.max(maximumPageNumber, 1)) {
-        onSetPage({}, maximumPageNumber);
-    }
+    useEffect(() => {
+        if (loaded && numberOfEntities > 0 && pageNumber > Math.max(maximumPageNumber, 1)) {
+            onSetPage({}, maximumPageNumber);
+        }
+    });
 
     const paginationConfig = {
         itemCount: numberOfEntities,

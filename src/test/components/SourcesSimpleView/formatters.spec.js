@@ -40,6 +40,8 @@ import { IntlProvider } from 'react-intl';
 import { CheckCircleIcon, TimesCircleIcon, QuestionCircleIcon, ExclamationTriangleIcon } from '@patternfly/react-icons';
 
 describe('formatters', () => {
+    const wrapperWithIntl = (children) => <IntlProvider locale="en">{children}</IntlProvider>;
+
     describe('formatters', () => {
         it('returns nameFormatter', () => {
             expect(formatters('nameFormatter')).toEqual(nameFormatter);
@@ -158,14 +160,14 @@ describe('formatters', () => {
         });
 
         it('returns only imported badge', () => {
-            const wrapper = mount(<IntlProvider>{importedFormatter('value with no text')}</IntlProvider>);
+            const wrapper = mount(<IntlProvider locale="en">{importedFormatter('value with no text')}</IntlProvider>);
 
             expect(wrapper.find(Badge)).toHaveLength(1);
             expect(wrapper.find(Tooltip)).toHaveLength(0);
         });
 
         it('returns imported badge with tooltip', () => {
-            const wrapper = mount(<IntlProvider>{importedFormatter('cfme')}</IntlProvider>);
+            const wrapper = mount(<IntlProvider locale="en">{importedFormatter('cfme')}</IntlProvider>);
 
             expect(wrapper.find(Badge)).toHaveLength(1);
             expect(wrapper.find(Tooltip)).toHaveLength(1);
@@ -240,15 +242,15 @@ describe('formatters', () => {
 
     describe('importsTexts', () => {
         it('returns object for cfme', () => {
-            expect(importsTexts('cfme')).toEqual(expect.any(Object));
+            expect(mount(wrapperWithIntl(importsTexts('cfme'))).children().first()).toEqual(expect.any(Object));
         });
 
         it('returns object for CFME', () => {
-            expect(importsTexts('CFME')).toEqual(expect.any(Object));
+            expect(mount(wrapperWithIntl(importsTexts('CFME'))).children().first()).toEqual(expect.any(Object));
         });
 
         it('returns default undefined', () => {
-            expect(importsTexts('nonsense')).toEqual(undefined);
+            expect(mount(wrapperWithIntl(importsTexts('nonsense'))).children().first()).toEqual({});
         });
     });
 
@@ -292,7 +294,6 @@ describe('formatters', () => {
     });
 
     describe('availability status', () => {
-        const wrapperWithIntl = (children) => <IntlProvider locale="en">{children}</IntlProvider>;
         const APPTYPES = applicationTypesData.data;
 
         describe('getStatusIcon', () => {
