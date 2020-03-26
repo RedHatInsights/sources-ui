@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, shallowEqual } from 'react-redux';
 import { useSource } from '../../hooks/useSource';
@@ -66,7 +66,9 @@ export const AuthTypeSetter = ({ formOptions, authenticationValues, modifiedValu
 
     const source = useSource();
 
-    innerSetter({ sourceTypes, checkAuthType, formOptions, authenticationValues, appTypes, source, modifiedValues });
+    useEffect(() => {
+        innerSetter({ sourceTypes, checkAuthType, formOptions, authenticationValues, appTypes, source, modifiedValues });
+    });
 
     return null;
 };

@@ -1,4 +1,4 @@
-import { ACTION_TYPES } from './actions-types';
+import { ACTION_TYPES } from './actionTypes';
 import { addMessage } from '../sources/actions';
 
 export const loadOrgAdmin = (title, description) => (dispatch) => {

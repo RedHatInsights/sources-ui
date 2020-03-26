@@ -25,11 +25,8 @@ export const ApplicationSummary = () => (<TextContent>
     <Text component={ TextVariants.p }>
         <FormattedMessage
             id="sources.reviewAddAppSummary"
-            defaultMessage="Review the information below and click Finish to add the application to your source."
-        /> <br />
-        <FormattedMessage
-            id="sources.backGuide"
-            defaultMessage="Use the Back button to make changes."
+            defaultMessage="Review the information below and click Add to add the application to your source.
+            Use the Back button to make changes."
         />
     </Text>
 </TextContent>);
@@ -141,9 +138,12 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
                     defaultMessage: 'You are managing applications of this source.'
                 }),
                 buttonLabels: {
-                    submit: intl.formatMessage({
-                        id: 'sources.finish',
-                        defaultMessage: 'Finish'
+                    submit: hasAvailableApps ? intl.formatMessage({
+                        id: 'sources.add',
+                        defaultMessage: 'Add'
+                    }) : intl.formatMessage({
+                        id: 'sources.close',
+                        defaultMessage: 'Close'
                     }),
                     cancel: intl.formatMessage({
                         id: 'sources.cancel',

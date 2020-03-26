@@ -18,15 +18,16 @@ This application allows to
 - [Running locally](#running-locally)
 - [Build app](#build-app)
   - [Testing](#testing)
-- [Deploying](#deploying)
-  - [How it works](#how-it-works)
 - [Patternfly](#patternfly)
 - [Data-driven forms](#data-driven-forms)
 - [Insights Components](#insights-components)
   - [AddSourceWizard](#addsourcewizard)
+  - [Updating steps in the wizard](#updating-steps-in-the-wizard)
 - [API](#api)
   - [Sources Javascript API client](#sources-javascript-api-client)
 - [Technologies](#technologies)
+- [Deploying](#deploying)
+  - [How it works](#how-it-works)
 - [License](#license)
 
 # Getting Started
@@ -39,7 +40,7 @@ There is a [comprehensive quick start guide in the Storybook Documentation](http
 - [Insights Proxy](https://github.com/RedHatInsights/insights-proxy)
 
 Note: You will need to set up the Insights environment if you want to develop
-with the starter app due to the consumption of the chroming service as well as
+Sources UI due to the consumption of the chroming service as well as
 setting up your global/app navigation through the API.
 
 # Running locally
@@ -60,18 +61,7 @@ SPANDX_CONFIG="./config/spandx.config.js" bash $PROXY_PATH/scripts/run.sh
 
 - Travis is used to test the build for this code.
   - `npm run test` will run tests,
-  - `npx eslint src` will run just the linter.
-
-# Deploying
-
-- The Platform team is using Travis to deploy the application
-
-## How it works
-
-- any push to the `{REPO}` `master` branch will deploy to a `{REPO}-build` `master` branch
-- any push to a `{REPO}` `stable/\*` branch will deploy to a `{REPO}-build` `stable` branch
-- Pull requests (based on master) will not be pushed to `{REPO}-build` `master` branch
-  - If the PR is accepted and merged, master will be rebuilt and will deploy to `{REPO}-build` `master` branch
+  - `npm run lint` will run just the linter.
 
 # Patternfly
 
@@ -94,18 +84,34 @@ Insights Platform will deliver components and static assets through [npm](https:
 
 This application use a [AddSourceWizard](https://github.com/RedHatInsights/frontend-components/tree/master/packages/sources), which provides the Wizard component. For creating the DDF schema, it uses information provided by Sources API and components included in the AddSourceWizard package.
 
+## Updating steps in the wizard
+
+- See [Update wizard](doc/update-wizard.md). This guideline provides info how to update the add source wizard.
+
 # API
 
 - [Sources API](https://github.com/RedHatInsights/sources-api)
 
 ## Sources Javascript API client
 
-- [Sources API Javascript client](https://github.com/RedHatInsights/javascript-clients/blob/master/packages/sources/doc/README.md)
+This API client is no longer in the UI because of its huge bundle size. However, is useful to use is a documentation to the API.
 
+- [Sources API Javascript client](https://github.com/RedHatInsights/javascript-clients/blob/master/packages/sources/doc/README.md)
 
 # Technologies
 
 - See [Technologies](doc/technologies.md).
+
+# Deploying
+
+- The Platform team is using Travis to deploy the application
+
+## How it works
+
+- any push to the `{REPO}` `master` branch will deploy to a `{REPO}-build` `master` branch
+- any push to a `{REPO}` `stable/\*` branch will deploy to a `{REPO}-build` `stable` branch
+- Pull requests (based on master) will not be pushed to `{REPO}-build` `master` branch
+  - If the PR is accepted and merged, master will be rebuilt and will deploy to `{REPO}-build` `master` branch
 
 # License
 

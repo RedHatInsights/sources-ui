@@ -4,7 +4,7 @@ import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-re
 import { hardcodedSchemas } from '@redhat-cloud-services/frontend-components-sources';
 import { FormattedMessage } from 'react-intl';
 
-import { EDIT_FIELD_NAME } from '../../editField/EditField';
+import { EDIT_FIELD_NAME } from '../../EditField/EditField';
 import { unsupportedAuthTypeField } from './unsupportedAuthType';
 
 export const createAuthFieldName = (fieldName, id) => `authentications.a${id}.${fieldName.replace('authentication.', '')}`;

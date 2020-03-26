@@ -1,7 +1,7 @@
 import get from 'lodash/get';
 import set from 'lodash/set';
 
-import { endpointToUrl } from '../SourcesSimpleView/formatters';
+import { endpointToUrl } from '../SourcesTable/formatters';
 
 export const selectOnlyEditedValues = (values, editing) => {
     const filteredValues = {};

@@ -7,7 +7,7 @@ import { Spinner } from '@patternfly/react-core/dist/js/components/Spinner';
 import { layoutMapper } from '@data-driven-forms/pf4-component-mapper';
 import { Modal } from '@patternfly/react-core/dist/js/components/Modal';
 
-import SourcesFormRenderer from '../../Utilities/SourcesFormRenderer';
+import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
 import { parseSourceToSchema } from './parser/parseSourceToSchema';
 import { doLoadSourceForEdit } from '../../api/doLoadSourceForEdit';
 import HorizontalFormWrapper from './HorizontalFormWrapper';
