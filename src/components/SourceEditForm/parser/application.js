@@ -4,7 +4,7 @@ import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-re
 import { hardcodedSchemas } from '@redhat-cloud-services/frontend-components-sources';
 import { FormattedMessage } from 'react-intl';
 import { modifyFields } from './helpers';
-import { EDIT_FIELD_NAME } from '../../editField/EditField';
+import { EDIT_FIELD_NAME } from '../../EditField/EditField';
 
 export const APP_NAMES = {
     COST_MANAGAMENT: '/insights/platform/cost-management'

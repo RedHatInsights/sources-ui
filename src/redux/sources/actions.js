@@ -10,7 +10,7 @@ import {
     SET_COUNT,
     ADD_HIDDEN_SOURCE,
     CLEAR_FILTERS
-} from './actions-types';
+} from './actionTypes';
 import {
     doLoadAppTypes,
     doRemoveSource,
