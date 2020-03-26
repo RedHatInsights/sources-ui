@@ -5,7 +5,7 @@ import { RowLoader } from '@redhat-cloud-services/frontend-components-utilities/
 import { Spinner } from '@patternfly/react-core/dist/js/components/Spinner';
 import { Bullseye } from '@patternfly/react-core/dist/js/layouts/Bullseye';
 
-import { PlaceHolderTable, RowWrapperLoader } from '../../../components/SourcesSimpleView/loaders';
+import { PlaceHolderTable, RowWrapperLoader } from '../../../components/SourcesTable/loaders';
 import { COLUMN_COUNT } from '../../../views/sourcesViewDefinition';
 
 describe('loaders', () => {

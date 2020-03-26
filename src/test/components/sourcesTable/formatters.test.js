@@ -23,7 +23,7 @@ import {
     PARTIALLY_UNAVAILABLE,
     UNAVAILABLE,
     UnknownError
-} from '../../../components/SourcesSimpleView/formatters';
+} from '../../../components/SourcesTable/formatters';
 import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX } from '../../__mocks__/sourceTypesData';
 import { sourcesDataGraphQl, SOURCE_CATALOGAPP_INDEX, SOURCE_ALL_APS_INDEX, SOURCE_NO_APS_INDEX, SOURCE_ENDPOINT_URL_INDEX } from '../../__mocks__/sourcesData';
 import {

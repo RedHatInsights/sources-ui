@@ -18,7 +18,7 @@ import { getSourcesApi } from '../../api/entities';
 
 import { useSource } from '../../hooks/useSource';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
-import { endpointToUrl } from '../SourcesSimpleView/formatters';
+import { endpointToUrl } from '../SourcesTable/formatters';
 import { routes } from '../../Routes';
 
 import { doAttachApp } from '../../api/doAttachApp';

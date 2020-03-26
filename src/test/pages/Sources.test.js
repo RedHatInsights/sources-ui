@@ -11,7 +11,7 @@ import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sour
 
 import SourcesPage from '../../pages/Sources';
 import SourcesEmptyState from '../../components/SourcesEmptyState';
-import SourcesSimpleView from '../../components/SourcesSimpleView/SourcesSimpleView';
+import SourcesTable from '../../components/SourcesTable/SourcesTable';
 
 import { sourcesDataGraphQl, SOURCE_ALL_APS_ID } from '../__mocks__/sourcesData';
 import { sourceTypesData, OPENSHIFT_ID } from '../__mocks__/sourceTypesData';
@@ -22,7 +22,7 @@ import { componentWrapperIntl } from '../../utilities/testsHelpers';
 import ReducersProviders, { defaultSourcesState } from '../../redux/sources/reducer';
 import * as api from '../../api/entities';
 import * as typesApi from '../../api/source_types';
-import EmptyStateTable from '../../components/SourcesSimpleView/EmptyStateTable';
+import EmptyStateTable from '../../components/SourcesTable/EmptyStateTable';
 import PaginationLoader from '../../pages/Sources/PaginationLoader';
 import { routes, replaceRouteId } from '../../Routes';
 import * as helpers from '../../pages/Sources/helpers';
@@ -32,7 +32,7 @@ import * as AddApplication from '../../components/AddApplication/AddApplication'
 import * as SourceEditModal from '../../components/SourceEditForm/SourceEditModal';
 import * as SourceRemoveModal from '../../components/SourceRemoveModal';
 import * as urlQuery from '../../utilities/urlQuery';
-import { PlaceHolderTable } from '../../components/SourcesSimpleView/loaders';
+import { PlaceHolderTable } from '../../components/SourcesTable/loaders';
 import { Table } from '@patternfly/react-table';
 
 describe('SourcesPage', () => {
@@ -73,7 +73,7 @@ describe('SourcesPage', () => {
         wrapper.update();
         expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
         expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
-        expect(wrapper.find(SourcesSimpleView)).toHaveLength(1);
+        expect(wrapper.find(SourcesTable)).toHaveLength(1);
         expect(wrapper.find(Pagination)).toHaveLength(2);
         expect(wrapper.find(PaginationLoader)).toHaveLength(0);
         expect(wrapper.find(PrimaryToolbar).first().props().actionsConfig).toEqual({ actions: expect.any(Array) });
@@ -106,7 +106,7 @@ describe('SourcesPage', () => {
         wrapper.update();
         expect(wrapper.find(SourcesEmptyState)).toHaveLength(1);
         expect(wrapper.find(PrimaryToolbar)).toHaveLength(0);
-        expect(wrapper.find(SourcesSimpleView)).toHaveLength(0);
+        expect(wrapper.find(SourcesTable)).toHaveLength(0);
     });
 
     it('renders empty state when there is fetching error', async () => {
@@ -120,7 +120,7 @@ describe('SourcesPage', () => {
         wrapper.update();
         expect(wrapper.find(SourcesEmptyState)).toHaveLength(1);
         expect(wrapper.find(PrimaryToolbar)).toHaveLength(0);
-        expect(wrapper.find(SourcesSimpleView)).toHaveLength(0);
+        expect(wrapper.find(SourcesTable)).toHaveLength(0);
         expect(wrapper.text().includes(ERROR_MESSAGE)).toEqual(true);
     });
 
@@ -131,7 +131,7 @@ describe('SourcesPage', () => {
 
         expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
         expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
-        expect(wrapper.find(SourcesSimpleView)).toHaveLength(1);
+        expect(wrapper.find(SourcesTable)).toHaveLength(1);
         expect(wrapper.find(PaginationLoader)).toHaveLength(2);
     });
 
@@ -152,7 +152,7 @@ describe('SourcesPage', () => {
 
         expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
         expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
-        expect(wrapper.find(SourcesSimpleView)).toHaveLength(1);
+        expect(wrapper.find(SourcesTable)).toHaveLength(1);
         expect(wrapper.find(PaginationLoader)).toHaveLength(0);
         expect(wrapper.find(Pagination)).toHaveLength(2);
     });
@@ -482,7 +482,7 @@ describe('SourcesPage', () => {
 
             expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
             expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
-            expect(wrapper.find(SourcesSimpleView)).toHaveLength(1);
+            expect(wrapper.find(SourcesTable)).toHaveLength(1);
             expect(wrapper.find(Pagination)).toHaveLength(2);
             expect(wrapper.find(PaginationLoader)).toHaveLength(0);
             expect(wrapper.find(PrimaryToolbar).first().props().actionsConfig).toEqual(undefined);

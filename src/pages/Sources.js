@@ -14,7 +14,7 @@ import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/compo
 import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/PageHeader';
 import { Section } from '@redhat-cloud-services/frontend-components/components/Section';
 
-import SourcesSimpleView from '../components/SourcesSimpleView/SourcesSimpleView';
+import SourcesTable from '../components/SourcesTable/SourcesTable';
 import SourcesEmptyState from '../components/SourcesEmptyState';
 import { pageAndSize } from '../redux/sources/actions';
 import { routes } from '../Routes';
@@ -180,7 +180,7 @@ const SourcesPage = () => {
                         dispatch(filterSources(removeChips(chips, filterValue, deleteAll)))
                 }}
             />
-            <SourcesSimpleView />
+            <SourcesTable />
             <PrimaryToolbar
                 pagination={
                     showPaginationLoader ? <PaginationLoader />

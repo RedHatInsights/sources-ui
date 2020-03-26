@@ -9,9 +9,9 @@ import { act } from 'react-dom/test-utils';
 import ArrowsAltVIcon from '@patternfly/react-icons/dist/js/icons/arrows-alt-v-icon';
 import LongArrowAltDownIcon from '@patternfly/react-icons/dist/js/icons/long-arrow-alt-down-icon';
 
-import SourcesSimpleView, { insertEditAction, actionResolver, prepareColumnsCells } from '../../../components/SourcesSimpleView/SourcesSimpleView';
-import { PlaceHolderTable, RowWrapperLoader } from '../../../components/SourcesSimpleView/loaders';
-import EmptyStateTable from '../../../components/SourcesSimpleView/EmptyStateTable';
+import SourcesTable, { insertEditAction, actionResolver, prepareColumnsCells } from '../../../components/SourcesTable/SourcesTable';
+import { PlaceHolderTable, RowWrapperLoader } from '../../../components/SourcesTable/loaders';
+import EmptyStateTable from '../../../components/SourcesTable/EmptyStateTable';
 
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
 import { sourceTypesData } from '../../__mocks__/sourceTypesData';
@@ -24,7 +24,7 @@ import { replaceRouteId, routes } from '../../../Routes';
 import { defaultSourcesState } from '../../../redux/sources/reducer';
 import { sourcesColumns } from '../../../views/sourcesViewDefinition';
 
-describe('SourcesSimpleView', () => {
+describe('SourcesTable', () => {
     const middlewares = [thunk, notificationsMiddleware()];
     let loadedProps;
     let mockStore;
@@ -55,7 +55,7 @@ describe('SourcesSimpleView', () => {
 
     it('renders loading state', () => {
         const store = mockStore(initialState);
-        const wrapper = mount(componentWrapperIntl(<SourcesSimpleView { ...initialProps } />, store));
+        const wrapper = mount(componentWrapperIntl(<SourcesTable { ...initialProps } />, store));
 
         expect(wrapper.find(PlaceHolderTable)).toHaveLength(1);
         expect(wrapper.find(ArrowsAltVIcon)).toHaveLength(0);
@@ -79,7 +79,7 @@ describe('SourcesSimpleView', () => {
         };
 
         const store = mockStore(initialState);
-        const wrapper = mount(componentWrapperIntl(<SourcesSimpleView { ...initialProps } />, store));
+        const wrapper = mount(componentWrapperIntl(<SourcesTable { ...initialProps } />, store));
 
         setTimeout(() => {
             setTimeout(() => {
@@ -102,7 +102,7 @@ describe('SourcesSimpleView', () => {
         };
 
         const store = mockStore(initialState);
-        const wrapper = mount(componentWrapperIntl(<SourcesSimpleView { ...initialProps } />, store));
+        const wrapper = mount(componentWrapperIntl(<SourcesTable { ...initialProps } />, store));
 
         const activeSortingIcon = 1;
         const expectSortableColumns = sourcesColumns({ formatMessage: () => {} }).filter(x => x.sortable).length - activeSortingIcon;
@@ -140,7 +140,7 @@ describe('SourcesSimpleView', () => {
         let wrapper;
 
         await act(async () => {
-            wrapper = mount(componentWrapperIntl(<SourcesSimpleView { ...initialProps } />, store));
+            wrapper = mount(componentWrapperIntl(<SourcesTable { ...initialProps } />, store));
         });
         wrapper.update();
 
@@ -171,7 +171,7 @@ describe('SourcesSimpleView', () => {
         let wrapper;
 
         await act(async () => {
-            wrapper = mount(componentWrapperIntl(<SourcesSimpleView { ...initialProps } />, store));
+            wrapper = mount(componentWrapperIntl(<SourcesTable { ...initialProps } />, store));
         });
         wrapper.update();
 
@@ -207,7 +207,7 @@ describe('SourcesSimpleView', () => {
         const store = mockStore(mockStoreFn);
 
         await act(async () => {
-            wrapper = mount(componentWrapperIntl(<SourcesSimpleView { ...initialProps } />, store));
+            wrapper = mount(componentWrapperIntl(<SourcesTable { ...initialProps } />, store));
         });
 
         wrapper.update();
@@ -241,7 +241,7 @@ describe('SourcesSimpleView', () => {
             };
 
             const store = mockStore(initialState);
-            wrapper = mount(componentWrapperIntl(<SourcesSimpleView { ...initialProps } />, store));
+            wrapper = mount(componentWrapperIntl(<SourcesTable { ...initialProps } />, store));
         });
 
         it('redirect to edit', (done) => {
@@ -302,7 +302,7 @@ describe('SourcesSimpleView', () => {
         };
 
         const store = mockStore(initialState);
-        const wrapper = mount(componentWrapperIntl(<SourcesSimpleView { ...initialProps } />, store));
+        const wrapper = mount(componentWrapperIntl(<SourcesTable { ...initialProps } />, store));
 
         setTimeout(() => {
             setTimeout(() => {

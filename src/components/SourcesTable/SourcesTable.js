@@ -81,7 +81,7 @@ export const actionResolver = (intl, push) => (rowData) => {
     return actions;
 };
 
-const SourcesSimpleView = () => {
+const SourcesTable = () => {
     const { push } = useHistory();
     const intl = useIntl();
 
@@ -179,4 +179,4 @@ const SourcesSimpleView = () => {
     );
 };
 
-export default SourcesSimpleView;
+export default SourcesTable;
