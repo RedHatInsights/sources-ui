@@ -1,4 +1,4 @@
-import { EDIT_FIELD_NAME } from '../../editField/EditField';
+import { EDIT_FIELD_NAME } from '../../EditField/EditField';
 import { componentTypes } from '@data-driven-forms/react-form-renderer';
 
 export const NOT_CHANGING_COMPONENTS = [componentTypes.CHECKBOX, componentTypes.SWITCH];

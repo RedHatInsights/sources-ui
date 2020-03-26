@@ -2,7 +2,7 @@
 import axios from 'axios';
 import * as interceptors from '../frontend-components-copies/interceptors';
 
-import { SOURCES_API_BASE } from './constants';
+import { SOURCES_API_BASE, SOURCES_API_BASE_V2 } from './constants';
 
 export const graphQlErrorInterceptor = response => {
     if (response.errors && response.errors.length > 0) {
@@ -47,7 +47,8 @@ export const getSourcesApi = () => ({
     postGraphQL: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE}/graphql`, data),
     listSourceTypes: () => axiosInstanceInsights.get(`${SOURCES_API_BASE}/source_types`),
     doLoadAppTypes: () => axiosInstanceInsights.get(`${SOURCES_API_BASE}/application_types`),
-    deleteApplication: (id) => axiosInstanceInsights.delete(`${SOURCES_API_BASE}/applications/${id}`)
+    deleteApplication: (id) => axiosInstanceInsights.delete(`${SOURCES_API_BASE}/applications/${id}`),
+    createAuthApp: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V2}/application_authentications`, data)
 });
 
 export const doLoadAppTypes = () => getSourcesApi().doLoadAppTypes();
