@@ -1,4 +1,4 @@
-import PaginationLoader from '../../../pages/SourcesPage/PaginationLoader';
+import PaginationLoader from '../../../pages/Sources/PaginationLoader';
 import ContentLoader from 'react-content-loader';
 
 describe('PaginationLoader', () => {

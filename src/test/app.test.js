@@ -13,7 +13,7 @@ import { getProdStore } from '../utilities/store';
 import * as PermissionsChecker from '../components/PermissionsChecker';
 import ErrorBoundary from '../components/ErrorBoundary';
 
-jest.mock('../pages/SourcesPage', () => ({
+jest.mock('../pages/Sources', () => ({
     __esModule: true,
     default: () => {
         return <div></div>;

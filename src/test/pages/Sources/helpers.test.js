@@ -7,7 +7,7 @@ import {
     removeChips,
     prepareChips,
     loadedTypes
-} from '../../../pages/SourcesPage/helpers';
+} from '../../../pages/Sources/helpers';
 
 import * as actions from '../../../redux/sources/actions';
 import { sourceTypesData } from '../../__mocks__/sourceTypesData';

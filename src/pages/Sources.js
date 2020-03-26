@@ -35,8 +35,8 @@ import {
     afterSuccess,
     onCloseAddSourceWizard,
     loadedTypes
-} from './SourcesPage/helpers';
-import PaginationLoader from './SourcesPage/PaginationLoader';
+} from './Sources/helpers';
+import PaginationLoader from './Sources/PaginationLoader';
 import { useIsLoaded } from '../hooks/useIsLoaded';
 import { useIsOrgAdmin } from '../hooks/useIsOrgAdmin';
 import CustomRoute from '../components/CustomRoute/CustomRoute';

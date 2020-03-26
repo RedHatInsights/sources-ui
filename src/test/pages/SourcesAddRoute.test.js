@@ -8,7 +8,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources';
 
-import SourcesPage from '../../pages/SourcesPage';
+import SourcesPage from '../../pages/Sources';
 
 import { sourcesDataGraphQl } from '../__mocks__/sourcesData';
 import { sourceTypesData } from '../__mocks__/sourceTypesData';

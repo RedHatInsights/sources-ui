@@ -9,7 +9,7 @@ import { Chip, Select, Pagination, Button } from '@patternfly/react-core';
 import { MemoryRouter, Link } from 'react-router-dom';
 import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources';
 
-import SourcesPage from '../../pages/SourcesPage';
+import SourcesPage from '../../pages/Sources';
 import SourcesEmptyState from '../../components/SourcesEmptyState';
 import SourcesSimpleView from '../../components/SourcesSimpleView/SourcesSimpleView';
 
@@ -23,9 +23,9 @@ import ReducersProviders, { defaultSourcesState } from '../../redux/sources/redu
 import * as api from '../../api/entities';
 import * as typesApi from '../../api/source_types';
 import EmptyStateTable from '../../components/SourcesSimpleView/EmptyStateTable';
-import PaginationLoader from '../../pages/SourcesPage/PaginationLoader';
+import PaginationLoader from '../../pages/Sources/PaginationLoader';
 import { routes, replaceRouteId } from '../../Routes';
-import * as helpers from '../../pages/SourcesPage/helpers';
+import * as helpers from '../../pages/Sources/helpers';
 import UserReducer from '../../redux/user/reducer';
 import RedirectNotAdmin from '../../components/RedirectNotAdmin/RedirectNotAdmin';
 import * as AddApplication from '../../components/AddApplication/AddApplication';
