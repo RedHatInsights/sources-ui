@@ -157,7 +157,7 @@ describe('entities spec', () => {
         it('doLoadEntities loads sources', async () => {
             const ENTITIES = [{ entity1: true }, { entity2: true }];
 
-            mock.onPost(`/api/sources/v1.0/graphql`).reply(200, { data: ENTITIES });
+            mock.onPost(`/api/sources/v3.0/graphql`).reply(200, { data: ENTITIES });
 
             const result = await api.doLoadEntities(params);
 
@@ -231,7 +231,7 @@ describe('entities spec', () => {
         it('doLoadSource', async () => {
             const ENTITIES = [{ entity1: true }];
 
-            mock.onPost(`/api/sources/v1.0/graphql`).reply(200, { data: ENTITIES });
+            mock.onPost(`/api/sources/v3.0/graphql`).reply(200, { data: ENTITIES });
 
             const result = await api.doLoadSource(SOURCE_ID);
 
