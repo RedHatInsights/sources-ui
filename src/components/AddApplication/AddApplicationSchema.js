@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
 
 import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
@@ -31,18 +32,99 @@ export const ApplicationSummary = () => (<TextContent>
     </Text>
 </TextContent>);
 
+export const SelectAuthenticationDescription = ({ applicationTypeName, authenticationTypeName }) => (
+    <TextContent>
+        <Text component={ TextVariants.p }>
+            <FormattedMessage
+                id="sources.selectAuthenticationDescription"
+                defaultMessage="Selected application { applicationTypeName } supports { authenticationTypeName } authentication
+                type. You can use already defined authentication values or define new."
+                values={{ applicationTypeName, authenticationTypeName }}
+            />
+        </Text>
+    </TextContent>
+);
+
+SelectAuthenticationDescription.propTypes = {
+    applicationTypeName: PropTypes.string,
+    authenticationTypeName: PropTypes.string
+};
+
 export const hasAlreadySupportedAuthType = (authValues = [], appType, sourceTypeName) =>
     authValues.find(({ authtype }) => authtype === get(appType, `supported_authentication_types.${sourceTypeName}[0]`));
+
+const selectAuthenticationStep = ({ authenticationValues, sourceType, applicationTypes }) => {
+    const nextStep = ({ values: { application } }) => {
+        const app = application ? application : {};
+        const appId = app.application_type_id ? app.application_type_id : '';
+
+        return `${sourceType.name}-${appId}`;
+    };
+
+    const fields = [];
+
+    applicationTypes.forEach((app) => {
+        const supportedAuthType = get(app, `supported_authentication_types[${sourceType.name}][0]`, '');
+
+        if (supportedAuthType && hasAlreadySupportedAuthType(authenticationValues, app, sourceType.name)) {
+            const supportedAuthTypeName =
+                get(sourceType, `schema.authentication`, {}).find(({ type }) => type === supportedAuthType).name;
+
+            const radioOptions = authenticationValues.filter(({ authtype }) => authtype === supportedAuthType).map((values) => ({
+                label: <FormattedMessage
+                    id="sources.selectAuthenticationradioLabel"
+                    defaultMessage="{ supportedAuthTypeName } used in list of applications"
+                    values={{ supportedAuthTypeName }}
+                />,
+                value: values,
+                key: values.id
+            }));
+
+            fields.push({
+                component: componentTypes.SUB_FORM,
+                name: `${app.name}-subform`,
+                condition: {
+                    when: 'application.application_type_id',
+                    is: app.id
+                },
+                fields: [
+                    {
+                        name: `${app.name}-select-authentication-summary`,
+                        component: 'description',
+                        Content: SelectAuthenticationDescription,
+                        applicationTypeName: app.display_name,
+                        authenticationTypeName: supportedAuthTypeName
+                    },
+                    {
+                        component: componentTypes.RADIO,
+                        name: 'authentication',
+                        options: [
+                            { label: 'Define new', value: {} },
+                            ...radioOptions
+                        ]
+                    }
+                ]
+            });
+        }
+    });
+
+    return ({
+        stepKey: 'selectAuthentication',
+        name: 'selectAuthentication',
+        title: 'Select authentication',
+        fields,
+        nextStep
+    });
+};
 
 const fields = (applications = [], intl, sourceTypes, applicationTypes, authenticationValues, source, modifiedValues) => {
     const hasAvailableApps = applications.length > 0;
 
     let nextStep = hasAvailableApps ? 'summary' : undefined;
     let authenticationFields = [];
+    const sourceType = sourceTypes.find(({ id }) => id === source.source_type_id);
 
     if (!source.imported && hasAvailableApps) {
-        const sourceType = sourceTypes.find(({ id }) => id === source.source_type_id);
-
         const appendEndpoint = sourceType.schema.endpoint.hidden ? sourceType.schema.endpoint.fields : [];
         const hasEndpointStep = appendEndpoint.length === 0;
 
@@ -91,10 +173,18 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
         }
 
         nextStep = ({ values: { application } }) => {
-            const app = application ? application : {};
-            const appId = app.application_type_id ? app.application_type_id : '';
+            if (application) {
+                const appType = applicationTypes.find(({ id }) => id === application.application_type_id);
 
-            return `${sourceType.name}-${appId}`;
+                if (hasAlreadySupportedAuthType(authenticationValues, appType, sourceType.name)) {
+                    return 'selectAuthentication';
+                }
+
+                const app = application ? application : {};
+                const appId = app.application_type_id ? app.application_type_id : '';
+
+                return `${sourceType.name}-${appId}`;
+            }
         };
     }
 
@@ -196,6 +286,7 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
                             applicationTypes
                         }]
                     },
+                    selectAuthenticationStep({ authenticationValues, sourceType, applicationTypes }),
                     ...authenticationFields
                 ]
             }
