@@ -11,6 +11,7 @@ import get from 'lodash/get';
 
 import AddApplicationDescription from './AddApplicationDescription';
 import { AuthTypeSetter } from './AuthTypeSetter';
+import { AuthTypeCleaner } from './AuthTypeCleaner';
 
 export const NoAvailableApplicationDescription = () => (<TextContent>
     <Text component={ TextVariants.p }>
@@ -53,7 +54,7 @@ SelectAuthenticationDescription.propTypes = {
 export const hasAlreadySupportedAuthType = (authValues = [], appType, sourceTypeName) =>
     authValues.find(({ authtype }) => authtype === get(appType, `supported_authentication_types.${sourceTypeName}[0]`));
 
-const selectAuthenticationStep = ({ authenticationValues, sourceType, applicationTypes }) => {
+const selectAuthenticationStep = ({ authenticationValues, sourceType, applicationTypes, modifiedValues }) => {
     const nextStep = ({ values: { application } }) => {
         const app = application ? application : {};
         const appId = app.application_type_id ? app.application_type_id : '';
@@ -61,7 +62,14 @@ const selectAuthenticationStep = ({ authenticationValues, sourceType, applicatio
         return `${sourceType.name}-${appId}`;
     };
 
-    const fields = [];
+    const fields = [{
+        component: 'description',
+        name: 'authtypesetter',
+        Content: AuthTypeSetter,
+        authenticationValues,
+        hideField: true,
+        modifiedValues
+    }];
 
     applicationTypes.forEach((app) => {
         const supportedAuthType = get(app, `supported_authentication_types[${sourceType.name}][0]`, '');
@@ -76,8 +84,7 @@ const selectAuthenticationStep = ({ authenticationValues, sourceType, applicatio
                     defaultMessage="{ supportedAuthTypeName } used in list of applications"
                     values={{ supportedAuthTypeName }}
                 />,
-                value: values,
-                key: values.id
+                value: values.id,
             }));
 
             fields.push({
@@ -93,16 +100,19 @@ const selectAuthenticationStep = ({ authenticationValues, sourceType, applicatio
                         component: 'description',
                         Content: SelectAuthenticationDescription,
                         applicationTypeName: app.display_name,
-                        authenticationTypeName: supportedAuthTypeName
+                        authenticationTypeName: supportedAuthTypeName,
                     },
                     {
                         component: componentTypes.RADIO,
-                        name: 'authentication',
+                        name: 'selectedAuthentication',
+                        label: 'Select authentication',
+                        isRequired: true,
+                        validate: [{ type: validatorTypes.REQUIRED }],
                         options: [
-                            { label: 'Define new', value: {} },
+                            { label: 'Define new', value: 'new' },
                             ...radioOptions
                         ]
-                    }
+                    },
                 ]
             });
         }
@@ -222,7 +232,7 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
                 inModal: true,
                 predictSteps: true,
                 showTitles: true,
-                crossroads: ['application.application_type_id'],
+                crossroads: ['application.application_type_id', 'selectedAuthentication'],
                 description: intl.formatMessage({
                     id: 'sources.addAppDescription',
                     defaultMessage: 'You are managing applications of this source.'
@@ -263,11 +273,11 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
                             {
                                 component: 'description',
                                 name: 'authtypesetter',
-                                Content: AuthTypeSetter,
-                                authenticationValues,
+                                Content: AuthTypeCleaner,
                                 hideField: true,
                                 modifiedValues
-                            }]
+                            }
+                        ]
                     }, {
                         title: intl.formatMessage({
                             id: 'sources.review',
@@ -286,7 +296,7 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
                             applicationTypes
                         }]
                     },
-                    selectAuthenticationStep({ authenticationValues, sourceType, applicationTypes }),
+                    selectAuthenticationStep({ authenticationValues, sourceType, applicationTypes, modifiedValues }),
                     ...authenticationFields
                 ]
             }
