@@ -5,7 +5,7 @@ import get from 'lodash/get';
 export const AuthTypeCleaner = ({ formOptions, modifiedValues }) => {
     const selectedAppId = get(formOptions.getState().values, 'application.application_type_id', '');
 
-    const [initialValue] = useState(selectedAppId);
+    const [initialValue, setInitialValue] = useState(selectedAppId);
 
     useEffect(() => {
         if (initialValue !== selectedAppId) {
@@ -14,6 +14,7 @@ export const AuthTypeCleaner = ({ formOptions, modifiedValues }) => {
                 formOptions.change('authentication', values);
                 formOptions.change('selectedAuthentication', undefined);
             });
+            setInitialValue(undefined);
         }
     }, [selectedAppId]);
 
