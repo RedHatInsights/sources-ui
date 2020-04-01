@@ -30,11 +30,12 @@ export const innerSetter = ({
 export const AuthTypeSetter = ({ formOptions, authenticationValues, modifiedValues }) => {
     const selectedAuthentication = formOptions.getState().values.selectedAuthentication;
 
-    const [initialValue] = useState(selectedAuthentication);
+    const [initialValue, setInitialValue] = useState(selectedAuthentication);
 
     useEffect(() => {
         if (initialValue !== selectedAuthentication) {
             innerSetter({ formOptions, authenticationValues, modifiedValues, selectedAuthentication });
+            setInitialValue(undefined);
         }
     }, [selectedAuthentication]);
 
