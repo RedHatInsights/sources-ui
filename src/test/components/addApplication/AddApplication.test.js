@@ -28,9 +28,11 @@ describe('AddApplication', () => {
     let store;
     let initialEntry;
     let mockStore;
+    let checkAvailabilitySource;
     const middlewares = [thunk, notificationsMiddleware()];
 
     beforeEach(() => {
+        checkAvailabilitySource = jest.fn().mockImplementation(() => Promise.resolve());
         initialEntry = [replaceRouteId(routes.sourceManageApps.path, SOURCE_NO_APS_ID)];
         mockStore = configureStore(middlewares);
         store = mockStore({
@@ -56,7 +58,8 @@ describe('AddApplication', () => {
             }
         });
         entities.getSourcesApi = () => ({
-            listEndpointAuthentications: jest.fn().mockImplementation(() => Promise.resolve({ data: [] }))
+            listEndpointAuthentications: jest.fn().mockImplementation(() => Promise.resolve({ data: [] })),
+            checkAvailabilitySource
         });
     });
 
@@ -347,6 +350,8 @@ describe('AddApplication', () => {
             expect(wrapper.find(ErroredStepAttach)).toHaveLength(0);
             expect(wrapper.find(FinishedStep)).toHaveLength(1);
 
+            expect(checkAvailabilitySource).toHaveBeenCalledWith(source.id);
+
             expect(attachSource.doAttachApp.mock.calls[0][1].getState().values).toEqual({
                 application: { application_type_id: application.id },
                 endpoint_id: undefined,
@@ -571,6 +576,8 @@ describe('AddApplication', () => {
             } };
             const formApi = expect.any(Object);
             const authenticationValues = expect.any(Array);
+
+            expect(checkAvailabilitySource).toHaveBeenCalledWith(source.id);
 
             expect(attachSource.doAttachApp).toHaveBeenCalledWith(
                 formValues,

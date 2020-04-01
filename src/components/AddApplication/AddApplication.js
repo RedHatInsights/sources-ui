@@ -23,6 +23,7 @@ import { routes } from '../../Routes';
 
 import { doAttachApp } from '../../api/doAttachApp';
 import { onCancelAddApplication } from './onCancel';
+import { checkSourceStatus } from '../../api/checkSourceStatus';
 
 let selectedApp = undefined; // this has to be not-state value, because it shouldn't re-render the component when changes
 const saveSelectedApp = ({ values: { application } }) => selectedApp = application;
@@ -32,6 +33,7 @@ export const onSubmit = (values, formApi, authenticationInitialValues, dispatch,
 
     return doAttachApp(values, formApi, authenticationInitialValues, initialValues)
     .then(async () => {
+        checkSourceStatus(initialValues.source.id);
         await dispatch(loadEntities());
         selectedApp = undefined;
         return setState({ state: 'finished' });
