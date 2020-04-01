@@ -85,8 +85,12 @@ const selectAuthenticationStep = ({ source, authenticationValues, sourceType, ap
                 const appTypeId = app ? app.application_type_id : '';
                 const appType = appTypeId ? applicationTypes.find(({ id }) => id === appTypeId) : '';
 
+                const includeUsername = values.username ? `-${values.username}` : '';
+                const includeAppName = appType ? `-${appType.display_name}` : `-unused-${values.id}`;
+                const label = `${supportedAuthTypeName}${includeUsername}${includeAppName}`;
+
                 return {
-                    label: `${supportedAuthTypeName}-${appType ? `-${appType.display_name}` : `unused-${values.id}`}`,
+                    label,
                     value: values.id,
                 };
             });
