@@ -9,7 +9,7 @@ export const innerSetter = ({
     authenticationValues,
     selectedAuthentication
 }) => {
-    if (selectedAuthentication === 'new') {
+    if (selectedAuthentication !== 'new') {
         const authentication = authenticationValues.find(({ id }) => id === selectedAuthentication);
 
         if (modifiedValues && modifiedValues.authentication) {

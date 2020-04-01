@@ -55,8 +55,6 @@ export const hasAlreadySupportedAuthType = (authValues = [], appType, sourceType
     authValues.find(({ authtype }) => authtype === get(appType, `supported_authentication_types.${sourceTypeName}[0]`));
 
 const selectAuthenticationStep = ({ source, authenticationValues, sourceType, applicationTypes, modifiedValues }) => {
-    console.log(source);
-
     const nextStep = ({ values: { application } }) => {
         const app = application ? application : {};
         const appId = app.application_type_id ? app.application_type_id : '';
@@ -151,15 +149,12 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
 
         applicationTypes.forEach(appType => {
             if (appType.supported_source_types.includes(sourceType.name)) {
-                const doNotRequirePasswords = hasAlreadySupportedAuthType(authenticationValues, appType, sourceType.name);
-
                 authenticationFields.push(
                     schemaBuilder.createSpecificAuthTypeSelection(
                         sourceType,
                         appType,
                         appendEndpoint,
                         false,
-                        doNotRequirePasswords
                     )
                 );
             }
@@ -171,8 +166,6 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
                     const appAdditionalSteps = schemaBuilder.getAdditionalSteps(sourceType.name, auth.type, appType.name);
 
                     if (appAdditionalSteps.length > 0) {
-                        const doNotRequirePasswords = hasAlreadySupportedAuthType(authenticationValues, appType, sourceType.name);
-
                         authenticationFields.push(
                             ...schemaBuilder.createAdditionalSteps(
                                 appAdditionalSteps,
@@ -181,7 +174,6 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
                                 hasEndpointStep,
                                 auth.fields,
                                 appType.name,
-                                doNotRequirePasswords
                             )
                         );
                     }
