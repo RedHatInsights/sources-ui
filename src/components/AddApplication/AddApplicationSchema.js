@@ -54,7 +54,9 @@ SelectAuthenticationDescription.propTypes = {
 export const hasAlreadySupportedAuthType = (authValues = [], appType, sourceTypeName) =>
     authValues.find(({ authtype }) => authtype === get(appType, `supported_authentication_types.${sourceTypeName}[0]`));
 
-const selectAuthenticationStep = ({ authenticationValues, sourceType, applicationTypes, modifiedValues }) => {
+const selectAuthenticationStep = ({ source, authenticationValues, sourceType, applicationTypes, modifiedValues }) => {
+    console.log(source);
+
     const nextStep = ({ values: { application } }) => {
         const app = application ? application : {};
         const appId = app.application_type_id ? app.application_type_id : '';
@@ -78,14 +80,18 @@ const selectAuthenticationStep = ({ authenticationValues, sourceType, applicatio
             const supportedAuthTypeName =
                 get(sourceType, `schema.authentication`, {}).find(({ type }) => type === supportedAuthType).name;
 
-            const radioOptions = authenticationValues.filter(({ authtype }) => authtype === supportedAuthType).map((values) => ({
-                label: <FormattedMessage
-                    id="sources.selectAuthenticationradioLabel"
-                    defaultMessage="{ supportedAuthTypeName } used in list of applications"
-                    values={{ supportedAuthTypeName }}
-                />,
-                value: values.id,
-            }));
+            const radioOptions = authenticationValues.filter(({ authtype }) => authtype === supportedAuthType).map((values) => {
+                const app = get(
+                    source.applications.find(({ authentications }) => authentications.find(({ id }) => id === values.id))
+                );
+                const appTypeId = app ? app.application_type_id : '';
+                const appType = appTypeId ? applicationTypes.find(({ id }) => id === appTypeId) : '';
+
+                return {
+                    label: `${supportedAuthTypeName}-${appType ? `-${appType.display_name}` : `unused-${values.id}`}`,
+                    value: values.id,
+                };
+            });
 
             fields.push({
                 component: componentTypes.SUB_FORM,
@@ -109,7 +115,12 @@ const selectAuthenticationStep = ({ authenticationValues, sourceType, applicatio
                         isRequired: true,
                         validate: [{ type: validatorTypes.REQUIRED }],
                         options: [
-                            { label: 'Define new', value: 'new' },
+                            { label: <FormattedMessage
+                                id="sources.selectAuthenticationradioLabel"
+                                defaultMessage="Define new { supportedAuthTypeName }"
+                                values={{ supportedAuthTypeName }}
+                            />,
+                            value: 'new' },
                             ...radioOptions
                         ]
                     },
@@ -296,7 +307,7 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
                             applicationTypes
                         }]
                     },
-                    selectAuthenticationStep({ authenticationValues, sourceType, applicationTypes, modifiedValues }),
+                    selectAuthenticationStep({ source, authenticationValues, sourceType, applicationTypes, modifiedValues }),
                     ...authenticationFields
                 ]
             }
