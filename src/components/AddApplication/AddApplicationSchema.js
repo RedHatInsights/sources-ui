@@ -54,6 +54,23 @@ SelectAuthenticationDescription.propTypes = {
 export const hasAlreadySupportedAuthType = (authValues = [], appType, sourceTypeName) =>
     authValues.find(({ authtype }) => authtype === get(appType, `supported_authentication_types.${sourceTypeName}[0]`));
 
+const generateAuthSelectionOptions = ({
+    source, authenticationValues, applicationTypes, supportedAuthTypeName, supportedAuthType
+}) => authenticationValues.filter(({ authtype }) => authtype === supportedAuthType).map((values) => {
+    const app = source.applications.find(({ authentications }) => authentications.find(({ id }) => id === values.id));
+
+    const appType = app && app.application_type_id ? applicationTypes.find(({ id }) => id === app.application_type_id) : '';
+
+    const includeUsername = values.username ? `-${values.username}` : '';
+    const includeAppName = appType ? `-${appType.display_name}` : `-unused-${values.id}`;
+    const label = `${supportedAuthTypeName}${includeUsername}${includeAppName}`;
+
+    return {
+        label,
+        value: values.id,
+    };
+});
+
 export const selectAuthenticationStep = ({
     intl, source, authenticationValues, sourceType, applicationTypes, modifiedValues
 }) => {
@@ -79,22 +96,6 @@ export const selectAuthenticationStep = ({
         if (supportedAuthType && hasAlreadySupportedAuthType(authenticationValues, app, sourceType.name)) {
             const supportedAuthTypeName =
                 get(sourceType, `schema.authentication`, {}).find(({ type }) => type === supportedAuthType).name;
-
-            const radioOptions = authenticationValues.filter(({ authtype }) => authtype === supportedAuthType).map((values) => {
-                const app = source.applications.find(({ authentications }) => authentications.find(({ id }) => id === values.id));
-
-                const appTypeId = app ? app.application_type_id : '';
-                const appType = appTypeId ? applicationTypes.find(({ id }) => id === appTypeId) : '';
-
-                const includeUsername = values.username ? `-${values.username}` : '';
-                const includeAppName = appType ? `-${appType.display_name}` : `-unused-${values.id}`;
-                const label = `${supportedAuthTypeName}${includeUsername}${includeAppName}`;
-
-                return {
-                    label,
-                    value: values.id,
-                };
-            });
 
             fields.push({
                 component: componentTypes.SUB_FORM,
@@ -128,7 +129,9 @@ export const selectAuthenticationStep = ({
                                 }, { supportedAuthTypeName }),
                                 value: 'new'
                             },
-                            ...radioOptions
+                            ...generateAuthSelectionOptions(
+                                { authenticationValues, source, applicationTypes, supportedAuthTypeName, supportedAuthType }
+                            )
                         ]
                     },
                 ]
@@ -199,16 +202,17 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
 
         nextStep = ({ values: { application } }) => {
             if (application) {
-                const appType = applicationTypes.find(({ id }) => id === application.application_type_id);
-
-                if (hasAlreadySupportedAuthType(authenticationValues, appType, sourceType.name)) {
+                if (
+                    hasAlreadySupportedAuthType(
+                        authenticationValues,
+                        applicationTypes.find(({ id }) => id === application.application_type_id),
+                        sourceType.name
+                    )
+                ) {
                     return 'selectAuthentication';
                 }
 
-                const app = application ? application : {};
-                const appId = app.application_type_id ? app.application_type_id : '';
-
-                return `${sourceType.name}-${appId}`;
+                return `${sourceType.name}-${application && application.application_type_id}`;
             }
         };
     }
