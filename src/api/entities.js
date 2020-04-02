@@ -100,12 +100,10 @@ export const graphQlAttributes = `
     created_at,
     source_type_id,
     name,
-    uid,
-    updated_at,
     imported,
     availability_status,
     source_ref,
-    applications { application_type_id, id, availability_status_error, availability_status },
+    applications { application_type_id, id, availability_status_error, availability_status, authentications { id } },
     endpoints { id, scheme, host, port, path, receptor_node, role, certificate_authority, verify_ssl, availability_status_error, availability_status, authentications { authtype, availability_status, availability_status_error } }
 `;
 

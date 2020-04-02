@@ -98,8 +98,8 @@ const AddApplication = () => {
                             endpoint: source.endpoints[0],
                             url: endpointToUrl(source.endpoints[0]),
                             application: selectedApp,
-                            values: {}
-                        }
+                        },
+                        values: {}
                     }))
                     .then(() => {
                         if (state.state === 'loading') {

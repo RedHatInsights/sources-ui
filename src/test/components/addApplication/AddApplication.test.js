@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { Button, EmptyStateBody } from '@patternfly/react-core';
+import { Button, EmptyStateBody, Radio } from '@patternfly/react-core';
 import { Route } from 'react-router-dom';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import configureStore from 'redux-mock-store';
@@ -23,6 +23,7 @@ import { routes, replaceRouteId } from '../../../Routes';
 import FinishedStep from '../../../components/steps/FinishedStep';
 import ErroredStepAttach from '../../../components/AddApplication/steps/ErroredStep';
 import * as onCancel from '../../../components/AddApplication/onCancel';
+import { AuthTypeSetter } from '../../../components/AddApplication/AuthTypeSetter';
 
 describe('AddApplication', () => {
     let store;
@@ -217,19 +218,20 @@ describe('AddApplication', () => {
 
         const another_value = 'do not remove this when retry';
 
-        const source = {
-            id: SOURCE_NO_APS_ID,
-            source_type_id: customSourceType.id,
-            applications: [],
-            nested: {
-                source_ref: 'original',
-                another_value
-            }
-        };
-
         let wrapper;
+        let source;
 
         beforeEach(async () => {
+            source = {
+                id: SOURCE_NO_APS_ID,
+                source_type_id: customSourceType.id,
+                applications: [],
+                nested: {
+                    source_ref: 'original',
+                    another_value
+                }
+            };
+
             store = mockStore({
                 sources: {
                     entities: [source],
@@ -357,7 +359,6 @@ describe('AddApplication', () => {
                 endpoint_id: undefined,
                 noEndpoint: false,
                 source: { ...source, nested: { source_ref: undoValue, another_value } },
-                supported_auth_type: 'receptor',
                 authentication: preserveAuthenticationChanges
             });
         });
@@ -404,7 +405,6 @@ describe('AddApplication', () => {
                             source_ref: value
                         }
                     },
-                    supported_auth_type: application.supported_authentication_types.custom_type[0],
                     noEndpoint: false
                 },
                 dispatch: expect.any(Function),
@@ -491,6 +491,130 @@ describe('AddApplication', () => {
                 endpoint_id: undefined,
                 noEndpoint: false,
                 source: { nested: { source_ref: value, another_value } }
+            });
+        });
+
+        it('renders authentication selection', async () => {
+            const authentication = {
+                id: 'authid',
+                authtype: 'receptor',
+                username: 'customusername',
+                password: 'somepassword'
+            };
+
+            entities.getSourcesApi = () => ({
+                listEndpointAuthentications: jest.fn().mockImplementation(() => Promise.resolve({
+                    data: [authentication]
+                })),
+                checkAvailabilitySource
+            });
+
+            const application2 = {
+                name: 'custom-app-second',
+                display_name: 'Custom app second',
+                id: '097JDS',
+                supported_source_types: ['custom_type'],
+                supported_authentication_types: { custom_type: ['receptor'] }
+            };
+
+            source = {
+                ...source,
+                endpoints: [{ id: '189298' }],
+                applications: [{
+                    id: '87658787878586',
+                    application_type_id: application2.id,
+                    authentications: [{
+                        id: 'authid'
+                    }]
+                }]
+            };
+
+            store = mockStore({
+                sources: {
+                    entities: [source],
+                    appTypes: [application, application2],
+                    sourceTypes: [customSourceType],
+                    appTypesLoaded: true,
+                    sourceTypesLoaded: true,
+                    loaded: 0,
+                }
+            });
+
+            await act(async () => {
+                wrapper = mount(componentWrapperIntl(
+                    <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplication { ...args }/> } />,
+                    store,
+                    initialEntry
+                ));
+            });
+            wrapper.update();
+
+            await act(async () => {
+                const firstAppCard = wrapper.find('Card').first();
+                firstAppCard.simulate('click');
+            });
+            wrapper.update();
+
+            await act(async () => {
+                const nextButton = wrapper.find(Button).at(2);
+                nextButton.simulate('click');
+            });
+            wrapper.update();
+
+            expect(wrapper.find(Radio)).toHaveLength(2);
+            expect(wrapper.find(AuthTypeSetter)).toHaveLength(1);
+
+            await act(async () => {
+                const selectExistingAuth = wrapper.find('input').last();
+                selectExistingAuth.simulate('change');
+            });
+            wrapper.update();
+
+            await act(async () => {
+                const nextButton = wrapper.find(Button).at(1);
+                nextButton.simulate('click');
+            });
+            wrapper.update();
+
+            const value = 'SOURCE_REF_CHANGED';
+
+            await act(async () => {
+                const sourceRefInput = wrapper.find('input').last();
+                sourceRefInput.instance().value = value;
+                sourceRefInput.simulate('change');
+            });
+            wrapper.update();
+
+            await act(async () => {
+                const nextButton = wrapper.find(Button).at(1);
+                nextButton.simulate('click');
+            });
+            wrapper.update();
+
+            entities.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
+            entities.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+            attachSource.doAttachApp = jest.fn().mockImplementation(() => Promise.resolve('OK'));
+
+            await act(async () => {
+                const submitButton = wrapper.find(Button).at(1);
+                submitButton.simulate('click');
+            });
+            wrapper.update();
+
+            expect(wrapper.find(FinishedStep)).toHaveLength(1);
+
+            expect(checkAvailabilitySource).toHaveBeenCalledWith(source.id);
+
+            expect(attachSource.doAttachApp.mock.calls[0][1].getState().values).toEqual({
+                application: { application_type_id: application.id },
+                noEndpoint: false,
+                source: { ...source, nested: { source_ref: value, another_value } },
+                authentication,
+                selectedAuthentication: 'authid',
+                url: undefined,
+                endpoint: {
+                    id: '189298'
+                }
             });
         });
     });
