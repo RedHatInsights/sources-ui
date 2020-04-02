@@ -424,3 +424,6 @@ export const ANSIBLE_TOWER_ID = '3';
 export const OPENSHIFT_INDEX = 0;
 export const AMAZON_INDEX = 1;
 export const ANSIBLE_TOWER_INDEX = 2;
+
+export const OPENSHIFT = sourceTypesData.data[OPENSHIFT_INDEX];
+export const AMAZON = sourceTypesData.data[AMAZON_INDEX];

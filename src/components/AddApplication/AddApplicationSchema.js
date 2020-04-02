@@ -54,7 +54,9 @@ SelectAuthenticationDescription.propTypes = {
 export const hasAlreadySupportedAuthType = (authValues = [], appType, sourceTypeName) =>
     authValues.find(({ authtype }) => authtype === get(appType, `supported_authentication_types.${sourceTypeName}[0]`));
 
-const selectAuthenticationStep = ({ source, authenticationValues, sourceType, applicationTypes, modifiedValues }) => {
+export const selectAuthenticationStep = ({
+    intl, source, authenticationValues, sourceType, applicationTypes, modifiedValues
+}) => {
     const nextStep = ({ values: { application } }) => {
         const app = application ? application : {};
         const appId = app.application_type_id ? app.application_type_id : '';
@@ -79,9 +81,8 @@ const selectAuthenticationStep = ({ source, authenticationValues, sourceType, ap
                 get(sourceType, `schema.authentication`, {}).find(({ type }) => type === supportedAuthType).name;
 
             const radioOptions = authenticationValues.filter(({ authtype }) => authtype === supportedAuthType).map((values) => {
-                const app = get(
-                    source.applications.find(({ authentications }) => authentications.find(({ id }) => id === values.id))
-                );
+                const app = source.applications.find(({ authentications }) => authentications.find(({ id }) => id === values.id));
+
                 const appTypeId = app ? app.application_type_id : '';
                 const appType = appTypeId ? applicationTypes.find(({ id }) => id === appTypeId) : '';
 
@@ -113,16 +114,20 @@ const selectAuthenticationStep = ({ source, authenticationValues, sourceType, ap
                     {
                         component: componentTypes.RADIO,
                         name: 'selectedAuthentication',
-                        label: 'Select authentication',
+                        label: intl.formatMessage({
+                            id: 'sources.selectAuthenticationTitle',
+                            defaultMessage: 'Select authentication'
+                        }),
                         isRequired: true,
                         validate: [{ type: validatorTypes.REQUIRED }],
                         options: [
-                            { label: <FormattedMessage
-                                id="sources.selectAuthenticationradioLabel"
-                                defaultMessage="Define new { supportedAuthTypeName }"
-                                values={{ supportedAuthTypeName }}
-                            />,
-                            value: 'new' },
+                            {
+                                label: intl.formatMessage({
+                                    id: 'sources.selectAuthenticationradioLabel',
+                                    defaultMessage: 'Define new { supportedAuthTypeName }'
+                                }, { supportedAuthTypeName }),
+                                value: 'new'
+                            },
                             ...radioOptions
                         ]
                     },
@@ -134,7 +139,10 @@ const selectAuthenticationStep = ({ source, authenticationValues, sourceType, ap
     return ({
         stepKey: 'selectAuthentication',
         name: 'selectAuthentication',
-        title: 'Select authentication',
+        title: intl.formatMessage({
+            id: 'sources.selectAuthenticationTitle',
+            defaultMessage: 'Select authentication'
+        }),
         fields,
         nextStep
     });
@@ -227,6 +235,14 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
         Content: NoAvailableApplicationDescription
     };
 
+    const selectionSteps = [];
+
+    if (!source.imported && hasAvailableApps) {
+        selectionSteps.push(
+            selectAuthenticationStep({ intl, source, authenticationValues, sourceType, applicationTypes, modifiedValues })
+        );
+    }
+
     return ({
         fields: [
             {
@@ -303,7 +319,7 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
                             applicationTypes
                         }]
                     },
-                    selectAuthenticationStep({ source, authenticationValues, sourceType, applicationTypes, modifiedValues }),
+                    ...selectionSteps,
                     ...authenticationFields
                 ]
             }
