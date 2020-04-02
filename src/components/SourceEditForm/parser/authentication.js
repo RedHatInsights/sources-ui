@@ -6,6 +6,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { EDIT_FIELD_NAME } from '../../EditField/EditField';
 import { unsupportedAuthTypeField } from './unsupportedAuthType';
+import AuthenticationManagement from './AuthenticationManagement';
 
 export const createAuthFieldName = (fieldName, id) => `authentications.a${id}.${fieldName.replace('authentication.', '')}`;
 
@@ -51,7 +52,7 @@ export const modifyAuthSchemas = (fields, id, editing, setEdit) => fields.map((f
     return finalField;
 });
 
-export const authenticationFields = (authentications, sourceType, editing, setEdit) => {
+export const authenticationFields = (authentications, sourceType, editing, setEdit, source, appTypes) => {
     if (!authentications || authentications.length === 0 || !sourceType.schema || !sourceType.schema.authentication) {
         return [];
     }
@@ -74,9 +75,17 @@ export const authenticationFields = (authentications, sourceType, editing, setEd
 
         return ({
             component: componentTypes.SUB_FORM,
-            title: schemaAuth.name,
             name: schemaAuth.name,
             fields: [
+                {
+                    component: 'description',
+                    name: `${auth.id}-authentication-management`,
+                    Content: AuthenticationManagement,
+                    schemaAuth,
+                    source,
+                    appTypes,
+                    auth
+                },
                 modifyAuthSchemas(enhancedFields, auth.id, editing, setEdit)
             ]
         });

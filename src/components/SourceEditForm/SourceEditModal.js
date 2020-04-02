@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
-import { useParams, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import { Spinner } from '@patternfly/react-core/dist/js/components/Spinner';
 
@@ -17,6 +17,9 @@ import { onSubmit } from './onSubmit';
 
 import { redirectWhenImported } from './importedRedirect';
 import { routes } from '../../Routes';
+import { useSource } from '../../hooks/useSource';
+import { useIsLoaded } from '../../hooks/useIsLoaded';
+import RedirectNoId from '../RedirectNoId/RedirectNoId';
 
 const initialState = {
     loading: true,
@@ -31,8 +34,9 @@ const reducer = (state, payload) => ({ ...state, ...payload });
 
 const SourceEditModal = () => {
     const [state, setState] = useReducer(reducer, initialState);
-    const { id } = useParams();
     const history = useHistory();
+    const sourceRedux = useSource();
+    const isLoaded = useIsLoaded();
 
     const { loading, editing, source, initialValues, sourceType, schema } = state;
 
@@ -48,14 +52,16 @@ const SourceEditModal = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        doLoadSourceForEdit(id).then((source) => {
-            if (source.source.imported) {
-                redirectWhenImported(dispatch, intl, history, source.source.name);
-            }
+        if (sourceRedux) {
+            doLoadSourceForEdit(sourceRedux).then((source) => {
+                if (source.source.imported) {
+                    redirectWhenImported(dispatch, intl, history, source.source.name);
+                }
 
-            setState({ source });
-        });
-    }, []);
+                setState({ source });
+            });
+        }
+    }, [sourceRedux, isLoaded]);
 
     const setEdit = (name) => setState({
         editing: {
