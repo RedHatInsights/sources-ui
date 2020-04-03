@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Button } from '@patternfly/react-core/dist/js/components/Button';
-import { FormattedMessage } from 'react-intl';
 import { GridItem } from '@patternfly/react-core/dist/js/layouts/Grid';
 import { Title } from '@patternfly/react-core/dist/js/components/Title/Title';
 import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
@@ -8,10 +7,11 @@ import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Te
 import TrashIcon from '@patternfly/react-icons/dist/js/icons/trash-icon';
 
 import RemoveAuth from './RemoveAuth';
+import sourceEditContext from '../sourceEditContext';
 
-const AuthenticationManagement = ({ schemaAuth, source, auth, appTypes, isDeleting }) => {
+const AuthenticationManagement = ({ schemaAuth, auth, appTypes, isDeleting }) => {
+    const { source } = useContext(sourceEditContext);
     const [isRemoving, setRemove] = useState(false);
-    const [isAttaching, setAttach] = useState(false);
 
     const attachedAppTypes = source.source.applications.filter(
         ({ authentications }) => authentications.find(({ id }) => id === auth.id)
@@ -42,18 +42,6 @@ const AuthenticationManagement = ({ schemaAuth, source, auth, appTypes, isDeleti
                 <TextContent>
                     <Text component={TextVariants.small} className="pf-u-mb-0">
                         {description}&nbsp;
-                        {!isDeleting && <Button
-                            variant="link"
-                            type="button"
-                            className="pf-u-pl-0"
-                            onClick={() => setAttach(!isAttaching)}
-                            style={{ fontSize: 'var(--pf-c-content--small--FontSize)' }}
-                        >
-                            <FormattedMessage
-                                id="sources.assignAuth"
-                                defaultMessage="+ assign to application"
-                            />
-                        </Button>}
                     </Text>
                 </TextContent>
             </GridItem>
