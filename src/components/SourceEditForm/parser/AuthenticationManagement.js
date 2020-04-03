@@ -1,4 +1,6 @@
 import React, { useState, useContext } from 'react';
+import PropTypes from 'prop-types';
+
 import { Button } from '@patternfly/react-core/dist/js/components/Button';
 import { GridItem } from '@patternfly/react-core/dist/js/layouts/Grid';
 import { Title } from '@patternfly/react-core/dist/js/components/Title/Title';
@@ -47,6 +49,17 @@ const AuthenticationManagement = ({ schemaAuth, auth, appTypes, isDeleting }) =>
             </GridItem>
         </React.Fragment>
     );
+};
+
+AuthenticationManagement.propTypes = {
+    isDeleting: PropTypes.bool,
+    appTypes: PropTypes.arrayOf(PropTypes.object),
+    schemaAuth: PropTypes.shape({
+        name: PropTypes.string.isRequired
+    }).isRequired,
+    auth: PropTypes.shape({
+        id: PropTypes.string.isRequired
+    }).isRequired
 };
 
 export default AuthenticationManagement;

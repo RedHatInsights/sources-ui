@@ -12,7 +12,7 @@ export const doLoadSourceForEdit = (source) => Promise.all([
     let basicValues = {
         source: {
             ...source,
-            sourceData
+            ...sourceData
         },
         applications: applications.data
     };

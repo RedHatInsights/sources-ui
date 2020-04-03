@@ -101,7 +101,7 @@ const SourceEditModal = () => {
             isLarge
             onClose={returnToSources}
         >
-            <sourceEditContext.Provider value={{ setState }}>
+            <sourceEditContext.Provider value={{ setState, source }}>
                 <SourcesFormRenderer
                     onCancel={returnToSources}
                     schema={schema}

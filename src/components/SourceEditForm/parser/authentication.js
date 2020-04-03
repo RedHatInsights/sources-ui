@@ -53,7 +53,7 @@ export const modifyAuthSchemas = (fields, id, editing, setEdit) => fields.map((f
     return finalField;
 });
 
-export const authenticationFields = (authentications, sourceType, editing, setEdit, source, appTypes) => {
+export const authenticationFields = (authentications, sourceType, editing, setEdit, appTypes) => {
     if (!authentications || authentications.length === 0 || !sourceType.schema || !sourceType.schema.authentication) {
         return [];
     }
@@ -83,7 +83,6 @@ export const authenticationFields = (authentications, sourceType, editing, setEd
                     name: `${auth.id}-authentication-management`,
                     Content: AuthenticationManagement,
                     schemaAuth,
-                    source,
                     appTypes,
                     auth,
                     isDeleting
