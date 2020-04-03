@@ -9,7 +9,7 @@ import TrashIcon from '@patternfly/react-icons/dist/js/icons/trash-icon';
 
 import RemoveAuth from './RemoveAuth';
 
-const AuthenticationManagement = ({ schemaAuth, source, auth, appTypes }) => {
+const AuthenticationManagement = ({ schemaAuth, source, auth, appTypes, isDeleting }) => {
     const [isRemoving, setRemove] = useState(false);
     const [isAttaching, setAttach] = useState(false);
 
@@ -25,17 +25,24 @@ const AuthenticationManagement = ({ schemaAuth, source, auth, appTypes }) => {
 
     return (
         <React.Fragment>
-            {isRemoving && <RemoveAuth onClose={() => setRemove(false)} appNames={ appNames } schemaAuth={schemaAuth}/>}
+            {isRemoving && <RemoveAuth
+                auth={auth}
+                onClose={() => setRemove(false)}
+                appNames={ appNames }
+                schemaAuth={schemaAuth}/>
+            }
             <GridItem sm={12}>
                 <Title size="xl">{schemaAuth.name}&nbsp;
+                    {!isDeleting &&
                     <Button variant="plain" aria-label="Remove authentication" onClick={() => setRemove(!isRemoving)}>
                         <TrashIcon />
                     </Button>
+                    }
                 </Title>
                 <TextContent>
-                    <Text component={TextVariants.small} style={{ marginBottom: 0 }}>
+                    <Text component={TextVariants.small} className="pf-u-mb-0">
                         {description}&nbsp;
-                        <Button
+                        {!isDeleting && <Button
                             variant="link"
                             type="button"
                             className="pf-u-pl-0"
@@ -46,7 +53,7 @@ const AuthenticationManagement = ({ schemaAuth, source, auth, appTypes }) => {
                                 id="sources.assignAuth"
                                 defaultMessage="+ assign to application"
                             />
-                        </Button>
+                        </Button>}
                     </Text>
                 </TextContent>
             </GridItem>

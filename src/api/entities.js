@@ -48,7 +48,8 @@ export const getSourcesApi = () => ({
     listSourceTypes: () => axiosInstanceInsights.get(`${SOURCES_API_BASE}/source_types`),
     doLoadAppTypes: () => axiosInstanceInsights.get(`${SOURCES_API_BASE}/application_types`),
     deleteApplication: (id) => axiosInstanceInsights.delete(`${SOURCES_API_BASE}/applications/${id}`),
-    createAuthApp: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V2}/application_authentications`, data)
+    createAuthApp: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V2}/application_authentications`, data),
+    deleteAuthentication: (id) => axiosInstanceInsights.delete(`${SOURCES_API_BASE_V3}/authentications/${id}`),
 });
 
 export const doLoadAppTypes = () => getSourcesApi().doLoadAppTypes();
@@ -149,3 +150,5 @@ export const doLoadSource = (id) => getSourcesApi().postGraphQL({
             { ${graphQlAttributes} }
         }`
 }).then(({ data }) => data);
+
+export const doDeleteAuthentication = (id) => getSourcesApi().deleteAuthentication(id);

@@ -8,29 +8,17 @@ import { layoutMapper } from '@data-driven-forms/pf4-component-mapper';
 import { Modal } from '@patternfly/react-core/dist/js/components/Modal';
 
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
-import { parseSourceToSchema } from './parser/parseSourceToSchema';
 import { doLoadSourceForEdit } from '../../api/doLoadSourceForEdit';
 import HorizontalFormWrapper from './HorizontalFormWrapper';
 import Header from './Header';
-import { prepareInitialValues } from './helpers';
 import { onSubmit } from './onSubmit';
 
 import { redirectWhenImported } from './importedRedirect';
 import { routes } from '../../Routes';
 import { useSource } from '../../hooks/useSource';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
-import RedirectNoId from '../RedirectNoId/RedirectNoId';
-
-const initialState = {
-    loading: true,
-    editing: {},
-    source: undefined,
-    initialValues: {},
-    sourceType: undefined,
-    schema: undefined
-};
-
-const reducer = (state, payload) => ({ ...state, ...payload });
+import reducer, { initialState } from './reducer';
+import sourceEditContext from './sourceEditContext';
 
 const SourceEditModal = () => {
     const [state, setState] = useReducer(reducer, initialState);
@@ -38,7 +26,7 @@ const SourceEditModal = () => {
     const sourceRedux = useSource();
     const isLoaded = useIsLoaded();
 
-    const { loading, editing, source, initialValues, sourceType, schema } = state;
+    const { loading, editing, source, initialValues, schema } = state;
 
     const intl = useIntl();
 
@@ -58,36 +46,24 @@ const SourceEditModal = () => {
                     redirectWhenImported(dispatch, intl, history, source.source.name);
                 }
 
-                setState({ source });
+                setState({ type: 'setSource', source });
             });
         }
     }, [sourceRedux, isLoaded]);
 
-    const setEdit = (name) => setState({
-        editing: {
-            ...editing,
-            [name]: !editing[name]
-        }
-    });
+    const setEdit = (name) => setState({ type: 'setEdit', name });
 
     useEffect(() => {
         if (source && appTypesLoaded && sourceTypesLoaded) {
             const sourceType = sourceTypes.find(({ id }) => id === source.source.source_type_id);
 
-            setState({
-                sourceType,
-                initialValues: prepareInitialValues(source, sourceType.product_name),
-                schema: parseSourceToSchema(source, editing, setEdit, sourceType, appTypes),
-                loading: false
-            });
+            setState({ type: 'createForm', sourceType, source, setEdit, appTypes });
         }
     }, [appTypesLoaded, source, sourceTypesLoaded]);
 
     useEffect(() => {
         if (source && !loading) {
-            setState({
-                schema: parseSourceToSchema(source, editing, setEdit, sourceType, appTypes)
-            });
+            setState({ type: 'refreshSchema', setEdit, appTypes });
         }
     }, [editing]);
 
@@ -125,26 +101,29 @@ const SourceEditModal = () => {
             isLarge
             onClose={returnToSources}
         >
-            <SourcesFormRenderer
-                onCancel={returnToSources}
-                schema={schema}
-                onSubmit={
-                    (values, formApi) => onSubmit(values, formApi.getState().dirtyFields, dispatch, source, intl, history.push)
-                }
-                layoutMapper={{
-                    ...layoutMapper,
-                    FormWrapper: HorizontalFormWrapper
-                }}
-                clearedValue={null}
-                canReset
-                disableSubmit={['submitting']}
-                onReset={() => setState({ editing: {} })}
-                initialValues={initialValues}
-                buttonsLabels={{ submitLabel: intl.formatMessage({
-                    id: 'sources.save',
-                    defaultMessage: 'Save'
-                }) }}
-            />
+            <sourceEditContext.Provider value={{ setState }}>
+                <SourcesFormRenderer
+                    onCancel={returnToSources}
+                    schema={schema}
+                    onSubmit={
+                        (values, formApi) =>
+                            onSubmit(values, formApi.getState().dirtyFields, dispatch, source, intl, history.push)
+                    }
+                    layoutMapper={{
+                        ...layoutMapper,
+                        FormWrapper: HorizontalFormWrapper
+                    }}
+                    clearedValue={null}
+                    canReset
+                    disableSubmit={['submitting']}
+                    onReset={() => setState({ type: 'reset' })}
+                    initialValues={initialValues}
+                    buttonsLabels={{ submitLabel: intl.formatMessage({
+                        id: 'sources.save',
+                        defaultMessage: 'Save'
+                    }) }}
+                />
+            </sourceEditContext.Provider>
         </Modal>
     );
 };
