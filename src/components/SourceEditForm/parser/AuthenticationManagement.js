@@ -10,6 +10,7 @@ import TrashIcon from '@patternfly/react-icons/dist/js/icons/trash-icon';
 
 import RemoveAuth from './RemoveAuth';
 import sourceEditContext from '../sourceEditContext';
+import { FormattedMessage } from 'react-intl';
 
 const AuthenticationManagement = ({ schemaAuth, auth, appTypes, isDeleting }) => {
     const { source } = useContext(sourceEditContext);
@@ -22,8 +23,6 @@ const AuthenticationManagement = ({ schemaAuth, auth, appTypes, isDeleting }) =>
     const appNames = attachedAppTypes.map(
         ({ application_type_id }) => application_type_id ? appTypes.find(({ id }) => id === application_type_id) : undefined
     ).filter(Boolean).map(app => app.display_name);
-
-    const description = `id: ${auth.id} ${appNames.length > 0 ? `used by ${appNames.join(', ')}` : 'not used by any app'}`;
 
     return (
         <React.Fragment>
@@ -43,7 +42,23 @@ const AuthenticationManagement = ({ schemaAuth, auth, appTypes, isDeleting }) =>
                 </Title>
                 <TextContent>
                     <Text component={TextVariants.small} className="pf-u-mb-0">
-                        {description}&nbsp;
+                        <FormattedMessage
+                            id="sources.removeAuthDescription"
+                            defaultMessage="id: {authid} { appNames}"
+                            values={{
+                                authid: auth.id,
+                                appNames: appNames.length > 0 ?
+                                    <FormattedMessage
+                                        id="sources.removeAuthWithApps"
+                                        defaultMessage="used by {appNames}"
+                                        values={{ appNames: appNames.join(', ') }}
+                                    />
+                                    : <FormattedMessage
+                                        id="sources.removeAuthNoApps"
+                                        defaultMessage="not used by any app"
+                                    />
+                            }}
+                        />&nbsp;
                     </Text>
                 </TextContent>
             </GridItem>
