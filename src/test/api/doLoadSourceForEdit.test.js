@@ -4,6 +4,8 @@ import { doLoadSourceForEdit } from '../../api/doLoadSourceForEdit';
 
 describe('doLoadSourceForEdit', () => {
     const SOURCE_ID = '2324232321';
+    const SOURCE = { id: SOURCE_ID };
+
     let mocks;
 
     const SOURCE_DATA = {
@@ -58,7 +60,7 @@ describe('doLoadSourceForEdit', () => {
     });
 
     it('return source without endpoint', async () => {
-        const result = await doLoadSourceForEdit(SOURCE_ID);
+        const result = await doLoadSourceForEdit(SOURCE);
 
         expect(mocks.showSource).toHaveBeenCalledWith(SOURCE_ID);
         expect(mocks.listSourceEndpoints).toHaveBeenCalledWith(SOURCE_ID);
@@ -67,7 +69,10 @@ describe('doLoadSourceForEdit', () => {
         expect(mocks.listEndpointAuthentications).not.toHaveBeenCalled();
 
         expect(result).toEqual({
-            source: SOURCE_DATA,
+            source: {
+                ...SOURCE,
+                ...SOURCE_DATA
+            },
             applications: []
         });
     });
@@ -86,7 +91,7 @@ describe('doLoadSourceForEdit', () => {
 
         api.getSourcesApi = () => mocks;
 
-        const result = await doLoadSourceForEdit(SOURCE_ID);
+        const result = await doLoadSourceForEdit(SOURCE);
 
         expect(mocks.showSource).toHaveBeenCalledWith(SOURCE_ID);
         expect(mocks.listSourceEndpoints).toHaveBeenCalledWith(SOURCE_ID);
@@ -95,7 +100,10 @@ describe('doLoadSourceForEdit', () => {
         expect(mocks.listEndpointAuthentications).not.toHaveBeenCalled();
 
         expect(result).toEqual({
-            source: SOURCE_DATA,
+            source: {
+                ...SOURCE,
+                ...SOURCE_DATA
+            },
             applications: APPLICATION_DATA.data
         });
     });
@@ -109,7 +117,7 @@ describe('doLoadSourceForEdit', () => {
 
         api.getSourcesApi = () => mocks;
 
-        const result = await doLoadSourceForEdit(SOURCE_ID);
+        const result = await doLoadSourceForEdit(SOURCE);
 
         expect(mocks.showSource).toHaveBeenCalledWith(SOURCE_ID);
         expect(mocks.listSourceEndpoints).toHaveBeenCalledWith(SOURCE_ID);
@@ -118,7 +126,10 @@ describe('doLoadSourceForEdit', () => {
         expect(mocks.listEndpointAuthentications).toHaveBeenCalledWith(ENDPOINT_ID);
 
         expect(result).toEqual({
-            source: SOURCE_DATA,
+            source: {
+                ...SOURCE,
+                ...SOURCE_DATA
+            },
             applications: [],
             endpoints: ENDPOINT_DATA.data,
             authentications: AUTHENTICATION_DATA.data
@@ -128,7 +139,7 @@ describe('doLoadSourceForEdit', () => {
     it('return source with cost management values', async () => {
         cmApi.getCmValues = jest.fn().mockImplementation(() => Promise.resolve(CM_SOURCE_DATA));
 
-        const result = await doLoadSourceForEdit(SOURCE_ID);
+        const result = await doLoadSourceForEdit(SOURCE);
 
         expect(mocks.showSource).toHaveBeenCalledWith(SOURCE_ID);
         expect(mocks.listSourceEndpoints).toHaveBeenCalledWith(SOURCE_ID);
@@ -137,7 +148,10 @@ describe('doLoadSourceForEdit', () => {
         expect(mocks.listEndpointAuthentications).not.toHaveBeenCalled();
 
         expect(result).toEqual({
-            source: SOURCE_DATA,
+            source: {
+                ...SOURCE,
+                ...SOURCE_DATA
+            },
             applications: [],
             billing_source: CM_SOURCE_DATA.billing_source,
             credentials: CM_SOURCE_DATA.authentication.credentials
@@ -153,7 +167,7 @@ describe('doLoadSourceForEdit', () => {
         api.getSourcesApi = () => mocks;
         cmApi.getCmValues = jest.fn().mockImplementation(() => Promise.resolve(CM_SOURCE_DATA));
 
-        const result = await doLoadSourceForEdit(SOURCE_ID);
+        const result = await doLoadSourceForEdit(SOURCE);
 
         expect(mocks.showSource).toHaveBeenCalledWith(SOURCE_ID);
         expect(mocks.listSourceEndpoints).toHaveBeenCalledWith(SOURCE_ID);
@@ -162,7 +176,10 @@ describe('doLoadSourceForEdit', () => {
         expect(mocks.listEndpointAuthentications).toHaveBeenCalledWith(ENDPOINT_ID);
 
         expect(result).toEqual({
-            source: SOURCE_DATA,
+            source: {
+                ...SOURCE,
+                ...SOURCE_DATA
+            },
             applications: [],
             billing_source: CM_SOURCE_DATA.billing_source,
             credentials: CM_SOURCE_DATA.authentication.credentials,

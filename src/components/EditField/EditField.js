@@ -52,7 +52,7 @@ const EditField = ({ isRequired, label, helperText, hideLabel, meta, input, type
 EditField.propTypes = {
     label: PropTypes.node,
     isRequired: PropTypes.bool,
-    helperText: PropTypes.string,
+    helperText: PropTypes.node,
     meta: PropTypes.object.isRequired,
     FieldProvider: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
     input: PropTypes.shape({

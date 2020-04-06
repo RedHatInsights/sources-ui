@@ -34,6 +34,16 @@ describe('entities spec', () => {
             expect(result).toEqual({ data: APP_TYPES });
         });
 
+        it('doDeleteAuthentication deletes authentication', async () => {
+            const AUTH_ID = '123232';
+
+            mock.onDelete(`/api/sources/v3.0/authentications/${AUTH_ID}`).reply(200, OK_RESPONSE);
+
+            const result = await api.doDeleteAuthentication(AUTH_ID);
+
+            expect(result).toEqual(OK_RESPONSE);
+        });
+
         it('doRemoveSource deletes source', async () => {
             mock.onDelete(`/api/sources/v1.0/sources/${SOURCE_ID}`).reply(200, OK_RESPONSE);
 

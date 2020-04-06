@@ -13,14 +13,24 @@ import { routes, replaceRouteId } from '../../../Routes';
 import { applicationTypesData } from '../../__mocks__/applicationTypesData';
 import { sourceTypesData, OPENSHIFT_ID } from '../../__mocks__/sourceTypesData';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
-import { Modal, Button, FormGroup, TextInput, Form } from '@patternfly/react-core';
+import { Modal, Button, FormGroup, TextInput, Form, Title } from '@patternfly/react-core';
 import * as editApi from '../../../api/doLoadSourceForEdit';
 import EditFieldProvider from '../../../components/EditField/EditField';
 import * as submit from '../../../components/SourceEditForm/onSubmit';
 import * as redirect from '../../../components/SourceEditForm/importedRedirect';
+import RemoveAuth from '../../../components/SourceEditForm/parser/RemoveAuth';
+import * as api from '../../../api/entities';
+import AuthenticationManagement from '../../../components/SourceEditForm/parser/AuthenticationManagement';
+import RemoveAuthPlaceholder from '../../../components/SourceEditForm/parser/RemoveAuthPlaceholder';
+import reducer from '../../../components/SourceEditForm/reducer';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources', () => ({
-    asyncValidator: jest.fn()
+    asyncValidator: jest.fn(),
+    mapperExtension: ({
+        // eslint-disable-next-line react/display-name
+        description: ({ Content, ...props }) => <Content {...props} />
+    }),
+    handleError: jest.fn()
 }));
 
 describe('SourceEditModal', () => {
@@ -281,5 +291,114 @@ describe('SourceEditModal', () => {
         wrapper.update();
 
         expect(getCurrentAddress(wrapper)).toEqual(routes.sources.path);
+    });
+
+    describe('remove auth integration', () => {
+        beforeEach(() => {
+            editApi.doLoadSourceForEdit = jest.fn().mockImplementation(() => Promise.resolve({
+                source: {
+                    name: 'Name',
+                    source_type_id: OPENSHIFT_ID,
+                    applications: []
+                },
+                applications: [],
+                endpoints: [],
+                authentications: [{
+                    id: 'authid',
+                    authtype: 'token'
+                }]
+            }));
+
+            initialEntry = [replaceRouteId(routes.sourcesEdit.path, '406')];
+        });
+
+        it('removes authentication successfully and shows loading during that', async () => {
+            await act(async() => {
+                wrapper = mount(componentWrapperIntl(
+                    <Route path={routes.sourcesEdit.path} render={ (...args) => <SourceEditModal { ...args }/> } />,
+                    store,
+                    initialEntry
+                ));
+            });
+            wrapper.update();
+
+            expect(wrapper.find(Title)).toHaveLength(2);
+            expect(wrapper.find(AuthenticationManagement)).toHaveLength(1);
+            expect(wrapper.find(Title).last().text()).toEqual('Token ');
+            expect(wrapper.find(RemoveAuthPlaceholder)).toHaveLength(0);
+
+            await act(async() => {
+                const removeButton = wrapper.find(Button).at(1);
+                removeButton.simulate('click');
+            });
+            wrapper.update();
+
+            api.doDeleteAuthentication = jest.fn().mockImplementation(() => new Promise((res) => setTimeout(() => res('OK'), 1)));
+
+            expect(api.doDeleteAuthentication).not.toHaveBeenCalled();
+
+            jest.useFakeTimers();
+            await act(async() => {
+                const removeConfirmButton = wrapper.find(RemoveAuth).find(Button).at(1);
+                removeConfirmButton.simulate('click');
+            });
+            wrapper.update();
+            expect(api.doDeleteAuthentication).toHaveBeenCalledWith('authid');
+            expect(wrapper.find(RemoveAuthPlaceholder)).toHaveLength(1);
+
+            await act(async() => {
+                jest.advanceTimersByTime(1000);
+            });
+            wrapper.update();
+
+            expect(wrapper.find(Title)).toHaveLength(1);
+            expect(wrapper.find(RemoveAuthPlaceholder)).toHaveLength(0);
+            expect(wrapper.find(AuthenticationManagement)).toHaveLength(0);
+        });
+
+        it('removes authentication unsuccessfully', async () => {
+            await act(async() => {
+                wrapper = mount(componentWrapperIntl(
+                    <Route path={routes.sourcesEdit.path} render={ (...args) => <SourceEditModal { ...args }/> } />,
+                    store,
+                    initialEntry
+                ));
+            });
+            wrapper.update();
+
+            expect(wrapper.find(Title)).toHaveLength(2);
+            expect(wrapper.find(Title).last().text()).toEqual('Token ');
+            expect(wrapper.find(AuthenticationManagement)).toHaveLength(1);
+
+            await act(async() => {
+                const removeButton = wrapper.find(Button).at(1);
+                removeButton.simulate('click');
+            });
+            wrapper.update();
+
+            api.doDeleteAuthentication = jest.fn().mockImplementation(() => Promise.reject('Error'));
+
+            expect(api.doDeleteAuthentication).not.toHaveBeenCalled();
+
+            await act(async() => {
+                const removeConfirmButton = wrapper.find(RemoveAuth).find(Button).at(1);
+                removeConfirmButton.simulate('click');
+            });
+            wrapper.update();
+
+            expect(wrapper.find(Title)).toHaveLength(2);
+            expect(wrapper.find(Title).last().text()).toEqual('Token ');
+            expect(api.doDeleteAuthentication).toHaveBeenCalledWith('authid');
+            expect(wrapper.find(AuthenticationManagement)).toHaveLength(1);
+        });
+    });
+
+    describe('reducer', () => {
+        it('returns default', () => {
+            const state = {
+                bla: 'blah'
+            };
+            expect(reducer(state, {})).toEqual(state);
+        });
     });
 });

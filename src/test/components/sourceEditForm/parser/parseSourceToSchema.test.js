@@ -65,7 +65,8 @@ describe('parseSourceToSchema', () => {
             SOURCE.authentications,
             SOURCE_TYPE,
             EDITING,
-            SET_EDIT
+            SET_EDIT,
+            APP_TYPES
         );
         expect(app.applicationsFields).toHaveBeenCalledWith(
             SOURCE.applications,
@@ -105,7 +106,8 @@ describe('parseSourceToSchema', () => {
             SOURCE.authentications,
             SOURCE_TYPE,
             EDITING,
-            SET_EDIT
+            SET_EDIT,
+            APP_TYPES
         );
         expect(app.applicationsFields).toHaveBeenCalledWith(
             SOURCE.applications,
@@ -141,7 +143,8 @@ describe('parseSourceToSchema', () => {
             SOURCE.authentications,
             SOURCE_TYPE,
             EDITING,
-            SET_EDIT
+            SET_EDIT,
+            APP_TYPES
         );
         expect(app.applicationsFields).toHaveBeenCalledWith(
             SOURCE.applications,
