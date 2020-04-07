@@ -7,7 +7,7 @@ const createProgressTextsApp = (
     let progressText = [];
     let step = 0;
 
-    if (filteredValues.endpoint && !isEmpty(filteredValues.endpoint) && get(allFormValues, 'endpoint.id', false)) {
+    if (filteredValues.endpoint && !isEmpty(filteredValues.endpoint) && !get(allFormValues, 'endpoint.id', false)) {
         progressText.push(intl.formatMessage({
             id: 'sources.authProgressEndpoint',
             defaultMessage: 'Step { step }: creating endpoint'
