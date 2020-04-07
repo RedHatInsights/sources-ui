@@ -6,6 +6,23 @@ describe('createProgressTextsApp', () => {
     };
 
     it('generate with new endpoint', () => {
+        const allValues = {};
+        const formData = {
+            endpoint: {
+                port: '232'
+            }
+        };
+
+        expect(createProgressTextsApp(formData, allValues, intl)).toEqual([
+            'Step { step }: creating endpoint',
+            'Step { step }: updating values and creating application',
+            'Step { step }: connecting application and authentication',
+            'Step { step }: reloading data',
+            'Completed'
+        ]);
+    });
+
+    it('do not generate with new endpoint', () => {
         const allValues = {
             endpoint: {
                 id: 'endpointid'
@@ -18,7 +35,6 @@ describe('createProgressTextsApp', () => {
         };
 
         expect(createProgressTextsApp(formData, allValues, intl)).toEqual([
-            'Step { step }: creating endpoint',
             'Step { step }: updating values and creating application',
             'Step { step }: connecting application and authentication',
             'Step { step }: reloading data',
