@@ -18,12 +18,13 @@ import { sourceTypesData, OPENSHIFT_ID } from '../../__mocks__/sourceTypesData';
 import { SOURCE_ALL_APS_ID, SOURCE_NO_APS_ID } from '../../__mocks__/sourcesData';
 import { applicationTypesData, COSTMANAGEMENT_APP, TOPOLOGICALINVENTORY_APP } from '../../__mocks__/applicationTypesData';
 import AddApplicationDescription from '../../../components/AddApplication/AddApplicationDescription';
-import LoadingStep from '../../../components/steps/LoadingStep';
 import { routes, replaceRouteId } from '../../../Routes';
-import FinishedStep from '../../../components/steps/FinishedStep';
+import FinishedStep from '../../../components/AddApplication/steps/FinishedStep';
 import ErroredStepAttach from '../../../components/AddApplication/steps/ErroredStep';
 import * as onCancel from '../../../components/AddApplication/onCancel';
 import { AuthTypeSetter } from '../../../components/AddApplication/AuthTypeSetter';
+import LoadingStep from '../../../components/AddApplication/steps/LoadingStep';
+import reducer from '../../../components/AddApplication/reducer';
 
 describe('AddApplication', () => {
     let store;
@@ -178,6 +179,8 @@ describe('AddApplication', () => {
         });
 
         expect(wrapper.find(LoadingStep)).toHaveLength(1);
+        expect(wrapper.find(LoadingStep).props().progressStep).toEqual(undefined);
+        expect(wrapper.find(LoadingStep).props().progressTexts).toEqual(undefined);
     });
 
     describe('custom type - integration tests', () => {
@@ -700,6 +703,10 @@ describe('AddApplication', () => {
             } };
             const formApi = expect.any(Object);
             const authenticationValues = expect.any(Array);
+            const setState = expect.any(Function);
+            const intl = expect.objectContaining({
+                formatMessage: expect.any(Function)
+            });
 
             expect(checkAvailabilitySource).toHaveBeenCalledWith(source.id);
 
@@ -707,7 +714,9 @@ describe('AddApplication', () => {
                 formValues,
                 formApi,
                 authenticationValues,
-                initialValues
+                initialValues,
+                setState,
+                intl
             );
             expect(wrapper.find(FinishedStep).length).toEqual(1);
         });
@@ -744,12 +753,18 @@ describe('AddApplication', () => {
             } };
             const formApi = expect.any(Object);
             const authenticationValues = expect.any(Array);
+            const setState = expect.any(Function);
+            const intl = expect.objectContaining({
+                formatMessage: expect.any(Function)
+            });
 
             expect(attachSource.doAttachApp).toHaveBeenCalledWith(
                 formValues,
                 formApi,
                 authenticationValues,
-                initialValues
+                initialValues,
+                setState,
+                intl
             );
             expect(wrapper.find(ErroredStepAttach).length).toEqual(1);
             expect(wrapper.find(EmptyStateBody).text().includes(ERROR_MESSAGE)).toEqual(true);
@@ -786,6 +801,23 @@ describe('AddApplication', () => {
             wrapper.update();
 
             expect(wrapper.find(LoadingStep).length).toEqual(1);
+            expect(wrapper.find(LoadingStep).props().progressStep).toEqual(0);
+            expect(wrapper.find(LoadingStep).props().progressTexts).toEqual(['Preparing']);
+        });
+    });
+
+    describe('reducer', () => {
+        it('set progressTexts', () => {
+            const progressTexts = ['aa', 'bb'];
+            expect(reducer({}, { type: 'setProgressTexts', progressTexts })).toEqual({ progressTexts });
+        });
+
+        it('increaseProgressStep', () => {
+            expect(reducer({ progressStep: 3 }, { type: 'increaseProgressStep' })).toEqual({ progressStep: 4 });
+        });
+
+        it('default', () => {
+            expect(reducer({ progressStep: 3 }, { })).toEqual({ progressStep: 3 });
         });
     });
 });

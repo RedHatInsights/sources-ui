@@ -54,14 +54,14 @@ const ErroredStepAttach = ({ onReset, goToSources, error, progressStep, progress
                     defaultMessage="Back to Sources"
                 />
             </Button>
-            { onReset && <EmptyStateSecondaryActions>
+            <EmptyStateSecondaryActions>
                 <Button variant="link" onClick={ onReset }>
                     <FormattedMessage
                         id="sources.retry"
                         defaultMessage="Retry"
                     />
                 </Button>
-            </EmptyStateSecondaryActions>}
+            </EmptyStateSecondaryActions>
         </EmptyState>
     </Bullseye>
 );

@@ -1,7 +1,9 @@
 import isEmpty from 'lodash/isEmpty';
 import get from 'lodash/get';
 
-const createProgressTextsApp = (filteredValues, allFormValues, intl) => {
+const createProgressTextsApp = (
+    filteredValues, allFormValues, intl
+) => {
     let progressText = [];
     let step = 0;
 
