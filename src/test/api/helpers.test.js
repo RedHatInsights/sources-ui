@@ -56,6 +56,14 @@ describe('api helpers', () => {
             );
         });
 
+        it('creates filtering query applications param [GRAPHQL]', () => {
+            const filterValue = { applications: ['2', '898'] };
+
+            expect(filtering(filterValue)).toEqual(
+                `, filter: { applications: { application_type_id: { eq: ["2", "898"] }} }`
+            );
+        });
+
         it('creates filtering query combined param [GRAPHQL]', () => {
             const filterValue = { source_type_id: SOURCE_TYPE_ID, name: NAME };
 
@@ -84,6 +92,14 @@ describe('api helpers', () => {
             const filterValue = { source_type_id: SOURCE_TYPE_ID };
 
             expect(restFilterGenerator(filterValue)).toEqual(EXPECTED_TYPE_QUERY_REST);
+        });
+
+        it('creates filtering query applications param [REST]', () => {
+            const EXPECTED_APPS_QUERY_REST = `filter[applications][application_type_id][eq][]=2&filter[applications][application_type_id][eq][]=898`;
+
+            const filterValue = { applications: ['2', '898'] };
+
+            expect(restFilterGenerator(filterValue)).toEqual(EXPECTED_APPS_QUERY_REST);
         });
 
         it('creates filtering query combined param [REST]', () => {

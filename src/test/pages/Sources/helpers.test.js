@@ -6,11 +6,13 @@ import {
     prepareSourceTypeSelection,
     removeChips,
     prepareChips,
-    loadedTypes
+    loadedTypes,
+    prepareApplicationTypeSelection
 } from '../../../pages/Sources/helpers';
 
 import * as actions from '../../../redux/sources/actions';
 import { sourceTypesData } from '../../__mocks__/sourceTypesData';
+import { applicationTypesData } from '../../__mocks__/applicationTypesData';
 import * as sourcesApi from '../../../api/checkSourceStatus';
 
 describe('Source page helpers', () => {
@@ -92,7 +94,8 @@ describe('Source page helpers', () => {
         const NAME = 'some name';
         const filterValue = {
             name: NAME,
-            source_type_id: ['3', '5', '333']
+            source_type_id: ['3', '5', '333'],
+            applications: ['1', '667'],
         };
 
         it('returns chip for name', () => {
@@ -123,6 +126,22 @@ describe('Source page helpers', () => {
             });
         });
 
+        it('returns chips for applications', () => {
+            const key = 'applications';
+
+            expect(chipsFormatters(key, filterValue, sourceTypesData.data, applicationTypesData.data)()).toEqual({
+                category: 'Application',
+                key,
+                chips: [{
+                    name: applicationTypesData.data.find(({ id }) => id === '1').display_name,
+                    value: '1'
+                }, {
+                    name: '667',
+                    value: '667'
+                }]
+            });
+        });
+
         it('returns chips for unknown', () => {
             const key = 'unknown';
 
@@ -148,6 +167,17 @@ describe('Source page helpers', () => {
             expect(prepareSourceTypeSelection(sourceTypes)).toEqual([
                 { label: 'First type', value: '23' },
                 { label: 'Last type', value: '12' }
+            ]);
+        });
+    });
+
+    describe('prepareApplicationTypeSelection', () => {
+        it('parses application types into selection and selection is sorted alphabetically', () => {
+            const appTypes = [{ id: '23', display_name: 'B' }, { id: '12', display_name: 'A' }];
+
+            expect(prepareApplicationTypeSelection(appTypes)).toEqual([
+                { label: 'A', value: '12' },
+                { label: 'B', value: '23' }
             ]);
         });
     });
@@ -186,14 +216,16 @@ describe('Source page helpers', () => {
         const filterValue = {
             name: 'some name',
             source_type_id: ['3', '5', '333'],
+            applications: ['1', '667'],
             empty: [],
             undefined
         };
 
         it('prepares chips', () => {
-            expect(prepareChips(filterValue, sourceTypesData.data)).toEqual([
+            expect(prepareChips(filterValue, sourceTypesData.data, applicationTypesData.data)).toEqual([
                 chipsFormatters('name', filterValue, sourceTypesData.data)(),
-                chipsFormatters('source_type_id', filterValue, sourceTypesData.data)()
+                chipsFormatters('source_type_id', filterValue, sourceTypesData.data)(),
+                chipsFormatters('applications', filterValue, sourceTypesData.data, applicationTypesData.data)()
             ]);
         });
     });

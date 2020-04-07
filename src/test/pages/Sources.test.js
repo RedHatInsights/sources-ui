@@ -15,7 +15,7 @@ import SourcesTable from '../../components/SourcesTable/SourcesTable';
 
 import { sourcesDataGraphQl, SOURCE_ALL_APS_ID } from '../__mocks__/sourcesData';
 import { sourceTypesData, OPENSHIFT_ID } from '../__mocks__/sourceTypesData';
-import { applicationTypesData } from '../__mocks__/applicationTypesData';
+import { applicationTypesData, CATALOG_APP } from '../__mocks__/applicationTypesData';
 
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
 
@@ -312,6 +312,31 @@ describe('SourcesPage', () => {
                 expect(store.getState().sources.filterValue).toEqual({
                     name: SEARCH_TERM,
                     source_type_id: [OPENSHIFT_ID]
+                });
+                done();
+            }, 500);
+        });
+
+        it('should call onFilterSelect with applications', (done) => {
+            setTimeout(() => {
+                wrapper.update();
+                expect(wrapper.find(Chip)).toHaveLength(1);
+
+                // Switch to source type in conditional filter
+                wrapper.find('ConditionalFilter').setState({ stateValue: 2 });
+                wrapper.update();
+
+                const checkboxDropdownProps = wrapper.find(Select).last().props();
+
+                // Select openshift
+                const EVENT = {};
+                checkboxDropdownProps.onSelect(EVENT, CATALOG_APP.id);
+                wrapper.update();
+
+                expect(wrapper.find(Chip)).toHaveLength(2);
+                expect(store.getState().sources.filterValue).toEqual({
+                    name: SEARCH_TERM,
+                    applications: [CATALOG_APP.id]
                 });
                 done();
             }, 500);
