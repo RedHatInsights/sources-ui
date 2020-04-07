@@ -34,7 +34,8 @@ import {
     prepareSourceTypeSelection,
     afterSuccess,
     onCloseAddSourceWizard,
-    loadedTypes
+    loadedTypes,
+    prepareApplicationTypeSelection
 } from './Sources/helpers';
 import PaginationLoader from './Sources/PaginationLoader';
 import { useIsLoaded } from '../hooks/useIsLoaded';
@@ -172,10 +173,22 @@ const SourcesPage = () => {
                             items: prepareSourceTypeSelection(sourceTypes || []),
                             value: filterValue.source_type_id
                         }
+                    }, {
+                        label: intl.formatMessage({
+                            id: 'sources.application',
+                            defaultMessage: 'Application'
+                        }),
+                        type: 'checkbox',
+                        filterValues: {
+                            onChange: (_event, value) =>
+                                setFilter('applications', value, dispatch),
+                            items: prepareApplicationTypeSelection(appTypes || []),
+                            value: filterValue.applications
+                        }
                     }]
                 }}
                 activeFiltersConfig={{
-                    filters: prepareChips(filterValue, sourceTypes),
+                    filters: prepareChips(filterValue, sourceTypes, appTypes),
                     onDelete: (_event, chips, deleteAll) =>
                         dispatch(filterSources(removeChips(chips, filterValue, deleteAll)))
                 }}

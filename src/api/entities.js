@@ -86,7 +86,10 @@ export const filtering = (filterValue = {}) => {;
 
     if (filterValue.source_type_id && filterValue.source_type_id.length > 0) {
         filterQueries.push(`source_type_id: { eq: [${filterValue.source_type_id.map(x => `"${x}"`).join(', ')}] }`);
+    }
 
+    if (filterValue.applications && filterValue.applications.length > 0) {
+        filterQueries.push(`applications: { application_type_id: { eq: [${filterValue.applications.map(x => `"${x}"`).join(', ')}] }}`);
     }
 
     if (filterQueries.length > 0) {
@@ -133,6 +136,10 @@ export const restFilterGenerator = (filterValue = {}) => {
 
     if (filterValue.source_type_id && filterValue.source_type_id.length > 0) {
         filterValue.source_type_id.map((id) => filterQueries.push(`filter[source_type_id][]=${id}`));
+    }
+
+    if (filterValue.applications && filterValue.applications.length > 0) {
+        filterValue.applications.map((id) => filterQueries.push(`filter[applications][application_type_id][eq][]=${id}`));
     }
 
     if (filterQueries.length > 0) {

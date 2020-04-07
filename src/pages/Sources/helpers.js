@@ -49,11 +49,15 @@ export const prepareSourceTypeSelection = (sourceTypes) =>
     sourceTypes.map(({ id, product_name }) => ({ label: product_name, value: id }))
     .sort((a, b) => a.label.localeCompare(b.label));
 
+export const prepareApplicationTypeSelection = (appTypes) =>
+    appTypes.map(({ id, display_name }) => ({ label: display_name, value: id }))
+    .sort((a, b) => a.label.localeCompare(b.label));
+
 export const setFilter = (column, value, dispatch) => dispatch(filterSources({
     [column]: value
 }));
 
-export const chipsFormatters = (key, filterValue, sourceTypes) => ({
+export const chipsFormatters = (key, filterValue, sourceTypes, appTypes) => ({
     name: () => ({ name: filterValue[key], key }),
     source_type_id: () => ({
         category: 'Source Type',
@@ -63,13 +67,22 @@ export const chipsFormatters = (key, filterValue, sourceTypes) => ({
 
             return ({ name: sourceType ? sourceType.product_name : id, value: id });
         })
+    }),
+    applications: () => ({
+        category: 'Application',
+        key,
+        chips: filterValue[key].map(id => {
+            const appType = appTypes.find((type) => type.id === id);
+
+            return ({ name: appType ? appType.display_name : id, value: id });
+        })
     })
 }[key] || (() => ({ name: key })));
 
-export const prepareChips = (filterValue, sourceTypes) =>
+export const prepareChips = (filterValue, sourceTypes, appTypes) =>
     Object.keys(filterValue)
     .map((key) =>
-        filterValue[key] && filterValue[key].length > 0 ? chipsFormatters(key, filterValue, sourceTypes)() : undefined
+        filterValue[key] && filterValue[key].length > 0 ? chipsFormatters(key, filterValue, sourceTypes, appTypes)() : undefined
     )
     .filter(Boolean);
 
