@@ -1,6 +1,7 @@
-import addApplicationSchema, { hasAlreadySupportedAuthType } from '../../../components/AddApplication/AddApplicationSchema';
-import { sourceTypesData, OPENSHIFT_ID } from '../../__mocks__/sourceTypesData';
-import { applicationTypesData, COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
+import addApplicationSchema, { hasAlreadySupportedAuthType, selectAuthenticationStep } from '../../../components/AddApplication/AddApplicationSchema';
+import { sourceTypesData, OPENSHIFT_ID, AMAZON } from '../../__mocks__/sourceTypesData';
+import { applicationTypesData, COSTMANAGEMENT_APP, TOPOLOGICALINVENTORY_APP } from '../../__mocks__/applicationTypesData';
+import { AuthTypeSetter } from '../../../components/AddApplication/AuthTypeSetter';
 
 describe('AddApplicationSchema', () => {
     const intl = { formatMessage: ({ defaultMessage }) => defaultMessage };
@@ -60,7 +61,7 @@ describe('AddApplicationSchema', () => {
             source
         );
 
-        expect(result.fields[0].fields).toHaveLength(9);
+        expect(result.fields[0].fields).toHaveLength(10);
     });
 
     it('no available apps', () => {
@@ -95,6 +96,59 @@ describe('AddApplicationSchema', () => {
                 })
             ]
         });
+    });
+
+    it('selectAuthenticationStep generates selection step', () => {
+        const source = {
+            applications: [{
+                application_type_id: TOPOLOGICALINVENTORY_APP.id,
+                authentications: [{ id: '1' }]
+            }]
+        };
+        const sourceType = AMAZON;
+        const modifiedValues = {
+            some: 'modifeidvalues'
+        };
+        const authenticationValues = [
+            { id: '1', username: 'user-123', authtype: 'arn' },
+            { id: '23324', authtype: 'arn' }
+        ];
+
+        const intl = { formatMessage: ({ defaultMessage }) => defaultMessage };
+
+        const authSelection = selectAuthenticationStep({ intl, source, authenticationValues, sourceType, applicationTypes, modifiedValues });
+
+        expect(authSelection).toEqual(expect.objectContaining({
+            name: 'selectAuthentication',
+            stepKey: 'selectAuthentication',
+            nextStep: expect.any(Function),
+            fields: [
+                expect.objectContaining({ name: 'authtypesetter', component: 'description', Content: AuthTypeSetter }),
+                expect.objectContaining({
+                    name: `${COSTMANAGEMENT_APP.name}-subform`,
+                    fields: [
+                        expect.objectContaining({ name: `${COSTMANAGEMENT_APP.name}-select-authentication-summary` }),
+                        expect.objectContaining({
+                            name: 'selectedAuthentication',
+                            component: 'radio',
+                            isRequired: true,
+                            options: [
+                                expect.objectContaining({ value: 'new' }),
+                                {
+                                    label: `ARN-${authenticationValues[0].username}-${TOPOLOGICALINVENTORY_APP.display_name}`,
+                                    value: authenticationValues[0].id
+                                },
+                                { label: `ARN-unused-${authenticationValues[1].id}`, value: authenticationValues[1].id }
+                            ]
+                        })
+                    ]
+                })
+            ]
+        }));
+
+        expect(authSelection.nextStep({ values: {} })).toEqual('amazon-');
+        expect(authSelection.nextStep({ values: { application: { application_type_id: COSTMANAGEMENT_APP.id } } }))
+        .toEqual('amazon-2');
     });
 
     describe('hasAlreadySupportedAuthType', () => {

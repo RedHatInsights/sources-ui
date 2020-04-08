@@ -56,6 +56,14 @@ describe('api helpers', () => {
             );
         });
 
+        it('creates filtering query applications param [GRAPHQL]', () => {
+            const filterValue = { applications: ['2', '898'] };
+
+            expect(filtering(filterValue)).toEqual(
+                `, filter: { applications: { application_type_id: { eq: ["2", "898"] }} }`
+            );
+        });
+
         it('creates filtering query combined param [GRAPHQL]', () => {
             const filterValue = { source_type_id: SOURCE_TYPE_ID, name: NAME };
 
@@ -86,6 +94,14 @@ describe('api helpers', () => {
             expect(restFilterGenerator(filterValue)).toEqual(EXPECTED_TYPE_QUERY_REST);
         });
 
+        it('creates filtering query applications param [REST]', () => {
+            const EXPECTED_APPS_QUERY_REST = `filter[applications][application_type_id][eq][]=2&filter[applications][application_type_id][eq][]=898`;
+
+            const filterValue = { applications: ['2', '898'] };
+
+            expect(restFilterGenerator(filterValue)).toEqual(EXPECTED_APPS_QUERY_REST);
+        });
+
         it('creates filtering query combined param [REST]', () => {
             const filterValue = { source_type_id: SOURCE_TYPE_ID, name: NAME };
 
@@ -106,12 +122,39 @@ describe('api helpers', () => {
     });
 
     describe('sorting', () => {
+        it('creates sorting query param - empty sort_by', () => {
+            const SORT_BY = '';
+            const SORT_DIRECTION = 'desc';
+
+            expect(sorting(SORT_BY, SORT_DIRECTION)).toEqual(
+                ''
+            );
+        });
+
         it('creates sorting query param', () => {
             const SORT_BY = 'name';
             const SORT_DIRECTION = 'desc';
 
             expect(sorting(SORT_BY, SORT_DIRECTION)).toEqual(
-                ', sort_by:"name:desc"'
+                ',sort_by:{name:"desc"}'
+            );
+        });
+
+        it('creates sorting query param for source_type_id', () => {
+            const SORT_BY = 'source_type_id';
+            const SORT_DIRECTION = 'desc';
+
+            expect(sorting(SORT_BY, SORT_DIRECTION)).toEqual(
+                ',sort_by:{source_type:{product_name:"desc"}}'
+            );
+        });
+
+        it('creates sorting query param for applications', () => {
+            const SORT_BY = 'applications';
+            const SORT_DIRECTION = 'desc';
+
+            expect(sorting(SORT_BY, SORT_DIRECTION)).toEqual(
+                ',sort_by:{applications:{__count:"desc"}}'
             );
         });
 

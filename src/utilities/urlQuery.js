@@ -84,6 +84,15 @@ export const parseQuery = () => {
         };
     }
 
+    const applicationTypes = urlParams.getAll('filter[applications][application_type_id][eq][]');
+
+    if (applicationTypes.length > 0) {
+        filterValue = {
+            ...filterValue,
+            applications: applicationTypes
+        };
+    }
+
     const hasSomeFilterValue = Object.entries(filterValue).map(([_key, value]) => value).filter(Boolean).length > 0;
 
     if (hasSomeFilterValue) {

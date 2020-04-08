@@ -22,7 +22,8 @@ export const routes = {
     },
     sourcesEdit: {
         path: '/sources/edit/:id',
-        writeAccess: true
+        writeAccess: true,
+        redirectNoId: true,
     },
     sourcesRemove: {
         path: '/sources/remove/:id',

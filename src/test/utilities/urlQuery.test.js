@@ -225,6 +225,18 @@ describe('urlQuery helpers', () => {
                     }
                 });
             });
+
+            it('handles applications filtering', () => {
+                window.location.search = '?filter[applications][application_type_id][eq][]=3&filter[applications][application_type_id][eq][]=2';
+
+                const result = parseQuery();
+
+                expect(result).toEqual({
+                    filterValue: {
+                        applications: ['3', '2']
+                    }
+                });
+            });
         });
 
         it('combined query', () => {
