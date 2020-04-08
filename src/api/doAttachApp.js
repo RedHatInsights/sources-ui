@@ -6,6 +6,7 @@ import cloneDeep from 'lodash/cloneDeep';
 
 import { getSourcesApi, doCreateApplication } from './entities';
 import { urlOrHost } from './doUpdateSource';
+import createProgressTextsApp from '../components/AddApplication/steps/createProgressTextsApp';
 
 // modification of https://stackoverflow.com/a/38340374
 export const removeEmpty = (obj) => {
@@ -23,7 +24,9 @@ export const removeEmpty = (obj) => {
     return obj;
 };
 
-export const doAttachApp = async (values, formApi, authenticationInitialValues, initialValues) => {
+export const doAttachApp = async (
+    values, formApi, authenticationInitialValues, initialValues, setState = () => {}, intl = () => {}
+) => {
     const formState = formApi.getState();
 
     const allFormValues = formState.values;
@@ -47,6 +50,8 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
             ...merge(cloneDeep(newAddedAuthValues), updatedAuthValues)
         }
     });
+
+    setState({ type: 'setProgressTexts', progressTexts: createProgressTextsApp(filteredValues, allFormValues, intl) });
 
     try {
         if (!allFormValues.source || !allFormValues.source.id) {
@@ -92,6 +97,7 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
                 };
 
                 const endpoint = await getSourcesApi().createEndpoint(createEndpointData);
+                setState({ type: 'increaseProgressStep' });
                 endpointId = endpoint.id;
             }
         } else {
@@ -122,6 +128,7 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
 
         // eslint-disable-next-line no-unused-vars
         const [_sourceDataOut, _endpointDataOut, authenticationDataOut, applicationDataOut] = await Promise.all(promises);
+        setState({ type: 'increaseProgressStep' });
 
         const authenticationId = selectedAuthId ? selectedAuthId : authenticationDataOut ? authenticationDataOut.id : undefined;
 
@@ -146,6 +153,7 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
         }
 
         await Promise.all(promisesSecondRound);
+        setState({ type: 'increaseProgressStep' });
     } catch (error) {
         const errorMessage = await handleError(error);
         throw errorMessage;

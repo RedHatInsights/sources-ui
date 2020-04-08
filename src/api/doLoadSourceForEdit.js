@@ -1,16 +1,19 @@
 import { getSourcesApi } from './entities';
 import { getCmValues } from './getCmValues';
 
-export const doLoadSourceForEdit = sourceId => Promise.all([
-    getSourcesApi().showSource(sourceId),
-    getSourcesApi().listSourceEndpoints(sourceId),
-    getSourcesApi().listSourceApplications(sourceId),
-    getCmValues(sourceId).catch(() => undefined)
+export const doLoadSourceForEdit = (source) => Promise.all([
+    getSourcesApi().showSource(source.id),
+    getSourcesApi().listSourceEndpoints(source.id),
+    getSourcesApi().listSourceApplications(source.id),
+    getCmValues(source.id).catch(() => undefined)
 ]).then(([sourceData, endpoints, applications, costManagement]) => {
     const endpoint = endpoints && endpoints.data && endpoints.data[0];
 
     let basicValues = {
-        source: sourceData,
+        source: {
+            ...source,
+            ...sourceData
+        },
         applications: applications.data
     };
 

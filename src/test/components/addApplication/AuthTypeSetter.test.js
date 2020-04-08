@@ -6,7 +6,7 @@ import { Route } from 'react-router-dom';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { sourceTypesData, OPENSHIFT_ID } from '../../__mocks__/sourceTypesData';
-import { AuthTypeSetter, checkAuthTypeMemo, innerSetter } from '../../../components/AddApplication/AuthTypeSetter';
+import { AuthTypeSetter } from '../../../components/AddApplication/AuthTypeSetter';
 import { routes, replaceRouteId } from '../../../Routes';
 
 describe('AuthTypeSetter', () => {
@@ -60,6 +60,18 @@ describe('AuthTypeSetter', () => {
 
     const initialEntry = [replaceRouteId(routes.sourceManageApps.path, SOURCE_ID)];
 
+    class Wrapper extends React.Component {
+        render() {
+            return (
+                componentWrapperIntl(
+                    <Route path={routes.sourceManageApps.path} render={ (...args) => <AuthTypeSetter { ...args } {...this.props}/> } />,
+                    store,
+                    initialEntry
+                )
+            );
+        }
+    }
+
     beforeEach(() => {
         mockStore = configureStore(middlewares);
         store = mockStore({
@@ -76,7 +88,7 @@ describe('AuthTypeSetter', () => {
         changeSpy = jest.fn().mockImplementation();
 
         formOptions = {
-            getState: jest.fn().mockImplementation(() => ({})),
+            getState: jest.fn().mockImplementation(() => ({ values: {} })),
             change: changeSpy
         };
 
@@ -86,173 +98,221 @@ describe('AuthTypeSetter', () => {
         };
     });
 
-    it('sets authentication when authentication_type on undefined', () => {
-        mount(componentWrapperIntl(
-            <Route path={routes.sourceManageApps.path} render={ (...args) => <AuthTypeSetter { ...args } {...initialProps}/> } />,
-            store,
-            initialEntry
-        ));
+    it('change authentication when selectedAuthentication is changed', () => {
+        const wrapper = mount(<Wrapper {...initialProps} />);
 
-        expect(changeSpy.mock.calls[0][0]).toEqual('supported_auth_type');
-        expect(changeSpy.mock.calls[0][1]).toEqual('');
+        expect(changeSpy).not.toHaveBeenCalled();
+        changeSpy.mockClear();
 
-        expect(changeSpy.mock.calls[1][0]).toEqual('authentication');
-        expect(changeSpy.mock.calls[1][1]).toEqual(undefined);
+        wrapper.setProps({
+            formOptions: {
+                ...formOptions,
+                getState: jest.fn().mockImplementation(() => ({
+                    values: {
+                        selectedAuthentication: 'new'
+                    }
+                })),
+            }
+        });
 
-        expect(changeSpy.mock.calls.length).toEqual(2);
+        expect(changeSpy).toHaveBeenCalledWith('authentication', undefined);
+        expect(changeSpy.mock.calls.length).toEqual(1);
+        changeSpy.mockClear();
+
+        wrapper.setProps({
+            formOptions: {
+                ...formOptions,
+                getState: jest.fn().mockImplementation(() => ({
+                    values: {
+                        selectedAuthentication: '23231'
+                    }
+                })),
+            }
+        });
+
+        expect(changeSpy).toHaveBeenCalledWith('authentication', AUTH_VALUES1);
+        expect(changeSpy.mock.calls.length).toEqual(1);
+        changeSpy.mockClear();
+
+        wrapper.setProps({
+            formOptions: {
+                ...formOptions,
+                getState: jest.fn().mockImplementation(() => ({
+                    values: {
+                        selectedAuthentication: '23231'
+                    }
+                })),
+            }
+        });
+
+        expect(changeSpy).not.toHaveBeenCalled();
+        changeSpy.mockClear();
+
+        wrapper.setProps({
+            formOptions: {
+                ...formOptions,
+                getState: jest.fn().mockImplementation(() => ({
+                    values: {
+                        selectedAuthentication: '09862'
+                    }
+                })),
+            }
+        });
+
+        expect(changeSpy).toHaveBeenCalledWith('authentication', AUTH_VALUES2);
+        expect(changeSpy.mock.calls.length).toEqual(1);
+        changeSpy.mockClear();
+
+        wrapper.setProps({
+            formOptions: {
+                ...formOptions,
+                getState: jest.fn().mockImplementation(() => ({
+                    values: {
+                        selectedAuthentication: 'new'
+                    }
+                })),
+            }
+        });
+
+        expect(changeSpy).toHaveBeenCalledWith('authentication', undefined);
+        expect(changeSpy.mock.calls.length).toEqual(1);
+        changeSpy.mockClear();
     });
 
-    it('sets authentication when authentication_type on token', () => {
+    it('do not reset when selectedApplication is defined on initialRender', () => {
         formOptions = {
-            getState: jest.fn().mockImplementation(() => ({ values: { application: { application_type_id: '6898778' } } })),
-            change: changeSpy
+            ...formOptions,
+            getState: jest.fn().mockImplementation(() => ({
+                values: {
+                    selectedAuthentication: 'new'
+                }
+            })),
+        };
+
+        const wrapper = mount(<Wrapper {...initialProps} formOptions={formOptions}/>);
+
+        expect(changeSpy).not.toHaveBeenCalled();
+        changeSpy.mockClear();
+
+        wrapper.setProps({
+            formOptions: {
+                ...formOptions,
+                getState: jest.fn().mockImplementation(() => ({
+                    values: {
+                        selectedAuthentication: '09862'
+                    }
+                })),
+            }
+        });
+
+        expect(changeSpy).toHaveBeenCalledWith('authentication', AUTH_VALUES2);
+        expect(changeSpy.mock.calls.length).toEqual(1);
+        changeSpy.mockClear();
+
+        wrapper.setProps({
+            formOptions: {
+                ...formOptions,
+                getState: jest.fn().mockImplementation(() => ({
+                    values: {
+                        selectedAuthentication: 'new'
+                    }
+                })),
+            }
+        });
+
+        expect(changeSpy).toHaveBeenCalledWith('authentication', undefined);
+        expect(changeSpy.mock.calls.length).toEqual(1);
+        changeSpy.mockClear();
+    });
+
+    it('change authentication when selectedAuthentication is changed with modified values', () => {
+        const authenticationValuesNested = [
+            {
+                ...AUTH_VALUES1,
+                nested: {
+                    password: '7897456'
+                }
+            }
+        ];
+
+        const modifiedValues = {
+            nested: true,
+            authentication: {
+                password: '123456'
+            }
         };
 
         initialProps = {
-            formOptions,
-            authenticationValues
+            ...initialProps,
+            authenticationValues: authenticationValuesNested,
+            modifiedValues
         };
 
-        mount(componentWrapperIntl(
-            <Route path={routes.sourceManageApps.path} render={ (...args) => <AuthTypeSetter { ...args } {...initialProps}/> } />,
-            store,
-            initialEntry
-        ));
+        const wrapper = mount(<Wrapper {...initialProps} />);
 
-        expect(changeSpy.mock.calls[0][0]).toEqual('supported_auth_type');
-        expect(changeSpy.mock.calls[0][1]).toEqual('token');
+        expect(changeSpy).not.toHaveBeenCalled();
+        changeSpy.mockClear();
 
-        expect(changeSpy.mock.calls[1][0]).toEqual('authentication');
-        expect(changeSpy.mock.calls[1][1]).toEqual(AUTH_VALUES1);
-
-        expect(changeSpy.mock.calls.length).toEqual(2);
-    });
-
-    describe('inner function tests', () => {
-        it('changes when types are changed', () => {
-            const checkAuthType = checkAuthTypeMemo();
-
-            let args = {
-                sourceTypes: sourceTypesData.data,
-                checkAuthType,
-                formOptions: {
-                    getState: jest.fn()
-                    .mockImplementationOnce(() => ({ }))
-                    .mockImplementationOnce(() => ({ values: { application: { application_type_id: '6898778' } } }))
-                    .mockImplementationOnce(() => ({ values: { application: { application_type_id: '986421686456' } } }))
-                    .mockImplementationOnce(() => ({ values: { application: { application_type_id: '986421686456' } } }))
-                    .mockImplementationOnce(() => ({ })),
-                    change: changeSpy
-                },
-                authenticationValues,
-                appTypes,
-                source: SOURCE
-            };
-
-            innerSetter(args);
-
-            expect(changeSpy.mock.calls[0][0]).toEqual('supported_auth_type');
-            expect(changeSpy.mock.calls[0][1]).toEqual('');
-
-            expect(changeSpy.mock.calls[1][0]).toEqual('authentication');
-            expect(changeSpy.mock.calls[1][1]).toEqual(undefined);
-
-            expect(changeSpy.mock.calls.length).toEqual(2);
-
-            innerSetter(args);
-
-            expect(changeSpy.mock.calls[2][0]).toEqual('supported_auth_type');
-            expect(changeSpy.mock.calls[2][1]).toEqual('token');
-
-            expect(changeSpy.mock.calls[3][0]).toEqual('authentication');
-            expect(changeSpy.mock.calls[3][1]).toEqual(AUTH_VALUES1);
-
-            expect(changeSpy.mock.calls.length).toEqual(4);
-
-            innerSetter(args);
-
-            expect(changeSpy.mock.calls[4][0]).toEqual('supported_auth_type');
-            expect(changeSpy.mock.calls[4][1]).toEqual('token_extra');
-
-            expect(changeSpy.mock.calls[5][0]).toEqual('authentication');
-            expect(changeSpy.mock.calls[5][1]).toEqual(AUTH_VALUES2);
-
-            expect(changeSpy.mock.calls.length).toEqual(6);
-
-            innerSetter(args);
-
-            expect(changeSpy.mock.calls.length).toEqual(6);
-
-            innerSetter(args);
-
-            expect(changeSpy.mock.calls[6][0]).toEqual('supported_auth_type');
-            expect(changeSpy.mock.calls[6][1]).toEqual('');
-
-            expect(changeSpy.mock.calls[7][0]).toEqual('authentication');
-            expect(changeSpy.mock.calls[7][1]).toEqual(undefined);
-
-            expect(changeSpy.mock.calls.length).toEqual(8);
+        wrapper.setProps({
+            formOptions: {
+                ...formOptions,
+                getState: jest.fn().mockImplementation(() => ({
+                    values: {
+                        selectedAuthentication: 'new'
+                    }
+                })),
+            }
         });
 
-        it('changes state with modified values', () => {
-            const checkAuthType = checkAuthTypeMemo();
+        expect(changeSpy).toHaveBeenCalledWith('authentication', modifiedValues.authentication);
+        expect(changeSpy.mock.calls.length).toEqual(1);
+        changeSpy.mockClear();
 
-            const authenticationValuesNested = [
-                {
-                    ...AUTH_VALUES1,
-                    nested: {
-                        password: '7897456'
+        wrapper.setProps({
+            formOptions: {
+                ...formOptions,
+                getState: jest.fn().mockImplementation(() => ({
+                    values: {
+                        selectedAuthentication: '23231'
                     }
-                }
-            ];
-
-            let args = {
-                sourceTypes: sourceTypesData.data,
-                checkAuthType,
-                formOptions: {
-                    getState: jest.fn()
-                    .mockImplementationOnce(() => ({ }))
-                    .mockImplementationOnce(() => ({ values: { application: { application_type_id: '6898778' } } }))
-                    .mockImplementationOnce(() => ({ values: { application: { application_type_id: '986421686456' } } }))
-                    .mockImplementationOnce(() => ({ values: { application: { application_type_id: '986421686456' } } }))
-                    .mockImplementationOnce(() => ({ })),
-                    change: changeSpy
-                },
-                authenticationValues: authenticationValuesNested,
-                appTypes,
-                source: SOURCE,
-                modifiedValues: {
-                    nested: true,
-                    authentication: {
-                        password: '123456'
-                    }
-                }
-            };
-
-            innerSetter(args);
-
-            expect(changeSpy.mock.calls[0][0]).toEqual('supported_auth_type');
-            expect(changeSpy.mock.calls[0][1]).toEqual('');
-
-            expect(changeSpy.mock.calls[1][0]).toEqual('authentication');
-            expect(changeSpy.mock.calls[1][1]).toEqual(args.modifiedValues.authentication);
-
-            expect(changeSpy.mock.calls.length).toEqual(2);
-
-            innerSetter(args);
-
-            expect(changeSpy.mock.calls[2][0]).toEqual('supported_auth_type');
-            expect(changeSpy.mock.calls[2][1]).toEqual('token');
-
-            expect(changeSpy.mock.calls[3][0]).toEqual('authentication');
-            expect(changeSpy.mock.calls[3][1]).toEqual({
-                ...authenticationValuesNested[0],
-                ...args.modifiedValues.authentication
-            });
-
-            expect(changeSpy.mock.calls.length).toEqual(4);
-
-            innerSetter(args);
+                })),
+            }
         });
+
+        expect(changeSpy).toHaveBeenCalledWith('authentication', {
+            ...authenticationValuesNested[0],
+            password: '123456'
+        });
+        expect(changeSpy.mock.calls.length).toEqual(1);
+        changeSpy.mockClear();
+
+        wrapper.setProps({
+            formOptions: {
+                ...formOptions,
+                getState: jest.fn().mockImplementation(() => ({
+                    values: {
+                        selectedAuthentication: '23231'
+                    }
+                })),
+            }
+        });
+
+        expect(changeSpy).not.toHaveBeenCalled();
+        changeSpy.mockClear();
+
+        wrapper.setProps({
+            formOptions: {
+                ...formOptions,
+                getState: jest.fn().mockImplementation(() => ({
+                    values: {
+                        selectedAuthentication: 'new'
+                    }
+                })),
+            }
+        });
+
+        expect(changeSpy).toHaveBeenCalledWith('authentication', modifiedValues.authentication);
+        expect(changeSpy.mock.calls.length).toEqual(1);
+        changeSpy.mockClear();
     });
 });

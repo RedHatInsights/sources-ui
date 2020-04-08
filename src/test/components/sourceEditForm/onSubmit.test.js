@@ -1,6 +1,7 @@
 import { onSubmit } from '../../../components/SourceEditForm/onSubmit';
 import * as actions from '../../../redux/sources/actions';
 import { routes } from '../../../Routes';
+import * as checkSourceStatus from '../../../api/checkSourceStatus';
 
 describe('editSourceModal - on submit', () => {
     let VALUES;
@@ -24,12 +25,14 @@ describe('editSourceModal - on submit', () => {
         };
         DISPATCH = jest.fn().mockImplementation((func) => func);
         SOURCE = { source: {
-            name: 'aaa'
+            name: 'aaa',
+            id: '2342'
         } };
         INTL = {
             formatMessage: formatMessageMock
         };
         PUSH = jest.fn();
+        checkSourceStatus.checkSourceStatus = jest.fn().mockImplementation(() => Promise.resolve());
     });
 
     afterEach(() => {
@@ -72,13 +75,14 @@ describe('editSourceModal - on submit', () => {
         );
         expect(PUSH).toHaveBeenCalledWith(routes.sources.path);
         expect(actions.loadEntities).toHaveBeenCalled();
+        expect(checkSourceStatus.checkSourceStatus).toHaveBeenCalledWith('2342');
     });
 
     it('submit values unsuccessfuly', async () => {
         actions.updateSource = jest.fn().mockImplementation(() => Promise.reject('FAILS'));
         actions.loadEntities = jest.fn();
 
-        expect.assertions(2);
+        expect.assertions(3);
 
         try {
             await onSubmit(
@@ -92,6 +96,7 @@ describe('editSourceModal - on submit', () => {
         } catch {
             expect(PUSH).not.toHaveBeenCalled();
             expect(actions.loadEntities).not.toHaveBeenCalled();
+            expect(checkSourceStatus.checkSourceStatus).not.toHaveBeenCalled();
         }
     });
 });

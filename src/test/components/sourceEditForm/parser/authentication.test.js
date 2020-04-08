@@ -11,6 +11,9 @@ import {
     removeRequiredValidator
 } from '../../../../components/SourceEditForm/parser/authentication';
 import { unsupportedAuthTypeField } from '../../../../components/SourceEditForm/parser/unsupportedAuthType';
+import { applicationTypesData } from '../../../__mocks__/applicationTypesData';
+import AuthenticationManagement from '../../../../components/SourceEditForm/parser/AuthenticationManagement';
+import RemoveAuthPlaceholder from '../../../../components/SourceEditForm/parser/RemoveAuthPlaceholder';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources', () => ({
     hardcodedSchemas: {
@@ -213,6 +216,7 @@ describe('authentication edit source parser', () => {
         let SET_EDIT;
         let AUTHTYPE;
         let ID;
+        let APP_TYPES;
 
         beforeEach(() => {
             ID = '15165132';
@@ -242,6 +246,7 @@ describe('authentication edit source parser', () => {
             };
             EDITING = {};
             SET_EDIT = jest.fn();
+            APP_TYPES = applicationTypesData.data;
         });
 
         afterEach(() => {
@@ -255,7 +260,8 @@ describe('authentication edit source parser', () => {
                 EMPTY_AUTHENTICATIONS,
                 SOURCE_TYPE,
                 EDITING,
-                SET_EDIT
+                SET_EDIT,
+                APP_TYPES
             );
 
             expect(result).toEqual([]);
@@ -266,7 +272,8 @@ describe('authentication edit source parser', () => {
                 AUTHENTICATIONS,
                 SOURCE_TYPE,
                 EDITING,
-                SET_EDIT
+                SET_EDIT,
+                APP_TYPES
             );
 
             const authentication = SOURCE_TYPE.schema.authentication[0];
@@ -274,10 +281,57 @@ describe('authentication edit source parser', () => {
 
             const ARN_GROUP = {
                 component: componentTypes.SUB_FORM,
-                title: authentication.name,
                 name: authentication.name,
                 fields: [
+                    {
+                        component: 'description',
+                        name: `${AUTHENTICATIONS[0].id}-authentication-management`,
+                        Content: AuthenticationManagement,
+                        schemaAuth: authentication,
+                        appTypes: APP_TYPES,
+                        auth: AUTHENTICATIONS[0],
+                        isDeleting: undefined
+                    },
                     modifyAuthSchemas(FIELDS_WITHOUT_STEPKEYS, ID, EDITING, SET_EDIT)
+                ]
+            };
+
+            expect(result).toEqual([
+                ARN_GROUP
+            ]);
+        });
+
+        it('returns authentication form groups when deleting', () => {
+            AUTHENTICATIONS = [{ authtype: AUTHTYPE, id: ID, isDeleting: true }];
+
+            const result = authenticationFields(
+                AUTHENTICATIONS,
+                SOURCE_TYPE,
+                EDITING,
+                SET_EDIT,
+                APP_TYPES
+            );
+
+            const authentication = SOURCE_TYPE.schema.authentication[0];
+
+            const ARN_GROUP = {
+                component: componentTypes.SUB_FORM,
+                name: authentication.name,
+                fields: [
+                    {
+                        component: 'description',
+                        name: `${AUTHENTICATIONS[0].id}-authentication-management`,
+                        Content: AuthenticationManagement,
+                        schemaAuth: authentication,
+                        appTypes: APP_TYPES,
+                        auth: { ...AUTHENTICATIONS[0], isDeleting: undefined },
+                        isDeleting: true
+                    },
+                    {
+                        component: 'description',
+                        name: `${AUTHENTICATIONS[0].id}-remove-spinner`,
+                        Content: RemoveAuthPlaceholder
+                    }
                 ]
             };
 
@@ -294,7 +348,8 @@ describe('authentication edit source parser', () => {
                 UNSUPPORTED_AUTHENTICATIONS,
                 SOURCE_TYPE,
                 EDITING,
-                SET_EDIT
+                SET_EDIT,
+                APP_TYPES
             );
 
             expect(result).toEqual([
@@ -314,7 +369,8 @@ describe('authentication edit source parser', () => {
                 AUTHENTICATIONS,
                 SOURCE_TYPE_WITHOUT_SCHEMA,
                 EDITING,
-                SET_EDIT
+                SET_EDIT,
+                APP_TYPES
             );
 
             expect(result).toEqual(EMPTY_ARRAY);
@@ -334,7 +390,8 @@ describe('authentication edit source parser', () => {
                 AUTHENTICATIONS,
                 SOURCE_TYPE_WITHOUT_SCHEMA_AUTH,
                 EDITING,
-                SET_EDIT
+                SET_EDIT,
+                APP_TYPES
             );
 
             expect(result).toEqual(EMPTY_ARRAY);
