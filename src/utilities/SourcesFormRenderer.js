@@ -1,18 +1,30 @@
 import React from 'react';
 
-import FormRenderer from '@data-driven-forms/react-form-renderer';
-import { layoutMapper, formFieldsMapper } from '@data-driven-forms/pf4-component-mapper';
+import FormRenderer from '@data-driven-forms/react-form-renderer/dist/cjs/form-renderer';
+import componentTypes from '@data-driven-forms/react-form-renderer/dist/cjs/component-types';
+import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
+import validatorMapper from '@data-driven-forms/react-form-renderer/dist/cjs/validator-mapper';
+
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/cjs/form-template';
+import componentMapper from '@data-driven-forms/pf4-component-mapper/dist/cjs/component-mapper';
+
 import { mapperExtension } from '@redhat-cloud-services/frontend-components-sources';
 
 import EditField from '../components/EditField/EditField';
 
 const SourcesFormRenderer = props => (
     <FormRenderer
-        layoutMapper={layoutMapper}
-        formFieldsMapper={{
-            ...formFieldsMapper,
+        FormTemplate={FormTemplate}
+        componentMapper={{
+            ...componentMapper,
             ...mapperExtension,
-            'edit-field': EditField
+            'edit-field': EditField,
+            'switch-field': componentMapper[componentTypes.SWITCH]
+        }}
+        validatorMapper={{
+            'required-validator': validatorMapper[validatorTypes.REQUIRED],
+            'pattern-validator': validatorMapper[validatorTypes.PATTERN],
+            'min-length-validator': validatorMapper[validatorTypes.MIN_LENGTH]
         }}
         {...props}
     />
