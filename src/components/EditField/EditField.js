@@ -56,12 +56,6 @@ EditField.propTypes = {
     label: PropTypes.node,
     isRequired: PropTypes.bool,
     helperText: PropTypes.node,
-    meta: PropTypes.object.isRequired,
-    FieldProvider: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
-    input: PropTypes.shape({
-        value: PropTypes.any,
-        name: PropTypes.string.isRequired
-    }).isRequired,
     hideLabel: PropTypes.bool,
     setEdit: PropTypes.func,
     type: PropTypes.string
