@@ -61,7 +61,7 @@ describe('AddApplicationSchema', () => {
             source
         );
 
-        expect(result.fields[0].fields).toHaveLength(10);
+        expect(result.fields[0].fields).toHaveLength(7);
     });
 
     it('no available apps', () => {
