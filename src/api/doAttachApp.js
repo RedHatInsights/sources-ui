@@ -6,6 +6,7 @@ import cloneDeep from 'lodash/cloneDeep';
 
 import { getSourcesApi, doCreateApplication } from './entities';
 import { urlOrHost } from './doUpdateSource';
+import createProgressTextsApp from '../components/AddApplication/steps/createProgressTextsApp';
 
 // modification of https://stackoverflow.com/a/38340374
 export const removeEmpty = (obj) => {
@@ -23,7 +24,9 @@ export const removeEmpty = (obj) => {
     return obj;
 };
 
-export const doAttachApp = async (values, formApi, authenticationInitialValues, initialValues) => {
+export const doAttachApp = async (
+    values, formApi, authenticationInitialValues, initialValues, setState = () => {}, intl = () => {}
+) => {
     const formState = formApi.getState();
 
     const allFormValues = formState.values;
@@ -48,6 +51,8 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
         }
     });
 
+    setState({ type: 'setProgressTexts', progressTexts: createProgressTextsApp(filteredValues, allFormValues, intl) });
+
     try {
         if (!allFormValues.source || !allFormValues.source.id) {
             throw 'Missing source id';
@@ -60,6 +65,8 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
 
         if (filteredValues.source && !isEmpty(filteredValues.source)) {
             promises.push(getSourcesApi().updateSource(sourceId, filteredValues.source));
+        } else {
+            promises.push(Promise.resolve(undefined));
         }
 
         const hasModifiedEndpoint = filteredValues.endpoint && !isEmpty(filteredValues.endpoint);
@@ -81,6 +88,8 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
             if (endpointId) {
                 promises.push(getSourcesApi().updateEndpoint(endpointId, endpointData));
             } else {
+                promises.push(Promise.resolve(undefined));
+
                 const createEndpointData = {
                     ...endpointData,
                     default: true,
@@ -88,8 +97,11 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
                 };
 
                 const endpoint = await getSourcesApi().createEndpoint(createEndpointData);
+                setState({ type: 'increaseProgressStep' });
                 endpointId = endpoint.id;
             }
+        } else {
+            promises.push(Promise.resolve(undefined));
         }
 
         if (filteredValues.authentication && !isEmpty(filteredValues.authentication)) {
@@ -104,13 +116,32 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
 
                 promises.push(getSourcesApi().createAuthentication(authenticationData));
             }
+        } else {
+            promises.push(Promise.resolve(undefined));
         }
 
         if (filteredValues.application && filteredValues.application.application_type_id) {
             promises.push(doCreateApplication(sourceId, filteredValues.application.application_type_id));
+        } else {
+            promises.push(Promise.resolve(undefined));
         }
 
-        await Promise.all(promises);
+        // eslint-disable-next-line no-unused-vars
+        const [_sourceDataOut, _endpointDataOut, authenticationDataOut, applicationDataOut] = await Promise.all(promises);
+        setState({ type: 'increaseProgressStep' });
+
+        const authenticationId = selectedAuthId ? selectedAuthId : authenticationDataOut ? authenticationDataOut.id : undefined;
+
+        const promisesSecondRound = [];
+
+        if (applicationDataOut && applicationDataOut.id && authenticationId) {
+            const authAppData = {
+                application_id: applicationDataOut.id,
+                authentication_id: authenticationId
+            };
+
+            promisesSecondRound.push(getSourcesApi().createAuthApp(authAppData));
+        }
 
         const isAttachingCostManagement = filteredValues.credentials || filteredValues.billing_source;
         if (isAttachingCostManagement) {
@@ -118,8 +149,11 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
             let data = {};
             data = credentials ? { authentication: { credentials } } : {};
             data = billing_source ? { ...data, billing_source } : data;
-            await patchSource({ id: sourceId, ...data });
+            promisesSecondRound.push(patchSource({ id: sourceId, ...data }));
         }
+
+        await Promise.all(promisesSecondRound);
+        setState({ type: 'increaseProgressStep' });
     } catch (error) {
         const errorMessage = await handleError(error);
         throw errorMessage;

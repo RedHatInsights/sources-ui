@@ -2,7 +2,7 @@
 import axios from 'axios';
 import * as interceptors from '../frontend-components-copies/interceptors';
 
-import { SOURCES_API_BASE } from './constants';
+import { SOURCES_API_BASE, SOURCES_API_BASE_V2, SOURCES_API_BASE_V3 } from './constants';
 
 export const graphQlErrorInterceptor = response => {
     if (response.errors && response.errors.length > 0) {
@@ -44,10 +44,12 @@ export const getSourcesApi = () => ({
     listEndpointAuthentications: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE}/endpoints/${id}/authentications`),
     deleteSource: (id) => axiosInstanceInsights.delete(`${SOURCES_API_BASE}/sources/${id}`),
     createApplication: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE}/applications`, data),
-    postGraphQL: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE}/graphql`, data),
+    postGraphQL: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/graphql`, data),
     listSourceTypes: () => axiosInstanceInsights.get(`${SOURCES_API_BASE}/source_types`),
     doLoadAppTypes: () => axiosInstanceInsights.get(`${SOURCES_API_BASE}/application_types`),
-    deleteApplication: (id) => axiosInstanceInsights.delete(`${SOURCES_API_BASE}/applications/${id}`)
+    deleteApplication: (id) => axiosInstanceInsights.delete(`${SOURCES_API_BASE}/applications/${id}`),
+    createAuthApp: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V2}/application_authentications`, data),
+    deleteAuthentication: (id) => axiosInstanceInsights.delete(`${SOURCES_API_BASE_V3}/authentications/${id}`),
 });
 
 export const doLoadAppTypes = () => getSourcesApi().doLoadAppTypes();
@@ -59,8 +61,21 @@ export const doRemoveSource = (sourceId) => getSourcesApi().deleteSource(sourceI
 export const pagination = (pageSize, pageNumber) =>
     `limit:${pageSize}, offset:${(pageNumber - 1) * pageSize}`;
 
-export const sorting = (sortBy, sortDirection) =>
-    sortBy ? `, sort_by:"${sortBy}:${sortDirection}"` : '';
+export const sorting = (sortBy, sortDirection) => {
+    if (!sortBy) {
+        return '';
+    }
+
+    if (sortBy === 'source_type_id') {
+        return `,sort_by:{source_type:{product_name:"${sortDirection}"}}`;
+    }
+
+    if (sortBy === 'applications') {
+        return `,sort_by:{applications:{__count:"${sortDirection}"}}`;
+    }
+
+    return `,sort_by:{${sortBy}:"${sortDirection}"}`;
+};
 
 export const filtering = (filterValue = {}) => {;
     let filterQueries = [];
@@ -71,7 +86,10 @@ export const filtering = (filterValue = {}) => {;
 
     if (filterValue.source_type_id && filterValue.source_type_id.length > 0) {
         filterQueries.push(`source_type_id: { eq: [${filterValue.source_type_id.map(x => `"${x}"`).join(', ')}] }`);
+    }
 
+    if (filterValue.applications && filterValue.applications.length > 0) {
+        filterQueries.push(`applications: { application_type_id: { eq: [${filterValue.applications.map(x => `"${x}"`).join(', ')}] }}`);
     }
 
     if (filterQueries.length > 0) {
@@ -86,13 +104,10 @@ export const graphQlAttributes = `
     created_at,
     source_type_id,
     name,
-    tenant,
-    uid,
-    updated_at,
     imported,
     availability_status,
     source_ref,
-    applications { application_type_id, id, availability_status_error, availability_status },
+    applications { application_type_id, id, availability_status_error, availability_status, authentications { id } },
     endpoints { id, scheme, host, port, path, receptor_node, role, certificate_authority, verify_ssl, availability_status_error, availability_status, authentications { authtype, availability_status, availability_status_error } }
 `;
 
@@ -123,6 +138,10 @@ export const restFilterGenerator = (filterValue = {}) => {
         filterValue.source_type_id.map((id) => filterQueries.push(`filter[source_type_id][]=${id}`));
     }
 
+    if (filterValue.applications && filterValue.applications.length > 0) {
+        filterValue.applications.map((id) => filterQueries.push(`filter[applications][application_type_id][eq][]=${id}`));
+    }
+
     if (filterQueries.length > 0) {
         return filterQueries.join('&');
     }
@@ -138,3 +157,5 @@ export const doLoadSource = (id) => getSourcesApi().postGraphQL({
             { ${graphQlAttributes} }
         }`
 }).then(({ data }) => data);
+
+export const doDeleteAuthentication = (id) => getSourcesApi().deleteAuthentication(id);

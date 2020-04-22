@@ -7,9 +7,9 @@ import cloneDeep from 'lodash/cloneDeep';
 import { filterApps } from '@redhat-cloud-services/frontend-components-sources';
 
 import { loadEntities } from '../../redux/sources/actions';
-import SourcesFormRenderer from '../../Utilities/SourcesFormRenderer';
+import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
 import createSchema from './AddApplicationSchema';
-import LoadingStep from '../steps/LoadingStep';
+import LoadingStep from './steps/LoadingStep';
 import ErroredStep from './steps/ErroredStep';
 import FinishedStep from './steps/FinishedStep';
 import WizardBody from './WizardBody';
@@ -18,41 +18,34 @@ import { getSourcesApi } from '../../api/entities';
 
 import { useSource } from '../../hooks/useSource';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
-import { endpointToUrl } from '../SourcesSimpleView/formatters';
+import { endpointToUrl } from '../SourcesTable/formatters';
 import { routes } from '../../Routes';
 
 import { doAttachApp } from '../../api/doAttachApp';
 import { onCancelAddApplication } from './onCancel';
+import { checkSourceStatus } from '../../api/checkSourceStatus';
+
+import reducer, { initialState } from './reducer';
 
 let selectedApp = undefined; // this has to be not-state value, because it shouldn't re-render the component when changes
 const saveSelectedApp = ({ values: { application } }) => selectedApp = application;
 
-export const onSubmit = (values, formApi, authenticationInitialValues, dispatch, setState, initialValues) => {
-    setState({ state: 'submitting' });
+export const onSubmit = (values, formApi, authenticationInitialValues, dispatch, setState, initialValues, intl) => {
+    setState({ type: 'submit' });
 
-    return doAttachApp(values, formApi, authenticationInitialValues, initialValues)
+    return doAttachApp(values, formApi, authenticationInitialValues, initialValues, setState, intl)
     .then(async () => {
+        checkSourceStatus(initialValues.source.id);
         await dispatch(loadEntities());
         selectedApp = undefined;
-        return setState({ state: 'finished' });
+        return setState({ type: 'finish' });
     })
     .catch(error => setState({
-        state: 'errored',
+        type: 'error',
         error,
         values
     }));
 };
-
-const initialState = {
-    state: 'loading',
-    error: '',
-    values: {},
-    authenticationsValues: [],
-    sourceAppsLength: 0,
-    initialValues: {}
-};
-
-const reducer = (state, payload) => ({ ...state, ...payload });
 
 const AddApplication = () => {
     const intl = useIntl();
@@ -83,39 +76,29 @@ const AddApplication = () => {
             // When app is only removed, there is no need to reload values
             const removeAppAction = state.sourceAppsLength >= source.applications.length && state.sourceAppsLength > 0;
 
-            setState({ sourceAppsLength: source.applications.length });
+            setState({ type: 'setSourceAppslength', length: source.applications.length });
 
             if (!removeAppAction) {
                 if (source.endpoints && source.endpoints[0]) {
                     getSourcesApi()
                     .listEndpointAuthentications(source.endpoints[0].id)
                     .then(({ data }) => setState({
+                        type: 'loadAuthentications',
                         authenticationsValues: data,
                         initialValues: {
                             source,
                             endpoint: source.endpoints[0],
                             url: endpointToUrl(source.endpoints[0]),
                             application: selectedApp,
-                            values: {}
-                        }
-                    }))
-                    .then(() => {
-                        if (state.state === 'loading') {
-                            setState({
-                                state: 'wizard'
-                            });
-                        }
-                    });
+                        },
+                        values: {}
+                    }));
                 } else {
                     setState({
+                        type: 'loadWithoutAuthentications',
                         initialValues: { source, application: selectedApp },
                         values: {}
                     });
-                    if (state.state === 'loading') {
-                        setState({
-                            state: 'wizard'
-                        });
-                    }
                 }
             }
         }
@@ -123,7 +106,7 @@ const AddApplication = () => {
 
     const goToSources = () => history.push(routes.sources.path);
 
-    if (!appTypesLoaded || !sourceTypesLoaded || !loaded) {
+    if ((!appTypesLoaded || !sourceTypesLoaded || !loaded || state.state === 'loading') && state.state !== 'submitting') {
         return  (
             <WizardBody
                 goToSources={goToSources}
@@ -132,18 +115,34 @@ const AddApplication = () => {
         );
     }
 
-    if (state.state === 'loading' || state.state === 'submitting') {
+    if (state.state === 'submitting') {
         return  (
             <WizardBody
                 goToSources={goToSources}
-                step={<LoadingStep />}
+                step={<LoadingStep
+                    progressStep={state.progressStep}
+                    progressTexts={state.progressTexts}
+                />}
             />
         );
     }
+
+    const onReset = () => setState({ type: 'reset' });
 
     if (state.state !== 'wizard') {
-        const shownStep = state.state === 'finished' ? (<FinishedStep setState={setState} goToSources={goToSources}/>) :
-            (<ErroredStep setState={setState} goToSources={goToSources} error={state.error}/>);
+        const shownStep = state.state === 'finished' ? (<FinishedStep
+            onReset={onReset}
+            goToSources={goToSources}
+            progressStep={state.progressStep}
+            progressTexts={state.progressTexts}
+        />) :
+            (<ErroredStep
+                onReset={onReset}
+                goToSources={goToSources}
+                error={state.error}
+                progressStep={state.progressStep}
+                progressTexts={state.progressTexts}
+            />);
 
         return (
             <WizardBody goToSources={goToSources} step={shownStep} />
@@ -187,7 +186,8 @@ const AddApplication = () => {
         state.authenticationsValues,
         dispatch,
         setState,
-        state.initialValues
+        state.initialValues,
+        intl
     );
 
     const hasAvailableApps = filteredAppTypes.length > 0;

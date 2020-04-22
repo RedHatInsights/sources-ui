@@ -4,8 +4,10 @@ import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-re
 import { hardcodedSchemas } from '@redhat-cloud-services/frontend-components-sources';
 import { FormattedMessage } from 'react-intl';
 
-import { EDIT_FIELD_NAME } from '../../editField/EditField';
+import { EDIT_FIELD_NAME } from '../../EditField/EditField';
 import { unsupportedAuthTypeField } from './unsupportedAuthType';
+import AuthenticationManagement from './AuthenticationManagement';
+import RemoveAuthPlaceholder from './RemoveAuthPlaceholder';
 
 export const createAuthFieldName = (fieldName, id) => `authentications.a${id}.${fieldName.replace('authentication.', '')}`;
 
@@ -51,12 +53,12 @@ export const modifyAuthSchemas = (fields, id, editing, setEdit) => fields.map((f
     return finalField;
 });
 
-export const authenticationFields = (authentications, sourceType, editing, setEdit) => {
+export const authenticationFields = (authentications, sourceType, editing, setEdit, appTypes) => {
     if (!authentications || authentications.length === 0 || !sourceType.schema || !sourceType.schema.authentication) {
         return [];
     }
 
-    return authentications.map((auth) => {
+    return authentications.map(({ isDeleting, ...auth }) => {
         const schemaAuth = sourceType.schema.authentication.find(({ type }) => type === auth.authtype);
 
         if (!schemaAuth) {
@@ -74,10 +76,22 @@ export const authenticationFields = (authentications, sourceType, editing, setEd
 
         return ({
             component: componentTypes.SUB_FORM,
-            title: schemaAuth.name,
             name: schemaAuth.name,
             fields: [
-                modifyAuthSchemas(enhancedFields, auth.id, editing, setEdit)
+                {
+                    component: 'description',
+                    name: `${auth.id}-authentication-management`,
+                    Content: AuthenticationManagement,
+                    schemaAuth,
+                    appTypes,
+                    auth,
+                    isDeleting
+                },
+                isDeleting ?  {
+                    component: 'description',
+                    name: `${auth.id}-remove-spinner`,
+                    Content: RemoveAuthPlaceholder
+                } : modifyAuthSchemas(enhancedFields, auth.id, editing, setEdit)
             ]
         });
     });
