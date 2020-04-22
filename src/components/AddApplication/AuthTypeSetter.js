@@ -1,72 +1,43 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector, shallowEqual } from 'react-redux';
-import { useSource } from '../../hooks/useSource';
-import get from 'lodash/get';
 import merge from 'lodash/merge';
 import cloneDeep from 'lodash/cloneDeep';
 
-export const checkAuthTypeMemo = () => {
-    let previousAuthType;
-
-    return (newAuthType) => {
-        if (previousAuthType === newAuthType) {
-            return false;
-        }
-
-        previousAuthType = newAuthType;
-        return true;
-    };
-};
-
 export const innerSetter = ({
-    sourceTypes,
-    source,
-    appTypes,
     formOptions,
-    checkAuthType,
+    modifiedValues,
     authenticationValues,
-    modifiedValues
+    selectedAuthentication
 }) => {
-    const sourceType = sourceTypes.find(({ id }) => id === source.source_type_id);
+    if (selectedAuthentication !== 'new') {
+        const authentication = authenticationValues.find(({ id }) => id === selectedAuthentication);
 
-    const formValues = formOptions.getState();
-
-    const application = appTypes.find(
-        ({ id }) => id === get(formValues, 'values.application.application_type_id', undefined)
-    );
-    const supported_auth_type = get(application, `supported_authentication_types[${sourceType.name}][0]`, '');
-
-    if (checkAuthType(supported_auth_type)) {
-        formOptions.change('supported_auth_type', supported_auth_type);
-
-        const hasAuthenticationAlready = authenticationValues.find(({ authtype }) => authtype === supported_auth_type);
-
-        if (hasAuthenticationAlready) {
-            if (modifiedValues && modifiedValues.authentication) {
-                const newAuthenticationValues = merge(cloneDeep(hasAuthenticationAlready), modifiedValues.authentication);
-                formOptions.change('authentication', newAuthenticationValues);
-            } else {
-                formOptions.change('authentication', hasAuthenticationAlready);
-            }
+        if (modifiedValues && modifiedValues.authentication) {
+            const newAuthenticationValues = merge(cloneDeep(authentication), modifiedValues.authentication);
+            formOptions.change('authentication', newAuthenticationValues);
         } else {
-            if (modifiedValues && modifiedValues.authentication) {
-                formOptions.change('authentication', modifiedValues.authentication);
-            } else {
-                formOptions.change('authentication', undefined);
-            }
+            formOptions.change('authentication', authentication);
+        }
+    } else {
+        if (modifiedValues && modifiedValues.authentication) {
+            formOptions.change('authentication', modifiedValues.authentication);
+        } else {
+            formOptions.change('authentication', undefined);
         }
     }
 };
 
 export const AuthTypeSetter = ({ formOptions, authenticationValues, modifiedValues }) => {
-    const [checkAuthType] = useState(() => checkAuthTypeMemo());
+    const selectedAuthentication = formOptions.getState().values.selectedAuthentication;
 
-    const { appTypes, sourceTypes } = useSelector(({ sources }) => sources, shallowEqual);
+    const [initialValue, setInitialValue] = useState(selectedAuthentication);
 
-    const source = useSource();
-
-    innerSetter({ sourceTypes, checkAuthType, formOptions, authenticationValues, appTypes, source, modifiedValues });
+    useEffect(() => {
+        if (initialValue !== selectedAuthentication) {
+            innerSetter({ formOptions, authenticationValues, modifiedValues, selectedAuthentication });
+            setInitialValue(undefined);
+        }
+    }, [selectedAuthentication]);
 
     return null;
 };

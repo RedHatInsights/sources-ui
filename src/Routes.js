@@ -2,7 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import { Route } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 
-const SourcesPage = lazy(() => import(/* webpackChunkName: "sourcePage" */ './pages/SourcesPage'));
+const SourcesPage = lazy(() => import(/* webpackChunkName: "sourcePage" */ './pages/Sources'));
 
 const Loader = () => (
     <ContentLoader>
@@ -22,7 +22,8 @@ export const routes = {
     },
     sourcesEdit: {
         path: '/sources/edit/:id',
-        writeAccess: true
+        writeAccess: true,
+        redirectNoId: true,
     },
     sourcesRemove: {
         path: '/sources/remove/:id',

@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { componentTypes } from '@data-driven-forms/react-form-renderer';
 import { asyncValidator } from '@redhat-cloud-services/frontend-components-sources';
-import { EDIT_FIELD_NAME } from '../../editField/EditField';
+import { EDIT_FIELD_NAME } from '../../EditField/EditField';
 
 export const genericInfo = (editing, setEdit, sourceId) => ([
     {
@@ -12,7 +12,7 @@ export const genericInfo = (editing, setEdit, sourceId) => ([
             defaultMessage="Source name"
         />,
         component: editing['source.name'] ? componentTypes.TEXT_FIELD : EDIT_FIELD_NAME,
-        setEdit: editing['source.name'] ? undefined : setEdit,
+        ...(editing['source.name'] ? {} : { setEdit }),
         validate: [
             (value) => asyncValidator(value, sourceId)
         ],

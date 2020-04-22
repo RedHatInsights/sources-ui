@@ -4,8 +4,6 @@
     "es6": true
   },
   "globals": {
-    "fetchMock": true,
-    "apiClientMock": true,
     "setImmediate": true,
     "toJson": true,
     "beforeAll": true,
@@ -13,11 +11,10 @@
     "expect": true,
     "it": true,
     "mount": true,
-    "shallow": true,
-    "mockOnce": true,
+    "shallow": true
   },
   "rules": {
     "react/prop-types": "off",
     "max-len": "off"
-  },
+  }
 }

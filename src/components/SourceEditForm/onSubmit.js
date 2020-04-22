@@ -1,6 +1,7 @@
 import { selectOnlyEditedValues } from './helpers';
 import { updateSource, loadEntities } from '../../redux/sources/actions';
 import { routes } from '../../Routes';
+import { checkSourceStatus } from '../../api/checkSourceStatus';
 
 export const onSubmit = (values, editing, dispatch, source, intl, push) => dispatch(updateSource(
     source,
@@ -32,6 +33,7 @@ export const onSubmit = (values, editing, dispatch, source, intl, push) => dispa
         })
     }))
 .then(() => {
+    checkSourceStatus(source.source.id);
     push(routes.sources.path);
     dispatch(loadEntities());
 });
