@@ -32,6 +32,7 @@ const renderSources = (entities, columns, sourceTypes, appTypes) =>
 export const prepareColumnsCells = columns => columns.filter(column => column.title || column.hidden).map(column => ({
     title: column.title || '',
     value: column.value,
+    hidden: column.hidden,
     ...(column.sortable && { transforms: [sortable] })
 }));
 
@@ -165,7 +166,7 @@ const SourcesTable = () => {
             })}
             onSort={(_event, key, direction) => reduxDispatch(sortEntities(state.cells[key].value, direction))}
             sortBy={{
-                index: state.cells.map(cell => cell.value).indexOf(sortBy),
+                index: state.cells.map(cell => cell.hidden ? 'hidden' : cell.value).indexOf(sortBy),
                 direction: sortDirection
             }}
             rows={shownRows}
