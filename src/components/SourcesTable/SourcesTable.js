@@ -32,6 +32,7 @@ const renderSources = (entities, columns, sourceTypes, appTypes) =>
 export const prepareColumnsCells = columns => columns.filter(column => column.title || column.hidden).map(column => ({
     title: column.title || '',
     value: column.value,
+    hidden: column.hidden,
     ...(column.sortable && { transforms: [sortable] })
 }));
 
@@ -63,7 +64,6 @@ export const actionResolver = (intl, push) => (rowData) => {
         component: 'button'
     },
     {
-        style: { color: 'var(--pf-global--danger-color--100)' },
         title: intl.formatMessage({
             id: 'sources.delete',
             defaultMessage: 'Delete'
@@ -165,7 +165,7 @@ const SourcesTable = () => {
             })}
             onSort={(_event, key, direction) => reduxDispatch(sortEntities(state.cells[key].value, direction))}
             sortBy={{
-                index: state.cells.map(cell => cell.value).indexOf(sortBy),
+                index: state.cells.map(cell => cell.hidden ? 'hidden' : cell.value).indexOf(sortBy),
                 direction: sortDirection
             }}
             rows={shownRows}
