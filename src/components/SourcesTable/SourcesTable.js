@@ -64,7 +64,6 @@ export const actionResolver = (intl, push) => (rowData) => {
         component: 'button'
     },
     {
-        style: { color: 'var(--pf-global--danger-color--100)' },
         title: intl.formatMessage({
             id: 'sources.delete',
             defaultMessage: 'Delete'
