@@ -195,8 +195,6 @@ describe('SourcesPage', () => {
     });
 
     it('closes addSourceWizard', async () => {
-        helpers.onCloseAddSourceWizard = jest.fn();
-
         await act(async() => {
             wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
         });
@@ -214,12 +212,7 @@ describe('SourcesPage', () => {
         });
         wrapper.update();
 
-        expect(helpers.onCloseAddSourceWizard).toHaveBeenCalledWith({
-            values: undefined,
-            intl: expect.any(Object),
-            dispatch: expect.any(Function),
-            history: expect.any(Object)
-        });
+        expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sources.path);
     });
 
     it('afterSuccess addSourceWizard', async () => {

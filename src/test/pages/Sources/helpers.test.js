@@ -1,5 +1,4 @@
 import {
-    onCloseAddSourceWizard,
     afterSuccess,
     afterSuccessLoadParameters,
     chipsFormatters,
@@ -16,60 +15,6 @@ import { applicationTypesData } from '../../__mocks__/applicationTypesData';
 import * as sourcesApi from '../../../api/checkSourceStatus';
 
 describe('Source page helpers', () => {
-    describe('onCloseAddSourceWizard', () => {
-        let args;
-
-        beforeEach(() => {
-            args = {
-                values: { some_value: 'aa' },
-                intl: {
-                    formatMessage: ({ defaultMessage }) => defaultMessage
-                },
-                dispatch: jest.fn(),
-                history: {
-                    push: jest.fn()
-                }
-            };
-
-            actions.addMessage = jest.fn();
-            actions.clearAddSource = jest.fn();
-        });
-
-        it('create notifications when values', () => {
-            const tmpDate = Date.now;
-
-            const TIMESTAMP = 12345313512;
-
-            Date.now = () => TIMESTAMP;
-
-            const EXPECTED_TITLE = expect.any(String);
-            const EXPECTED_VARIANT = expect.any(String);
-            const EXPECTED_DEESCRIPTION = expect.any(Object);
-            const EXPECTED_CUSTOM_ID = TIMESTAMP;
-
-            onCloseAddSourceWizard(args);
-
-            expect(actions.addMessage).toHaveBeenCalledWith(
-                EXPECTED_TITLE,
-                EXPECTED_VARIANT,
-                EXPECTED_DEESCRIPTION,
-                EXPECTED_CUSTOM_ID
-            );
-            expect(actions.clearAddSource).toHaveBeenCalled();
-            expect(args.history.push).toHaveBeenCalled();
-
-            Date.now = tmpDate;
-        });
-
-        it('only clear and change path when no values/empty', () => {
-            onCloseAddSourceWizard({ ...args, values: {} });
-
-            expect(actions.addMessage).not.toHaveBeenCalled();
-            expect(actions.clearAddSource).toHaveBeenCalled();
-            expect(args.history.push).toHaveBeenCalled();
-        });
-    });
-
     describe('afterSuccess', () => {
         it('calls function and checks source availibility status', () => {
             const dispatch = jest.fn();

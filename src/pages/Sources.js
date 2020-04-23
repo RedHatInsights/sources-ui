@@ -33,7 +33,6 @@ import {
     debouncedFiltering,
     prepareSourceTypeSelection,
     afterSuccess,
-    onCloseAddSourceWizard,
     loadedTypes,
     prepareApplicationTypeSelection
 } from './Sources/helpers';
@@ -216,7 +215,7 @@ const SourcesPage = () => {
                         sourceTypes: loadedTypes(sourceTypes, sourceTypesLoaded),
                         applicationTypes: loadedTypes(appTypes, appTypesLoaded),
                         isOpen: true,
-                        onClose: (values) => onCloseAddSourceWizard({ values, dispatch, history, intl }),
+                        onClose: () => history.push(routes.sources.path),
                         afterSuccess: (source) => afterSuccess(dispatch, source),
                         hideSourcesButton: true,
                         initialValues: undoValues
