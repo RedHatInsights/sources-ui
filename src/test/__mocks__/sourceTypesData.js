@@ -177,6 +177,7 @@ export const sourceTypesData =
         },
         {
             created_at: '2019-04-05T17:54:38Z',
+            icon_url: '/tower.jpg',
             id: '3',
             name: 'ansible-tower',
             product_name: 'Ansible Tower',
@@ -268,6 +269,7 @@ export const sourceTypesData =
         },
         {
             created_at: '2019-07-16T13:52:12Z',
+            icon_url: 'ovirt.jpg',
             id: '5',
             name: 'ovirt',
             product_name: 'Red Hat Virtualization',
@@ -365,6 +367,7 @@ export const sourceTypesData =
             created_at: '2019-11-08T14:43:11Z',
             id: '9',
             name: 'satellite',
+            icon_url: 'satellite.jpg',
             product_name: 'Red Hat Satellite',
             schema: {
                 endpoint: {

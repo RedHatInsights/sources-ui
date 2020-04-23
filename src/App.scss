@@ -100,3 +100,8 @@
   width: 32px;
   height: 32px;
 }
+
+.ins-c-sources__empty-state {
+  // should be 64px from the top, content has padding --pf-global--spacer--lg, so we have to calculate the rest of it
+  padding-top: calc(0px - var(--pf-global--spacer--lg) + 64px) !important;
+}
