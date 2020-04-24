@@ -255,6 +255,16 @@ describe('AddApplication', () => {
             wrapper.update();
         });
 
+        it('closes immedietaly when no value is filled', async () => {
+            await act(async () => {
+                const closeButton = wrapper.find('Button').at(0);
+                closeButton.simulate('click');
+            });
+            wrapper.update();
+
+            expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sources.path);
+        });
+
         it('opens a modal on cancel and closes the wizard', async () => {
             await act(async () => {
                 const firstAppCard = wrapper.find('Card').first();
