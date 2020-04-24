@@ -155,7 +155,7 @@ const SourcesPage = () => {
                             }
                             key="addSourceButton"
                         >
-                            <span>
+                            <span tabIndex="0">
                                 <Button variant='primary' isDisabled id="addSourceButton">
                                     <FormattedMessage
                                         id="sources.addSource"
