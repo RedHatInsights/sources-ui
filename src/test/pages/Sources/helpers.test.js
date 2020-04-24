@@ -23,13 +23,11 @@ describe('Source page helpers', () => {
             sourcesApi.checkSourceStatus = jest.fn();
 
             actions.loadEntities = jest.fn();
-            actions.clearAddSource = jest.fn();
 
             afterSuccess(dispatch, source);
 
-            expect(dispatch.mock.calls.length).toBe(2);
+            expect(dispatch.mock.calls.length).toBe(1);
             expect(actions.loadEntities).toHaveBeenCalledWith(afterSuccessLoadParameters);
-            expect(actions.loadEntities).toHaveBeenCalled();
 
             expect(sourcesApi.checkSourceStatus).toHaveBeenCalledWith(source.id);
         });

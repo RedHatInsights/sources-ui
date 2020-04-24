@@ -1,7 +1,6 @@
 import awesomeDebounce from 'awesome-debounce-promise';
 import {
     loadEntities,
-    clearAddSource,
     filterSources,
 } from '../../redux/sources/actions';
 import { checkSourceStatus } from '../../api/checkSourceStatus';
@@ -12,7 +11,6 @@ export const afterSuccessLoadParameters = { pageNumber: 1, sortBy: 'created_at',
 
 export const afterSuccess = (dispatch, source) => {
     checkSourceStatus(source.id);
-    dispatch(clearAddSource());
     dispatch(loadEntities(afterSuccessLoadParameters));
 };
 
