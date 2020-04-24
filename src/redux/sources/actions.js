@@ -172,15 +172,6 @@ export const addAppToSource = (sourceId, app) => ({
     }
 });
 
-export const undoValues = (values) => ({
-    type: UNDO_VALUES,
-    payload: { values }
-});
-
-export const clearAddSource = () => ({
-    type: CLEAR_ADD_SOURCE
-});
-
 export const addHiddenSource = (source) => ({
     type: ADD_HIDDEN_SOURCE,
     payload: {
