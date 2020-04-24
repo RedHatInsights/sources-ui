@@ -1,39 +1,9 @@
-import React from 'react';
-import { FormattedMessage } from 'react-intl';
 import awesomeDebounce from 'awesome-debounce-promise';
-import isEmpty from 'lodash/isEmpty';
-
 import {
     loadEntities,
-    clearAddSource,
     filterSources,
-    addMessage
 } from '../../redux/sources/actions';
-import UndoButtonAdd from '../../components/UndoButton/UndoButtonAdd';
-import { routes } from '../../Routes';
 import { checkSourceStatus } from '../../api/checkSourceStatus';
-
-export const onCloseAddSourceWizard = ({ values, dispatch, history, intl }) => {
-    if (values && !isEmpty(values)) {
-        const messageId = Date.now();
-        dispatch(addMessage(
-            intl.formatMessage({
-                id: 'sources.addWizardCanceled',
-                defaultMessage: 'Adding a source was cancelled'
-            }),
-            'success',
-            <FormattedMessage
-                id="sources.undoMistake"
-                defaultMessage={ `{undo} if this was a mistake.` }
-                values={ { undo: <UndoButtonAdd messageId={messageId} values={values} /> } }
-            />,
-            messageId
-        ));
-    }
-
-    dispatch(clearAddSource());
-    history.push(routes.sources.path);
-};
 
 export const debouncedFiltering = awesomeDebounce((refresh) => refresh(), 500);
 
@@ -41,7 +11,6 @@ export const afterSuccessLoadParameters = { pageNumber: 1, sortBy: 'created_at',
 
 export const afterSuccess = (dispatch, source) => {
     checkSourceStatus(source.id);
-    dispatch(clearAddSource());
     dispatch(loadEntities(afterSuccessLoadParameters));
 };
 

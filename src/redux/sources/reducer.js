@@ -4,8 +4,6 @@ import {
     PAGE_AND_SIZE,
     FILTER_SOURCES,
     ADD_APP_TO_SOURCE,
-    UNDO_VALUES,
-    CLEAR_ADD_SOURCE,
     SET_COUNT,
     ADD_HIDDEN_SOURCE,
     CLEAR_FILTERS
@@ -150,16 +148,6 @@ export const addAppToSource = (state, { payload: { sourceId, app } }) => ({
         : entity)
 });
 
-export const undoValues = (state, { payload: { values } }) => ({
-    ...state,
-    undoValues: values
-});
-
-export const clearAddSource = (state) => ({
-    ...state,
-    undoValues: {}
-});
-
 export const setCount = (state, { payload: { count } }) => ({
     ...state,
     numberOfEntities: count
@@ -198,8 +186,6 @@ export default {
     [PAGE_AND_SIZE]: setPageAndSize,
     [FILTER_SOURCES]: filterSources,
     [ADD_APP_TO_SOURCE]: addAppToSource,
-    [UNDO_VALUES]: undoValues,
-    [CLEAR_ADD_SOURCE]: clearAddSource,
     [ADD_APP_TO_SOURCE]: addAppToSource,
     [SET_COUNT]: setCount,
     [ADD_HIDDEN_SOURCE]: addHiddenSource,

@@ -151,7 +151,9 @@ export const selectAuthenticationStep = ({
     });
 };
 
-const fields = (applications = [], intl, sourceTypes, applicationTypes, authenticationValues, source, modifiedValues) => {
+const fields = (
+    applications = [], intl, sourceTypes, applicationTypes, authenticationValues, source, modifiedValues, container
+) => {
     const hasAvailableApps = applications.length > 0;
 
     let nextStep = hasAvailableApps ? 'summary' : undefined;
@@ -257,6 +259,7 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
                     defaultMessage: 'Manage applications'
                 }),
                 inModal: true,
+                container,
                 predictSteps: true,
                 showTitles: true,
                 crossroads: ['application.application_type_id', 'selectedAuthentication'],
