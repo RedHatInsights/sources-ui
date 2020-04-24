@@ -1,12 +1,7 @@
 import { loadOrgAdmin } from '../../../redux/user/actions';
-import * as sourcesActions from '../../../redux/sources/actions';
 import { ACTION_TYPES } from '../../../redux/user/actionTypes';
 
 describe('user reducer actions', () => {
-    const TITLE = 'TIIITLE';
-    const DESCRIPTION = 'DEEESCRIPTION';
-    const MESSAGE_TYPE = ({ type: 'message blabla' });
-
     let getUserSpy;
     let dispatch;
 
@@ -16,8 +11,6 @@ describe('user reducer actions', () => {
         _insights = insights;
 
         dispatch = jest.fn();
-
-        sourcesActions.addMessage = jest.fn().mockImplementation(() => MESSAGE_TYPE);
     });
 
     afterEach(() => {
@@ -44,9 +37,7 @@ describe('user reducer actions', () => {
                 }
             };
 
-            await loadOrgAdmin(TITLE, DESCRIPTION)(dispatch);
-
-            expect(sourcesActions.addMessage).not.toHaveBeenCalled();
+            await loadOrgAdmin()(dispatch);
 
             expect(dispatch.mock.calls.length).toEqual(2);
 
@@ -76,18 +67,15 @@ describe('user reducer actions', () => {
                 }
             };
 
-            await loadOrgAdmin(TITLE, DESCRIPTION)(dispatch);
+            await loadOrgAdmin()(dispatch);
 
-            expect(sourcesActions.addMessage).toHaveBeenCalledWith(TITLE, 'info', DESCRIPTION);
-
-            expect(dispatch.mock.calls.length).toEqual(3);
+            expect(dispatch.mock.calls.length).toEqual(2);
 
             expect(dispatch.mock.calls[0][0]).toEqual({ type: ACTION_TYPES.SET_ORG_ADMIN_PENDING });
             expect(dispatch.mock.calls[1][0]).toEqual({
                 type: ACTION_TYPES.SET_ORG_ADMIN_FULFILLED,
                 payload: isOrgAdmin
             });
-            expect(dispatch.mock.calls[2][0]).toEqual(MESSAGE_TYPE);
         });
 
         it('rejected', async () => {
@@ -105,9 +93,7 @@ describe('user reducer actions', () => {
                 }
             };
 
-            await loadOrgAdmin(TITLE, DESCRIPTION)(dispatch);
-
-            expect(sourcesActions.addMessage).not.toHaveBeenCalled();
+            await loadOrgAdmin()(dispatch);
 
             expect(dispatch.mock.calls.length).toEqual(2);
 
@@ -133,9 +119,7 @@ describe('user reducer actions', () => {
                 }
             };
 
-            await loadOrgAdmin(TITLE, DESCRIPTION)(dispatch);
-
-            expect(sourcesActions.addMessage).not.toHaveBeenCalled();
+            await loadOrgAdmin()(dispatch);
 
             expect(dispatch.mock.calls.length).toEqual(2);
 

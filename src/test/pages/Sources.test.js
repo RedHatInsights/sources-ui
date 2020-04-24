@@ -5,7 +5,7 @@ import { applyReducerHash } from '@redhat-cloud-services/frontend-components-uti
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/components/PrimaryToolbar';
 import { act } from 'react-dom/test-utils';
-import { Chip, Select, Pagination, Button } from '@patternfly/react-core';
+import { Chip, Select, Pagination, Button, Tooltip } from '@patternfly/react-core';
 import { MemoryRouter, Link } from 'react-router-dom';
 import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources';
 
@@ -510,8 +510,8 @@ describe('SourcesPage', () => {
             expect(wrapper.find(SourcesTable)).toHaveLength(1);
             expect(wrapper.find(Pagination)).toHaveLength(2);
             expect(wrapper.find(PaginationLoader)).toHaveLength(0);
-            expect(wrapper.find(PrimaryToolbar).first().props().actionsConfig).toEqual(undefined);
-            expect(wrapper.find(PrimaryToolbar).last().props().actionsConfig).toEqual(undefined);
+            expect(wrapper.find('#addSourceButton').first().props().isDisabled).toEqual(true);
+            expect(wrapper.find(PrimaryToolbar).find(Tooltip)).toHaveLength(1);
             expect(wrapper.find(RedirectNotAdmin)).toHaveLength(0);
         });
     });
