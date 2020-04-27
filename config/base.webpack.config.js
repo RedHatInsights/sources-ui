@@ -39,7 +39,10 @@ const webpackConfig = {
     },
 
     resolve: {
-        alias: { react: resolve(__dirname, '../node_modules', 'react') }
+        alias: {
+            react: resolve(__dirname, '../node_modules', 'react'),
+            'react-dom': resolve(__dirname, '../node_modules', 'react-dom')
+        }
     }
 };
 
