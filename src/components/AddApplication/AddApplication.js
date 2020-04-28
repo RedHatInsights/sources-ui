@@ -5,6 +5,7 @@ import { useIntl } from 'react-intl';
 import merge from 'lodash/merge';
 import cloneDeep from 'lodash/cloneDeep';
 import { filterApps, CloseModal } from '@redhat-cloud-services/frontend-components-sources';
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/cjs/form-template';
 
 import { loadEntities } from '../../redux/sources/actions';
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
@@ -45,6 +46,8 @@ export const onSubmit = (values, formApi, authenticationInitialValues, dispatch,
         values
     }));
 };
+
+const FormTemplateWrapper = (props) => <FormTemplate {...props} showFormControls={false} />;
 
 const AddApplication = () => {
     const intl = useIntl();
@@ -229,6 +232,7 @@ const AddApplication = () => {
                 subscription={{ values: true }}
                 onStateUpdate={saveSelectedApp}
                 clearedValue={null}
+                FormTemplate={FormTemplateWrapper}
             />
         </React.Fragment>
     );
