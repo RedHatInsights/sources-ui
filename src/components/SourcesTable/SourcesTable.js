@@ -45,14 +45,13 @@ const initialState = (columns) => ({
     cells: prepareColumnsCells(columns)
 });
 
-export const insertEditAction = (actions, intl, push, isOrgAdmin, tooltip) => actions.splice(1, 0, {
+export const insertEditAction = (actions, intl, push, isOrgAdmin, disabledProps) => actions.splice(1, 0, {
     title: intl.formatMessage({
         id: 'sources.edit',
         defaultMessage: 'Edit'
     }),
     onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesEdit.path, id)),
-    component: 'button',
-    ...(!isOrgAdmin && { tooltip, isDisabled: true }),
+    ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
 });
 
 export const actionResolver = (intl, push, isOrgAdmin) => (rowData) => {
@@ -61,14 +60,20 @@ export const actionResolver = (intl, push, isOrgAdmin) => (rowData) => {
         defaultMessage: 'You do not have permission to perform this action.'
     });
 
+    const disabledProps = {
+        tooltip,
+        isDisabled: true,
+        className: 'ins-c-sources__disabled-drodpown-item',
+        tabIndex: '0'
+    };
+
     const actions = [{
         title: intl.formatMessage({
             id: 'sources.manageApps',
             defaultMessage: 'Manage applications'
         }),
         onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourceManageApps.path, id)),
-        component: 'button',
-        ...(!isOrgAdmin && { tooltip, isDisabled: true }),
+        ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
     },
     {
         title: intl.formatMessage({
@@ -76,14 +81,13 @@ export const actionResolver = (intl, push, isOrgAdmin) => (rowData) => {
             defaultMessage: 'Delete'
         }),
         onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesRemove.path, id)),
-        component: 'button',
-        ...(!isOrgAdmin && { tooltip, isDisabled: true }),
+        ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
     }];
 
     const isSourceEditable = !rowData.imported;
 
     if (isSourceEditable) {
-        insertEditAction(actions, intl, push, isOrgAdmin, tooltip);
+        insertEditAction(actions, intl, push, isOrgAdmin, disabledProps);
     }
 
     return actions;
