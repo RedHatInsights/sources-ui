@@ -4,10 +4,13 @@ import PencilAltIcon from '@patternfly/react-icons/dist/js/icons/pencil-alt-icon
 
 import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
 import { FormGroup } from '@patternfly/react-core/dist/js/components/Form/FormGroup';
+import useFieldApi from '@data-driven-forms/react-form-renderer/dist/cjs/use-field-api';
 
 export const EDIT_FIELD_NAME = 'edit-field';
 
-const EditField = ({ isRequired, label, helperText, hideLabel, meta, input, type, setEdit }) => {
+const EditField = (props) => {
+    const { isRequired, label, helperText, hideLabel, meta, input, type, setEdit } = useFieldApi(props);
+
     const { error, touched } = meta;
     const showError = touched && error;
 
@@ -53,26 +56,9 @@ EditField.propTypes = {
     label: PropTypes.node,
     isRequired: PropTypes.bool,
     helperText: PropTypes.node,
-    meta: PropTypes.object.isRequired,
-    FieldProvider: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
-    input: PropTypes.shape({
-        value: PropTypes.any,
-        name: PropTypes.string.isRequired
-    }).isRequired,
     hideLabel: PropTypes.bool,
     setEdit: PropTypes.func,
     type: PropTypes.string
 };
 
-const EditFieldProvider = ({ FieldProvider, ...rest }) =>
-    (
-        <FieldProvider { ...rest }>
-            { (props) =>  <EditField  { ...props }/> }
-        </FieldProvider>
-    );
-
-EditFieldProvider.propTypes = {
-    FieldProvider: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired
-};
-
-export default EditFieldProvider;
+export default EditField;

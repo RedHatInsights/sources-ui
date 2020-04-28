@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { EmptyStateBody } from '@patternfly/react-core';
+import { EmptyStateBody, Radio } from '@patternfly/react-core';
 import { Route, MemoryRouter } from 'react-router-dom';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import configureStore from 'redux-mock-store';
@@ -491,7 +491,7 @@ describe('AddApplication', () => {
             });
             wrapper.update();
 
-            expect(wrapper.find('Radio')).toHaveLength(2);
+            expect(wrapper.find(Radio)).toHaveLength(2);
             expect(wrapper.find(AuthTypeSetter)).toHaveLength(1);
 
             await act(async () => {
