@@ -2,6 +2,7 @@ import { componentTypes } from '@data-driven-forms/react-form-renderer';
 
 import { genericInfo } from '../../../../components/SourceEditForm/parser/genericInfo';
 import { EDIT_FIELD_NAME } from '../../../../components/EditField/EditField';
+import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources', () => ({
     asyncValidator: jest.fn().mockImplementation(() => jest.fn())
@@ -26,7 +27,8 @@ describe('generic info edit form parser', () => {
             component: EDIT_FIELD_NAME,
             setEdit: SET_EDIT,
             validate: [
-                expect.any(Function)
+                expect.any(Function),
+                { type: validatorTypes.REQUIRED }
             ],
             isRequired: true
         };
@@ -49,7 +51,8 @@ describe('generic info edit form parser', () => {
             label: expect.any(Object),
             component: componentTypes.TEXT_FIELD,
             validate: [
-                expect.any(Function)
+                expect.any(Function),
+                { type: validatorTypes.REQUIRED }
             ],
             isRequired: true
         };

@@ -140,7 +140,6 @@ export const selectAuthenticationStep = ({
     });
 
     return ({
-        stepKey: 'selectAuthentication',
         name: 'selectAuthentication',
         title: intl.formatMessage({
             id: 'sources.selectAuthenticationTitle',
@@ -291,7 +290,6 @@ const fields = (
                             id: 'sources.selectApp',
                             defaultMessage: 'Select application'
                         }),
-                        stepKey: 1,
                         name: 'selectAppStep',
                         fields: [
                             {
@@ -313,7 +311,6 @@ const fields = (
                             id: 'sources.review',
                             defaultMessage: 'Review'
                         }),
-                        stepKey: 'summary',
                         name: 'summary',
                         fields: [{
                             component: 'description',
