@@ -230,7 +230,7 @@ const AddApplication = () => {
                 onCancel={cancelBeforeExit}
                 initialValues={finalValues}
                 subscription={{ values: true }}
-                onStateUpdate={saveSelectedApp}
+                debug={saveSelectedApp}
                 clearedValue={null}
                 FormTemplate={FormTemplateWrapper}
             />
