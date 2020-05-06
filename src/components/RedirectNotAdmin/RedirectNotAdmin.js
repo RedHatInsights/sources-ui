@@ -20,8 +20,8 @@ const RedirectNotAdmin = () => {
             defaultMessage: 'Insufficient permissions'
         });
         const description = intl.formatMessage({
-            id: 'sources.insufficietnPermsDesc',
-            defaultMessage: 'You have to be an organisation admin to be able to do this action'
+            id: 'sources.notAdminButton',
+            defaultMessage: 'You do not have permission to perform this action.'
         });
 
         dispatch(addMessage(

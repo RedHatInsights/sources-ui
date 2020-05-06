@@ -1,4 +1,5 @@
-import { mount } from 'enzyme';
+import rendererContext from '@data-driven-forms/react-form-renderer/dist/cjs/renderer-context';
+
 import { AuthTypeCleaner } from '../../../components/AddApplication/AuthTypeCleaner';
 
 describe('AuthTypeCleaner', () => {
@@ -8,8 +9,12 @@ describe('AuthTypeCleaner', () => {
 
     class Wrapper extends React.Component {
         render() {
+            const { formOptions, ...props } = this.props;
+
             return (
-                <AuthTypeCleaner {...this.props} />
+                <rendererContext.Provider value={{ formOptions } }>
+                    <AuthTypeCleaner {...props}/>
+                </rendererContext.Provider>
             );
         }
     }

@@ -33,7 +33,6 @@ import {
     debouncedFiltering,
     prepareSourceTypeSelection,
     afterSuccess,
-    onCloseAddSourceWizard,
     loadedTypes,
     prepareApplicationTypeSelection
 } from './Sources/helpers';
@@ -42,6 +41,7 @@ import { useIsLoaded } from '../hooks/useIsLoaded';
 import { useIsOrgAdmin } from '../hooks/useIsOrgAdmin';
 import CustomRoute from '../components/CustomRoute/CustomRoute';
 import { updateQuery, parseQuery } from '../utilities/urlQuery';
+import { Tooltip } from '@patternfly/react-core/dist/js/components/Tooltip/Tooltip';
 
 const SourcesPage = () => {
     const [showEmptyState, setShowEmptyState] = useState(false);
@@ -64,7 +64,6 @@ const SourcesPage = () => {
         pageSize,
         pageNumber,
         fetchingError,
-        undoValues,
         sourceTypes,
         paginationClicked,
         appTypesLoaded,
@@ -135,7 +134,7 @@ const SourcesPage = () => {
                 actionsConfig={isOrgAdmin ? {
                     actions: [
                         <Link to={routes.sourcesNew.path} key="addSourceButton">
-                            <Button variant='primary'>
+                            <Button variant='primary' id="addSourceButton">
                                 <FormattedMessage
                                     id="sources.addSource"
                                     defaultMessage="Add source"
@@ -143,7 +142,28 @@ const SourcesPage = () => {
                             </Button>
                         </Link>
                     ]
-                } : undefined}
+                } : {
+                    actions: [
+                        <Tooltip
+                            content={
+                                intl.formatMessage({
+                                    id: 'sources.notAdminButton',
+                                    defaultMessage: 'You do not have permission to perform this action.'
+                                })
+                            }
+                            key="addSourceButton"
+                        >
+                            <span tabIndex="0">
+                                <Button variant='primary' isDisabled id="addSourceButton">
+                                    <FormattedMessage
+                                        id="sources.addSource"
+                                        defaultMessage="Add source"
+                                    />
+                                </Button>
+                            </span>
+                        </Tooltip>
+                    ]
+                }}
                 filterConfig={{
                     items: [{
                         label: intl.formatMessage({
@@ -216,10 +236,9 @@ const SourcesPage = () => {
                         sourceTypes: loadedTypes(sourceTypes, sourceTypesLoaded),
                         applicationTypes: loadedTypes(appTypes, appTypesLoaded),
                         isOpen: true,
-                        onClose: (values) => onCloseAddSourceWizard({ values, dispatch, history, intl }),
+                        onClose: () => history.push(routes.sources.path),
                         afterSuccess: (source) => afterSuccess(dispatch, source),
-                        hideSourcesButton: true,
-                        initialValues: undoValues
+                        hideSourcesButton: true
                     }}
                 />
                 <CustomRoute exact route={routes.sourcesEdit} Component={SourceEditModal}/>

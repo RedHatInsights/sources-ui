@@ -15,7 +15,7 @@ import { FormattedMessage } from 'react-intl';
 const LoadingStep = ({ onClose, customText, progressStep, progressTexts }) => (
     <Bullseye>
         <EmptyState variant={ EmptyStateVariant.full } className="ins-c-sources__empty-state">
-            <EmptyStateIcon icon={ Spinner } color="var(--pf-global--success-color--100)" />
+            <EmptyStateIcon icon={ Spinner } color="var(--pf-global--success-color--100)" className="pf-u-mb-0"/>
             <EmptyStateBody>
                 {progressTexts ?
                     <Progress
@@ -25,13 +25,13 @@ const LoadingStep = ({ onClose, customText, progressStep, progressTexts }) => (
                         title=" "
                         label={progressTexts[progressStep]}
                         valueText={progressTexts[progressStep]}
-                        className="pf-u-mb-md ins-c-sources__progress"
+                        className="pf-u-mb-0 ins-c-sources__progress"
                     />
                     : customText
                 }
             </EmptyStateBody>
             { onClose &&
-        <EmptyStateSecondaryActions>
+        <EmptyStateSecondaryActions className="pf-u-mt-xl">
             <Button variant="link" onClick={ onClose }>
                 <FormattedMessage
                     id="sources.cancel"

@@ -19,8 +19,8 @@ import { TextContent } from '@patternfly/react-core/dist/js/components/Text/Text
 const ErroredStepAttach = ({ onReset, goToSources, error, progressStep, progressTexts }) => (
     <Bullseye>
         <EmptyState variant={ EmptyStateVariant.full } className="ins-c-sources__empty-state">
-            <EmptyStateIcon icon={ TimesCircleIcon } color="var(--pf-global--danger-color--100)" />
-            <Title headingLevel="h5" size="lg">
+            <EmptyStateIcon icon={ TimesCircleIcon } color="var(--pf-global--danger-color--100)" className="pf-u-mb-0"/>
+            <Title headingLevel="h5" size="lg" className="pf-u-mt-xl">
                 <FormattedMessage
                     id="sources.configurationSuccessful"
                     defaultMessage="Configuration unsuccessful"

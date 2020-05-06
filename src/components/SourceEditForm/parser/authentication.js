@@ -14,7 +14,7 @@ export const createAuthFieldName = (fieldName, id) => `authentications.a${id}.${
 export const getLastPartOfName = (fieldName) => fieldName.split('.').pop();
 
 export const removeRequiredValidator = (validate = []) =>
-    validate.filter(validation => validation.type !== validatorTypes.REQUIRED);
+    validate.filter(validation => validation.type !== validatorTypes.REQUIRED && validation.type !== 'required-validator');
 
 export const getEnhancedAuthField = (sourceType, authtype, name) =>
     get(hardcodedSchemas, [sourceType, 'authentication', authtype, 'generic', name], {});

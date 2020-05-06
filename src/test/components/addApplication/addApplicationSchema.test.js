@@ -120,7 +120,6 @@ describe('AddApplicationSchema', () => {
 
         expect(authSelection).toEqual(expect.objectContaining({
             name: 'selectAuthentication',
-            stepKey: 'selectAuthentication',
             nextStep: expect.any(Function),
             fields: [
                 expect.objectContaining({ name: 'authtypesetter', component: 'description', Content: AuthTypeSetter }),
