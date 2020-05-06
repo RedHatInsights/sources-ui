@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import get from 'lodash/get';
+import useFormApi from '@data-driven-forms/react-form-renderer/dist/cjs/use-form-api';
 
-export const AuthTypeCleaner = ({ formOptions, modifiedValues }) => {
+export const AuthTypeCleaner = ({ modifiedValues }) => {
+    const formOptions = useFormApi();
+
     const selectedAppId = get(formOptions.getState().values, 'application.application_type_id', '');
 
     const [initialValue, setInitialValue] = useState(selectedAppId);
@@ -22,9 +25,5 @@ export const AuthTypeCleaner = ({ formOptions, modifiedValues }) => {
 };
 
 AuthTypeCleaner.propTypes = {
-    formOptions: PropTypes.shape({
-        getState: PropTypes.func.isRequired,
-        change: PropTypes.func.isRequired
-    }).isRequired,
     modifiedValues: PropTypes.object
 };

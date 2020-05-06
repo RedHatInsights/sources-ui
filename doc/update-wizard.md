@@ -46,7 +46,7 @@ Each authentication type is defined by three attributes: `type`, `name`, `fields
 Quick guide:
 
 ```yaml
-:component         => ... # type of the input: text-field, textarea-field, switch-field ...
+:component         => ... # type of the input: text-field, textarea, switch...
 :name              => ... # name consists of two parts: prefix and the actual name.
                           # Prefix is one of 'authentication', 'endpoint' (or application-specific prefixes, currently implemented only by cost management) and the name is the rest of the name.
                           # In prefix, you choose which entity will receive the value. For example, all values with the prefix 'authentication' are sent to the authentication entity.
@@ -133,7 +133,7 @@ This file is a similar config with the following structure:
 
 `additionalSteps` use this array to add additional steps in the wizard. Please take a look on DDF documentation page or other examples in the hardcoded schemas file.
 
-*Notes: The first step should not contain any `stepKey`, all `stepKeys` has to be unique in the whole file otherwise users could be directed to the wrong steps! Also, each step has to have `name` defined. This name is not important.*
+*Notes: The first step should not contain any `name`, all `name`s have to be unique in the whole file otherwise users could be directed to the wrong steps!*
 
 `customSteps` set to true, if you want to replace the endpoint implementation with your own. Just add endpoint steps to `additionalSteps` and config them here.
 
@@ -156,7 +156,7 @@ This file is a similar config with the following structure:
                                              // this string will be used in the summary
                 },
                 additionalSteps: [{ // adds two steps and overwrites fields from the API
-                    name: 'step-1', // do not set up stepKey for the first step
+                    // do not set up name for the first step
                     nextStep: 'step-2',
                     fields: [{
                         name: 'authentication.password', // sets position of the field
@@ -173,8 +173,7 @@ This file is a similar config with the following structure:
                         hideField: true,
                     }]
                 }, {
-                    name: 'step-2',
-                    stepKey: 'step-2', // has to be unique (for the whole file)
+                    name: 'step-2', // has to be unique (for the whole file)
                     fields: [{
                         name: 'summary-description',
                         component: 'description', // custom component, renders a component from Content

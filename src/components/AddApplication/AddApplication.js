@@ -1,10 +1,11 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { useIntl } from 'react-intl';
 import merge from 'lodash/merge';
 import cloneDeep from 'lodash/cloneDeep';
-import { filterApps } from '@redhat-cloud-services/frontend-components-sources';
+import { filterApps, CloseModal } from '@redhat-cloud-services/frontend-components-sources';
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/cjs/form-template';
 
 import { loadEntities } from '../../redux/sources/actions';
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
@@ -22,7 +23,6 @@ import { endpointToUrl } from '../SourcesTable/formatters';
 import { routes } from '../../Routes';
 
 import { doAttachApp } from '../../api/doAttachApp';
-import { onCancelAddApplication } from './onCancel';
 import { checkSourceStatus } from '../../api/checkSourceStatus';
 
 import reducer, { initialState } from './reducer';
@@ -47,6 +47,8 @@ export const onSubmit = (values, formApi, authenticationInitialValues, dispatch,
     }));
 };
 
+const FormTemplateWrapper = (props) => <FormTemplate {...props} showFormControls={false} />;
+
 const AddApplication = () => {
     const intl = useIntl();
     const history = useHistory();
@@ -58,7 +60,6 @@ const AddApplication = () => {
         sourceTypesLoaded,
         appTypesLoaded,
         sourceTypes,
-        undoValues
     } = useSelector(({ sources }) => sources, shallowEqual);
 
     const source = useSource();
@@ -66,6 +67,8 @@ const AddApplication = () => {
     const dispatch = useDispatch();
 
     const [state, setState] = useReducer(reducer, initialState);
+
+    const container = useRef(document.createElement('div'));
 
     useEffect(() => {
         selectedApp = undefined;
@@ -168,8 +171,6 @@ const AddApplication = () => {
         return ({ value: type.id, label, isDisabled: hasDeletingApp ? true : false });
     });
 
-    const usersModifiedValues = merge(cloneDeep(undoValues), state.values);
-
     const schema = createSchema(
         availableAppTypes,
         intl,
@@ -177,7 +178,8 @@ const AddApplication = () => {
         appTypes,
         state.authenticationsValues,
         source,
-        usersModifiedValues
+        state.values,
+        container.current
     );
 
     const onSubmitWrapper = (values, formApi) => onSubmit(
@@ -193,21 +195,46 @@ const AddApplication = () => {
     const hasAvailableApps = filteredAppTypes.length > 0;
     const onSubmitFinal = hasAvailableApps ? onSubmitWrapper : goToSources;
 
-    const onCancel = (values) => onCancelAddApplication({ values, dispatch, intl, sourceId: source.id, history });
+    const finalValues = merge(cloneDeep(state.initialValues), state.values);
 
-    const finalValues = merge(cloneDeep(state.initialValues), usersModifiedValues);
+    const onStay = () => {
+        container.current.hidden = false;
+        setState({ type: 'toggleCancelling' });
+    };
+
+    const cancelBeforeExit = (values) => {
+        if (values?.application) {
+            container.current.hidden = true;
+            setState({ type: 'toggleCancelling', values }); }
+        else {
+            goToSources();
+        }
+    };
 
     return (
-        <SourcesFormRenderer
-            schema={schema}
-            showFormControls={false}
-            onSubmit={onSubmitFinal}
-            onCancel={onCancel}
-            initialValues={finalValues}
-            subscription={{ values: true }}
-            onStateUpdate={saveSelectedApp}
-            clearedValue={null}
-        />
+        <React.Fragment>
+            <CloseModal
+                title={
+                    intl.formatMessage({
+                        id: 'sources.manageAppsCloseModalTitle', defaultMessage: 'Exit application adding?'
+                    })
+                }
+                isOpen={state.isCancelling}
+                onStay={onStay}
+                onExit={goToSources}
+            />
+            <SourcesFormRenderer
+                schema={schema}
+                showFormControls={false}
+                onSubmit={onSubmitFinal}
+                onCancel={cancelBeforeExit}
+                initialValues={finalValues}
+                subscription={{ values: true }}
+                debug={saveSelectedApp}
+                clearedValue={null}
+                FormTemplate={FormTemplateWrapper}
+            />
+        </React.Fragment>
     );
 };
 

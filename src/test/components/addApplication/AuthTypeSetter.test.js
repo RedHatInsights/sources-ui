@@ -4,6 +4,8 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Route } from 'react-router-dom';
 
+import rendererContext from '@data-driven-forms/react-form-renderer/dist/cjs/renderer-context';
+
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { sourceTypesData, OPENSHIFT_ID } from '../../__mocks__/sourceTypesData';
 import { AuthTypeSetter } from '../../../components/AddApplication/AuthTypeSetter';
@@ -62,9 +64,13 @@ describe('AuthTypeSetter', () => {
 
     class Wrapper extends React.Component {
         render() {
+            const { formOptions, ...props } = this.props;
+
             return (
                 componentWrapperIntl(
-                    <Route path={routes.sourceManageApps.path} render={ (...args) => <AuthTypeSetter { ...args } {...this.props}/> } />,
+                    <rendererContext.Provider value={{ formOptions } }>
+                        <Route path={routes.sourceManageApps.path} render={ (...args) => <AuthTypeSetter { ...args } {...props}/> } />
+                    </rendererContext.Provider>,
                     store,
                     initialEntry
                 )

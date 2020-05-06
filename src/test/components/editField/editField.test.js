@@ -1,7 +1,10 @@
-import { MockFieldProvider } from '../../__mocks__/helpers';
-import EditField from '../../../components/EditField/EditField';
 import { FormGroup } from '@patternfly/react-core';
 import { PencilAltIcon } from '@patternfly/react-icons';
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/cjs/form-template';
+import FormRenderer from '@data-driven-forms/react-form-renderer/dist/cjs/form-renderer';
+import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
+
+import EditField, { EDIT_FIELD_NAME } from '../../../components/EditField/EditField';
 
 describe('Edit field', () => {
     let initialProps;
@@ -11,17 +14,26 @@ describe('Edit field', () => {
 
     const SPACE_CODE = 32;
 
+    const componentMapper = {
+        [EDIT_FIELD_NAME]: EditField
+    };
+
     beforeEach(() => {
         initialProps = {
-            FieldProvider: MockFieldProvider,
-            input: {
-                name: NAME
+            componentMapper,
+            FormTemplate,
+            onSubmit: jest.fn(),
+            schema: {
+                fields: [{
+                    name: NAME,
+                    component: EDIT_FIELD_NAME
+                }]
             }
         };
     });
 
     it('renders correctly', () => {
-        const wrapper = mount(<EditField {...initialProps} />);
+        const wrapper = mount(<FormRenderer {...initialProps} />);
 
         expect(wrapper.find(FormGroup)).toHaveLength(1);
         expect(wrapper.find('span')).toHaveLength(1);
@@ -31,97 +43,129 @@ describe('Edit field', () => {
     it('renders correctly with error', () => {
         const ERROR = 'errror';
 
-        const wrapper = mount(<EditField
-            {...initialProps}
-            meta={{ error: ERROR, touched: true }}
-        />
-        );
+        initialProps = {
+            ...initialProps,
+            schema: {
+                fields: [{
+                    ...initialProps.schema.fields[0],
+                    validate: [{ type: validatorTypes.REQUIRED, message: ERROR }]
+                }]
+            }
+        };
+
+        const wrapper = mount(<FormRenderer {...initialProps} />);
+
+        wrapper.find('form').simulate('submit');
+        wrapper.update();
 
         expect(wrapper.find(FormGroup).props().isValid).toEqual(false);
         expect(wrapper.find(FormGroup).props().helperTextInvalid).toEqual(ERROR);
     });
 
     it('renders correctly with value', () => {
-        const wrapper = mount(<EditField
-            {...initialProps}
-            input={{
-                ...initialProps.input,
-                value: VALUE
-            }}
-        />);
+        initialProps = {
+            ...initialProps,
+            initialValues: {
+                [NAME]: VALUE
+            }
+        };
+
+        const wrapper = mount(<FormRenderer {...initialProps} />);
 
         expect(wrapper.find('span').text()).toEqual(VALUE);
         expect(wrapper.find(PencilAltIcon)).toHaveLength(0);
     });
 
     it('renders correctly true', () => {
-        const wrapper = mount(<EditField
-            {...initialProps}
-            input={{
-                ...initialProps.input,
-                value: true
-            }}
-        />);
+        initialProps = {
+            ...initialProps,
+            initialValues: {
+                [NAME]: true
+            }
+        };
+
+        const wrapper = mount(<FormRenderer {...initialProps} />);
 
         expect(wrapper.find('span').text()).toEqual('True');
     });
 
     it('renders correctly false', () => {
-        const wrapper = mount(<EditField
-            {...initialProps}
-            input={{
-                ...initialProps.input,
-                value: false
-            }}
-        />);
+        initialProps = {
+            ...initialProps,
+            initialValues: {
+                [NAME]: false
+            }
+        };
+
+        const wrapper = mount(<FormRenderer {...initialProps} />);
 
         expect(wrapper.find('span').text()).toEqual('False');
     });
 
     it('renders empty - Click to add', () => {
-        const wrapper = mount(<EditField
-            {...initialProps}
-            input={{
-                ...initialProps.input,
-                value: undefined
-            }}
-            setEdit={jest.fn()}
-        />);
+        initialProps = {
+            ...initialProps,
+            initialValues: {
+                [NAME]: undefined
+            },
+            schema: {
+                fields: [{
+                    ...initialProps.schema.fields[0],
+                    setEdit: jest.fn()
+                }]
+            }
+        };
+
+        const wrapper = mount(<FormRenderer {...initialProps} />);
 
         expect(wrapper.find('span').text().includes('add')).toEqual(true);
     });
 
     it('renders empty password - Click to edit', () => {
-        const wrapper = mount(<EditField
-            {...initialProps}
-            input={{
-                ...initialProps.input,
-                value: undefined
-            }}
-            type="password"
-            setEdit={jest.fn()}
-        />);
+        initialProps = {
+            ...initialProps,
+            initialValues: {
+                [NAME]: undefined
+            },
+            schema: {
+                fields: [{
+                    ...initialProps.schema.fields[0],
+                    setEdit: jest.fn(),
+                    type: 'password'
+                }]
+            }
+        };
+
+        const wrapper = mount(<FormRenderer {...initialProps} />);
 
         expect(wrapper.find('span').text().includes('edit')).toEqual(true);
     });
 
     it('renders empty - no value', () => {
-        const wrapper = mount(<EditField
-            {...initialProps}
-            input={{
-                ...initialProps.input,
-                value: undefined
-            }}
-        />);
+        initialProps = {
+            ...initialProps,
+            initialValues: {
+                [NAME]: undefined
+            }
+        };
+
+        const wrapper = mount(<FormRenderer {...initialProps} />);
 
         expect(wrapper.find('span').text()).toEqual('');
     });
 
     it('renders editable', () => {
-        const wrapper = mount(<EditField
-            {...initialProps}
-            setEdit={jest.fn()}
-        />);
+        initialProps = {
+            ...initialProps,
+            schema: {
+                fields: [{
+                    ...initialProps.schema.fields[0],
+                    setEdit: jest.fn()
+                }]
+            }
+        };
+
+        const wrapper = mount(<FormRenderer {...initialProps} />);
 
         expect(wrapper.find(PencilAltIcon)).toHaveLength(1);
     });
@@ -129,10 +173,17 @@ describe('Edit field', () => {
     it('calls setEdit with field name', () => {
         const setEdit = jest.fn();
 
-        const wrapper = mount(<EditField
-            {...initialProps}
-            setEdit={setEdit}
-        />);
+        initialProps = {
+            ...initialProps,
+            schema: {
+                fields: [{
+                    ...initialProps.schema.fields[0],
+                    setEdit,
+                }]
+            }
+        };
+
+        const wrapper = mount(<FormRenderer {...initialProps} />);
 
         wrapper.find(FormGroup).simulate('click');
 
@@ -142,10 +193,17 @@ describe('Edit field', () => {
     it('calls setEdit with field name by pressing space', () => {
         const setEdit = jest.fn();
 
-        const wrapper = mount(<EditField
-            {...initialProps}
-            setEdit={setEdit}
-        />);
+        initialProps = {
+            ...initialProps,
+            schema: {
+                fields: [{
+                    ...initialProps.schema.fields[0],
+                    setEdit,
+                }]
+            }
+        };
+
+        const wrapper = mount(<FormRenderer {...initialProps} />);
 
         const event = {
             charCode: SPACE_CODE,
@@ -161,10 +219,17 @@ describe('Edit field', () => {
     it('do not call setEdit with field name by pressing different key than space', () => {
         const setEdit = jest.fn();
 
-        const wrapper = mount(<EditField
-            {...initialProps}
-            setEdit={setEdit}
-        />);
+        initialProps = {
+            ...initialProps,
+            schema: {
+                fields: [{
+                    ...initialProps.schema.fields[0],
+                    setEdit,
+                }]
+            }
+        };
+
+        const wrapper = mount(<FormRenderer {...initialProps} />);
 
         const event = {
             charCode: 31,
@@ -178,10 +243,16 @@ describe('Edit field', () => {
     });
 
     it('do nothing when setEdit is not set', () => {
-        const wrapper = mount(<EditField
-            {...initialProps}
-            setEdit={undefined}
-        />);
+        initialProps = {
+            ...initialProps,
+            schema: {
+                fields: [{
+                    ...initialProps.schema.fields[0],
+                }]
+            }
+        };
+
+        const wrapper = mount(<FormRenderer {...initialProps} />);
 
         const event = {
             charCode: SPACE_CODE,

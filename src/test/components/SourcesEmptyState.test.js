@@ -48,7 +48,8 @@ describe('SourcesEmptyState', () => {
         expect(wrapper.find(EmptyState)).toHaveLength(1);
         expect(wrapper.find(EmptyStateIcon)).toHaveLength(1);
         expect(wrapper.find(EmptyStateBody)).toHaveLength(1);
-        expect(wrapper.find(Button)).toHaveLength(0);
+        expect(wrapper.find(Button)).toHaveLength(1);
+        expect(wrapper.find(Button).props().isDisabled).toEqual(true);
         expect(wrapper.find(Title)).toHaveLength(1);
         expect(wrapper.find(Bullseye)).toHaveLength(1);
         expect(wrapper.find('br')).toHaveLength(1);

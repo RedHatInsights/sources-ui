@@ -140,7 +140,6 @@ export const selectAuthenticationStep = ({
     });
 
     return ({
-        stepKey: 'selectAuthentication',
         name: 'selectAuthentication',
         title: intl.formatMessage({
             id: 'sources.selectAuthenticationTitle',
@@ -151,7 +150,9 @@ export const selectAuthenticationStep = ({
     });
 };
 
-const fields = (applications = [], intl, sourceTypes, applicationTypes, authenticationValues, source, modifiedValues) => {
+const fields = (
+    applications = [], intl, sourceTypes, applicationTypes, authenticationValues, source, modifiedValues, container
+) => {
     const hasAvailableApps = applications.length > 0;
 
     let nextStep = hasAvailableApps ? 'summary' : undefined;
@@ -257,6 +258,7 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
                     defaultMessage: 'Manage applications'
                 }),
                 inModal: true,
+                container,
                 predictSteps: true,
                 showTitles: true,
                 crossroads: ['application.application_type_id', 'selectedAuthentication'],
@@ -288,7 +290,6 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
                             id: 'sources.selectApp',
                             defaultMessage: 'Select application'
                         }),
-                        stepKey: 1,
                         name: 'selectAppStep',
                         fields: [
                             {
@@ -310,7 +311,6 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
                             id: 'sources.review',
                             defaultMessage: 'Review'
                         }),
-                        stepKey: 'summary',
                         name: 'summary',
                         fields: [{
                             component: 'description',

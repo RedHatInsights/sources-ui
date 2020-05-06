@@ -45,23 +45,35 @@ const initialState = (columns) => ({
     cells: prepareColumnsCells(columns)
 });
 
-export const insertEditAction = (actions, intl, push) => actions.splice(1, 0, {
+export const insertEditAction = (actions, intl, push, isOrgAdmin, disabledProps) => actions.splice(1, 0, {
     title: intl.formatMessage({
         id: 'sources.edit',
         defaultMessage: 'Edit'
     }),
     onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesEdit.path, id)),
-    component: 'button'
+    ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
 });
 
-export const actionResolver = (intl, push) => (rowData) => {
+export const actionResolver = (intl, push, isOrgAdmin) => (rowData) => {
+    const tooltip = intl.formatMessage({
+        id: 'sources.notAdminButton',
+        defaultMessage: 'You do not have permission to perform this action.'
+    });
+
+    const disabledProps = {
+        tooltip,
+        isDisabled: true,
+        className: 'ins-c-sources__disabled-drodpown-item',
+        tabIndex: '0'
+    };
+
     const actions = [{
         title: intl.formatMessage({
             id: 'sources.manageApps',
             defaultMessage: 'Manage applications'
         }),
         onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourceManageApps.path, id)),
-        component: 'button'
+        ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
     },
     {
         title: intl.formatMessage({
@@ -69,13 +81,13 @@ export const actionResolver = (intl, push) => (rowData) => {
             defaultMessage: 'Delete'
         }),
         onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesRemove.path, id)),
-        component: 'button'
+        ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
     }];
 
     const isSourceEditable = !rowData.imported;
 
     if (isSourceEditable) {
-        insertEditAction(actions, intl, push);
+        insertEditAction(actions, intl, push, isOrgAdmin, disabledProps);
     }
 
     return actions;
@@ -170,7 +182,7 @@ const SourcesTable = () => {
             }}
             rows={shownRows}
             cells={state.cells}
-            actionResolver={loaded && isOrgAdmin && numberOfEntities > 0 ? actionResolver(intl, push) : undefined}
+            actionResolver={loaded && numberOfEntities > 0 ? actionResolver(intl, push, isOrgAdmin) : undefined}
             rowWrapper={RowWrapperLoader}
         >
             <TableHeader />

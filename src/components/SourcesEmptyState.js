@@ -40,19 +40,32 @@ const SourcesEmptyState = ({ title, body }) => {
                         <br />
                         <FormattedMessage
                             id="sources.emptyStateBodyNotAdmin"
-                            defaultMessage="To define a source, you have to be an organisation admin."
+                            defaultMessage="You do not have permission to define sources."
                         />
                     </React.Fragment>}
                 </EmptyStateBody>
-                {isOrgAdmin && <Link to={routes.sourcesNew.path}>
-                    <Button style={{ marginTop: 'var(--pf-c-empty-state--c-button--MarginTop)' }}
-                        variant="primary">
+                {isOrgAdmin ? <Link to={routes.sourcesNew.path}>
+                    <Button
+                        style={{ marginTop: 'var(--pf-c-empty-state--c-button--MarginTop)' }}
+                        variant="primary"
+                    >
                         <FormattedMessage
                             id="sources.emptyStateButton"
                             defaultMessage="Add source"
                         />
                     </Button>
-                </Link>}
+                </Link> :
+                    <Button
+                        style={{ marginTop: 'var(--pf-c-empty-state--c-button--MarginTop)' }}
+                        variant="primary"
+                        isDisabled
+                    >
+                        <FormattedMessage
+                            id="sources.emptyStateButton"
+                            defaultMessage="Add source"
+                        />
+                    </Button>
+                }
             </EmptyState>
         </Bullseye>
     );
