@@ -1,8 +1,6 @@
 import SourcesEmptyState from '../../components/SourcesEmptyState';
 import {
     Bullseye,
-    Card,
-    CardBody,
     Title,
     Button,
     EmptyState,
@@ -25,14 +23,13 @@ describe('SourcesEmptyState', () => {
         const wrapper = mount(componentWrapperIntl(<SourcesEmptyState />, store));
 
         expect(wrapper.find(EmptyState)).toHaveLength(1);
-        expect(wrapper.find(Card)).toHaveLength(1);
         expect(wrapper.find(EmptyStateIcon)).toHaveLength(1);
         expect(wrapper.find(EmptyStateBody)).toHaveLength(1);
         expect(wrapper.find(Button)).toHaveLength(1);
         expect(wrapper.find(Title)).toHaveLength(1);
-        expect(wrapper.find(CardBody)).toHaveLength(1);
         expect(wrapper.find(Bullseye)).toHaveLength(1);
         expect(wrapper.find('br')).toHaveLength(0);
+        expect(wrapper.find(EmptyState).props().className).toEqual('ins-c-sources__empty-state');
     });
 
     it('renders correctly with custom props', () => {
@@ -40,6 +37,7 @@ describe('SourcesEmptyState', () => {
 
         expect(wrapper.find(Title).text().includes('Chyba')).toEqual(true);
         expect(wrapper.find(EmptyStateBody).text().includes('Velmi oskliva chyba')).toEqual(true);
+        expect(wrapper.find(EmptyState).props().className).toEqual('ins-c-sources__empty-state');
     });
 
     it('renders as not org admin', () => {
@@ -48,13 +46,12 @@ describe('SourcesEmptyState', () => {
         const wrapper = mount(componentWrapperIntl(<SourcesEmptyState />, store));
 
         expect(wrapper.find(EmptyState)).toHaveLength(1);
-        expect(wrapper.find(Card)).toHaveLength(1);
         expect(wrapper.find(EmptyStateIcon)).toHaveLength(1);
         expect(wrapper.find(EmptyStateBody)).toHaveLength(1);
         expect(wrapper.find(Button)).toHaveLength(0);
         expect(wrapper.find(Title)).toHaveLength(1);
-        expect(wrapper.find(CardBody)).toHaveLength(1);
         expect(wrapper.find(Bullseye)).toHaveLength(1);
         expect(wrapper.find('br')).toHaveLength(1);
+        expect(wrapper.find(EmptyState).props().className).toEqual('ins-c-sources__empty-state');
     });
 });
