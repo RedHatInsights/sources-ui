@@ -20,7 +20,9 @@ import { pageAndSize } from '../redux/sources/actions';
 import { routes } from '../Routes';
 
 const SourceEditModal = lazy(() => import(/* webpackChunkName: "edit" */ '../components/SourceEditForm/SourceEditModal'));
-const SourceRemoveModal = lazy(() => import(/* webpackChunkName: "remove" */ '../components/SourceRemoveModal'));
+const SourceRemoveModal = lazy(() => import(/* webpackChunkName: "remove" */
+    '../components/SourceRemoveModal/SourceRemoveModal'
+));
 const AddApplication = lazy(() => import(/* webpackChunkName: "addApp" */ '../components/AddApplication/AddApplication'));
 const AddSourceWizard = lazy(() => import(
     /* webpackChunkName: "addSource" */ '@redhat-cloud-services/frontend-components-sources'
