@@ -15,6 +15,7 @@
   },
   "rules": {
     "react/prop-types": "off",
-    "max-len": "off"
+    "max-len": "off",
+    "no-import-assign": "off"
   }
 }
