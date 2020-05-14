@@ -115,10 +115,10 @@ const SourceEditModal = () => {
                         }}
                         canReset
                         disableSubmit={['submitting']}
-                        buttonsLabels={{ submitLabel: intl.formatMessage({
+                        submitLabel={intl.formatMessage({
                             id: 'sources.save',
                             defaultMessage: 'Save'
-                        }) }}
+                        })}
                     />)}
                     clearedValue={null}
                     onReset={() => setState({ type: 'reset' })}
