@@ -30,7 +30,7 @@ import UserReducer from '../../redux/user/reducer';
 import RedirectNotAdmin from '../../components/RedirectNotAdmin/RedirectNotAdmin';
 import * as AddApplication from '../../components/AddApplication/AddApplication';
 import * as SourceEditModal from '../../components/SourceEditForm/SourceEditModal';
-import * as SourceRemoveModal from '../../components/SourceRemoveModal';
+import * as SourceRemoveModal from '../../components/SourceRemoveModal/SourceRemoveModal';
 import * as urlQuery from '../../utilities/urlQuery';
 import { PlaceHolderTable } from '../../components/SourcesTable/loaders';
 import { Table } from '@patternfly/react-table';
