@@ -5,9 +5,7 @@ import { Modal } from '@patternfly/react-core/dist/js/components/Modal';
 import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
 import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
 import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
-import { Split } from '@patternfly/react-core/dist/js/layouts/Split/Split';
-import { SplitItem } from '@patternfly/react-core/dist/js/layouts/Split/SplitItem';
-import { Stack } from '@patternfly/react-core/dist/js/layouts/Stack/Stack';
+import { Title } from '@patternfly/react-core/dist/js/components/Title/Title';
 
 import ExclamationTriangleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-triangle-icon';
 
@@ -56,9 +54,13 @@ const RemoveAuth = ({ onClose, appNames, schemaAuth, auth }) => {
     if (hasAttachedApp) {
         body = (<FormattedMessage
             id="sources.removeAuthWarningApps"
-            defaultMessage="To remove this authentication you have to remove attached
+            defaultMessage="To remove {authname} authentication you have to remove attached
             {count, plural, one {application} other {applications}}: { appNames }."
-            values={{ appNames: appNames.join(', '), count: appNames.length }}
+            values={{
+                appNames: appNames.join(', '),
+                count: appNames.length,
+                authname: <b>{schemaAuth.name}</b>
+            }}
         />);
         actions = [<Button
             id="deleteCancel"
@@ -75,7 +77,8 @@ const RemoveAuth = ({ onClose, appNames, schemaAuth, auth }) => {
     } else {
         body = (<FormattedMessage
             id="sources.removeAuthWarning"
-            defaultMessage="Do you really want to remove this authentication?"
+            defaultMessage="Do you really want to remove {auth} authentication?"
+            values={{ auth: <b>{schemaAuth.name}</b> }}
         />);
         actions = [<Button
             id="deleteSubmit"
@@ -86,7 +89,7 @@ const RemoveAuth = ({ onClose, appNames, schemaAuth, auth }) => {
         >
             <FormattedMessage
                 id="sources.deleteConfirm"
-                defaultMessage="Delete this authentication"
+                defaultMessage="Remove authentication"
             />
         </Button>,
         <Button
@@ -98,7 +101,7 @@ const RemoveAuth = ({ onClose, appNames, schemaAuth, auth }) => {
         >
             <FormattedMessage
                 id="sources.deleteCancel"
-                defaultMessage="Do not delete this authentication"
+                defaultMessage="Cancel"
             />
         </Button>];
     }
@@ -111,25 +114,28 @@ const RemoveAuth = ({ onClose, appNames, schemaAuth, auth }) => {
             onClose={onClose}
             actions={actions}
             isSmall
-            title={intl.formatMessage(
-                { id: 'sources.deleteAuthTitle', defaultMessage: 'Delete { name }' },
-                { name: schemaAuth.name })
+            title={
+                intl.formatMessage({
+                    id: 'sources.deleteAuthTitle',
+                    defaultMessage: 'Remove authentication?',
+                })
+            }
+            header={
+                <Title size="2xl">
+                    <ExclamationTriangleIcon size="sm" className="ins-m-alert ins-c-source__delete-icon pf-u-mr-sm" />
+                    {intl.formatMessage({
+                        id: 'sources.deleteAppTitle',
+                        defaultMessage: 'Remove authentication?',
+                    })}
+                </Title>
             }
         >
-            <Split gutter="md">
-                <SplitItem>
-                    <ExclamationTriangleIcon size="xl" className="ins-m-alert ins-c-source__delete-icon" />
-                </SplitItem>
-                <SplitItem isFilled>
-                    <Stack gutter="md">
-                        <TextContent>
-                            <Text variant={TextVariants.p}>
-                                {body}
-                            </Text>
-                        </TextContent>
-                    </Stack>
-                </SplitItem>
-            </Split>
+
+            <TextContent>
+                <Text variant={TextVariants.p}>
+                    {body}
+                </Text>
+            </TextContent>
         </Modal>
     );
 };
