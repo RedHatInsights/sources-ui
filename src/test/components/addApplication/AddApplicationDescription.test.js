@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { Text, Button, Title } from '@patternfly/react-core';
+import { Text, Button } from '@patternfly/react-core';
 import { Route } from 'react-router-dom';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import configureStore from 'redux-mock-store';
@@ -90,14 +90,10 @@ describe('AddApplicationDescription', () => {
             [replaceRouteId(routes.sourceManageApps.path, '406')]
         ));
 
-        const source = sourcesDataGraphQl.find((x) => x.id === '406');
-        const applicationType = applicationTypesData.data.find((x) => x.id === source.applications[0].application_type_id);
-
         wrapper.find(Button).first().simulate('click');
 
         wrapper.update();
         expect(wrapper.find(RemoveAppModal).length).toEqual(1);
-        expect(wrapper.find(Title).first().text().includes(applicationType.display_name)).toEqual(true);
     });
 
     it('show remove app modal and close it', () => {

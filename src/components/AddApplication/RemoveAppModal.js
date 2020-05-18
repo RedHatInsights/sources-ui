@@ -6,10 +6,8 @@ import { useIntl, FormattedMessage } from 'react-intl';
 import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
 import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
 import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
-import { Split } from '@patternfly/react-core/dist/js/layouts/Split/Split';
-import { SplitItem } from '@patternfly/react-core/dist/js/layouts/Split/SplitItem';
-import { Stack } from '@patternfly/react-core/dist/js/layouts/Stack/Stack';
 import { Modal } from '@patternfly/react-core/dist/js/components/Modal/Modal';
+import { Title } from '@patternfly/react-core/dist/js/components/Title/Title';
 
 import ExclamationTriangleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-triangle-icon';
 
@@ -51,18 +49,32 @@ const RemoveAppModal = ({ app, onCancel }) => {
     return (
         <Modal
             className="ins-c-sources__dialog--warning"
-            title={`Remove ${app.display_name} application`}
             isOpen={true}
-            isSmall
             onClose={onCancel}
             isFooterLeftAligned
+            isSmall
+            title={
+                intl.formatMessage({
+                    id: 'sources.deleteAppTitle',
+                    defaultMessage: 'Remove application?',
+                })
+            }
+            header={
+                <Title size="2xl">
+                    <ExclamationTriangleIcon size="sm" className="ins-m-alert ins-c-source__delete-icon pf-u-mr-sm" />
+                    {intl.formatMessage({
+                        id: 'sources.deleteAppTitle',
+                        defaultMessage: 'Remove application?',
+                    })}
+                </Title>
+            }
             actions={[
                 <Button
                     id="deleteSubmit" key="submit" variant="danger" type="button" onClick={ onSubmit }
                 >
                     <FormattedMessage
                         id="sources.remove"
-                        defaultMessage="Remove"
+                        defaultMessage="Remove application"
                     />
                 </Button>,
                 <Button id="deleteCancel" key="cancel" variant="link" type="button" onClick={ onCancel }>
@@ -73,33 +85,26 @@ const RemoveAppModal = ({ app, onCancel }) => {
                 </Button>
             ]}
         >
-            <Split gutter="md">
-                <SplitItem><ExclamationTriangleIcon size="xl" className="ins-m-alert ins-c-source__delete-icon" /></SplitItem>
-                <SplitItem isFilled>
-                    <Stack gutter="md">
-                        <TextContent>
-                            <Text component={TextVariants.p}>
-                                <FormattedMessage
-                                    id="sources.deleteAppWarning"
-                                    defaultMessage={`Are you sure to remove { appName } from this source?`}
-                                    values={{
-                                        appName: app.display_name
-                                    }}
-                                />
-                            </Text>
-                            {dependentApps.length > 0 && <Text component={TextVariants.p}>
-                                <FormattedMessage
-                                    id="sources.deleteAppDetails"
-                                    defaultMessage={`This change will affect these applications: { apps }.`}
-                                    values={{
-                                        apps: dependentApps
-                                    }}
-                                />
-                            </Text>}
-                        </TextContent>
-                    </Stack>
-                </SplitItem>
-            </Split>
+            <TextContent>
+                <Text component={TextVariants.p}>
+                    <FormattedMessage
+                        id="sources.deleteAppWarning"
+                        defaultMessage={`Are you sure to remove { appName } from this source?`}
+                        values={{
+                            appName: <b>{app.display_name}</b>
+                        }}
+                    />
+                </Text>
+                {dependentApps.length > 0 && <Text component={TextVariants.p}>
+                    <FormattedMessage
+                        id="sources.deleteAppDetails"
+                        defaultMessage={`This change will affect these applications: { apps }.`}
+                        values={{
+                            apps: dependentApps
+                        }}
+                    />
+                </Text>}
+            </TextContent>
         </Modal>
     );
 };
