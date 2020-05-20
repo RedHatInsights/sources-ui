@@ -14,7 +14,7 @@
     "@redhat-cloud-services/frontend-components": "1.0.25",
     "@redhat-cloud-services/frontend-components-notifications": "1.0.3",
     "@redhat-cloud-services/frontend-components-sources": "1.0.31",
-    "@redhat-cloud-services/frontend-components-utilities": "1.0.3",
+    "@redhat-cloud-services/frontend-components-utilities": "1.0.4",
     "@sentry/minimal": "5.15.5",
     "axios": "0.19.2",
     "deep-object-diff": "^1.1.0",
