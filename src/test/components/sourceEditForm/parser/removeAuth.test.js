@@ -50,10 +50,10 @@ describe('RemoveAuth', () => {
             );
 
             expect(wrapper.find(Modal)).toHaveLength(1);
-            expect(wrapper.find(Modal).props().title).toEqual('Delete some name');
+            expect(wrapper.find(Modal).props().title).toEqual('Remove authentication?');
             expect(wrapper.find(ExclamationTriangleIcon)).toHaveLength(1);
             expect(wrapper.find(Button)).toHaveLength(2);
-            expect(wrapper.find(Text).text()).toEqual('To remove this authentication you have to remove attached application: Catalog.');
+            expect(wrapper.find(Text).text()).toEqual('To remove some name authentication you have to remove attached application: Catalog.');
         });
 
         it('renders correctly - multiple apps', () => {
@@ -71,10 +71,10 @@ describe('RemoveAuth', () => {
             );
 
             expect(wrapper.find(Modal)).toHaveLength(1);
-            expect(wrapper.find(Modal).props().title).toEqual('Delete some name');
+            expect(wrapper.find(Modal).props().title).toEqual('Remove authentication?');
             expect(wrapper.find(ExclamationTriangleIcon)).toHaveLength(1);
             expect(wrapper.find(Button)).toHaveLength(2);
-            expect(wrapper.find(Text).text()).toEqual('To remove this authentication you have to remove attached applications: Catalog, Cost Management.');
+            expect(wrapper.find(Text).text()).toEqual('To remove some name authentication you have to remove attached applications: Catalog, Cost Management.');
         });
 
         it('close on icon/button', () => {
@@ -113,10 +113,10 @@ describe('RemoveAuth', () => {
             );
 
             expect(wrapper.find(Modal)).toHaveLength(1);
-            expect(wrapper.find(Modal).props().title).toEqual('Delete some name');
+            expect(wrapper.find(Modal).props().title).toEqual('Remove authentication?');
             expect(wrapper.find(ExclamationTriangleIcon)).toHaveLength(1);
             expect(wrapper.find(Button)).toHaveLength(3);
-            expect(wrapper.find(Text).text()).toEqual('Do you really want to remove this authentication?');
+            expect(wrapper.find(Text).text()).toEqual('Do you really want to remove some name authentication?');
         });
 
         it('calls submit succesfuly', async () => {

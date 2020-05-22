@@ -1,12 +1,14 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { RowWrapper } from '@patternfly/react-table';
-import { RowLoader } from '@redhat-cloud-services/frontend-components-utilities/files/helpers';
 import { Spinner } from '@patternfly/react-core/dist/js/components/Spinner';
 import { Bullseye } from '@patternfly/react-core/dist/js/layouts/Bullseye';
+import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/PageHeader';
+import { Section } from '@redhat-cloud-services/frontend-components/components/Section';
 
-import { PlaceHolderTable, RowWrapperLoader } from '../../../components/SourcesTable/loaders';
+import { PlaceHolderTable, RowWrapperLoader, Loader, AppPlaceholder } from '../../../components/SourcesTable/loaders';
 import { COLUMN_COUNT } from '../../../views/sourcesViewDefinition';
+import { IntlProvider } from 'react-intl';
 
 describe('loaders', () => {
     describe('PlaceholderTable', () => {
@@ -32,7 +34,7 @@ describe('loaders', () => {
                 </table>
             );
 
-            expect(wrapper.find(RowLoader).length).toEqual(1);
+            expect(wrapper.find(Loader).length).toEqual(1);
             expect(wrapper.find(RowWrapper).length).toEqual(0);
             expect(wrapper.find('td').props().colSpan).toEqual(COLUMN_COUNT);
         });
@@ -46,8 +48,22 @@ describe('loaders', () => {
                 </table>
             );
 
-            expect(wrapper.find(RowLoader).length).toEqual(0);
+            expect(wrapper.find(Loader).length).toEqual(0);
             expect(wrapper.find(RowWrapper).length).toEqual(1);
+        });
+    });
+
+    describe('AppPlaceholder', () => {
+        it('renders correctly', () => {
+            const wrapper = mount(<IntlProvider locale="en">
+                <AppPlaceholder />
+            </IntlProvider>
+            );
+
+            expect(wrapper.find(PageHeader)).toHaveLength(1);
+            expect(wrapper.find(PageHeaderTitle).text()).toEqual(' Sources ');
+            expect(wrapper.find(Section)).toHaveLength(1);
+            expect(wrapper.find(Loader).length).toEqual(1);
         });
     });
 });
