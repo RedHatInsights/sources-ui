@@ -64,7 +64,6 @@ export const actionResolver = (intl, push, isOrgAdmin) => (rowData) => {
         tooltip,
         isDisabled: true,
         className: 'ins-c-sources__disabled-drodpown-item',
-        tabIndex: '0'
     };
 
     const actions = [{

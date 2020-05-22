@@ -4,13 +4,12 @@ import { notificationsMiddleware } from '@redhat-cloud-services/frontend-compone
 import configureStore from 'redux-mock-store';
 import { Table, TableHeader, TableBody, RowWrapper, sortable, ActionsColumn } from '@patternfly/react-table';
 import { MemoryRouter } from 'react-router-dom';
-import { RowLoader } from '@redhat-cloud-services/frontend-components-utilities/files/helpers';
 import { act } from 'react-dom/test-utils';
 import ArrowsAltVIcon from '@patternfly/react-icons/dist/js/icons/arrows-alt-v-icon';
 import LongArrowAltDownIcon from '@patternfly/react-icons/dist/js/icons/long-arrow-alt-down-icon';
 
 import SourcesTable, { insertEditAction, actionResolver, prepareColumnsCells } from '../../../components/SourcesTable/SourcesTable';
-import { PlaceHolderTable, RowWrapperLoader } from '../../../components/SourcesTable/loaders';
+import { PlaceHolderTable, RowWrapperLoader, Loader } from '../../../components/SourcesTable/loaders';
 import EmptyStateTable from '../../../components/SourcesTable/EmptyStateTable';
 
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
@@ -86,7 +85,7 @@ describe('SourcesTable', () => {
             setTimeout(() => {
                 wrapper.update();
                 expect(wrapper.find(RowWrapperLoader)).toHaveLength(sourcesDataGraphQl.length);
-                expect(wrapper.find(RowLoader)).toHaveLength(1);
+                expect(wrapper.find(Loader)).toHaveLength(1);
                 done();
             });
         });
