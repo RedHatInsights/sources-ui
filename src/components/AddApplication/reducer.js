@@ -6,7 +6,8 @@ export const initialState = {
     sourceAppsLength: 0,
     initialValues: {},
     progressStep: 0,
-    progressTexts: []
+    progressTexts: [],
+    isCancelling: false,
 };
 
 const reducer = (state, { type, length, authenticationsValues, initialValues, error, values, progressTexts }) => {
@@ -65,6 +66,12 @@ const reducer = (state, { type, length, authenticationsValues, initialValues, er
             return {
                 ...state,
                 progressStep: ++state.progressStep
+            };
+        case 'toggleCancelling':
+            return {
+                ...state,
+                isCancelling: !state.isCancelling,
+                ...(values && { values })
             };
         default:
             return state;

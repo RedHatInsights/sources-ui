@@ -15,8 +15,8 @@ import CheckCircleIcon from '@patternfly/react-icons/dist/js/icons/check-circle-
 const FinishedStepAttach = ({ goToSources, onReset, progressStep, progressTexts }) => (
     <Bullseye>
         <EmptyState variant={ EmptyStateVariant.full } className="ins-c-sources__empty-state">
-            <EmptyStateIcon icon={ CheckCircleIcon } color="var(--pf-global--success-color--100)" />
-            <Title headingLevel="h5" size="lg">
+            <EmptyStateIcon icon={ CheckCircleIcon } color="var(--pf-global--success-color--200)" className="pf-u-mb-0"/>
+            <Title headingLevel="h5" size="lg" className="pf-u-mt-xl">
                 <FormattedMessage
                     id="sources.configurationSuccessful"
                     defaultMessage="Configuration successful"
@@ -24,7 +24,7 @@ const FinishedStepAttach = ({ goToSources, onReset, progressStep, progressTexts 
             </Title>
             <EmptyStateBody>
                 <Progress
-                    className="pf-u-mb-md ins-c-sources__progress"
+                    className="pf-u-mb-md ins-c-sources__progress ins-c-sources__progress-success"
                     value={progressStep}
                     min={0}
                     title=" "
@@ -38,7 +38,7 @@ const FinishedStepAttach = ({ goToSources, onReset, progressStep, progressTexts 
                     defaultMessage="Your application has been successfully added."
                 />
             </EmptyStateBody>
-            <Button variant="primary" onClick={ goToSources }>
+            <Button variant="primary" onClick={ goToSources } className="pf-u-mt-xl">
                 <FormattedMessage
                     id="sources.backToSources"
                     defaultMessage="Back to Sources"

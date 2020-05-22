@@ -17,13 +17,7 @@ describe('PermissionChecker', () => {
             </PermissionsChecker>));
         });
 
-        const TITLE = expect.any(String);
-        const DESCRIPTION = expect.any(String);
-
         expect(wrapper.find(Children)).toHaveLength(1);
-        expect(actions.loadOrgAdmin).toHaveBeenCalledWith(
-            TITLE,
-            DESCRIPTION,
-        );
+        expect(actions.loadOrgAdmin).toHaveBeenCalled();
     });
 });

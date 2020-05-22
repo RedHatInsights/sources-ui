@@ -23,6 +23,7 @@ import * as API from '../../../api/entities';
 import { replaceRouteId, routes } from '../../../Routes';
 import { defaultSourcesState } from '../../../redux/sources/reducer';
 import { sourcesColumns } from '../../../views/sourcesViewDefinition';
+import { DropdownItem } from '@patternfly/react-core';
 
 describe('SourcesTable', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -150,7 +151,14 @@ describe('SourcesTable', () => {
         expect(wrapper.find(TableHeader)).toHaveLength(1);
         expect(wrapper.find(TableBody)).toHaveLength(1);
         expect(wrapper.find(RowWrapper)).toHaveLength(sourcesDataGraphQl.length);
-        expect(wrapper.find(ActionsColumn)).toHaveLength(0);
+        expect(wrapper.find(ActionsColumn)).toHaveLength(sourcesDataGraphQl.length);
+
+        wrapper.find(ActionsColumn).forEach((actions) => {
+            actions.find(DropdownItem).forEach((item) => {
+                expect(item.props().isDisabled).toEqual(true);
+                expect(item.props().tooltip).toEqual(expect.any(String));
+            });
+        }).find(DropdownItem);
         expect(wrapper.find(RowWrapper).first().props().className).toEqual(ROW_WRAPPER_CLASSNAME);
     });
 
