@@ -23,7 +23,6 @@ import ReducersProviders, { defaultSourcesState } from '../../redux/sources/redu
 import * as api from '../../api/entities';
 import * as typesApi from '../../api/source_types';
 import EmptyStateTable from '../../components/SourcesTable/EmptyStateTable';
-import PaginationLoader from '../../pages/Sources/PaginationLoader';
 import { routes, replaceRouteId } from '../../Routes';
 import * as helpers from '../../pages/Sources/helpers';
 import UserReducer from '../../redux/user/reducer';
@@ -32,7 +31,7 @@ import * as AddApplication from '../../components/AddApplication/AddApplication'
 import * as SourceEditModal from '../../components/SourceEditForm/SourceEditModal';
 import * as SourceRemoveModal from '../../components/SourceRemoveModal/SourceRemoveModal';
 import * as urlQuery from '../../utilities/urlQuery';
-import { PlaceHolderTable } from '../../components/SourcesTable/loaders';
+import { PlaceHolderTable, PaginationLoader } from '../../components/SourcesTable/loaders';
 import { Table } from '@patternfly/react-table';
 
 describe('SourcesPage', () => {

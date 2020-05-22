@@ -38,12 +38,12 @@ import {
     loadedTypes,
     prepareApplicationTypeSelection
 } from './Sources/helpers';
-import PaginationLoader from './Sources/PaginationLoader';
 import { useIsLoaded } from '../hooks/useIsLoaded';
 import { useIsOrgAdmin } from '../hooks/useIsOrgAdmin';
 import CustomRoute from '../components/CustomRoute/CustomRoute';
 import { updateQuery, parseQuery } from '../utilities/urlQuery';
 import { Tooltip } from '@patternfly/react-core/dist/js/components/Tooltip/Tooltip';
+import { PaginationLoader } from '../components/SourcesTable/loaders';
 
 const SourcesPage = () => {
     const [showEmptyState, setShowEmptyState] = useState(false);
