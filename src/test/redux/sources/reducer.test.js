@@ -49,33 +49,6 @@ describe('redux > sources reducer', () => {
         });
     });
 
-    describe('undoValues', () => {
-        it('sets values', () => {
-            const VALUES = { name: 'aa', source: { id: 1 } };
-
-            expect(sourcesReducer.undoValues(defaultSourcesState, { payload: { values: VALUES } })).toEqual(
-                expect.objectContaining({
-                    ...defaultSourcesState,
-                    undoValues: VALUES
-                })
-            );
-        });
-    });
-
-    describe('clearAddSource', () => {
-        it('sets values to null', () => {
-            const EMPTY_OBJECT = {};
-            const NOT_EMPTY = { cosi: '133' };
-
-            expect(sourcesReducer.clearAddSource({ ...defaultSourcesState, undoValues: NOT_EMPTY })).toEqual(
-                expect.objectContaining({
-                    ...defaultSourcesState,
-                    undoValues: EMPTY_OBJECT
-                })
-            );
-        });
-    });
-
     describe('filterSources', () => {
         const value = { name: 'name' };
 

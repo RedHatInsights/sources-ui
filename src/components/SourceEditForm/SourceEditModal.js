@@ -4,12 +4,11 @@ import { useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import { Spinner } from '@patternfly/react-core/dist/js/components/Spinner';
 
-import { layoutMapper } from '@data-driven-forms/pf4-component-mapper';
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/cjs/form-template';
 import { Modal } from '@patternfly/react-core/dist/js/components/Modal';
 
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
 import { doLoadSourceForEdit } from '../../api/doLoadSourceForEdit';
-import HorizontalFormWrapper from './HorizontalFormWrapper';
 import Header from './Header';
 import { onSubmit } from './onSubmit';
 
@@ -109,19 +108,21 @@ const SourceEditModal = () => {
                         (values, formApi) =>
                             onSubmit(values, formApi.getState().dirtyFields, dispatch, source, intl, history.push)
                     }
-                    layoutMapper={{
-                        ...layoutMapper,
-                        FormWrapper: HorizontalFormWrapper
-                    }}
+                    FormTemplate={(props) => (<FormTemplate
+                        {...props}
+                        formWrapperProps={{
+                            isHorizontal: true
+                        }}
+                        canReset
+                        disableSubmit={['submitting']}
+                        buttonsLabels={{ submitLabel: intl.formatMessage({
+                            id: 'sources.save',
+                            defaultMessage: 'Save'
+                        }) }}
+                    />)}
                     clearedValue={null}
-                    canReset
-                    disableSubmit={['submitting']}
                     onReset={() => setState({ type: 'reset' })}
                     initialValues={initialValues}
-                    buttonsLabels={{ submitLabel: intl.formatMessage({
-                        id: 'sources.save',
-                        defaultMessage: 'Save'
-                    }) }}
                 />
             </sourceEditContext.Provider>
         </Modal>

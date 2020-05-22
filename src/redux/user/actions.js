@@ -1,7 +1,6 @@
 import { ACTION_TYPES } from './actionTypes';
-import { addMessage } from '../sources/actions';
 
-export const loadOrgAdmin = (title, description) => (dispatch) => {
+export const loadOrgAdmin = () => (dispatch) => {
     dispatch({ type: ACTION_TYPES.SET_ORG_ADMIN_PENDING });
 
     return insights.chrome.auth.getUser().then((user) => {
@@ -11,14 +10,6 @@ export const loadOrgAdmin = (title, description) => (dispatch) => {
             type: ACTION_TYPES.SET_ORG_ADMIN_FULFILLED,
             payload: isOrgAdmin
         });
-
-        if (!isOrgAdmin) {
-            dispatch(addMessage(
-                title,
-                'info',
-                description
-            ));
-        }
     }
     ).catch(error => dispatch({
         type: ACTION_TYPES.SET_ORG_ADMIN_REJECTED,

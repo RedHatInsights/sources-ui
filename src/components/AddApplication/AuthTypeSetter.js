@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import merge from 'lodash/merge';
 import cloneDeep from 'lodash/cloneDeep';
+import useFormApi from '@data-driven-forms/react-form-renderer/dist/cjs/use-form-api';
 
 export const innerSetter = ({
     formOptions,
@@ -27,7 +28,9 @@ export const innerSetter = ({
     }
 };
 
-export const AuthTypeSetter = ({ formOptions, authenticationValues, modifiedValues }) => {
+export const AuthTypeSetter = ({ authenticationValues, modifiedValues }) => {
+    const formOptions = useFormApi();
+
     const selectedAuthentication = formOptions.getState().values.selectedAuthentication;
 
     const [initialValue, setInitialValue] = useState(selectedAuthentication);
@@ -43,10 +46,6 @@ export const AuthTypeSetter = ({ formOptions, authenticationValues, modifiedValu
 };
 
 AuthTypeSetter.propTypes = {
-    formOptions: PropTypes.shape({
-        getState: PropTypes.func.isRequired,
-        change: PropTypes.func.isRequired
-    }).isRequired,
     authenticationValues: PropTypes.arrayOf(PropTypes.object),
     modifiedValues: PropTypes.object
 };
