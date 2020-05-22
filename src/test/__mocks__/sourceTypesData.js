@@ -427,6 +427,9 @@ export const ANSIBLE_TOWER_ID = '3';
 export const OPENSHIFT_INDEX = 0;
 export const AMAZON_INDEX = 1;
 export const ANSIBLE_TOWER_INDEX = 2;
+export const SATELLITE_INDEX = 8;
 
 export const OPENSHIFT = sourceTypesData.data[OPENSHIFT_INDEX];
 export const AMAZON = sourceTypesData.data[AMAZON_INDEX];
+export const ANSIBLE_TOWER = sourceTypesData.data[ANSIBLE_TOWER_INDEX];
+export const SATELLITE = sourceTypesData.data[SATELLITE_INDEX];

@@ -20,7 +20,9 @@ import { pageAndSize } from '../redux/sources/actions';
 import { routes } from '../Routes';
 
 const SourceEditModal = lazy(() => import(/* webpackChunkName: "edit" */ '../components/SourceEditForm/SourceEditModal'));
-const SourceRemoveModal = lazy(() => import(/* webpackChunkName: "remove" */ '../components/SourceRemoveModal'));
+const SourceRemoveModal = lazy(() => import(/* webpackChunkName: "remove" */
+    '../components/SourceRemoveModal/SourceRemoveModal'
+));
 const AddApplication = lazy(() => import(/* webpackChunkName: "addApp" */ '../components/AddApplication/AddApplication'));
 const AddSourceWizard = lazy(() => import(
     /* webpackChunkName: "addSource" */ '@redhat-cloud-services/frontend-components-sources'
@@ -36,12 +38,12 @@ import {
     loadedTypes,
     prepareApplicationTypeSelection
 } from './Sources/helpers';
-import PaginationLoader from './Sources/PaginationLoader';
 import { useIsLoaded } from '../hooks/useIsLoaded';
 import { useIsOrgAdmin } from '../hooks/useIsOrgAdmin';
 import CustomRoute from '../components/CustomRoute/CustomRoute';
 import { updateQuery, parseQuery } from '../utilities/urlQuery';
 import { Tooltip } from '@patternfly/react-core/dist/js/components/Tooltip/Tooltip';
+import { PaginationLoader } from '../components/SourcesTable/loaders';
 
 const SourcesPage = () => {
     const [showEmptyState, setShowEmptyState] = useState(false);
