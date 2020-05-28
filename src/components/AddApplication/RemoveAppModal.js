@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useIntl, FormattedMessage } from 'react-intl';
@@ -14,13 +14,19 @@ import ExclamationTriangleIcon from '@patternfly/react-icons/dist/js/icons/excla
 import { removeApplication } from '../../redux/sources/actions';
 import { useSource } from '../../hooks/useSource';
 
-const RemoveAppModal = ({ app, onCancel }) => {
+const RemoveAppModal = ({ app, onCancel, container }) => {
     const intl = useIntl();
 
     const appTypes = useSelector(({ sources }) => sources.appTypes);
     const source = useSource();
 
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (container) {
+            container.hidden = true;
+        }
+    }, []);
 
     const dependentApps = app.dependent_applications.map(appName => {
         const appType = appTypes.find(({ name }) => name === appName);
@@ -116,7 +122,8 @@ RemoveAppModal.propTypes = {
         dependent_applications: PropTypes.arrayOf(PropTypes.string),
         sourceAppsNames: PropTypes.arrayOf(PropTypes.string)
     }).isRequired,
-    onCancel: PropTypes.func.isRequired
+    onCancel: PropTypes.func.isRequired,
+    container: PropTypes.instanceOf(Element)
 };
 
 export default RemoveAppModal;

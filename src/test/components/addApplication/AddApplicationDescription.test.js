@@ -21,8 +21,12 @@ describe('AddApplicationDescription', () => {
     let initialEntry;
     const middlewares = [thunk, notificationsMiddleware()];
     let mockStore;
+    let initialProps;
 
     beforeEach(() => {
+        initialProps = {
+            container: document.createElement('div')
+        };
         initialEntry = [replaceRouteId(routes.sourceManageApps.path, '23')];
         mockStore = configureStore(middlewares);
         store = mockStore({
@@ -36,7 +40,7 @@ describe('AddApplicationDescription', () => {
 
     it('renders correctly', () => {
         const wrapper = mount(componentWrapperIntl(
-            <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplicationDescription { ...args }/> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplicationDescription {...initialProps} { ...args }/> } />,
             store,
             initialEntry
         ));
@@ -49,11 +53,12 @@ describe('AddApplicationDescription', () => {
         expect(wrapper.find(ApplicationList).length).toEqual(0);
         expect(wrapper.find(FormattedMessage).last().text()).toEqual('No applications');
         expect(wrapper.find(Button).length).toEqual(0);
+        expect(initialProps.container.hidden).toEqual(false);
     });
 
     it('renders correctly with application', () => {
         const wrapper = mount(componentWrapperIntl(
-            <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplicationDescription { ...args }/> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplicationDescription {...initialProps} { ...args }/> } />,
             store,
             [replaceRouteId(routes.sourceManageApps.path, '406')]
         ));
@@ -69,7 +74,7 @@ describe('AddApplicationDescription', () => {
 
     it('renders correctly with applications', () => {
         const wrapper = mount(componentWrapperIntl(
-            <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplicationDescription { ...args }/> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplicationDescription {...initialProps} { ...args }/> } />,
             store,
             [replaceRouteId(routes.sourceManageApps.path, '408')]
         ));
@@ -83,22 +88,9 @@ describe('AddApplicationDescription', () => {
         expect(wrapper.find(Button).length).toEqual(3);
     });
 
-    it('show remove app modal', () => {
-        const wrapper = mount(componentWrapperIntl(
-            <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplicationDescription { ...args }/> } />,
-            store,
-            [replaceRouteId(routes.sourceManageApps.path, '406')]
-        ));
-
-        wrapper.find(Button).first().simulate('click');
-
-        wrapper.update();
-        expect(wrapper.find(RemoveAppModal).length).toEqual(1);
-    });
-
     it('show remove app modal and close it', () => {
         const wrapper = mount(componentWrapperIntl(
-            <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplicationDescription { ...args }/> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplicationDescription {...initialProps} { ...args }/> } />,
             store,
             [replaceRouteId(routes.sourceManageApps.path, '406')]
         ));
@@ -108,10 +100,12 @@ describe('AddApplicationDescription', () => {
         wrapper.find(Button).first().simulate('click');
         wrapper.update();
         expect(wrapper.find(RemoveAppModal).length).toEqual(1);
+        expect(initialProps.container.hidden).toEqual(true);
 
         wrapper.find(Button).at(0).simulate('click');
         wrapper.update();
         expect(wrapper.find(RemoveAppModal).length).toEqual(0);
+        expect(initialProps.container.hidden).toEqual(false);
     });
 
     it('renders correctly when SourceType does not exist', () => {
@@ -125,7 +119,7 @@ describe('AddApplicationDescription', () => {
         });
 
         const wrapper = mount(componentWrapperIntl(
-            <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplicationDescription { ...args }/> } />,
+            <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplicationDescription {...initialProps} { ...args }/> } />,
             store,
             initialEntry
         ));

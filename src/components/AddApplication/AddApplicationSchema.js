@@ -295,7 +295,8 @@ const fields = (
                             {
                                 component: 'description',
                                 name: 'description',
-                                Content: AddApplicationDescription
+                                Content: AddApplicationDescription,
+                                container
                             },
                             applicationSelection,
                             {

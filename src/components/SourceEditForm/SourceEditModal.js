@@ -18,6 +18,7 @@ import { useSource } from '../../hooks/useSource';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
 import reducer, { initialState } from './reducer';
 import sourceEditContext from './sourceEditContext';
+import RemoveAuth from './parser/RemoveAuth';
 
 const SourceEditModal = () => {
     const [state, setState] = useReducer(reducer, initialState);
@@ -90,42 +91,45 @@ const SourceEditModal = () => {
     }
 
     return (
-        <Modal
-            title={intl.formatMessage({
-                id: 'sources.editSource',
-                defaultMessage: 'Edit source.'
-            })}
-            header={<Header />}
-            isOpen={true}
-            isLarge
-            onClose={returnToSources}
-        >
+        <React.Fragment>
             <sourceEditContext.Provider value={{ setState, source }}>
-                <SourcesFormRenderer
-                    onCancel={returnToSources}
-                    schema={schema}
-                    onSubmit={
-                        (values, formApi) =>
-                            onSubmit(values, formApi.getState().dirtyFields, dispatch, source, intl, history.push)
-                    }
-                    FormTemplate={(props) => (<FormTemplate
-                        {...props}
-                        formWrapperProps={{
-                            isHorizontal: true
-                        }}
-                        canReset
-                        disableSubmit={['submitting']}
-                        submitLabel={intl.formatMessage({
-                            id: 'sources.save',
-                            defaultMessage: 'Save'
-                        })}
-                    />)}
-                    clearedValue={null}
-                    onReset={() => setState({ type: 'reset' })}
-                    initialValues={initialValues}
-                />
+                {state.isAuthRemoving && <RemoveAuth {...state.isAuthRemoving}/>}
+                <Modal
+                    title={intl.formatMessage({
+                        id: 'sources.editSource',
+                        defaultMessage: 'Edit source.'
+                    })}
+                    header={<Header />}
+                    isOpen={!state.isAuthRemoving}
+                    isLarge
+                    onClose={returnToSources}
+                >
+                    <SourcesFormRenderer
+                        onCancel={returnToSources}
+                        schema={schema}
+                        onSubmit={
+                            (values, formApi) =>
+                                onSubmit(values, formApi.getState().dirtyFields, dispatch, source, intl, history.push)
+                        }
+                        FormTemplate={(props) => (<FormTemplate
+                            {...props}
+                            formWrapperProps={{
+                                isHorizontal: true
+                            }}
+                            canReset
+                            disableSubmit={['submitting']}
+                            submitLabel={intl.formatMessage({
+                                id: 'sources.save',
+                                defaultMessage: 'Save'
+                            })}
+                        />)}
+                        clearedValue={null}
+                        onReset={() => setState({ type: 'reset' })}
+                        initialValues={initialValues}
+                    />
+                </Modal>
             </sourceEditContext.Provider>
-        </Modal>
+        </React.Fragment>
     );
 };
 

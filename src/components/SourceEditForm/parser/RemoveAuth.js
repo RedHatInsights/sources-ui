@@ -17,7 +17,7 @@ import { addMessage } from '../../../redux/sources/actions';
 import { doDeleteAuthentication } from '../../../api/entities';
 import { handleError } from '@redhat-cloud-services/frontend-components-sources';
 
-const RemoveAuth = ({ onClose, appNames, schemaAuth, auth }) => {
+const RemoveAuth = ({ appNames, schemaAuth, auth }) => {
     const hasAttachedApp = appNames.length > 0;
     let body;
     let actions;
@@ -26,6 +26,8 @@ const RemoveAuth = ({ onClose, appNames, schemaAuth, auth }) => {
     const intl = useIntl();
 
     const { setState } = useContext(sourceEditContext);
+
+    const onClose = () => setState({ type: 'closeAuthRemoving' });
 
     const onRemove = () => {
         setState({ type: 'removeAuthPending', authId: auth.id });
@@ -141,7 +143,6 @@ const RemoveAuth = ({ onClose, appNames, schemaAuth, auth }) => {
 };
 
 RemoveAuth.propTypes = {
-    onClose: PropTypes.func.isRequired,
     appNames: PropTypes.arrayOf(PropTypes.string),
     schemaAuth: PropTypes.shape({
         name: PropTypes.string.isRequired
