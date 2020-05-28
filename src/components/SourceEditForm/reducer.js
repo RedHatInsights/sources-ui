@@ -7,10 +7,11 @@ export const initialState = {
     source: undefined,
     initialValues: {},
     sourceType: undefined,
-    schema: undefined
+    schema: undefined,
+    isAuthRemoving: null
 };
 
-const reducer = (state, { type, source, name, sourceType, setEdit, appTypes, authId }) => {
+const reducer = (state, { type, source, name, sourceType, setEdit, appTypes, authId, removingAuth }) => {
     switch (type) {
         case 'createForm':
             return {
@@ -46,6 +47,7 @@ const reducer = (state, { type, source, name, sourceType, setEdit, appTypes, aut
         case 'removeAuthPending':
             return {
                 ...state,
+                isAuthRemoving: null,
                 source: {
                     ...state.source,
                     authentications: state.source.authentications.map((auth) => auth.id === authId ? {
@@ -70,6 +72,16 @@ const reducer = (state, { type, source, name, sourceType, setEdit, appTypes, aut
                     ...state.source,
                     authentications: state.source.authentications.filter((auth) => auth.id !== authId)
                 }
+            };
+        case 'setAuthRemoving':
+            return {
+                ...state,
+                isAuthRemoving: removingAuth
+            };
+        case 'closeAuthRemoving':
+            return {
+                ...state,
+                isAuthRemoving: null
             };
         default:
             return state;

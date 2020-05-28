@@ -45,7 +45,7 @@ describe('AuhtenticationManagement', () => {
         expect(wrapper.find(RemoveAuth)).toHaveLength(0);
         expect(wrapper.find(Button)).toHaveLength(1);
         expect(wrapper.find(Title).text()).toEqual('some name ');
-        expect(wrapper.find(Text).text()).toEqual('id: authid not used by any app ');
+        expect(wrapper.find(Text).text()).toEqual('id: authid not used by any app');
     });
 
     it('renders correctly with assigned app', () => {
@@ -71,7 +71,7 @@ describe('AuhtenticationManagement', () => {
         expect(wrapper.find(RemoveAuth)).toHaveLength(0);
         expect(wrapper.find(Button)).toHaveLength(1);
         expect(wrapper.find(Title).text()).toEqual('some name ');
-        expect(wrapper.find(Text).text()).toEqual('id: authid used by Cost Management ');
+        expect(wrapper.find(Text).text()).toEqual('id: authid used by Cost Management');
     });
 
     it('renders correctly with assigned multiple apps', () => {
@@ -107,7 +107,7 @@ describe('AuhtenticationManagement', () => {
         expect(wrapper.find(RemoveAuth)).toHaveLength(0);
         expect(wrapper.find(Button)).toHaveLength(1);
         expect(wrapper.find(Title).text()).toEqual('some name ');
-        expect(wrapper.find(Text).text()).toEqual('id: authid used by Cost Management, Topological Inventory ');
+        expect(wrapper.find(Text).text()).toEqual('id: authid used by Cost Management, Topological Inventory');
     });
 
     it('renders deleting', () => {
@@ -127,12 +127,14 @@ describe('AuhtenticationManagement', () => {
         expect(wrapper.find(RemoveAuth)).toHaveLength(0);
         expect(wrapper.find(Button)).toHaveLength(0);
         expect(wrapper.find(Title).text()).toEqual('some name ');
-        expect(wrapper.find(Text).text()).toEqual('id: authid not used by any app ');
+        expect(wrapper.find(Text).text()).toEqual('id: authid not used by any app');
     });
 
     it('renders remove modal', () => {
+        const setState = jest.fn();
+
         const wrapper = mount(componentWrapperIntl(
-            <sourceEditContext.Provider value={{ source }}>
+            <sourceEditContext.Provider value={{ source, setState }}>
                 <AuthenticationManagement {...initialProps }/>
             </sourceEditContext.Provider>
         ),
@@ -142,11 +144,14 @@ describe('AuhtenticationManagement', () => {
         expect(wrapper.find(RemoveAuth)).toHaveLength(0);
         wrapper.find(Button).simulate('click');
         wrapper.update();
-        expect(wrapper.find(RemoveAuth)).toHaveLength(1);
-        expect(wrapper.find(RemoveAuth).props().auth).toEqual(initialProps.auth);
 
-        wrapper.find(Button).first().simulate('click');
-        wrapper.update();
-        expect(wrapper.find(RemoveAuth)).toHaveLength(0);
+        expect(setState).toHaveBeenCalledWith({
+            type: 'setAuthRemoving',
+            removingAuth: {
+                auth: initialProps.auth,
+                appNames: [],
+                schemaAuth: initialProps.schemaAuth
+            }
+        });
     });
 });

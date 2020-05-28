@@ -15,18 +15,15 @@ import * as actions from '../../../../redux/sources/actions';
 describe('RemoveAuth', () => {
     let initialProps;
     let setState;
-    let onClose;
 
     const middlewares = [thunk, notificationsMiddleware()];
     let mockStore;
     let store;
 
     beforeEach(() => {
-        onClose = jest.fn();
         initialProps = {
             schemaAuth: { name: 'some name' },
             auth: { id: 'authid' },
-            onClose,
             appNames: []
         };
         setState = jest.fn();
@@ -91,14 +88,14 @@ describe('RemoveAuth', () => {
             store
             );
 
-            expect(onClose).not.toHaveBeenCalled();
+            expect(setState).not.toHaveBeenCalled();
 
             wrapper.find(Button).first().simulate('click');
-            expect(onClose).toHaveBeenCalled();
-            onClose.mockClear();
+            expect(setState).toHaveBeenCalledWith({ type: 'closeAuthRemoving' });
+            setState.mockClear();
 
             wrapper.find(Button).last().simulate('click');
-            expect(onClose).toHaveBeenCalled();
+            expect(setState).toHaveBeenCalledWith({ type: 'closeAuthRemoving' });
         });
     });
 
@@ -181,14 +178,14 @@ describe('RemoveAuth', () => {
             store
             );
 
-            expect(onClose).not.toHaveBeenCalled();
+            expect(setState).not.toHaveBeenCalled();
 
             wrapper.find(Button).first().simulate('click');
-            expect(onClose).toHaveBeenCalled();
-            onClose.mockClear();
+            expect(setState).toHaveBeenCalledWith({ type: 'closeAuthRemoving' });
+            setState.mockClear();
 
             wrapper.find(Button).last().simulate('click');
-            expect(onClose).toHaveBeenCalled();
+            expect(setState).toHaveBeenCalledWith({ type: 'closeAuthRemoving' });
         });
     });
 });

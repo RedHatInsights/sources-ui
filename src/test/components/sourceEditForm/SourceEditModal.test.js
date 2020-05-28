@@ -326,6 +326,7 @@ describe('SourceEditModal', () => {
             expect(wrapper.find(AuthenticationManagement)).toHaveLength(1);
             expect(wrapper.find(Title).last().text()).toEqual('Token ');
             expect(wrapper.find(RemoveAuthPlaceholder)).toHaveLength(0);
+            expect(wrapper.find(Modal)).toHaveLength(1);
 
             await act(async() => {
                 const removeButton = wrapper.find(Button).at(1);
@@ -336,6 +337,9 @@ describe('SourceEditModal', () => {
             api.doDeleteAuthentication = jest.fn().mockImplementation(() => new Promise((res) => setTimeout(() => res('OK'), 1)));
 
             expect(api.doDeleteAuthentication).not.toHaveBeenCalled();
+            expect(wrapper.find(Modal)).toHaveLength(2);
+            expect(wrapper.find(Modal).first().props().isOpen).toEqual(true);
+            expect(wrapper.find(Modal).last().props().isOpen).toEqual(false);
 
             jest.useFakeTimers();
             await act(async() => {
@@ -345,6 +349,8 @@ describe('SourceEditModal', () => {
             wrapper.update();
             expect(api.doDeleteAuthentication).toHaveBeenCalledWith('authid');
             expect(wrapper.find(RemoveAuthPlaceholder)).toHaveLength(1);
+            expect(wrapper.find(Modal)).toHaveLength(1);
+            expect(wrapper.find(Modal).props().isOpen).toEqual(true);
 
             await act(async() => {
                 jest.advanceTimersByTime(1000);
