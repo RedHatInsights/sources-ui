@@ -11,20 +11,15 @@ export const initialState = {
     isAuthRemoving: null
 };
 
-const reducer = (state, { type, source, name, sourceType, setEdit, appTypes, authId, removingAuth }) => {
+const reducer = (state, { type, source, name, sourceType, appTypes, authId, removingAuth }) => {
     switch (type) {
         case 'createForm':
             return {
                 ...state,
                 sourceType,
                 initialValues: prepareInitialValues(state.source, sourceType.product_name),
-                schema: parseSourceToSchema(state.source, state.editing, setEdit, sourceType, appTypes),
+                schema: parseSourceToSchema(state.source, sourceType, appTypes),
                 loading: false
-            };
-        case 'refreshSchema':
-            return {
-                ...state,
-                schema: parseSourceToSchema(state.source, state.editing, setEdit, state.sourceType, appTypes)
             };
         case 'setSource':
             return {

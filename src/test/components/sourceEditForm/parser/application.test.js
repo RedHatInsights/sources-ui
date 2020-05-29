@@ -41,15 +41,11 @@ describe('application edit form parser', () => {
         const FIELDS = [...BILLING_SOURCE_FIELDS, { name: 'field2' }];
 
         let APPLICATIONS;
-        let EDITING;
-        let SET_EDIT;
         let SOURCE_TYPE;
         let SOURCE;
 
         beforeEach(() => {
             APPLICATIONS = [{ application_type_id: COSTMANAGEMENT_APP.id }];
-            EDITING = {};
-            SET_EDIT = jest.fn();
             SOURCE_TYPE = {
                 name: 'aws',
                 schema: {
@@ -63,10 +59,6 @@ describe('application edit form parser', () => {
             SOURCE = { authentications: [{ authtype: 'arn' }] };
         });
 
-        afterEach(() => {
-            SET_EDIT.mockReset();
-        });
-
         it('return undefined if cm app does not exist', () => {
             const EXPECTED_RESULT = undefined;
 
@@ -74,8 +66,6 @@ describe('application edit form parser', () => {
 
             const result = costManagementFields(
                 APPLICATIONS,
-                EDITING,
-                SET_EDIT,
                 SOURCE_TYPE,
                 APPLICATION_TYPES_WITHOUT_CM,
                 SOURCE,
@@ -91,8 +81,6 @@ describe('application edit form parser', () => {
 
             const result = costManagementFields(
                 UNDEF_APPLICATIONS,
-                EDITING,
-                SET_EDIT,
                 SOURCE_TYPE,
                 APP_TYPES,
                 SOURCE,
@@ -108,8 +96,6 @@ describe('application edit form parser', () => {
 
             const result = costManagementFields(
                 APPLICATION_WITHOUT_CM,
-                EDITING,
-                SET_EDIT,
                 SOURCE_TYPE,
                 APP_TYPES,
                 SOURCE,
@@ -123,14 +109,12 @@ describe('application edit form parser', () => {
                 component: componentTypes.SUB_FORM,
                 title: COSTMANAGEMENT_APP.display_name,
                 name: COSTMANAGEMENT_APP.display_name,
-                fields: modifyFields(BILLING_SOURCE_FIELDS, EDITING, SET_EDIT)
+                fields: modifyFields(BILLING_SOURCE_FIELDS)
             };
 
             const result = costManagementFields(
                 APPLICATIONS,
                 SOURCE_TYPE,
-                EDITING,
-                SET_EDIT,
                 APP_TYPES,
                 SOURCE,
             );
@@ -147,7 +131,7 @@ describe('application edit form parser', () => {
                     component: componentTypes.SUB_FORM,
                     title: COSTMANAGEMENT_APP.display_name,
                     name: COSTMANAGEMENT_APP.display_name,
-                    fields: modifyFields(BILLING_SOURCE_FIELDS, EDITING, SET_EDIT)
+                    fields: modifyFields(BILLING_SOURCE_FIELDS)
                 };
 
                 EXPECTED_RESULT = [
@@ -159,8 +143,6 @@ describe('application edit form parser', () => {
                 const result = applicationsFields(
                     APPLICATIONS,
                     SOURCE_TYPE,
-                    EDITING,
-                    SET_EDIT,
                     APP_TYPES,
                     SOURCE,
                 );
@@ -174,8 +156,6 @@ describe('application edit form parser', () => {
                 const result = applicationsFields(
                     APPLICATIONS,
                     SOURCE_TYPE,
-                    EDITING,
-                    SET_EDIT,
                     APP_TYPES,
                     SOURCE_WITH_NO_AUTHS,
                 );
@@ -262,38 +242,23 @@ describe('application edit form parser', () => {
         });
 
         describe('appendClusterIdentifier', () => {
-            const EDITING = {};
-            const SET_EDIT = jest.fn();
             const SOURCE_TYPE = { name: 'openshift' };
 
             it('returns cluster identifier field when type is openshift', () => {
-                expect(appendClusterIdentifier(EDITING, SET_EDIT, SOURCE_TYPE)).toEqual([{
+                expect(appendClusterIdentifier(SOURCE_TYPE)).toEqual([{
                     name: 'source.source_ref',
                     label: expect.any(Object),
                     isRequired: true,
-                    setEdit: SET_EDIT,
                     validate: [{ type: validatorTypes.REQUIRED }],
-                    component: EDIT_FIELD_NAME
+                    component: EDIT_FIELD_NAME,
+                    originalComponent: componentTypes.TEXT_FIELD,
                 }]);
             });
 
             it('dont return cluster identifier field when type is not openshift', () => {
                 const AWS_SOURCE_TYPE = { name: 'aws' };
 
-                expect(appendClusterIdentifier(EDITING, SET_EDIT, AWS_SOURCE_TYPE)).toEqual([]);
-            });
-
-            it('returns cluster identifier field when type is openshift and its being edited', () => {
-                const EDITING_REF = { 'source.source_ref': true };
-
-                expect(appendClusterIdentifier(EDITING_REF, SET_EDIT, SOURCE_TYPE)).toEqual([{
-                    name: 'source.source_ref',
-                    label: expect.any(Object),
-                    isRequired: true,
-                    setEdit: undefined,
-                    validate: [{ type: validatorTypes.REQUIRED }],
-                    component: componentTypes.TEXT_FIELD
-                }]);
+                expect(appendClusterIdentifier(AWS_SOURCE_TYPE)).toEqual([]);
             });
         });
     });

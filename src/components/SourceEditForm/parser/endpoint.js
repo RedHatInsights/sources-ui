@@ -8,7 +8,7 @@ import { modifyFields } from './helpers';
 export const getEnhancedEndpointField = (sourceType, name) =>
     get(hardcodedSchemas, [sourceType, 'endpoint', name], {});
 
-export const endpointFields = (sourceType, editing, setEdit) => {
+export const endpointFields = (sourceType) => {
     if (!sourceType.schema || !sourceType.schema.endpoint || sourceType.schema.endpoint.hidden) {
         return undefined;
     }
@@ -27,6 +27,6 @@ export const endpointFields = (sourceType, editing, setEdit) => {
             defaultMessage="Endpoint"
         />,
         name: 'endpoint',
-        fields: modifyFields(enhancedFields, editing, setEdit)
+        fields: modifyFields(enhancedFields)
     });
 };

@@ -4,10 +4,10 @@ import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-re
 import { hardcodedSchemas } from '@redhat-cloud-services/frontend-components-sources';
 import { FormattedMessage } from 'react-intl';
 
-import { EDIT_FIELD_NAME } from '../../EditField/EditField';
 import { unsupportedAuthTypeField } from './unsupportedAuthType';
 import AuthenticationManagement from './AuthenticationManagement';
 import RemoveAuthPlaceholder from './RemoveAuthPlaceholder';
+import { modifyFields } from './helpers';
 
 export const createAuthFieldName = (fieldName, id) => `authentications.a${id}.${fieldName.replace('authentication.', '')}`;
 
@@ -22,19 +22,13 @@ export const getEnhancedAuthField = (sourceType, authtype, name) =>
 export const getAdditionalAuthSteps = (sourceType, authtype) =>
     get(hardcodedSchemas, [sourceType, 'authentication', authtype, 'generic', 'includeStepKeyFields'], []);
 
-export const modifyAuthSchemas = (fields, id, editing, setEdit) => fields.map((field) => {
+export const modifyAuthSchemas = (fields, id) => fields.map((field) => {
     const editedName = field.name.startsWith('authentication') ? createAuthFieldName(field.name, id) : field.name;
-    const isEditing = editing[editedName];
 
     const finalField = ({
         ...field,
         name: editedName,
-        component: isEditing ? field.component : EDIT_FIELD_NAME
     });
-
-    if (!isEditing) {
-        finalField.setEdit = setEdit;
-    }
 
     const isPassword = getLastPartOfName(finalField.name) === 'password';
 
@@ -53,7 +47,7 @@ export const modifyAuthSchemas = (fields, id, editing, setEdit) => fields.map((f
     return finalField;
 });
 
-export const authenticationFields = (authentications, sourceType, editing, setEdit, appTypes) => {
+export const authenticationFields = (authentications, sourceType, appTypes) => {
     if (!authentications || authentications.length === 0 || !sourceType.schema || !sourceType.schema.authentication) {
         return [];
     }
@@ -91,7 +85,7 @@ export const authenticationFields = (authentications, sourceType, editing, setEd
                     component: 'description',
                     name: `${auth.id}-remove-spinner`,
                     Content: RemoveAuthPlaceholder
-                } : modifyAuthSchemas(enhancedFields, auth.id, editing, setEdit)
+                } : modifyFields(modifyAuthSchemas(enhancedFields, auth.id))
             ]
         });
     });
