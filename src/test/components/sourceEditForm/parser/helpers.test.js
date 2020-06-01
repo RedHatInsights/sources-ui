@@ -7,7 +7,7 @@ describe('source edit form parser helpers', () => {
         const NAME = '123';
         const FIELDS = [{ component: componentTypes.TEXT_FIELD, name: NAME }];
 
-        it('adds component type when not editing', () => {
+        it('adds originalComponent and component', () => {
             const EDITING = {};
             const SET_EDIT = jest.fn();
 
@@ -15,25 +15,9 @@ describe('source edit form parser helpers', () => {
                 {
                     ...FIELDS[0],
                     component: EDIT_FIELD_NAME,
-                    setEdit: SET_EDIT
+                    originalComponent: componentTypes.TEXT_FIELD
                 }
             ]);
-        });
-
-        it('adds nothing type when editing', () => {
-            const EDITING = { [NAME]: true };
-            const SET_EDIT = jest.fn();
-
-            expect(modifyFields(FIELDS, EDITING, SET_EDIT)).toEqual(FIELDS);
-        });
-
-        it('do not change switch and checkbox components', () => {
-            const EDITING = {};
-            const SET_EDIT = jest.fn();
-
-            const FIELDS = [{ component: componentTypes.SWITCH, name: NAME }, { component: componentTypes.CHECKBOX, name: NAME }];
-
-            expect(modifyFields(FIELDS, EDITING, SET_EDIT)).toEqual(FIELDS);
         });
     });
 });

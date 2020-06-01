@@ -51,21 +51,13 @@ const SourceEditModal = () => {
         }
     }, [sourceRedux, isLoaded]);
 
-    const setEdit = (name) => setState({ type: 'setEdit', name });
-
     useEffect(() => {
         if (source && appTypesLoaded && sourceTypesLoaded) {
             const sourceType = sourceTypes.find(({ id }) => id === source.source.source_type_id);
 
-            setState({ type: 'createForm', sourceType, source, setEdit, appTypes });
+            setState({ type: 'createForm', sourceType, source, appTypes });
         }
     }, [appTypesLoaded, source, sourceTypesLoaded]);
-
-    useEffect(() => {
-        if (source && !loading) {
-            setState({ type: 'refreshSchema', setEdit, appTypes });
-        }
-    }, [editing]);
 
     const isLoading = !appTypesLoaded || !sourceTypesLoaded || loading;
 
@@ -92,7 +84,7 @@ const SourceEditModal = () => {
 
     return (
         <React.Fragment>
-            <sourceEditContext.Provider value={{ setState, source }}>
+            <sourceEditContext.Provider value={{ setState, source, editing }}>
                 {state.isAuthRemoving && <RemoveAuth {...state.isAuthRemoving}/>}
                 <Modal
                     title={intl.formatMessage({

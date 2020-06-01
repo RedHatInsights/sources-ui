@@ -6,15 +6,15 @@ import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/vali
 
 import { EDIT_FIELD_NAME } from '../../EditField/EditField';
 
-export const genericInfo = (editing, setEdit, sourceId) => ([
+export const genericInfo = (sourceId) => ([
     {
         name: 'source.name',
         label: <FormattedMessage
             id="sources.sourceName"
             defaultMessage="Source name"
         />,
-        component: editing['source.name'] ? componentTypes.TEXT_FIELD : EDIT_FIELD_NAME,
-        ...(editing['source.name'] ? {} : { setEdit }),
+        originalComponent: componentTypes.TEXT_FIELD,
+        component: EDIT_FIELD_NAME,
         validate: [
             (value) => asyncValidator(value, sourceId),
             { type: validatorTypes.REQUIRED }
@@ -27,6 +27,7 @@ export const genericInfo = (editing, setEdit, sourceId) => ([
             defaultMessage="Source type"
         />,
         isReadOnly: true,
-        component: EDIT_FIELD_NAME
+        component: EDIT_FIELD_NAME,
+        isEditable: false
     }
 ]);

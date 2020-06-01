@@ -7,8 +7,6 @@ import * as app from '../../../../components/SourceEditForm/parser/application';
 
 describe('parseSourceToSchema', () => {
     let SOURCE;
-    let EDITING;
-    let SET_EDIT;
     let SOURCE_TYPE;
     let APP_TYPES;
 
@@ -19,8 +17,6 @@ describe('parseSourceToSchema', () => {
             applications: [],
             endpoints: [{}]
         };
-        EDITING = {};
-        SET_EDIT = jest.fn();
         SOURCE_TYPE = {
             id: '2',
             schema: {
@@ -43,43 +39,29 @@ describe('parseSourceToSchema', () => {
         end.endpointFields = jest.fn().mockImplementation(() => (undefined));
     });
 
-    afterEach(() => {
-        SET_EDIT.mockReset();
-    });
-
     it('calls all subsections', () => {
         parseSourceToSchema(
             SOURCE,
-            EDITING,
-            SET_EDIT,
             SOURCE_TYPE,
             APP_TYPES
         );
 
         expect(gen.genericInfo).toHaveBeenCalledWith(
-            EDITING,
-            SET_EDIT,
             SOURCE.source.id
         );
         expect(auth.authenticationFields).toHaveBeenCalledWith(
             SOURCE.authentications,
             SOURCE_TYPE,
-            EDITING,
-            SET_EDIT,
             APP_TYPES
         );
         expect(app.applicationsFields).toHaveBeenCalledWith(
             SOURCE.applications,
             SOURCE_TYPE,
-            EDITING,
-            SET_EDIT,
             APP_TYPES,
             SOURCE,
         );
         expect(end.endpointFields).toHaveBeenCalledWith(
             SOURCE_TYPE,
-            EDITING,
-            SET_EDIT
         );
     });
 
@@ -91,29 +73,21 @@ describe('parseSourceToSchema', () => {
 
         parseSourceToSchema(
             SOURCE_WITH_NO_ENDPOINT,
-            EDITING,
-            SET_EDIT,
             SOURCE_TYPE,
             APP_TYPES
         );
 
         expect(gen.genericInfo).toHaveBeenCalledWith(
-            EDITING,
-            SET_EDIT,
             SOURCE.source.id
         );
         expect(auth.authenticationFields).toHaveBeenCalledWith(
             SOURCE.authentications,
             SOURCE_TYPE,
-            EDITING,
-            SET_EDIT,
             APP_TYPES
         );
         expect(app.applicationsFields).toHaveBeenCalledWith(
             SOURCE.applications,
             SOURCE_TYPE,
-            EDITING,
-            SET_EDIT,
             APP_TYPES,
             SOURCE_WITH_NO_ENDPOINT,
         );
@@ -128,29 +102,21 @@ describe('parseSourceToSchema', () => {
 
         parseSourceToSchema(
             SOURCE_WITH_NO_ENDPOINT,
-            EDITING,
-            SET_EDIT,
             SOURCE_TYPE,
             APP_TYPES
         );
 
         expect(gen.genericInfo).toHaveBeenCalledWith(
-            EDITING,
-            SET_EDIT,
             SOURCE.source.id
         );
         expect(auth.authenticationFields).toHaveBeenCalledWith(
             SOURCE.authentications,
             SOURCE_TYPE,
-            EDITING,
-            SET_EDIT,
             APP_TYPES
         );
         expect(app.applicationsFields).toHaveBeenCalledWith(
             SOURCE.applications,
             SOURCE_TYPE,
-            EDITING,
-            SET_EDIT,
             APP_TYPES,
             SOURCE_WITH_NO_ENDPOINT,
         );
@@ -169,8 +135,6 @@ describe('parseSourceToSchema', () => {
 
         const result = parseSourceToSchema(
             SOURCE,
-            EDITING,
-            SET_EDIT,
             SOURCE_TYPE,
             APP_TYPES
         );
