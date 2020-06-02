@@ -35,7 +35,7 @@ import {
     CATALOG_APP
 } from '../../__mocks__/applicationTypesData';
 import { Badge, Tooltip, Bullseye } from '@patternfly/react-core';
-import { DateFormat } from '@redhat-cloud-services/frontend-components/components/DateFormat';
+import { DateFormat } from '@redhat-cloud-services/frontend-components/components/cjs/DateFormat';
 import { IntlProvider } from 'react-intl';
 import { CheckCircleIcon, TimesCircleIcon, QuestionCircleIcon, ExclamationTriangleIcon } from '@patternfly/react-icons';
 

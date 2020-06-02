@@ -8,7 +8,7 @@ import { Popover } from '@patternfly/react-core/dist/js/components/Popover/Popov
 import { Tooltip } from '@patternfly/react-core/dist/js/components/Tooltip/Tooltip';
 
 import { FormattedMessage } from 'react-intl';
-import { DateFormat } from '@redhat-cloud-services/frontend-components/components/DateFormat';
+import { DateFormat } from '@redhat-cloud-services/frontend-components/components/cjs/DateFormat';
 
 import ExclamationTriangleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-triangle-icon';
 import CheckCircleIcon from '@patternfly/react-icons/dist/js/icons/check-circle-icon';

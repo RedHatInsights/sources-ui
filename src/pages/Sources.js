@@ -10,9 +10,9 @@ import {
 import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/components/PrimaryToolbar';
-import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/PageHeader';
-import { Section } from '@redhat-cloud-services/frontend-components/components/Section';
+import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/components/cjs/PrimaryToolbar';
+import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/cjs/PageHeader';
+import { Section } from '@redhat-cloud-services/frontend-components/components/cjs/Section';
 
 import SourcesTable from '../components/SourcesTable/SourcesTable';
 import SourcesEmptyState from '../components/SourcesEmptyState';
@@ -25,8 +25,10 @@ const SourceRemoveModal = lazy(() => import(/* webpackChunkName: "remove" */
 ));
 const AddApplication = lazy(() => import(/* webpackChunkName: "addApp" */ '../components/AddApplication/AddApplication'));
 const AddSourceWizard = lazy(() => import(
-    /* webpackChunkName: "addSource" */ '@redhat-cloud-services/frontend-components-sources'
+    /* webpackChunkName: "addSource" */ '@redhat-cloud-services/frontend-components-sources/'
 ).then(module => ({ default: module.AddSourceWizard })));
+
+console.log({ env: process.env.BASE_PATH });
 
 import {
     prepareChips,

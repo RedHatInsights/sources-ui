@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { NotificationsPortal } from '@redhat-cloud-services/frontend-components-notifications';
-import { Main } from '@redhat-cloud-services/frontend-components/components/Main';
+import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/cjs/NotificationPortal';
+import { Main } from '@redhat-cloud-services/frontend-components/components/cjs/Main';
 import { IntlProvider } from 'react-intl';
 import { BrowserRouter as Router } from 'react-router-dom';
 
