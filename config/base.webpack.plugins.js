@@ -22,7 +22,7 @@ const plugins = [
     new(require('html-replace-webpack-plugin'))([{
         pattern: '@@env',
         replacement: config.deploymentEnv
-    }])
+    }]),
     //new(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
 ];
 

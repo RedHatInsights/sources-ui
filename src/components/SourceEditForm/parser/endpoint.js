@@ -1,7 +1,7 @@
 import React from 'react';
 import get from 'lodash/get';
 import { FormattedMessage } from 'react-intl';
-import { componentTypes } from '@data-driven-forms/react-form-renderer';
+import componentTypes from '@data-driven-forms/react-form-renderer/dist/cjs/component-types';
 import { hardcodedSchemas } from '@redhat-cloud-services/frontend-components-sources';
 import { modifyFields } from './helpers';
 

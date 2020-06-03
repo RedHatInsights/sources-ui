@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { componentTypes } from '@data-driven-forms/react-form-renderer';
+import componentTypes from '@data-driven-forms/react-form-renderer/dist/cjs/component-types';
 import { asyncValidator } from '@redhat-cloud-services/frontend-components-sources';
 import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
 
