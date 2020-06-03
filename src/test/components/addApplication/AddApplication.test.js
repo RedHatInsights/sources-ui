@@ -5,7 +5,7 @@ import { Route, MemoryRouter } from 'react-router-dom';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { CardSelect, SummaryStep, CloseModal } from '@redhat-cloud-services/frontend-components-sources';
+import { CardSelect, SummaryStep, CloseModal, ErroredStep, LoadingStep } from '@redhat-cloud-services/frontend-components-sources';
 import { act } from 'react-dom/test-utils';
 
 import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
@@ -20,9 +20,7 @@ import { applicationTypesData, COSTMANAGEMENT_APP, TOPOLOGICALINVENTORY_APP } fr
 import AddApplicationDescription from '../../../components/AddApplication/AddApplicationDescription';
 import { routes, replaceRouteId } from '../../../Routes';
 import FinishedStep from '../../../components/AddApplication/steps/FinishedStep';
-import ErroredStepAttach from '../../../components/AddApplication/steps/ErroredStep';
 import { AuthTypeSetter } from '../../../components/AddApplication/AuthTypeSetter';
-import LoadingStep from '../../../components/AddApplication/steps/LoadingStep';
 import reducer from '../../../components/AddApplication/reducer';
 
 describe('AddApplication', () => {
@@ -381,8 +379,8 @@ describe('AddApplication', () => {
             });
             wrapper.update();
 
-            expect(wrapper.find(ErroredStepAttach)).toHaveLength(1);
-            expect(wrapper.find(ErroredStepAttach).props().error).toEqual(ERROR);
+            expect(wrapper.find(ErroredStep)).toHaveLength(1);
+            expect(wrapper.find(ErroredStep).props().message).toEqual(ERROR);
             expect(attachSource.doAttachApp).toHaveBeenCalled();
 
             await act(async () => {
@@ -413,7 +411,7 @@ describe('AddApplication', () => {
             });
             wrapper.update();
 
-            expect(wrapper.find(ErroredStepAttach)).toHaveLength(0);
+            expect(wrapper.find(ErroredStep)).toHaveLength(0);
             expect(wrapper.find(FinishedStep)).toHaveLength(1);
 
             expect(attachSource.doAttachApp.mock.calls[0][0]).toEqual({
@@ -691,7 +689,7 @@ describe('AddApplication', () => {
                 setState,
                 intl
             );
-            expect(wrapper.find(ErroredStepAttach).length).toEqual(1);
+            expect(wrapper.find(ErroredStep).length).toEqual(1);
             expect(wrapper.find(EmptyStateBody).text().includes(ERROR_MESSAGE)).toEqual(true);
         });
 
