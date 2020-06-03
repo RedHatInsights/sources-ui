@@ -1,6 +1,7 @@
 import React from 'react';
 import get from 'lodash/get';
-import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
+import componentTypes from '@data-driven-forms/react-form-renderer/dist/cjs/component-types';
+import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
 import { hardcodedSchemas } from '@redhat-cloud-services/frontend-components-sources';
 import { FormattedMessage } from 'react-intl';
 

@@ -8,7 +8,7 @@ import validatorMapper from '@data-driven-forms/react-form-renderer/dist/cjs/val
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/cjs/form-template';
 import componentMapper from '@data-driven-forms/pf4-component-mapper/dist/cjs/component-mapper';
 
-import { mapperExtension } from '@redhat-cloud-services/frontend-components-sources/index';
+import { mapperExtension } from '@redhat-cloud-services/frontend-components-sources';
 
 import EditFieldWrapper from '../components/EditField/EditFieldWrapper';
 
