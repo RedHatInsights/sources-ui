@@ -23,7 +23,7 @@ const plugins = [
         pattern: '@@env',
         replacement: config.deploymentEnv
     }]),
-    new(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
+    //new(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
 ];
 
 module.exports = { plugins };
