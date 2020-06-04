@@ -5,7 +5,13 @@ import { Route, MemoryRouter } from 'react-router-dom';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { CardSelect, SummaryStep, CloseModal, ErroredStep, LoadingStep } from '@redhat-cloud-services/frontend-components-sources';
+
+import CloseModal from '@redhat-cloud-services/frontend-components-sources/cjs/CloseModal';
+import LoadingStep from '@redhat-cloud-services/frontend-components-sources/cjs/LoadingStep';
+import ErroredStep from '@redhat-cloud-services/frontend-components-sources/cjs/ErroredStep';
+import CardSelect from '@redhat-cloud-services/frontend-components-sources/cjs/CardSelect';
+import SummaryStep from '@redhat-cloud-services/frontend-components-sources/cjs/SourceWizardSummary';
+
 import { act } from 'react-dom/test-utils';
 
 import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';

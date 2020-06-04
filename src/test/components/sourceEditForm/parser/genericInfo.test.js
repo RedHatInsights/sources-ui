@@ -4,8 +4,9 @@ import { genericInfo } from '../../../../components/SourceEditForm/parser/generi
 import { EDIT_FIELD_NAME } from '../../../../components/EditField/EditField';
 import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
 
-jest.mock('@redhat-cloud-services/frontend-components-sources', () => ({
-    asyncValidator: jest.fn().mockImplementation(() => jest.fn())
+jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/SourceAddSchema', () => ({
+    __esModule: true,
+    asyncValidatorDebounced: jest.fn().mockImplementation(() => jest.fn())
 }));
 
 describe('generic info edit form parser', () => {

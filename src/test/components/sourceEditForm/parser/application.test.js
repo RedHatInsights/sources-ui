@@ -11,8 +11,9 @@ import { applicationTypesData, COSTMANAGEMENT_APP } from '../../../__mocks__/app
 import { modifyFields } from '../../../../components/SourceEditForm/parser/helpers';
 import { EDIT_FIELD_NAME } from '../../../../components/EditField/EditField';
 
-jest.mock('@redhat-cloud-services/frontend-components-sources', () => ({
-    hardcodedSchemas: {
+jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas', () => ({
+    __esModule: true,
+    default: {
         aws: {
             authentication: {
                 arn: {
