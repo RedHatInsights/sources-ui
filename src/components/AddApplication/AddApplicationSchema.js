@@ -7,7 +7,7 @@ import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Te
 import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
 
 import { FormattedMessage } from 'react-intl';
-import { schemaBuilder } from '@redhat-cloud-services/frontend-components-sources';
+import * as schemaBuilder from '@redhat-cloud-services/frontend-components-sources/cjs/schemaBuilder';
 import get from 'lodash/get';
 
 import AddApplicationDescription from './AddApplicationDescription';

@@ -7,7 +7,7 @@ import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/compo
 import { act } from 'react-dom/test-utils';
 import { Chip, Select, Pagination, Button, Tooltip } from '@patternfly/react-core';
 import { MemoryRouter, Link } from 'react-router-dom';
-import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources';
+import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources/cjs/addSourceWizard';
 
 import SourcesPage from '../../pages/Sources';
 import SourcesEmptyState from '../../components/SourcesEmptyState';

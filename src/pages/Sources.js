@@ -25,7 +25,7 @@ const SourceRemoveModal = lazy(() => import(/* webpackChunkName: "remove" */
 ));
 const AddApplication = lazy(() => import(/* webpackChunkName: "addApp" */ '../components/AddApplication/AddApplication'));
 const AddSourceWizard = lazy(() => import(
-    /* webpackChunkName: "addSource" */ '@redhat-cloud-services/frontend-components-sources'
+    /* webpackChunkName: "addSource" */ '@redhat-cloud-services/frontend-components-sources/cjs/addSourceWizard'
 ).then(module => ({ default: module.AddSourceWizard })));
 
 import {

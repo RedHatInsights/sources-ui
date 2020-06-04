@@ -1,5 +1,6 @@
 import { addedDiff, updatedDiff } from 'deep-object-diff';
-import { patchSource, handleError } from '@redhat-cloud-services/frontend-components-sources';
+import { patchSource } from '@redhat-cloud-services/frontend-components-sources/cjs/costManagementAuthentication';
+import { handleError } from '@redhat-cloud-services/frontend-components-sources/cjs/handleError';
 import isEmpty from 'lodash/isEmpty';
 import merge from 'lodash/merge';
 import cloneDeep from 'lodash/cloneDeep';

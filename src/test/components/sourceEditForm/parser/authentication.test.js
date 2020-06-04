@@ -15,8 +15,9 @@ import AuthenticationManagement from '../../../../components/SourceEditForm/pars
 import RemoveAuthPlaceholder from '../../../../components/SourceEditForm/parser/RemoveAuthPlaceholder';
 import { modifyFields } from '../../../../components/SourceEditForm/parser/helpers';
 
-jest.mock('@redhat-cloud-services/frontend-components-sources', () => ({
-    hardcodedSchemas: {
+jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas', () => ({
+    __esModule: true,
+    default: {
         aws: {
             authentication: {
                 arn: {

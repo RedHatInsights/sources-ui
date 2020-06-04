@@ -15,7 +15,7 @@ import { useDispatch } from 'react-redux';
 import sourceEditContext from '../sourceEditContext';
 import { addMessage } from '../../../redux/sources/actions';
 import { doDeleteAuthentication } from '../../../api/entities';
-import { handleError } from '@redhat-cloud-services/frontend-components-sources';
+import { handleError } from '@redhat-cloud-services/frontend-components-sources/cjs/handleError';
 
 const RemoveAuth = ({ appNames, schemaAuth, auth }) => {
     const hasAttachedApp = appNames.length > 0;

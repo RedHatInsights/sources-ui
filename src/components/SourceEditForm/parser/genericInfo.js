@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import componentTypes from '@data-driven-forms/react-form-renderer/dist/cjs/component-types';
-import { asyncValidator } from '@redhat-cloud-services/frontend-components-sources';
+import { asyncValidatorDebounced } from '@redhat-cloud-services/frontend-components-sources/cjs/SourceAddSchema';
 import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
 
 import { EDIT_FIELD_NAME } from '../../EditField/EditField';
@@ -16,7 +16,7 @@ export const genericInfo = (sourceId) => ([
         originalComponent: componentTypes.TEXT_FIELD,
         component: EDIT_FIELD_NAME,
         validate: [
-            (value) => asyncValidator(value, sourceId),
+            (value) => asyncValidatorDebounced(value, sourceId),
             { type: validatorTypes.REQUIRED }
         ],
         isRequired: true

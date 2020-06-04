@@ -2,8 +2,9 @@ import { getEnhancedEndpointField, endpointFields } from '../../../../components
 import { componentTypes } from '@data-driven-forms/react-form-renderer';
 import { modifyFields } from '../../../../components/SourceEditForm/parser/helpers';
 
-jest.mock('@redhat-cloud-services/frontend-components-sources', () => ({
-    hardcodedSchemas: {
+jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas', () => ({
+    __esModule: true,
+    default: {
         aws: {
             endpoint: {
                 password: { name: 'superpassword' }

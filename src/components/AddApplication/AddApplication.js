@@ -4,12 +4,12 @@ import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { useIntl, FormattedMessage } from 'react-intl';
 import merge from 'lodash/merge';
 import cloneDeep from 'lodash/cloneDeep';
-import {
-    filterApps,
-    CloseModal,
-    LoadingStep,
-    ErroredStep,
-} from '@redhat-cloud-services/frontend-components-sources';
+
+import filterApps from '@redhat-cloud-services/frontend-components-sources/cjs/filterApps';
+import CloseModal from '@redhat-cloud-services/frontend-components-sources/cjs/CloseModal';
+import LoadingStep from '@redhat-cloud-services/frontend-components-sources/cjs/LoadingStep';
+import ErroredStep from '@redhat-cloud-services/frontend-components-sources/cjs/ErroredStep';
+
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/cjs/form-template';
 
 import { loadEntities } from '../../redux/sources/actions';

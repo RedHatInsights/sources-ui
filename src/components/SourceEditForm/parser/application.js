@@ -2,7 +2,7 @@ import React from 'react';
 import get from 'lodash/get';
 import componentTypes from '@data-driven-forms/react-form-renderer/dist/cjs/component-types';
 import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
-import { hardcodedSchemas } from '@redhat-cloud-services/frontend-components-sources';
+import hardcodedSchemas from '@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas';
 import { FormattedMessage } from 'react-intl';
 import { modifyFields } from './helpers';
 import { EDIT_FIELD_NAME } from '../../EditField/EditField';

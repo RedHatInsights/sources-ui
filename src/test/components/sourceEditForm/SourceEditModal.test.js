@@ -24,13 +24,9 @@ import AuthenticationManagement from '../../../components/SourceEditForm/parser/
 import RemoveAuthPlaceholder from '../../../components/SourceEditForm/parser/RemoveAuthPlaceholder';
 import reducer from '../../../components/SourceEditForm/reducer';
 
-jest.mock('@redhat-cloud-services/frontend-components-sources', () => ({
-    asyncValidator: jest.fn(),
-    mapperExtension: ({
-        // eslint-disable-next-line react/display-name
-        description: ({ Content, ...props }) => <Content {...props} />
-    }),
-    handleError: jest.fn()
+jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/SourceAddSchema', () => ({
+    __esModule: true,
+    asyncValidatorDebounced: jest.fn()
 }));
 
 describe('SourceEditModal', () => {
