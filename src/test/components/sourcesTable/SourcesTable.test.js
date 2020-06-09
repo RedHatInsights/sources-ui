@@ -119,7 +119,7 @@ describe('SourcesTable', () => {
                 expect(wrapper.find(RowWrapper).first().props().className).toEqual(ROW_WRAPPER_CLASSNAME);
                 expect(wrapper.find(LongArrowAltDownIcon)).toHaveLength(1);
                 expect(wrapper.find(ArrowsAltVIcon)).toHaveLength(expectSortableColumns);
-                expect(wrapper.find('img')).toHaveLength(sourcesDataGraphQl.length);
+                expect(wrapper.find('img')).toHaveLength(0);
                 done();
             });
         });

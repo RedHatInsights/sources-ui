@@ -326,18 +326,6 @@ export const availabilityFormatter = (_status, source, { appTypes }) => {
     </TextContent>);
 };
 
-export const sourceTypeIconFormatter = (sourceTypeId, _item, { sourceTypes }) => {
-    const sourceType = sourceTypes.find(({ id }) => id === sourceTypeId);
-
-    if (!sourceType || !sourceType.icon_url) {
-        return null;
-    }
-
-    return (<Bullseye>
-        <img src={sourceType.icon_url} alt={sourceType.product_name} className="ins-c-sources__icon" />
-    </Bullseye>);
-};
-
 export const formatters = (name) => ({
     nameFormatter,
     dateFormatter,
@@ -345,5 +333,4 @@ export const formatters = (name) => ({
     sourceTypeFormatter,
     importedFormatter,
     availabilityFormatter,
-    sourceTypeIconFormatter
 }[name] || defaultFormatter(name));
