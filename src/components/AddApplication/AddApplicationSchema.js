@@ -310,8 +310,8 @@ const fields = (
                         ]
                     }, {
                         title: intl.formatMessage({
-                            id: 'sources.review',
-                            defaultMessage: 'Review'
+                            id: 'sources.reviewDetails',
+                            defaultMessage: 'Review details'
                         }),
                         name: 'summary',
                         fields: [{
