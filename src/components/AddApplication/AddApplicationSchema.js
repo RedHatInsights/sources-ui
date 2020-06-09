@@ -52,8 +52,42 @@ SelectAuthenticationDescription.propTypes = {
     authenticationTypeName: PropTypes.string
 };
 
-export const hasAlreadySupportedAuthType = (authValues = [], appType, sourceTypeName) =>
-    authValues.find(({ authtype }) => authtype === get(appType, `supported_authentication_types.${sourceTypeName}[0]`));
+export const hasAlreadySupportedAuthType = (authValues = [], appType, sourceTypeName) => (
+    authValues.find(({ authtype }) => authtype === get(appType, `supported_authentication_types.${sourceTypeName}[0]`))
+);
+
+export const authenticationSelectionStep = (sourceType, appType, intl, authenticationValues) => {
+    const nextStep = ({ values: { application, authtype } }) => {
+        if (authtype) {
+            const hasSupportedAuthType = authenticationValues.find((auth) => auth.authtype === authtype);
+
+            if (hasSupportedAuthType) {
+                return 'selectAuthentication';
+            }
+
+            return `${sourceType.name}-${application && application.application_type_id}-${authtype}`;
+        }
+    };
+
+    return ({
+        name: 'selectAuthType',
+        title: intl.formatMessage({
+            id: 'sources.selectAuthenticationTitle',
+            defaultMessage: 'Select authentication type'
+        }),
+        fields: [{
+            component: componentTypes.RADIO,
+            name: 'authtype',
+            options: appType.supported_authentication_types[sourceType.name].map(type => ({
+                value: type,
+                label: sourceType.schema.authentication.find((authtype) => authtype.type === type)?.name || 'unknown name'
+            })),
+            isRequired: true,
+            validate: [{ type: validatorTypes.REQUIRED }]
+        }],
+        nextStep
+    });
+};
 
 const generateAuthSelectionOptions = ({
     source, authenticationValues, applicationTypes, supportedAuthTypeName, supportedAuthType
@@ -75,11 +109,11 @@ const generateAuthSelectionOptions = ({
 export const selectAuthenticationStep = ({
     intl, source, authenticationValues, sourceType, applicationTypes, modifiedValues
 }) => {
-    const nextStep = ({ values: { application } }) => {
+    const nextStep = ({ values: { application, authtype, authentication } }) => {
         const app = application ? application : {};
         const appId = app.application_type_id ? app.application_type_id : '';
 
-        return `${sourceType.name}-${appId}`;
+        return `${sourceType.name}-${appId}-${authtype || authentication?.authtype}`;
     };
 
     const fields = [{
@@ -92,9 +126,9 @@ export const selectAuthenticationStep = ({
     }];
 
     applicationTypes.forEach((app) => {
-        const supportedAuthType = get(app, `supported_authentication_types[${sourceType.name}][0]`, '');
+        const supportedAuthTypes = get(app, `supported_authentication_types[${sourceType.name}]`, []);
 
-        if (supportedAuthType && hasAlreadySupportedAuthType(authenticationValues, app, sourceType.name)) {
+        supportedAuthTypes.forEach((supportedAuthType) => {
             const supportedAuthTypeName =
                 get(sourceType, `schema.authentication`, {}).find(({ type }) => type === supportedAuthType).name;
 
@@ -102,8 +136,17 @@ export const selectAuthenticationStep = ({
                 component: componentTypes.SUB_FORM,
                 name: `${app.name}-subform`,
                 condition: {
-                    when: 'application.application_type_id',
-                    is: app.id
+                    and: [{
+                        when: 'application.application_type_id',
+                        is: app.id
+                    },
+                    ...(supportedAuthTypes.length > 1
+                        ? [{
+                            when: 'authtype',
+                            is: supportedAuthType
+                        }]
+                        : []
+                    )]
                 },
                 fields: [
                     {
@@ -128,7 +171,7 @@ export const selectAuthenticationStep = ({
                                     id: 'sources.selectAuthenticationradioLabel',
                                     defaultMessage: 'Define new { supportedAuthTypeName }'
                                 }, { supportedAuthTypeName }),
-                                value: 'new'
+                                value: `new-${supportedAuthType}`
                             },
                             ...generateAuthSelectionOptions(
                                 { authenticationValues, source, applicationTypes, supportedAuthTypeName, supportedAuthType }
@@ -137,7 +180,7 @@ export const selectAuthenticationStep = ({
                     },
                 ]
             });
-        }
+        });
     });
 
     return ({
@@ -148,6 +191,75 @@ export const selectAuthenticationStep = ({
         }),
         fields,
         nextStep
+    });
+};
+
+const generateFirstAuthStep = (type, appType, endpointFields, authtype) => {
+    const fields = [...endpointFields];
+
+    const auth = type.schema.authentication.find(({ type }) => type === authtype);
+
+    const additionalStepName = `${type.name}-${authtype}-${appType.name}-additional-step`;
+
+    const skipEndpoint = schemaBuilder.shouldSkipEndpoint(type.name, authtype, appType.name);
+    const customSteps = schemaBuilder.hasCustomSteps(type.name, authtype, appType.name);
+
+    let nextStep;
+
+    if (schemaBuilder.getAdditionalSteps(type.name, authtype, appType.name).length > 0) {
+        nextStep = additionalStepName;
+    } else if (endpointFields.length === 0 && !skipEndpoint) {
+        nextStep = `${type.name}-endpoint`;
+    } else {
+        nextStep = 'summary';
+    }
+
+    const additionalIncludesStepKeys = schemaBuilder.getAdditionalStepKeys(type.name, authtype, appType.name);
+    const hasCustomStep = schemaBuilder.shouldSkipSelection(type.name, authtype, appType.name);
+
+    let stepProps = {};
+
+    if (hasCustomStep) {
+        const firstAdditonalStep = schemaBuilder.getAdditionalSteps(type.name, authtype, appType.name).find(({ name }) => !name);
+        const additionalFields = schemaBuilder.getAdditionalStepFields(auth.fields, additionalStepName);
+
+        if (firstAdditonalStep.nextStep) {
+            nextStep = firstAdditonalStep.nextStep;
+        } else if (endpointFields.length === 0 && !skipEndpoint && !customSteps) {
+            nextStep = `${type.name}-endpoint`;
+        } else {
+            nextStep = 'summary';
+        }
+
+        stepProps = {
+            ...firstAdditonalStep,
+            fields: [
+                ...fields,
+                ...schemaBuilder.injectAuthFieldsInfo(
+                    [...firstAdditonalStep.fields, ...additionalFields],
+                    type.name,
+                    auth.type,
+                    appType.name
+                )
+            ]
+        };
+    }
+
+    return ({
+        name: `${type.name}-${appType.id}-${authtype}`,
+        title: 'Configure credentials',
+        fields: [
+            ...fields,
+            ...schemaBuilder.getAdditionalAuthFields(type.name, authtype, appType.name),
+            ...schemaBuilder.injectAuthFieldsInfo(
+                schemaBuilder.getNoStepsFields(auth.fields, additionalIncludesStepKeys),
+                type.name,
+                authtype,
+                appType.name
+            )
+        ],
+        nextStep,
+        ...stepProps
     });
 };
 
@@ -166,14 +278,16 @@ const fields = (
 
         applicationTypes.forEach(appType => {
             if (appType.supported_source_types.includes(sourceType.name)) {
-                authenticationFields.push(
-                    schemaBuilder.createSpecificAuthTypeSelection(
-                        sourceType,
-                        appType,
-                        appendEndpoint,
-                        false,
-                    )
-                );
+                appType.supported_authentication_types[sourceType.name].forEach((authtype) => {
+                    authenticationFields.push(
+                        generateFirstAuthStep(
+                            sourceType,
+                            appType,
+                            appendEndpoint,
+                            authtype
+                        )
+                    );
+                });
             }
         });
 
@@ -204,6 +318,14 @@ const fields = (
 
         nextStep = ({ values: { application } }) => {
             if (application) {
+                const appType = applicationTypes.find(({ id }) => id === application.application_type_id);
+
+                const hasMultipleAuthTypes = appType?.supported_authentication_types[sourceType.name]?.length > 1;
+
+                if (hasMultipleAuthTypes) {
+                    return 'selectAuthType';
+                }
+
                 if (
                     hasAlreadySupportedAuthType(
                         authenticationValues,
@@ -214,7 +336,9 @@ const fields = (
                     return 'selectAuthentication';
                 }
 
-                return `${sourceType.name}-${application && application.application_type_id}`;
+                const authType = appType?.supported_authentication_types[sourceType.name][0];
+
+                return `${sourceType.name}-${application && application.application_type_id}-${authType}`;
             }
         };
     }
@@ -241,7 +365,9 @@ const fields = (
         Content: NoAvailableApplicationDescription
     };
 
-    const selectionSteps = [];
+    const selectionSteps = applicationTypes
+    .filter(({ supported_source_types }) => supported_source_types.includes(sourceType.name))
+    .map(app => authenticationSelectionStep(sourceType, app, intl, authenticationValues));
 
     if (!source.imported && hasAvailableApps) {
         selectionSteps.push(
@@ -262,7 +388,7 @@ const fields = (
                 container,
                 predictSteps: true,
                 showTitles: true,
-                crossroads: ['application.application_type_id', 'selectedAuthentication'],
+                crossroads: ['application.application_type_id', 'selectedAuthentication', 'authtype'],
                 description: intl.formatMessage({
                     id: 'sources.addAppDescription',
                     defaultMessage: 'You are managing applications of this source.'
