@@ -109,7 +109,7 @@ const SourceEditModal = () => {
                                 isHorizontal: true
                             }}
                             canReset
-                            disableSubmit={['submitting']}
+                            disableSubmit={['submitting', 'pristine']}
                             submitLabel={intl.formatMessage({
                                 id: 'sources.save',
                                 defaultMessage: 'Save'
