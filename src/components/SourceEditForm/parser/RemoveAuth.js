@@ -79,7 +79,7 @@ const RemoveAuth = ({ appNames, schemaAuth, auth }) => {
     } else {
         body = (<FormattedMessage
             id="sources.removeAuthWarning"
-            defaultMessage="Do you really want to remove {auth} authentication?"
+            defaultMessage="This action will permanently remove {auth} from this source."
             values={{ auth: <b>{schemaAuth.name}</b> }}
         />);
         actions = [<Button
