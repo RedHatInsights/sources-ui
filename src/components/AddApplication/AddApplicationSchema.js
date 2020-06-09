@@ -19,7 +19,7 @@ export const NoAvailableApplicationDescription = () => (<TextContent>
         <FormattedMessage
             id="sources.allApplicationsAssigned"
             defaultMessage="All available applications have already been added to this source
-        or there is no available application for this source type."
+        or there is no available application for this source."
         />
     </Text>
 </TextContent>);
