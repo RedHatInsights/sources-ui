@@ -115,13 +115,13 @@ describe('AuthTypeSetter', () => {
                 ...formOptions,
                 getState: jest.fn().mockImplementation(() => ({
                     values: {
-                        selectedAuthentication: 'new'
+                        selectedAuthentication: 'new-token'
                     }
                 })),
             }
         });
 
-        expect(changeSpy).toHaveBeenCalledWith('authentication', undefined);
+        expect(changeSpy).toHaveBeenCalledWith('authentication', { authtype: 'token' });
         expect(changeSpy.mock.calls.length).toEqual(1);
         changeSpy.mockClear();
 
@@ -174,13 +174,13 @@ describe('AuthTypeSetter', () => {
                 ...formOptions,
                 getState: jest.fn().mockImplementation(() => ({
                     values: {
-                        selectedAuthentication: 'new'
+                        selectedAuthentication: 'new-token'
                     }
                 })),
             }
         });
 
-        expect(changeSpy).toHaveBeenCalledWith('authentication', undefined);
+        expect(changeSpy).toHaveBeenCalledWith('authentication', { authtype: 'token' });
         expect(changeSpy.mock.calls.length).toEqual(1);
         changeSpy.mockClear();
     });
@@ -190,7 +190,7 @@ describe('AuthTypeSetter', () => {
             ...formOptions,
             getState: jest.fn().mockImplementation(() => ({
                 values: {
-                    selectedAuthentication: 'new'
+                    selectedAuthentication: 'new-token-extra'
                 }
             })),
         };
@@ -220,13 +220,13 @@ describe('AuthTypeSetter', () => {
                 ...formOptions,
                 getState: jest.fn().mockImplementation(() => ({
                     values: {
-                        selectedAuthentication: 'new'
+                        selectedAuthentication: 'new-token-extra'
                     }
                 })),
             }
         });
 
-        expect(changeSpy).toHaveBeenCalledWith('authentication', undefined);
+        expect(changeSpy).toHaveBeenCalledWith('authentication', { authtype: 'token-extra' });
         expect(changeSpy.mock.calls.length).toEqual(1);
         changeSpy.mockClear();
     });
@@ -264,13 +264,13 @@ describe('AuthTypeSetter', () => {
                 ...formOptions,
                 getState: jest.fn().mockImplementation(() => ({
                     values: {
-                        selectedAuthentication: 'new'
+                        selectedAuthentication: 'new-token'
                     }
                 })),
             }
         });
 
-        expect(changeSpy).toHaveBeenCalledWith('authentication', modifiedValues.authentication);
+        expect(changeSpy).toHaveBeenCalledWith('authentication', { ...modifiedValues.authentication, authtype: 'token' });
         expect(changeSpy.mock.calls.length).toEqual(1);
         changeSpy.mockClear();
 
@@ -311,13 +311,13 @@ describe('AuthTypeSetter', () => {
                 ...formOptions,
                 getState: jest.fn().mockImplementation(() => ({
                     values: {
-                        selectedAuthentication: 'new'
+                        selectedAuthentication: 'new-token'
                     }
                 })),
             }
         });
 
-        expect(changeSpy).toHaveBeenCalledWith('authentication', modifiedValues.authentication);
+        expect(changeSpy).toHaveBeenCalledWith('authentication', { ...modifiedValues.authentication, authtype: 'token' });
         expect(changeSpy.mock.calls.length).toEqual(1);
         changeSpy.mockClear();
     });
