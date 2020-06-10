@@ -1,6 +1,6 @@
 import * as schemaBuilder from '@redhat-cloud-services/frontend-components-sources/cjs/schemaBuilder';
 
-const generateFirstAuthStep = (type, appType, endpointFields, authtype) => {
+const generateFirstAuthStep = (type, appType, endpointFields, authtype, intl) => {
     const fields = [...endpointFields];
 
     const auth = type.schema.authentication.find(({ type }) => type === authtype);
@@ -53,7 +53,10 @@ const generateFirstAuthStep = (type, appType, endpointFields, authtype) => {
 
     return ({
         name: `${type.name}-${appType.id}-${authtype}`,
-        title: 'Configure credentials',
+        title: intl.formatMessage({
+            id: 'sources.configureCredentials',
+            defaultMessage: 'Configure credentials'
+        }),
         fields: [
             ...fields,
             ...schemaBuilder.getAdditionalAuthFields(type.name, authtype, appType.name),

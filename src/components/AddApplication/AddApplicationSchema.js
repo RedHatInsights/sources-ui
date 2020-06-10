@@ -64,7 +64,8 @@ const fields = (
                             sourceType,
                             appType,
                             appendEndpoint,
-                            authtype
+                            authtype,
+                            intl
                         )
                     );
                 });

@@ -41,6 +41,7 @@ describe('generateFirstAuthStep', () => {
     };;
     const ENDPOINT_FIELDS = [];
     const AUTHTYPE = 'arn';
+    const INTL = { formatMessage: ({ defaultMessage }) => defaultMessage };
 
     it('generates step from API', () => {
         TYPE = {
@@ -52,7 +53,8 @@ describe('generateFirstAuthStep', () => {
             TYPE,
             APP_TYPE,
             ENDPOINT_FIELDS,
-            AUTHTYPE
+            AUTHTYPE,
+            INTL
         );
 
         expect(firstStep).toEqual({
@@ -76,7 +78,8 @@ describe('generateFirstAuthStep', () => {
             TYPE,
             APP_TYPE,
             ENDPOINT_FIELDS,
-            AUTHTYPE
+            AUTHTYPE,
+            INTL
         );
 
         expect(firstStep).toEqual({
@@ -100,7 +103,8 @@ describe('generateFirstAuthStep', () => {
             TYPE,
             APP_TYPE,
             ENDPOINT_FIELDS,
-            AUTHTYPE
+            AUTHTYPE,
+            INTL
         );
 
         expect(firstStep).toEqual({
@@ -123,7 +127,8 @@ describe('generateFirstAuthStep', () => {
             TYPE,
             APP_TYPE,
             ENDPOINT_FIELDS,
-            AUTHTYPE
+            AUTHTYPE,
+            INTL
         );
 
         expect(firstStep).toEqual({
@@ -146,7 +151,8 @@ describe('generateFirstAuthStep', () => {
             TYPE,
             APP_TYPE,
             ENDPOINT_FIELDS,
-            AUTHTYPE
+            AUTHTYPE,
+            INTL
         );
 
         expect(firstStep).toEqual({
@@ -169,7 +175,8 @@ describe('generateFirstAuthStep', () => {
             TYPE,
             APP_TYPE,
             ENDPOINT_FIELDS,
-            AUTHTYPE
+            AUTHTYPE,
+            INTL
         );
 
         expect(firstStep).toEqual({
