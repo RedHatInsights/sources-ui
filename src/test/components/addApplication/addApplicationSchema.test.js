@@ -29,7 +29,7 @@ describe('AddApplicationSchema', () => {
         });
 
         const summaryStep = expect.objectContaining({
-            title: 'Review'
+            title: 'Review details'
         });
 
         expect(result).toEqual({
@@ -83,7 +83,7 @@ describe('AddApplicationSchema', () => {
         });
 
         const summaryStep = expect.objectContaining({
-            title: 'Review'
+            title: 'Review details'
         });
 
         expect(result).toEqual({

@@ -113,7 +113,7 @@ describe('RemoveAuth', () => {
             expect(wrapper.find(Modal).props().title).toEqual('Remove authentication?');
             expect(wrapper.find(ExclamationTriangleIcon)).toHaveLength(1);
             expect(wrapper.find(Button)).toHaveLength(3);
-            expect(wrapper.find(Text).text()).toEqual('Do you really want to remove some name authentication?');
+            expect(wrapper.find(Text).text()).toEqual('This action will permanently remove some name from this source.');
         });
 
         it('calls submit succesfuly', async () => {
