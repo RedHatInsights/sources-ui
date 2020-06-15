@@ -47,7 +47,7 @@ describe('RemoveAuth', () => {
             );
 
             expect(wrapper.find(Modal)).toHaveLength(1);
-            expect(wrapper.find(Modal).props().title).toEqual('Remove authentication?');
+            expect(wrapper.find(Modal).props()['aria-label']).toEqual('Remove authentication?');
             expect(wrapper.find(ExclamationTriangleIcon)).toHaveLength(1);
             expect(wrapper.find(Button)).toHaveLength(2);
             expect(wrapper.find(Text).text()).toEqual('To remove some name authentication you have to remove attached application: Catalog.');
@@ -68,7 +68,7 @@ describe('RemoveAuth', () => {
             );
 
             expect(wrapper.find(Modal)).toHaveLength(1);
-            expect(wrapper.find(Modal).props().title).toEqual('Remove authentication?');
+            expect(wrapper.find(Modal).props()['aria-label']).toEqual('Remove authentication?');
             expect(wrapper.find(ExclamationTriangleIcon)).toHaveLength(1);
             expect(wrapper.find(Button)).toHaveLength(2);
             expect(wrapper.find(Text).text()).toEqual('To remove some name authentication you have to remove attached applications: Catalog, Cost Management.');
@@ -110,7 +110,7 @@ describe('RemoveAuth', () => {
             );
 
             expect(wrapper.find(Modal)).toHaveLength(1);
-            expect(wrapper.find(Modal).props().title).toEqual('Remove authentication?');
+            expect(wrapper.find(Modal).props()['aria-label']).toEqual('Remove authentication?');
             expect(wrapper.find(ExclamationTriangleIcon)).toHaveLength(1);
             expect(wrapper.find(Button)).toHaveLength(3);
             expect(wrapper.find(Text).text()).toEqual('This action will permanently remove some name from this source.');
