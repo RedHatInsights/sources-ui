@@ -112,18 +112,17 @@ const RemoveAuth = ({ appNames, schemaAuth, auth }) => {
         <Modal
             isOpen
             className="ins-c-sources__dialog--warning"
-            isFooterLeftAligned
             onClose={onClose}
             actions={actions}
-            isSmall
-            title={
+            variant="small"
+            aria-label={
                 intl.formatMessage({
                     id: 'sources.deleteAuthTitle',
                     defaultMessage: 'Remove authentication?',
                 })
             }
             header={
-                <Title size="2xl">
+                <Title headingLevel="h1" size="2xl">
                     <ExclamationTriangleIcon size="sm" className="ins-m-alert ins-c-source__delete-icon pf-u-mr-sm" />
                     {intl.formatMessage({
                         id: 'sources.deleteAppTitle',
