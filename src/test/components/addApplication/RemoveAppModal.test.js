@@ -69,7 +69,7 @@ describe('RemoveAppModal', () => {
         expect(wrapper.find(Modal).length).toEqual(1);
         expect(wrapper.find(Button).length).toEqual(3); // modal cancel, remove, cancel
         expect(wrapper.find(FormattedMessage).length).toEqual(3);
-        expect(wrapper.find(Button).at(1).text()).toEqual('Remove');
+        expect(wrapper.find(Button).at(1).text()).toEqual('Remove application');
         expect(wrapper.find(Button).last().text()).toEqual('Cancel');
     });
 

@@ -13,8 +13,8 @@ const webpackConfig = {
         App: config.paths.entry
     },
     output: {
-        filename: 'js/[name].js',
-        chunkFilename: 'js/[name].js',
+        filename: 'js/[name].[chunkhash].js',
+        chunkFilename: 'js/[name].[chunkhash].js',
         path: config.paths.public,
         publicPath: config.paths.publicPath
     },
