@@ -419,7 +419,6 @@ describe('AddApplication', () => {
             expect(attachSource.doAttachApp.mock.calls[0][0]).toEqual({
                 application: { application_type_id: application.id },
                 endpoint_id: undefined,
-                noEndpoint: false,
                 source: { nested: { source_ref: value, another_value } }
             });
         });
@@ -537,7 +536,6 @@ describe('AddApplication', () => {
 
             expect(attachSource.doAttachApp.mock.calls[0][1].getState().values).toEqual({
                 application: { application_type_id: application.id },
-                noEndpoint: false,
                 source: { ...source, nested: { source_ref: value, another_value } },
                 authentication,
                 selectedAuthentication: 'authid',
