@@ -7,23 +7,19 @@ export const initialState = {
     source: undefined,
     initialValues: {},
     sourceType: undefined,
-    schema: undefined
+    schema: undefined,
+    isAuthRemoving: null
 };
 
-const reducer = (state, { type, source, name, sourceType, setEdit, appTypes, authId }) => {
+const reducer = (state, { type, source, name, sourceType, appTypes, authId, removingAuth }) => {
     switch (type) {
         case 'createForm':
             return {
                 ...state,
                 sourceType,
                 initialValues: prepareInitialValues(state.source, sourceType.product_name),
-                schema: parseSourceToSchema(state.source, state.editing, setEdit, sourceType, appTypes),
+                schema: parseSourceToSchema(state.source, sourceType, appTypes),
                 loading: false
-            };
-        case 'refreshSchema':
-            return {
-                ...state,
-                schema: parseSourceToSchema(state.source, state.editing, setEdit, state.sourceType, appTypes)
             };
         case 'setSource':
             return {
@@ -46,6 +42,7 @@ const reducer = (state, { type, source, name, sourceType, setEdit, appTypes, aut
         case 'removeAuthPending':
             return {
                 ...state,
+                isAuthRemoving: null,
                 source: {
                     ...state.source,
                     authentications: state.source.authentications.map((auth) => auth.id === authId ? {
@@ -70,6 +67,16 @@ const reducer = (state, { type, source, name, sourceType, setEdit, appTypes, aut
                     ...state.source,
                     authentications: state.source.authentications.filter((auth) => auth.id !== authId)
                 }
+            };
+        case 'setAuthRemoving':
+            return {
+                ...state,
+                isAuthRemoving: removingAuth
+            };
+        case 'closeAuthRemoving':
+            return {
+                ...state,
+                isAuthRemoving: null
             };
         default:
             return state;

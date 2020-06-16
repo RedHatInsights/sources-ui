@@ -1,13 +1,15 @@
 import { FormGroup } from '@patternfly/react-core';
 import { PencilAltIcon } from '@patternfly/react-icons';
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/cjs/form-template';
-import FormRenderer from '@data-driven-forms/react-form-renderer/dist/cjs/form-renderer';
-import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
+import FormRendererOriginal from '@data-driven-forms/react-form-renderer/dist/cjs/form-renderer';
 
 import EditField, { EDIT_FIELD_NAME } from '../../../components/EditField/EditField';
+import sourceEditContext from '../../../components/SourceEditForm/sourceEditContext';
 
 describe('Edit field', () => {
     let initialProps;
+    let setState;
+    let FormRenderer;
 
     const NAME = 'name1234';
     const VALUE = 'password';
@@ -30,6 +32,13 @@ describe('Edit field', () => {
                 }]
             }
         };
+
+        setState = jest.fn();
+
+        // eslint-disable-next-line react/display-name
+        FormRenderer = (props) => (<sourceEditContext.Provider value={{ setState }}>
+            <FormRendererOriginal {...props} />
+        </sourceEditContext.Provider>);
     });
 
     it('renders correctly', () => {
@@ -38,28 +47,6 @@ describe('Edit field', () => {
         expect(wrapper.find(FormGroup)).toHaveLength(1);
         expect(wrapper.find('span')).toHaveLength(1);
         expect(wrapper.find(PencilAltIcon)).toHaveLength(0);
-    });
-
-    it('renders correctly with error', () => {
-        const ERROR = 'errror';
-
-        initialProps = {
-            ...initialProps,
-            schema: {
-                fields: [{
-                    ...initialProps.schema.fields[0],
-                    validate: [{ type: validatorTypes.REQUIRED, message: ERROR }]
-                }]
-            }
-        };
-
-        const wrapper = mount(<FormRenderer {...initialProps} />);
-
-        wrapper.find('form').simulate('submit');
-        wrapper.update();
-
-        expect(wrapper.find(FormGroup).props().isValid).toEqual(false);
-        expect(wrapper.find(FormGroup).props().helperTextInvalid).toEqual(ERROR);
     });
 
     it('renders correctly with value', () => {
@@ -76,32 +63,6 @@ describe('Edit field', () => {
         expect(wrapper.find(PencilAltIcon)).toHaveLength(0);
     });
 
-    it('renders correctly true', () => {
-        initialProps = {
-            ...initialProps,
-            initialValues: {
-                [NAME]: true
-            }
-        };
-
-        const wrapper = mount(<FormRenderer {...initialProps} />);
-
-        expect(wrapper.find('span').text()).toEqual('True');
-    });
-
-    it('renders correctly false', () => {
-        initialProps = {
-            ...initialProps,
-            initialValues: {
-                [NAME]: false
-            }
-        };
-
-        const wrapper = mount(<FormRenderer {...initialProps} />);
-
-        expect(wrapper.find('span').text()).toEqual('False');
-    });
-
     it('renders empty - Click to add', () => {
         initialProps = {
             ...initialProps,
@@ -111,7 +72,7 @@ describe('Edit field', () => {
             schema: {
                 fields: [{
                     ...initialProps.schema.fields[0],
-                    setEdit: jest.fn()
+                    isEditable: true
                 }]
             }
         };
@@ -130,8 +91,8 @@ describe('Edit field', () => {
             schema: {
                 fields: [{
                     ...initialProps.schema.fields[0],
-                    setEdit: jest.fn(),
-                    type: 'password'
+                    type: 'password',
+                    isEditable: true
                 }]
             }
         };
@@ -160,7 +121,7 @@ describe('Edit field', () => {
             schema: {
                 fields: [{
                     ...initialProps.schema.fields[0],
-                    setEdit: jest.fn()
+                    isEditable: true
                 }]
             }
         };
@@ -171,14 +132,12 @@ describe('Edit field', () => {
     });
 
     it('calls setEdit with field name', () => {
-        const setEdit = jest.fn();
-
         initialProps = {
             ...initialProps,
             schema: {
                 fields: [{
                     ...initialProps.schema.fields[0],
-                    setEdit,
+                    isEditable: true
                 }]
             }
         };
@@ -187,18 +146,16 @@ describe('Edit field', () => {
 
         wrapper.find(FormGroup).simulate('click');
 
-        expect(setEdit).toHaveBeenCalledWith(NAME);
+        expect(setState).toHaveBeenCalledWith({ type: 'setEdit', name: NAME });
     });
 
     it('calls setEdit with field name by pressing space', () => {
-        const setEdit = jest.fn();
-
         initialProps = {
             ...initialProps,
             schema: {
                 fields: [{
                     ...initialProps.schema.fields[0],
-                    setEdit,
+                    isEditable: true,
                 }]
             }
         };
@@ -212,19 +169,17 @@ describe('Edit field', () => {
 
         wrapper.find(FormGroup).simulate('keypress', event);
 
-        expect(setEdit).toHaveBeenCalledWith(NAME);
+        expect(setState).toHaveBeenCalledWith({ type: 'setEdit', name: NAME });
         expect(event.preventDefault).toHaveBeenCalled();
     });
 
     it('do not call setEdit with field name by pressing different key than space', () => {
-        const setEdit = jest.fn();
-
         initialProps = {
             ...initialProps,
             schema: {
                 fields: [{
                     ...initialProps.schema.fields[0],
-                    setEdit,
+                    isEditable: true,
                 }]
             }
         };
@@ -238,7 +193,7 @@ describe('Edit field', () => {
 
         wrapper.find(FormGroup).simulate('keypress', event);
 
-        expect(setEdit).not.toHaveBeenCalled();
+        expect(setState).not.toHaveBeenCalled();
         expect(event.preventDefault).not.toHaveBeenCalled();
     });
 
@@ -248,6 +203,7 @@ describe('Edit field', () => {
             schema: {
                 fields: [{
                     ...initialProps.schema.fields[0],
+                    isEditable: false
                 }]
             }
         };

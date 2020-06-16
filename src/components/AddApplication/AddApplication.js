@@ -1,17 +1,20 @@
 import React, { useReducer, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
-import { useIntl } from 'react-intl';
+import { useIntl, FormattedMessage } from 'react-intl';
 import merge from 'lodash/merge';
 import cloneDeep from 'lodash/cloneDeep';
-import { filterApps, CloseModal } from '@redhat-cloud-services/frontend-components-sources';
+
+import filterApps from '@redhat-cloud-services/frontend-components-sources/cjs/filterApps';
+import CloseModal from '@redhat-cloud-services/frontend-components-sources/cjs/CloseModal';
+import LoadingStep from '@redhat-cloud-services/frontend-components-sources/cjs/LoadingStep';
+import ErroredStep from '@redhat-cloud-services/frontend-components-sources/cjs/ErroredStep';
+
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/cjs/form-template';
 
 import { loadEntities } from '../../redux/sources/actions';
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
 import createSchema from './AddApplicationSchema';
-import LoadingStep from './steps/LoadingStep';
-import ErroredStep from './steps/ErroredStep';
 import FinishedStep from './steps/FinishedStep';
 import WizardBody from './WizardBody';
 
@@ -113,7 +116,16 @@ const AddApplication = () => {
         return  (
             <WizardBody
                 goToSources={goToSources}
-                step={<LoadingStep />}
+                step={<LoadingStep
+                    customText={intl.formatMessage({
+                        id: 'sources.loading',
+                        defaultMessage: 'Loading, please wait.'
+                    })}
+                    cancelTitle={<FormattedMessage
+                        id="sources.cancel"
+                        defaultMessage="Cancel"
+                    />}
+                />}
             />
         );
     }
@@ -125,6 +137,10 @@ const AddApplication = () => {
                 step={<LoadingStep
                     progressStep={state.progressStep}
                     progressTexts={state.progressTexts}
+                    cancelTitle={<FormattedMessage
+                        id="sources.cancel"
+                        defaultMessage="Cancel"
+                    />}
                 />}
             />
         );
@@ -140,11 +156,27 @@ const AddApplication = () => {
             progressTexts={state.progressTexts}
         />) :
             (<ErroredStep
-                onReset={onReset}
-                goToSources={goToSources}
-                error={state.error}
+                onRetry={onReset}
+                onClose={goToSources}
+                message={state.error}
                 progressStep={state.progressStep}
                 progressTexts={state.progressTexts}
+                customText={<FormattedMessage
+                    id="sources.successAddApp"
+                    defaultMessage="Your application has not been successfully added:"
+                />}
+                title={<FormattedMessage
+                    id="sources.configurationSuccessful"
+                    defaultMessage="Configuration unsuccessful"
+                />}
+                returnButtonTitle={<FormattedMessage
+                    id="sources.backToSources"
+                    defaultMessage="Back to Sources"
+                />}
+                retryText={<FormattedMessage
+                    id="sources.retry"
+                    defaultMessage="Retry"
+                />}
             />);
 
         return (

@@ -1,6 +1,5 @@
 import { validatorTypes, componentTypes } from '@data-driven-forms/react-form-renderer';
 
-import { EDIT_FIELD_NAME } from '../../../../components/EditField/EditField';
 import {
     createAuthFieldName,
     getLastPartOfName,
@@ -14,9 +13,11 @@ import { unsupportedAuthTypeField } from '../../../../components/SourceEditForm/
 import { applicationTypesData } from '../../../__mocks__/applicationTypesData';
 import AuthenticationManagement from '../../../../components/SourceEditForm/parser/AuthenticationManagement';
 import RemoveAuthPlaceholder from '../../../../components/SourceEditForm/parser/RemoveAuthPlaceholder';
+import { modifyFields } from '../../../../components/SourceEditForm/parser/helpers';
 
-jest.mock('@redhat-cloud-services/frontend-components-sources', () => ({
-    hardcodedSchemas: {
+jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas', () => ({
+    __esModule: true,
+    default: {
         aws: {
             authentication: {
                 arn: {
@@ -103,8 +104,6 @@ describe('authentication edit source parser', () => {
     describe('modifyAuthSchemas', () => {
         let FIELDS;
         let ID;
-        let EDITING;
-        let SET_EDIT;
         let FIELD_NAME;
 
         beforeEach(() => {
@@ -112,28 +111,18 @@ describe('authentication edit source parser', () => {
             FIELDS = [
                 { name: FIELD_NAME, component: componentTypes.TEXT_FIELD }
             ];
-            EDITING = {};
-            SET_EDIT = jest.fn();
             ID = '1231325314';
-        });
-
-        afterEach(() => {
-            SET_EDIT.mockReset();
         });
 
         it('parses correctly (change components to edit field)', () => {
             const result = modifyAuthSchemas(
                 FIELDS,
                 ID,
-                EDITING,
-                SET_EDIT
             );
 
             expect(result).toEqual([{
                 ...FIELDS[0],
-                component: EDIT_FIELD_NAME,
                 name: createAuthFieldName(FIELD_NAME, ID),
-                setEdit: SET_EDIT
             }]);
         });
 
@@ -147,33 +136,11 @@ describe('authentication edit source parser', () => {
             const result = modifyAuthSchemas(
                 FIELDS,
                 ID,
-                EDITING,
-                SET_EDIT
             );
 
             expect(result).toEqual([{
                 ...FIELDS[0],
-                component: EDIT_FIELD_NAME,
                 name: NOT_AUTH_NAME,
-                setEdit: SET_EDIT
-            }]);
-        });
-
-        it('parses editing correctly', () => {
-            EDITING = {
-                [createAuthFieldName(FIELD_NAME, ID)]: true
-            };
-
-            const result = modifyAuthSchemas(
-                FIELDS,
-                ID,
-                EDITING,
-                SET_EDIT
-            );
-
-            expect(result).toEqual([{
-                ...FIELDS[0],
-                name: createAuthFieldName(FIELD_NAME, ID)
             }]);
         });
 
@@ -193,15 +160,11 @@ describe('authentication edit source parser', () => {
             const result = modifyAuthSchemas(
                 FIELDS_WITH_PASSWORD,
                 ID,
-                EDITING,
-                SET_EDIT
             );
 
             expect(result).toEqual([{
-                ...FIELDS[0],
-                component: EDIT_FIELD_NAME,
+                ...FIELDS_WITH_PASSWORD[0],
                 name: createAuthFieldName(PASSWORD_NAME, ID),
-                setEdit: SET_EDIT,
                 isRequired: false,
                 validate: [],
                 helperText: expect.any(Object)
@@ -212,8 +175,6 @@ describe('authentication edit source parser', () => {
     describe('authenticationFields', () => {
         let AUTHENTICATIONS;
         let SOURCE_TYPE;
-        let EDITING;
-        let SET_EDIT;
         let AUTHTYPE;
         let ID;
         let APP_TYPES;
@@ -244,13 +205,7 @@ describe('authentication edit source parser', () => {
                     ]
                 }
             };
-            EDITING = {};
-            SET_EDIT = jest.fn();
             APP_TYPES = applicationTypesData.data;
-        });
-
-        afterEach(() => {
-            SET_EDIT.mockReset();
         });
 
         it('returns empty array when no authentications', () => {
@@ -259,8 +214,6 @@ describe('authentication edit source parser', () => {
             const result = authenticationFields(
                 EMPTY_AUTHENTICATIONS,
                 SOURCE_TYPE,
-                EDITING,
-                SET_EDIT,
                 APP_TYPES
             );
 
@@ -271,8 +224,6 @@ describe('authentication edit source parser', () => {
             const result = authenticationFields(
                 AUTHENTICATIONS,
                 SOURCE_TYPE,
-                EDITING,
-                SET_EDIT,
                 APP_TYPES
             );
 
@@ -292,7 +243,7 @@ describe('authentication edit source parser', () => {
                         auth: AUTHENTICATIONS[0],
                         isDeleting: undefined
                     },
-                    modifyAuthSchemas(FIELDS_WITHOUT_STEPKEYS, ID, EDITING, SET_EDIT)
+                    modifyFields(modifyAuthSchemas(FIELDS_WITHOUT_STEPKEYS, ID))
                 ]
             };
 
@@ -307,8 +258,6 @@ describe('authentication edit source parser', () => {
             const result = authenticationFields(
                 AUTHENTICATIONS,
                 SOURCE_TYPE,
-                EDITING,
-                SET_EDIT,
                 APP_TYPES
             );
 
@@ -347,8 +296,6 @@ describe('authentication edit source parser', () => {
             const result = authenticationFields(
                 UNSUPPORTED_AUTHENTICATIONS,
                 SOURCE_TYPE,
-                EDITING,
-                SET_EDIT,
                 APP_TYPES
             );
 
@@ -368,8 +315,6 @@ describe('authentication edit source parser', () => {
             const result = authenticationFields(
                 AUTHENTICATIONS,
                 SOURCE_TYPE_WITHOUT_SCHEMA,
-                EDITING,
-                SET_EDIT,
                 APP_TYPES
             );
 
@@ -389,8 +334,6 @@ describe('authentication edit source parser', () => {
             const result = authenticationFields(
                 AUTHENTICATIONS,
                 SOURCE_TYPE_WITHOUT_SCHEMA_AUTH,
-                EDITING,
-                SET_EDIT,
                 APP_TYPES
             );
 

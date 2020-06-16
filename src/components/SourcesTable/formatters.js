@@ -2,13 +2,12 @@ import React from 'react';
 
 import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
 import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
-import { Bullseye } from '@patternfly/react-core/dist/js/layouts/Bullseye/Bullseye';
 import { Badge } from '@patternfly/react-core/dist/js/components/Badge/Badge';
 import { Popover } from '@patternfly/react-core/dist/js/components/Popover/Popover';
 import { Tooltip } from '@patternfly/react-core/dist/js/components/Tooltip/Tooltip';
 
 import { FormattedMessage } from 'react-intl';
-import { DateFormat } from '@redhat-cloud-services/frontend-components/components/DateFormat';
+import { DateFormat } from '@redhat-cloud-services/frontend-components/components/cjs/DateFormat';
 
 import ExclamationTriangleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-triangle-icon';
 import CheckCircleIcon from '@patternfly/react-icons/dist/js/icons/check-circle-icon';
@@ -326,18 +325,6 @@ export const availabilityFormatter = (_status, source, { appTypes }) => {
     </TextContent>);
 };
 
-export const sourceTypeIconFormatter = (sourceTypeId, _item, { sourceTypes }) => {
-    const sourceType = sourceTypes.find(({ id }) => id === sourceTypeId);
-
-    if (!sourceType || !sourceType.icon_url) {
-        return null;
-    }
-
-    return (<Bullseye>
-        <img src={sourceType.icon_url} alt={sourceType.product_name} className="ins-c-sources__icon" />
-    </Bullseye>);
-};
-
 export const formatters = (name) => ({
     nameFormatter,
     dateFormatter,
@@ -345,5 +332,4 @@ export const formatters = (name) => ({
     sourceTypeFormatter,
     importedFormatter,
     availabilityFormatter,
-    sourceTypeIconFormatter
 }[name] || defaultFormatter(name));
