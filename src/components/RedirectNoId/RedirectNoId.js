@@ -23,23 +23,23 @@ const RedirectNoId = () => {
         if (loaded && appTypesLoaded && sourceTypesLoaded) {
             doLoadSource(id).then(({ sources: [source] }) => dispatch(addHiddenSource(source)))
             .then(() => {
+                dispatch(addMessage(
+                    intl.formatMessage({
+                        id: 'sources.sourceNotFoundTitle',
+                        defaultMessage: 'Requested source was not found'
+                    }),
+                    'danger',
+                    intl.formatMessage({
+                        id: 'sources.sourceNotFoundTitleDescription',
+                        defaultMessage: 'Source with { id } was not found. Try it again later.'
+                    }, { id })
+                ));
                 setIsApplicationLoaded(true);
             });
         }
     }, [loaded, appTypesLoaded, sourceTypesLoaded]);
 
     if (applicationIsLoaded) {
-        dispatch(addMessage(
-            intl.formatMessage({
-                id: 'sources.sourceNotFoundTitle',
-                defaultMessage: 'Requested source was not found'
-            }),
-            'danger',
-            intl.formatMessage({
-                id: 'sources.sourceNotFoundTitleDescription',
-                defaultMessage: 'Source with { id } was not found. Try it again later.'
-            }, { id })
-        ));
         return <Redirect to={routes.sources.path} />;
     }
 

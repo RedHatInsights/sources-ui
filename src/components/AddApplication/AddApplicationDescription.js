@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 
@@ -10,7 +11,7 @@ import RemoveAppModal from './RemoveAppModal';
 import ApplicationList from '../ApplicationsList/ApplicationList';
 import { useSource } from '../../hooks/useSource';
 
-const AddApplicationDescription = () => {
+const AddApplicationDescription = ({ container }) => {
     const [removingApp, setApplicationToRemove] = useState({});
 
     const sourceTypes = useSelector(({ sources }) => sources.sourceTypes);
@@ -23,7 +24,14 @@ const AddApplicationDescription = () => {
         <React.Fragment>
             {removingApp.id && <RemoveAppModal
                 app={removingApp}
-                onCancel={() => setApplicationToRemove({})}
+                onCancel={() => {
+                    if (container) {
+                        container.hidden = false;
+                    }
+
+                    return setApplicationToRemove({});
+                }}
+                container={container}
             />}
             <TextContent>
                 <Grid gutter="md">
@@ -74,6 +82,10 @@ const AddApplicationDescription = () => {
             </TextContent>
         </React.Fragment>
     );
+};
+
+AddApplicationDescription.propTypes = {
+    container: PropTypes.instanceOf(Element)
 };
 
 export default AddApplicationDescription;
