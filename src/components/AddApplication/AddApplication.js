@@ -9,13 +9,13 @@ import filterApps from '@redhat-cloud-services/frontend-components-sources/cjs/f
 import CloseModal from '@redhat-cloud-services/frontend-components-sources/cjs/CloseModal';
 import LoadingStep from '@redhat-cloud-services/frontend-components-sources/cjs/LoadingStep';
 import ErroredStep from '@redhat-cloud-services/frontend-components-sources/cjs/ErroredStep';
+import FinishedStep from '@redhat-cloud-services/frontend-components-sources/cjs/FinishedStep';
 
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/cjs/form-template';
 
 import { loadEntities } from '../../redux/sources/actions';
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
 import createSchema from './AddApplicationSchema';
-import FinishedStep from './steps/FinishedStep';
 import WizardBody from './WizardBody';
 
 import { getSourcesApi } from '../../api/entities';
@@ -29,6 +29,7 @@ import { doAttachApp } from '../../api/doAttachApp';
 import { checkSourceStatus } from '../../api/checkSourceStatus';
 
 import reducer, { initialState } from './reducer';
+import { Button } from '@patternfly/react-core/dist/js/components/Button';
 
 let selectedApp = undefined; // this has to be not-state value, because it shouldn't re-render the component when changes
 const saveSelectedApp = ({ values: { application } }) => selectedApp = application;
@@ -150,10 +151,35 @@ const AddApplication = () => {
 
     if (state.state !== 'wizard') {
         const shownStep = state.state === 'finished' ? (<FinishedStep
+            title={<FormattedMessage
+                id="sources.configurationSuccessful"
+                defaultMessage="Configuration successful"
+            />}
             onReset={onReset}
-            goToSources={goToSources}
+            onClose={goToSources}
             progressStep={state.progressStep}
             progressTexts={state.progressTexts}
+            hideSourcesButton={true}
+            secondaryActions={
+                <Button variant="link" onClick={onReset}>
+                    <FormattedMessage
+                        id="sources.continueManageApp"
+                        defaultMessage="Continue managing applications"
+                    />
+                </Button>
+            }
+            returnButtonTitle={
+                <FormattedMessage
+                    id="sources.backToSources"
+                    defaultMessage="Back to Sources"
+                />
+            }
+            successfulMessage={
+                <FormattedMessage
+                    id="sources.successAddApp"
+                    defaultMessage="Your application has been successfully added."
+                />
+            }
         />) :
             (<ErroredStep
                 onRetry={onReset}

@@ -11,6 +11,7 @@ import LoadingStep from '@redhat-cloud-services/frontend-components-sources/cjs/
 import ErroredStep from '@redhat-cloud-services/frontend-components-sources/cjs/ErroredStep';
 import CardSelect from '@redhat-cloud-services/frontend-components-sources/cjs/CardSelect';
 import SummaryStep from '@redhat-cloud-services/frontend-components-sources/cjs/SourceWizardSummary';
+import FinishedStep from '@redhat-cloud-services/frontend-components-sources/cjs/FinishedStep';
 
 import { act } from 'react-dom/test-utils';
 
@@ -25,7 +26,6 @@ import { SOURCE_ALL_APS_ID, SOURCE_NO_APS_ID } from '../../__mocks__/sourcesData
 import { applicationTypesData, COSTMANAGEMENT_APP, TOPOLOGICALINVENTORY_APP } from '../../__mocks__/applicationTypesData';
 import AddApplicationDescription from '../../../components/AddApplication/AddApplicationDescription';
 import { routes, replaceRouteId } from '../../../Routes';
-import FinishedStep from '../../../components/AddApplication/steps/FinishedStep';
 import { AuthTypeSetter } from '../../../components/AddApplication/AuthTypeSetter';
 import reducer from '../../../components/AddApplication/reducer';
 
