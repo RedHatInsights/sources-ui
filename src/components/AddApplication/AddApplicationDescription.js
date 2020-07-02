@@ -34,7 +34,7 @@ const AddApplicationDescription = ({ container }) => {
                 container={container}
             />}
             <TextContent>
-                <Grid gutter="md">
+                <Grid hasGutter>
                     <GridItem md={2}>
                         <Text component={TextVariants.h4}>
                             <FormattedMessage
