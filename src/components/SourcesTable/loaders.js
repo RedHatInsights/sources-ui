@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { RowWrapper } from '@patternfly/react-table';
 import { Spinner } from '@patternfly/react-core/dist/js/components/Spinner';
 import { Bullseye } from '@patternfly/react-core/dist/js/layouts/Bullseye';
-import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/PageHeader';
-import { Section } from '@redhat-cloud-services/frontend-components/components/Section';
+import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/cjs/PageHeader';
+import { Section } from '@redhat-cloud-services/frontend-components/components/cjs/Section';
 
 import { COLUMN_COUNT } from '../../views/sourcesViewDefinition';
 

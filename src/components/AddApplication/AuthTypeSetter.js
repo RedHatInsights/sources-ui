@@ -10,7 +10,7 @@ export const innerSetter = ({
     authenticationValues,
     selectedAuthentication
 }) => {
-    if (selectedAuthentication !== 'new') {
+    if (!selectedAuthentication.startsWith('new-')) {
         const authentication = authenticationValues.find(({ id }) => id === selectedAuthentication);
 
         if (modifiedValues && modifiedValues.authentication) {
@@ -20,10 +20,11 @@ export const innerSetter = ({
             formOptions.change('authentication', authentication);
         }
     } else {
+        const authtype = selectedAuthentication.replace('new-', '');
         if (modifiedValues && modifiedValues.authentication) {
-            formOptions.change('authentication', modifiedValues.authentication);
+            formOptions.change('authentication', { ...modifiedValues.authentication, authtype });
         } else {
-            formOptions.change('authentication', undefined);
+            formOptions.change('authentication', { authtype });
         }
     }
 };

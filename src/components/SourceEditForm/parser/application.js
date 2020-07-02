@@ -1,7 +1,8 @@
 import React from 'react';
 import get from 'lodash/get';
-import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
-import { hardcodedSchemas } from '@redhat-cloud-services/frontend-components-sources';
+import componentTypes from '@data-driven-forms/react-form-renderer/dist/cjs/component-types';
+import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
+import hardcodedSchemas from '@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas';
 import { FormattedMessage } from 'react-intl';
 import { modifyFields } from './helpers';
 import { EDIT_FIELD_NAME } from '../../EditField/EditField';
@@ -37,7 +38,7 @@ export const getEnhancedCMField = (sourceType, name, authenticationsTypes) => {
     return field ? field : {};
 };
 
-export const appendClusterIdentifier = (editing, setEdit, sourceType) =>
+export const appendClusterIdentifier = (sourceType) =>
     sourceType.name === 'openshift' ? [{
         name: 'source.source_ref',
         label: <FormattedMessage
@@ -45,16 +46,14 @@ export const appendClusterIdentifier = (editing, setEdit, sourceType) =>
             defaultMessage="Cluster identifier"
         />,
         isRequired: true,
-        ...(editing['source.source_ref'] ? {} : { setEdit }),
         validate: [{ type: validatorTypes.REQUIRED }],
-        component: editing['source.source_ref'] ? componentTypes.TEXT_FIELD : EDIT_FIELD_NAME
+        originalComponent: componentTypes.TEXT_FIELD,
+        component: EDIT_FIELD_NAME
     }] : [];
 
 export const costManagementFields = (
     applications = [],
     sourceType,
-    editing,
-    setEdit,
     appTypes,
     source
 ) => {
@@ -84,8 +83,8 @@ export const costManagementFields = (
         title: costManagementApp.display_name,
         name: costManagementApp.display_name,
         fields: [
-            ...modifyFields(enhandcedFields, editing, setEdit),
-            ...appendClusterIdentifier(editing, setEdit, sourceType)
+            ...modifyFields(enhandcedFields),
+            ...appendClusterIdentifier(sourceType)
         ]
     });
 };
@@ -93,16 +92,12 @@ export const costManagementFields = (
 export const applicationsFields = (
     applications,
     sourceType,
-    editing,
-    setEdit,
     appTypes,
     source
 ) => ([
     costManagementFields(
         applications,
         sourceType,
-        editing,
-        setEdit,
         appTypes,
         source
     )

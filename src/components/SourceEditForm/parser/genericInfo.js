@@ -1,22 +1,22 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { componentTypes } from '@data-driven-forms/react-form-renderer';
-import { asyncValidator } from '@redhat-cloud-services/frontend-components-sources';
+import componentTypes from '@data-driven-forms/react-form-renderer/dist/cjs/component-types';
+import { asyncValidatorDebounced } from '@redhat-cloud-services/frontend-components-sources/cjs/SourceAddSchema';
 import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
 
 import { EDIT_FIELD_NAME } from '../../EditField/EditField';
 
-export const genericInfo = (editing, setEdit, sourceId) => ([
+export const genericInfo = (sourceId) => ([
     {
         name: 'source.name',
         label: <FormattedMessage
             id="sources.sourceName"
             defaultMessage="Source name"
         />,
-        component: editing['source.name'] ? componentTypes.TEXT_FIELD : EDIT_FIELD_NAME,
-        ...(editing['source.name'] ? {} : { setEdit }),
+        originalComponent: componentTypes.TEXT_FIELD,
+        component: EDIT_FIELD_NAME,
         validate: [
-            (value) => asyncValidator(value, sourceId),
+            (value) => asyncValidatorDebounced(value, sourceId),
             { type: validatorTypes.REQUIRED }
         ],
         isRequired: true
@@ -27,6 +27,7 @@ export const genericInfo = (editing, setEdit, sourceId) => ([
             defaultMessage="Source type"
         />,
         isReadOnly: true,
-        component: EDIT_FIELD_NAME
+        component: EDIT_FIELD_NAME,
+        isEditable: false
     }
 ]);

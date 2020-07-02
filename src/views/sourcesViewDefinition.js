@@ -7,10 +7,6 @@ export const sourcesColumns = (intl, notSortable = false) => ([{
     formatter: 'nameFormatter',
     sortable: !notSortable
 }, {
-    hidden: true,
-    value: 'source_type_id',
-    formatter: 'sourceTypeIconFormatter'
-}, {
     title: intl.formatMessage({
         id: 'sources.type',
         defaultMessage: 'Type'
