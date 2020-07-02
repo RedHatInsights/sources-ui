@@ -1,6 +1,6 @@
 import { doAttachApp, removeEmpty } from '../../api/doAttachApp';
 import * as api from '../../api/entities';
-import * as cm from '@redhat-cloud-services/frontend-components-sources';
+import * as cm from '@redhat-cloud-services/frontend-components-sources/cjs/costManagementAuthentication';
 
 const prepareFormApi = (values) => ({
     getState: () => ({
@@ -8,10 +8,9 @@ const prepareFormApi = (values) => ({
     })
 });
 
-jest.mock('@redhat-cloud-services/frontend-components-sources', () => ({
+jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/costManagementAuthentication', () => ({
     __esModule: true,
     patchSource: jest.fn().mockImplementation(() => Promise.resolve('ok')),
-    handleError: (str) => str
 }));
 
 describe('doAttachApp', () => {

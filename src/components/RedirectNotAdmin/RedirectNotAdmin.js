@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { useIntl } from 'react-intl';
@@ -14,21 +14,26 @@ const RedirectNotAdmin = () => {
 
     const dispatch = useDispatch();
 
-    if (isOrgAdmin === false) {
-        const title = intl.formatMessage({
-            id: 'sources.insufficietnPerms',
-            defaultMessage: 'Insufficient permissions'
-        });
-        const description = intl.formatMessage({
-            id: 'sources.notAdminButton',
-            defaultMessage: 'You do not have permission to perform this action.'
-        });
+    useEffect(() => {
+        if (isOrgAdmin === false) {
+            const title = intl.formatMessage({
+                id: 'sources.insufficietnPerms',
+                defaultMessage: 'Insufficient permissions'
+            });
+            const description = intl.formatMessage({
+                id: 'sources.notAdminButton',
+                defaultMessage: 'You do not have permission to perform this action.'
+            });
 
-        dispatch(addMessage(
-            title,
-            'danger',
-            description
-        ));
+            dispatch(addMessage(
+                title,
+                'danger',
+                description
+            ));
+        }
+    }, []);
+
+    if (isOrgAdmin === false) {
         return <Redirect to={routes.sources.path} />;
     }
 

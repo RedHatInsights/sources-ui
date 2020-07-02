@@ -4,6 +4,7 @@ import { Modal, Button, Text } from '@patternfly/react-core';
 import configureStore from 'redux-mock-store';
 import { FormattedMessage } from 'react-intl';
 import { Route } from 'react-router-dom';
+import { act } from 'react-dom/test-utils';
 
 import RemoveAppModal from '../../../components/AddApplication/RemoveAppModal';
 import * as actions from '../../../redux/sources/actions';
@@ -50,7 +51,8 @@ describe('RemoveAppModal', () => {
                 display_name: 'Catalog',
                 dependent_applications: []
             },
-            onCancel: spyOnCancel
+            onCancel: spyOnCancel,
+            container: document.createElement('div')
         };
         initialEntry = [replaceRouteId(routes.sourceManageApps.path, SOURCE_ID)];
     });
@@ -123,6 +125,23 @@ describe('RemoveAppModal', () => {
         expect(wrapper.find(Text)).toHaveLength(1);
         expect(wrapper.find(Text).last().html().includes(APP1_DISPLAY_NAME)).toEqual(false);
         expect(wrapper.find(Text).last().html().includes(APP2_DISPLAY_NAME)).toEqual(false);
+    });
+
+    it('hides container on render', async () => {
+        let wrapper;
+
+        expect(initialProps.container.hidden).toEqual(false);
+
+        await act(async () => {
+            wrapper = mount(componentWrapperIntl(
+                <Route path={routes.sourceManageApps.path} render={ (...args) =>  <RemoveAppModal {...args} {...initialProps}/> } />,
+                store,
+                initialEntry
+            ));
+        });
+        wrapper.update();
+
+        expect(initialProps.container.hidden).toEqual(true);
     });
 
     it('calls cancel', () => {

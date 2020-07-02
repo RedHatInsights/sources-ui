@@ -1,5 +1,8 @@
-import ReducerRegistry, { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/files/ReducerRegistry';
-import { notifications, notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
+import
+ReducerRegistry, { applyReducerHash }
+    from '@redhat-cloud-services/frontend-components-utilities/files/cjs/ReducerRegistry';
+import notificationsMiddleware from '@redhat-cloud-services/frontend-components-notifications/cjs/notificationsMiddleware';
+import notifications from '@redhat-cloud-services/frontend-components-notifications/cjs/notifications';
 import thunk from 'redux-thunk';
 import promise from 'redux-promise-middleware';
 

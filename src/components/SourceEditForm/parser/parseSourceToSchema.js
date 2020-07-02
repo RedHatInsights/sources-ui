@@ -3,11 +3,11 @@ import { authenticationFields } from './authentication';
 import { endpointFields } from './endpoint';
 import { applicationsFields } from './application';
 
-export const parseSourceToSchema = (source, editing, setEdit, sourceType, appTypes) => ({
+export const parseSourceToSchema = (source, sourceType, appTypes) => ({
     fields: [
-        ...genericInfo(editing, setEdit, source.source.id),
-        ...authenticationFields(source.authentications, sourceType, editing, setEdit, appTypes),
-        ...applicationsFields(source.applications, sourceType, editing, setEdit, appTypes, source),
-        source.endpoints && source.endpoints.length > 0 ? endpointFields(sourceType, editing, setEdit) : false
+        ...genericInfo(source.source.id),
+        ...authenticationFields(source.authentications, sourceType, appTypes),
+        ...applicationsFields(source.applications, sourceType, appTypes, source),
+        source.endpoints && source.endpoints.length > 0 ? endpointFields(sourceType) : false
     ].filter(Boolean)
 });
