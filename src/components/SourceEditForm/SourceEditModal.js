@@ -55,7 +55,7 @@ const SourceEditModal = () => {
         if (source && appTypesLoaded && sourceTypesLoaded) {
             const sourceType = sourceTypes.find(({ id }) => id === source.source.source_type_id);
 
-            setState({ type: 'createForm', sourceType, source, appTypes });
+            setState({ type: 'createForm', sourceType, source, appTypes, intl });
         }
     }, [appTypesLoaded, source, sourceTypesLoaded]);
 

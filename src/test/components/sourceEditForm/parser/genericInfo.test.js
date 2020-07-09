@@ -11,6 +11,7 @@ jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/SourceAddSchem
 
 describe('generic info edit form parser', () => {
     const SOURCE_ID = '1233465';
+    const INTL = { formatMessage: jest.fn() };
 
     it('should generate generic info form group', () => {
 
@@ -37,13 +38,13 @@ describe('generic info edit form parser', () => {
             expect.objectContaining(EXPECTED_TYPE_FIELD)
         ];
 
-        expect(genericInfo(SOURCE_ID)).toEqual(EXPECTED_FORM_GROUP);
+        expect(genericInfo(SOURCE_ID, INTL)).toEqual(EXPECTED_FORM_GROUP);
     });
 
     it('should return debounced validate function', () => {
-        const schema = genericInfo(SOURCE_ID);
+        const schema = genericInfo(SOURCE_ID, INTL);
 
-        const returnedFunction = schema[0].validate[0]('some value', SOURCE_ID);
+        const returnedFunction = schema[0].validate[0]('some value', SOURCE_ID, INTL);
 
         expect(returnedFunction).toEqual(expect.any(Function));
     });
