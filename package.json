@@ -99,6 +99,7 @@
     "start": "BETA=true webpack-dev-server --config config/dev.webpack.config.js",
     "travis:build": "webpack --config config/test.webpack.config.js",
     "travis:verify": "npm-run-all travis:build lint test",
-    "verify": "npm-run-all build lint test"
+    "verify": "npm-run-all build lint test",
+    "extract:messages": "npx @formatjs/cli extract 'src/**/*.{js,jsx}' --out-file ./translations/messages.json"
   }
 }
