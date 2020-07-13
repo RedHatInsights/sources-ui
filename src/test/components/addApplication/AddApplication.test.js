@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { EmptyStateBody, Radio } from '@patternfly/react-core';
+import { EmptyStateBody, Radio, Card, Button } from '@patternfly/react-core';
 import { Route, MemoryRouter } from 'react-router-dom';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import configureStore from 'redux-mock-store';
@@ -11,6 +11,7 @@ import LoadingStep from '@redhat-cloud-services/frontend-components-sources/cjs/
 import ErroredStep from '@redhat-cloud-services/frontend-components-sources/cjs/ErroredStep';
 import CardSelect from '@redhat-cloud-services/frontend-components-sources/cjs/CardSelect';
 import SummaryStep from '@redhat-cloud-services/frontend-components-sources/cjs/SourceWizardSummary';
+import FinishedStep from '@redhat-cloud-services/frontend-components-sources/cjs/FinishedStep';
 
 import { act } from 'react-dom/test-utils';
 
@@ -25,7 +26,6 @@ import { SOURCE_ALL_APS_ID, SOURCE_NO_APS_ID } from '../../__mocks__/sourcesData
 import { applicationTypesData, COSTMANAGEMENT_APP, TOPOLOGICALINVENTORY_APP } from '../../__mocks__/applicationTypesData';
 import AddApplicationDescription from '../../../components/AddApplication/AddApplicationDescription';
 import { routes, replaceRouteId } from '../../../Routes';
-import FinishedStep from '../../../components/AddApplication/steps/FinishedStep';
 import { AuthTypeSetter } from '../../../components/AddApplication/AuthTypeSetter';
 import reducer from '../../../components/AddApplication/reducer';
 
@@ -83,8 +83,8 @@ describe('AddApplication', () => {
         expect(wrapper.find(SourcesFormRenderer).length).toEqual(1);
         expect(wrapper.find(AddApplicationDescription).length).toEqual(1);
         expect(wrapper.find(CardSelect).length).toEqual(1);
-        expect(wrapper.find('Card').length).toEqual(1); // one app is not compatible, one app is topology inventory
-        expect(wrapper.find('Button').at(1).text()).toEqual('Next');
+        expect(wrapper.find(Card).length).toEqual(1); // one app is not compatible, one app is topology inventory
+        expect(wrapper.find(Button).at(1).text()).toEqual('Next');
     });
 
     it('loads with endpoint values - not removing of source', async () => {
@@ -137,8 +137,8 @@ describe('AddApplication', () => {
         expect(wrapper.find(SourcesFormRenderer).length).toEqual(1);
         expect(wrapper.find(AddApplicationDescription).length).toEqual(1);
         expect(wrapper.find(CardSelect).length).toEqual(1);
-        expect(wrapper.find('Card').length).toEqual(1);
-        expect(wrapper.find('Button').at(1).text()).toEqual('Next');
+        expect(wrapper.find(Card).length).toEqual(1);
+        expect(wrapper.find(Button).at(1).text()).toEqual('Next');
     });
 
     it('renders correctly when there is no free application - close button instead of next', async () => {
@@ -156,8 +156,8 @@ describe('AddApplication', () => {
         expect(wrapper.find(SourcesFormRenderer).length).toEqual(1);
         expect(wrapper.find(AddApplicationDescription).length).toEqual(1);
         expect(wrapper.find(CardSelect).length).toEqual(0);
-        expect(wrapper.find('Card').length).toEqual(0);
-        expect(wrapper.find('Button').at(3).text()).toEqual('Close');
+        expect(wrapper.find(Card).length).toEqual(0);
+        expect(wrapper.find(Button).at(3).text()).toEqual('Close');
     });
 
     it('renders loading state when is not loaded', async () => {
@@ -180,6 +180,7 @@ describe('AddApplication', () => {
                 initialEntry
             ));
         });
+        wrapper.update();
 
         expect(wrapper.find(LoadingStep)).toHaveLength(1);
         expect(wrapper.find(LoadingStep).props().progressStep).toEqual(undefined);
@@ -261,7 +262,7 @@ describe('AddApplication', () => {
 
         it('closes immedietaly when no value is filled', async () => {
             await act(async () => {
-                const closeButton = wrapper.find('Button').at(0);
+                const closeButton = wrapper.find(Button).at(0);
                 closeButton.simulate('click');
             });
             wrapper.update();
@@ -271,13 +272,13 @@ describe('AddApplication', () => {
 
         it('opens a modal on cancel and closes the wizard', async () => {
             await act(async () => {
-                const firstAppCard = wrapper.find('Card').first();
+                const firstAppCard = wrapper.find(Card).first();
                 firstAppCard.simulate('click');
             });
             wrapper.update();
 
             await act(async () => {
-                const nextButton = wrapper.find('Button').at(1);
+                const nextButton = wrapper.find(Button).at(1);
                 nextButton.simulate('click');
             });
             wrapper.update();
@@ -292,7 +293,7 @@ describe('AddApplication', () => {
             wrapper.update();
 
             await act(async () => {
-                const closeButton = wrapper.find('Button').at(0);
+                const closeButton = wrapper.find(Button).at(0);
                 closeButton.simulate('click');
             });
             wrapper.update();
@@ -300,7 +301,7 @@ describe('AddApplication', () => {
             expect(wrapper.find(CloseModal).props().isOpen).toEqual(true);
 
             await act(async () => {
-                const leaveButton = wrapper.find('Button').at(1);
+                const leaveButton = wrapper.find(Button).at(1);
                 leaveButton.simulate('click');
             });
             wrapper.update();
@@ -310,13 +311,13 @@ describe('AddApplication', () => {
 
         it('opens a modal on cancel and stay on the wizard', async () => {
             await act(async () => {
-                const firstAppCard = wrapper.find('Card').first();
+                const firstAppCard = wrapper.find(Card).first();
                 firstAppCard.simulate('click');
             });
             wrapper.update();
 
             await act(async () => {
-                const nextButton = wrapper.find('Button').at(1);
+                const nextButton = wrapper.find(Button).at(1);
                 nextButton.simulate('click');
             });
             wrapper.update();
@@ -331,7 +332,7 @@ describe('AddApplication', () => {
             wrapper.update();
 
             await act(async () => {
-                const closeButton = wrapper.find('Button').at(0);
+                const closeButton = wrapper.find(Button).at(0);
                 closeButton.simulate('click');
             });
             wrapper.update();
@@ -339,7 +340,7 @@ describe('AddApplication', () => {
             expect(wrapper.find(CloseModal).props().isOpen).toEqual(true);
 
             await act(async () => {
-                const stayButton = wrapper.find('Button').at(0);
+                const stayButton = wrapper.find(Button).at(0);
                 stayButton.simulate('click');
             });
             wrapper.update();
@@ -350,13 +351,13 @@ describe('AddApplication', () => {
 
         it('sets values on retry and do not erase nested original values', async () => {
             await act(async () => {
-                const firstAppCard = wrapper.find('Card').first();
+                const firstAppCard = wrapper.find(Card).first();
                 firstAppCard.simulate('click');
             });
             wrapper.update();
 
             await act(async () => {
-                const nextButton = wrapper.find('Button').at(1);
+                const nextButton = wrapper.find(Button).at(1);
                 nextButton.simulate('click');
             });
             wrapper.update();
@@ -371,7 +372,7 @@ describe('AddApplication', () => {
             wrapper.update();
 
             await act(async () => {
-                const nextButton = wrapper.find('Button').at(1);
+                const nextButton = wrapper.find(Button).at(1);
                 nextButton.simulate('click');
             });
             wrapper.update();
@@ -380,7 +381,7 @@ describe('AddApplication', () => {
             attachSource.doAttachApp = jest.fn().mockImplementation(() => Promise.reject(ERROR));
 
             await act(async () => {
-                const submitButton = wrapper.find('Button').at(1);
+                const submitButton = wrapper.find(Button).at(1);
                 submitButton.simulate('click');
             });
             wrapper.update();
@@ -390,19 +391,19 @@ describe('AddApplication', () => {
             expect(attachSource.doAttachApp).toHaveBeenCalled();
 
             await act(async () => {
-                const retryButton = wrapper.find('Button').at(2);
+                const retryButton = wrapper.find(Button).at(2);
                 retryButton.simulate('click');
             });
             wrapper.update();
 
             await act(async () => {
-                const nextButton = wrapper.find('Button').at(1);
+                const nextButton = wrapper.find(Button).at(1);
                 nextButton.simulate('click');
             });
             wrapper.update();
 
             await act(async () => {
-                const nextButton = wrapper.find('Button').at(1);
+                const nextButton = wrapper.find(Button).at(1);
                 nextButton.simulate('click');
             });
             wrapper.update();
@@ -412,7 +413,7 @@ describe('AddApplication', () => {
             attachSource.doAttachApp = jest.fn().mockImplementation(() => Promise.resolve('OK'));
 
             await act(async () => {
-                const submitButton = wrapper.find('Button').at(1);
+                const submitButton = wrapper.find(Button).at(1);
                 submitButton.simulate('click');
             });
             wrapper.update();
@@ -483,13 +484,13 @@ describe('AddApplication', () => {
             wrapper.update();
 
             await act(async () => {
-                const firstAppCard = wrapper.find('Card').first();
+                const firstAppCard = wrapper.find(Card).first();
                 firstAppCard.simulate('click');
             });
             wrapper.update();
 
             await act(async () => {
-                const nextButton = wrapper.find('Button').at(2);
+                const nextButton = wrapper.find(Button).at(2);
                 nextButton.simulate('click');
             });
             wrapper.update();
@@ -504,7 +505,7 @@ describe('AddApplication', () => {
             wrapper.update();
 
             await act(async () => {
-                const nextButton = wrapper.find('Button').at(1);
+                const nextButton = wrapper.find(Button).at(1);
                 nextButton.simulate('click');
             });
             wrapper.update();
@@ -519,7 +520,7 @@ describe('AddApplication', () => {
             wrapper.update();
 
             await act(async () => {
-                const nextButton = wrapper.find('Button').at(1);
+                const nextButton = wrapper.find(Button).at(1);
                 nextButton.simulate('click');
             });
             wrapper.update();
@@ -529,7 +530,7 @@ describe('AddApplication', () => {
             attachSource.doAttachApp = jest.fn().mockImplementation(() => Promise.resolve('OK'));
 
             await act(async () => {
-                const submitButton = wrapper.find('Button').at(1);
+                const submitButton = wrapper.find(Button).at(1);
                 submitButton.simulate('click');
             });
             wrapper.update();
@@ -584,19 +585,19 @@ describe('AddApplication', () => {
             ));
 
             await act(async () => {
-                const firstAppCard = wrapper.find('Card').first();
+                const firstAppCard = wrapper.find(Card).first();
                 firstAppCard.simulate('click');
             });
             wrapper.update();
 
             await act(async () => {
-                const nextButton = wrapper.find('Button').at(1);
+                const nextButton = wrapper.find(Button).at(1);
                 nextButton.simulate('click');
             });
             wrapper.update();
 
             expect(wrapper.find(SummaryStep)).toHaveLength(1);
-            expect(wrapper.find('Button').at(1).text()).toEqual('Add');
+            expect(wrapper.find(Button).at(1).text()).toEqual('Add');
         });
 
         it('calls on submit function', async () => {
@@ -612,18 +613,18 @@ describe('AddApplication', () => {
             ));
 
             await act(async () => {
-                wrapper.find('Card').first().simulate('click');
-                wrapper.find('Button').at(1).simulate('click');
+                wrapper.find(Card).first().simulate('click');
+                wrapper.find(Button).at(1).simulate('click');
             });
             wrapper.update();
 
             await act(async () => {
-                wrapper.find('Button').at(1).simulate('click');
+                wrapper.find(Button).at(1).simulate('click');
             });
             wrapper.update();
 
             await act(async () => {
-                wrapper.find('Button').at(1).simulate('click');
+                wrapper.find(Button).at(1).simulate('click');
             });
             wrapper.update();
 
@@ -662,18 +663,18 @@ describe('AddApplication', () => {
             ));
 
             await act(async () => {
-                wrapper.find('Card').first().simulate('click');
-                wrapper.find('Button').at(1).simulate('click');
+                wrapper.find(Card).first().simulate('click');
+                wrapper.find(Button).at(1).simulate('click');
             });
             wrapper.update();
 
             await act(async () => {
-                wrapper.find('Button').at(1).simulate('click');
+                wrapper.find(Button).at(1).simulate('click');
             });
             wrapper.update();
 
             await act(async () => {
-                wrapper.find('Button').at(1).simulate('click');
+                wrapper.find(Button).at(1).simulate('click');
             });
             wrapper.update();
 
@@ -711,19 +712,19 @@ describe('AddApplication', () => {
             ));
 
             await act(async () => {
-                wrapper.find('Card').first().simulate('click');
-                wrapper.find('Button').at(1).simulate('click');
+                wrapper.find(Card).first().simulate('click');
+                wrapper.find(Button).at(1).simulate('click');
             });
             wrapper.update();
 
             await act(async () => {
-                wrapper.find('Button').at(1).simulate('click');
+                wrapper.find(Button).at(1).simulate('click');
             });
             wrapper.update();
 
             jest.useFakeTimers();
             await act(async () => {
-                wrapper.find('Button').at(1).simulate('click');
+                wrapper.find(Button).at(1).simulate('click');
             });
             jest.useRealTimers();
 

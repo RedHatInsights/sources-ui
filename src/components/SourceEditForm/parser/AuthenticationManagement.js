@@ -33,7 +33,7 @@ const AuthenticationManagement = ({ schemaAuth, auth, appTypes, isDeleting }) =>
 
     return (
         <GridItem sm={12}>
-            <Title size="xl">{schemaAuth.name}&nbsp;
+            <Title headingLevel="h1" size="xl">{schemaAuth.name}&nbsp;
                 {!isDeleting &&
                     <Button variant="plain" aria-label="Remove authentication" onClick={setAuthRemoving}>
                         <TrashIcon />
