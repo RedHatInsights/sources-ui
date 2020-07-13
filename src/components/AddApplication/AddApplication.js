@@ -136,12 +136,11 @@ const AddApplication = () => {
             <WizardBody
                 goToSources={goToSources}
                 step={<LoadingStep
-                    progressStep={state.progressStep}
-                    progressTexts={state.progressTexts}
                     cancelTitle={<FormattedMessage
                         id="sources.cancel"
                         defaultMessage="Cancel"
                     />}
+                    customText={<FormattedMessage id="wizard.loadingText" defaultMessage="Validating source credentials"/>}
                 />}
             />
         );
@@ -157,8 +156,6 @@ const AddApplication = () => {
             />}
             onReset={onReset}
             onClose={goToSources}
-            progressStep={state.progressStep}
-            progressTexts={state.progressTexts}
             hideSourcesButton={true}
             secondaryActions={
                 <Button variant="link" onClick={onReset}>
@@ -185,8 +182,6 @@ const AddApplication = () => {
                 onRetry={onReset}
                 onClose={goToSources}
                 message={state.error}
-                progressStep={state.progressStep}
-                progressTexts={state.progressTexts}
                 customText={<FormattedMessage
                     id="sources.successAddApp"
                     defaultMessage="Your application has not been successfully added:"

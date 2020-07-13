@@ -7,7 +7,6 @@ import cloneDeep from 'lodash/cloneDeep';
 
 import { getSourcesApi, doCreateApplication } from './entities';
 import { urlOrHost } from './doUpdateSource';
-import createProgressTextsApp from '../components/AddApplication/steps/createProgressTextsApp';
 
 // modification of https://stackoverflow.com/a/38340374
 export const removeEmpty = (obj) => {
@@ -26,7 +25,7 @@ export const removeEmpty = (obj) => {
 };
 
 export const doAttachApp = async (
-    values, formApi, authenticationInitialValues, initialValues, setState = () => {}, intl = () => {}
+    values, formApi, authenticationInitialValues, initialValues
 ) => {
     const formState = formApi.getState();
 
@@ -51,8 +50,6 @@ export const doAttachApp = async (
             ...merge(cloneDeep(newAddedAuthValues), updatedAuthValues)
         }
     });
-
-    setState({ type: 'setProgressTexts', progressTexts: createProgressTextsApp(filteredValues, allFormValues, intl) });
 
     try {
         if (!allFormValues.source || !allFormValues.source.id) {
@@ -98,7 +95,6 @@ export const doAttachApp = async (
                 };
 
                 const endpoint = await getSourcesApi().createEndpoint(createEndpointData);
-                setState({ type: 'increaseProgressStep' });
                 endpointId = endpoint.id;
             }
         } else {
@@ -129,7 +125,6 @@ export const doAttachApp = async (
 
         // eslint-disable-next-line no-unused-vars
         const [_sourceDataOut, _endpointDataOut, authenticationDataOut, applicationDataOut] = await Promise.all(promises);
-        setState({ type: 'increaseProgressStep' });
 
         const authenticationId = selectedAuthId ? selectedAuthId : authenticationDataOut ? authenticationDataOut.id : undefined;
 
@@ -154,7 +149,6 @@ export const doAttachApp = async (
         }
 
         await Promise.all(promisesSecondRound);
-        setState({ type: 'increaseProgressStep' });
     } catch (error) {
         const errorMessage = await handleError(error);
         throw errorMessage;
