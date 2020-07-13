@@ -14,7 +14,7 @@ then
     done
 fi
 
-if [ "${TRAVIS_BRANCH}" = "master-stable" ]
+if [ "${TRAVIS_BRANCH}" = "stable" ]
 then
     for env in ci qa
     do
