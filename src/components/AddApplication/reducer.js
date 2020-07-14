@@ -5,12 +5,10 @@ export const initialState = {
     authenticationsValues: [],
     sourceAppsLength: 0,
     initialValues: {},
-    progressStep: 0,
-    progressTexts: [],
     isCancelling: false,
 };
 
-const reducer = (state, { type, length, authenticationsValues, initialValues, error, values, progressTexts }) => {
+const reducer = (state, { type, length, authenticationsValues, initialValues, error, values }) => {
     switch (type) {
         case 'setSourceAppslength':
             return {
@@ -41,14 +39,11 @@ const reducer = (state, { type, length, authenticationsValues, initialValues, er
             return {
                 ...state,
                 state: 'submitting',
-                progressStep: 0,
-                progressTexts: ['Preparing']
             };
         case 'finish':
             return {
                 ...state,
                 state: 'finished',
-                progressStep: ++state.progressStep
             };
         case 'error':
             return {
@@ -56,16 +51,6 @@ const reducer = (state, { type, length, authenticationsValues, initialValues, er
                 state: 'errored',
                 error,
                 values
-            };
-        case 'setProgressTexts':
-            return {
-                ...state,
-                progressTexts
-            };
-        case 'increaseProgressStep':
-            return {
-                ...state,
-                progressStep: ++state.progressStep
             };
         case 'toggleCancelling':
             return {

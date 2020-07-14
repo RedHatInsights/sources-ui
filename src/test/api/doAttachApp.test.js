@@ -38,9 +38,6 @@ describe('doAttachApp', () => {
 
     let mockPatchSourceSpy;
 
-    let setState;
-    let intl;
-
     beforeEach(() => {
         mockPatchSourceSpy = jest.spyOn(cm, 'patchSource');
 
@@ -84,9 +81,6 @@ describe('doAttachApp', () => {
         };
         FORM_API = prepareFormApi(INITIAL_VALUES);
         AUTHENTICATION_INIT = [];
-
-        setState = jest.fn();
-        intl = { formatMessage: jest.fn(({ defaultMessage }) => defaultMessage) };
     });
 
     afterEach(() => {
@@ -105,7 +99,7 @@ describe('doAttachApp', () => {
         FORM_API = prepareFormApi({});
 
         try {
-            await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES, setState, intl);
+            await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
         } catch (error) {
             expect(error).toEqual('Missing source id');
 
@@ -127,7 +121,7 @@ describe('doAttachApp', () => {
             }
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES, setState, intl);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).not.toHaveBeenCalled();
@@ -146,7 +140,7 @@ describe('doAttachApp', () => {
             }
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES, setState, intl);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).toHaveBeenCalledWith(SOURCE_ID, {
@@ -182,7 +176,7 @@ describe('doAttachApp', () => {
             }
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES, setState, intl);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).toHaveBeenCalledWith(SOURCE_ID, {
@@ -246,7 +240,7 @@ describe('doAttachApp', () => {
             }
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES, setState, intl);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).toHaveBeenCalledWith(SOURCE_ID, {
@@ -290,7 +284,7 @@ describe('doAttachApp', () => {
             }
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES, setState, intl);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).not.toHaveBeenCalled();
@@ -325,7 +319,7 @@ describe('doAttachApp', () => {
             }
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES, setState, intl);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).not.toHaveBeenCalled();
@@ -358,7 +352,7 @@ describe('doAttachApp', () => {
             endpoint: { }
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES, setState, intl);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).not.toHaveBeenCalled();
@@ -386,7 +380,7 @@ describe('doAttachApp', () => {
             url: 'https://redhat.com:8989/mypage'
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES, setState, intl);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).not.toHaveBeenCalled();
@@ -430,7 +424,7 @@ describe('doAttachApp', () => {
             id: AUTH_ID
         }];
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES, setState, intl);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).not.toHaveBeenCalled();
@@ -473,7 +467,7 @@ describe('doAttachApp', () => {
             removed: 'this was removed'
         }];
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES, setState, intl);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).not.toHaveBeenCalled();
@@ -506,7 +500,7 @@ describe('doAttachApp', () => {
             }
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES, setState, intl);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).not.toHaveBeenCalled();
@@ -527,7 +521,7 @@ describe('doAttachApp', () => {
             url: 'https://redhat.com:8989/mypage'
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES, setState, intl);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).not.toHaveBeenCalled();
@@ -554,7 +548,7 @@ describe('doAttachApp', () => {
             }
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES, setState, intl);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).not.toHaveBeenCalled();
@@ -584,7 +578,7 @@ describe('doAttachApp', () => {
             }
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES, setState, intl);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).not.toHaveBeenCalled();
@@ -603,7 +597,7 @@ describe('doAttachApp', () => {
             nonsense: 'Z7SHADZUSAgd'
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES, setState, intl);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).toHaveBeenCalledWith({
             id: SOURCE_ID,
@@ -627,7 +621,7 @@ describe('doAttachApp', () => {
             nonsense: 'Z7SHADZUSAgd'
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES, setState, intl);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).toHaveBeenCalledWith({
             id: SOURCE_ID,
@@ -648,7 +642,7 @@ describe('doAttachApp', () => {
             nonsense: 'Z7SHADZUSAgd'
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES, setState, intl);
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).toHaveBeenCalledWith({
             id: SOURCE_ID,
@@ -677,7 +671,7 @@ describe('doAttachApp', () => {
                 }
             };
 
-            await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES, setState, intl);
+            await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
             expect(mockPatchSourceSpy).not.toHaveBeenCalled();
             expect(sourceUpdate).not.toHaveBeenCalled();
@@ -722,7 +716,7 @@ describe('doAttachApp', () => {
                 id: AUTH_ID
             }];
 
-            await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES, setState, intl);
+            await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
             expect(mockPatchSourceSpy).not.toHaveBeenCalled();
             expect(sourceUpdate).not.toHaveBeenCalled();
