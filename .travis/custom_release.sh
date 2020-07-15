@@ -2,7 +2,7 @@
 set -e
 set -x
 
-NODE_ENV=production npm run build
+npm run build
 
 if [ "${TRAVIS_BRANCH}" = "master" ]
 then
