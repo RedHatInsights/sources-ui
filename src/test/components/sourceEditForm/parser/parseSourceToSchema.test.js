@@ -9,6 +9,7 @@ describe('parseSourceToSchema', () => {
     let SOURCE;
     let SOURCE_TYPE;
     let APP_TYPES;
+    let INTL;
 
     beforeEach(() => {
         SOURCE = {
@@ -32,6 +33,7 @@ describe('parseSourceToSchema', () => {
             }
         };
         APP_TYPES = [];
+        INTL = { formatMessage: jest.fn() };
 
         gen.genericInfo = jest.fn().mockImplementation(() => ([]));
         auth.authenticationFields = jest.fn().mockImplementation(() => ([]));
@@ -43,11 +45,13 @@ describe('parseSourceToSchema', () => {
         parseSourceToSchema(
             SOURCE,
             SOURCE_TYPE,
-            APP_TYPES
+            APP_TYPES,
+            INTL
         );
 
         expect(gen.genericInfo).toHaveBeenCalledWith(
-            SOURCE.source.id
+            SOURCE.source.id,
+            INTL
         );
         expect(auth.authenticationFields).toHaveBeenCalledWith(
             SOURCE.authentications,
@@ -74,11 +78,13 @@ describe('parseSourceToSchema', () => {
         parseSourceToSchema(
             SOURCE_WITH_NO_ENDPOINT,
             SOURCE_TYPE,
-            APP_TYPES
+            APP_TYPES,
+            INTL
         );
 
         expect(gen.genericInfo).toHaveBeenCalledWith(
-            SOURCE.source.id
+            SOURCE.source.id,
+            INTL
         );
         expect(auth.authenticationFields).toHaveBeenCalledWith(
             SOURCE.authentications,
@@ -103,11 +109,13 @@ describe('parseSourceToSchema', () => {
         parseSourceToSchema(
             SOURCE_WITH_NO_ENDPOINT,
             SOURCE_TYPE,
-            APP_TYPES
+            APP_TYPES,
+            INTL
         );
 
         expect(gen.genericInfo).toHaveBeenCalledWith(
-            SOURCE.source.id
+            SOURCE.source.id,
+            INTL
         );
         expect(auth.authenticationFields).toHaveBeenCalledWith(
             SOURCE.authentications,
@@ -136,7 +144,8 @@ describe('parseSourceToSchema', () => {
         const result = parseSourceToSchema(
             SOURCE,
             SOURCE_TYPE,
-            APP_TYPES
+            APP_TYPES,
+            INTL
         );
 
         expect(result).toEqual({ fields: FILTERED_FIELDS });
