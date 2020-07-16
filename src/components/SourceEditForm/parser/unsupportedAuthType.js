@@ -1,22 +1,32 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import PropTypes from 'prop-types';
+import { useIntl } from 'react-intl';
 
 import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
 import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
 
-export const unsupportedAuthTypeField = (type) => ({
-    component: 'description',
-    name: `${type}-unsupported`,
-    // eslint-disable-next-line react/display-name
-    Content: () => (
+export const Content = ({ authtype }) => {
+    const intl = useIntl();
+
+    return (
         <TextContent>
             <Text component={ TextVariants.p }>
-                <FormattedMessage
-                    id="sources.unsupportedAuthType"
-                    defaultMessage={`Authentication type of { type } is no longer supported.`}
-                    values={{ type }}
-                />
+                { intl.formatMessage({
+                    id: 'sources.unsupportedAuthType',
+                    defaultMessage: 'Authentication type of { authtype } is no longer supported.'
+                }, { authtype }) }
             </Text>
         </TextContent>
-    )
+    );
+};
+
+Content.propTypes = {
+    authtype: PropTypes.string
+};
+
+export const unsupportedAuthTypeField = (authtype) => ({
+    component: 'description',
+    name: `${authtype}-unsupported`,
+    authtype,
+    Content
 });

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
-import { useIntl, FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
 import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
@@ -77,37 +77,31 @@ const RemoveAppModal = ({ app, onCancel, container }) => {
                 <Button
                     id="deleteSubmit" key="submit" variant="danger" type="button" onClick={ onSubmit }
                 >
-                    <FormattedMessage
-                        id="sources.remove"
-                        defaultMessage="Remove application"
-                    />
+                    { intl.formatMessage({
+                        id: 'sources.remove',
+                        defaultMessage: 'Remove application'
+                    }) }
                 </Button>,
                 <Button id="deleteCancel" key="cancel" variant="link" type="button" onClick={ onCancel }>
-                    <FormattedMessage
-                        id="sources.cancel"
-                        defaultMessage="Cancel"
-                    />
+                    { intl.formatMessage({
+                        id: 'sources.cancel',
+                        defaultMessage: 'Cancel'
+                    }) }
                 </Button>
             ]}
         >
             <TextContent>
                 <Text component={TextVariants.p}>
-                    <FormattedMessage
-                        id="sources.deleteAppWarning"
-                        defaultMessage={`Are you sure to remove { appName } from this source?`}
-                        values={{
-                            appName: <b>{app.display_name}</b>
-                        }}
-                    />
+                    { intl.formatMessage({
+                        id: 'sources.deleteAppWarning',
+                        defaultMessage: 'Are you sure to remove { appName } from this source?'
+                    }, { appName: <b key="b">{app.display_name}</b> }) }
                 </Text>
                 {dependentApps.length > 0 && <Text component={TextVariants.p}>
-                    <FormattedMessage
-                        id="sources.deleteAppDetails"
-                        defaultMessage={`This change will affect these applications: { apps }.`}
-                        values={{
-                            apps: dependentApps
-                        }}
-                    />
+                    { intl.formatMessage({
+                        id: 'sources.deleteAppDetails',
+                        defaultMessage: 'This change will affect these applications: { apps }.'
+                    }, { apps: dependentApps }) }
                 </Text>}
             </TextContent>
         </Modal>

@@ -7,12 +7,13 @@ import { EmptyStateBody } from '@patternfly/react-core/dist/js/components/EmptyS
 import { Bullseye } from '@patternfly/react-core/dist/js/layouts/Bullseye/Bullseye';
 import { Title } from '@patternfly/react-core/dist/js/components/Title/Title';
 import SearchIcon from '@patternfly/react-icons/dist/js/icons/search-icon';
-import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 
 import { clearFilters } from '../../redux/sources/actions';
 
 const EmptyStateTable = () => {
+    const intl = useIntl();
     const dispatch = useDispatch();
 
     return (
@@ -20,23 +21,23 @@ const EmptyStateTable = () => {
             <EmptyState variant={EmptyStateVariant.small}>
                 <EmptyStateIcon icon={SearchIcon} />
                 <Title headingLevel="h2" size="lg">
-                    <FormattedMessage
-                        defaultMessage="No sources found"
-                        id="sources.noResultsFoundTitle"
-                    />
+                    { intl.formatMessage({
+                        id: 'sources.noResultsFoundTitle',
+                        defaultMessage: 'No sources found'
+                    }) }
                 </Title>
                 <EmptyStateBody>
-                    <FormattedMessage
-                        defaultMessage="No sources match the filter criteria. Remove
-                    all filters or clear all filters to show sources."
-                        id="sources.noResultsFoundDescription"
-                    />
+                    { intl.formatMessage({
+                        id: 'sources.noResultsFoundDescription',
+                        // eslint-disable-next-line max-len
+                        defaultMessage: 'No sources match the filter criteria. Remove all filters or clear all filters to show sources.'
+                    }) }
                 </EmptyStateBody>
                 <Button variant="link" onClick={() => dispatch(clearFilters())}>
-                    <FormattedMessage
-                        defaultMessage="Clear all filters"
-                        id="sources.clearAllFilters"
-                    />
+                    { intl.formatMessage({
+                        id: 'sources.clearAllFilters',
+                        defaultMessage: 'Clear all filters'
+                    }) }
                 </Button>
             </EmptyState>
         </Bullseye>

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import get from 'lodash/get';
-import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 import componentTypes from '@data-driven-forms/react-form-renderer/dist/cjs/component-types';
 import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
@@ -11,18 +11,20 @@ import { TextContent } from '@patternfly/react-core/dist/js/components/Text/Text
 
 import { AuthTypeSetter } from '../AuthTypeSetter';
 
-export const SelectAuthenticationDescription = ({ applicationTypeName, authenticationTypeName }) => (
-    <TextContent>
-        <Text component={ TextVariants.p }>
-            <FormattedMessage
-                id="sources.selectAuthenticationDescription"
-                defaultMessage="Selected application { applicationTypeName } supports { authenticationTypeName } authentication
-                type. You can use already defined authentication values or define new."
-                values={{ applicationTypeName, authenticationTypeName }}
-            />
-        </Text>
-    </TextContent>
-);
+export const SelectAuthenticationDescription = ({ applicationTypeName, authenticationTypeName }) => {
+    const intl = useIntl();
+
+    return (
+        <TextContent>
+            <Text component={ TextVariants.p }>
+                { intl.formatMessage({
+                    id: 'sources.selectAuthenticationDescription',
+                    // eslint-disable-next-line max-len
+                    defaultMessage: 'Selected application { applicationTypeName } supports { authenticationTypeName } authentication type. You can use already defined authentication values or define new.'
+                }, { applicationTypeName, authenticationTypeName }) }
+            </Text>
+        </TextContent>
+    );};
 
 SelectAuthenticationDescription.propTypes = {
     applicationTypeName: PropTypes.string,

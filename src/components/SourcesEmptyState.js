@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
 import { EmptyState } from '@patternfly/react-core/dist/js/components/EmptyState/EmptyState';
@@ -17,6 +17,7 @@ import { useIsOrgAdmin } from '../hooks/useIsOrgAdmin';
 
 const SourcesEmptyState = ({ title, body }) => {
     const isOrgAdmin = useIsOrgAdmin();
+    const intl = useIntl();
 
     return (
         <Bullseye>
@@ -24,24 +25,21 @@ const SourcesEmptyState = ({ title, body }) => {
                 <EmptyStateIcon icon={WrenchIcon} />
                 <Title headingLevel="h5" size="lg">
                     {title ? title :
-                        <FormattedMessage
-                            id="sources.emptyStateTitle"
-                            defaultMessage="No sources"
-                        />
+                        intl.formatMessage({ id: 'sources.emptyStateTitle', defaultMessage: 'No sources' })
                     }
                 </Title>
                 <EmptyStateBody>
                     {body ? body :
-                        isOrgAdmin && <FormattedMessage
-                            id="sources.emptyStateBody"
-                            defaultMessage="No sources have been defined. To start define a source."
-                        />}
+                        isOrgAdmin && intl.formatMessage({
+                            id: 'sources.emptyStateBody',
+                            defaultMessage: 'No sources have been defined. To start define a source.'
+                        })}
                     {!isOrgAdmin && <React.Fragment>
                         <br />
-                        <FormattedMessage
-                            id="sources.emptyStateBodyNotAdmin"
-                            defaultMessage="You do not have permission to define sources."
-                        />
+                        {intl.formatMessage({
+                            id: 'sources.emptyStateBodyNotAdmin',
+                            defaultMessage: 'You do not have permission to define sources.'
+                        })}
                     </React.Fragment>}
                 </EmptyStateBody>
                 {isOrgAdmin ? <Link to={routes.sourcesNew.path}>
@@ -49,10 +47,10 @@ const SourcesEmptyState = ({ title, body }) => {
                         style={{ marginTop: 'var(--pf-c-empty-state--c-button--MarginTop)' }}
                         variant="primary"
                     >
-                        <FormattedMessage
-                            id="sources.emptyStateButton"
-                            defaultMessage="Add source"
-                        />
+                        { intl.formatMessage({
+                            id: 'sources.emptyStateButton',
+                            defaultMessage: 'Add source'
+                        }) }
                     </Button>
                 </Link> :
                     <Button
@@ -60,10 +58,10 @@ const SourcesEmptyState = ({ title, body }) => {
                         variant="primary"
                         isDisabled
                     >
-                        <FormattedMessage
-                            id="sources.emptyStateButton"
-                            defaultMessage="Add source"
-                        />
+                        { intl.formatMessage({
+                            id: 'sources.emptyStateButton',
+                            defaultMessage: 'Add source'
+                        }) }
                     </Button>
                 }
             </EmptyState>

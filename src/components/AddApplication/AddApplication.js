@@ -1,7 +1,7 @@
 import React, { useReducer, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
-import { useIntl, FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
 import merge from 'lodash/merge';
 import cloneDeep from 'lodash/cloneDeep';
 
@@ -122,10 +122,10 @@ const AddApplication = () => {
                         id: 'sources.loading',
                         defaultMessage: 'Loading, please wait.'
                     })}
-                    cancelTitle={<FormattedMessage
-                        id="sources.cancel"
-                        defaultMessage="Cancel"
-                    />}
+                    cancelTitle={intl.formatMessage({
+                        id: 'sources.cancel',
+                        defaultMessage: 'Cancel'
+                    })}
                 />}
             />
         );
@@ -136,11 +136,14 @@ const AddApplication = () => {
             <WizardBody
                 goToSources={goToSources}
                 step={<LoadingStep
-                    cancelTitle={<FormattedMessage
-                        id="sources.cancel"
-                        defaultMessage="Cancel"
-                    />}
-                    customText={<FormattedMessage id="wizard.loadingText" defaultMessage="Validating source credentials"/>}
+                    cancelTitle={intl.formatMessage({
+                        id: 'sources.cancel',
+                        defaultMessage: 'Cancel'
+                    })}
+                    customText={intl.formatMessage({
+                        id: 'wizard.loadingText defaultMessage=Validating source credentials',
+                        defaultMessage: 'Validating source credentials'
+                    })}
                 />}
             />
         );
@@ -150,54 +153,57 @@ const AddApplication = () => {
 
     if (state.state !== 'wizard') {
         const shownStep = state.state === 'finished' ? (<FinishedStep
-            title={<FormattedMessage
-                id="sources.configurationSuccessful"
-                defaultMessage="Configuration successful"
-            />}
+            title={intl.formatMessage({
+                id: 'sources.configurationSuccessful',
+                defaultMessage: 'Configuration successful'
+            })}
             onReset={onReset}
             onClose={goToSources}
             hideSourcesButton={true}
             secondaryActions={
                 <Button variant="link" onClick={onReset}>
-                    <FormattedMessage
-                        id="sources.continueManageApp"
-                        defaultMessage="Continue managing applications"
-                    />
+                    { intl.formatMessage({
+                        id: 'sources.continueManageApp',
+                        defaultMessage: 'Continue managing applications'
+                    }) }
                 </Button>
             }
             returnButtonTitle={
-                <FormattedMessage
-                    id="sources.backToSources"
-                    defaultMessage="Back to Sources"
-                />
+                intl.formatMessage({
+                    id: 'sources.backToSources',
+                    defaultMessage: 'Back to Sources'
+                })
+
             }
             successfulMessage={
-                <FormattedMessage
-                    id="sources.successAddApp"
-                    defaultMessage="Your application has been successfully added."
-                />
+                intl.formatMessage({
+                    id: 'sources.successAddApp',
+                    defaultMessage: 'Your application has been successfully added.'
+                })
             }
         />) :
             (<ErroredStep
                 onRetry={onReset}
                 onClose={goToSources}
                 message={state.error}
-                customText={<FormattedMessage
-                    id="sources.successAddApp"
-                    defaultMessage="Your application has not been successfully added:"
-                />}
-                title={<FormattedMessage
-                    id="sources.configurationSuccessful"
-                    defaultMessage="Configuration unsuccessful"
-                />}
-                returnButtonTitle={<FormattedMessage
-                    id="sources.backToSources"
-                    defaultMessage="Back to Sources"
-                />}
-                retryText={<FormattedMessage
-                    id="sources.retry"
-                    defaultMessage="Retry"
-                />}
+                customText={intl.formatMessage({
+                    id: 'sources.successAddApp',
+                    defaultMessage: 'Your application has not been successfully added:'
+                })
+                }
+                title={intl.formatMessage({
+                    id: 'sources.configurationSuccessful',
+                    defaultMessage: 'Configuration unsuccessful'
+                })}
+                returnButtonTitle={intl.formatMessage({
+                    id: 'sources.backToSources',
+                    defaultMessage: 'Back to Sources'
+                })
+                }
+                retryText={intl.formatMessage({
+                    id: 'sources.retry',
+                    defaultMessage: 'Retry'
+                })}
             />);
 
         return (
