@@ -55,7 +55,7 @@ const SourceEditModal = () => {
         if (source && appTypesLoaded && sourceTypesLoaded) {
             const sourceType = sourceTypes.find(({ id }) => id === source.source.source_type_id);
 
-            setState({ type: 'createForm', sourceType, source, appTypes });
+            setState({ type: 'createForm', sourceType, source, appTypes, intl });
         }
     }, [appTypesLoaded, source, sourceTypesLoaded]);
 
@@ -66,13 +66,13 @@ const SourceEditModal = () => {
     if (isLoading) {
         return (
             <Modal
-                title={intl.formatMessage({
+                aria-label={intl.formatMessage({
                     id: 'sources.editSource',
                     defaultMessage: 'Edit source.'
                 })}
                 header={<Header />}
                 isOpen={true}
-                isLarge
+                variant="large"
                 onClose={returnToSources}
             >
                 <div className="ins-c-sources__dialog--spinnerContainer">
@@ -87,13 +87,13 @@ const SourceEditModal = () => {
             <sourceEditContext.Provider value={{ setState, source, editing }}>
                 {state.isAuthRemoving && <RemoveAuth {...state.isAuthRemoving}/>}
                 <Modal
-                    title={intl.formatMessage({
+                    aria-label={intl.formatMessage({
                         id: 'sources.editSource',
                         defaultMessage: 'Edit source.'
                     })}
                     header={<Header />}
                     isOpen={!state.isAuthRemoving}
-                    isLarge
+                    variant="large"
                     onClose={returnToSources}
                 >
                     <SourcesFormRenderer
