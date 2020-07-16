@@ -2,7 +2,7 @@
 set -e
 set -x
 
-NODE_ENV=production npm run build
+npm run build
 
 if [ "${TRAVIS_BRANCH}" = "master" ]
 then
@@ -14,7 +14,7 @@ then
     done
 fi
 
-if [ "${TRAVIS_BRANCH}" = "master-stable" ]
+if [ "${TRAVIS_BRANCH}" = "stable" ]
 then
     for env in ci qa
     do

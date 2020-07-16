@@ -183,8 +183,6 @@ describe('AddApplication', () => {
         wrapper.update();
 
         expect(wrapper.find(LoadingStep)).toHaveLength(1);
-        expect(wrapper.find(LoadingStep).props().progressStep).toEqual(undefined);
-        expect(wrapper.find(LoadingStep).props().progressTexts).toEqual(undefined);
     });
 
     describe('custom type - integration tests', () => {
@@ -731,21 +729,10 @@ describe('AddApplication', () => {
             wrapper.update();
 
             expect(wrapper.find(LoadingStep).length).toEqual(1);
-            expect(wrapper.find(LoadingStep).props().progressStep).toEqual(0);
-            expect(wrapper.find(LoadingStep).props().progressTexts).toEqual(['Preparing']);
         });
     });
 
     describe('reducer', () => {
-        it('set progressTexts', () => {
-            const progressTexts = ['aa', 'bb'];
-            expect(reducer({}, { type: 'setProgressTexts', progressTexts })).toEqual({ progressTexts });
-        });
-
-        it('increaseProgressStep', () => {
-            expect(reducer({ progressStep: 3 }, { type: 'increaseProgressStep' })).toEqual({ progressStep: 4 });
-        });
-
         it('default', () => {
             expect(reducer({ progressStep: 3 }, { })).toEqual({ progressStep: 3 });
         });
