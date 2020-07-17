@@ -4,7 +4,6 @@ import { Spinner } from '@patternfly/react-core/dist/js/components/Spinner';
 import { Grid, GridItem } from '@patternfly/react-core/dist/js/layouts/Grid';
 import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
 import { Text } from '@patternfly/react-core/dist/js/components/Text/Text';
-import { FormattedMessage } from 'react-intl';
 
 import { componentWrapperIntl } from '../../../../utilities/testsHelpers';
 
@@ -20,6 +19,5 @@ describe('RemoveAuthPlaceholder', () => {
         expect(wrapper.find(Spinner)).toHaveLength(1);
         expect(wrapper.find(TextContent)).toHaveLength(1);
         expect(wrapper.find(Text)).toHaveLength(1);
-        expect(wrapper.find(FormattedMessage)).toHaveLength(1);
     });
 });

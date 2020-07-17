@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
 import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
@@ -45,16 +45,16 @@ const SourceRemoveModal = () => {
         <Button
             id="deleteSubmit" key="submit" variant="danger" type="button" onClick={ onSubmit } isDisabled={!acknowledge}
         >
-            <FormattedMessage
-                id="sources.deleteConfirm"
-                defaultMessage="Remove source and its data"
-            />
+            { intl.formatMessage({
+                id: 'sources.deleteConfirm',
+                defaultMessage: 'Remove source and its data'
+            }) }
         </Button>,
         <Button id="deleteCancel" key="cancel" variant="link" type="button" onClick={ returnToSources }>
-            <FormattedMessage
-                id="sources.deleteCancel"
-                defaultMessage="Cancel"
-            />
+            { intl.formatMessage({
+                id: 'sources.deleteCancel',
+                defaultMessage: 'Cancel'
+            }) }
         </Button>
     ];
 

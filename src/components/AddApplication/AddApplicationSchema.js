@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React from 'react';
 import componentTypes from '@data-driven-forms/react-form-renderer/dist/cjs/component-types';
 import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
@@ -5,7 +6,7 @@ import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/vali
 import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
 import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
 
-import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
 import * as schemaBuilder from '@redhat-cloud-services/frontend-components-sources/cjs/schemaBuilder';
 import get from 'lodash/get';
 
@@ -15,25 +16,31 @@ import authenticationSelectionStep from './schema/authenticationSelectionStep';
 import generateFirstAuthStep from './schema/generateFirstAuthStep';
 import selectAuthenticationStep from './schema/selectAuthenticationStep';
 
-export const NoAvailableApplicationDescription = () => (<TextContent>
-    <Text component={ TextVariants.p }>
-        <FormattedMessage
-            id="sources.allApplicationsAssigned"
-            defaultMessage="All available applications have already been added to this source
-        or there is no available application for this source."
-        />
-    </Text>
-</TextContent>);
+export const NoAvailableApplicationDescription = () => {
+    const intl = useIntl();
 
-export const ApplicationSummary = () => (<TextContent>
-    <Text component={ TextVariants.p }>
-        <FormattedMessage
-            id="sources.reviewAddAppSummary"
-            defaultMessage="Review the information below and click Add to add the application to your source.
-            Use the Back button to make changes."
-        />
-    </Text>
-</TextContent>);
+    return (<TextContent>
+        <Text component={ TextVariants.p }>
+            { intl.formatMessage({
+                id: 'sources.allApplicationsAssigned',
+                defaultMessage: 'All available applications have already been added to this source or there is no available application for this source.'
+            }) }
+        </Text>
+    </TextContent>)
+    ;};
+
+export const ApplicationSummary = () => {
+    const intl = useIntl();
+
+    return (<TextContent>
+        <Text component={ TextVariants.p }>
+            { intl.formatMessage({
+                id: 'sources.reviewAddAppSummary',
+                defaultMessage: 'Review the information below and click Add to add the application to your source. Use the Back button to make changes.'
+            }) }
+        </Text>
+    </TextContent>);
+};
 
 export const hasAlreadySupportedAuthType = (authValues = [], appType, sourceTypeName) => (
     authValues.find(({ authtype }) => authtype === get(appType, `supported_authentication_types.${sourceTypeName}[0]`))

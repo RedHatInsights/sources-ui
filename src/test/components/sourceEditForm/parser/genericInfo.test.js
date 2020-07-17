@@ -11,19 +11,18 @@ jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/SourceAddSchem
 
 describe('generic info edit form parser', () => {
     const SOURCE_ID = '1233465';
-    const INTL = { formatMessage: jest.fn() };
+    const INTL = { formatMessage: ({ defaultMessage }) => defaultMessage };
 
     it('should generate generic info form group', () => {
-
         const EXPECTED_TYPE_FIELD = {
             name: 'source_type',
-            label: expect.any(Object),
+            label: 'Source type',
             isReadOnly: true,
             component: EDIT_FIELD_NAME,
         };
         const EXPECTED_NAME_FIELD = {
             name: 'source.name',
-            label: expect.any(Object),
+            label: 'Source name',
             validate: [
                 expect.any(Function),
                 { type: validatorTypes.REQUIRED }
