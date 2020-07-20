@@ -1,5 +1,5 @@
 import React, { useReducer, useEffect, useRef } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { useIntl } from 'react-intl';
 
@@ -233,14 +233,16 @@ const AddApplication = () => {
                             id: 'sources.configurationSuccessful',
                             defaultMessage: 'Configuration unsuccessful'
                         })}
-                        returnButtonTitle={intl.formatMessage({
-                            id: 'sources.backToSources',
-                            defaultMessage: 'Edit source'
-                        })}
                         secondaryActions={<Button variant="link" onClick={ removeApp }>
                             {intl.formatMessage({ id: 'wizard.removeApp', defaultMessage: 'Remove application' })}
                         </Button>}
-                        primaryAction={() => history.push(replaceRouteId(routes.sourcesEdit.path, source.id))}
+                        Component={() => (
+                            <Link to={replaceRouteId(routes.sourcesEdit.path, source.id)}>
+                                <Button variant='primary'>
+                                    { intl.formatMessage({ id: 'wizard.editSource', defaultMessage: 'Edit source' })}
+                                </Button>
+                            </Link>
+                        )}
                     />);
                     break;
                 default:
