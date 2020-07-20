@@ -11,8 +11,9 @@ import { Title } from '@patternfly/react-core/dist/js/components/Title/Title';
 
 import ExclamationTriangleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-triangle-icon';
 
-import { removeApplication } from '../../redux/sources/actions';
 import { useSource } from '../../hooks/useSource';
+
+import removeAppSubmit from './removeAppSubmit';
 
 const RemoveAppModal = ({ app, onCancel, container }) => {
     const intl = useIntl();
@@ -21,6 +22,8 @@ const RemoveAppModal = ({ app, onCancel, container }) => {
     const source = useSource();
 
     const dispatch = useDispatch();
+
+    const onSubmit = () => removeAppSubmit(app, intl, onCancel, dispatch, source);
 
     useEffect(() => {
         if (container) {
@@ -33,24 +36,6 @@ const RemoveAppModal = ({ app, onCancel, container }) => {
 
         return appType ? app.sourceAppsNames.includes(appType.display_name) ? appType.display_name : undefined : undefined;
     }).filter(x => x);
-
-    const onSubmit = () => {
-        const titleSuccess = intl.formatMessage({
-            id: 'sources.removeAppWarning',
-            defaultMessage: `{ name } was removed from this source.`
-        },
-        {
-            name: app.display_name
-        });
-        const titleError = intl.formatMessage({
-            id: 'sources.removeAppError',
-            defaultMessage: `Removing of { name } application from this source was unsuccessful.`
-        }, {
-            name: app.display_name
-        });
-        onCancel();
-        return dispatch(removeApplication(app.id, source.id, titleSuccess, titleError));
-    };
 
     return (
         <Modal

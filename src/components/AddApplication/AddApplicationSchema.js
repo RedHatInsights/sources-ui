@@ -51,7 +51,7 @@ export const hasMultipleAuthenticationTypes = (app, sourceType) => (
 );
 
 const fields = (
-    applications = [], intl, sourceTypes, applicationTypes, authenticationValues, source, modifiedValues, container
+    applications = [], intl, sourceTypes, applicationTypes, authenticationValues, source, container
 ) => {
     const hasAvailableApps = applications.length > 0;
 
@@ -159,7 +159,7 @@ const fields = (
 
     if (!source.imported && hasAvailableApps) {
         selectionSteps.push(
-            selectAuthenticationStep({ intl, source, authenticationValues, sourceType, applicationTypes, modifiedValues })
+            selectAuthenticationStep({ intl, source, authenticationValues, sourceType, applicationTypes })
         );
     }
 
@@ -217,8 +217,7 @@ const fields = (
                                 component: 'description',
                                 name: 'authtypesetter',
                                 Content: AuthTypeCleaner,
-                                hideField: true,
-                                modifiedValues
+                                hideField: true
                             }
                         ]
                     }, {

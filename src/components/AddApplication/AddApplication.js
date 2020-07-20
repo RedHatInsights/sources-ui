@@ -2,14 +2,13 @@ import React, { useReducer, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { useIntl } from 'react-intl';
-import merge from 'lodash/merge';
-import cloneDeep from 'lodash/cloneDeep';
 
 import filterApps from '@redhat-cloud-services/frontend-components-sources/cjs/filterApps';
 import CloseModal from '@redhat-cloud-services/frontend-components-sources/cjs/CloseModal';
 import LoadingStep from '@redhat-cloud-services/frontend-components-sources/cjs/LoadingStep';
 import ErroredStep from '@redhat-cloud-services/frontend-components-sources/cjs/ErroredStep';
 import FinishedStep from '@redhat-cloud-services/frontend-components-sources/cjs/FinishedStep';
+import TimeoutStep from '@redhat-cloud-services/frontend-components-sources/cjs/TimeoutStep';
 
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/cjs/form-template';
 
@@ -23,31 +22,31 @@ import { getSourcesApi } from '../../api/entities';
 import { useSource } from '../../hooks/useSource';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
 import { endpointToUrl } from '../SourcesTable/formatters';
-import { routes } from '../../Routes';
+import { routes, replaceRouteId } from '../../Routes';
 
 import { doAttachApp } from '../../api/doAttachApp';
 import { checkSourceStatus } from '../../api/checkSourceStatus';
 
 import reducer, { initialState } from './reducer';
 import { Button } from '@patternfly/react-core/dist/js/components/Button';
+import removeAppSubmit from './removeAppSubmit';
 
 let selectedApp = undefined; // this has to be not-state value, because it shouldn't re-render the component when changes
 const saveSelectedApp = ({ values: { application } }) => selectedApp = application;
 
-export const onSubmit = (values, formApi, authenticationInitialValues, dispatch, setState, initialValues, intl) => {
-    setState({ type: 'submit' });
+export const onSubmit = (values, formApi, authenticationInitialValues, dispatch, setState, initialValues, appTypes) => {
+    setState({ type: 'submit', values, formApi });
 
-    return doAttachApp(values, formApi, authenticationInitialValues, initialValues, setState, intl)
-    .then(async () => {
+    return doAttachApp(values, formApi, authenticationInitialValues, initialValues, appTypes)
+    .then(async (data) => {
         checkSourceStatus(initialValues.source.id);
         await dispatch(loadEntities());
         selectedApp = undefined;
-        return setState({ type: 'finish' });
+        return setState({ type: 'finish', data });
     })
     .catch(error => setState({
         type: 'error',
         error,
-        values
     }));
 };
 
@@ -73,6 +72,18 @@ const AddApplication = () => {
     const [state, setState] = useReducer(reducer, initialState);
 
     const container = useRef(document.createElement('div'));
+
+    const removeApp = () => {
+        setState({ type: 'reset' });
+
+        return removeAppSubmit(
+            { id: state.data?.id, display_name: appTypes.find(({ id }) => id === state.data?.application_type_id)?.display_name },
+            intl,
+            undefined,
+            dispatch,
+            source
+        );
+    };
 
     useEffect(() => {
         selectedApp = undefined;
@@ -123,13 +134,24 @@ const AddApplication = () => {
                         defaultMessage: 'Loading, please wait.'
                     })}
                     cancelTitle={intl.formatMessage({
-                        id: 'sources.cancel',
-                        defaultMessage: 'Cancel'
+                        id: 'sources.close',
+                        defaultMessage: 'Close'
                     })}
+                    onClose={goToSources}
                 />}
             />
         );
     }
+
+    const onSubmitWrapper = (values, formApi) => onSubmit(
+        values,
+        formApi,
+        state.authenticationsValues,
+        dispatch,
+        setState,
+        state.initialValues,
+        appTypes
+    );
 
     if (state.state === 'submitting') {
         return  (
@@ -137,9 +159,10 @@ const AddApplication = () => {
                 goToSources={goToSources}
                 step={<LoadingStep
                     cancelTitle={intl.formatMessage({
-                        id: 'sources.cancel',
-                        defaultMessage: 'Cancel'
+                        id: 'sources.close',
+                        defaultMessage: 'Close'
                     })}
+                    onClose={goToSources}
                     customText={intl.formatMessage({
                         id: 'wizard.loadingText defaultMessage=Validating source credentials',
                         defaultMessage: 'Validating source credentials'
@@ -152,59 +175,92 @@ const AddApplication = () => {
     const onReset = () => setState({ type: 'reset' });
 
     if (state.state !== 'wizard') {
-        const shownStep = state.state === 'finished' ? (<FinishedStep
-            title={intl.formatMessage({
-                id: 'sources.configurationSuccessful',
-                defaultMessage: 'Configuration successful'
-            })}
-            onReset={onReset}
-            onClose={goToSources}
-            hideSourcesButton={true}
-            secondaryActions={
-                <Button variant="link" onClick={onReset}>
-                    { intl.formatMessage({
-                        id: 'sources.continueManageApp',
-                        defaultMessage: 'Continue managing applications'
-                    }) }
-                </Button>
-            }
-            returnButtonTitle={
-                intl.formatMessage({
-                    id: 'sources.backToSources',
-                    defaultMessage: 'Back to Sources'
-                })
+        let shownStep;
 
-            }
-            successfulMessage={
-                intl.formatMessage({
-                    id: 'sources.successAddApp',
-                    defaultMessage: 'Your application has been successfully added.'
-                })
-            }
-        />) :
-            (<ErroredStep
+        if (state.state !== 'finished') {
+            shownStep = (<ErroredStep
                 onRetry={onReset}
                 onClose={goToSources}
-                message={state.error}
+                primaryAction={() => onSubmitWrapper(state.values, state.formApi)}
                 customText={intl.formatMessage({
-                    id: 'sources.successAddApp',
-                    defaultMessage: 'Your application has not been successfully added:'
-                })
-                }
-                title={intl.formatMessage({
-                    id: 'sources.configurationSuccessful',
-                    defaultMessage: 'Configuration unsuccessful'
-                })}
-                returnButtonTitle={intl.formatMessage({
-                    id: 'sources.backToSources',
-                    defaultMessage: 'Back to Sources'
-                })
-                }
-                retryText={intl.formatMessage({
-                    id: 'sources.retry',
-                    defaultMessage: 'Retry'
+                    id: 'sources.addAppApiError',
+                    // eslint-disable-next-line max-len
+                    defaultMessage: 'There was a problem while trying to add your source. Please try again. If the error persists, open a support case.'
                 })}
             />);
+        } else {
+            switch (state.data.availability_status) {
+                case 'available':
+                    shownStep = (<FinishedStep
+                        title={intl.formatMessage({
+                            id: 'sources.configurationSuccessful',
+                            defaultMessage: 'Configuration successful'
+                        })}
+                        hideSourcesButton={true}
+                        onReset={onReset}
+                        onClose={goToSources}
+                        secondaryActions={
+                            <Button variant="link" onClick={onReset}>
+                                { intl.formatMessage({
+                                    id: 'sources.continueManageApp',
+                                    defaultMessage: 'Continue managing applications'
+                                }) }
+                            </Button>
+                        }
+                        returnButtonTitle={
+                            intl.formatMessage({
+                                id: 'sources.backToSources',
+                                defaultMessage: 'Back to Sources'
+                            })
+                        }
+                        successfulMessage={
+                            intl.formatMessage({
+                                id: 'sources.successAddApp',
+                                defaultMessage: 'Your application was successfully added.'
+                            })
+                        }
+                    />);
+                    break;
+                case 'unavailable':
+                    shownStep = (<ErroredStep
+                        onRetry={onReset}
+                        onClose={goToSources}
+                        message={
+                            state.data.availability_status_error
+                            || intl.formatMessage({ id: 'wizard.unknownError', defaultMessage: 'Unknown error' })
+                        }
+                        title={intl.formatMessage({
+                            id: 'sources.configurationSuccessful',
+                            defaultMessage: 'Configuration unsuccessful'
+                        })}
+                        returnButtonTitle={intl.formatMessage({
+                            id: 'sources.backToSources',
+                            defaultMessage: 'Edit source'
+                        })}
+                        secondaryActions={<Button variant="link" onClick={ removeApp }>
+                            {intl.formatMessage({ id: 'wizard.removeApp', defaultMessage: 'Remove application' })}
+                        </Button>}
+                        primaryAction={() => history.push(replaceRouteId(routes.sourcesEdit.path, source.id))}
+                    />);
+                    break;
+                default:
+                    shownStep = (<TimeoutStep
+                        returnButtonTitle={
+                            intl.formatMessage({
+                                id: 'sources.backToSources',
+                                defaultMessage: 'Back to Sources'
+                            })
+                        }
+                        onClose={ goToSources }
+                        secondaryActions={<Button variant="link" onClick={onReset}>
+                            { intl.formatMessage({
+                                id: 'sources.continueManageApp',
+                                defaultMessage: 'Continue managing applications'
+                            }) }
+                        </Button>}
+                    />);
+            }
+        }
 
         return (
             <WizardBody goToSources={goToSources} step={shownStep} />
@@ -237,24 +293,11 @@ const AddApplication = () => {
         appTypes,
         state.authenticationsValues,
         source,
-        state.values,
         container.current
-    );
-
-    const onSubmitWrapper = (values, formApi) => onSubmit(
-        values,
-        formApi,
-        state.authenticationsValues,
-        dispatch,
-        setState,
-        state.initialValues,
-        intl
     );
 
     const hasAvailableApps = filteredAppTypes.length > 0;
     const onSubmitFinal = hasAvailableApps ? onSubmitWrapper : goToSources;
-
-    const finalValues = merge(cloneDeep(state.initialValues), state.values);
 
     const onStay = () => {
         container.current.hidden = false;
@@ -287,7 +330,7 @@ const AddApplication = () => {
                 showFormControls={false}
                 onSubmit={onSubmitFinal}
                 onCancel={cancelBeforeExit}
-                initialValues={finalValues}
+                initialValues={state.initialValues}
                 subscription={{ values: true }}
                 debug={saveSelectedApp}
                 clearedValue={null}
