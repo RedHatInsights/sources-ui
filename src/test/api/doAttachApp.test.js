@@ -1,6 +1,8 @@
+/* eslint-disable no-console */
 import { doAttachApp, removeEmpty } from '../../api/doAttachApp';
 import * as api from '../../api/entities';
 import * as cm from '@redhat-cloud-services/frontend-components-sources/cjs/costManagementAuthentication';
+import * as appStatus from '@redhat-cloud-services/frontend-components-sources/cjs/getApplicationStatus';
 
 const prepareFormApi = (values) => ({
     getState: () => ({
@@ -8,9 +10,9 @@ const prepareFormApi = (values) => ({
     })
 });
 
-jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/costManagementAuthentication', () => ({
+jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/constants', () => ({
     __esModule: true,
-    patchSource: jest.fn().mockImplementation(() => Promise.resolve('ok')),
+    timeoutedApps: () => [],
 }));
 
 describe('doAttachApp', () => {
@@ -23,6 +25,8 @@ describe('doAttachApp', () => {
 
     let appCreate;
     let createAuthApp;
+
+    let appDelete;
 
     let VALUES;
     let FORM_API;
@@ -38,8 +42,16 @@ describe('doAttachApp', () => {
 
     let mockPatchSourceSpy;
 
+    let mockAppStatus;
+
+    let consoleError;
+
     beforeEach(() => {
-        mockPatchSourceSpy = jest.spyOn(cm, 'patchSource');
+        consoleError = console.error;
+        console.error = jest.fn();
+
+        mockPatchSourceSpy = jest.spyOn(cm, 'patchSource').mockImplementation(() => Promise.resolve('ok'));
+        mockAppStatus = jest.spyOn(appStatus, 'checkAppAvailability').mockImplementation(() => Promise.resolve({ status: 'available' }));
 
         jest.resetModules();
 
@@ -57,6 +69,7 @@ describe('doAttachApp', () => {
         authCreate = jest.fn().mockImplementation(() => Promise.resolve(RETURNED_AUTH));
         endpointCreate = jest.fn().mockImplementation(() => Promise.resolve(RETURNED_ENDPOINT));
         createAuthApp = jest.fn().mockImplementation(()=> Promise.resolve('ok'));
+        appDelete = jest.fn().mockImplementation(() => Promise.resolve('ok'));
 
         api.getSourcesApi = () => ({
             updateSource: sourceUpdate,
@@ -65,7 +78,9 @@ describe('doAttachApp', () => {
 
             createEndpoint: endpointCreate,
             createAuthentication: authCreate,
-            createAuthApp
+            createAuthApp,
+
+            deleteApplication: appDelete
         });
 
         appCreate = jest.fn().mockImplementation(() => Promise.resolve(RETURNED_APP));
@@ -84,17 +99,13 @@ describe('doAttachApp', () => {
     });
 
     afterEach(() => {
+        console.erorr = consoleError;
         mockPatchSourceSpy.mockReset();
-        sourceUpdate.mockReset();
-        authUpdate.mockReset();
-        endpointUpdate.mockReset();
-        authCreate.mockReset();
-        endpointCreate.mockReset();
-        createAuthApp.mockReset();
+        mockAppStatus.mockReset();
     });
 
     it('no values at all - should miss source id (only developer error)', async () => {
-        expect.assertions(9);
+        expect.assertions(11);
 
         FORM_API = prepareFormApi({});
 
@@ -111,6 +122,8 @@ describe('doAttachApp', () => {
             expect(endpointCreate).not.toHaveBeenCalled();
             expect(appCreate).not.toHaveBeenCalled();
             expect(createAuthApp).not.toHaveBeenCalled();
+            expect(mockAppStatus).not.toHaveBeenCalled();
+            expect(appDelete).not.toHaveBeenCalled();
         }
     });
 
@@ -121,7 +134,7 @@ describe('doAttachApp', () => {
             }
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
+        const result = await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).not.toHaveBeenCalled();
@@ -131,6 +144,10 @@ describe('doAttachApp', () => {
         expect(endpointCreate).not.toHaveBeenCalled();
         expect(appCreate).toHaveBeenCalledWith(SOURCE_ID, APP_ID);
         expect(createAuthApp).not.toHaveBeenCalled();
+        expect(mockAppStatus).toHaveBeenCalledWith(APP_ID, 0);
+        expect(appDelete).not.toHaveBeenCalled();
+
+        expect(result).toEqual({ status: 'available' });
     });
 
     it('only source is changed', async () => {
@@ -140,7 +157,7 @@ describe('doAttachApp', () => {
             }
         };
 
-        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
+        const result = await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
         expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).toHaveBeenCalledWith(SOURCE_ID, {
@@ -152,6 +169,10 @@ describe('doAttachApp', () => {
         expect(endpointCreate).not.toHaveBeenCalled();
         expect(appCreate).not.toHaveBeenCalled();
         expect(createAuthApp).not.toHaveBeenCalled();
+        expect(mockAppStatus).not.toHaveBeenCalled();
+        expect(appDelete).not.toHaveBeenCalled();
+
+        expect(result).toEqual({});
     });
 
     it('only source is changed and only modified (removed) values are sent to the endpoint', async () => {
@@ -190,6 +211,8 @@ describe('doAttachApp', () => {
         expect(endpointCreate).not.toHaveBeenCalled();
         expect(appCreate).not.toHaveBeenCalled();
         expect(createAuthApp).not.toHaveBeenCalled();
+        expect(mockAppStatus).not.toHaveBeenCalled();
+        expect(appDelete).not.toHaveBeenCalled();
     });
 
     it('only source is changed and only modified (removed) values are sent to the endpoint with super nesting', async () => {
@@ -264,6 +287,8 @@ describe('doAttachApp', () => {
         expect(endpointCreate).not.toHaveBeenCalled();
         expect(appCreate).not.toHaveBeenCalled();
         expect(createAuthApp).not.toHaveBeenCalled();
+        expect(mockAppStatus).not.toHaveBeenCalled();
+        expect(appDelete).not.toHaveBeenCalled();
     });
 
     it('only endpoint is changed', async () => {
@@ -299,6 +324,8 @@ describe('doAttachApp', () => {
         expect(endpointCreate).not.toHaveBeenCalled();
         expect(appCreate).not.toHaveBeenCalled();
         expect(createAuthApp).not.toHaveBeenCalled();
+        expect(mockAppStatus).not.toHaveBeenCalled();
+        expect(appDelete).not.toHaveBeenCalled();
     });
 
     it('only endpoint is changed - port is nonsense', async () => {
@@ -334,6 +361,8 @@ describe('doAttachApp', () => {
         expect(endpointCreate).not.toHaveBeenCalled();
         expect(appCreate).not.toHaveBeenCalled();
         expect(createAuthApp).not.toHaveBeenCalled();
+        expect(mockAppStatus).not.toHaveBeenCalled();
+        expect(appDelete).not.toHaveBeenCalled();
     });
 
     it('empty endpoint', async () => {
@@ -362,6 +391,8 @@ describe('doAttachApp', () => {
         expect(endpointCreate).not.toHaveBeenCalled();
         expect(appCreate).not.toHaveBeenCalled();
         expect(createAuthApp).not.toHaveBeenCalled();
+        expect(mockAppStatus).not.toHaveBeenCalled();
+        expect(appDelete).not.toHaveBeenCalled();
     });
 
     it('url is changed', async () => {
@@ -395,6 +426,8 @@ describe('doAttachApp', () => {
         expect(endpointCreate).not.toHaveBeenCalled();
         expect(appCreate).not.toHaveBeenCalled();
         expect(createAuthApp).not.toHaveBeenCalled();
+        expect(mockAppStatus).not.toHaveBeenCalled();
+        expect(appDelete).not.toHaveBeenCalled();
     });
 
     it('only auth is changed', async () => {
@@ -434,6 +467,8 @@ describe('doAttachApp', () => {
         expect(endpointCreate).not.toHaveBeenCalled();
         expect(appCreate).not.toHaveBeenCalled();
         expect(createAuthApp).not.toHaveBeenCalled();
+        expect(mockAppStatus).not.toHaveBeenCalled();
+        expect(appDelete).not.toHaveBeenCalled();
     });
 
     it('only auth is changed and only modified (removed) values are sent to to the endpoint', async () => {
@@ -480,6 +515,8 @@ describe('doAttachApp', () => {
         expect(endpointCreate).not.toHaveBeenCalled();
         expect(appCreate).not.toHaveBeenCalled();
         expect(createAuthApp).not.toHaveBeenCalled();
+        expect(mockAppStatus).not.toHaveBeenCalled();
+        expect(appDelete).not.toHaveBeenCalled();
     });
 
     it('auth is created', async () => {
@@ -514,6 +551,8 @@ describe('doAttachApp', () => {
         expect(endpointCreate).not.toHaveBeenCalled();
         expect(appCreate).not.toHaveBeenCalled();
         expect(createAuthApp).not.toHaveBeenCalled();
+        expect(mockAppStatus).not.toHaveBeenCalled();
+        expect(appDelete).not.toHaveBeenCalled();
     });
 
     it('endpoint is created', async () => {
@@ -538,6 +577,8 @@ describe('doAttachApp', () => {
         });
         expect(appCreate).not.toHaveBeenCalled();
         expect(createAuthApp).not.toHaveBeenCalled();
+        expect(mockAppStatus).not.toHaveBeenCalled();
+        expect(appDelete).not.toHaveBeenCalled();
     });
 
     it('endpoint and auth is created', async () => {
@@ -569,6 +610,8 @@ describe('doAttachApp', () => {
         });
         expect(appCreate).not.toHaveBeenCalled();
         expect(createAuthApp).not.toHaveBeenCalled();
+        expect(mockAppStatus).not.toHaveBeenCalled();
+        expect(appDelete).not.toHaveBeenCalled();
     });
 
     it('auth is created, however there is no endpoint id and no endpoint values to create a new', async () => {
@@ -588,6 +631,8 @@ describe('doAttachApp', () => {
         expect(endpointCreate).not.toHaveBeenCalled();
         expect(appCreate).not.toHaveBeenCalled();
         expect(createAuthApp).not.toHaveBeenCalled();
+        expect(mockAppStatus).not.toHaveBeenCalled();
+        expect(appDelete).not.toHaveBeenCalled();
     });
 
     it('cost management is attached and values are updated', async () => {
@@ -613,6 +658,8 @@ describe('doAttachApp', () => {
         expect(endpointCreate).not.toHaveBeenCalledWith();
         expect(appCreate).not.toHaveBeenCalled();
         expect(createAuthApp).not.toHaveBeenCalled();
+        expect(mockAppStatus).not.toHaveBeenCalled();
+        expect(appDelete).not.toHaveBeenCalled();
     });
 
     it('cost management is attached and values are updated - only billing_source', async () => {
@@ -634,6 +681,8 @@ describe('doAttachApp', () => {
         expect(endpointCreate).not.toHaveBeenCalledWith();
         expect(appCreate).not.toHaveBeenCalled();
         expect(createAuthApp).not.toHaveBeenCalled();
+        expect(mockAppStatus).not.toHaveBeenCalled();
+        expect(appDelete).not.toHaveBeenCalled();
     });
 
     it('cost management is attached and values are updated - only credentials', async () => {
@@ -657,6 +706,8 @@ describe('doAttachApp', () => {
         expect(endpointCreate).not.toHaveBeenCalledWith();
         expect(appCreate).not.toHaveBeenCalled();
         expect(createAuthApp).not.toHaveBeenCalled();
+        expect(mockAppStatus).not.toHaveBeenCalled();
+        expect(appDelete).not.toHaveBeenCalled();
     });
 
     describe('appAuth endpoint', () => {
@@ -684,6 +735,54 @@ describe('doAttachApp', () => {
                 authentication_id: AUTH_ID,
                 application_id: APP_ID
             });
+            expect(mockAppStatus).toHaveBeenCalledWith(APP_ID, 0);
+            expect(appDelete).not.toHaveBeenCalled();
+        });
+
+        it('new auth - error, app is removed', async () => {
+            expect.assertions(10);
+
+            createAuthApp = jest.fn().mockImplementation(() => Promise.reject('error'));
+
+            api.getSourcesApi = () => ({
+                updateSource: sourceUpdate,
+                updateEndpoint: endpointUpdate,
+                updateAuthentication: authUpdate,
+
+                createEndpoint: endpointCreate,
+                createAuthentication: authCreate,
+                createAuthApp,
+
+                deleteApplication: appDelete
+            });
+
+            VALUES = {
+                application: {
+                    application_type_id: APP_ID
+                },
+                url: 'https://redhat.com:8989/mypage',
+                authentication: {
+                    password: 'pepa'
+                }
+            };
+
+            try {
+                await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
+            } catch {
+                expect(mockPatchSourceSpy).not.toHaveBeenCalled();
+                expect(sourceUpdate).not.toHaveBeenCalled();
+                expect(authUpdate).not.toHaveBeenCalled();
+                expect(endpointUpdate).not.toHaveBeenCalled();
+                expect(authCreate).toHaveBeenCalled();
+                expect(endpointCreate).toHaveBeenCalled();
+                expect(appCreate).toHaveBeenCalledWith(SOURCE_ID, APP_ID);
+                expect(createAuthApp).toHaveBeenCalledWith({
+                    authentication_id: AUTH_ID,
+                    application_id: APP_ID
+                });
+                expect(mockAppStatus).not.toHaveBeenCalled();
+                expect(appDelete).toHaveBeenCalledWith(APP_ID);
+            }
         });
 
         it('current auth', async () => {
@@ -729,6 +828,8 @@ describe('doAttachApp', () => {
                 authentication_id: AUTH_ID,
                 application_id: APP_ID
             });
+            expect(mockAppStatus).toHaveBeenCalledWith(APP_ID, 0);
+            expect(appDelete).not.toHaveBeenCalled();
         });
     });
 });

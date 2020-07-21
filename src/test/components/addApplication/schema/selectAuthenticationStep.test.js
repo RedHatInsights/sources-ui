@@ -16,16 +16,14 @@ describe('selectAuthenticationStep', () => {
             }]
         };
         const sourceType = AMAZON;
-        const modifiedValues = {
-            some: 'modifeidvalues'
-        };
+
         const authenticationValues = [
             { id: '1', username: 'user-123', authtype: 'arn' },
             { id: '23324', authtype: 'arn' }
         ];
         const applicationTypes = applicationTypesData.data;
 
-        const authSelection = selectAuthenticationStep({ intl, source, authenticationValues, sourceType, applicationTypes, modifiedValues });
+        const authSelection = selectAuthenticationStep({ intl, source, authenticationValues, sourceType, applicationTypes });
 
         expect(authSelection).toEqual(expect.objectContaining({
             name: 'selectAuthentication',
@@ -36,7 +34,6 @@ describe('selectAuthenticationStep', () => {
                     component: 'description',
                     Content: AuthTypeSetter,
                     authenticationValues,
-                    modifiedValues,
                     hideField: true
                 }),
                 expect.objectContaining({
@@ -77,11 +74,10 @@ describe('selectAuthenticationStep', () => {
     it('selectAuthenticationStep generates selection step - when no auth available', () => {
         const source = {};
         const sourceType = AMAZON;
-        const modifiedValues = {};
         const authenticationValues = [];
         const applicationTypes = applicationTypesData.data;
 
-        const authSelection = selectAuthenticationStep({ intl, source, authenticationValues, sourceType, applicationTypes, modifiedValues });
+        const authSelection = selectAuthenticationStep({ intl, source, authenticationValues, sourceType, applicationTypes });
 
         expect(authSelection).toEqual(expect.objectContaining({
             name: 'selectAuthentication',
@@ -92,7 +88,6 @@ describe('selectAuthenticationStep', () => {
                     component: 'description',
                     Content: AuthTypeSetter,
                     authenticationValues,
-                    modifiedValues,
                     hideField: true
                 }),
             ]
@@ -128,16 +123,14 @@ describe('selectAuthenticationStep', () => {
                 ]
             },
         };
-        const modifiedValues = {
-            some: 'modifeidvalues'
-        };
+
         const authenticationValues = [
             { id: '23324', authtype: 'arn' },
             { id: '23324', authtype: 'password' },
         ];
         const applicationTypes = [CUSTOM_APP];
 
-        const authSelection = selectAuthenticationStep({ intl, source, authenticationValues, sourceType, applicationTypes, modifiedValues });
+        const authSelection = selectAuthenticationStep({ intl, source, authenticationValues, sourceType, applicationTypes });
 
         expect(authSelection).toEqual(expect.objectContaining({
             name: 'selectAuthentication',
@@ -148,7 +141,6 @@ describe('selectAuthenticationStep', () => {
                     component: 'description',
                     Content: AuthTypeSetter,
                     authenticationValues,
-                    modifiedValues,
                     hideField: true
                 }),
                 expect.objectContaining({

@@ -29,6 +29,8 @@ import { checkSourceStatus } from '../../api/checkSourceStatus';
 
 import reducer, { initialState } from './reducer';
 import { Button } from '@patternfly/react-core/dist/js/components/Button';
+import { Text } from '@patternfly/react-core/dist/js/components/Text';
+
 import removeAppSubmit from './removeAppSubmit';
 
 let selectedApp = undefined; // this has to be not-state value, because it shouldn't re-render the component when changes
@@ -181,12 +183,21 @@ const AddApplication = () => {
             shownStep = (<ErroredStep
                 onRetry={onReset}
                 onClose={goToSources}
-                primaryAction={() => onSubmitWrapper(state.values, state.formApi)}
-                customText={intl.formatMessage({
-                    id: 'sources.addAppApiError',
-                    // eslint-disable-next-line max-len
-                    defaultMessage: 'There was a problem while trying to add your source. Please try again. If the error persists, open a support case.'
+                returnButtonTitle={intl.formatMessage({
+                    id: 'sources.retry',
+                    defaultMessage: 'Retry'
                 })}
+                primaryAction={() => onSubmitWrapper(state.values, state.formApi)}
+                secondaryActions={
+                    <Text
+                        component='a'
+                        target="_blank"
+                        href="https://access.redhat.com/support/cases/#/case/new/open-case?caseCreate=true"
+                        rel="noopener noreferrer"
+                    >
+                        {intl.formatMessage({ id: 'wizard.openTicket', defaultMessage: 'Open a support case' })}
+                    </Text>
+                }
             />);
         } else {
             switch (state.data.availability_status) {
@@ -238,7 +249,7 @@ const AddApplication = () => {
                         </Button>}
                         Component={() => (
                             <Link to={replaceRouteId(routes.sourcesEdit.path, source.id)}>
-                                <Button variant='primary'>
+                                <Button variant='primary' className="pf-u-mt-xl">
                                     { intl.formatMessage({ id: 'wizard.editSource', defaultMessage: 'Edit source' })}
                                 </Button>
                             </Link>

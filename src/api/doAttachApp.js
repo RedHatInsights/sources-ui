@@ -28,7 +28,7 @@ export const removeEmpty = (obj) => {
 };
 
 export const doAttachApp = async (
-    values, formApi, authenticationInitialValues, initialValues, appTypes
+    values, formApi, authenticationInitialValues, initialValues, appTypes = []
 ) => {
     let appId;
 
@@ -131,7 +131,7 @@ export const doAttachApp = async (
         // eslint-disable-next-line no-unused-vars
         const [_sourceDataOut, _endpointDataOut, authenticationDataOut, applicationDataOut] = await Promise.all(promises);
 
-        appId = applicationDataOut.id;
+        appId = applicationDataOut?.id;
 
         const authenticationId = selectedAuthId ? selectedAuthId : authenticationDataOut ? authenticationDataOut.id : undefined;
 
@@ -157,9 +157,12 @@ export const doAttachApp = async (
 
         await Promise.all(promisesSecondRound);
 
-        const timeout = timeoutedApps(appTypes).includes(applicationDataOut.application_type_id) ? 10000 : 0;
+        if (applicationDataOut) {
+            const timeout = timeoutedApps(appTypes).includes(applicationDataOut.application_type_id) ? 10000 : 0;
+            return await checkAppAvailability(applicationDataOut.id, timeout);
+        }
 
-        return await checkAppAvailability(applicationDataOut.id, timeout);
+        return {};
     } catch (error) {
         console.error(error);
         if (appId) {
