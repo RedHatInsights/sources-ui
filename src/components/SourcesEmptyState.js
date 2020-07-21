@@ -44,7 +44,7 @@ const SourcesEmptyState = ({ title, body }) => {
                 </EmptyStateBody>
                 {isOrgAdmin ? <Link to={routes.sourcesNew.path}>
                     <Button
-                        style={{ marginTop: 'var(--pf-c-empty-state--c-button--MarginTop)' }}
+                        className="pf-u-mt-xl"
                         variant="primary"
                     >
                         { intl.formatMessage({
@@ -54,7 +54,6 @@ const SourcesEmptyState = ({ title, body }) => {
                     </Button>
                 </Link> :
                     <Button
-                        style={{ marginTop: 'var(--pf-c-empty-state--c-button--MarginTop)' }}
                         variant="primary"
                         isDisabled
                     >
