@@ -49,7 +49,7 @@ export const generateAuthSelectionOptions = ({
 });
 
 const selectAuthenticationStep = ({
-    intl, source, authenticationValues, sourceType, applicationTypes, modifiedValues
+    intl, source, authenticationValues, sourceType, applicationTypes
 }) => {
     const nextStep = ({ values: { application, authtype, authentication } }) => {
         const app = application ? application : {};
@@ -64,7 +64,6 @@ const selectAuthenticationStep = ({
         Content: AuthTypeSetter,
         authenticationValues,
         hideField: true,
-        modifiedValues
     }];
 
     applicationTypes.forEach((app) => {

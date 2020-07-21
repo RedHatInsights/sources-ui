@@ -1,6 +1,9 @@
 import { addedDiff, updatedDiff } from 'deep-object-diff';
 import { patchSource } from '@redhat-cloud-services/frontend-components-sources/cjs/costManagementAuthentication';
 import { handleError } from '@redhat-cloud-services/frontend-components-sources/cjs/handleError';
+import { checkAppAvailability } from '@redhat-cloud-services/frontend-components-sources/cjs/getApplicationStatus';
+import { timeoutedApps } from '@redhat-cloud-services/frontend-components-sources/cjs/constants';
+
 import isEmpty from 'lodash/isEmpty';
 import merge from 'lodash/merge';
 import cloneDeep from 'lodash/cloneDeep';
@@ -25,8 +28,10 @@ export const removeEmpty = (obj) => {
 };
 
 export const doAttachApp = async (
-    values, formApi, authenticationInitialValues, initialValues
+    values, formApi, authenticationInitialValues, initialValues, appTypes = []
 ) => {
+    let appId;
+
     const formState = formApi.getState();
 
     const allFormValues = formState.values;
@@ -126,6 +131,8 @@ export const doAttachApp = async (
         // eslint-disable-next-line no-unused-vars
         const [_sourceDataOut, _endpointDataOut, authenticationDataOut, applicationDataOut] = await Promise.all(promises);
 
+        appId = applicationDataOut?.id;
+
         const authenticationId = selectedAuthId ? selectedAuthId : authenticationDataOut ? authenticationDataOut.id : undefined;
 
         const promisesSecondRound = [];
@@ -149,7 +156,19 @@ export const doAttachApp = async (
         }
 
         await Promise.all(promisesSecondRound);
+
+        if (applicationDataOut) {
+            const timeout = timeoutedApps(appTypes).includes(applicationDataOut.application_type_id) ? 10000 : 0;
+            return await checkAppAvailability(applicationDataOut.id, timeout);
+        }
+
+        return {};
     } catch (error) {
+        console.error(error);
+        if (appId) {
+            await getSourcesApi().deleteApplication(appId);
+        }
+
         const errorMessage = await handleError(error);
         throw errorMessage;
     }
