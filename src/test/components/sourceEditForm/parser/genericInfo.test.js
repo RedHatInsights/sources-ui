@@ -30,6 +30,7 @@ describe('generic info edit form parser', () => {
             isRequired: true,
             originalComponent: componentTypes.TEXT_FIELD,
             component: EDIT_FIELD_NAME,
+            resolveProps: expect.any(Function)
         };
 
         const EXPECTED_FORM_GROUP = [
