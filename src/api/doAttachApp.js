@@ -164,6 +164,7 @@ export const doAttachApp = async (
 
         return {};
     } catch (error) {
+        // eslint-disable-next-line no-console
         console.error(error);
         if (appId) {
             await getSourcesApi().deleteApplication(appId);
