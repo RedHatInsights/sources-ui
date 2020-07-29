@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
 import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
@@ -13,6 +13,7 @@ import { useSource } from '../../hooks/useSource';
 
 const AddApplicationDescription = ({ container }) => {
     const [removingApp, setApplicationToRemove] = useState({});
+    const intl = useIntl();
 
     const sourceTypes = useSelector(({ sources }) => sources.sourceTypes);
     const source = useSource();
@@ -37,26 +38,26 @@ const AddApplicationDescription = ({ container }) => {
                 <Grid hasGutter>
                     <GridItem md={2}>
                         <Text component={TextVariants.h4}>
-                            <FormattedMessage
-                                id="sources.sourceName"
-                                defaultMessage="Source name"
-                            />
+                            { intl.formatMessage({
+                                id: 'sources.sourceName',
+                                defaultMessage: 'Source name'
+                            }) }
                         </Text>
                     </GridItem>
                     <GridItem md={2}>
                         <Text component={TextVariants.h4}>
-                            <FormattedMessage
-                                id="sources.type"
-                                defaultMessage="Type"
-                            />
+                            { intl.formatMessage({
+                                id: 'sources.type',
+                                defaultMessage: 'Type'
+                            }) }
                         </Text>
                     </GridItem>
                     <GridItem md={8}>
                         <Text component={TextVariants.h4}>
-                            <FormattedMessage
-                                id="sources.apps"
-                                defaultMessage="Applications"
-                            />
+                            { intl.formatMessage({
+                                id: 'sources.apps',
+                                defaultMessage: 'Applications'
+                            }) }
                         </Text>
                     </GridItem>
                     <GridItem md={2}>
@@ -66,17 +67,18 @@ const AddApplicationDescription = ({ container }) => {
                     </GridItem>
                     <GridItem md={2}>
                         <Text component={TextVariants.p}>
-                            { sourceType ? sourceType.product_name : <FormattedMessage
-                                id="sources.typeNotFound"
-                                defaultMessage="Type not found"
-                            />}
+                            { sourceType ? sourceType.product_name : intl.formatMessage({
+                                id: 'sources.typeNotFound',
+                                defaultMessage: 'Type not found'
+                            })}
                         </Text>
                     </GridItem>
                     <GridItem md={8}>
-                        {apps.length > 0 ? <ApplicationList setApplicationToRemove={setApplicationToRemove}/> : <FormattedMessage
-                            id="sources.noApps"
-                            defaultMessage="No applications"
-                        />}
+                        {apps.length > 0 ? <ApplicationList setApplicationToRemove={setApplicationToRemove}/>
+                            : intl.formatMessage({
+                                id: 'sources.noApps',
+                                defaultMessage: 'No applications'
+                            })}
                     </GridItem>
                 </Grid>
             </TextContent>

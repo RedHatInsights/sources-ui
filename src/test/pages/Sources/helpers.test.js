@@ -31,6 +31,22 @@ describe('Source page helpers', () => {
 
             expect(sourcesApi.checkSourceStatus).toHaveBeenCalledWith(source.id);
         });
+
+        it('refresh table, do not check source when there is no one', () => {
+            const dispatch = jest.fn();
+            const source = undefined;
+
+            sourcesApi.checkSourceStatus = jest.fn();
+
+            actions.loadEntities = jest.fn();
+
+            afterSuccess(dispatch, source);
+
+            expect(dispatch.mock.calls.length).toBe(1);
+            expect(actions.loadEntities).toHaveBeenCalledWith(afterSuccessLoadParameters);
+
+            expect(sourcesApi.checkSourceStatus).not.toHaveBeenCalled();
+        });
     });
 
     describe('chipsFormatters', () => {

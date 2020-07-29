@@ -8,7 +8,7 @@ export const initialState = {
     isCancelling: false,
 };
 
-const reducer = (state, { type, length, authenticationsValues, initialValues, error, values }) => {
+const reducer = (state, { type, length, authenticationsValues, initialValues, error, values, data, formApi }) => {
     switch (type) {
         case 'setSourceAppslength':
             return {
@@ -38,19 +38,21 @@ const reducer = (state, { type, length, authenticationsValues, initialValues, er
         case 'submit':
             return {
                 ...state,
+                values,
+                formApi,
                 state: 'submitting',
             };
         case 'finish':
             return {
                 ...state,
                 state: 'finished',
+                data
             };
         case 'error':
             return {
                 ...state,
                 state: 'errored',
                 error,
-                values
             };
         case 'toggleCancelling':
             return {

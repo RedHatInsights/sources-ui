@@ -9,10 +9,11 @@ import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Te
 import TrashIcon from '@patternfly/react-icons/dist/js/icons/trash-icon';
 
 import sourceEditContext from '../sourceEditContext';
-import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 const AuthenticationManagement = ({ schemaAuth, auth, appTypes, isDeleting }) => {
     const { source, setState } = useContext(sourceEditContext);
+    const intl = useIntl();
 
     const attachedAppTypes = source.source.applications.filter(
         ({ authentications }) => authentications.find(({ id }) => id === auth.id)
@@ -42,23 +43,21 @@ const AuthenticationManagement = ({ schemaAuth, auth, appTypes, isDeleting }) =>
             </Title>
             <TextContent>
                 <Text component={TextVariants.small} className="pf-u-mb-0">
-                    <FormattedMessage
-                        id="sources.removeAuthDescription"
-                        defaultMessage="id: {authid} { appNames}"
-                        values={{
-                            authid: auth.id,
-                            appNames: appNames.length > 0 ?
-                                <FormattedMessage
-                                    id="sources.removeAuthWithApps"
-                                    defaultMessage="used by {appNames}"
-                                    values={{ appNames: appNames.join(', ') }}
-                                />
-                                : <FormattedMessage
-                                    id="sources.removeAuthNoApps"
-                                    defaultMessage="not used by any app"
-                                />
-                        }}
-                    />
+                    { intl.formatMessage({
+                        id: 'sources.removeAuthDescription',
+                        defaultMessage: 'id: {authid} { appNames}'
+                    }, {
+                        authid: auth.id,
+                        appNames: appNames.length > 0 ?
+                            intl.formatMessage({
+                                id: 'sources.removeAuthWithApps',
+                                defaultMessage: 'used by {appNames}'
+                            }, { appNames: appNames.join(', ') })
+                            : intl.formatMessage({
+                                id: 'sources.removeAuthNoApps',
+                                defaultMessage: 'not used by any app'
+                            })
+                    }) }
                 </Text>
             </TextContent>
         </GridItem>
