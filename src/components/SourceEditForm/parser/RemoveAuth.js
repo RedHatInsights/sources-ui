@@ -9,7 +9,7 @@ import { Title } from '@patternfly/react-core/dist/js/components/Title/Title';
 
 import ExclamationTriangleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-triangle-icon';
 
-import { FormattedMessage, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 
 import sourceEditContext from '../sourceEditContext';
@@ -54,16 +54,11 @@ const RemoveAuth = ({ appNames, schemaAuth, auth }) => {
     };
 
     if (hasAttachedApp) {
-        body = (<FormattedMessage
-            id="sources.removeAuthWarningApps"
-            defaultMessage="To remove {authname} authentication you have to remove attached
-            {count, plural, one {application} other {applications}}: { appNames }."
-            values={{
-                appNames: appNames.join(', '),
-                count: appNames.length,
-                authname: <b>{schemaAuth.name}</b>
-            }}
-        />);
+        body = intl.formatMessage({
+            id: 'sources.removeAuthWarningApps',
+            // eslint-disable-next-line max-len
+            defaultMessage: 'To remove {authname} authentication you have to remove attached {count, plural, one {application} other {applications}}: { appNames }.'
+        }, { appNames: appNames.join(', '), count: appNames.length, authname: <b key="b">{schemaAuth.name}</b> });
         actions = [<Button
             id="deleteCancel"
             key="cancel"
@@ -71,17 +66,16 @@ const RemoveAuth = ({ appNames, schemaAuth, auth }) => {
             type="button"
             onClick={ onClose }
         >
-            <FormattedMessage
-                id="sources.close"
-                defaultMessage="Close"
-            />
+            { intl.formatMessage({
+                id: 'sources.close',
+                defaultMessage: 'Close'
+            }) }
         </Button>];
     } else {
-        body = (<FormattedMessage
-            id="sources.removeAuthWarning"
-            defaultMessage="This action will permanently remove {auth} from this source."
-            values={{ auth: <b>{schemaAuth.name}</b> }}
-        />);
+        body = intl.formatMessage({
+            id: 'sources.removeAuthWarning',
+            defaultMessage: 'This action will permanently remove {auth} from this source.'
+        }, { auth: <b key="b">{schemaAuth.name}</b> });
         actions = [<Button
             id="deleteSubmit"
             key="submit"
@@ -89,10 +83,10 @@ const RemoveAuth = ({ appNames, schemaAuth, auth }) => {
             type="button"
             onClick={ onRemove }
         >
-            <FormattedMessage
-                id="sources.deleteConfirm"
-                defaultMessage="Remove authentication"
-            />
+            { intl.formatMessage({
+                id: 'sources.deleteConfirm',
+                defaultMessage: 'Remove authentication'
+            }) }
         </Button>,
         <Button
             id="deleteCancel"
@@ -101,10 +95,10 @@ const RemoveAuth = ({ appNames, schemaAuth, auth }) => {
             type="button"
             onClick={ onClose }
         >
-            <FormattedMessage
-                id="sources.deleteCancel"
-                defaultMessage="Cancel"
-            />
+            { intl.formatMessage({
+                id: 'sources.deleteCancel',
+                defaultMessage: 'Cancel'
+            }) }
         </Button>];
     }
 

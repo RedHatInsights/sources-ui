@@ -1,4 +1,4 @@
-import { unsupportedAuthTypeField } from '../../../../components/SourceEditForm/parser/unsupportedAuthType';
+import { unsupportedAuthTypeField, Content } from '../../../../components/SourceEditForm/parser/unsupportedAuthType';
 import { componentWrapperIntl } from '../../../../utilities/testsHelpers';
 import { Text } from '@patternfly/react-core';
 
@@ -15,10 +15,7 @@ describe('unsupportedAuthTypeField', () => {
     });
 
     it('renders content', () => {
-        const unsupportedAuthType = unsupportedAuthTypeField(AUTHTYPE);
-
-        // eslint-disable-next-line new-cap
-        const wrapper = mount(componentWrapperIntl(unsupportedAuthType.Content()));
+        const wrapper = mount(componentWrapperIntl(<Content authtype={AUTHTYPE}/>));
 
         expect(wrapper.find(Text)).toHaveLength(1);
         expect(wrapper.find(Text).text().includes(AUTHTYPE)).toEqual(true);
