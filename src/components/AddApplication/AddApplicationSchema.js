@@ -167,7 +167,6 @@ const fields = (
                 }),
                 inModal: true,
                 container,
-                predictSteps: true,
                 showTitles: true,
                 crossroads: ['application.application_type_id', 'selectedAuthentication', 'authtype'],
                 description: intl.formatMessage({
