@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
 import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
@@ -15,7 +14,7 @@ import { Link } from 'react-router-dom';
 import { routes } from '../Routes';
 import { useIsOrgAdmin } from '../hooks/useIsOrgAdmin';
 
-const SourcesEmptyState = ({ title, body }) => {
+const SourcesEmptyState = () => {
     const isOrgAdmin = useIsOrgAdmin();
     const intl = useIntl();
 
@@ -24,16 +23,17 @@ const SourcesEmptyState = ({ title, body }) => {
             <EmptyState className="ins-c-sources__empty-state">
                 <EmptyStateIcon icon={WrenchIcon} />
                 <Title headingLevel="h5" size="lg">
-                    {title ? title :
+                    {
                         intl.formatMessage({ id: 'sources.emptyStateTitle', defaultMessage: 'No sources' })
                     }
                 </Title>
                 <EmptyStateBody>
-                    {body ? body :
+                    {
                         isOrgAdmin && intl.formatMessage({
                             id: 'sources.emptyStateBody',
                             defaultMessage: 'No sources have been defined. To start define a source.'
-                        })}
+                        })
+                    }
                     {!isOrgAdmin && <React.Fragment>
                         <br />
                         {intl.formatMessage({
@@ -66,11 +66,6 @@ const SourcesEmptyState = ({ title, body }) => {
             </EmptyState>
         </Bullseye>
     );
-};
-
-SourcesEmptyState.propTypes = {
-    title: PropTypes.node,
-    body: PropTypes.node
 };
 
 export default SourcesEmptyState;
