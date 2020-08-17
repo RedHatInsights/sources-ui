@@ -1,11 +1,10 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { Text, Button } from '@patternfly/react-core';
+import { Text, Button, GridItem } from '@patternfly/react-core';
 import { Route } from 'react-router-dom';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { FormattedMessage } from 'react-intl';
 
 import AddApplicationDescription from '../../../components/AddApplication/AddApplicationDescription';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
@@ -51,7 +50,7 @@ describe('AddApplicationDescription', () => {
         expect(wrapper.find(Text).at(3).text()).toEqual(source.name);
         expect(wrapper.find(Text).at(4).text()).toEqual(sourceType.product_name);
         expect(wrapper.find(ApplicationList).length).toEqual(0);
-        expect(wrapper.find(FormattedMessage).last().text()).toEqual('No applications');
+        expect(wrapper.find(GridItem).last().text()).toEqual('No applications');
         expect(wrapper.find(Button).length).toEqual(0);
         expect(initialProps.container.hidden).toEqual(false);
     });

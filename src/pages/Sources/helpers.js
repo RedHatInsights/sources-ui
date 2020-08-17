@@ -10,7 +10,7 @@ export const debouncedFiltering = awesomeDebounce((refresh) => refresh(), 500);
 export const afterSuccessLoadParameters = { pageNumber: 1, sortBy: 'created_at', sortDirection: 'desc' };
 
 export const afterSuccess = (dispatch, source) => {
-    checkSourceStatus(source.id);
+    source?.id && checkSourceStatus(source.id);
     dispatch(loadEntities(afterSuccessLoadParameters));
 };
 

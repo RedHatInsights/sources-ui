@@ -8,7 +8,7 @@ import {
     filterSources
 } from '../redux/sources/actions';
 import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/components/cjs/PrimaryToolbar';
 import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/cjs/PageHeader';
@@ -137,10 +137,10 @@ const SourcesPage = () => {
                     actions: [
                         <Link to={routes.sourcesNew.path} key="addSourceButton">
                             <Button variant='primary' id="addSourceButton">
-                                <FormattedMessage
-                                    id="sources.addSource"
-                                    defaultMessage="Add source"
-                                />
+                                { intl.formatMessage({
+                                    id: 'sources.addSource',
+                                    defaultMessage: 'Add source'
+                                }) }
                             </Button>
                         </Link>
                     ]
@@ -157,10 +157,10 @@ const SourcesPage = () => {
                         >
                             <span tabIndex="0">
                                 <Button variant='primary' isDisabled id="addSourceButton">
-                                    <FormattedMessage
-                                        id="sources.addSource"
-                                        defaultMessage="Add source"
-                                    />
+                                    { intl.formatMessage({
+                                        id: 'sources.addSource',
+                                        defaultMessage: 'Add source'
+                                    }) }
                                 </Button>
                             </span>
                         </Tooltip>

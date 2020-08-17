@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
 import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
@@ -12,6 +12,7 @@ import { GridItem } from '@patternfly/react-core/dist/js/layouts/Grid/GridItem';
 import { useSource } from '../../hooks/useSource';
 
 const ApplicationList = ({ setApplicationToRemove, breakpoints, namePrefix }) => {
+    const intl = useIntl();
     const appTypes = useSelector(({ sources }) => sources.appTypes);
     const source = useSource();
 
@@ -49,10 +50,10 @@ const ApplicationList = ({ setApplicationToRemove, breakpoints, namePrefix }) =>
                         isInline
                         onClick={() => setApplicationToRemove({ id, display_name, dependent_applications, sourceAppsNames })}
                     >
-                        <FormattedMessage
-                            id="sources.remove"
-                            defaultMessage="Remove"
-                        />
+                        { intl.formatMessage({
+                            id: 'sources.remove',
+                            defaultMessage: 'Remove'
+                        }) }
                     </Button>
                 </GridItem>
             </Grid>
