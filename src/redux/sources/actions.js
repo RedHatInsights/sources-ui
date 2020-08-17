@@ -35,6 +35,7 @@ export const loadEntities = (options) => (dispatch, getState) => {
         payload: sources
     })).catch(error => dispatch({
         type: ACTION_TYPES.LOAD_ENTITIES_REJECTED,
+        meta: { noError: true },
         payload: { error: { detail: error.detail || error.data, title: error.title || 'Fetching data failed, try refresh page' } }
     }));
 };

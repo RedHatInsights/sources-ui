@@ -32,14 +32,6 @@ describe('SourcesEmptyState', () => {
         expect(wrapper.find(EmptyState).props().className).toEqual('ins-c-sources__empty-state');
     });
 
-    it('renders correctly with custom props', () => {
-        const wrapper = mount(componentWrapperIntl(<SourcesEmptyState title="Chyba" body="Velmi oskliva chyba"/>, store));
-
-        expect(wrapper.find(Title).text().includes('Chyba')).toEqual(true);
-        expect(wrapper.find(EmptyStateBody).text().includes('Velmi oskliva chyba')).toEqual(true);
-        expect(wrapper.find(EmptyState).props().className).toEqual('ins-c-sources__empty-state');
-    });
-
     it('renders as not org admin', () => {
         store = mockStore({ user: { isOrgAdmin: false } });
 

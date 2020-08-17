@@ -1,12 +1,6 @@
 import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { Link, useHistory, useLocation } from 'react-router-dom';
-import {
-    loadAppTypes,
-    loadEntities,
-    loadSourceTypes,
-    filterSources
-} from '../redux/sources/actions';
 import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
 import { useIntl } from 'react-intl';
 
@@ -14,9 +8,16 @@ import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/compo
 import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/cjs/PageHeader';
 import { Section } from '@redhat-cloud-services/frontend-components/components/cjs/Section';
 
+import {
+    loadAppTypes,
+    loadEntities,
+    loadSourceTypes,
+    filterSources,
+    pageAndSize
+} from '../redux/sources/actions';
 import SourcesTable from '../components/SourcesTable/SourcesTable';
 import SourcesEmptyState from '../components/SourcesEmptyState';
-import { pageAndSize } from '../redux/sources/actions';
+import SourcesErrorState from '../components/SourcesErrorState';
 import { routes } from '../Routes';
 
 const SourceEditModal = lazy(() => import(/* webpackChunkName: "edit" */ '../components/SourceEditForm/SourceEditModal'));
@@ -49,6 +50,7 @@ const SourcesPage = () => {
     const [showEmptyState, setShowEmptyState] = useState(false);
     const [checkEmptyState, setCheckEmptyState] = useState(false);
     const [filter, setFilterValue] = useState();
+    const [loadingError, setLoadingError] = useState();
 
     const loaded = useIsLoaded();
     const isOrgAdmin = useIsOrgAdmin();
@@ -76,7 +78,8 @@ const SourcesPage = () => {
 
     useEffect(() => {
         Promise.all([dispatch(loadSourceTypes()), dispatch(loadAppTypes()), dispatch(loadEntities(parseQuery()))])
-        .then(() => setCheckEmptyState(true));
+        .then(() => setCheckEmptyState(true))
+        .catch((error) => setLoadingError(error));
     }, []);
 
     const hasSomeFilter = Object.entries(filterValue).map(([_key, value]) => value).filter(Boolean).length > 0;
@@ -225,6 +228,8 @@ const SourcesPage = () => {
         </React.Fragment>
     );
 
+    const isErrored = loadingError || fetchingError;
+
     return (
         <React.Fragment>
             <Suspense fallback={null}>
@@ -252,13 +257,9 @@ const SourcesPage = () => {
                 })}/>
             </PageHeader>
             <Section type='content'>
-                { (showEmptyState || fetchingError) ?
-                    <SourcesEmptyState
-                        title={fetchingError ? fetchingError.title : undefined}
-                        body={fetchingError ? fetchingError.detail : undefined}
-                    />
-                    :
-                    mainContent()}
+                { showEmptyState && <SourcesEmptyState />}
+                { isErrored && <SourcesErrorState />}
+                { !showEmptyState && !isErrored && mainContent()}
             </Section>
         </React.Fragment>
     );
