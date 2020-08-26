@@ -222,6 +222,7 @@ describe('redux actions', () => {
             });
             expect(dispatch.mock.calls[2][0]).toEqual({
                 type: ACTION_TYPES.LOAD_ENTITIES_REJECTED,
+                meta: { noError: true },
                 payload: { error: { detail: ERROR_DETAIL, title: expect.any(String) } }
             });
         });
@@ -243,6 +244,7 @@ describe('redux actions', () => {
             });
             expect(dispatch.mock.calls[2][0]).toEqual({
                 type: ACTION_TYPES.LOAD_ENTITIES_REJECTED,
+                meta: { noError: true },
                 payload: { error: { detail: ERROR_DETAIL, title: ERROR_TITLE } }
             });
         });

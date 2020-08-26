@@ -33,6 +33,7 @@ import * as SourceRemoveModal from '../../components/SourceRemoveModal/SourceRem
 import * as urlQuery from '../../utilities/urlQuery';
 import { PlaceHolderTable, PaginationLoader } from '../../components/SourcesTable/loaders';
 import { Table } from '@patternfly/react-table';
+import SourcesErrorState from '../../components/SourcesErrorState';
 
 describe('SourcesPage', () => {
     const middlewares = [thunk, notificationsMiddleware()];
@@ -108,7 +109,7 @@ describe('SourcesPage', () => {
         expect(wrapper.find(SourcesTable)).toHaveLength(0);
     });
 
-    it('renders empty state when there is fetching error', async () => {
+    it('renders error state when there is fetching (loadEntities) error', async () => {
         const ERROR_MESSAGE = 'ERROR_MESSAGE';
         api.doLoadEntities = jest.fn().mockImplementation(() => Promise.reject({ detail: ERROR_MESSAGE }));
 
@@ -117,10 +118,23 @@ describe('SourcesPage', () => {
         });
 
         wrapper.update();
-        expect(wrapper.find(SourcesEmptyState)).toHaveLength(1);
+        expect(wrapper.find(SourcesErrorState)).toHaveLength(1);
         expect(wrapper.find(PrimaryToolbar)).toHaveLength(0);
         expect(wrapper.find(SourcesTable)).toHaveLength(0);
-        expect(wrapper.text().includes(ERROR_MESSAGE)).toEqual(true);
+    });
+
+    it('renders error state when there is loading (sourceTypes/appTypes) error', async () => {
+        const ERROR_MESSAGE = 'ERROR_MESSAGE';
+        api.doLoadAppTypes = jest.fn().mockImplementation(() => Promise.reject({ detail: ERROR_MESSAGE }));
+
+        await act(async() => {
+            wrapper = mount(componentWrapperIntl(<SourcesPage { ...initialProps } />, store));
+        });
+
+        wrapper.update();
+        expect(wrapper.find(SourcesErrorState)).toHaveLength(1);
+        expect(wrapper.find(PrimaryToolbar)).toHaveLength(0);
+        expect(wrapper.find(SourcesTable)).toHaveLength(0);
     });
 
     it('renders table and filtering - loading', async () => {
