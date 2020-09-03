@@ -12,7 +12,7 @@
     "@patternfly/react-icons": "^4.7.4",
     "@patternfly/react-table": "^4.16.7",
     "@redhat-cloud-services/frontend-components": "2.4.3",
-    "@redhat-cloud-services/frontend-components-notifications": "2.1.2",
+    "@redhat-cloud-services/frontend-components-notifications": "2.2.1",
     "@redhat-cloud-services/frontend-components-sources": "2.2.2",
     "@redhat-cloud-services/frontend-components-utilities": "2.2.1",
     "@sentry/minimal": "5.22.3",
