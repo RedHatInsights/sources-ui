@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { Table, TableHeader, TableBody, sortable } from '@patternfly/react-table';
+import { Table, TableHeader, TableBody, sortable, wrappable } from '@patternfly/react-table';
 import { useIntl } from 'react-intl';
 
 import { sortEntities } from '../../redux/sources/actions';
@@ -33,7 +33,7 @@ export const prepareColumnsCells = columns => columns.filter(column => column.ti
     title: column.title || '',
     value: column.value,
     hidden: column.hidden,
-    ...(column.sortable && { transforms: [sortable] })
+    ...(column.sortable && { transforms: [sortable, wrappable] })
 }));
 
 const reducer = (state, payload) => ({ ...state, ...payload });
@@ -76,8 +76,8 @@ export const actionResolver = (intl, push, isOrgAdmin) => (rowData) => {
     },
     {
         title: intl.formatMessage({
-            id: 'sources.delete',
-            defaultMessage: 'Delete'
+            id: 'sources.remove',
+            defaultMessage: 'Remove'
         }),
         onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesRemove.path, id)),
         ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
