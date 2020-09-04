@@ -2,7 +2,7 @@ import React from 'react';
 import thunk from 'redux-thunk';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import configureStore from 'redux-mock-store';
-import { Table, TableHeader, TableBody, RowWrapper, sortable, ActionsColumn } from '@patternfly/react-table';
+import { Table, TableHeader, TableBody, RowWrapper, sortable, ActionsColumn, wrappable } from '@patternfly/react-table';
 import { MemoryRouter } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
 import ArrowsAltVIcon from '@patternfly/react-icons/dist/js/icons/arrows-alt-v-icon';
@@ -368,7 +368,7 @@ describe('SourcesTable', () => {
                 }, {
                     title: 'date',
                     value: 'date',
-                    transforms: [sortable]
+                    transforms: [sortable, wrappable]
                 }]);
             });
         });
@@ -380,7 +380,7 @@ describe('SourcesTable', () => {
 
             const MANAGE_APP_TITLE = 'Manage applications';
             const EDIT_TITLE = 'Edit';
-            const DELETE_TITLE = 'Delete';
+            const DELETE_TITLE = 'Remove';
 
             it('create actions for editable source', () => {
                 const EDITABLE_DATA = { imported: undefined };
