@@ -236,7 +236,7 @@ export const getStatusTooltipText = (status, appTypes, errors = {}) => ({
 />);
 
 export const getAllErrors = (
-    { availability_status, availability_status_error, applications = [], endpoint = { authentications: [] } }
+    { availability_status, availability_status_error, applications = [], endpoints: [endpoint] = [] }
 ) => {
     let errors = {};
     let statusesCount = 0;
@@ -269,18 +269,18 @@ export const getAllErrors = (
         }
     });
 
-    if (endpoint.availability_status === UNAVAILABLE) {
+    if (endpoint?.availability_status === UNAVAILABLE) {
         errors = {
             ...errors,
             endpoint: endpoint.availability_status_error || <UnknownError />
         };
         statusesCount++;
         errorsCount++;
-    } else if (endpoint.availability_status === AVAILABLE) {
+    } else if (endpoint?.availability_status === AVAILABLE) {
         statusesCount++;
     }
 
-    if (endpoint.authentications) {
+    if (endpoint?.authentications) {
         endpoint.authentications.map((auth) => {
             if (auth.availability_status === UNAVAILABLE) {
                 errors = {
