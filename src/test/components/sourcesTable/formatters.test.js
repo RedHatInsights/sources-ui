@@ -487,14 +487,14 @@ describe('formatters', () => {
             });
 
             it('available source with endpoint', () => {
-                expect(getAllErrors({ availability_status: AVAILABLE, endpoint: { availability_status: AVAILABLE } })).toEqual({
+                expect(getAllErrors({ availability_status: AVAILABLE, endpoints: [{ availability_status: AVAILABLE }] })).toEqual({
                     errors: {},
                     status: AVAILABLE
                 });
             });
 
             it('available source with endpoint - 2', () => {
-                expect(getAllErrors({ availability_status: '', endpoint: { availability_status: AVAILABLE } })).toEqual({
+                expect(getAllErrors({ availability_status: '', endpoints: [{ availability_status: AVAILABLE }] })).toEqual({
                     errors: {},
                     status: AVAILABLE
                 });
@@ -503,7 +503,7 @@ describe('formatters', () => {
             it('available source with authentications', () => {
                 expect(getAllErrors({
                     availability_status: AVAILABLE,
-                    endpoint: { availability_status: AVAILABLE, authentications: [{ availability_status: AVAILABLE }] }
+                    endpoints: [{ availability_status: AVAILABLE, authentications: [{ availability_status: AVAILABLE }] }]
                 })).toEqual({
                     errors: {},
                     status: AVAILABLE
@@ -513,7 +513,7 @@ describe('formatters', () => {
             it('available source with apps', () => {
                 expect(getAllErrors({
                     availability_status: AVAILABLE,
-                    endpoint: { availability_status: AVAILABLE, authentications: [{ availability_status: AVAILABLE }] },
+                    endpoints: [{ availability_status: AVAILABLE, authentications: [{ availability_status: AVAILABLE }] }],
                     applications: [{ availability_status: AVAILABLE }, { availability_status: AVAILABLE }]
                 })).toEqual({
                     errors: {},
@@ -524,7 +524,7 @@ describe('formatters', () => {
             it('available source with apps - 2', () => {
                 expect(getAllErrors({
                     availability_status: AVAILABLE,
-                    endpoint: { availability_status: AVAILABLE, authentications: [{ availability_status: AVAILABLE }] },
+                    endpoints: [{ availability_status: AVAILABLE, authentications: [{ availability_status: AVAILABLE }] }],
                     applications: [{ availability_status: '' }, { availability_status: AVAILABLE }]
                 })).toEqual({
                     errors: {},
@@ -534,7 +534,7 @@ describe('formatters', () => {
 
             it('partially available source with endpoint', () => {
                 expect(getAllErrors(
-                    { availability_status: AVAILABLE, endpoint: { availability_status: UNAVAILABLE, availability_status_error: errorMsg } }
+                    { availability_status: AVAILABLE, endpoints: [{ availability_status: UNAVAILABLE, availability_status_error: errorMsg }] }
                 )).toEqual({
                     errors: { endpoint: errorMsg },
                     status: PARTIALLY_UNAVAILABLE
@@ -543,7 +543,7 @@ describe('formatters', () => {
 
             it('partially available source with endpoint - no error', () => {
                 expect(getAllErrors(
-                    { availability_status: AVAILABLE, endpoint: { availability_status: UNAVAILABLE, availability_status_error: '' } }
+                    { availability_status: AVAILABLE, endpoints: [{ availability_status: UNAVAILABLE, availability_status_error: '' }] }
                 )).toEqual({
                     errors: { endpoint: <UnknownError /> },
                     status: PARTIALLY_UNAVAILABLE
@@ -552,7 +552,7 @@ describe('formatters', () => {
 
             it('partially available source with endpoint - no error for source status', () => {
                 expect(getAllErrors(
-                    { availability_status: UNAVAILABLE, availability_status_error: '', endpoint: { availability_status: AVAILABLE } }
+                    { availability_status: UNAVAILABLE, availability_status_error: '', endpoints: [{ availability_status: AVAILABLE }] }
                 )).toEqual({
                     errors: { source: <UnknownError /> },
                     status: PARTIALLY_UNAVAILABLE
@@ -561,7 +561,7 @@ describe('formatters', () => {
 
             it('partially available source with unavailable source', () => {
                 expect(getAllErrors(
-                    { availability_status: UNAVAILABLE, availability_status_error: errorMsg, endpoint: { availability_status: AVAILABLE } }
+                    { availability_status: UNAVAILABLE, availability_status_error: errorMsg, endpoints: [{ availability_status: AVAILABLE }] }
                 )).toEqual({
                     errors: { source: errorMsg },
                     status: PARTIALLY_UNAVAILABLE
@@ -571,7 +571,7 @@ describe('formatters', () => {
             it('partially available source with authentications', () => {
                 expect(getAllErrors({
                     availability_status: AVAILABLE,
-                    endpoint: { availability_status: AVAILABLE, authentications: [{ authtype: 'token', availability_status: UNAVAILABLE, availability_status_error: errorMsg }] }
+                    endpoints: [{ availability_status: AVAILABLE, authentications: [{ authtype: 'token', availability_status: UNAVAILABLE, availability_status_error: errorMsg }] }]
                 })).toEqual({
                     errors: { authentications: [{ type: 'token', error: errorMsg }] },
                     status: PARTIALLY_UNAVAILABLE
@@ -581,7 +581,7 @@ describe('formatters', () => {
             it('partially available source with authentications - 2', () => {
                 expect(getAllErrors({
                     availability_status: AVAILABLE,
-                    endpoint: { availability_status: '', authentications: [{ authtype: 'token', availability_status: UNAVAILABLE, availability_status_error: errorMsg }] }
+                    endpoints: [{ availability_status: '', authentications: [{ authtype: 'token', availability_status: UNAVAILABLE, availability_status_error: errorMsg }] }]
                 })).toEqual({
                     errors: { authentications: [{ type: 'token', error: errorMsg }] },
                     status: PARTIALLY_UNAVAILABLE
@@ -591,10 +591,10 @@ describe('formatters', () => {
             it('partially available source with multiple authentications', () => {
                 expect(getAllErrors({
                     availability_status: AVAILABLE,
-                    endpoint: { availability_status: '', authentications: [
+                    endpoints: [{ availability_status: '', authentications: [
                         { authtype: 'token', availability_status: UNAVAILABLE, availability_status_error: errorMsg },
                         { authtype: 'lojza', availability_status: UNAVAILABLE, availability_status_error: undefined }
-                    ] }
+                    ] }]
                 })).toEqual({
                     errors: { authentications: [{ type: 'token', error: errorMsg }, { type: 'lojza', error: <UnknownError /> }] },
                     status: PARTIALLY_UNAVAILABLE
@@ -604,7 +604,7 @@ describe('formatters', () => {
             it('partially available source with apps', () => {
                 expect(getAllErrors({
                     availability_status: AVAILABLE,
-                    endpoint: { availability_status: AVAILABLE, authentications: [{ availability_status: AVAILABLE }] },
+                    endpoints: [{ availability_status: AVAILABLE, authentications: [{ availability_status: AVAILABLE }] }],
                     applications: [{ availability_status: AVAILABLE }, { application_type_id: '151', availability_status: UNAVAILABLE, availability_status_error: errorMsg }]
                 })).toEqual({
                     errors: { applications: [{ id: '151', error: errorMsg }] },
@@ -614,7 +614,7 @@ describe('formatters', () => {
 
             it('unavailable available source with endpoint', () => {
                 expect(getAllErrors(
-                    { availability_status: UNAVAILABLE, availability_status_error: errorMsg, endpoint: { availability_status: UNAVAILABLE, availability_status_error: errorMsg } }
+                    { availability_status: UNAVAILABLE, availability_status_error: errorMsg, endpoints: [{ availability_status: UNAVAILABLE, availability_status_error: errorMsg }] }
                 )).toEqual({
                     errors: { endpoint: errorMsg, source: errorMsg },
                     status: UNAVAILABLE
@@ -623,7 +623,7 @@ describe('formatters', () => {
 
             it('unavailable available source with unavailable source', () => {
                 expect(getAllErrors(
-                    { availability_status: '', availability_status_error: errorMsg, endpoint: { availability_status: UNAVAILABLE, availability_status_error: errorMsg   } }
+                    { availability_status: '', availability_status_error: errorMsg, endpoints: [{ availability_status: UNAVAILABLE, availability_status_error: errorMsg   }] }
                 )).toEqual({
                     errors: { endpoint: errorMsg },
                     status: UNAVAILABLE
@@ -633,7 +633,7 @@ describe('formatters', () => {
             it('unavailable source with authentications', () => {
                 expect(getAllErrors({
                     availability_status: '',
-                    endpoint: { availability_status: '', authentications: [{ authtype: 'token', availability_status: UNAVAILABLE, availability_status_error: errorMsg }] }
+                    endpoints: [{ availability_status: '', authentications: [{ authtype: 'token', availability_status: UNAVAILABLE, availability_status_error: errorMsg }] }]
                 })).toEqual({
                     errors: { authentications: [{ type: 'token', error: errorMsg }] },
                     status: UNAVAILABLE
@@ -643,7 +643,7 @@ describe('formatters', () => {
             it('unavailable source with apps', () => {
                 expect(getAllErrors({
                     availability_status: '',
-                    endpoint: { availability_status: '', authentications: [{ availability_status: '' }] },
+                    endpoints: [{ availability_status: '', authentications: [{ availability_status: '' }] }],
                     applications: [{ availability_status: '' }, { application_type_id: '151', availability_status: UNAVAILABLE, availability_status_error: errorMsg }]
                 })).toEqual({
                     errors: { applications: [{ id: '151', error: errorMsg }] },
@@ -654,7 +654,7 @@ describe('formatters', () => {
             it('unavailable source with multiple apps', () => {
                 expect(getAllErrors({
                     availability_status: '',
-                    endpoint: { availability_status: '', authentications: [{ availability_status: '' }] },
+                    endpoints: [{ availability_status: '', authentications: [{ availability_status: '' }] }],
                     applications: [
                         { application_type_id: '151', availability_status: UNAVAILABLE, availability_status_error: errorMsg },
                         { application_type_id: '5646', availability_status: UNAVAILABLE, availability_status_error: undefined }
