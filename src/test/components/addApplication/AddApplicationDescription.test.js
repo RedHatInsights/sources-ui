@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { Text, Button, GridItem } from '@patternfly/react-core';
+import { Button } from '@patternfly/react-core';
 import { Route } from 'react-router-dom';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import configureStore from 'redux-mock-store';
