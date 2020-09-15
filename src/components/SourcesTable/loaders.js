@@ -41,7 +41,7 @@ export const AppPlaceholder = () => {
     );
 };
 
-export const PaginationLoader = () => <Loader height={30} width={200}/>;
+export const PaginationLoader = () => <Loader className="top-pagination" height={30} width={200}/>;
 
 export const PlaceHolderTable = () => (
     <Bullseye className="ins-c-sources__sources-placeholder-loader">

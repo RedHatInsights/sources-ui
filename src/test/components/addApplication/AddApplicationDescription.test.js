@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { Text, Button, GridItem } from '@patternfly/react-core';
+import { Button } from '@patternfly/react-core';
 import { Route } from 'react-router-dom';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import configureStore from 'redux-mock-store';
@@ -47,10 +47,10 @@ describe('AddApplicationDescription', () => {
         const source = sourcesDataGraphQl.find((x) => x.id === '23');
         const sourceType = sourceTypesData.data.find((x) => x.id === source.source_type_id);
 
-        expect(wrapper.find(Text).at(3).text()).toEqual(source.name);
-        expect(wrapper.find(Text).at(4).text()).toEqual(sourceType.product_name);
+        expect(wrapper.find('p#add-application-desc-name').text()).toEqual(source.name);
+        expect(wrapper.find('p#add-application-desc-type').text()).toEqual(sourceType.product_name);
         expect(wrapper.find(ApplicationList).length).toEqual(0);
-        expect(wrapper.find(GridItem).last().text()).toEqual('No applications');
+        expect(wrapper.find('p#add-application-desc-no-app').text()).toEqual('No applications');
         expect(wrapper.find(Button).length).toEqual(0);
         expect(initialProps.container.hidden).toEqual(false);
     });
@@ -65,8 +65,8 @@ describe('AddApplicationDescription', () => {
         const source = sourcesDataGraphQl.find((x) => x.id === '406');
         const sourceType = sourceTypesData.data.find((x) => x.id === source.source_type_id);
 
-        expect(wrapper.find(Text).at(3).text()).toEqual(source.name);
-        expect(wrapper.find(Text).at(4).text()).toEqual(sourceType.product_name);
+        expect(wrapper.find('p#add-application-desc-name').text()).toEqual(source.name);
+        expect(wrapper.find('p#add-application-desc-type').text()).toEqual(sourceType.product_name);
         expect(wrapper.find(ApplicationList).length).toEqual(1);
         expect(wrapper.find(Button).length).toEqual(1);
     });
@@ -81,8 +81,8 @@ describe('AddApplicationDescription', () => {
         const source = sourcesDataGraphQl.find((x) => x.id === '408');
         const sourceType = sourceTypesData.data.find((x) => x.id === source.source_type_id);
 
-        expect(wrapper.find(Text).at(3).text()).toEqual(source.name);
-        expect(wrapper.find(Text).at(4).text()).toEqual(sourceType.product_name);
+        expect(wrapper.find('p#add-application-desc-name').text()).toEqual(source.name);
+        expect(wrapper.find('p#add-application-desc-type').text()).toEqual(sourceType.product_name);
         expect(wrapper.find(ApplicationList).length).toEqual(1);
         expect(wrapper.find(Button).length).toEqual(3);
     });
@@ -123,6 +123,6 @@ describe('AddApplicationDescription', () => {
             initialEntry
         ));
 
-        expect(wrapper.find(Text).at(4).text()).toEqual(NOT_FOUND_MSG);
+        expect(wrapper.find('p#add-application-desc-type').text()).toEqual(NOT_FOUND_MSG);
     });
 });

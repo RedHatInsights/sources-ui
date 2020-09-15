@@ -57,22 +57,6 @@ describe('ApplicationList', () => {
         expect(wrapper.find(Button)).toHaveLength(1);
     });
 
-    it('renders correctly with prefix', () => {
-        const PREFIX = '##';
-        initialEntry = [replaceRouteId(routes.sourceManageApps.path, SOURCE_ONE_APS_ID)];
-
-        const wrapper = mount(componentWrapperIntl(
-            <Route path={routes.sourceManageApps.path} render={ (...args) => <ApplicationList {...initialProps} { ...args } namePrefix={PREFIX}/> } />,
-            store,
-            initialEntry
-        ));
-
-        const source = sourcesDataGraphQl.find((x) => x.id === SOURCE_ONE_APS_ID);
-        const applicationType = applicationTypesData.data.find((x) => x.id === source.applications[0].application_type_id);
-
-        expect(wrapper.find(Text).first().text()).toEqual(`${PREFIX}${applicationType.display_name}`);
-    });
-
     it('renders correctly with applications', () => {
         initialEntry = [replaceRouteId(routes.sourceManageApps.path, SOURCE_ALL_APS_ID)];
 
