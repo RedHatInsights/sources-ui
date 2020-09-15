@@ -11,7 +11,7 @@ import { GridItem } from '@patternfly/react-core/dist/js/layouts/Grid/GridItem';
 
 import { useSource } from '../../hooks/useSource';
 
-const ApplicationList = ({ setApplicationToRemove, breakpoints, namePrefix }) => {
+const ApplicationList = ({ setApplicationToRemove }) => {
     const intl = useIntl();
     const appTypes = useSelector(({ sources }) => sources.appTypes);
     const source = useSource();
@@ -39,12 +39,12 @@ const ApplicationList = ({ setApplicationToRemove, breakpoints, namePrefix }) =>
     .map(({ display_name, id, dependent_applications }) => (
         <TextContent key={id}>
             <Grid>
-                <GridItem md={breakpoints.display_name || 4}>
+                <GridItem md={4} sm={6}>
                     <Text component={TextVariants.p} style={{ marginBottom: 0 }}>
-                        { namePrefix }{ display_name }
+                        { display_name }
                     </Text>
                 </GridItem>
-                <GridItem md={breakpoints.remove || 8} className="ins-c-sources__remove-app">
+                <GridItem md={8} sm={6} className="ins-c-sources__remove-app">
                     <Button
                         variant={ButtonVariant.link}
                         isInline
@@ -63,15 +63,6 @@ const ApplicationList = ({ setApplicationToRemove, breakpoints, namePrefix }) =>
 
 ApplicationList.propTypes = {
     setApplicationToRemove: PropTypes.func.isRequired,
-    breakpoints: PropTypes.shape({
-        display_name: PropTypes.number,
-        remove: PropTypes.number
-    }),
-    namePrefix: PropTypes.node
-};
-
-ApplicationList.defaultProps = {
-    breakpoints: {}
 };
 
 export default ApplicationList;
