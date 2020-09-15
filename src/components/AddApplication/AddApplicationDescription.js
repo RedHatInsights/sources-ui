@@ -43,6 +43,9 @@ const AddApplicationDescription = ({ container }) => {
                                 defaultMessage: 'Source name'
                             }) }
                         </Text>
+                        <Text component={TextVariants.p} id="add-application-desc-name">
+                            {source.name}
+                        </Text>
                     </GridItem>
                     <GridItem md={2}>
                         <Text component={TextVariants.h4}>
@@ -50,6 +53,12 @@ const AddApplicationDescription = ({ container }) => {
                                 id: 'sources.type',
                                 defaultMessage: 'Type'
                             }) }
+                        </Text>
+                        <Text component={TextVariants.p} id="add-application-desc-type">
+                            { sourceType ? sourceType.product_name : intl.formatMessage({
+                                id: 'sources.typeNotFound',
+                                defaultMessage: 'Type not found'
+                            })}
                         </Text>
                     </GridItem>
                     <GridItem md={8}>
@@ -59,26 +68,16 @@ const AddApplicationDescription = ({ container }) => {
                                 defaultMessage: 'Applications'
                             }) }
                         </Text>
-                    </GridItem>
-                    <GridItem md={2}>
-                        <Text component={TextVariants.p}>
-                            {source.name}
-                        </Text>
-                    </GridItem>
-                    <GridItem md={2}>
-                        <Text component={TextVariants.p}>
-                            { sourceType ? sourceType.product_name : intl.formatMessage({
-                                id: 'sources.typeNotFound',
-                                defaultMessage: 'Type not found'
-                            })}
-                        </Text>
-                    </GridItem>
-                    <GridItem md={8}>
                         {apps.length > 0 ? <ApplicationList setApplicationToRemove={setApplicationToRemove}/>
-                            : intl.formatMessage({
-                                id: 'sources.noApps',
-                                defaultMessage: 'No applications'
-                            })}
+                            : (
+                                <Text component={TextVariants.p} id="add-application-desc-no-app">
+                                    {intl.formatMessage({
+                                        id: 'sources.noApps',
+                                        defaultMessage: 'No applications'
+                                    })}
+                                </Text>
+                            )
+                        }
                     </GridItem>
                 </Grid>
             </TextContent>
