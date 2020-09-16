@@ -10,15 +10,12 @@ import componentMapper from '@data-driven-forms/pf4-component-mapper/dist/cjs/co
 
 import { mapperExtension } from '@redhat-cloud-services/frontend-components-sources/cjs/sourceFormRenderer';
 
-import EditFieldWrapper from '../components/EditField/EditFieldWrapper';
-
 const SourcesFormRenderer = props => (
     <FormRenderer
         FormTemplate={FormTemplate}
         componentMapper={{
             ...componentMapper,
             ...mapperExtension,
-            'edit-field': EditFieldWrapper,
             'switch-field': componentMapper[componentTypes.SWITCH]
         }}
         validatorMapper={{

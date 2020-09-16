@@ -4,8 +4,6 @@ import componentTypes from '@data-driven-forms/react-form-renderer/dist/cjs/comp
 import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
 import hardcodedSchemas from '@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas';
 import { FormattedMessage } from 'react-intl';
-import { modifyFields } from './helpers';
-import { EDIT_FIELD_NAME } from '../../EditField/EditField';
 
 export const APP_NAMES = {
     COST_MANAGAMENT: '/insights/platform/cost-management'
@@ -47,8 +45,7 @@ export const appendClusterIdentifier = (sourceType) =>
         />,
         isRequired: true,
         validate: [{ type: validatorTypes.REQUIRED }],
-        originalComponent: componentTypes.TEXT_FIELD,
-        component: EDIT_FIELD_NAME
+        component: componentTypes.TEXT_FIELD,
     }] : [];
 
 export const costManagementFields = (
@@ -83,7 +80,7 @@ export const costManagementFields = (
         title: costManagementApp.display_name,
         name: costManagementApp.display_name,
         fields: [
-            ...modifyFields(enhandcedFields),
+            ...enhandcedFields,
             ...appendClusterIdentifier(sourceType)
         ]
     });

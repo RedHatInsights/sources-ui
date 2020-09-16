@@ -8,8 +8,6 @@ import {
     isCMField
 } from '../../../../components/SourceEditForm/parser/application';
 import { applicationTypesData, COSTMANAGEMENT_APP } from '../../../__mocks__/applicationTypesData';
-import { modifyFields } from '../../../../components/SourceEditForm/parser/helpers';
-import { EDIT_FIELD_NAME } from '../../../../components/EditField/EditField';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas', () => ({
     __esModule: true,
@@ -110,7 +108,7 @@ describe('application edit form parser', () => {
                 component: componentTypes.SUB_FORM,
                 title: COSTMANAGEMENT_APP.display_name,
                 name: COSTMANAGEMENT_APP.display_name,
-                fields: modifyFields(BILLING_SOURCE_FIELDS)
+                fields: BILLING_SOURCE_FIELDS
             };
 
             const result = costManagementFields(
@@ -132,7 +130,7 @@ describe('application edit form parser', () => {
                     component: componentTypes.SUB_FORM,
                     title: COSTMANAGEMENT_APP.display_name,
                     name: COSTMANAGEMENT_APP.display_name,
-                    fields: modifyFields(BILLING_SOURCE_FIELDS)
+                    fields: BILLING_SOURCE_FIELDS
                 };
 
                 EXPECTED_RESULT = [
@@ -251,8 +249,7 @@ describe('application edit form parser', () => {
                     label: expect.any(Object),
                     isRequired: true,
                     validate: [{ type: validatorTypes.REQUIRED }],
-                    component: EDIT_FIELD_NAME,
-                    originalComponent: componentTypes.TEXT_FIELD,
+                    component: componentTypes.TEXT_FIELD,
                 }]);
             });
 

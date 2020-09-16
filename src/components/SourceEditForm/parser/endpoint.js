@@ -3,7 +3,6 @@ import get from 'lodash/get';
 import { FormattedMessage } from 'react-intl';
 import componentTypes from '@data-driven-forms/react-form-renderer/dist/cjs/component-types';
 import hardcodedSchemas from '@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas';
-import { modifyFields } from './helpers';
 
 export const getEnhancedEndpointField = (sourceType, name) =>
     get(hardcodedSchemas, [sourceType, 'endpoint', name], {});
@@ -27,6 +26,6 @@ export const endpointFields = (sourceType) => {
             defaultMessage="Endpoint"
         />,
         name: 'endpoint',
-        fields: modifyFields(enhancedFields)
+        fields: enhancedFields
     });
 };

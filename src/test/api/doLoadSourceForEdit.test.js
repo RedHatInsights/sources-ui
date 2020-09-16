@@ -51,12 +51,17 @@ describe('doLoadSourceForEdit', () => {
         mocks = {
             showSource: jest.fn().mockImplementation(() => Promise.resolve(SOURCE_DATA)),
             listSourceEndpoints: jest.fn().mockImplementation(() => Promise.resolve(EMPTY_DATA)),
-            listSourceApplications: jest.fn().mockImplementation(() => Promise.resolve(EMPTY_DATA)),
-            listEndpointAuthentications: jest.fn().mockImplementation(() => Promise.resolve(EMPTY_DATA))
+            listEndpointAuthentications: jest.fn().mockImplementation(() => Promise.resolve(EMPTY_DATA)),
+            showAuthentication: jest.fn().mockImplementation(() => Promise.resolve(EMPTY_DATA))
         };
 
         api.getSourcesApi = () => mocks;
         cmApi.getCmValues = jest.fn().mockImplementation(() => Promise.reject());
+        api.doLoadApplicationsForEdit = jest.fn().mockImplementation(() => Promise.resolve({
+            sources: [{
+                applications: []
+            }]
+        }));
     });
 
     it('return source without endpoint', async () => {
@@ -64,7 +69,7 @@ describe('doLoadSourceForEdit', () => {
 
         expect(mocks.showSource).toHaveBeenCalledWith(SOURCE_ID);
         expect(mocks.listSourceEndpoints).toHaveBeenCalledWith(SOURCE_ID);
-        expect(mocks.listSourceApplications).toHaveBeenCalledWith(SOURCE_ID);
+        expect(api.doLoadApplicationsForEdit).toHaveBeenCalledWith(SOURCE_ID);
         expect(cmApi.getCmValues).toHaveBeenCalledWith(SOURCE_ID);
         expect(mocks.listEndpointAuthentications).not.toHaveBeenCalled();
 
@@ -79,15 +84,14 @@ describe('doLoadSourceForEdit', () => {
 
     it('return source without endpoint and with applications', async () => {
         const APPLICATION_DATA = {
-            data: [{
-                id: '2323322'
-            }]
+            id: '2323322'
         };
 
-        mocks = {
-            ...mocks,
-            listSourceApplications: jest.fn().mockImplementation(() => Promise.resolve(APPLICATION_DATA))
-        };
+        api.doLoadApplicationsForEdit = jest.fn().mockImplementation(() => Promise.resolve({
+            sources: [{
+                applications: [APPLICATION_DATA]
+            }]
+        }));
 
         api.getSourcesApi = () => mocks;
 
@@ -95,16 +99,58 @@ describe('doLoadSourceForEdit', () => {
 
         expect(mocks.showSource).toHaveBeenCalledWith(SOURCE_ID);
         expect(mocks.listSourceEndpoints).toHaveBeenCalledWith(SOURCE_ID);
-        expect(mocks.listSourceApplications).toHaveBeenCalledWith(SOURCE_ID);
+        expect(api.doLoadApplicationsForEdit).toHaveBeenCalledWith(SOURCE_ID);
         expect(cmApi.getCmValues).toHaveBeenCalledWith(SOURCE_ID);
         expect(mocks.listEndpointAuthentications).not.toHaveBeenCalled();
+        expect(mocks.showAuthentication).not.toHaveBeenCalled();
 
         expect(result).toEqual({
             source: {
                 ...SOURCE,
                 ...SOURCE_DATA
             },
-            applications: APPLICATION_DATA.data
+            applications: [APPLICATION_DATA]
+        });
+    });
+
+    it('return source without endpoint and with applications - load authentications for apps', async () => {
+        const AUTHENTICATION_DATA_1 = { id: '123' };
+        const AUTHENTICATION_DATA_2 = { id: '345' };
+
+        const APPLICATION_DATA = {
+            id: '2323322',
+            authentications: [
+                AUTHENTICATION_DATA_1,
+                AUTHENTICATION_DATA_2
+            ]
+        };
+
+        api.doLoadApplicationsForEdit = jest.fn().mockImplementation(() => Promise.resolve({
+            sources: [{
+                applications: [APPLICATION_DATA]
+            }]
+        }));
+
+        api.getSourcesApi = () => mocks;
+
+        const result = await doLoadSourceForEdit(SOURCE);
+
+        expect(mocks.showSource).toHaveBeenCalledWith(SOURCE_ID);
+        expect(mocks.listSourceEndpoints).toHaveBeenCalledWith(SOURCE_ID);
+        expect(api.doLoadApplicationsForEdit).toHaveBeenCalledWith(SOURCE_ID);
+        expect(cmApi.getCmValues).toHaveBeenCalledWith(SOURCE_ID);
+        expect(mocks.listEndpointAuthentications).not.toHaveBeenCalled();
+        expect(mocks.showAuthentication.mock.calls).toEqual([
+            [AUTHENTICATION_DATA_1.id],
+            [AUTHENTICATION_DATA_2.id]
+        ]);
+
+        expect(result).toEqual({
+            source: {
+                ...SOURCE,
+                ...SOURCE_DATA
+            },
+            applications: [APPLICATION_DATA]
         });
     });
 
@@ -121,7 +167,7 @@ describe('doLoadSourceForEdit', () => {
 
         expect(mocks.showSource).toHaveBeenCalledWith(SOURCE_ID);
         expect(mocks.listSourceEndpoints).toHaveBeenCalledWith(SOURCE_ID);
-        expect(mocks.listSourceApplications).toHaveBeenCalledWith(SOURCE_ID);
+        expect(api.doLoadApplicationsForEdit).toHaveBeenCalledWith(SOURCE_ID);
         expect(cmApi.getCmValues).toHaveBeenCalledWith(SOURCE_ID);
         expect(mocks.listEndpointAuthentications).toHaveBeenCalledWith(ENDPOINT_ID);
 
@@ -143,7 +189,7 @@ describe('doLoadSourceForEdit', () => {
 
         expect(mocks.showSource).toHaveBeenCalledWith(SOURCE_ID);
         expect(mocks.listSourceEndpoints).toHaveBeenCalledWith(SOURCE_ID);
-        expect(mocks.listSourceApplications).toHaveBeenCalledWith(SOURCE_ID);
+        expect(api.doLoadApplicationsForEdit).toHaveBeenCalledWith(SOURCE_ID);
         expect(cmApi.getCmValues).toHaveBeenCalledWith(SOURCE_ID);
         expect(mocks.listEndpointAuthentications).not.toHaveBeenCalled();
 
@@ -171,7 +217,7 @@ describe('doLoadSourceForEdit', () => {
 
         expect(mocks.showSource).toHaveBeenCalledWith(SOURCE_ID);
         expect(mocks.listSourceEndpoints).toHaveBeenCalledWith(SOURCE_ID);
-        expect(mocks.listSourceApplications).toHaveBeenCalledWith(SOURCE_ID);
+        expect(api.doLoadApplicationsForEdit).toHaveBeenCalledWith(SOURCE_ID);
         expect(cmApi.getCmValues).toHaveBeenCalledWith(SOURCE_ID);
         expect(mocks.listEndpointAuthentications).toHaveBeenCalledWith(ENDPOINT_ID);
 

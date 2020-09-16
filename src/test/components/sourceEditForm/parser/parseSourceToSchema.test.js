@@ -51,7 +51,9 @@ describe('parseSourceToSchema', () => {
 
         expect(gen.genericInfo).toHaveBeenCalledWith(
             SOURCE.source.id,
-            INTL
+            INTL,
+            SOURCE_TYPE,
+            SOURCE.applications
         );
         expect(auth.authenticationFields).toHaveBeenCalledWith(
             SOURCE.authentications,
@@ -84,7 +86,9 @@ describe('parseSourceToSchema', () => {
 
         expect(gen.genericInfo).toHaveBeenCalledWith(
             SOURCE.source.id,
-            INTL
+            INTL,
+            SOURCE_TYPE,
+            SOURCE.applications
         );
         expect(auth.authenticationFields).toHaveBeenCalledWith(
             SOURCE.authentications,
@@ -115,7 +119,9 @@ describe('parseSourceToSchema', () => {
 
         expect(gen.genericInfo).toHaveBeenCalledWith(
             SOURCE.source.id,
-            INTL
+            INTL,
+            SOURCE_TYPE,
+            SOURCE.applications
         );
         expect(auth.authenticationFields).toHaveBeenCalledWith(
             SOURCE.authentications,

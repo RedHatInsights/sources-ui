@@ -1,6 +1,5 @@
 import { getEnhancedEndpointField, endpointFields } from '../../../../components/SourceEditForm/parser/endpoint';
 import { componentTypes } from '@data-driven-forms/react-form-renderer';
-import { modifyFields } from '../../../../components/SourceEditForm/parser/helpers';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas', () => ({
     __esModule: true,
@@ -66,7 +65,7 @@ describe('endpoint edit form parser', () => {
                 component: componentTypes.SUB_FORM,
                 title: expect.any(Object),
                 name: 'endpoint',
-                fields: modifyFields(FIELDS, EDITING, SET_EDIT)
+                fields: FIELDS
             });
         });
     });
