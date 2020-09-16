@@ -1,9 +1,7 @@
-import React from 'react';
 import get from 'lodash/get';
 import componentTypes from '@data-driven-forms/react-form-renderer/dist/cjs/component-types';
 import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
 import hardcodedSchemas from '@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas';
-import { FormattedMessage } from 'react-intl';
 
 import { unsupportedAuthTypeField } from './unsupportedAuthType';
 import AuthenticationManagement from './AuthenticationManagement';
@@ -32,15 +30,7 @@ export const modifyAuthSchemas = (fields, id) => fields.map((field) => {
     const isPassword = getLastPartOfName(finalField.name) === 'password';
 
     if (isPassword) {
-        finalField.helperText = (<FormattedMessage
-            id="sources.passwordResetHelperText"
-            defaultMessage={`Changing this resets your current { label }.`}
-            values={{
-                label: finalField.label
-            }}
-        />);
-        finalField.isRequired = false;
-        finalField.validate = removeRequiredValidator(finalField.validate);
+        finalField.component = 'authentication';
     }
 
     return finalField;

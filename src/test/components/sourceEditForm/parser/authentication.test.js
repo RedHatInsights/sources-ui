@@ -162,10 +162,8 @@ describe('authentication edit source parser', () => {
 
             expect(result).toEqual([{
                 ...FIELDS_WITH_PASSWORD[0],
+                component: 'authentication',
                 name: createAuthFieldName(PASSWORD_NAME, ID),
-                isRequired: false,
-                validate: [],
-                helperText: expect.any(Object)
             }]);
         });
     });
