@@ -3,6 +3,7 @@ import get from 'lodash/get';
 import { FormattedMessage } from 'react-intl';
 import componentTypes from '@data-driven-forms/react-form-renderer/dist/cjs/component-types';
 import hardcodedSchemas from '@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas';
+import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
 
 export const getEnhancedEndpointField = (sourceType, name) =>
     get(hardcodedSchemas, [sourceType, 'endpoint', name], {});
@@ -19,13 +20,48 @@ export const endpointFields = (sourceType) => {
         ...getEnhancedEndpointField(sourceType.name, field.name)
     }));
 
-    return ({
+    const modifiedFields = enhancedFields;
+
+    const subForm = {
         component: componentTypes.SUB_FORM,
         title: <FormattedMessage
             id="sources.endpoint"
             defaultMessage="Endpoint"
         />,
         name: 'endpoint',
-        fields: enhancedFields
+    };
+
+    if (sourceType.name === 'ansible-tower') {
+        const url = modifiedFields.find(({ name }) => name === 'url');
+
+        return ({
+            ...subForm,
+            fields: [{
+                component: componentTypes.SUB_FORM,
+                name: 'receptor_node_group',
+                condition: {
+                    when: 'endpoint.receptor_node',
+                    isNotEmpty: true
+                },
+                fields: [{
+                    ...url,
+                    isRequired: false,
+                    validate: url?.validate?.filter(validation => validation.type !== validatorTypes.REQUIRED)
+                }]
+            }, {
+                component: componentTypes.SUB_FORM,
+                name: 'hostname_group',
+                condition: {
+                    when: 'endpoint.receptor_node',
+                    isEmpty: true
+                },
+                fields: modifiedFields
+            }]
+        });
+    }
+
+    return ({
+        ...subForm,
+        fields: modifiedFields
     });
 };
