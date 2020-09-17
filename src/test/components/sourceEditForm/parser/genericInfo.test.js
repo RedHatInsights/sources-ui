@@ -1,8 +1,8 @@
 import { componentTypes } from '@data-driven-forms/react-form-renderer';
+import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
 
 import { genericInfo } from '../../../../components/SourceEditForm/parser/genericInfo';
-import { EDIT_FIELD_NAME } from '../../../../components/EditField/EditField';
-import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
+import AdditionalInfoBar from '../../../../components/SourceEditForm/parser/AdditionalInfoBar';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/SourceAddSchema', () => ({
     __esModule: true,
@@ -15,10 +15,9 @@ describe('generic info edit form parser', () => {
 
     it('should generate generic info form group', () => {
         const EXPECTED_TYPE_FIELD = {
-            name: 'source_type',
-            label: 'Source type',
-            isReadOnly: true,
-            component: EDIT_FIELD_NAME,
+            name: 'additional_info',
+            component: 'description',
+            Content: AdditionalInfoBar
         };
         const EXPECTED_NAME_FIELD = {
             name: 'source.name',
@@ -28,8 +27,7 @@ describe('generic info edit form parser', () => {
                 { type: validatorTypes.REQUIRED }
             ],
             isRequired: true,
-            originalComponent: componentTypes.TEXT_FIELD,
-            component: EDIT_FIELD_NAME,
+            component: componentTypes.TEXT_FIELD,
             resolveProps: expect.any(Function)
         };
 

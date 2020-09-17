@@ -150,6 +150,15 @@ describe('entities spec', () => {
 
                 expect(mock.history.post[0].data).toEqual('{"application_type":"app_id","authentication_id":"auth_id"}');
             });
+
+            it('showAuthentication', async () => {
+                const method = 'Get';
+                mock[`on${method}`](`/api/sources/v3.0/authentications/${SOURCE_ID}`).reply(200, OK_RESPONSE);
+
+                const result = await api.getSourcesApi().showAuthentication(SOURCE_ID);
+
+                expect(result).toEqual(OK_RESPONSE);
+            });
         });
 
         it('doRemoveSource fails', async () => {
@@ -244,6 +253,20 @@ describe('entities spec', () => {
             mock.onPost(`/api/sources/v3.0/graphql`).reply(200, { data: ENTITIES });
 
             const result = await api.doLoadSource(SOURCE_ID);
+
+            expect(result).toEqual(ENTITIES);
+
+            expect(mock.history.post[0].data.includes('id')).toEqual(true);
+            expect(mock.history.post[0].data.includes('eq')).toEqual(true);
+            expect(mock.history.post[0].data.includes(SOURCE_ID)).toEqual(true);
+        });
+
+        it('doLoadApplicationsForEdit', async () => {
+            const ENTITIES = [{ entity1: true }];
+
+            mock.onPost(`/api/sources/v3.0/graphql`).reply(200, { data: ENTITIES });
+
+            const result = await api.doLoadApplicationsForEdit(SOURCE_ID);
 
             expect(result).toEqual(ENTITIES);
 

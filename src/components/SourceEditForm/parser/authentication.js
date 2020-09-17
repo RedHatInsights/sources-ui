@@ -7,8 +7,6 @@ import { FormattedMessage } from 'react-intl';
 
 import { unsupportedAuthTypeField } from './unsupportedAuthType';
 import AuthenticationManagement from './AuthenticationManagement';
-import RemoveAuthPlaceholder from './RemoveAuthPlaceholder';
-import { modifyFields } from './helpers';
 
 export const createAuthFieldName = (fieldName, id) => `authentications.a${id}.${fieldName.replace('authentication.', '')}`;
 
@@ -53,7 +51,7 @@ export const authenticationFields = (authentications, sourceType, appTypes) => {
         return [];
     }
 
-    return authentications.map(({ isDeleting, ...auth }) => {
+    return authentications.map((auth) => {
         const schemaAuth = sourceType.schema.authentication.find(({ type }) => type === auth.authtype);
 
         if (!schemaAuth) {
@@ -80,13 +78,8 @@ export const authenticationFields = (authentications, sourceType, appTypes) => {
                     schemaAuth,
                     appTypes,
                     auth,
-                    isDeleting
                 },
-                isDeleting ?  {
-                    component: 'description',
-                    name: `${auth.id}-remove-spinner`,
-                    Content: RemoveAuthPlaceholder
-                } : modifyFields(modifyAuthSchemas(enhancedFields, auth.id))
+                modifyAuthSchemas(enhancedFields, auth.id)
             ]
         });
     });

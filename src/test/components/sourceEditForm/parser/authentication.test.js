@@ -12,8 +12,6 @@ import {
 import { unsupportedAuthTypeField } from '../../../../components/SourceEditForm/parser/unsupportedAuthType';
 import { applicationTypesData } from '../../../__mocks__/applicationTypesData';
 import AuthenticationManagement from '../../../../components/SourceEditForm/parser/AuthenticationManagement';
-import RemoveAuthPlaceholder from '../../../../components/SourceEditForm/parser/RemoveAuthPlaceholder';
-import { modifyFields } from '../../../../components/SourceEditForm/parser/helpers';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas', () => ({
     __esModule: true,
@@ -243,44 +241,7 @@ describe('authentication edit source parser', () => {
                         auth: AUTHENTICATIONS[0],
                         isDeleting: undefined
                     },
-                    modifyFields(modifyAuthSchemas(FIELDS_WITHOUT_STEPKEYS, ID))
-                ]
-            };
-
-            expect(result).toEqual([
-                ARN_GROUP
-            ]);
-        });
-
-        it('returns authentication form groups when deleting', () => {
-            AUTHENTICATIONS = [{ authtype: AUTHTYPE, id: ID, isDeleting: true }];
-
-            const result = authenticationFields(
-                AUTHENTICATIONS,
-                SOURCE_TYPE,
-                APP_TYPES
-            );
-
-            const authentication = SOURCE_TYPE.schema.authentication[0];
-
-            const ARN_GROUP = {
-                component: componentTypes.SUB_FORM,
-                name: authentication.name,
-                fields: [
-                    {
-                        component: 'description',
-                        name: `${AUTHENTICATIONS[0].id}-authentication-management`,
-                        Content: AuthenticationManagement,
-                        schemaAuth: authentication,
-                        appTypes: APP_TYPES,
-                        auth: { ...AUTHENTICATIONS[0], isDeleting: undefined },
-                        isDeleting: true
-                    },
-                    {
-                        component: 'description',
-                        name: `${AUTHENTICATIONS[0].id}-remove-spinner`,
-                        Content: RemoveAuthPlaceholder
-                    }
+                    modifyAuthSchemas(FIELDS_WITHOUT_STEPKEYS, ID)
                 ]
             };
 
