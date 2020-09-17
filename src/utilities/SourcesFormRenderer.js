@@ -10,12 +10,15 @@ import componentMapper from '@data-driven-forms/pf4-component-mapper/dist/cjs/co
 
 import { mapperExtension } from '@redhat-cloud-services/frontend-components-sources/cjs/sourceFormRenderer';
 
+import Authentication from '../components/Authentication';
+
 const SourcesFormRenderer = props => (
     <FormRenderer
         FormTemplate={FormTemplate}
         componentMapper={{
             ...componentMapper,
             ...mapperExtension,
+            authentication: Authentication,
             'switch-field': componentMapper[componentTypes.SWITCH]
         }}
         validatorMapper={{
