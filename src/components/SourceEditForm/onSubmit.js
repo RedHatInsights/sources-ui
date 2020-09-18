@@ -1,39 +1,76 @@
-import { selectOnlyEditedValues } from './helpers';
-import { updateSource, loadEntities } from '../../redux/sources/actions';
-import { routes } from '../../Routes';
-import { checkSourceStatus } from '../../api/checkSourceStatus';
+import { checkAppAvailability } from '@redhat-cloud-services/frontend-components-sources/cjs/getApplicationStatus';
 
-export const onSubmit = (values, editing, dispatch, source, intl, push) => dispatch(updateSource(
-    source,
-    selectOnlyEditedValues(values, editing),
-    intl.formatMessage({
-        id: 'sources.modifiedNotificationTitle',
-        defaultMessage: `"{ name }" was modified successfully.`
-    }, { name: source.source.name }),
-    intl.formatMessage({
-        id: 'sources.modifiedNotificationDescription',
-        defaultMessage: 'The source was successfully modified.'
-    }),
-    {
-        authentication: intl.formatMessage({
-            id: 'sources.sourceEditAuthFailure',
-            defaultMessage: 'Authentication update failure.'
-        }),
-        source: intl.formatMessage({
-            id: 'sources.sourceEditFailure',
-            defaultMessage: 'Source update failure.'
-        }),
-        endpoint: intl.formatMessage({
-            id: 'sources.sourceEditEndpointFailure',
-            defaultMessage: 'Endpoint update failure.'
-        }),
-        costManagement: intl.formatMessage({
-            id: 'sources.sourceCostmanagementFailure',
-            defaultMessage: 'Cost Management update failure.'
-        })
-    }))
-.then(() => {
+import { selectOnlyEditedValues } from './helpers';
+import { loadEntities } from '../../redux/sources/actions';
+import { checkSourceStatus } from '../../api/checkSourceStatus';
+import { doLoadSourceForEdit } from '../../api/doLoadSourceForEdit';
+import { doUpdateSource } from '../../api/doUpdateSource';
+
+import { UNAVAILABLE } from '../SourcesTable/formatters';
+
+export const onSubmit = async (values, editing, dispatch, source, intl, setState) => {
+    setState({ type: 'submit' });
+
+    try {
+        await doUpdateSource(source, selectOnlyEditedValues(values, editing));
+    } catch {
+        setState({ type: 'submitFailed' });
+
+        return;
+    }
+
     checkSourceStatus(source.source.id);
-    push(routes.sources.path);
     dispatch(loadEntities());
-});
+
+    let message;
+
+    const sourceData = await doLoadSourceForEdit({ id: source.source.id });
+
+    const promises = source.applications?.map(({ id }) => checkAppAvailability(id));
+
+    let statusResults;
+    if (promises.length > 0) {
+        try {
+            statusResults = await Promise.all(promises);
+        } catch (error) {
+            setState({ type: 'submitFailed' });
+
+            return;
+        }
+
+        const unavailableApp = statusResults.find(({ availability_status }) => availability_status === UNAVAILABLE);
+
+        if (unavailableApp) {
+            message = {
+                title: intl.formatMessage({
+                    id: 'wizard.failEditToastTitle',
+                    defaultMessage: 'Edit source failed'
+                }),
+                description: unavailableApp.availability_status_error,
+                variant: 'danger'
+            };
+
+            setState({ type: 'submitFinished', source: sourceData, message });
+
+            return;
+        }
+
+        const anyTimetouted = statusResults.some(({ availability_status }) => !availability_status);
+
+        if (anyTimetouted) {
+            setState({ type: 'submitTimetouted' });
+
+            return;
+        }
+    }
+
+    message = {
+        title: intl.formatMessage({
+            id: 'wizard.successEditToastTitle',
+            defaultMessage: 'Source ‘{name}’ was edited successfully.'
+        }, { name: source.source.name }),
+        variant: 'success'
+    };
+
+    setState({ type: 'submitFinished', source: sourceData, message });
+};

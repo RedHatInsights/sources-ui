@@ -7,9 +7,13 @@ export const initialState = {
     initialValues: {},
     sourceType: undefined,
     schema: undefined,
+    isSubmitting: false,
+    initialLoad: true,
+    submitError: false,
+    isTimeouted: false
 };
 
-const reducer = (state, { type, source, sourceType, appTypes, intl }) => {
+const reducer = (state, { type, source, sourceType, appTypes, intl, message }) => {
     switch (type) {
         case 'createForm':
             return {
@@ -22,7 +26,33 @@ const reducer = (state, { type, source, sourceType, appTypes, intl }) => {
         case 'setSource':
             return {
                 ...state,
-                source
+                source,
+                initialLoad: false
+            };
+        case 'submit':
+            return {
+                ...state,
+                isSubmitting: true,
+                submitError: false
+            };
+        case 'submitFinished':
+            return {
+                ...state,
+                isSubmitting: false,
+                source,
+                message
+            };
+        case 'submitFailed':
+            return {
+                ...state,
+                isSubmitting: false,
+                submitError: true
+            };
+        case 'submitTimetouted':
+            return {
+                ...state,
+                isSubmitting: false,
+                isTimeouted: true
             };
         default:
             return state;
