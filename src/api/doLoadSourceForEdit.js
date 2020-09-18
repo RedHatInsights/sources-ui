@@ -29,15 +29,23 @@ export const doLoadSourceForEdit = (source) => Promise.all([
 
     const promises = [];
     let appAuths;
+    const addToApp = [];
 
     apps.forEach((app) => {
         app?.authentications?.forEach((auth) => {
-            auth?.id && promises.push(getSourcesApi().showAuthentication(auth.id));
+            if (auth?.id) {
+                promises.push(getSourcesApi().showAuthentication(auth.id));
+                addToApp.push(app.id);
+            }
         });
     });
 
     if (promises.length > 0) {
         appAuths = await Promise.all(promises);
+
+        addToApp.forEach((id, index) => {
+            basicValues.applications.find(app => app.id === id).authentications.push(appAuths[index]);
+        });
     }
 
     if (!endpoint) {
@@ -48,6 +56,5 @@ export const doLoadSourceForEdit = (source) => Promise.all([
         ...basicValues,
         endpoints: endpoints.data,
         authentications: authentications.data,
-        appAuths
     }));
 });

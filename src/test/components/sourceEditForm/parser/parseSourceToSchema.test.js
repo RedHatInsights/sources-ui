@@ -4,6 +4,7 @@ import * as gen from '../../../../components/SourceEditForm/parser/genericInfo';
 import * as auth from '../../../../components/SourceEditForm/parser/authentication';
 import * as end from '../../../../components/SourceEditForm/parser/endpoint';
 import * as app from '../../../../components/SourceEditForm/parser/application';
+import * as titleField from '../../../../components/SourceEditForm/parser/titleField';
 
 describe('parseSourceToSchema', () => {
     let SOURCE;
@@ -39,6 +40,7 @@ describe('parseSourceToSchema', () => {
         auth.authenticationFields = jest.fn().mockImplementation(() => ([]));
         app.applicationsFields = jest.fn().mockImplementation(() => ([]));
         end.endpointFields = jest.fn().mockImplementation(() => (undefined));
+        titleField.default = jest.fn().mockImplementation(() => ([]));
     });
 
     it('calls all subsections', () => {
@@ -57,8 +59,7 @@ describe('parseSourceToSchema', () => {
         );
         expect(auth.authenticationFields).toHaveBeenCalledWith(
             SOURCE.authentications,
-            SOURCE_TYPE,
-            APP_TYPES
+            SOURCE_TYPE
         );
         expect(app.applicationsFields).toHaveBeenCalledWith(
             SOURCE.applications,
@@ -68,6 +69,49 @@ describe('parseSourceToSchema', () => {
         );
         expect(end.endpointFields).toHaveBeenCalledWith(
             SOURCE_TYPE,
+        );
+        expect(titleField.default).toHaveBeenCalledWith(
+            SOURCE.applications,
+            SOURCE_TYPE,
+            APP_TYPES,
+            INTL
+        );
+    });
+
+    it('calls all subsections with apps', () => {
+        SOURCE = {
+            ...SOURCE,
+            applications: [{ id: '1234' }]
+        };
+
+        parseSourceToSchema(
+            SOURCE,
+            SOURCE_TYPE,
+            APP_TYPES,
+            INTL
+        );
+
+        expect(gen.genericInfo).toHaveBeenCalledWith(
+            SOURCE.source.id,
+            INTL,
+            SOURCE_TYPE,
+            SOURCE.applications
+        );
+        expect(auth.authenticationFields).not.toHaveBeenCalled();
+        expect(app.applicationsFields).toHaveBeenCalledWith(
+            SOURCE.applications,
+            SOURCE_TYPE,
+            APP_TYPES,
+            SOURCE,
+        );
+        expect(end.endpointFields).toHaveBeenCalledWith(
+            SOURCE_TYPE,
+        );
+        expect(titleField.default).toHaveBeenCalledWith(
+            SOURCE.applications,
+            SOURCE_TYPE,
+            APP_TYPES,
+            INTL
         );
     });
 
@@ -92,8 +136,7 @@ describe('parseSourceToSchema', () => {
         );
         expect(auth.authenticationFields).toHaveBeenCalledWith(
             SOURCE.authentications,
-            SOURCE_TYPE,
-            APP_TYPES
+            SOURCE_TYPE
         );
         expect(app.applicationsFields).toHaveBeenCalledWith(
             SOURCE.applications,
@@ -102,6 +145,12 @@ describe('parseSourceToSchema', () => {
             SOURCE_WITH_NO_ENDPOINT,
         );
         expect(end.endpointFields).not.toHaveBeenCalled();
+        expect(titleField.default).toHaveBeenCalledWith(
+            SOURCE.applications,
+            SOURCE_TYPE,
+            APP_TYPES,
+            INTL
+        );
     });
 
     it('calls all subsections without endpoint of empty array', () => {
@@ -125,8 +174,7 @@ describe('parseSourceToSchema', () => {
         );
         expect(auth.authenticationFields).toHaveBeenCalledWith(
             SOURCE.authentications,
-            SOURCE_TYPE,
-            APP_TYPES
+            SOURCE_TYPE
         );
         expect(app.applicationsFields).toHaveBeenCalledWith(
             SOURCE.applications,
@@ -135,6 +183,12 @@ describe('parseSourceToSchema', () => {
             SOURCE_WITH_NO_ENDPOINT,
         );
         expect(end.endpointFields).not.toHaveBeenCalled();
+        expect(titleField.default).toHaveBeenCalledWith(
+            SOURCE.applications,
+            SOURCE_TYPE,
+            APP_TYPES,
+            INTL
+        );
     });
 
     it('returns filtered fields', () => {
@@ -154,6 +208,6 @@ describe('parseSourceToSchema', () => {
             INTL
         );
 
-        expect(result).toEqual({ fields: FILTERED_FIELDS });
+        expect(result).toEqual({ fields: [...FILTERED_FIELDS, titleField.default(SOURCE.applications, SOURCE_TYPE, APP_TYPES, INTL)] });
     });
 });
