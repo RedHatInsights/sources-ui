@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useIntl } from 'react-intl';
 import get from 'lodash/get';
 
 import { FormGroup } from '@patternfly/react-core/dist/js/components/Form/FormGroup';
@@ -11,7 +10,6 @@ import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/vali
 import validated from '@redhat-cloud-services/frontend-components-sources/cjs/validated';
 
 const Authentication = (rest) => {
-    const intl = useIntl();
     const formOptions = useFormApi();
     const values = formOptions.getState().values;
 
@@ -50,11 +48,6 @@ const Authentication = (rest) => {
     const componentProps = {
         ...rest,
         ...(isEditing ? {
-            isRequired: false,
-            helperText: intl.formatMessage({
-                id: 'wizard.changeAuthHelper',
-                defaultMessage: 'Changing this resets your current {label}.'
-            }, { label: rest.label }),
             validate: doNotRequirePassword,
             resolveProps: validated
         } : {})

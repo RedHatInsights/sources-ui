@@ -147,8 +147,6 @@ describe('Authentication test', () => {
         wrapper.update();
 
         expect(wrapper.find(Authentication)).toHaveLength(1);
-        expect(wrapper.find(TextField).props().isRequired).toEqual(false);
-        expect(wrapper.find(TextField).props().helperText).toEqual('Changing this resets your current .');
 
         wrapper.find('form').simulate('submit');
         wrapper.update();
@@ -194,8 +192,7 @@ describe('Authentication test', () => {
         wrapper.update();
 
         expect(wrapper.find(Authentication)).toHaveLength(1);
-        expect(wrapper.find(TextField).props().isRequired).toEqual(false);
-        expect(wrapper.find(TextField).props().helperText).toEqual('Changing this resets your current .');
+        expect(wrapper.find(TextField)).toHaveLength(1);
 
         await act(async () => {
             wrapper.find('input').instance().value = 's';
