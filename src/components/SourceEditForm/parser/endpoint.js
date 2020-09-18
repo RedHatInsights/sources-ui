@@ -1,6 +1,4 @@
-import React from 'react';
 import get from 'lodash/get';
-import { FormattedMessage } from 'react-intl';
 import componentTypes from '@data-driven-forms/react-form-renderer/dist/cjs/component-types';
 import hardcodedSchemas from '@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas';
 import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
@@ -24,10 +22,6 @@ export const endpointFields = (sourceType) => {
 
     const subForm = {
         component: componentTypes.SUB_FORM,
-        title: <FormattedMessage
-            id="sources.endpoint"
-            defaultMessage="Endpoint"
-        />,
         name: 'endpoint',
     };
 
