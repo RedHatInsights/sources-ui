@@ -11,10 +11,9 @@ const AdditionalInfoBar = ({ sourceType, applications }) => {
     const intl = useIntl();
     const appTypes = useSelector(({ sources }) => sources.appTypes);
 
-    const sourceAppsNames = applications?.map(({ application_type_id }) => {
-        const appType = appTypes.find(({ id }) => id === application_type_id);
-        return appType ? appType.display_name : undefined;
-    }) || [];
+    const sourceAppsNames = applications?.map(({ application_type_id }) =>
+        appTypes?.find(({ id }) => id === application_type_id)?.display_name
+    );
 
     return (
         <TextContent>

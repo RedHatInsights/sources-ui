@@ -45,7 +45,7 @@ export const authenticationFields = (authentications, sourceType, appName) => {
     }
 
     return authentications.map((auth) => {
-        const schemaAuth = sourceType.schema.authentication.find(({ type }) => type === auth.authtype);
+        const schemaAuth = sourceType?.schema?.authentication?.find(({ type }) => type === auth.authtype);
 
         if (!schemaAuth) {
             return [];

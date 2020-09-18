@@ -23,20 +23,13 @@ jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchem
 describe('endpoint edit form parser', () => {
     describe('endpointFields', () => {
         let SOURCE_TYPE;
-        let EDITING;
-        let SET_EDIT;
-
-        beforeEach(() => {
-            EDITING = {};
-            SET_EDIT = jest.fn();
-        });
 
         it('returns nothing when hidden', () => {
             SOURCE_TYPE = {
                 schema: { endpoint: { hidden: true } }
             };
 
-            expect(endpointFields(SOURCE_TYPE, EDITING, SET_EDIT)).toEqual(undefined);
+            expect(endpointFields(SOURCE_TYPE)).toEqual(undefined);
         });
 
         it('returns nothing when no schema', () => {
@@ -44,7 +37,7 @@ describe('endpoint edit form parser', () => {
                 schema: undefined
             };
 
-            expect(endpointFields(SOURCE_TYPE, EDITING, SET_EDIT)).toEqual(undefined);
+            expect(endpointFields(SOURCE_TYPE)).toEqual(undefined);
         });
 
         it('returns nothing when no schema.endpoint', () => {
@@ -54,7 +47,7 @@ describe('endpoint edit form parser', () => {
                 }
             };
 
-            expect(endpointFields(SOURCE_TYPE, EDITING, SET_EDIT)).toEqual(undefined);
+            expect(endpointFields(SOURCE_TYPE)).toEqual(undefined);
         });
 
         it('returns endpoint SUBFORM', () => {
@@ -67,11 +60,10 @@ describe('endpoint edit form parser', () => {
                 schema: { endpoint: { fields: FIELDS } }
             };
 
-            const result = endpointFields(SOURCE_TYPE, EDITING, SET_EDIT);
+            const result = endpointFields(SOURCE_TYPE);
 
             expect(result).toEqual({
                 component: componentTypes.SUB_FORM,
-                title: expect.any(Object),
                 name: 'endpoint',
                 fields: FIELDS
             });
@@ -88,11 +80,10 @@ describe('endpoint edit form parser', () => {
                 schema: { endpoint: { fields: FIELDS } }
             };
 
-            const result = endpointFields(SOURCE_TYPE, EDITING, SET_EDIT);
+            const result = endpointFields(SOURCE_TYPE);
 
             expect(result).toEqual({
                 component: componentTypes.SUB_FORM,
-                title: expect.any(Object),
                 name: 'endpoint',
                 fields: [{
                     component: componentTypes.SUB_FORM,

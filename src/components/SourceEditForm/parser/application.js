@@ -22,7 +22,7 @@ export const appendClusterIdentifier = (sourceType) =>
 
 const createOneAppFields = (appType, sourceType, app) => ([
     ...authenticationFields(
-        app.authentications.filter(auth => Object.keys(auth).length > 1),
+        app.authentications?.filter(auth => Object.keys(auth).length > 1),
         sourceType,
         appType?.name
     ),
@@ -34,7 +34,7 @@ export const applicationsFields = (
     sourceType,
     appTypes,
 ) => {
-    if (applications.length === 0) {
+    if (!applications || applications.length === 0) {
         return [];
     } else if (applications.length === 1) {
         const appType = appTypes.find(({ id }) => id === applications[0].application_type_id);

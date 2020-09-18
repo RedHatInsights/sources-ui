@@ -5,7 +5,7 @@ import { TextContent } from '@patternfly/react-core/dist/js/components/Text/Text
 import { Title } from '@patternfly/react-core/dist/js/components/Title/Title';
 import { Text } from '@patternfly/react-core/dist/js/components/Text/Text';
 
-const TitleAndDescription = ({ title, description }) => (<TextContent>
+export const TitleAndDescription = ({ title, description }) => (<TextContent>
     <Title headingLevel="h2" className="pf-u-mb-0">{title}</Title>
     {description && <Text variant="p">{description}</Text>}
 </TextContent>);
