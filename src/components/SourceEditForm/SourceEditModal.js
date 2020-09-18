@@ -4,7 +4,6 @@ import { useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import { Spinner } from '@patternfly/react-core/dist/js/components/Spinner';
 
-import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/cjs/form-template';
 import { Modal } from '@patternfly/react-core/dist/js/components/Modal';
 
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
@@ -18,6 +17,7 @@ import { useSource } from '../../hooks/useSource';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
 import reducer, { initialState } from './reducer';
 import sourceEditContext from './sourceEditContext';
+import ModalFormTemplate from '../ModalFormTemplate';
 
 const SourceEditModal = () => {
     const [state, setState] = useReducer(reducer, initialState);
@@ -83,36 +83,29 @@ const SourceEditModal = () => {
 
     return (
         <sourceEditContext.Provider value={{ setState, source, editing }}>
-            <Modal
-                aria-label={intl.formatMessage({
-                    id: 'sources.editSource',
-                    defaultMessage: 'Edit source.'
-                })}
-                header={<Header name={source.source.name} />}
-                variant="large"
-                isOpen
-                onClose={returnToSources}
-            >
-                <SourcesFormRenderer
-                    onCancel={returnToSources}
-                    schema={schema}
-                    onSubmit={
-                        (values, formApi) =>
-                            onSubmit(values, formApi.getState().dirtyFields, dispatch, source, intl, history.push)
-                    }
-                    FormTemplate={(props) => (<FormTemplate
-                        {...props}
-                        canReset
-                        disableSubmit={['submitting', 'pristine']}
-                        submitLabel={intl.formatMessage({
-                            id: 'sources.save',
-                            defaultMessage: 'Save'
-                        })}
-                    />)}
-                    clearedValue={null}
-                    initialValues={initialValues}
-                />
-            </Modal>
+            <SourcesFormRenderer
+                onCancel={returnToSources}
+                schema={schema}
+                onSubmit={
+                    (values, formApi) =>
+                        onSubmit(values, formApi.getState().dirtyFields, dispatch, source, intl, history.push)
+                }
+                FormTemplate={(props) => (<ModalFormTemplate
+                    ModalProps={{
+                        ['aria-label']: intl.formatMessage({
+                            id: 'sources.editSource',
+                            defaultMessage: 'Edit source.'
+                        }),
+                        header: <Header name={source.source.name} />,
+                        variant: 'large',
+                        isOpen: true,
+                        onClose: returnToSources
+                    }}
+                    {...props}
+                />)}
+                clearedValue={null}
+                initialValues={initialValues}
+            />
         </sourceEditContext.Provider>
     );
 };
