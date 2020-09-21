@@ -34,13 +34,11 @@ export const parseUrl = url => {
 export const urlOrHost = formData =>
     formData.url || formData.url === null ? parseUrl(formData.url) : formData.endpoint ? formData.endpoint : formData;
 
-export const doUpdateSource = (source, formData, errorTitles) => {
+export const doUpdateSource = (source, formData) => {
     const promises = [];
 
     if (formData.source) {
-        promises.push(getSourcesApi().updateSource(source.source.id, formData.source).catch((error) => {
-            throw { error: { title: errorTitles.source, detail: error.errors[0].detail } };
-        }));
+        promises.push(getSourcesApi().updateSource(source.source.id, formData.source));
     }
 
     if (formData.endpoint || formData.url || formData.url === null) {
@@ -55,18 +53,14 @@ export const doUpdateSource = (source, formData, errorTitles) => {
             ...formData.endpoint
         };
 
-        promises.push(getSourcesApi().updateEndpoint(source.endpoints[0].id, endpointData).catch((error) => {
-            throw { error: { title: errorTitles.endpoint, detail: error.errors[0].detail } };
-        }));
+        promises.push(getSourcesApi().updateEndpoint(source.endpoints[0].id, endpointData));
     }
 
     if (formData.authentications) {
         Object.keys(formData.authentications).forEach((key) => {
             const idWithoutPrefix = key.replace('a', '');
 
-            promises.push(getSourcesApi().updateAuthentication(idWithoutPrefix, formData.authentications[key]).catch((error) => {
-                throw { error: { title: errorTitles.authentication, detail: error.errors[0].detail } };
-            }));
+            promises.push(getSourcesApi().updateAuthentication(idWithoutPrefix, formData.authentications[key]));
         });
     }
 
@@ -88,9 +82,7 @@ export const doUpdateSource = (source, formData, errorTitles) => {
             };
         }
 
-        promises.push(patchCmValues(source.source.id, cmDataOut).catch((error) => {
-            throw { error: { title: errorTitles.costManagement, detail: error.errors[0].detail } };
-        }));
+        promises.push(patchCmValues(source.source.id, cmDataOut));
     }
 
     return Promise.all(promises);

@@ -18,6 +18,9 @@ import { useIsLoaded } from '../../hooks/useIsLoaded';
 import reducer, { initialState } from './reducer';
 import sourceEditContext from './sourceEditContext';
 import ModalFormTemplate from '../ModalFormTemplate';
+import SubmittingModal from './SubmittingModal';
+import TimeoutedModal from './TimeoutedModal';
+import ErroredModal from './ErroredModal';
 
 const SourceEditModal = () => {
     const [state, setState] = useReducer(reducer, initialState);
@@ -25,7 +28,19 @@ const SourceEditModal = () => {
     const sourceRedux = useSource();
     const isLoaded = useIsLoaded();
 
-    const { loading, editing, source, initialValues, schema } = state;
+    const {
+        loading,
+        editing,
+        source,
+        initialValues,
+        schema,
+        isSubmitting,
+        initialLoad,
+        message,
+        submitError,
+        isTimeouted,
+        values,
+    } = state;
 
     const intl = useIntl();
 
@@ -39,7 +54,7 @@ const SourceEditModal = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (sourceRedux) {
+        if (sourceRedux && initialLoad) {
             doLoadSourceForEdit(sourceRedux).then((source) => {
                 if (source.source.imported) {
                     redirectWhenImported(dispatch, intl, history, source.source.name);
@@ -62,6 +77,20 @@ const SourceEditModal = () => {
 
     const returnToSources = () => history.push(routes.sources.path);
 
+    if (isTimeouted) {
+        return <TimeoutedModal />;
+    }
+
+    if (submitError) {
+        return (<ErroredModal
+            onRetry={() => onSubmit(values, editing, dispatch, source, intl, setState)}
+        />);
+    }
+
+    if (isSubmitting) {
+        return <SubmittingModal />;
+    }
+
     if (isLoading) {
         return (
             <Modal
@@ -82,13 +111,13 @@ const SourceEditModal = () => {
     }
 
     return (
-        <sourceEditContext.Provider value={{ setState, source, editing }}>
+        <sourceEditContext.Provider value={{ setState, source }}>
             <SourcesFormRenderer
                 onCancel={returnToSources}
                 schema={schema}
                 onSubmit={
                     (values, formApi) =>
-                        onSubmit(values, formApi.getState().dirtyFields, dispatch, source, intl, history.push)
+                        onSubmit(values, formApi.getState().dirtyFields, dispatch, source, intl, setState)
                 }
                 FormTemplate={(props) => (<ModalFormTemplate
                     ModalProps={{
@@ -104,7 +133,10 @@ const SourceEditModal = () => {
                     {...props}
                 />)}
                 clearedValue={null}
-                initialValues={initialValues}
+                initialValues={{
+                    ...initialValues,
+                    message
+                }}
             />
         </sourceEditContext.Provider>
     );

@@ -2,9 +2,20 @@ import componentTypes from '@data-driven-forms/react-form-renderer/dist/cjs/comp
 import { asyncValidatorDebounced } from '@redhat-cloud-services/frontend-components-sources/cjs/SourceAddSchema';
 import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
 import validated from '@redhat-cloud-services/frontend-components-sources/cjs/validated';
+
 import AdditionalInfoBar from './AdditionalInfoBar';
+import EditAlert from './EditAlert';
 
 export const genericInfo = (sourceId, intl, sourceType, applications) => ([
+    {
+        name: 'alert',
+        component: 'description',
+        Content: EditAlert,
+        condition: {
+            when: 'message',
+            isNotEmpty: true
+        }
+    },
     {
         name: 'source.name',
         label: intl.formatMessage({

@@ -13,11 +13,16 @@ import { routes, replaceRouteId } from '../../../Routes';
 import { applicationTypesData } from '../../__mocks__/applicationTypesData';
 import { sourceTypesData, OPENSHIFT_ID } from '../../__mocks__/sourceTypesData';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
-import { Modal, Button, FormGroup, TextInput, Form } from '@patternfly/react-core';
+import { Modal, Button, FormGroup, TextInput, Form, Alert, EmptyState } from '@patternfly/react-core';
 import * as editApi from '../../../api/doLoadSourceForEdit';
 import * as submit from '../../../components/SourceEditForm/onSubmit';
 import * as redirect from '../../../components/SourceEditForm/importedRedirect';
 import reducer from '../../../components/SourceEditForm/reducer';
+
+import SubmittingModal from '../../../components/SourceEditForm/SubmittingModal';
+import EditAlert from '../../../components/SourceEditForm/parser/EditAlert';
+import TimeoutedModal from '../../../components/SourceEditForm/TimeoutedModal';
+import ErroredModal from '../../../components/SourceEditForm/ErroredModal';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/SourceAddSchema', () => ({
     __esModule: true,
@@ -115,7 +120,7 @@ describe('SourceEditModal', () => {
         );
     });
 
-    it('calls onSubmit with values and editing object', async() => {
+    describe('submit', () => {
         const NEW_NAME_VALUE = 'new name';
 
         const VALUES = expect.objectContaining({
@@ -127,40 +132,170 @@ describe('SourceEditModal', () => {
             'source.name': true
         };
         const DISPATCH = expect.any(Function);
-        const PUSH = expect.any(Function);
+        const SET_STATE = expect.any(Function);
         const SOURCE = expect.any(Object);
         const INTL = expect.objectContaining({
             formatMessage: expect.any(Function)
         });
 
-        submit.onSubmit = jest.fn();
+        beforeEach(async () => {
+            const nameFormGroup = wrapper.find(FormGroup).first();
+            await act(async() => {
+                nameFormGroup.simulate('click');
+            });
+            wrapper.update();
 
-        const nameFormGroup = wrapper.find(FormGroup).first();
-        await act(async() => {
-            nameFormGroup.simulate('click');
-        });
-        wrapper.update();
-
-        await act(async() => {
-            wrapper.find('input').instance().value = NEW_NAME_VALUE;
-            wrapper.find('input').simulate('change');
-        });
-        wrapper.update();
-
-        const form = wrapper.find(Form);
-
-        await act(async() => {
-            form.simulate('submit');
+            await act(async() => {
+                wrapper.find('input').instance().value = NEW_NAME_VALUE;
+                wrapper.find('input').simulate('change');
+            });
+            wrapper.update();
         });
 
-        expect(submit.onSubmit).toHaveBeenCalledWith(
-            VALUES,
-            EDITING,
-            DISPATCH,
-            SOURCE,
-            INTL,
-            PUSH
-        );
+        it('calls onSubmit with values and editing object', async () => {
+            jest.useFakeTimers();
+
+            const message = {
+                title: 'some title',
+                variant: 'danger',
+                description: 'some description'
+            };
+
+            submit.onSubmit = jest.fn().mockImplementation((values, editing, _dispatch, source, _intl, setState) => {
+                setState({ type: 'submit', values, editing });
+
+                setTimeout(() => {
+                    setState({ type: 'submitFinished', source, message });
+                }, 1000);
+            });
+
+            const form = wrapper.find(Form);
+
+            expect(wrapper.find(SubmittingModal)).toHaveLength(0);
+
+            await act(async() => {
+                form.simulate('submit');
+            });
+            wrapper.update();
+
+            expect(wrapper.find(SubmittingModal)).toHaveLength(1);
+
+            await act(async() => {
+                jest.runAllTimers();
+            });
+            wrapper.update();
+
+            expect(wrapper.find(SubmittingModal)).toHaveLength(0);
+            expect(wrapper.find(EditAlert)).toHaveLength(1);
+
+            expect(wrapper.find(EditAlert).find(Alert).props().title).toEqual(message.title);
+            expect(wrapper.find(EditAlert).find(Alert).props().variant).toEqual(message.variant);
+            expect(wrapper.find(EditAlert).find(Alert).props().children).toEqual(message.description);
+
+            expect(submit.onSubmit).toHaveBeenCalledWith(
+                VALUES,
+                EDITING,
+                DISPATCH,
+                SOURCE,
+                INTL,
+                SET_STATE
+            );
+        });
+
+        it('calls onSubmit - timeout', async () => {
+            jest.useFakeTimers();
+
+            submit.onSubmit = jest.fn().mockImplementation((values, editing, _dispatch, source, _intl, setState) => {
+                setState({ type: 'submit', values, editing });
+
+                setTimeout(() => {
+                    setState({ type: 'submitTimetouted' });
+                }, 1000);
+            });
+
+            const form = wrapper.find(Form);
+
+            expect(wrapper.find(SubmittingModal)).toHaveLength(0);
+
+            await act(async() => {
+                form.simulate('submit');
+            });
+            wrapper.update();
+
+            expect(wrapper.find(SubmittingModal)).toHaveLength(1);
+
+            await act(async() => {
+                jest.runAllTimers();
+            });
+            wrapper.update();
+
+            expect(wrapper.find(TimeoutedModal)).toHaveLength(1);
+
+            expect(submit.onSubmit).toHaveBeenCalledWith(
+                VALUES,
+                EDITING,
+                DISPATCH,
+                SOURCE,
+                INTL,
+                SET_STATE
+            );
+        });
+
+        it('calls onSubmit - server error', async () => {
+            jest.useFakeTimers();
+
+            submit.onSubmit = jest.fn().mockImplementation((values, editing, _dispatch, source, _intl, setState) => {
+                setState({ type: 'submit', values, editing });
+
+                setTimeout(() => {
+                    setState({ type: 'submitFailed' });
+                }, 1000);
+            });
+
+            const form = wrapper.find(Form);
+
+            expect(wrapper.find(SubmittingModal)).toHaveLength(0);
+
+            await act(async() => {
+                form.simulate('submit');
+            });
+            wrapper.update();
+
+            expect(wrapper.find(SubmittingModal)).toHaveLength(1);
+
+            await act(async() => {
+                jest.runAllTimers();
+            });
+            wrapper.update();
+
+            expect(wrapper.find(ErroredModal)).toHaveLength(1);
+
+            expect(submit.onSubmit).toHaveBeenCalledWith(
+                VALUES,
+                EDITING,
+                DISPATCH,
+                SOURCE,
+                INTL,
+                SET_STATE
+            );
+
+            submit.onSubmit.mockReset();
+
+            // try again via retry button
+            await act(async() => {
+                wrapper.find(ErroredModal).find(EmptyState).find(Button).simulate('click');
+            });
+            wrapper.update();
+
+            expect(submit.onSubmit).toHaveBeenCalledWith(
+                VALUES,
+                EDITING,
+                DISPATCH,
+                SOURCE,
+                INTL,
+                SET_STATE
+            );
+        });
     });
 
     it('calls onCancel via onClose icon and returns to root', async () => {
