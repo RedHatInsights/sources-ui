@@ -57,6 +57,46 @@ describe('edit form helpers', () => {
             expect(prepareInitialValues(SOURCE, SOURCE_TYPE_NAME)).toEqual(EXPECTED_INITIAL_VALUES);
         });
 
+        it('prepares initial values with apps auths', () => {
+            const SOURCE_WITH_APPS = {
+                ...SOURCE,
+                applications: [{
+                    authentications: [{
+                        authtype: 'super-type-1',
+                        id: 'st1'
+                    }, {
+                        authtype: 'super-type-2',
+                        id: 'st2'
+                    }]
+                },
+                {
+                    authentications: [{
+                        authtype: 'super-type-3',
+                        id: 'st3'
+                    }]
+                }]
+            };
+
+            expect(prepareInitialValues(SOURCE_WITH_APPS, SOURCE_TYPE_NAME)).toEqual({
+                ...EXPECTED_INITIAL_VALUES,
+                authentications: {
+                    ...EXPECTED_INITIAL_VALUES.authentications,
+                    ast1: {
+                        authtype: 'super-type-1',
+                        id: 'st1'
+                    },
+                    ast2: {
+                        authtype: 'super-type-2',
+                        id: 'st2'
+                    },
+                    ast3: {
+                        authtype: 'super-type-3',
+                        id: 'st3'
+                    }
+                }
+            });
+        });
+
         it('prepares initial values with URL', () => {
             const SOURCE_WITH_URL = {
                 ...SOURCE,

@@ -30,12 +30,14 @@ export const doLoadSourceForEdit = (source) => Promise.all([
     const promises = [];
     let appAuths;
     const addToApp = [];
+    const appAuthenticationIds = [];
 
     apps.forEach((app) => {
         app?.authentications?.forEach((auth) => {
             if (auth?.id) {
                 promises.push(getSourcesApi().showAuthentication(auth.id));
                 addToApp.push(app.id);
+                appAuthenticationIds.push(auth.id);
             }
         });
     });
@@ -55,6 +57,6 @@ export const doLoadSourceForEdit = (source) => Promise.all([
     return getSourcesApi().listEndpointAuthentications(endpoint.id).then(authentications => ({
         ...basicValues,
         endpoints: endpoints.data,
-        authentications: authentications.data,
+        authentications: authentications.data.filter(({ id }) => !appAuthenticationIds.includes(id)),
     }));
 });
