@@ -49,7 +49,7 @@ const Authentication = (rest) => {
         ...rest,
         ...(isEditing ? {
             validate: doNotRequirePassword,
-            resolveProps: validated
+            resolveProps: validated,
         } : {})
     };
 
@@ -58,6 +58,7 @@ const Authentication = (rest) => {
             helperText={componentProps.helperText}
             label={componentProps.label}
             onFocus={() => setEdited(true)}
+            isRequired
         >
             <TextInput aria-label="pre-filled-authentication" value="•••••••••••••" />
         </FormGroup>);
