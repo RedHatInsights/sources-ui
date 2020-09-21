@@ -1,8 +1,17 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import { Grid } from '@patternfly/react-core/dist/js/layouts/Grid/Grid';
+import { GridItem } from '@patternfly/react-core/dist/js/layouts/Grid/GridItem';
+import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
+import TrashIcon from '@patternfly/react-icons/dist/js/icons/trash-icon';
+
 import get from 'lodash/get';
 import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
 import hardcodedSchemas from '@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas';
 
 import AuthenticationId from './AuthenticationId';
+import useFormApi from '@data-driven-forms/react-form-renderer/dist/cjs/use-form-api';
 
 export const createAuthFieldName = (fieldName, id) => `authentications.a${id}.${fieldName.replace('authentication.', '')}`;
 
@@ -39,6 +48,22 @@ export const modifyAuthSchemas = (fields, id) => fields.map((field) => {
     return finalField;
 });
 
+const GridLayout = ({ id, fields }) => {
+    const { renderForm } = useFormApi();
+
+    return (<Grid>
+        <GridItem md={2} style={{ display: 'flex' }}>
+            <Button variant="plain" aria-label="Action" style={{ display: 'inline-flex' }}>
+                <TrashIcon />
+            </Button>
+            <AuthenticationId id={id} />
+        </GridItem>
+        <GridItem md={10}>
+            { renderForm(fields) }
+        </GridItem>
+    </Grid>);
+};
+
 export const authenticationFields = (authentications, sourceType, appName) => {
     if (!authentications || authentications.length === 0 || !sourceType.schema || !sourceType.schema.authentication) {
         return [];
@@ -66,14 +91,18 @@ export const authenticationFields = (authentications, sourceType, appName) => {
             ...getEnhancedAuthField(sourceType.name, auth.authtype, field.name, appName)
         }));
 
-        return [
-            ...(!appName ? [{
-                name: `authentication-${auth.id}`,
-                component: 'description',
-                id: auth.id,
-                Content: AuthenticationId
-            }] : []),
-            ...modifyAuthSchemas(enhancedFields, auth.id)
-        ];
+        if (!appName) {
+            return ([
+                {
+                    name: `authentication-${auth.id}`,
+                    component: 'description',
+                    id: auth.id,
+                    Content: GridLayout,
+                    fields: modifyAuthSchemas(enhancedFields, auth.id)
+                },
+            ]);
+        }
+
+        return modifyAuthSchemas(enhancedFields, auth.id);
     });
 };
