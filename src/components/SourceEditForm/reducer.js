@@ -13,7 +13,7 @@ export const initialState = {
     isTimeouted: false
 };
 
-const reducer = (state, { type, source, sourceType, appTypes, intl, message }) => {
+const reducer = (state, { type, source, sourceType, appTypes, intl, message, values, editing }) => {
     switch (type) {
         case 'createForm':
             return {
@@ -33,7 +33,9 @@ const reducer = (state, { type, source, sourceType, appTypes, intl, message }) =
             return {
                 ...state,
                 isSubmitting: true,
-                submitError: false
+                submitError: false,
+                values,
+                editing
             };
         case 'submitFinished':
             return {

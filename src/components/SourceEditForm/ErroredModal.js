@@ -1,5 +1,6 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
+import PropTypes from 'prop-types';
 
 import { Text } from '@patternfly/react-core/dist/js/components/Text/Text';
 
@@ -7,13 +8,13 @@ import ErroredStep from '@redhat-cloud-services/frontend-components-sources/cjs/
 
 import WrapperModal from './WrapperModal';
 
-const ErroredModal = () => {
+const ErroredModal = ({ onRetry }) => {
     const intl = useIntl();
 
     return (
         <WrapperModal>
             <ErroredStep
-                primaryAction={console.log('reset')}
+                onClose={onRetry}
                 customText={
                     intl.formatMessage({
                         id: 'sources.editErrorDescription',
@@ -38,6 +39,10 @@ const ErroredModal = () => {
             />
         </WrapperModal>
     );
+};
+
+ErroredModal.propTypes = {
+    onRetry: PropTypes.func.isRequired
 };
 
 export default ErroredModal;

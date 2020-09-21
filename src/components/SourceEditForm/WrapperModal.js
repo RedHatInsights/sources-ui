@@ -13,6 +13,7 @@ import Header from './Header';
 
 export const FakeFooter = () => {
     const intl = useIntl();
+    const history = useHistory();
 
     return (<div className="pf-c-form">
         <ActionGroup className="pf-u-mt-0">

@@ -38,7 +38,8 @@ const SourceEditModal = () => {
         initialLoad,
         message,
         submitError,
-        isTimeouted
+        isTimeouted,
+        values,
     } = state;
 
     const intl = useIntl();
@@ -81,7 +82,9 @@ const SourceEditModal = () => {
     }
 
     if (submitError) {
-        return <ErroredModal />;
+        return (<ErroredModal
+            onRetry={() => onSubmit(values, editing, dispatch, source, intl, setState)}
+        />);
     }
 
     if (isSubmitting) {
@@ -108,7 +111,7 @@ const SourceEditModal = () => {
     }
 
     return (
-        <sourceEditContext.Provider value={{ setState, source, editing }}>
+        <sourceEditContext.Provider value={{ setState, source }}>
             <SourcesFormRenderer
                 onCancel={returnToSources}
                 schema={schema}

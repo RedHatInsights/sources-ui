@@ -9,7 +9,7 @@ import { doUpdateSource } from '../../api/doUpdateSource';
 import { UNAVAILABLE } from '../SourcesTable/formatters';
 
 export const onSubmit = async (values, editing, dispatch, source, intl, setState) => {
-    setState({ type: 'submit' });
+    setState({ type: 'submit', values, editing });
 
     try {
         await doUpdateSource(source, selectOnlyEditedValues(values, editing));
@@ -26,7 +26,7 @@ export const onSubmit = async (values, editing, dispatch, source, intl, setState
 
     const sourceData = await doLoadSourceForEdit({ id: source.source.id });
 
-    const promises = source.applications?.map(({ id }) => checkAppAvailability(id));
+    const promises = source.applications?.map(({ id }) => checkAppAvailability(id)) || [];
 
     let statusResults;
     if (promises.length > 0) {

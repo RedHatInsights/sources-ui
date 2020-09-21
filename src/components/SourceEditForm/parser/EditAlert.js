@@ -10,7 +10,9 @@ const EditAlert = () => {
     const { message } = formOptions.getState().values;
 
     return (
-        <Alert variant={message?.variant} isInline title={message?.title} />
+        <Alert variant={message?.variant} isInline title={message?.title}>
+            {message?.description}
+        </Alert>
     );
 };
 
