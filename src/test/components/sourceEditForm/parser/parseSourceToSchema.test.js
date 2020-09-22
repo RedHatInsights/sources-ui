@@ -68,7 +68,8 @@ describe('parseSourceToSchema', () => {
             SOURCE.applications,
             SOURCE_TYPE,
             APP_TYPES,
-            INTL
+            INTL,
+            SOURCE.authentications
         );
     });
 
@@ -104,7 +105,8 @@ describe('parseSourceToSchema', () => {
             SOURCE.applications,
             SOURCE_TYPE,
             APP_TYPES,
-            INTL
+            INTL,
+            SOURCE.authentications
         );
     });
 
@@ -138,7 +140,8 @@ describe('parseSourceToSchema', () => {
             SOURCE.applications,
             SOURCE_TYPE,
             APP_TYPES,
-            INTL
+            INTL,
+            SOURCE.authentications
         );
     });
 
@@ -172,7 +175,8 @@ describe('parseSourceToSchema', () => {
             SOURCE.applications,
             SOURCE_TYPE,
             APP_TYPES,
-            INTL
+            INTL,
+            SOURCE.authentications
         );
     });
 

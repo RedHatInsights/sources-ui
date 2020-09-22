@@ -14,20 +14,44 @@ describe('titleField', () => {
     const intl = {
         formatMessage: ({ defaultMessage }) => defaultMessage
     };
-    it('no app', () => {
+
+    it('no app, one auth', () => {
         applications = [];
+        const auths = [{ id: 'some-id' }];
 
         expect(titleField(
             applications,
             sourceType,
             appTypes,
-            intl
+            intl,
+            auths
         )).toEqual({
             name: 'edit-title',
             Content: expect.any(Function),
             description: undefined,
             component: 'description',
-            title: '{type} credentials'
+            title: '{type} credentials',
+            hideField: false
+        });
+    });
+
+    it('no app', () => {
+        applications = [];
+        const emptyAuths = [];
+
+        expect(titleField(
+            applications,
+            sourceType,
+            appTypes,
+            intl,
+            emptyAuths
+        )).toEqual({
+            name: 'edit-title',
+            Content: expect.any(Function),
+            description: undefined,
+            component: 'description',
+            title: '{type} credentials',
+            hideField: true
         });
     });
 
@@ -44,7 +68,8 @@ describe('titleField', () => {
             Content: expect.any(Function),
             description: undefined,
             component: 'description',
-            title: '{type} & {app} credentials'
+            title: '{type} & {app} credentials',
+            hideField: false
         });
     });
 
@@ -61,7 +86,8 @@ describe('titleField', () => {
             Content: expect.any(Function),
             description: 'Use the tabs below to view and edit credentials for connected applications.',
             component: 'description',
-            title: '{type} & application credentials'
+            title: '{type} & application credentials',
+            hideField: false
         });
     });
 
