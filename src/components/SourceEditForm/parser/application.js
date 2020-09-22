@@ -42,7 +42,7 @@ const unusedAuthsWarning = (length) => ({
 
 const unusedAuthentications = (authentications, sourceType, appsLength) => {
     if (!authentications || authentications.length === 0) {
-        return [[], false];
+        return [];
     }
 
     let authenticationsInputs = sourceType?.schema?.authentication?.reduce((acc, { type }) => {
@@ -58,8 +58,7 @@ const unusedAuthentications = (authentications, sourceType, appsLength) => {
         return acc;
     }, [])?.filter(Boolean);
 
-    const transformToTabs = authenticationsInputs?.length > 1 || appsLength !== 0;
-    const returnAsTabs = transformToTabs && appsLength === 0;
+    const transformToTabs = appsLength !== 0;
 
     if (transformToTabs) {
         authenticationsInputs = [{
@@ -81,15 +80,7 @@ const unusedAuthentications = (authentications, sourceType, appsLength) => {
         }];
     }
 
-    if (returnAsTabs) {
-        authenticationsInputs = [{
-            component: componentTypes.TABS,
-            name: 'unused-auths-tabs',
-            fields: authenticationsInputs
-        }];
-    }
-
-    return [authenticationsInputs, returnAsTabs];
+    return authenticationsInputs;
 };
 
 export const applicationsFields = (
@@ -98,11 +89,11 @@ export const applicationsFields = (
     appTypes,
     authentications
 ) => {
-    const [authenticationTypesFormGroups, isTab] = unusedAuthentications(authentications, sourceType, applications?.length);
+    const authenticationTypesFormGroups = unusedAuthentications(authentications, sourceType, applications?.length);
 
     if (!applications || applications.length === 0) {
         return authenticationTypesFormGroups;
-    } else if (applications.length === 1 && !isTab && authenticationTypesFormGroups.length === 0) {
+    } else if (applications.length === 1 && authenticationTypesFormGroups.length === 0) {
         const appType = appTypes.find(({ id }) => id === applications[0].application_type_id);
 
         return createOneAppFields(appType, sourceType, applications[0]);
