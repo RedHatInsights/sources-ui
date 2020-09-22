@@ -32,7 +32,7 @@ const CustomButtons = () => {
                             defaultMessage: 'Save'
                         })}
                     </Button>
-                    <Button variant="secondary" onClick={onReset} id="reset-modal">
+                    <Button variant="secondary" isDisabled={pristine} onClick={onReset} id="reset-modal">
                         {intl.formatMessage({
                             id: 'sources.reset',
                             defaultMessage: 'Reset'

@@ -13,7 +13,7 @@ export const initialState = {
     isTimeouted: false
 };
 
-const reducer = (state, { type, source, sourceType, appTypes, intl, message, values, editing }) => {
+const reducer = (state, { type, source, sourceType, appTypes, intl, message, values, editing, removingAuth, authId }) => {
     switch (type) {
         case 'createForm':
             return {
@@ -55,6 +55,45 @@ const reducer = (state, { type, source, sourceType, appTypes, intl, message, val
                 ...state,
                 isSubmitting: false,
                 isTimeouted: true
+            };
+        case 'removeAuthPending':
+            return {
+                ...state,
+                isAuthRemoving: null,
+                source: {
+                    ...state.source,
+                    authentications: state.source.authentications.map((auth) => auth.id === authId ? {
+                        ...auth, isDeleting: true
+                    } : auth)
+                }
+            };
+        case 'removeAuthRejected':
+            return {
+                ...state,
+                source: {
+                    ...state.source,
+                    authentications: state.source.authentications.map((auth) => auth.id === authId ? {
+                        ...auth, isDeleting: false
+                    } : auth)
+                }
+            };
+        case 'removeAuthFulfill':
+            return {
+                ...state,
+                source: {
+                    ...state.source,
+                    authentications: state.source.authentications.filter((auth) => auth.id !== authId)
+                }
+            };
+        case 'setAuthRemoving':
+            return {
+                ...state,
+                isAuthRemoving: removingAuth
+            };
+        case 'closeAuthRemoving':
+            return {
+                ...state,
+                isAuthRemoving: null
             };
         default:
             return state;

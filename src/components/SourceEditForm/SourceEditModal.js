@@ -21,6 +21,7 @@ import ModalFormTemplate from '../ModalFormTemplate';
 import SubmittingModal from './SubmittingModal';
 import TimeoutedModal from './TimeoutedModal';
 import ErroredModal from './ErroredModal';
+import RemoveAuth from './parser/RemoveAuth';
 
 const SourceEditModal = () => {
     const [state, setState] = useReducer(reducer, initialState);
@@ -40,6 +41,8 @@ const SourceEditModal = () => {
         submitError,
         isTimeouted,
         values,
+        sourceType,
+        isAuthRemoving
     } = state;
 
     const intl = useIntl();
@@ -111,7 +114,8 @@ const SourceEditModal = () => {
     }
 
     return (
-        <sourceEditContext.Provider value={{ setState, source }}>
+        <sourceEditContext.Provider value={{ setState, source, sourceType }}>
+            {isAuthRemoving && <RemoveAuth authId={isAuthRemoving} />}
             <SourcesFormRenderer
                 onCancel={returnToSources}
                 schema={schema}
@@ -127,7 +131,7 @@ const SourceEditModal = () => {
                         }),
                         header: <Header name={source.source.name} />,
                         variant: 'large',
-                        isOpen: true,
+                        isOpen: !isAuthRemoving,
                         onClose: returnToSources
                     }}
                     {...props}

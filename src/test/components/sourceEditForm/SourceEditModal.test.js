@@ -24,6 +24,11 @@ import EditAlert from '../../../components/SourceEditForm/parser/EditAlert';
 import TimeoutedModal from '../../../components/SourceEditForm/TimeoutedModal';
 import ErroredModal from '../../../components/SourceEditForm/ErroredModal';
 
+import RemoveAuth from '../../../components/SourceEditForm/parser/RemoveAuth';
+import * as api from '../../../api/entities';
+import RemoveAuthPlaceholder from '../../../components/SourceEditForm/parser/RemoveAuthPlaceholder';
+import GridLayout from '../../../components/SourceEditForm/parser/GridLayout';
+
 jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/SourceAddSchema', () => ({
     __esModule: true,
     asyncValidatorDebounced: jest.fn()
@@ -372,6 +377,105 @@ describe('SourceEditModal', () => {
         wrapper.update();
 
         expect(getCurrentAddress(wrapper)).toEqual(routes.sources.path);
+    });
+
+    describe('remove auth integration', () => {
+        beforeEach(() => {
+            editApi.doLoadSourceForEdit = jest.fn().mockImplementation(() => Promise.resolve({
+                source: {
+                    name: 'Name',
+                    source_type_id: OPENSHIFT_ID,
+                    applications: []
+                },
+                applications: [],
+                endpoints: [],
+                authentications: [{
+                    id: 'authid',
+                    authtype: 'token'
+                }]
+            }));
+
+            initialEntry = [replaceRouteId(routes.sourcesEdit.path, '406')];
+        });
+
+        it('removes authentication successfully and shows loading during that', async () => {
+            await act(async() => {
+                wrapper = mount(componentWrapperIntl(
+                    <Route path={routes.sourcesEdit.path} render={ (...args) => <SourceEditModal { ...args }/> } />,
+                    store,
+                    initialEntry
+                ));
+            });
+            wrapper.update();
+
+            expect(wrapper.find(GridLayout)).toHaveLength(1);
+            expect(wrapper.find(RemoveAuthPlaceholder)).toHaveLength(0);
+            expect(wrapper.find(Modal)).toHaveLength(1);
+
+            await act(async() => {
+                const removeButton = wrapper.find(Button).at(1);
+                removeButton.simulate('click');
+            });
+            wrapper.update();
+
+            api.doDeleteAuthentication = jest.fn().mockImplementation(() => new Promise((res) => setTimeout(() => res('OK'), 1)));
+
+            expect(api.doDeleteAuthentication).not.toHaveBeenCalled();
+            expect(wrapper.find(Modal)).toHaveLength(2);
+            expect(wrapper.find(Modal).first().props().isOpen).toEqual(true);
+            expect(wrapper.find(Modal).last().props().isOpen).toEqual(false);
+
+            jest.useFakeTimers();
+            await act(async() => {
+                const removeConfirmButton = wrapper.find(RemoveAuth).find(Button).at(1);
+                removeConfirmButton.simulate('click');
+            });
+            wrapper.update();
+            expect(api.doDeleteAuthentication).toHaveBeenCalledWith('authid');
+            expect(wrapper.find(RemoveAuthPlaceholder)).toHaveLength(1);
+            expect(wrapper.find(Modal)).toHaveLength(1);
+            expect(wrapper.find(Modal).props().isOpen).toEqual(true);
+
+            await act(async() => {
+                jest.advanceTimersByTime(1000);
+            });
+            wrapper.update();
+
+            expect(wrapper.find(RemoveAuthPlaceholder)).toHaveLength(0);
+            expect(wrapper.find(GridLayout)).toHaveLength(0);
+        });
+
+        it('removes authentication unsuccessfully', async () => {
+            await act(async() => {
+                wrapper = mount(componentWrapperIntl(
+                    <Route path={routes.sourcesEdit.path} render={ (...args) => <SourceEditModal { ...args }/> } />,
+                    store,
+                    initialEntry
+                ));
+            });
+            wrapper.update();
+
+            expect(wrapper.find(GridLayout)).toHaveLength(1);
+
+            await act(async() => {
+                const removeButton = wrapper.find(Button).at(1);
+                removeButton.simulate('click');
+            });
+            wrapper.update();
+
+            api.doDeleteAuthentication = jest.fn().mockImplementation(() => Promise.reject('Error'));
+
+            expect(api.doDeleteAuthentication).not.toHaveBeenCalled();
+
+            await act(async() => {
+                const removeConfirmButton = wrapper.find(RemoveAuth).find(Button).at(1);
+                removeConfirmButton.simulate('click');
+            });
+            wrapper.update();
+
+            expect(api.doDeleteAuthentication).toHaveBeenCalledWith('authid');
+            expect(wrapper.find(GridLayout)).toHaveLength(1);
+        });
     });
 
     describe('reducer', () => {
