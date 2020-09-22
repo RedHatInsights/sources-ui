@@ -15,7 +15,7 @@ TitleAndDescription.propTypes = {
     description: PropTypes.node
 };
 
-const titleField = (applications, sourceType, appTypes, intl) => {
+const titleField = (applications, sourceType, appTypes, intl, authentications) => {
     let title;
     let description;
 
@@ -47,6 +47,7 @@ const titleField = (applications, sourceType, appTypes, intl) => {
         Content: TitleAndDescription,
         title,
         description,
+        hideField: applications?.length === 0 && authentications?.length === 0
     });
 };
 
