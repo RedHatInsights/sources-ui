@@ -16,19 +16,6 @@ import authenticationSelectionStep from './schema/authenticationSelectionStep';
 import generateFirstAuthStep from './schema/generateFirstAuthStep';
 import selectAuthenticationStep from './schema/selectAuthenticationStep';
 
-export const NoAvailableApplicationDescription = () => {
-    const intl = useIntl();
-
-    return (<TextContent>
-        <Text component={ TextVariants.p }>
-            { intl.formatMessage({
-                id: 'sources.allApplicationsAssigned',
-                defaultMessage: 'All available applications have already been added to this source or there is no available application for this source.'
-            }) }
-        </Text>
-    </TextContent>)
-    ;};
-
 export const ApplicationSummary = () => {
     const intl = useIntl();
 
@@ -51,7 +38,7 @@ export const hasMultipleAuthenticationTypes = (app, sourceType) => (
 );
 
 const fields = (
-    applications = [], intl, sourceTypes, applicationTypes, authenticationValues, source, container
+    applications = [], intl, sourceTypes, applicationTypes, authenticationValues, source, container, appIds
 ) => {
     const hasAvailableApps = applications.length > 0;
 
@@ -131,26 +118,15 @@ const fields = (
         };
     }
 
-    const applicationSelection = hasAvailableApps ? {
-        component: 'card-select',
+    const applicationSelection = {
+        component: 'application-select',
         name: 'application.application_type_id',
         options: applications,
-        label: intl.formatMessage({
-            id: 'sources.chooseAppToAdd',
-            defaultMessage: 'Choose an application to add'
-        }),
-        DefaultIcon: null,
-        isRequired: true,
+        appIds,
+        container,
         validate: [{
             type: validatorTypes.REQUIRED
         }]
-    } : {
-        component: 'description',
-        name: 'description-no-options',
-        validate: [{
-            type: validatorTypes.REQUIRED
-        }],
-        Content: NoAvailableApplicationDescription
     };
 
     const selectionSteps = applicationTypes
@@ -178,15 +154,12 @@ const fields = (
                 crossroads: ['application.application_type_id', 'selectedAuthentication', 'authtype'],
                 description: intl.formatMessage({
                     id: 'sources.addAppDescription',
-                    defaultMessage: 'You are managing applications of this source.'
-                }),
+                    defaultMessage: 'Add or remove applications from {name}.'
+                }, { name: source.name }),
                 buttonLabels: {
-                    submit: hasAvailableApps ? intl.formatMessage({
+                    submit: intl.formatMessage({
                         id: 'sources.add',
                         defaultMessage: 'Add'
-                    }) : intl.formatMessage({
-                        id: 'sources.close',
-                        defaultMessage: 'Close'
                     }),
                     cancel: intl.formatMessage({
                         id: 'sources.cancel',
@@ -202,13 +175,14 @@ const fields = (
                         nextStep,
                         title: intl.formatMessage({
                             id: 'sources.selectApp',
-                            defaultMessage: 'Select application'
+                            defaultMessage: 'Add / remove applications'
                         }),
                         name: 'selectAppStep',
                         fields: [
                             {
                                 component: 'description',
                                 name: 'description',
+                                appIds,
                                 Content: AddApplicationDescription,
                                 container
                             },
