@@ -10,7 +10,7 @@ import {
     removeRequiredValidator,
     getAdditionalAuthSteps
 } from '../../../../components/SourceEditForm/parser/authentication';
-import AuthenticationId from '../../../../components/SourceEditForm/parser/AuthenticationId';
+import GridLayout from '../../../../components/SourceEditForm/parser/GridLayout';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas', () => ({
     __esModule: true,
@@ -256,9 +256,9 @@ describe('authentication edit source parser', () => {
                     name: `authentication-${AUTHENTICATIONS[0].id}`,
                     component: 'description',
                     id: AUTHENTICATIONS[0].id,
-                    Content: AuthenticationId
+                    Content: GridLayout,
+                    fields: modifyAuthSchemas(FIELDS_WITHOUT_STEPKEYS, ID)
                 },
-                ...modifyAuthSchemas(FIELDS_WITHOUT_STEPKEYS, ID)
             ];
 
             expect(result).toEqual([

@@ -1,8 +1,7 @@
 import get from 'lodash/get';
 import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
 import hardcodedSchemas from '@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas';
-
-import AuthenticationId from './AuthenticationId';
+import GridLayout from './GridLayout';
 
 export const createAuthFieldName = (fieldName, id) => `authentications.a${id}.${fieldName.replace('authentication.', '')}`;
 
@@ -66,14 +65,18 @@ export const authenticationFields = (authentications, sourceType, appName) => {
             ...getEnhancedAuthField(sourceType.name, auth.authtype, field.name, appName)
         }));
 
-        return [
-            ...(!appName ? [{
-                name: `authentication-${auth.id}`,
-                component: 'description',
-                id: auth.id,
-                Content: AuthenticationId
-            }] : []),
-            ...modifyAuthSchemas(enhancedFields, auth.id)
-        ];
+        if (!appName) {
+            return ([
+                {
+                    name: `authentication-${auth.id}`,
+                    component: 'description',
+                    id: auth.id,
+                    Content: GridLayout,
+                    fields: modifyAuthSchemas(enhancedFields, auth.id)
+                },
+            ]);
+        }
+
+        return modifyAuthSchemas(enhancedFields, auth.id);
     });
 };

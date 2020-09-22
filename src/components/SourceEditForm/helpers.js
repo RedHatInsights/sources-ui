@@ -15,11 +15,16 @@ export const selectOnlyEditedValues = (values, editing) => {
     return filteredValues;
 };
 
-export const prepareInitialValues = ({ endpoints, authentications, ...rest }, sourceTypeName) => {
+export const prepareInitialValues = ({ endpoints, authentications, applications, ...rest }, sourceTypeName) => {
     const auhenticationsFinal = {};
 
-    if (authentications && authentications.length > 0) {
-        authentications.forEach((auth) => {
+    const mergeAuths = [
+        ...(authentications || []),
+        ...(applications?.reduce((acc, curr) => [...acc, ...curr.authentications], []) || [])
+    ];
+
+    if (mergeAuths.length > 0) {
+        mergeAuths.forEach((auth) => {
             auhenticationsFinal[`a${auth.id}`] = auth;
         });
     }

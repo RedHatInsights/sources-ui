@@ -1,7 +1,6 @@
 import { parseSourceToSchema } from '../../../../components/SourceEditForm/parser/parseSourceToSchema';
 
 import * as gen from '../../../../components/SourceEditForm/parser/genericInfo';
-import * as auth from '../../../../components/SourceEditForm/parser/authentication';
 import * as end from '../../../../components/SourceEditForm/parser/endpoint';
 import * as app from '../../../../components/SourceEditForm/parser/application';
 import * as titleField from '../../../../components/SourceEditForm/parser/titleField';
@@ -37,7 +36,6 @@ describe('parseSourceToSchema', () => {
         INTL = { formatMessage: jest.fn() };
 
         gen.genericInfo = jest.fn().mockImplementation(() => ([]));
-        auth.authenticationFields = jest.fn().mockImplementation(() => ([]));
         app.applicationsFields = jest.fn().mockImplementation(() => ([]));
         end.endpointFields = jest.fn().mockImplementation(() => (undefined));
         titleField.default = jest.fn().mockImplementation(() => ([]));
@@ -57,15 +55,11 @@ describe('parseSourceToSchema', () => {
             SOURCE_TYPE,
             SOURCE.applications
         );
-        expect(auth.authenticationFields).toHaveBeenCalledWith(
-            SOURCE.authentications,
-            SOURCE_TYPE
-        );
         expect(app.applicationsFields).toHaveBeenCalledWith(
             SOURCE.applications,
             SOURCE_TYPE,
             APP_TYPES,
-            SOURCE,
+            SOURCE.authentications
         );
         expect(end.endpointFields).toHaveBeenCalledWith(
             SOURCE_TYPE,
@@ -97,12 +91,11 @@ describe('parseSourceToSchema', () => {
             SOURCE_TYPE,
             SOURCE.applications
         );
-        expect(auth.authenticationFields).not.toHaveBeenCalled();
         expect(app.applicationsFields).toHaveBeenCalledWith(
             SOURCE.applications,
             SOURCE_TYPE,
             APP_TYPES,
-            SOURCE,
+            SOURCE.authentications
         );
         expect(end.endpointFields).toHaveBeenCalledWith(
             SOURCE_TYPE,
@@ -134,15 +127,11 @@ describe('parseSourceToSchema', () => {
             SOURCE_TYPE,
             SOURCE.applications
         );
-        expect(auth.authenticationFields).toHaveBeenCalledWith(
-            SOURCE.authentications,
-            SOURCE_TYPE
-        );
         expect(app.applicationsFields).toHaveBeenCalledWith(
             SOURCE.applications,
             SOURCE_TYPE,
             APP_TYPES,
-            SOURCE_WITH_NO_ENDPOINT,
+            SOURCE.authentications
         );
         expect(end.endpointFields).not.toHaveBeenCalled();
         expect(titleField.default).toHaveBeenCalledWith(
@@ -172,15 +161,11 @@ describe('parseSourceToSchema', () => {
             SOURCE_TYPE,
             SOURCE.applications
         );
-        expect(auth.authenticationFields).toHaveBeenCalledWith(
-            SOURCE.authentications,
-            SOURCE_TYPE
-        );
         expect(app.applicationsFields).toHaveBeenCalledWith(
             SOURCE.applications,
             SOURCE_TYPE,
             APP_TYPES,
-            SOURCE_WITH_NO_ENDPOINT,
+            SOURCE.authentications
         );
         expect(end.endpointFields).not.toHaveBeenCalled();
         expect(titleField.default).toHaveBeenCalledWith(
