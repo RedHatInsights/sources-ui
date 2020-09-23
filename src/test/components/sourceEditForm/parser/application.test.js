@@ -93,6 +93,7 @@ describe('application edit form parser', () => {
         const EXPECTED_RESULT = [{
             component: componentTypes.TABS,
             name: 'app-tabs',
+            isBox: true,
             fields: [
                 { name: COSTMANAGEMENT_APP.id, title: COSTMANAGEMENT_APP.display_name, fields: [[{ name: 'billing_source.field1' }, { name: 'field2' }]] },
                 { name: CATALOG_APP.id, title: CATALOG_APP.display_name, fields: [[{ name: 'billing_source.field1' }, { name: 'field2' }]] }
@@ -146,6 +147,7 @@ describe('application edit form parser', () => {
         expect(result).toEqual([{
             component: componentTypes.TABS,
             name: 'app-tabs',
+            isBox: true,
             fields: [{
                 title: 'Cost Management',
                 fields: [FIELDS],

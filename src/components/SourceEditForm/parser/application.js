@@ -101,6 +101,7 @@ export const applicationsFields = (
         return ([{
             component: componentTypes.TABS,
             name: 'app-tabs',
+            isBox: true,
             fields: [
                 ...applications.map((app) => {
                     const appType = appTypes.find(({ id }) => id === app.application_type_id);
