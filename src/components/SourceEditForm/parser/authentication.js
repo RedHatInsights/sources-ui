@@ -38,6 +38,28 @@ export const modifyAuthSchemas = (fields, id) => fields.map((field) => {
     return finalField;
 });
 
+const specialModifierAWS = (field, authtype) => {
+    if (getLastPartOfName(field.name) !== 'password') {
+        return field;
+    }
+
+    if (authtype === 'arn') {
+        return ({
+            ...field,
+            label: 'Cost Management ARN'
+        });
+    }
+
+    if (authtype === 'cloud-meter-arn') {
+        return ({
+            ...field,
+            label: 'Subscription Watch ARN'
+        });
+    }
+
+    return field;
+};
+
 export const authenticationFields = (authentications, sourceType, appName) => {
     if (!authentications || authentications.length === 0 || !sourceType.schema || !sourceType.schema.authentication) {
         return [];
@@ -55,7 +77,7 @@ export const authenticationFields = (authentications, sourceType, appName) => {
         ?.map(step => ({ ...step, fields: [...step.fields, ...getAdditionalFields(schemaAuth, step.name)] }))
         .map(({ fields }) => fields.map(({ name }) => name)).flatMap(x => x);
 
-        const enhancedFields = schemaAuth.fields
+        let enhancedFields = schemaAuth.fields
         .filter(field => additionalStepsFields.includes(field.name)
         || !field.stepKey
         || (field.stepKey && additionalStepKeys.includes(field.stepKey))
@@ -64,6 +86,10 @@ export const authenticationFields = (authentications, sourceType, appName) => {
             ...field,
             ...getEnhancedAuthField(sourceType.name, auth.authtype, field.name, appName)
         }));
+
+        if (!appName && sourceType.name === 'amazon') {
+            enhancedFields = enhancedFields.map(field => specialModifierAWS(field, auth.authtype));
+        }
 
         if (!appName) {
             return ([
