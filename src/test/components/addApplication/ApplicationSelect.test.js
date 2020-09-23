@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { Radio, Button } from '@patternfly/react-core';
+import { Radio } from '@patternfly/react-core';
 import configureStore from 'redux-mock-store';
 import { Route } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
