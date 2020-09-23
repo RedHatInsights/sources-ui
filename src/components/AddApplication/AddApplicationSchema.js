@@ -38,7 +38,7 @@ export const hasMultipleAuthenticationTypes = (app, sourceType) => (
 );
 
 const fields = (
-    applications = [], intl, sourceTypes, applicationTypes, authenticationValues, source, container, appIds
+    applications = [], intl, sourceTypes, applicationTypes, authenticationValues, source, container
 ) => {
     const hasAvailableApps = applications.length > 0;
 
@@ -122,7 +122,6 @@ const fields = (
         component: 'application-select',
         name: 'application.application_type_id',
         options: applications,
-        appIds,
         container,
         validate: [{
             type: validatorTypes.REQUIRED
@@ -182,7 +181,6 @@ const fields = (
                             {
                                 component: 'description',
                                 name: 'description',
-                                appIds,
                                 Content: AddApplicationDescription,
                                 container
                             },

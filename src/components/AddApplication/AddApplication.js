@@ -281,9 +281,6 @@ const AddApplication = () => {
         );
     }
 
-    const appIds = source.applications.filter(({ isDeleting }) => !isDeleting)
-    .reduce((acc, app) => [...acc, app.application_type_id], []);
-
     const sourceType = sourceTypes.find((type) => type.id === source.source_type_id);
     const sourceTypeName = sourceType && sourceType.name;
     const filteredAppTypes = appTypes.filter((type) =>
@@ -302,8 +299,7 @@ const AddApplication = () => {
         appTypes,
         state.authenticationsValues,
         source,
-        container.current,
-        appIds
+        container.current
     );
 
     const hasAvailableApps = filteredAppTypes.length > 0;

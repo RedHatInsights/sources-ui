@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import { useIntl } from 'react-intl';
 
 import { Radio } from '@patternfly/react-core/dist/js/components/Radio/Radio';
 import { Button } from '@patternfly/react-core/dist/js/components/Button';
@@ -13,6 +14,8 @@ import { useSource } from '../../hooks/useSource';
 import RemoveAppModal from './RemoveAppModal';
 
 const RemoveRadio = ({ option, setApplicationToRemove, sourceAppsNames, app, appType }) => {
+    const intl = useIntl();
+
     const onClick = () => setApplicationToRemove({
         id: app?.id,
         display_name: appType?.display_name,
@@ -24,7 +27,10 @@ const RemoveRadio = ({ option, setApplicationToRemove, sourceAppsNames, app, app
         <Button
             id={`remove-app-${option.value}`}
             variant="plain"
-            aria-label="Remove app"
+            aria-label={intl.formatMessage({
+                id: 'source.removeAppAria',
+                defaultMessage: 'Remove application {app} from this source'
+            }, { app: option.label })}
             className="pf-u-p-0"
             onClick={onClick}
         >
@@ -54,7 +60,7 @@ RemoveRadio.propTypes = {
 };
 
 const ApplicationSelect = (props) => {
-    const { options, appIds, input: { onChange, value, name }, container } = useFieldApi(props);
+    const { options, input: { onChange, value, name }, container } = useFieldApi(props);
 
     const [removingApp, setApplicationToRemove] = useState({});
 
@@ -73,6 +79,9 @@ const ApplicationSelect = (props) => {
     const app = (value) => source.applications.find(app => app.application_type_id === value);
 
     const isCurrentlyRemoving = (value) => app(value)?.isDeleting;
+
+    const appIds = source.applications.filter(({ isDeleting }) => !isDeleting)
+    .reduce((acc, app) => [...acc, app.application_type_id], []);
 
     return (
         <div>
