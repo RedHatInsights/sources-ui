@@ -25,23 +25,17 @@ describe('AddApplicationSchema', () => {
         );
 
         const selectionStep = expect.objectContaining({
-            title: 'Select application'
+            title: 'Add / remove applications'
         });
 
         const summaryStep = expect.objectContaining({
             title: 'Review details'
         });
 
-        expect(result).toEqual({
-            fields: [
-                expect.objectContaining({
-                    fields: [
-                        selectionStep,
-                        summaryStep
-                    ]
-                })
-            ]
-        });
+        expect(result.fields[0].fields).toEqual([
+            selectionStep,
+            summaryStep
+        ]);
     });
 
     it('openshift schema', () => {
@@ -90,7 +84,7 @@ describe('AddApplicationSchema', () => {
         );
 
         const selectionStep = expect.objectContaining({
-            title: 'Select application',
+            title: 'Add / remove applications',
             nextStep: undefined
         });
 
@@ -98,16 +92,10 @@ describe('AddApplicationSchema', () => {
             title: 'Review details'
         });
 
-        expect(result).toEqual({
-            fields: [
-                expect.objectContaining({
-                    fields: [
-                        selectionStep,
-                        summaryStep
-                    ]
-                })
-            ]
-        });
+        expect(result.fields[0].fields).toEqual([
+            selectionStep,
+            summaryStep
+        ]);
     });
 
     it('multiple authentication types', () => {

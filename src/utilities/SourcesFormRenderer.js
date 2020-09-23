@@ -12,6 +12,8 @@ import { mapperExtension } from '@redhat-cloud-services/frontend-components-sour
 
 import Authentication from '../components/Authentication';
 
+import ApplicationSelect from '../components/AddApplication/ApplicationSelect';
+
 const SourcesFormRenderer = props => (
     <FormRenderer
         FormTemplate={FormTemplate}
@@ -19,7 +21,8 @@ const SourcesFormRenderer = props => (
             ...componentMapper,
             ...mapperExtension,
             authentication: Authentication,
-            'switch-field': componentMapper[componentTypes.SWITCH]
+            'switch-field': componentMapper[componentTypes.SWITCH],
+            'application-select': ApplicationSelect
         }}
         validatorMapper={{
             'required-validator': validatorMapper[validatorTypes.REQUIRED],

@@ -1,6 +1,5 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { Button } from '@patternfly/react-core';
 import { Route } from 'react-router-dom';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import configureStore from 'redux-mock-store';
@@ -11,8 +10,7 @@ import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { sourceTypesData } from '../../__mocks__/sourceTypesData';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
 import { applicationTypesData } from '../../__mocks__/applicationTypesData';
-import RemoveAppModal from '../../../components/AddApplication/RemoveAppModal';
-import ApplicationList from '../../../components/ApplicationsList/ApplicationList';
+
 import { routes, replaceRouteId } from '../../../Routes';
 
 describe('AddApplicationDescription', () => {
@@ -47,11 +45,9 @@ describe('AddApplicationDescription', () => {
         const source = sourcesDataGraphQl.find((x) => x.id === '23');
         const sourceType = sourceTypesData.data.find((x) => x.id === source.source_type_id);
 
-        expect(wrapper.find('p#add-application-desc-name').text()).toEqual(source.name);
         expect(wrapper.find('p#add-application-desc-type').text()).toEqual(sourceType.product_name);
-        expect(wrapper.find(ApplicationList).length).toEqual(0);
-        expect(wrapper.find('p#add-application-desc-no-app').text()).toEqual('No applications');
-        expect(wrapper.find(Button).length).toEqual(0);
+        expect(wrapper.find('h4#add-application-header').text()).toEqual('Add an application');
+        expect(wrapper.find('p#add-application-description').text()).toEqual('There are currently no applications connected to this source. Select from available applications below.');
         expect(initialProps.container.hidden).toEqual(false);
     });
 
@@ -62,49 +58,8 @@ describe('AddApplicationDescription', () => {
             [replaceRouteId(routes.sourceManageApps.path, '406')]
         ));
 
-        const source = sourcesDataGraphQl.find((x) => x.id === '406');
-        const sourceType = sourceTypesData.data.find((x) => x.id === source.source_type_id);
-
-        expect(wrapper.find('p#add-application-desc-name').text()).toEqual(source.name);
-        expect(wrapper.find('p#add-application-desc-type').text()).toEqual(sourceType.product_name);
-        expect(wrapper.find(ApplicationList).length).toEqual(1);
-        expect(wrapper.find(Button).length).toEqual(1);
-    });
-
-    it('renders correctly with applications', () => {
-        const wrapper = mount(componentWrapperIntl(
-            <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplicationDescription {...initialProps} { ...args }/> } />,
-            store,
-            [replaceRouteId(routes.sourceManageApps.path, '408')]
-        ));
-
-        const source = sourcesDataGraphQl.find((x) => x.id === '408');
-        const sourceType = sourceTypesData.data.find((x) => x.id === source.source_type_id);
-
-        expect(wrapper.find('p#add-application-desc-name').text()).toEqual(source.name);
-        expect(wrapper.find('p#add-application-desc-type').text()).toEqual(sourceType.product_name);
-        expect(wrapper.find(ApplicationList).length).toEqual(1);
-        expect(wrapper.find(Button).length).toEqual(3);
-    });
-
-    it('show remove app modal and close it', () => {
-        const wrapper = mount(componentWrapperIntl(
-            <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplicationDescription {...initialProps} { ...args }/> } />,
-            store,
-            [replaceRouteId(routes.sourceManageApps.path, '406')]
-        ));
-
-        expect(wrapper.find(RemoveAppModal).length).toEqual(0);
-
-        wrapper.find(Button).first().simulate('click');
-        wrapper.update();
-        expect(wrapper.find(RemoveAppModal).length).toEqual(1);
-        expect(initialProps.container.hidden).toEqual(true);
-
-        wrapper.find(Button).at(0).simulate('click');
-        wrapper.update();
-        expect(wrapper.find(RemoveAppModal).length).toEqual(0);
-        expect(initialProps.container.hidden).toEqual(false);
+        expect(wrapper.find('h4#add-application-header').text()).toEqual('Applications');
+        expect(wrapper.find('p#add-application-description').text()).toEqual('Select a radio button to add an application. Click trash icon to remove an application.');
     });
 
     it('renders correctly when SourceType does not exist', () => {
