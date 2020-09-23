@@ -1,6 +1,5 @@
 import { getEnhancedEndpointField, endpointFields } from '../../../../components/SourceEditForm/parser/endpoint';
 import { componentTypes } from '@data-driven-forms/react-form-renderer';
-import { modifyFields } from '../../../../components/SourceEditForm/parser/helpers';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas', () => ({
     __esModule: true,
@@ -24,20 +23,13 @@ jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchem
 describe('endpoint edit form parser', () => {
     describe('endpointFields', () => {
         let SOURCE_TYPE;
-        let EDITING;
-        let SET_EDIT;
-
-        beforeEach(() => {
-            EDITING = {};
-            SET_EDIT = jest.fn();
-        });
 
         it('returns nothing when hidden', () => {
             SOURCE_TYPE = {
                 schema: { endpoint: { hidden: true } }
             };
 
-            expect(endpointFields(SOURCE_TYPE, EDITING, SET_EDIT)).toEqual(undefined);
+            expect(endpointFields(SOURCE_TYPE)).toEqual(undefined);
         });
 
         it('returns nothing when no schema', () => {
@@ -45,7 +37,7 @@ describe('endpoint edit form parser', () => {
                 schema: undefined
             };
 
-            expect(endpointFields(SOURCE_TYPE, EDITING, SET_EDIT)).toEqual(undefined);
+            expect(endpointFields(SOURCE_TYPE)).toEqual(undefined);
         });
 
         it('returns nothing when no schema.endpoint', () => {
@@ -55,7 +47,7 @@ describe('endpoint edit form parser', () => {
                 }
             };
 
-            expect(endpointFields(SOURCE_TYPE, EDITING, SET_EDIT)).toEqual(undefined);
+            expect(endpointFields(SOURCE_TYPE)).toEqual(undefined);
         });
 
         it('returns endpoint SUBFORM', () => {
@@ -68,13 +60,12 @@ describe('endpoint edit form parser', () => {
                 schema: { endpoint: { fields: FIELDS } }
             };
 
-            const result = endpointFields(SOURCE_TYPE, EDITING, SET_EDIT);
+            const result = endpointFields(SOURCE_TYPE);
 
             expect(result).toEqual({
                 component: componentTypes.SUB_FORM,
-                title: expect.any(Object),
                 name: 'endpoint',
-                fields: modifyFields(FIELDS, EDITING, SET_EDIT)
+                fields: FIELDS
             });
         });
 
@@ -89,11 +80,10 @@ describe('endpoint edit form parser', () => {
                 schema: { endpoint: { fields: FIELDS } }
             };
 
-            const result = endpointFields(SOURCE_TYPE, EDITING, SET_EDIT);
+            const result = endpointFields(SOURCE_TYPE);
 
             expect(result).toEqual({
                 component: componentTypes.SUB_FORM,
-                title: expect.any(Object),
                 name: 'endpoint',
                 fields: [{
                     component: componentTypes.SUB_FORM,
@@ -104,7 +94,6 @@ describe('endpoint edit form parser', () => {
                     },
                     fields: [{
                         ...FIELDS[0],
-                        ...modifyFields([FIELDS[0]])[0],
                         isRequired: false,
                         additional: 'value',
                         validate: [{ type: 'url' }]
@@ -118,11 +107,11 @@ describe('endpoint edit form parser', () => {
                     },
                     fields: [
                         {
-                            ...modifyFields(FIELDS, EDITING, SET_EDIT)[0],
+                            ...FIELDS[0],
                             additional: 'value',
                             validate: [{ type: 'required' }, { type: 'url' }]
                         },
-                        modifyFields(FIELDS, EDITING, SET_EDIT)[1]
+                        FIELDS[1]
                     ]
                 }]
             });

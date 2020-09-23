@@ -13,16 +13,21 @@ import { routes, replaceRouteId } from '../../../Routes';
 import { applicationTypesData } from '../../__mocks__/applicationTypesData';
 import { sourceTypesData, OPENSHIFT_ID } from '../../__mocks__/sourceTypesData';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
-import { Modal, Button, FormGroup, TextInput, Form, Title } from '@patternfly/react-core';
+import { Modal, Button, FormGroup, TextInput, Form, Alert, EmptyState } from '@patternfly/react-core';
 import * as editApi from '../../../api/doLoadSourceForEdit';
-import EditFieldProvider from '../../../components/EditField/EditField';
 import * as submit from '../../../components/SourceEditForm/onSubmit';
 import * as redirect from '../../../components/SourceEditForm/importedRedirect';
+import reducer from '../../../components/SourceEditForm/reducer';
+
+import SubmittingModal from '../../../components/SourceEditForm/SubmittingModal';
+import EditAlert from '../../../components/SourceEditForm/parser/EditAlert';
+import TimeoutedModal from '../../../components/SourceEditForm/TimeoutedModal';
+import ErroredModal from '../../../components/SourceEditForm/ErroredModal';
+
 import RemoveAuth from '../../../components/SourceEditForm/parser/RemoveAuth';
 import * as api from '../../../api/entities';
-import AuthenticationManagement from '../../../components/SourceEditForm/parser/AuthenticationManagement';
 import RemoveAuthPlaceholder from '../../../components/SourceEditForm/parser/RemoveAuthPlaceholder';
-import reducer from '../../../components/SourceEditForm/reducer';
+import GridLayout from '../../../components/SourceEditForm/parser/GridLayout';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/SourceAddSchema', () => ({
     __esModule: true,
@@ -40,7 +45,7 @@ describe('SourceEditModal', () => {
     const BUTTONS = ['closeIcon', 'submit', 'reset', 'cancel'];
 
     const CANCEL_POS = BUTTONS.indexOf('cancel');
-    const RESET_POS = BUTTONS.indexOf('reset');
+    //const RESET_POS = BUTTONS.indexOf('reset');
     const ONCLOSE_POS = BUTTONS.indexOf('closeIcon');
 
     const getCurrentAddress = wrapper => wrapper.find(MemoryRouter).instance().history.location.pathname;
@@ -80,7 +85,7 @@ describe('SourceEditModal', () => {
 
     it('renders correctly', () => {
         expect(wrapper.find(Modal)).toHaveLength(1);
-        expect(wrapper.find(EditFieldProvider).length).toBeGreaterThan(0);
+        expect(wrapper.find(TextInput).length).toBeGreaterThan(0);
         expect(wrapper.find(Button)).toHaveLength(BUTTONS.length);
     });
 
@@ -120,25 +125,7 @@ describe('SourceEditModal', () => {
         );
     });
 
-    it('change editField component for name', async() => {
-        expect(wrapper.find(TextInput)).toHaveLength(0);
-
-        const UNEDITED_FIELDS = wrapper.find(EditFieldProvider).length;
-
-        const nameFormGroup = wrapper.find(FormGroup).first();
-        await act(async() => {
-            nameFormGroup.simulate('click');
-        });
-        wrapper.update();
-
-        const UNEDITED_FIELDS_WITHOUT_NAME_FIELD = UNEDITED_FIELDS - 1;
-
-        expect(wrapper.find(EditFieldProvider).length).toEqual(UNEDITED_FIELDS_WITHOUT_NAME_FIELD);
-        expect(wrapper.find(TextInput)).toHaveLength(1);
-
-    });
-
-    it('calls onSubmit with values and editing object', async() => {
+    describe('submit', () => {
         const NEW_NAME_VALUE = 'new name';
 
         const VALUES = expect.objectContaining({
@@ -150,40 +137,170 @@ describe('SourceEditModal', () => {
             'source.name': true
         };
         const DISPATCH = expect.any(Function);
-        const PUSH = expect.any(Function);
+        const SET_STATE = expect.any(Function);
         const SOURCE = expect.any(Object);
         const INTL = expect.objectContaining({
             formatMessage: expect.any(Function)
         });
 
-        submit.onSubmit = jest.fn();
+        beforeEach(async () => {
+            const nameFormGroup = wrapper.find(FormGroup).first();
+            await act(async() => {
+                nameFormGroup.simulate('click');
+            });
+            wrapper.update();
 
-        const nameFormGroup = wrapper.find(FormGroup).first();
-        await act(async() => {
-            nameFormGroup.simulate('click');
-        });
-        wrapper.update();
-
-        await act(async() => {
-            wrapper.find('input').instance().value = NEW_NAME_VALUE;
-            wrapper.find('input').simulate('change');
-        });
-        wrapper.update();
-
-        const form = wrapper.find(Form);
-
-        await act(async() => {
-            form.simulate('submit');
+            await act(async() => {
+                wrapper.find('input').instance().value = NEW_NAME_VALUE;
+                wrapper.find('input').simulate('change');
+            });
+            wrapper.update();
         });
 
-        expect(submit.onSubmit).toHaveBeenCalledWith(
-            VALUES,
-            EDITING,
-            DISPATCH,
-            SOURCE,
-            INTL,
-            PUSH
-        );
+        it('calls onSubmit with values and editing object', async () => {
+            jest.useFakeTimers();
+
+            const message = {
+                title: 'some title',
+                variant: 'danger',
+                description: 'some description'
+            };
+
+            submit.onSubmit = jest.fn().mockImplementation((values, editing, _dispatch, source, _intl, setState) => {
+                setState({ type: 'submit', values, editing });
+
+                setTimeout(() => {
+                    setState({ type: 'submitFinished', source, message });
+                }, 1000);
+            });
+
+            const form = wrapper.find(Form);
+
+            expect(wrapper.find(SubmittingModal)).toHaveLength(0);
+
+            await act(async() => {
+                form.simulate('submit');
+            });
+            wrapper.update();
+
+            expect(wrapper.find(SubmittingModal)).toHaveLength(1);
+
+            await act(async() => {
+                jest.runAllTimers();
+            });
+            wrapper.update();
+
+            expect(wrapper.find(SubmittingModal)).toHaveLength(0);
+            expect(wrapper.find(EditAlert)).toHaveLength(1);
+
+            expect(wrapper.find(EditAlert).find(Alert).props().title).toEqual(message.title);
+            expect(wrapper.find(EditAlert).find(Alert).props().variant).toEqual(message.variant);
+            expect(wrapper.find(EditAlert).find(Alert).props().children).toEqual(message.description);
+
+            expect(submit.onSubmit).toHaveBeenCalledWith(
+                VALUES,
+                EDITING,
+                DISPATCH,
+                SOURCE,
+                INTL,
+                SET_STATE
+            );
+        });
+
+        it('calls onSubmit - timeout', async () => {
+            jest.useFakeTimers();
+
+            submit.onSubmit = jest.fn().mockImplementation((values, editing, _dispatch, source, _intl, setState) => {
+                setState({ type: 'submit', values, editing });
+
+                setTimeout(() => {
+                    setState({ type: 'submitTimetouted' });
+                }, 1000);
+            });
+
+            const form = wrapper.find(Form);
+
+            expect(wrapper.find(SubmittingModal)).toHaveLength(0);
+
+            await act(async() => {
+                form.simulate('submit');
+            });
+            wrapper.update();
+
+            expect(wrapper.find(SubmittingModal)).toHaveLength(1);
+
+            await act(async() => {
+                jest.runAllTimers();
+            });
+            wrapper.update();
+
+            expect(wrapper.find(TimeoutedModal)).toHaveLength(1);
+
+            expect(submit.onSubmit).toHaveBeenCalledWith(
+                VALUES,
+                EDITING,
+                DISPATCH,
+                SOURCE,
+                INTL,
+                SET_STATE
+            );
+        });
+
+        it('calls onSubmit - server error', async () => {
+            jest.useFakeTimers();
+
+            submit.onSubmit = jest.fn().mockImplementation((values, editing, _dispatch, source, _intl, setState) => {
+                setState({ type: 'submit', values, editing });
+
+                setTimeout(() => {
+                    setState({ type: 'submitFailed' });
+                }, 1000);
+            });
+
+            const form = wrapper.find(Form);
+
+            expect(wrapper.find(SubmittingModal)).toHaveLength(0);
+
+            await act(async() => {
+                form.simulate('submit');
+            });
+            wrapper.update();
+
+            expect(wrapper.find(SubmittingModal)).toHaveLength(1);
+
+            await act(async() => {
+                jest.runAllTimers();
+            });
+            wrapper.update();
+
+            expect(wrapper.find(ErroredModal)).toHaveLength(1);
+
+            expect(submit.onSubmit).toHaveBeenCalledWith(
+                VALUES,
+                EDITING,
+                DISPATCH,
+                SOURCE,
+                INTL,
+                SET_STATE
+            );
+
+            submit.onSubmit.mockReset();
+
+            // try again via retry button
+            await act(async() => {
+                wrapper.find(ErroredModal).find(EmptyState).find(Button).simulate('click');
+            });
+            wrapper.update();
+
+            expect(submit.onSubmit).toHaveBeenCalledWith(
+                VALUES,
+                EDITING,
+                DISPATCH,
+                SOURCE,
+                INTL,
+                SET_STATE
+            );
+        });
     });
 
     it('calls onCancel via onClose icon and returns to root', async () => {
@@ -206,33 +323,6 @@ describe('SourceEditModal', () => {
         wrapper.update();
 
         expect(getCurrentAddress(wrapper)).toEqual(routes.sources.path);
-    });
-
-    it('calls onRetry and resets edited fields', async () => {
-        const UNEDITED_FIELDS = wrapper.find(EditFieldProvider).length;
-
-        const nameFormGroup = wrapper.find(FormGroup).first();
-        await act(async() => {
-            nameFormGroup.simulate('click');
-        });
-        wrapper.update();
-
-        expect(wrapper.find(EditFieldProvider)).toHaveLength(UNEDITED_FIELDS - 1);
-
-        await act(async() => {
-            wrapper.find('input').instance().value = 'new value';
-            wrapper.find('input').simulate('change');
-        });
-        wrapper.update();
-
-        const resetButton = wrapper.find(Button).at(RESET_POS);
-
-        await act(async() => {
-            resetButton.simulate('click');
-        });
-        wrapper.update();
-
-        expect(wrapper.find(EditFieldProvider)).toHaveLength(UNEDITED_FIELDS);
     });
 
     it('renders loading modal', async() => {
@@ -318,9 +408,7 @@ describe('SourceEditModal', () => {
             });
             wrapper.update();
 
-            expect(wrapper.find(Title)).toHaveLength(2);
-            expect(wrapper.find(AuthenticationManagement)).toHaveLength(1);
-            expect(wrapper.find(Title).last().text()).toEqual('Token ');
+            expect(wrapper.find(GridLayout)).toHaveLength(1);
             expect(wrapper.find(RemoveAuthPlaceholder)).toHaveLength(0);
             expect(wrapper.find(Modal)).toHaveLength(1);
 
@@ -353,9 +441,8 @@ describe('SourceEditModal', () => {
             });
             wrapper.update();
 
-            expect(wrapper.find(Title)).toHaveLength(1);
             expect(wrapper.find(RemoveAuthPlaceholder)).toHaveLength(0);
-            expect(wrapper.find(AuthenticationManagement)).toHaveLength(0);
+            expect(wrapper.find(GridLayout)).toHaveLength(0);
         });
 
         it('removes authentication unsuccessfully', async () => {
@@ -368,9 +455,7 @@ describe('SourceEditModal', () => {
             });
             wrapper.update();
 
-            expect(wrapper.find(Title)).toHaveLength(2);
-            expect(wrapper.find(Title).last().text()).toEqual('Token ');
-            expect(wrapper.find(AuthenticationManagement)).toHaveLength(1);
+            expect(wrapper.find(GridLayout)).toHaveLength(1);
 
             await act(async() => {
                 const removeButton = wrapper.find(Button).at(1);
@@ -388,10 +473,8 @@ describe('SourceEditModal', () => {
             });
             wrapper.update();
 
-            expect(wrapper.find(Title)).toHaveLength(2);
-            expect(wrapper.find(Title).last().text()).toEqual('Token ');
             expect(api.doDeleteAuthentication).toHaveBeenCalledWith('authid');
-            expect(wrapper.find(AuthenticationManagement)).toHaveLength(1);
+            expect(wrapper.find(GridLayout)).toHaveLength(1);
         });
     });
 

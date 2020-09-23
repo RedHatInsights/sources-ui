@@ -1,6 +1,5 @@
 import {
     removeMessage,
-    updateSource,
     addHiddenSource,
     pageAndSize,
     loadEntities,
@@ -19,8 +18,7 @@ import {
     FILTER_SOURCES,
     CLEAR_FILTERS
 } from '../../../redux/sources/actionTypes';
-import { REMOVE_NOTIFICATION, ADD_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications';
-import * as updateSourceApi from '../../../api/doUpdateSource';
+import { REMOVE_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications';
 import * as api from '../../../api/entities';
 
 describe('redux actions', () => {
@@ -69,50 +67,6 @@ describe('redux actions', () => {
             }
         });
         expect(dispatch.mock.calls[1][0]).toEqual(expect.any(Function));
-    });
-
-    describe('updateSource', () => {
-        const SOURCE = { name: 'aaa' };
-        const FORM_DATA = { formadata: true };
-        const TITLE = 'title';
-        const DESCRIPTION = 'description';
-        const ERROR_TTITLES = { titles: 'blabla' };
-
-        it('succesfuly calls doUpdateSource', async () => {
-            updateSourceApi.doUpdateSource = jest.fn().mockImplementation(() => Promise.resolve('ok'));
-
-            const result = await updateSource(SOURCE, FORM_DATA, TITLE, DESCRIPTION, ERROR_TTITLES)(dispatch);
-
-            expect(result).toEqual(
-                expect.objectContaining({
-                    type: ADD_NOTIFICATION,
-                    payload: {
-                        variant: 'success',
-                        title: TITLE,
-                        description: DESCRIPTION,
-                        dismissable: true
-                    }
-                })
-            );
-        });
-
-        it('handle error', async () => {
-            const ERROR = { detail: 'blabla' };
-            updateSourceApi.doUpdateSource = jest.fn().mockImplementation(() => Promise.reject(ERROR));
-
-            expect.assertions(2);
-            try {
-                await updateSource(SOURCE, FORM_DATA, TITLE, DESCRIPTION, ERROR_TTITLES)(dispatch);
-            } catch (error) {
-                expect(dispatch).toHaveBeenCalledWith(
-                    expect.objectContaining({
-                        type: 'FOOBAR_REJECTED',
-                        payload: ERROR
-                    })
-                );
-                expect(error).toEqual(ERROR);
-            }
-        });
     });
 
     describe('page and size', () => {

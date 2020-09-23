@@ -17,23 +17,23 @@ import { addMessage } from '../../../redux/sources/actions';
 import { doDeleteAuthentication } from '../../../api/entities';
 import { handleError } from '@redhat-cloud-services/frontend-components-sources/cjs/handleError';
 
-const RemoveAuth = ({ appNames, schemaAuth, auth }) => {
-    const hasAttachedApp = appNames.length > 0;
-    let body;
-    let actions;
+const RemoveAuth = ({ authId }) => {
+    const { setState, source, sourceType } = useContext(sourceEditContext);
+
+    const schemaAuth = sourceType?.schema?.authentication?.find(
+        ({ type }) => type === source?.authentications?.find(auth => auth?.id === authId)?.authtype
+    );
 
     const dispatch = useDispatch();
     const intl = useIntl();
 
-    const { setState } = useContext(sourceEditContext);
-
     const onClose = () => setState({ type: 'closeAuthRemoving' });
 
     const onRemove = () => {
-        setState({ type: 'removeAuthPending', authId: auth.id });
+        setState({ type: 'removeAuthPending', authId });
         onClose();
-        return doDeleteAuthentication(auth.id).then(() => {
-            setState({ type: 'removeAuthFulfill', authId: auth.id });
+        return doDeleteAuthentication(authId).then(() => {
+            setState({ type: 'removeAuthFulfill', authId });
             dispatch(addMessage(
                 intl.formatMessage(
                     { id: 'sources.authRemoveFullfil', defaultMessage: 'Authentication was deleted successfully.' }
@@ -42,7 +42,7 @@ const RemoveAuth = ({ appNames, schemaAuth, auth }) => {
             ));
         })
         .catch((error) => {
-            setState({ type: 'removeAuthRejected', authId: auth.id });
+            setState({ type: 'removeAuthRejected', authId });
             dispatch(addMessage(
                 intl.formatMessage(
                     { id: 'sources.authRemoveRejected', defaultMessage: 'Authentication was not deleted successfully.' }
@@ -53,61 +53,35 @@ const RemoveAuth = ({ appNames, schemaAuth, auth }) => {
         });
     };
 
-    if (hasAttachedApp) {
-        body = intl.formatMessage({
-            id: 'sources.removeAuthWarningApps',
-            // eslint-disable-next-line max-len
-            defaultMessage: 'To remove {authname} authentication you have to remove attached {count, plural, one {application} other {applications}}: { appNames }.'
-        }, { appNames: appNames.join(', '), count: appNames.length, authname: <b key="b">{schemaAuth.name}</b> });
-        actions = [<Button
-            id="deleteCancel"
-            key="cancel"
-            variant="link"
-            type="button"
-            onClick={ onClose }
-        >
-            { intl.formatMessage({
-                id: 'sources.close',
-                defaultMessage: 'Close'
-            }) }
-        </Button>];
-    } else {
-        body = intl.formatMessage({
-            id: 'sources.removeAuthWarning',
-            defaultMessage: 'This action will permanently remove {auth} from this source.'
-        }, { auth: <b key="b">{schemaAuth.name}</b> });
-        actions = [<Button
-            id="deleteSubmit"
-            key="submit"
-            variant="danger"
-            type="button"
-            onClick={ onRemove }
-        >
-            { intl.formatMessage({
-                id: 'sources.deleteConfirm',
-                defaultMessage: 'Remove authentication'
-            }) }
-        </Button>,
-        <Button
-            id="deleteCancel"
-            key="cancel"
-            variant="link"
-            type="button"
-            onClick={ onClose }
-        >
-            { intl.formatMessage({
-                id: 'sources.deleteCancel',
-                defaultMessage: 'Cancel'
-            }) }
-        </Button>];
-    }
-
     return (
         <Modal
             isOpen
             className="ins-c-sources__dialog--warning"
             onClose={onClose}
-            actions={actions}
+            actions={[<Button
+                id="deleteSubmit"
+                key="submit"
+                variant="danger"
+                type="button"
+                onClick={ onRemove }
+            >
+                { intl.formatMessage({
+                    id: 'sources.deleteConfirm',
+                    defaultMessage: 'Remove authentication'
+                }) }
+            </Button>,
+            <Button
+                id="deleteCancel"
+                key="cancel"
+                variant="link"
+                type="button"
+                onClick={ onClose }
+            >
+                { intl.formatMessage({
+                    id: 'sources.deleteCancel',
+                    defaultMessage: 'Cancel'
+                }) }
+            </Button>]}
             variant="small"
             aria-label={
                 intl.formatMessage({
@@ -128,7 +102,10 @@ const RemoveAuth = ({ appNames, schemaAuth, auth }) => {
 
             <TextContent>
                 <Text variant={TextVariants.p}>
-                    {body}
+                    {intl.formatMessage({
+                        id: 'sources.removeAuthWarning',
+                        defaultMessage: 'This action will permanently remove {auth} from this source.'
+                    }, { auth: <b key="b">{schemaAuth?.name}</b> })}
                 </Text>
             </TextContent>
         </Modal>
@@ -136,13 +113,7 @@ const RemoveAuth = ({ appNames, schemaAuth, auth }) => {
 };
 
 RemoveAuth.propTypes = {
-    appNames: PropTypes.arrayOf(PropTypes.string),
-    schemaAuth: PropTypes.shape({
-        name: PropTypes.string.isRequired
-    }).isRequired,
-    auth: PropTypes.shape({
-        id: PropTypes.string.isRequired
-    }).isRequired
+    authId: PropTypes.string.isRequired
 };
 
 export default RemoveAuth;
