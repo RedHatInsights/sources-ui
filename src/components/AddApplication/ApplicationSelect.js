@@ -12,15 +12,7 @@ import { useSource } from '../../hooks/useSource';
 
 import RemoveAppModal from './RemoveAppModal';
 
-const RemoveRadio = ({ option, setApplicationToRemove, sourceAppsNames }) => {
-    const appTypes = useSelector(({ sources }) => sources.appTypes);
-    const source = useSource();
-
-    const appType = appTypes?.find(appType =>
-        appType.id === option.value
-    );
-    const app = source.applications.find(app => app.application_type_id === option.value);
-
+const RemoveRadio = ({ option, setApplicationToRemove, sourceAppsNames, app, appType }) => {
     const onClick = () => setApplicationToRemove({
         id: app?.id,
         display_name: appType?.display_name,
@@ -28,11 +20,17 @@ const RemoveRadio = ({ option, setApplicationToRemove, sourceAppsNames }) => {
         sourceAppsNames
     });
 
-    return (<div className="pf-c-radio">
-        <Button variant="plain" aria-label="Remove app" className="pf-u-p-0" onClick={onClick}>
+    return (<div className="pf-c-radio pf-u-mb-md">
+        <Button
+            id={`remove-app-${option.value}`}
+            variant="plain"
+            aria-label="Remove app"
+            className="pf-u-p-0"
+            onClick={onClick}
+        >
             <TrashIcon variant="small" />
         </Button>
-        <label className="pf-c-radio__label">
+        <label className="pf-c-radio__label" htmlFor={`remove-app-${option.value}`}>
             {option.label}
         </label>
     </div>);
@@ -44,7 +42,15 @@ RemoveRadio.propTypes = {
         value: PropTypes.string.isRequired
     }),
     setApplicationToRemove: PropTypes.func.isRequired,
-    sourceAppsNames: PropTypes.arrayOf(PropTypes.string)
+    sourceAppsNames: PropTypes.arrayOf(PropTypes.string),
+    appType: PropTypes.shape({
+        display_name: PropTypes.string.isRequired,
+        dependent_applications: PropTypes.arrayOf(PropTypes.string)
+    }),
+    app: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        application_type_id: PropTypes.string.isRequired
+    })
 };
 
 const ApplicationSelect = (props) => {
@@ -61,6 +67,13 @@ const ApplicationSelect = (props) => {
         return appType ? appType.display_name : undefined;
     });
 
+    const appType = (value) => appTypes?.find(appType =>
+        appType.id === value
+    );
+    const app = (value) => source.applications.find(app => app.application_type_id === value);
+
+    const isCurrentlyRemoving = (value) => app(value)?.isDeleting;
+
     return (
         <div>
             {removingApp.id && <RemoveAppModal
@@ -75,18 +88,21 @@ const ApplicationSelect = (props) => {
                 container={container}
             />}
             {options.map((option) => (!appIds.includes(option.value) ? (<Radio
-                className="pf-u-mb-sm"
+                className="pf-u-mb-md"
                 key={option.value}
                 onChange={() => onChange(option.value)}
                 label={option.label}
                 id={`${name}-${option.value}`}
                 name={name}
                 isChecked={value === option.value }
+                isDisabled={isCurrentlyRemoving(option.value)}
             />) : (<RemoveRadio
                 key={option.value}
                 option={option}
                 setApplicationToRemove={setApplicationToRemove}
                 sourceAppsNames={sourceAppsNames}
+                app={app(option.value)}
+                appType={appType(option.value)}
             />)))}
         </div>
     );
