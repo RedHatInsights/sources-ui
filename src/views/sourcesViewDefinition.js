@@ -17,7 +17,7 @@ export const sourcesColumns = (intl, notSortable = false) => ([{
 }, {
     title: intl.formatMessage({
         id: 'sources.application',
-        defaultMessage: 'Application'
+        defaultMessage: 'Applications'
     }),
     value: 'applications',
     formatter: 'applicationFormatter',
