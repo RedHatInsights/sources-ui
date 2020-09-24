@@ -50,6 +50,7 @@ export const getSourcesApi = () => ({
     deleteApplication: (id) => axiosInstanceInsights.delete(`${SOURCES_API_BASE}/applications/${id}`),
     createAuthApp: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V2}/application_authentications`, data),
     deleteAuthentication: (id) => axiosInstanceInsights.delete(`${SOURCES_API_BASE_V3}/authentications/${id}`),
+    showAuthentication: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/authentications/${id}`)
 });
 
 export const doLoadAppTypes = () => getSourcesApi().doLoadAppTypes();
@@ -155,6 +156,18 @@ export const doLoadCountOfSources = (filterValue = {}) =>
 export const doLoadSource = (id) => getSourcesApi().postGraphQL({
     query: `{ sources(filter: { id: { eq: ${id}}})
             { ${graphQlAttributes} }
+        }`
+}).then(({ data }) => data);
+
+export const doLoadApplicationsForEdit = (id) => getSourcesApi().postGraphQL({
+    query: `{ sources(filter: { id: { eq: ${id}}})
+            { applications {
+                application_type_id,
+                id,
+                authentications {
+                    id
+                }
+            } }
         }`
 }).then(({ data }) => data);
 

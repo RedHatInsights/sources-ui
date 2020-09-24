@@ -3,15 +3,17 @@ import { prepareInitialValues } from './helpers';
 
 export const initialState = {
     loading: true,
-    editing: {},
     source: undefined,
     initialValues: {},
     sourceType: undefined,
     schema: undefined,
-    isAuthRemoving: null
+    isSubmitting: false,
+    initialLoad: true,
+    submitError: false,
+    isTimeouted: false
 };
 
-const reducer = (state, { type, source, name, sourceType, appTypes, authId, removingAuth, intl }) => {
+const reducer = (state, { type, source, sourceType, appTypes, intl, message, values, editing, removingAuth, authId }) => {
     switch (type) {
         case 'createForm':
             return {
@@ -24,20 +26,35 @@ const reducer = (state, { type, source, name, sourceType, appTypes, authId, remo
         case 'setSource':
             return {
                 ...state,
-                source
+                source,
+                initialLoad: false
             };
-        case 'reset':
+        case 'submit':
             return {
                 ...state,
-                editing: {}
+                isSubmitting: true,
+                submitError: false,
+                values,
+                editing
             };
-        case 'setEdit':
+        case 'submitFinished':
             return {
                 ...state,
-                editing: {
-                    ...state.editing,
-                    [name]: !state.editing[name]
-                }
+                isSubmitting: false,
+                source,
+                message
+            };
+        case 'submitFailed':
+            return {
+                ...state,
+                isSubmitting: false,
+                submitError: true
+            };
+        case 'submitTimetouted':
+            return {
+                ...state,
+                isSubmitting: false,
+                isTimeouted: true
             };
         case 'removeAuthPending':
             return {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { EmptyStateBody, Radio, Card, Button, Title, EmptyStateSecondaryActions } from '@patternfly/react-core';
+import { EmptyStateBody, Radio, Button, Title, EmptyStateSecondaryActions } from '@patternfly/react-core';
 import { Route, MemoryRouter } from 'react-router-dom';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import configureStore from 'redux-mock-store';
@@ -9,7 +9,6 @@ import thunk from 'redux-thunk';
 import CloseModal from '@redhat-cloud-services/frontend-components-sources/cjs/CloseModal';
 import LoadingStep from '@redhat-cloud-services/frontend-components-sources/cjs/LoadingStep';
 import ErroredStep from '@redhat-cloud-services/frontend-components-sources/cjs/ErroredStep';
-import CardSelect from '@redhat-cloud-services/frontend-components-sources/cjs/CardSelect';
 import SummaryStep from '@redhat-cloud-services/frontend-components-sources/cjs/SourceWizardSummary';
 import FinishedStep from '@redhat-cloud-services/frontend-components-sources/cjs/FinishedStep';
 
@@ -30,6 +29,7 @@ import { AuthTypeSetter } from '../../../components/AddApplication/AuthTypeSette
 import reducer from '../../../components/AddApplication/reducer';
 import * as removeAppSubmit from '../../../components/AddApplication/removeAppSubmit';
 import TimeoutStep from '@redhat-cloud-services/frontend-components-sources/cjs/TimeoutStep';
+import ApplicationSelect from '../../../components/AddApplication/ApplicationSelect';
 
 describe('AddApplication', () => {
     let store;
@@ -84,8 +84,8 @@ describe('AddApplication', () => {
 
         expect(wrapper.find(SourcesFormRenderer).length).toEqual(1);
         expect(wrapper.find(AddApplicationDescription).length).toEqual(1);
-        expect(wrapper.find(CardSelect).length).toEqual(1);
-        expect(wrapper.find(Card).length).toEqual(1); // one app is not compatible, one app is topology inventory
+        expect(wrapper.find(ApplicationSelect).length).toEqual(1);
+        expect(wrapper.find(ApplicationSelect).find(Radio).length).toEqual(1); // one app is not compatible, one app is topology inventory
         expect(wrapper.find(Button).at(1).text()).toEqual('Next');
     });
 
@@ -138,28 +138,9 @@ describe('AddApplication', () => {
         expect(loadAuthsSpy).toHaveBeenCalledWith(ENDPOINT_ID);
         expect(wrapper.find(SourcesFormRenderer).length).toEqual(1);
         expect(wrapper.find(AddApplicationDescription).length).toEqual(1);
-        expect(wrapper.find(CardSelect).length).toEqual(1);
-        expect(wrapper.find(Card).length).toEqual(1);
+        expect(wrapper.find(ApplicationSelect).length).toEqual(1);
+        expect(wrapper.find(ApplicationSelect).find(Radio).length).toEqual(1);
         expect(wrapper.find(Button).at(1).text()).toEqual('Next');
-    });
-
-    it('renders correctly when there is no free application - close button instead of next', async () => {
-        let wrapper;
-
-        await act(async () => {
-            wrapper = mount(componentWrapperIntl(
-                <Route path={routes.sourceManageApps.path} render={ (...args) => <AddApplication { ...args }/> } />,
-                store,
-                [replaceRouteId(routes.sourceManageApps.path, SOURCE_ALL_APS_ID)]
-            ));
-        });
-        wrapper.update();
-
-        expect(wrapper.find(SourcesFormRenderer).length).toEqual(1);
-        expect(wrapper.find(AddApplicationDescription).length).toEqual(1);
-        expect(wrapper.find(CardSelect).length).toEqual(0);
-        expect(wrapper.find(Card).length).toEqual(0);
-        expect(wrapper.find(Button).at(3).text()).toEqual('Close');
     });
 
     it('renders loading state when is not loaded', async () => {
@@ -272,8 +253,7 @@ describe('AddApplication', () => {
 
         it('opens a modal on cancel and closes the wizard', async () => {
             await act(async () => {
-                const firstAppCard = wrapper.find(Card).first();
-                firstAppCard.simulate('click');
+                wrapper.find(ApplicationSelect).find(Radio).find('input').first().simulate('change');
             });
             wrapper.update();
 
@@ -311,8 +291,7 @@ describe('AddApplication', () => {
 
         it('opens a modal on cancel and stay on the wizard', async () => {
             await act(async () => {
-                const firstAppCard = wrapper.find(Card).first();
-                firstAppCard.simulate('click');
+                wrapper.find(ApplicationSelect).find(Radio).find('input').first().simulate('change');
             });
             wrapper.update();
 
@@ -405,8 +384,7 @@ describe('AddApplication', () => {
             wrapper.update();
 
             await act(async () => {
-                const firstAppCard = wrapper.find(Card).first();
-                firstAppCard.simulate('click');
+                wrapper.find(ApplicationSelect).find(Radio).find('input').first().simulate('change');
             });
             wrapper.update();
 
@@ -508,8 +486,7 @@ describe('AddApplication', () => {
             ));
 
             await act(async () => {
-                const firstAppCard = wrapper.find(Card).first();
-                firstAppCard.simulate('click');
+                wrapper.find(ApplicationSelect).find(Radio).find('input').first().simulate('change');
             });
             wrapper.update();
 
@@ -538,7 +515,7 @@ describe('AddApplication', () => {
             ));
 
             await act(async () => {
-                wrapper.find(Card).first().simulate('click');
+                wrapper.find(ApplicationSelect).find(Radio).find('input').first().simulate('change');
                 wrapper.find(Button).at(1).simulate('click');
             });
             wrapper.update();
@@ -591,7 +568,7 @@ describe('AddApplication', () => {
             ));
 
             await act(async () => {
-                wrapper.find(Card).first().simulate('click');
+                wrapper.find(ApplicationSelect).find(Radio).find('input').first().simulate('change');
                 wrapper.find(Button).at(1).simulate('click');
             });
             wrapper.update();
@@ -631,7 +608,7 @@ describe('AddApplication', () => {
             ));
 
             await act(async () => {
-                wrapper.find(Card).first().simulate('click');
+                wrapper.find(ApplicationSelect).find(Radio).find('input').first().simulate('change');
                 wrapper.find(Button).at(1).simulate('click');
             });
             wrapper.update();
@@ -682,7 +659,7 @@ describe('AddApplication', () => {
             ));
 
             await act(async () => {
-                wrapper.find(Card).first().simulate('click');
+                wrapper.find(ApplicationSelect).find(Radio).find('input').first().simulate('change');
                 wrapper.find(Button).at(1).simulate('click');
             });
             wrapper.update();
@@ -735,7 +712,7 @@ describe('AddApplication', () => {
             ));
 
             await act(async () => {
-                wrapper.find(Card).first().simulate('click');
+                wrapper.find(ApplicationSelect).find(Radio).find('input').first().simulate('change');
                 wrapper.find(Button).at(1).simulate('click');
             });
             wrapper.update();
@@ -784,7 +761,7 @@ describe('AddApplication', () => {
             ));
 
             await act(async () => {
-                wrapper.find(Card).first().simulate('click');
+                wrapper.find(ApplicationSelect).find(Radio).find('input').first().simulate('change');
                 wrapper.find(Button).at(1).simulate('click');
             });
             wrapper.update();
@@ -842,7 +819,7 @@ describe('AddApplication', () => {
             ));
 
             await act(async () => {
-                wrapper.find(Card).first().simulate('click');
+                wrapper.find(ApplicationSelect).find(Radio).find('input').first().simulate('change');
                 wrapper.find(Button).at(1).simulate('click');
             });
             wrapper.update();

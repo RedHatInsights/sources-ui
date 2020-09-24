@@ -4,16 +4,13 @@ import {
     createAuthFieldName,
     getLastPartOfName,
     getEnhancedAuthField,
-    getAdditionalAuthSteps,
+    getAdditionalAuthStepsKeys,
     authenticationFields,
     modifyAuthSchemas,
-    removeRequiredValidator
+    removeRequiredValidator,
+    getAdditionalAuthSteps
 } from '../../../../components/SourceEditForm/parser/authentication';
-import { unsupportedAuthTypeField } from '../../../../components/SourceEditForm/parser/unsupportedAuthType';
-import { applicationTypesData } from '../../../__mocks__/applicationTypesData';
-import AuthenticationManagement from '../../../../components/SourceEditForm/parser/AuthenticationManagement';
-import RemoveAuthPlaceholder from '../../../../components/SourceEditForm/parser/RemoveAuthPlaceholder';
-import { modifyFields } from '../../../../components/SourceEditForm/parser/helpers';
+import GridLayout from '../../../../components/SourceEditForm/parser/GridLayout';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas', () => ({
     __esModule: true,
@@ -23,7 +20,12 @@ jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchem
                 arn: {
                     generic: {
                         password: { name: 'superpassword' },
-                        includeStepKeyFields: ['arn-step']
+                        includeStepKeyFields: ['arn-step'],
+                        additionalSteps: [{
+                            fields: [{
+                                name: 'additional-field'
+                            }]
+                        }]
                     }
                 }
             }
@@ -68,17 +70,27 @@ describe('authentication edit source parser', () => {
             });
         });
 
-        describe('getAdditionalAuthSteps', () => {
+        describe('getAdditionalAuthStepsKeys', () => {
             it('gets additional steps', () => {
                 const ADDITIONAl_STEPS = ['arn-step'];
 
-                expect(getAdditionalAuthSteps('aws', 'arn')).toEqual(ADDITIONAl_STEPS);
+                expect(getAdditionalAuthStepsKeys('aws', 'arn')).toEqual(ADDITIONAl_STEPS);
             });
 
             it('gets empty array', () => {
                 const EMPTY_ADDITIONAl_STEPS = [];
 
-                expect(getAdditionalAuthSteps('aws', 'nonsense')).toEqual(EMPTY_ADDITIONAl_STEPS);
+                expect(getAdditionalAuthStepsKeys('aws', 'nonsense')).toEqual(EMPTY_ADDITIONAl_STEPS);
+            });
+        });
+
+        describe('getAdditionalAuthSteps', () => {
+            it('gets additional steps', () => {
+                expect(getAdditionalAuthSteps('aws', 'arn')).toEqual([{
+                    fields: [{
+                        name: 'additional-field'
+                    }]
+                }]);
             });
         });
 
@@ -164,10 +176,8 @@ describe('authentication edit source parser', () => {
 
             expect(result).toEqual([{
                 ...FIELDS_WITH_PASSWORD[0],
+                component: 'authentication',
                 name: createAuthFieldName(PASSWORD_NAME, ID),
-                isRequired: false,
-                validate: [],
-                helperText: expect.any(Object)
             }]);
         });
     });
@@ -177,13 +187,13 @@ describe('authentication edit source parser', () => {
         let SOURCE_TYPE;
         let AUTHTYPE;
         let ID;
-        let APP_TYPES;
 
         beforeEach(() => {
             ID = '15165132';
             AUTHTYPE = 'arn';
             AUTHENTICATIONS = [{ authtype: AUTHTYPE, id: ID }];
             SOURCE_TYPE = {
+                name: 'aws',
                 id: '2',
                 schema: {
                     authentication: [
@@ -205,7 +215,6 @@ describe('authentication edit source parser', () => {
                     ]
                 }
             };
-            APP_TYPES = applicationTypesData.data;
         });
 
         it('returns empty array when no authentications', () => {
@@ -214,93 +223,46 @@ describe('authentication edit source parser', () => {
             const result = authenticationFields(
                 EMPTY_AUTHENTICATIONS,
                 SOURCE_TYPE,
-                APP_TYPES
             );
 
             expect(result).toEqual([]);
+        });
+
+        it('returns empty array when no autheschemauath', () => {
+            const result = authenticationFields(
+                AUTHENTICATIONS,
+                {
+                    ...SOURCE_TYPE,
+                    schema: {
+                        authentication: []
+                    }
+                },
+            );
+
+            expect(result).toEqual([[]]);
         });
 
         it('returns authentication form groups', () => {
             const result = authenticationFields(
                 AUTHENTICATIONS,
                 SOURCE_TYPE,
-                APP_TYPES
             );
 
             const authentication = SOURCE_TYPE.schema.authentication[0];
             const FIELDS_WITHOUT_STEPKEYS = [authentication.fields[0], authentication.fields[1]];
 
-            const ARN_GROUP = {
-                component: componentTypes.SUB_FORM,
-                name: authentication.name,
-                fields: [
-                    {
-                        component: 'description',
-                        name: `${AUTHENTICATIONS[0].id}-authentication-management`,
-                        Content: AuthenticationManagement,
-                        schemaAuth: authentication,
-                        appTypes: APP_TYPES,
-                        auth: AUTHENTICATIONS[0],
-                        isDeleting: undefined
-                    },
-                    modifyFields(modifyAuthSchemas(FIELDS_WITHOUT_STEPKEYS, ID))
-                ]
-            };
+            const ARN_GROUP = [
+                {
+                    name: `authentication-${AUTHENTICATIONS[0].id}`,
+                    component: 'description',
+                    id: AUTHENTICATIONS[0].id,
+                    Content: GridLayout,
+                    fields: modifyAuthSchemas(FIELDS_WITHOUT_STEPKEYS, ID)
+                },
+            ];
 
             expect(result).toEqual([
                 ARN_GROUP
-            ]);
-        });
-
-        it('returns authentication form groups when deleting', () => {
-            AUTHENTICATIONS = [{ authtype: AUTHTYPE, id: ID, isDeleting: true }];
-
-            const result = authenticationFields(
-                AUTHENTICATIONS,
-                SOURCE_TYPE,
-                APP_TYPES
-            );
-
-            const authentication = SOURCE_TYPE.schema.authentication[0];
-
-            const ARN_GROUP = {
-                component: componentTypes.SUB_FORM,
-                name: authentication.name,
-                fields: [
-                    {
-                        component: 'description',
-                        name: `${AUTHENTICATIONS[0].id}-authentication-management`,
-                        Content: AuthenticationManagement,
-                        schemaAuth: authentication,
-                        appTypes: APP_TYPES,
-                        auth: { ...AUTHENTICATIONS[0], isDeleting: undefined },
-                        isDeleting: true
-                    },
-                    {
-                        component: 'description',
-                        name: `${AUTHENTICATIONS[0].id}-remove-spinner`,
-                        Content: RemoveAuthPlaceholder
-                    }
-                ]
-            };
-
-            expect(result).toEqual([
-                ARN_GROUP
-            ]);
-        });
-
-        it('returns unsupported authentication type when unsupported', () => {
-            const UNSUPPORTED_AUTHTYPE = 'openshift_default';
-            const UNSUPPORTED_AUTHENTICATIONS = [{ authtype: UNSUPPORTED_AUTHTYPE, id: ID }];
-
-            const result = authenticationFields(
-                UNSUPPORTED_AUTHENTICATIONS,
-                SOURCE_TYPE,
-                APP_TYPES
-            );
-
-            expect(result).toEqual([
-                { ...unsupportedAuthTypeField(UNSUPPORTED_AUTHTYPE), Content: expect.any(Function) }
             ]);
         });
 
@@ -315,7 +277,6 @@ describe('authentication edit source parser', () => {
             const result = authenticationFields(
                 AUTHENTICATIONS,
                 SOURCE_TYPE_WITHOUT_SCHEMA,
-                APP_TYPES
             );
 
             expect(result).toEqual(EMPTY_ARRAY);
@@ -334,10 +295,65 @@ describe('authentication edit source parser', () => {
             const result = authenticationFields(
                 AUTHENTICATIONS,
                 SOURCE_TYPE_WITHOUT_SCHEMA_AUTH,
-                APP_TYPES
             );
 
             expect(result).toEqual(EMPTY_ARRAY);
+        });
+
+        it('rename arn/cloud-meter-arn', () => {
+            SOURCE_TYPE = {
+                name: 'amazon',
+                id: '1',
+                schema: {
+                    authentication: [{
+                        type: 'arn',
+                        fields: [{
+                            component: 'text-field',
+                            name: 'authentication.password',
+                            label: 'arn'
+                        }]
+                    }, {
+                        type: 'cloud-meter-arn',
+                        fields: [{
+                            component: 'text-field',
+                            name: 'authentication.password',
+                            label: 'arn'
+                        }]
+                    }, {
+                        type: 'different',
+                        fields: [{
+                            component: 'text-field',
+                            name: 'authentication.password',
+                            label: 'arn'
+                        }, {
+                            component: 'text-field',
+                            name: 'authentication.username',
+                            label: 'username'
+                        }]
+                    }]
+                }
+            };
+
+            AUTHENTICATIONS = [{
+                authtype: 'arn',
+                id: '123'
+            }, {
+                authtype: 'cloud-meter-arn',
+                id: '234'
+            }, {
+                authtype: 'different',
+                id: '345'
+            }];
+
+            const result = authenticationFields(
+                AUTHENTICATIONS,
+                SOURCE_TYPE,
+            );
+
+            expect(result[0][0].fields[0]).toEqual({ component: 'authentication', label: 'Cost Management ARN', name: 'authentications.a123.password' });
+            expect(result[1][0].fields[0]).toEqual({ component: 'authentication', label: 'Subscription Watch ARN', name: 'authentications.a234.password' });
+            expect(result[2][0].fields[0]).toEqual({ component: 'authentication', label: 'arn', name: 'authentications.a345.password' });
+            expect(result[2][0].fields[1]).toEqual({ component: 'text-field', label: 'username', name: 'authentications.a345.username' });
         });
     });
 });

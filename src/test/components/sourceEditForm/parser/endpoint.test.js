@@ -1,6 +1,5 @@
 import { getEnhancedEndpointField, endpointFields } from '../../../../components/SourceEditForm/parser/endpoint';
 import { componentTypes } from '@data-driven-forms/react-form-renderer';
-import { modifyFields } from '../../../../components/SourceEditForm/parser/helpers';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas', () => ({
     __esModule: true,
@@ -9,6 +8,14 @@ jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchem
             endpoint: {
                 password: { name: 'superpassword' }
             }
+        },
+        ['ansible-tower']: {
+            endpoint: {
+                url: {
+                    additional: 'value',
+                    validate: [{ type: 'required' }, { type: 'url' }]
+                }
+            }
         }
     }
 }));
@@ -16,20 +23,13 @@ jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchem
 describe('endpoint edit form parser', () => {
     describe('endpointFields', () => {
         let SOURCE_TYPE;
-        let EDITING;
-        let SET_EDIT;
-
-        beforeEach(() => {
-            EDITING = {};
-            SET_EDIT = jest.fn();
-        });
 
         it('returns nothing when hidden', () => {
             SOURCE_TYPE = {
                 schema: { endpoint: { hidden: true } }
             };
 
-            expect(endpointFields(SOURCE_TYPE, EDITING, SET_EDIT)).toEqual(undefined);
+            expect(endpointFields(SOURCE_TYPE)).toEqual(undefined);
         });
 
         it('returns nothing when no schema', () => {
@@ -37,7 +37,7 @@ describe('endpoint edit form parser', () => {
                 schema: undefined
             };
 
-            expect(endpointFields(SOURCE_TYPE, EDITING, SET_EDIT)).toEqual(undefined);
+            expect(endpointFields(SOURCE_TYPE)).toEqual(undefined);
         });
 
         it('returns nothing when no schema.endpoint', () => {
@@ -47,7 +47,7 @@ describe('endpoint edit form parser', () => {
                 }
             };
 
-            expect(endpointFields(SOURCE_TYPE, EDITING, SET_EDIT)).toEqual(undefined);
+            expect(endpointFields(SOURCE_TYPE)).toEqual(undefined);
         });
 
         it('returns endpoint SUBFORM', () => {
@@ -60,13 +60,60 @@ describe('endpoint edit form parser', () => {
                 schema: { endpoint: { fields: FIELDS } }
             };
 
-            const result = endpointFields(SOURCE_TYPE, EDITING, SET_EDIT);
+            const result = endpointFields(SOURCE_TYPE);
 
             expect(result).toEqual({
                 component: componentTypes.SUB_FORM,
-                title: expect.any(Object),
                 name: 'endpoint',
-                fields: modifyFields(FIELDS, EDITING, SET_EDIT)
+                fields: FIELDS
+            });
+        });
+
+        it('returns endpoint SUBFORM for tower source', () => {
+            const FIELDS = [
+                { name: 'url' },
+                { name: 'field2' }
+            ];
+
+            SOURCE_TYPE = {
+                name: 'ansible-tower',
+                schema: { endpoint: { fields: FIELDS } }
+            };
+
+            const result = endpointFields(SOURCE_TYPE);
+
+            expect(result).toEqual({
+                component: componentTypes.SUB_FORM,
+                name: 'endpoint',
+                fields: [{
+                    component: componentTypes.SUB_FORM,
+                    name: 'receptor_node_group',
+                    condition: {
+                        when: 'endpoint.receptor_node',
+                        isNotEmpty: true
+                    },
+                    fields: [{
+                        ...FIELDS[0],
+                        isRequired: false,
+                        additional: 'value',
+                        validate: [{ type: 'url' }]
+                    }]
+                }, {
+                    component: componentTypes.SUB_FORM,
+                    name: 'hostname_group',
+                    condition: {
+                        when: 'endpoint.receptor_node',
+                        isEmpty: true
+                    },
+                    fields: [
+                        {
+                            ...FIELDS[0],
+                            additional: 'value',
+                            validate: [{ type: 'required' }, { type: 'url' }]
+                        },
+                        FIELDS[1]
+                    ]
+                }]
             });
         });
     });

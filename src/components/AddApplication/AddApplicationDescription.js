@@ -1,18 +1,13 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 
 import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
 import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
-import { Grid, GridItem } from '@patternfly/react-core/dist/js/layouts/Grid/index';
 
-import RemoveAppModal from './RemoveAppModal';
-import ApplicationList from '../ApplicationsList/ApplicationList';
 import { useSource } from '../../hooks/useSource';
 
-const AddApplicationDescription = ({ container }) => {
-    const [removingApp, setApplicationToRemove] = useState({});
+const AddApplicationDescription = () => {
     const intl = useIntl();
 
     const sourceTypes = useSelector(({ sources }) => sources.sourceTypes);
@@ -21,73 +16,57 @@ const AddApplicationDescription = ({ container }) => {
     const sourceType = sourceTypes.find((type) => type.id === source.source_type_id);
     const apps = source.applications.filter((app) => !app.isDeleting);
 
+    const appIds = source.applications.filter(({ isDeleting }) => !isDeleting)
+    .reduce((acc, app) => [...acc, app.application_type_id], []);
+
+    const applicationsPart = apps.filter(({ id }) => !appIds.includes(id)).length > 0 ? (<React.Fragment>
+        <Text component={TextVariants.h4} id="add-application-header">
+            { intl.formatMessage({
+                id: 'sources.apps',
+                defaultMessage: 'Applications'
+            }) }
+        </Text>
+        <Text component={TextVariants.p} id="add-application-description">
+            {intl.formatMessage({
+                id: 'sources.addAppMultipleAppDesc',
+                defaultMessage: 'Select a radio button to add an application. Click trash icon to remove an application.'
+            })}
+        </Text>
+    </React.Fragment>) : (<React.Fragment>
+        <Text component={TextVariants.h4} id="add-application-header">
+            { intl.formatMessage({
+                id: 'sources.addApp',
+                defaultMessage: 'Add an application'
+            }) }
+        </Text>
+        <Text component={TextVariants.p} id="add-application-description">
+            {intl.formatMessage({
+                id: 'sources.addAppNoAppsDesc',
+                // eslint-disable-next-line max-len
+                defaultMessage: 'There are currently no applications connected to this source. Select from available applications below.'
+            })}
+        </Text>
+    </React.Fragment>);
+
     return (
         <React.Fragment>
-            {removingApp.id && <RemoveAppModal
-                app={removingApp}
-                onCancel={() => {
-                    if (container) {
-                        container.hidden = false;
-                    }
-
-                    return setApplicationToRemove({});
-                }}
-                container={container}
-            />}
             <TextContent>
-                <Grid hasGutter>
-                    <GridItem md={2}>
-                        <Text component={TextVariants.h4}>
-                            { intl.formatMessage({
-                                id: 'sources.sourceName',
-                                defaultMessage: 'Source name'
-                            }) }
-                        </Text>
-                    </GridItem>
-                    <GridItem md={2}>
-                        <Text component={TextVariants.h4}>
-                            { intl.formatMessage({
-                                id: 'sources.type',
-                                defaultMessage: 'Type'
-                            }) }
-                        </Text>
-                    </GridItem>
-                    <GridItem md={8}>
-                        <Text component={TextVariants.h4}>
-                            { intl.formatMessage({
-                                id: 'sources.apps',
-                                defaultMessage: 'Applications'
-                            }) }
-                        </Text>
-                    </GridItem>
-                    <GridItem md={2}>
-                        <Text component={TextVariants.p}>
-                            {source.name}
-                        </Text>
-                    </GridItem>
-                    <GridItem md={2}>
-                        <Text component={TextVariants.p}>
-                            { sourceType ? sourceType.product_name : intl.formatMessage({
-                                id: 'sources.typeNotFound',
-                                defaultMessage: 'Type not found'
-                            })}
-                        </Text>
-                    </GridItem>
-                    <GridItem md={8}>
-                        {apps.length > 0 ? <ApplicationList setApplicationToRemove={setApplicationToRemove}/>
-                            : intl.formatMessage({
-                                id: 'sources.noApps',
-                                defaultMessage: 'No applications'
-                            })}
-                    </GridItem>
-                </Grid>
+                <Text component={TextVariants.h4}>
+                    { intl.formatMessage({
+                        id: 'sources.type',
+                        defaultMessage: 'Source type'
+                    }) }
+                </Text>
+                <Text component={TextVariants.p} id="add-application-desc-type">
+                    { sourceType ? sourceType.product_name : intl.formatMessage({
+                        id: 'sources.typeNotFound',
+                        defaultMessage: 'Type not found'
+                    })}
+                </Text>
+                {applicationsPart}
             </TextContent>
         </React.Fragment>
     );
-};
-
-AddApplicationDescription.propTypes = {
-    container: PropTypes.instanceOf(Element)
 };
 
 export default AddApplicationDescription;

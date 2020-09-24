@@ -3,7 +3,7 @@ import { PropTypes } from 'prop-types';
 import { useIntl } from 'react-intl';
 import { Wizard } from '@patternfly/react-core/dist/js/components/Wizard/Wizard';
 
-const WizardBodyAttach = ({ step, goToSources }) => {
+const WizardBodyAttach = ({ step, goToSources, name }) => {
     const intl = useIntl();
 
     return (
@@ -17,8 +17,8 @@ const WizardBodyAttach = ({ step, goToSources }) => {
             description={
                 intl.formatMessage({
                     id: 'sources.addAppDescription',
-                    defaultMessage: 'You are managing applications of this source.'
-                })
+                    defaultMessage: 'Add or remove applications from {name}.'
+                }, { name })
             }
             steps={ [{
                 name: 'Finish',
@@ -31,7 +31,8 @@ const WizardBodyAttach = ({ step, goToSources }) => {
 
 WizardBodyAttach.propTypes = {
     step: PropTypes.node.isRequired,
-    goToSources: PropTypes.func.isRequired
+    goToSources: PropTypes.func.isRequired,
+    name: PropTypes.string
 };
 
 export default WizardBodyAttach;
