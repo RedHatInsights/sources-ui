@@ -1,41 +1,11 @@
 import React from 'react';
-import get from 'lodash/get';
 import componentTypes from '@data-driven-forms/react-form-renderer/dist/cjs/component-types';
 import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
-import hardcodedSchemas from '@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas';
 import { FormattedMessage } from 'react-intl';
-import { modifyFields } from './helpers';
-import { EDIT_FIELD_NAME } from '../../EditField/EditField';
+import { authenticationFields } from './authentication';
 
 export const APP_NAMES = {
     COST_MANAGAMENT: '/insights/platform/cost-management'
-};
-
-export const cmFieldsPrefixes = ['billing_source', 'credentials'];
-
-export const isCMField = ({ name }) => cmFieldsPrefixes.some((prefix) => name.startsWith(prefix));
-
-export const getCMFields = (authentication) =>
-    Object.keys(authentication)
-    .map((key) => authentication[key].fields.filter(isCMField))
-    .flatMap((x) => x);
-
-export const getEnhancedCMField = (sourceType, name, authenticationsTypes) => {
-    let field = undefined;
-
-    authenticationsTypes.forEach((type) => {
-        const apps = field ? {} : get(hardcodedSchemas, [sourceType, 'authentication', type], {});
-
-        Object.keys(apps).find((key) => {
-            const hasAppField = get(hardcodedSchemas, [sourceType, 'authentication', type, key, name], undefined);
-            if (hasAppField) {
-                field = hasAppField;
-                return true;
-            }
-        });
-    });
-
-    return field ? field : {};
 };
 
 export const appendClusterIdentifier = (sourceType) =>
@@ -47,58 +17,103 @@ export const appendClusterIdentifier = (sourceType) =>
         />,
         isRequired: true,
         validate: [{ type: validatorTypes.REQUIRED }],
-        originalComponent: componentTypes.TEXT_FIELD,
-        component: EDIT_FIELD_NAME
+        component: componentTypes.TEXT_FIELD,
     }] : [];
 
-export const costManagementFields = (
-    applications = [],
-    sourceType,
-    appTypes,
-    source
-) => {
-    const costManagementApp = appTypes.find(({ name }) => name === APP_NAMES.COST_MANAGAMENT);
+const createOneAppFields = (appType, sourceType, app) => ([
+    ...authenticationFields(
+        app.authentications?.filter(auth => Object.keys(auth).length > 1),
+        sourceType,
+        appType?.name
+    ),
+    ...(appType?.name === APP_NAMES.COST_MANAGAMENT ? appendClusterIdentifier(sourceType) : [])
+]);
 
-    if (!costManagementApp) {
-        return undefined;
+const unusedAuthsWarning = (length) => ({
+    component: componentTypes.PLAIN_TEXT,
+    name: 'unused-auth-warning',
+    label: <FormattedMessage
+        id='sources.authNotUsed'
+        // eslint-disable-next-line max-len
+        defaultMessage='The following {length, plural, one {authentication is not} other {authentications are not}} used by any application.'
+        values={{ length }}
+    />
+});
+
+const unusedAuthentications = (authentications, sourceType, appsLength) => {
+    if (!authentications || authentications.length === 0) {
+        return [];
     }
 
-    const hasCostManagement = applications.find(({ application_type_id }) => application_type_id === costManagementApp.id);
+    let authenticationsInputs = sourceType?.schema?.authentication?.reduce((acc, { type }) => {
+        const auths = authentications.filter(({ authtype }) => type === authtype);
 
-    if (!hasCostManagement) {
-        return undefined;
+        if (auths?.length > 0) {
+            return ([
+                ...acc,
+                ...authenticationFields(auths, sourceType)
+            ]);
+        }
+
+        return acc;
+    }, [])?.filter(Boolean);
+
+    const transformToTabs = appsLength !== 0;
+
+    if (transformToTabs) {
+        authenticationsInputs = [{
+            fields: [
+                unusedAuthsWarning(authenticationsInputs.length),
+                ...authenticationsInputs
+            ],
+            title: sourceType.product_name,
+            name: 'unused-auths-tab'
+        }];
+    } else {
+        authenticationsInputs = [{
+            fields: [
+                unusedAuthsWarning(authenticationsInputs.length),
+                ...authenticationsInputs
+            ],
+            component: componentTypes.SUB_FORM,
+            name: 'unused-auths-group'
+        }];
     }
 
-    const billingSourceFields = getCMFields(sourceType.schema.authentication);
-
-    const authenticationsTypes = source.authentications ? source.authentications.map(({ authtype }) => authtype) : [];
-
-    const enhandcedFields = billingSourceFields.map((field) => ({
-        ...field,
-        ...getEnhancedCMField(sourceType.name, field.name, authenticationsTypes)
-    }));
-
-    return ({
-        component: componentTypes.SUB_FORM,
-        title: costManagementApp.display_name,
-        name: costManagementApp.display_name,
-        fields: [
-            ...modifyFields(enhandcedFields),
-            ...appendClusterIdentifier(sourceType)
-        ]
-    });
+    return authenticationsInputs;
 };
 
 export const applicationsFields = (
     applications,
     sourceType,
     appTypes,
-    source
-) => ([
-    costManagementFields(
-        applications,
-        sourceType,
-        appTypes,
-        source
-    )
-]);
+    authentications
+) => {
+    const authenticationTypesFormGroups = unusedAuthentications(authentications, sourceType, applications?.length);
+
+    if (!applications || applications.length === 0) {
+        return authenticationTypesFormGroups;
+    } else if (applications.length === 1 && authenticationTypesFormGroups.length === 0) {
+        const appType = appTypes.find(({ id }) => id === applications[0].application_type_id);
+
+        return createOneAppFields(appType, sourceType, applications[0]);
+    } else {
+        return ([{
+            component: componentTypes.TABS,
+            name: 'app-tabs',
+            isBox: true,
+            fields: [
+                ...applications.map((app) => {
+                    const appType = appTypes.find(({ id }) => id === app.application_type_id);
+
+                    return ({
+                        name: appType?.id,
+                        title: appType?.display_name,
+                        fields: createOneAppFields(appType, sourceType, app)
+                    });
+                }),
+                ...authenticationTypesFormGroups
+            ]
+        }]);
+    }
+};

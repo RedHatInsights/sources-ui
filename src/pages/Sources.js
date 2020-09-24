@@ -120,14 +120,16 @@ const SourcesPage = () => {
         page: pageNumber,
         perPage: pageSize,
         onSetPage,
-        onPerPageSelect
+        onPerPageSelect,
+        className: 'top-pagination'
     };
 
     const paginationConfigBottom = {
         ...paginationConfig,
         dropDirection: 'up',
         variant: 'bottom',
-        isCompact: false
+        isCompact: false,
+        className: 'bottom-pagination'
     };
 
     const showPaginationLoader = (!loaded || !appTypesLoaded || !sourceTypesLoaded) && !paginationClicked;

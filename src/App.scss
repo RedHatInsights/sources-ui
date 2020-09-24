@@ -103,3 +103,34 @@
 .ins-c-sources__disabled-drodpown-item {
   pointer-events: auto !important;
 }
+
+@media (max-width: 768px) {
+  .ins-l-content {
+    padding: 0 !important;
+  }
+
+  .top-pagination {
+    display: none;
+  }
+
+  .ins-c-sources__row-vertical-centered {
+    border-bottom: 16px solid var(--pf-c-table--responsive--BorderColor) !important;
+  }
+
+  .pf-c-table {
+    tbody {
+      border-top: 16px solid var(--pf-c-table--responsive--BorderColor) !important;
+    }
+  }
+
+  .ins-c-primary-toolbar__pagination {
+    width: 100%;
+  }
+
+  .bottom-pagination {
+    .pf-c-options-menu, .pf-c-pagination__nav {
+      display: flex !important;
+      visibility: visible !important;
+    }
+  }
+}

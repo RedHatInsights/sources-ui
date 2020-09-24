@@ -1,11 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
 import { Grid } from '@patternfly/react-core/dist/js/layouts/Grid/Grid';
 import { GridItem } from '@patternfly/react-core/dist/js/layouts/Grid/GridItem';
 import { Title } from '@patternfly/react-core/dist/js/components/Title/Title';
 
-const Header = () =>{
+const Header = ({ name }) =>{
     const intl = useIntl();
 
     return (
@@ -18,13 +19,18 @@ const Header = () =>{
                     }) }
                 </Title>
             </GridItem>
-            <GridItem xs={12}>
+            {name && <GridItem xs={12}>
                 { intl.formatMessage({
                     id: 'sources.editSourceDescription',
-                    defaultMessage: 'You are editing a source.'
-                }) }
-            </GridItem>
+                    defaultMessage: 'Use the form fields below to make desired changes to source {name}.'
+                }, { name: <b key="b">{name}</b> }) }
+            </GridItem>}
         </Grid>
-    );};
+    );
+};
+
+Header.propTypes = {
+    name: PropTypes.node
+};
 
 export default Header;

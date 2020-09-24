@@ -16,7 +16,6 @@ import {
     doDeleteApplication,
     doLoadCountOfSources
 } from '../../api/entities';
-import { doUpdateSource } from '../../api/doUpdateSource';
 import { doLoadSourceTypes } from '../../api/source_types';
 
 export const loadEntities = (options) => (dispatch, getState) => {
@@ -84,24 +83,6 @@ export const filterSources = (value) => (dispatch) => {
 
     return dispatch(loadEntities());
 };
-
-export const updateSource = (source, formData, title, description, errorTitles) => (dispatch) =>
-    doUpdateSource(source, formData, errorTitles).then(_finished => dispatch({
-        type: ADD_NOTIFICATION,
-        payload: {
-            variant: 'success',
-            title,
-            description,
-            dismissable: true
-        }
-    })).catch(error => {
-        dispatch({
-            type: 'FOOBAR_REJECTED',
-            payload: error
-        });
-
-        throw error;
-    });
 
 export const addMessage = (title, variant, description, customId) => (dispatch) => dispatch({
     type: ADD_NOTIFICATION,

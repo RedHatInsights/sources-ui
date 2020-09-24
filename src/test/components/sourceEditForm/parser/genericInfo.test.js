@@ -1,8 +1,9 @@
 import { componentTypes } from '@data-driven-forms/react-form-renderer';
+import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
 
 import { genericInfo } from '../../../../components/SourceEditForm/parser/genericInfo';
-import { EDIT_FIELD_NAME } from '../../../../components/EditField/EditField';
-import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
+import AdditionalInfoBar from '../../../../components/SourceEditForm/parser/AdditionalInfoBar';
+import EditAlert from '../../../../components/SourceEditForm/parser/EditAlert';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/SourceAddSchema', () => ({
     __esModule: true,
@@ -14,11 +15,19 @@ describe('generic info edit form parser', () => {
     const INTL = { formatMessage: ({ defaultMessage }) => defaultMessage };
 
     it('should generate generic info form group', () => {
+        const EXPECTED_ALERT_FIELD = {
+            name: 'alert',
+            component: 'description',
+            Content: EditAlert,
+            condition: {
+                when: 'message',
+                isNotEmpty: true
+            }
+        };
         const EXPECTED_TYPE_FIELD = {
-            name: 'source_type',
-            label: 'Source type',
-            isReadOnly: true,
-            component: EDIT_FIELD_NAME,
+            name: 'additional_info',
+            component: 'description',
+            Content: AdditionalInfoBar
         };
         const EXPECTED_NAME_FIELD = {
             name: 'source.name',
@@ -28,12 +37,12 @@ describe('generic info edit form parser', () => {
                 { type: validatorTypes.REQUIRED }
             ],
             isRequired: true,
-            originalComponent: componentTypes.TEXT_FIELD,
-            component: EDIT_FIELD_NAME,
+            component: componentTypes.TEXT_FIELD,
             resolveProps: expect.any(Function)
         };
 
         const EXPECTED_FORM_GROUP = [
+            expect.objectContaining(EXPECTED_ALERT_FIELD),
             expect.objectContaining(EXPECTED_NAME_FIELD),
             expect.objectContaining(EXPECTED_TYPE_FIELD)
         ];
@@ -44,7 +53,7 @@ describe('generic info edit form parser', () => {
     it('should return debounced validate function', () => {
         const schema = genericInfo(SOURCE_ID, INTL);
 
-        const returnedFunction = schema[0].validate[0]('some value', SOURCE_ID, INTL);
+        const returnedFunction = schema[1].validate[0]('some value', SOURCE_ID, INTL);
 
         expect(returnedFunction).toEqual(expect.any(Function));
     });
