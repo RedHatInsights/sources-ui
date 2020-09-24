@@ -13,7 +13,6 @@ import {
     endpointToUrl,
     importsTexts,
     availabilityFormatter,
-    getStatusIcon,
     getStatusText,
     getStatusTooltipText,
     formatAvailibilityErrors,
@@ -21,7 +20,8 @@ import {
     AVAILABLE,
     PARTIALLY_UNAVAILABLE,
     UNAVAILABLE,
-    UnknownError
+    UnknownError,
+    getStatusColor
 } from '../../../components/SourcesTable/formatters';
 import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX } from '../../__mocks__/sourceTypesData';
 import { sourcesDataGraphQl, SOURCE_CATALOGAPP_INDEX, SOURCE_ALL_APS_INDEX, SOURCE_NO_APS_INDEX, SOURCE_ENDPOINT_URL_INDEX } from '../../__mocks__/sourcesData';
@@ -33,10 +33,9 @@ import {
     COSTMANAGEMENT_APP,
     CATALOG_APP
 } from '../../__mocks__/applicationTypesData';
-import { Badge, Tooltip } from '@patternfly/react-core';
+import { Badge, Tooltip, Label } from '@patternfly/react-core';
 import { DateFormat } from '@redhat-cloud-services/frontend-components/components/cjs/DateFormat';
 import { IntlProvider } from 'react-intl';
-import { CheckCircleIcon, TimesCircleIcon, QuestionCircleIcon, ExclamationTriangleIcon } from '@patternfly/react-icons';
 
 describe('formatters', () => {
     const wrapperWithIntl = (children) => <IntlProvider locale="en">{children}</IntlProvider>;
@@ -267,29 +266,21 @@ describe('formatters', () => {
     describe('availability status', () => {
         const APPTYPES = applicationTypesData.data;
 
-        describe('getStatusIcon', () => {
-            it('returns OK icon', () => {
-                const wrapper = mount(getStatusIcon('available'));
-
-                expect(wrapper.find(CheckCircleIcon)).toHaveLength(1);
+        describe('getStatusColor', () => {
+            it('returns OK color', () => {
+                expect(getStatusColor(AVAILABLE)).toEqual('green');
             });
 
-            it('returns WARNING icon', () => {
-                const wrapper = mount(getStatusIcon('partially_available'));
-
-                expect(wrapper.find(ExclamationTriangleIcon)).toHaveLength(1);
+            it('returns WARNING color', () => {
+                expect(getStatusColor(PARTIALLY_UNAVAILABLE)).toEqual('orange');
             });
 
-            it('returns DANGER icon', () => {
-                const wrapper = mount(getStatusIcon('unavailable'));
-
-                expect(wrapper.find(TimesCircleIcon)).toHaveLength(1);
+            it('returns DANGER color', () => {
+                expect(getStatusColor(UNAVAILABLE)).toEqual('red');
             });
 
-            it('returns unknown by default', () => {
-                const wrapper = mount(getStatusIcon('some nonsense'));
-
-                expect(wrapper.find(QuestionCircleIcon)).toHaveLength(1);
+            it('returns unknown color by default', () => {
+                expect(getStatusColor(null)).toEqual('grey');
             });
         });
 
@@ -297,7 +288,7 @@ describe('formatters', () => {
             it('returns OK text', () => {
                 const wrapper = mount(wrapperWithIntl(getStatusText('available')));
 
-                expect(wrapper.text()).toEqual('OK');
+                expect(wrapper.text()).toEqual('Available');
             });
 
             it('returns WARNING text', () => {
@@ -378,8 +369,8 @@ describe('formatters', () => {
 
                 const wrapper = mount(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES })));
 
-                expect(wrapper.find(CheckCircleIcon)).toHaveLength(1);
-                expect(wrapper.text().includes('OK')).toEqual(true);
+                expect(wrapper.find(Label)).toHaveLength(1);
+                expect(wrapper.text().includes('Available')).toEqual(true);
             });
 
             it('returns WARNING text', () => {
@@ -389,7 +380,7 @@ describe('formatters', () => {
 
                 const wrapper = mount(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES })));
 
-                expect(wrapper.find(ExclamationTriangleIcon)).toHaveLength(1);
+                expect(wrapper.find(Label)).toHaveLength(1);
                 expect(wrapper.text().includes('Partially available')).toEqual(true);
             });
 
@@ -400,7 +391,7 @@ describe('formatters', () => {
 
                 const wrapper = mount(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES })));
 
-                expect(wrapper.find(TimesCircleIcon)).toHaveLength(1);
+                expect(wrapper.find(Label)).toHaveLength(1);
                 expect(wrapper.text().includes('Unavailable')).toEqual(true);
             });
 
@@ -409,7 +400,7 @@ describe('formatters', () => {
 
                 const wrapper = mount(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES })));
 
-                expect(wrapper.find(QuestionCircleIcon)).toHaveLength(1);
+                expect(wrapper.find(Label)).toHaveLength(1);
                 expect(wrapper.text().includes('Unknown')).toEqual(true);
             });
         });
