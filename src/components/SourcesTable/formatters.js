@@ -5,14 +5,10 @@ import { TextContent } from '@patternfly/react-core/dist/js/components/Text/Text
 import { Badge } from '@patternfly/react-core/dist/js/components/Badge/Badge';
 import { Popover } from '@patternfly/react-core/dist/js/components/Popover/Popover';
 import { Tooltip } from '@patternfly/react-core/dist/js/components/Tooltip/Tooltip';
+import { Label } from '@patternfly/react-core/dist/js/components/Label/Label';
 
 import { FormattedMessage } from 'react-intl';
 import { DateFormat } from '@redhat-cloud-services/frontend-components/components/cjs/DateFormat';
-
-import ExclamationTriangleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-triangle-icon';
-import CheckCircleIcon from '@patternfly/react-icons/dist/js/icons/check-circle-icon';
-import QuestionCircleIcon from '@patternfly/react-icons/dist/js/icons/question-circle-icon';
-import TimesCircleIcon from '@patternfly/react-icons/dist/js/icons/times-circle-icon';
 
 export const defaultPort = (scheme) => ({
     http: '80',
@@ -130,11 +126,11 @@ export const UNAVAILABLE = 'unavailable';
 export const UNKNOWN = 'unknown';
 export const PARTIALLY_UNAVAILABLE = 'partially_available';
 
-export const getStatusIcon = (status) => ({
-    [UNAVAILABLE]: <TimesCircleIcon className="ins-c-sources__availability-not-ok"/>,
-    [AVAILABLE]: <CheckCircleIcon className="ins-c-sources__availability-ok"/>,
-    [PARTIALLY_UNAVAILABLE]: <ExclamationTriangleIcon className="ins-c-sources__availability-partially"/>
-}[status] || <QuestionCircleIcon className="ins-c-sources__availability-unknown"/>);
+export const getStatusColor = (status) => ({
+    [UNAVAILABLE]: 'red',
+    [AVAILABLE]: 'green',
+    [PARTIALLY_UNAVAILABLE]: 'orange'
+}[status] || 'grey');
 
 export const getStatusText = (status) => ({
     [UNAVAILABLE]: <FormattedMessage
@@ -142,8 +138,8 @@ export const getStatusText = (status) => ({
         defaultMessage="Unavailable"
     />,
     [AVAILABLE]: <FormattedMessage
-        id="sources.ok"
-        defaultMessage="OK"
+        id="sources.available"
+        defaultMessage="Available"
     />,
     [PARTIALLY_UNAVAILABLE]: <FormattedMessage
         id="sources.partiallyAvailable"
@@ -316,10 +312,9 @@ export const availabilityFormatter = (_status, source, { appTypes }) => {
                 aria-label={`${status} popover`}
                 bodyContent={<h1>{getStatusTooltipText(status, appTypes, meta.errors)}</h1>}
             >
-                <span>
-                    {getStatusIcon(status)}&nbsp;
+                <Label color={getStatusColor(status)}>
                     {getStatusText(status)}
-                </span>
+                </Label>
             </Popover>
         </Text>
     </TextContent>);
