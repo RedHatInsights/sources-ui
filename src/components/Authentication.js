@@ -53,7 +53,7 @@ const Authentication = (rest) => {
         } : {})
     };
 
-    if (!edited) {
+    if (!edited && isEditing) {
         return (<FormGroup
             helperText={componentProps.helperText}
             label={componentProps.label}
