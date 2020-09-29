@@ -30,7 +30,8 @@ jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/schemaBuilder'
     injectAuthFieldsInfo: (fields) => fields,
     getNoStepsFields: (fields) => fields,
     getAdditionalAuthFields: () => [],
-    getAdditionalStepFields: () => []
+    getAdditionalStepFields: () => [],
+    shouldUseAppAuth: (typeName) => typeName === 'custom-authapp'
 }));
 
 describe('generateFirstAuthStep', () => {
@@ -65,6 +66,65 @@ describe('generateFirstAuthStep', () => {
                 component: 'text',
                 name: 'username'
             }]
+        });
+    });
+
+    it('generates step from API - with endpoint fields', () => {
+        const ENDPOINT_FIELDS_FULL = [{ role: 'endpoint' }];
+
+        TYPE = {
+            name: 'custom',
+            schema: { authentication: [{ type: 'arn', fields: [{ component: 'text', name: 'username' }] }] }
+        };
+
+        const firstStep = generateFirstAuthStep(
+            TYPE,
+            APP_TYPE,
+            ENDPOINT_FIELDS_FULL,
+            AUTHTYPE,
+            INTL
+        );
+
+        expect(firstStep).toEqual({
+            name: `${TYPE.name}-${APP_TYPE.id}-${AUTHTYPE}`,
+            nextStep: `summary`,
+            title: 'Configure credentials',
+            fields: [
+                ...ENDPOINT_FIELDS_FULL,
+                {
+                    component: 'text',
+                    name: 'username'
+                }
+            ]
+        });
+    });
+
+    it('generates step from API - should use appAuth', () => {
+        const ENDPOINT_FIELDS_FULL = [{ role: 'endpoint' }];
+
+        TYPE = {
+            name: 'custom-authapp',
+            schema: { authentication: [{ type: 'arn', fields: [{ component: 'text', name: 'username' }] }] }
+        };
+
+        const firstStep = generateFirstAuthStep(
+            TYPE,
+            APP_TYPE,
+            ENDPOINT_FIELDS_FULL,
+            AUTHTYPE,
+            INTL
+        );
+
+        expect(firstStep).toEqual({
+            name: `${TYPE.name}-${APP_TYPE.id}-${AUTHTYPE}`,
+            nextStep: `summary`,
+            title: 'Configure credentials',
+            fields: [
+                {
+                    component: 'text',
+                    name: 'username'
+                }
+            ]
         });
     });
 

@@ -57,12 +57,12 @@ export const doAttachApp = async (
     });
 
     try {
-        if (!allFormValues.source || !allFormValues.source.id) {
+        if (!allFormValues?.source?.id) {
             throw 'Missing source id';
         }
 
         const sourceId = allFormValues.source.id;
-        let endpointId = allFormValues.endpoint ? allFormValues.endpoint.id : undefined;
+        let endpointId = allFormValues?.endpoint?.id;
 
         const promises = [];
 
@@ -91,53 +91,50 @@ export const doAttachApp = async (
             if (endpointId) {
                 promises.push(getSourcesApi().updateEndpoint(endpointId, endpointData));
             } else {
-                promises.push(Promise.resolve(undefined));
-
                 const createEndpointData = {
                     ...endpointData,
                     default: true,
                     source_id: sourceId
                 };
 
-                const endpoint = await getSourcesApi().createEndpoint(createEndpointData);
-                endpointId = endpoint.id;
+                promises.push(getSourcesApi().createEndpoint(createEndpointData));
             }
         } else {
             promises.push(Promise.resolve(undefined));
         }
 
-        if (filteredValues.authentication && !isEmpty(filteredValues.authentication)) {
-            if (selectedAuthId) {
-                promises.push(getSourcesApi().updateAuthentication(selectedAuthId, filteredValues.authentication));
-            } else if (endpointId) {
-                const authenticationData = {
-                    ...filteredValues.authentication,
-                    resource_id: endpointId,
-                    resource_type: 'Endpoint'
-                };
-
-                promises.push(getSourcesApi().createAuthentication(authenticationData));
-            }
-        } else {
-            promises.push(Promise.resolve(undefined));
-        }
-
-        if (filteredValues.application && filteredValues.application.application_type_id) {
+        if (filteredValues.application?.application_type_id) {
             promises.push(doCreateApplication(sourceId, filteredValues.application.application_type_id));
         } else {
             promises.push(Promise.resolve(undefined));
         }
 
         // eslint-disable-next-line no-unused-vars
-        const [_sourceDataOut, _endpointDataOut, authenticationDataOut, applicationDataOut] = await Promise.all(promises);
+        const [_sourceDataOut, endpointDataOut, applicationDataOut] = await Promise.all(promises);
+
+        let authenticationDataOut;
+
+        if (filteredValues.authentication && !isEmpty(filteredValues.authentication)) {
+            if (selectedAuthId) {
+                authenticationDataOut = await getSourcesApi().updateAuthentication(selectedAuthId, filteredValues.authentication);
+            } else {
+                const authenticationData = {
+                    ...filteredValues.authentication,
+                    resource_id: endpointDataOut?.id || applicationDataOut?.id,
+                    resource_type: endpointDataOut?.id ? 'Endpoint' : 'Application'
+                };
+
+                authenticationDataOut = await getSourcesApi().createAuthentication(authenticationData);
+            }
+        }
 
         appId = applicationDataOut?.id;
 
-        const authenticationId = selectedAuthId ? selectedAuthId : authenticationDataOut ? authenticationDataOut.id : undefined;
+        const authenticationId = selectedAuthId || authenticationDataOut?.id;
 
         const promisesSecondRound = [];
 
-        if (applicationDataOut && applicationDataOut.id && authenticationId) {
+        if (applicationDataOut?.id && authenticationId) {
             const authAppData = {
                 application_id: applicationDataOut.id,
                 authentication_id: authenticationId

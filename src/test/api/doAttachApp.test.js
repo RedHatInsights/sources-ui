@@ -64,8 +64,8 @@ describe('doAttachApp', () => {
         RETURNED_APP = { id: APP_ID };
 
         sourceUpdate = jest.fn().mockImplementation(() => Promise.resolve('ok'));
-        authUpdate = jest.fn().mockImplementation(() => Promise.resolve('ok'));
-        endpointUpdate = jest.fn().mockImplementation(() => Promise.resolve('ok'));
+        authUpdate = jest.fn().mockImplementation(() => Promise.resolve(RETURNED_AUTH));
+        endpointUpdate = jest.fn().mockImplementation(() => Promise.resolve(RETURNED_ENDPOINT));
         authCreate = jest.fn().mockImplementation(() => Promise.resolve(RETURNED_AUTH));
         endpointCreate = jest.fn().mockImplementation(() => Promise.resolve(RETURNED_ENDPOINT));
         createAuthApp = jest.fn().mockImplementation(()=> Promise.resolve('ok'));
@@ -545,8 +545,8 @@ describe('doAttachApp', () => {
         expect(endpointUpdate).not.toHaveBeenCalledWith();
         expect(authCreate).toHaveBeenCalledWith({
             ...VALUES.authentication,
-            resource_id: ENDPOINT_ID,
-            resource_type: 'Endpoint'
+            resource_id: undefined, // no endpoint values
+            resource_type: 'Application'
         });
         expect(endpointCreate).not.toHaveBeenCalled();
         expect(appCreate).not.toHaveBeenCalled();
@@ -627,11 +627,46 @@ describe('doAttachApp', () => {
         expect(sourceUpdate).not.toHaveBeenCalled();
         expect(authUpdate).not.toHaveBeenCalled();
         expect(endpointUpdate).not.toHaveBeenCalledWith();
-        expect(authCreate).not.toHaveBeenCalled();
+        expect(authCreate).toHaveBeenCalledWith({
+            ...VALUES.authentication,
+            resource_id: undefined, // empty endpoint values
+            resource_type: 'Application'
+        });
         expect(endpointCreate).not.toHaveBeenCalled();
         expect(appCreate).not.toHaveBeenCalled();
         expect(createAuthApp).not.toHaveBeenCalled();
         expect(mockAppStatus).not.toHaveBeenCalled();
+        expect(appDelete).not.toHaveBeenCalled();
+    });
+
+    it('auth and app is created', async () => {
+        VALUES = {
+            authentication: {
+                password: 'pepa'
+            },
+            application: {
+                application_type_id: APP_ID
+            }
+        };
+
+        await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
+
+        expect(mockPatchSourceSpy).not.toHaveBeenCalled();
+        expect(sourceUpdate).not.toHaveBeenCalled();
+        expect(authUpdate).not.toHaveBeenCalled();
+        expect(endpointUpdate).not.toHaveBeenCalledWith();
+        expect(authCreate).toHaveBeenCalledWith({
+            ...VALUES.authentication,
+            resource_id: RETURNED_APP.id,
+            resource_type: 'Application'
+        });
+        expect(endpointCreate).not.toHaveBeenCalled();
+        expect(appCreate).toHaveBeenCalledWith(SOURCE_ID, APP_ID);
+        expect(createAuthApp).toHaveBeenCalledWith({
+            authentication_id: AUTH_ID,
+            application_id: APP_ID
+        });
+        expect(mockAppStatus).toHaveBeenCalledWith(APP_ID, 0);
         expect(appDelete).not.toHaveBeenCalled();
     });
 
