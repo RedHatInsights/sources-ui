@@ -1,11 +1,12 @@
 import { act } from 'react-dom/test-utils';
 
 import componentTypes from '@data-driven-forms/react-form-renderer/dist/cjs/component-types';
-import componentMapper from '@data-driven-forms/pf4-component-mapper/dist/cjs/component-mapper';
 
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
 import ModalFormTemplate from '../../components/ModalFormTemplate';
+
+import componentMapper from '@data-driven-forms/pf4-component-mapper/dist/cjs/component-mapper';
 
 describe('modalFormTemplate', () => {
     let wrapper;

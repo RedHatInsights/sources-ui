@@ -1,7 +1,11 @@
 import * as schemaBuilder from '@redhat-cloud-services/frontend-components-sources/cjs/schemaBuilder';
 
 const generateFirstAuthStep = (type, appType, endpointFields, authtype, intl) => {
-    const fields = [...endpointFields];
+    let fields = [...endpointFields];
+
+    if (schemaBuilder.shouldUseAppAuth(type.name, authtype, appType.name)) {
+        fields = [];
+    }
 
     const auth = type.schema.authentication.find(({ type }) => type === authtype);
 
