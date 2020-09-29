@@ -64,7 +64,7 @@ const RemoveAppModal = ({ app, onCancel, container }) => {
                 >
                     { intl.formatMessage({
                         id: 'sources.remove',
-                        defaultMessage: 'Remove application'
+                        defaultMessage: 'Remove'
                     }) }
                 </Button>,
                 <Button id="deleteCancel" key="cancel" variant="link" type="button" onClick={ onCancel }>
@@ -79,7 +79,7 @@ const RemoveAppModal = ({ app, onCancel, container }) => {
                 <Text component={TextVariants.p}>
                     { intl.formatMessage({
                         id: 'sources.deleteAppWarning',
-                        defaultMessage: 'Are you sure to remove { appName } from this source?'
+                        defaultMessage: '{ appName } will be disconnected from this source.'
                     }, { appName: <b key="b">{app.display_name}</b> }) }
                 </Text>
                 {dependentApps.length > 0 && <Text component={TextVariants.p}>
