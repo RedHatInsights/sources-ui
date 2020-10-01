@@ -57,7 +57,7 @@ export const insertEditAction = (actions, intl, push, isOrgAdmin, disabledProps)
 export const actionResolver = (intl, push, isOrgAdmin) => (rowData) => {
     const tooltip = intl.formatMessage({
         id: 'sources.notAdminButton',
-        defaultMessage: 'You do not have permission to perform this action.'
+        defaultMessage: 'You must be an Organization Administrator to perform this action.'
     });
 
     const disabledProps = {
