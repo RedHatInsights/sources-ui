@@ -13,7 +13,7 @@
     "@patternfly/react-table": "^4.16.20",
     "@redhat-cloud-services/frontend-components": "2.4.8",
     "@redhat-cloud-services/frontend-components-notifications": "2.2.1",
-    "@redhat-cloud-services/frontend-components-sources": "2.2.8",
+    "@redhat-cloud-services/frontend-components-sources": "2.2.9",
     "@redhat-cloud-services/frontend-components-utilities": "2.2.4",
     "@sentry/minimal": "5.24.2",
     "axios": "0.20.0",
