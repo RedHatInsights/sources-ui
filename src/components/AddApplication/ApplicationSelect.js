@@ -68,10 +68,7 @@ const ApplicationSelect = (props) => {
     const source = useSource();
 
     const sourceAppsNames = source.applications
-    .map(({ application_type_id }) => {
-        const appType = appTypes.find(({ id }) => id === application_type_id);
-        return appType ? appType.display_name : undefined;
-    });
+    .map(({ application_type_id }) => appTypes.find(({ id }) => id === application_type_id)?.display_name);
 
     const appType = (value) => appTypes?.find(appType =>
         appType.id === value
