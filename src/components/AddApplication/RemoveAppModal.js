@@ -34,7 +34,7 @@ const RemoveAppModal = ({ app, onCancel, container }) => {
     const dependentApps = app.dependent_applications.map(appName => {
         const appType = appTypes.find(({ name }) => name === appName);
 
-        return appType ? app.sourceAppsNames.includes(appType.display_name) ? appType.display_name : undefined : undefined;
+        return app.sourceAppsNames.includes(appType?.display_name) && appType?.display_name;
     }).filter(x => x);
 
     return (

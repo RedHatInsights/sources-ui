@@ -36,11 +36,9 @@ export const doAttachApp = async (
 
     const allFormValues = formState.values;
 
-    const selectedAuthId = allFormValues.authentication ? allFormValues.authentication.id : undefined;
+    const selectedAuthId = allFormValues.authentication?.id;
 
-    const authInitialValues = selectedAuthId
-        ? authenticationInitialValues.find(({ id }) => id === selectedAuthId)
-        : undefined;
+    const authInitialValues = selectedAuthId && authenticationInitialValues.find(({ id }) => id === selectedAuthId);
 
     const { authentication, ...valuesWithoutAuth } = values;
 
