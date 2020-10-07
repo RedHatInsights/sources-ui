@@ -4,13 +4,13 @@ import { useDispatch } from 'react-redux';
 import { loadOrgAdmin } from '../redux/user/actions';
 
 const PermissionsChecker = ({ children }) => {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-    useEffect(() => {
-        dispatch(loadOrgAdmin());
-    }, []);
+  useEffect(() => {
+    dispatch(loadOrgAdmin());
+  }, []);
 
-    return children;
+  return children;
 };
 
 export default PermissionsChecker;

@@ -18,185 +18,221 @@ import { routes, replaceRouteId } from '../../../Routes';
 import AppListInRemoval from '../../../components/SourceRemoveModal/AppListInRemoval';
 
 describe('SourceRemoveModal', () => {
-    const middlewares = [thunk, notificationsMiddleware()];
-    let mockStore;
-    let store;
+  const middlewares = [thunk, notificationsMiddleware()];
+  let mockStore;
+  let store;
 
-    beforeEach(() => {
-        mockStore = configureStore(middlewares);
-        store = mockStore({
-            sources: { entities: sourcesDataGraphQl, appTypes: applicationTypesData.data, sourceTypes: sourceTypesData.data }
-        });
+  beforeEach(() => {
+    mockStore = configureStore(middlewares);
+    store = mockStore({
+      sources: {
+        entities: sourcesDataGraphQl,
+        appTypes: applicationTypesData.data,
+        sourceTypes: sourceTypesData.data,
+      },
+    });
+  });
+
+  describe('source with no application', () => {
+    it('renders correctly', () => {
+      const wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesRemove.path} render={(...args) => <SourceRemoveModal {...args} />} />,
+          store,
+          [replaceRouteId(routes.sourcesRemove.path, '14')]
+        )
+      );
+
+      expect(wrapper.find('input')).toHaveLength(1); // checkbox
+      expect(wrapper.find(Button)).toHaveLength(3); // cancel modal, cancel delete, delete
+      expect(wrapper.find('button[id="deleteSubmit"]').props().disabled).toEqual(true); // delete is disabled
+      expect(wrapper.find(AppListInRemoval)).toHaveLength(0);
     });
 
-    describe('source with no application', () => {
-        it('renders correctly', () => {
-            const wrapper = mount(componentWrapperIntl(
-                <Route path={routes.sourcesRemove.path} render={ (...args) => <SourceRemoveModal { ...args } /> } />,
-                store,
-                [replaceRouteId(routes.sourcesRemove.path, '14')])
-            );
+    it('enables submit button', () => {
+      const wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesRemove.path} render={(...args) => <SourceRemoveModal {...args} />} />,
+          store,
+          [replaceRouteId(routes.sourcesRemove.path, '14')]
+        )
+      );
 
-            expect(wrapper.find('input')).toHaveLength(1); // checkbox
-            expect(wrapper.find(Button)).toHaveLength(3); // cancel modal, cancel delete, delete
-            expect(wrapper.find('button[id="deleteSubmit"]').props().disabled).toEqual(true); // delete is disabled
-            expect(wrapper.find(AppListInRemoval)).toHaveLength(0);
-        });
+      expect(wrapper.find('button[id="deleteSubmit"]').props().disabled).toEqual(true); // delete is disabled
 
-        it('enables submit button', () => {
-            const wrapper = mount(componentWrapperIntl(
-                <Route path={routes.sourcesRemove.path} render={ (...args) => <SourceRemoveModal { ...args } /> } />,
-                store,
-                [replaceRouteId(routes.sourcesRemove.path, '14')])
-            );
+      wrapper.find('input').simulate('change', { target: { checked: true } }); // click on checkbox
+      wrapper.update();
 
-            expect(wrapper.find('button[id="deleteSubmit"]').props().disabled).toEqual(true); // delete is disabled
-
-            wrapper.find('input').simulate('change', { target: { checked: true } }); // click on checkbox
-            wrapper.update();
-
-            expect(wrapper.find('button[id="deleteSubmit"]').props().disabled).toEqual(false); // delete is enabled
-        });
-
-        it('calls submit action', () => {
-            actions.removeSource = jest.fn().mockImplementation(() => ({ type: 'REMOVE' }));
-
-            const wrapper = mount(componentWrapperIntl(
-                <Route path={routes.sourcesRemove.path} render={ (...args) => <SourceRemoveModal { ...args } /> } />,
-                store,
-                [replaceRouteId(routes.sourcesRemove.path, '14')])
-            );
-
-            wrapper.find('input').simulate('change', { target: { checked: true } }); // click on checkbox
-            wrapper.update();
-
-            wrapper.find('button[id="deleteSubmit"]').simulate('click');
-
-            const source = sourcesDataGraphQl.find((s) => s.id === '14');
-
-            expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sources.path); // modal was closed
-            expect(actions.removeSource).toHaveBeenCalledWith('14', `${source.name} was deleted successfully.`); // calls removeSource with id of the source and right message
-        });
+      expect(wrapper.find('button[id="deleteSubmit"]').props().disabled).toEqual(false); // delete is enabled
     });
 
-    describe('source with applications', () => {
-        it('renders correctly', () => {
-            const wrapper = mount(componentWrapperIntl(
-                <Route path={routes.sourcesRemove.path} render={ (...args) => <SourceRemoveModal { ...args } /> } />,
-                store,
-                [replaceRouteId(routes.sourcesRemove.path, '406')])
-            );
+    it('calls submit action', () => {
+      actions.removeSource = jest.fn().mockImplementation(() => ({ type: 'REMOVE' }));
 
-            const source = sourcesDataGraphQl.find((s) => s.id === '406');
-            const application = applicationTypesData.data.find((app) => app.id === source.applications[0].application_type_id);
+      const wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesRemove.path} render={(...args) => <SourceRemoveModal {...args} />} />,
+          store,
+          [replaceRouteId(routes.sourcesRemove.path, '14')]
+        )
+      );
 
-            expect(wrapper.find('input')).toHaveLength(1); // checkbox
-            expect(wrapper.find(Button)).toHaveLength(3); // cancel modal, cancel delete, delete
-            expect(wrapper.find('button[id="deleteSubmit"]').props().disabled).toEqual(true); // delete is disabled
-            expect(wrapper.find(AppListInRemoval)).toHaveLength(1);
-            expect(wrapper.find(Text).at(1).text().includes(application.display_name)).toEqual(true); // application in the list
-        });
+      wrapper.find('input').simulate('change', { target: { checked: true } }); // click on checkbox
+      wrapper.update();
 
-        it('renders correctly when app is being deleted', () => {
-            store = mockStore({
-                sources: { entities: [{
-                    ...sourcesDataGraphQl.find((s) => s.id === '406'),
-                    applications: [{
-                        ...sourcesDataGraphQl.find((s) => s.id === '406').applications,
-                        isDeleting: true
-                    }]
-                }
-                ],
-                appTypes: applicationTypesData.data,
-                sourceTypes: sourceTypesData.data
-                }
-            });
+      wrapper.find('button[id="deleteSubmit"]').simulate('click');
 
-            const wrapper = mount(componentWrapperIntl(
-                <Route path={routes.sourcesRemove.path} render={ (...args) => <SourceRemoveModal { ...args } /> } />,
-                store,
-                [replaceRouteId(routes.sourcesRemove.path, '406')])
-            );
+      const source = sourcesDataGraphQl.find((s) => s.id === '14');
 
-            expect(wrapper.find(AppListInRemoval)).toHaveLength(0);
-        });
-
-        it('renders correctly - ansible tower', () => {
-            store = mockStore({
-                sources: { entities: [{
-                    id: '406',
-                    name: 'Source pokus',
-                    source_type_id: ANSIBLE_TOWER.id,
-                    applications: [{
-                        id: 'someid',
-                        application_type_id: CATALOG_APP.id
-                    }]
-                }
-                ],
-                appTypes: applicationTypesData.data,
-                sourceTypes: sourceTypesData.data
-                }
-            });
-
-            const wrapper = mount(componentWrapperIntl(
-                <Route path={routes.sourcesRemove.path} render={ (...args) => <SourceRemoveModal { ...args } /> } />,
-                store,
-                [replaceRouteId(routes.sourcesRemove.path, '406')])
-            );
-
-            expect(wrapper.find(Text).first().text().includes('data')).toEqual(false);
-        });
-
-        it('renders correctly - satellite', () => {
-            store = mockStore({
-                sources: { entities: [{
-                    id: '406',
-                    name: 'Source pokus',
-                    source_type_id: SATELLITE.id,
-                    applications: [{
-                        id: 'someid',
-                        application_type_id: CATALOG_APP.id
-                    }]
-                }
-                ],
-                appTypes: applicationTypesData.data,
-                sourceTypes: sourceTypesData.data
-                }
-            });
-
-            const wrapper = mount(componentWrapperIntl(
-                <Route path={routes.sourcesRemove.path} render={ (...args) => <SourceRemoveModal { ...args } /> } />,
-                store,
-                [replaceRouteId(routes.sourcesRemove.path, '406')])
-            );
-
-            expect(wrapper.find(Text).first().text().includes('data')).toEqual(false);
-        });
-
-        it('renders correctly - openshift', () => {
-            store = mockStore({
-                sources: { entities: [{
-                    id: '406',
-                    name: 'Source pokus',
-                    source_type_id: OPENSHIFT.id,
-                    applications: [{
-                        id: 'someid',
-                        application_type_id: CATALOG_APP.id
-                    }]
-                }
-                ],
-                appTypes: applicationTypesData.data,
-                sourceTypes: sourceTypesData.data
-                }
-            });
-
-            const wrapper = mount(componentWrapperIntl(
-                <Route path={routes.sourcesRemove.path} render={ (...args) => <SourceRemoveModal { ...args } /> } />,
-                store,
-                [replaceRouteId(routes.sourcesRemove.path, '406')])
-            );
-
-            expect(wrapper.find(Text).first().text().includes('data')).toEqual(true);
-        });
+      expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sources.path); // modal was closed
+      expect(actions.removeSource).toHaveBeenCalledWith('14', `${source.name} was deleted successfully.`); // calls removeSource with id of the source and right message
     });
+  });
+
+  describe('source with applications', () => {
+    it('renders correctly', () => {
+      const wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesRemove.path} render={(...args) => <SourceRemoveModal {...args} />} />,
+          store,
+          [replaceRouteId(routes.sourcesRemove.path, '406')]
+        )
+      );
+
+      const source = sourcesDataGraphQl.find((s) => s.id === '406');
+      const application = applicationTypesData.data.find((app) => app.id === source.applications[0].application_type_id);
+
+      expect(wrapper.find('input')).toHaveLength(1); // checkbox
+      expect(wrapper.find(Button)).toHaveLength(3); // cancel modal, cancel delete, delete
+      expect(wrapper.find('button[id="deleteSubmit"]').props().disabled).toEqual(true); // delete is disabled
+      expect(wrapper.find(AppListInRemoval)).toHaveLength(1);
+      expect(wrapper.find(Text).at(1).text().includes(application.display_name)).toEqual(true); // application in the list
+    });
+
+    it('renders correctly when app is being deleted', () => {
+      store = mockStore({
+        sources: {
+          entities: [
+            {
+              ...sourcesDataGraphQl.find((s) => s.id === '406'),
+              applications: [
+                {
+                  ...sourcesDataGraphQl.find((s) => s.id === '406').applications,
+                  isDeleting: true,
+                },
+              ],
+            },
+          ],
+          appTypes: applicationTypesData.data,
+          sourceTypes: sourceTypesData.data,
+        },
+      });
+
+      const wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesRemove.path} render={(...args) => <SourceRemoveModal {...args} />} />,
+          store,
+          [replaceRouteId(routes.sourcesRemove.path, '406')]
+        )
+      );
+
+      expect(wrapper.find(AppListInRemoval)).toHaveLength(0);
+    });
+
+    it('renders correctly - ansible tower', () => {
+      store = mockStore({
+        sources: {
+          entities: [
+            {
+              id: '406',
+              name: 'Source pokus',
+              source_type_id: ANSIBLE_TOWER.id,
+              applications: [
+                {
+                  id: 'someid',
+                  application_type_id: CATALOG_APP.id,
+                },
+              ],
+            },
+          ],
+          appTypes: applicationTypesData.data,
+          sourceTypes: sourceTypesData.data,
+        },
+      });
+
+      const wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesRemove.path} render={(...args) => <SourceRemoveModal {...args} />} />,
+          store,
+          [replaceRouteId(routes.sourcesRemove.path, '406')]
+        )
+      );
+
+      expect(wrapper.find(Text).first().text().includes('data')).toEqual(false);
+    });
+
+    it('renders correctly - satellite', () => {
+      store = mockStore({
+        sources: {
+          entities: [
+            {
+              id: '406',
+              name: 'Source pokus',
+              source_type_id: SATELLITE.id,
+              applications: [
+                {
+                  id: 'someid',
+                  application_type_id: CATALOG_APP.id,
+                },
+              ],
+            },
+          ],
+          appTypes: applicationTypesData.data,
+          sourceTypes: sourceTypesData.data,
+        },
+      });
+
+      const wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesRemove.path} render={(...args) => <SourceRemoveModal {...args} />} />,
+          store,
+          [replaceRouteId(routes.sourcesRemove.path, '406')]
+        )
+      );
+
+      expect(wrapper.find(Text).first().text().includes('data')).toEqual(false);
+    });
+
+    it('renders correctly - openshift', () => {
+      store = mockStore({
+        sources: {
+          entities: [
+            {
+              id: '406',
+              name: 'Source pokus',
+              source_type_id: OPENSHIFT.id,
+              applications: [
+                {
+                  id: 'someid',
+                  application_type_id: CATALOG_APP.id,
+                },
+              ],
+            },
+          ],
+          appTypes: applicationTypesData.data,
+          sourceTypes: sourceTypesData.data,
+        },
+      });
+
+      const wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesRemove.path} render={(...args) => <SourceRemoveModal {...args} />} />,
+          store,
+          [replaceRouteId(routes.sourcesRemove.path, '406')]
+        )
+      );
+
+      expect(wrapper.find(Text).first().text().includes('data')).toEqual(true);
+    });
+  });
 });

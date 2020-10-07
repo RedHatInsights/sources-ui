@@ -8,36 +8,32 @@ import { useIsOrgAdmin } from '../../hooks/useIsOrgAdmin';
 import { routes } from '../../Routes';
 
 const RedirectNotAdmin = () => {
-    const intl = useIntl();
+  const intl = useIntl();
 
-    const isOrgAdmin = useIsOrgAdmin();
+  const isOrgAdmin = useIsOrgAdmin();
 
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-    useEffect(() => {
-        if (isOrgAdmin === false) {
-            const title = intl.formatMessage({
-                id: 'sources.insufficietnPerms',
-                defaultMessage: 'Insufficient permissions'
-            });
-            const description = intl.formatMessage({
-                id: 'sources.notAdminButton',
-                defaultMessage: 'You must be an Organization Administrator to perform this action.'
-            });
-
-            dispatch(addMessage(
-                title,
-                'danger',
-                description
-            ));
-        }
-    }, []);
-
+  useEffect(() => {
     if (isOrgAdmin === false) {
-        return <Redirect to={routes.sources.path} />;
-    }
+      const title = intl.formatMessage({
+        id: 'sources.insufficietnPerms',
+        defaultMessage: 'Insufficient permissions',
+      });
+      const description = intl.formatMessage({
+        id: 'sources.notAdminButton',
+        defaultMessage: 'You must be an Organization Administrator to perform this action.',
+      });
 
-    return null;
+      dispatch(addMessage(title, 'danger', description));
+    }
+  }, []);
+
+  if (isOrgAdmin === false) {
+    return <Redirect to={routes.sources.path} />;
+  }
+
+  return null;
 };
 
 export default RedirectNotAdmin;

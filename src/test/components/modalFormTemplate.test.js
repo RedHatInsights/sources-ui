@@ -9,77 +9,87 @@ import ModalFormTemplate from '../../components/ModalFormTemplate';
 import componentMapper from '@data-driven-forms/pf4-component-mapper/dist/cjs/component-mapper';
 
 describe('modalFormTemplate', () => {
-    let wrapper;
-    let submit;
-    let reset;
-    let cancel;
+  let wrapper;
+  let submit;
+  let reset;
+  let cancel;
 
-    beforeEach(() => {
-        submit = jest.fn();
-        reset = jest.fn();
-        cancel = jest.fn();
+  beforeEach(() => {
+    submit = jest.fn();
+    reset = jest.fn();
+    cancel = jest.fn();
 
-        wrapper = mount(
-            componentWrapperIntl(
-                <SourcesFormRenderer
-                    schema={{ fields: [{ component: componentTypes.TEXT_FIELD, name: 'name', initialValue: 'some-name' }] }}
-                    componentMapper={componentMapper}
-                    FormTemplate={(props) => (<ModalFormTemplate
-                        ModalProps={{
-                            isOpen: true,
-                            title: 'Some title'
-                        }}
-                        {...props}
-                    />)}
-                    onSubmit={submit}
-                    onReset={reset}
-                    onCancel={cancel}
-                />
-            )
-        );
+    wrapper = mount(
+      componentWrapperIntl(
+        <SourcesFormRenderer
+          schema={{
+            fields: [
+              {
+                component: componentTypes.TEXT_FIELD,
+                name: 'name',
+                initialValue: 'some-name',
+              },
+            ],
+          }}
+          componentMapper={componentMapper}
+          FormTemplate={(props) => (
+            <ModalFormTemplate
+              ModalProps={{
+                isOpen: true,
+                title: 'Some title',
+              }}
+              {...props}
+            />
+          )}
+          onSubmit={submit}
+          onReset={reset}
+          onCancel={cancel}
+        />
+      )
+    );
+  });
+
+  it('resets', async () => {
+    expect(reset).not.toHaveBeenCalled();
+
+    expect(wrapper.find('input').props().value).toEqual('some-name');
+
+    await act(async () => {
+      wrapper.find('input').instance().value = 'some-value';
+      wrapper.find('input').simulate('change');
     });
+    wrapper.update();
 
-    it('resets', async () => {
-        expect(reset).not.toHaveBeenCalled();
+    expect(wrapper.find('input').props().value).toEqual('some-value');
 
-        expect(wrapper.find('input').props().value).toEqual('some-name');
-
-        await act(async () => {
-            wrapper.find('input').instance().value = 'some-value';
-            wrapper.find('input').simulate('change');
-        });
-        wrapper.update();
-
-        expect(wrapper.find('input').props().value).toEqual('some-value');
-
-        await act(async () => {
-            wrapper.find('button#reset-modal').simulate('click');
-        });
-        wrapper.update();
-
-        expect(wrapper.find('input').props().value).toEqual('some-name');
-        expect(reset).toHaveBeenCalled();
+    await act(async () => {
+      wrapper.find('button#reset-modal').simulate('click');
     });
+    wrapper.update();
 
-    it('submits', async () => {
-        expect(submit).not.toHaveBeenCalled();
+    expect(wrapper.find('input').props().value).toEqual('some-name');
+    expect(reset).toHaveBeenCalled();
+  });
 
-        await act(async () => {
-            wrapper.find('form').simulate('submit');
-        });
-        wrapper.update();
+  it('submits', async () => {
+    expect(submit).not.toHaveBeenCalled();
 
-        expect(submit).toHaveBeenCalled();
+    await act(async () => {
+      wrapper.find('form').simulate('submit');
     });
+    wrapper.update();
 
-    it('cancels', async () => {
-        expect(cancel).not.toHaveBeenCalled();
+    expect(submit).toHaveBeenCalled();
+  });
 
-        await act(async () => {
-            wrapper.find('button#cancel-modal').simulate('click');
-        });
-        wrapper.update();
+  it('cancels', async () => {
+    expect(cancel).not.toHaveBeenCalled();
 
-        expect(cancel).toHaveBeenCalled();
+    await act(async () => {
+      wrapper.find('button#cancel-modal').simulate('click');
     });
+    wrapper.update();
+
+    expect(cancel).toHaveBeenCalled();
+  });
 });

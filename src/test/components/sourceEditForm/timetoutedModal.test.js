@@ -20,41 +20,45 @@ import WrenchIcon from '@patternfly/react-icons/dist/js/icons/wrench-icon';
 import { Title } from '@patternfly/react-core';
 
 describe('TimeoutedModal', () => {
-    let store;
-    let mockStore;
-    let initialEntry;
-    let wrapper;
+  let store;
+  let mockStore;
+  let initialEntry;
+  let wrapper;
 
-    const middlewares = [thunk, notificationsMiddleware()];
+  const middlewares = [thunk, notificationsMiddleware()];
 
-    beforeEach(async () => {
-        initialEntry = [replaceRouteId(routes.sourcesEdit.path, '14')];
-        mockStore = configureStore(middlewares);
-        store = mockStore({
-            sources: {
-                entities: sourcesDataGraphQl
-            }
-        });
-
-        await act(async () => {
-            wrapper = mount(componentWrapperIntl(
-                <Route path={routes.sourcesEdit.path} render={ (...args) => <TimeoutedModal {...args} /> } />,
-                store,
-                initialEntry
-            ));
-        });
-        wrapper.update();
+  beforeEach(async () => {
+    initialEntry = [replaceRouteId(routes.sourcesEdit.path, '14')];
+    mockStore = configureStore(middlewares);
+    store = mockStore({
+      sources: {
+        entities: sourcesDataGraphQl,
+      },
     });
 
-    it('renders correctly', async () => {
-        expect(wrapper.find(WrapperModal)).toHaveLength(1);
-
-        expect(wrapper.find(Bullseye)).toHaveLength(1);
-        expect(wrapper.find(EmptyState)).toHaveLength(1);
-        expect(wrapper.find(WrenchIcon)).toHaveLength(1);
-        expect(wrapper.find(EmptyStateIcon)).toHaveLength(1);
-
-        expect(wrapper.find(Title).last().text()).toEqual('Edit source not yet complete');
-        expect(wrapper.find(EmptyStateBody).text()).toEqual('We are still working to confirm your updated credentials and app settings.To track progress, check the Status column in the Sources table.');
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesEdit.path} render={(...args) => <TimeoutedModal {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
     });
+    wrapper.update();
+  });
+
+  it('renders correctly', async () => {
+    expect(wrapper.find(WrapperModal)).toHaveLength(1);
+
+    expect(wrapper.find(Bullseye)).toHaveLength(1);
+    expect(wrapper.find(EmptyState)).toHaveLength(1);
+    expect(wrapper.find(WrenchIcon)).toHaveLength(1);
+    expect(wrapper.find(EmptyStateIcon)).toHaveLength(1);
+
+    expect(wrapper.find(Title).last().text()).toEqual('Edit source not yet complete');
+    expect(wrapper.find(EmptyStateBody).text()).toEqual(
+      'We are still working to confirm your updated credentials and app settings.To track progress, check the Status column in the Sources table.'
+    );
+  });
 });

@@ -6,15 +6,12 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 describe('Source Edit form header', () => {
-    it('renders correctly', () => {
-        const middlewares = [thunk, notificationsMiddleware()];
-        const mockStore = configureStore(middlewares);
+  it('renders correctly', () => {
+    const middlewares = [thunk, notificationsMiddleware()];
+    const mockStore = configureStore(middlewares);
 
-        const wrapper = mount(componentWrapperIntl(
-            <Header />,
-            mockStore({}),
-        ));
+    const wrapper = mount(componentWrapperIntl(<Header />, mockStore({})));
 
-        expect(wrapper.find(Grid)).toHaveLength(1);
-    });
+    expect(wrapper.find(Grid)).toHaveLength(1);
+  });
 });

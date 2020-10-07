@@ -9,66 +9,69 @@ import RedirectNotAdmin from '../../../components/RedirectNotAdmin/RedirectNotAd
 import { routes, replaceRouteId } from '../../../Routes';
 
 describe('RedirectNotAdmin', () => {
-    let initialStore;
-    let initialEntry;
-    let mockStore;
+  let initialStore;
+  let initialEntry;
+  let mockStore;
 
-    const wasRedirectedToRoot = (wrapper) => wrapper.find(MemoryRouter).instance().history.location.pathname === routes.sources.path;
+  const wasRedirectedToRoot = (wrapper) =>
+    wrapper.find(MemoryRouter).instance().history.location.pathname === routes.sources.path;
 
-    beforeEach(() => {
-        initialEntry = [replaceRouteId(routes.sourcesRemove.path, '1')];
+  beforeEach(() => {
+    initialEntry = [replaceRouteId(routes.sourcesRemove.path, '1')];
 
-        mockStore = configureStore();
+    mockStore = configureStore();
 
-        actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'ADD_MESSAGE' }));
+    actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'ADD_MESSAGE' }));
+  });
+
+  it('Renders null if user is admin', () => {
+    initialStore = mockStore({ user: { isOrgAdmin: true } });
+
+    const wrapper = mount(
+      componentWrapperIntl(
+        <Route path={routes.sourcesRemove.path} render={(...args) => <RedirectNotAdmin {...args} />} />,
+        initialStore,
+        initialEntry
+      )
+    );
+
+    expect(wrapper.html()).toEqual('');
+  });
+
+  it('Renders null if app does not if user is admin (undefined)', () => {
+    initialStore = mockStore({ user: { isOrgAdmin: undefined } });
+
+    const wrapper = mount(
+      componentWrapperIntl(
+        <Route path={routes.sourcesRemove.path} render={(...args) => <RedirectNotAdmin {...args} />} />,
+        initialStore,
+        initialEntry
+      )
+    );
+
+    expect(actions.addMessage).not.toHaveBeenCalled();
+    expect(wasRedirectedToRoot(wrapper)).toEqual(false);
+    expect(wrapper.html()).toEqual('');
+  });
+
+  it('Renders redirect and creates message if user is not admin', async () => {
+    let wrapper;
+
+    initialStore = mockStore({ user: { isOrgAdmin: false } });
+
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesRemove.path} render={(...args) => <RedirectNotAdmin {...args} />} />,
+          initialStore,
+          initialEntry
+        )
+      );
     });
 
-    it('Renders null if user is admin', () => {
-        initialStore = mockStore({ user: { isOrgAdmin: true } });
+    expect(actions.addMessage).toHaveBeenCalled();
+    expect(actions.addMessage).toHaveBeenCalledWith(expect.any(String), 'danger', expect.any(String));
 
-        const wrapper = mount(componentWrapperIntl(
-            <Route path={routes.sourcesRemove.path} render={ (...args) => <RedirectNotAdmin { ...args } /> } />,
-            initialStore,
-            initialEntry
-        ));
-
-        expect(wrapper.html()).toEqual('');
-    });
-
-    it('Renders null if app does not if user is admin (undefined)', () => {
-        initialStore = mockStore({ user: { isOrgAdmin: undefined } });
-
-        const wrapper = mount(componentWrapperIntl(
-            <Route path={routes.sourcesRemove.path} render={ (...args) => <RedirectNotAdmin { ...args } /> } />,
-            initialStore,
-            initialEntry
-        ));
-
-        expect(actions.addMessage).not.toHaveBeenCalled();
-        expect(wasRedirectedToRoot(wrapper)).toEqual(false);
-        expect(wrapper.html()).toEqual('');
-    });
-
-    it('Renders redirect and creates message if user is not admin', async () => {
-        let wrapper;
-
-        initialStore = mockStore({ user: { isOrgAdmin: false } });
-
-        await act(async () => {
-            wrapper = mount(componentWrapperIntl(
-                <Route path={routes.sourcesRemove.path} render={ (...args) => <RedirectNotAdmin { ...args } /> } />,
-                initialStore,
-                initialEntry
-            ));
-        });
-
-        expect(actions.addMessage).toHaveBeenCalled();
-        expect(actions.addMessage).toHaveBeenCalledWith(
-            expect.any(String),
-            'danger',
-            expect.any(String)
-        );
-
-        expect(wasRedirectedToRoot(wrapper)).toEqual(true);
-    });
+    expect(wasRedirectedToRoot(wrapper)).toEqual(true);
+  });
 });

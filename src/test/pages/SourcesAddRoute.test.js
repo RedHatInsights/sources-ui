@@ -1,4 +1,3 @@
-/* eslint-disable react/display-name */
 import thunk from 'redux-thunk';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/files/ReducerRegistry';
@@ -24,41 +23,44 @@ import { routes } from '../../Routes';
 import UserReducer from '../../redux/user/reducer';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/addSourceWizard', () => ({
-    __esModule: true,
-    AddSourceWizard: jest.fn().mockImplementation(() => <h2>AddSource mock</h2>)
+  __esModule: true,
+  AddSourceWizard: jest.fn().mockImplementation(() => <h2>AddSource mock</h2>),
 }));
 
 describe('SourcesPage - addSource route', () => {
-    const middlewares = [thunk, notificationsMiddleware()];
-    let store;
-    let wrapper;
+  const middlewares = [thunk, notificationsMiddleware()];
+  let store;
+  let wrapper;
 
-    const wasRedirectedToRoot = (wrapper) => wrapper.find(MemoryRouter).instance().history.location.pathname === routes.sources.path;
+  const wasRedirectedToRoot = (wrapper) =>
+    wrapper.find(MemoryRouter).instance().history.location.pathname === routes.sources.path;
 
-    beforeEach(() => {
-        api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: sourcesDataGraphQl }));
-        api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: sourcesDataGraphQl.length } }));
-        api.doLoadAppTypes = jest.fn().mockImplementation(() => Promise.resolve(applicationTypesData));
-        typesApi.doLoadSourceTypes =  jest.fn().mockImplementation(() => Promise.resolve(sourceTypesData.data));
+  beforeEach(() => {
+    api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: sourcesDataGraphQl }));
+    api.doLoadCountOfSources = jest
+      .fn()
+      .mockImplementation(() => Promise.resolve({ meta: { count: sourcesDataGraphQl.length } }));
+    api.doLoadAppTypes = jest.fn().mockImplementation(() => Promise.resolve(applicationTypesData));
+    typesApi.doLoadSourceTypes = jest.fn().mockImplementation(() => Promise.resolve(sourceTypesData.data));
 
-        store = createStore(
-            combineReducers({
-                sources: applyReducerHash(ReducersProviders, defaultSourcesState),
-                user: applyReducerHash(UserReducer, { isOrgAdmin: false })
-            }),
-            applyMiddleware(...middlewares)
-        );
+    store = createStore(
+      combineReducers({
+        sources: applyReducerHash(ReducersProviders, defaultSourcesState),
+        user: applyReducerHash(UserReducer, { isOrgAdmin: false }),
+      }),
+      applyMiddleware(...middlewares)
+    );
+  });
+
+  it('redirect when not org admin', async () => {
+    const initialEntry = [routes.sourcesNew.path];
+
+    await act(async () => {
+      wrapper = mount(componentWrapperIntl(<SourcesPage />, store, initialEntry));
     });
+    wrapper.update();
 
-    it('redirect when not org admin', async () => {
-        const initialEntry = [routes.sourcesNew.path];
-
-        await act(async() => {
-            wrapper = mount(componentWrapperIntl(<SourcesPage />, store, initialEntry));
-        });
-        wrapper.update();
-
-        expect(wrapper.find(AddSourceWizard)).toHaveLength(0);
-        expect(wasRedirectedToRoot(wrapper)).toEqual(true);
-    });
+    expect(wrapper.find(AddSourceWizard)).toHaveLength(0);
+    expect(wasRedirectedToRoot(wrapper)).toEqual(true);
+  });
 });
