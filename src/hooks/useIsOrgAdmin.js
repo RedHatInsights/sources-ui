@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 
 export const useIsOrgAdmin = () => {
-    const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
+  const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
 
-    return isOrgAdmin;
+  return isOrgAdmin;
 };

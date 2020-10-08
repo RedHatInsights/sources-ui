@@ -1,6 +1,6 @@
-import
-ReducerRegistry, { applyReducerHash }
-    from '@redhat-cloud-services/frontend-components-utilities/files/cjs/ReducerRegistry';
+import ReducerRegistry, {
+  applyReducerHash,
+} from '@redhat-cloud-services/frontend-components-utilities/files/cjs/ReducerRegistry';
 import notificationsMiddleware from '@redhat-cloud-services/frontend-components-notifications/cjs/notificationsMiddleware';
 import notifications from '@redhat-cloud-services/frontend-components-notifications/cjs/notifications';
 import thunk from 'redux-thunk';
@@ -11,32 +11,37 @@ import UserReducer, { defaultUserState } from '../redux/user/reducer';
 import { updateQuery } from './urlQuery';
 import { ACTION_TYPES } from '../redux/sources/actionTypes';
 
-export const urlQueryMiddleware = store => next => action => {
-    if (action.type === ACTION_TYPES.LOAD_ENTITIES_PENDING) {
-        const sources = store.getState().sources;
+export const urlQueryMiddleware = (store) => (next) => (action) => {
+  if (action.type === ACTION_TYPES.LOAD_ENTITIES_PENDING) {
+    const sources = store.getState().sources;
 
-        updateQuery({ ...sources, ...action.options });
-    }
+    updateQuery({ ...sources, ...action.options });
+  }
 
-    next(action);
+  next(action);
 };
 
 export const getStore = (addMiddlewares = []) => {
-    const middlewares = [
-        thunk,
-        notificationsMiddleware({ errorTitleKey: 'error.title', errorDescriptionKey: 'error.detail' }),
-        promise,
-        urlQueryMiddleware,
-        ...addMiddlewares
-    ];
+  const middlewares = [
+    thunk,
+    notificationsMiddleware({
+      errorTitleKey: 'error.title',
+      errorDescriptionKey: 'error.detail',
+    }),
+    promise,
+    urlQueryMiddleware,
+    ...addMiddlewares,
+  ];
 
-    const registry = new ReducerRegistry({}, middlewares);
+  const registry = new ReducerRegistry({}, middlewares);
 
-    registry.register({ sources: applyReducerHash(SourcesReducer, defaultSourcesState) });
-    registry.register({ user: applyReducerHash(UserReducer, defaultUserState) });
-    registry.register({ notifications });
+  registry.register({
+    sources: applyReducerHash(SourcesReducer, defaultSourcesState),
+  });
+  registry.register({ user: applyReducerHash(UserReducer, defaultUserState) });
+  registry.register({ notifications });
 
-    return registry.getStore();
+  return registry.getStore();
 };
 
 export const getProdStore = () => getStore();

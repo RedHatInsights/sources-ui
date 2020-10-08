@@ -3,29 +3,25 @@ import * as actions from '../../../redux/sources/actions';
 import { routes } from '../../../Routes';
 
 describe('redirectWhenImported', () => {
-    const DISPATCH = jest.fn();
-    const INTL = {
-        formatMessage: jest.fn().mockImplementation(({ defaultMessage }) => defaultMessage)
-    };
-    const HISTORY = {
-        push: jest.fn()
-    };
-    const NAME = 'imported source';
+  const DISPATCH = jest.fn();
+  const INTL = {
+    formatMessage: jest.fn().mockImplementation(({ defaultMessage }) => defaultMessage),
+  };
+  const HISTORY = {
+    push: jest.fn(),
+  };
+  const NAME = 'imported source';
 
-    const EXPECT_TITLE =  expect.any(String);
-    const EXPECT_DESCRIPTION =  expect.any(String);
+  const EXPECT_TITLE = expect.any(String);
+  const EXPECT_DESCRIPTION = expect.any(String);
 
-    it('add a notification and redirects to root', () => {
-        actions.addMessage = jest.fn().mockImplementation();
+  it('add a notification and redirects to root', () => {
+    actions.addMessage = jest.fn().mockImplementation();
 
-        redirectWhenImported(DISPATCH, INTL, HISTORY, NAME);
+    redirectWhenImported(DISPATCH, INTL, HISTORY, NAME);
 
-        expect(DISPATCH).toHaveBeenCalled();
-        expect(actions.addMessage).toHaveBeenCalledWith(
-            EXPECT_TITLE,
-            'danger',
-            EXPECT_DESCRIPTION,
-        );
-        expect(HISTORY.push).toHaveBeenCalledWith(routes.sources.path);
-    });
+    expect(DISPATCH).toHaveBeenCalled();
+    expect(actions.addMessage).toHaveBeenCalledWith(EXPECT_TITLE, 'danger', EXPECT_DESCRIPTION);
+    expect(HISTORY.push).toHaveBeenCalledWith(routes.sources.path);
+  });
 });

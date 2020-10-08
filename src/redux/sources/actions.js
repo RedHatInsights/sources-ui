@@ -1,168 +1,188 @@
 import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications/cjs/actionTypes';
 import {
-    ACTION_TYPES,
-    SORT_ENTITIES,
-    PAGE_AND_SIZE,
-    FILTER_SOURCES,
-    ADD_APP_TO_SOURCE,
-    SET_COUNT,
-    ADD_HIDDEN_SOURCE,
-    CLEAR_FILTERS
+  ACTION_TYPES,
+  SORT_ENTITIES,
+  PAGE_AND_SIZE,
+  FILTER_SOURCES,
+  ADD_APP_TO_SOURCE,
+  SET_COUNT,
+  ADD_HIDDEN_SOURCE,
+  CLEAR_FILTERS,
 } from './actionTypes';
-import {
-    doLoadAppTypes,
-    doRemoveSource,
-    doLoadEntities,
-    doDeleteApplication,
-    doLoadCountOfSources
-} from '../../api/entities';
+import { doLoadAppTypes, doRemoveSource, doLoadEntities, doDeleteApplication, doLoadCountOfSources } from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
 
 export const loadEntities = (options) => (dispatch, getState) => {
-    dispatch({
-        type: ACTION_TYPES.LOAD_ENTITIES_PENDING,
-        options
-    });
+  dispatch({
+    type: ACTION_TYPES.LOAD_ENTITIES_PENDING,
+    options,
+  });
 
-    const { pageSize, pageNumber, sortBy, sortDirection, filterValue } = getState().sources;
+  const { pageSize, pageNumber, sortBy, sortDirection, filterValue } = getState().sources;
 
-    return Promise.all([
-        doLoadEntities({ pageSize, pageNumber, sortBy, sortDirection, filterValue }),
-        doLoadCountOfSources(filterValue).then(({ meta: { count } }) => dispatch({ type: SET_COUNT, payload: { count } }))
-    ]).then(([{ sources }]) => dispatch({
+  return Promise.all([
+    doLoadEntities({
+      pageSize,
+      pageNumber,
+      sortBy,
+      sortDirection,
+      filterValue,
+    }),
+    doLoadCountOfSources(filterValue).then(({ meta: { count } }) => dispatch({ type: SET_COUNT, payload: { count } })),
+  ])
+    .then(([{ sources }]) =>
+      dispatch({
         type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
-        payload: sources
-    })).catch(error => dispatch({
+        payload: sources,
+      })
+    )
+    .catch((error) =>
+      dispatch({
         type: ACTION_TYPES.LOAD_ENTITIES_REJECTED,
         meta: { noError: true },
-        payload: { error: { detail: error.detail || error.data, title: error.title || 'Fetching data failed, try refresh page' } }
-    }));
+        payload: {
+          error: {
+            detail: error.detail || error.data,
+            title: error.title || 'Fetching data failed, try refresh page',
+          },
+        },
+      })
+    );
 };
 
 export const loadSourceTypes = () => (dispatch) => {
-    dispatch({ type: ACTION_TYPES.LOAD_SOURCE_TYPES_PENDING });
+  dispatch({ type: ACTION_TYPES.LOAD_SOURCE_TYPES_PENDING });
 
-    return doLoadSourceTypes().then(sourceTypes => dispatch({
-        type: ACTION_TYPES.LOAD_SOURCE_TYPES_FULFILLED,
-        payload: sourceTypes
-    }));
+  return doLoadSourceTypes().then((sourceTypes) =>
+    dispatch({
+      type: ACTION_TYPES.LOAD_SOURCE_TYPES_FULFILLED,
+      payload: sourceTypes,
+    })
+  );
 };
 
 export const loadAppTypes = () => (dispatch) => {
-    dispatch({ type: ACTION_TYPES.LOAD_APP_TYPES_PENDING });
+  dispatch({ type: ACTION_TYPES.LOAD_APP_TYPES_PENDING });
 
-    return doLoadAppTypes().then(appTypes => dispatch({
-        type: ACTION_TYPES.LOAD_APP_TYPES_FULFILLED,
-        payload: appTypes.data
-    }));
+  return doLoadAppTypes().then((appTypes) =>
+    dispatch({
+      type: ACTION_TYPES.LOAD_APP_TYPES_FULFILLED,
+      payload: appTypes.data,
+    })
+  );
 };
 
 export const sortEntities = (column, direction) => (dispatch) => {
-    dispatch({
-        type: SORT_ENTITIES,
-        payload: { column, direction }
-    });
+  dispatch({
+    type: SORT_ENTITIES,
+    payload: { column, direction },
+  });
 
-    return dispatch(loadEntities());
+  return dispatch(loadEntities());
 };
 
 export const pageAndSize = (page, size) => (dispatch) => {
-    dispatch({
-        type: PAGE_AND_SIZE,
-        payload: { page, size }
-    });
+  dispatch({
+    type: PAGE_AND_SIZE,
+    payload: { page, size },
+  });
 
-    return dispatch(loadEntities({ paginationClicked: true }));
+  return dispatch(loadEntities({ paginationClicked: true }));
 };
 
 export const filterSources = (value) => (dispatch) => {
-    dispatch(({
-        type: FILTER_SOURCES,
-        payload: { value }
-    }));
+  dispatch({
+    type: FILTER_SOURCES,
+    payload: { value },
+  });
 
-    return dispatch(loadEntities());
+  return dispatch(loadEntities());
 };
 
-export const addMessage = (title, variant, description, customId) => (dispatch) => dispatch({
+export const addMessage = (title, variant, description, customId) => (dispatch) =>
+  dispatch({
     type: ADD_NOTIFICATION,
     payload: {
-        title,
-        variant,
-        description,
-        dismissable: true,
-        customId
-    }
-});
+      title,
+      variant,
+      description,
+      dismissable: true,
+      customId,
+    },
+  });
 
 export const removeSource = (sourceId, title) => (dispatch) => {
-    dispatch({
-        type: ACTION_TYPES.REMOVE_SOURCE_PENDING,
-        meta: {
-            sourceId
-        }
-    });
+  dispatch({
+    type: ACTION_TYPES.REMOVE_SOURCE_PENDING,
+    meta: {
+      sourceId,
+    },
+  });
 
-    return doRemoveSource(sourceId).then(() => dispatch(loadEntities({ loaded: 0 })))
+  return doRemoveSource(sourceId)
+    .then(() => dispatch(loadEntities({ loaded: 0 })))
     .then(() => {
-        dispatch({
-            type: ACTION_TYPES.REMOVE_SOURCE_FULFILLED,
-            meta: {
-                sourceId
-            }
-        });
-        dispatch(addMessage(title, 'success'));
+      dispatch({
+        type: ACTION_TYPES.REMOVE_SOURCE_FULFILLED,
+        meta: {
+          sourceId,
+        },
+      });
+      dispatch(addMessage(title, 'success'));
     })
-    .catch(() => dispatch({
+    .catch(() =>
+      dispatch({
         type: ACTION_TYPES.REMOVE_SOURCE_REJECTED,
         meta: {
-            sourceId
-        }
-    }));
+          sourceId,
+        },
+      })
+    );
 };
 
-export const removeMessage = (id) => (dispatch) => dispatch({
+export const removeMessage = (id) => (dispatch) =>
+  dispatch({
     type: REMOVE_NOTIFICATION,
-    payload: id
-});
+    payload: id,
+  });
 
 export const removeApplication = (appId, sourceId, successTitle, errorTitle) => (dispatch) => {
-    dispatch({
-        type: ACTION_TYPES.REMOVE_APPLICATION,
-        payload: () => doDeleteApplication(appId, errorTitle),
-        meta: {
-            appId,
-            sourceId,
-            notifications: {
-                fulfilled: {
-                    variant: 'success',
-                    title: successTitle,
-                    dismissable: true
-                }
-            }
-        }
-    });
+  dispatch({
+    type: ACTION_TYPES.REMOVE_APPLICATION,
+    payload: () => doDeleteApplication(appId, errorTitle),
+    meta: {
+      appId,
+      sourceId,
+      notifications: {
+        fulfilled: {
+          variant: 'success',
+          title: successTitle,
+          dismissable: true,
+        },
+      },
+    },
+  });
 };
 
 export const addAppToSource = (sourceId, app) => ({
-    type: ADD_APP_TO_SOURCE,
-    payload: {
-        sourceId,
-        app
-    }
+  type: ADD_APP_TO_SOURCE,
+  payload: {
+    sourceId,
+    app,
+  },
 });
 
 export const addHiddenSource = (source) => ({
-    type: ADD_HIDDEN_SOURCE,
-    payload: {
-        source
-    }
+  type: ADD_HIDDEN_SOURCE,
+  payload: {
+    source,
+  },
 });
 
 export const clearFilters = () => (dispatch) => {
-    dispatch({
-        type: CLEAR_FILTERS
-    });
+  dispatch({
+    type: CLEAR_FILTERS,
+  });
 
-    return dispatch(loadEntities());
+  return dispatch(loadEntities());
 };

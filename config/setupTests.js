@@ -23,18 +23,21 @@ window.SVGPathElement = window.Element;
 process.env.BASE_PATH = '/api';
 
 global.insights = {
-    chrome: {
-        identifyApp: () => ({}),
-        auth: {
-            getUser: () => new Promise(resolve => resolve({
-                identity: {
-                    user: {
-                        is_org_admin: true
-                    }
-                }
-            }))
-        }
-    }
+  chrome: {
+    identifyApp: () => ({}),
+    auth: {
+      getUser: () =>
+        new Promise((resolve) =>
+          resolve({
+            identity: {
+              user: {
+                is_org_admin: true,
+              },
+            },
+          })
+        ),
+    },
+  },
 };
 
 Element.prototype.scrollTo = () => {};

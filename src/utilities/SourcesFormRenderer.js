@@ -14,24 +14,24 @@ import Authentication from '../components/Authentication';
 
 import ApplicationSelect from '../components/AddApplication/ApplicationSelect';
 
-const SourcesFormRenderer = props => (
-    <FormRenderer
-        FormTemplate={FormTemplate}
-        componentMapper={{
-            ...componentMapper,
-            ...mapperExtension,
-            authentication: Authentication,
-            'switch-field': componentMapper[componentTypes.SWITCH],
-            'application-select': ApplicationSelect
-        }}
-        validatorMapper={{
-            'required-validator': validatorMapper[validatorTypes.REQUIRED],
-            'pattern-validator': validatorMapper[validatorTypes.PATTERN],
-            'min-length-validator': validatorMapper[validatorTypes.MIN_LENGTH],
-            'url-validator': validatorMapper[validatorTypes.URL]
-        }}
-        {...props}
-    />
+const SourcesFormRenderer = (props) => (
+  <FormRenderer
+    FormTemplate={FormTemplate}
+    componentMapper={{
+      ...componentMapper,
+      ...mapperExtension,
+      authentication: Authentication,
+      'switch-field': componentMapper[componentTypes.SWITCH],
+      'application-select': ApplicationSelect,
+    }}
+    validatorMapper={{
+      'required-validator': validatorMapper[validatorTypes.REQUIRED],
+      'pattern-validator': validatorMapper[validatorTypes.PATTERN],
+      'min-length-validator': validatorMapper[validatorTypes.MIN_LENGTH],
+      'url-validator': validatorMapper[validatorTypes.URL],
+    }}
+    {...props}
+  />
 );
 
 export default SourcesFormRenderer;
