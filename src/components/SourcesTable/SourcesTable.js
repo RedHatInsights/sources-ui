@@ -25,21 +25,23 @@ const itemToCells = (item, columns, sourceTypes, appTypes) =>
         : item[col.value] || '',
     }));
 
-const renderSources = (entities, columns, sourceTypes, appTypes) =>
+const renderSources = (entities, columns, sourceTypes, appTypes, removingSources) =>
   entities
     .filter(({ hidden }) => !hidden)
-    .reduce(
-      (acc, item) => [
+    .reduce((acc, item) => {
+      const isDeleting = removingSources.includes(item.id);
+
+      return [
         ...acc,
         {
           ...item,
           isOpen: !!item.expanded,
           cells: itemToCells(item, columns, sourceTypes, appTypes),
-          disableActions: !!item.isDeleting,
+          disableActions: isDeleting,
+          isDeleting,
         },
-      ],
-      []
-    );
+      ];
+    }, []);
 
 export const prepareColumnsCells = (columns) =>
   columns
@@ -126,6 +128,7 @@ const SourcesTable = () => {
     sortBy,
     sortDirection,
     numberOfEntities,
+    removingSources,
   } = useSelector(({ sources }) => sources, shallowEqual);
   const reduxDispatch = useDispatch();
 
@@ -145,7 +148,7 @@ const SourcesTable = () => {
     const columns = sourcesColumns(intl, notSortable);
 
     return dispatch({
-      rows: renderSources(entities, columns, sourceTypes, appTypes),
+      rows: renderSources(entities, columns, sourceTypes, appTypes, removingSources),
       cells: prepareColumnsCells(columns),
     });
   };
@@ -164,7 +167,7 @@ const SourcesTable = () => {
     if (state.isLoaded) {
       refreshSources();
     }
-  }, [entities]);
+  }, [entities, removingSources]);
 
   let shownRows = state.rows;
   if (numberOfEntities === 0 && state.isLoaded) {
