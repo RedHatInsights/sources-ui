@@ -12,7 +12,6 @@ import {
 import * as actions from '../../../redux/sources/actions';
 import { sourceTypesData } from '../../__mocks__/sourceTypesData';
 import { applicationTypesData } from '../../__mocks__/applicationTypesData';
-import * as sourcesApi from '../../../api/checkSourceStatus';
 
 describe('Source page helpers', () => {
   describe('afterSuccess', () => {
@@ -20,32 +19,24 @@ describe('Source page helpers', () => {
       const dispatch = jest.fn();
       const source = { id: '154586' };
 
-      sourcesApi.checkSourceStatus = jest.fn();
-
       actions.loadEntities = jest.fn();
 
       afterSuccess(dispatch, source);
 
       expect(dispatch.mock.calls.length).toBe(1);
       expect(actions.loadEntities).toHaveBeenCalledWith(afterSuccessLoadParameters);
-
-      expect(sourcesApi.checkSourceStatus).toHaveBeenCalledWith(source.id);
     });
 
     it('refresh table, do not check source when there is no one', () => {
       const dispatch = jest.fn();
       const source = undefined;
 
-      sourcesApi.checkSourceStatus = jest.fn();
-
       actions.loadEntities = jest.fn();
 
       afterSuccess(dispatch, source);
 
       expect(dispatch.mock.calls.length).toBe(1);
       expect(actions.loadEntities).toHaveBeenCalledWith(afterSuccessLoadParameters);
-
-      expect(sourcesApi.checkSourceStatus).not.toHaveBeenCalled();
     });
   });
 
