@@ -1,12 +1,12 @@
 import { getSourcesApi, doLoadApplicationsForEdit } from './entities';
 import { getCmValues } from './getCmValues';
 
-export const doLoadSourceForEdit = (source) =>
+export const doLoadSourceForEdit = (source, hasCostManagement) =>
   Promise.all([
     getSourcesApi().showSource(source.id),
     getSourcesApi().listSourceEndpoints(source.id),
     doLoadApplicationsForEdit(source.id),
-    getCmValues(source.id).catch(() => undefined),
+    hasCostManagement && getCmValues(source.id).catch(() => undefined),
   ]).then(async ([sourceData, endpoints, applications, costManagement]) => {
     const endpoint = endpoints && endpoints.data && endpoints.data[0];
 
