@@ -9,7 +9,7 @@ describe('source_types api', () => {
 
     const SOURCE_TYPES = ['1223', { x: '54651' }];
 
-    mock.onGet('/api/sources/v1.0/source_types').reply(200, { data: SOURCE_TYPES });
+    mock.onGet('/api/sources/v3.0/source_types').reply(200, { data: SOURCE_TYPES });
 
     const result = await doLoadSourceTypes();
 

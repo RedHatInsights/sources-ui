@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as interceptors from '../frontend-components-copies/interceptors';
 
-import { SOURCES_API_BASE, SOURCES_API_BASE_V2, SOURCES_API_BASE_V3 } from './constants';
+import { SOURCES_API_BASE_V3 } from './constants';
 
 export const graphQlErrorInterceptor = (response) => {
   if (response.errors && response.errors.length > 0) {
@@ -34,23 +34,23 @@ axiosInstanceInsights.interceptors.response.use(null, interceptor403);
 export { axiosInstanceInsights as axiosInstance };
 
 export const getSourcesApi = () => ({
-  checkAvailabilitySource: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE}/sources/${id}/check_availability`),
-  updateSource: (id, data) => axiosInstanceInsights.patch(`${SOURCES_API_BASE}/sources/${id}`, data),
-  updateEndpoint: (id, data) => axiosInstanceInsights.patch(`${SOURCES_API_BASE}/endpoints/${id}`, data),
-  createEndpoint: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE}/endpoints`, data),
-  updateAuthentication: (id, data) => axiosInstanceInsights.patch(`${SOURCES_API_BASE}/authentications/${id}`, data),
-  createAuthentication: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE}/authentications`, data),
-  showSource: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE}/sources/${id}`),
-  listSourceEndpoints: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE}/sources/${id}/endpoints`),
-  listSourceApplications: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE}/sources/${id}/applications`),
-  listEndpointAuthentications: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE}/endpoints/${id}/authentications`),
-  deleteSource: (id) => axiosInstanceInsights.delete(`${SOURCES_API_BASE}/sources/${id}`),
-  createApplication: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE}/applications`, data),
+  checkAvailabilitySource: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/sources/${id}/check_availability`),
+  updateSource: (id, data) => axiosInstanceInsights.patch(`${SOURCES_API_BASE_V3}/sources/${id}`, data),
+  updateEndpoint: (id, data) => axiosInstanceInsights.patch(`${SOURCES_API_BASE_V3}/endpoints/${id}`, data),
+  createEndpoint: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/endpoints`, data),
+  updateAuthentication: (id, data) => axiosInstanceInsights.patch(`${SOURCES_API_BASE_V3}/authentications/${id}`, data),
+  createAuthentication: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/authentications`, data),
+  showSource: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/sources/${id}`),
+  listSourceEndpoints: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/sources/${id}/endpoints`),
+  listSourceApplications: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/sources/${id}/applications`),
+  listEndpointAuthentications: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/endpoints/${id}/authentications`),
+  deleteSource: (id) => axiosInstanceInsights.delete(`${SOURCES_API_BASE_V3}/sources/${id}`),
+  createApplication: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/applications`, data),
   postGraphQL: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/graphql`, data),
-  listSourceTypes: () => axiosInstanceInsights.get(`${SOURCES_API_BASE}/source_types`),
-  doLoadAppTypes: () => axiosInstanceInsights.get(`${SOURCES_API_BASE}/application_types`),
-  deleteApplication: (id) => axiosInstanceInsights.delete(`${SOURCES_API_BASE}/applications/${id}`),
-  createAuthApp: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V2}/application_authentications`, data),
+  listSourceTypes: () => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/source_types`),
+  doLoadAppTypes: () => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/application_types`),
+  deleteApplication: (id) => axiosInstanceInsights.delete(`${SOURCES_API_BASE_V3}/applications/${id}`),
+  createAuthApp: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/application_authentications`, data),
   deleteAuthentication: (id) => axiosInstanceInsights.delete(`${SOURCES_API_BASE_V3}/authentications/${id}`),
   showAuthentication: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/authentications/${id}`),
 });
@@ -163,7 +163,7 @@ export const restFilterGenerator = (filterValue = {}) => {
 };
 
 export const doLoadCountOfSources = (filterValue = {}) =>
-  axiosInstanceInsights.get(`${SOURCES_API_BASE}/sources?${restFilterGenerator(filterValue)}`);
+  axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/sources?${restFilterGenerator(filterValue)}`);
 
 export const doLoadSource = (id) =>
   getSourcesApi()

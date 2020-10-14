@@ -1,8 +1,8 @@
 export const applicationTypesData = {
   meta: { count: 3, limit: 100, offset: 0 },
   links: {
-    first: '/api/v1.0/application_types?offset=0',
-    last: '/api/v1.0/application_types?offset=0',
+    first: '/api/v3.0/application_types?offset=0',
+    last: '/api/v3.0/application_types?offset=0',
   },
   data: [
     {

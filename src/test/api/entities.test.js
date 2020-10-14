@@ -27,7 +27,7 @@ describe('entities spec', () => {
     it('doLoadAppTypes loads appTypes', async () => {
       const APP_TYPES = ['1223', { x: '54651' }];
 
-      mock.onGet('/api/sources/v1.0/application_types').reply(200, { data: APP_TYPES });
+      mock.onGet('/api/sources/v3.0/application_types').reply(200, { data: APP_TYPES });
 
       const result = await api.doLoadAppTypes();
 
@@ -45,7 +45,7 @@ describe('entities spec', () => {
     });
 
     it('doRemoveSource deletes source', async () => {
-      mock.onDelete(`/api/sources/v1.0/sources/${SOURCE_ID}`).reply(200, OK_RESPONSE);
+      mock.onDelete(`/api/sources/v3.0/sources/${SOURCE_ID}`).reply(200, OK_RESPONSE);
 
       const result = await api.doRemoveSource(SOURCE_ID);
 
@@ -57,7 +57,7 @@ describe('entities spec', () => {
 
       it('updateSource', async () => {
         const method = 'Patch';
-        mock[`on${method}`](`/api/sources/v1.0/sources/${SOURCE_ID}`).reply(200, OK_RESPONSE);
+        mock[`on${method}`](`/api/sources/v3.0/sources/${SOURCE_ID}`).reply(200, OK_RESPONSE);
 
         const result = await api.getSourcesApi().updateSource(SOURCE_ID, DATA);
 
@@ -67,7 +67,7 @@ describe('entities spec', () => {
 
       it('updateEndpoint', async () => {
         const method = 'Patch';
-        mock[`on${method}`](`/api/sources/v1.0/endpoints/${SOURCE_ID}`).reply(200, OK_RESPONSE);
+        mock[`on${method}`](`/api/sources/v3.0/endpoints/${SOURCE_ID}`).reply(200, OK_RESPONSE);
 
         const result = await api.getSourcesApi().updateEndpoint(SOURCE_ID, DATA);
 
@@ -77,7 +77,7 @@ describe('entities spec', () => {
 
       it('createEndpoint', async () => {
         const method = 'Post';
-        mock[`on${method}`](`/api/sources/v1.0/endpoints`).reply(200, OK_RESPONSE);
+        mock[`on${method}`](`/api/sources/v3.0/endpoints`).reply(200, OK_RESPONSE);
 
         const result = await api.getSourcesApi().createEndpoint(DATA);
 
@@ -87,7 +87,7 @@ describe('entities spec', () => {
 
       it('updateAuthentication', async () => {
         const method = 'Patch';
-        mock[`on${method}`](`/api/sources/v1.0/authentications/${SOURCE_ID}`).reply(200, OK_RESPONSE);
+        mock[`on${method}`](`/api/sources/v3.0/authentications/${SOURCE_ID}`).reply(200, OK_RESPONSE);
 
         const result = await api.getSourcesApi().updateAuthentication(SOURCE_ID, DATA);
 
@@ -97,7 +97,7 @@ describe('entities spec', () => {
 
       it('createAuthentication', async () => {
         const method = 'Post';
-        mock[`on${method}`](`/api/sources/v1.0/authentications`).reply(200, OK_RESPONSE);
+        mock[`on${method}`](`/api/sources/v3.0/authentications`).reply(200, OK_RESPONSE);
 
         const result = await api.getSourcesApi().createAuthentication(DATA);
 
@@ -107,7 +107,7 @@ describe('entities spec', () => {
 
       it('showSource', async () => {
         const method = 'Get';
-        mock[`on${method}`](`/api/sources/v1.0/sources/${SOURCE_ID}`).reply(200, OK_RESPONSE);
+        mock[`on${method}`](`/api/sources/v3.0/sources/${SOURCE_ID}`).reply(200, OK_RESPONSE);
 
         const result = await api.getSourcesApi().showSource(SOURCE_ID);
 
@@ -116,7 +116,7 @@ describe('entities spec', () => {
 
       it('listSourceEndpoints', async () => {
         const method = 'Get';
-        mock[`on${method}`](`/api/sources/v1.0/sources/${SOURCE_ID}/endpoints`).reply(200, OK_RESPONSE);
+        mock[`on${method}`](`/api/sources/v3.0/sources/${SOURCE_ID}/endpoints`).reply(200, OK_RESPONSE);
 
         const result = await api.getSourcesApi().listSourceEndpoints(SOURCE_ID);
 
@@ -125,7 +125,7 @@ describe('entities spec', () => {
 
       it('listSourceApplications', async () => {
         const method = 'Get';
-        mock[`on${method}`](`/api/sources/v1.0/sources/${SOURCE_ID}/applications`).reply(200, OK_RESPONSE);
+        mock[`on${method}`](`/api/sources/v3.0/sources/${SOURCE_ID}/applications`).reply(200, OK_RESPONSE);
 
         const result = await api.getSourcesApi().listSourceApplications(SOURCE_ID);
 
@@ -134,7 +134,7 @@ describe('entities spec', () => {
 
       it('listEndpointAuthentications', async () => {
         const method = 'Get';
-        mock[`on${method}`](`/api/sources/v1.0/endpoints/${SOURCE_ID}/authentications`).reply(200, OK_RESPONSE);
+        mock[`on${method}`](`/api/sources/v3.0/endpoints/${SOURCE_ID}/authentications`).reply(200, OK_RESPONSE);
 
         const result = await api.getSourcesApi().listEndpointAuthentications(SOURCE_ID);
 
@@ -142,7 +142,7 @@ describe('entities spec', () => {
       });
 
       it('createAuthApp', async () => {
-        mock.onPost(`/api/sources/v2.0/application_authentications`).reply(200, OK_RESPONSE);
+        mock.onPost(`/api/sources/v3.0/application_authentications`).reply(200, OK_RESPONSE);
 
         const result = await api.getSourcesApi().createAuthApp({
           application_type: 'app_id',
@@ -167,7 +167,7 @@ describe('entities spec', () => {
     it('doRemoveSource fails', async () => {
       expect.assertions(1);
 
-      mock.onDelete(`/api/sources/v1.0/sources/${SOURCE_ID}`).reply(500, ERROR_RESPONSE);
+      mock.onDelete(`/api/sources/v3.0/sources/${SOURCE_ID}`).reply(500, ERROR_RESPONSE);
 
       try {
         await api.doRemoveSource(SOURCE_ID);
@@ -202,7 +202,7 @@ describe('entities spec', () => {
     it('doCreateApplication creates app', async () => {
       const APP_TYPE_ID = '1212';
 
-      mock.onPost('/api/sources/v1.0/applications').reply(200, OK_RESPONSE);
+      mock.onPost('/api/sources/v3.0/applications').reply(200, OK_RESPONSE);
 
       const result = await api.doCreateApplication(SOURCE_ID, APP_TYPE_ID);
 
@@ -219,7 +219,7 @@ describe('entities spec', () => {
     it('doDeleteApplication deletes app', async () => {
       const APP_ID = '4546518132165';
 
-      mock.onDelete(`/api/sources/v1.0/applications/${APP_ID}`).reply(200, OK_RESPONSE);
+      mock.onDelete(`/api/sources/v3.0/applications/${APP_ID}`).reply(200, OK_RESPONSE);
 
       const result = await api.doDeleteApplication(APP_ID, 'error');
 
@@ -230,7 +230,7 @@ describe('entities spec', () => {
       const APP_ID = '4546518132165';
       const ERROR_TITLE = 'error title';
 
-      mock.onDelete(`/api/sources/v1.0/applications/${APP_ID}`).reply(500, ERROR_RESPONSE);
+      mock.onDelete(`/api/sources/v3.0/applications/${APP_ID}`).reply(500, ERROR_RESPONSE);
 
       try {
         await api.doDeleteApplication(APP_ID, ERROR_TITLE);
@@ -245,7 +245,7 @@ describe('entities spec', () => {
     });
 
     it('doLoadCountOfSources loads count of sources', async () => {
-      mock.onGet(`/api/sources/v1.0/sources?filter[name][contains_i]=pepa`).reply(200, { response: 'spec response' });
+      mock.onGet(`/api/sources/v3.0/sources?filter[name][contains_i]=pepa`).reply(200, { response: 'spec response' });
 
       const result = await api.doLoadCountOfSources({ name: 'pepa' });
 
