@@ -110,7 +110,8 @@ This file is a similar config with the following structure:
                     skipSelection: true || false,
                     skipEndpoint: true || false,
                     additionalSteps: [ ... ],
-                    customSteps: true || false
+                    customSteps: true || false,
+                    useApplicationAuth: true || false,
                     ...enhancedFields,
                 }
             },
@@ -136,6 +137,8 @@ This file is a similar config with the following structure:
 *Notes: The first step should not contain any `name`, all `name`s have to be unique in the whole file otherwise users could be directed to the wrong steps!*
 
 `customSteps` set to true, if you want to replace the endpoint implementation with your own. Just add endpoint steps to `additionalSteps` and config them here.
+
+`useApplicationAuth` if it is set to true, the authentication record will be linked to a application, not endpoint. Use if you want to avoid using topology for checking sources statuses.
 
 `enhancedFields` you can enhance all fields by using their name as a key here and then follow the DDF standard.
 
