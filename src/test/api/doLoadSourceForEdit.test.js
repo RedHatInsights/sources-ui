@@ -5,6 +5,7 @@ import { doLoadSourceForEdit } from '../../api/doLoadSourceForEdit';
 describe('doLoadSourceForEdit', () => {
   const SOURCE_ID = '2324232321';
   const SOURCE = { id: SOURCE_ID };
+  let hasCostManagement;
 
   let mocks;
 
@@ -70,6 +71,8 @@ describe('doLoadSourceForEdit', () => {
         ],
       })
     );
+
+    hasCostManagement = true;
   });
 
   it('return source without endpoint', async () => {
@@ -78,7 +81,7 @@ describe('doLoadSourceForEdit', () => {
     expect(mocks.showSource).toHaveBeenCalledWith(SOURCE_ID);
     expect(mocks.listSourceEndpoints).toHaveBeenCalledWith(SOURCE_ID);
     expect(api.doLoadApplicationsForEdit).toHaveBeenCalledWith(SOURCE_ID);
-    expect(cmApi.getCmValues).toHaveBeenCalledWith(SOURCE_ID);
+    expect(cmApi.getCmValues).not.toHaveBeenCalledWith();
     expect(mocks.listEndpointAuthentications).not.toHaveBeenCalled();
 
     expect(result).toEqual({
@@ -112,7 +115,7 @@ describe('doLoadSourceForEdit', () => {
     expect(mocks.showSource).toHaveBeenCalledWith(SOURCE_ID);
     expect(mocks.listSourceEndpoints).toHaveBeenCalledWith(SOURCE_ID);
     expect(api.doLoadApplicationsForEdit).toHaveBeenCalledWith(SOURCE_ID);
-    expect(cmApi.getCmValues).toHaveBeenCalledWith(SOURCE_ID);
+    expect(cmApi.getCmValues).not.toHaveBeenCalledWith();
     expect(mocks.listEndpointAuthentications).not.toHaveBeenCalled();
     expect(mocks.showAuthentication).not.toHaveBeenCalled();
 
@@ -151,7 +154,7 @@ describe('doLoadSourceForEdit', () => {
     expect(mocks.showSource).toHaveBeenCalledWith(SOURCE_ID);
     expect(mocks.listSourceEndpoints).toHaveBeenCalledWith(SOURCE_ID);
     expect(api.doLoadApplicationsForEdit).toHaveBeenCalledWith(SOURCE_ID);
-    expect(cmApi.getCmValues).toHaveBeenCalledWith(SOURCE_ID);
+    expect(cmApi.getCmValues).not.toHaveBeenCalledWith();
     expect(mocks.listEndpointAuthentications).not.toHaveBeenCalled();
     expect(mocks.showAuthentication.mock.calls).toEqual([[AUTHENTICATION_DATA_1.id], [AUTHENTICATION_DATA_2.id]]);
 
@@ -207,7 +210,7 @@ describe('doLoadSourceForEdit', () => {
     expect(mocks.showSource).toHaveBeenCalledWith(SOURCE_ID);
     expect(mocks.listSourceEndpoints).toHaveBeenCalledWith(SOURCE_ID);
     expect(api.doLoadApplicationsForEdit).toHaveBeenCalledWith(SOURCE_ID);
-    expect(cmApi.getCmValues).toHaveBeenCalledWith(SOURCE_ID);
+    expect(cmApi.getCmValues).not.toHaveBeenCalledWith();
     expect(mocks.listEndpointAuthentications).toHaveBeenCalledWith(ENDPOINT_ID);
     expect(mocks.showAuthentication.mock.calls).toEqual([[AUTHENTICATION_DATA_1.id], [AUTHENTICATION_DATA_2.id]]);
 
@@ -236,7 +239,7 @@ describe('doLoadSourceForEdit', () => {
     expect(mocks.showSource).toHaveBeenCalledWith(SOURCE_ID);
     expect(mocks.listSourceEndpoints).toHaveBeenCalledWith(SOURCE_ID);
     expect(api.doLoadApplicationsForEdit).toHaveBeenCalledWith(SOURCE_ID);
-    expect(cmApi.getCmValues).toHaveBeenCalledWith(SOURCE_ID);
+    expect(cmApi.getCmValues).not.toHaveBeenCalledWith();
     expect(mocks.listEndpointAuthentications).toHaveBeenCalledWith(ENDPOINT_ID);
 
     expect(result).toEqual({
@@ -253,7 +256,7 @@ describe('doLoadSourceForEdit', () => {
   it('return source with cost management values', async () => {
     cmApi.getCmValues = jest.fn().mockImplementation(() => Promise.resolve(CM_SOURCE_DATA));
 
-    const result = await doLoadSourceForEdit(SOURCE);
+    const result = await doLoadSourceForEdit(SOURCE, hasCostManagement);
 
     expect(mocks.showSource).toHaveBeenCalledWith(SOURCE_ID);
     expect(mocks.listSourceEndpoints).toHaveBeenCalledWith(SOURCE_ID);
@@ -272,6 +275,24 @@ describe('doLoadSourceForEdit', () => {
     });
   });
 
+  it('return source with cost management values - rejected cost', async () => {
+    const result = await doLoadSourceForEdit(SOURCE, hasCostManagement);
+
+    expect(mocks.showSource).toHaveBeenCalledWith(SOURCE_ID);
+    expect(mocks.listSourceEndpoints).toHaveBeenCalledWith(SOURCE_ID);
+    expect(api.doLoadApplicationsForEdit).toHaveBeenCalledWith(SOURCE_ID);
+    expect(cmApi.getCmValues).toHaveBeenCalledWith(SOURCE_ID);
+    expect(mocks.listEndpointAuthentications).not.toHaveBeenCalled();
+
+    expect(result).toEqual({
+      source: {
+        ...SOURCE,
+        ...SOURCE_DATA,
+      },
+      applications: [],
+    });
+  });
+
   it('return source with cost management values and endpoint', async () => {
     mocks = {
       ...mocks,
@@ -281,7 +302,7 @@ describe('doLoadSourceForEdit', () => {
     api.getSourcesApi = () => mocks;
     cmApi.getCmValues = jest.fn().mockImplementation(() => Promise.resolve(CM_SOURCE_DATA));
 
-    const result = await doLoadSourceForEdit(SOURCE);
+    const result = await doLoadSourceForEdit(SOURCE, hasCostManagement);
 
     expect(mocks.showSource).toHaveBeenCalledWith(SOURCE_ID);
     expect(mocks.listSourceEndpoints).toHaveBeenCalledWith(SOURCE_ID);

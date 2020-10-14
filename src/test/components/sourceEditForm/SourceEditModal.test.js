@@ -10,7 +10,7 @@ import { Spinner } from '@patternfly/react-core/dist/js/components/Spinner';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import SourceEditModal from '../../../components/SourceEditForm/SourceEditModal';
 import { routes, replaceRouteId } from '../../../Routes';
-import { applicationTypesData } from '../../__mocks__/applicationTypesData';
+import { applicationTypesData, COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
 import { sourceTypesData, OPENSHIFT_ID } from '../../__mocks__/sourceTypesData';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
 import { Modal, Button, FormGroup, TextInput, Form, Alert, EmptyState } from '@patternfly/react-core';
@@ -356,6 +356,64 @@ describe('SourceEditModal', () => {
     wrapper.update();
 
     expect(getCurrentAddress(wrapper)).toEqual(routes.sources.path);
+  });
+
+  it('do not load cost management values', async () => {
+    editApi.doLoadSourceForEdit.mockClear();
+
+    const source = { id: '14', applications: [] };
+
+    store = mockStore({
+      sources: {
+        entities: [source],
+        appTypes: applicationTypesData.data,
+        sourceTypes: sourceTypesData.data,
+        appTypesLoaded: true,
+        sourceTypesLoaded: true,
+      },
+    });
+
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesEdit.path} render={(...args) => <SourceEditModal {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+    });
+    wrapper.update();
+
+    expect(editApi.doLoadSourceForEdit).toHaveBeenCalledWith(source, false);
+  });
+
+  it('do load cost management values', async () => {
+    editApi.doLoadSourceForEdit.mockClear();
+
+    const source = { id: '14', applications: [{ application_type_id: COSTMANAGEMENT_APP.id }] };
+
+    store = mockStore({
+      sources: {
+        entities: [source],
+        appTypes: applicationTypesData.data,
+        sourceTypes: sourceTypesData.data,
+        appTypesLoaded: true,
+        sourceTypesLoaded: true,
+      },
+    });
+
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesEdit.path} render={(...args) => <SourceEditModal {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+    });
+    wrapper.update();
+
+    expect(editApi.doLoadSourceForEdit).toHaveBeenCalledWith(source, true);
   });
 
   describe('remove auth integration', () => {

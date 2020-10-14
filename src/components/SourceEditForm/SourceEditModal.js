@@ -22,6 +22,7 @@ import SubmittingModal from './SubmittingModal';
 import TimeoutedModal from './TimeoutedModal';
 import ErroredModal from './ErroredModal';
 import RemoveAuth from './parser/RemoveAuth';
+import { APP_NAMES } from './parser/application';
 
 const SourceEditModal = () => {
   const [state, setState] = useReducer(reducer, initialState);
@@ -52,8 +53,12 @@ const SourceEditModal = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (sourceRedux && initialLoad) {
-      doLoadSourceForEdit(sourceRedux).then((source) => {
+    if (sourceRedux && initialLoad && appTypesLoaded) {
+      const hasCostManagement = sourceRedux.applications
+        .map(({ application_type_id }) => application_type_id)
+        .includes(appTypes.find(({ name }) => name === APP_NAMES.COST_MANAGAMENT)?.id);
+
+      doLoadSourceForEdit(sourceRedux, hasCostManagement).then((source) => {
         if (source.source.imported) {
           redirectWhenImported(dispatch, intl, history, source.source.name);
         }
@@ -61,7 +66,7 @@ const SourceEditModal = () => {
         setState({ type: 'setSource', source });
       });
     }
-  }, [sourceRedux, isLoaded]);
+  }, [sourceRedux, isLoaded, appTypesLoaded]);
 
   useEffect(() => {
     if (source && appTypesLoaded && sourceTypesLoaded) {
