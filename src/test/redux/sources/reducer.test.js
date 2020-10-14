@@ -216,18 +216,16 @@ describe('redux > sources reducer', () => {
 
     it('pending marks source for deletion', () => {
       expect(sourcesReducer.sourceEditRemovePending(defaultState, payload)).toEqual({
-        ...defaultSourcesState,
-        entities: [
-          { id: '1235', name: 'do not remove this' },
-          { id: SOURCE_ID, name: 'delete this', isDeleting: true },
-        ],
+        ...defaultState,
+        removingSources: [SOURCE_ID],
       });
     });
 
     it('fullfiled deletes the source', () => {
-      expect(sourcesReducer.sourceEditRemoveFulfilled(defaultState, payload)).toEqual({
-        ...defaultSourcesState,
+      expect(sourcesReducer.sourceEditRemoveFulfilled({ ...defaultState, removingSources: [SOURCE_ID] }, payload)).toEqual({
+        ...defaultState,
         entities: [{ id: '1235', name: 'do not remove this' }],
+        removingSources: [],
       });
     });
 
@@ -240,12 +238,9 @@ describe('redux > sources reducer', () => {
         ],
       };
 
-      expect(sourcesReducer.sourceEditRemoveRejected(defaultState, payload)).toEqual({
-        ...defaultSourcesState,
-        entities: [
-          { id: '1235', name: 'do not remove this' },
-          { id: SOURCE_ID, name: 'delete this', isDeleting: undefined },
-        ],
+      expect(sourcesReducer.sourceEditRemoveRejected({ ...defaultState, removingSources: [SOURCE_ID] }, payload)).toEqual({
+        ...defaultState,
+        removingSources: [],
       });
     });
   });

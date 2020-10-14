@@ -21,6 +21,7 @@ export const defaultSourcesState = {
   filterValue: {},
   sortBy: 'created_at',
   sortDirection: 'desc',
+  removingSources: [],
 };
 
 export const entitiesPending = (state, { options }) => ({
@@ -89,17 +90,18 @@ export const filterSources = (state, { payload: { value } }) => ({
 
 export const sourceEditRemovePending = (state, { meta }) => ({
   ...state,
-  entities: state.entities.map((entity) => (entity.id === meta.sourceId ? { ...entity, isDeleting: true } : entity)),
+  removingSources: [...state.removingSources, meta.sourceId],
 });
 
 export const sourceEditRemoveFulfilled = (state, { meta }) => ({
   ...state,
-  entities: state.entities.map((entity) => (entity.id === meta.sourceId ? undefined : entity)).filter((x) => x),
+  removingSources: state.removingSources.filter((id) => id !== meta.sourceId),
+  entities: state.entities.filter((entity) => entity.id !== meta.sourceId),
 });
 
 export const sourceEditRemoveRejected = (state, { meta }) => ({
   ...state,
-  entities: state.entities.map((entity) => (entity.id === meta.sourceId ? { ...entity, isDeleting: undefined } : entity)),
+  removingSources: state.removingSources.filter((id) => id !== meta.sourceId),
 });
 
 export const appRemovingPending = (state, { meta }) => ({

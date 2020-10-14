@@ -74,13 +74,7 @@ describe('SourcesTable', () => {
       sources: {
         ...initialState.sources,
         ...loadedProps,
-        entities: [
-          {
-            ...sourcesDataGraphQl[0],
-            isDeleting: true,
-          },
-          ...sourcesDataGraphQl.slice(1),
-        ],
+        removingSources: [sourcesDataGraphQl[0].id],
       },
     };
 
