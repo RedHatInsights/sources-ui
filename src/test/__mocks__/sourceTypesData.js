@@ -27,7 +27,7 @@ export const sourceTypesData = {
               label: 'URL',
               validate: [
                 {
-                  type: 'url-validator',
+                  type: 'url',
                 },
               ],
               component: 'text-field',
@@ -35,7 +35,7 @@ export const sourceTypesData = {
             {
               name: 'endpoint.verify_ssl',
               label: 'Verify SSL',
-              component: 'switch-field',
+              component: 'switch',
             },
             {
               name: 'endpoint.certificate_authority',
@@ -140,10 +140,10 @@ export const sourceTypesData = {
                 stepKey: 'amazon-arn-additional-step',
                 validate: [
                   {
-                    type: 'required-validator',
+                    type: 'required',
                   },
                   {
-                    type: 'pattern-validator',
+                    type: 'pattern',
                     pattern: '^[A-Za-z0-9]+[A-Za-z0-9_-]*$',
                   },
                 ],
@@ -156,14 +156,14 @@ export const sourceTypesData = {
                 stepKey: 'arn',
                 validate: [
                   {
-                    type: 'required-validator',
+                    type: 'required',
                   },
                   {
-                    type: 'pattern-validator',
+                    type: 'pattern',
                     pattern: '^arn:aws:.*',
                   },
                   {
-                    type: 'min-length-validator',
+                    type: 'min-length',
                     threshold: 10,
                   },
                 ],
@@ -199,7 +199,7 @@ export const sourceTypesData = {
               label: 'URL',
               validate: [
                 {
-                  type: 'url-validator',
+                  type: 'url',
                 },
               ],
               component: 'text-field',
@@ -207,7 +207,7 @@ export const sourceTypesData = {
             {
               name: 'endpoint.verify_ssl',
               label: 'Verify SSL',
-              component: 'switch-field',
+              component: 'switch',
             },
             {
               name: 'endpoint.certificate_authority',
@@ -221,7 +221,7 @@ export const sourceTypesData = {
             {
               name: 'platform_receptor',
               label: 'Use Platform Receptor and PKI (?)',
-              component: 'switch-field',
+              component: 'switch',
             },
             {
               name: 'endpoint.receptor_node',
@@ -406,7 +406,7 @@ export const sourceTypesData = {
                 label: 'Satellite ID',
                 validate: [
                   {
-                    type: 'required-validator',
+                    type: 'required',
                   },
                 ],
                 component: 'text-field',
