@@ -1,6 +1,5 @@
 import awesomeDebounce from 'awesome-debounce-promise';
 import { loadEntities, filterSources } from '../../redux/sources/actions';
-import { checkSourceStatus } from '../../api/checkSourceStatus';
 
 export const debouncedFiltering = awesomeDebounce((refresh) => refresh(), 500);
 
@@ -10,10 +9,7 @@ export const afterSuccessLoadParameters = {
   sortDirection: 'desc',
 };
 
-export const afterSuccess = (dispatch, source) => {
-  source?.id && checkSourceStatus(source.id);
-  dispatch(loadEntities(afterSuccessLoadParameters));
-};
+export const afterSuccess = (dispatch) => dispatch(loadEntities(afterSuccessLoadParameters));
 
 export const prepareSourceTypeSelection = (sourceTypes) =>
   sourceTypes.map(({ id, product_name }) => ({ label: product_name, value: id })).sort((a, b) => a.label.localeCompare(b.label));
