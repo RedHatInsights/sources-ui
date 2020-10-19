@@ -150,9 +150,16 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
 
     await Promise.all(promisesSecondRound);
 
+    let endpoint;
+    if (endpointId) {
+      endpoint = await checkAppAvailability(applicationDataOut.id, undefined, undefined, 'getEndpoint');
+    }
+
     if (applicationDataOut) {
       const timeout = timeoutedApps(appTypes).includes(applicationDataOut.application_type_id) ? 10000 : 0;
-      return await checkAppAvailability(applicationDataOut.id, timeout);
+      const app = await checkAppAvailability(applicationDataOut.id, timeout);
+
+      return { id: app.id, applications: [app], ...(endpoint && { endpoint: [endpoint] }) };
     }
 
     return {};

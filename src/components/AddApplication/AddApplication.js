@@ -9,6 +9,7 @@ import LoadingStep from '@redhat-cloud-services/frontend-components-sources/cjs/
 import ErroredStep from '@redhat-cloud-services/frontend-components-sources/cjs/ErroredStep';
 import FinishedStep from '@redhat-cloud-services/frontend-components-sources/cjs/FinishedStep';
 import TimeoutStep from '@redhat-cloud-services/frontend-components-sources/cjs/TimeoutStep';
+import computeSourceStatus from '@redhat-cloud-services/frontend-components-sources/cjs/computeSourceStatus';
 
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/cjs/form-template';
 
@@ -208,8 +209,8 @@ const AddApplication = () => {
         />
       );
     } else {
-      switch (state.data.availability_status) {
-        case 'available':
+      switch (computeSourceStatus(state.data)) {
+        default:
           shownStep = (
             <FinishedStep
               title={intl.formatMessage({
@@ -244,7 +245,8 @@ const AddApplication = () => {
               onRetry={onReset}
               onClose={goToSources}
               message={
-                state.data.availability_status_error ||
+                state.data.applications?.[0]?.availability_status_error ||
+                state.data.endpoint?.[0]?.availability_status_error ||
                 intl.formatMessage({
                   id: 'wizard.unknownError',
                   defaultMessage: 'Unknown error',
@@ -275,7 +277,7 @@ const AddApplication = () => {
             />
           );
           break;
-        default:
+        case 'timeout':
           shownStep = (
             <TimeoutStep
               returnButtonTitle={intl.formatMessage({
@@ -293,6 +295,7 @@ const AddApplication = () => {
               }
             />
           );
+          break;
       }
     }
 
