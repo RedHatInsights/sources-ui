@@ -4,7 +4,7 @@ import configureStore from 'redux-mock-store';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import CustomRoute from '../../../components/CustomRoute/CustomRoute';
-import RedirectNotAdmin from '../../../components/RedirectNotAdmin/RedirectNotAdmin';
+import RedirectNoWriteAccess from '../../../components/RedirectNoWriteAccess/RedirectNoWriteAccess';
 import * as RedirectNoId from '../../../components/RedirectNoId/RedirectNoId';
 import * as useSource from '../../../hooks/useSource';
 
@@ -28,7 +28,7 @@ describe('CustomRoute', () => {
     expect(wrapper.find(Route).props().path).toEqual(route.path);
     expect(wrapper.find(Route).props().component).toEqual(undefined);
     expect(wrapper.find(PokusComponent)).toHaveLength(0);
-    expect(wrapper.find(RedirectNotAdmin)).toHaveLength(0);
+    expect(wrapper.find(RedirectNoWriteAccess)).toHaveLength(0);
     expect(wrapper.find(RedirectNoId)).toHaveLength(0);
   });
 
@@ -72,7 +72,7 @@ describe('CustomRoute', () => {
     const wrapper = mount(componentWrapperIntl(<CustomRoute exact route={route} Component={PokusComponent} />, store, ['/path']));
 
     expect(wrapper.find(PokusComponent)).toHaveLength(1);
-    expect(wrapper.find(RedirectNotAdmin)).toHaveLength(1);
+    expect(wrapper.find(RedirectNoWriteAccess)).toHaveLength(1);
   });
 
   it('renders RedirectNoId when redirectNoId set', () => {

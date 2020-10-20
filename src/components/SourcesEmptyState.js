@@ -12,10 +12,10 @@ import WrenchIcon from '@patternfly/react-icons/dist/js/icons/wrench-icon';
 
 import { Link } from 'react-router-dom';
 import { routes } from '../Routes';
-import { useIsOrgAdmin } from '../hooks/useIsOrgAdmin';
+import { useHasWritePermissions } from '../hooks/useHasWritePermissions';
 
 const SourcesEmptyState = () => {
-  const isOrgAdmin = useIsOrgAdmin();
+  const writePermissions = useHasWritePermissions();
   const intl = useIntl();
 
   return (
@@ -29,22 +29,22 @@ const SourcesEmptyState = () => {
           })}
         </Title>
         <EmptyStateBody>
-          {isOrgAdmin &&
+          {writePermissions &&
             intl.formatMessage({
               id: 'sources.emptyStateBody',
               defaultMessage: 'No sources have been defined. To start define a source.',
             })}
-          {!isOrgAdmin && (
+          {!writePermissions && (
             <React.Fragment>
               <br />
               {intl.formatMessage({
                 id: 'sources.emptyStateBodyNotAdmin',
-                defaultMessage: 'You must be an Organization Administrator to add a source.',
+                defaultMessage: 'To add a source, you must be granted write permissions from your Organization Administrator.',
               })}
             </React.Fragment>
           )}
         </EmptyStateBody>
-        {isOrgAdmin ? (
+        {writePermissions ? (
           <Link to={routes.sourcesNew.path}>
             <Button className="pf-u-mt-xl" variant="primary">
               {intl.formatMessage({

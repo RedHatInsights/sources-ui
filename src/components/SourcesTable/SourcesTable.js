@@ -10,7 +10,7 @@ import { PlaceHolderTable, RowWrapperLoader } from './loaders';
 import { sourcesColumns, COLUMN_COUNT } from '../../views/sourcesViewDefinition';
 import EmptyStateTable from './EmptyStateTable';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
-import { useIsOrgAdmin } from '../../hooks/useIsOrgAdmin';
+import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import { replaceRouteId, routes } from '../../Routes';
 
 const itemToCells = (item, columns, sourceTypes, appTypes) =>
@@ -75,7 +75,7 @@ export const insertEditAction = (actions, intl, push, isOrgAdmin, disabledProps)
 export const actionResolver = (intl, push, isOrgAdmin) => (rowData) => {
   const tooltip = intl.formatMessage({
     id: 'sources.notAdminButton',
-    defaultMessage: 'You must be an Organization Administrator to perform this action.',
+    defaultMessage: 'To perform this action, you must be granted write permissions from your Organization Administrator.',
   });
 
   const disabledProps = {
@@ -117,7 +117,7 @@ const SourcesTable = () => {
   const intl = useIntl();
 
   const loaded = useIsLoaded();
-  const isOrgAdmin = useIsOrgAdmin();
+  const writePermissions = useHasWritePermissions();
 
   const {
     appTypes,
@@ -213,7 +213,7 @@ const SourcesTable = () => {
       }}
       rows={shownRows}
       cells={state.cells}
-      actionResolver={loaded && numberOfEntities > 0 ? actionResolver(intl, push, isOrgAdmin) : undefined}
+      actionResolver={loaded && numberOfEntities > 0 ? actionResolver(intl, push, writePermissions) : undefined}
       rowWrapper={RowWrapperLoader}
     >
       <TableHeader />

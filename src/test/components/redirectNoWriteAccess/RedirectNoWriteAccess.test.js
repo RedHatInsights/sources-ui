@@ -5,10 +5,10 @@ import { act } from 'react-dom/test-utils';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import * as actions from '../../../redux/sources/actions';
-import RedirectNotAdmin from '../../../components/RedirectNotAdmin/RedirectNotAdmin';
+import RedirectNoWriteAccess from '../../../components/RedirectNoWriteAccess/RedirectNoWriteAccess';
 import { routes, replaceRouteId } from '../../../Routes';
 
-describe('RedirectNotAdmin', () => {
+describe('RedirectNoWriteAccess', () => {
   let initialStore;
   let initialEntry;
   let mockStore;
@@ -29,7 +29,21 @@ describe('RedirectNotAdmin', () => {
 
     const wrapper = mount(
       componentWrapperIntl(
-        <Route path={routes.sourcesRemove.path} render={(...args) => <RedirectNotAdmin {...args} />} />,
+        <Route path={routes.sourcesRemove.path} render={(...args) => <RedirectNoWriteAccess {...args} />} />,
+        initialStore,
+        initialEntry
+      )
+    );
+
+    expect(wrapper.html()).toEqual('');
+  });
+
+  it('Renders null if user has write permissions', () => {
+    initialStore = mockStore({ user: { writePermissions: true } });
+
+    const wrapper = mount(
+      componentWrapperIntl(
+        <Route path={routes.sourcesRemove.path} render={(...args) => <RedirectNoWriteAccess {...args} />} />,
         initialStore,
         initialEntry
       )
@@ -43,7 +57,7 @@ describe('RedirectNotAdmin', () => {
 
     const wrapper = mount(
       componentWrapperIntl(
-        <Route path={routes.sourcesRemove.path} render={(...args) => <RedirectNotAdmin {...args} />} />,
+        <Route path={routes.sourcesRemove.path} render={(...args) => <RedirectNoWriteAccess {...args} />} />,
         initialStore,
         initialEntry
       )
@@ -57,12 +71,12 @@ describe('RedirectNotAdmin', () => {
   it('Renders redirect and creates message if user is not admin', async () => {
     let wrapper;
 
-    initialStore = mockStore({ user: { isOrgAdmin: false } });
+    initialStore = mockStore({ user: { isOrgAdmin: false, writePermissions: false } });
 
     await act(async () => {
       wrapper = mount(
         componentWrapperIntl(
-          <Route path={routes.sourcesRemove.path} render={(...args) => <RedirectNotAdmin {...args} />} />,
+          <Route path={routes.sourcesRemove.path} render={(...args) => <RedirectNoWriteAccess {...args} />} />,
           initialStore,
           initialEntry
         )

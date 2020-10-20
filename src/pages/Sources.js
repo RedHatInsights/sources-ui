@@ -39,7 +39,7 @@ import {
   prepareApplicationTypeSelection,
 } from './Sources/helpers';
 import { useIsLoaded } from '../hooks/useIsLoaded';
-import { useIsOrgAdmin } from '../hooks/useIsOrgAdmin';
+import { useHasWritePermissions } from '../hooks/useHasWritePermissions';
 import CustomRoute from '../components/CustomRoute/CustomRoute';
 import { updateQuery, parseQuery } from '../utilities/urlQuery';
 import { Tooltip } from '@patternfly/react-core/dist/js/components/Tooltip/Tooltip';
@@ -52,7 +52,7 @@ const SourcesPage = () => {
   const [loadingError, setLoadingError] = useState();
 
   const loaded = useIsLoaded();
-  const isOrgAdmin = useIsOrgAdmin();
+  const hasWritePermissions = useHasWritePermissions();
 
   const history = useHistory();
   const location = useLocation();
@@ -141,7 +141,7 @@ const SourcesPage = () => {
       <PrimaryToolbar
         pagination={showPaginationLoader ? <PaginationLoader /> : numberOfEntities > 0 ? paginationConfig : undefined}
         actionsConfig={
-          isOrgAdmin
+          hasWritePermissions
             ? {
                 actions: [
                   <Link to={routes.sourcesNew.path} key="addSourceButton">
@@ -159,7 +159,8 @@ const SourcesPage = () => {
                   <Tooltip
                     content={intl.formatMessage({
                       id: 'sources.notAdminAddButton',
-                      defaultMessage: 'You must be an Organization Administrator to add a source.',
+                      defaultMessage:
+                        'To add a source, you must be granted write permissions from your Organization Administrator.',
                     })}
                     key="addSourceButton"
                   >
