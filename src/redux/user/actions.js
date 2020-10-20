@@ -25,3 +25,29 @@ export const loadOrgAdmin = () => (dispatch) => {
       })
     );
 };
+
+export const loadWritePermissions = () => (dispatch) => {
+  dispatch({ type: ACTION_TYPES.SET_WRITE_PERMISSIONS_PENDING });
+
+  return insights.chrome
+    .getUserPermissions('sources')
+    .then((permissions) => {
+      const writePermissions = permissions.includes('sources:*:*');
+
+      dispatch({
+        type: ACTION_TYPES.SET_WRITE_PERMISSIONS_FULFILLED,
+        payload: writePermissions,
+      });
+    })
+    .catch((error) =>
+      dispatch({
+        type: ACTION_TYPES.SET_WRITE_PERMISSIONS_REJECTED,
+        payload: {
+          error: {
+            detail: error.detail || error.data,
+            title: "Cannot get user's credentials",
+          },
+        },
+      })
+    );
+};

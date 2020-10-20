@@ -45,4 +45,48 @@ describe('userReducer', () => {
       isOrgAdmin: undefined,
     });
   });
+
+  describe('write permissions', () => {
+    it('resets state when pending', () => {
+      result = userReducer[ACTION_TYPES.SET_WRITE_PERMISSIONS_PENDING]({
+        ...defaultUserState,
+        writePermissions: 'nonsense',
+      });
+
+      expect(result).toEqual({
+        ...defaultUserState,
+        writePermissions: undefined,
+      });
+    });
+
+    it('sets isOrgAdmin when true', () => {
+      result = userReducer[ACTION_TYPES.SET_WRITE_PERMISSIONS_FULFILLED](defaultUserState, { payload: true });
+
+      expect(result).toEqual({
+        ...defaultUserState,
+        writePermissions: true,
+      });
+    });
+
+    it('sets isOrgAdmin when false', () => {
+      result = userReducer[ACTION_TYPES.SET_WRITE_PERMISSIONS_FULFILLED](defaultUserState, { payload: false });
+
+      expect(result).toEqual({
+        ...defaultUserState,
+        writePermissions: false,
+      });
+    });
+
+    it('resets state when rejected', () => {
+      result = userReducer[ACTION_TYPES.SET_WRITE_PERMISSIONS_REJECTED]({
+        ...defaultUserState,
+        writePermissions: 'nonsense',
+      });
+
+      expect(result).toEqual({
+        ...defaultUserState,
+        writePermissions: undefined,
+      });
+    });
+  });
 });

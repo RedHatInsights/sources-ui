@@ -4,18 +4,18 @@ import { Redirect } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 
 import { addMessage } from '../../redux/sources/actions';
-import { useIsOrgAdmin } from '../../hooks/useIsOrgAdmin';
+import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import { routes } from '../../Routes';
 
-const RedirectNotAdmin = () => {
+const RedirectNoWriteAccess = () => {
   const intl = useIntl();
 
-  const isOrgAdmin = useIsOrgAdmin();
+  const writePermissions = useHasWritePermissions();
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (isOrgAdmin === false) {
+    if (writePermissions === false) {
       const title = intl.formatMessage({
         id: 'sources.insufficietnPerms',
         defaultMessage: 'Insufficient permissions',
@@ -27,13 +27,13 @@ const RedirectNotAdmin = () => {
 
       dispatch(addMessage(title, 'danger', description));
     }
-  }, []);
+  }, [writePermissions]);
 
-  if (isOrgAdmin === false) {
+  if (writePermissions === false) {
     return <Redirect to={routes.sources.path} />;
   }
 
   return null;
 };
 
-export default RedirectNotAdmin;
+export default RedirectNoWriteAccess;

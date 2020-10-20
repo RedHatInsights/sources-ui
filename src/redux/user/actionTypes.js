@@ -1,4 +1,4 @@
-export const ACTION_TYPES = ['SET_ORG_ADMIN'].reduce(
+export const ACTION_TYPES = ['SET_ORG_ADMIN', 'SET_WRITE_PERMISSIONS'].reduce(
   (acc, curr) => ({
     ...acc,
     [curr]: curr,

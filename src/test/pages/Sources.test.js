@@ -25,7 +25,7 @@ import EmptyStateTable from '../../components/SourcesTable/EmptyStateTable';
 import { routes, replaceRouteId } from '../../Routes';
 import * as helpers from '../../pages/Sources/helpers';
 import UserReducer from '../../redux/user/reducer';
-import RedirectNotAdmin from '../../components/RedirectNotAdmin/RedirectNotAdmin';
+import RedirectNoWriteAccess from '../../components/RedirectNoWriteAccess/RedirectNoWriteAccess';
 import * as AddApplication from '../../components/AddApplication/AddApplication';
 import * as SourceEditModal from '../../components/SourceEditForm/SourceEditModal';
 import * as SourceRemoveModal from '../../components/SourceRemoveModal/SourceRemoveModal';
@@ -81,7 +81,7 @@ describe('SourcesPage', () => {
       actions: expect.any(Array),
     });
     expect(wrapper.find(PrimaryToolbar).last().props().actionsConfig).toEqual(undefined);
-    expect(wrapper.find(RedirectNotAdmin)).toHaveLength(0);
+    expect(wrapper.find(RedirectNoWriteAccess)).toHaveLength(0);
 
     expect(urlQuery.parseQuery.mock.calls).toHaveLength(1);
     expect(urlQuery.updateQuery.mock.calls).toHaveLength(1);
@@ -226,7 +226,7 @@ describe('SourcesPage', () => {
     });
     wrapper.update();
 
-    expect(wrapper.find(RedirectNotAdmin)).toHaveLength(1);
+    expect(wrapper.find(RedirectNoWriteAccess)).toHaveLength(1);
 
     await act(async () => {
       wrapper.find(AddSourceWizard).props().onClose();
@@ -534,7 +534,7 @@ describe('SourcesPage', () => {
       expect(wrapper.find(PaginationLoader)).toHaveLength(0);
       expect(wrapper.find('#addSourceButton').first().props().isDisabled).toEqual(true);
       expect(wrapper.find(PrimaryToolbar).find(Tooltip)).toHaveLength(1);
-      expect(wrapper.find(RedirectNotAdmin)).toHaveLength(0);
+      expect(wrapper.find(RedirectNoWriteAccess)).toHaveLength(0);
     });
   });
 
@@ -553,7 +553,7 @@ describe('SourcesPage', () => {
       });
       wrapper.update();
 
-      expect(wrapper.find(RedirectNotAdmin)).toHaveLength(1);
+      expect(wrapper.find(RedirectNoWriteAccess)).toHaveLength(1);
       expect(wrapper.find(SourceRemoveModal.default)).toHaveLength(1);
     });
 
@@ -566,7 +566,7 @@ describe('SourcesPage', () => {
       });
       wrapper.update();
 
-      expect(wrapper.find(RedirectNotAdmin)).toHaveLength(1);
+      expect(wrapper.find(RedirectNoWriteAccess)).toHaveLength(1);
       expect(wrapper.find(AddApplication.default)).toHaveLength(1);
     });
 
@@ -579,7 +579,7 @@ describe('SourcesPage', () => {
       });
       wrapper.update();
 
-      expect(wrapper.find(RedirectNotAdmin)).toHaveLength(1);
+      expect(wrapper.find(RedirectNoWriteAccess)).toHaveLength(1);
       expect(wrapper.find(SourceEditModal.default)).toHaveLength(1);
     });
 
@@ -599,7 +599,7 @@ describe('SourcesPage', () => {
         });
         wrapper.update();
 
-        expect(wrapper.find(RedirectNotAdmin)).toHaveLength(0);
+        expect(wrapper.find(RedirectNoWriteAccess)).toHaveLength(0);
         expect(wrapper.find(SourceRemoveModal.default)).toHaveLength(0);
         expect(wasRedirectedToRoot(wrapper)).toEqual(true);
       });
@@ -613,7 +613,7 @@ describe('SourcesPage', () => {
         });
         wrapper.update();
 
-        expect(wrapper.find(RedirectNotAdmin)).toHaveLength(0);
+        expect(wrapper.find(RedirectNoWriteAccess)).toHaveLength(0);
         expect(wrapper.find(AddApplication.default)).toHaveLength(0);
         expect(wasRedirectedToRoot(wrapper)).toEqual(true);
       });

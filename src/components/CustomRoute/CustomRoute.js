@@ -2,7 +2,7 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import RedirectNotAdmin from '../RedirectNotAdmin/RedirectNotAdmin';
+import RedirectNoWriteAccess from '../RedirectNoWriteAccess/RedirectNoWriteAccess';
 import { useSource } from '../../hooks/useSource';
 import RedirectNoId from '../RedirectNoId/RedirectNoId';
 
@@ -15,7 +15,7 @@ const CustomRouteInternal = ({ route, children }) => {
 
   return (
     <React.Fragment>
-      {route.writeAccess && <RedirectNotAdmin />}
+      {route.writeAccess && <RedirectNoWriteAccess />}
       {children}
     </React.Fragment>
   );

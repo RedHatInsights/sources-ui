@@ -8,6 +8,7 @@ describe('PermissionChecker', () => {
   it('load userIsOrgAdmin on mount', async () => {
     const Children = () => <h1>App</h1>;
     actions.loadOrgAdmin = jest.fn().mockImplementation(() => ({ type: 'type' }));
+    actions.loadWritePermissions = jest.fn().mockImplementation(() => ({ type: 'type' }));
 
     let wrapper;
     await act(async () => {
@@ -22,5 +23,6 @@ describe('PermissionChecker', () => {
 
     expect(wrapper.find(Children)).toHaveLength(1);
     expect(actions.loadOrgAdmin).toHaveBeenCalled();
+    expect(actions.loadWritePermissions).toHaveBeenCalled();
   });
 });
