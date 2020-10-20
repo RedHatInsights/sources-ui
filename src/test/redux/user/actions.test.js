@@ -146,8 +146,30 @@ describe('user reducer actions', () => {
   describe('loadWritePermissions', () => {
     let getUserPermissions;
 
-    it('has write permissions', async () => {
+    it('has write permissions - all', async () => {
       getUserPermissions = jest.fn().mockImplementation(() => Promise.resolve(['sources:*:*']));
+
+      insights = {
+        chrome: {
+          getUserPermissions,
+        },
+      };
+
+      await loadWritePermissions()(dispatch);
+
+      expect(dispatch.mock.calls.length).toEqual(2);
+
+      expect(dispatch.mock.calls[0][0]).toEqual({
+        type: ACTION_TYPES.SET_WRITE_PERMISSIONS_PENDING,
+      });
+      expect(dispatch.mock.calls[1][0]).toEqual({
+        type: ACTION_TYPES.SET_WRITE_PERMISSIONS_FULFILLED,
+        payload: true,
+      });
+    });
+
+    it('has write permissions - just write', async () => {
+      getUserPermissions = jest.fn().mockImplementation(() => Promise.resolve(['sources:*:write']));
 
       insights = {
         chrome: {
