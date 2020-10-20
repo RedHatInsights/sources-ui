@@ -24,7 +24,6 @@ export const sourcesColumns = (intl, notSortable = false) => [
     }),
     value: 'applications',
     formatter: 'applicationFormatter',
-    sortable: !notSortable,
   },
   {
     title: intl.formatMessage({
