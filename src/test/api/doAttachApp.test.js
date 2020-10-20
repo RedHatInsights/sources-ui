@@ -49,16 +49,16 @@ describe('doAttachApp', () => {
     consoleError = console.error;
     console.error = jest.fn();
 
-    mockPatchSourceSpy = jest.spyOn(cm, 'patchSource').mockImplementation(() => Promise.resolve('ok'));
-    mockAppStatus = jest
-      .spyOn(appStatus, 'checkAppAvailability')
-      .mockImplementation(() => Promise.resolve({ status: 'available' }));
-
-    jest.resetModules();
-
     ENDPOINT_ID = '99998887776655';
     AUTH_ID = '55643265870983219274209';
     APP_ID = '878776767';
+
+    mockPatchSourceSpy = jest.spyOn(cm, 'patchSource').mockImplementation(() => Promise.resolve('ok'));
+    mockAppStatus = jest
+      .spyOn(appStatus, 'checkAppAvailability')
+      .mockImplementation(() => Promise.resolve({ status: 'available', id: APP_ID }));
+
+    jest.resetModules();
 
     RETURNED_ENDPOINT = { id: ENDPOINT_ID };
     RETURNED_AUTH = { id: AUTH_ID };
@@ -148,7 +148,7 @@ describe('doAttachApp', () => {
     expect(mockAppStatus).toHaveBeenCalledWith(APP_ID, 0);
     expect(appDelete).not.toHaveBeenCalled();
 
-    expect(result).toEqual({ status: 'available' });
+    expect(result).toEqual({ id: APP_ID, applications: [{ id: APP_ID, status: 'available' }] });
   });
 
   it('only source is changed', async () => {
@@ -325,7 +325,7 @@ describe('doAttachApp', () => {
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).not.toHaveBeenCalled();
     expect(createAuthApp).not.toHaveBeenCalled();
-    expect(mockAppStatus).not.toHaveBeenCalled();
+    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint');
     expect(appDelete).not.toHaveBeenCalled();
   });
 
@@ -362,7 +362,7 @@ describe('doAttachApp', () => {
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).not.toHaveBeenCalled();
     expect(createAuthApp).not.toHaveBeenCalled();
-    expect(mockAppStatus).not.toHaveBeenCalled();
+    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint');
     expect(appDelete).not.toHaveBeenCalled();
   });
 
@@ -392,7 +392,7 @@ describe('doAttachApp', () => {
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).not.toHaveBeenCalled();
     expect(createAuthApp).not.toHaveBeenCalled();
-    expect(mockAppStatus).not.toHaveBeenCalled();
+    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint');
     expect(appDelete).not.toHaveBeenCalled();
   });
 
@@ -427,7 +427,7 @@ describe('doAttachApp', () => {
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).not.toHaveBeenCalled();
     expect(createAuthApp).not.toHaveBeenCalled();
-    expect(mockAppStatus).not.toHaveBeenCalled();
+    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint');
     expect(appDelete).not.toHaveBeenCalled();
   });
 
@@ -470,7 +470,7 @@ describe('doAttachApp', () => {
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).not.toHaveBeenCalled();
     expect(createAuthApp).not.toHaveBeenCalled();
-    expect(mockAppStatus).not.toHaveBeenCalled();
+    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint');
     expect(appDelete).not.toHaveBeenCalled();
   });
 
@@ -520,7 +520,7 @@ describe('doAttachApp', () => {
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).not.toHaveBeenCalled();
     expect(createAuthApp).not.toHaveBeenCalled();
-    expect(mockAppStatus).not.toHaveBeenCalled();
+    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint');
     expect(appDelete).not.toHaveBeenCalled();
   });
 
@@ -556,7 +556,7 @@ describe('doAttachApp', () => {
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).not.toHaveBeenCalled();
     expect(createAuthApp).not.toHaveBeenCalled();
-    expect(mockAppStatus).not.toHaveBeenCalled();
+    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint');
     expect(appDelete).not.toHaveBeenCalled();
   });
 

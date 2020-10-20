@@ -590,10 +590,61 @@ describe('AddApplication', () => {
       expect(wrapper.find(Button).at(2).text()).toEqual('Continue managing applications');
     });
 
+    it('renders timeouted step when endpoint', async () => {
+      attachSource.doAttachApp = jest.fn().mockImplementation(() =>
+        Promise.resolve({
+          endpoint: [
+            {
+              availability_status: null,
+            },
+          ],
+        })
+      );
+
+      entities.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
+      entities.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+
+      const wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourceManageApps.path} render={(...args) => <AddApplication {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+
+      await act(async () => {
+        wrapper.find(ApplicationSelect).find(Radio).find('input').first().simulate('change');
+        wrapper.find(Button).at(1).simulate('click');
+      });
+      wrapper.update();
+
+      await act(async () => {
+        wrapper.find(Button).at(1).simulate('click');
+      });
+      wrapper.update();
+
+      await act(async () => {
+        wrapper.find(Button).at(1).simulate('click');
+      });
+      wrapper.update();
+
+      expect(wrapper.find(TimeoutStep)).toHaveLength(1);
+      expect(wrapper.find(Title).last().text()).toEqual('Configuration not yet complete');
+      expect(wrapper.find(EmptyStateBody).last().text()).toEqual(
+        'We are still working to confirm credentials and app settings.To track progress, check the Status column in the Sources table.'
+      );
+      expect(wrapper.find(Button).at(1).text()).toEqual('Back to Sources');
+      expect(wrapper.find(Button).at(2).text()).toEqual('Continue managing applications');
+    });
+
     it('renders timeouted step', async () => {
       attachSource.doAttachApp = jest.fn().mockImplementation(() =>
         Promise.resolve({
-          availability_status: null,
+          applications: [
+            {
+              availability_status: null,
+            },
+          ],
         })
       );
 
@@ -638,8 +689,12 @@ describe('AddApplication', () => {
 
       attachSource.doAttachApp = jest.fn().mockImplementation(() =>
         Promise.resolve({
-          availability_status: 'unavailable',
-          availability_status_error: ERROR,
+          applications: [
+            {
+              availability_status: 'unavailable',
+              availability_status_error: ERROR,
+            },
+          ],
         })
       );
 
@@ -694,9 +749,14 @@ describe('AddApplication', () => {
 
       attachSource.doAttachApp = jest.fn().mockImplementation(() =>
         Promise.resolve({
-          availability_status: 'unavailable',
-          availability_status_error: ERROR,
           id: APP_ID,
+          applications: [
+            {
+              availability_status: 'unavailable',
+              availability_status_error: ERROR,
+              id: APP_ID,
+            },
+          ],
         })
       );
 
