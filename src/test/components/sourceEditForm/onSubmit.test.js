@@ -81,6 +81,56 @@ describe('editSourceModal - on submit', () => {
     });
   });
 
+  it('checks endpoint availability', async () => {
+    doUpdateSource.doUpdateSource = jest.fn().mockImplementation(() => Promise.resolve('OK'));
+
+    const ENDPOINT_ID = '123698623259';
+
+    getAppStatus.checkAppAvailability = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        availability_status: 'available',
+      })
+    );
+
+    const FILTERED_VALUES = {
+      source: {
+        type: 'openshift',
+      },
+    };
+
+    SOURCE = {
+      ...SOURCE,
+      endpoints: [
+        {
+          id: ENDPOINT_ID,
+        },
+      ],
+    };
+
+    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
+
+    expect(doUpdateSource.doUpdateSource).toHaveBeenCalledWith(SOURCE, FILTERED_VALUES);
+    expect(SET_STATE.mock.calls[0][0]).toEqual({
+      type: 'submit',
+      values: VALUES,
+      editing: EDITING,
+    });
+    expect(actions.loadEntities).toHaveBeenCalled();
+    expect(checkSourceStatus.checkSourceStatus).toHaveBeenCalledWith('2342');
+    expect(doLoadSourceForEdit.doLoadSourceForEdit).toHaveBeenCalledWith({
+      id: SOURCE.source.id,
+    });
+    expect(SET_STATE.mock.calls[1][0]).toEqual({
+      type: 'submitFinished',
+      source: SOURCE_DATA,
+      message: {
+        variant: 'success',
+        title: 'Source ‘{name}’ was edited successfully.',
+      },
+    });
+    expect(getAppStatus.checkAppAvailability).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint');
+  });
+
   it('submit values unsuccessfuly when submit error', async () => {
     doUpdateSource.doUpdateSource = jest.fn().mockImplementation(() => Promise.reject('FAILS'));
 
