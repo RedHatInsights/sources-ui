@@ -159,7 +159,8 @@ const SourcesPage = () => {
                   <Tooltip
                     content={intl.formatMessage({
                       id: 'sources.notAdminAddButton',
-                      defaultMessage: 'You must be an Organization Administrator to add a source.',
+                      defaultMessage:
+                        'To add a source, you must be granted write permissions from your Organization Administrator.',
                     })}
                     key="addSourceButton"
                   >

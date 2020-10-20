@@ -22,7 +22,7 @@ const RedirectNoWriteAccess = () => {
       });
       const description = intl.formatMessage({
         id: 'sources.notAdminButton',
-        defaultMessage: 'You must be an Organization Administrator to perform this action.',
+        defaultMessage: 'To perform this action, you must be granted write permissions from your Organization Administrator.',
       });
 
       dispatch(addMessage(title, 'danger', description));

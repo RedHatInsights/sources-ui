@@ -39,7 +39,7 @@ const SourcesEmptyState = () => {
               <br />
               {intl.formatMessage({
                 id: 'sources.emptyStateBodyNotAdmin',
-                defaultMessage: 'You must be an Organization Administrator to add a source.',
+                defaultMessage: 'To add a source, you must be granted write permissions from your Organization Administrator.',
               })}
             </React.Fragment>
           )}
