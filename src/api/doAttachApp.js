@@ -152,7 +152,7 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
 
     let endpoint;
     if (endpointId) {
-      endpoint = await checkAppAvailability(applicationDataOut.id, undefined, undefined, 'getEndpoint');
+      endpoint = await checkAppAvailability(endpointId, undefined, undefined, 'getEndpoint');
     }
 
     if (applicationDataOut) {

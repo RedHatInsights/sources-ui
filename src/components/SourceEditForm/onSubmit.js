@@ -28,8 +28,8 @@ export const onSubmit = async (values, editing, dispatch, source, intl, setState
 
   const promises = source.applications?.map(({ id }) => checkAppAvailability(id)) || [];
 
-  if (source.endpoint?.id) {
-    promises.push(checkAppAvailability(source.endpoint.id, undefined, undefined, 'getEndpoint'));
+  if (source.endpoints?.[0]?.id) {
+    promises.push(checkAppAvailability(source.endpoints[0].id, undefined, undefined, 'getEndpoint'));
   }
 
   let statusResults;
