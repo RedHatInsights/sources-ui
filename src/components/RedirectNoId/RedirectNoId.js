@@ -9,41 +9,47 @@ import { useIsLoaded } from '../../hooks/useIsLoaded';
 import { routes } from '../../Routes';
 
 const RedirectNoId = () => {
-    const { id } = useParams();
-    const intl = useIntl();
+  const { id } = useParams();
+  const intl = useIntl();
 
-    const loaded = useIsLoaded();
+  const loaded = useIsLoaded();
 
-    const { appTypesLoaded, sourceTypesLoaded } = useSelector(({ sources }) => sources, shallowEqual);
-    const dispatch = useDispatch();
+  const { appTypesLoaded, sourceTypesLoaded } = useSelector(({ sources }) => sources, shallowEqual);
+  const dispatch = useDispatch();
 
-    const [applicationIsLoaded, setIsApplicationLoaded] = useState(false);
+  const [applicationIsLoaded, setIsApplicationLoaded] = useState(false);
 
-    useEffect(() => {
-        if (loaded && appTypesLoaded && sourceTypesLoaded) {
-            doLoadSource(id).then(({ sources: [source] }) => dispatch(addHiddenSource(source)))
-            .then(() => {
-                dispatch(addMessage(
-                    intl.formatMessage({
-                        id: 'sources.sourceNotFoundTitle',
-                        defaultMessage: 'Requested source was not found'
-                    }),
-                    'danger',
-                    intl.formatMessage({
-                        id: 'sources.sourceNotFoundTitleDescription',
-                        defaultMessage: 'Source with { id } was not found. Try it again later.'
-                    }, { id })
-                ));
-                setIsApplicationLoaded(true);
-            });
-        }
-    }, [loaded, appTypesLoaded, sourceTypesLoaded]);
-
-    if (applicationIsLoaded) {
-        return <Redirect to={routes.sources.path} />;
+  useEffect(() => {
+    if (loaded && appTypesLoaded && sourceTypesLoaded) {
+      doLoadSource(id)
+        .then(({ sources: [source] }) => dispatch(addHiddenSource(source)))
+        .then(() => {
+          dispatch(
+            addMessage(
+              intl.formatMessage({
+                id: 'sources.sourceNotFoundTitle',
+                defaultMessage: 'Requested source was not found',
+              }),
+              'danger',
+              intl.formatMessage(
+                {
+                  id: 'sources.sourceNotFoundTitleDescription',
+                  defaultMessage: 'Source with { id } was not found. Try it again later.',
+                },
+                { id }
+              )
+            )
+          );
+          setIsApplicationLoaded(true);
+        });
     }
+  }, [loaded, appTypesLoaded, sourceTypesLoaded]);
 
-    return null;
+  if (applicationIsLoaded) {
+    return <Redirect to={routes.sources.path} />;
+  }
+
+  return null;
 };
 
 export default RedirectNoId;

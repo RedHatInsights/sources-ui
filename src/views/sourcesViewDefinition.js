@@ -1,47 +1,53 @@
-export const sourcesColumns = (intl, notSortable = false) => ([{
+export const sourcesColumns = (intl, notSortable = false) => [
+  {
     title: intl.formatMessage({
-        id: 'sources.name',
-        defaultMessage: 'Name'
+      id: 'sources.name',
+      defaultMessage: 'Name',
     }),
     value: 'name',
     formatter: 'nameFormatter',
-    sortable: !notSortable
-}, {
+    sortable: !notSortable,
+  },
+  {
     title: intl.formatMessage({
-        id: 'sources.type',
-        defaultMessage: 'Type'
+      id: 'sources.type',
+      defaultMessage: 'Type',
     }),
     value: 'source_type_id',
     formatter: 'sourceTypeFormatter',
-    sortable: !notSortable
-}, {
+    sortable: !notSortable,
+  },
+  {
     title: intl.formatMessage({
-        id: 'sources.application',
-        defaultMessage: 'Applications'
+      id: 'sources.application',
+      defaultMessage: 'Applications',
     }),
     value: 'applications',
     formatter: 'applicationFormatter',
-    sortable: !notSortable
-}, {
+  },
+  {
     title: intl.formatMessage({
-        id: 'sources.addedDate',
-        defaultMessage: 'Date added'
+      id: 'sources.addedDate',
+      defaultMessage: 'Date added',
     }),
     value: 'created_at',
     formatter: 'dateFormatter',
-    sortable: !notSortable
-}, {
+    sortable: !notSortable,
+  },
+  {
     hidden: true,
     value: 'imported',
-    formatter: 'importedFormatter'
-}, {
+    formatter: 'importedFormatter',
+  },
+  {
     title: intl.formatMessage({
-        id: 'sources.status',
-        defaultMessage: 'Status'
+      id: 'sources.status',
+      defaultMessage: 'Status',
     }),
     value: 'availability_status',
-    formatter: 'availabilityFormatter'
-}]);
+    formatter: 'availabilityFormatter',
+  },
+];
 
 const KEBAB_COLUMN = 1;
 const COUNT_OF_COLUMNS = sourcesColumns({ formatMessage: () => '' }).length;
