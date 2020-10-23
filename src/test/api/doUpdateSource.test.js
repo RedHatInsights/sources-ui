@@ -27,12 +27,6 @@ describe('doUpdateSource', () => {
             id: ENDPOINT_ID
         }]
     };
-    const ERROR_TITLES = {
-        authentication: 'authentication error',
-        source: 'source error',
-        endpoint: 'endpoint error',
-        costManagement: 'cost management error'
-    };
 
     let FORM_DATA;
 
@@ -65,7 +59,7 @@ describe('doUpdateSource', () => {
     it('sends nothing', () => {
         FORM_DATA = {};
 
-        doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
+        doUpdateSource(SOURCE, FORM_DATA);
 
         expect(sourceSpy).not.toHaveBeenCalled();
         expect(endpointSpy).not.toHaveBeenCalled();
@@ -80,7 +74,7 @@ describe('doUpdateSource', () => {
             source: SOURCE_VALUES
         };
 
-        doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
+        doUpdateSource(SOURCE, FORM_DATA);
 
         expect(sourceSpy).toHaveBeenCalledWith(SOURCE_ID, SOURCE_VALUES);
         expect(endpointSpy).not.toHaveBeenCalled();
@@ -95,7 +89,7 @@ describe('doUpdateSource', () => {
             endpoint: ENDPOINT_VALUES
         };
 
-        doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
+        doUpdateSource(SOURCE, FORM_DATA);
 
         expect(sourceSpy).not.toHaveBeenCalled();
         expect(endpointSpy).toHaveBeenCalledWith(ENDPOINT_ID, ENDPOINT_VALUES);
@@ -117,7 +111,7 @@ describe('doUpdateSource', () => {
             port: Number(PORT)
         };
 
-        doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
+        doUpdateSource(SOURCE, FORM_DATA);
 
         expect(sourceSpy).not.toHaveBeenCalled();
         expect(endpointSpy).toHaveBeenCalledWith(ENDPOINT_ID, EXPECTED_ENDPOINT_VALUES_WITH_URL);
@@ -135,7 +129,7 @@ describe('doUpdateSource', () => {
             port: Number(PORT)
         };
 
-        doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
+        doUpdateSource(SOURCE, FORM_DATA);
 
         expect(sourceSpy).not.toHaveBeenCalled();
         expect(endpointSpy).toHaveBeenCalledWith(ENDPOINT_ID, EXPECTED_ENDPOINT_VALUES_ONLY_WITH_URL);
@@ -155,7 +149,7 @@ describe('doUpdateSource', () => {
             path: null
         };
 
-        doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
+        doUpdateSource(SOURCE, FORM_DATA);
 
         expect(sourceSpy).not.toHaveBeenCalled();
         expect(endpointSpy).toHaveBeenCalledWith(ENDPOINT_ID, EXPECTED_ENDPOINT_VALUES_ONLY_WITH_URL);
@@ -171,7 +165,7 @@ describe('doUpdateSource', () => {
             authentications: { [`a${AUTH_ID}`]: AUTHENTICATION_VALUES }
         };
 
-        doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
+        doUpdateSource(SOURCE, FORM_DATA);
 
         expect(sourceSpy).not.toHaveBeenCalled();
         expect(endpointSpy).not.toHaveBeenCalled();
@@ -192,7 +186,7 @@ describe('doUpdateSource', () => {
             }
         };
 
-        doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
+        doUpdateSource(SOURCE, FORM_DATA);
 
         expect(sourceSpy).not.toHaveBeenCalled();
         expect(endpointSpy).not.toHaveBeenCalled();
@@ -218,7 +212,7 @@ describe('doUpdateSource', () => {
 
             const EXPECTED_CM_DATA = { ...FORM_DATA };
 
-            doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
+            doUpdateSource(SOURCE, FORM_DATA);
 
             expect(sourceSpy).not.toHaveBeenCalled();
             expect(endpointSpy).not.toHaveBeenCalled();
@@ -233,7 +227,7 @@ describe('doUpdateSource', () => {
 
             const EXPECTED_CM_DATA = { authentication: FORM_DATA };
 
-            doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
+            doUpdateSource(SOURCE, FORM_DATA);
 
             expect(sourceSpy).not.toHaveBeenCalled();
             expect(endpointSpy).not.toHaveBeenCalled();
@@ -254,7 +248,7 @@ describe('doUpdateSource', () => {
                 }
             };
 
-            doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
+            doUpdateSource(SOURCE, FORM_DATA);
 
             expect(sourceSpy).not.toHaveBeenCalled();
             expect(endpointSpy).not.toHaveBeenCalled();
@@ -275,10 +269,9 @@ describe('doUpdateSource', () => {
         it('handle source failure', async () => {
             sourceSpy = jest.fn().mockImplementation(() => Promise.reject(ERROR_OBJECT));
 
-            const EXPECTED_ERROR = { error: {
+            const EXPECTED_ERROR = { errors: [{
                 detail: ERROR_TEXT,
-                title: ERROR_TITLES.source
-            } };
+            }] };
 
             const SOURCE_VALUES = { name: 'pepa' };
 
@@ -287,72 +280,7 @@ describe('doUpdateSource', () => {
             };
 
             try {
-                await doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
-                throw ('should not be here');
-            } catch (error) {
-                expect(error).toEqual(EXPECTED_ERROR);
-            }
-        });
-
-        it('handle endpoint failure', async () => {
-            endpointSpy = jest.fn().mockImplementation(() => Promise.reject(ERROR_OBJECT));
-
-            const EXPECTED_ERROR = { error: {
-                detail: ERROR_TEXT,
-                title: ERROR_TITLES.endpoint
-            } };
-
-            const ENDPOINT_VALUES = { tenant: 'US-EAST' };
-
-            FORM_DATA = {
-                endpoint: ENDPOINT_VALUES
-            };
-
-            try {
-                await doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
-                throw ('should not be here');
-            } catch (error) {
-                expect(error).toEqual(EXPECTED_ERROR);
-            }
-        });
-
-        it('handle authentication failure', async () => {
-            authenticationSpy = jest.fn().mockImplementation(() => Promise.reject(ERROR_OBJECT));
-
-            const EXPECTED_ERROR = { error: {
-                detail: ERROR_TEXT,
-                title: ERROR_TITLES.authentication
-            } };
-
-            const AUTH_ID = '1234234243';
-            const AUTHENTICATION_VALUES = { password: '123456' };
-
-            FORM_DATA = {
-                authentications: { [`a${AUTH_ID}`]: AUTHENTICATION_VALUES }
-            };
-
-            try {
-                await doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
-                throw ('should not be here');
-            } catch (error) {
-                expect(error).toEqual(EXPECTED_ERROR);
-            }
-        });
-
-        it('handle CM failure', async () => {
-            cmApi.patchCmValues = jest.fn().mockImplementation(() => Promise.reject(ERROR_OBJECT));
-
-            const EXPECTED_ERROR = { error: {
-                detail: ERROR_TEXT,
-                title: ERROR_TITLES.costManagement
-            } };
-
-            FORM_DATA = {
-                billing_source: { bucket: 'aaa' }
-            };
-
-            try {
-                await doUpdateSource(SOURCE, FORM_DATA, ERROR_TITLES);
+                await doUpdateSource(SOURCE, FORM_DATA);
                 throw ('should not be here');
             } catch (error) {
                 expect(error).toEqual(EXPECTED_ERROR);

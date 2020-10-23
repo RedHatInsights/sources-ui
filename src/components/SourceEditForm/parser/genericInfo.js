@@ -3,17 +3,26 @@ import { asyncValidatorDebounced } from '@redhat-cloud-services/frontend-compone
 import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
 import validated from '@redhat-cloud-services/frontend-components-sources/cjs/validated';
 
-import { EDIT_FIELD_NAME } from '../../EditField/EditField';
+import AdditionalInfoBar from './AdditionalInfoBar';
+import EditAlert from './EditAlert';
 
-export const genericInfo = (sourceId, intl) => ([
+export const genericInfo = (sourceId, intl, sourceType, applications) => ([
+    {
+        name: 'alert',
+        component: 'description',
+        Content: EditAlert,
+        condition: {
+            when: 'message',
+            isNotEmpty: true
+        }
+    },
     {
         name: 'source.name',
         label: intl.formatMessage({
             id: 'sources.sourceName',
             defaultMessage: 'Source name'
         }),
-        originalComponent: componentTypes.TEXT_FIELD,
-        component: EDIT_FIELD_NAME,
+        component: componentTypes.TEXT_FIELD,
         validate: [
             (value) => asyncValidatorDebounced(value, sourceId, intl),
             { type: validatorTypes.REQUIRED }
@@ -21,13 +30,10 @@ export const genericInfo = (sourceId, intl) => ([
         isRequired: true,
         resolveProps: validated
     }, {
-        name: 'source_type',
-        label: intl.formatMessage({
-            id: 'sources.sourceType',
-            defaultMessage: 'Source type'
-        }),
-        isReadOnly: true,
-        component: EDIT_FIELD_NAME,
-        isEditable: false
+        name: 'additional_info',
+        Content: AdditionalInfoBar,
+        component: 'description',
+        sourceType,
+        applications
     }
 ]);
