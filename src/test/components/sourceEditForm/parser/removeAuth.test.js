@@ -13,120 +13,127 @@ import * as api from '../../../../api/entities';
 import * as actions from '../../../../redux/sources/actions';
 
 describe('RemoveAuth', () => {
-    let initialProps;
-    let setState;
-    let source;
-    let sourceType;
+  let initialProps;
+  let setState;
+  let source;
+  let sourceType;
 
-    const middlewares = [thunk, notificationsMiddleware()];
-    let mockStore;
-    let store;
+  const middlewares = [thunk, notificationsMiddleware()];
+  let mockStore;
+  let store;
 
-    beforeEach(() => {
-        initialProps = {
-            authId: 'authid',
-        };
+  beforeEach(() => {
+    initialProps = {
+      authId: 'authid',
+    };
 
-        source = {
-            authentications: [{ id: 'authid', authtype: 'arn' }]
-        };
-        sourceType = {
-            schema: { authentication: [{
-                type: 'arn',
-                name: 'ARN'
-            }] }
-        };
+    source = {
+      authentications: [{ id: 'authid', authtype: 'arn' }],
+    };
+    sourceType = {
+      schema: {
+        authentication: [
+          {
+            type: 'arn',
+            name: 'ARN',
+          },
+        ],
+      },
+    };
 
-        setState = jest.fn();
-        mockStore = configureStore(middlewares);
-        store = mockStore();
+    setState = jest.fn();
+    mockStore = configureStore(middlewares);
+    store = mockStore();
+  });
+
+  it('renders correctly', () => {
+    const wrapper = mount(
+      componentWrapperIntl(
+        <sourceEditContext.Provider value={{ setState, source, sourceType }}>
+          <RemoveAuth {...initialProps} />
+        </sourceEditContext.Provider>
+      ),
+      store
+    );
+
+    expect(wrapper.find(Modal)).toHaveLength(1);
+    expect(wrapper.find(Modal).props()['aria-label']).toEqual('Remove authentication?');
+    expect(wrapper.find(ExclamationTriangleIcon)).toHaveLength(1);
+    expect(wrapper.find(Button)).toHaveLength(3);
+    expect(wrapper.find(Text).text()).toEqual('This action will permanently remove ARN from this source.');
+  });
+
+  it('calls submit succesfuly', async () => {
+    api.doDeleteAuthentication = jest.fn().mockImplementation(() => Promise.resolve('OK'));
+    actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'addmessage' }));
+
+    const wrapper = mount(
+      componentWrapperIntl(
+        <sourceEditContext.Provider value={{ setState, source, sourceType }}>
+          <RemoveAuth {...initialProps} />
+        </sourceEditContext.Provider>
+      ),
+      store
+    );
+
+    expect(api.doDeleteAuthentication).not.toHaveBeenCalled();
+
+    await act(async () => {
+      wrapper.find(Button).at(1).simulate('click');
     });
 
-    it('renders correctly', () => {
-        const wrapper = mount(componentWrapperIntl(
-            <sourceEditContext.Provider value={{ setState, source, sourceType }}>
-                <RemoveAuth {...initialProps }/>
-            </sourceEditContext.Provider>
-        ),
-        store
-        );
+    expect(api.doDeleteAuthentication).toHaveBeenCalledWith('authid');
+    expect(setState).toHaveBeenCalledWith({
+      type: 'removeAuthFulfill',
+      authId: 'authid',
+    });
+    expect(actions.addMessage).toHaveBeenCalledWith('Authentication was deleted successfully.', 'success');
+  });
 
-        expect(wrapper.find(Modal)).toHaveLength(1);
-        expect(wrapper.find(Modal).props()['aria-label']).toEqual('Remove authentication?');
-        expect(wrapper.find(ExclamationTriangleIcon)).toHaveLength(1);
-        expect(wrapper.find(Button)).toHaveLength(3);
-        expect(wrapper.find(Text).text()).toEqual('This action will permanently remove ARN from this source.');
+  it('calls submit unsuccesfuly', async () => {
+    api.doDeleteAuthentication = jest.fn().mockImplementation(() => Promise.reject('Some error'));
+    actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'addmessage' }));
+
+    const wrapper = mount(
+      componentWrapperIntl(
+        <sourceEditContext.Provider value={{ setState, source, sourceType }}>
+          <RemoveAuth {...initialProps} />
+        </sourceEditContext.Provider>
+      ),
+      store
+    );
+
+    expect(api.doDeleteAuthentication).not.toHaveBeenCalled();
+
+    await act(async () => {
+      wrapper.find(Button).at(1).simulate('click');
     });
 
-    it('calls submit succesfuly', async () => {
-        api.doDeleteAuthentication = jest.fn().mockImplementation(() => Promise.resolve('OK'));
-        actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'addmessage' }));
-
-        const wrapper = mount(componentWrapperIntl(
-            <sourceEditContext.Provider value={{ setState, source, sourceType }}>
-                <RemoveAuth {...initialProps }/>
-            </sourceEditContext.Provider>
-        ),
-        store
-        );
-
-        expect(api.doDeleteAuthentication).not.toHaveBeenCalled();
-
-        await act(async () => {
-            wrapper.find(Button).at(1).simulate('click');
-        });
-
-        expect(api.doDeleteAuthentication).toHaveBeenCalledWith('authid');
-        expect(setState).toHaveBeenCalledWith({ type: 'removeAuthFulfill', authId: 'authid' });
-        expect(actions.addMessage).toHaveBeenCalledWith(
-            'Authentication was deleted successfully.',
-            'success'
-        );
+    expect(api.doDeleteAuthentication).toHaveBeenCalledWith('authid');
+    expect(setState).toHaveBeenCalledWith({
+      type: 'removeAuthRejected',
+      authId: 'authid',
     });
+    expect(actions.addMessage).toHaveBeenCalledWith('Authentication was not deleted successfully.', 'danger', 'Some error');
+  });
 
-    it('calls submit unsuccesfuly', async () => {
-        api.doDeleteAuthentication = jest.fn().mockImplementation(() => Promise.reject('Some error'));
-        actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'addmessage' }));
+  it('close on icon/cancel', () => {
+    const wrapper = mount(
+      componentWrapperIntl(
+        <sourceEditContext.Provider value={{ setState, source, sourceType }}>
+          <RemoveAuth {...initialProps} />
+        </sourceEditContext.Provider>
+      ),
+      store
+    );
 
-        const wrapper = mount(componentWrapperIntl(
-            <sourceEditContext.Provider value={{ setState, source, sourceType }}>
-                <RemoveAuth {...initialProps }/>
-            </sourceEditContext.Provider>
-        ),
-        store
-        );
+    expect(setState).not.toHaveBeenCalled();
 
-        expect(api.doDeleteAuthentication).not.toHaveBeenCalled();
+    wrapper.find(Button).first().simulate('click');
+    expect(setState).toHaveBeenCalledWith({ type: 'closeAuthRemoving' });
+    setState.mockClear();
 
-        await act(async () => {
-            wrapper.find(Button).at(1).simulate('click');
-        });
-
-        expect(api.doDeleteAuthentication).toHaveBeenCalledWith('authid');
-        expect(setState).toHaveBeenCalledWith({ type: 'removeAuthRejected', authId: 'authid' });
-        expect(actions.addMessage).toHaveBeenCalledWith(
-            'Authentication was not deleted successfully.',
-            'danger',
-            'Some error'
-        );
-    });
-
-    it('close on icon/cancel', () => {
-        const wrapper = mount(componentWrapperIntl(
-            <sourceEditContext.Provider value={{ setState, source, sourceType }}>
-                <RemoveAuth {...initialProps }/>
-            </sourceEditContext.Provider>
-        ),
-        store
-        );
-
-        expect(setState).not.toHaveBeenCalled();
-
-        wrapper.find(Button).first().simulate('click');
-        expect(setState).toHaveBeenCalledWith({ type: 'closeAuthRemoving' });
-        setState.mockClear();
-
-        wrapper.find(Button).last().simulate('click');
-        expect(setState).toHaveBeenCalledWith({ type: 'closeAuthRemoving' });
-    });
+    wrapper.find(Button).last().simulate('click');
+    expect(setState).toHaveBeenCalledWith({ type: 'closeAuthRemoving' });
+  });
 });

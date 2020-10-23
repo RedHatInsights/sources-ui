@@ -6,55 +6,52 @@ import AdditionalInfoBar from '../../../../components/SourceEditForm/parser/Addi
 import EditAlert from '../../../../components/SourceEditForm/parser/EditAlert';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/SourceAddSchema', () => ({
-    __esModule: true,
-    asyncValidatorDebounced: jest.fn().mockImplementation(() => jest.fn())
+  __esModule: true,
+  asyncValidatorDebounced: jest.fn().mockImplementation(() => jest.fn()),
 }));
 
 describe('generic info edit form parser', () => {
-    const SOURCE_ID = '1233465';
-    const INTL = { formatMessage: ({ defaultMessage }) => defaultMessage };
+  const SOURCE_ID = '1233465';
+  const INTL = { formatMessage: ({ defaultMessage }) => defaultMessage };
 
-    it('should generate generic info form group', () => {
-        const EXPECTED_ALERT_FIELD = {
-            name: 'alert',
-            component: 'description',
-            Content: EditAlert,
-            condition: {
-                when: 'message',
-                isNotEmpty: true
-            }
-        };
-        const EXPECTED_TYPE_FIELD = {
-            name: 'additional_info',
-            component: 'description',
-            Content: AdditionalInfoBar
-        };
-        const EXPECTED_NAME_FIELD = {
-            name: 'source.name',
-            label: 'Source name',
-            validate: [
-                expect.any(Function),
-                { type: validatorTypes.REQUIRED }
-            ],
-            isRequired: true,
-            component: componentTypes.TEXT_FIELD,
-            resolveProps: expect.any(Function)
-        };
+  it('should generate generic info form group', () => {
+    const EXPECTED_ALERT_FIELD = {
+      name: 'alert',
+      component: 'description',
+      Content: EditAlert,
+      condition: {
+        when: 'message',
+        isNotEmpty: true,
+      },
+    };
+    const EXPECTED_TYPE_FIELD = {
+      name: 'additional_info',
+      component: 'description',
+      Content: AdditionalInfoBar,
+    };
+    const EXPECTED_NAME_FIELD = {
+      name: 'source.name',
+      label: 'Source name',
+      validate: [expect.any(Function), { type: validatorTypes.REQUIRED }],
+      isRequired: true,
+      component: componentTypes.TEXT_FIELD,
+      resolveProps: expect.any(Function),
+    };
 
-        const EXPECTED_FORM_GROUP = [
-            expect.objectContaining(EXPECTED_ALERT_FIELD),
-            expect.objectContaining(EXPECTED_NAME_FIELD),
-            expect.objectContaining(EXPECTED_TYPE_FIELD)
-        ];
+    const EXPECTED_FORM_GROUP = [
+      expect.objectContaining(EXPECTED_ALERT_FIELD),
+      expect.objectContaining(EXPECTED_NAME_FIELD),
+      expect.objectContaining(EXPECTED_TYPE_FIELD),
+    ];
 
-        expect(genericInfo(SOURCE_ID, INTL)).toEqual(EXPECTED_FORM_GROUP);
-    });
+    expect(genericInfo(SOURCE_ID, INTL)).toEqual(EXPECTED_FORM_GROUP);
+  });
 
-    it('should return debounced validate function', () => {
-        const schema = genericInfo(SOURCE_ID, INTL);
+  it('should return debounced validate function', () => {
+    const schema = genericInfo(SOURCE_ID, INTL);
 
-        const returnedFunction = schema[1].validate[0]('some value', SOURCE_ID, INTL);
+    const returnedFunction = schema[1].validate[0]('some value', SOURCE_ID, INTL);
 
-        expect(returnedFunction).toEqual(expect.any(Function));
-    });
+    expect(returnedFunction).toEqual(expect.any(Function));
+  });
 });

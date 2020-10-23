@@ -7,21 +7,24 @@ import { Text } from '@patternfly/react-core/dist/js/components/Text/Text';
 import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
 
 const AuthenticationId = ({ id }) => {
-    const intl = useIntl();
+  const intl = useIntl();
 
-    return (<FormGroup
-        label={intl.formatMessage({ id: 'sources.authId', defaultMessage: 'Authentication ID' })}
+  return (
+    <FormGroup
+      label={intl.formatMessage({
+        id: 'sources.authId',
+        defaultMessage: 'Authentication ID',
+      })}
     >
-        <TextContent>
-            <Text variant="p">
-                {id}
-            </Text>
-        </TextContent>
-    </FormGroup>);
+      <TextContent>
+        <Text variant="p">{id}</Text>
+      </TextContent>
+    </FormGroup>
+  );
 };
 
 AuthenticationId.propTypes = {
-    id: PropTypes.string.isRequired
+  id: PropTypes.string.isRequired,
 };
 
 export default AuthenticationId;

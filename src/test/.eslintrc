@@ -16,6 +16,8 @@
   "rules": {
     "react/prop-types": "off",
     "max-len": "off",
-    "no-import-assign": "off"
+    "no-import-assign": "off",
+    "react/display-name": "off",
+    "no-console": "off"
   }
 }

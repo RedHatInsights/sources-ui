@@ -7,36 +7,37 @@ export const idToName = (id, appTypes) => appTypes.find((app) => app.id === id)?
 
 export const typesWithExtendedText = [SATELLITE_NAME, ANSIBLE_TOWER_NAME];
 
-export const bodyVariants = (variant, { name, count }) => ({
-    noApps: <FormattedMessage
+export const bodyVariants = (variant, { name, count }) =>
+  ({
+    noApps: (
+      <FormattedMessage
         id="sources.deleteTextBodyNoApps"
-        defaultMessage='Removing { name } will permanently delete all data collected.'
+        defaultMessage="Removing { name } will permanently delete all data collected."
         values={{
-            name: <b>
-                {name}
-            </b>
+          name: <b>{name}</b>,
         }}
-    />,
-    withApps: <FormattedMessage
+      />
+    ),
+    withApps: (
+      <FormattedMessage
         id="sources.deleteTextBodyWithApps"
         defaultMessage={`Removing { name } detaches the following
         connected {count, plural, one {application} other {applications}} from this source:`}
         values={{
-            name: <b>
-                {name}
-            </b>,
-            count
+          name: <b>{name}</b>,
+          count,
         }}
-    />,
-    withAppsExtendedText: <FormattedMessage
+      />
+    ),
+    withAppsExtendedText: (
+      <FormattedMessage
         id="sources.deleteTextBodyWithAppsExtended"
         defaultMessage={`Removing { name } permanently deletes all collected data and detaches the following
     connected {count, plural, one {application} other {applications}}:`}
         values={{
-            name: <b>
-                {name}
-            </b>,
-            count
+          name: <b>{name}</b>,
+          count,
         }}
-    />,
-}[variant]);
+      />
+    ),
+  }[variant]);

@@ -2,32 +2,41 @@
   "parser": "babel-eslint",
   "env": {
     "browser": true,
-    "es6": true
-  },
-  "extends": [
-    "eslint:recommended",
-    "prettier",
-    "plugin:react/recommended"
-  ],
-  "plugins": ["react"],
-  "parserOptions": {
-    "ecmaVersion": 11,
-    "sourceType": "module"
-  },
-  "globals": {
-    "global": true,
-    "insights": true,
-    "process": true,
-    "render": true,
-    "React": true
+    "es6": true,
+    "node": true
   },
   "settings": {
     "react": {
-      "version": "detect"
+      "version": "16.0"
     }
   },
+  "extends": [
+    "plugin:prettier/recommended",
+    "prettier/react",
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
+  "plugins": [
+    "react"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 7,
+    "sourceType": "module"
+  },
+  "globals": {
+    "beforeAll": true,
+    "describe": true,
+    "expect": true,
+    "global": true,
+    "insights": true,
+    "it": true,
+    "mount": true,
+    "process": true,
+    "render": true,
+    "shallow": true,
+    "React": true
+  },
   "rules": {
-    "array-bracket-spacing": 2,
     "comma-dangle": 0,
     "comma-spacing": [
       2,
@@ -48,31 +57,16 @@
       "error",
       "never"
     ],
-    "indent": [
-      "error",
-      4,
-      {
-        "SwitchCase": 1,
-        "MemberExpression": 0,
-        "ImportDeclaration": 1,
-        "ObjectExpression": 1
-      }
-    ],
     "key-spacing": 2,
     "keyword-spacing": 2,
     "linebreak-style": [
       "error",
       "unix"
     ],
-    "max-len": [
-      2,
-      130,
-      { "ignoreComments": true }
-    ],
     "new-cap": 2,
     "no-bitwise": 2,
     "no-caller": 2,
-    "no-console": 1, // temporarily allow console
+    "no-console": 1,
     "no-mixed-spaces-and-tabs": 2,
     "no-multiple-empty-lines": [
       "error",
@@ -88,20 +82,13 @@
       }
     ],
     "no-undef": 2,
-    "no-useless-catch": 2,
-    "no-async-promise-executor": 2,
-    "no-misleading-character-class": 2,
     "no-unused-vars": [
-	2,
-	{ "argsIgnorePattern": "^_" }
+      2,
+      { "argsIgnorePattern": "^_" }
     ],
     "no-var": 2,
     "no-with": 2,
     "object-shorthand": 2,
-    "object-curly-spacing": [
-      "error",
-      "always"
-    ],
     "one-var": [
       "error",
       "never"
@@ -118,13 +105,6 @@
       "error",
       "as-needed"
     ],
-    "quotes": [
-      "error",
-      "single",
-      {
-        "allowTemplateLiterals": true
-      }
-    ],
     "semi": [
       "error",
       "always"
@@ -136,7 +116,10 @@
       "error",
       {
         "words": false,
-        "nonwords": false
+        "nonwords": false,
+        "overrides": {
+          "new": true
+        }
       }
     ],
     "vars-on-top": 2,

@@ -18,37 +18,39 @@ import SubmittingModal from '../../../components/SourceEditForm/SubmittingModal'
 import LoadingStep from '@redhat-cloud-services/frontend-components-sources/cjs/LoadingStep';
 
 describe('SubmittingModal', () => {
-    let store;
-    let mockStore;
-    let initialEntry;
-    let wrapper;
+  let store;
+  let mockStore;
+  let initialEntry;
+  let wrapper;
 
-    const middlewares = [thunk, notificationsMiddleware()];
+  const middlewares = [thunk, notificationsMiddleware()];
 
-    beforeEach(async () => {
-        initialEntry = [replaceRouteId(routes.sourcesEdit.path, '14')];
-        mockStore = configureStore(middlewares);
-        store = mockStore({
-            sources: {
-                entities: sourcesDataGraphQl
-            }
-        });
-
-        await act(async () => {
-            wrapper = mount(componentWrapperIntl(
-                <Route path={routes.sourcesEdit.path} render={ (...args) => <SubmittingModal {...args} /> } />,
-                store,
-                initialEntry
-            ));
-        });
-        wrapper.update();
+  beforeEach(async () => {
+    initialEntry = [replaceRouteId(routes.sourcesEdit.path, '14')];
+    mockStore = configureStore(middlewares);
+    store = mockStore({
+      sources: {
+        entities: sourcesDataGraphQl,
+      },
     });
 
-    it('renders correctly', async () => {
-        expect(wrapper.find(WrapperModal)).toHaveLength(1);
-        expect(wrapper.find(LoadingStep)).toHaveLength(1);
-
-        expect(wrapper.find(Spinner)).toHaveLength(1);
-        expect(wrapper.find(EmptyState).text()).toEqual('Validating edited source credentials');
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesEdit.path} render={(...args) => <SubmittingModal {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
     });
+    wrapper.update();
+  });
+
+  it('renders correctly', async () => {
+    expect(wrapper.find(WrapperModal)).toHaveLength(1);
+    expect(wrapper.find(LoadingStep)).toHaveLength(1);
+
+    expect(wrapper.find(Spinner)).toHaveLength(1);
+    expect(wrapper.find(EmptyState).text()).toEqual('Validating edited source credentials');
+  });
 });

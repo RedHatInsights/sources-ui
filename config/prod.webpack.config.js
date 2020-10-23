@@ -1,6 +1,4 @@
-/* global require, module */
-
 module.exports = {
-    ...require('./base.webpack.config'),
-    ...require('./base.webpack.plugins.js')
+  ...require('./base.webpack.config'),
+  ...require('./base.webpack.plugins.js'),
 };
