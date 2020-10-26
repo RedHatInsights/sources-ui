@@ -34,17 +34,23 @@ import { Text } from '@patternfly/react-core/dist/js/components/Text';
 
 import removeAppSubmit from './removeAppSubmit';
 
-let selectedApp = undefined; // this has to be not-state value, because it shouldn't re-render the component when changes
-const saveSelectedApp = ({ values: { application } }) => (selectedApp = application);
-
-export const onSubmit = (values, formApi, authenticationInitialValues, dispatch, setState, initialValues, appTypes) => {
+export const onSubmit = (
+  values,
+  formApi,
+  authenticationInitialValues,
+  dispatch,
+  setState,
+  initialValues,
+  appTypes,
+  setSelectedApp
+) => {
   setState({ type: 'submit', values, formApi });
 
   return doAttachApp(values, formApi, authenticationInitialValues, initialValues, appTypes)
     .then(async (data) => {
       checkSourceStatus(initialValues.source.id);
       await dispatch(loadEntities());
-      selectedApp = undefined;
+      setSelectedApp({ values: { application: null } });
       return setState({ type: 'finish', data });
     })
     .catch((error) =>
@@ -60,6 +66,8 @@ const FormTemplateWrapper = (props) => <FormTemplate {...props} showFormControls
 const AddApplication = () => {
   const intl = useIntl();
   const history = useHistory();
+  const selectedApp = useRef();
+  const saveSelectedApp = ({ values: { application } }) => (selectedApp.current = application);
 
   const loaded = useIsLoaded();
 
@@ -89,10 +97,6 @@ const AddApplication = () => {
   };
 
   useEffect(() => {
-    selectedApp = undefined;
-  }, []);
-
-  useEffect(() => {
     if (source) {
       // When app is only removed, there is no need to reload values
       const removeAppAction = state.sourceAppsLength >= source.applications.length && state.sourceAppsLength > 0;
@@ -114,7 +118,7 @@ const AddApplication = () => {
                   source,
                   endpoint: source.endpoints[0],
                   url: endpointToUrl(source.endpoints[0]),
-                  application: selectedApp,
+                  application: selectedApp.current,
                 },
                 values: {},
               })
@@ -122,7 +126,7 @@ const AddApplication = () => {
         } else {
           setState({
             type: 'loadWithoutAuthentications',
-            initialValues: { source, application: selectedApp },
+            initialValues: { source, application: selectedApp.current },
             values: {},
           });
         }
@@ -154,7 +158,7 @@ const AddApplication = () => {
   }
 
   const onSubmitWrapper = (values, formApi) =>
-    onSubmit(values, formApi, state.authenticationsValues, dispatch, setState, state.initialValues, appTypes);
+    onSubmit(values, formApi, state.authenticationsValues, dispatch, setState, state.initialValues, appTypes, saveSelectedApp);
 
   if (state.state === 'submitting') {
     return (
