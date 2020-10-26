@@ -55,25 +55,23 @@ const AddApplicationDescription = () => {
     );
 
   return (
-    <React.Fragment>
-      <TextContent>
-        <Text component={TextVariants.h4}>
-          {intl.formatMessage({
-            id: 'sources.type',
-            defaultMessage: 'Source type',
-          })}
-        </Text>
-        <Text component={TextVariants.p} id="add-application-desc-type">
-          {sourceType
-            ? sourceType.product_name
-            : intl.formatMessage({
-                id: 'sources.typeNotFound',
-                defaultMessage: 'Type not found',
-              })}
-        </Text>
-        {applicationsPart}
-      </TextContent>
-    </React.Fragment>
+    <TextContent>
+      <Text component={TextVariants.h4}>
+        {intl.formatMessage({
+          id: 'sources.type',
+          defaultMessage: 'Source type',
+        })}
+      </Text>
+      <Text component={TextVariants.p} id="add-application-desc-type">
+        {sourceType
+          ? sourceType.product_name
+          : intl.formatMessage({
+              id: 'sources.typeNotFound',
+              defaultMessage: 'Type not found',
+            })}
+      </Text>
+      {applicationsPart}
+    </TextContent>
   );
 };
 
