@@ -16,6 +16,7 @@ export const onSubmit = async (values, editing, dispatch, source, intl, setState
   try {
     await doUpdateSource(source, selectOnlyEditedValues(values, editing));
   } catch {
+    dispatch(loadEntities());
     setState({ type: 'submitFailed' });
 
     return;
@@ -39,8 +40,8 @@ export const onSubmit = async (values, editing, dispatch, source, intl, setState
     try {
       statusResults = await Promise.all(promises);
     } catch (error) {
+      dispatch(loadEntities());
       setState({ type: 'submitFailed' });
-
       return;
     }
 

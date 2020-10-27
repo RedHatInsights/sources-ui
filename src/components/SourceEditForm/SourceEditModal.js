@@ -81,7 +81,11 @@ const SourceEditModal = () => {
   }
 
   if (submitError) {
-    return <ErroredModal onRetry={() => onSubmit(values, editing, dispatch, source, intl, setState)} />;
+    return (
+      <ErroredModal
+        onRetry={() => onSubmit(values, editing, dispatch, source, intl, setState, hasCostManagement(sourceRedux, appTypes))}
+      />
+    );
   }
 
   if (isSubmitting) {
