@@ -145,6 +145,7 @@ describe('SourceEditModal', () => {
     const INTL = expect.objectContaining({
       formatMessage: expect.any(Function),
     });
+    const HAS_COST_MANAGEMENT = false;
 
     beforeEach(async () => {
       const nameFormGroup = wrapper.find(FormGroup).first();
@@ -200,7 +201,7 @@ describe('SourceEditModal', () => {
       expect(wrapper.find(EditAlert).find(Alert).props().variant).toEqual(message.variant);
       expect(wrapper.find(EditAlert).find(Alert).props().children).toEqual(message.description);
 
-      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
+      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, HAS_COST_MANAGEMENT);
     });
 
     it('calls onSubmit - timeout', async () => {
@@ -232,7 +233,7 @@ describe('SourceEditModal', () => {
 
       expect(wrapper.find(TimeoutedModal)).toHaveLength(1);
 
-      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
+      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, HAS_COST_MANAGEMENT);
     });
 
     it('calls onSubmit - server error', async () => {
@@ -264,7 +265,7 @@ describe('SourceEditModal', () => {
 
       expect(wrapper.find(ErroredModal)).toHaveLength(1);
 
-      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
+      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, HAS_COST_MANAGEMENT);
 
       submit.onSubmit.mockReset();
 
@@ -274,7 +275,7 @@ describe('SourceEditModal', () => {
       });
       wrapper.update();
 
-      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
+      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, HAS_COST_MANAGEMENT);
     });
   });
 

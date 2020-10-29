@@ -325,7 +325,7 @@ describe('doAttachApp', () => {
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).not.toHaveBeenCalled();
     expect(createAuthApp).not.toHaveBeenCalled();
-    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint');
+    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint', expect.any(Date));
     expect(appDelete).not.toHaveBeenCalled();
   });
 
@@ -362,7 +362,7 @@ describe('doAttachApp', () => {
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).not.toHaveBeenCalled();
     expect(createAuthApp).not.toHaveBeenCalled();
-    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint');
+    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint', expect.any(Date));
     expect(appDelete).not.toHaveBeenCalled();
   });
 
@@ -392,7 +392,7 @@ describe('doAttachApp', () => {
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).not.toHaveBeenCalled();
     expect(createAuthApp).not.toHaveBeenCalled();
-    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint');
+    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint', expect.any(Date));
     expect(appDelete).not.toHaveBeenCalled();
   });
 
@@ -427,7 +427,7 @@ describe('doAttachApp', () => {
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).not.toHaveBeenCalled();
     expect(createAuthApp).not.toHaveBeenCalled();
-    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint');
+    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint', expect.any(Date));
     expect(appDelete).not.toHaveBeenCalled();
   });
 
@@ -470,7 +470,7 @@ describe('doAttachApp', () => {
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).not.toHaveBeenCalled();
     expect(createAuthApp).not.toHaveBeenCalled();
-    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint');
+    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint', expect.any(Date));
     expect(appDelete).not.toHaveBeenCalled();
   });
 
@@ -520,7 +520,7 @@ describe('doAttachApp', () => {
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).not.toHaveBeenCalled();
     expect(createAuthApp).not.toHaveBeenCalled();
-    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint');
+    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint', expect.any(Date));
     expect(appDelete).not.toHaveBeenCalled();
   });
 
@@ -556,7 +556,7 @@ describe('doAttachApp', () => {
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).not.toHaveBeenCalled();
     expect(createAuthApp).not.toHaveBeenCalled();
-    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint');
+    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint', expect.any(Date));
     expect(appDelete).not.toHaveBeenCalled();
   });
 
