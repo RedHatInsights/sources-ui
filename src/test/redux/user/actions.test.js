@@ -147,7 +147,7 @@ describe('user reducer actions', () => {
     let getUserPermissions;
 
     it('has write permissions - all', async () => {
-      getUserPermissions = jest.fn().mockImplementation(() => Promise.resolve(['sources:*:*']));
+      getUserPermissions = jest.fn().mockImplementation(() => Promise.resolve([{ permission: 'sources:*:*' }]));
 
       insights = {
         chrome: {
@@ -169,7 +169,7 @@ describe('user reducer actions', () => {
     });
 
     it('has write permissions - just write', async () => {
-      getUserPermissions = jest.fn().mockImplementation(() => Promise.resolve(['sources:*:write']));
+      getUserPermissions = jest.fn().mockImplementation(() => Promise.resolve([{ permission: 'sources:*:write' }]));
 
       insights = {
         chrome: {

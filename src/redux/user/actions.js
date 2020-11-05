@@ -32,7 +32,8 @@ export const loadWritePermissions = () => (dispatch) => {
   return insights.chrome
     .getUserPermissions('sources')
     .then((permissions) => {
-      const writePermissions = permissions.includes('sources:*:*') || permissions.includes('sources:*:write');
+      const allPermission = permissions.reduce((acc, curr) => [...acc, curr?.permission], []);
+      const writePermissions = allPermission.includes('sources:*:*') || allPermission.includes('sources:*:write');
 
       dispatch({
         type: ACTION_TYPES.SET_WRITE_PERMISSIONS_FULFILLED,
