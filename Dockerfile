@@ -1,22 +1,21 @@
-FROM node:8-alpine
+FROM registry.access.redhat.com/ubi8/ubi:8.2-343
 
 ENV WORKDIR /sources-ui/
 RUN mkdir -p $WORKDIR
 WORKDIR $WORKDIR
 COPY . $WORKDIR
 
-# Use apk to install python. Python is needed by one of the javascript dependencies.
-#
-# --no-cache: download package index on-the-fly, no need to cleanup afterwards
-# --virtual: bundle packages, remove whole bundle at once, when done
-RUN apk --no-cache --virtual build-dependencies add \
-    python \
-    make \
-    g++
+# Enable nodejs & python2.7 module streams to lock versions
+RUN dnf -y --disableplugin=subscription-manager module enable nodejs:10 && \
+    dnf -y --disableplugin=subscription-manager module enable python27:2.7 && \
+    dnf -y --disableplugin=subscription-manager --setopt=tsflags=nodocs install \
+       npm nodejs \
+       python2 \
+       make gcc-c++ git && \
+    dnf --disableplugin=subscription-manager clean all
 
 RUN npm install
 RUN npm rebuild node-sass
-RUN apk del build-dependencies
 
 EXPOSE 8001 8002
 CMD [ "npm", "run", "start", "--", "--host", "0.0.0.0" ]
