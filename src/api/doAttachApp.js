@@ -57,6 +57,7 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
       throw 'Missing source id';
     }
 
+    const startDate = new Date();
     const sourceId = allFormValues.source.id;
     let endpointId = allFormValues?.endpoint?.id;
 
@@ -152,7 +153,7 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
 
     let endpoint;
     if (endpointId) {
-      endpoint = await checkAppAvailability(endpointId, undefined, undefined, 'getEndpoint');
+      endpoint = await checkAppAvailability(endpointId, undefined, undefined, 'getEndpoint', startDate);
     }
 
     if (applicationDataOut) {
