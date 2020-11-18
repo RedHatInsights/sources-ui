@@ -15,49 +15,54 @@ import sourceEditContext from '../sourceEditContext';
 import RemoveAuthPlaceholder from './RemoveAuthPlaceholder';
 
 const GridLayout = ({ id, fields }) => {
-    const intl = useIntl();
-    const { renderForm } = useFormApi();
-    const { setState, source } = useContext(sourceEditContext);
+  const intl = useIntl();
+  const { renderForm } = useFormApi();
+  const { setState, source } = useContext(sourceEditContext);
 
-    const setAuthRemoving = () => setState({
-        type: 'setAuthRemoving',
-        removingAuth: id,
+  const setAuthRemoving = () =>
+    setState({
+      type: 'setAuthRemoving',
+      removingAuth: id,
     });
 
-    const isDeleting = source?.authentications?.find(auth => auth.id === id)?.isDeleting;
+  const isDeleting = source?.authentications?.find((auth) => auth.id === id)?.isDeleting;
 
-    if (isDeleting) {
-        return <RemoveAuthPlaceholder />;
-    }
+  if (isDeleting) {
+    return <RemoveAuthPlaceholder />;
+  }
 
-    return (<Grid>
-        <GridItem md={2}>
-            <Flex>
-                <FlexItem className="pf-u-mr-0">
-                    <Button
-                        variant="plain"
-                        aria-label={intl.formatMessage({
-                            id: 'sources.removeAuthAriaLabel',
-                            defaultMessage: 'Remove authentication with id {id}'
-                        }, { id })}
-                        onClick={setAuthRemoving}>
-                        <TrashIcon />
-                    </Button>
-                </FlexItem>
-                <Flex>
-                    <AuthenticationId id={id} />
-                </Flex>
-            </Flex>
-        </GridItem>
-        <GridItem md={10}>
-            { renderForm(fields) }
-        </GridItem>
-    </Grid>);
+  return (
+    <Grid>
+      <GridItem md={2}>
+        <Flex>
+          <FlexItem className="pf-u-mr-0">
+            <Button
+              variant="plain"
+              aria-label={intl.formatMessage(
+                {
+                  id: 'sources.removeAuthAriaLabel',
+                  defaultMessage: 'Remove authentication with id {id}',
+                },
+                { id }
+              )}
+              onClick={setAuthRemoving}
+            >
+              <TrashIcon />
+            </Button>
+          </FlexItem>
+          <Flex>
+            <AuthenticationId id={id} />
+          </Flex>
+        </Flex>
+      </GridItem>
+      <GridItem md={10}>{renderForm(fields)}</GridItem>
+    </Grid>
+  );
 };
 
 GridLayout.propTypes = {
-    id: PropTypes.string.isRequired,
-    fields: PropTypes.array.isRequired
+  id: PropTypes.string.isRequired,
+  fields: PropTypes.array.isRequired,
 };
 
 export default GridLayout;

@@ -6,82 +6,82 @@ import { ACTION_TYPES } from '../../redux/sources/actionTypes';
 import { getDevStore } from '../../utilities/getDevStore';
 
 describe('store creator', () => {
-    const EXPECTED_DEFAULT_STATE = {
-        notifications: [],
-        sources: defaultSourcesState,
-        user: defaultUserState
-    };
+  const EXPECTED_DEFAULT_STATE = {
+    notifications: [],
+    sources: defaultSourcesState,
+    user: defaultUserState,
+  };
 
-    it('creates DevStore', () => {
-        const store = getDevStore();
+  it('creates DevStore', () => {
+    const store = getDevStore();
 
-        expect(store.getState()).toEqual(EXPECTED_DEFAULT_STATE);
+    expect(store.getState()).toEqual(EXPECTED_DEFAULT_STATE);
+  });
+
+  it('creates ProdStore', () => {
+    const store = getProdStore();
+
+    expect(store.getState()).toEqual(EXPECTED_DEFAULT_STATE);
+  });
+
+  describe('url middleware', () => {
+    let store;
+    let next;
+    let action;
+    let sources;
+    let options;
+
+    beforeEach(() => {
+      next = jest.fn();
+      queries.updateQuery = jest.fn();
+      sources = {
+        pageSize: 1,
+        pageNumber: 125,
+        loaded: true,
+      };
     });
 
-    it('creates ProdStore', () => {
-        const store = getProdStore();
+    it('calls update url when load_entities_pending', () => {
+      options = {
+        pageSize: 2,
+        filterValue: {
+          name: 'johny smith',
+        },
+      };
 
-        expect(store.getState()).toEqual(EXPECTED_DEFAULT_STATE);
+      action = {
+        type: ACTION_TYPES.LOAD_ENTITIES_PENDING,
+        options,
+      };
+
+      store = {
+        getState: () => ({ sources }),
+      };
+
+      urlQueryMiddleware(store)(next)(action);
+
+      const combinedState = {
+        ...sources,
+        ...options,
+      };
+
+      expect(next).toHaveBeenCalledWith(action);
+      expect(queries.updateQuery).toHaveBeenCalledWith(combinedState);
     });
 
-    describe('url middleware', () => {
-        let store;
-        let next;
-        let action;
-        let sources;
-        let options;
+    it('does not call update url when action is not load_entities_pending', () => {
+      action = {
+        type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
+      };
 
-        beforeEach(() => {
-            next = jest.fn();
-            queries.updateQuery = jest.fn();
-            sources = {
-                pageSize: 1,
-                pageNumber: 125,
-                loaded: true
-            };
-        });
+      store = {
+        getState: () => ({ sources }),
+      };
 
-        it('calls update url when load_entities_pending', () => {
-            options = {
-                pageSize: 2,
-                filterValue: {
-                    name: 'johny smith'
-                }
-            };
+      urlQueryMiddleware(store)(next)(action);
 
-            action = {
-                type: ACTION_TYPES.LOAD_ENTITIES_PENDING,
-                options
-            };
-
-            store = {
-                getState: () => ({ sources })
-            };
-
-            urlQueryMiddleware(store)(next)(action);
-
-            const combinedState = {
-                ...sources,
-                ...options
-            };
-
-            expect(next).toHaveBeenCalledWith(action);
-            expect(queries.updateQuery).toHaveBeenCalledWith(combinedState);
-        });
-
-        it('does not call update url when action is not load_entities_pending', () => {
-            action = {
-                type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED
-            };
-
-            store = {
-                getState: () => ({ sources })
-            };
-
-            urlQueryMiddleware(store)(next)(action);
-
-            expect(next).toHaveBeenCalledWith(action);
-            expect(queries.updateQuery).not.toHaveBeenCalledWith(sources);
-        });
+      expect(next).toHaveBeenCalledWith(action);
+      expect(queries.updateQuery).not.toHaveBeenCalledWith(sources);
     });
+  });
 });

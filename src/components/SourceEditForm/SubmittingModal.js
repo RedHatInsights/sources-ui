@@ -6,20 +6,18 @@ import LoadingStep from '@redhat-cloud-services/frontend-components-sources/cjs/
 import WrapperModal from './WrapperModal';
 
 const SubmittingModal = () => {
-    const intl = useIntl();
+  const intl = useIntl();
 
-    return (
-        <WrapperModal>
-            <LoadingStep
-                customText={
-                    intl.formatMessage({
-                        id: 'sources.editSubmittingTitle',
-                        defaultMessage: 'Validating edited source credentials'
-                    })
-                }
-            />
-        </WrapperModal>
-    );
+  return (
+    <WrapperModal>
+      <LoadingStep
+        customText={intl.formatMessage({
+          id: 'sources.editSubmittingTitle',
+          defaultMessage: 'Validating edited source credentials',
+        })}
+      />
+    </WrapperModal>
+  );
 };
 
 export default SubmittingModal;

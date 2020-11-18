@@ -1,9 +1,6 @@
 import React from 'react';
 
 import FormRenderer from '@data-driven-forms/react-form-renderer/dist/cjs/form-renderer';
-import componentTypes from '@data-driven-forms/react-form-renderer/dist/cjs/component-types';
-import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
-import validatorMapper from '@data-driven-forms/react-form-renderer/dist/cjs/validator-mapper';
 
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/cjs/form-template';
 import componentMapper from '@data-driven-forms/pf4-component-mapper/dist/cjs/component-mapper';
@@ -14,24 +11,17 @@ import Authentication from '../components/Authentication';
 
 import ApplicationSelect from '../components/AddApplication/ApplicationSelect';
 
-const SourcesFormRenderer = props => (
-    <FormRenderer
-        FormTemplate={FormTemplate}
-        componentMapper={{
-            ...componentMapper,
-            ...mapperExtension,
-            authentication: Authentication,
-            'switch-field': componentMapper[componentTypes.SWITCH],
-            'application-select': ApplicationSelect
-        }}
-        validatorMapper={{
-            'required-validator': validatorMapper[validatorTypes.REQUIRED],
-            'pattern-validator': validatorMapper[validatorTypes.PATTERN],
-            'min-length-validator': validatorMapper[validatorTypes.MIN_LENGTH],
-            'url-validator': validatorMapper[validatorTypes.URL]
-        }}
-        {...props}
-    />
+const SourcesFormRenderer = (props) => (
+  <FormRenderer
+    FormTemplate={FormTemplate}
+    componentMapper={{
+      ...componentMapper,
+      ...mapperExtension,
+      authentication: Authentication,
+      'application-select': ApplicationSelect,
+    }}
+    {...props}
+  />
 );
 
 export default SourcesFormRenderer;

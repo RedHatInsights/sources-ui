@@ -12,32 +12,32 @@ import PermissionsChecker from './components/PermissionsChecker';
 import { getBaseName } from './frontend-components-copies/getBaseName';
 
 const App = () => {
-    useEffect(() => {
-        insights.chrome.init();
-        try {
-            insights.chrome.identifyApp('sources');
-        } catch (_exception) {
-            // eslint-disable-next-line no-console
-            console.warn('Failed to initialize chrome navigation.');
-        }
-    }, []);
+  useEffect(() => {
+    insights.chrome.init();
+    try {
+      insights.chrome.identifyApp('sources');
+    } catch (_exception) {
+      // eslint-disable-next-line no-console
+      console.warn('Failed to initialize chrome navigation.');
+    }
+  }, []);
 
-    return (
-        <Router basename={getBaseName(location.pathname, 1)}>
-            <IntlProvider locale="en">
-                <React.Fragment>
-                    <NotificationsPortal />
-                    <ErrorBoundary>
-                        <PermissionsChecker>
-                            <Main style={ { padding: 0 } } >
-                                <Routes />
-                            </Main>
-                        </PermissionsChecker>
-                    </ErrorBoundary>
-                </React.Fragment>
-            </IntlProvider>
-        </Router>
-    );
+  return (
+    <Router basename={getBaseName(location.pathname, 1)}>
+      <IntlProvider locale="en">
+        <React.Fragment>
+          <NotificationsPortal />
+          <ErrorBoundary>
+            <PermissionsChecker>
+              <Main style={{ padding: 0 }}>
+                <Routes />
+              </Main>
+            </PermissionsChecker>
+          </ErrorBoundary>
+        </React.Fragment>
+      </IntlProvider>
+    </Router>
+  );
 };
 
 export default App;

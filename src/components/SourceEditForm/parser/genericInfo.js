@@ -6,34 +6,32 @@ import validated from '@redhat-cloud-services/frontend-components-sources/cjs/va
 import AdditionalInfoBar from './AdditionalInfoBar';
 import EditAlert from './EditAlert';
 
-export const genericInfo = (sourceId, intl, sourceType, applications) => ([
-    {
-        name: 'alert',
-        component: 'description',
-        Content: EditAlert,
-        condition: {
-            when: 'message',
-            isNotEmpty: true
-        }
+export const genericInfo = (sourceId, intl, sourceType, applications) => [
+  {
+    name: 'alert',
+    component: 'description',
+    Content: EditAlert,
+    condition: {
+      when: 'message',
+      isNotEmpty: true,
     },
-    {
-        name: 'source.name',
-        label: intl.formatMessage({
-            id: 'sources.sourceName',
-            defaultMessage: 'Source name'
-        }),
-        component: componentTypes.TEXT_FIELD,
-        validate: [
-            (value) => asyncValidatorDebounced(value, sourceId, intl),
-            { type: validatorTypes.REQUIRED }
-        ],
-        isRequired: true,
-        resolveProps: validated
-    }, {
-        name: 'additional_info',
-        Content: AdditionalInfoBar,
-        component: 'description',
-        sourceType,
-        applications
-    }
-]);
+  },
+  {
+    name: 'source.name',
+    label: intl.formatMessage({
+      id: 'sources.sourceName',
+      defaultMessage: 'Source name',
+    }),
+    component: componentTypes.TEXT_FIELD,
+    validate: [(value) => asyncValidatorDebounced(value, sourceId, intl), { type: validatorTypes.REQUIRED }],
+    isRequired: true,
+    resolveProps: validated,
+  },
+  {
+    name: 'additional_info',
+    Content: AdditionalInfoBar,
+    component: 'description',
+    sourceType,
+    applications,
+  },
+];
