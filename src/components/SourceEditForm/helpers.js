@@ -2,6 +2,7 @@ import get from 'lodash/get';
 import set from 'lodash/set';
 
 import { endpointToUrl } from '../SourcesTable/formatters';
+import { APP_NAMES } from './parser/application';
 
 export const selectOnlyEditedValues = (values, editing) => {
   const filteredValues = {};
@@ -48,3 +49,8 @@ export const prepareInitialValues = ({ endpoints, authentications, applications,
     ...rest,
   };
 };
+
+export const hasCostManagement = (source, appTypes) =>
+  source.applications
+    .map(({ application_type_id }) => application_type_id)
+    .includes(appTypes.find(({ name }) => name === APP_NAMES.COST_MANAGAMENT)?.id);
