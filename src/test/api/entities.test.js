@@ -162,6 +162,16 @@ describe('entities spec', () => {
 
         expect(result).toEqual(OK_RESPONSE);
       });
+
+      it('updateApplication', async () => {
+        const method = 'Patch';
+        mock[`on${method}`](`/api/sources/v3.0/applications/${SOURCE_ID}`).reply(200, OK_RESPONSE);
+
+        const result = await api.getSourcesApi().updateApplication(SOURCE_ID, DATA);
+
+        expect(result).toEqual(OK_RESPONSE);
+        expect(mock.history[method.toLowerCase()][0].data).toEqual(JSON.stringify(DATA));
+      });
     });
 
     it('doRemoveSource fails', async () => {
@@ -204,7 +214,7 @@ describe('entities spec', () => {
 
       mock.onPost('/api/sources/v3.0/applications').reply(200, OK_RESPONSE);
 
-      const result = await api.doCreateApplication(SOURCE_ID, APP_TYPE_ID);
+      const result = await api.doCreateApplication({ source_id: SOURCE_ID, application_type_id: APP_TYPE_ID });
 
       expect(result).toEqual(OK_RESPONSE);
 

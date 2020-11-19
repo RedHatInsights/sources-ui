@@ -64,6 +64,14 @@ export const doUpdateSource = (source, formData) => {
     });
   }
 
+  if (formData.applications) {
+    Object.keys(formData.applications).forEach((key) => {
+      const idWithoutPrefix = key.replace('a', '');
+
+      promises.push(getSourcesApi().updateApplication(idWithoutPrefix, formData.applications[key]));
+    });
+  }
+
   if (formData.billing_source || formData.credentials) {
     let cmDataOut = {};
 
