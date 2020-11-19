@@ -5,7 +5,6 @@ import { Table, TableHeader, TableBody, sortable, wrappable } from '@patternfly/
 import { useIntl } from 'react-intl';
 
 import { sortEntities } from '../../redux/sources/actions';
-import { formatters } from './formatters';
 import { PlaceHolderTable, RowWrapperLoader } from './loaders';
 import { sourcesColumns, COLUMN_COUNT } from '../../views/sourcesViewDefinition';
 import EmptyStateTable from './EmptyStateTable';
@@ -18,7 +17,7 @@ const itemToCells = (item, columns, sourceTypes, appTypes) =>
     .filter((column) => column.title || column.hidden)
     .map((col) => ({
       title: col.formatter
-        ? formatters(col.formatter)(item[col.value], item, {
+        ? col.formatter(item[col.value], item, {
             sourceTypes,
             appTypes,
           })

@@ -1,7 +1,7 @@
 import get from 'lodash/get';
 import set from 'lodash/set';
 
-import { endpointToUrl } from '../SourcesTable/formatters';
+import { endpointToUrl } from '../../views/formatters';
 import { APP_NAMES } from './parser/application';
 
 export const selectOnlyEditedValues = (values, editing) => {
