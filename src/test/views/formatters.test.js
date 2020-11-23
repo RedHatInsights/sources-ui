@@ -1,6 +1,4 @@
 import {
-  formatters,
-  defaultFormatter,
   nameFormatter,
   dateFormatter,
   sourceTypeFormatter,
@@ -22,15 +20,15 @@ import {
   UNAVAILABLE,
   UnknownError,
   getStatusColor,
-} from '../../../components/SourcesTable/formatters';
-import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX } from '../../__mocks__/sourceTypesData';
+} from '../../views/formatters';
+import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX } from '../__mocks__/sourceTypesData';
 import {
   sourcesDataGraphQl,
   SOURCE_CATALOGAPP_INDEX,
   SOURCE_ALL_APS_INDEX,
   SOURCE_NO_APS_INDEX,
   SOURCE_ENDPOINT_URL_INDEX,
-} from '../../__mocks__/sourcesData';
+} from '../__mocks__/sourcesData';
 import {
   applicationTypesData,
   CATALOG_INDEX,
@@ -38,57 +36,13 @@ import {
   COSTMANAGEMENET_INDEX,
   COSTMANAGEMENT_APP,
   CATALOG_APP,
-} from '../../__mocks__/applicationTypesData';
+} from '../__mocks__/applicationTypesData';
 import { Badge, Tooltip, Label } from '@patternfly/react-core';
 import { DateFormat } from '@redhat-cloud-services/frontend-components/components/cjs/DateFormat';
 import { IntlProvider } from 'react-intl';
 
 describe('formatters', () => {
   const wrapperWithIntl = (children) => <IntlProvider locale="en">{children}</IntlProvider>;
-
-  describe('formatters', () => {
-    it('returns nameFormatter', () => {
-      expect(formatters('nameFormatter')).toEqual(nameFormatter);
-    });
-
-    it('returns dateFormatter', () => {
-      expect(formatters('dateFormatter')).toEqual(dateFormatter);
-    });
-
-    it('returns sourceTypeFormatter', () => {
-      expect(formatters('sourceTypeFormatter')).toEqual(sourceTypeFormatter);
-    });
-
-    it('returns applicationFormatter', () => {
-      expect(formatters('applicationFormatter')).toEqual(applicationFormatter);
-    });
-
-    it('returns importedFormatter', () => {
-      expect(formatters('importedFormatter')).toEqual(importedFormatter);
-    });
-
-    it('returns availabilityFormatter', () => {
-      expect(formatters('availabilityFormatter')).toEqual(availabilityFormatter);
-    });
-
-    it('returns defaultFormatter when non-sense', () => {
-      const nonsenseFormatter = 'peknaKravina';
-      const value = 'some value';
-      expect(formatters(nonsenseFormatter)(value)).toEqual(`undefined ${nonsenseFormatter} formatter of value: ${value}`);
-    });
-  });
-
-  describe('defaultFormatter', () => {
-    it('returns string message', () => {
-      const VALUE = 'ahoj';
-      const NAME = 'dateFormatter';
-
-      const result = defaultFormatter(NAME)(VALUE);
-
-      expect(result.includes(NAME)).toEqual(true);
-      expect(result.includes(VALUE)).toEqual(true);
-    });
-  });
 
   describe('sourceIsOpenShift', () => {
     it('returns true when is openshift', () => {

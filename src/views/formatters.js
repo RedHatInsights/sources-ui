@@ -97,8 +97,6 @@ export const nameFormatter = (name, source, { sourceTypes }) => (
   </TextContent>
 );
 
-export const defaultFormatter = (name) => (value) => `undefined ${name} formatter of value: ${value}`;
-
 export const importedFormatter = (value) => {
   if (!value) {
     return null;
@@ -332,13 +330,3 @@ export const availabilityFormatter = (_status, source, { appTypes }) => {
     </TextContent>
   );
 };
-
-export const formatters = (name) =>
-  ({
-    nameFormatter,
-    dateFormatter,
-    applicationFormatter,
-    sourceTypeFormatter,
-    importedFormatter,
-    availabilityFormatter,
-  }[name] || defaultFormatter(name));

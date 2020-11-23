@@ -22,7 +22,7 @@ import { getSourcesApi } from '../../api/entities';
 
 import { useSource } from '../../hooks/useSource';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
-import { endpointToUrl } from '../SourcesTable/formatters';
+import { endpointToUrl } from '../../views/formatters';
 import { routes, replaceRouteId } from '../../Routes';
 
 import { doAttachApp } from '../../api/doAttachApp';

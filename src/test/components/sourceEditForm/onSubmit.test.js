@@ -5,7 +5,7 @@ import * as doUpdateSource from '../../../api/doUpdateSource';
 import * as doLoadSourceForEdit from '../../../api/doLoadSourceForEdit';
 
 import * as getAppStatus from '@redhat-cloud-services/frontend-components-sources/cjs/getApplicationStatus';
-import { UNAVAILABLE, AVAILABLE } from '../../../components/SourcesTable/formatters';
+import { UNAVAILABLE, AVAILABLE } from '../../../views/formatters';
 
 describe('editSourceModal - on submit', () => {
   let VALUES;

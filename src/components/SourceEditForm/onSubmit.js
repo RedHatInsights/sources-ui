@@ -6,7 +6,7 @@ import { checkSourceStatus } from '../../api/checkSourceStatus';
 import { doLoadSourceForEdit } from '../../api/doLoadSourceForEdit';
 import { doUpdateSource } from '../../api/doUpdateSource';
 
-import { UNAVAILABLE } from '../SourcesTable/formatters';
+import { UNAVAILABLE } from '../../views/formatters';
 
 export const onSubmit = async (values, editing, dispatch, source, intl, setState, hasCostManagement) => {
   setState({ type: 'submit', values, editing });
