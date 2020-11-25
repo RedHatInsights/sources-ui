@@ -9,8 +9,6 @@ import { mapperExtension } from '@redhat-cloud-services/frontend-components-sour
 
 import Authentication from '../components/Authentication';
 
-import ApplicationSelect from '../components/AddApplication/ApplicationSelect';
-
 const SourcesFormRenderer = (props) => (
   <FormRenderer
     FormTemplate={FormTemplate}
@@ -18,7 +16,6 @@ const SourcesFormRenderer = (props) => (
       ...componentMapper,
       ...mapperExtension,
       authentication: Authentication,
-      'application-select': ApplicationSelect,
     }}
     {...props}
   />

@@ -53,57 +53,14 @@ const reducer = (state, { type, source, sourceType, appTypes, intl, message, val
     case 'submitTimetouted':
       return {
         ...state,
+        source,
         isSubmitting: false,
         isTimeouted: true,
       };
-    case 'removeAuthPending':
+    case 'cancelTimetouted':
       return {
         ...state,
-        isAuthRemoving: null,
-        source: {
-          ...state.source,
-          authentications: state.source.authentications.map((auth) =>
-            auth.id === authId
-              ? {
-                  ...auth,
-                  isDeleting: true,
-                }
-              : auth
-          ),
-        },
-      };
-    case 'removeAuthRejected':
-      return {
-        ...state,
-        source: {
-          ...state.source,
-          authentications: state.source.authentications.map((auth) =>
-            auth.id === authId
-              ? {
-                  ...auth,
-                  isDeleting: false,
-                }
-              : auth
-          ),
-        },
-      };
-    case 'removeAuthFulfill':
-      return {
-        ...state,
-        source: {
-          ...state.source,
-          authentications: state.source.authentications.filter((auth) => auth.id !== authId),
-        },
-      };
-    case 'setAuthRemoving':
-      return {
-        ...state,
-        isAuthRemoving: removingAuth,
-      };
-    case 'closeAuthRemoving':
-      return {
-        ...state,
-        isAuthRemoving: null,
+        isTimeouted: false,
       };
     default:
       return state;

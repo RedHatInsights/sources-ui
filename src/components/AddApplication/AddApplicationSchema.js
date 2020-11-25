@@ -1,6 +1,5 @@
 import React from 'react';
 import componentTypes from '@data-driven-forms/react-form-renderer/dist/cjs/component-types';
-import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
 
 import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
 import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
@@ -9,8 +8,6 @@ import { useIntl } from 'react-intl';
 import * as schemaBuilder from '@redhat-cloud-services/frontend-components-sources/cjs/schemaBuilder';
 import get from 'lodash/get';
 
-import { AuthTypeCleaner } from './AuthTypeCleaner';
-import AddApplicationDescription from './AddApplicationDescription';
 import authenticationSelectionStep from './schema/authenticationSelectionStep';
 import generateFirstAuthStep from './schema/generateFirstAuthStep';
 import selectAuthenticationStep from './schema/selectAuthenticationStep';
@@ -37,103 +34,59 @@ export const hasAlreadySupportedAuthType = (authValues = [], appType, sourceType
 export const hasMultipleAuthenticationTypes = (app, sourceType) =>
   app.supported_source_types.includes(sourceType.name) && app.supported_authentication_types[sourceType.name]?.length > 1;
 
-const fields = (applications = [], intl, sourceTypes, applicationTypes, authenticationValues, source, container) => {
-  const hasAvailableApps = applications.length > 0;
-
-  let nextStep = hasAvailableApps ? 'summary' : undefined;
+const fields = (intl, sourceType, appType, authenticationValues, source, container, title, description) => {
   let authenticationFields = [];
-  const sourceType = sourceTypes.find(({ id }) => id === source.source_type_id);
 
-  if (!source.imported && hasAvailableApps) {
-    const appendEndpoint = sourceType.schema.endpoint.hidden ? sourceType.schema.endpoint.fields : [];
-    const hasEndpointStep = appendEndpoint.length === 0;
+  const appendEndpoint = sourceType.schema.endpoint.hidden ? sourceType.schema.endpoint.fields : [];
+  const hasEndpointStep = appendEndpoint.length === 0;
 
-    applicationTypes.forEach((appType) => {
-      if (appType.supported_source_types.includes(sourceType.name)) {
-        appType.supported_authentication_types[sourceType.name].forEach((authtype) => {
-          authenticationFields.push(generateFirstAuthStep(sourceType, appType, appendEndpoint, authtype, intl));
-        });
-      }
+  if (appType.supported_source_types.includes(sourceType.name)) {
+    appType.supported_authentication_types[sourceType.name].forEach((authtype) => {
+      authenticationFields.push(generateFirstAuthStep(sourceType, appType, appendEndpoint, authtype, intl));
     });
-
-    sourceType.schema.authentication.forEach((auth) => {
-      applicationTypes.forEach((appType) => {
-        if (appType.supported_source_types.includes(sourceType.name)) {
-          const appAdditionalSteps = schemaBuilder.getAdditionalSteps(sourceType.name, auth.type, appType.name);
-
-          if (appAdditionalSteps.length > 0) {
-            authenticationFields.push(
-              ...schemaBuilder.createAdditionalSteps(
-                appAdditionalSteps,
-                sourceType.name,
-                auth.type,
-                hasEndpointStep,
-                auth.fields,
-                appType.name
-              )
-            );
-          }
-        }
-      });
-    });
-
-    if (hasEndpointStep) {
-      authenticationFields.push(schemaBuilder.createEndpointStep(sourceType.schema.endpoint, sourceType.name));
-    }
-
-    nextStep = ({ values: { application } }) => {
-      if (application) {
-        const appType = applicationTypes.find(({ id }) => id === application.application_type_id);
-
-        const hasMultipleAuthTypes = appType?.supported_authentication_types[sourceType.name]?.length > 1;
-
-        if (hasMultipleAuthTypes) {
-          return `selectAuthType-${application.application_type_id}`;
-        }
-
-        if (
-          hasAlreadySupportedAuthType(
-            authenticationValues,
-            applicationTypes.find(({ id }) => id === application.application_type_id),
-            sourceType.name
-          )
-        ) {
-          return 'selectAuthentication';
-        }
-
-        const authType = appType?.supported_authentication_types[sourceType.name][0];
-
-        return `${sourceType.name}-${application && application.application_type_id}-${authType}`;
-      }
-    };
   }
 
-  const applicationSelection = {
-    component: 'application-select',
-    name: 'application.application_type_id',
-    options: applications,
-    container,
-    validate: [
-      {
-        type: validatorTypes.REQUIRED,
-      },
-    ],
-  };
+  sourceType.schema.authentication.forEach((auth) => {
+    if (appType.supported_source_types.includes(sourceType.name)) {
+      const appAdditionalSteps = schemaBuilder.getAdditionalSteps(sourceType.name, auth.type, appType.name);
 
-  const selectionSteps = applicationTypes
-    .filter((app) => hasMultipleAuthenticationTypes(app, sourceType))
-    .map((app) => authenticationSelectionStep(sourceType, app, intl, authenticationValues));
+      if (appAdditionalSteps.length > 0) {
+        authenticationFields.push(
+          ...schemaBuilder.createAdditionalSteps(
+            appAdditionalSteps,
+            sourceType.name,
+            auth.type,
+            hasEndpointStep,
+            auth.fields,
+            appType.name
+          )
+        );
+      }
+    }
+  });
 
-  if (!source.imported && hasAvailableApps) {
-    selectionSteps.push(
-      selectAuthenticationStep({
-        intl,
-        source,
-        authenticationValues,
-        sourceType,
-        applicationTypes,
-      })
-    );
+  if (hasEndpointStep) {
+    authenticationFields.push(schemaBuilder.createEndpointStep(sourceType.schema.endpoint, sourceType.name));
+  }
+
+  let firstStep = authenticationFields[0];
+
+  const hasMultipleAuthTypes = appType?.supported_authentication_types[sourceType.name]?.length > 1;
+
+  if (hasMultipleAuthTypes) {
+    firstStep = authenticationSelectionStep(sourceType, appType, intl, authenticationValues);
+  }
+
+  const hasAlreadyType = hasAlreadySupportedAuthType(authenticationValues, appType, sourceType.name);
+
+  if (hasAlreadyType) {
+    firstStep = selectAuthenticationStep({
+      intl,
+      source,
+      authenticationValues,
+      sourceType,
+      app: appType,
+    });
   }
 
   return {
@@ -141,21 +94,12 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
       {
         component: componentTypes.WIZARD,
         name: 'wizard',
-        title: intl.formatMessage({
-          id: 'sources.manageApps',
-          defaultMessage: 'Manage applications',
-        }),
+        title,
         inModal: true,
         container,
         showTitles: true,
-        crossroads: ['application.application_type_id', 'selectedAuthentication', 'authtype'],
-        description: intl.formatMessage(
-          {
-            id: 'sources.addAppDescription',
-            defaultMessage: 'Add or remove applications from {name}.',
-          },
-          { name: source.name }
-        ),
+        crossroads: ['selectedAuthentication', 'authtype'],
+        description,
         buttonLabels: {
           submit: intl.formatMessage({
             id: 'sources.add',
@@ -172,25 +116,14 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
         },
         fields: [
           {
-            nextStep,
-            title: intl.formatMessage({
-              id: 'sources.selectApp',
-              defaultMessage: 'Add / remove applications',
-            }),
-            name: 'selectAppStep',
+            ...firstStep,
             fields: [
+              ...firstStep.fields,
               {
-                component: 'description',
-                name: 'description',
-                Content: AddApplicationDescription,
-                container,
-              },
-              applicationSelection,
-              {
-                component: 'description',
-                name: 'authtypesetter',
-                Content: AuthTypeCleaner,
+                component: componentTypes.TEXT_FIELD,
+                name: 'application.application_type_id',
                 hideField: true,
+                initialValue: appType.id,
               },
             ],
           },
@@ -209,13 +142,12 @@ const fields = (applications = [], intl, sourceTypes, applicationTypes, authenti
               {
                 component: 'summary',
                 name: 'summary',
-                sourceTypes,
-                applicationTypes,
+                sourceTypes: [sourceType],
+                applicationTypes: [appType],
               },
             ],
           },
-          ...selectionSteps,
-          ...authenticationFields,
+          ...(hasAlreadyType || hasMultipleAuthTypes ? authenticationFields : authenticationFields.splice(1)),
         ],
       },
     ],

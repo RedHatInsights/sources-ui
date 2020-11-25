@@ -67,7 +67,7 @@ export const insertEditAction = (actions, intl, push, isOrgAdmin, disabledProps)
       id: 'sources.edit',
       defaultMessage: 'Edit',
     }),
-    onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesEdit.path, id)),
+    onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesDetail.path, id)),
     ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
   });
 
@@ -83,30 +83,22 @@ export const actionResolver = (intl, push, isOrgAdmin) => (rowData) => {
     className: 'ins-c-sources__disabled-drodpown-item',
   };
 
-  const actions = [
-    {
-      title: intl.formatMessage({
-        id: 'sources.manageApps',
-        defaultMessage: 'Manage applications',
-      }),
-      onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourceManageApps.path, id)),
-      ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
-    },
-    {
-      title: intl.formatMessage({
-        id: 'sources.remove',
-        defaultMessage: 'Remove',
-      }),
-      onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesRemove.path, id)),
-      ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
-    },
-  ];
+  const actions = [];
 
   const isSourceEditable = !rowData.imported;
 
   if (isSourceEditable) {
     insertEditAction(actions, intl, push, isOrgAdmin, disabledProps);
   }
+
+  actions.push({
+    title: intl.formatMessage({
+      id: 'sources.remove',
+      defaultMessage: 'Remove',
+    }),
+    onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesRemove.path, id)),
+    ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
+  });
 
   return actions;
 };
