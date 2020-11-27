@@ -35,11 +35,20 @@ SelectAuthenticationDescription.propTypes = {
   authenticationTypeName: PropTypes.string,
 };
 
-export const generateAuthSelectionOptions = ({ authenticationValues, appType, supportedAuthTypeName, supportedAuthType }) =>
+export const generateAuthSelectionOptions = ({
+  authenticationValues,
+  supportedAuthTypeName,
+  supportedAuthType,
+  applicationTypes,
+  source,
+}) =>
   authenticationValues
     .filter(({ authtype }) => authtype === supportedAuthType)
     .map((values) => {
       const includeUsername = values.username ? `-${values.username}` : '';
+
+      const app = source.applications.find(({ authentications }) => authentications.find(({ id }) => id === values.id));
+      const appType = app && app.application_type_id ? applicationTypes.find(({ id }) => id === app.application_type_id) : '';
       const includeAppName = appType ? `-${appType.display_name}` : `-unused-${values.id}`;
       const label = `${supportedAuthTypeName}${includeUsername}${includeAppName}`;
 
@@ -49,7 +58,7 @@ export const generateAuthSelectionOptions = ({ authenticationValues, appType, su
       };
     });
 
-const selectAuthenticationStep = ({ intl, source, authenticationValues, sourceType, app }) => {
+const selectAuthenticationStep = ({ intl, source, authenticationValues, sourceType, app, applicationTypes }) => {
   const nextStep = ({ values: { authtype, authentication } }) =>
     `${sourceType.name}-${app.id}-${authtype || authentication?.authtype}`;
 
@@ -109,9 +118,10 @@ const selectAuthenticationStep = ({ intl, source, authenticationValues, sourceTy
                 },
                 ...generateAuthSelectionOptions({
                   authenticationValues,
-                  appType: app,
                   supportedAuthTypeName,
                   supportedAuthType,
+                  applicationTypes,
+                  source,
                 }),
               ],
             },

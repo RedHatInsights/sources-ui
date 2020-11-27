@@ -45,7 +45,7 @@ import { PaginationLoader } from '../components/SourcesTable/loaders';
 const SourcesPage = () => {
   const [filter, setFilterValue] = useState();
 
-  const loaded = useIsLoaded();
+  const entitiesLoaded = useIsLoaded();
   const hasWritePermissions = useHasWritePermissions();
 
   const history = useHistory();
@@ -65,6 +65,8 @@ const SourcesPage = () => {
     appTypesLoaded,
     sourceTypesLoaded,
   } = sources;
+
+  const loaded = entitiesLoaded && sourceTypesLoaded && appTypesLoaded;
 
   const dispatch = useDispatch();
 

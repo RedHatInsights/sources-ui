@@ -9,7 +9,6 @@ import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { routes, replaceRouteId } from '../../../Routes';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
 
-import WrapperModal from '../../../components/SourceEditForm/WrapperModal';
 import ErroredModal from '../../../components/SourceEditForm/ErroredModal';
 
 import { EmptyStateBody, EmptyState } from '@patternfly/react-core/dist/js/components/EmptyState';
@@ -27,7 +26,7 @@ describe('ErroredModal', () => {
   const middlewares = [thunk, notificationsMiddleware()];
 
   beforeEach(async () => {
-    initialEntry = [replaceRouteId(routes.sourcesEdit.path, '14')];
+    initialEntry = [replaceRouteId(routes.sourcesDetail.path, '14')];
     mockStore = configureStore(middlewares);
     store = mockStore({
       sources: {
@@ -39,7 +38,7 @@ describe('ErroredModal', () => {
     await act(async () => {
       wrapper = mount(
         componentWrapperIntl(
-          <Route path={routes.sourcesEdit.path} render={(...args) => <ErroredModal {...args} onRetry={onRetry} />} />,
+          <Route path={routes.sourcesDetail.path} render={(...args) => <ErroredModal {...args} onRetry={onRetry} />} />,
           store,
           initialEntry
         )
@@ -49,7 +48,6 @@ describe('ErroredModal', () => {
   });
 
   it('renders correctly', async () => {
-    expect(wrapper.find(WrapperModal)).toHaveLength(1);
     expect(wrapper.find(ErroredStep)).toHaveLength(1);
 
     expect(wrapper.find(Title).last().text()).toEqual('Something went wrong');

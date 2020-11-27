@@ -367,6 +367,7 @@ describe('editSourceModal - on submit', () => {
     );
     expect(SET_STATE.mock.calls[1][0]).toEqual({
       type: 'submitTimetouted',
+      source: SOURCE_DATA,
     });
   });
 

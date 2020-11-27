@@ -10,7 +10,6 @@ import {
   removeRequiredValidator,
   getAdditionalAuthSteps,
 } from '../../../../components/SourceEditForm/parser/authentication';
-import GridLayout from '../../../../components/SourceEditForm/parser/GridLayout';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas', () => ({
   __esModule: true,
@@ -243,15 +242,7 @@ describe('authentication edit source parser', () => {
       const authentication = SOURCE_TYPE.schema.authentication[0];
       const FIELDS_WITHOUT_STEPKEYS = [authentication.fields[0], authentication.fields[1]];
 
-      const ARN_GROUP = [
-        {
-          name: `authentication-${AUTHENTICATIONS[0].id}`,
-          component: 'description',
-          id: AUTHENTICATIONS[0].id,
-          Content: GridLayout,
-          fields: modifyAuthSchemas(FIELDS_WITHOUT_STEPKEYS, ID),
-        },
-      ];
+      const ARN_GROUP = modifyAuthSchemas(FIELDS_WITHOUT_STEPKEYS, ID);
 
       expect(result).toEqual([ARN_GROUP]);
     });
@@ -346,25 +337,20 @@ describe('authentication edit source parser', () => {
 
       const result = authenticationFields(AUTHENTICATIONS, SOURCE_TYPE);
 
-      expect(result[0][0].fields[0]).toEqual({
+      expect(result[0][0]).toEqual({
         component: 'authentication',
         label: 'Cost Management ARN',
         name: 'authentications.a123.password',
       });
-      expect(result[1][0].fields[0]).toEqual({
+      expect(result[1][0]).toEqual({
         component: 'authentication',
         label: 'Subscription Watch ARN',
         name: 'authentications.a234.password',
       });
-      expect(result[2][0].fields[0]).toEqual({
+      expect(result[2][0]).toEqual({
         component: 'authentication',
         label: 'arn',
         name: 'authentications.a345.password',
-      });
-      expect(result[2][0].fields[1]).toEqual({
-        component: 'text-field',
-        label: 'username',
-        name: 'authentications.a345.username',
       });
     });
   });

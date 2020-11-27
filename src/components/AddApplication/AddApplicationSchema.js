@@ -34,60 +34,73 @@ export const hasAlreadySupportedAuthType = (authValues = [], appType, sourceType
 export const hasMultipleAuthenticationTypes = (app, sourceType) =>
   app.supported_source_types.includes(sourceType.name) && app.supported_authentication_types[sourceType.name]?.length > 1;
 
-const fields = (intl, sourceType, appType, authenticationValues, source, container, title, description) => {
+const fields = (intl, sourceType, appType, authenticationValues, source, container, title, description, applicationTypes) => {
   let authenticationFields = [];
+  let firstStep;
+  let hasMultipleAuthTypes;
+  let hasAlreadyType;
 
-  const appendEndpoint = sourceType.schema.endpoint.hidden ? sourceType.schema.endpoint.fields : [];
-  const hasEndpointStep = appendEndpoint.length === 0;
+  if (!source.imported) {
+    const appendEndpoint = sourceType.schema.endpoint.hidden ? sourceType.schema.endpoint.fields : [];
+    const hasEndpointStep = appendEndpoint.length === 0;
 
-  if (appType.supported_source_types.includes(sourceType.name)) {
-    appType.supported_authentication_types[sourceType.name].forEach((authtype) => {
-      authenticationFields.push(generateFirstAuthStep(sourceType, appType, appendEndpoint, authtype, intl));
-    });
-  }
-
-  sourceType.schema.authentication.forEach((auth) => {
     if (appType.supported_source_types.includes(sourceType.name)) {
-      const appAdditionalSteps = schemaBuilder.getAdditionalSteps(sourceType.name, auth.type, appType.name);
-
-      if (appAdditionalSteps.length > 0) {
-        authenticationFields.push(
-          ...schemaBuilder.createAdditionalSteps(
-            appAdditionalSteps,
-            sourceType.name,
-            auth.type,
-            hasEndpointStep,
-            auth.fields,
-            appType.name
-          )
-        );
-      }
+      appType.supported_authentication_types[sourceType.name].forEach((authtype) => {
+        authenticationFields.push(generateFirstAuthStep(sourceType, appType, appendEndpoint, authtype, intl));
+      });
     }
-  });
 
-  if (hasEndpointStep) {
-    authenticationFields.push(schemaBuilder.createEndpointStep(sourceType.schema.endpoint, sourceType.name));
-  }
+    sourceType.schema.authentication.forEach((auth) => {
+      if (appType.supported_source_types.includes(sourceType.name)) {
+        const appAdditionalSteps = schemaBuilder.getAdditionalSteps(sourceType.name, auth.type, appType.name);
 
-  let firstStep = authenticationFields[0];
-
-  const hasMultipleAuthTypes = appType?.supported_authentication_types[sourceType.name]?.length > 1;
-
-  if (hasMultipleAuthTypes) {
-    firstStep = authenticationSelectionStep(sourceType, appType, intl, authenticationValues);
-  }
-
-  const hasAlreadyType = hasAlreadySupportedAuthType(authenticationValues, appType, sourceType.name);
-
-  if (hasAlreadyType) {
-    firstStep = selectAuthenticationStep({
-      intl,
-      source,
-      authenticationValues,
-      sourceType,
-      app: appType,
+        if (appAdditionalSteps.length > 0) {
+          authenticationFields.push(
+            ...schemaBuilder.createAdditionalSteps(
+              appAdditionalSteps,
+              sourceType.name,
+              auth.type,
+              hasEndpointStep,
+              auth.fields,
+              appType.name
+            )
+          );
+        }
+      }
     });
+
+    if (hasEndpointStep) {
+      authenticationFields.push(schemaBuilder.createEndpointStep(sourceType.schema.endpoint, sourceType.name));
+    }
+
+    firstStep = authenticationFields[0];
+
+    hasMultipleAuthTypes = appType?.supported_authentication_types[sourceType.name]?.length > 1;
+
+    if (hasMultipleAuthTypes) {
+      firstStep = authenticationSelectionStep(sourceType, appType, intl, authenticationValues);
+    }
+
+    hasAlreadyType = hasAlreadySupportedAuthType(authenticationValues, appType, sourceType.name);
+
+    if (hasAlreadyType) {
+      firstStep = selectAuthenticationStep({
+        intl,
+        source,
+        authenticationValues,
+        sourceType,
+        app: appType,
+        applicationTypes,
+      });
+    }
   }
+
+  const appTypeSetter = {
+    component: componentTypes.TEXT_FIELD,
+    name: 'application.application_type_id',
+    hideField: true,
+    initialValue: appType.id,
+  };
 
   return {
     fields: [
@@ -115,18 +128,14 @@ const fields = (intl, sourceType, appType, authenticationValues, source, contain
           }),
         },
         fields: [
-          {
-            ...firstStep,
-            fields: [
-              ...firstStep.fields,
-              {
-                component: componentTypes.TEXT_FIELD,
-                name: 'application.application_type_id',
-                hideField: true,
-                initialValue: appType.id,
-              },
-            ],
-          },
+          ...(source.imported
+            ? []
+            : [
+                {
+                  ...firstStep,
+                  fields: [...firstStep.fields, appTypeSetter],
+                },
+              ]),
           {
             title: intl.formatMessage({
               id: 'sources.reviewDetails',
@@ -145,6 +154,7 @@ const fields = (intl, sourceType, appType, authenticationValues, source, contain
                 sourceTypes: [sourceType],
                 applicationTypes: [appType],
               },
+              ...(source.imported ? [appTypeSetter] : []),
             ],
           },
           ...(hasAlreadyType || hasMultipleAuthTypes ? authenticationFields : authenticationFields.splice(1)),

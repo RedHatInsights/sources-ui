@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { lazy, Suspense } from 'react';
 
 import { Grid } from '@patternfly/react-core/dist/js/layouts/Grid/Grid';
 import { GridItem } from '@patternfly/react-core/dist/js/layouts/Grid/GridItem';
@@ -11,10 +11,28 @@ import { useSource } from '../hooks/useSource';
 import { DetailLoader } from '../components/SourcesTable/loaders';
 import CustomRoute from '../components/CustomRoute/CustomRoute';
 import { replaceRouteId, routes } from '../Routes';
-import SourceRemoveModal from '../components/SourceRemoveModal/SourceRemoveModal';
-import AddApplication from '../components/AddApplication/AddApplication';
-import RemoveAppModal from '../components/AddApplication/RemoveAppModal';
 import DetailHeader from '../components/SourceDetail/DetailHeader';
+
+const SourceRemoveModal = lazy(() =>
+  import(
+    /* webpackChunkName: "remove" */
+    '../components/SourceRemoveModal/SourceRemoveModal'
+  )
+);
+
+const AddApplication = lazy(() =>
+  import(
+    /* webpackChunkName: "remove" */
+    '../components/AddApplication/AddApplication'
+  )
+);
+
+const RemoveAppModal = lazy(() =>
+  import(
+    /* webpackChunkName: "remove" */
+    '../components/AddApplication/RemoveAppModal'
+  )
+);
 
 const Detail = () => {
   const source = useSource();

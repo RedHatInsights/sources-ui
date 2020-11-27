@@ -1,6 +1,5 @@
 import React, { useEffect, useReducer } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import { Spinner } from '@patternfly/react-core/dist/js/components/Spinner';
 import { Bullseye } from '@patternfly/react-core/dist/js/layouts/Bullseye';
@@ -11,7 +10,6 @@ import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
 import { doLoadSourceForEdit } from '../../api/doLoadSourceForEdit';
 import { onSubmit } from './onSubmit';
 
-import { redirectWhenImported } from './importedRedirect';
 import { useSource } from '../../hooks/useSource';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
 import reducer, { initialState } from './reducer';
@@ -22,7 +20,6 @@ import { hasCostManagement } from './helpers';
 
 const SourceEditModal = () => {
   const [state, setState] = useReducer(reducer, initialState);
-  const history = useHistory();
   const sourceRedux = useSource();
   const isLoaded = useIsLoaded();
 
@@ -47,16 +44,18 @@ const SourceEditModal = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (!initialLoad) {
+      setState({ type: 'sourceChanged' });
+    }
+  }, [sourceRedux, sourceRedux?.applications?.length]);
+
+  useEffect(() => {
     if (sourceRedux && initialLoad && appTypesLoaded) {
       doLoadSourceForEdit(sourceRedux, hasCostManagement(sourceRedux, appTypes)).then((source) => {
-        if (source.source.imported) {
-          redirectWhenImported(dispatch, intl, history, source.source.name);
-        }
-
         setState({ type: 'setSource', source });
       });
     }
-  }, [sourceRedux, isLoaded, appTypesLoaded]);
+  }, [sourceRedux, isLoaded, appTypesLoaded, initialLoad]);
 
   useEffect(() => {
     if (source && appTypesLoaded && sourceTypesLoaded) {

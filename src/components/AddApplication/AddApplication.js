@@ -2,6 +2,7 @@ import React, { useReducer, useEffect, useRef } from 'react';
 import { useHistory, Link, useParams, Redirect } from 'react-router-dom';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { useIntl } from 'react-intl';
+import isEmpty from 'lodash/isEmpty';
 
 import filterApps from '@redhat-cloud-services/frontend-components-sources/cjs/filterApps';
 import CloseModal from '@redhat-cloud-services/frontend-components-sources/cjs/CloseModal';
@@ -33,6 +34,7 @@ import { Button } from '@patternfly/react-core/dist/js/components/Button';
 import { Text } from '@patternfly/react-core/dist/js/components/Text';
 
 import removeAppSubmit from './removeAppSubmit';
+import { diff } from 'deep-object-diff';
 
 export const onSubmit = (
   values,
@@ -340,7 +342,8 @@ const AddApplication = () => {
     source,
     container.current,
     title,
-    description
+    description,
+    appTypes
   );
 
   const hasAvailableApps = filteredAppTypes.length > 0;
@@ -352,7 +355,14 @@ const AddApplication = () => {
   };
 
   const cancelBeforeExit = (values) => {
-    if (values?.application) {
+    // eslint-disable-next-line no-unused-vars
+    const { application: _a, ...initialValues } = state.initialValues;
+    // eslint-disable-next-line no-unused-vars
+    const { application: _a1, ...newValues } = values;
+
+    const isChanged = !isEmpty(diff(initialValues, newValues));
+
+    if (isChanged) {
       container.current.hidden = true;
       setState({ type: 'toggleCancelling', values });
     } else {

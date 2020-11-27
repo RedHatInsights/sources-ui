@@ -45,13 +45,13 @@ const RemoveAppModal = () => {
   const onCancel = () => push(replaceRouteId(routes.sourcesDetail.path, source.id));
   const onSubmit = () => removeAppSubmit(app, intl, onCancel, dispatch, source);
 
-  const dependentApps = app.dependent_applications
+  const dependentApps = appType?.dependent_applications
     .map((appName) => {
       const appType = appTypes.find(({ name }) => name === appName);
 
-      return app.sourceAppsNames.includes(appType?.display_name) && appType?.display_name;
+      return source?.applications?.find(({ application_type_id }) => application_type_id === appType.id) && appType?.display_name;
     })
-    .filter((x) => x);
+    .filter(Boolean);
 
   return (
     <Modal

@@ -13,7 +13,7 @@ export const initialState = {
   isTimeouted: false,
 };
 
-const reducer = (state, { type, source, sourceType, appTypes, intl, message, values, editing, removingAuth, authId }) => {
+const reducer = (state, { type, source, sourceType, appTypes, intl, message, values, editing }) => {
   switch (type) {
     case 'createForm':
       return {
@@ -61,6 +61,12 @@ const reducer = (state, { type, source, sourceType, appTypes, intl, message, val
       return {
         ...state,
         isTimeouted: false,
+      };
+    case 'sourceChanged':
+      return {
+        ...state,
+        initialLoad: true,
+        loading: true,
       };
     default:
       return state;

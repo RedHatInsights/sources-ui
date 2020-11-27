@@ -53,23 +53,39 @@ export const loadEntities = (options) => (dispatch, getState) => {
 export const loadSourceTypes = () => (dispatch) => {
   dispatch({ type: ACTION_TYPES.LOAD_SOURCE_TYPES_PENDING });
 
-  return doLoadSourceTypes().then((sourceTypes) =>
-    dispatch({
-      type: ACTION_TYPES.LOAD_SOURCE_TYPES_FULFILLED,
-      payload: sourceTypes,
-    })
-  );
+  return doLoadSourceTypes()
+    .then((sourceTypes) =>
+      dispatch({
+        type: ACTION_TYPES.LOAD_SOURCE_TYPES_FULFILLED,
+        payload: sourceTypes,
+      })
+    )
+    .catch((error) =>
+      dispatch({
+        type: ACTION_TYPES.LOAD_SOURCE_TYPES_REJECTED,
+        payload: { error },
+        meta: { noError: true },
+      })
+    );
 };
 
 export const loadAppTypes = () => (dispatch) => {
   dispatch({ type: ACTION_TYPES.LOAD_APP_TYPES_PENDING });
 
-  return doLoadAppTypes().then((appTypes) =>
-    dispatch({
-      type: ACTION_TYPES.LOAD_APP_TYPES_FULFILLED,
-      payload: appTypes.data,
-    })
-  );
+  return doLoadAppTypes()
+    .then((appTypes) =>
+      dispatch({
+        type: ACTION_TYPES.LOAD_APP_TYPES_FULFILLED,
+        payload: appTypes.data,
+      })
+    )
+    .catch((error) =>
+      dispatch({
+        type: ACTION_TYPES.LOAD_APP_TYPES_REJECTED,
+        payload: { error },
+        meta: { noError: true },
+      })
+    );
 };
 
 export const sortEntities = (column, direction) => (dispatch) => {

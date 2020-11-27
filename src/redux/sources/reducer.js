@@ -49,6 +49,11 @@ export const sourceTypesPending = (state) => ({
   sourceTypesLoaded: false,
 });
 
+export const sourceTypesRejected = (state, { payload: { error } }) => ({
+  ...state,
+  fetchingError: error,
+});
+
 export const sourceTypesLoaded = (state, { payload: sourceTypes }) => ({
   ...state,
   sourceTypes,
@@ -65,6 +70,11 @@ export const appTypesLoaded = (state, { payload: appTypes }) => ({
   ...state,
   appTypes,
   appTypesLoaded: true,
+});
+
+export const appTypesRejected = (state, { payload: { error } }) => ({
+  ...state,
+  fetchingError: error,
 });
 
 export const sortEntities = (state, { payload: { column, direction } }) => ({
@@ -188,8 +198,10 @@ export default {
   [ACTION_TYPES.LOAD_ENTITIES_REJECTED]: entitiesRejected,
   [ACTION_TYPES.LOAD_SOURCE_TYPES_PENDING]: sourceTypesPending,
   [ACTION_TYPES.LOAD_SOURCE_TYPES_FULFILLED]: sourceTypesLoaded,
+  [ACTION_TYPES.LOAD_SOURCE_TYPES_REJECTED]: sourceTypesRejected,
   [ACTION_TYPES.LOAD_APP_TYPES_PENDING]: appTypesPending,
   [ACTION_TYPES.LOAD_APP_TYPES_FULFILLED]: appTypesLoaded,
+  [ACTION_TYPES.LOAD_APP_TYPES_REJECTED]: appTypesRejected,
   [ACTION_TYPES.REMOVE_SOURCE_PENDING]: sourceEditRemovePending,
   [ACTION_TYPES.REMOVE_SOURCE_FULFILLED]: sourceEditRemoveFulfilled,
   [ACTION_TYPES.REMOVE_SOURCE_REJECTED]: sourceEditRemoveRejected,
