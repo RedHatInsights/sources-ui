@@ -31,9 +31,6 @@ export const ApplicationSummary = () => {
 export const hasAlreadySupportedAuthType = (authValues = [], appType, sourceTypeName) =>
   authValues.find(({ authtype }) => authtype === get(appType, `supported_authentication_types.${sourceTypeName}[0]`));
 
-export const hasMultipleAuthenticationTypes = (app, sourceType) =>
-  app.supported_source_types.includes(sourceType.name) && app.supported_authentication_types[sourceType.name]?.length > 1;
-
 const fields = (intl, sourceType, appType, authenticationValues, source, container, title, description, applicationTypes) => {
   let authenticationFields = [];
   let firstStep;

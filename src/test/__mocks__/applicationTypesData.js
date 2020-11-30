@@ -55,3 +55,15 @@ export const TOPOLOGICALINVENTORY_INDEX = 2;
 export const COSTMANAGEMENT_APP = applicationTypesData.data[1];
 export const CATALOG_APP = applicationTypesData.data[0];
 export const TOPOLOGICALINVENTORY_APP = applicationTypesData.data[2];
+export const SUBWATCH_APP = {
+  created_at: '2020-02-05T21:08:50Z',
+  dependent_applications: [],
+  display_name: 'Subscription Watch',
+  id: '5',
+  name: '/insights/platform/cloud-meter',
+  supported_authentication_types: { amazon: ['cloud-meter-arn'] },
+  supported_source_types: ['amazon'],
+  updated_at: '2020-02-18T19:38:52Z',
+};
+
+export default applicationTypesData;

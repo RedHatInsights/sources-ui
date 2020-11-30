@@ -327,7 +327,7 @@ const AddApplication = () => {
     }));
 
   if (
-    !app_type_id ||
+    !applicationType ||
     source.applications.find(({ application_type_id }) => application_type_id === app_type_id) ||
     !applicationType.supported_source_types.includes(sourceType.name)
   ) {

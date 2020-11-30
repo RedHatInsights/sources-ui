@@ -5,6 +5,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { PageHeader } from '@redhat-cloud-services/frontend-components/components/cjs/PageHeader';
 import { Title } from '@patternfly/react-core/dist/js/components/Title/Title';
 import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
+import { Text } from '@patternfly/react-core/dist/js/components/Text/Text';
 import { Flex } from '@patternfly/react-core/dist/js/layouts/Flex/Flex';
 import { FlexItem } from '@patternfly/react-core/dist/js/layouts/Flex/FlexItem';
 
@@ -33,12 +34,12 @@ const DetailHeader = () => {
         </FlexItem>
       </Flex>
       <TextContent>
-        <TextContent>
+        <Text>
           {intl.formatMessage({
             id: 'detail.description',
             defaultMessage: 'View details and manage connections for this source.',
           })}
-        </TextContent>
+        </Text>
       </TextContent>
     </PageHeader>
   );

@@ -70,7 +70,7 @@ RowWrapperLoader.propTypes = {
   row: PropTypes.object.isRequired,
 };
 
-const CardLoader = (props) => (
+export const CardLoader = (props) => (
   <Card className="card pf-u-m-md">
     <CardBody>
       <Loader {...props} />

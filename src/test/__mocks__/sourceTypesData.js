@@ -435,3 +435,5 @@ export const OPENSHIFT = sourceTypesData.data[OPENSHIFT_INDEX];
 export const AMAZON = sourceTypesData.data[AMAZON_INDEX];
 export const ANSIBLE_TOWER = sourceTypesData.data[ANSIBLE_TOWER_INDEX];
 export const SATELLITE = sourceTypesData.data[SATELLITE_INDEX];
+
+export default sourceTypesData;

@@ -68,6 +68,34 @@ describe('RemoveAppModal', () => {
     expect(wrapper.find(Button).last().text()).toEqual('Cancel');
   });
 
+  it('redirect when app does not exist', async () => {
+    let wrapper;
+
+    initialStore = {
+      sources: {
+        appTypes: APP_TYPES,
+        entities: [{ id: SOURCE_ID, applications: [] }],
+      },
+    };
+    mockStore = configureStore();
+    store = mockStore(initialStore);
+
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetailRemoveApp.path} render={(...args) => <RemoveAppModal {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+    });
+    wrapper.update();
+
+    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
+      replaceRouteId(routes.sourcesDetail.path, SOURCE_ID)
+    );
+  });
+
   it('renders correctly with attached dependent applications', () => {
     initialEntry = [replaceRouteId(routes.sourcesDetailRemoveApp.path, SOURCE_ID).replace(':app_id', APP2_ID)];
     store = mockStore({

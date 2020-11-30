@@ -6,6 +6,8 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { act } from 'react-dom/test-utils';
 import { Spinner } from '@patternfly/react-core/dist/js/components/Spinner';
+import { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/files/cjs/ReducerRegistry';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import SourceEditModal from '../../../components/SourceEditForm/SourceEditModal';
@@ -24,6 +26,10 @@ import TimeoutedModal from '../../../components/SourceEditForm/TimeoutedModal';
 import ErroredModal from '../../../components/SourceEditForm/ErroredModal';
 import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
 import { Switch } from '@data-driven-forms/pf4-component-mapper';
+import { ACTION_TYPES } from '../../../redux/sources/actionTypes';
+import { useDispatch } from 'react-redux';
+import ReducersProviders, { defaultSourcesState } from '../../../redux/sources/reducer';
+import UserReducer from '../../../redux/user/reducer';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/SourceAddSchema', () => ({
   __esModule: true,
@@ -126,6 +132,87 @@ describe('SourceEditModal', () => {
     expect(wrapper.find(Button)).toHaveLength(BUTTONS.length);
   });
 
+  it('reload data when source from redux is changed', async () => {
+    const ChangeSourceComponent = () => {
+      const dispatch = useDispatch();
+
+      return (
+        <button
+          id="change-redux-source"
+          onClick={() =>
+            dispatch({
+              type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
+              payload: [
+                {
+                  id: '14',
+                  source_type_id: ANSIBLE_TOWER_ID,
+                  applications: [],
+                },
+              ],
+            })
+          }
+        />
+      );
+    };
+
+    editApi.doLoadSourceForEdit.mockClear();
+
+    store = createStore(
+      combineReducers({
+        sources: applyReducerHash(ReducersProviders, {
+          ...defaultSourcesState,
+          entities: [
+            {
+              id: '14',
+              source_type_id: ANSIBLE_TOWER_ID,
+              applications: [
+                {
+                  id: '123',
+                  authentications: [{ id: '343' }],
+                },
+              ],
+            },
+          ],
+          appTypes: applicationTypesData.data,
+          sourceTypes: sourceTypesData.data,
+          appTypesLoaded: true,
+          sourceTypesLoaded: true,
+          loaded: 0,
+        }),
+        user: applyReducerHash(UserReducer, { isOrgAdmin: true }),
+      }),
+      applyMiddleware(...middlewares)
+    );
+
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route
+            path={routes.sourcesDetail.path}
+            render={(...args) => (
+              <React.Fragment>
+                <ChangeSourceComponent />
+                <SourceEditModal {...args} />
+              </React.Fragment>
+            )}
+          />,
+          store,
+          initialEntry
+        )
+      );
+    });
+    wrapper.update();
+
+    expect(editApi.doLoadSourceForEdit.mock.calls).toHaveLength(1);
+
+    await act(async () => {
+      wrapper.find('#change-redux-source').simulate('click');
+    });
+    wrapper.update();
+
+    expect(editApi.doLoadSourceForEdit.mock.calls).toHaveLength(2);
+  });
+
   describe('submit', () => {
     const NEW_CA = 'new name';
 
@@ -202,7 +289,7 @@ describe('SourceEditModal', () => {
       expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, HAS_COST_MANAGEMENT);
     });
 
-    it('calls onSubmit - timeout', async () => {
+    it('calls onSubmit - timeout - return to edit', async () => {
       jest.useFakeTimers();
 
       submit.onSubmit = jest.fn().mockImplementation((values, editing, _dispatch, source, _intl, setState) => {
@@ -232,6 +319,15 @@ describe('SourceEditModal', () => {
       expect(wrapper.find(TimeoutedModal)).toHaveLength(1);
 
       expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, HAS_COST_MANAGEMENT);
+
+      jest.useRealTimers();
+
+      await act(async () => {
+        wrapper.find(TimeoutedModal).find(Button).simulate('click');
+      });
+      wrapper.update();
+
+      expect(wrapper.find(Form)).toHaveLength(1);
     });
 
     it('calls onSubmit - server error', async () => {

@@ -35,6 +35,8 @@ const SourceKebab = () => {
       isPlain
       position="right"
       dropdownItems={[
+        /*
+        // this comment will be uncommented in followup pr
         <DropdownItem
           {...(!hasRightAccess && disabledProps)}
           key="rename"
@@ -44,7 +46,7 @@ const SourceKebab = () => {
             id: 'detail.rename.button',
             defaultMessage: 'Rename',
           })}
-        </DropdownItem>,
+        </DropdownItem>,*/
         <DropdownItem
           {...(!hasRightAccess && disabledProps)}
           key="remove"

@@ -42,6 +42,9 @@ export const routes = {
     redirectNoId: true,
     writeAccess: true,
   },
+  sourcesEditLegacy: {
+    path: '/sources/edit/:id', // redirect from the add source wizard, remove when new version released
+  },
 };
 
 export const replaceRouteId = (path, id) => path.replace(':id', id);
@@ -49,7 +52,7 @@ export const replaceRouteId = (path, id) => path.replace(':id', id);
 const Routes = () => (
   <Suspense fallback={<AppPlaceholder />}>
     <Switch>
-      <Route path={routes.sourcesDetail.path} component={SourceDetail} />
+      <Route path={[routes.sourcesDetail.path, routes.sourcesEditLegacy.path]} component={SourceDetail} />
       <Route component={SourcesPage} />
     </Switch>
   </Suspense>

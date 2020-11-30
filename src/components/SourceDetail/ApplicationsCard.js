@@ -37,7 +37,7 @@ const ApplicationsCard = () => {
       </CardTitle>
       <CardBody>
         {!hasRightAccess && (
-          <div className="pf-u-mb-md">
+          <div className="pf-u-mb-md" id="no-permissions-applications">
             {intl.formatMessage({
               id: 'sources.notAdminButton',
               defaultMessage:

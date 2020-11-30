@@ -20,7 +20,7 @@ import * as attachSource from '../../../api/doAttachApp';
 
 import AddApplication from '../../../components/AddApplication/AddApplication';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import { sourceTypesData, OPENSHIFT_ID } from '../../__mocks__/sourceTypesData';
+import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID } from '../../__mocks__/sourceTypesData';
 import { SOURCE_NO_APS_ID } from '../../__mocks__/sourcesData';
 import { applicationTypesData, COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
 import { routes, replaceRouteId } from '../../../Routes';
@@ -133,6 +133,108 @@ describe('AddApplication', () => {
     wrapper.update();
 
     expect(wrapper.find(LoadingStep)).toHaveLength(1);
+  });
+
+  describe('redirects', () => {
+    const APP = {
+      id: '1543897',
+      name: 'custom-app',
+      supported_source_types: [],
+    };
+
+    initialEntry = [replaceRouteId(routes.sourcesDetailAddApp.path, SOURCE_NO_APS_ID).replace(':app_type_id', APP.id)];
+
+    it('when type does exist', async () => {
+      store = mockStore({
+        sources: {
+          entities: [{ id: SOURCE_NO_APS_ID, source_type_id: AMAZON_ID, applications: [] }],
+          appTypes: [],
+          sourceTypes: sourceTypesData.data,
+          appTypesLoaded: true,
+          sourceTypesLoaded: true,
+          loaded: 0,
+        },
+      });
+
+      let wrapper;
+
+      await act(async () => {
+        wrapper = mount(
+          componentWrapperIntl(
+            <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
+            store,
+            initialEntry
+          )
+        );
+      });
+      wrapper.update();
+
+      expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
+        replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID)
+      );
+    });
+
+    it('when type does is not supported', async () => {
+      store = mockStore({
+        sources: {
+          entities: [{ id: SOURCE_NO_APS_ID, source_type_id: AMAZON_ID, applications: [] }],
+          appTypes: [APP],
+          sourceTypes: sourceTypesData.data,
+          appTypesLoaded: true,
+          sourceTypesLoaded: true,
+          loaded: 0,
+        },
+      });
+
+      let wrapper;
+
+      await act(async () => {
+        wrapper = mount(
+          componentWrapperIntl(
+            <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
+            store,
+            initialEntry
+          )
+        );
+      });
+      wrapper.update();
+
+      expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
+        replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID)
+      );
+    });
+
+    it('when type is already attached', async () => {
+      store = mockStore({
+        sources: {
+          entities: [
+            { id: SOURCE_NO_APS_ID, source_type_id: AMAZON_ID, applications: [{ id: '234', application_type_id: APP.id }] },
+          ],
+          appTypes: [{ ...APP, supported_source_types: ['amazon'] }],
+          sourceTypes: sourceTypesData.data,
+          appTypesLoaded: true,
+          sourceTypesLoaded: true,
+          loaded: 0,
+        },
+      });
+
+      let wrapper;
+
+      await act(async () => {
+        wrapper = mount(
+          componentWrapperIntl(
+            <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
+            store,
+            initialEntry
+          )
+        );
+      });
+      wrapper.update();
+
+      expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
+        replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID)
+      );
+    });
   });
 
   describe('custom type - integration tests', () => {
