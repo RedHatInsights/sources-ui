@@ -192,6 +192,18 @@ export const clearFilters = (state) => ({
   pageNumber: 1,
 });
 
+export const sourceRenamePending = (state, { payload: { id, name } }) => ({
+  ...state,
+  entities: state.entities.map((entity) =>
+    entity.id === id
+      ? {
+          ...entity,
+          name,
+        }
+      : entity
+  ),
+});
+
 export default {
   [ACTION_TYPES.LOAD_ENTITIES_PENDING]: entitiesPending,
   [ACTION_TYPES.LOAD_ENTITIES_FULFILLED]: entitiesLoaded,
@@ -208,6 +220,8 @@ export default {
   [ACTION_TYPES.REMOVE_APPLICATION_PENDING]: appRemovingPending,
   [ACTION_TYPES.REMOVE_APPLICATION_FULFILLED]: appRemovingFulfilled,
   [ACTION_TYPES.REMOVE_APPLICATION_REJECTED]: appRemovingRejected,
+  [ACTION_TYPES.RENAME_SOURCE_PENDING]: sourceRenamePending,
+  [ACTION_TYPES.RENAME_SOURCE_REJECTED]: sourceRenamePending,
 
   [SORT_ENTITIES]: sortEntities,
   [PAGE_AND_SIZE]: setPageAndSize,

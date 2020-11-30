@@ -9,6 +9,7 @@ import {
   clearFilters,
   removeApplication,
   loadSourceTypes,
+  renameSource,
 } from '../../../redux/sources/actions';
 import {
   ADD_HIDDEN_SOURCE,
@@ -322,6 +323,64 @@ describe('redux actions', () => {
       type: ACTION_TYPES.LOAD_SOURCE_TYPES_REJECTED,
       payload: { error },
       meta: { noError: true },
+    });
+  });
+
+  describe('renameSource', () => {
+    let updateSource;
+    const sourceId = 'some-id';
+    const sourceName = 'some-name';
+    const errorTitle = 'renaming failed';
+
+    const getState = () => ({
+      sources: {
+        entities: [
+          {
+            id: 'different-id',
+            name: 'different-name',
+          },
+          {
+            id: sourceId,
+            name: 'old-name',
+          },
+        ],
+      },
+    });
+
+    it('passes', async () => {
+      updateSource = jest.fn().mockImplementation(() => Promise.resolve('OK'));
+      api.getSourcesApi = () => ({
+        updateSource,
+      });
+
+      await renameSource(sourceId, sourceName, errorTitle)(dispatch, getState);
+
+      expect(dispatch.mock.calls).toHaveLength(1);
+
+      expect(dispatch.mock.calls[0][0]).toEqual({
+        type: ACTION_TYPES.RENAME_SOURCE_PENDING,
+        payload: { id: sourceId, name: sourceName },
+      });
+    });
+
+    it('fails', async () => {
+      updateSource = jest.fn().mockImplementation(() => Promise.reject({ errors: [{ detail: 'some-error' }] }));
+      api.getSourcesApi = () => ({
+        updateSource,
+      });
+
+      await renameSource(sourceId, sourceName, errorTitle)(dispatch, getState);
+
+      expect(dispatch.mock.calls).toHaveLength(2);
+
+      expect(dispatch.mock.calls[0][0]).toEqual({
+        type: ACTION_TYPES.RENAME_SOURCE_PENDING,
+        payload: { id: sourceId, name: sourceName },
+      });
+      expect(dispatch.mock.calls[1][0]).toEqual({
+        type: ACTION_TYPES.RENAME_SOURCE_REJECTED,
+        payload: { id: sourceId, name: 'old-name', error: { detail: 'some-error', title: errorTitle } },
+      });
     });
   });
 });

@@ -5,6 +5,7 @@ export const ACTION_TYPES = [
   'LOAD_SOURCE_TYPES',
   'LOAD_APP_TYPES',
   'REMOVE_APPLICATION',
+  'RENAME_SOURCE',
 ].reduce(
   (acc, curr) => ({
     ...acc,

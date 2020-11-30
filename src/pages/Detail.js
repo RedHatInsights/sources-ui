@@ -15,22 +15,29 @@ import DetailHeader from '../components/SourceDetail/DetailHeader';
 
 const SourceRemoveModal = lazy(() =>
   import(
-    /* webpackChunkName: "remove" */
+    /* webpackChunkName: "removeSource" */
     '../components/SourceRemoveModal/SourceRemoveModal'
   )
 );
 
 const AddApplication = lazy(() =>
   import(
-    /* webpackChunkName: "remove" */
+    /* webpackChunkName: "addApplication" */
     '../components/AddApplication/AddApplication'
   )
 );
 
 const RemoveAppModal = lazy(() =>
   import(
-    /* webpackChunkName: "remove" */
+    /* webpackChunkName: "removeApplication" */
     '../components/AddApplication/RemoveAppModal'
+  )
+);
+
+const SourceRenameModal = lazy(() =>
+  import(
+    /* webpackChunkName: "renameSource" */
+    '../components/SourceDetail/SourceRenameModal'
   )
 );
 
@@ -57,6 +64,7 @@ const Detail = () => {
         />
         <CustomRoute exact route={routes.sourcesDetailAddApp} Component={AddApplication} />
         <CustomRoute exact route={routes.sourcesDetailRemoveApp} Component={RemoveAppModal} />
+        <CustomRoute exact route={routes.sourcesDetailRename} Component={SourceRenameModal} />
       </Suspense>
       <DetailHeader />
       <Grid>
