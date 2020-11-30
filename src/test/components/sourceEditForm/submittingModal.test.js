@@ -9,8 +9,6 @@ import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { routes, replaceRouteId } from '../../../Routes';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
 
-import WrapperModal from '../../../components/SourceEditForm/WrapperModal';
-
 import { EmptyState } from '@patternfly/react-core/dist/js/components/EmptyState';
 import { Spinner } from '@patternfly/react-core';
 
@@ -26,7 +24,7 @@ describe('SubmittingModal', () => {
   const middlewares = [thunk, notificationsMiddleware()];
 
   beforeEach(async () => {
-    initialEntry = [replaceRouteId(routes.sourcesEdit.path, '14')];
+    initialEntry = [replaceRouteId(routes.sourcesDetail.path, '14')];
     mockStore = configureStore(middlewares);
     store = mockStore({
       sources: {
@@ -37,7 +35,7 @@ describe('SubmittingModal', () => {
     await act(async () => {
       wrapper = mount(
         componentWrapperIntl(
-          <Route path={routes.sourcesEdit.path} render={(...args) => <SubmittingModal {...args} />} />,
+          <Route path={routes.sourcesDetail.path} render={(...args) => <SubmittingModal {...args} />} />,
           store,
           initialEntry
         )
@@ -47,7 +45,6 @@ describe('SubmittingModal', () => {
   });
 
   it('renders correctly', async () => {
-    expect(wrapper.find(WrapperModal)).toHaveLength(1);
     expect(wrapper.find(LoadingStep)).toHaveLength(1);
 
     expect(wrapper.find(Spinner)).toHaveLength(1);

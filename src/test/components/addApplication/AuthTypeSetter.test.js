@@ -63,7 +63,7 @@ describe('AuthTypeSetter', () => {
     applications: [],
   };
 
-  const initialEntry = [replaceRouteId(routes.sourceManageApps.path, SOURCE_ID)];
+  const initialEntry = [replaceRouteId(routes.sourcesDetail.path, SOURCE_ID)];
 
   class Wrapper extends React.Component {
     render() {
@@ -71,7 +71,7 @@ describe('AuthTypeSetter', () => {
 
       return componentWrapperIntl(
         <rendererContext.Provider value={{ formOptions }}>
-          <Route path={routes.sourceManageApps.path} render={(...args) => <AuthTypeSetter {...args} {...props} />} />
+          <Route path={routes.sourcesDetail.path} render={(...args) => <AuthTypeSetter {...args} {...props} />} />
         </rendererContext.Provider>,
         store,
         initialEntry

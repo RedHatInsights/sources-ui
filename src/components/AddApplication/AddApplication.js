@@ -1,7 +1,8 @@
 import React, { useReducer, useEffect, useRef } from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory, Link, useParams, Redirect } from 'react-router-dom';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { useIntl } from 'react-intl';
+import isEmpty from 'lodash/isEmpty';
 
 import filterApps from '@redhat-cloud-services/frontend-components-sources/cjs/filterApps';
 import CloseModal from '@redhat-cloud-services/frontend-components-sources/cjs/CloseModal';
@@ -33,6 +34,7 @@ import { Button } from '@patternfly/react-core/dist/js/components/Button';
 import { Text } from '@patternfly/react-core/dist/js/components/Text';
 
 import removeAppSubmit from './removeAppSubmit';
+import { diff } from 'deep-object-diff';
 
 export const onSubmit = (
   values,
@@ -68,6 +70,7 @@ const AddApplication = () => {
   const history = useHistory();
   const selectedApp = useRef();
   const saveSelectedApp = ({ values: { application } }) => (selectedApp.current = application);
+  const { app_type_id } = useParams();
 
   const loaded = useIsLoaded();
 
@@ -80,6 +83,8 @@ const AddApplication = () => {
   const [state, setState] = useReducer(reducer, initialState);
 
   const container = useRef(document.createElement('div'));
+
+  const applicationType = appTypes.find(({ id }) => id === app_type_id);
 
   const removeApp = () => {
     setState({ type: 'reset' });
@@ -134,12 +139,33 @@ const AddApplication = () => {
     }
   }, [source]);
 
-  const goToSources = () => history.push(routes.sources.path);
+  const goToSources = () => history.push(replaceRouteId(routes.sourcesDetail.path, source.id));
+
+  const title = intl.formatMessage(
+    {
+      id: 'sources.addApplicationNameTitle',
+      defaultMessage: 'Connect {appName}',
+    },
+    {
+      appName: applicationType?.display_name || 'application',
+    }
+  );
+  const description = intl.formatMessage(
+    {
+      id: 'sources.addApplicationNameDescription',
+      defaultMessage: 'Configure {appName} for this source.',
+    },
+    {
+      appName: applicationType?.display_name || 'application',
+    }
+  );
 
   if ((!appTypesLoaded || !sourceTypesLoaded || !loaded || state.state === 'loading') && state.state !== 'submitting') {
     return (
       <WizardBody
         goToSources={goToSources}
+        title={title}
+        description={description}
         step={
           <LoadingStep
             customText={intl.formatMessage({
@@ -163,7 +189,8 @@ const AddApplication = () => {
   if (state.state === 'submitting') {
     return (
       <WizardBody
-        name={source.name}
+        title={title}
+        description={description}
         goToSources={goToSources}
         step={
           <LoadingStep
@@ -222,19 +249,10 @@ const AddApplication = () => {
                 defaultMessage: 'Configuration successful',
               })}
               hideSourcesButton={true}
-              onReset={onReset}
               onClose={goToSources}
-              secondaryActions={
-                <Button variant="link" onClick={onReset}>
-                  {intl.formatMessage({
-                    id: 'sources.continueManageApp',
-                    defaultMessage: 'Continue managing applications',
-                  })}
-                </Button>
-              }
               returnButtonTitle={intl.formatMessage({
-                id: 'sources.backToSources',
-                defaultMessage: 'Back to Sources',
+                id: 'sources.exit',
+                defaultMessage: 'Exit',
               })}
               successfulMessage={intl.formatMessage({
                 id: 'sources.successAddApp',
@@ -269,7 +287,7 @@ const AddApplication = () => {
                 </Button>
               }
               Component={() => (
-                <Link to={replaceRouteId(routes.sourcesEdit.path, source.id)}>
+                <Link to={replaceRouteId(routes.sourcesDetail.path, source.id)}>
                   <Button variant="primary" className="pf-u-mt-xl">
                     {intl.formatMessage({
                       id: 'wizard.editSource',
@@ -285,25 +303,17 @@ const AddApplication = () => {
           shownStep = (
             <TimeoutStep
               returnButtonTitle={intl.formatMessage({
-                id: 'sources.backToSources',
-                defaultMessage: 'Back to Sources',
+                id: 'sources.exit',
+                defaultMessage: 'Exit',
               })}
               onClose={goToSources}
-              secondaryActions={
-                <Button variant="link" onClick={onReset}>
-                  {intl.formatMessage({
-                    id: 'sources.continueManageApp',
-                    defaultMessage: 'Continue managing applications',
-                  })}
-                </Button>
-              }
             />
           );
           break;
       }
     }
 
-    return <WizardBody name={source.name} goToSources={goToSources} step={shownStep} />;
+    return <WizardBody title={title} description={description} goToSources={goToSources} step={shownStep} />;
   }
 
   const sourceType = sourceTypes.find((type) => type.id === source.source_type_id);
@@ -316,14 +326,24 @@ const AddApplication = () => {
       label: type.display_name,
     }));
 
+  if (
+    !applicationType ||
+    source.applications.find(({ application_type_id }) => application_type_id === app_type_id) ||
+    !applicationType.supported_source_types.includes(sourceType.name)
+  ) {
+    return <Redirect to={replaceRouteId(routes.sourcesDetail.path, source.id)} />;
+  }
+
   const schema = createSchema(
-    filteredAppTypes,
     intl,
-    sourceTypes,
-    appTypes,
+    sourceType,
+    applicationType,
     state.authenticationsValues,
     source,
-    container.current
+    container.current,
+    title,
+    description,
+    appTypes
   );
 
   const hasAvailableApps = filteredAppTypes.length > 0;
@@ -335,7 +355,14 @@ const AddApplication = () => {
   };
 
   const cancelBeforeExit = (values) => {
-    if (values?.application) {
+    // eslint-disable-next-line no-unused-vars
+    const { application: _a, ...initialValues } = state.initialValues;
+    // eslint-disable-next-line no-unused-vars
+    const { application: _a1, ...newValues } = values;
+
+    const isChanged = !isEmpty(diff(initialValues, newValues));
+
+    if (isChanged) {
       container.current.hidden = true;
       setState({ type: 'toggleCancelling', values });
     } else {

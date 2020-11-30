@@ -1,8 +1,6 @@
 import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
-import { FormattedMessage } from 'react-intl';
 import { applicationsFields, appendClusterIdentifier } from '../../../../components/SourceEditForm/parser/application';
 import { applicationTypesData, COSTMANAGEMENT_APP, CATALOG_APP } from '../../../__mocks__/applicationTypesData';
-import { authenticationFields } from '../../../../components/SourceEditForm/parser/authentication';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas', () => ({
   __esModule: true,
@@ -63,18 +61,21 @@ describe('application edit form parser', () => {
     };
   });
 
-  it('return [] if applications is undefined', () => {
-    const EXPECTED_RESULT = [];
-
-    const UNDEF_APPLICATIONS = undefined;
-
-    const result = applicationsFields(UNDEF_APPLICATIONS, SOURCE_TYPE, APP_TYPES);
-
-    expect(result).toEqual(EXPECTED_RESULT);
-  });
-
   it('return cost management form group', () => {
-    const EXPECTED_RESULT = [[{ name: 'billing_source.field1' }, { name: 'field2' }]];
+    const EXPECTED_RESULT = [
+      {
+        component: componentTypes.TABS,
+        name: 'app-tabs',
+        isBox: true,
+        fields: [
+          {
+            name: COSTMANAGEMENT_APP.id,
+            title: COSTMANAGEMENT_APP.display_name,
+            fields: [[{ name: 'billing_source.field1' }, { name: 'field2' }]],
+          },
+        ],
+      },
+    ];
 
     const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, APP_TYPES);
 
@@ -113,68 +114,6 @@ describe('application edit form parser', () => {
     const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, APP_TYPES);
 
     expect(result).toEqual(EXPECTED_RESULT);
-  });
-
-  it('returns only unused auths', () => {
-    const result = applicationsFields([], SOURCE_TYPE, APP_TYPES, [{ authtype: 'arn', id: '12345' }]);
-
-    expect(result).toEqual([
-      {
-        component: 'sub-form',
-        fields: [
-          {
-            component: 'plain-text',
-            label: (
-              <FormattedMessage
-                defaultMessage="The following {length, plural, one {authentication is not} other {authentications are not}} used by any application."
-                id="sources.authNotUsed"
-                values={{ length: 1 }}
-              />
-            ),
-            name: 'unused-auth-warning',
-          },
-          ...authenticationFields([{ authtype: 'arn', id: '12345' }], SOURCE_TYPE),
-        ],
-        name: 'unused-auths-group',
-      },
-    ]);
-  });
-
-  it('return cost management form group and unused auths', () => {
-    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, APP_TYPES, [{ authtype: 'arn', id: '12345' }]);
-
-    expect(result).toEqual([
-      {
-        component: componentTypes.TABS,
-        name: 'app-tabs',
-        isBox: true,
-        fields: [
-          {
-            title: 'Cost Management',
-            fields: [FIELDS],
-            name: '2',
-          },
-          {
-            name: 'unused-auths-tab',
-            title: 'Amazon',
-            fields: [
-              {
-                component: 'plain-text',
-                label: (
-                  <FormattedMessage
-                    defaultMessage="The following {length, plural, one {authentication is not} other {authentications are not}} used by any application."
-                    id="sources.authNotUsed"
-                    values={{ length: 1 }}
-                  />
-                ),
-                name: 'unused-auth-warning',
-              },
-              ...authenticationFields([{ authtype: 'arn', id: '12345' }], SOURCE_TYPE),
-            ],
-          },
-        ],
-      },
-    ]);
   });
 });
 

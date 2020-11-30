@@ -9,7 +9,6 @@ import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { routes, replaceRouteId } from '../../../Routes';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
 
-import WrapperModal from '../../../components/SourceEditForm/WrapperModal';
 import TimeoutedModal from '../../../components/SourceEditForm/TimeoutedModal';
 
 import { Bullseye } from '@patternfly/react-core/dist/js/layouts/Bullseye';
@@ -17,29 +16,31 @@ import { EmptyState, EmptyStateBody } from '@patternfly/react-core/dist/js/compo
 import { EmptyStateIcon } from '@patternfly/react-core/dist/js/components/EmptyState/EmptyStateIcon';
 
 import WrenchIcon from '@patternfly/react-icons/dist/js/icons/wrench-icon';
-import { Title } from '@patternfly/react-core';
+import { Button, Title } from '@patternfly/react-core';
 
 describe('TimeoutedModal', () => {
   let store;
   let mockStore;
   let initialEntry;
   let wrapper;
+  let setState;
 
   const middlewares = [thunk, notificationsMiddleware()];
 
   beforeEach(async () => {
-    initialEntry = [replaceRouteId(routes.sourcesEdit.path, '14')];
+    initialEntry = [replaceRouteId(routes.sourcesDetail.path, '14')];
     mockStore = configureStore(middlewares);
     store = mockStore({
       sources: {
         entities: sourcesDataGraphQl,
       },
     });
+    setState = jest.fn();
 
     await act(async () => {
       wrapper = mount(
         componentWrapperIntl(
-          <Route path={routes.sourcesEdit.path} render={(...args) => <TimeoutedModal {...args} />} />,
+          <Route path={routes.sourcesDetail.path} render={(...args) => <TimeoutedModal {...args} setState={setState} />} />,
           store,
           initialEntry
         )
@@ -49,8 +50,6 @@ describe('TimeoutedModal', () => {
   });
 
   it('renders correctly', async () => {
-    expect(wrapper.find(WrapperModal)).toHaveLength(1);
-
     expect(wrapper.find(Bullseye)).toHaveLength(1);
     expect(wrapper.find(EmptyState)).toHaveLength(1);
     expect(wrapper.find(WrenchIcon)).toHaveLength(1);
@@ -60,5 +59,17 @@ describe('TimeoutedModal', () => {
     expect(wrapper.find(EmptyStateBody).text()).toEqual(
       'We are still working to confirm your updated credentials and app settings.To track progress, check the Status column in the Sources table.'
     );
+    expect(wrapper.find(Button).text()).toEqual('Edit');
+  });
+
+  it('renders correctly', async () => {
+    expect(setState).not.toHaveBeenCalled();
+
+    await act(async () => {
+      wrapper.find(Button).simulate('click');
+    });
+    wrapper.update();
+
+    expect(setState).toHaveBeenCalledWith({ type: 'cancelTimetouted' });
   });
 });

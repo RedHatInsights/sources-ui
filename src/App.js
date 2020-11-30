@@ -9,6 +9,8 @@ import './App.scss';
 
 import ErrorBoundary from './components/ErrorBoundary';
 import PermissionsChecker from './components/PermissionsChecker';
+import DataLoader from './components/DataLoader';
+
 import { getBaseName } from './frontend-components-copies/getBaseName';
 
 const App = () => {
@@ -30,6 +32,7 @@ const App = () => {
           <ErrorBoundary>
             <PermissionsChecker>
               <Main style={{ padding: 0 }}>
+                <DataLoader />
                 <Routes />
               </Main>
             </PermissionsChecker>

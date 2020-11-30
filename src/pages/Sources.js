@@ -1,6 +1,6 @@
 import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
 import { useIntl } from 'react-intl';
 
@@ -8,20 +8,18 @@ import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/compo
 import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/cjs/PageHeader';
 import { Section } from '@redhat-cloud-services/frontend-components/components/cjs/Section';
 
-import { loadAppTypes, loadEntities, loadSourceTypes, filterSources, pageAndSize } from '../redux/sources/actions';
+import { filterSources, pageAndSize } from '../redux/sources/actions';
 import SourcesTable from '../components/SourcesTable/SourcesTable';
 import SourcesEmptyState from '../components/SourcesEmptyState';
 import SourcesErrorState from '../components/SourcesErrorState';
 import { routes } from '../Routes';
 
-const SourceEditModal = lazy(() => import(/* webpackChunkName: "edit" */ '../components/SourceEditForm/SourceEditModal'));
 const SourceRemoveModal = lazy(() =>
   import(
     /* webpackChunkName: "remove" */
     '../components/SourceRemoveModal/SourceRemoveModal'
   )
 );
-const AddApplication = lazy(() => import(/* webpackChunkName: "addApp" */ '../components/AddApplication/AddApplication'));
 const AddSourceWizard = lazy(() =>
   import(
     /* webpackChunkName: "addSource" */ '@redhat-cloud-services/frontend-components-sources/cjs/addSourceWizard'
@@ -41,21 +39,16 @@ import {
 import { useIsLoaded } from '../hooks/useIsLoaded';
 import { useHasWritePermissions } from '../hooks/useHasWritePermissions';
 import CustomRoute from '../components/CustomRoute/CustomRoute';
-import { updateQuery, parseQuery } from '../utilities/urlQuery';
 import { Tooltip } from '@patternfly/react-core/dist/js/components/Tooltip/Tooltip';
 import { PaginationLoader } from '../components/SourcesTable/loaders';
 
 const SourcesPage = () => {
-  const [showEmptyState, setShowEmptyState] = useState(false);
-  const [checkEmptyState, setCheckEmptyState] = useState(false);
   const [filter, setFilterValue] = useState();
-  const [loadingError, setLoadingError] = useState();
 
-  const loaded = useIsLoaded();
+  const entitiesLoaded = useIsLoaded();
   const hasWritePermissions = useHasWritePermissions();
 
   const history = useHistory();
-  const location = useLocation();
   const intl = useIntl();
 
   const sources = useSelector(({ sources }) => sources, shallowEqual);
@@ -73,37 +66,15 @@ const SourcesPage = () => {
     sourceTypesLoaded,
   } = sources;
 
+  const loaded = entitiesLoaded && sourceTypesLoaded && appTypesLoaded;
+
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    Promise.all([dispatch(loadSourceTypes()), dispatch(loadAppTypes()), dispatch(loadEntities(parseQuery()))])
-      .then(() => setCheckEmptyState(true))
-      .catch((error) => setLoadingError(error));
-  }, []);
-
-  const hasSomeFilter =
-    Object.entries(filterValue)
-      .map(([_key, value]) => value)
-      .filter(Boolean).length > 0;
-
-  useEffect(() => {
-    if (checkEmptyState) {
-      setShowEmptyState(loaded && numberOfEntities === 0 && !hasSomeFilter);
-      updateQuery(sources);
-    }
-  }, [location, checkEmptyState]);
 
   useEffect(() => {
     if (filter !== filterValue.name) {
       setFilterValue(filterValue.name);
     }
   }, [filterValue.name]);
-
-  useEffect(() => {
-    if (checkEmptyState && loaded) {
-      setShowEmptyState(numberOfEntities === 0 && !hasSomeFilter);
-    }
-  }, [loaded]);
 
   const onSetPage = (_e, page) => dispatch(pageAndSize(page, pageSize));
 
@@ -233,12 +204,16 @@ const SourcesPage = () => {
     </React.Fragment>
   );
 
-  const isErrored = loadingError || fetchingError;
+  const hasSomeFilter =
+    Object.entries(filterValue)
+      .map(([_key, value]) => value)
+      .filter(Boolean).length > 0;
+
+  const showEmptyState = loaded && !hasSomeFilter && numberOfEntities === 0;
 
   return (
     <React.Fragment>
       <Suspense fallback={null}>
-        <CustomRoute exact route={routes.sourceManageApps} Component={AddApplication} />
         <CustomRoute exact route={routes.sourcesRemove} Component={SourceRemoveModal} />
         <CustomRoute
           exact
@@ -253,7 +228,6 @@ const SourcesPage = () => {
             hideSourcesButton: true,
           }}
         />
-        <CustomRoute exact route={routes.sourcesEdit} Component={SourceEditModal} />
       </Suspense>
       <PageHeader>
         <PageHeaderTitle
@@ -265,8 +239,8 @@ const SourcesPage = () => {
       </PageHeader>
       <Section type="content">
         {showEmptyState && <SourcesEmptyState />}
-        {isErrored && <SourcesErrorState />}
-        {!showEmptyState && !isErrored && mainContent()}
+        {fetchingError && <SourcesErrorState />}
+        {!showEmptyState && !fetchingError && mainContent()}
       </Section>
     </React.Fragment>
   );

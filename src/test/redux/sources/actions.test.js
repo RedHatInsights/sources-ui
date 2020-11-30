@@ -8,6 +8,7 @@ import {
   filterSources,
   clearFilters,
   removeApplication,
+  loadSourceTypes,
 } from '../../../redux/sources/actions';
 import {
   ADD_HIDDEN_SOURCE,
@@ -20,6 +21,7 @@ import {
 } from '../../../redux/sources/actionTypes';
 import { REMOVE_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications';
 import * as api from '../../../api/entities';
+import * as types_api from '../../../api/source_types';
 
 describe('redux actions', () => {
   let dispatch;
@@ -302,5 +304,24 @@ describe('redux actions', () => {
     await resultObject.payload();
 
     expect(api.doDeleteApplication).toHaveBeenCalledWith(appId, errorTitle);
+  });
+
+  it('loadSourceTypes catches error', async () => {
+    const error = 'some-error';
+    types_api.doLoadSourceTypes = jest.fn().mockImplementation(() => Promise.reject(error));
+
+    await loadSourceTypes()(dispatch);
+
+    expect(dispatch.mock.calls).toHaveLength(2);
+
+    expect(dispatch.mock.calls[0][0]).toEqual({
+      type: ACTION_TYPES.LOAD_SOURCE_TYPES_PENDING,
+    });
+
+    expect(dispatch.mock.calls[1][0]).toEqual({
+      type: ACTION_TYPES.LOAD_SOURCE_TYPES_REJECTED,
+      payload: { error },
+      meta: { noError: true },
+    });
   });
 });

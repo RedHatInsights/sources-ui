@@ -9,6 +9,8 @@ import { Label } from '@patternfly/react-core/dist/js/components/Label/Label';
 
 import { FormattedMessage } from 'react-intl';
 import { DateFormat } from '@redhat-cloud-services/frontend-components/components/cjs/DateFormat';
+import { Link } from 'react-router-dom';
+import { replaceRouteId, routes } from '../Routes';
 
 export const defaultPort = (scheme) =>
   ({
@@ -89,7 +91,7 @@ export const dateFormatter = (str) => (
 
 export const nameFormatter = (name, source, { sourceTypes }) => (
   <TextContent>
-    {name}
+    <Link to={replaceRouteId(routes.sourcesDetail.path, source.id)}>{name}</Link>
     <br key={`${source.id}-br`} />
     <Text key={source.id} component={TextVariants.small}>
       {sourceIsOpenShift(source, sourceTypes) && formatURL(source)}
@@ -321,12 +323,10 @@ export const availabilityFormatter = (_status, source, { appTypes }) => {
   const status = meta.status;
 
   return (
-    <TextContent className="clickable">
-      <Text key={status} component={TextVariants.p}>
-        <Popover aria-label={`${status} popover`} bodyContent={<h1>{getStatusTooltipText(status, appTypes, meta.errors)}</h1>}>
-          <Label color={getStatusColor(status)}>{getStatusText(status)}</Label>
-        </Popover>
-      </Text>
-    </TextContent>
+    <Popover aria-label={`${status} popover`} bodyContent={<h1>{getStatusTooltipText(status, appTypes, meta.errors)}</h1>}>
+      <Label className="clickable" color={getStatusColor(status)}>
+        {getStatusText(status)}
+      </Label>
+    </Popover>
   );
 };
