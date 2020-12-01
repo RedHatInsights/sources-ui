@@ -9,7 +9,7 @@ export const parseSourceToSchema = (source, sourceType, appTypes, intl) => ({
   }),
   fields: [
     {
-      name: 'alert',
+      name: 'message',
       component: 'description',
       Content: EditAlert,
       condition: {
