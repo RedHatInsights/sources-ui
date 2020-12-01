@@ -23,7 +23,7 @@ const SourceSummaryCard = () => {
       <CardTitle>
         {intl.formatMessage({
           id: 'detail.summary.title',
-          defaultMessage: 'Source Summary',
+          defaultMessage: 'Source summary',
         })}
       </CardTitle>
       <CardBody>
