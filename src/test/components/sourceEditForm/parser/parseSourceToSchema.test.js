@@ -88,7 +88,7 @@ describe('parseSourceToSchema', () => {
     expect(result).toEqual({
       fields: [
         {
-          name: 'alert',
+          name: 'message',
           component: 'description',
           Content: expect.any(Function),
           condition: {

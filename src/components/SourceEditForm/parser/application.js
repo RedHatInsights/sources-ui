@@ -3,6 +3,7 @@ import componentTypes from '@data-driven-forms/react-form-renderer/dist/cjs/comp
 import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
 import { FormattedMessage } from 'react-intl';
 import { authenticationFields } from './authentication';
+import EditAlert from './EditAlert';
 
 export const APP_NAMES = {
   COST_MANAGAMENT: '/insights/platform/cost-management',
@@ -22,6 +23,15 @@ export const appendClusterIdentifier = (sourceType) =>
     : [];
 
 const createOneAppFields = (appType, sourceType, app) => [
+  {
+    name: `messages.${app.id}`,
+    component: 'description',
+    Content: EditAlert,
+    condition: {
+      when: ({ name }) => name,
+      isNotEmpty: true,
+    },
+  },
   ...authenticationFields(
     app.authentications?.filter((auth) => Object.keys(auth).length > 1),
     sourceType,

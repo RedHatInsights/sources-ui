@@ -1,5 +1,6 @@
 import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
 import { applicationsFields, appendClusterIdentifier } from '../../../../components/SourceEditForm/parser/application';
+import EditAlert from '../../../../components/SourceEditForm/parser/EditAlert';
 import { applicationTypesData, COSTMANAGEMENT_APP, CATALOG_APP } from '../../../__mocks__/applicationTypesData';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas', () => ({
@@ -37,6 +38,7 @@ describe('application edit form parser', () => {
   beforeEach(() => {
     APPLICATIONS = [
       {
+        id: 'app-id',
         application_type_id: COSTMANAGEMENT_APP.id,
         authentications: [{ id: '1234', authtype: 'arn' }],
       },
@@ -71,7 +73,18 @@ describe('application edit form parser', () => {
           {
             name: COSTMANAGEMENT_APP.id,
             title: COSTMANAGEMENT_APP.display_name,
-            fields: [[{ name: 'billing_source.field1' }, { name: 'field2' }]],
+            fields: [
+              {
+                name: 'messages.app-id',
+                component: 'description',
+                condition: {
+                  isNotEmpty: true,
+                  when: expect.any(Function),
+                },
+                Content: EditAlert,
+              },
+              [{ name: 'billing_source.field1' }, { name: 'field2' }],
+            ],
           },
         ],
       },
@@ -86,6 +99,7 @@ describe('application edit form parser', () => {
     APPLICATIONS = [
       ...APPLICATIONS,
       {
+        id: 'app-id-2',
         application_type_id: CATALOG_APP.id,
         authentications: [{ id: '2345', authtype: 'arn' }],
       },
@@ -100,12 +114,34 @@ describe('application edit form parser', () => {
           {
             name: COSTMANAGEMENT_APP.id,
             title: COSTMANAGEMENT_APP.display_name,
-            fields: [[{ name: 'billing_source.field1' }, { name: 'field2' }]],
+            fields: [
+              {
+                name: 'messages.app-id',
+                component: 'description',
+                condition: {
+                  isNotEmpty: true,
+                  when: expect.any(Function),
+                },
+                Content: EditAlert,
+              },
+              [{ name: 'billing_source.field1' }, { name: 'field2' }],
+            ],
           },
           {
             name: CATALOG_APP.id,
             title: CATALOG_APP.display_name,
-            fields: [[{ name: 'billing_source.field1' }, { name: 'field2' }]],
+            fields: [
+              {
+                name: 'messages.app-id-2',
+                component: 'description',
+                condition: {
+                  isNotEmpty: true,
+                  when: expect.any(Function),
+                },
+                Content: EditAlert,
+              },
+              [{ name: 'billing_source.field1' }, { name: 'field2' }],
+            ],
           },
         ],
       },

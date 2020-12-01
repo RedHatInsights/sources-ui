@@ -3,12 +3,11 @@ import { checkAppAvailability } from '@redhat-cloud-services/frontend-components
 import { selectOnlyEditedValues } from './helpers';
 import { loadEntities } from '../../redux/sources/actions';
 import { checkSourceStatus } from '../../api/checkSourceStatus';
-import { doLoadSourceForEdit } from '../../api/doLoadSourceForEdit';
 import { doUpdateSource } from '../../api/doUpdateSource';
 
 import { UNAVAILABLE } from '../../views/formatters';
 
-export const onSubmit = async (values, editing, dispatch, source, intl, setState, hasCostManagement) => {
+export const onSubmit = async (values, editing, dispatch, source, intl, setState) => {
   setState({ type: 'submit', values, editing });
 
   const startDate = new Date();
@@ -16,7 +15,7 @@ export const onSubmit = async (values, editing, dispatch, source, intl, setState
   try {
     await doUpdateSource(source, selectOnlyEditedValues(values, editing));
   } catch {
-    dispatch(loadEntities());
+    await dispatch(loadEntities());
     setState({ type: 'submitFailed' });
 
     return;
@@ -24,9 +23,8 @@ export const onSubmit = async (values, editing, dispatch, source, intl, setState
 
   checkSourceStatus(source.source.id);
 
-  let message;
-
-  const sourceData = await doLoadSourceForEdit({ id: source.source.id }, hasCostManagement);
+  let message = {};
+  let messages = {};
 
   const promises =
     source.applications?.map(({ id }) => checkAppAvailability(id, undefined, undefined, undefined, startDate)) || [];
@@ -40,48 +38,61 @@ export const onSubmit = async (values, editing, dispatch, source, intl, setState
     try {
       statusResults = await Promise.all(promises);
     } catch (error) {
-      dispatch(loadEntities());
+      await dispatch(loadEntities());
       setState({ type: 'submitFailed' });
       return;
     }
 
-    const unavailableApp = statusResults.find(({ availability_status }) => availability_status === UNAVAILABLE);
+    statusResults.forEach(({ availability_status, availability_status_error, id, role: isEndpoint }) => {
+      let updatedMessage;
 
-    if (unavailableApp) {
-      message = {
-        title: intl.formatMessage({
-          id: 'wizard.failEditToastTitle',
-          defaultMessage: 'Edit source failed',
-        }),
-        description: unavailableApp.availability_status_error,
-        variant: 'danger',
-      };
+      if (availability_status === UNAVAILABLE) {
+        updatedMessage = {
+          title: intl.formatMessage({
+            id: 'wizard.failEditToastTitle',
+            defaultMessage: 'Edit application credentials failed',
+          }),
+          description: availability_status_error,
+          variant: 'danger',
+        };
+      }
 
-      setState({ type: 'submitFinished', source: sourceData, message });
-      dispatch(loadEntities());
-      return;
-    }
+      if (!availability_status) {
+        updatedMessage = {
+          title: intl.formatMessage({
+            id: 'wizard.timeoutEditToastTitle',
+            defaultMessage: 'Edit in progress',
+          }),
+          description: intl.formatMessage({
+            id: 'wizard.timeoutEditToastDescription',
+            defaultMessage:
+              'We are still working to confirm your updated credentials. Changes will be reflected in this table when complete.',
+          }),
+          variant: 'warning',
+        };
+      }
 
-    const anyTimetouted = statusResults.some(({ availability_status }) => !availability_status);
-
-    if (anyTimetouted) {
-      setState({ type: 'submitTimetouted', source: sourceData });
-      dispatch(loadEntities());
-      return;
-    }
+      if (updatedMessage && isEndpoint) {
+        message = updatedMessage;
+      } else if (updatedMessage) {
+        messages[id] = updatedMessage;
+      }
+    });
   }
 
-  message = {
-    title: intl.formatMessage(
-      {
-        id: 'wizard.successEditToastTitle',
-        defaultMessage: 'Source ‘{name}’ was edited successfully.',
-      },
-      { name: source.source.name }
-    ),
-    variant: 'success',
-  };
+  if (Object.keys(message).length === 0 && Object.keys(messages).length === 0) {
+    message = {
+      title: intl.formatMessage(
+        {
+          id: 'wizard.successEditToastTitle',
+          defaultMessage: 'Source ‘{name}’ was edited successfully.',
+        },
+        { name: source.source.name }
+      ),
+      variant: 'success',
+    };
+  }
 
-  setState({ type: 'submitFinished', source: sourceData, message });
-  dispatch(loadEntities());
+  await dispatch(loadEntities());
+  setState({ type: 'submitFinished', message, messages });
 };

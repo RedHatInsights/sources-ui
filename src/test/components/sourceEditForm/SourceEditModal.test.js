@@ -22,7 +22,6 @@ import reducer from '../../../components/SourceEditForm/reducer';
 
 import SubmittingModal from '../../../components/SourceEditForm/SubmittingModal';
 import EditAlert from '../../../components/SourceEditForm/parser/EditAlert';
-import TimeoutedModal from '../../../components/SourceEditForm/TimeoutedModal';
 import ErroredModal from '../../../components/SourceEditForm/ErroredModal';
 import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
 import { Switch } from '@data-driven-forms/pf4-component-mapper';
@@ -230,7 +229,6 @@ describe('SourceEditModal', () => {
     const INTL = expect.objectContaining({
       formatMessage: expect.any(Function),
     });
-    const HAS_COST_MANAGEMENT = false;
 
     beforeEach(async () => {
       const nameFormGroup = wrapper.find(FormGroup).first();
@@ -286,17 +284,25 @@ describe('SourceEditModal', () => {
       expect(wrapper.find(EditAlert).find(Alert).props().variant).toEqual(message.variant);
       expect(wrapper.find(EditAlert).find(Alert).props().children).toEqual(message.description);
 
-      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, HAS_COST_MANAGEMENT);
+      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
     });
 
     it('calls onSubmit - timeout - return to edit', async () => {
       jest.useFakeTimers();
 
+      const variant = 'warning';
+      const title = 'some title';
+      const description = 'description of timeout';
+
       submit.onSubmit = jest.fn().mockImplementation((values, editing, _dispatch, source, _intl, setState) => {
         setState({ type: 'submit', values, editing });
 
         setTimeout(() => {
-          setState({ type: 'submitTimetouted' });
+          const messages = {
+            123: { variant, title, description },
+          };
+
+          setState({ type: 'submitFinished', messages });
         }, 1000);
       });
 
@@ -316,18 +322,10 @@ describe('SourceEditModal', () => {
       });
       wrapper.update();
 
-      expect(wrapper.find(TimeoutedModal)).toHaveLength(1);
-
-      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, HAS_COST_MANAGEMENT);
-
-      jest.useRealTimers();
-
-      await act(async () => {
-        wrapper.find(TimeoutedModal).find(Button).simulate('click');
-      });
-      wrapper.update();
-
-      expect(wrapper.find(Form)).toHaveLength(1);
+      expect(wrapper.find(EditAlert)).toHaveLength(1);
+      expect(wrapper.find(Alert).props().variant).toEqual(variant);
+      expect(wrapper.find(Alert).props().title).toEqual(title);
+      expect(wrapper.find(Alert).text().includes(description)).toEqual(true);
     });
 
     it('calls onSubmit - server error', async () => {
@@ -359,7 +357,7 @@ describe('SourceEditModal', () => {
 
       expect(wrapper.find(ErroredModal)).toHaveLength(1);
 
-      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, HAS_COST_MANAGEMENT);
+      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
 
       submit.onSubmit.mockReset();
 
@@ -369,7 +367,7 @@ describe('SourceEditModal', () => {
       });
       wrapper.update();
 
-      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, HAS_COST_MANAGEMENT);
+      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
     });
   });
 

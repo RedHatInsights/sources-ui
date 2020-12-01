@@ -10,10 +10,9 @@ export const initialState = {
   isSubmitting: false,
   initialLoad: true,
   submitError: false,
-  isTimeouted: false,
 };
 
-const reducer = (state, { type, source, sourceType, appTypes, intl, message, values, editing }) => {
+const reducer = (state, { type, source, sourceType, appTypes, intl, message, values, editing, messages }) => {
   switch (type) {
     case 'createForm':
       return {
@@ -43,24 +42,15 @@ const reducer = (state, { type, source, sourceType, appTypes, intl, message, val
         isSubmitting: false,
         source,
         message,
+        messages,
       };
     case 'submitFailed':
       return {
         ...state,
         isSubmitting: false,
         submitError: true,
-      };
-    case 'submitTimetouted':
-      return {
-        ...state,
-        source,
-        isSubmitting: false,
-        isTimeouted: true,
-      };
-    case 'cancelTimetouted':
-      return {
-        ...state,
-        isTimeouted: false,
+        message: undefined,
+        messages: undefined,
       };
     case 'sourceChanged':
       return {
