@@ -44,7 +44,7 @@ const SourcesEmptyState = () => {
             </React.Fragment>
           )}
         </EmptyStateBody>
-        {writePermissions ? (
+        {writePermissions && (
           <Link to={routes.sourcesNew.path}>
             <Button className="pf-u-mt-xl" variant="primary">
               {intl.formatMessage({
@@ -53,13 +53,6 @@ const SourcesEmptyState = () => {
               })}
             </Button>
           </Link>
-        ) : (
-          <Button variant="primary" isDisabled>
-            {intl.formatMessage({
-              id: 'sources.emptyStateButton',
-              defaultMessage: 'Add source',
-            })}
-          </Button>
         )}
       </EmptyState>
     </Bullseye>
