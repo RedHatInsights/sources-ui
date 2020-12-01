@@ -50,7 +50,7 @@ describe('SourceSummaryCard', () => {
     );
 
     expect(wrapper.find(Card)).toHaveLength(1);
-    expect(wrapper.find(CardTitle).text()).toEqual('Source Summary');
+    expect(wrapper.find(CardTitle).text()).toEqual('Source summary');
     expect(wrapper.find(CardBody)).toHaveLength(1);
     expect(wrapper.find(DescriptionList)).toHaveLength(1);
     expect(wrapper.find(DescriptionListGroup)).toHaveLength(4);
