@@ -1,7 +1,7 @@
 # Sources
 ![Main screen with "Add a new Source" wizard](doc/images/sources-main-add.jpg)
 
-[![Build Status](https://travis-ci.org/RedHatInsights/sources-ui.svg?branch=master)](https://travis-ci.org/RedHatInsights/sources-ui)
+[![Build Status](https://travis-ci.com/RedHatInsights/sources-ui.svg?branch=master)](https://travis-ci.com/RedHatInsights/sources-ui)
 [![Test Coverage](https://codecov.io/gh/RedHatInsights/sources-ui/branch/master/graph/badge.svg)](https://codecov.io/gh/RedHatInsights/sources-ui)
 
 List of Sources for Red Hat Cloud Services.
