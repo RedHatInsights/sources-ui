@@ -9,7 +9,14 @@ import {
   ADD_HIDDEN_SOURCE,
   CLEAR_FILTERS,
 } from './actionTypes';
-import { doLoadAppTypes, doRemoveSource, doLoadEntities, doDeleteApplication, doLoadCountOfSources } from '../../api/entities';
+import {
+  doLoadAppTypes,
+  doRemoveSource,
+  doLoadEntities,
+  doDeleteApplication,
+  doLoadCountOfSources,
+  getSourcesApi,
+} from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
 
 export const loadEntities = (options) => (dispatch, getState) => {
@@ -201,4 +208,19 @@ export const clearFilters = () => (dispatch) => {
   });
 
   return dispatch(loadEntities());
+};
+
+export const renameSource = (id, name, errorTitle) => (dispatch, getState) => {
+  const oldName = getState().sources.entities.find((source) => source.id === id)?.name;
+
+  dispatch({ type: ACTION_TYPES.RENAME_SOURCE_PENDING, payload: { id, name } });
+
+  return getSourcesApi()
+    .updateSource(id, { name })
+    .catch((error) =>
+      dispatch({
+        type: ACTION_TYPES.RENAME_SOURCE_REJECTED,
+        payload: { error: { detail: error.errors?.[0]?.detail || error, title: errorTitle }, id, name: oldName },
+      })
+    );
 };

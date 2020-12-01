@@ -39,12 +39,17 @@ describe('SourceKebab', () => {
     });
     wrapper.update();
 
-    expect(wrapper.find(DropdownItem)).toHaveLength(1);
+    expect(wrapper.find(DropdownItem)).toHaveLength(2);
     expect(wrapper.find(DropdownItem).first().props().isDisabled).toEqual(true);
     expect(wrapper.find(DropdownItem).first().props().tooltip).toEqual(
       'To perform this action, you must be granted write permissions from your Organization Administrator.'
     );
-    expect(wrapper.find(InternalDropdownItem).first().text()).toEqual('Remove');
+    expect(wrapper.find(InternalDropdownItem).first().text()).toEqual('Rename');
+    expect(wrapper.find(DropdownItem).last().props().isDisabled).toEqual(true);
+    expect(wrapper.find(DropdownItem).last().props().tooltip).toEqual(
+      'To perform this action, you must be granted write permissions from your Organization Administrator.'
+    );
+    expect(wrapper.find(InternalDropdownItem).last().text()).toEqual('Remove');
   });
 
   describe('with permissions', () => {
@@ -73,13 +78,32 @@ describe('SourceKebab', () => {
       });
       wrapper.update();
 
-      expect(wrapper.find(DropdownItem)).toHaveLength(1);
+      expect(wrapper.find(DropdownItem)).toHaveLength(2);
       expect(wrapper.find(DropdownItem).first().props().isDisabled).toEqual(undefined);
       expect(wrapper.find(DropdownItem).first().props().tooltip).toEqual(undefined);
-      expect(wrapper.find(InternalDropdownItem).first().text()).toEqual('Remove');
+      expect(wrapper.find(InternalDropdownItem).first().text()).toEqual('Rename');
+      expect(wrapper.find(DropdownItem).last().props().isDisabled).toEqual(undefined);
+      expect(wrapper.find(DropdownItem).last().props().tooltip).toEqual(undefined);
+      expect(wrapper.find(InternalDropdownItem).last().text()).toEqual('Remove');
     });
 
     it('remove source', async () => {
+      await act(async () => {
+        wrapper.find(KebabToggle).props().onToggle();
+      });
+      wrapper.update();
+
+      await act(async () => {
+        wrapper.find(DropdownItem).last().simulate('click');
+      });
+      wrapper.update();
+
+      expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
+        replaceRouteId(routes.sourcesDetailRemove.path, sourceId)
+      );
+    });
+
+    it('rename source', async () => {
       await act(async () => {
         wrapper.find(KebabToggle).props().onToggle();
       });
@@ -91,7 +115,7 @@ describe('SourceKebab', () => {
       wrapper.update();
 
       expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
-        replaceRouteId(routes.sourcesDetailRemove.path, sourceId)
+        replaceRouteId(routes.sourcesDetailRename.path, sourceId)
       );
     });
   });
