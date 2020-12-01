@@ -12,6 +12,7 @@ import { DescriptionListDescription } from '@patternfly/react-core/dist/js/compo
 
 import { useSource } from '../../hooks/useSource';
 import { dateFormatter, sourceTypeFormatter } from '../../views/formatters';
+import AvailabilityChecker from './AvailabilityChecker';
 
 const SourceSummaryCard = () => {
   const intl = useIntl();
@@ -57,6 +58,7 @@ const SourceSummaryCard = () => {
                     id: 'detail.summary.notChecked',
                     defaultMessage: 'Not checked yet',
                   })}
+              <AvailabilityChecker />
             </DescriptionListDescription>
           </DescriptionListGroup>
           <DescriptionListGroup>

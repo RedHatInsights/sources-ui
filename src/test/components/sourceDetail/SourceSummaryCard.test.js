@@ -16,6 +16,7 @@ import SourceSummaryCard from '../../../components/SourceDetail/SourceSummaryCar
 import { Route } from 'react-router-dom';
 import { replaceRouteId, routes } from '../../../Routes';
 import * as formatters from '../../../views/formatters';
+import AvailabilityChecker from '../../../components/SourceDetail/AvailabilityChecker';
 
 describe('SourceSummaryCard', () => {
   let wrapper;
@@ -56,6 +57,8 @@ describe('SourceSummaryCard', () => {
     expect(wrapper.find(DescriptionListGroup)).toHaveLength(4);
     expect(wrapper.find(DescriptionListTerm)).toHaveLength(4);
     expect(wrapper.find(DescriptionListDescription)).toHaveLength(4);
+
+    expect(wrapper.find(AvailabilityChecker)).toHaveLength(1);
 
     const categories = wrapper
       .find(DescriptionListGroup)
