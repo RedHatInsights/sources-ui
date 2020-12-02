@@ -10,7 +10,7 @@ import { MemoryRouter, Link } from 'react-router-dom';
 import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources/cjs/addSourceWizard';
 
 import SourcesPageOriginal from '../../pages/Sources';
-import SourcesEmptyState from '../../components/SourcesEmptyState';
+import SourcesEmptyState from '../../components/SourcesTable/SourcesEmptyState';
 import SourcesTable from '../../components/SourcesTable/SourcesTable';
 
 import { sourcesDataGraphQl, SOURCE_ALL_APS_ID } from '../__mocks__/sourcesData';
@@ -115,8 +115,8 @@ describe('SourcesPage', () => {
 
     wrapper.update();
     expect(wrapper.find(SourcesEmptyState)).toHaveLength(1);
-    expect(wrapper.find(PrimaryToolbar)).toHaveLength(0);
-    expect(wrapper.find(SourcesTable)).toHaveLength(0);
+    expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
+    expect(wrapper.find(SourcesTable)).toHaveLength(1);
   });
 
   it('renders error state when there is fetching (loadEntities) error', async () => {
