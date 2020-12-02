@@ -1,10 +1,11 @@
 import { restFilterGenerator } from '../api/entities';
 import { sourcesColumns } from '../views/sourcesViewDefinition';
+import { CLOUD_VENDOR, REDHAT_VENDOR } from './constants';
 
-export const updateQuery = ({ sortBy, sortDirection, pageNumber, pageSize, filterValue }) => {
+export const updateQuery = ({ sortBy, sortDirection, pageNumber, pageSize, filterValue, activeVendor }) => {
   const sortQuery = `sort_by[]=${sortBy}:${sortDirection}`;
 
-  const paginationQuery = `limit=${pageSize}&offset=${(pageNumber - 1) * pageSize}`;
+  const paginationQuery = `limit=${pageSize}&offset=${(pageNumber - 1) * pageSize}&activeVendor=${activeVendor || CLOUD_VENDOR}`;
 
   const filterQuery = restFilterGenerator(filterValue);
 
@@ -104,6 +105,15 @@ export const parseQuery = () => {
     fetchOptions = {
       ...fetchOptions,
       filterValue,
+    };
+  }
+
+  const activeVendor = urlParams.get('activeVendor');
+
+  if (activeVendor === CLOUD_VENDOR || activeVendor === REDHAT_VENDOR) {
+    fetchOptions = {
+      ...fetchOptions,
+      activeVendor,
     };
   }
 

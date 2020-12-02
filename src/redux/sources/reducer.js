@@ -7,7 +7,9 @@ import {
   SET_COUNT,
   ADD_HIDDEN_SOURCE,
   CLEAR_FILTERS,
+  SET_VENDOR,
 } from './actionTypes';
+import { CLOUD_VENDOR } from '../../utilities/constants';
 
 export const defaultSourcesState = {
   loaded: 0,
@@ -22,6 +24,7 @@ export const defaultSourcesState = {
   sortBy: 'created_at',
   sortDirection: 'desc',
   removingSources: [],
+  activeVendor: CLOUD_VENDOR,
 };
 
 export const entitiesPending = (state, { options }) => ({
@@ -204,6 +207,15 @@ export const sourceRenamePending = (state, { payload: { id, name } }) => ({
   ),
 });
 
+const setVendor = (state, { payload: { vendor } }) => ({
+  ...state,
+  filterValue: {
+    ...state.filterValue,
+    source_type_id: [],
+  },
+  activeVendor: vendor,
+});
+
 export default {
   [ACTION_TYPES.LOAD_ENTITIES_PENDING]: entitiesPending,
   [ACTION_TYPES.LOAD_ENTITIES_FULFILLED]: entitiesLoaded,
@@ -231,4 +243,5 @@ export default {
   [SET_COUNT]: setCount,
   [ADD_HIDDEN_SOURCE]: addHiddenSource,
   [CLEAR_FILTERS]: clearFilters,
+  [SET_VENDOR]: setVendor,
 };

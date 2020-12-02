@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as interceptors from '../frontend-components-copies/interceptors';
+import { CLOUD_VENDOR, CLOUD_VENDORS, REDHAT_VENDOR } from '../utilities/constants';
 
 import { SOURCES_API_BASE_V3 } from './constants';
 
@@ -82,7 +83,7 @@ export const sorting = (sortBy, sortDirection) => {
   return `,sort_by:{${sortBy}:"${sortDirection}"}`;
 };
 
-export const filtering = (filterValue = {}) => {
+export const filtering = (filterValue = {}, activeVendor) => {
   let filterQueries = [];
 
   if (filterValue.name) {
@@ -97,6 +98,14 @@ export const filtering = (filterValue = {}) => {
     filterQueries.push(
       `applications: { application_type_id: { eq: [${filterValue.applications.map((x) => `"${x}"`).join(', ')}] }}`
     );
+  }
+
+  if (activeVendor === CLOUD_VENDOR) {
+    filterQueries.push(`source_type: { vendor: { eq: [${CLOUD_VENDORS.map((x) => `"${x}"`).join(', ')}]} }`);
+  }
+
+  if (activeVendor === REDHAT_VENDOR) {
+    filterQueries.push('source_type: { vendor: "Red Hat" }');
   }
 
   if (filterQueries.length > 0) {
@@ -121,10 +130,13 @@ export const graphQlAttributes = `
     endpoints { id, scheme, host, port, path, receptor_node, role, certificate_authority, verify_ssl, availability_status_error, availability_status, authentications { authtype, availability_status, availability_status_error } }
 `;
 
-export const doLoadEntities = ({ pageSize, pageNumber, sortBy, sortDirection, filterValue }) =>
+export const doLoadEntities = ({ pageSize, pageNumber, sortBy, sortDirection, filterValue, activeVendor }) =>
   getSourcesApi()
     .postGraphQL({
-      query: `{ sources(${pagination(pageSize, pageNumber)}${sorting(sortBy, sortDirection)}${filtering(filterValue)})
+      query: `{ sources(${pagination(pageSize, pageNumber)}${sorting(sortBy, sortDirection)}${filtering(
+        filterValue,
+        activeVendor
+      )})
         { ${graphQlAttributes} }
     }`,
     })
@@ -143,7 +155,7 @@ export const doDeleteApplication = (appId, errorMessage) =>
       throw { error: { title: errorMessage, detail } };
     });
 
-export const restFilterGenerator = (filterValue = {}) => {
+export const restFilterGenerator = (filterValue = {}, activeVendor) => {
   let filterQueries = [];
 
   if (filterValue.name) {
@@ -158,6 +170,14 @@ export const restFilterGenerator = (filterValue = {}) => {
     filterValue.applications.map((id) => filterQueries.push(`filter[applications][application_type_id][eq][]=${id}`));
   }
 
+  if (activeVendor === CLOUD_VENDOR) {
+    CLOUD_VENDORS.forEach((vendor) => filterQueries.push(`filter[source_type][vendor][eq][]=${vendor}`));
+  }
+
+  if (activeVendor === REDHAT_VENDOR) {
+    filterQueries.push('filter[source_type][vendor]=Red Hat');
+  }
+
   if (filterQueries.length > 0) {
     return filterQueries.join('&');
   }
@@ -165,8 +185,8 @@ export const restFilterGenerator = (filterValue = {}) => {
   return '';
 };
 
-export const doLoadCountOfSources = (filterValue = {}) =>
-  axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/sources?${restFilterGenerator(filterValue)}`);
+export const doLoadCountOfSources = (filterValue = {}, activeVendor) =>
+  axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/sources?${restFilterGenerator(filterValue, activeVendor)}`);
 
 export const doLoadSource = (id) =>
   getSourcesApi()

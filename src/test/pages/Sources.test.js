@@ -33,6 +33,7 @@ import { PlaceHolderTable, PaginationLoader } from '../../components/SourcesTabl
 import { Table } from '@patternfly/react-table';
 import SourcesErrorState from '../../components/SourcesErrorState';
 import DataLoader from '../../components/DataLoader';
+import TabNavigation from '../../components/TabNavigation';
 
 describe('SourcesPage', () => {
   const middlewares = [thunk, notificationsMiddleware()];
@@ -79,6 +80,8 @@ describe('SourcesPage', () => {
     expect(typesApi.doLoadSourceTypes).toHaveBeenCalled();
 
     wrapper.update();
+
+    expect(wrapper.find(TabNavigation)).toHaveLength(1);
     expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
     expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
     expect(wrapper.find(SourcesTable)).toHaveLength(1);

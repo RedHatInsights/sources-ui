@@ -8,6 +8,7 @@ import {
   SET_COUNT,
   ADD_HIDDEN_SOURCE,
   CLEAR_FILTERS,
+  SET_VENDOR,
 } from './actionTypes';
 import {
   doLoadAppTypes,
@@ -25,7 +26,7 @@ export const loadEntities = (options) => (dispatch, getState) => {
     options,
   });
 
-  const { pageSize, pageNumber, sortBy, sortDirection, filterValue } = getState().sources;
+  const { pageSize, pageNumber, sortBy, sortDirection, filterValue, activeVendor } = getState().sources;
 
   return Promise.all([
     doLoadEntities({
@@ -34,8 +35,11 @@ export const loadEntities = (options) => (dispatch, getState) => {
       sortBy,
       sortDirection,
       filterValue,
+      activeVendor,
     }),
-    doLoadCountOfSources(filterValue).then(({ meta: { count } }) => dispatch({ type: SET_COUNT, payload: { count } })),
+    doLoadCountOfSources(filterValue, activeVendor).then(({ meta: { count } }) =>
+      dispatch({ type: SET_COUNT, payload: { count } })
+    ),
   ])
     .then(([{ sources }]) =>
       dispatch({
@@ -223,4 +227,13 @@ export const renameSource = (id, name, errorTitle) => (dispatch, getState) => {
         payload: { error: { detail: error.errors?.[0]?.detail || error, title: errorTitle }, id, name: oldName },
       })
     );
+};
+
+export const setActiveVendor = (vendor) => (dispatch) => {
+  dispatch({
+    type: SET_VENDOR,
+    payload: { vendor },
+  });
+
+  return dispatch(loadEntities());
 };
