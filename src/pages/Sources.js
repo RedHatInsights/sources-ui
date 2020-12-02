@@ -10,7 +10,6 @@ import { Section } from '@redhat-cloud-services/frontend-components/components/c
 
 import { filterSources, pageAndSize } from '../redux/sources/actions';
 import SourcesTable from '../components/SourcesTable/SourcesTable';
-import SourcesEmptyState from '../components/SourcesEmptyState';
 import SourcesErrorState from '../components/SourcesErrorState';
 import { routes } from '../Routes';
 
@@ -206,13 +205,6 @@ const SourcesPage = () => {
     </React.Fragment>
   );
 
-  const hasSomeFilter =
-    Object.entries(filterValue)
-      .map(([_key, value]) => value)
-      .filter(Boolean).length > 0;
-
-  const showEmptyState = loaded && !hasSomeFilter && numberOfEntities === 0;
-
   return (
     <React.Fragment>
       <Suspense fallback={null}>
@@ -241,9 +233,8 @@ const SourcesPage = () => {
         <TabNavigation />
       </PageHeader>
       <Section type="content">
-        {showEmptyState && <SourcesEmptyState />}
         {fetchingError && <SourcesErrorState />}
-        {!showEmptyState && !fetchingError && mainContent()}
+        {!fetchingError && mainContent()}
       </Section>
     </React.Fragment>
   );
