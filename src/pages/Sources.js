@@ -41,6 +41,7 @@ import { useHasWritePermissions } from '../hooks/useHasWritePermissions';
 import CustomRoute from '../components/CustomRoute/CustomRoute';
 import { Tooltip } from '@patternfly/react-core/dist/js/components/Tooltip/Tooltip';
 import { PaginationLoader } from '../components/SourcesTable/loaders';
+import TabNavigation from '../components/TabNavigation';
 
 const SourcesPage = () => {
   const [filter, setFilterValue] = useState();
@@ -64,6 +65,7 @@ const SourcesPage = () => {
     paginationClicked,
     appTypesLoaded,
     sourceTypesLoaded,
+    activeVendor,
   } = sources;
 
   const loaded = entitiesLoaded && sourceTypesLoaded && appTypesLoaded;
@@ -174,7 +176,7 @@ const SourcesPage = () => {
               type: 'checkbox',
               filterValues: {
                 onChange: (_event, value) => setFilter('source_type_id', value, dispatch),
-                items: prepareSourceTypeSelection(sourceTypes || []),
+                items: prepareSourceTypeSelection(sourceTypes || [], activeVendor),
                 value: filterValue.source_type_id,
               },
             },
@@ -229,13 +231,14 @@ const SourcesPage = () => {
           }}
         />
       </Suspense>
-      <PageHeader>
+      <PageHeader className="pf-u-pb-0">
         <PageHeaderTitle
           title={intl.formatMessage({
             id: 'sources.sources',
             defaultMessage: 'Sources',
           })}
         />
+        <TabNavigation />
       </PageHeader>
       <Section type="content">
         {showEmptyState && <SourcesEmptyState />}

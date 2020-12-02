@@ -10,6 +10,7 @@ import {
   removeApplication,
   loadSourceTypes,
   renameSource,
+  setActiveVendor,
 } from '../../../redux/sources/actions';
 import {
   ADD_HIDDEN_SOURCE,
@@ -19,10 +20,12 @@ import {
   SORT_ENTITIES,
   FILTER_SOURCES,
   CLEAR_FILTERS,
+  SET_VENDOR,
 } from '../../../redux/sources/actionTypes';
 import { REMOVE_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications';
 import * as api from '../../../api/entities';
 import * as types_api from '../../../api/source_types';
+import { CLOUD_VENDOR } from '../../../utilities/constants';
 
 describe('redux actions', () => {
   let dispatch;
@@ -382,5 +385,13 @@ describe('redux actions', () => {
         payload: { id: sourceId, name: 'old-name', error: { detail: 'some-error', title: errorTitle } },
       });
     });
+  });
+
+  it('setActiveVendor creates an object', async () => {
+    await setActiveVendor(CLOUD_VENDOR)(dispatch);
+
+    expect(dispatch.mock.calls).toHaveLength(2);
+    expect(dispatch.mock.calls[0][0]).toEqual({ type: SET_VENDOR, payload: { vendor: CLOUD_VENDOR } });
+    expect(dispatch.mock.calls[1][0]).toEqual(expect.any(Function));
   });
 });

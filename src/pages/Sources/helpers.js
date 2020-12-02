@@ -1,5 +1,6 @@
 import awesomeDebounce from 'awesome-debounce-promise';
 import { loadEntities, filterSources } from '../../redux/sources/actions';
+import { CLOUD_VENDOR, CLOUD_VENDORS, REDHAT_VENDOR } from '../../utilities/constants';
 
 export const debouncedFiltering = awesomeDebounce((refresh) => refresh(), 500);
 
@@ -11,8 +12,11 @@ export const afterSuccessLoadParameters = {
 
 export const afterSuccess = (dispatch) => dispatch(loadEntities(afterSuccessLoadParameters));
 
-export const prepareSourceTypeSelection = (sourceTypes) =>
-  sourceTypes.map(({ id, product_name }) => ({ label: product_name, value: id })).sort((a, b) => a.label.localeCompare(b.label));
+export const prepareSourceTypeSelection = (sourceTypes, activeVendor) =>
+  sourceTypes
+    .filter(({ vendor }) => (activeVendor === CLOUD_VENDOR ? CLOUD_VENDORS.includes(vendor) : vendor === REDHAT_VENDOR))
+    .map(({ id, product_name }) => ({ label: product_name, value: id }))
+    .sort((a, b) => a.label.localeCompare(b.label));
 
 export const prepareApplicationTypeSelection = (appTypes) =>
   appTypes.map(({ id, display_name }) => ({ label: display_name, value: id })).sort((a, b) => a.label.localeCompare(b.label));
