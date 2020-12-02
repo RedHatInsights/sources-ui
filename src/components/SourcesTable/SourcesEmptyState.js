@@ -1,5 +1,6 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
+import { useSelector } from 'react-redux';
 
 import { EmptyState } from '@patternfly/react-core/dist/js/components/EmptyState/EmptyState';
 import { EmptyStateIcon } from '@patternfly/react-core/dist/js/components/EmptyState/EmptyStateIcon';
@@ -8,9 +9,11 @@ import { Bullseye } from '@patternfly/react-core/dist/js/layouts/Bullseye/Bullse
 import { Title } from '@patternfly/react-core/dist/js/components/Title/Title';
 
 import PlusIcon from '@patternfly/react-icons/dist/js/icons/plus-circle-icon';
+import { CLOUD_VENDOR } from '../../utilities/constants';
 
 const SourcesEmptyState = () => {
   const intl = useIntl();
+  const activeVendor = useSelector(({ sources }) => sources.activeVendor);
 
   return (
     <Bullseye>
@@ -23,11 +26,17 @@ const SourcesEmptyState = () => {
           })}
         </Title>
         <EmptyStateBody>
-          {intl.formatMessage({
-            id: 'sources.emptyStateBody',
-            defaultMessage:
-              'You don’t have any Red Hat sources configured. Add a source to connect to your Red Hat applications.',
-          })}
+          {intl.formatMessage(
+            {
+              id: 'sources.emptyStateBody',
+              defaultMessage:
+                'You don’t have any {activeVendor} sources configured. Add a source to connect to your Red Hat applications.',
+            },
+            {
+              activeVendor:
+                activeVendor === CLOUD_VENDOR ? intl.formatMessage({ id: 'sources.cloud', defaultMessage: 'cloud' }) : 'Red Hat',
+            }
+          )}
         </EmptyStateBody>
       </EmptyState>
     </Bullseye>
