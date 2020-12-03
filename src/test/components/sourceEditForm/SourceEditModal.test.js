@@ -284,7 +284,7 @@ describe('SourceEditModal', () => {
       expect(wrapper.find(EditAlert).find(Alert).props().variant).toEqual(message.variant);
       expect(wrapper.find(EditAlert).find(Alert).props().children).toEqual(message.description);
 
-      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
+      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, applicationTypesData.data);
     });
 
     it('calls onSubmit - timeout - return to edit', async () => {
@@ -357,7 +357,7 @@ describe('SourceEditModal', () => {
 
       expect(wrapper.find(ErroredModal)).toHaveLength(1);
 
-      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
+      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, applicationTypesData.data);
 
       submit.onSubmit.mockReset();
 
@@ -367,7 +367,7 @@ describe('SourceEditModal', () => {
       });
       wrapper.update();
 
-      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
+      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, applicationTypesData.data);
     });
   });
 

@@ -67,7 +67,7 @@ const SourceEditModal = () => {
   const isLoading = !appTypesLoaded || !sourceTypesLoaded || loading;
 
   if (submitError) {
-    return <ErroredModal onRetry={() => onSubmit(values, editing, dispatch, source, intl, setState)} />;
+    return <ErroredModal onRetry={() => onSubmit(values, editing, dispatch, source, intl, setState, appTypes)} />;
   }
 
   if (isSubmitting) {
@@ -85,7 +85,7 @@ const SourceEditModal = () => {
   return (
     <SourcesFormRenderer
       schema={schema}
-      onSubmit={(values, formApi) => onSubmit(values, formApi.getState().dirtyFields, dispatch, source, intl, setState)}
+      onSubmit={(values, formApi) => onSubmit(values, formApi.getState().dirtyFields, dispatch, source, intl, setState, appTypes)}
       FormTemplate={(props) => (
         <FormTemplate canReset submitLabel="Save changes" disableSubmit={['pristine', 'invalid']} {...props} />
       )}
