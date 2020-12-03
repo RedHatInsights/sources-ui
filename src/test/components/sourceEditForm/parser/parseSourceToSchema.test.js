@@ -86,17 +86,7 @@ describe('parseSourceToSchema', () => {
     const result = parseSourceToSchema(SOURCE, SOURCE_TYPE, APP_TYPES, INTL);
 
     expect(result).toEqual({
-      fields: [
-        {
-          name: 'message',
-          component: 'description',
-          Content: expect.any(Function),
-          condition: {
-            when: 'message',
-            isNotEmpty: true,
-          },
-        },
-      ],
+      fields: [],
     });
   });
 });

@@ -15,7 +15,7 @@ import { useIsLoaded } from '../../hooks/useIsLoaded';
 import reducer, { initialState } from './reducer';
 import SubmittingModal from './SubmittingModal';
 import ErroredModal from './ErroredModal';
-import { hasCostManagement } from './helpers';
+import { hasCostManagement, prepareMessages } from './helpers';
 
 const SourceEditModal = () => {
   const [state, setState] = useReducer(reducer, initialState);
@@ -51,7 +51,9 @@ const SourceEditModal = () => {
   useEffect(() => {
     if (sourceRedux && initialLoad && appTypesLoaded) {
       doLoadSourceForEdit(sourceRedux, hasCostManagement(sourceRedux, appTypes)).then((source) => {
-        setState({ type: 'setSource', source });
+        const messages = prepareMessages(source, intl);
+
+        setState({ type: 'setSource', source, messages });
       });
     }
   }, [sourceRedux, isLoaded, appTypesLoaded, initialLoad]);

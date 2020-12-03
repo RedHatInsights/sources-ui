@@ -12,7 +12,7 @@ export const initialState = {
   submitError: false,
 };
 
-const reducer = (state, { type, source, sourceType, appTypes, intl, message, values, editing, messages }) => {
+const reducer = (state, { type, source, sourceType, appTypes, intl, values, editing, messages }) => {
   switch (type) {
     case 'createForm':
       return {
@@ -25,6 +25,10 @@ const reducer = (state, { type, source, sourceType, appTypes, intl, message, val
     case 'setSource':
       return {
         ...state,
+        messages: {
+          ...messages,
+          ...state.messages,
+        },
         source,
         initialLoad: false,
       };
@@ -41,7 +45,6 @@ const reducer = (state, { type, source, sourceType, appTypes, intl, message, val
         ...state,
         isSubmitting: false,
         source,
-        message,
         messages,
       };
     case 'submitFailed':
@@ -49,7 +52,6 @@ const reducer = (state, { type, source, sourceType, appTypes, intl, message, val
         ...state,
         isSubmitting: false,
         submitError: true,
-        message: undefined,
         messages: undefined,
       };
     case 'sourceChanged':

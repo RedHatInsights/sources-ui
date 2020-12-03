@@ -105,3 +105,39 @@ export const getEditedApplications = (source, editing, appTypes) => {
 
   return editedApplications.filter(Boolean);
 };
+
+export const prepareMessages = (source, intl) => {
+  const messages = {};
+
+  source.applications.forEach(({ id, availability_status_error }) => {
+    if (availability_status_error) {
+      messages[id] = {
+        title: intl.formatMessage({
+          id: 'wizard.failEditToastTitleBeforeEdit',
+          defaultMessage: 'This application is unavailable',
+        }),
+        description: availability_status_error,
+        variant: 'danger',
+      };
+    }
+  });
+
+  if (source.endpoints?.[0]?.availability_status_error) {
+    const applicationsUsingEndpoint = source.applications
+      .map((app) => (app.authentications.find(({ resource_type }) => resource_type === 'Endpoint') ? app.id : undefined))
+      .filter(Boolean);
+
+    applicationsUsingEndpoint.forEach((id) => {
+      messages[id] = {
+        title: intl.formatMessage({
+          id: 'wizard.failEditToastTitleBeforeEdit',
+          defaultMessage: 'This application is unavailable',
+        }),
+        description: source.endpoints?.[0]?.availability_status_error,
+        variant: 'danger',
+      };
+    });
+  }
+
+  return messages;
+};

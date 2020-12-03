@@ -15,7 +15,7 @@ import { routes, replaceRouteId } from '../../../Routes';
 import { applicationTypesData, CATALOG_APP, COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
 import { sourceTypesData, ANSIBLE_TOWER_ID } from '../../__mocks__/sourceTypesData';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
-import { Button, FormGroup, Form, Alert, EmptyState, TextInput } from '@patternfly/react-core';
+import { Button, Form, Alert, EmptyState, TextInput } from '@patternfly/react-core';
 import * as editApi from '../../../api/doLoadSourceForEdit';
 import * as submit from '../../../components/SourceEditForm/onSubmit';
 import reducer from '../../../components/SourceEditForm/reducer';
@@ -131,6 +131,97 @@ describe('SourceEditModal', () => {
     expect(wrapper.find(Button)).toHaveLength(BUTTONS.length);
   });
 
+  it('renders correctly with initial message', async () => {
+    editApi.doLoadSourceForEdit = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        source: {
+          name: 'Name',
+          source_type_id: ANSIBLE_TOWER_ID,
+          applications: [
+            {
+              id: '123',
+              application_type_id: CATALOG_APP.id,
+              availability_status_error: 'app-error',
+              authentications: [{ id: '343' }],
+            },
+          ],
+          endpoints: [{ id: '10953' }],
+        },
+        applications: [
+          {
+            application_type_id: CATALOG_APP.id,
+            id: '123',
+            availability_status_error: 'app-error',
+            authentications: [{ type: 'username_password', username: '123', id: '343' }],
+          },
+        ],
+        endpoints: [
+          {
+            certificate_authority: 'sadas',
+            default: true,
+            host: 'myopenshiftcluster.mycompany.com',
+            id: '10953',
+            path: '/',
+            role: 'ansible',
+            scheme: 'https',
+            verify_ssl: true,
+          },
+        ],
+        authentications: [],
+      })
+    );
+
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <SourceEditModal {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+    });
+    wrapper.update();
+
+    expect(wrapper.find(EditAlert)).toHaveLength(1);
+
+    expect(wrapper.find(EditAlert).find(Alert).props().title).toEqual('This application is unavailable');
+    expect(wrapper.find(EditAlert).find(Alert).props().variant).toEqual('danger');
+    expect(wrapper.find(EditAlert).find(Alert).props().children).toEqual('app-error');
+
+    await act(async () => {
+      wrapper.find(TextInput).at(2).find('input').instance().value = 'different-value';
+      wrapper.find(TextInput).at(2).simulate('change');
+    });
+    wrapper.update();
+
+    submit.onSubmit = jest.fn().mockImplementation((values, editing, _dispatch, source, _intl, setState) => {
+      setState({
+        type: 'submitFinished',
+        messages: {
+          123: {
+            variant: 'success',
+            title: 'success title',
+          },
+        },
+      });
+    });
+
+    const form = wrapper.find(Form);
+
+    expect(wrapper.find(SubmittingModal)).toHaveLength(0);
+
+    await act(async () => {
+      form.simulate('submit');
+    });
+    wrapper.update();
+
+    expect(wrapper.find(EditAlert)).toHaveLength(1);
+
+    expect(wrapper.find(EditAlert).find(Alert).props().title).toEqual('success title');
+    expect(wrapper.find(EditAlert).find(Alert).props().variant).toEqual('success');
+    expect(wrapper.find(EditAlert).find(Alert).props().children).toEqual(undefined);
+  });
+
   it('reload data when source from redux is changed', async () => {
     const ChangeSourceComponent = () => {
       const dispatch = useDispatch();
@@ -231,12 +322,6 @@ describe('SourceEditModal', () => {
     });
 
     beforeEach(async () => {
-      const nameFormGroup = wrapper.find(FormGroup).first();
-      await act(async () => {
-        nameFormGroup.simulate('click');
-      });
-      wrapper.update();
-
       await act(async () => {
         wrapper.find(TextInput).at(2).find('input').instance().value = NEW_CA;
         wrapper.find(TextInput).at(2).simulate('change');
@@ -252,12 +337,15 @@ describe('SourceEditModal', () => {
         variant: 'danger',
         description: 'some description',
       };
+      const messages = {
+        123: message,
+      };
 
       submit.onSubmit = jest.fn().mockImplementation((values, editing, _dispatch, source, _intl, setState) => {
         setState({ type: 'submit', values, editing });
 
         setTimeout(() => {
-          setState({ type: 'submitFinished', source, message });
+          setState({ type: 'submitFinished', source, messages });
         }, 1000);
       });
 
