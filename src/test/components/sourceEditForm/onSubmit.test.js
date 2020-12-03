@@ -45,35 +45,6 @@ describe('editSourceModal - on submit', () => {
     actions.loadEntities = jest.fn();
   });
 
-  it('submit values successfuly with cost management', async () => {
-    doUpdateSource.doUpdateSource = jest.fn().mockImplementation(() => Promise.resolve('OK'));
-
-    const FILTERED_VALUES = {
-      source: {
-        type: 'openshift',
-      },
-    };
-
-    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, APP_TYPES);
-
-    expect(doUpdateSource.doUpdateSource).toHaveBeenCalledWith(SOURCE, FILTERED_VALUES);
-    expect(SET_STATE.mock.calls[0][0]).toEqual({
-      type: 'submit',
-      values: VALUES,
-      editing: EDITING,
-    });
-    expect(actions.loadEntities).toHaveBeenCalled();
-    expect(checkSourceStatus.checkSourceStatus).toHaveBeenCalledWith('2342');
-    expect(SET_STATE.mock.calls[1][0]).toEqual({
-      type: 'submitFinished',
-      messages: {},
-      message: {
-        variant: 'success',
-        title: 'Source ‘{name}’ was edited successfully.',
-      },
-    });
-  });
-
   it('checks endpoint availability', async () => {
     doUpdateSource.doUpdateSource = jest.fn().mockImplementation(() => Promise.resolve('OK'));
 
@@ -118,10 +89,11 @@ describe('editSourceModal - on submit', () => {
     expect(checkSourceStatus.checkSourceStatus).toHaveBeenCalledWith('2342');
     expect(SET_STATE.mock.calls[1][0]).toEqual({
       type: 'submitFinished',
-      messages: {},
-      message: {
-        variant: 'success',
-        title: 'Source ‘{name}’ was edited successfully.',
+      messages: {
+        123: {
+          variant: 'success',
+          title: 'Application credentials were edited successfully.',
+        },
       },
     });
     expect(getAppStatus.checkAppAvailability).toHaveBeenCalledWith(
@@ -247,11 +219,10 @@ describe('editSourceModal - on submit', () => {
     );
     expect(SET_STATE.mock.calls[1][0]).toEqual({
       type: 'submitFinished',
-      message: {},
       messages: {
         'application-id': {
           variant: 'danger',
-          title: 'Edit application credentials failed',
+          title: 'Edit application credentials failed.',
           description: APP_ERROR,
         },
       },
@@ -266,6 +237,7 @@ describe('editSourceModal - on submit', () => {
       .mockImplementationOnce(() =>
         Promise.resolve({
           availability_status: AVAILABLE,
+          id: 'application-id-1',
         })
       )
       .mockImplementationOnce(() =>
@@ -316,11 +288,14 @@ describe('editSourceModal - on submit', () => {
     expect(getAppStatus.checkAppAvailability.mock.calls[1][0]).toEqual('application-id-2');
     expect(SET_STATE.mock.calls[1][0]).toEqual({
       type: 'submitFinished',
-      message: {},
       messages: {
+        'application-id-1': {
+          variant: 'success',
+          title: 'Application credentials were edited successfully.',
+        },
         'application-id-2': {
           variant: 'danger',
-          title: 'Edit application credentials failed',
+          title: 'Edit application credentials failed.',
           description: APP_ERROR,
         },
       },
@@ -382,11 +357,10 @@ describe('editSourceModal - on submit', () => {
       messages: {
         'application-id': {
           variant: 'danger',
-          title: 'Edit application credentials failed',
+          title: 'Edit application credentials failed.',
           description: ERROR,
         },
       },
-      message: {},
     });
   });
 
@@ -438,7 +412,6 @@ describe('editSourceModal - on submit', () => {
     );
     expect(SET_STATE.mock.calls[1][0]).toEqual({
       type: 'submitFinished',
-      message: {},
       messages: {
         'application-id': {
           variant: 'warning',
@@ -453,6 +426,7 @@ describe('editSourceModal - on submit', () => {
   it('check app availablity status - available', async () => {
     getAppStatus.checkAppAvailability = jest.fn().mockImplementation(() =>
       Promise.resolve({
+        id: 'application-id',
         availability_status: AVAILABLE,
       })
     );
@@ -497,10 +471,11 @@ describe('editSourceModal - on submit', () => {
     );
     expect(SET_STATE.mock.calls[1][0]).toEqual({
       type: 'submitFinished',
-      messages: {},
-      message: {
-        variant: 'success',
-        title: 'Source ‘{name}’ was edited successfully.',
+      messages: {
+        'application-id': {
+          variant: 'success',
+          title: 'Application credentials were edited successfully.',
+        },
       },
     });
   });

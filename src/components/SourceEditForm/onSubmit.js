@@ -5,7 +5,7 @@ import { loadEntities } from '../../redux/sources/actions';
 import { checkSourceStatus } from '../../api/checkSourceStatus';
 import { doUpdateSource } from '../../api/doUpdateSource';
 
-import { UNAVAILABLE } from '../../views/formatters';
+import { AVAILABLE, UNAVAILABLE } from '../../views/formatters';
 
 export const onSubmit = async (values, editing, dispatch, source, intl, setState, appTypes) => {
   setState({ type: 'submit', values, editing });
@@ -23,7 +23,6 @@ export const onSubmit = async (values, editing, dispatch, source, intl, setState
 
   checkSourceStatus(source.source.id);
 
-  let message = {};
   let messages = {};
 
   const checkApplications = getEditedApplications(source, editing, appTypes);
@@ -54,11 +53,22 @@ export const onSubmit = async (values, editing, dispatch, source, intl, setState
     }
 
     statusResults.forEach(({ availability_status, availability_status_error, id }) => {
+      if (availability_status === AVAILABLE) {
+        messages[id] = {
+          title: intl.formatMessage({
+            id: 'wizard.successEditToastTitle',
+            defaultMessage: 'Application credentials were edited successfully.',
+          }),
+          description: availability_status_error,
+          variant: 'success',
+        };
+      }
+
       if (availability_status === UNAVAILABLE) {
         messages[id] = {
           title: intl.formatMessage({
             id: 'wizard.failEditToastTitle',
-            defaultMessage: 'Edit application credentials failed',
+            defaultMessage: 'Edit application credentials failed.',
           }),
           description: availability_status_error,
           variant: 'danger',
@@ -82,19 +92,6 @@ export const onSubmit = async (values, editing, dispatch, source, intl, setState
     });
   }
 
-  if (Object.keys(message).length === 0 && Object.keys(messages).length === 0) {
-    message = {
-      title: intl.formatMessage(
-        {
-          id: 'wizard.successEditToastTitle',
-          defaultMessage: 'Source ‘{name}’ was edited successfully.',
-        },
-        { name: source.source.name }
-      ),
-      variant: 'success',
-    };
-  }
-
   await dispatch(loadEntities());
-  setState({ type: 'submitFinished', message, messages });
+  setState({ type: 'submitFinished', messages });
 };

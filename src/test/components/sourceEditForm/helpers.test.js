@@ -1,4 +1,9 @@
-import { getEditedApplications, prepareInitialValues, selectOnlyEditedValues } from '../../../components/SourceEditForm/helpers';
+import {
+  getEditedApplications,
+  prepareInitialValues,
+  prepareMessages,
+  selectOnlyEditedValues,
+} from '../../../components/SourceEditForm/helpers';
 import applicationTypesData, { COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
 
 describe('edit form helpers', () => {
@@ -286,6 +291,58 @@ describe('edit form helpers', () => {
       };
 
       expect(getEditedApplications(source, edited, appTypes)).toEqual(['456']);
+    });
+  });
+
+  describe('prepareMessages', () => {
+    let source;
+    let intl = { formatMessage: ({ defaultMessage }) => defaultMessage };
+
+    it('prepare application messages', () => {
+      source = {
+        applications: [
+          { id: 'app1', availability_status_error: 'some error' },
+          { id: 'app2' },
+          { id: 'app3', availability_status_error: 'some error 3' },
+        ],
+      };
+
+      expect(prepareMessages(source, intl)).toEqual({
+        app1: {
+          description: 'some error',
+          title: 'This application is unavailable',
+          variant: 'danger',
+        },
+        app3: {
+          description: 'some error 3',
+          title: 'This application is unavailable',
+          variant: 'danger',
+        },
+      });
+    });
+
+    it('prepare endpoint messages', () => {
+      source = {
+        applications: [
+          { id: 'app1', authentications: [{ resource_type: 'Endpoint' }] },
+          { id: 'app2', authentications: [] },
+          { id: 'app3', authentications: [{ resource_type: 'Endpoint' }] },
+        ],
+        endpoints: [{ availability_status_error: 'endpoint error' }],
+      };
+
+      expect(prepareMessages(source, intl)).toEqual({
+        app1: {
+          description: 'endpoint error',
+          title: 'This application is unavailable',
+          variant: 'danger',
+        },
+        app3: {
+          description: 'endpoint error',
+          title: 'This application is unavailable',
+          variant: 'danger',
+        },
+      });
     });
   });
 });
