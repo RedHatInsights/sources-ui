@@ -5,6 +5,7 @@ import * as doUpdateSource from '../../../api/doUpdateSource';
 
 import * as getAppStatus from '@redhat-cloud-services/frontend-components-sources/cjs/getApplicationStatus';
 import { UNAVAILABLE, AVAILABLE } from '../../../views/formatters';
+import applicationTypesData from '../../__mocks__/applicationTypesData';
 
 describe('editSourceModal - on submit', () => {
   let VALUES;
@@ -13,6 +14,7 @@ describe('editSourceModal - on submit', () => {
   let SOURCE;
   let INTL;
   let SET_STATE;
+  const APP_TYPES = applicationTypesData.data;
 
   let formatMessageMock;
 
@@ -52,7 +54,7 @@ describe('editSourceModal - on submit', () => {
       },
     };
 
-    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
+    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, APP_TYPES);
 
     expect(doUpdateSource.doUpdateSource).toHaveBeenCalledWith(SOURCE, FILTERED_VALUES);
     expect(SET_STATE.mock.calls[0][0]).toEqual({
@@ -91,6 +93,7 @@ describe('editSourceModal - on submit', () => {
 
     SOURCE = {
       ...SOURCE,
+      applications: [{ id: '123', authentications: [{ id: '123', resource_type: 'Endpoint' }] }],
       endpoints: [
         {
           id: ENDPOINT_ID,
@@ -98,7 +101,12 @@ describe('editSourceModal - on submit', () => {
       ],
     };
 
-    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
+    EDITING = {
+      ...EDITING,
+      url: true,
+    };
+
+    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, APP_TYPES);
 
     expect(doUpdateSource.doUpdateSource).toHaveBeenCalledWith(SOURCE, FILTERED_VALUES);
     expect(SET_STATE.mock.calls[0][0]).toEqual({
@@ -128,7 +136,7 @@ describe('editSourceModal - on submit', () => {
   it('submit values unsuccessfuly when submit error', async () => {
     doUpdateSource.doUpdateSource = jest.fn().mockImplementation(() => Promise.reject('FAILS'));
 
-    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
+    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, APP_TYPES);
 
     expect(actions.loadEntities).toHaveBeenCalled();
     expect(checkSourceStatus.checkSourceStatus).not.toHaveBeenCalled();
@@ -147,7 +155,12 @@ describe('editSourceModal - on submit', () => {
 
     SOURCE = {
       ...SOURCE,
-      applications: [{ id: 'application-id' }],
+      applications: [{ id: 'application-id', authentications: [{ id: '123', resource_type: 'Application' }] }],
+    };
+
+    EDITING = {
+      ...EDITING,
+      'authentications.a123.username': true,
     };
 
     doUpdateSource.doUpdateSource = jest.fn().mockImplementation(() => Promise.resolve('OK'));
@@ -156,9 +169,12 @@ describe('editSourceModal - on submit', () => {
       source: {
         type: 'openshift',
       },
+      authentications: {
+        a123: { username: undefined },
+      },
     };
 
-    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
+    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, APP_TYPES);
 
     expect(doUpdateSource.doUpdateSource).toHaveBeenCalledWith(SOURCE, FILTERED_VALUES);
     expect(SET_STATE.mock.calls[0][0]).toEqual({
@@ -193,7 +209,12 @@ describe('editSourceModal - on submit', () => {
 
     SOURCE = {
       ...SOURCE,
-      applications: [{ id: 'application-id' }],
+      applications: [{ id: 'application-id', authentications: [{ id: '123', resource_type: 'Application' }] }],
+    };
+
+    EDITING = {
+      ...EDITING,
+      'authentications.a123.username': true,
     };
 
     doUpdateSource.doUpdateSource = jest.fn().mockImplementation(() => Promise.resolve('OK'));
@@ -202,9 +223,12 @@ describe('editSourceModal - on submit', () => {
       source: {
         type: 'openshift',
       },
+      authentications: {
+        a123: { username: undefined },
+      },
     };
 
-    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
+    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, APP_TYPES);
 
     expect(doUpdateSource.doUpdateSource).toHaveBeenCalledWith(SOURCE, FILTERED_VALUES);
     expect(SET_STATE.mock.calls[0][0]).toEqual({
@@ -254,18 +278,31 @@ describe('editSourceModal - on submit', () => {
 
     SOURCE = {
       ...SOURCE,
-      applications: [{ id: 'application-id' }, { id: 'application-id-2' }],
+      applications: [
+        { id: 'application-id', authentications: [{ id: '123', resource_type: 'Application' }] },
+        { id: 'application-id-2', authentications: [{ id: '245', resource_type: 'Application' }] },
+      ],
     };
 
-    doUpdateSource.doUpdateSource = jest.fn().mockImplementationOnce(() => Promise.resolve('OK'));
+    EDITING = {
+      ...EDITING,
+      'authentications.a123.username': true,
+      'authentications.a245.username': true,
+    };
+
+    doUpdateSource.doUpdateSource = jest.fn().mockImplementation(() => Promise.resolve('OK'));
 
     const FILTERED_VALUES = {
       source: {
         type: 'openshift',
       },
+      authentications: {
+        a123: { username: undefined },
+        a245: { username: undefined },
+      },
     };
 
-    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
+    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, APP_TYPES);
 
     expect(doUpdateSource.doUpdateSource).toHaveBeenCalledWith(SOURCE, FILTERED_VALUES);
     expect(SET_STATE.mock.calls[0][0]).toEqual({
@@ -304,17 +341,26 @@ describe('editSourceModal - on submit', () => {
     SOURCE = {
       ...SOURCE,
       endpoints: [{ id: 'endpoint-id' }],
+      applications: [{ id: 'application-id', authentications: [{ id: '123', resource_type: 'Endpoint' }] }],
     };
 
-    doUpdateSource.doUpdateSource = jest.fn().mockImplementationOnce(() => Promise.resolve('OK'));
+    EDITING = {
+      ...EDITING,
+      'authentications.a123.username': true,
+    };
+
+    doUpdateSource.doUpdateSource = jest.fn().mockImplementation(() => Promise.resolve('OK'));
 
     const FILTERED_VALUES = {
       source: {
         type: 'openshift',
       },
+      authentications: {
+        a123: { username: undefined },
+      },
     };
 
-    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
+    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, APP_TYPES);
 
     expect(doUpdateSource.doUpdateSource).toHaveBeenCalledWith(SOURCE, FILTERED_VALUES);
     expect(SET_STATE.mock.calls[0][0]).toEqual({
@@ -333,12 +379,14 @@ describe('editSourceModal - on submit', () => {
     );
     expect(SET_STATE.mock.calls[1][0]).toEqual({
       type: 'submitFinished',
-      messages: {},
-      message: {
-        variant: 'danger',
-        title: 'Edit application credentials failed',
-        description: ERROR,
+      messages: {
+        'application-id': {
+          variant: 'danger',
+          title: 'Edit application credentials failed',
+          description: ERROR,
+        },
       },
+      message: {},
     });
   });
 
@@ -352,7 +400,12 @@ describe('editSourceModal - on submit', () => {
 
     SOURCE = {
       ...SOURCE,
-      applications: [{ id: 'application-id' }],
+      applications: [{ id: 'application-id', authentications: [{ id: '123', resource_type: 'Application' }] }],
+    };
+
+    EDITING = {
+      ...EDITING,
+      'authentications.a123.username': true,
     };
 
     doUpdateSource.doUpdateSource = jest.fn().mockImplementation(() => Promise.resolve('OK'));
@@ -361,9 +414,12 @@ describe('editSourceModal - on submit', () => {
       source: {
         type: 'openshift',
       },
+      authentications: {
+        a123: { username: undefined },
+      },
     };
 
-    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
+    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, APP_TYPES);
 
     expect(doUpdateSource.doUpdateSource).toHaveBeenCalledWith(SOURCE, FILTERED_VALUES);
     expect(SET_STATE.mock.calls[0][0]).toEqual({
@@ -403,7 +459,12 @@ describe('editSourceModal - on submit', () => {
 
     SOURCE = {
       ...SOURCE,
-      applications: [{ id: 'application-id' }],
+      applications: [{ id: 'application-id', authentications: [{ id: '123', resource_type: 'Application' }] }],
+    };
+
+    EDITING = {
+      ...EDITING,
+      'authentications.a123.username': true,
     };
 
     doUpdateSource.doUpdateSource = jest.fn().mockImplementation(() => Promise.resolve('OK'));
@@ -412,9 +473,12 @@ describe('editSourceModal - on submit', () => {
       source: {
         type: 'openshift',
       },
+      authentications: {
+        a123: { username: undefined },
+      },
     };
 
-    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
+    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, APP_TYPES);
 
     expect(doUpdateSource.doUpdateSource).toHaveBeenCalledWith(SOURCE, FILTERED_VALUES);
     expect(SET_STATE.mock.calls[0][0]).toEqual({

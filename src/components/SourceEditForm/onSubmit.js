@@ -1,13 +1,13 @@
 import { checkAppAvailability } from '@redhat-cloud-services/frontend-components-sources/cjs/getApplicationStatus';
 
-import { selectOnlyEditedValues } from './helpers';
+import { CHECK_ENDPOINT_COMMAND, getEditedApplications, selectOnlyEditedValues } from './helpers';
 import { loadEntities } from '../../redux/sources/actions';
 import { checkSourceStatus } from '../../api/checkSourceStatus';
 import { doUpdateSource } from '../../api/doUpdateSource';
 
 import { UNAVAILABLE } from '../../views/formatters';
 
-export const onSubmit = async (values, editing, dispatch, source, intl, setState) => {
+export const onSubmit = async (values, editing, dispatch, source, intl, setState, appTypes) => {
   setState({ type: 'submit', values, editing });
 
   const startDate = new Date();
@@ -26,12 +26,22 @@ export const onSubmit = async (values, editing, dispatch, source, intl, setState
   let message = {};
   let messages = {};
 
-  const promises =
-    source.applications?.map(({ id }) => checkAppAvailability(id, undefined, undefined, undefined, startDate)) || [];
+  const checkApplications = getEditedApplications(source, editing, appTypes);
 
-  if (source.endpoints?.[0]?.id) {
-    promises.push(checkAppAvailability(source.endpoints[0].id, undefined, undefined, 'getEndpoint', startDate));
-  }
+  const promises = [];
+
+  checkApplications.forEach((checkInfo) => {
+    if (checkInfo.includes(CHECK_ENDPOINT_COMMAND)) {
+      promises.push(
+        checkAppAvailability(source.endpoints[0].id, undefined, undefined, 'getEndpoint', startDate).then((data) => ({
+          ...data,
+          id: checkInfo.replace(`${CHECK_ENDPOINT_COMMAND}-`, ''),
+        }))
+      );
+    } else {
+      promises.push(checkAppAvailability(checkInfo, undefined, undefined, undefined, startDate));
+    }
+  });
 
   let statusResults;
   if (promises.length > 0) {
@@ -43,11 +53,9 @@ export const onSubmit = async (values, editing, dispatch, source, intl, setState
       return;
     }
 
-    statusResults.forEach(({ availability_status, availability_status_error, id, role: isEndpoint }) => {
-      let updatedMessage;
-
+    statusResults.forEach(({ availability_status, availability_status_error, id }) => {
       if (availability_status === UNAVAILABLE) {
-        updatedMessage = {
+        messages[id] = {
           title: intl.formatMessage({
             id: 'wizard.failEditToastTitle',
             defaultMessage: 'Edit application credentials failed',
@@ -58,7 +66,7 @@ export const onSubmit = async (values, editing, dispatch, source, intl, setState
       }
 
       if (!availability_status) {
-        updatedMessage = {
+        messages[id] = {
           title: intl.formatMessage({
             id: 'wizard.timeoutEditToastTitle',
             defaultMessage: 'Edit in progress',
@@ -70,12 +78,6 @@ export const onSubmit = async (values, editing, dispatch, source, intl, setState
           }),
           variant: 'warning',
         };
-      }
-
-      if (updatedMessage && isEndpoint) {
-        message = updatedMessage;
-      } else if (updatedMessage) {
-        messages[id] = updatedMessage;
       }
     });
   }
