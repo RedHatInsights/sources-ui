@@ -212,6 +212,7 @@ const setVendor = (state, { payload: { vendor } }) => ({
   filterValue: {
     ...state.filterValue,
     source_type_id: [],
+    applications: [],
   },
   activeVendor: vendor,
 });
