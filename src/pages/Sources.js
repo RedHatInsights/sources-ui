@@ -7,6 +7,7 @@ import { useIntl } from 'react-intl';
 import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/components/cjs/PrimaryToolbar';
 import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/cjs/PageHeader';
 import { Section } from '@redhat-cloud-services/frontend-components/components/cjs/Section';
+import { filterVendorAppTypes } from '@redhat-cloud-services/frontend-components-sources/cjs/filterApps';
 
 import { filterSources, pageAndSize } from '../redux/sources/actions';
 import SourcesTable from '../components/SourcesTable/SourcesTable';
@@ -187,7 +188,7 @@ const SourcesPage = () => {
               type: 'checkbox',
               filterValues: {
                 onChange: (_event, value) => setFilter('applications', value, dispatch),
-                items: prepareApplicationTypeSelection(appTypes || []),
+                items: prepareApplicationTypeSelection(appTypes?.filter(filterVendorAppTypes(sourceTypes)) || []),
                 value: filterValue.applications,
               },
             },
