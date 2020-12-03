@@ -84,9 +84,9 @@ export const sourceTypeFormatter = (sourceType, _item, { sourceTypes }) => {
 };
 
 export const dateFormatter = (str) => (
-  <Text style={{ marginBottom: 0 }} component={TextVariants.p} className="ins-c-sources__help-cursor">
+  <span className="ins-c-sources__help-cursor">
     <DateFormat type="relative" date={str} />
-  </Text>
+  </span>
 );
 
 export const nameFormatter = (name, source, { sourceTypes }) => (
