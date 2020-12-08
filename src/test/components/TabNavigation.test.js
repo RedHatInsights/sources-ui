@@ -7,7 +7,7 @@ import { TabButton } from '@patternfly/react-core/dist/js/components/Tabs/TabBut
 import { TabTitleIcon } from '@patternfly/react-core/dist/js/components/Tabs/TabTitleIcon';
 import { TabTitleText } from '@patternfly/react-core/dist/js/components/Tabs/TabTitleText';
 import RedhatIcon from '@patternfly/react-icons/dist/js/icons/redhat-icon';
-import CloudIcon from '@patternfly/react-icons/dist/js/icons/cloud-tenant-icon';
+import CloudIcon from '@patternfly/react-icons/dist/js/icons/cloud-icon';
 
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../utilities/constants';
