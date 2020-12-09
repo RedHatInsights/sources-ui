@@ -8,28 +8,31 @@ import { doUpdateSource } from '../../api/doUpdateSource';
 
 import { UNAVAILABLE } from '../SourcesTable/formatters';
 
-export const onSubmit = async (values, editing, dispatch, source, intl, setState) => {
+export const onSubmit = async (values, editing, dispatch, source, intl, setState, hasCostManagement) => {
   setState({ type: 'submit', values, editing });
+
+  const startDate = new Date();
 
   try {
     await doUpdateSource(source, selectOnlyEditedValues(values, editing));
   } catch {
+    dispatch(loadEntities());
     setState({ type: 'submitFailed' });
 
     return;
   }
 
   checkSourceStatus(source.source.id);
-  dispatch(loadEntities());
 
   let message;
 
-  const sourceData = await doLoadSourceForEdit({ id: source.source.id });
+  const sourceData = await doLoadSourceForEdit({ id: source.source.id }, hasCostManagement);
 
-  const promises = source.applications?.map(({ id }) => checkAppAvailability(id)) || [];
+  const promises =
+    source.applications?.map(({ id }) => checkAppAvailability(id, undefined, undefined, undefined, startDate)) || [];
 
   if (source.endpoints?.[0]?.id) {
-    promises.push(checkAppAvailability(source.endpoints[0].id, undefined, undefined, 'getEndpoint'));
+    promises.push(checkAppAvailability(source.endpoints[0].id, undefined, undefined, 'getEndpoint', startDate));
   }
 
   let statusResults;
@@ -37,8 +40,8 @@ export const onSubmit = async (values, editing, dispatch, source, intl, setState
     try {
       statusResults = await Promise.all(promises);
     } catch (error) {
+      dispatch(loadEntities());
       setState({ type: 'submitFailed' });
-
       return;
     }
 
@@ -55,7 +58,7 @@ export const onSubmit = async (values, editing, dispatch, source, intl, setState
       };
 
       setState({ type: 'submitFinished', source: sourceData, message });
-
+      dispatch(loadEntities());
       return;
     }
 
@@ -63,7 +66,7 @@ export const onSubmit = async (values, editing, dispatch, source, intl, setState
 
     if (anyTimetouted) {
       setState({ type: 'submitTimetouted' });
-
+      dispatch(loadEntities());
       return;
     }
   }
@@ -80,4 +83,5 @@ export const onSubmit = async (values, editing, dispatch, source, intl, setState
   };
 
   setState({ type: 'submitFinished', source: sourceData, message });
+  dispatch(loadEntities());
 };

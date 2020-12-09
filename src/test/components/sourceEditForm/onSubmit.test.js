@@ -49,7 +49,9 @@ describe('editSourceModal - on submit', () => {
     doLoadSourceForEdit.doLoadSourceForEdit = jest.fn().mockImplementation(() => Promise.resolve(SOURCE_DATA));
   });
 
-  it('submit values successfuly', async () => {
+  it('submit values successfuly with cost management', async () => {
+    const HAS_COST_MANAGAMENT = true;
+
     doUpdateSource.doUpdateSource = jest.fn().mockImplementation(() => Promise.resolve('OK'));
 
     const FILTERED_VALUES = {
@@ -58,7 +60,7 @@ describe('editSourceModal - on submit', () => {
       },
     };
 
-    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
+    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, HAS_COST_MANAGAMENT);
 
     expect(doUpdateSource.doUpdateSource).toHaveBeenCalledWith(SOURCE, FILTERED_VALUES);
     expect(SET_STATE.mock.calls[0][0]).toEqual({
@@ -68,9 +70,12 @@ describe('editSourceModal - on submit', () => {
     });
     expect(actions.loadEntities).toHaveBeenCalled();
     expect(checkSourceStatus.checkSourceStatus).toHaveBeenCalledWith('2342');
-    expect(doLoadSourceForEdit.doLoadSourceForEdit).toHaveBeenCalledWith({
-      id: SOURCE.source.id,
-    });
+    expect(doLoadSourceForEdit.doLoadSourceForEdit).toHaveBeenCalledWith(
+      {
+        id: SOURCE.source.id,
+      },
+      HAS_COST_MANAGAMENT
+    );
     expect(SET_STATE.mock.calls[1][0]).toEqual({
       type: 'submitFinished',
       source: SOURCE_DATA,
@@ -117,9 +122,12 @@ describe('editSourceModal - on submit', () => {
     });
     expect(actions.loadEntities).toHaveBeenCalled();
     expect(checkSourceStatus.checkSourceStatus).toHaveBeenCalledWith('2342');
-    expect(doLoadSourceForEdit.doLoadSourceForEdit).toHaveBeenCalledWith({
-      id: SOURCE.source.id,
-    });
+    expect(doLoadSourceForEdit.doLoadSourceForEdit).toHaveBeenCalledWith(
+      {
+        id: SOURCE.source.id,
+      },
+      undefined
+    );
     expect(SET_STATE.mock.calls[1][0]).toEqual({
       type: 'submitFinished',
       source: SOURCE_DATA,
@@ -128,7 +136,13 @@ describe('editSourceModal - on submit', () => {
         title: 'Source ‘{name}’ was edited successfully.',
       },
     });
-    expect(getAppStatus.checkAppAvailability).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint');
+    expect(getAppStatus.checkAppAvailability).toHaveBeenCalledWith(
+      ENDPOINT_ID,
+      undefined,
+      undefined,
+      'getEndpoint',
+      expect.any(Date)
+    );
   });
 
   it('submit values unsuccessfuly when submit error', async () => {
@@ -136,7 +150,7 @@ describe('editSourceModal - on submit', () => {
 
     await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
 
-    expect(actions.loadEntities).not.toHaveBeenCalled();
+    expect(actions.loadEntities).toHaveBeenCalled();
     expect(checkSourceStatus.checkSourceStatus).not.toHaveBeenCalled();
     expect(SET_STATE.mock.calls[0][0]).toEqual({
       type: 'submit',
@@ -174,10 +188,19 @@ describe('editSourceModal - on submit', () => {
     });
     expect(actions.loadEntities).toHaveBeenCalled();
     expect(checkSourceStatus.checkSourceStatus).toHaveBeenCalledWith('2342');
-    expect(doLoadSourceForEdit.doLoadSourceForEdit).toHaveBeenCalledWith({
-      id: SOURCE.source.id,
-    });
-    expect(getAppStatus.checkAppAvailability).toHaveBeenCalledWith('application-id');
+    expect(doLoadSourceForEdit.doLoadSourceForEdit).toHaveBeenCalledWith(
+      {
+        id: SOURCE.source.id,
+      },
+      undefined
+    );
+    expect(getAppStatus.checkAppAvailability).toHaveBeenCalledWith(
+      'application-id',
+      undefined,
+      undefined,
+      undefined,
+      expect.any(Date)
+    );
     expect(SET_STATE.mock.calls[1][0]).toEqual({
       type: 'submitFailed',
     });
@@ -216,10 +239,19 @@ describe('editSourceModal - on submit', () => {
     });
     expect(actions.loadEntities).toHaveBeenCalled();
     expect(checkSourceStatus.checkSourceStatus).toHaveBeenCalledWith('2342');
-    expect(doLoadSourceForEdit.doLoadSourceForEdit).toHaveBeenCalledWith({
-      id: SOURCE.source.id,
-    });
-    expect(getAppStatus.checkAppAvailability).toHaveBeenCalledWith('application-id');
+    expect(doLoadSourceForEdit.doLoadSourceForEdit).toHaveBeenCalledWith(
+      {
+        id: SOURCE.source.id,
+      },
+      undefined
+    );
+    expect(getAppStatus.checkAppAvailability).toHaveBeenCalledWith(
+      'application-id',
+      undefined,
+      undefined,
+      undefined,
+      expect.any(Date)
+    );
     expect(SET_STATE.mock.calls[1][0]).toEqual({
       type: 'submitFinished',
       source: SOURCE_DATA,
@@ -271,9 +303,12 @@ describe('editSourceModal - on submit', () => {
     });
     expect(actions.loadEntities).toHaveBeenCalled();
     expect(checkSourceStatus.checkSourceStatus).toHaveBeenCalledWith('2342');
-    expect(doLoadSourceForEdit.doLoadSourceForEdit).toHaveBeenCalledWith({
-      id: SOURCE.source.id,
-    });
+    expect(doLoadSourceForEdit.doLoadSourceForEdit).toHaveBeenCalledWith(
+      {
+        id: SOURCE.source.id,
+      },
+      undefined
+    );
     expect(getAppStatus.checkAppAvailability.mock.calls[0][0]).toEqual('application-id');
     expect(getAppStatus.checkAppAvailability.mock.calls[1][0]).toEqual('application-id-2');
     expect(SET_STATE.mock.calls[1][0]).toEqual({
@@ -317,10 +352,19 @@ describe('editSourceModal - on submit', () => {
     });
     expect(actions.loadEntities).toHaveBeenCalled();
     expect(checkSourceStatus.checkSourceStatus).toHaveBeenCalledWith('2342');
-    expect(doLoadSourceForEdit.doLoadSourceForEdit).toHaveBeenCalledWith({
-      id: SOURCE.source.id,
-    });
-    expect(getAppStatus.checkAppAvailability).toHaveBeenCalledWith('application-id');
+    expect(doLoadSourceForEdit.doLoadSourceForEdit).toHaveBeenCalledWith(
+      {
+        id: SOURCE.source.id,
+      },
+      undefined
+    );
+    expect(getAppStatus.checkAppAvailability).toHaveBeenCalledWith(
+      'application-id',
+      undefined,
+      undefined,
+      undefined,
+      expect.any(Date)
+    );
     expect(SET_STATE.mock.calls[1][0]).toEqual({
       type: 'submitTimetouted',
     });
@@ -356,10 +400,19 @@ describe('editSourceModal - on submit', () => {
     });
     expect(actions.loadEntities).toHaveBeenCalled();
     expect(checkSourceStatus.checkSourceStatus).toHaveBeenCalledWith('2342');
-    expect(doLoadSourceForEdit.doLoadSourceForEdit).toHaveBeenCalledWith({
-      id: SOURCE.source.id,
-    });
-    expect(getAppStatus.checkAppAvailability).toHaveBeenCalledWith('application-id');
+    expect(doLoadSourceForEdit.doLoadSourceForEdit).toHaveBeenCalledWith(
+      {
+        id: SOURCE.source.id,
+      },
+      undefined
+    );
+    expect(getAppStatus.checkAppAvailability).toHaveBeenCalledWith(
+      'application-id',
+      undefined,
+      undefined,
+      undefined,
+      expect.any(Date)
+    );
     expect(SET_STATE.mock.calls[1][0]).toEqual({
       type: 'submitFinished',
       source: SOURCE_DATA,

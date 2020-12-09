@@ -22,7 +22,7 @@ import SubmittingModal from './SubmittingModal';
 import TimeoutedModal from './TimeoutedModal';
 import ErroredModal from './ErroredModal';
 import RemoveAuth from './parser/RemoveAuth';
-import { APP_NAMES } from './parser/application';
+import { hasCostManagement } from './helpers';
 
 const SourceEditModal = () => {
   const [state, setState] = useReducer(reducer, initialState);
@@ -54,11 +54,7 @@ const SourceEditModal = () => {
 
   useEffect(() => {
     if (sourceRedux && initialLoad && appTypesLoaded) {
-      const hasCostManagement = sourceRedux.applications
-        .map(({ application_type_id }) => application_type_id)
-        .includes(appTypes.find(({ name }) => name === APP_NAMES.COST_MANAGAMENT)?.id);
-
-      doLoadSourceForEdit(sourceRedux, hasCostManagement).then((source) => {
+      doLoadSourceForEdit(sourceRedux, hasCostManagement(sourceRedux, appTypes)).then((source) => {
         if (source.source.imported) {
           redirectWhenImported(dispatch, intl, history, source.source.name);
         }
@@ -85,7 +81,11 @@ const SourceEditModal = () => {
   }
 
   if (submitError) {
-    return <ErroredModal onRetry={() => onSubmit(values, editing, dispatch, source, intl, setState)} />;
+    return (
+      <ErroredModal
+        onRetry={() => onSubmit(values, editing, dispatch, source, intl, setState, hasCostManagement(sourceRedux, appTypes))}
+      />
+    );
   }
 
   if (isSubmitting) {
@@ -117,7 +117,17 @@ const SourceEditModal = () => {
       <SourcesFormRenderer
         onCancel={returnToSources}
         schema={schema}
-        onSubmit={(values, formApi) => onSubmit(values, formApi.getState().dirtyFields, dispatch, source, intl, setState)}
+        onSubmit={(values, formApi) =>
+          onSubmit(
+            values,
+            formApi.getState().dirtyFields,
+            dispatch,
+            source,
+            intl,
+            setState,
+            hasCostManagement(sourceRedux, appTypes)
+          )
+        }
         FormTemplate={(props) => (
           <ModalFormTemplate
             ModalProps={{
