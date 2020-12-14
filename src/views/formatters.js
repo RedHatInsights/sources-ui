@@ -327,7 +327,7 @@ const EnhancedLabelGroup = ({ applications, ...props }) => {
       {...props}
       numLabels={2}
       collapsedText={intl.formatMessage(
-        { id: 'applications.showMore', defaultMessage: 'See {remaining} more' },
+        { id: 'applications.showMore', defaultMessage: '{remaining} more' },
         { remaining: '${remaining}' }
       )}
     >
