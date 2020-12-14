@@ -14,6 +14,7 @@ import filterApps from '@redhat-cloud-services/frontend-components-sources/cjs/f
 import { useSource } from '../../hooks/useSource';
 import { replaceRouteId, routes } from '../../Routes';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
+import ApplicationStatusLabel from './ApplicationStatusLabel';
 
 const ApplicationsCard = () => {
   const intl = useIntl();
@@ -62,6 +63,7 @@ const ApplicationsCard = () => {
                       : push(replaceRouteId(routes.sourcesDetailAddApp.path, source.id).replace(':app_type_id', app.id))
                   }
                 />
+                {Boolean(connectedApp) && <ApplicationStatusLabel app={connectedApp} />}
               </FormGroup>
             );
           })}
