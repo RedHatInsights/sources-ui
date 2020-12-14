@@ -389,6 +389,7 @@ describe('SourcesTable', () => {
           {
             title: 'name',
             value: 'name',
+            transforms: [wrappable],
           },
           {
             title: 'date',

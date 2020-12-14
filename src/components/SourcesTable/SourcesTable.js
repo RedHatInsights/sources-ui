@@ -50,6 +50,7 @@ export const prepareColumnsCells = (columns) =>
       title: column.title || '',
       value: column.value,
       hidden: column.hidden,
+      transforms: [wrappable],
       ...(column.sortable && { transforms: [sortable, wrappable] }),
     }));
 
