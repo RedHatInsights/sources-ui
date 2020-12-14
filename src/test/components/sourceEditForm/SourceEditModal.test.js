@@ -29,6 +29,7 @@ import { ACTION_TYPES } from '../../../redux/sources/actionTypes';
 import { useDispatch } from 'react-redux';
 import ReducersProviders, { defaultSourcesState } from '../../../redux/sources/reducer';
 import UserReducer from '../../../redux/user/reducer';
+import { UNAVAILABLE } from '../../../views/formatters';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/SourceAddSchema', () => ({
   __esModule: true,
@@ -142,6 +143,7 @@ describe('SourceEditModal', () => {
               id: '123',
               application_type_id: CATALOG_APP.id,
               availability_status_error: 'app-error',
+              availability_status: UNAVAILABLE,
               authentications: [{ id: '343' }],
             },
           ],
@@ -152,6 +154,7 @@ describe('SourceEditModal', () => {
             application_type_id: CATALOG_APP.id,
             id: '123',
             availability_status_error: 'app-error',
+            availability_status: UNAVAILABLE,
             authentications: [{ type: 'username_password', username: '123', id: '343' }],
           },
         ],

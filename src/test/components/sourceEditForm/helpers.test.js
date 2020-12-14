@@ -4,6 +4,7 @@ import {
   prepareMessages,
   selectOnlyEditedValues,
 } from '../../../components/SourceEditForm/helpers';
+import { UNAVAILABLE } from '../../../views/formatters';
 import applicationTypesData, { COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
 
 describe('edit form helpers', () => {
@@ -301,9 +302,9 @@ describe('edit form helpers', () => {
     it('prepare application messages', () => {
       source = {
         applications: [
-          { id: 'app1', availability_status_error: 'some error' },
+          { id: 'app1', availability_status: UNAVAILABLE, availability_status_error: 'some error' },
           { id: 'app2' },
-          { id: 'app3', availability_status_error: 'some error 3' },
+          { id: 'app3', availability_status: UNAVAILABLE, availability_status_error: 'some error 3' },
         ],
       };
 

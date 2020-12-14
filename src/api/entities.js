@@ -205,6 +205,7 @@ export const doLoadApplicationsForEdit = (id) =>
                 application_type_id,
                 id,
                 availability_status_error,
+                availability_status,
                 authentications {
                     id
                 }

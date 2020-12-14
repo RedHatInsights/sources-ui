@@ -1,7 +1,7 @@
 import get from 'lodash/get';
 import set from 'lodash/set';
 
-import { endpointToUrl } from '../../views/formatters';
+import { endpointToUrl, UNAVAILABLE } from '../../views/formatters';
 import { APP_NAMES } from './parser/application';
 
 export const CHECK_ENDPOINT_COMMAND = 'check-endpoint';
@@ -109,8 +109,8 @@ export const getEditedApplications = (source, editing, appTypes) => {
 export const prepareMessages = (source, intl) => {
   const messages = {};
 
-  source.applications.forEach(({ id, availability_status_error }) => {
-    if (availability_status_error) {
+  source.applications.forEach(({ id, availability_status_error, availability_status }) => {
+    if (availability_status === UNAVAILABLE) {
       messages[id] = {
         title: intl.formatMessage({
           id: 'wizard.failEditToastTitleBeforeEdit',
