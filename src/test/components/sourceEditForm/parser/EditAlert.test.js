@@ -11,7 +11,7 @@ describe('EditAlert', () => {
           fields: [
             {
               component: 'description',
-              name: 'alert',
+              name: 'message',
               Content: EditAlert,
             },
           ],

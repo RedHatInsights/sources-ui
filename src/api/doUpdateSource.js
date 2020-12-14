@@ -1,4 +1,4 @@
-import { defaultPort } from '../components/SourcesTable/formatters';
+import { defaultPort } from '../views/formatters';
 import { getSourcesApi } from './entities';
 import { patchCmValues } from './patchCmValues';
 

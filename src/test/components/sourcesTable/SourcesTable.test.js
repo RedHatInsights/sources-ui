@@ -27,6 +27,7 @@ import { replaceRouteId, routes } from '../../../Routes';
 import { defaultSourcesState } from '../../../redux/sources/reducer';
 import { sourcesColumns } from '../../../views/sourcesViewDefinition';
 import { DropdownItem } from '@patternfly/react-core';
+import SourcesEmptyState from '../../../components/SourcesTable/SourcesEmptyState';
 
 describe('SourcesTable', () => {
   const middlewares = [thunk, notificationsMiddleware()];
@@ -194,6 +195,38 @@ describe('SourcesTable', () => {
     expect(wrapper.find(ArrowsAltVIcon)).toHaveLength(0);
   });
 
+  it('renders empty state table - no filters', async () => {
+    initialState = {
+      ...initialState,
+      sources: {
+        ...initialState.sources,
+        ...loadedProps,
+        entities: [],
+        numberOfEntities: 0,
+        filterValue: {
+          name: undefined,
+          source_type_id: [],
+        },
+      },
+    };
+
+    const store = mockStore(initialState);
+    let wrapper;
+
+    await act(async () => {
+      wrapper = mount(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
+    });
+    wrapper.update();
+
+    expect(wrapper.find(EmptyStateTable)).toHaveLength(0);
+    expect(wrapper.find(SourcesEmptyState)).toHaveLength(1);
+    expect(wrapper.find(Table)).toHaveLength(1);
+    expect(wrapper.find(TableHeader)).toHaveLength(1);
+    expect(wrapper.find(TableBody)).toHaveLength(1);
+    expect(wrapper.find(ActionsColumn)).toHaveLength(0);
+    expect(wrapper.find(ArrowsAltVIcon)).toHaveLength(0);
+  });
+
   it('re-renders when entities changed', async () => {
     let wrapper;
 
@@ -237,9 +270,8 @@ describe('SourcesTable', () => {
   });
 
   describe('actions', () => {
-    const MANAGE_APPS_INDEX = 0;
-    const EDIT_SOURCE_INDEX = 1;
-    const DELETE_SOURCE_INDEX = 2;
+    const EDIT_SOURCE_INDEX = 0;
+    const DELETE_SOURCE_INDEX = 1;
     let wrapper;
 
     beforeEach(() => {
@@ -263,7 +295,7 @@ describe('SourcesTable', () => {
           wrapper.update();
           wrapper.find('.pf-c-dropdown__menu-item').at(EDIT_SOURCE_INDEX).simulate('click');
 
-          const expectedPath = replaceRouteId(routes.sourcesEdit.path, sourcesDataGraphQl[0].id);
+          const expectedPath = replaceRouteId(routes.sourcesDetail.path, sourcesDataGraphQl[0].id);
           expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(expectedPath);
           done();
         });
@@ -279,21 +311,6 @@ describe('SourcesTable', () => {
           wrapper.find('.pf-c-dropdown__menu-item').at(DELETE_SOURCE_INDEX).simulate('click');
 
           const expectedPath = replaceRouteId(routes.sourcesRemove.path, sourcesDataGraphQl[0].id);
-          expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(expectedPath);
-          done();
-        });
-      });
-    });
-
-    it('redirect to manage apps', (done) => {
-      setTimeout(() => {
-        setTimeout(() => {
-          wrapper.update();
-          wrapper.find('.pf-c-dropdown__toggle').first().simulate('click');
-          wrapper.update();
-          wrapper.find('.pf-c-dropdown__menu-item').at(MANAGE_APPS_INDEX).simulate('click');
-
-          const expectedPath = replaceRouteId(routes.sourceManageApps.path, sourcesDataGraphQl[0].id);
           expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(expectedPath);
           done();
         });
@@ -372,6 +389,7 @@ describe('SourcesTable', () => {
           {
             title: 'name',
             value: 'name',
+            transforms: [wrappable],
           },
           {
             title: 'date',
@@ -388,7 +406,6 @@ describe('SourcesTable', () => {
           title: title ? expect.stringContaining(title) : expect.any(String),
         });
 
-      const MANAGE_APP_TITLE = 'Manage applications';
       const EDIT_TITLE = 'Edit';
       const DELETE_TITLE = 'Remove';
 
@@ -397,10 +414,7 @@ describe('SourcesTable', () => {
 
         const actions = actionResolver(INTL_MOCK, pushMock)(EDITABLE_DATA);
 
-        expect(actions).toHaveLength(3);
-        expect(actions).toEqual(
-          expect.arrayContaining([actionObject(MANAGE_APP_TITLE), actionObject(EDIT_TITLE), actionObject(DELETE_TITLE)])
-        );
+        expect(actions).toEqual(expect.arrayContaining([actionObject(EDIT_TITLE), actionObject(DELETE_TITLE)]));
       });
 
       it('create actions for uneditable source', () => {
@@ -408,8 +422,7 @@ describe('SourcesTable', () => {
 
         const actions = actionResolver(INTL_MOCK, pushMock)(UNEDITABLE_DATA);
 
-        expect(actions).toHaveLength(2);
-        expect(actions).toEqual(expect.arrayContaining([actionObject(MANAGE_APP_TITLE), actionObject(DELETE_TITLE)]));
+        expect(actions).toEqual(expect.arrayContaining([actionObject(DELETE_TITLE)]));
       });
     });
   });

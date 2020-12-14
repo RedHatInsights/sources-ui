@@ -8,8 +8,16 @@ import {
   SET_COUNT,
   ADD_HIDDEN_SOURCE,
   CLEAR_FILTERS,
+  SET_VENDOR,
 } from './actionTypes';
-import { doLoadAppTypes, doRemoveSource, doLoadEntities, doDeleteApplication, doLoadCountOfSources } from '../../api/entities';
+import {
+  doLoadAppTypes,
+  doRemoveSource,
+  doLoadEntities,
+  doDeleteApplication,
+  doLoadCountOfSources,
+  getSourcesApi,
+} from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
 
 export const loadEntities = (options) => (dispatch, getState) => {
@@ -18,7 +26,7 @@ export const loadEntities = (options) => (dispatch, getState) => {
     options,
   });
 
-  const { pageSize, pageNumber, sortBy, sortDirection, filterValue } = getState().sources;
+  const { pageSize, pageNumber, sortBy, sortDirection, filterValue, activeVendor } = getState().sources;
 
   return Promise.all([
     doLoadEntities({
@@ -27,8 +35,11 @@ export const loadEntities = (options) => (dispatch, getState) => {
       sortBy,
       sortDirection,
       filterValue,
+      activeVendor,
     }),
-    doLoadCountOfSources(filterValue).then(({ meta: { count } }) => dispatch({ type: SET_COUNT, payload: { count } })),
+    doLoadCountOfSources(filterValue, activeVendor).then(({ meta: { count } }) =>
+      dispatch({ type: SET_COUNT, payload: { count } })
+    ),
   ])
     .then(([{ sources }]) =>
       dispatch({
@@ -53,23 +64,39 @@ export const loadEntities = (options) => (dispatch, getState) => {
 export const loadSourceTypes = () => (dispatch) => {
   dispatch({ type: ACTION_TYPES.LOAD_SOURCE_TYPES_PENDING });
 
-  return doLoadSourceTypes().then((sourceTypes) =>
-    dispatch({
-      type: ACTION_TYPES.LOAD_SOURCE_TYPES_FULFILLED,
-      payload: sourceTypes,
-    })
-  );
+  return doLoadSourceTypes()
+    .then((sourceTypes) =>
+      dispatch({
+        type: ACTION_TYPES.LOAD_SOURCE_TYPES_FULFILLED,
+        payload: sourceTypes,
+      })
+    )
+    .catch((error) =>
+      dispatch({
+        type: ACTION_TYPES.LOAD_SOURCE_TYPES_REJECTED,
+        payload: { error },
+        meta: { noError: true },
+      })
+    );
 };
 
 export const loadAppTypes = () => (dispatch) => {
   dispatch({ type: ACTION_TYPES.LOAD_APP_TYPES_PENDING });
 
-  return doLoadAppTypes().then((appTypes) =>
-    dispatch({
-      type: ACTION_TYPES.LOAD_APP_TYPES_FULFILLED,
-      payload: appTypes.data,
-    })
-  );
+  return doLoadAppTypes()
+    .then((appTypes) =>
+      dispatch({
+        type: ACTION_TYPES.LOAD_APP_TYPES_FULFILLED,
+        payload: appTypes.data,
+      })
+    )
+    .catch((error) =>
+      dispatch({
+        type: ACTION_TYPES.LOAD_APP_TYPES_REJECTED,
+        payload: { error },
+        meta: { noError: true },
+      })
+    );
 };
 
 export const sortEntities = (column, direction) => (dispatch) => {
@@ -182,6 +209,30 @@ export const addHiddenSource = (source) => ({
 export const clearFilters = () => (dispatch) => {
   dispatch({
     type: CLEAR_FILTERS,
+  });
+
+  return dispatch(loadEntities());
+};
+
+export const renameSource = (id, name, errorTitle) => (dispatch, getState) => {
+  const oldName = getState().sources.entities.find((source) => source.id === id)?.name;
+
+  dispatch({ type: ACTION_TYPES.RENAME_SOURCE_PENDING, payload: { id, name } });
+
+  return getSourcesApi()
+    .updateSource(id, { name })
+    .catch((error) =>
+      dispatch({
+        type: ACTION_TYPES.RENAME_SOURCE_REJECTED,
+        payload: { error: { detail: error.errors?.[0]?.detail || error, title: errorTitle }, id, name: oldName },
+      })
+    );
+};
+
+export const setActiveVendor = (vendor) => (dispatch) => {
+  dispatch({
+    type: SET_VENDOR,
+    payload: { vendor },
   });
 
   return dispatch(loadEntities());
