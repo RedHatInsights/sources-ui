@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
 import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
@@ -6,8 +7,9 @@ import { Badge } from '@patternfly/react-core/dist/js/components/Badge/Badge';
 import { Popover } from '@patternfly/react-core/dist/js/components/Popover/Popover';
 import { Tooltip } from '@patternfly/react-core/dist/js/components/Tooltip/Tooltip';
 import { Label } from '@patternfly/react-core/dist/js/components/Label/Label';
+import { LabelGroup } from '@patternfly/react-core/dist/js/components/LabelGroup/LabelGroup';
 
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { DateFormat } from '@redhat-cloud-services/frontend-components/components/cjs/DateFormat';
 import { Link } from 'react-router-dom';
 import { replaceRouteId, routes } from '../Routes';
@@ -50,33 +52,6 @@ export const sourceIsOpenShift = (source, sourceTypes) => {
 };
 
 export const formatURL = (source) => source.endpoints && source.endpoints[0] && endpointToUrl(source.endpoints[0]);
-
-export const applicationFormatter = (apps, _item, { appTypes }) => {
-  const applications = apps.map((app) => {
-    const application = appTypes.find((type) => type.id === app.application_type_id);
-
-    if (application) {
-      return application.display_name;
-    }
-  });
-
-  const filteredApplications = applications.filter((app) => typeof app !== 'undefined');
-
-  return (
-    <TextContent>
-      {filteredApplications.length > 0
-        ? filteredApplications
-            .sort((a, b) => a.localeCompare(b))
-            .map((app, index) => (
-              <Text key={app} className="pf-u-mb-0-on-sm">
-                {app}
-                {index < filteredApplications.length - 1 && <br key={index} />}
-              </Text>
-            ))
-        : '--'}
-    </TextContent>
-  );
-};
 
 export const sourceTypeFormatter = (sourceType, _item, { sourceTypes }) => {
   const type = sourceTypes.find((type) => type.id === sourceType);
@@ -323,10 +298,92 @@ export const availabilityFormatter = (_status, source, { appTypes }) => {
   const status = meta.status;
 
   return (
-    <Popover aria-label={`${status} popover`} bodyContent={<h1>{getStatusTooltipText(status, appTypes, meta.errors)}</h1>}>
+    <Popover showClose={false} aria-label={`${status} popover`} bodyContent={getStatusTooltipText(status, appTypes, meta.errors)}>
       <Label className="clickable" color={getStatusColor(status)}>
         {getStatusText(status)}
       </Label>
     </Popover>
   );
+};
+
+const getStatusTooltipTextApp = (status, error, intl) =>
+  ({
+    [AVAILABLE]: intl.formatMessage({
+      id: 'sources.appStatusOK',
+      defaultMessage: 'Everything works fine.',
+    }),
+    [UNAVAILABLE]: error || intl.formatMessage({ id: 'sources.unknownError', defaultMessage: 'Unknown error' }),
+  }[status] ||
+  intl.formatMessage({
+    id: 'sources.appStatusUnknown',
+    defaultMessage: 'Status has not been verified.',
+  }));
+
+const EnhancedLabelGroup = ({ applications, ...props }) => {
+  const intl = useIntl();
+
+  return (
+    <LabelGroup
+      {...props}
+      numLabels={2}
+      collapsedText={intl.formatMessage(
+        { id: 'applications.showMore', defaultMessage: 'See {remaining} more' },
+        { remaining: '${remaining}' }
+      )}
+    >
+      {applications.map((app) => (
+        <Popover
+          showClose={false}
+          key={app.display_name}
+          aria-label={`${app.display_name} popover`}
+          bodyContent={getStatusTooltipTextApp(app.availability_status, app.availability_status_error, intl)}
+        >
+          <Label className="clickable" color={getStatusColor(app.availability_status)}>
+            {app.display_name}
+          </Label>
+        </Popover>
+      ))}
+    </LabelGroup>
+  );
+};
+
+EnhancedLabelGroup.propTypes = {
+  applications: PropTypes.arrayOf(
+    PropTypes.shape({
+      display_name: PropTypes.string.isRequired,
+      availability_status: PropTypes.string,
+      availability_status_error: PropTypes.string,
+    })
+  ).isRequired,
+};
+
+export const applicationFormatter = (apps, item, { appTypes }) => {
+  const applications = apps
+    .map((app) => {
+      const application = appTypes.find((type) => type.id === app.application_type_id);
+
+      if (application) {
+        let availability_status = app.availability_status;
+        let availability_status_error = app.availability_status_error;
+
+        if (app.authentications?.[0]?.resource_type === 'Endpoint') {
+          availability_status = item.endpoints?.[0]?.availability_status;
+          availability_status_error = item.endpoints?.[0]?.availability_status_error;
+        }
+
+        return {
+          display_name: application.display_name,
+          availability_status,
+          availability_status_error,
+        };
+      }
+    })
+    .filter(Boolean)
+    .sort((a, b) => a.display_name.localeCompare(b.display_name));
+
+  if (applications.length === 0) {
+    return '--';
+  }
+
+  return <EnhancedLabelGroup numLabels={2} collapsedText applications={applications} />;
 };
