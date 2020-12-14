@@ -146,7 +146,7 @@ describe('formatters', () => {
 
       expect(wrapper.find(Label).at(0).props().children).toEqual(applicationTypesData.data[CATALOG_INDEX].display_name);
       expect(wrapper.find(Label).at(1).props().children).toEqual(applicationTypesData.data[COSTMANAGEMENET_INDEX].display_name);
-      expect(wrapper.find(Label).at(2).props().children).toEqual('See 1 more');
+      expect(wrapper.find(Label).at(2).props().children).toEqual('1 more');
 
       await act(async () => {
         wrapper.find(Label).at(2).simulate('click');
