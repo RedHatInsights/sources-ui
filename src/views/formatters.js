@@ -306,7 +306,7 @@ export const availabilityFormatter = (_status, source, { appTypes }) => {
   );
 };
 
-const getStatusTooltipTextApp = (status, error, intl) =>
+export const getStatusTooltipTextApp = (status, error, intl) =>
   ({
     [AVAILABLE]: intl.formatMessage({
       id: 'sources.appStatusOK',
@@ -357,27 +357,29 @@ EnhancedLabelGroup.propTypes = {
   ).isRequired,
 };
 
+export const getAppStatus = (app, source, appTypes) => {
+  const application = appTypes.find((type) => type.id === app.application_type_id);
+
+  if (application) {
+    let availability_status = app.availability_status;
+    let availability_status_error = app.availability_status_error;
+
+    if (app.authentications?.[0]?.resource_type === 'Endpoint') {
+      availability_status = source.endpoints?.[0]?.availability_status;
+      availability_status_error = source.endpoints?.[0]?.availability_status_error;
+    }
+
+    return {
+      display_name: application.display_name,
+      availability_status,
+      availability_status_error,
+    };
+  }
+};
+
 export const applicationFormatter = (apps, item, { appTypes }) => {
   const applications = apps
-    .map((app) => {
-      const application = appTypes.find((type) => type.id === app.application_type_id);
-
-      if (application) {
-        let availability_status = app.availability_status;
-        let availability_status_error = app.availability_status_error;
-
-        if (app.authentications?.[0]?.resource_type === 'Endpoint') {
-          availability_status = item.endpoints?.[0]?.availability_status;
-          availability_status_error = item.endpoints?.[0]?.availability_status_error;
-        }
-
-        return {
-          display_name: application.display_name,
-          availability_status,
-          availability_status_error,
-        };
-      }
-    })
+    .map((app) => getAppStatus(app, item, appTypes))
     .filter(Boolean)
     .sort((a, b) => a.display_name.localeCompare(b.display_name));
 
