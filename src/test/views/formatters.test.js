@@ -1,3 +1,5 @@
+import React from 'react';
+import { act } from 'react-dom/test-utils';
 import {
   nameFormatter,
   dateFormatter,
@@ -37,9 +39,10 @@ import {
   COSTMANAGEMENT_APP,
   CATALOG_APP,
 } from '../__mocks__/applicationTypesData';
-import { Badge, Tooltip, Label } from '@patternfly/react-core';
+import { Badge, Tooltip, Label, LabelGroup, Popover } from '@patternfly/react-core';
 import { DateFormat } from '@redhat-cloud-services/frontend-components/components/cjs/DateFormat';
 import { IntlProvider } from 'react-intl';
+import { componentWrapperIntl } from '../../utilities/testsHelpers';
 
 describe('formatters', () => {
   const wrapperWithIntl = (children) => <IntlProvider locale="en">{children}</IntlProvider>;
@@ -126,42 +129,191 @@ describe('formatters', () => {
   });
 
   describe('applicationFormatter', () => {
-    it('returns full application list', () => {
-      const result = JSON.stringify(
-        applicationFormatter(sourcesDataGraphQl[SOURCE_ALL_APS_INDEX].applications, undefined, {
-          appTypes: applicationTypesData.data,
-        })
+    it('returns full application list', async () => {
+      const wrapper = mount(
+        componentWrapperIntl(
+          <React.Fragment>
+            {applicationFormatter(sourcesDataGraphQl[SOURCE_ALL_APS_INDEX].applications, undefined, {
+              appTypes: applicationTypesData.data,
+            })}
+          </React.Fragment>
+        )
       );
 
-      expect(result.includes(applicationTypesData.data[CATALOG_INDEX].display_name)).toEqual(true);
-      expect(result.includes(applicationTypesData.data[COSTMANAGEMENET_INDEX].display_name)).toEqual(true);
-      expect(result.includes(applicationTypesData.data[TOPOLOGICALINVENTORY_INDEX].display_name)).toEqual(true);
+      expect(wrapper.find(LabelGroup)).toHaveLength(1);
+      expect(wrapper.find(Label)).toHaveLength(3);
+      expect(wrapper.find(Popover)).toHaveLength(2);
+
+      expect(wrapper.find(Label).at(0).props().children).toEqual(applicationTypesData.data[CATALOG_INDEX].display_name);
+      expect(wrapper.find(Label).at(1).props().children).toEqual(applicationTypesData.data[COSTMANAGEMENET_INDEX].display_name);
+      expect(wrapper.find(Label).at(2).props().children).toEqual('See 1 more');
+
+      await act(async () => {
+        wrapper.find(Label).at(2).simulate('click');
+      });
+      wrapper.update();
+
+      expect(wrapper.find(Label).at(2).props().children).toEqual(
+        applicationTypesData.data[TOPOLOGICALINVENTORY_INDEX].display_name
+      );
     });
 
     it('returns empty application list', () => {
       const EMPTY_LIST_PLACEHOLDER = '--';
-      const result = JSON.stringify(
-        applicationFormatter(sourcesDataGraphQl[SOURCE_NO_APS_INDEX].applications, undefined, {
-          appTypes: applicationTypesData.data,
-        })
+
+      const wrapper = mount(
+        componentWrapperIntl(
+          <React.Fragment>
+            {applicationFormatter(sourcesDataGraphQl[SOURCE_NO_APS_INDEX].applications, undefined, {
+              appTypes: applicationTypesData.data,
+            })}
+          </React.Fragment>
+        )
       );
 
-      expect(result.includes(applicationTypesData.data[CATALOG_INDEX].display_name)).toEqual(false);
-      expect(result.includes(applicationTypesData.data[COSTMANAGEMENET_INDEX].display_name)).toEqual(false);
-      expect(result.includes(applicationTypesData.data[TOPOLOGICALINVENTORY_INDEX].display_name)).toEqual(false);
-      expect(result.includes(EMPTY_LIST_PLACEHOLDER)).toEqual(true);
+      expect(wrapper.text()).toEqual(EMPTY_LIST_PLACEHOLDER);
+      expect(wrapper.find(LabelGroup)).toHaveLength(0);
+      expect(wrapper.find(Label)).toHaveLength(0);
+      expect(wrapper.find(Popover)).toHaveLength(0);
     });
 
     it('returns application list with one item (catalog)', () => {
-      const result = JSON.stringify(
-        applicationFormatter(sourcesDataGraphQl[SOURCE_CATALOGAPP_INDEX].applications, undefined, {
-          appTypes: applicationTypesData.data,
-        })
+      const wrapper = mount(
+        componentWrapperIntl(
+          <React.Fragment>
+            {applicationFormatter(sourcesDataGraphQl[SOURCE_CATALOGAPP_INDEX].applications, undefined, {
+              appTypes: applicationTypesData.data,
+            })}
+          </React.Fragment>
+        )
       );
 
-      expect(result.includes(applicationTypesData.data[CATALOG_INDEX].display_name)).toEqual(true);
-      expect(result.includes(applicationTypesData.data[COSTMANAGEMENET_INDEX].display_name)).toEqual(false);
-      expect(result.includes(applicationTypesData.data[TOPOLOGICALINVENTORY_INDEX].display_name)).toEqual(false);
+      expect(wrapper.find(LabelGroup)).toHaveLength(1);
+      expect(wrapper.find(Label)).toHaveLength(1);
+      expect(wrapper.find(Popover)).toHaveLength(1);
+
+      expect(wrapper.find(Label).at(0).props().children).toEqual(applicationTypesData.data[CATALOG_INDEX].display_name);
+    });
+
+    it('show available popover', () => {
+      const wrapper = mount(
+        componentWrapperIntl(
+          <React.Fragment>
+            {applicationFormatter(
+              [
+                {
+                  application_type_id: COSTMANAGEMENT_APP.id,
+                  availability_status: AVAILABLE,
+                },
+              ],
+              undefined,
+              {
+                appTypes: applicationTypesData.data,
+              }
+            )}
+          </React.Fragment>
+        )
+      );
+
+      expect(wrapper.find(Popover).props().bodyContent).toEqual('Everything works fine.');
+    });
+
+    it('show unavailable popover', () => {
+      const ERROR = 'some error';
+      const wrapper = mount(
+        componentWrapperIntl(
+          <React.Fragment>
+            {applicationFormatter(
+              [
+                {
+                  application_type_id: COSTMANAGEMENT_APP.id,
+                  availability_status: UNAVAILABLE,
+                  availability_status_error: ERROR,
+                },
+              ],
+              undefined,
+              {
+                appTypes: applicationTypesData.data,
+              }
+            )}
+          </React.Fragment>
+        )
+      );
+
+      expect(wrapper.find(Popover).props().bodyContent).toEqual(ERROR);
+    });
+
+    it('show unavailable popover - endpoint error', () => {
+      const ERROR = 'some error';
+      const wrapper = mount(
+        componentWrapperIntl(
+          <React.Fragment>
+            {applicationFormatter(
+              [
+                {
+                  application_type_id: COSTMANAGEMENT_APP.id,
+                  availability_status: null,
+                  authentications: [{ resource_type: 'Endpoint' }],
+                },
+              ],
+              { endpoints: [{ availability_status: UNAVAILABLE, availability_status_error: ERROR }] },
+              {
+                appTypes: applicationTypesData.data,
+              }
+            )}
+          </React.Fragment>
+        )
+      );
+
+      expect(wrapper.find(Popover).props().bodyContent).toEqual(ERROR);
+    });
+
+    it('show unavailable popover - unknown error', () => {
+      const wrapper = mount(
+        componentWrapperIntl(
+          <React.Fragment>
+            {applicationFormatter(
+              [
+                {
+                  application_type_id: COSTMANAGEMENT_APP.id,
+                  availability_status: UNAVAILABLE,
+                  availability_status_error: null,
+                },
+              ],
+              undefined,
+              {
+                appTypes: applicationTypesData.data,
+              }
+            )}
+          </React.Fragment>
+        )
+      );
+
+      expect(wrapper.find(Popover).props().bodyContent).toEqual('Unknown error');
+    });
+
+    it('show unknown popover', () => {
+      const wrapper = mount(
+        componentWrapperIntl(
+          <React.Fragment>
+            {applicationFormatter(
+              [
+                {
+                  application_type_id: COSTMANAGEMENT_APP.id,
+                  availability_status: null,
+                  availability_status_error: null,
+                },
+              ],
+              undefined,
+              {
+                appTypes: applicationTypesData.data,
+              }
+            )}
+          </React.Fragment>
+        )
+      );
+
+      expect(wrapper.find(Popover).props().bodyContent).toEqual('Status has not been verified.');
     });
   });
 

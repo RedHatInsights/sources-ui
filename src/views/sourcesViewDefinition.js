@@ -28,8 +28,8 @@ export const sourcesColumns = (intl, notSortable = false) => [
   },
   {
     title: intl.formatMessage({
-      id: 'sources.application',
-      defaultMessage: 'Applications',
+      id: 'sources.connectedApplications',
+      defaultMessage: 'Connected applications',
     }),
     value: 'applications',
     formatter: applicationFormatter,
