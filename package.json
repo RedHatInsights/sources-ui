@@ -18,7 +18,7 @@
     "@patternfly/react-table": "^4.19.45",
     "@redhat-cloud-services/frontend-components": "2.5.2",
     "@redhat-cloud-services/frontend-components-notifications": "2.2.4",
-    "@redhat-cloud-services/frontend-components-sources": "2.2.20",
+    "@redhat-cloud-services/frontend-components-sources": "2.2.21",
     "@redhat-cloud-services/frontend-components-utilities": "2.2.8",
     "@sentry/minimal": "5.29.1",
     "axios": "0.21.0",
