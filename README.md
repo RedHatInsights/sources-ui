@@ -1,7 +1,7 @@
 # Sources
-![Main screen with "Add a new Source" wizard](doc/images/sources-main-add.jpg)
+![Main screen with "Add a new Source" wizard](doc/images/sources-main-add.png)
 
-[![Build Status](https://travis-ci.org/RedHatInsights/sources-ui.svg?branch=master)](https://travis-ci.org/RedHatInsights/sources-ui)
+[![Build Status](https://travis-ci.com/RedHatInsights/sources-ui.svg?branch=master)](https://travis-ci.com/RedHatInsights/sources-ui)
 [![Test Coverage](https://codecov.io/gh/RedHatInsights/sources-ui/branch/master/graph/badge.svg)](https://codecov.io/gh/RedHatInsights/sources-ui)
 
 List of Sources for Red Hat Cloud Services.
@@ -25,6 +25,7 @@ This application allows to
   - [Updating steps in the wizard](#updating-steps-in-the-wizard)
 - [API](#api)
   - [Sources Javascript API client](#sources-javascript-api-client)
+- [Insights Frontend Assets](#insights-frontend-assets)
 - [Technologies](#technologies)
 - [Deploying](#deploying)
   - [How it works](#how-it-works)
@@ -97,6 +98,10 @@ This application use a [AddSourceWizard](https://github.com/RedHatInsights/front
 This API client is no longer in the UI because of its huge bundle size. However, is useful to use is a documentation to the API.
 
 - [Sources API Javascript client](https://github.com/RedHatInsights/javascript-clients/blob/master/packages/sources/doc/README.md)
+
+# Insights Frontend Assets
+
+Static assets are deployed to [Insights Frontend Assets](https://github.com/RedHatInsights/insights-frontend-assets) repository. If you need to add/change/remove some icon, please do it there.
 
 # Technologies
 

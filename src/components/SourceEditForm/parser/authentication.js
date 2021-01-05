@@ -1,7 +1,6 @@
 import get from 'lodash/get';
 import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
 import hardcodedSchemas from '@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas';
-import GridLayout from './GridLayout';
 
 export const createAuthFieldName = (fieldName, id) => `authentications.a${id}.${fieldName.replace('authentication.', '')}`;
 
@@ -96,18 +95,6 @@ export const authenticationFields = (authentications, sourceType, appName) => {
 
     if (!appName && sourceType.name === 'amazon') {
       enhancedFields = enhancedFields.map((field) => specialModifierAWS(field, auth.authtype));
-    }
-
-    if (!appName) {
-      return [
-        {
-          name: `authentication-${auth.id}`,
-          component: 'description',
-          id: auth.id,
-          Content: GridLayout,
-          fields: modifyAuthSchemas(enhancedFields, auth.id),
-        },
-      ];
     }
 
     return modifyAuthSchemas(enhancedFields, auth.id);

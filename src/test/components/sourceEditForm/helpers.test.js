@@ -1,4 +1,11 @@
-import { prepareInitialValues, selectOnlyEditedValues } from '../../../components/SourceEditForm/helpers';
+import {
+  getEditedApplications,
+  prepareInitialValues,
+  prepareMessages,
+  selectOnlyEditedValues,
+} from '../../../components/SourceEditForm/helpers';
+import { UNAVAILABLE } from '../../../views/formatters';
+import applicationTypesData, { COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
 
 describe('edit form helpers', () => {
   describe('selectOnlyEditedValues', () => {
@@ -190,6 +197,153 @@ describe('edit form helpers', () => {
       expect(prepareInitialValues(SOURCE_WITH_UNDEF_ENDPOINTS, SOURCE_TYPE_NAME)).toEqual(
         EXPECTED_INITIAL_VALUES_WITH_UNDEF_ENDPOINTS
       );
+    });
+  });
+
+  describe('getEditedApplications', () => {
+    let source;
+    let edited;
+
+    const appTypes = applicationTypesData.data;
+
+    it('assigns applications to app id', () => {
+      edited = {
+        'applications.a1.password': true,
+        'applications.a1.username': true,
+        'applications.a2.username': false,
+        'applications.a3.password': true,
+      };
+
+      expect(getEditedApplications(source, edited, appTypes)).toEqual(['1', '3']);
+    });
+
+    it('assigns authentications to app id', () => {
+      source = {
+        applications: [
+          { id: '123', authentications: [{ id: '1', resource_type: 'Application' }] },
+          { id: '456', authentications: [{ id: '2', resource_type: 'Endpoint' }] },
+        ],
+      };
+
+      edited = {
+        'authentications.a1.password': true,
+        'authentications.a1.username': true,
+        'authentications.a2.username': true,
+      };
+
+      expect(getEditedApplications(source, edited, appTypes)).toEqual(['123', 'check-endpoint-456']);
+    });
+
+    it('assigns endpoint to app id using URL', () => {
+      source = {
+        applications: [
+          { id: '123', authentications: [] },
+          { id: '456', authentications: [{ id: '2', resource_type: 'Endpoint' }] },
+        ],
+      };
+
+      edited = {
+        url: true,
+      };
+
+      expect(getEditedApplications(source, edited, appTypes)).toEqual(['check-endpoint-456']);
+    });
+
+    it('assigns endpoint to app id using endpoint value', () => {
+      source = {
+        applications: [
+          { id: '123', authentications: [{ id: '234', resource_type: 'Endpoint' }] },
+          { id: '456', authentications: [{ id: '2', resource_type: 'Endpoint' }] },
+        ],
+      };
+
+      edited = {
+        'endpoint.role': true,
+      };
+
+      expect(getEditedApplications(source, edited, appTypes)).toEqual(['check-endpoint-123', 'check-endpoint-456']);
+    });
+
+    it('edit cost management billing_source', () => {
+      source = {
+        applications: [
+          { id: '123', authentications: [] },
+          { id: '456', application_type_id: COSTMANAGEMENT_APP.id },
+        ],
+      };
+
+      edited = {
+        'billing_source.role': true,
+      };
+
+      expect(getEditedApplications(source, edited, appTypes)).toEqual(['456']);
+    });
+
+    it('edit cost management credentials', () => {
+      source = {
+        applications: [
+          { id: '123', authentications: [] },
+          { id: '456', application_type_id: COSTMANAGEMENT_APP.id },
+        ],
+      };
+
+      edited = {
+        'credentials.role': true,
+      };
+
+      expect(getEditedApplications(source, edited, appTypes)).toEqual(['456']);
+    });
+  });
+
+  describe('prepareMessages', () => {
+    let source;
+    let intl = { formatMessage: ({ defaultMessage }) => defaultMessage };
+
+    it('prepare application messages', () => {
+      source = {
+        applications: [
+          { id: 'app1', availability_status: UNAVAILABLE, availability_status_error: 'some error' },
+          { id: 'app2' },
+          { id: 'app3', availability_status: UNAVAILABLE, availability_status_error: 'some error 3' },
+        ],
+      };
+
+      expect(prepareMessages(source, intl)).toEqual({
+        app1: {
+          description: 'some error',
+          title: 'This application is unavailable',
+          variant: 'danger',
+        },
+        app3: {
+          description: 'some error 3',
+          title: 'This application is unavailable',
+          variant: 'danger',
+        },
+      });
+    });
+
+    it('prepare endpoint messages', () => {
+      source = {
+        applications: [
+          { id: 'app1', authentications: [{ resource_type: 'Endpoint' }] },
+          { id: 'app2', authentications: [] },
+          { id: 'app3', authentications: [{ resource_type: 'Endpoint' }] },
+        ],
+        endpoints: [{ availability_status_error: 'endpoint error' }],
+      };
+
+      expect(prepareMessages(source, intl)).toEqual({
+        app1: {
+          description: 'endpoint error',
+          title: 'This application is unavailable',
+          variant: 'danger',
+        },
+        app3: {
+          description: 'endpoint error',
+          title: 'This application is unavailable',
+          variant: 'danger',
+        },
+      });
     });
   });
 });

@@ -1,4 +1,5 @@
 import { pagination, filtering, sorting, restFilterGenerator } from '../../api/entities';
+import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../utilities/constants';
 
 describe('api helpers', () => {
   describe('pagination', () => {
@@ -64,6 +65,20 @@ describe('api helpers', () => {
       expect(filtering(filterValue)).toEqual('');
     });
 
+    it('creates cloud vendor [GRAPHQL]', () => {
+      const filterValue = {};
+      const activeVendor = CLOUD_VENDOR;
+
+      expect(filtering(filterValue, activeVendor)).toEqual(', filter: { source_type: { vendor: { eq: ["Amazon", "Azure"]} } }');
+    });
+
+    it('creates red hat vendor [GRAPHQL]', () => {
+      const filterValue = {};
+      const activeVendor = REDHAT_VENDOR;
+
+      expect(filtering(filterValue, activeVendor)).toEqual(', filter: { source_type: { vendor: "Red Hat" } }');
+    });
+
     it('creates empty filtering query param [GRAPHQL]', () => {
       expect(filtering()).toEqual('');
     });
@@ -98,6 +113,22 @@ describe('api helpers', () => {
       const filterValue = { source_type_id: [] };
 
       expect(restFilterGenerator(filterValue)).toEqual('');
+    });
+
+    it('creates cloud vendor [REST]', () => {
+      const filterValue = {};
+      const activeVendor = CLOUD_VENDOR;
+
+      expect(restFilterGenerator(filterValue, activeVendor)).toEqual(
+        'filter[source_type][vendor][eq][]=Amazon&filter[source_type][vendor][eq][]=Azure'
+      );
+    });
+
+    it('creates red hat vendor [REST]', () => {
+      const filterValue = {};
+      const activeVendor = REDHAT_VENDOR;
+
+      expect(restFilterGenerator(filterValue, activeVendor)).toEqual('filter[source_type][vendor]=Red Hat');
     });
 
     it('creates empty filtering query param [REST]', () => {

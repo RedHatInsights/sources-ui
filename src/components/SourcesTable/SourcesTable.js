@@ -5,20 +5,20 @@ import { Table, TableHeader, TableBody, sortable, wrappable } from '@patternfly/
 import { useIntl } from 'react-intl';
 
 import { sortEntities } from '../../redux/sources/actions';
-import { formatters } from './formatters';
 import { PlaceHolderTable, RowWrapperLoader } from './loaders';
 import { sourcesColumns, COLUMN_COUNT } from '../../views/sourcesViewDefinition';
 import EmptyStateTable from './EmptyStateTable';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import { replaceRouteId, routes } from '../../Routes';
+import SourcesEmptyState from './SourcesEmptyState';
 
 const itemToCells = (item, columns, sourceTypes, appTypes) =>
   columns
     .filter((column) => column.title || column.hidden)
     .map((col) => ({
       title: col.formatter
-        ? formatters(col.formatter)(item[col.value], item, {
+        ? col.formatter(item[col.value], item, {
             sourceTypes,
             appTypes,
           })
@@ -50,6 +50,7 @@ export const prepareColumnsCells = (columns) =>
       title: column.title || '',
       value: column.value,
       hidden: column.hidden,
+      transforms: [wrappable],
       ...(column.sortable && { transforms: [sortable, wrappable] }),
     }));
 
@@ -68,7 +69,7 @@ export const insertEditAction = (actions, intl, push, isOrgAdmin, disabledProps)
       id: 'sources.edit',
       defaultMessage: 'Edit',
     }),
-    onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesEdit.path, id)),
+    onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesDetail.path, id)),
     ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
   });
 
@@ -84,30 +85,22 @@ export const actionResolver = (intl, push, isOrgAdmin) => (rowData) => {
     className: 'ins-c-sources__disabled-drodpown-item',
   };
 
-  const actions = [
-    {
-      title: intl.formatMessage({
-        id: 'sources.manageApps',
-        defaultMessage: 'Manage applications',
-      }),
-      onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourceManageApps.path, id)),
-      ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
-    },
-    {
-      title: intl.formatMessage({
-        id: 'sources.remove',
-        defaultMessage: 'Remove',
-      }),
-      onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesRemove.path, id)),
-      ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
-    },
-  ];
+  const actions = [];
 
   const isSourceEditable = !rowData.imported;
 
   if (isSourceEditable) {
     insertEditAction(actions, intl, push, isOrgAdmin, disabledProps);
   }
+
+  actions.push({
+    title: intl.formatMessage({
+      id: 'sources.remove',
+      defaultMessage: 'Remove',
+    }),
+    onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesRemove.path, id)),
+    ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
+  });
 
   return actions;
 };
@@ -129,6 +122,7 @@ const SourcesTable = () => {
     sortDirection,
     numberOfEntities,
     removingSources,
+    filterValue,
   } = useSelector(({ sources }) => sources, shallowEqual);
   const reduxDispatch = useDispatch();
 
@@ -171,13 +165,18 @@ const SourcesTable = () => {
 
   let shownRows = state.rows;
   if (numberOfEntities === 0 && state.isLoaded) {
+    const hasSomeFilter =
+      Object.entries(filterValue)
+        .map(([_key, value]) => value && (!Array.isArray(value) || (Array.isArray(value) && value.length > 0)))
+        .filter(Boolean).length > 0;
+
     shownRows = [
       {
         heightAuto: true,
         cells: [
           {
             props: { colSpan: COLUMN_COUNT },
-            title: <EmptyStateTable />,
+            title: hasSomeFilter ? <EmptyStateTable /> : <SourcesEmptyState />,
           },
         ],
       },

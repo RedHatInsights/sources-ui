@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
+import { Redirect, useHistory, useParams } from 'react-router-dom';
 
 import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
 import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
@@ -14,30 +14,44 @@ import ExclamationTriangleIcon from '@patternfly/react-icons/dist/js/icons/excla
 import { useSource } from '../../hooks/useSource';
 
 import removeAppSubmit from './removeAppSubmit';
+import { replaceRouteId, routes } from '../../Routes';
 
-const RemoveAppModal = ({ app, onCancel, container }) => {
+const RemoveAppModal = () => {
   const intl = useIntl();
-
-  const appTypes = useSelector(({ sources }) => sources.appTypes);
+  const { push } = useHistory();
+  const { app_id } = useParams();
   const source = useSource();
 
+  const appTypes = useSelector(({ sources }) => sources.appTypes);
   const dispatch = useDispatch();
 
+  const application = source.applications?.find(({ id }) => id === app_id);
+
+  if (!application) {
+    return <Redirect to={replaceRouteId(routes.sourcesDetail.path, source.id)} />;
+  }
+
+  const appType = appTypes.find(({ id }) => id === application?.application_type_id);
+
+  const app = {
+    id: app_id,
+    display_name: appType?.display_name,
+    dependent_applications: appType?.dependent_applications,
+    sourceAppsNames: source.applications.map(
+      ({ application_type_id }) => appTypes.find(({ id }) => id === application_type_id)?.display_name
+    ),
+  };
+
+  const onCancel = () => push(replaceRouteId(routes.sourcesDetail.path, source.id));
   const onSubmit = () => removeAppSubmit(app, intl, onCancel, dispatch, source);
 
-  useEffect(() => {
-    if (container) {
-      container.hidden = true;
-    }
-  }, []);
-
-  const dependentApps = app.dependent_applications
+  const dependentApps = appType?.dependent_applications
     .map((appName) => {
       const appType = appTypes.find(({ name }) => name === appName);
 
-      return app.sourceAppsNames.includes(appType?.display_name) && appType?.display_name;
+      return source?.applications?.find(({ application_type_id }) => application_type_id === appType.id) && appType?.display_name;
     })
-    .filter((x) => x);
+    .filter(Boolean);
 
   return (
     <Modal
@@ -97,17 +111,6 @@ const RemoveAppModal = ({ app, onCancel, container }) => {
       </TextContent>
     </Modal>
   );
-};
-
-RemoveAppModal.propTypes = {
-  app: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    display_name: PropTypes.string.isRequired,
-    dependent_applications: PropTypes.arrayOf(PropTypes.string),
-    sourceAppsNames: PropTypes.arrayOf(PropTypes.string),
-  }).isRequired,
-  onCancel: PropTypes.func.isRequired,
-  container: PropTypes.instanceOf(Element),
 };
 
 export default RemoveAppModal;

@@ -357,4 +357,24 @@ describe('redux > sources reducer', () => {
       numberOfEntities: COUNT,
     });
   });
+
+  it('sourceRenamePending renames source', () => {
+    const payload = { payload: { id: SOURCE_ID, name: 'new-name' } };
+
+    const defaultState = {
+      ...defaultSourcesState,
+      entities: [
+        { id: '1235', name: 'no apps' },
+        { id: SOURCE_ID, name: 'rename me' },
+      ],
+    };
+
+    expect(sourcesReducer.sourceRenamePending(defaultState, payload)).toEqual({
+      ...defaultSourcesState,
+      entities: [
+        { id: '1235', name: 'no apps' },
+        { id: SOURCE_ID, name: 'new-name' },
+      ],
+    });
+  });
 });

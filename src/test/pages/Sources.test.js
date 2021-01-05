@@ -1,3 +1,4 @@
+import React from 'react';
 import thunk from 'redux-thunk';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/files/ReducerRegistry';
@@ -8,8 +9,8 @@ import { Chip, Select, Pagination, Button, Tooltip } from '@patternfly/react-cor
 import { MemoryRouter, Link } from 'react-router-dom';
 import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources/cjs/addSourceWizard';
 
-import SourcesPage from '../../pages/Sources';
-import SourcesEmptyState from '../../components/SourcesEmptyState';
+import SourcesPageOriginal from '../../pages/Sources';
+import SourcesEmptyState from '../../components/SourcesTable/SourcesEmptyState';
 import SourcesTable from '../../components/SourcesTable/SourcesTable';
 
 import { sourcesDataGraphQl, SOURCE_ALL_APS_ID } from '../__mocks__/sourcesData';
@@ -26,19 +27,26 @@ import { routes, replaceRouteId } from '../../Routes';
 import * as helpers from '../../pages/Sources/helpers';
 import UserReducer from '../../redux/user/reducer';
 import RedirectNoWriteAccess from '../../components/RedirectNoWriteAccess/RedirectNoWriteAccess';
-import * as AddApplication from '../../components/AddApplication/AddApplication';
-import * as SourceEditModal from '../../components/SourceEditForm/SourceEditModal';
 import * as SourceRemoveModal from '../../components/SourceRemoveModal/SourceRemoveModal';
 import * as urlQuery from '../../utilities/urlQuery';
 import { PlaceHolderTable, PaginationLoader } from '../../components/SourcesTable/loaders';
 import { Table } from '@patternfly/react-table';
 import SourcesErrorState from '../../components/SourcesErrorState';
+import DataLoader from '../../components/DataLoader';
+import TabNavigation from '../../components/TabNavigation';
 
 describe('SourcesPage', () => {
   const middlewares = [thunk, notificationsMiddleware()];
   let initialProps;
   let store;
   let wrapper;
+
+  const SourcesPage = (props) => (
+    <React.Fragment>
+      <DataLoader />
+      <SourcesPageOriginal {...props} />
+    </React.Fragment>
+  );
 
   beforeEach(() => {
     initialProps = {};
@@ -72,6 +80,8 @@ describe('SourcesPage', () => {
     expect(typesApi.doLoadSourceTypes).toHaveBeenCalled();
 
     wrapper.update();
+
+    expect(wrapper.find(TabNavigation)).toHaveLength(1);
     expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
     expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
     expect(wrapper.find(SourcesTable)).toHaveLength(1);
@@ -108,8 +118,8 @@ describe('SourcesPage', () => {
 
     wrapper.update();
     expect(wrapper.find(SourcesEmptyState)).toHaveLength(1);
-    expect(wrapper.find(PrimaryToolbar)).toHaveLength(0);
-    expect(wrapper.find(SourcesTable)).toHaveLength(0);
+    expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
+    expect(wrapper.find(SourcesTable)).toHaveLength(1);
   });
 
   it('renders error state when there is fetching (loadEntities) error', async () => {
@@ -557,32 +567,6 @@ describe('SourcesPage', () => {
       expect(wrapper.find(SourceRemoveModal.default)).toHaveLength(1);
     });
 
-    it('renders manageApps', async () => {
-      AddApplication.default = () => <h1>managing apps mock</h1>;
-      initialEntry = [replaceRouteId(routes.sourceManageApps.path, SOURCE_ALL_APS_ID)];
-
-      await act(async () => {
-        wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store, initialEntry));
-      });
-      wrapper.update();
-
-      expect(wrapper.find(RedirectNoWriteAccess)).toHaveLength(1);
-      expect(wrapper.find(AddApplication.default)).toHaveLength(1);
-    });
-
-    it('renders edit', async () => {
-      SourceEditModal.default = () => <h1>edit modal mock</h1>;
-      initialEntry = [replaceRouteId(routes.sourcesEdit.path, SOURCE_ALL_APS_ID)];
-
-      await act(async () => {
-        wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store, initialEntry));
-      });
-      wrapper.update();
-
-      expect(wrapper.find(RedirectNoWriteAccess)).toHaveLength(1);
-      expect(wrapper.find(SourceEditModal.default)).toHaveLength(1);
-    });
-
     describe('id not found, redirect back to sources', () => {
       const NONSENSE_ID = '&88{}#558';
 
@@ -601,20 +585,6 @@ describe('SourcesPage', () => {
 
         expect(wrapper.find(RedirectNoWriteAccess)).toHaveLength(0);
         expect(wrapper.find(SourceRemoveModal.default)).toHaveLength(0);
-        expect(wasRedirectedToRoot(wrapper)).toEqual(true);
-      });
-
-      it('when manageApps', async () => {
-        AddApplication.default = () => <h1>managing apps mock</h1>;
-        initialEntry = [replaceRouteId(routes.sourceManageApps.path, NONSENSE_ID)];
-
-        await act(async () => {
-          wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store, initialEntry));
-        });
-        wrapper.update();
-
-        expect(wrapper.find(RedirectNoWriteAccess)).toHaveLength(0);
-        expect(wrapper.find(AddApplication.default)).toHaveLength(0);
         expect(wasRedirectedToRoot(wrapper)).toEqual(true);
       });
     });
@@ -640,32 +610,6 @@ describe('SourcesPage', () => {
         wrapper.update();
 
         expect(wrapper.find(SourceRemoveModal.default)).toHaveLength(0);
-        expect(wasRedirectedToRoot(wrapper)).toEqual(true);
-      });
-
-      it('when manageApps', async () => {
-        AddApplication.default = () => <h1>managing apps mock</h1>;
-        initialEntry = [replaceRouteId(routes.sourceManageApps.path, SOURCE_ALL_APS_ID)];
-
-        await act(async () => {
-          wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store, initialEntry));
-        });
-        wrapper.update();
-
-        expect(wrapper.find(AddApplication.default)).toHaveLength(0);
-        expect(wasRedirectedToRoot(wrapper)).toEqual(true);
-      });
-
-      it('when edit', async () => {
-        SourceEditModal.default = () => <h1>edit modal mock</h1>;
-        initialEntry = [replaceRouteId(routes.sourcesEdit.path, SOURCE_ALL_APS_ID)];
-
-        await act(async () => {
-          wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store, initialEntry));
-        });
-        wrapper.update();
-
-        expect(wrapper.find(SourceEditModal.default)).toHaveLength(0);
         expect(wasRedirectedToRoot(wrapper)).toEqual(true);
       });
     });

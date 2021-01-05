@@ -8,6 +8,9 @@ import {
   filterSources,
   clearFilters,
   removeApplication,
+  loadSourceTypes,
+  renameSource,
+  setActiveVendor,
 } from '../../../redux/sources/actions';
 import {
   ADD_HIDDEN_SOURCE,
@@ -17,9 +20,12 @@ import {
   SORT_ENTITIES,
   FILTER_SOURCES,
   CLEAR_FILTERS,
+  SET_VENDOR,
 } from '../../../redux/sources/actionTypes';
 import { REMOVE_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications';
 import * as api from '../../../api/entities';
+import * as types_api from '../../../api/source_types';
+import { CLOUD_VENDOR } from '../../../utilities/constants';
 
 describe('redux actions', () => {
   let dispatch;
@@ -302,5 +308,90 @@ describe('redux actions', () => {
     await resultObject.payload();
 
     expect(api.doDeleteApplication).toHaveBeenCalledWith(appId, errorTitle);
+  });
+
+  it('loadSourceTypes catches error', async () => {
+    const error = 'some-error';
+    types_api.doLoadSourceTypes = jest.fn().mockImplementation(() => Promise.reject(error));
+
+    await loadSourceTypes()(dispatch);
+
+    expect(dispatch.mock.calls).toHaveLength(2);
+
+    expect(dispatch.mock.calls[0][0]).toEqual({
+      type: ACTION_TYPES.LOAD_SOURCE_TYPES_PENDING,
+    });
+
+    expect(dispatch.mock.calls[1][0]).toEqual({
+      type: ACTION_TYPES.LOAD_SOURCE_TYPES_REJECTED,
+      payload: { error },
+      meta: { noError: true },
+    });
+  });
+
+  describe('renameSource', () => {
+    let updateSource;
+    const sourceId = 'some-id';
+    const sourceName = 'some-name';
+    const errorTitle = 'renaming failed';
+
+    const getState = () => ({
+      sources: {
+        entities: [
+          {
+            id: 'different-id',
+            name: 'different-name',
+          },
+          {
+            id: sourceId,
+            name: 'old-name',
+          },
+        ],
+      },
+    });
+
+    it('passes', async () => {
+      updateSource = jest.fn().mockImplementation(() => Promise.resolve('OK'));
+      api.getSourcesApi = () => ({
+        updateSource,
+      });
+
+      await renameSource(sourceId, sourceName, errorTitle)(dispatch, getState);
+
+      expect(dispatch.mock.calls).toHaveLength(1);
+
+      expect(dispatch.mock.calls[0][0]).toEqual({
+        type: ACTION_TYPES.RENAME_SOURCE_PENDING,
+        payload: { id: sourceId, name: sourceName },
+      });
+    });
+
+    it('fails', async () => {
+      updateSource = jest.fn().mockImplementation(() => Promise.reject({ errors: [{ detail: 'some-error' }] }));
+      api.getSourcesApi = () => ({
+        updateSource,
+      });
+
+      await renameSource(sourceId, sourceName, errorTitle)(dispatch, getState);
+
+      expect(dispatch.mock.calls).toHaveLength(2);
+
+      expect(dispatch.mock.calls[0][0]).toEqual({
+        type: ACTION_TYPES.RENAME_SOURCE_PENDING,
+        payload: { id: sourceId, name: sourceName },
+      });
+      expect(dispatch.mock.calls[1][0]).toEqual({
+        type: ACTION_TYPES.RENAME_SOURCE_REJECTED,
+        payload: { id: sourceId, name: 'old-name', error: { detail: 'some-error', title: errorTitle } },
+      });
+    });
+  });
+
+  it('setActiveVendor creates an object', async () => {
+    await setActiveVendor(CLOUD_VENDOR)(dispatch);
+
+    expect(dispatch.mock.calls).toHaveLength(2);
+    expect(dispatch.mock.calls[0][0]).toEqual({ type: SET_VENDOR, payload: { vendor: CLOUD_VENDOR } });
+    expect(dispatch.mock.calls[1][0]).toEqual(expect.any(Function));
   });
 });

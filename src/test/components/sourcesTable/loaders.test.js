@@ -3,10 +3,18 @@ import { mount } from 'enzyme';
 import { RowWrapper } from '@patternfly/react-table';
 import { Spinner } from '@patternfly/react-core/dist/js/components/Spinner';
 import { Bullseye } from '@patternfly/react-core/dist/js/layouts/Bullseye';
+import { Card, CardBody } from '@patternfly/react-core';
 import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/cjs/PageHeader';
 import { Section } from '@redhat-cloud-services/frontend-components/components/cjs/Section';
 
-import { PlaceHolderTable, RowWrapperLoader, Loader, AppPlaceholder } from '../../../components/SourcesTable/loaders';
+import {
+  PlaceHolderTable,
+  RowWrapperLoader,
+  Loader,
+  AppPlaceholder,
+  CardLoader,
+  DetailLoader,
+} from '../../../components/SourcesTable/loaders';
 import { COLUMN_COUNT } from '../../../views/sourcesViewDefinition';
 import { IntlProvider } from 'react-intl';
 
@@ -65,6 +73,23 @@ describe('loaders', () => {
       expect(wrapper.find(PageHeaderTitle).text()).toEqual(' Sources ');
       expect(wrapper.find(Section)).toHaveLength(1);
       expect(wrapper.find(Loader).length).toEqual(1);
+    });
+  });
+
+  describe('DetailLoaders', () => {
+    it('CardLoader renders correctly', () => {
+      const wrapper = mount(<CardLoader />);
+
+      expect(wrapper.find(Card)).toHaveLength(1);
+      expect(wrapper.find(CardBody)).toHaveLength(1);
+      expect(wrapper.find(Loader)).toHaveLength(1);
+    });
+
+    it('DetailLoader renders correctly', () => {
+      const wrapper = mount(<DetailLoader />);
+
+      expect(wrapper.find(PageHeader)).toHaveLength(1);
+      expect(wrapper.find(CardLoader)).toHaveLength(3);
     });
   });
 });
