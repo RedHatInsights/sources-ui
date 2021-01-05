@@ -22,6 +22,10 @@ const App = () => {
       // eslint-disable-next-line no-console
       console.warn('Failed to initialize chrome navigation.');
     }
+
+    return () => {
+      sessionStorage.removeItem('ins-c-sources__cloud_cards_expanded');
+    };
   }, []);
 
   return (

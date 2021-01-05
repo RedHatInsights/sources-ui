@@ -42,6 +42,8 @@ import CustomRoute from '../components/CustomRoute/CustomRoute';
 import { Tooltip } from '@patternfly/react-core/dist/js/components/Tooltip/Tooltip';
 import { PaginationLoader } from '../components/SourcesTable/loaders';
 import TabNavigation from '../components/TabNavigation';
+import CloudCards from '../components/CloudCards';
+import { CLOUD_VENDOR } from '../utilities/constants';
 
 const SourcesPage = () => {
   const [filter, setFilterValue] = useState();
@@ -206,6 +208,14 @@ const SourcesPage = () => {
     </React.Fragment>
   );
 
+  const hasSomeFilter =
+    Object.entries(filterValue)
+      .map(([_key, value]) => value && (!Array.isArray(value) || (Array.isArray(value) && value.length > 0)))
+      .filter(Boolean).length > 0;
+
+  const showEmptyState = loaded && numberOfEntities === 0 && !hasSomeFilter;
+  const showInfoCards = activeVendor === CLOUD_VENDOR && !showEmptyState;
+
   return (
     <React.Fragment>
       <Suspense fallback={null}>
@@ -234,6 +244,7 @@ const SourcesPage = () => {
         <TabNavigation />
       </PageHeader>
       <Section type="content">
+        {showInfoCards && <CloudCards />}
         {fetchingError && <SourcesErrorState />}
         {!fetchingError && mainContent()}
       </Section>
