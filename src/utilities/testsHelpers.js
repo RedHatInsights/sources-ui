@@ -20,3 +20,5 @@ export const componentWrapperIntl = (children, store, initialEntries, initialInd
     </IntlProvider>
   );
 };
+
+export default componentWrapperIntl;

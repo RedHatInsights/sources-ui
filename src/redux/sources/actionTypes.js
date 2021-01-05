@@ -5,6 +5,7 @@ export const ACTION_TYPES = [
   'LOAD_SOURCE_TYPES',
   'LOAD_APP_TYPES',
   'REMOVE_APPLICATION',
+  'RENAME_SOURCE',
 ].reduce(
   (acc, curr) => ({
     ...acc,
@@ -23,3 +24,4 @@ export const ADD_APP_TO_SOURCE = 'ADD_APP_TO_SOURCE';
 export const SET_COUNT = 'SET_COUNT';
 export const ADD_HIDDEN_SOURCE = 'ADD_HIDDEN_SOURCE';
 export const CLEAR_FILTERS = 'CLEAR_FILTERS';
+export const SET_VENDOR = 'SET_VENDOR';

@@ -9,6 +9,8 @@ import { componentWrapperIntl } from '../utilities/testsHelpers';
 import Routes from '../Routes';
 import { getProdStore } from '../utilities/store';
 import * as PermissionsChecker from '../components/PermissionsChecker';
+import * as DataLoader from '../components/DataLoader';
+
 import ErrorBoundary from '../components/ErrorBoundary';
 
 jest.mock('../pages/Sources', () => ({
@@ -29,6 +31,7 @@ describe('App spec js', () => {
     identifyAppSpy = jest.fn();
 
     PermissionsChecker.default = ({ children }) => <h1>{children}</h1>;
+    DataLoader.default = ({ children }) => <span>{children}</span>;
 
     insights = {
       chrome: {
@@ -89,6 +92,7 @@ describe('App spec js', () => {
     expect(wrapper.find(Router)).toHaveLength(1);
     expect(wrapper.find(Router).props().basename).toEqual('/');
     expect(wrapper.find(PermissionsChecker.default)).toHaveLength(1);
+    expect(wrapper.find(DataLoader.default)).toHaveLength(1);
     expect(wrapper.find(ErrorBoundary)).toHaveLength(1);
   });
 });

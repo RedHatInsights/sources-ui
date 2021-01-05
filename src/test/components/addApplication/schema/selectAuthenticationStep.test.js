@@ -9,6 +9,8 @@ import { IntlProvider } from 'react-intl';
 
 describe('selectAuthenticationStep', () => {
   const intl = { formatMessage: ({ defaultMessage }) => defaultMessage };
+  const app = COSTMANAGEMENT_APP;
+  const applicationTypes = applicationTypesData.data;
 
   it('selectAuthenticationStep generates selection step', () => {
     const source = {
@@ -25,7 +27,6 @@ describe('selectAuthenticationStep', () => {
       { id: '1', username: 'user-123', authtype: 'arn' },
       { id: '23324', authtype: 'arn' },
     ];
-    const applicationTypes = applicationTypesData.data;
 
     const authSelection = selectAuthenticationStep({
       intl,
@@ -33,6 +34,7 @@ describe('selectAuthenticationStep', () => {
       authenticationValues,
       sourceType,
       applicationTypes,
+      app,
     });
 
     expect(authSelection).toEqual(
@@ -49,14 +51,6 @@ describe('selectAuthenticationStep', () => {
           }),
           expect.objectContaining({
             name: `${COSTMANAGEMENT_APP.name}-subform`,
-            condition: {
-              and: [
-                {
-                  when: 'application.application_type_id',
-                  is: COSTMANAGEMENT_APP.id,
-                },
-              ],
-            },
             fields: [
               expect.objectContaining({
                 name: `${COSTMANAGEMENT_APP.name}-select-authentication-summary`,
@@ -83,7 +77,7 @@ describe('selectAuthenticationStep', () => {
       })
     );
 
-    expect(authSelection.nextStep({ values: {} })).toEqual('amazon--undefined');
+    expect(authSelection.nextStep({ values: {} })).toEqual('amazon-2-undefined');
     expect(
       authSelection.nextStep({
         values: {
@@ -106,7 +100,6 @@ describe('selectAuthenticationStep', () => {
     const source = {};
     const sourceType = AMAZON;
     const authenticationValues = [];
-    const applicationTypes = applicationTypesData.data;
 
     const authSelection = selectAuthenticationStep({
       intl,
@@ -114,6 +107,7 @@ describe('selectAuthenticationStep', () => {
       authenticationValues,
       sourceType,
       applicationTypes,
+      app,
     });
 
     expect(authSelection).toEqual(
@@ -127,131 +121,6 @@ describe('selectAuthenticationStep', () => {
             Content: AuthTypeSetter,
             authenticationValues,
             hideField: true,
-          }),
-        ],
-      })
-    );
-  });
-
-  it('selectAuthenticationStep generates selection - multiple auth types', () => {
-    const CUSTOM_APP = {
-      id: '1',
-      name: 'custom_app',
-      supported_authentication_types: {
-        amazon: ['arn', 'password'],
-      },
-      supported_source_types: ['amazon'],
-    };
-
-    const source = { applications: [] };
-    const sourceType = {
-      id: '2',
-      name: 'amazon',
-      schema: {
-        authentication: [
-          {
-            name: 'AWS Secret Key',
-            type: 'password',
-            fields: [],
-          },
-          {
-            name: 'ARN',
-            type: 'arn',
-            fields: [],
-          },
-        ],
-      },
-    };
-
-    const authenticationValues = [
-      { id: '23324', authtype: 'arn' },
-      { id: '23324', authtype: 'password' },
-    ];
-    const applicationTypes = [CUSTOM_APP];
-
-    const authSelection = selectAuthenticationStep({
-      intl,
-      source,
-      authenticationValues,
-      sourceType,
-      applicationTypes,
-    });
-
-    expect(authSelection).toEqual(
-      expect.objectContaining({
-        name: 'selectAuthentication',
-        nextStep: expect.any(Function),
-        fields: [
-          expect.objectContaining({
-            name: 'authtypesetter',
-            component: 'description',
-            Content: AuthTypeSetter,
-            authenticationValues,
-            hideField: true,
-          }),
-          expect.objectContaining({
-            name: `${CUSTOM_APP.name}-subform`,
-            condition: {
-              and: [
-                {
-                  when: 'application.application_type_id',
-                  is: CUSTOM_APP.id,
-                },
-                {
-                  when: 'authtype',
-                  is: 'arn',
-                },
-              ],
-            },
-            fields: [
-              expect.objectContaining({
-                name: `${CUSTOM_APP.name}-select-authentication-summary`,
-              }),
-              expect.objectContaining({
-                name: 'selectedAuthentication',
-                component: 'radio',
-                isRequired: true,
-                options: [
-                  expect.objectContaining({ value: 'new-arn' }),
-                  {
-                    label: `ARN-unused-${authenticationValues[0].id}`,
-                    value: authenticationValues[0].id,
-                  },
-                ],
-              }),
-            ],
-          }),
-          expect.objectContaining({
-            name: `${CUSTOM_APP.name}-subform`,
-            condition: {
-              and: [
-                {
-                  when: 'application.application_type_id',
-                  is: CUSTOM_APP.id,
-                },
-                {
-                  when: 'authtype',
-                  is: 'password',
-                },
-              ],
-            },
-            fields: [
-              expect.objectContaining({
-                name: `${CUSTOM_APP.name}-select-authentication-summary`,
-              }),
-              expect.objectContaining({
-                name: 'selectedAuthentication',
-                component: 'radio',
-                isRequired: true,
-                options: [
-                  expect.objectContaining({ value: 'new-password' }),
-                  {
-                    label: `AWS Secret Key-unused-${authenticationValues[1].id}`,
-                    value: authenticationValues[1].id,
-                  },
-                ],
-              }),
-            ],
           }),
         ],
       })

@@ -1,32 +1,24 @@
 import React, { useEffect, useReducer } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import { Spinner } from '@patternfly/react-core/dist/js/components/Spinner';
+import { Bullseye } from '@patternfly/react-core/dist/js/layouts/Bullseye';
 
-import { Modal } from '@patternfly/react-core/dist/js/components/Modal';
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/cjs/form-template';
 
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
 import { doLoadSourceForEdit } from '../../api/doLoadSourceForEdit';
-import Header from './Header';
 import { onSubmit } from './onSubmit';
 
-import { redirectWhenImported } from './importedRedirect';
-import { routes } from '../../Routes';
 import { useSource } from '../../hooks/useSource';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
 import reducer, { initialState } from './reducer';
-import sourceEditContext from './sourceEditContext';
-import ModalFormTemplate from '../ModalFormTemplate';
 import SubmittingModal from './SubmittingModal';
-import TimeoutedModal from './TimeoutedModal';
 import ErroredModal from './ErroredModal';
-import RemoveAuth from './parser/RemoveAuth';
-import { hasCostManagement } from './helpers';
+import { hasCostManagement, prepareMessages } from './helpers';
 
 const SourceEditModal = () => {
   const [state, setState] = useReducer(reducer, initialState);
-  const history = useHistory();
   const sourceRedux = useSource();
   const isLoaded = useIsLoaded();
 
@@ -39,11 +31,9 @@ const SourceEditModal = () => {
     isSubmitting,
     initialLoad,
     message,
+    messages,
     submitError,
-    isTimeouted,
     values,
-    sourceType,
-    isAuthRemoving,
   } = state;
 
   const intl = useIntl();
@@ -53,16 +43,20 @@ const SourceEditModal = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (!initialLoad) {
+      setState({ type: 'sourceChanged' });
+    }
+  }, [sourceRedux, sourceRedux?.applications?.length]);
+
+  useEffect(() => {
     if (sourceRedux && initialLoad && appTypesLoaded) {
       doLoadSourceForEdit(sourceRedux, hasCostManagement(sourceRedux, appTypes)).then((source) => {
-        if (source.source.imported) {
-          redirectWhenImported(dispatch, intl, history, source.source.name);
-        }
+        const messages = prepareMessages(source, intl);
 
-        setState({ type: 'setSource', source });
+        setState({ type: 'setSource', source, messages });
       });
     }
-  }, [sourceRedux, isLoaded, appTypesLoaded]);
+  }, [sourceRedux, isLoaded, appTypesLoaded, initialLoad]);
 
   useEffect(() => {
     if (source && appTypesLoaded && sourceTypesLoaded) {
@@ -74,18 +68,8 @@ const SourceEditModal = () => {
 
   const isLoading = !appTypesLoaded || !sourceTypesLoaded || loading;
 
-  const returnToSources = () => history.push(routes.sources.path);
-
-  if (isTimeouted) {
-    return <TimeoutedModal />;
-  }
-
   if (submitError) {
-    return (
-      <ErroredModal
-        onRetry={() => onSubmit(values, editing, dispatch, source, intl, setState, hasCostManagement(sourceRedux, appTypes))}
-      />
-    );
+    return <ErroredModal onRetry={() => onSubmit(values, editing, dispatch, source, intl, setState, appTypes)} />;
   }
 
   if (isSubmitting) {
@@ -94,62 +78,26 @@ const SourceEditModal = () => {
 
   if (isLoading) {
     return (
-      <Modal
-        aria-label={intl.formatMessage({
-          id: 'sources.editSource',
-          defaultMessage: 'Edit source.',
-        })}
-        header={<Header />}
-        isOpen
-        variant="large"
-        onClose={returnToSources}
-      >
-        <div className="ins-c-sources__dialog--spinnerContainer">
-          <Spinner />
-        </div>
-      </Modal>
+      <Bullseye className="pf-u-m-2xl">
+        <Spinner />
+      </Bullseye>
     );
   }
 
   return (
-    <sourceEditContext.Provider value={{ setState, source, sourceType }}>
-      {isAuthRemoving && <RemoveAuth authId={isAuthRemoving} />}
-      <SourcesFormRenderer
-        onCancel={returnToSources}
-        schema={schema}
-        onSubmit={(values, formApi) =>
-          onSubmit(
-            values,
-            formApi.getState().dirtyFields,
-            dispatch,
-            source,
-            intl,
-            setState,
-            hasCostManagement(sourceRedux, appTypes)
-          )
-        }
-        FormTemplate={(props) => (
-          <ModalFormTemplate
-            ModalProps={{
-              ['aria-label']: intl.formatMessage({
-                id: 'sources.editSource',
-                defaultMessage: 'Edit source.',
-              }),
-              header: <Header name={source.source.name} />,
-              variant: 'large',
-              isOpen: !isAuthRemoving,
-              onClose: returnToSources,
-            }}
-            {...props}
-          />
-        )}
-        clearedValue={null}
-        initialValues={{
-          ...initialValues,
-          message,
-        }}
-      />
-    </sourceEditContext.Provider>
+    <SourcesFormRenderer
+      schema={schema}
+      onSubmit={(values, formApi) => onSubmit(values, formApi.getState().dirtyFields, dispatch, source, intl, setState, appTypes)}
+      FormTemplate={(props) => (
+        <FormTemplate canReset submitLabel="Save changes" disableSubmit={['pristine', 'invalid']} {...props} />
+      )}
+      clearedValue={null}
+      initialValues={{
+        ...initialValues,
+        message,
+        messages,
+      }}
+    />
   );
 };
 

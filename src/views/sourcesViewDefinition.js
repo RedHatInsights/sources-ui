@@ -1,3 +1,12 @@
+import {
+  applicationFormatter,
+  availabilityFormatter,
+  dateFormatter,
+  importedFormatter,
+  nameFormatter,
+  sourceTypeFormatter,
+} from './formatters';
+
 export const sourcesColumns = (intl, notSortable = false) => [
   {
     title: intl.formatMessage({
@@ -5,7 +14,7 @@ export const sourcesColumns = (intl, notSortable = false) => [
       defaultMessage: 'Name',
     }),
     value: 'name',
-    formatter: 'nameFormatter',
+    formatter: nameFormatter,
     sortable: !notSortable,
   },
   {
@@ -14,16 +23,16 @@ export const sourcesColumns = (intl, notSortable = false) => [
       defaultMessage: 'Type',
     }),
     value: 'source_type_id',
-    formatter: 'sourceTypeFormatter',
+    formatter: sourceTypeFormatter,
     sortable: !notSortable,
   },
   {
     title: intl.formatMessage({
-      id: 'sources.application',
-      defaultMessage: 'Applications',
+      id: 'sources.connectedApplications',
+      defaultMessage: 'Connected applications',
     }),
     value: 'applications',
-    formatter: 'applicationFormatter',
+    formatter: applicationFormatter,
   },
   {
     title: intl.formatMessage({
@@ -31,13 +40,13 @@ export const sourcesColumns = (intl, notSortable = false) => [
       defaultMessage: 'Date added',
     }),
     value: 'created_at',
-    formatter: 'dateFormatter',
+    formatter: dateFormatter,
     sortable: !notSortable,
   },
   {
     hidden: true,
     value: 'imported',
-    formatter: 'importedFormatter',
+    formatter: importedFormatter,
   },
   {
     title: intl.formatMessage({
@@ -45,7 +54,7 @@ export const sourcesColumns = (intl, notSortable = false) => [
       defaultMessage: 'Status',
     }),
     value: 'availability_status',
-    formatter: 'availabilityFormatter',
+    formatter: availabilityFormatter,
   },
 ];
 

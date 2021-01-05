@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { useIntl } from 'react-intl';
@@ -19,7 +20,7 @@ import { routes } from '../../Routes';
 import { bodyVariants, typesWithExtendedText } from './helpers';
 import AppListInRemoval from './AppListInRemoval';
 
-const SourceRemoveModal = () => {
+const SourceRemoveModal = ({ backPath }) => {
   const { push } = useHistory();
 
   const [acknowledge, setAcknowledge] = useState(false);
@@ -31,10 +32,10 @@ const SourceRemoveModal = () => {
 
   const { sourceTypes } = useSelector(({ sources }) => sources, shallowEqual);
 
-  const returnToSources = () => push(routes.sources.path);
+  const returnToSources = () => push(backPath);
 
   const onSubmit = () => {
-    returnToSources();
+    push(routes.sources.path);
     dispatch(
       removeSource(
         source.id,
@@ -127,6 +128,14 @@ const SourceRemoveModal = () => {
       {body}
     </Modal>
   );
+};
+
+SourceRemoveModal.propTypes = {
+  backPath: PropTypes.string,
+};
+
+SourceRemoveModal.defaultProps = {
+  backPath: routes.sources.path,
 };
 
 export default SourceRemoveModal;

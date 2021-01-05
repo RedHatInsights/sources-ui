@@ -12,6 +12,7 @@ import {
 import * as actions from '../../../redux/sources/actions';
 import { sourceTypesData } from '../../__mocks__/sourceTypesData';
 import { applicationTypesData } from '../../__mocks__/applicationTypesData';
+import { CLOUD_VENDOR, CLOUD_VENDORS, REDHAT_VENDOR } from '../../../utilities/constants';
 
 describe('Source page helpers', () => {
   describe('afterSuccess', () => {
@@ -109,13 +110,27 @@ describe('Source page helpers', () => {
   });
 
   describe('prepareSourceTypeSelection', () => {
-    it('parses source types into selection', () => {
+    it('parses source types into selection when CLOUD vendor set', () => {
       const sourceTypes = [
-        { id: '23', product_name: 'First type' },
-        { id: '12', product_name: 'Last type' },
+        { id: '23', product_name: 'Hidden type', vendor: REDHAT_VENDOR },
+        { id: '12', product_name: 'First type', vendor: CLOUD_VENDORS[0] },
+        { id: '14', product_name: 'Last type', vendor: CLOUD_VENDORS[1] },
+        { id: '25', product_name: 'Also hidden type', vendor: REDHAT_VENDOR },
       ];
 
-      expect(prepareSourceTypeSelection(sourceTypes)).toEqual([
+      expect(prepareSourceTypeSelection(sourceTypes, CLOUD_VENDOR)).toEqual([
+        { value: '12', label: 'First type' },
+        { value: '14', label: 'Last type' },
+      ]);
+    });
+
+    it('parses source types into selection', () => {
+      const sourceTypes = [
+        { id: '23', product_name: 'First type', vendor: REDHAT_VENDOR },
+        { id: '12', product_name: 'Last type', vendor: REDHAT_VENDOR },
+      ];
+
+      expect(prepareSourceTypeSelection(sourceTypes, REDHAT_VENDOR)).toEqual([
         { label: 'First type', value: '23' },
         { label: 'Last type', value: '12' },
       ]);
@@ -123,8 +138,8 @@ describe('Source page helpers', () => {
 
     it('selection is sorted alphabetically', () => {
       const sourceTypes = [
-        { id: '12', product_name: 'Last type' },
-        { id: '23', product_name: 'First type' },
+        { id: '12', product_name: 'Last type', vendor: REDHAT_VENDOR },
+        { id: '23', product_name: 'First type', vendor: REDHAT_VENDOR },
       ];
 
       expect(prepareSourceTypeSelection(sourceTypes)).toEqual([
