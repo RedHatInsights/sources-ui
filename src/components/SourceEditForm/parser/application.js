@@ -35,7 +35,8 @@ const createOneAppFields = (appType, sourceType, app) => [
   ...authenticationFields(
     app.authentications?.filter((auth) => Object.keys(auth).length > 1),
     sourceType,
-    appType?.name
+    appType?.name,
+    app.id
   ),
   ...(appType?.name === APP_NAMES.COST_MANAGAMENT ? appendClusterIdentifier(sourceType) : []),
 ];

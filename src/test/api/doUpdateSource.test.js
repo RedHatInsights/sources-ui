@@ -35,27 +35,23 @@ describe('doUpdateSource', () => {
   let sourceSpy;
   let endpointSpy;
   let authenticationSpy;
+  let applicationSpy;
   let patchCostManagementSpy;
 
   beforeEach(() => {
     sourceSpy = jest.fn().mockImplementation(() => Promise.resolve('ok'));
     endpointSpy = jest.fn().mockImplementation(() => Promise.resolve('ok'));
     authenticationSpy = jest.fn().mockImplementation(() => Promise.resolve('ok'));
+    applicationSpy = jest.fn().mockImplementation(() => Promise.resolve('ok'));
     patchCostManagementSpy = jest.fn().mockImplementation(() => Promise.resolve('ok'));
 
     api.getSourcesApi = () => ({
       updateSource: sourceSpy,
       updateEndpoint: endpointSpy,
       updateAuthentication: authenticationSpy,
+      updateApplication: applicationSpy,
     });
     cmApi.patchCmValues = patchCostManagementSpy;
-  });
-
-  afterEach(() => {
-    sourceSpy.mockReset();
-    endpointSpy.mockReset();
-    authenticationSpy.mockReset();
-    patchCostManagementSpy.mockReset();
   });
 
   it('sends nothing', () => {
@@ -66,6 +62,7 @@ describe('doUpdateSource', () => {
     expect(sourceSpy).not.toHaveBeenCalled();
     expect(endpointSpy).not.toHaveBeenCalled();
     expect(authenticationSpy).not.toHaveBeenCalled();
+    expect(applicationSpy).not.toHaveBeenCalled();
     expect(patchCostManagementSpy).not.toHaveBeenCalled();
   });
 
@@ -81,6 +78,7 @@ describe('doUpdateSource', () => {
     expect(sourceSpy).toHaveBeenCalledWith(SOURCE_ID, SOURCE_VALUES);
     expect(endpointSpy).not.toHaveBeenCalled();
     expect(authenticationSpy).not.toHaveBeenCalled();
+    expect(applicationSpy).not.toHaveBeenCalled();
     expect(patchCostManagementSpy).not.toHaveBeenCalled();
   });
 
@@ -96,6 +94,7 @@ describe('doUpdateSource', () => {
     expect(sourceSpy).not.toHaveBeenCalled();
     expect(endpointSpy).toHaveBeenCalledWith(ENDPOINT_ID, ENDPOINT_VALUES);
     expect(authenticationSpy).not.toHaveBeenCalled();
+    expect(applicationSpy).not.toHaveBeenCalled();
     expect(patchCostManagementSpy).not.toHaveBeenCalled();
   });
 
@@ -118,6 +117,7 @@ describe('doUpdateSource', () => {
     expect(sourceSpy).not.toHaveBeenCalled();
     expect(endpointSpy).toHaveBeenCalledWith(ENDPOINT_ID, EXPECTED_ENDPOINT_VALUES_WITH_URL);
     expect(authenticationSpy).not.toHaveBeenCalled();
+    expect(applicationSpy).not.toHaveBeenCalled();
     expect(patchCostManagementSpy).not.toHaveBeenCalled();
   });
 
@@ -136,6 +136,7 @@ describe('doUpdateSource', () => {
     expect(sourceSpy).not.toHaveBeenCalled();
     expect(endpointSpy).toHaveBeenCalledWith(ENDPOINT_ID, EXPECTED_ENDPOINT_VALUES_ONLY_WITH_URL);
     expect(authenticationSpy).not.toHaveBeenCalled();
+    expect(applicationSpy).not.toHaveBeenCalled();
     expect(patchCostManagementSpy).not.toHaveBeenCalled();
   });
 
@@ -156,6 +157,7 @@ describe('doUpdateSource', () => {
     expect(sourceSpy).not.toHaveBeenCalled();
     expect(endpointSpy).toHaveBeenCalledWith(ENDPOINT_ID, EXPECTED_ENDPOINT_VALUES_ONLY_WITH_URL);
     expect(authenticationSpy).not.toHaveBeenCalled();
+    expect(applicationSpy).not.toHaveBeenCalled();
     expect(patchCostManagementSpy).not.toHaveBeenCalled();
   });
 
@@ -172,6 +174,7 @@ describe('doUpdateSource', () => {
     expect(sourceSpy).not.toHaveBeenCalled();
     expect(endpointSpy).not.toHaveBeenCalled();
     expect(authenticationSpy).toHaveBeenCalledWith(AUTH_ID, AUTHENTICATION_VALUES);
+    expect(applicationSpy).not.toHaveBeenCalled();
     expect(patchCostManagementSpy).not.toHaveBeenCalled();
   });
 
@@ -193,6 +196,7 @@ describe('doUpdateSource', () => {
     expect(sourceSpy).not.toHaveBeenCalled();
     expect(endpointSpy).not.toHaveBeenCalled();
     expect(patchCostManagementSpy).not.toHaveBeenCalled();
+    expect(applicationSpy).not.toHaveBeenCalled();
 
     expect(authenticationSpy.mock.calls.length).toEqual(Object.keys(FORM_DATA.authentications).length);
 
@@ -201,6 +205,35 @@ describe('doUpdateSource', () => {
 
     expect(authenticationSpy.mock.calls[1][0]).toBe(AUTH_ID_2);
     expect(authenticationSpy.mock.calls[1][1]).toBe(AUTHENTICATION_VALUES_2);
+  });
+
+  it('sends multiple application values', () => {
+    const APP_ID = '1234234243';
+    const APP_ID_2 = '7232490239';
+    const APPLICATION_VALUES = { password: '123456' };
+    const APPLICATION_VALUES_2 = { usernamen: 'QWERTY' };
+
+    FORM_DATA = {
+      applications: {
+        [`a${APP_ID}`]: APPLICATION_VALUES,
+        [`a${APP_ID_2}`]: APPLICATION_VALUES_2,
+      },
+    };
+
+    doUpdateSource(SOURCE, FORM_DATA);
+
+    expect(sourceSpy).not.toHaveBeenCalled();
+    expect(endpointSpy).not.toHaveBeenCalled();
+    expect(patchCostManagementSpy).not.toHaveBeenCalled();
+    expect(authenticationSpy).not.toHaveBeenCalled();
+
+    expect(applicationSpy.mock.calls.length).toEqual(Object.keys(FORM_DATA.applications).length);
+
+    expect(applicationSpy.mock.calls[0][0]).toBe(APP_ID);
+    expect(applicationSpy.mock.calls[0][1]).toBe(APPLICATION_VALUES);
+
+    expect(applicationSpy.mock.calls[1][0]).toBe(APP_ID_2);
+    expect(applicationSpy.mock.calls[1][1]).toBe(APPLICATION_VALUES_2);
   });
 
   describe('cost management endpoint', () => {
@@ -219,6 +252,7 @@ describe('doUpdateSource', () => {
       expect(sourceSpy).not.toHaveBeenCalled();
       expect(endpointSpy).not.toHaveBeenCalled();
       expect(authenticationSpy).not.toHaveBeenCalled();
+      expect(applicationSpy).not.toHaveBeenCalled();
       expect(patchCostManagementSpy).toHaveBeenCalledWith(SOURCE_ID, EXPECTED_CM_DATA);
     });
 
@@ -234,6 +268,7 @@ describe('doUpdateSource', () => {
       expect(sourceSpy).not.toHaveBeenCalled();
       expect(endpointSpy).not.toHaveBeenCalled();
       expect(authenticationSpy).not.toHaveBeenCalled();
+      expect(applicationSpy).not.toHaveBeenCalled();
       expect(patchCostManagementSpy).toHaveBeenCalledWith(SOURCE_ID, EXPECTED_CM_DATA);
     });
 
@@ -255,6 +290,7 @@ describe('doUpdateSource', () => {
       expect(sourceSpy).not.toHaveBeenCalled();
       expect(endpointSpy).not.toHaveBeenCalled();
       expect(authenticationSpy).not.toHaveBeenCalled();
+      expect(applicationSpy).not.toHaveBeenCalled();
       expect(patchCostManagementSpy).toHaveBeenCalledWith(SOURCE_ID, EXPECTED_CM_DATA);
     });
   });

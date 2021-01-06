@@ -143,7 +143,33 @@ describe('doAttachApp', () => {
     expect(endpointUpdate).not.toHaveBeenCalled();
     expect(authCreate).not.toHaveBeenCalled();
     expect(endpointCreate).not.toHaveBeenCalled();
-    expect(appCreate).toHaveBeenCalledWith(SOURCE_ID, APP_ID);
+    expect(appCreate).toHaveBeenCalledWith({ source_id: SOURCE_ID, application_type_id: APP_ID });
+    expect(createAuthApp).not.toHaveBeenCalled();
+    expect(mockAppStatus).toHaveBeenCalledWith(APP_ID, 0);
+    expect(appDelete).not.toHaveBeenCalled();
+
+    expect(result).toEqual({ id: APP_ID, applications: [{ id: APP_ID, status: 'available' }] });
+  });
+
+  it('only app with extra changed', async () => {
+    const EXTRA = { billing_source: 'billing-source' };
+
+    VALUES = {
+      application: {
+        application_type_id: APP_ID,
+        extra: EXTRA,
+      },
+    };
+
+    const result = await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
+
+    expect(mockPatchSourceSpy).not.toHaveBeenCalled();
+    expect(sourceUpdate).not.toHaveBeenCalled();
+    expect(authUpdate).not.toHaveBeenCalled();
+    expect(endpointUpdate).not.toHaveBeenCalled();
+    expect(authCreate).not.toHaveBeenCalled();
+    expect(endpointCreate).not.toHaveBeenCalled();
+    expect(appCreate).toHaveBeenCalledWith({ source_id: SOURCE_ID, application_type_id: APP_ID, extra: EXTRA });
     expect(createAuthApp).not.toHaveBeenCalled();
     expect(mockAppStatus).toHaveBeenCalledWith(APP_ID, 0);
     expect(appDelete).not.toHaveBeenCalled();
@@ -666,7 +692,7 @@ describe('doAttachApp', () => {
       resource_type: 'Application',
     });
     expect(endpointCreate).not.toHaveBeenCalled();
-    expect(appCreate).toHaveBeenCalledWith(SOURCE_ID, APP_ID);
+    expect(appCreate).toHaveBeenCalledWith({ source_id: SOURCE_ID, application_type_id: APP_ID });
     expect(createAuthApp).toHaveBeenCalledWith({
       authentication_id: AUTH_ID,
       application_id: APP_ID,
@@ -770,7 +796,7 @@ describe('doAttachApp', () => {
       expect(endpointUpdate).not.toHaveBeenCalled();
       expect(authCreate).toHaveBeenCalled();
       expect(endpointCreate).toHaveBeenCalled();
-      expect(appCreate).toHaveBeenCalledWith(SOURCE_ID, APP_ID);
+      expect(appCreate).toHaveBeenCalledWith({ source_id: SOURCE_ID, application_type_id: APP_ID });
       expect(createAuthApp).toHaveBeenCalledWith({
         authentication_id: AUTH_ID,
         application_id: APP_ID,
@@ -815,7 +841,7 @@ describe('doAttachApp', () => {
         expect(endpointUpdate).not.toHaveBeenCalled();
         expect(authCreate).toHaveBeenCalled();
         expect(endpointCreate).toHaveBeenCalled();
-        expect(appCreate).toHaveBeenCalledWith(SOURCE_ID, APP_ID);
+        expect(appCreate).toHaveBeenCalledWith({ source_id: SOURCE_ID, application_type_id: APP_ID });
         expect(createAuthApp).toHaveBeenCalledWith({
           authentication_id: AUTH_ID,
           application_id: APP_ID,
@@ -865,7 +891,7 @@ describe('doAttachApp', () => {
       expect(endpointUpdate).not.toHaveBeenCalled();
       expect(authCreate).not.toHaveBeenCalled();
       expect(endpointCreate).not.toHaveBeenCalled();
-      expect(appCreate).toHaveBeenCalledWith(SOURCE_ID, APP_ID);
+      expect(appCreate).toHaveBeenCalledWith({ source_id: SOURCE_ID, application_type_id: APP_ID });
       expect(createAuthApp).toHaveBeenCalledWith({
         authentication_id: AUTH_ID,
         application_id: APP_ID,
