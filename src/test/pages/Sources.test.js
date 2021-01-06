@@ -34,6 +34,8 @@ import { Table } from '@patternfly/react-table';
 import SourcesErrorState from '../../components/SourcesErrorState';
 import DataLoader from '../../components/DataLoader';
 import TabNavigation from '../../components/TabNavigation';
+import CloudCards from '../../components/CloudCards';
+import { REDHAT_VENDOR } from '../../utilities/constants';
 
 describe('SourcesPage', () => {
   const middlewares = [thunk, notificationsMiddleware()];
@@ -84,6 +86,7 @@ describe('SourcesPage', () => {
     expect(wrapper.find(TabNavigation)).toHaveLength(1);
     expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
     expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
+    expect(wrapper.find(CloudCards)).toHaveLength(1);
     expect(wrapper.find(SourcesTable)).toHaveLength(1);
     expect(wrapper.find(Pagination)).toHaveLength(2);
     expect(wrapper.find(PaginationLoader)).toHaveLength(0);
@@ -106,6 +109,24 @@ describe('SourcesPage', () => {
       entities: sourcesDataGraphQl,
       paginationClicked: false,
     });
+  });
+
+  it('do not show CloudCards on Red Hat page', async () => {
+    store = createStore(
+      combineReducers({
+        sources: applyReducerHash(ReducersProviders, { ...defaultSourcesState, activeVendor: REDHAT_VENDOR }),
+        user: applyReducerHash(UserReducer, { isOrgAdmin: true }),
+      }),
+      applyMiddleware(...middlewares)
+    );
+
+    await act(async () => {
+      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    });
+
+    wrapper.update();
+
+    expect(wrapper.find(CloudCards)).toHaveLength(0);
   });
 
   it('renders empty state when there are no Sources', async () => {

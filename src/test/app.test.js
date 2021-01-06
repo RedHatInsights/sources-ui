@@ -54,7 +54,7 @@ describe('App spec js', () => {
     expect(identifyAppSpy).toHaveBeenCalledWith('sources');
   });
 
-  it('onmounts app and clears localStorage', async () => {
+  it('unmounts app and clears localStorage', async () => {
     let localStorage;
     let protoTmp;
     let wrapper;
