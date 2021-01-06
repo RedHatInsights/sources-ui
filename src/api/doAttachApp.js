@@ -124,6 +124,7 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
           ...filteredValues.authentication,
           resource_id: endpointDataOut?.id || applicationDataOut?.id,
           resource_type: endpointDataOut?.id ? 'Endpoint' : 'Application',
+          source_id: sourceId,
         };
 
         authenticationDataOut = await getSourcesApi().createAuthentication(authenticationData);
