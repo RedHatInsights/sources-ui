@@ -10,6 +10,7 @@ import './App.scss';
 import ErrorBoundary from './components/ErrorBoundary';
 import PermissionsChecker from './components/PermissionsChecker';
 import DataLoader from './components/DataLoader';
+import { CLOUD_CARDS_KEY } from './components/CloudCards';
 
 import { getBaseName } from './frontend-components-copies/getBaseName';
 
@@ -24,7 +25,7 @@ const App = () => {
     }
 
     return () => {
-      sessionStorage.removeItem('ins-c-sources__cloud_cards_expanded');
+      sessionStorage.removeItem(CLOUD_CARDS_KEY);
     };
   }, []);
 
