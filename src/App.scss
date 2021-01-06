@@ -129,3 +129,19 @@
     margin-top: 0px !important;
   }
 }
+
+.ins-c-sources__info-card {
+  min-height: 100%;
+}
+
+.ins-c-sources__info-icon {
+  max-height: 40px;
+}
+
+.ins-c-sources__info-point {
+  display: flex;
+
+  &:not(:last-child) {
+    margin-bottom: 8px;
+  }
+}

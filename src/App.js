@@ -10,6 +10,7 @@ import './App.scss';
 import ErrorBoundary from './components/ErrorBoundary';
 import PermissionsChecker from './components/PermissionsChecker';
 import DataLoader from './components/DataLoader';
+import { CLOUD_CARDS_KEY } from './components/CloudCards';
 
 import { getBaseName } from './frontend-components-copies/getBaseName';
 
@@ -22,6 +23,10 @@ const App = () => {
       // eslint-disable-next-line no-console
       console.warn('Failed to initialize chrome navigation.');
     }
+
+    return () => {
+      sessionStorage.removeItem(CLOUD_CARDS_KEY);
+    };
   }, []);
 
   return (
