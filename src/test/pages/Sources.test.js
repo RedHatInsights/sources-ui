@@ -267,6 +267,31 @@ describe('SourcesPage', () => {
     expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sources.path);
   });
 
+  it('closes addSourceWizard and redirects to detail when source is created', async () => {
+    await act(async () => {
+      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    });
+    wrapper.update();
+
+    await act(async () => {
+      wrapper.find(Link).first().simulate('click', { button: 0 });
+    });
+    wrapper.update();
+
+    expect(wrapper.find(RedirectNoWriteAccess)).toHaveLength(1);
+
+    const SOURCE_ID = '544615';
+
+    await act(async () => {
+      wrapper.find(AddSourceWizard).props().onClose(null, { id: SOURCE_ID });
+    });
+    wrapper.update();
+
+    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
+      replaceRouteId(routes.sourcesDetail.path, SOURCE_ID)
+    );
+  });
+
   it('afterSuccess addSourceWizard', async () => {
     helpers.afterSuccess = jest.fn();
 
