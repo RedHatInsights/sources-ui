@@ -200,8 +200,13 @@ const AddApplication = () => {
             })}
             onClose={goToSources}
             customText={intl.formatMessage({
-              id: 'wizard.loadingText defaultMessage=Validating source credentials',
-              defaultMessage: 'Validating source credentials',
+              id: 'wizard.loadingText',
+              defaultMessage: 'Validating credentials',
+            })}
+            description={intl.formatMessage({
+              id: 'wizard.loadingDescription',
+              defaultMessage:
+                'This could take a minute. If you prefer not to wait, close this dialog and the process will continue.',
             })}
           />
         }
