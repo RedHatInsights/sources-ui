@@ -105,6 +105,7 @@
     "prod": "NODE_ENV=production webpack-dev-server --config config/dev.webpack.config.js",
     "server:ctr": "node src/server/generateServerKey.js",
     "start": "BETA=true webpack-dev-server --config config/dev.webpack.config.js",
+    "start:link": "LINKED=TRUE BETA=true webpack-dev-server --config config/dev.webpack.config.js",
     "travis:build": "webpack --config config/test.webpack.config.js",
     "travis:verify": "npm-run-all travis:build lint test",
     "verify": "npm-run-all build lint test",

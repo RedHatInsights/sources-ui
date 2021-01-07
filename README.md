@@ -17,6 +17,7 @@ This application allows to
 - [Getting Started](#getting-started)
 - [Running locally](#running-locally)
 - [Build app](#build-app)
+  - [With locally linked Sources Wizard package](#with-locally-linked-sources-wizard-package)
   - [Testing](#testing)
 - [Patternfly](#patternfly)
 - [Data-driven forms](#data-driven-forms)
@@ -57,6 +58,14 @@ SPANDX_CONFIG="./config/spandx.config.js" bash $PROXY_PATH/scripts/run.sh
 
 2. ```npm run start```
     - starts webpack bundler and serves the files with webpack dev server
+
+## With locally linked Sources Wizard package
+
+If you linked Sources Wizard package via npm link, run the application with a following command:
+
+- ```npm run start:link```
+
+This command ensures that the application and the package is using the same node_modules folder and it prevents any conflicts between various React instancies.
 
 ## Testing
 
