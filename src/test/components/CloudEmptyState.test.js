@@ -1,7 +1,8 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
+import configureStore from 'redux-mock-store';
 
-import { Card, Tile } from '@patternfly/react-core';
+import { Card, Tile, Tooltip } from '@patternfly/react-core';
 
 import componentWrapperIntl from '../../utilities/testsHelpers';
 import CloudEmptyState from '../../components/CloudEmptyState';
@@ -12,6 +13,7 @@ describe('CloudEmptyState', () => {
   let wrapper;
   let setSelectedType;
   let initialProps;
+  let store;
 
   beforeEach(() => {
     setSelectedType = jest.fn();
@@ -19,23 +21,47 @@ describe('CloudEmptyState', () => {
     initialProps = {
       setSelectedType,
     };
+
+    store = configureStore()({ user: { isOrgAdmin: true } });
   });
 
-  it('renders correctly and sets local storage', async () => {
+  it('renders correctly', async () => {
     await act(async () => {
-      wrapper = mount(componentWrapperIntl(<CloudEmptyState {...initialProps} />));
+      wrapper = mount(componentWrapperIntl(<CloudEmptyState {...initialProps} />, store));
     });
     wrapper.update();
 
     expect(wrapper.find(Card)).toHaveLength(1);
-    expect(wrapper.find(Tile)).toHaveLength(3);
-    expect(wrapper.find('img')).toHaveLength(3);
+    expect(wrapper.find(Tile)).toHaveLength(2);
+    expect(wrapper.find('img')).toHaveLength(2);
+
+    expect(wrapper.find(Tile).first().props().isDisabled).toEqual(undefined);
+    expect(wrapper.find(Tile).last().props().isDisabled).toEqual(undefined);
+    expect(wrapper.find(Tooltip)).toHaveLength(0);
+  });
+
+  it('renders correctly when no permissions', async () => {
+    store = configureStore()({ user: { isOrgAdmin: false } });
+
+    await act(async () => {
+      wrapper = mount(componentWrapperIntl(<CloudEmptyState {...initialProps} />, store));
+    });
+    wrapper.update();
+
+    expect(wrapper.find(Card)).toHaveLength(1);
+    expect(wrapper.find(Tile)).toHaveLength(2);
+    expect(wrapper.find('img')).toHaveLength(2);
+    expect(wrapper.find(Tile).first().props().isDisabled).toEqual(true);
     expect(wrapper.find(Tile).last().props().isDisabled).toEqual(true);
+    expect(wrapper.find(Tooltip)).toHaveLength(2);
+    expect(wrapper.find(Tooltip).first().props().content).toEqual(
+      'To perform this action, you must be granted write permissions from your Organization Administrator.'
+    );
   });
 
   it('sets amazon', async () => {
     await act(async () => {
-      wrapper = mount(componentWrapperIntl(<CloudEmptyState {...initialProps} />));
+      wrapper = mount(componentWrapperIntl(<CloudEmptyState {...initialProps} />, store));
     });
     wrapper.update();
 
@@ -50,7 +76,7 @@ describe('CloudEmptyState', () => {
 
   it('sets azure', async () => {
     await act(async () => {
-      wrapper = mount(componentWrapperIntl(<CloudEmptyState {...initialProps} />));
+      wrapper = mount(componentWrapperIntl(<CloudEmptyState {...initialProps} />, store));
     });
     wrapper.update();
 
@@ -63,9 +89,9 @@ describe('CloudEmptyState', () => {
     expect(setSelectedType).toHaveBeenCalledWith('azure');
   });
 
-  it('does not set gcp', async () => {
+  it.skip('does not set gcp', async () => {
     await act(async () => {
-      wrapper = mount(componentWrapperIntl(<CloudEmptyState {...initialProps} />));
+      wrapper = mount(componentWrapperIntl(<CloudEmptyState {...initialProps} />, store));
     });
     wrapper.update();
 

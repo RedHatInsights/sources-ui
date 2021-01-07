@@ -172,4 +172,12 @@
   .disabled-icon {
     opacity: 0.5;
   }
+
+  .disabled-tile-with-tooltip {
+    display: inline-block;
+
+    .provider-icon {
+      opacity: 0.5;
+    }
+  }
 }
