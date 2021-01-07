@@ -44,9 +44,11 @@ import { PaginationLoader } from '../components/SourcesTable/loaders';
 import TabNavigation from '../components/TabNavigation';
 import CloudCards from '../components/CloudCards';
 import { CLOUD_VENDOR } from '../utilities/constants';
+import CloudEmptyState from '../components/CloudEmptyState';
 
 const SourcesPage = () => {
   const [filter, setFilterValue] = useState();
+  const [selectedType, setSelectedType] = useState();
 
   const entitiesLoaded = useIsLoaded();
   const hasWritePermissions = useHasWritePermissions();
@@ -213,7 +215,7 @@ const SourcesPage = () => {
       .map(([_key, value]) => value && (!Array.isArray(value) || (Array.isArray(value) && value.length > 0)))
       .filter(Boolean).length > 0;
 
-  const showEmptyState = loaded && numberOfEntities === 0 && !hasSomeFilter;
+  const showEmptyState = loaded && numberOfEntities === 0 && !hasSomeFilter && activeVendor === CLOUD_VENDOR;
   const showInfoCards = activeVendor === CLOUD_VENDOR && !showEmptyState;
 
   return (
@@ -233,6 +235,7 @@ const SourcesPage = () => {
             afterSuccess: (source) => afterSuccess(dispatch, source),
             hideSourcesButton: true,
             returnButtonTitle: intl.formatMessage({ id: 'sources.returnButtonTitle', defaultMessage: 'Exit to source details' }),
+            selectedType: (showEmptyState && selectedType) || undefined,
           }}
         />
       </Suspense>
@@ -248,7 +251,8 @@ const SourcesPage = () => {
       <Section type="content">
         {showInfoCards && <CloudCards />}
         {fetchingError && <SourcesErrorState />}
-        {!fetchingError && mainContent()}
+        {!fetchingError && showEmptyState && <CloudEmptyState setSelectedType={setSelectedType} />}
+        {!fetchingError && !showEmptyState && mainContent()}
       </Section>
     </React.Fragment>
   );

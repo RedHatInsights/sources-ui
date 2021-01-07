@@ -69,7 +69,7 @@ const CloudCards = () => {
   }, [isExpanded]);
 
   return (
-    <Grid hasGutter className="pf-u-mb-lg pf-u-mt-md-on-sm pf-u-mt-0-on-md">
+    <Grid hasGutter className="pf-u-mb-lg pf-u-mt-md pf-u-mt-0-on-md">
       <GridItem md="6">
         <Card isExpanded={isExpanded} className="ins-c-sources__info-card">
           <CardHeader onExpand={() => setExpanded(!isExpanded)}>
