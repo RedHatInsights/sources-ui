@@ -108,7 +108,6 @@
 .ins-c-sources__detail-page {
   .card {
     box-shadow: none !important;
-
   }
 
   .summary-card {
@@ -143,5 +142,42 @@
 
   &:not(:last-child) {
     margin-bottom: 8px;
+  }
+}
+
+.ins-c-sources__cloud-empty-state-card {
+  box-shadow: none !important;
+  cursor: initial !important;
+
+  .catalog-link {
+    font-size: 14px;
+  }
+
+  .cloud-footer {
+    text-align: center;
+  }
+
+  .provider-tiles {
+    text-align: center;
+
+    .tile {
+      width:  284px;
+    }
+  }
+
+  .provider-icon {
+    height: 40px;
+  }
+
+  .disabled-icon {
+    opacity: 0.5;
+  }
+
+  .disabled-tile-with-tooltip {
+    display: inline-block;
+
+    .provider-icon {
+      opacity: 0.5;
+    }
   }
 }

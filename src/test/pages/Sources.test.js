@@ -5,7 +5,7 @@ import { applyReducerHash } from '@redhat-cloud-services/frontend-components-uti
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/components/cjs/PrimaryToolbar';
 import { act } from 'react-dom/test-utils';
-import { Chip, Select, Pagination, Button, Tooltip } from '@patternfly/react-core';
+import { Chip, Select, Pagination, Button, Tooltip, Tile } from '@patternfly/react-core';
 import { MemoryRouter, Link } from 'react-router-dom';
 import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources/cjs/addSourceWizard';
 
@@ -35,7 +35,8 @@ import SourcesErrorState from '../../components/SourcesErrorState';
 import DataLoader from '../../components/DataLoader';
 import TabNavigation from '../../components/TabNavigation';
 import CloudCards from '../../components/CloudCards';
-import { REDHAT_VENDOR } from '../../utilities/constants';
+import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../utilities/constants';
+import CloudEmptyState from '../../components/CloudEmptyState';
 
 describe('SourcesPage', () => {
   const middlewares = [thunk, notificationsMiddleware()];
@@ -129,7 +130,15 @@ describe('SourcesPage', () => {
     expect(wrapper.find(CloudCards)).toHaveLength(0);
   });
 
-  it('renders empty state when there are no Sources', async () => {
+  it('renders empty state when there are no Sources - CLOUD', async () => {
+    store = createStore(
+      combineReducers({
+        sources: applyReducerHash(ReducersProviders, { ...defaultSourcesState, activeVendor: CLOUD_VENDOR }),
+        user: applyReducerHash(UserReducer, { isOrgAdmin: true }),
+      }),
+      applyMiddleware(...middlewares)
+    );
+
     api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
     api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
 
@@ -138,6 +147,59 @@ describe('SourcesPage', () => {
     });
 
     wrapper.update();
+
+    expect(wrapper.find(CloudEmptyState)).toHaveLength(1);
+    expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
+    expect(wrapper.find(PrimaryToolbar)).toHaveLength(0);
+    expect(wrapper.find(SourcesTable)).toHaveLength(0);
+  });
+
+  it('renders empty state when there are no Sources and open AWS selection', async () => {
+    store = createStore(
+      combineReducers({
+        sources: applyReducerHash(ReducersProviders, { ...defaultSourcesState, activeVendor: CLOUD_VENDOR }),
+        user: applyReducerHash(UserReducer, { isOrgAdmin: true }),
+      }),
+      applyMiddleware(...middlewares)
+    );
+
+    api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
+    api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+
+    await act(async () => {
+      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    });
+    wrapper.update();
+
+    expect(wrapper.find(CloudEmptyState)).toHaveLength(1);
+
+    await act(async () => {
+      wrapper.find(Tile).first().simulate('click');
+    });
+    wrapper.update();
+
+    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
+    expect(wrapper.find(AddSourceWizard).props().selectedType).toEqual('amazon');
+  });
+
+  it('renders empty state when there are no Sources - RED HAT', async () => {
+    store = createStore(
+      combineReducers({
+        sources: applyReducerHash(ReducersProviders, { ...defaultSourcesState, activeVendor: REDHAT_VENDOR }),
+        user: applyReducerHash(UserReducer, { isOrgAdmin: true }),
+      }),
+      applyMiddleware(...middlewares)
+    );
+
+    api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
+    api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+
+    await act(async () => {
+      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    });
+
+    wrapper.update();
+    expect(wrapper.find(CloudEmptyState)).toHaveLength(0);
     expect(wrapper.find(SourcesEmptyState)).toHaveLength(1);
     expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
     expect(wrapper.find(SourcesTable)).toHaveLength(1);
@@ -222,6 +284,7 @@ describe('SourcesPage', () => {
 
     expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
     expect(wrapper.find(AddSourceWizard)).toHaveLength(1);
+    expect(wrapper.find(AddSourceWizard).props().selectedType).toEqual();
   });
 
   it('renders and decreased page number if it is too great', async () => {
@@ -496,7 +559,27 @@ describe('SourcesPage', () => {
       }, 500);
     });
 
-    it('show empty state table after clicking on clears all filter in empty table state', (done) => {
+    it('show empty state table after clicking on clears all filter in empty table state - RED HAT', async (done) => {
+      store = createStore(
+        combineReducers({
+          sources: applyReducerHash(ReducersProviders, { ...defaultSourcesState, activeVendor: REDHAT_VENDOR }),
+          user: applyReducerHash(UserReducer, { isOrgAdmin: true }),
+        }),
+        applyMiddleware(...middlewares)
+      );
+
+      await act(async () => {
+        wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+      });
+      wrapper.update();
+
+      await act(async () => {
+        filterInput(wrapper).simulate('change', {
+          target: { value: SEARCH_TERM },
+        });
+      });
+      wrapper.update();
+
       setTimeout(async () => {
         wrapper.update();
 
