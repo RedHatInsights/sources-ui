@@ -131,10 +131,26 @@
 
 .ins-c-sources__info-card {
   min-height: 100%;
-}
 
-.ins-c-sources__info-icon {
-  max-height: 40px;
+  .center {
+    text-align: center;
+  }
+
+  .tile {
+    width: 210px;
+  }
+
+  .provider-icon {
+    height: 40px;
+  }
+
+  .disabled-tile-with-tooltip {
+    display: inline-block;
+
+    .provider-icon {
+      opacity: 0.5;
+    }
+  }
 }
 
 .ins-c-sources__info-point {
@@ -167,10 +183,6 @@
 
   .provider-icon {
     height: 40px;
-  }
-
-  .disabled-icon {
-    opacity: 0.5;
   }
 
   .disabled-tile-with-tooltip {

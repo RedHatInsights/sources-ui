@@ -11,26 +11,10 @@ import { CardTitle } from '@patternfly/react-core/dist/js/components/Card/CardTi
 import { CardHeader } from '@patternfly/react-core/dist/js/components/Card/CardHeader';
 import { CardExpandableContent } from '@patternfly/react-core/dist/js/components/Card/CardExpandableContent';
 import { Text } from '@patternfly/react-core/dist/js/components/Text/Text';
-import { Bullseye } from '@patternfly/react-core/dist/js/layouts/Bullseye/Bullseye';
 
 import PlusIcon from '@patternfly/react-icons/dist/js/icons/plus-icon';
-
-import { Loader } from './SourcesTable/loaders';
-
-export const ImageWithPlaceholder = ({ src, ...rest }) => {
-  const [loaded, setLoaded] = useState(false);
-
-  return (
-    <React.Fragment>
-      {!loaded && <Loader height="40px" width="110px" {...rest} />}
-      <img src={src} onLoad={() => setLoaded(true)} style={{ display: loaded ? 'initial' : 'none' }} {...rest} />
-    </React.Fragment>
-  );
-};
-
-ImageWithPlaceholder.propTypes = {
-  src: PropTypes.string.isRequired,
-};
+import CloudTiles from './CloudTiles';
+import ProvidersLink from './ProvidersLink';
 
 const Point = ({ bold, text }) => (
   <div className="ins-c-sources__info-point">
@@ -56,7 +40,7 @@ const SUBWATCH_HREF = `/${PREFIX}subscriptions`;
 
 export const CLOUD_CARDS_KEY = 'ins-c-sources__cloud_cards_expanded';
 
-const CloudCards = () => {
+const CloudCards = (props) => {
   const [isExpanded, setExpanded] = useState(() => {
     const session = sessionStorage.getItem(CLOUD_CARDS_KEY);
 
@@ -80,29 +64,15 @@ const CloudCards = () => {
               <Text>
                 {intl.formatMessage({
                   id: 'cloud.providersDescription',
-                  defaultMessage: 'You can add a source for the following CCSPs.',
+                  defaultMessage: 'Add a source for following cloud providers.',
                 })}
               </Text>
-              <Grid className="pf-u-mt-xl pf-u-mb-xl">
-                <GridItem md={6}>
-                  <Bullseye>
-                    <ImageWithPlaceholder
-                      className="ins-c-sources__info-icon pf-u-mt-md"
-                      src="/apps/frontend-assets/partners-icons/aws-long.svg"
-                      alt="aws logo"
-                    />
-                  </Bullseye>
-                </GridItem>
-                <GridItem md={6}>
-                  <Bullseye>
-                    <ImageWithPlaceholder
-                      className="ins-c-sources__info-icon pf-u-mt-md"
-                      src="/apps/frontend-assets/partners-icons/microsoft-azure.svg"
-                      alt="azure logo"
-                    />
-                  </Bullseye>
-                </GridItem>
-              </Grid>
+              <div className="center">
+                <div className="pf-u-mt-md pf-u-mb-md">
+                  <CloudTiles {...props} />
+                </div>
+                <ProvidersLink />
+              </div>
             </CardBody>
           </CardExpandableContent>
         </Card>

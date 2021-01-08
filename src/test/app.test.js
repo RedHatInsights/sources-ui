@@ -10,7 +10,7 @@ import Routes from '../Routes';
 import { getProdStore } from '../utilities/store';
 import * as PermissionsChecker from '../components/PermissionsChecker';
 import * as DataLoader from '../components/DataLoader';
-import { CLOUD_CARDS_KEY } from '../components/CloudCards';
+import { CLOUD_CARDS_KEY } from '../components/CloudTiles/CloudCards';
 
 import ErrorBoundary from '../components/ErrorBoundary';
 

@@ -42,9 +42,9 @@ import CustomRoute from '../components/CustomRoute/CustomRoute';
 import { Tooltip } from '@patternfly/react-core/dist/js/components/Tooltip/Tooltip';
 import { PaginationLoader } from '../components/SourcesTable/loaders';
 import TabNavigation from '../components/TabNavigation';
-import CloudCards from '../components/CloudCards';
+import CloudCards from '../components/CloudTiles/CloudCards';
 import { CLOUD_VENDOR } from '../utilities/constants';
-import CloudEmptyState from '../components/CloudEmptyState';
+import CloudEmptyState from '../components/CloudTiles/CloudEmptyState';
 
 const SourcesPage = () => {
   const [filter, setFilterValue] = useState();
@@ -230,12 +230,14 @@ const SourcesPage = () => {
             sourceTypes: loadedTypes(sourceTypes, sourceTypesLoaded),
             applicationTypes: loadedTypes(appTypes, appTypesLoaded),
             isOpen: true,
-            onClose: (_values, source) =>
-              source?.id ? history.push(replaceRouteId(routes.sourcesDetail.path, source.id)) : history.push(routes.sources.path),
+            onClose: (_values, source) => {
+              setSelectedType(undefined);
+              source?.id ? history.push(replaceRouteId(routes.sourcesDetail.path, source.id)) : history.push(routes.sources.path);
+            },
             afterSuccess: (source) => afterSuccess(dispatch, source),
             hideSourcesButton: true,
             returnButtonTitle: intl.formatMessage({ id: 'sources.returnButtonTitle', defaultMessage: 'Exit to source details' }),
-            selectedType: (showEmptyState && selectedType) || undefined,
+            selectedType,
           }}
         />
       </Suspense>
@@ -249,7 +251,7 @@ const SourcesPage = () => {
         <TabNavigation />
       </PageHeader>
       <Section type="content">
-        {showInfoCards && <CloudCards />}
+        {showInfoCards && <CloudCards setSelectedType={setSelectedType} />}
         {fetchingError && <SourcesErrorState />}
         {!fetchingError && showEmptyState && <CloudEmptyState setSelectedType={setSelectedType} />}
         {!fetchingError && !showEmptyState && mainContent()}
