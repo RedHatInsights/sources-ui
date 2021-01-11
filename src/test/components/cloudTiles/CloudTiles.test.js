@@ -2,14 +2,14 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import configureStore from 'redux-mock-store';
 
-import { Card, Tile, Tooltip } from '@patternfly/react-core';
+import { Tile, Tooltip } from '@patternfly/react-core';
 
-import componentWrapperIntl from '../../utilities/testsHelpers';
-import CloudEmptyState from '../../components/CloudEmptyState';
+import componentWrapperIntl from '../../../utilities/testsHelpers';
 import { MemoryRouter } from 'react-router-dom';
-import { routes } from '../../Routes';
+import { routes } from '../../../Routes';
+import CloudTiles from '../../../components/CloudTiles/CloudTiles';
 
-describe('CloudEmptyState', () => {
+describe('CloudTiles', () => {
   let wrapper;
   let setSelectedType;
   let initialProps;
@@ -27,11 +27,11 @@ describe('CloudEmptyState', () => {
 
   it('renders correctly', async () => {
     await act(async () => {
-      wrapper = mount(componentWrapperIntl(<CloudEmptyState {...initialProps} />, store));
+      wrapper = mount(componentWrapperIntl(<CloudTiles {...initialProps} />, store));
     });
     wrapper.update();
 
-    expect(wrapper.find(Card)).toHaveLength(1);
+    expect(wrapper.find(CloudTiles)).toHaveLength(1);
     expect(wrapper.find(Tile)).toHaveLength(2);
     expect(wrapper.find('img')).toHaveLength(2);
 
@@ -44,11 +44,10 @@ describe('CloudEmptyState', () => {
     store = configureStore()({ user: { isOrgAdmin: false } });
 
     await act(async () => {
-      wrapper = mount(componentWrapperIntl(<CloudEmptyState {...initialProps} />, store));
+      wrapper = mount(componentWrapperIntl(<CloudTiles {...initialProps} />, store));
     });
     wrapper.update();
 
-    expect(wrapper.find(Card)).toHaveLength(1);
     expect(wrapper.find(Tile)).toHaveLength(2);
     expect(wrapper.find('img')).toHaveLength(2);
     expect(wrapper.find(Tile).first().props().isDisabled).toEqual(true);
@@ -61,7 +60,7 @@ describe('CloudEmptyState', () => {
 
   it('sets amazon', async () => {
     await act(async () => {
-      wrapper = mount(componentWrapperIntl(<CloudEmptyState {...initialProps} />, store));
+      wrapper = mount(componentWrapperIntl(<CloudTiles {...initialProps} />, store));
     });
     wrapper.update();
 
@@ -76,7 +75,7 @@ describe('CloudEmptyState', () => {
 
   it('sets azure', async () => {
     await act(async () => {
-      wrapper = mount(componentWrapperIntl(<CloudEmptyState {...initialProps} />, store));
+      wrapper = mount(componentWrapperIntl(<CloudTiles {...initialProps} />, store));
     });
     wrapper.update();
 
@@ -91,7 +90,7 @@ describe('CloudEmptyState', () => {
 
   it.skip('does not set gcp', async () => {
     await act(async () => {
-      wrapper = mount(componentWrapperIntl(<CloudEmptyState {...initialProps} />, store));
+      wrapper = mount(componentWrapperIntl(<CloudTiles {...initialProps} />, store));
     });
     wrapper.update();
 

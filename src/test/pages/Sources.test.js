@@ -34,9 +34,9 @@ import { Table } from '@patternfly/react-table';
 import SourcesErrorState from '../../components/SourcesErrorState';
 import DataLoader from '../../components/DataLoader';
 import TabNavigation from '../../components/TabNavigation';
-import CloudCards from '../../components/CloudCards';
+import CloudCards from '../../components/CloudTiles/CloudCards';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../utilities/constants';
-import CloudEmptyState from '../../components/CloudEmptyState';
+import CloudEmptyState from '../../components/CloudTiles/CloudEmptyState';
 
 describe('SourcesPage', () => {
   const middlewares = [thunk, notificationsMiddleware()];
@@ -269,6 +269,38 @@ describe('SourcesPage', () => {
     expect(wrapper.find(SourcesTable)).toHaveLength(1);
     expect(wrapper.find(PaginationLoader)).toHaveLength(0);
     expect(wrapper.find(Pagination)).toHaveLength(2);
+  });
+
+  it('opens wizard from info card and clears selection after leaving', async () => {
+    api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
+    api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 1 } }));
+
+    await act(async () => {
+      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    });
+    wrapper.update();
+
+    expect(wrapper.find(CloudCards)).toHaveLength(1);
+
+    await act(async () => {
+      wrapper.find(Tile).first().simulate('click');
+    });
+    wrapper.update();
+
+    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
+    expect(wrapper.find(AddSourceWizard).props().selectedType).toEqual('amazon');
+
+    await act(async () => {
+      wrapper.find(AddSourceWizard).props().onClose();
+    });
+    wrapper.update();
+
+    await act(async () => {
+      wrapper.find(Link).first().simulate('click', { button: 0 });
+    });
+    wrapper.update();
+
+    expect(wrapper.find(AddSourceWizard).props().selectedType).toEqual(undefined);
   });
 
   it('renders addSourceWizard', async () => {
