@@ -17,6 +17,8 @@ This application allows to
 - [Getting Started](#getting-started)
 - [Running locally](#running-locally)
 - [Build app](#build-app)
+  - [With locally linked Sources Wizard package](#with-locally-linked-sources-wizard-package)
+  - [Debug functions](#debug-functions)
   - [Testing](#testing)
 - [Patternfly](#patternfly)
 - [Data-driven forms](#data-driven-forms)
@@ -57,6 +59,36 @@ SPANDX_CONFIG="./config/spandx.config.js" bash $PROXY_PATH/scripts/run.sh
 
 2. ```npm run start```
     - starts webpack bundler and serves the files with webpack dev server
+
+## With locally linked Sources Wizard package
+
+If you linked Sources Wizard package via npm link, run the application with a following command:
+
+- ```npm run start:link```
+
+This command ensures that the application and the package is using the same node_modules folder and it prevents any conflicts between various React instancies.
+
+## Debug functions
+
+Sources UI provides easy way how to test different states of the application when running in dev environment.
+
+Run from the console one of following commands:
+
+- ```sourcesDebug.showEmptyState```
+
+Sets number of currently loaded sources to 0. Shows empty state.
+
+- ```sourcesDebug.setCount```
+
+Changes number of sources to a value you need.
+
+- ```sourcesDebug.removePermissions```
+
+Removes write permissions.
+
+- ```sourcesDebug.setPermissions```
+
+Grants write permissions.
 
 ## Testing
 

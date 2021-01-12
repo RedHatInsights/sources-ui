@@ -11,6 +11,7 @@ import ErroredStep from '@redhat-cloud-services/frontend-components-sources/cjs/
 import FinishedStep from '@redhat-cloud-services/frontend-components-sources/cjs/FinishedStep';
 import TimeoutStep from '@redhat-cloud-services/frontend-components-sources/cjs/TimeoutStep';
 import computeSourceStatus from '@redhat-cloud-services/frontend-components-sources/cjs/computeSourceStatus';
+import AmazonFinishedStep from '@redhat-cloud-services/frontend-components-sources/cjs/AmazonFinishedStep';
 
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/cjs/form-template';
 
@@ -200,8 +201,13 @@ const AddApplication = () => {
             })}
             onClose={goToSources}
             customText={intl.formatMessage({
-              id: 'wizard.loadingText defaultMessage=Validating source credentials',
-              defaultMessage: 'Validating source credentials',
+              id: 'wizard.loadingText',
+              defaultMessage: 'Validating credentials',
+            })}
+            description={intl.formatMessage({
+              id: 'wizard.loadingDescription',
+              defaultMessage:
+                'This could take a minute. If you prefer not to wait, close this dialog and the process will continue.',
             })}
           />
         }
@@ -210,6 +216,8 @@ const AddApplication = () => {
   }
 
   const onReset = () => setState({ type: 'reset' });
+
+  const sourceType = sourceTypes.find((type) => type.id === source.source_type_id);
 
   if (state.state !== 'wizard') {
     let shownStep;
@@ -242,24 +250,29 @@ const AddApplication = () => {
     } else {
       switch (computeSourceStatus(state.data)) {
         default:
-          shownStep = (
-            <FinishedStep
-              title={intl.formatMessage({
-                id: 'sources.configurationSuccessful',
-                defaultMessage: 'Configuration successful',
-              })}
-              hideSourcesButton={true}
-              onClose={goToSources}
-              returnButtonTitle={intl.formatMessage({
-                id: 'sources.exit',
-                defaultMessage: 'Exit',
-              })}
-              successfulMessage={intl.formatMessage({
-                id: 'sources.successAddApp',
-                defaultMessage: 'Your application was successfully added.',
-              })}
-            />
-          );
+          if (sourceType.name === 'amazon') {
+            shownStep = <AmazonFinishedStep onClose={goToSources} />;
+          } else {
+            shownStep = (
+              <FinishedStep
+                title={intl.formatMessage({
+                  id: 'sources.configurationSuccessful',
+                  defaultMessage: 'Configuration successful',
+                })}
+                hideSourcesButton={true}
+                onClose={goToSources}
+                returnButtonTitle={intl.formatMessage({
+                  id: 'sources.exit',
+                  defaultMessage: 'Exit',
+                })}
+                successfulMessage={intl.formatMessage({
+                  id: 'sources.successAddApp',
+                  defaultMessage: 'Your application was successfully added.',
+                })}
+              />
+            );
+          }
+
           break;
         case 'unavailable':
           shownStep = (
@@ -316,7 +329,6 @@ const AddApplication = () => {
     return <WizardBody title={title} description={description} goToSources={goToSources} step={shownStep} />;
   }
 
-  const sourceType = sourceTypes.find((type) => type.id === source.source_type_id);
   const sourceTypeName = sourceType && sourceType.name;
   const filteredAppTypes = appTypes
     .filter((type) => type.supported_source_types.includes(sourceTypeName))

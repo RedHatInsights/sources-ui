@@ -13,9 +13,39 @@ describe('store creator', () => {
   };
 
   it('creates DevStore', () => {
+    const tmp = console.log;
+    const tmpGroup = console.group;
+    console.log = jest.fn();
+    console.group = jest.fn();
+
+    expect(window.sourcesDebug).toEqual(undefined);
+
     const store = getDevStore();
 
     expect(store.getState()).toEqual(EXPECTED_DEFAULT_STATE);
+
+    expect(window.sourcesDebug).toEqual({
+      showEmptyState: expect.any(Function),
+      removePermissions: expect.any(Function),
+      setCount: expect.any(Function),
+      setPermissions: expect.any(Function),
+    });
+
+    window.sourcesDebug.setCount(12);
+    expect(store.getState().sources.numberOfEntities).toEqual(12);
+
+    window.sourcesDebug.showEmptyState();
+    expect(store.getState().sources.numberOfEntities).toEqual(0);
+
+    window.sourcesDebug.setPermissions();
+    expect(store.getState().user.isOrgAdmin).toEqual(true);
+
+    window.sourcesDebug.removePermissions();
+    expect(store.getState().user.isOrgAdmin).toEqual(false);
+
+    window.sourcesDebug = {};
+    console.log = tmp;
+    console.group = tmpGroup;
   });
 
   it('creates ProdStore', () => {
