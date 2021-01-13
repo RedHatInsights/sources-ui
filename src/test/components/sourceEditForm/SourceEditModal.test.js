@@ -36,7 +36,6 @@ describe('SourceEditModal', () => {
   let initialEntry;
   let wrapper;
 
-
   const BUTTONS = ['submit', 'reset'];
 
   beforeEach(async () => {

@@ -18,7 +18,6 @@ describe('SubmittingModal', () => {
   let initialEntry;
   let wrapper;
 
-
   beforeEach(async () => {
     initialEntry = [replaceRouteId(routes.sourcesDetail.path, '14')];
     store = mockStore({
