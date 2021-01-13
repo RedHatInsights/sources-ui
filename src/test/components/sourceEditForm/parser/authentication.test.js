@@ -9,6 +9,7 @@ import {
   modifyAuthSchemas,
   removeRequiredValidator,
   getAdditionalAuthSteps,
+  createAuthAppFieldName,
 } from '../../../../components/SourceEditForm/parser/authentication';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas', () => ({
@@ -46,6 +47,17 @@ describe('authentication edit source parser', () => {
         const PREFIXED_NAME = `authentications.a123154.name`;
 
         expect(createAuthFieldName(NAME, ID)).toEqual(PREFIXED_NAME);
+      });
+    });
+
+    describe('createAuthAppFieldName', () => {
+      it('generates prefixed name', () => {
+        const NAME = 'application.name';
+        const ID = '123154';
+
+        const PREFIXED_NAME = `applications.a123154.name`;
+
+        expect(createAuthAppFieldName(NAME, ID)).toEqual(PREFIXED_NAME);
       });
     });
 
@@ -136,6 +148,13 @@ describe('authentication edit source parser', () => {
           name: createAuthFieldName(FIELD_NAME, ID),
         },
       ]);
+    });
+
+    it('renames application fields', () => {
+      const APP_ID = 'app-id';
+      const result = modifyAuthSchemas([{ name: 'application.extra.billing_source' }], ID, APP_ID);
+
+      expect(result).toEqual([{ name: createAuthAppFieldName('application.extra.billing_source', APP_ID) }]);
     });
 
     it('does not change name for non-authentication values', () => {

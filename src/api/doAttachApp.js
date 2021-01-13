@@ -101,7 +101,12 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
     }
 
     if (filteredValues.application?.application_type_id) {
-      promises.push(doCreateApplication(sourceId, filteredValues.application.application_type_id));
+      const applicationData = {
+        ...filteredValues.application,
+        source_id: sourceId,
+      };
+
+      promises.push(doCreateApplication(applicationData));
     } else {
       promises.push(Promise.resolve(undefined));
     }
@@ -119,6 +124,7 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
           ...filteredValues.authentication,
           resource_id: endpointDataOut?.id || applicationDataOut?.id,
           resource_type: endpointDataOut?.id ? 'Endpoint' : 'Application',
+          source_id: sourceId,
         };
 
         authenticationDataOut = await getSourcesApi().createAuthentication(authenticationData);
