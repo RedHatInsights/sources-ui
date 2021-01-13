@@ -1,12 +1,8 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { Route } from 'react-router-dom';
-import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
-import thunk from 'redux-thunk';
 import { act } from 'react-dom/test-utils';
 import { Spinner } from '@patternfly/react-core/dist/js/components/Spinner';
-import { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/files/cjs/ReducerRegistry';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import SourceEditModal from '../../../components/SourceEditForm/SourceEditModal';
@@ -26,10 +22,9 @@ import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
 import { Switch } from '@data-driven-forms/pf4-component-mapper';
 import { ACTION_TYPES } from '../../../redux/sources/actionTypes';
 import { useDispatch } from 'react-redux';
-import ReducersProviders, { defaultSourcesState } from '../../../redux/sources/reducer';
-import UserReducer from '../../../redux/user/reducer';
 import { UNAVAILABLE } from '../../../views/formatters';
 import mockStore from '../../__mocks__/mockStore';
+import { getStore } from '../../../utilities/store';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/SourceAddSchema', () => ({
   __esModule: true,
@@ -41,7 +36,6 @@ describe('SourceEditModal', () => {
   let initialEntry;
   let wrapper;
 
-  const middlewares = [thunk, notificationsMiddleware()];
 
   const BUTTONS = ['submit', 'reset'];
 
@@ -248,32 +242,28 @@ describe('SourceEditModal', () => {
 
     editApi.doLoadSourceForEdit.mockClear();
 
-    store = createStore(
-      combineReducers({
-        sources: applyReducerHash(ReducersProviders, {
-          ...defaultSourcesState,
-          entities: [
-            {
-              id: '14',
-              source_type_id: ANSIBLE_TOWER_ID,
-              applications: [
-                {
-                  id: '123',
-                  authentications: [{ id: '343' }],
-                },
-              ],
-            },
-          ],
-          appTypes: applicationTypesData.data,
-          sourceTypes: sourceTypesData.data,
-          appTypesLoaded: true,
-          sourceTypesLoaded: true,
-          loaded: 0,
-        }),
-        user: applyReducerHash(UserReducer, { isOrgAdmin: true }),
-      }),
-      applyMiddleware(...middlewares)
-    );
+    store = getStore([], {
+      sources: {
+        entities: [
+          {
+            id: '14',
+            source_type_id: ANSIBLE_TOWER_ID,
+            applications: [
+              {
+                id: '123',
+                authentications: [{ id: '343' }],
+              },
+            ],
+          },
+        ],
+        appTypes: applicationTypesData.data,
+        sourceTypes: sourceTypesData.data,
+        appTypesLoaded: true,
+        sourceTypesLoaded: true,
+        loaded: 0,
+      },
+      user: { isOrgAdmin: true },
+    });
 
     await act(async () => {
       wrapper = mount(

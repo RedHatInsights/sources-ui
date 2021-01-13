@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
@@ -6,23 +6,21 @@ import { loadAppTypes, loadEntities, loadSourceTypes } from '../redux/sources/ac
 import { parseQuery, updateQuery } from '../utilities/urlQuery';
 
 const DataLoader = () => {
-  const [initialLoad, setLoaded] = useState(false);
-
   const dispatch = useDispatch();
-  const location = useLocation();
+  const { pathname } = useLocation();
   const sources = useSelector(({ sources }) => sources, shallowEqual);
+  const previousPathname = useRef(pathname);
 
   useEffect(() => {
-    Promise.all([dispatch(loadSourceTypes()), dispatch(loadAppTypes()), dispatch(loadEntities(parseQuery()))]).then(() =>
-      setLoaded(true)
-    );
+    Promise.all([dispatch(loadSourceTypes()), dispatch(loadAppTypes()), dispatch(loadEntities(parseQuery()))]);
   }, []);
 
   useEffect(() => {
-    if (initialLoad) {
+    if (previousPathname.current !== pathname) {
       updateQuery(sources);
+      previousPathname.current = pathname;
     }
-  }, [location, initialLoad]);
+  }, [pathname]);
 
   return null;
 };
