@@ -1,15 +1,14 @@
-import configureStore from 'redux-mock-store';
-
 import SourcesEmptyState from '../../../components/SourcesTable/SourcesEmptyState';
 import { Bullseye, Title, EmptyState, EmptyStateIcon, EmptyStateBody } from '@patternfly/react-core';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../../utilities/constants';
+import mockStore from '../../__mocks__/mockStore';
 
 describe('SourcesEmptyState', () => {
   let store;
 
   it('renders correctly on cloud vendor', () => {
-    store = configureStore()({
+    store = mockStore({
       sources: {
         activeVendor: CLOUD_VENDOR,
       },
@@ -30,7 +29,7 @@ describe('SourcesEmptyState', () => {
   });
 
   it('renders correctly on Red Hat vendor', () => {
-    store = configureStore()({
+    store = mockStore({
       sources: {
         activeVendor: REDHAT_VENDOR,
       },

@@ -1,12 +1,10 @@
 import { IntlProvider } from 'react-intl';
 import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import configureStore from 'redux-mock-store';
+import mockStore from '../test/__mocks__/mockStore';
 
 export const componentWrapperIntl = (children, store, initialEntries, initialIndex = 0) => {
   if (!store) {
-    const mockStore = configureStore([]);
-
     store = mockStore({});
   }
 

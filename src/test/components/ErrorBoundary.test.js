@@ -1,10 +1,9 @@
 import ErrorBoundary from '../../components/ErrorBoundary';
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import * as sentry from '@sentry/browser';
 
 import * as actions from '../../redux/sources/actions';
+import mockStore from '../__mocks__/mockStore';
 
 describe('Error Boundary', () => {
   it('renders children', () => {
@@ -31,9 +30,6 @@ describe('Error Boundary', () => {
 
     console.error = jest.fn();
 
-    const middlewares = [thunk];
-
-    const mockStore = configureStore(middlewares);
     const store = mockStore({});
 
     const ERROR = new Error('Something very wrong happenned');

@@ -1,6 +1,5 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
-import configureStore from 'redux-mock-store';
 
 import { Tile, Tooltip } from '@patternfly/react-core';
 
@@ -8,6 +7,7 @@ import componentWrapperIntl from '../../../utilities/testsHelpers';
 import { MemoryRouter } from 'react-router-dom';
 import { routes } from '../../../Routes';
 import CloudTiles from '../../../components/CloudTiles/CloudTiles';
+import mockStore from '../../__mocks__/mockStore';
 
 describe('CloudTiles', () => {
   let wrapper;
@@ -22,7 +22,7 @@ describe('CloudTiles', () => {
       setSelectedType,
     };
 
-    store = configureStore()({ user: { isOrgAdmin: true } });
+    store = mockStore({ user: { isOrgAdmin: true } });
   });
 
   it('renders correctly', async () => {
@@ -41,7 +41,7 @@ describe('CloudTiles', () => {
   });
 
   it('renders correctly when no permissions', async () => {
-    store = configureStore()({ user: { isOrgAdmin: false } });
+    store = mockStore({ user: { isOrgAdmin: false } });
 
     await act(async () => {
       wrapper = mount(componentWrapperIntl(<CloudTiles {...initialProps} />, store));

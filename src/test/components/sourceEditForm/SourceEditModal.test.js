@@ -2,7 +2,6 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { Route } from 'react-router-dom';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
-import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { act } from 'react-dom/test-utils';
 import { Spinner } from '@patternfly/react-core/dist/js/components/Spinner';
@@ -30,6 +29,7 @@ import { useDispatch } from 'react-redux';
 import ReducersProviders, { defaultSourcesState } from '../../../redux/sources/reducer';
 import UserReducer from '../../../redux/user/reducer';
 import { UNAVAILABLE } from '../../../views/formatters';
+import mockStore from '../../__mocks__/mockStore';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/SourceAddSchema', () => ({
   __esModule: true,
@@ -39,7 +39,6 @@ jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/SourceAddSchem
 describe('SourceEditModal', () => {
   let store;
   let initialEntry;
-  let mockStore;
   let wrapper;
 
   const middlewares = [thunk, notificationsMiddleware()];
@@ -48,7 +47,6 @@ describe('SourceEditModal', () => {
 
   beforeEach(async () => {
     initialEntry = [replaceRouteId(routes.sourcesDetail.path, '14')];
-    mockStore = configureStore(middlewares);
     store = mockStore({
       sources: {
         entities: [

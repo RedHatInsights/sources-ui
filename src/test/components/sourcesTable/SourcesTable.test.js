@@ -1,7 +1,4 @@
 import React from 'react';
-import thunk from 'redux-thunk';
-import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
-import configureStore from 'redux-mock-store';
 import { Table, TableHeader, TableBody, RowWrapper, sortable, ActionsColumn, wrappable } from '@patternfly/react-table';
 import { MemoryRouter } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
@@ -28,17 +25,15 @@ import { defaultSourcesState } from '../../../redux/sources/reducer';
 import { sourcesColumns } from '../../../views/sourcesViewDefinition';
 import { DropdownItem } from '@patternfly/react-core';
 import SourcesEmptyState from '../../../components/SourcesTable/SourcesEmptyState';
+import mockStore from '../../__mocks__/mockStore';
 
 describe('SourcesTable', () => {
-  const middlewares = [thunk, notificationsMiddleware()];
   let loadedProps;
-  let mockStore;
   let initialProps;
   let initialState;
 
   beforeEach(() => {
     initialProps = {};
-    mockStore = configureStore(middlewares);
     initialState = {
       sources: defaultSourcesState,
       user: {

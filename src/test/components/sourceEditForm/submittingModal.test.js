@@ -1,7 +1,4 @@
 import { mount } from 'enzyme';
-import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { Route } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
 
@@ -14,18 +11,16 @@ import { Spinner } from '@patternfly/react-core';
 
 import SubmittingModal from '../../../components/SourceEditForm/SubmittingModal';
 import LoadingStep from '@redhat-cloud-services/frontend-components-sources/cjs/LoadingStep';
+import mockStore from '../../__mocks__/mockStore';
 
 describe('SubmittingModal', () => {
   let store;
-  let mockStore;
   let initialEntry;
   let wrapper;
 
-  const middlewares = [thunk, notificationsMiddleware()];
 
   beforeEach(async () => {
     initialEntry = [replaceRouteId(routes.sourcesDetail.path, '14')];
-    mockStore = configureStore(middlewares);
     store = mockStore({
       sources: {
         entities: sourcesDataGraphQl,

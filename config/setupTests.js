@@ -16,6 +16,7 @@ process.env.BASE_PATH = '/api';
 
 global.insights = {
   chrome: {
+    init: () => {},
     identifyApp: () => ({}),
     isBeta: () => true,
     auth: {

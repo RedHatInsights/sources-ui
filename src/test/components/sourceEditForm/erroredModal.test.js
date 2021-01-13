@@ -1,7 +1,4 @@
 import { mount } from 'enzyme';
-import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { Route } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
 
@@ -15,19 +12,16 @@ import { EmptyStateBody, EmptyState } from '@patternfly/react-core/dist/js/compo
 import { Title, Button } from '@patternfly/react-core';
 
 import ErroredStep from '@redhat-cloud-services/frontend-components-sources/cjs/ErroredStep';
+import mockStore from '../../__mocks__/mockStore';
 
 describe('ErroredModal', () => {
   let store;
-  let mockStore;
   let initialEntry;
   let wrapper;
   let onRetry;
 
-  const middlewares = [thunk, notificationsMiddleware()];
-
   beforeEach(async () => {
     initialEntry = [replaceRouteId(routes.sourcesDetail.path, '14')];
-    mockStore = configureStore(middlewares);
     store = mockStore({
       sources: {
         entities: sourcesDataGraphQl,
