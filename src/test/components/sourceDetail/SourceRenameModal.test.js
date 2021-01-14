@@ -1,5 +1,4 @@
 import React from 'react';
-import configureStore from 'redux-mock-store';
 import { Modal } from '@patternfly/react-core';
 import { act } from 'react-dom/test-utils';
 
@@ -10,6 +9,7 @@ import SourceRenameModal from '../../../components/SourceDetail/SourceRenameModa
 import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
 import TextField from '@data-driven-forms/pf4-component-mapper/dist/cjs/text-field';
 import * as actions from '../../../redux/sources/actions';
+import mockStore from '../../__mocks__/mockStore';
 
 jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/SourceAddSchema', () => ({
   __esModule: true,
@@ -24,7 +24,7 @@ describe('SourceRenameModal', () => {
   const initialEntry = [replaceRouteId(routes.sourcesDetailRename.path, sourceId)];
 
   beforeEach(() => {
-    store = configureStore()({
+    store = mockStore({
       sources: {
         entities: [
           {

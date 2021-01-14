@@ -1,7 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { Modal, Button, Text } from '@patternfly/react-core';
-import configureStore from 'redux-mock-store';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
 
@@ -9,10 +8,10 @@ import RemoveAppModal from '../../../components/AddApplication/RemoveAppModal';
 import * as actions from '../../../redux/sources/actions';
 import { routes, replaceRouteId } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
+import mockStore from '../../__mocks__/mockStore';
 
 describe('RemoveAppModal', () => {
   let store;
-  let mockStore;
   let initialEntry;
   let initialStore;
 
@@ -48,7 +47,6 @@ describe('RemoveAppModal', () => {
         entities: [{ id: SOURCE_ID, applications: [{ id: APP_ID, application_type_id: 1 }] }],
       },
     };
-    mockStore = configureStore();
     store = mockStore(initialStore);
     initialEntry = [replaceRouteId(routes.sourcesDetailRemoveApp.path, SOURCE_ID).replace(':app_id', APP_ID)];
   });
@@ -77,7 +75,6 @@ describe('RemoveAppModal', () => {
         entities: [{ id: SOURCE_ID, applications: [] }],
       },
     };
-    mockStore = configureStore();
     store = mockStore(initialStore);
 
     await act(async () => {

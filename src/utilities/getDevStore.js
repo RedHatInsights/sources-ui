@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { logger } from 'redux-logger';
 
 import { SET_COUNT } from '../redux/sources/actionTypes';

@@ -25,6 +25,8 @@ export const defaultSourcesState = {
   sortDirection: 'desc',
   removingSources: [],
   activeVendor: CLOUD_VENDOR,
+  appTypes: [],
+  sourceTypes: [],
 };
 
 export const entitiesPending = (state, { options }) => ({

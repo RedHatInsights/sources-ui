@@ -1,6 +1,5 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
 import { Text, Title } from '@patternfly/react-core';
 
 import { replaceRouteId, routes } from '../../../Routes';
@@ -11,6 +10,7 @@ import Breadcrumbs from '../../../components/SourceDetail/Breadcrumbs';
 import { PageHeader } from '@redhat-cloud-services/frontend-components/components/cjs/PageHeader';
 import SourceKebab from '../../../components/SourceDetail/SourceKebab';
 import * as formatters from '../../../views/formatters';
+import mockStore from '../../__mocks__/mockStore';
 
 describe('DetailHeader', () => {
   let wrapper;
@@ -22,7 +22,7 @@ describe('DetailHeader', () => {
   it('renders with no permissions', async () => {
     formatters.availabilityFormatter = jest.fn();
 
-    store = configureStore()({
+    store = mockStore({
       sources: {
         entities: [{ id: sourceId, name: 'Name of this source' }],
         appTypes: applicationTypesData.data,

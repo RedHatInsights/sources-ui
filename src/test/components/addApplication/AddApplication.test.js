@@ -2,9 +2,6 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { EmptyStateBody, Radio, Button, Title, EmptyStateSecondaryActions } from '@patternfly/react-core';
 import { Route, MemoryRouter } from 'react-router-dom';
-import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import CloseModal from '@redhat-cloud-services/frontend-components-sources/cjs/CloseModal';
 import LoadingStep from '@redhat-cloud-services/frontend-components-sources/cjs/LoadingStep';
@@ -30,19 +27,18 @@ import reducer from '../../../components/AddApplication/reducer';
 import * as removeAppSubmit from '../../../components/AddApplication/removeAppSubmit';
 import TimeoutStep from '@redhat-cloud-services/frontend-components-sources/cjs/TimeoutStep';
 
+import mockStore from '../../__mocks__/mockStore';
+
 describe('AddApplication', () => {
   let store;
   let initialEntry;
-  let mockStore;
   let checkAvailabilitySource;
-  const middlewares = [thunk, notificationsMiddleware()];
 
   beforeEach(() => {
     checkAvailabilitySource = jest.fn().mockImplementation(() => Promise.resolve());
     initialEntry = [
       replaceRouteId(routes.sourcesDetailAddApp.path, SOURCE_NO_APS_ID).replace(':app_type_id', COSTMANAGEMENT_APP.id),
     ];
-    mockStore = configureStore(middlewares);
     store = mockStore({
       sources: {
         entities: [

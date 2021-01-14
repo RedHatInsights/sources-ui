@@ -1,15 +1,16 @@
 import { Provider } from 'react-redux';
-import configureStore from 'redux-mock-store';
 
 import { ProdEntry } from '../entries';
 import { DevEntry } from '../entries-dev';
 import * as app from '../App';
 import * as stores from '../utilities/store';
 import * as getDevStore from '../utilities/getDevStore';
+import mockStore from './__mocks__/mockStore';
+
 describe('entries test', () => {
   let store;
   beforeEach(() => {
-    store = configureStore()({});
+    store = mockStore({});
     getDevStore.getDevStore = jest.fn().mockImplementation(() => store);
     stores.getProdStore = jest.fn().mockImplementation(() => store);
     app.default = () => <h1></h1>;
