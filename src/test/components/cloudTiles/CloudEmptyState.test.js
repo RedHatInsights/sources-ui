@@ -1,12 +1,12 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
-import configureStore from 'redux-mock-store';
 
 import { Card, Tile, Tooltip } from '@patternfly/react-core';
 
 import componentWrapperIntl from '../../../utilities/testsHelpers';
 import CloudEmptyState from '../../../components/CloudTiles/CloudEmptyState';
 import CloudTiles from '../../../components/CloudTiles/CloudTiles';
+import mockStore from '../../__mocks__/mockStore';
 
 describe('CloudEmptyState', () => {
   let wrapper;
@@ -21,7 +21,7 @@ describe('CloudEmptyState', () => {
       setSelectedType,
     };
 
-    store = configureStore()({ user: { isOrgAdmin: true } });
+    store = mockStore({ user: { isOrgAdmin: true } });
   });
 
   it('renders correctly', async () => {

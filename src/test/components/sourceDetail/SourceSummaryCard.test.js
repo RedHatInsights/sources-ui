@@ -1,5 +1,4 @@
 import React from 'react';
-import configureStore from 'redux-mock-store';
 import {
   Card,
   CardBody,
@@ -17,6 +16,7 @@ import { Route } from 'react-router-dom';
 import { replaceRouteId, routes } from '../../../Routes';
 import * as formatters from '../../../views/formatters';
 import AvailabilityChecker from '../../../components/SourceDetail/AvailabilityChecker';
+import mockStore from '../../__mocks__/mockStore';
 
 describe('SourceSummaryCard', () => {
   let wrapper;
@@ -28,7 +28,7 @@ describe('SourceSummaryCard', () => {
   it('renders correctly', async () => {
     formatters.dateFormatter = jest.fn().mockImplementation(() => 'some date');
 
-    store = configureStore()({
+    store = mockStore({
       sources: {
         entities: [
           {

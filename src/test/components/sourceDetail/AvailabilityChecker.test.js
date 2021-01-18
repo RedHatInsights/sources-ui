@@ -1,6 +1,5 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
-import configureStore from 'redux-mock-store';
 import { Button, Spinner } from '@patternfly/react-core';
 import RedoIcon from '@patternfly/react-icons/dist/js/icons/redo-icon';
 
@@ -10,6 +9,7 @@ import { replaceRouteId, routes } from '../../../Routes';
 import AvailabilityChecker from '../../../components/SourceDetail/AvailabilityChecker';
 import * as api from '../../../api/checkSourceStatus';
 import * as actions from '../../../redux/sources/actions';
+import mockStore from '../../__mocks__/mockStore';
 
 describe('AvailabilityChecker', () => {
   let wrapper;
@@ -19,7 +19,7 @@ describe('AvailabilityChecker', () => {
   const initialEntry = [replaceRouteId(routes.sourcesDetail.path, sourceId)];
 
   beforeEach(() => {
-    store = configureStore()({ sources: { entities: [{ id: sourceId }] } });
+    store = mockStore({ sources: { entities: [{ id: sourceId }] } });
 
     wrapper = mount(
       componentWrapperIntl(
