@@ -14,14 +14,13 @@ import { ACTION_TYPES } from '../redux/sources/actionTypes';
 export const urlQueryMiddleware = (store) => (next) => (action) => {
   if (action.type === ACTION_TYPES.LOAD_ENTITIES_PENDING) {
     const sources = store.getState().sources;
-
     updateQuery({ ...sources, ...action.options });
   }
 
   next(action);
 };
 
-export const getStore = (addMiddlewares = []) => {
+export const getStore = (addMiddlewares = [], initialState = {}) => {
   const middlewares = [
     thunk,
     notificationsMiddleware({
@@ -36,9 +35,9 @@ export const getStore = (addMiddlewares = []) => {
   const registry = new ReducerRegistry({}, middlewares);
 
   registry.register({
-    sources: applyReducerHash(SourcesReducer, defaultSourcesState),
+    sources: applyReducerHash(SourcesReducer, { ...defaultSourcesState, ...initialState.sources }),
   });
-  registry.register({ user: applyReducerHash(UserReducer, defaultUserState) });
+  registry.register({ user: applyReducerHash(UserReducer, { ...defaultUserState, ...initialState.user }) });
   registry.register({ notifications });
 
   return registry.getStore();

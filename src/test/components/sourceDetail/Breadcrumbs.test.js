@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link, MemoryRouter, Route } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
 import { act } from 'react-dom/test-utils';
 import { Breadcrumb, BreadcrumbItem } from '@patternfly/react-core';
 
 import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import Breadcrumbs from '../../../components/SourceDetail/Breadcrumbs';
+import mockStore from '../../__mocks__/mockStore';
 
 describe('Breadcrumbs', () => {
   let wrapper;
@@ -16,7 +16,7 @@ describe('Breadcrumbs', () => {
   const initialEntry = [replaceRouteId(routes.sourcesDetail.path, sourceId)];
 
   beforeEach(() => {
-    store = configureStore()({
+    store = mockStore({
       sources: {
         entities: [{ id: sourceId, name: 'Somename' }],
       },

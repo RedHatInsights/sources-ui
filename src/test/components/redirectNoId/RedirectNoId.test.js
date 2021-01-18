@@ -1,5 +1,4 @@
 import { Route, MemoryRouter } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
 import { mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
 
@@ -8,19 +7,17 @@ import RedirectNoId from '../../../components/RedirectNoId/RedirectNoId';
 import * as actions from '../../../redux/sources/actions';
 import * as api from '../../../api/entities';
 import { routes, replaceRouteId } from '../../../Routes';
+import mockStore from '../../__mocks__/mockStore';
 
 describe('RedirectNoId', () => {
   let initialStore;
   let initialEntry;
-  let mockStore;
 
   const wasRedirectedToRoot = (wrapper) =>
     wrapper.find(MemoryRouter).instance().history.location.pathname === routes.sources.path;
 
   beforeEach(() => {
     initialEntry = [replaceRouteId(routes.sourcesRemove.path, '1')];
-
-    mockStore = configureStore();
 
     actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'ADD_MESSAGE' }));
     actions.addHiddenSource = jest.fn().mockImplementation(() => ({ type: 'ADD_HIDDEN_SOURCE' }));

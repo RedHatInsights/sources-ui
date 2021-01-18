@@ -1,8 +1,4 @@
 import React from 'react';
-import thunk from 'redux-thunk';
-import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
-import { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/files/ReducerRegistry';
-import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/components/cjs/PrimaryToolbar';
 import { act } from 'react-dom/test-utils';
 import { Chip, Select, Pagination, Button, Tooltip, Tile } from '@patternfly/react-core';
@@ -19,13 +15,12 @@ import { applicationTypesData, CATALOG_APP } from '../__mocks__/applicationTypes
 
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
 
-import ReducersProviders, { defaultSourcesState } from '../../redux/sources/reducer';
+import { defaultSourcesState } from '../../redux/sources/reducer';
 import * as api from '../../api/entities';
 import * as typesApi from '../../api/source_types';
 import EmptyStateTable from '../../components/SourcesTable/EmptyStateTable';
 import { routes, replaceRouteId } from '../../Routes';
 import * as helpers from '../../pages/Sources/helpers';
-import UserReducer from '../../redux/user/reducer';
 import RedirectNoWriteAccess from '../../components/RedirectNoWriteAccess/RedirectNoWriteAccess';
 import * as SourceRemoveModal from '../../components/SourceRemoveModal/SourceRemoveModal';
 import * as urlQuery from '../../utilities/urlQuery';
@@ -37,13 +32,12 @@ import TabNavigation from '../../components/TabNavigation';
 import CloudCards from '../../components/CloudTiles/CloudCards';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../utilities/constants';
 import CloudEmptyState from '../../components/CloudTiles/CloudEmptyState';
+import { getStore } from '../../utilities/store';
 
 describe('SourcesPage', () => {
-  const middlewares = [thunk, notificationsMiddleware()];
   let initialProps;
   let store;
   let wrapper;
-
   const SourcesPage = (props) => (
     <React.Fragment>
       <DataLoader />
@@ -61,13 +55,9 @@ describe('SourcesPage', () => {
     api.doLoadAppTypes = jest.fn().mockImplementation(() => Promise.resolve(applicationTypesData));
     typesApi.doLoadSourceTypes = jest.fn().mockImplementation(() => Promise.resolve(sourceTypesData.data));
 
-    store = createStore(
-      combineReducers({
-        sources: applyReducerHash(ReducersProviders, defaultSourcesState),
-        user: applyReducerHash(UserReducer, { isOrgAdmin: true }),
-      }),
-      applyMiddleware(...middlewares)
-    );
+    store = getStore([], {
+      user: { isOrgAdmin: true },
+    });
 
     urlQuery.updateQuery = jest.fn();
     urlQuery.parseQuery = jest.fn();
@@ -99,27 +89,14 @@ describe('SourcesPage', () => {
 
     expect(urlQuery.parseQuery.mock.calls).toHaveLength(1);
     expect(urlQuery.updateQuery.mock.calls).toHaveLength(1);
-    expect(urlQuery.updateQuery).toHaveBeenCalledWith({
-      ...defaultSourcesState,
-      loaded: 0,
-      appTypesLoaded: true,
-      sourceTypesLoaded: true,
-      sourceTypes: sourceTypesData.data,
-      appTypes: applicationTypesData.data,
-      numberOfEntities: sourcesDataGraphQl.length,
-      entities: sourcesDataGraphQl,
-      paginationClicked: false,
-    });
+    expect(urlQuery.updateQuery).toHaveBeenCalledWith(defaultSourcesState);
   });
 
   it('do not show CloudCards on Red Hat page', async () => {
-    store = createStore(
-      combineReducers({
-        sources: applyReducerHash(ReducersProviders, { ...defaultSourcesState, activeVendor: REDHAT_VENDOR }),
-        user: applyReducerHash(UserReducer, { isOrgAdmin: true }),
-      }),
-      applyMiddleware(...middlewares)
-    );
+    store = getStore([], {
+      sources: { activeVendor: REDHAT_VENDOR },
+      user: { isOrgAdmin: true },
+    });
 
     await act(async () => {
       wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
@@ -131,13 +108,10 @@ describe('SourcesPage', () => {
   });
 
   it('renders empty state when there are no Sources - CLOUD', async () => {
-    store = createStore(
-      combineReducers({
-        sources: applyReducerHash(ReducersProviders, { ...defaultSourcesState, activeVendor: CLOUD_VENDOR }),
-        user: applyReducerHash(UserReducer, { isOrgAdmin: true }),
-      }),
-      applyMiddleware(...middlewares)
-    );
+    store = getStore([], {
+      sources: { activeVendor: CLOUD_VENDOR },
+      user: { isOrgAdmin: true },
+    });
 
     api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
     api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
@@ -155,13 +129,10 @@ describe('SourcesPage', () => {
   });
 
   it('renders empty state when there are no Sources and open AWS selection', async () => {
-    store = createStore(
-      combineReducers({
-        sources: applyReducerHash(ReducersProviders, { ...defaultSourcesState, activeVendor: CLOUD_VENDOR }),
-        user: applyReducerHash(UserReducer, { isOrgAdmin: true }),
-      }),
-      applyMiddleware(...middlewares)
-    );
+    store = getStore([], {
+      sources: { activeVendor: CLOUD_VENDOR },
+      user: { isOrgAdmin: true },
+    });
 
     api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
     api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
@@ -183,13 +154,10 @@ describe('SourcesPage', () => {
   });
 
   it('renders empty state when there are no Sources - RED HAT', async () => {
-    store = createStore(
-      combineReducers({
-        sources: applyReducerHash(ReducersProviders, { ...defaultSourcesState, activeVendor: REDHAT_VENDOR }),
-        user: applyReducerHash(UserReducer, { isOrgAdmin: true }),
-      }),
-      applyMiddleware(...middlewares)
-    );
+    store = getStore([], {
+      sources: { activeVendor: REDHAT_VENDOR },
+      user: { isOrgAdmin: true },
+    });
 
     api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
     api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
@@ -245,20 +213,10 @@ describe('SourcesPage', () => {
   });
 
   it('renders table and filtering - loading with paginationClicked: true, do not show paginationLoader', async () => {
-    const modifiedState = {
-      ...defaultSourcesState,
-      loaded: 1,
-      paginationClicked: true,
-      numberOfEntities: 5,
-    };
-
-    store = createStore(
-      combineReducers({
-        sources: applyReducerHash(ReducersProviders, modifiedState),
-        user: applyReducerHash(UserReducer, { isOrgAdmin: true }),
-      }),
-      applyMiddleware(...middlewares)
-    );
+    store = getStore([], {
+      sources: { loaded: 1, paginationClicked: true, numberOfEntities: 5 },
+      user: { isOrgAdmin: true },
+    });
 
     await act(async () => {
       wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
@@ -320,16 +278,10 @@ describe('SourcesPage', () => {
   });
 
   it('renders and decreased page number if it is too great', async () => {
-    store = createStore(
-      combineReducers({
-        sources: applyReducerHash(ReducersProviders, {
-          ...defaultSourcesState,
-          pageNumber: 20,
-        }),
-        user: applyReducerHash(UserReducer, { isOrgAdmin: true }),
-      }),
-      applyMiddleware(...middlewares)
-    );
+    store = getStore([], {
+      sources: { pageNumber: 20 },
+      user: { isOrgAdmin: true },
+    });
 
     await act(async () => {
       wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
@@ -592,13 +544,10 @@ describe('SourcesPage', () => {
     });
 
     it('show empty state table after clicking on clears all filter in empty table state - RED HAT', async (done) => {
-      store = createStore(
-        combineReducers({
-          sources: applyReducerHash(ReducersProviders, { ...defaultSourcesState, activeVendor: REDHAT_VENDOR }),
-          user: applyReducerHash(UserReducer, { isOrgAdmin: true }),
-        }),
-        applyMiddleware(...middlewares)
-      );
+      store = getStore([], {
+        sources: { activeVendor: REDHAT_VENDOR },
+        user: { isOrgAdmin: true },
+      });
 
       await act(async () => {
         wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
@@ -679,13 +628,10 @@ describe('SourcesPage', () => {
 
   describe('not org admin', () => {
     beforeEach(async () => {
-      store = createStore(
-        combineReducers({
-          sources: applyReducerHash(ReducersProviders, defaultSourcesState),
-          user: applyReducerHash(UserReducer, { isOrgAdmin: false }),
-        }),
-        applyMiddleware(...middlewares)
-      );
+      store = getStore([], {
+        sources: {},
+        user: { isOrgAdmin: false },
+      });
 
       await act(async () => {
         wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
@@ -752,13 +698,9 @@ describe('SourcesPage', () => {
 
     describe('not org admin, redirect back to sources', () => {
       beforeEach(() => {
-        store = createStore(
-          combineReducers({
-            sources: applyReducerHash(ReducersProviders, defaultSourcesState),
-            user: applyReducerHash(UserReducer, { isOrgAdmin: false }),
-          }),
-          applyMiddleware(...middlewares)
-        );
+        store = getStore([], {
+          user: { isOrgAdmin: false },
+        });
       });
 
       it('when remove', async () => {

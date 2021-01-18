@@ -1,6 +1,5 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
 import { act } from 'react-dom/test-utils';
 import { Card, CardBody, CardTitle, FormGroup, Switch } from '@patternfly/react-core';
 
@@ -10,6 +9,7 @@ import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import sourceTypesData, { AMAZON_ID } from '../../__mocks__/sourceTypesData';
 import applicationTypesData, { COSTMANAGEMENT_APP, SUBWATCH_APP } from '../../__mocks__/applicationTypesData';
 import ApplicationStatusLabel from '../../../components/SourceDetail/ApplicationStatusLabel';
+import mockStore from '../../__mocks__/mockStore';
 
 describe('ApplicationsCard', () => {
   let wrapper;
@@ -21,7 +21,7 @@ describe('ApplicationsCard', () => {
   const updateAppData = [...applicationTypesData.data, SUBWATCH_APP];
 
   it('renders with no permissions', async () => {
-    store = configureStore()({
+    store = mockStore({
       sources: {
         entities: [{ id: sourceId, source_type_id: AMAZON_ID, applications: [] }],
         sourceTypes: sourceTypesData.data,
@@ -54,7 +54,7 @@ describe('ApplicationsCard', () => {
 
   describe('with permissions', () => {
     beforeEach(() => {
-      store = configureStore()({
+      store = mockStore({
         sources: {
           entities: [
             {
