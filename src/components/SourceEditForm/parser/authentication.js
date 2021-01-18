@@ -4,6 +4,8 @@ import hardcodedSchemas from '@redhat-cloud-services/frontend-components-sources
 
 export const createAuthFieldName = (fieldName, id) => `authentications.a${id}.${fieldName.replace('authentication.', '')}`;
 
+export const createAuthAppFieldName = (fieldName, id) => `applications.a${id}.${fieldName.replace('application.', '')}`;
+
 export const getLastPartOfName = (fieldName) => fieldName.split('.').pop();
 
 export const removeRequiredValidator = (validate = []) =>
@@ -20,9 +22,13 @@ export const getAdditionalAuthStepsKeys = (sourceType, authtype, appName = 'gene
 
 export const getAdditionalFields = (auth, stepKey) => auth?.fields?.filter((field) => field.stepKey === stepKey) || [];
 
-export const modifyAuthSchemas = (fields, id) =>
+export const modifyAuthSchemas = (fields, id, appId) =>
   fields.map((field) => {
-    const editedName = field.name.startsWith('authentication') ? createAuthFieldName(field.name, id) : field.name;
+    let editedName = field.name.startsWith('authentication')
+      ? createAuthFieldName(field.name, id)
+      : field.name.startsWith('application')
+      ? createAuthAppFieldName(field.name, appId)
+      : field.name;
 
     const finalField = {
       ...field,
@@ -60,7 +66,7 @@ const specialModifierAWS = (field, authtype) => {
   return field;
 };
 
-export const authenticationFields = (authentications, sourceType, appName) => {
+export const authenticationFields = (authentications, sourceType, appName, appId) => {
   if (!authentications || authentications.length === 0 || !sourceType.schema || !sourceType.schema.authentication) {
     return [];
   }
@@ -97,6 +103,6 @@ export const authenticationFields = (authentications, sourceType, appName) => {
       enhancedFields = enhancedFields.map((field) => specialModifierAWS(field, auth.authtype));
     }
 
-    return modifyAuthSchemas(enhancedFields, auth.id);
+    return modifyAuthSchemas(enhancedFields, auth.id, appId);
   });
 };

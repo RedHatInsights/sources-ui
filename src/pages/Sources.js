@@ -12,7 +12,7 @@ import { filterVendorAppTypes } from '@redhat-cloud-services/frontend-components
 import { filterSources, pageAndSize } from '../redux/sources/actions';
 import SourcesTable from '../components/SourcesTable/SourcesTable';
 import SourcesErrorState from '../components/SourcesErrorState';
-import { routes } from '../Routes';
+import { replaceRouteId, routes } from '../Routes';
 
 const SourceRemoveModal = lazy(() =>
   import(
@@ -42,9 +42,13 @@ import CustomRoute from '../components/CustomRoute/CustomRoute';
 import { Tooltip } from '@patternfly/react-core/dist/js/components/Tooltip/Tooltip';
 import { PaginationLoader } from '../components/SourcesTable/loaders';
 import TabNavigation from '../components/TabNavigation';
+import CloudCards from '../components/CloudTiles/CloudCards';
+import { CLOUD_VENDOR } from '../utilities/constants';
+import CloudEmptyState from '../components/CloudTiles/CloudEmptyState';
 
 const SourcesPage = () => {
   const [filter, setFilterValue] = useState();
+  const [selectedType, setSelectedType] = useState();
 
   const entitiesLoaded = useIsLoaded();
   const hasWritePermissions = useHasWritePermissions();
@@ -206,6 +210,14 @@ const SourcesPage = () => {
     </React.Fragment>
   );
 
+  const hasSomeFilter =
+    Object.entries(filterValue)
+      .map(([_key, value]) => value && (!Array.isArray(value) || (Array.isArray(value) && value.length > 0)))
+      .filter(Boolean).length > 0;
+
+  const showEmptyState = loaded && numberOfEntities === 0 && !hasSomeFilter && activeVendor === CLOUD_VENDOR;
+  const showInfoCards = activeVendor === CLOUD_VENDOR && !showEmptyState;
+
   return (
     <React.Fragment>
       <Suspense fallback={null}>
@@ -218,9 +230,14 @@ const SourcesPage = () => {
             sourceTypes: loadedTypes(sourceTypes, sourceTypesLoaded),
             applicationTypes: loadedTypes(appTypes, appTypesLoaded),
             isOpen: true,
-            onClose: () => history.push(routes.sources.path),
+            onClose: (_values, source) => {
+              setSelectedType(undefined);
+              source?.id ? history.push(replaceRouteId(routes.sourcesDetail.path, source.id)) : history.push(routes.sources.path);
+            },
             afterSuccess: (source) => afterSuccess(dispatch, source),
             hideSourcesButton: true,
+            returnButtonTitle: intl.formatMessage({ id: 'sources.returnButtonTitle', defaultMessage: 'Exit to source details' }),
+            selectedType,
           }}
         />
       </Suspense>
@@ -234,8 +251,10 @@ const SourcesPage = () => {
         <TabNavigation />
       </PageHeader>
       <Section type="content">
+        {showInfoCards && <CloudCards setSelectedType={setSelectedType} />}
         {fetchingError && <SourcesErrorState />}
-        {!fetchingError && mainContent()}
+        {!fetchingError && showEmptyState && <CloudEmptyState setSelectedType={setSelectedType} />}
+        {!fetchingError && !showEmptyState && mainContent()}
       </Section>
     </React.Fragment>
   );

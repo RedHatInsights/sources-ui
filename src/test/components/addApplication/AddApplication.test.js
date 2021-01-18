@@ -11,6 +11,7 @@ import LoadingStep from '@redhat-cloud-services/frontend-components-sources/cjs/
 import ErroredStep from '@redhat-cloud-services/frontend-components-sources/cjs/ErroredStep';
 import SummaryStep from '@redhat-cloud-services/frontend-components-sources/cjs/SourceWizardSummary';
 import FinishedStep from '@redhat-cloud-services/frontend-components-sources/cjs/FinishedStep';
+import AmazonFinishedStep from '@redhat-cloud-services/frontend-components-sources/cjs/AmazonFinishedStep';
 
 import { act } from 'react-dom/test-utils';
 
@@ -586,6 +587,66 @@ describe('AddApplication', () => {
       expect(wrapper.find(FinishedStep).length).toEqual(1);
       expect(wrapper.find(Title).last().text()).toEqual('Configuration successful');
       expect(wrapper.find(EmptyStateBody).last().text()).toEqual('Your application was successfully added.');
+      expect(wrapper.find(Button).at(1).text()).toEqual('Exit');
+    });
+
+    it('shows aws specific step', async () => {
+      source = {
+        ...source,
+        source_type_id: AMAZON_ID,
+      };
+
+      store = mockStore({
+        sources: {
+          entities: [source],
+          appTypes: applicationTypesData.data,
+          sourceTypes: sourceTypesData.data,
+          appTypesLoaded: true,
+          sourceTypesLoaded: true,
+          loaded: 0,
+        },
+      });
+      initialValues = { application: undefined, source };
+
+      attachSource.doAttachApp = jest.fn().mockImplementation(() =>
+        Promise.resolve({
+          availability_status: 'available',
+        })
+      );
+
+      entities.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
+      entities.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+
+      const wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+
+      await act(async () => {
+        wrapper.find(Button).at(1).simulate('click');
+      });
+      wrapper.update();
+
+      const formValues = {
+        application: {
+          application_type_id: '2',
+        },
+      };
+      const formApi = expect.any(Object);
+      const authenticationValues = expect.any(Array);
+      const appTypes = expect.any(Array);
+
+      expect(checkAvailabilitySource).toHaveBeenCalledWith(source.id);
+
+      expect(attachSource.doAttachApp).toHaveBeenCalledWith(formValues, formApi, authenticationValues, initialValues, appTypes);
+      expect(wrapper.find(AmazonFinishedStep).length).toEqual(1);
+      expect(wrapper.find(Title).last().text()).toEqual('Amazon Web Services connection established');
+      expect(wrapper.find(EmptyStateBody).last().text()).toEqual(
+        'Discover the benefits of your connection or exit to manage your new source.View enabled AWS Gold imagesSubscription Watch usageGet started with Red Hat InsightsCost Management reporting'
+      );
       expect(wrapper.find(Button).at(1).text()).toEqual('Exit');
     });
 

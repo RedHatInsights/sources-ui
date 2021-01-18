@@ -54,6 +54,7 @@ export const getSourcesApi = () => ({
   createAuthApp: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/application_authentications`, data),
   deleteAuthentication: (id) => axiosInstanceInsights.delete(`${SOURCES_API_BASE_V3}/authentications/${id}`),
   showAuthentication: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/authentications/${id}`),
+  updateApplication: (id, data) => axiosInstanceInsights.patch(`${SOURCES_API_BASE_V3}/applications/${id}`, data),
 });
 
 export const doLoadAppTypes = () => getSourcesApi().doLoadAppTypes();
@@ -142,11 +143,7 @@ export const doLoadEntities = ({ pageSize, pageNumber, sortBy, sortDirection, fi
     })
     .then(({ data }) => data);
 
-export const doCreateApplication = (source_id, application_type_id) =>
-  getSourcesApi().createApplication({
-    source_id,
-    application_type_id,
-  });
+export const doCreateApplication = (data) => getSourcesApi().createApplication(data);
 
 export const doDeleteApplication = (appId, errorMessage) =>
   getSourcesApi()
