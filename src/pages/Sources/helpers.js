@@ -1,6 +1,7 @@
 import awesomeDebounce from 'awesome-debounce-promise';
 import { loadEntities, filterSources } from '../../redux/sources/actions';
 import { CLOUD_VENDOR, CLOUD_VENDORS, REDHAT_VENDOR } from '../../utilities/constants';
+import { AVAILABLE } from '../../views/formatters';
 
 export const debouncedFiltering = awesomeDebounce((refresh) => refresh(), 500);
 
@@ -28,7 +29,7 @@ export const setFilter = (column, value, dispatch) =>
     })
   );
 
-export const chipsFormatters = (key, filterValue, sourceTypes, appTypes) =>
+export const chipsFormatters = (key, filterValue, sourceTypes, appTypes, intl) =>
   ({
     name: () => ({ name: filterValue[key], key }),
     source_type_id: () => ({
@@ -49,12 +50,33 @@ export const chipsFormatters = (key, filterValue, sourceTypes, appTypes) =>
         return { name: appType ? appType.display_name : id, value: id };
       }),
     }),
+    availability_status: () => ({
+      category: 'Status',
+      key,
+      chips: [
+        {
+          value: filterValue[key][0],
+          name:
+            filterValue[key][0] === AVAILABLE
+              ? intl.formatMessage({
+                  id: 'sources.available',
+                  defaultMessage: 'Available',
+                })
+              : intl.formatMessage({
+                  id: 'sources.unavailable',
+                  defaultMessage: 'Unavailable',
+                }),
+        },
+      ],
+    }),
   }[key] || (() => ({ name: key })));
 
-export const prepareChips = (filterValue, sourceTypes, appTypes) =>
+export const prepareChips = (filterValue, sourceTypes, appTypes, intl) =>
   Object.keys(filterValue)
     .map((key) =>
-      filterValue[key] && filterValue[key].length > 0 ? chipsFormatters(key, filterValue, sourceTypes, appTypes)() : undefined
+      filterValue[key] && filterValue[key].length > 0
+        ? chipsFormatters(key, filterValue, sourceTypes, appTypes, intl)()
+        : undefined
     )
     .filter(Boolean);
 
