@@ -674,7 +674,7 @@ describe('AddApplication', () => {
       wrapper.update();
 
       expect(wrapper.find(TimeoutStep)).toHaveLength(1);
-      expect(wrapper.find(Title).last().text()).toEqual('Configuration not yet complete');
+      expect(wrapper.find(Title).last().text()).toEqual('Configuration in progress');
       expect(wrapper.find(EmptyStateBody).last().text()).toEqual(
         'We are still working to confirm credentials and app settings.To track progress, check the Status column in the Sources table.'
       );
@@ -709,7 +709,7 @@ describe('AddApplication', () => {
       wrapper.update();
 
       expect(wrapper.find(TimeoutStep)).toHaveLength(1);
-      expect(wrapper.find(Title).last().text()).toEqual('Configuration not yet complete');
+      expect(wrapper.find(Title).last().text()).toEqual('Configuration in progress');
       expect(wrapper.find(EmptyStateBody).last().text()).toEqual(
         'We are still working to confirm credentials and app settings.To track progress, check the Status column in the Sources table.'
       );
