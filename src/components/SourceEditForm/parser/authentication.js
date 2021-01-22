@@ -45,7 +45,7 @@ export const modifyAuthSchemas = (fields, id, appId) =>
   });
 
 const specialModifierAWS = (field, authtype) => {
-  if (getLastPartOfName(field.name) !== 'password') {
+  if (getLastPartOfName(field.name) !== 'username') {
     return field;
   }
 

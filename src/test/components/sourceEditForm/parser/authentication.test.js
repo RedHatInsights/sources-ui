@@ -305,7 +305,7 @@ describe('authentication edit source parser', () => {
               fields: [
                 {
                   component: 'text-field',
-                  name: 'authentication.password',
+                  name: 'authentication.username',
                   label: 'arn',
                 },
               ],
@@ -315,7 +315,7 @@ describe('authentication edit source parser', () => {
               fields: [
                 {
                   component: 'text-field',
-                  name: 'authentication.password',
+                  name: 'authentication.username',
                   label: 'arn',
                 },
               ],
@@ -325,13 +325,13 @@ describe('authentication edit source parser', () => {
               fields: [
                 {
                   component: 'text-field',
-                  name: 'authentication.password',
+                  name: 'authentication.username',
                   label: 'arn',
                 },
                 {
                   component: 'text-field',
-                  name: 'authentication.username',
-                  label: 'username',
+                  name: 'authentication.password',
+                  label: 'password',
                 },
               ],
             },
@@ -357,19 +357,19 @@ describe('authentication edit source parser', () => {
       const result = authenticationFields(AUTHENTICATIONS, SOURCE_TYPE);
 
       expect(result[0][0]).toEqual({
-        component: 'authentication',
+        component: 'text-field',
         label: 'Cost Management ARN',
-        name: 'authentications.a123.password',
+        name: 'authentications.a123.username',
       });
       expect(result[1][0]).toEqual({
-        component: 'authentication',
+        component: 'text-field',
         label: 'Subscription Watch ARN',
-        name: 'authentications.a234.password',
+        name: 'authentications.a234.username',
       });
       expect(result[2][0]).toEqual({
-        component: 'authentication',
+        component: 'text-field',
         label: 'arn',
-        name: 'authentications.a345.password',
+        name: 'authentications.a345.username',
       });
     });
   });
