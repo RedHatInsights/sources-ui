@@ -45,6 +45,7 @@ import TabNavigation from '../components/TabNavigation';
 import CloudCards from '../components/CloudTiles/CloudCards';
 import { CLOUD_VENDOR } from '../utilities/constants';
 import CloudEmptyState from '../components/CloudTiles/CloudEmptyState';
+import { AVAILABLE, UNAVAILABLE } from '../views/formatters';
 
 const SourcesPage = () => {
   const [filter, setFilterValue] = useState();
@@ -196,10 +197,29 @@ const SourcesPage = () => {
                 value: filterValue.applications,
               },
             },
+            {
+              label: intl.formatMessage({
+                id: 'sources.availabilityStatus',
+                defaultMessage: 'Status',
+              }),
+              type: 'checkbox',
+              filterValues: {
+                onChange: (event, _value, selectedValue) =>
+                  setFilter('availability_status', event.target.checked ? [selectedValue] : [], dispatch),
+                items: [
+                  { label: intl.formatMessage({ id: 'sources.available', defaultMessage: 'Available' }), value: AVAILABLE },
+                  {
+                    label: intl.formatMessage({ id: 'sources.unavailable', defaultMessage: 'Unavailable' }),
+                    value: UNAVAILABLE,
+                  },
+                ],
+                value: filterValue.availability_status,
+              },
+            },
           ],
         }}
         activeFiltersConfig={{
-          filters: prepareChips(filterValue, sourceTypes, appTypes),
+          filters: prepareChips(filterValue, sourceTypes, appTypes, intl),
           onDelete: (_event, chips, deleteAll) => dispatch(filterSources(removeChips(chips, filterValue, deleteAll))),
         }}
       />

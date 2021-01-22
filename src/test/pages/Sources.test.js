@@ -33,6 +33,7 @@ import CloudCards from '../../components/CloudTiles/CloudCards';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../utilities/constants';
 import CloudEmptyState from '../../components/CloudTiles/CloudEmptyState';
 import { getStore } from '../../utilities/store';
+import { AVAILABLE, UNAVAILABLE } from '../../views/formatters';
 
 describe('SourcesPage', () => {
   let initialProps;
@@ -457,6 +458,52 @@ describe('SourcesPage', () => {
           name: SEARCH_TERM,
           applications: [CATALOG_APP.id],
         });
+        done();
+      }, 500);
+    });
+
+    it('should call onFilterSelect with available status', (done) => {
+      setTimeout(() => {
+        wrapper.update();
+        expect(wrapper.find(Chip)).toHaveLength(1);
+
+        // Switch to status type in conditional filter
+        wrapper.find('ConditionalFilter').setState({ stateValue: 3 });
+        wrapper.update();
+
+        const checkboxDropdownProps = wrapper.find(Select).last().props();
+
+        const EVENT = { target: { checked: true } };
+        const EVENT_FALSE = { target: { checked: false } };
+
+        // Select available
+        checkboxDropdownProps.onSelect(EVENT, AVAILABLE);
+        wrapper.update();
+
+        expect(wrapper.find(Chip)).toHaveLength(2);
+        expect(store.getState().sources.filterValue).toEqual({
+          name: SEARCH_TERM,
+          availability_status: [AVAILABLE],
+        });
+
+        // Select unavailable
+        checkboxDropdownProps.onSelect(EVENT, UNAVAILABLE);
+        wrapper.update();
+
+        expect(store.getState().sources.filterValue).toEqual({
+          name: SEARCH_TERM,
+          availability_status: [UNAVAILABLE],
+        });
+
+        // Deselect unavailable
+        checkboxDropdownProps.onSelect(EVENT_FALSE, UNAVAILABLE);
+        wrapper.update();
+
+        expect(store.getState().sources.filterValue).toEqual({
+          name: SEARCH_TERM,
+          availability_status: [],
+        });
+
         done();
       }, 500);
     });

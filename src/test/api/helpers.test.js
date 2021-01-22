@@ -1,5 +1,6 @@
 import { pagination, filtering, sorting, restFilterGenerator } from '../../api/entities';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../utilities/constants';
+import { AVAILABLE, PARTIALLY_UNAVAILABLE, UNAVAILABLE } from '../../views/formatters';
 
 describe('api helpers', () => {
   describe('pagination', () => {
@@ -79,6 +80,20 @@ describe('api helpers', () => {
       expect(filtering(filterValue, activeVendor)).toEqual(', filter: { source_type: { vendor: "Red Hat" } }');
     });
 
+    it('creates available filter [GRAPHQL]', () => {
+      const filterValue = { availability_status: [AVAILABLE] };
+
+      expect(filtering(filterValue)).toEqual(`, filter: { availability_status: { eq: "${AVAILABLE}" } }`);
+    });
+
+    it('creates unavailable filter [GRAPHQL]', () => {
+      const filterValue = { availability_status: [UNAVAILABLE] };
+
+      expect(filtering(filterValue)).toEqual(
+        `, filter: { availability_status: { eq: ["${PARTIALLY_UNAVAILABLE}", "${UNAVAILABLE}"] } }`
+      );
+    });
+
     it('creates empty filtering query param [GRAPHQL]', () => {
       expect(filtering()).toEqual('');
     });
@@ -129,6 +144,20 @@ describe('api helpers', () => {
       const activeVendor = REDHAT_VENDOR;
 
       expect(restFilterGenerator(filterValue, activeVendor)).toEqual('filter[source_type][vendor]=Red Hat');
+    });
+
+    it('creates available filter [REST]', () => {
+      const filterValue = { availability_status: [AVAILABLE] };
+
+      expect(restFilterGenerator(filterValue)).toEqual(`filter[availability_status]=${AVAILABLE}`);
+    });
+
+    it('creates unavailable filter [REST]', () => {
+      const filterValue = { availability_status: [UNAVAILABLE] };
+
+      expect(restFilterGenerator(filterValue)).toEqual(
+        `filter[availability_status][]=${PARTIALLY_UNAVAILABLE}&filter[availability_status][]=${UNAVAILABLE}`
+      );
     });
 
     it('creates empty filtering query param [REST]', () => {

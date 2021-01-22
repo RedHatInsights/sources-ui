@@ -1,6 +1,7 @@
 import axios from 'axios';
 import * as interceptors from '../frontend-components-copies/interceptors';
 import { CLOUD_VENDOR, CLOUD_VENDORS, REDHAT_VENDOR } from '../utilities/constants';
+import { AVAILABLE, PARTIALLY_UNAVAILABLE, UNAVAILABLE } from '../views/formatters';
 
 import { SOURCES_API_BASE_V3 } from './constants';
 
@@ -91,11 +92,11 @@ export const filtering = (filterValue = {}, activeVendor) => {
     filterQueries.push(`name: { contains_i: "${filterValue.name}" }`);
   }
 
-  if (filterValue.source_type_id && filterValue.source_type_id.length > 0) {
+  if (filterValue.source_type_id?.length > 0) {
     filterQueries.push(`source_type_id: { eq: [${filterValue.source_type_id.map((x) => `"${x}"`).join(', ')}] }`);
   }
 
-  if (filterValue.applications && filterValue.applications.length > 0) {
+  if (filterValue.applications?.length > 0) {
     filterQueries.push(
       `applications: { application_type_id: { eq: [${filterValue.applications.map((x) => `"${x}"`).join(', ')}] }}`
     );
@@ -107,6 +108,15 @@ export const filtering = (filterValue = {}, activeVendor) => {
 
   if (activeVendor === REDHAT_VENDOR) {
     filterQueries.push('source_type: { vendor: "Red Hat" }');
+  }
+
+  const status = filterValue.availability_status?.[0];
+  if (status) {
+    if (status === AVAILABLE) {
+      filterQueries.push(`availability_status: { eq: "${AVAILABLE}" }`);
+    } else if (status === UNAVAILABLE) {
+      filterQueries.push(`availability_status: { eq: ["${PARTIALLY_UNAVAILABLE}", "${UNAVAILABLE}"] }`);
+    }
   }
 
   if (filterQueries.length > 0) {
@@ -159,11 +169,11 @@ export const restFilterGenerator = (filterValue = {}, activeVendor) => {
     filterQueries.push(`filter[name][contains_i]=${filterValue.name}`);
   }
 
-  if (filterValue.source_type_id && filterValue.source_type_id.length > 0) {
+  if (filterValue.source_type_id?.length > 0) {
     filterValue.source_type_id.map((id) => filterQueries.push(`filter[source_type_id][]=${id}`));
   }
 
-  if (filterValue.applications && filterValue.applications.length > 0) {
+  if (filterValue.applications?.length > 0) {
     filterValue.applications.map((id) => filterQueries.push(`filter[applications][application_type_id][eq][]=${id}`));
   }
 
@@ -173,6 +183,16 @@ export const restFilterGenerator = (filterValue = {}, activeVendor) => {
 
   if (activeVendor === REDHAT_VENDOR) {
     filterQueries.push('filter[source_type][vendor]=Red Hat');
+  }
+
+  const status = filterValue.availability_status?.[0];
+  if (status) {
+    if (status === AVAILABLE) {
+      filterQueries.push(`filter[availability_status]=${AVAILABLE}`);
+    } else if (status === UNAVAILABLE) {
+      filterQueries.push(`filter[availability_status][]=${PARTIALLY_UNAVAILABLE}`);
+      filterQueries.push(`filter[availability_status][]=${UNAVAILABLE}`);
+    }
   }
 
   if (filterQueries.length > 0) {

@@ -13,6 +13,7 @@ import * as actions from '../../../redux/sources/actions';
 import { sourceTypesData } from '../../__mocks__/sourceTypesData';
 import { applicationTypesData } from '../../__mocks__/applicationTypesData';
 import { CLOUD_VENDOR, CLOUD_VENDORS, REDHAT_VENDOR } from '../../../utilities/constants';
+import { AVAILABLE, UNAVAILABLE } from '../../../views/formatters';
 
 describe('Source page helpers', () => {
   describe('afterSuccess', () => {
@@ -97,6 +98,36 @@ describe('Source page helpers', () => {
             value: '667',
           },
         ],
+      });
+    });
+
+    it('returns chips for unavailable status', () => {
+      const key = 'availability_status';
+      const intl = { formatMessage: ({ defaultMessage }) => defaultMessage };
+
+      const filterValue = {
+        availability_status: [UNAVAILABLE],
+      };
+
+      expect(chipsFormatters(key, filterValue, sourceTypesData.data, applicationTypesData.data, intl)()).toEqual({
+        category: 'Status',
+        chips: [{ name: 'Unavailable', value: 'unavailable' }],
+        key: 'availability_status',
+      });
+    });
+
+    it('returns chips for available status', () => {
+      const key = 'availability_status';
+      const intl = { formatMessage: ({ defaultMessage }) => defaultMessage };
+
+      const filterValue = {
+        availability_status: [AVAILABLE],
+      };
+
+      expect(chipsFormatters(key, filterValue, sourceTypesData.data, applicationTypesData.data, intl)()).toEqual({
+        category: 'Status',
+        chips: [{ name: 'Available', value: 'available' }],
+        key: 'availability_status',
       });
     });
 
