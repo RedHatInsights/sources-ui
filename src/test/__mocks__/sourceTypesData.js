@@ -151,7 +151,7 @@ export const sourceTypesData = {
                 isRequired: true,
               },
               {
-                name: 'authentication.password',
+                name: 'authentication.username',
                 label: 'ARN',
                 stepKey: 'arn',
                 validate: [
