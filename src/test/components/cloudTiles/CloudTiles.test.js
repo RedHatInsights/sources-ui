@@ -32,8 +32,8 @@ describe('CloudTiles', () => {
     wrapper.update();
 
     expect(wrapper.find(CloudTiles)).toHaveLength(1);
-    expect(wrapper.find(Tile)).toHaveLength(2);
-    expect(wrapper.find('img')).toHaveLength(2);
+    expect(wrapper.find(Tile)).toHaveLength(3);
+    expect(wrapper.find('img')).toHaveLength(3);
 
     expect(wrapper.find(Tile).first().props().isDisabled).toEqual(undefined);
     expect(wrapper.find(Tile).last().props().isDisabled).toEqual(undefined);
@@ -48,11 +48,11 @@ describe('CloudTiles', () => {
     });
     wrapper.update();
 
-    expect(wrapper.find(Tile)).toHaveLength(2);
-    expect(wrapper.find('img')).toHaveLength(2);
+    expect(wrapper.find(Tile)).toHaveLength(3);
+    expect(wrapper.find('img')).toHaveLength(3);
     expect(wrapper.find(Tile).first().props().isDisabled).toEqual(true);
     expect(wrapper.find(Tile).last().props().isDisabled).toEqual(true);
-    expect(wrapper.find(Tooltip)).toHaveLength(2);
+    expect(wrapper.find(Tooltip)).toHaveLength(3);
     expect(wrapper.find(Tooltip).first().props().content).toEqual(
       'To perform this action, you must be granted write permissions from your Organization Administrator.'
     );

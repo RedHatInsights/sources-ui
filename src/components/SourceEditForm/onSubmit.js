@@ -13,7 +13,7 @@ export const onSubmit = async (values, editing, dispatch, source, intl, setState
   const startDate = new Date();
 
   try {
-    await doUpdateSource(source, selectOnlyEditedValues(values, editing));
+    await doUpdateSource(source, selectOnlyEditedValues(values, editing), values);
   } catch {
     await dispatch(loadEntities());
     setState({ type: 'submitFailed' });

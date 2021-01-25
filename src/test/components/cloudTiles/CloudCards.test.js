@@ -42,7 +42,7 @@ describe('CloudCards', () => {
 
     expect(wrapper.find(Card)).toHaveLength(2);
     expect(wrapper.find(CloudTiles)).toHaveLength(1);
-    expect(wrapper.find('img')).toHaveLength(2);
+    expect(wrapper.find('img')).toHaveLength(3);
     expect(wrapper.find(PlusIcon)).toHaveLength(3);
 
     expect(wrapper.find(Card).first().props().isExpanded).toEqual(true);

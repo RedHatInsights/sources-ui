@@ -172,6 +172,15 @@ describe('entities spec', () => {
         expect(result).toEqual(OK_RESPONSE);
         expect(mock.history[method.toLowerCase()][0].data).toEqual(JSON.stringify(DATA));
       });
+
+      it('showApplication', async () => {
+        const method = 'Get';
+        mock[`on${method}`](`/api/sources/v3.0/applications/${SOURCE_ID}`).reply(200, OK_RESPONSE);
+
+        const result = await api.getSourcesApi().showApplication(SOURCE_ID);
+
+        expect(result).toEqual(OK_RESPONSE);
+      });
     });
 
     it('doRemoveSource fails', async () => {
@@ -288,6 +297,33 @@ describe('entities spec', () => {
       expect(mock.history.post[0].data.includes('id')).toEqual(true);
       expect(mock.history.post[0].data.includes('eq')).toEqual(true);
       expect(mock.history.post[0].data.includes(SOURCE_ID)).toEqual(true);
+    });
+
+    it('doLoadApplicationsForEdit - load extra for applications', async () => {
+      const ENTITIES = {
+        sources: [
+          {
+            applications: [{ id: '123' }, { id: '456' }],
+          },
+        ],
+      };
+
+      mock.onPost(`/api/sources/v3.0/graphql`).reply(200, { data: ENTITIES });
+      mock.onGet(`/api/sources/v3.0/applications/123`).reply(200, { extra: { dataset: '134' } });
+      mock.onGet(`/api/sources/v3.0/applications/456`).reply(200, { extra: { username: 'jsmith' } });
+
+      const result = await api.doLoadApplicationsForEdit(SOURCE_ID);
+
+      expect(result).toEqual({
+        sources: [
+          {
+            applications: [
+              { extra: { dataset: '134' }, id: '123' },
+              { extra: { username: 'jsmith' }, id: '456' },
+            ],
+          },
+        ],
+      });
     });
   });
 

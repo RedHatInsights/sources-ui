@@ -43,11 +43,23 @@ export const prepareInitialValues = ({ endpoints, authentications, applications,
     url = endpoint.scheme || endpoint.host || endpoint.path || endpoint.port ? endpointToUrl(endpoint) : undefined;
   }
 
+  const applicationsFinal = {};
+  if (applications?.length > 0) {
+    applications.forEach((app) => {
+      if (app.extra && Object.keys(app.extra).length > 0) {
+        applicationsFinal[`a${app.id}`] = { extra: app.extra };
+      }
+    });
+  }
+
   return {
     source_type: sourceTypeName,
     endpoint,
     authentications: auhenticationsFinal,
     url,
+    ...(Object.keys(applicationsFinal).length && {
+      applications: applicationsFinal,
+    }),
     ...rest,
   };
 };

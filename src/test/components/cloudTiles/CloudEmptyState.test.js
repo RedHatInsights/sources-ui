@@ -32,8 +32,8 @@ describe('CloudEmptyState', () => {
 
     expect(wrapper.find(Card)).toHaveLength(1);
     expect(wrapper.find(CloudTiles)).toHaveLength(1);
-    expect(wrapper.find(Tile)).toHaveLength(2);
-    expect(wrapper.find('img')).toHaveLength(2);
+    expect(wrapper.find(Tile)).toHaveLength(3);
+    expect(wrapper.find('img')).toHaveLength(3);
 
     expect(wrapper.find(Tile).first().props().isDisabled).toEqual(undefined);
     expect(wrapper.find(Tile).last().props().isDisabled).toEqual(undefined);

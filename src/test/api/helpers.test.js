@@ -70,7 +70,9 @@ describe('api helpers', () => {
       const filterValue = {};
       const activeVendor = CLOUD_VENDOR;
 
-      expect(filtering(filterValue, activeVendor)).toEqual(', filter: { source_type: { vendor: { eq: ["Amazon", "Azure"]} } }');
+      expect(filtering(filterValue, activeVendor)).toEqual(
+        ', filter: { source_type: { vendor: { eq: ["Amazon", "Azure", "Google"]} } }'
+      );
     });
 
     it('creates red hat vendor [GRAPHQL]', () => {
@@ -135,7 +137,7 @@ describe('api helpers', () => {
       const activeVendor = CLOUD_VENDOR;
 
       expect(restFilterGenerator(filterValue, activeVendor)).toEqual(
-        'filter[source_type][vendor][eq][]=Amazon&filter[source_type][vendor][eq][]=Azure'
+        'filter[source_type][vendor][eq][]=Amazon&filter[source_type][vendor][eq][]=Azure&filter[source_type][vendor][eq][]=Google'
       );
     });
 
