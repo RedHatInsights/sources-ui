@@ -198,6 +198,29 @@ describe('edit form helpers', () => {
         EXPECTED_INITIAL_VALUES_WITH_UNDEF_ENDPOINTS
       );
     });
+
+    it('prepares initial values with application extra values', () => {
+      const SOURCE_WITH_APPS_EXTRA = {
+        ...SOURCE,
+        applications: [
+          { id: '123', extra: { dataset: '123dataset' }, authentications: [] },
+          { id: 'withoutdataset', authentications: [] },
+          { id: 'cosi', extra: { username: 'joesmith' }, authentications: [] },
+        ],
+      };
+
+      const EXPECTED_INITIAL_VALUES_SOURCE_WITH_APPS_EXTRA = {
+        ...EXPECTED_INITIAL_VALUES,
+        applications: {
+          a123: { extra: { dataset: '123dataset' } },
+          acosi: { extra: { username: 'joesmith' } },
+        },
+      };
+
+      expect(prepareInitialValues(SOURCE_WITH_APPS_EXTRA, SOURCE_TYPE_NAME)).toEqual(
+        EXPECTED_INITIAL_VALUES_SOURCE_WITH_APPS_EXTRA
+      );
+    });
   });
 
   describe('getEditedApplications', () => {

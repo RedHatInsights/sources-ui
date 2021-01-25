@@ -34,7 +34,7 @@ export const parseUrl = (url) => {
 export const urlOrHost = (formData) =>
   formData.url || formData.url === null ? parseUrl(formData.url) : formData.endpoint ? formData.endpoint : formData;
 
-export const doUpdateSource = (source, formData) => {
+export const doUpdateSource = (source, formData, values) => {
   const promises = [];
 
   if (formData.source) {
@@ -68,7 +68,7 @@ export const doUpdateSource = (source, formData) => {
     Object.keys(formData.applications).forEach((key) => {
       const idWithoutPrefix = key.replace('a', '');
 
-      promises.push(getSourcesApi().updateApplication(idWithoutPrefix, formData.applications[key]));
+      promises.push(getSourcesApi().updateApplication(idWithoutPrefix, { extra: values.applications[key].extra }));
     });
   }
 

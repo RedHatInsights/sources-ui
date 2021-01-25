@@ -56,6 +56,7 @@ export const getSourcesApi = () => ({
   deleteAuthentication: (id) => axiosInstanceInsights.delete(`${SOURCES_API_BASE_V3}/authentications/${id}`),
   showAuthentication: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/authentications/${id}`),
   updateApplication: (id, data) => axiosInstanceInsights.patch(`${SOURCES_API_BASE_V3}/applications/${id}`, data),
+  showApplication: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/applications/${id}`),
 });
 
 export const doLoadAppTypes = () => getSourcesApi().doLoadAppTypes();
@@ -214,21 +215,38 @@ export const doLoadSource = (id) =>
     })
     .then(({ data }) => data);
 
-export const doLoadApplicationsForEdit = (id) =>
-  getSourcesApi()
-    .postGraphQL({
-      query: `{ sources(filter: { id: { eq: ${id}}})
-            { applications {
-                application_type_id,
-                id,
-                availability_status_error,
-                availability_status,
-                authentications {
-                    id
-                }
-            } }
-        }`,
-    })
-    .then(({ data }) => data);
+export const doLoadApplicationsForEdit = async (id) => {
+  let graphql = await getSourcesApi().postGraphQL({
+    query: `{ sources(filter: { id: { eq: ${id}}})
+          { applications {
+              application_type_id,
+              id,
+              availability_status_error,
+              availability_status,
+              authentications {
+                  id
+              }
+          } }
+      }`,
+  });
+
+  const promises = [];
+  graphql.data.sources?.[0]?.applications?.forEach((app) => {
+    promises.push(getSourcesApi().showApplication(app.id));
+  });
+
+  const results = await Promise.all(promises);
+
+  if (results.length) {
+    results.forEach(({ extra }, index) => {
+      graphql.data.sources[0].applications[index] = {
+        ...graphql.data.sources[0].applications[index],
+        extra,
+      };
+    });
+  }
+
+  return graphql.data;
+};
 
 export const doDeleteAuthentication = (id) => getSourcesApi().deleteAuthentication(id);
