@@ -73,7 +73,7 @@ describe('CloudTiles', () => {
     expect(setSelectedType).toHaveBeenCalledWith('amazon');
   });
 
-  it('sets azure', async () => {
+  it('sets gcp', async () => {
     await act(async () => {
       wrapper = mount(componentWrapperIntl(<CloudTiles {...initialProps} />, store));
     });
@@ -85,10 +85,10 @@ describe('CloudTiles', () => {
     wrapper.update();
 
     expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
-    expect(setSelectedType).toHaveBeenCalledWith('azure');
+    expect(setSelectedType).toHaveBeenCalledWith('google');
   });
 
-  it.skip('does not set gcp', async () => {
+  it('sets azure', async () => {
     await act(async () => {
       wrapper = mount(componentWrapperIntl(<CloudTiles {...initialProps} />, store));
     });
@@ -99,7 +99,7 @@ describe('CloudTiles', () => {
     });
     wrapper.update();
 
-    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual('/');
-    expect(setSelectedType).not.toHaveBeenCalled();
+    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
+    expect(setSelectedType).toHaveBeenCalledWith('azure');
   });
 });

@@ -55,6 +55,19 @@ const CloudTiles = ({ setSelectedType }) => {
       />
       <TileComponent
         isStacked
+        title="Google Cloud"
+        className="tile pf-u-mr-md-on-md pf-u-mt-md pf-u-mt-0-on-md"
+        onClick={() => openWizard('google')}
+        icon={
+          <ImageWithPlaceholder
+            className="provider-icon pf-u-mb-sm disabled-icon"
+            src="/apps/frontend-assets/partners-icons/google-cloud-short.svg"
+            alt="google logo"
+          />
+        }
+      />
+      <TileComponent
+        isStacked
         title="Microsoft Azure"
         onClick={() => openWizard('azure')}
         className="tile pf-u-mr-md-on-md pf-u-mt-md pf-u-mt-0-on-md"
@@ -75,19 +88,3 @@ CloudTiles.propTypes = {
 };
 
 export default CloudTiles;
-
-/* USE WHEN GOOGLE IS READY
-          <TileComponent
-            isDisabled
-            isStacked
-            className="tile pf-u-mt-md pf-u-mt-0-on-md"
-            title="Google Cloud"
-            icon={
-              <ImageWithPlaceholder
-                className="provider-icon pf-u-mb-sm disabled-icon"
-                src="/apps/frontend-assets/partners-icons/google-cloud-short.svg"
-                alt="azure logo"
-              />
-            }
-          />
-*/
