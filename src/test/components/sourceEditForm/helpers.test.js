@@ -181,24 +181,6 @@ describe('edit form helpers', () => {
       );
     });
 
-    it('prepares initial values with cost management values', () => {
-      const SOURCE_WITH_UNDEF_ENDPOINTS = {
-        ...SOURCE,
-        billing_source: { bucket: 'bucket' },
-        credentials: { subscription_id: '122' },
-      };
-
-      const EXPECTED_INITIAL_VALUES_WITH_UNDEF_ENDPOINTS = {
-        ...EXPECTED_INITIAL_VALUES,
-        billing_source: { bucket: 'bucket' },
-        credentials: { subscription_id: '122' },
-      };
-
-      expect(prepareInitialValues(SOURCE_WITH_UNDEF_ENDPOINTS, SOURCE_TYPE_NAME)).toEqual(
-        EXPECTED_INITIAL_VALUES_WITH_UNDEF_ENDPOINTS
-      );
-    });
-
     it('prepares initial values with application extra values', () => {
       const SOURCE_WITH_APPS_EXTRA = {
         ...SOURCE,
@@ -285,36 +267,6 @@ describe('edit form helpers', () => {
       };
 
       expect(getEditedApplications(source, edited, appTypes)).toEqual(['check-endpoint-123', 'check-endpoint-456']);
-    });
-
-    it('edit cost management billing_source', () => {
-      source = {
-        applications: [
-          { id: '123', authentications: [] },
-          { id: '456', application_type_id: COSTMANAGEMENT_APP.id },
-        ],
-      };
-
-      edited = {
-        'billing_source.role': true,
-      };
-
-      expect(getEditedApplications(source, edited, appTypes)).toEqual(['456']);
-    });
-
-    it('edit cost management credentials', () => {
-      source = {
-        applications: [
-          { id: '123', authentications: [] },
-          { id: '456', application_type_id: COSTMANAGEMENT_APP.id },
-        ],
-      };
-
-      edited = {
-        'credentials.role': true,
-      };
-
-      expect(getEditedApplications(source, edited, appTypes)).toEqual(['456']);
     });
   });
 

@@ -15,7 +15,7 @@ import { useIsLoaded } from '../../hooks/useIsLoaded';
 import reducer, { initialState } from './reducer';
 import SubmittingModal from './SubmittingModal';
 import ErroredModal from './ErroredModal';
-import { hasCostManagement, prepareMessages } from './helpers';
+import { prepareMessages } from './helpers';
 
 const SourceEditModal = () => {
   const [state, setState] = useReducer(reducer, initialState);
@@ -50,7 +50,7 @@ const SourceEditModal = () => {
 
   useEffect(() => {
     if (sourceRedux && initialLoad && appTypesLoaded) {
-      doLoadSourceForEdit(sourceRedux, hasCostManagement(sourceRedux, appTypes)).then((source) => {
+      doLoadSourceForEdit(sourceRedux).then((source) => {
         const messages = prepareMessages(source, intl);
 
         setState({ type: 'setSource', source, messages });
@@ -69,7 +69,7 @@ const SourceEditModal = () => {
   const isLoading = !appTypesLoaded || !sourceTypesLoaded || loading;
 
   if (submitError) {
-    return <ErroredModal onRetry={() => onSubmit(values, editing, dispatch, source, intl, setState, appTypes)} />;
+    return <ErroredModal onRetry={() => onSubmit(values, editing, dispatch, source, intl, setState)} />;
   }
 
   if (isSubmitting) {
@@ -87,7 +87,7 @@ const SourceEditModal = () => {
   return (
     <SourcesFormRenderer
       schema={schema}
-      onSubmit={(values, formApi) => onSubmit(values, formApi.getState().dirtyFields, dispatch, source, intl, setState, appTypes)}
+      onSubmit={(values, formApi) => onSubmit(values, formApi.getState().dirtyFields, dispatch, source, intl, setState)}
       FormTemplate={(props) => (
         <FormTemplate canReset submitLabel="Save changes" disableSubmit={['pristine', 'invalid']} {...props} />
       )}

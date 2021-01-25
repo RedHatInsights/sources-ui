@@ -7,7 +7,7 @@ import { Spinner } from '@patternfly/react-core/dist/js/components/Spinner';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import SourceEditModal from '../../../components/SourceEditForm/SourceEditModal';
 import { routes, replaceRouteId } from '../../../Routes';
-import { applicationTypesData, CATALOG_APP, COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
+import { applicationTypesData, CATALOG_APP } from '../../__mocks__/applicationTypesData';
 import { sourceTypesData, ANSIBLE_TOWER_ID } from '../../__mocks__/sourceTypesData';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
 import { Button, Form, Alert, EmptyState, TextInput } from '@patternfly/react-core';
@@ -362,7 +362,7 @@ describe('SourceEditModal', () => {
       expect(wrapper.find(EditAlert).find(Alert).props().variant).toEqual(message.variant);
       expect(wrapper.find(EditAlert).find(Alert).props().children).toEqual(message.description);
 
-      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, applicationTypesData.data);
+      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
     });
 
     it('calls onSubmit - timeout - return to edit', async () => {
@@ -435,7 +435,7 @@ describe('SourceEditModal', () => {
 
       expect(wrapper.find(ErroredModal)).toHaveLength(1);
 
-      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, applicationTypesData.data);
+      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
 
       submit.onSubmit.mockReset();
 
@@ -445,7 +445,7 @@ describe('SourceEditModal', () => {
       });
       wrapper.update();
 
-      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, applicationTypesData.data);
+      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
     });
   });
 
@@ -472,64 +472,6 @@ describe('SourceEditModal', () => {
     wrapper.update();
 
     expect(wrapper.find(Spinner)).toHaveLength(1);
-  });
-
-  it('do not load cost management values', async () => {
-    editApi.doLoadSourceForEdit.mockClear();
-
-    const source = { id: '14', applications: [] };
-
-    store = mockStore({
-      sources: {
-        entities: [source],
-        appTypes: applicationTypesData.data,
-        sourceTypes: sourceTypesData.data,
-        appTypesLoaded: true,
-        sourceTypesLoaded: true,
-      },
-    });
-
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <SourceEditModal {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
-    wrapper.update();
-
-    expect(editApi.doLoadSourceForEdit).toHaveBeenCalledWith(source, false);
-  });
-
-  it('do load cost management values', async () => {
-    editApi.doLoadSourceForEdit.mockClear();
-
-    const source = { id: '14', applications: [{ application_type_id: COSTMANAGEMENT_APP.id }] };
-
-    store = mockStore({
-      sources: {
-        entities: [source],
-        appTypes: applicationTypesData.data,
-        sourceTypes: sourceTypesData.data,
-        appTypesLoaded: true,
-        sourceTypesLoaded: true,
-      },
-    });
-
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <SourceEditModal {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
-    wrapper.update();
-
-    expect(editApi.doLoadSourceForEdit).toHaveBeenCalledWith(source, true);
   });
 
   describe('reducer', () => {
