@@ -1,10 +1,10 @@
 import { getSourcesApi, doLoadApplicationsForEdit } from './entities';
 
-export const doLoadSourceForEdit = (source) =>
+export const doLoadSourceForEdit = (source, appTypes, sourceTypes) =>
   Promise.all([
     getSourcesApi().showSource(source.id),
     getSourcesApi().listSourceEndpoints(source.id),
-    doLoadApplicationsForEdit(source.id),
+    doLoadApplicationsForEdit(source.id, appTypes, sourceTypes),
   ]).then(async ([sourceData, endpoints, applications]) => {
     const endpoint = endpoints && endpoints.data && endpoints.data[0];
 

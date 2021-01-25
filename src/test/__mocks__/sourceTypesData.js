@@ -425,6 +425,7 @@ export const sourceTypesData = {
 export const OPENSHIFT_ID = '1';
 export const AMAZON_ID = '2';
 export const ANSIBLE_TOWER_ID = '3';
+export const AZURE_ID = '8';
 
 export const OPENSHIFT_INDEX = 0;
 export const AMAZON_INDEX = 1;
