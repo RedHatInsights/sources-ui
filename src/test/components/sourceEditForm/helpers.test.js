@@ -5,7 +5,7 @@ import {
   selectOnlyEditedValues,
 } from '../../../components/SourceEditForm/helpers';
 import { UNAVAILABLE } from '../../../views/formatters';
-import applicationTypesData, { COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
+import applicationTypesData from '../../__mocks__/applicationTypesData';
 
 describe('edit form helpers', () => {
   describe('selectOnlyEditedValues', () => {

@@ -2,7 +2,6 @@ import get from 'lodash/get';
 import set from 'lodash/set';
 
 import { endpointToUrl, UNAVAILABLE } from '../../views/formatters';
-import { APP_NAMES } from './parser/application';
 
 export const CHECK_ENDPOINT_COMMAND = 'check-endpoint';
 
