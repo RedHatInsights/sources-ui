@@ -1,6 +1,5 @@
 import { defaultPort } from '../views/formatters';
 import { getSourcesApi } from './entities';
-import { patchCmValues } from './patchCmValues';
 
 export const parseUrl = (url) => {
   if (url === null) {
@@ -70,27 +69,6 @@ export const doUpdateSource = (source, formData, values) => {
 
       promises.push(getSourcesApi().updateApplication(idWithoutPrefix, { extra: values.applications[key].extra }));
     });
-  }
-
-  if (formData.billing_source || formData.credentials) {
-    let cmDataOut = {};
-
-    if (formData.credentials) {
-      cmDataOut = {
-        authentication: {
-          credentials: formData.credentials,
-        },
-      };
-    }
-
-    if (formData.billing_source) {
-      cmDataOut = {
-        ...cmDataOut,
-        billing_source: formData.billing_source,
-      };
-    }
-
-    promises.push(patchCmValues(source.source.id, cmDataOut));
   }
 
   return Promise.all(promises);

@@ -2,7 +2,6 @@ import get from 'lodash/get';
 import set from 'lodash/set';
 
 import { endpointToUrl, UNAVAILABLE } from '../../views/formatters';
-import { APP_NAMES } from './parser/application';
 
 export const CHECK_ENDPOINT_COMMAND = 'check-endpoint';
 
@@ -64,19 +63,12 @@ export const prepareInitialValues = ({ endpoints, authentications, applications,
   };
 };
 
-export const hasCostManagement = (source, appTypes) =>
-  source.applications
-    .map(({ application_type_id }) => application_type_id)
-    .includes(appTypes.find(({ name }) => name === APP_NAMES.COST_MANAGAMENT)?.id);
-
 const addIfUnique = (array, item) => !array.includes(item) && array.push(item);
 
-export const getEditedApplications = (source, editing, appTypes) => {
+export const getEditedApplications = (source, editing) => {
   const editedApplications = [];
 
   const editedFields = Object.keys(editing);
-
-  const costId = appTypes.find(({ name }) => name === APP_NAMES.COST_MANAGAMENT)?.id;
 
   editedFields.forEach((key) => {
     if (editing[key]) {
@@ -94,13 +86,6 @@ export const getEditedApplications = (source, editing, appTypes) => {
               id === editedId &&
               addIfUnique(editedApplications, resource_type === 'Application' ? app.id : `${CHECK_ENDPOINT_COMMAND}-${app.id}`)
           )
-        );
-      }
-
-      if (key.startsWith('billing_source') || key.startsWith('credentials')) {
-        addIfUnique(
-          editedApplications,
-          source.applications.find(({ application_type_id }) => application_type_id === costId)?.id
         );
       }
 

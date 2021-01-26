@@ -135,7 +135,7 @@ export const sourceTypesData = {
                 initializeOnMount: true,
               },
               {
-                name: 'billing_source.bucket',
+                name: 'application.extra.bucket',
                 label: 'S3 bucket name',
                 stepKey: 'amazon-arn-additional-step',
                 validate: [
@@ -325,13 +325,13 @@ export const sourceTypesData = {
                 initializeOnMount: true,
               },
               {
-                name: 'billing_source.data_source.resource_group',
+                name: 'application.extra.resource_group',
                 label: 'Resource group name',
                 stepKey: 'azure-2',
                 component: 'text-field',
               },
               {
-                name: 'billing_source.data_source.storage_account',
+                name: 'application.extra.storage_account',
                 label: 'Storage account name',
                 stepKey: 'azure-2',
                 component: 'text-field',
@@ -425,6 +425,7 @@ export const sourceTypesData = {
 export const OPENSHIFT_ID = '1';
 export const AMAZON_ID = '2';
 export const ANSIBLE_TOWER_ID = '3';
+export const AZURE_ID = '8';
 
 export const OPENSHIFT_INDEX = 0;
 export const AMAZON_INDEX = 1;

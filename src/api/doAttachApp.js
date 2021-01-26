@@ -1,5 +1,4 @@
 import { addedDiff, updatedDiff } from 'deep-object-diff';
-import { patchSource } from '@redhat-cloud-services/frontend-components-sources/cjs/costManagementAuthentication';
 import { handleError } from '@redhat-cloud-services/frontend-components-sources/cjs/handleError';
 import { checkAppAvailability } from '@redhat-cloud-services/frontend-components-sources/cjs/getApplicationStatus';
 import { timeoutedApps } from '@redhat-cloud-services/frontend-components-sources/cjs/constants';
@@ -135,27 +134,14 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
 
     const authenticationId = selectedAuthId || authenticationDataOut?.id;
 
-    const promisesSecondRound = [];
-
     if (applicationDataOut?.id && authenticationId) {
       const authAppData = {
         application_id: applicationDataOut.id,
         authentication_id: authenticationId,
       };
 
-      promisesSecondRound.push(getSourcesApi().createAuthApp(authAppData));
+      await getSourcesApi().createAuthApp(authAppData);
     }
-
-    const isAttachingCostManagement = filteredValues.credentials || filteredValues.billing_source;
-    if (isAttachingCostManagement) {
-      const { credentials, billing_source } = filteredValues;
-      let data = {};
-      data = credentials ? { authentication: { credentials } } : {};
-      data = billing_source ? { ...data, billing_source } : data;
-      promisesSecondRound.push(patchSource({ id: sourceId, ...data }));
-    }
-
-    await Promise.all(promisesSecondRound);
 
     let endpoint;
     if (endpointId) {

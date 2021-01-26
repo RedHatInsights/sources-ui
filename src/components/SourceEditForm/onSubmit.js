@@ -7,7 +7,7 @@ import { doUpdateSource } from '../../api/doUpdateSource';
 
 import { AVAILABLE, UNAVAILABLE } from '../../views/formatters';
 
-export const onSubmit = async (values, editing, dispatch, source, intl, setState, appTypes) => {
+export const onSubmit = async (values, editing, dispatch, source, intl, setState) => {
   setState({ type: 'submit', values, editing });
 
   const startDate = new Date();
@@ -25,7 +25,7 @@ export const onSubmit = async (values, editing, dispatch, source, intl, setState
 
   let messages = {};
 
-  const checkApplications = getEditedApplications(source, editing, appTypes);
+  const checkApplications = getEditedApplications(source, editing);
 
   const promises = [];
 
