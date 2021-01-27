@@ -169,7 +169,7 @@ const SourcesTable = () => {
         cells: [
           {
             props: { colSpan: COLUMN_COUNT },
-            title: <EmptyStateTable /> ,
+            title: <EmptyStateTable />,
           },
         ],
       },
