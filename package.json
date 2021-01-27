@@ -19,7 +19,7 @@
     "@redhat-cloud-services/frontend-components": "2.5.10",
     "@redhat-cloud-services/frontend-components-notifications": "2.2.4",
     "@redhat-cloud-services/frontend-components-sources": "2.2.36",
-    "@redhat-cloud-services/frontend-components-utilities": "2.2.9",
+    "@redhat-cloud-services/frontend-components-utilities": "3.0.2",
     "@sentry/minimal": "5.29.2",
     "axios": "0.21.1",
     "classnames": "^2.2.6",
