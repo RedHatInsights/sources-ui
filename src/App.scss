@@ -164,6 +164,12 @@
     display: flex;
   }
 
+  .custom-icon {
+    height: 16px;
+    width: auto;
+    vertical-align: -2px;
+  }
+
   @media (max-width: 768px) {
     .pf-c-divider  {
       display: none;

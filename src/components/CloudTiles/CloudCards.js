@@ -19,6 +19,7 @@ import { TextListItem } from '@patternfly/react-core/dist/js/components/Text/Tex
 
 import ArrowRightIcon from '@patternfly/react-icons/dist/js/icons/arrow-right-icon';
 import BuilderImageIcon from '@patternfly/react-icons/dist/js/icons/builder-image-icon';
+import SubWatchIcon from './SubWatchIcon';
 
 const PREFIX = insights.chrome.isBeta() ? 'beta/' : '';
 
@@ -34,6 +35,8 @@ const SUBWATCH_HREF = `/${PREFIX}subscriptions`;
 const SUBWATCH_MORE_HREF = 'https://access.redhat.com/products/subscription-central';
 
 export const CLOUD_CARDS_KEY = 'ins-c-sources__cloud_cards_expanded';
+
+const INSIGHTS_ICON = `/${PREFIX}apps/landing/fonts/Insights.svg`;
 
 const CloudCards = () => {
   const [isExpanded, setExpanded] = useState(() => {
@@ -106,7 +109,7 @@ const CloudCards = () => {
               <GridItem md={4} className="flex">
                 <Stack>
                   <StackItem className="pf-u-mb-sm">
-                    <BuilderImageIcon fill="#EE0000" className="pf-u-mr-sm" />
+                    <img src={INSIGHTS_ICON} fill="#EE0000" className="pf-u-mr-sm custom-icon" />
                     <Text component="span" className="insights-title text">
                       {intl.formatMessage({ id: 'cloud.insights', defaultMessage: 'Explore Red Hat Insights' })}
                     </Text>
@@ -145,7 +148,7 @@ const CloudCards = () => {
               <GridItem md={4} className="flex">
                 <Stack>
                   <StackItem className="pf-u-mb-sm">
-                    <BuilderImageIcon fill="#5955d2" className="pf-u-mr-sm" />
+                    <SubWatchIcon className="pf-u-mr-sm custom-icon" />
                     <Text component="span" className="subwatch-title text">
                       {intl.formatMessage({ id: 'cloud.subwatch', defaultMessage: 'Track usage with Subscription Watch' })}
                     </Text>

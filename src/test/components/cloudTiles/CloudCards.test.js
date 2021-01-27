@@ -39,7 +39,7 @@ describe('CloudCards', () => {
     wrapper.update();
 
     expect(wrapper.find(Card)).toHaveLength(1);
-    expect(wrapper.find('svg')).toHaveLength(7);
+    expect(wrapper.find('svg')).toHaveLength(6);
     expect(wrapper.find(GridItem)).toHaveLength(3);
 
     expect(wrapper.find(Card).first().props().isExpanded).toEqual(true);
