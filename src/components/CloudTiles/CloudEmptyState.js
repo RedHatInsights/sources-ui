@@ -18,7 +18,7 @@ const CloudEmptyState = ({ setSelectedType }) => {
   const intl = useIntl();
 
   return (
-    <Card className="pf-m-selectable pf-m-selected ins-c-sources__cloud-empty-state-card pf-u-mt-md pf-u-mt-0-on-md">
+    <Card className="ins-c-sources__cloud-empty-state-card pf-u-mt-md pf-u-mt-0-on-md">
       <CardTitle>
         {intl.formatMessage({
           id: 'cloud.emptystate.cardTitle',
