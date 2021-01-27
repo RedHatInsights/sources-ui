@@ -12,7 +12,7 @@ import { filterVendorAppTypes } from '@redhat-cloud-services/frontend-components
 import { filterSources, pageAndSize } from '../redux/sources/actions';
 import SourcesTable from '../components/SourcesTable/SourcesTable';
 import SourcesErrorState from '../components/SourcesErrorState';
-import { replaceRouteId, routes } from '../Routes';
+import { routes } from '../Routes';
 
 const SourceRemoveModal = lazy(() =>
   import(
@@ -250,13 +250,12 @@ const SourcesPage = () => {
             sourceTypes: loadedTypes(sourceTypes, sourceTypesLoaded),
             applicationTypes: loadedTypes(appTypes, appTypesLoaded),
             isOpen: true,
-            onClose: (_values, source) => {
+            onClose: () => {
               setSelectedType(undefined);
-              source?.id ? history.push(replaceRouteId(routes.sourcesDetail.path, source.id)) : history.push(routes.sources.path);
+              history.push(routes.sources.path);
             },
             afterSuccess: (source) => afterSuccess(dispatch, source),
             hideSourcesButton: true,
-            returnButtonTitle: intl.formatMessage({ id: 'sources.returnButtonTitle', defaultMessage: 'Exit to source details' }),
             selectedType,
           }}
         />
