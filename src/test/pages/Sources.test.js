@@ -6,7 +6,6 @@ import { MemoryRouter, Link } from 'react-router-dom';
 import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources/cjs/addSourceWizard';
 
 import SourcesPageOriginal from '../../pages/Sources';
-import SourcesEmptyState from '../../components/SourcesTable/SourcesEmptyState';
 import SourcesTable from '../../components/SourcesTable/SourcesTable';
 
 import { sourcesDataGraphQl, SOURCE_ALL_APS_ID } from '../__mocks__/sourcesData';
@@ -34,6 +33,7 @@ import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../utilities/constants';
 import CloudEmptyState from '../../components/CloudTiles/CloudEmptyState';
 import { getStore } from '../../utilities/store';
 import { AVAILABLE, UNAVAILABLE } from '../../views/formatters';
+import RedHatEmptyState from '../../components/RedHatTiles/RedHatEmptyState';
 
 describe('SourcesPage', () => {
   let initialProps;
@@ -76,7 +76,6 @@ describe('SourcesPage', () => {
     wrapper.update();
 
     expect(wrapper.find(TabNavigation)).toHaveLength(1);
-    expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
     expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
     expect(wrapper.find(CloudCards)).toHaveLength(1);
     expect(wrapper.find(SourcesTable)).toHaveLength(1);
@@ -124,7 +123,7 @@ describe('SourcesPage', () => {
     wrapper.update();
 
     expect(wrapper.find(CloudEmptyState)).toHaveLength(1);
-    expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
+    expect(wrapper.find(RedHatEmptyState)).toHaveLength(0);
     expect(wrapper.find(PrimaryToolbar)).toHaveLength(0);
     expect(wrapper.find(SourcesTable)).toHaveLength(0);
   });
@@ -168,10 +167,35 @@ describe('SourcesPage', () => {
     });
 
     wrapper.update();
+    expect(wrapper.find(RedHatEmptyState)).toHaveLength(1);
     expect(wrapper.find(CloudEmptyState)).toHaveLength(0);
-    expect(wrapper.find(SourcesEmptyState)).toHaveLength(1);
-    expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
-    expect(wrapper.find(SourcesTable)).toHaveLength(1);
+    expect(wrapper.find(PrimaryToolbar)).toHaveLength(0);
+    expect(wrapper.find(SourcesTable)).toHaveLength(0);
+  });
+
+  it('renders empty state when there are no Sources and open ansible-tower selection', async () => {
+    store = getStore([], {
+      sources: { activeVendor: REDHAT_VENDOR },
+      user: { isOrgAdmin: true },
+    });
+
+    api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
+    api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+
+    await act(async () => {
+      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    });
+    wrapper.update();
+
+    expect(wrapper.find(RedHatEmptyState)).toHaveLength(1);
+
+    await act(async () => {
+      wrapper.find(Tile).first().simulate('click');
+    });
+    wrapper.update();
+
+    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
+    expect(wrapper.find(AddSourceWizard).props().selectedType).toEqual('ansible-tower');
   });
 
   it('renders error state when there is fetching (loadEntities) error', async () => {
@@ -207,7 +231,6 @@ describe('SourcesPage', () => {
       wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
     });
 
-    expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
     expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
     expect(wrapper.find(SourcesTable)).toHaveLength(1);
     expect(wrapper.find(PaginationLoader)).toHaveLength(2);
@@ -223,7 +246,6 @@ describe('SourcesPage', () => {
       wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
     });
 
-    expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
     expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
     expect(wrapper.find(SourcesTable)).toHaveLength(1);
     expect(wrapper.find(PaginationLoader)).toHaveLength(0);
@@ -607,7 +629,7 @@ describe('SourcesPage', () => {
           });
           wrapper.update();
 
-          expect(wrapper.find(SourcesEmptyState)).toHaveLength(1);
+          expect(wrapper.find(RedHatEmptyState)).toHaveLength(1);
           done();
         }, 500);
       }, 500);
@@ -666,7 +688,6 @@ describe('SourcesPage', () => {
       expect(api.doLoadAppTypes).toHaveBeenCalled();
       expect(typesApi.doLoadSourceTypes).toHaveBeenCalled();
 
-      expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
       expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
       expect(wrapper.find(SourcesTable)).toHaveLength(1);
       expect(wrapper.find(Pagination)).toHaveLength(2);

@@ -43,9 +43,10 @@ import { Tooltip } from '@patternfly/react-core/dist/js/components/Tooltip/Toolt
 import { PaginationLoader } from '../components/SourcesTable/loaders';
 import TabNavigation from '../components/TabNavigation';
 import CloudCards from '../components/CloudTiles/CloudCards';
-import { CLOUD_VENDOR } from '../utilities/constants';
+import { CLOUD_VENDOR, REDHAT_VENDOR } from '../utilities/constants';
 import CloudEmptyState from '../components/CloudTiles/CloudEmptyState';
 import { AVAILABLE, UNAVAILABLE } from '../views/formatters';
+import RedHatEmptyState from '../components/RedHatTiles/RedHatEmptyState';
 
 const SourcesPage = () => {
   const [filter, setFilterValue] = useState();
@@ -235,7 +236,7 @@ const SourcesPage = () => {
       .map(([_key, value]) => value && (!Array.isArray(value) || (Array.isArray(value) && value.length > 0)))
       .filter(Boolean).length > 0;
 
-  const showEmptyState = loaded && numberOfEntities === 0 && !hasSomeFilter && activeVendor === CLOUD_VENDOR;
+  const showEmptyState = loaded && numberOfEntities === 0 && !hasSomeFilter;
   const showInfoCards = activeVendor === CLOUD_VENDOR && !showEmptyState;
 
   return (
@@ -272,7 +273,12 @@ const SourcesPage = () => {
       <Section type="content">
         {showInfoCards && <CloudCards setSelectedType={setSelectedType} />}
         {fetchingError && <SourcesErrorState />}
-        {!fetchingError && showEmptyState && <CloudEmptyState setSelectedType={setSelectedType} />}
+        {!fetchingError && showEmptyState && activeVendor === CLOUD_VENDOR && (
+          <CloudEmptyState setSelectedType={setSelectedType} />
+        )}
+        {!fetchingError && showEmptyState && activeVendor === REDHAT_VENDOR && (
+          <RedHatEmptyState setSelectedType={setSelectedType} />
+        )}
         {!fetchingError && !showEmptyState && mainContent()}
       </Section>
     </React.Fragment>

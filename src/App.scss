@@ -163,7 +163,6 @@
 
 .ins-c-sources__cloud-empty-state-card {
   box-shadow: none !important;
-  cursor: initial !important;
 
   .catalog-link {
     font-size: 14px;
@@ -183,6 +182,10 @@
 
   .provider-icon {
     height: 40px;
+  }
+
+  .redhat-icon {
+    height: 50px;
   }
 
   .disabled-tile-with-tooltip {

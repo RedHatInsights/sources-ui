@@ -9,7 +9,7 @@ import ImageWithPlaceholder from '../TilesShared/ImageWithPlaceholder';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import DisabledTile from '../TilesShared/DisabledTile';
 
-const CloudTiles = ({ setSelectedType }) => {
+const RedHatTiles = ({ setSelectedType }) => {
   const { push } = useHistory();
   const hasWritePermissions = useHasWritePermissions();
 
@@ -20,53 +20,39 @@ const CloudTiles = ({ setSelectedType }) => {
 
   const TileComponent = hasWritePermissions ? Tile : DisabledTile;
 
+  const icon = (
+    <ImageWithPlaceholder className="redhat-icon" src="/apps/frontend-assets/red-hat-logos/stacked.svg" alt="red hat logo" />
+  );
+
   return (
     <React.Fragment>
       <TileComponent
         isStacked
-        title="Amazon Web Services"
-        onClick={() => openWizard('amazon')}
+        title="Ansible Automation Platform"
+        onClick={() => openWizard('ansible-tower')}
         className="tile pf-u-mr-md-on-md pf-u-mt-md pf-u-mt-0-on-md"
-        icon={
-          <ImageWithPlaceholder
-            className="provider-icon pf-u-mb-sm"
-            src="/apps/frontend-assets/partners-icons/aws.svg"
-            alt="aws logo"
-          />
-        }
+        icon={icon}
       />
       <TileComponent
         isStacked
-        title="Google Cloud"
+        title="OpenShift Container Platfrom"
         className="tile pf-u-mr-md-on-md pf-u-mt-md pf-u-mt-0-on-md"
-        onClick={() => openWizard('google')}
-        icon={
-          <ImageWithPlaceholder
-            className="provider-icon pf-u-mb-sm disabled-icon"
-            src="/apps/frontend-assets/partners-icons/google-cloud-short.svg"
-            alt="google logo"
-          />
-        }
+        onClick={() => openWizard('openshift')}
+        icon={icon}
       />
       <TileComponent
         isStacked
-        title="Microsoft Azure"
-        onClick={() => openWizard('azure')}
+        title="Satellite"
+        onClick={() => openWizard('satellite')}
         className="tile pf-u-mr-md-on-md pf-u-mt-md pf-u-mt-0-on-md"
-        icon={
-          <ImageWithPlaceholder
-            className="provider-icon pf-u-mb-sm"
-            src="/apps/frontend-assets/partners-icons/microsoft-azure-short.svg"
-            alt="azure logo"
-          />
-        }
+        icon={icon}
       />
     </React.Fragment>
   );
 };
 
-CloudTiles.propTypes = {
+RedHatTiles.propTypes = {
   setSelectedType: PropTypes.func.isRequired,
 };
 
-export default CloudTiles;
+export default RedHatTiles;
