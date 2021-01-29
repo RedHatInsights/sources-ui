@@ -18,7 +18,7 @@ const TabNavigation = () => {
   const activeVendor = useSelector(({ sources }) => sources.activeVendor);
 
   return (
-    <Tabs activeKey={activeVendor} onSelect={(_e, key) => dispatch(setActiveVendor(key))} className="pf-u-mt-md" isFilled>
+    <Tabs activeKey={activeVendor} onSelect={(_e, key) => dispatch(setActiveVendor(key))} className="pf-u-mt-md">
       <Tab
         eventKey={CLOUD_VENDOR}
         title={
