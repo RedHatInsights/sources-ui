@@ -14,7 +14,6 @@ import { Text } from '@patternfly/react-core/dist/js/components/Text/Text';
 
 import PlusIcon from '@patternfly/react-icons/dist/js/icons/plus-icon';
 import CloudTiles from './CloudTiles';
-import ProvidersLink from './ProvidersLink';
 
 const Point = ({ bold, text }) => (
   <div className="ins-c-sources__info-point">
@@ -67,11 +66,8 @@ const CloudCards = (props) => {
                   defaultMessage: 'Add a source for following cloud providers.',
                 })}
               </Text>
-              <div className="center">
-                <div className="pf-u-mt-md pf-u-mb-md">
-                  <CloudTiles {...props} />
-                </div>
-                <ProvidersLink />
+              <div className="center pf-u-mt-md pf-u-mb-md">
+                <CloudTiles {...props} />
               </div>
             </CardBody>
           </CardExpandableContent>
