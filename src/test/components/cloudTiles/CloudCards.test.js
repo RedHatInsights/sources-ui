@@ -1,13 +1,11 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import { Card, CardHeader } from '@patternfly/react-core';
-import PlusIcon from '@patternfly/react-icons/dist/js/icons/plus-icon';
+import { Card, CardHeader, GridItem } from '@patternfly/react-core';
 
 import CloudCards, { CLOUD_CARDS_KEY } from '../../../components/CloudTiles/CloudCards';
 
 import componentWrapperIntl from '../../../utilities/testsHelpers';
-import CloudTiles from '../../../components/CloudTiles/CloudTiles';
 
 describe('CloudCards', () => {
   let wrapper;
@@ -40,13 +38,11 @@ describe('CloudCards', () => {
     });
     wrapper.update();
 
-    expect(wrapper.find(Card)).toHaveLength(2);
-    expect(wrapper.find(CloudTiles)).toHaveLength(1);
-    expect(wrapper.find('img')).toHaveLength(3);
-    expect(wrapper.find(PlusIcon)).toHaveLength(3);
+    expect(wrapper.find(Card)).toHaveLength(1);
+    expect(wrapper.find('svg')).toHaveLength(6);
+    expect(wrapper.find(GridItem)).toHaveLength(3);
 
     expect(wrapper.find(Card).first().props().isExpanded).toEqual(true);
-    expect(wrapper.find(Card).last().props().isExpanded).toEqual(true);
 
     expect(localStorage).toEqual({
       [CLOUD_CARDS_KEY]: 'true',
@@ -61,26 +57,23 @@ describe('CloudCards', () => {
     });
     wrapper.update();
 
-    expect(wrapper.find(Card)).toHaveLength(2);
-    expect(wrapper.find('img')).toHaveLength(0);
-    expect(wrapper.find(PlusIcon)).toHaveLength(0);
+    expect(wrapper.find(Card)).toHaveLength(1);
+    expect(wrapper.find('svg')).toHaveLength(1);
 
     expect(wrapper.find(Card).first().props().isExpanded).toEqual(false);
-    expect(wrapper.find(Card).last().props().isExpanded).toEqual(false);
 
     expect(localStorage).toEqual({
       [CLOUD_CARDS_KEY]: 'false',
     });
   });
 
-  it('hides both card at once', async () => {
+  it('hides card', async () => {
     await act(async () => {
       wrapper = mount(componentWrapperIntl(<CloudCards {...initialProps} />));
     });
     wrapper.update();
 
     expect(wrapper.find(Card).first().props().isExpanded).toEqual(true);
-    expect(wrapper.find(Card).last().props().isExpanded).toEqual(true);
 
     await act(async () => {
       wrapper.find(CardHeader).first().find('button').simulate('click');
@@ -88,7 +81,6 @@ describe('CloudCards', () => {
     wrapper.update();
 
     expect(wrapper.find(Card).first().props().isExpanded).toEqual(false);
-    expect(wrapper.find(Card).last().props().isExpanded).toEqual(false);
     expect(localStorage).toEqual({
       [CLOUD_CARDS_KEY]: 'false',
     });
@@ -99,7 +91,6 @@ describe('CloudCards', () => {
     wrapper.update();
 
     expect(wrapper.find(Card).first().props().isExpanded).toEqual(true);
-    expect(wrapper.find(Card).last().props().isExpanded).toEqual(true);
     expect(localStorage).toEqual({
       [CLOUD_CARDS_KEY]: 'true',
     });

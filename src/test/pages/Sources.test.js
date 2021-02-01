@@ -252,38 +252,6 @@ describe('SourcesPage', () => {
     expect(wrapper.find(Pagination)).toHaveLength(2);
   });
 
-  it('opens wizard from info card and clears selection after leaving', async () => {
-    api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
-    api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 1 } }));
-
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-    });
-    wrapper.update();
-
-    expect(wrapper.find(CloudCards)).toHaveLength(1);
-
-    await act(async () => {
-      wrapper.find(Tile).first().simulate('click');
-    });
-    wrapper.update();
-
-    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
-    expect(wrapper.find(AddSourceWizard).props().selectedType).toEqual('amazon');
-
-    await act(async () => {
-      wrapper.find(AddSourceWizard).props().onClose();
-    });
-    wrapper.update();
-
-    await act(async () => {
-      wrapper.find(Link).first().simulate('click', { button: 0 });
-    });
-    wrapper.update();
-
-    expect(wrapper.find(AddSourceWizard).props().selectedType).toEqual(undefined);
-  });
-
   it('renders addSourceWizard', async () => {
     await act(async () => {
       wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
