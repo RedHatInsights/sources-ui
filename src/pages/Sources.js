@@ -36,6 +36,7 @@ import {
   afterSuccess,
   loadedTypes,
   prepareApplicationTypeSelection,
+  checkSubmit,
 } from './Sources/helpers';
 import { useIsLoaded } from '../hooks/useIsLoaded';
 import { useHasWritePermissions } from '../hooks/useHasWritePermissions';
@@ -242,6 +243,8 @@ const SourcesPage = () => {
   const showEmptyState = loaded && numberOfEntities === 0 && !hasSomeFilter;
   const showInfoCards = activeVendor === CLOUD_VENDOR && !showEmptyState;
 
+  window.checkSubmit = (state) => checkSubmit(state, dispatch, history.push, intl);
+
   return (
     <React.Fragment>
       <Suspense fallback={null}>
@@ -261,6 +264,7 @@ const SourcesPage = () => {
             afterSuccess: (source) => afterSuccess(dispatch, source),
             hideSourcesButton: true,
             selectedType,
+            submitCallback: (state) => checkSubmit(state, dispatch, history.push, intl),
           }}
         />
       </Suspense>

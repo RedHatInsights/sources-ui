@@ -1,3 +1,5 @@
+import { act } from 'react-dom/test-utils';
+
 import {
   afterSuccess,
   afterSuccessLoadParameters,
@@ -7,13 +9,16 @@ import {
   prepareChips,
   loadedTypes,
   prepareApplicationTypeSelection,
+  checkSubmit,
 } from '../../../pages/Sources/helpers';
 
 import * as actions from '../../../redux/sources/actions';
-import { sourceTypesData } from '../../__mocks__/sourceTypesData';
+import { AMAZON, AMAZON_ID, sourceTypesData } from '../../__mocks__/sourceTypesData';
 import { applicationTypesData } from '../../__mocks__/applicationTypesData';
 import { REDHAT_VENDOR } from '../../../utilities/constants';
 import { AVAILABLE, UNAVAILABLE } from '../../../views/formatters';
+import { replaceRouteId, routes } from '../../../Routes';
+import { mount } from 'enzyme';
 
 describe('Source page helpers', () => {
   describe('afterSuccess', () => {
@@ -251,6 +256,174 @@ describe('Source page helpers', () => {
       loaded = true;
 
       expect(loadedTypes(types, loaded)).toEqual(undefined);
+    });
+  });
+
+  describe('checkSubmit', () => {
+    let tmpLocation;
+    let state;
+    let dispatch;
+    let push;
+    let intl;
+
+    let messageActionLinks;
+    let messageId;
+    let wrapper;
+
+    beforeEach(() => {
+      tmpLocation = Object.assign({}, window.location);
+
+      delete window.location;
+
+      window.location = {};
+
+      window.location.pathname = routes.sources.path;
+
+      state = {};
+      dispatch = jest.fn().mockImplementation((func) => func);
+      push = jest.fn();
+      intl = {
+        formatMessage: ({ defaultMessage }, { name, type } = {}) =>
+          defaultMessage.replace('{name}', name).replace('{type}', type),
+      };
+
+      actions.addMessage = jest.fn().mockImplementation(({ actionLinks, customId }) => {
+        messageActionLinks = actionLinks;
+        messageId = customId;
+      });
+      actions.removeMessage = jest.fn();
+    });
+
+    afterEach(() => {
+      window.location = tmpLocation;
+    });
+
+    it('is called when wizard is open', () => {
+      window.location.pathname = routes.sourcesNew.path;
+
+      checkSubmit(state, dispatch, push, intl);
+
+      expect(dispatch).not.toHaveBeenCalled();
+      expect(actions.addMessage).not.toHaveBeenCalled();
+      expect(push).not.toHaveBeenCalled();
+    });
+
+    it('error', () => {
+      state = { isErrored: true, values: { source: { name: 'some-name' } }, error: 'some-error' };
+
+      checkSubmit(state, dispatch, push, intl);
+
+      expect(dispatch).toHaveBeenCalled();
+      expect(actions.addMessage).toHaveBeenCalledWith({
+        actionLinks: expect.any(Object),
+        customId: expect.any(String),
+        description:
+          'There was a problem while trying to add your source. Please try again. If the error persists, open a support case.',
+        title: 'Error adding source some-name',
+        variant: 'danger',
+      });
+      expect(push).not.toHaveBeenCalled();
+
+      wrapper = mount(messageActionLinks);
+
+      expect(wrapper.find('button').text()).toEqual('Retry');
+    });
+
+    it('unavailable', async () => {
+      state = {
+        isSubmitted: true,
+        createdSource: {
+          source_type_id: AMAZON_ID,
+          id: '1234',
+          name: 'some-name',
+          applications: [{ availability_status: UNAVAILABLE, availability_status_error: 'Some app error' }],
+        },
+        sourceTypes: [AMAZON],
+      };
+
+      checkSubmit(state, dispatch, push, intl);
+
+      expect(dispatch).toHaveBeenCalled();
+      expect(actions.addMessage).toHaveBeenCalledWith({
+        actionLinks: expect.any(Object),
+        customId: expect.any(String),
+        description: 'Some app error',
+        title: 'Source some-name configuration unsuccessful',
+        variant: 'danger',
+      });
+      expect(push).not.toHaveBeenCalled();
+
+      wrapper = mount(messageActionLinks);
+
+      expect(wrapper.find('button').text()).toEqual('Edit source');
+
+      await act(async () => {
+        wrapper.find('button').simulate('click');
+      });
+      wrapper.update();
+
+      expect(push).toHaveBeenCalledWith(replaceRouteId(routes.sourcesDetail.path, '1234'));
+      expect(actions.removeMessage).toHaveBeenCalledWith(messageId);
+    });
+
+    it('timeout', () => {
+      state = {
+        isSubmitted: true,
+        createdSource: {
+          source_type_id: AMAZON_ID,
+          name: 'some-name',
+          applications: [{ availability_status: null }],
+        },
+        sourceTypes: [AMAZON],
+      };
+
+      checkSubmit(state, dispatch, push, intl);
+
+      expect(dispatch).toHaveBeenCalled();
+      expect(actions.addMessage).toHaveBeenCalledWith({
+        description:
+          'We are still working to confirm credentials and app settings. To track progress, check the Status column in the Sources table.',
+        title: 'Source some-name configuration in progress',
+        variant: 'info',
+      });
+      expect(push).not.toHaveBeenCalled();
+    });
+
+    it('available', async () => {
+      state = {
+        isSubmitted: true,
+        createdSource: {
+          source_type_id: AMAZON_ID,
+          id: '1234',
+          name: 'some-name',
+          applications: [{ availability_status: AVAILABLE }],
+        },
+        sourceTypes: [AMAZON],
+      };
+
+      checkSubmit(state, dispatch, push, intl);
+
+      expect(dispatch).toHaveBeenCalled();
+      expect(actions.addMessage).toHaveBeenCalledWith({
+        actionLinks: expect.any(Object),
+        customId: expect.any(String),
+        description: 'Amazon Web Services connection is established.',
+        title: 'Source some-name connection successful',
+        variant: 'success',
+      });
+      expect(push).not.toHaveBeenCalled();
+
+      wrapper = mount(messageActionLinks);
+
+      expect(wrapper.find('button').text()).toEqual('View source details');
+
+      await act(async () => {
+        wrapper.find('button').simulate('click');
+      });
+      wrapper.update();
+
+      expect(push).toHaveBeenCalledWith(replaceRouteId(routes.sourcesDetail.path, '1234'));
+      expect(actions.removeMessage).toHaveBeenCalledWith(messageId);
     });
   });
 });
