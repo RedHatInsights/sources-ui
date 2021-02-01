@@ -81,7 +81,11 @@ describe('RedirectNoWriteAccess', () => {
     });
 
     expect(actions.addMessage).toHaveBeenCalled();
-    expect(actions.addMessage).toHaveBeenCalledWith(expect.any(String), 'danger', expect.any(String));
+    expect(actions.addMessage).toHaveBeenCalledWith({
+      title: expect.any(String),
+      variant: 'danger',
+      description: expect.any(String),
+    });
 
     expect(wasRedirectedToRoot(wrapper)).toEqual(true);
   });

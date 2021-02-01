@@ -25,17 +25,17 @@ const AvailabilityChecker = () => {
         await checkSourceStatus(source.id);
         setLoading(false);
         dispatch(
-          addMessage(
-            intl.formatMessage({
+          addMessage({
+            title: intl.formatMessage({
               id: 'sources.checkavailability.notificationTitle',
               defaultMessage: 'Request to check source status was sent',
             }),
-            'info',
-            intl.formatMessage({
+            variant: 'info',
+            description: intl.formatMessage({
               id: 'sources.checkavailability.notificationDescription',
               defaultMessage: 'Check this page later for updates',
-            })
-          )
+            }),
+          })
         );
       }}
       isDisabled={loading}
