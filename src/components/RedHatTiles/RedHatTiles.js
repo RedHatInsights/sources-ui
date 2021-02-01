@@ -40,13 +40,6 @@ const RedHatTiles = ({ setSelectedType }) => {
         onClick={() => openWizard('openshift')}
         icon={icon}
       />
-      <TileComponent
-        isStacked
-        title="Satellite"
-        onClick={() => openWizard('satellite')}
-        className="tile pf-u-mr-md-on-md pf-u-mt-md pf-u-mt-0-on-md"
-        icon={icon}
-      />
     </React.Fragment>
   );
 };

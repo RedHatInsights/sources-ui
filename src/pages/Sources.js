@@ -8,6 +8,7 @@ import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/compo
 import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/cjs/PageHeader';
 import { Section } from '@redhat-cloud-services/frontend-components/components/cjs/Section';
 import { filterVendorAppTypes } from '@redhat-cloud-services/frontend-components-sources/cjs/filterApps';
+import { filterVendorTypes } from '@redhat-cloud-services/frontend-components-sources/cjs/filterTypes';
 
 import { filterSources, pageAndSize } from '../redux/sources/actions';
 import SourcesTable from '../components/SourcesTable/SourcesTable';
@@ -115,6 +116,8 @@ const SourcesPage = () => {
 
   const showPaginationLoader = (!loaded || !appTypesLoaded || !sourceTypesLoaded) && !paginationClicked;
 
+  const filteredSourceTypes = sourceTypes.filter(filterVendorTypes);
+
   const mainContent = () => (
     <React.Fragment>
       <PrimaryToolbar
@@ -182,7 +185,7 @@ const SourcesPage = () => {
               type: 'checkbox',
               filterValues: {
                 onChange: (_event, value) => setFilter('source_type_id', value, dispatch),
-                items: prepareSourceTypeSelection(sourceTypes || [], activeVendor),
+                items: prepareSourceTypeSelection(filteredSourceTypes),
                 value: filterValue.source_type_id,
               },
             },
@@ -194,7 +197,7 @@ const SourcesPage = () => {
               type: 'checkbox',
               filterValues: {
                 onChange: (_event, value) => setFilter('applications', value, dispatch),
-                items: prepareApplicationTypeSelection(appTypes?.filter(filterVendorAppTypes(sourceTypes)) || []),
+                items: prepareApplicationTypeSelection(appTypes?.filter(filterVendorAppTypes(filteredSourceTypes)) || []),
                 value: filterValue.applications,
               },
             },

@@ -31,8 +31,8 @@ describe('RedhatTiles', () => {
     });
     wrapper.update();
 
-    expect(wrapper.find(Tile)).toHaveLength(3);
-    expect(wrapper.find('img')).toHaveLength(3);
+    expect(wrapper.find(Tile)).toHaveLength(2);
+    expect(wrapper.find('img')).toHaveLength(2);
 
     expect(wrapper.find(Tile).first().props().isDisabled).toEqual(undefined);
     expect(wrapper.find(Tile).last().props().isDisabled).toEqual(undefined);
@@ -47,17 +47,17 @@ describe('RedhatTiles', () => {
     });
     wrapper.update();
 
-    expect(wrapper.find(Tile)).toHaveLength(3);
-    expect(wrapper.find('img')).toHaveLength(3);
+    expect(wrapper.find(Tile)).toHaveLength(2);
+    expect(wrapper.find('img')).toHaveLength(2);
     expect(wrapper.find(Tile).first().props().isDisabled).toEqual(true);
     expect(wrapper.find(Tile).last().props().isDisabled).toEqual(true);
-    expect(wrapper.find(Tooltip)).toHaveLength(3);
+    expect(wrapper.find(Tooltip)).toHaveLength(2);
     expect(wrapper.find(Tooltip).first().props().content).toEqual(
       'To perform this action, you must be granted write permissions from your Organization Administrator.'
     );
   });
 
-  it('sets amazon', async () => {
+  it('sets ansible', async () => {
     await act(async () => {
       wrapper = mount(componentWrapperIntl(<RedHatTiles {...initialProps} />, store));
     });
@@ -72,7 +72,7 @@ describe('RedhatTiles', () => {
     expect(setSelectedType).toHaveBeenCalledWith('ansible-tower');
   });
 
-  it('sets gcp', async () => {
+  it('sets openshift', async () => {
     await act(async () => {
       wrapper = mount(componentWrapperIntl(<RedHatTiles {...initialProps} />, store));
     });
@@ -85,20 +85,5 @@ describe('RedhatTiles', () => {
 
     expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
     expect(setSelectedType).toHaveBeenCalledWith('openshift');
-  });
-
-  it('sets azure', async () => {
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<RedHatTiles {...initialProps} />, store));
-    });
-    wrapper.update();
-
-    await act(async () => {
-      wrapper.find(Tile).last().simulate('click');
-    });
-    wrapper.update();
-
-    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
-    expect(setSelectedType).toHaveBeenCalledWith('satellite');
   });
 });
