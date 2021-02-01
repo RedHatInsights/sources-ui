@@ -30,7 +30,7 @@ const GOLD_IMAGES_AZURE =
 const GOLD_IMAGES_MORE =
   'https://access.redhat.com/documentation/en-us/red_hat_subscription_management/1/html/red_hat_cloud_access_reference_guide/cloud-access-gold-images_cloud-access';
 const INSIGHTS_REF = 'https://www.redhat.com/en/technologies/management/insights';
-const INSIGHTS_SERVICES = '';
+const INSIGHTS_SERVICES = `/${PREFIX}insights/dashboard#workloads=All+workloads`;
 const SUBWATCH_HREF = `/${PREFIX}subscriptions`;
 const SUBWATCH_MORE_HREF = 'https://access.redhat.com/products/subscription-central';
 
