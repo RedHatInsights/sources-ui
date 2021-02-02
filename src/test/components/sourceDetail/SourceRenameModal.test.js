@@ -7,11 +7,11 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { replaceRouteId, routes } from '../../../Routes';
 import SourceRenameModal from '../../../components/SourceDetail/SourceRenameModal';
 import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
-import TextField from '@data-driven-forms/pf4-component-mapper/dist/cjs/text-field';
+import TextField from '@data-driven-forms/pf4-component-mapper/dist/esm/text-field';
 import * as actions from '../../../redux/sources/actions';
 import mockStore from '../../__mocks__/mockStore';
 
-jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/SourceAddSchema', () => ({
+jest.mock('@redhat-cloud-services/frontend-components-sources/esm/SourceAddSchema', () => ({
   __esModule: true,
   asyncValidatorDebounced: jest.fn(),
 }));

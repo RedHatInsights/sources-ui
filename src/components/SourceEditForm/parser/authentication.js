@@ -1,6 +1,6 @@
 import get from 'lodash/get';
-import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
-import hardcodedSchemas from '@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas';
+import validatorTypes from '@data-driven-forms/react-form-renderer/dist/esm/validator-types';
+import hardcodedSchemas from '@redhat-cloud-services/frontend-components-sources/esm/hardcodedSchemas';
 
 export const createAuthFieldName = (fieldName, id) => `authentications.a${id}.${fieldName.replace('authentication.', '')}`;
 

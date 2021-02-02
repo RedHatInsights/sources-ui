@@ -4,8 +4,8 @@ import { act } from 'react-dom/test-utils';
 import { FormGroup, TextInput, Button } from '@patternfly/react-core';
 import { validatorTypes } from '@data-driven-forms/react-form-renderer';
 
-import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/cjs/form-template';
-import TextField from '@data-driven-forms/pf4-component-mapper/dist/cjs/text-field';
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
+import TextField from '@data-driven-forms/pf4-component-mapper/dist/esm/text-field';
 
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
 

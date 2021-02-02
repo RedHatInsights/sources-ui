@@ -3,7 +3,7 @@ import { EmptyState, EmptyStateBody, EmptyStateIcon, Title } from '@patternfly/r
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import NoApplications from '../../../components/SourceDetail/NoApplications';
-import PlusCircleIcon from '@patternfly/react-icons/dist/js/icons/plus-circle-icon';
+import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-icon';
 
 describe('NoApplications', () => {
   let wrapper;

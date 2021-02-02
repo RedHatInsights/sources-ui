@@ -4,16 +4,16 @@ import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { useIntl } from 'react-intl';
 import isEmpty from 'lodash/isEmpty';
 
-import filterApps from '@redhat-cloud-services/frontend-components-sources/cjs/filterApps';
-import CloseModal from '@redhat-cloud-services/frontend-components-sources/cjs/CloseModal';
-import LoadingStep from '@redhat-cloud-services/frontend-components-sources/cjs/LoadingStep';
-import ErroredStep from '@redhat-cloud-services/frontend-components-sources/cjs/ErroredStep';
-import FinishedStep from '@redhat-cloud-services/frontend-components-sources/cjs/FinishedStep';
-import TimeoutStep from '@redhat-cloud-services/frontend-components-sources/cjs/TimeoutStep';
-import computeSourceStatus from '@redhat-cloud-services/frontend-components-sources/cjs/computeSourceStatus';
-import AmazonFinishedStep from '@redhat-cloud-services/frontend-components-sources/cjs/AmazonFinishedStep';
+import filterApps from '@redhat-cloud-services/frontend-components-sources/esm/filterApps';
+import CloseModal from '@redhat-cloud-services/frontend-components-sources/esm/CloseModal';
+import LoadingStep from '@redhat-cloud-services/frontend-components-sources/esm/LoadingStep';
+import ErroredStep from '@redhat-cloud-services/frontend-components-sources/esm/ErroredStep';
+import FinishedStep from '@redhat-cloud-services/frontend-components-sources/esm/FinishedStep';
+import TimeoutStep from '@redhat-cloud-services/frontend-components-sources/esm/TimeoutStep';
+import computeSourceStatus from '@redhat-cloud-services/frontend-components-sources/esm/computeSourceStatus';
+import AmazonFinishedStep from '@redhat-cloud-services/frontend-components-sources/esm/AmazonFinishedStep';
 
-import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/cjs/form-template';
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
 
 import { loadEntities } from '../../redux/sources/actions';
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
@@ -31,8 +31,8 @@ import { doAttachApp } from '../../api/doAttachApp';
 import { checkSourceStatus } from '../../api/checkSourceStatus';
 
 import reducer, { initialState } from './reducer';
-import { Button } from '@patternfly/react-core/dist/js/components/Button';
-import { Text } from '@patternfly/react-core/dist/js/components/Text';
+import { Button } from '@patternfly/react-core/dist/esm/components/Button';
+import { Text } from '@patternfly/react-core/dist/esm/components/Text';
 
 import removeAppSubmit from './removeAppSubmit';
 import { diff } from 'deep-object-diff';

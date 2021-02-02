@@ -3,12 +3,12 @@ import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import { Modal } from '@patternfly/react-core/dist/js/components/Modal/Modal';
-import componentTypes from '@data-driven-forms/react-form-renderer/dist/cjs/component-types';
-import { asyncValidatorDebounced } from '@redhat-cloud-services/frontend-components-sources/cjs/SourceAddSchema';
-import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
-import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/cjs/form-template';
-import validated from '@redhat-cloud-services/frontend-components-sources/cjs/validated';
+import { Modal } from '@patternfly/react-core/dist/esm/components/Modal/Modal';
+import componentTypes from '@data-driven-forms/react-form-renderer/dist/esm/component-types';
+import { asyncValidatorDebounced } from '@redhat-cloud-services/frontend-components-sources/esm/SourceAddSchema';
+import validatorTypes from '@data-driven-forms/react-form-renderer/dist/esm/validator-types';
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
+import validated from '@redhat-cloud-services/frontend-components-sources/esm/validated';
 
 import { useSource } from '../../hooks/useSource';
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Button, Spinner } from '@patternfly/react-core';
-import RedoIcon from '@patternfly/react-icons/dist/js/icons/redo-icon';
+import RedoIcon from '@patternfly/react-icons/dist/esm/icons/redo-icon';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { Route } from 'react-router-dom';

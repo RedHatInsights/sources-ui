@@ -8,10 +8,10 @@ import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
 
 import ErroredModal from '../../../components/SourceEditForm/ErroredModal';
 
-import { EmptyStateBody, EmptyState } from '@patternfly/react-core/dist/js/components/EmptyState';
+import { EmptyStateBody, EmptyState } from '@patternfly/react-core/dist/esm/components/EmptyState';
 import { Title, Button } from '@patternfly/react-core';
 
-import ErroredStep from '@redhat-cloud-services/frontend-components-sources/cjs/ErroredStep';
+import ErroredStep from '@redhat-cloud-services/frontend-components-sources/esm/ErroredStep';
 import mockStore from '../../__mocks__/mockStore';
 
 describe('ErroredModal', () => {

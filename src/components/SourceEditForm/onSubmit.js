@@ -1,4 +1,4 @@
-import { checkAppAvailability } from '@redhat-cloud-services/frontend-components-sources/cjs/getApplicationStatus';
+import { checkAppAvailability } from '@redhat-cloud-services/frontend-components-sources/esm/getApplicationStatus';
 
 import { CHECK_ENDPOINT_COMMAND, getEditedApplications, selectOnlyEditedValues } from './helpers';
 import { loadEntities } from '../../redux/sources/actions';

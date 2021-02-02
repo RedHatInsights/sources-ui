@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { routes } from '../../Routes';
 
-import { Tile } from '@patternfly/react-core/dist/js/components/Tile/Tile';
+import { Tile } from '@patternfly/react-core/dist/esm/components/Tile/Tile';
 
 import ImageWithPlaceholder from '../TilesShared/ImageWithPlaceholder';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';

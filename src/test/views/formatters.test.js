@@ -40,7 +40,7 @@ import {
   CATALOG_APP,
 } from '../__mocks__/applicationTypesData';
 import { Badge, Tooltip, Label, LabelGroup, Popover } from '@patternfly/react-core';
-import { DateFormat } from '@redhat-cloud-services/frontend-components/components/cjs/DateFormat';
+import { DateFormat } from '@redhat-cloud-services/frontend-components/components/esm/DateFormat';
 import { IntlProvider } from 'react-intl';
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
 

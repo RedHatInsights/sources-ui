@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import get from 'lodash/get';
 
-import { FormGroup } from '@patternfly/react-core/dist/js/components/Form/FormGroup';
-import { TextInput } from '@patternfly/react-core/dist/js/components/TextInput/TextInput';
+import { FormGroup } from '@patternfly/react-core/dist/esm/components/Form/FormGroup';
+import { TextInput } from '@patternfly/react-core/dist/esm/components/TextInput/TextInput';
 
-import TextField from '@data-driven-forms/pf4-component-mapper/dist/cjs/text-field';
-import useFormApi from '@data-driven-forms/react-form-renderer/dist/cjs/use-form-api';
-import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
-import validated from '@redhat-cloud-services/frontend-components-sources/cjs/validated';
+import TextField from '@data-driven-forms/pf4-component-mapper/dist/esm/text-field';
+import useFormApi from '@data-driven-forms/react-form-renderer/dist/esm/use-form-api';
+import validatorTypes from '@data-driven-forms/react-form-renderer/dist/esm/validator-types';
+import validated from '@redhat-cloud-services/frontend-components-sources/esm/validated';
 
 const Authentication = (rest) => {
   const formOptions = useFormApi();

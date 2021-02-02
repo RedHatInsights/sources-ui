@@ -3,7 +3,7 @@ import { EmptyState, EmptyStateBody, EmptyStateIcon, Title } from '@patternfly/r
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import NoPermissions from '../../../components/SourceDetail/NoPermissions';
-import PrivateIcon from '@patternfly/react-icons/dist/js/icons/private-icon';
+import PrivateIcon from '@patternfly/react-icons/dist/esm/icons/private-icon';
 
 describe('NoPermissions', () => {
   let wrapper;

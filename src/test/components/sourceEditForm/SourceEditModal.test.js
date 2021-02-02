@@ -2,7 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { Route } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
-import { Spinner } from '@patternfly/react-core/dist/js/components/Spinner';
+import { Spinner } from '@patternfly/react-core/dist/esm/components/Spinner';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import SourceEditModal from '../../../components/SourceEditForm/SourceEditModal';
@@ -26,7 +26,7 @@ import { UNAVAILABLE } from '../../../views/formatters';
 import mockStore from '../../__mocks__/mockStore';
 import { getStore } from '../../../utilities/store';
 
-jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/SourceAddSchema', () => ({
+jest.mock('@redhat-cloud-services/frontend-components-sources/esm/SourceAddSchema', () => ({
   __esModule: true,
   asyncValidatorDebounced: jest.fn(),
 }));

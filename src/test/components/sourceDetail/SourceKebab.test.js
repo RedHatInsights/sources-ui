@@ -6,7 +6,7 @@ import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
 import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import SourceKebab from '../../../components/SourceDetail/SourceKebab';
-import { InternalDropdownItem } from '@patternfly/react-core/dist/js/components/Dropdown/InternalDropdownItem';
+import { InternalDropdownItem } from '@patternfly/react-core/dist/esm/components/Dropdown/InternalDropdownItem';
 import mockStore from '../../__mocks__/mockStore';
 
 describe('SourceKebab', () => {

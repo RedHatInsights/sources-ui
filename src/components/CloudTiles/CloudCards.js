@@ -2,23 +2,23 @@
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
-import { Grid } from '@patternfly/react-core/dist/js/layouts/Grid/Grid';
-import { GridItem } from '@patternfly/react-core/dist/js/layouts/Grid/GridItem';
-import { Stack } from '@patternfly/react-core/dist/js/layouts/Stack/Stack';
-import { StackItem } from '@patternfly/react-core/dist/js/layouts/Stack/StackItem';
-import { Card } from '@patternfly/react-core/dist/js/components/Card/Card';
-import { CardBody } from '@patternfly/react-core/dist/js/components/Card/CardBody';
-import { CardTitle } from '@patternfly/react-core/dist/js/components/Card/CardTitle';
-import { CardHeader } from '@patternfly/react-core/dist/js/components/Card/CardHeader';
-import { CardExpandableContent } from '@patternfly/react-core/dist/js/components/Card/CardExpandableContent';
-import { Text } from '@patternfly/react-core/dist/js/components/Text/Text';
-import { Divider } from '@patternfly/react-core/dist/js/components/Divider/Divider';
-import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
-import { TextList } from '@patternfly/react-core/dist/js/components/Text/TextList';
-import { TextListItem } from '@patternfly/react-core/dist/js/components/Text/TextListItem';
+import { Grid } from '@patternfly/react-core/dist/esm/layouts/Grid/Grid';
+import { GridItem } from '@patternfly/react-core/dist/esm/layouts/Grid/GridItem';
+import { Stack } from '@patternfly/react-core/dist/esm/layouts/Stack/Stack';
+import { StackItem } from '@patternfly/react-core/dist/esm/layouts/Stack/StackItem';
+import { Card } from '@patternfly/react-core/dist/esm/components/Card/Card';
+import { CardBody } from '@patternfly/react-core/dist/esm/components/Card/CardBody';
+import { CardTitle } from '@patternfly/react-core/dist/esm/components/Card/CardTitle';
+import { CardHeader } from '@patternfly/react-core/dist/esm/components/Card/CardHeader';
+import { CardExpandableContent } from '@patternfly/react-core/dist/esm/components/Card/CardExpandableContent';
+import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
+import { Divider } from '@patternfly/react-core/dist/esm/components/Divider/Divider';
+import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
+import { TextList } from '@patternfly/react-core/dist/esm/components/Text/TextList';
+import { TextListItem } from '@patternfly/react-core/dist/esm/components/Text/TextListItem';
 
-import ArrowRightIcon from '@patternfly/react-icons/dist/js/icons/arrow-right-icon';
-import BuilderImageIcon from '@patternfly/react-icons/dist/js/icons/builder-image-icon';
+import ArrowRightIcon from '@patternfly/react-icons/dist/esm/icons/arrow-right-icon';
+import BuilderImageIcon from '@patternfly/react-icons/dist/esm/icons/builder-image-icon';
 import SubWatchIcon from './SubWatchIcon';
 
 const PREFIX = insights.chrome.isBeta() ? 'beta/' : '';

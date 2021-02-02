@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
-import { Dropdown } from '@patternfly/react-core/dist/js/components/Dropdown/Dropdown';
-import { DropdownItem } from '@patternfly/react-core/dist/js/components/Dropdown/DropdownItem';
-import { KebabToggle } from '@patternfly/react-core/dist/js/components/Dropdown/KebabToggle';
+import { Dropdown } from '@patternfly/react-core/dist/esm/components/Dropdown/Dropdown';
+import { DropdownItem } from '@patternfly/react-core/dist/esm/components/Dropdown/DropdownItem';
+import { KebabToggle } from '@patternfly/react-core/dist/esm/components/Dropdown/KebabToggle';
 
 import { replaceRouteId, routes } from '../../Routes';
 import { useSource } from '../../hooks/useSource';

@@ -12,7 +12,7 @@ import {
   createAuthAppFieldName,
 } from '../../../../components/SourceEditForm/parser/authentication';
 
-jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas', () => ({
+jest.mock('@redhat-cloud-services/frontend-components-sources/esm/hardcodedSchemas', () => ({
   __esModule: true,
   default: {
     aws: {
