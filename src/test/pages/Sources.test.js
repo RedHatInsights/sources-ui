@@ -411,7 +411,7 @@ describe('SourcesPage', () => {
     expect(helpers.afterSuccess).toHaveBeenCalledWith(expect.any(Function), source);
   });
 
-  it('submitCallback addSourceWizard - availale', async () => {
+  it('submitCallback addSourceWizard - available', async () => {
     const checkSubmitSpy = jest.spyOn(helpers, 'checkSubmit');
 
     const source = {
@@ -455,9 +455,8 @@ describe('SourcesPage', () => {
       expect.objectContaining({ formatMessage: expect.any(Function) })
     );
 
-    expect(wrapper.find(Alert).props().title).toEqual('Source name of created source connection successful');
     expect(wrapper.find(Alert).text()).toEqual(
-      'Success alert:Source name of created source connection successfulAmazon Web Services connection is established.View source details'
+      'Success alert:Amazon Web Services connection successfulSource name of created source was successfully addedView source details'
     );
     expect(wrapper.find(Alert).props().variant).toEqual('success');
 

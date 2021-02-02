@@ -283,8 +283,7 @@ describe('Source page helpers', () => {
       dispatch = jest.fn().mockImplementation((func) => func);
       push = jest.fn();
       intl = {
-        formatMessage: ({ defaultMessage }, { name, type } = {}) =>
-          defaultMessage.replace('{name}', name).replace('{type}', type),
+        formatMessage: ({ defaultMessage }) => defaultMessage.replace('{name}', 'some-name').replace('{type}', 'some-type'),
       };
 
       actions.addMessage = jest.fn().mockImplementation(({ actionLinks, customId }) => {
@@ -318,8 +317,8 @@ describe('Source page helpers', () => {
         actionLinks: expect.any(Object),
         customId: expect.any(String),
         description:
-          'There was a problem while trying to add your source. Please try again. If the error persists, open a support case.',
-        title: 'Error adding source some-name',
+          'There was a problem while trying to add source some-name. Please try again. If the error persists, open a support case.',
+        title: 'Error adding source',
         variant: 'danger',
       });
       expect(push).not.toHaveBeenCalled();
@@ -347,8 +346,8 @@ describe('Source page helpers', () => {
       expect(actions.addMessage).toHaveBeenCalledWith({
         actionLinks: expect.any(Object),
         customId: expect.any(String),
-        description: 'Some app error',
-        title: 'Source some-name configuration unsuccessful',
+        description: expect.any(Object),
+        title: 'Source configuration unsuccessful',
         variant: 'danger',
       });
       expect(push).not.toHaveBeenCalled();
@@ -382,8 +381,8 @@ describe('Source page helpers', () => {
       expect(dispatch).toHaveBeenCalled();
       expect(actions.addMessage).toHaveBeenCalledWith({
         description:
-          'We are still working to confirm credentials and app settings. To track progress, check the Status column in the Sources table.',
-        title: 'Source some-name configuration in progress',
+          'We are still working to confirm credentials for source some-name. To track progress, check the Status column in the Sources table.',
+        title: 'Source configuration in progress',
         variant: 'info',
       });
       expect(push).not.toHaveBeenCalled();
@@ -407,8 +406,8 @@ describe('Source page helpers', () => {
       expect(actions.addMessage).toHaveBeenCalledWith({
         actionLinks: expect.any(Object),
         customId: expect.any(String),
-        description: 'Amazon Web Services connection is established.',
-        title: 'Source some-name connection successful',
+        description: 'Source some-name was successfully added',
+        title: 'some-type connection successful',
         variant: 'success',
       });
       expect(push).not.toHaveBeenCalled();

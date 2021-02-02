@@ -111,18 +111,18 @@ export const checkSubmit = (state, dispatch, push, intl) => {
     if (state.isErrored) {
       dispatch(
         addMessage({
-          title: intl.formatMessage(
-            {
-              id: 'alert.error.title',
-              defaultMessage: 'Error adding source {name}',
-            },
-            { name: state.values.source.name }
-          ),
-          description: intl.formatMessage({
-            id: 'alert.error.description',
-            defaultMessage:
-              'There was a problem while trying to add your source. Please try again. If the error persists, open a support case.',
+          title: intl.formatMessage({
+            id: 'alert.error.title',
+            defaultMessage: 'Error adding source',
           }),
+          description: intl.formatMessage(
+            {
+              id: 'alert.error.description',
+              defaultMessage:
+                'There was a problem while trying to add source {name}. Please try again. If the error persists, open a support case.',
+            },
+            { name: <b>{state.values.source.name}</b> }
+          ),
           variant: 'danger',
           customId: id,
           actionLinks: (
@@ -140,20 +140,21 @@ export const checkSubmit = (state, dispatch, push, intl) => {
         case 'unavailable':
           dispatch(
             addMessage({
-              title: intl.formatMessage(
-                {
-                  id: 'alert.error.title',
-                  defaultMessage: 'Source {name} configuration unsuccessful',
-                },
-                { name: state.createdSource.name }
+              title: intl.formatMessage({
+                id: 'alert.error.title',
+                defaultMessage: 'Source configuration unsuccessful',
+              }),
+              description: (
+                <React.Fragment>
+                  {state.createdSource.applications?.[0]?.availability_status_error ||
+                    state.createdSource.endpoint?.[0]?.availability_status_error ||
+                    intl.formatMessage({
+                      id: 'wizard.unknownError',
+                      defaultMessage: 'Unknown error',
+                    })}
+                  &nbsp;[<b>{state.createdSource.name}</b>]
+                </React.Fragment>
               ),
-              description:
-                state.createdSource.applications?.[0]?.availability_status_error ||
-                state.createdSource.endpoint?.[0]?.availability_status_error ||
-                intl.formatMessage({
-                  id: 'wizard.unknownError',
-                  defaultMessage: 'Unknown error',
-                }),
               variant: 'danger',
               customId: id,
               actionLinks: (
@@ -175,18 +176,18 @@ export const checkSubmit = (state, dispatch, push, intl) => {
         case 'timeout':
           dispatch(
             addMessage({
-              title: intl.formatMessage(
-                {
-                  id: 'alert.timeout.title',
-                  defaultMessage: 'Source {name} configuration in progress',
-                },
-                { name: state.createdSource.name }
-              ),
-              description: intl.formatMessage({
-                id: 'alert.timeout.description',
-                defaultMessage:
-                  'We are still working to confirm credentials and app settings. To track progress, check the Status column in the Sources table.',
+              title: intl.formatMessage({
+                id: 'alert.timeout.title',
+                defaultMessage: 'Source configuration in progress',
               }),
+              description: intl.formatMessage(
+                {
+                  id: 'alert.timeout.description',
+                  defaultMessage:
+                    'We are still working to confirm credentials for source {name}. To track progress, check the Status column in the Sources table.',
+                },
+                { name: <b>{state.createdSource.name}</b> }
+              ),
               variant: 'info',
             })
           );
@@ -197,16 +198,16 @@ export const checkSubmit = (state, dispatch, push, intl) => {
               title: intl.formatMessage(
                 {
                   id: 'alert.success.title',
-                  defaultMessage: 'Source {name} connection successful',
+                  defaultMessage: '{type} connection successful',
                 },
-                { name: state.createdSource.name }
+                { type: state.sourceTypes.find(({ id }) => id === state.createdSource.source_type_id)?.product_name }
               ),
               description: intl.formatMessage(
                 {
                   id: 'alert.success.description',
-                  defaultMessage: '{type} connection is established.',
+                  defaultMessage: 'Source {name} was successfully added',
                 },
-                { type: state.sourceTypes.find(({ id }) => id === state.createdSource.source_type_id)?.product_name }
+                { name: <b>{state.createdSource.name}</b> }
               ),
               variant: 'success',
               customId: id,
