@@ -452,7 +452,8 @@ describe('SourcesPage', () => {
       source,
       expect.any(Function),
       expect.any(Function),
-      expect.objectContaining({ formatMessage: expect.any(Function) })
+      expect.objectContaining({ formatMessage: expect.any(Function) }),
+      expect.any(Function)
     );
 
     expect(wrapper.find(Alert).text()).toEqual(
@@ -470,6 +471,85 @@ describe('SourcesPage', () => {
     expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
       replaceRouteId(routes.sourcesDetail.path, '544615')
     );
+  });
+
+  it('submitCallback addSourceWizard - open wizard on error', async () => {
+    const checkSubmitSpy = jest.spyOn(helpers, 'checkSubmit');
+
+    const wizardState = {
+      activeStep: 'name_step',
+      activeStepIndex: '0',
+      maxStepIndex: 3,
+      prevSteps: [],
+      registeredFieldsHistory: {},
+    };
+
+    const source = {
+      isErrored: true,
+      sourceTypes: sourceTypesData.data,
+      values: { source: { name: 'some-name' } },
+      wizardState,
+    };
+
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <React.Fragment>
+            <NotificationsPortal />
+            <SourcesPage {...initialProps} />
+          </React.Fragment>,
+          store
+        )
+      );
+    });
+    wrapper.update();
+
+    await act(async () => {
+      wrapper.find(Link).first().simulate('click', { button: 0 });
+    });
+    wrapper.update();
+
+    await act(async () => {
+      wrapper.find(AddSourceWizard).props().submitCallback(source);
+    });
+    wrapper.update();
+
+    expect(checkSubmitSpy).toHaveBeenCalledWith(
+      source,
+      expect.any(Function),
+      expect.any(Function),
+      expect.objectContaining({ formatMessage: expect.any(Function) }),
+      expect.any(Function)
+    );
+
+    expect(wrapper.find(Alert).text()).toEqual(
+      'Danger alert:Error adding sourceThere was a problem while trying to add source some-name. Please try again. If the error persists, open a support case.Retry'
+    );
+
+    await act(async () => {
+      wrapper.find(AlertActionLink).find('button').simulate('click');
+    });
+    wrapper.update();
+
+    expect(wrapper.find(Alert)).toHaveLength(0);
+
+    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
+    expect(wrapper.find(AddSourceWizard).props().initialValues).toEqual({ source: { name: 'some-name' } });
+    expect(wrapper.find(AddSourceWizard).props().initialWizardState).toEqual(wizardState);
+
+    // reopen wizard to remove the initial values
+    await act(async () => {
+      wrapper.find(AddSourceWizard).props().onClose();
+    });
+    wrapper.update();
+
+    await act(async () => {
+      wrapper.find(Link).first().simulate('click', { button: 0 });
+    });
+    wrapper.update();
+
+    expect(wrapper.find(AddSourceWizard).props().initialValues).toEqual(undefined);
+    expect(wrapper.find(AddSourceWizard).props().initialWizardState).toEqual(undefined);
   });
 
   it('renders loading state when is loading', async () => {

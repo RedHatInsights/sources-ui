@@ -104,11 +104,13 @@ export const removeChips = (chips, filterValue, deleteAll) => {
 
 export const loadedTypes = (types, loaded) => (loaded && types.length > 0 ? types : undefined);
 
-export const checkSubmit = (state, dispatch, push, intl) => {
+export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
   const id = `sources-wizard-notification-${Date.now()}`;
 
   if (location.pathname.split('/').filter(Boolean).pop() !== routes.sourcesNew.path.split('/').pop()) {
     if (state.isErrored) {
+      const { activeStep, activeStepIndex, maxStepIndex, prevSteps, registeredFieldsHistory } = state.wizardState;
+
       dispatch(
         addMessage({
           title: intl.formatMessage({
@@ -126,7 +128,17 @@ export const checkSubmit = (state, dispatch, push, intl) => {
           variant: 'danger',
           customId: id,
           actionLinks: (
-            <AlertActionLink>
+            <AlertActionLink
+              onClick={() => {
+                stateDispatch({
+                  type: 'retryWizard',
+                  initialValues: state.values,
+                  initialState: { activeStep, activeStepIndex, maxStepIndex, prevSteps, registeredFieldsHistory },
+                });
+                dispatch(removeMessage(id));
+                push(routes.sourcesNew.path);
+              }}
+            >
               {intl.formatMessage({
                 id: 'alert.error.link',
                 defaultMessage: 'Retry',

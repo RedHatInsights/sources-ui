@@ -1,4 +1,4 @@
-import React, { useEffect, useState, lazy, Suspense } from 'react';
+import React, { useEffect, lazy, Suspense, useReducer } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
@@ -50,9 +50,28 @@ import CloudEmptyState from '../components/CloudTiles/CloudEmptyState';
 import { AVAILABLE, UNAVAILABLE } from '../views/formatters';
 import RedHatEmptyState from '../components/RedHatTiles/RedHatEmptyState';
 
+const initialState = {
+  filter: undefined,
+  selectedType: undefined,
+  wizardInitialState: undefined,
+  wizardInitialValues: undefined,
+};
+
+const reducer = (state, { type, value, selectedType, initialValues, initialState }) => {
+  switch (type) {
+    case 'setFilterValue':
+      return { ...state, filter: value };
+    case 'setSelectedType':
+      return { ...state, selectedType };
+    case 'retryWizard':
+      return { ...state, wizardInitialState: initialState, wizardInitialValues: initialValues };
+    case 'closeWizard':
+      return { ...state, selectedType: undefined, wizardInitialState: undefined, wizardInitialValues: undefined };
+  }
+};
+
 const SourcesPage = () => {
-  const [filter, setFilterValue] = useState();
-  const [selectedType, setSelectedType] = useState();
+  const [{ filter, selectedType, wizardInitialState, wizardInitialValues }, stateDispatch] = useReducer(reducer, initialState);
 
   const entitiesLoaded = useIsLoaded();
   const hasWritePermissions = useHasWritePermissions();
@@ -82,7 +101,7 @@ const SourcesPage = () => {
 
   useEffect(() => {
     if (filter !== filterValue.name) {
-      setFilterValue(filterValue.name);
+      stateDispatch({ type: 'setFilterValue', value: filterValue.name });
     }
   }, [filterValue.name]);
 
@@ -172,7 +191,7 @@ const SourcesPage = () => {
                   defaultMessage: 'Filter by name',
                 }),
                 onChange: (_event, value) => {
-                  setFilterValue(value);
+                  stateDispatch({ type: 'setFilterValue', value });
                   debouncedFiltering(() => setFilter('name', value, dispatch));
                 },
                 value: filter,
@@ -243,7 +262,7 @@ const SourcesPage = () => {
   const showEmptyState = loaded && numberOfEntities === 0 && !hasSomeFilter;
   const showInfoCards = activeVendor === CLOUD_VENDOR && !showEmptyState;
 
-  window.checkSubmit = (state) => checkSubmit(state, dispatch, history.push, intl);
+  const setSelectedType = (selectedType) => stateDispatch({ type: 'setSelectedType', selectedType });
 
   return (
     <React.Fragment>
@@ -258,13 +277,15 @@ const SourcesPage = () => {
             applicationTypes: loadedTypes(appTypes, appTypesLoaded),
             isOpen: true,
             onClose: () => {
-              setSelectedType(undefined);
+              stateDispatch({ type: 'closeWizard' });
               history.push(routes.sources.path);
             },
             afterSuccess: (source) => afterSuccess(dispatch, source),
             hideSourcesButton: true,
             selectedType,
-            submitCallback: (state) => checkSubmit(state, dispatch, history.push, intl),
+            submitCallback: (state) => checkSubmit(state, dispatch, history.push, intl, stateDispatch),
+            initialValues: wizardInitialValues,
+            initialWizardState: wizardInitialState,
           }}
         />
       </Suspense>
@@ -278,7 +299,7 @@ const SourcesPage = () => {
         <TabNavigation />
       </PageHeader>
       <Section type="content">
-        {showInfoCards && <CloudCards setSelectedType={setSelectedType} />}
+        {showInfoCards && <CloudCards />}
         {fetchingError && <SourcesErrorState />}
         {!fetchingError && showEmptyState && activeVendor === CLOUD_VENDOR && (
           <CloudEmptyState setSelectedType={setSelectedType} />

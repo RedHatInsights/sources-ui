@@ -265,6 +265,7 @@ describe('Source page helpers', () => {
     let dispatch;
     let push;
     let intl;
+    let stateDispatch;
 
     let messageActionLinks;
     let messageId;
@@ -307,10 +308,18 @@ describe('Source page helpers', () => {
       expect(push).not.toHaveBeenCalled();
     });
 
-    it('error', () => {
-      state = { isErrored: true, values: { source: { name: 'some-name' } }, error: 'some-error' };
+    it('error', async () => {
+      stateDispatch = jest.fn();
+      const wizardState = {
+        activeStep: '123',
+        activeStepIndex: '3',
+        maxStepIndex: 3,
+        prevSteps: ['prev-step'],
+        registeredFieldsHistory: { cosi: ['name'] },
+      };
+      state = { isErrored: true, values: { source: { name: 'some-name' } }, error: 'some-error', wizardState };
 
-      checkSubmit(state, dispatch, push, intl);
+      checkSubmit(state, dispatch, push, intl, stateDispatch);
 
       expect(dispatch).toHaveBeenCalled();
       expect(actions.addMessage).toHaveBeenCalledWith({
@@ -322,10 +331,24 @@ describe('Source page helpers', () => {
         variant: 'danger',
       });
       expect(push).not.toHaveBeenCalled();
+      expect(stateDispatch).not.toHaveBeenCalled();
 
       wrapper = mount(messageActionLinks);
 
       expect(wrapper.find('button').text()).toEqual('Retry');
+
+      await act(async () => {
+        wrapper.find('button').simulate('click');
+      });
+      wrapper.update();
+
+      expect(push).toHaveBeenCalledWith(routes.sourcesNew.path);
+      expect(actions.removeMessage).toHaveBeenCalledWith(messageId);
+      expect(stateDispatch).toHaveBeenCalledWith({
+        type: 'retryWizard',
+        initialValues: { source: { name: 'some-name' } },
+        initialState: wizardState,
+      });
     });
 
     it('unavailable', async () => {
