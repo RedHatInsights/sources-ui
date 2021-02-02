@@ -252,6 +252,82 @@ describe('SourcesPage', () => {
     expect(wrapper.find(Pagination)).toHaveLength(2);
   });
 
+  describe('filter source type selection', () => {
+    let tmpLocation;
+
+    beforeEach(() => {
+      tmpLocation = Object.assign({}, window.location);
+
+      delete window.location;
+
+      window.location = {};
+
+      window.location.pathname = routes.sources.path;
+    });
+
+    afterEach(() => {
+      window.location = tmpLocation;
+    });
+
+    it('shows only Red Hat sources in the selection (filters satellite out)', async () => {
+      window.location.search = `?activeVendor=${REDHAT_VENDOR}`;
+
+      store = getStore([], {
+        sources: {
+          loaded: 1,
+          numberOfEntities: 5,
+          sourceTypes: sourceTypesData.data,
+          activeVendor: REDHAT_VENDOR,
+        },
+        user: { isOrgAdmin: true },
+      });
+
+      await act(async () => {
+        wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+      });
+
+      expect(
+        wrapper
+          .find(PrimaryToolbar)
+          .first()
+          .props()
+          .filterConfig.items[1].filterValues.items.map(({ label }) => label)
+      ).toEqual([
+        'Ansible Tower',
+        'OpenShift Container Platform',
+        'Red Hat CloudForms',
+        'Red Hat OpenStack',
+        'Red Hat Virtualization',
+      ]);
+    });
+
+    it('shows only Cloud sources in the selection', async () => {
+      window.location.search = `?activeVendor=${CLOUD_VENDOR}`;
+
+      store = getStore([], {
+        sources: {
+          loaded: 1,
+          numberOfEntities: 5,
+          sourceTypes: sourceTypesData.data,
+          activeVendor: CLOUD_VENDOR,
+        },
+        user: { isOrgAdmin: true },
+      });
+
+      await act(async () => {
+        wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+      });
+
+      expect(
+        wrapper
+          .find(PrimaryToolbar)
+          .first()
+          .props()
+          .filterConfig.items[1].filterValues.items.map(({ label }) => label)
+      ).toEqual(['Amazon Web Services', 'Microsoft Azure', 'VMware vSphere']);
+    });
+  });
+
   it('renders addSourceWizard', async () => {
     await act(async () => {
       wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
