@@ -50,11 +50,11 @@ describe('Error Boundary', () => {
     );
 
     expect(wrapper.text()).toEqual('Error occurred');
-    expect(actions.addMessage).toHaveBeenCalledWith(ERROR_TO_STRING, 'danger', ERROR_STACK);
+    expect(actions.addMessage).toHaveBeenCalledWith({ title: ERROR_TO_STRING, variant: 'danger', description: ERROR_STACK });
 
-    expect(actions.addMessage.mock.calls[0][0].includes(ERROR.toString()));
-    expect(actions.addMessage.mock.calls[0][0].includes('Sentry ID'));
-    expect(actions.addMessage.mock.calls[0][0].includes(SENTRY_ID));
+    expect(actions.addMessage.mock.calls[0][0].title.includes(ERROR.toString()));
+    expect(actions.addMessage.mock.calls[0][0].title.includes('Sentry ID'));
+    expect(actions.addMessage.mock.calls[0][0].title.includes(SENTRY_ID));
 
     expect(sentry.captureException).toHaveBeenCalledWith(ERROR);
 

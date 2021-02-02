@@ -31,20 +31,20 @@ const RedirectNoId = () => {
         .then((source) => {
           if (!source) {
             dispatch(
-              addMessage(
-                intl.formatMessage({
+              addMessage({
+                title: intl.formatMessage({
                   id: 'sources.sourceNotFoundTitle',
                   defaultMessage: 'Requested source was not found',
                 }),
-                'danger',
-                intl.formatMessage(
+                variant: 'danger',
+                description: intl.formatMessage(
                   {
                     id: 'sources.sourceNotFoundTitleDescription',
                     defaultMessage: 'Source with { id } was not found. Try it again later.',
                   },
                   { id }
-                )
-              )
+                ),
+              })
             );
           }
 

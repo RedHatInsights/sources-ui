@@ -16,7 +16,13 @@ class ErrorBoundary extends Component {
 
   componentDidCatch(error) {
     const sentryId = Sentry.captureException(error);
-    this.props.dispatch(addMessage(`${error.toString()} (Sentry ID: ${sentryId})`, 'danger', error.stack));
+    this.props.dispatch(
+      addMessage({
+        title: `${error.toString()} (Sentry ID: ${sentryId})`,
+        variant: 'danger',
+        description: error.stack,
+      })
+    );
   }
 
   render() {

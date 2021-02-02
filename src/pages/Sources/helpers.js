@@ -1,5 +1,12 @@
+import React from 'react';
 import awesomeDebounce from 'awesome-debounce-promise';
-import { loadEntities, filterSources } from '../../redux/sources/actions';
+
+import { AlertActionLink } from '@patternfly/react-core/dist/js/components/Alert/AlertActionLink';
+
+import computeSourceStatus from '@redhat-cloud-services/frontend-components-sources/cjs/computeSourceStatus';
+
+import { loadEntities, filterSources, addMessage, removeMessage } from '../../redux/sources/actions';
+import { replaceRouteId, routes } from '../../Routes';
 import { AVAILABLE } from '../../views/formatters';
 
 export const debouncedFiltering = awesomeDebounce((refresh) => refresh(), 500);
@@ -96,3 +103,143 @@ export const removeChips = (chips, filterValue, deleteAll) => {
 };
 
 export const loadedTypes = (types, loaded) => (loaded && types.length > 0 ? types : undefined);
+
+export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
+  const id = `sources-wizard-notification-${Date.now()}`;
+
+  if (location.pathname.split('/').filter(Boolean).pop() !== routes.sourcesNew.path.split('/').pop()) {
+    if (state.isErrored) {
+      const { activeStep, activeStepIndex, maxStepIndex, prevSteps, registeredFieldsHistory } = state.wizardState;
+
+      dispatch(
+        addMessage({
+          title: intl.formatMessage({
+            id: 'alert.error.title',
+            defaultMessage: 'Error adding source',
+          }),
+          description: intl.formatMessage(
+            {
+              id: 'alert.error.description',
+              defaultMessage:
+                'There was a problem while trying to add source {name}. Please try again. If the error persists, open a support case.',
+            },
+            { name: <b>{state.values.source.name}</b> }
+          ),
+          variant: 'danger',
+          customId: id,
+          actionLinks: (
+            <AlertActionLink
+              onClick={() => {
+                stateDispatch({
+                  type: 'retryWizard',
+                  initialValues: state.values,
+                  initialState: { activeStep, activeStepIndex, maxStepIndex, prevSteps, registeredFieldsHistory },
+                });
+                dispatch(removeMessage(id));
+                push(routes.sourcesNew.path);
+              }}
+            >
+              {intl.formatMessage({
+                id: 'alert.error.link',
+                defaultMessage: 'Retry',
+              })}
+            </AlertActionLink>
+          ),
+        })
+      );
+    } else {
+      switch (computeSourceStatus(state.createdSource)) {
+        case 'unavailable':
+          dispatch(
+            addMessage({
+              title: intl.formatMessage({
+                id: 'alert.error.title',
+                defaultMessage: 'Source configuration unsuccessful',
+              }),
+              description: (
+                <React.Fragment>
+                  {state.createdSource.applications?.[0]?.availability_status_error ||
+                    state.createdSource.endpoint?.[0]?.availability_status_error ||
+                    intl.formatMessage({
+                      id: 'wizard.unknownError',
+                      defaultMessage: 'Unknown error',
+                    })}
+                  &nbsp;[<b>{state.createdSource.name}</b>]
+                </React.Fragment>
+              ),
+              variant: 'danger',
+              customId: id,
+              actionLinks: (
+                <AlertActionLink
+                  onClick={() => {
+                    dispatch(removeMessage(id));
+                    push(replaceRouteId(routes.sourcesDetail.path, state.createdSource.id));
+                  }}
+                >
+                  {intl.formatMessage({
+                    id: 'alert.unavailable.link',
+                    defaultMessage: 'Edit source',
+                  })}
+                </AlertActionLink>
+              ),
+            })
+          );
+          break;
+        case 'timeout':
+          dispatch(
+            addMessage({
+              title: intl.formatMessage({
+                id: 'alert.timeout.title',
+                defaultMessage: 'Source configuration in progress',
+              }),
+              description: intl.formatMessage(
+                {
+                  id: 'alert.timeout.description',
+                  defaultMessage:
+                    'We are still working to confirm credentials for source {name}. To track progress, check the Status column in the Sources table.',
+                },
+                { name: <b>{state.createdSource.name}</b> }
+              ),
+              variant: 'info',
+            })
+          );
+          break;
+        default:
+          dispatch(
+            addMessage({
+              title: intl.formatMessage(
+                {
+                  id: 'alert.success.title',
+                  defaultMessage: '{type} connection successful',
+                },
+                { type: state.sourceTypes.find(({ id }) => id === state.createdSource.source_type_id)?.product_name }
+              ),
+              description: intl.formatMessage(
+                {
+                  id: 'alert.success.description',
+                  defaultMessage: 'Source {name} was successfully added',
+                },
+                { name: <b>{state.createdSource.name}</b> }
+              ),
+              variant: 'success',
+              customId: id,
+              actionLinks: (
+                <AlertActionLink
+                  onClick={() => {
+                    dispatch(removeMessage(id));
+                    push(replaceRouteId(routes.sourcesDetail.path, state.createdSource.id));
+                  }}
+                >
+                  {intl.formatMessage({
+                    id: 'alert.success.link',
+                    defaultMessage: 'View source details',
+                  })}
+                </AlertActionLink>
+              ),
+            })
+          );
+          break;
+      }
+    }
+  }
+};
