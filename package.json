@@ -52,7 +52,10 @@
     ],
     "moduleNameMapper": {
       "\\.(css|scss)$": "identity-obj-proxy"
-    }
+    },
+    "transformIgnorePatterns": [
+      "<rootDir>/node_modules/(?!(@patternfly|@redhat-cloud-services|@data-driven-forms)).*$"
+    ]
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",
