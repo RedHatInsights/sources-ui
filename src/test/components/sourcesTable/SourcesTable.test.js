@@ -2,8 +2,10 @@ import React from 'react';
 import { Table, TableHeader, TableBody, RowWrapper, sortable, ActionsColumn, wrappable } from '@patternfly/react-table';
 import { MemoryRouter } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
-import ArrowsAltVIcon from '@patternfly/react-icons/dist/esm/icons/arrows-alt-v-icon';
-import LongArrowAltDownIcon from '@patternfly/react-icons/dist/esm/icons/long-arrow-alt-down-icon';
+import ArrowsAltVIcon from '@patternfly/react-icons/dist/js/icons/arrows-alt-v-icon';
+import LongArrowAltDownIcon from '@patternfly/react-icons/dist/js/icons/long-arrow-alt-down-icon';
+
+import { DropdownItem } from '@patternfly/react-core/dist/esm/components/Dropdown/DropdownItem';
 
 import SourcesTable, {
   insertEditAction,
@@ -23,7 +25,6 @@ import * as API from '../../../api/entities';
 import { replaceRouteId, routes } from '../../../Routes';
 import { defaultSourcesState } from '../../../redux/sources/reducer';
 import { sourcesColumns } from '../../../views/sourcesViewDefinition';
-import { DropdownItem } from '@patternfly/react-core';
 import mockStore from '../../__mocks__/mockStore';
 
 describe('SourcesTable', () => {

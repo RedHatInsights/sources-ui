@@ -1,7 +1,10 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
-import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
+
+import { Dropdown } from '@patternfly/react-core/dist/esm/components/Dropdown/Dropdown';
+import { DropdownItem } from '@patternfly/react-core/dist/esm/components/Dropdown/DropdownItem';
+import { KebabToggle } from '@patternfly/react-core/dist/esm/components/Dropdown/KebabToggle';
 
 import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';

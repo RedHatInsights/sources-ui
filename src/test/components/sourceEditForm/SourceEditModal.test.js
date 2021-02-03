@@ -10,7 +10,13 @@ import { routes, replaceRouteId } from '../../../Routes';
 import { applicationTypesData, CATALOG_APP } from '../../__mocks__/applicationTypesData';
 import { sourceTypesData, ANSIBLE_TOWER_ID } from '../../__mocks__/sourceTypesData';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
-import { Button, Form, Alert, EmptyState, TextInput } from '@patternfly/react-core';
+
+import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
+import { EmptyState } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyState';
+import { TextInput } from '@patternfly/react-core/dist/esm/components/TextInput/TextInput';
+import { Alert } from '@patternfly/react-core/dist/esm/components/Alert/Alert';
+import { Form } from '@patternfly/react-core/dist/esm/components/Form/Form';
+
 import * as editApi from '../../../api/doLoadSourceForEdit';
 import * as submit from '../../../components/SourceEditForm/onSubmit';
 import reducer from '../../../components/SourceEditForm/reducer';
@@ -19,7 +25,7 @@ import SubmittingModal from '../../../components/SourceEditForm/SubmittingModal'
 import EditAlert from '../../../components/SourceEditForm/parser/EditAlert';
 import ErroredModal from '../../../components/SourceEditForm/ErroredModal';
 import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
-import { Switch } from '@data-driven-forms/pf4-component-mapper';
+import Switch from '@data-driven-forms/pf4-component-mapper/dist/esm/switch';
 import { ACTION_TYPES } from '../../../redux/sources/actionTypes';
 import { useDispatch } from 'react-redux';
 import { UNAVAILABLE } from '../../../views/formatters';

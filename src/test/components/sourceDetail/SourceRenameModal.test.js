@@ -1,5 +1,7 @@
 import React from 'react';
-import { Modal } from '@patternfly/react-core';
+
+import { Modal } from '@patternfly/react-core/dist/esm/components/Modal/Modal';
+
 import { act } from 'react-dom/test-utils';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';

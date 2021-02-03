@@ -6,8 +6,8 @@ import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { routes, replaceRouteId } from '../../../Routes';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
 
-import { EmptyState } from '@patternfly/react-core/dist/esm/components/EmptyState';
-import { Spinner } from '@patternfly/react-core';
+import { EmptyState } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyState';
+import { Spinner } from '@patternfly/react-core/dist/esm/components/Spinner/Spinner';
 
 import SubmittingModal from '../../../components/SourceEditForm/SubmittingModal';
 import LoadingStep from '@redhat-cloud-services/frontend-components-sources/esm/LoadingStep';

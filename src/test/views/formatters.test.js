@@ -39,7 +39,13 @@ import {
   COSTMANAGEMENT_APP,
   CATALOG_APP,
 } from '../__mocks__/applicationTypesData';
-import { Badge, Tooltip, Label, LabelGroup, Popover } from '@patternfly/react-core';
+
+import { Badge } from '@patternfly/react-core/dist/esm/components/Badge/Badge';
+import { Popover } from '@patternfly/react-core/dist/esm/components/Popover/Popover';
+import { Tooltip } from '@patternfly/react-core/dist/esm/components/Tooltip/Tooltip';
+import { Label } from '@patternfly/react-core/dist/esm/components/Label/Label';
+import { LabelGroup } from '@patternfly/react-core/dist/esm/components/LabelGroup/LabelGroup';
+
 import { DateFormat } from '@redhat-cloud-services/frontend-components/components/esm/DateFormat';
 import { IntlProvider } from 'react-intl';
 import { componentWrapperIntl } from '../../utilities/testsHelpers';

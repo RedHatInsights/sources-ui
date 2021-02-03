@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link, MemoryRouter, Route } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
-import { Breadcrumb, BreadcrumbItem } from '@patternfly/react-core';
+
+import { Breadcrumb } from '@patternfly/react-core/dist/esm/components/Breadcrumb/Breadcrumb';
+import { BreadcrumbItem } from '@patternfly/react-core/dist/esm/components/Breadcrumb/BreadcrumbItem';
 
 import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';

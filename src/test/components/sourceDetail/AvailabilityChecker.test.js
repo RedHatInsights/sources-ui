@@ -1,6 +1,9 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
-import { Button, Spinner } from '@patternfly/react-core';
+
+import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
+import { Spinner } from '@patternfly/react-core/dist/esm/components/Spinner/Spinner';
+
 import RedoIcon from '@patternfly/react-icons/dist/esm/icons/redo-icon';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';

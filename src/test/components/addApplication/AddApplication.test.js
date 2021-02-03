@@ -1,6 +1,12 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { EmptyStateBody, Radio, Button, Title, EmptyStateSecondaryActions } from '@patternfly/react-core';
+
+import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
+import { EmptyStateBody } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateBody';
+import { EmptyStateSecondaryActions } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateSecondaryActions';
+import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
+import { Radio } from '@patternfly/react-core/dist/esm/components/Radio/Radio';
+
 import { Route, MemoryRouter } from 'react-router-dom';
 
 import CloseModal from '@redhat-cloud-services/frontend-components-sources/esm/CloseModal';

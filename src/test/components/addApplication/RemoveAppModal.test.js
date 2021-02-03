@@ -1,6 +1,10 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { Modal, Button, Text } from '@patternfly/react-core';
+
+import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
+import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
+import { Modal } from '@patternfly/react-core/dist/esm/components/Modal/Modal';
+
 import { MemoryRouter, Route } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
 

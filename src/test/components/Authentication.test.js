@@ -1,7 +1,10 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import { FormGroup, TextInput, Button } from '@patternfly/react-core';
+import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
+import { FormGroup } from '@patternfly/react-core/dist/esm/components/Form/FormGroup';
+import { TextInput } from '@patternfly/react-core/dist/esm/components/TextInput/TextInput';
+
 import { validatorTypes } from '@data-driven-forms/react-form-renderer';
 
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
