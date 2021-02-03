@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import useFormApi from '@data-driven-forms/react-form-renderer/dist/cjs/use-form-api';
+import useFormApi from '@data-driven-forms/react-form-renderer/dist/esm/use-form-api';
 
 export const innerSetter = ({ formOptions, authenticationValues, selectedAuthentication }) => {
   if (!selectedAuthentication.startsWith('new-')) {

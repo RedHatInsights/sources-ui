@@ -3,13 +3,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
 
-import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
-import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
-import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
-import { Modal } from '@patternfly/react-core/dist/js/components/Modal/Modal';
-import { Title } from '@patternfly/react-core/dist/js/components/Title/Title';
+import { Text, TextVariants } from '@patternfly/react-core/dist/esm/components/Text/Text';
+import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
+import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
+import { Modal } from '@patternfly/react-core/dist/esm/components/Modal/Modal';
+import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
 
-import ExclamationTriangleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-triangle-icon';
+import ExclamationTriangleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-triangle-icon';
 
 import { useSource } from '../../hooks/useSource';
 

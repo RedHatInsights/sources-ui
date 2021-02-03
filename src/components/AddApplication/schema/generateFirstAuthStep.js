@@ -1,4 +1,4 @@
-import * as schemaBuilder from '@redhat-cloud-services/frontend-components-sources/cjs/schemaBuilder';
+import * as schemaBuilder from '@redhat-cloud-services/frontend-components-sources/esm/schemaBuilder';
 
 const generateFirstAuthStep = (type, appType, endpointFields, authtype, intl) => {
   let fields = [...endpointFields];

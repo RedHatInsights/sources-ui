@@ -1,9 +1,9 @@
 import React from 'react';
 import awesomeDebounce from 'awesome-debounce-promise';
 
-import { AlertActionLink } from '@patternfly/react-core/dist/js/components/Alert/AlertActionLink';
+import { AlertActionLink } from '@patternfly/react-core/dist/esm/components/Alert/AlertActionLink';
 
-import computeSourceStatus from '@redhat-cloud-services/frontend-components-sources/cjs/computeSourceStatus';
+import computeSourceStatus from '@redhat-cloud-services/frontend-components-sources/esm/computeSourceStatus';
 
 import { loadEntities, filterSources, addMessage, removeMessage } from '../../redux/sources/actions';
 import { replaceRouteId, routes } from '../../Routes';

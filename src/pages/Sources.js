@@ -1,14 +1,14 @@
 import React, { useEffect, lazy, Suspense, useReducer } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
+import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
 import { useIntl } from 'react-intl';
 
-import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/components/cjs/PrimaryToolbar';
-import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/cjs/PageHeader';
-import { Section } from '@redhat-cloud-services/frontend-components/components/cjs/Section';
-import { filterVendorAppTypes } from '@redhat-cloud-services/frontend-components-sources/cjs/filterApps';
-import { filterVendorTypes } from '@redhat-cloud-services/frontend-components-sources/cjs/filterTypes';
+import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/components/esm/PrimaryToolbar';
+import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/esm/PageHeader';
+import { Section } from '@redhat-cloud-services/frontend-components/components/esm/Section';
+import { filterVendorAppTypes } from '@redhat-cloud-services/frontend-components-sources/esm/filterApps';
+import { filterVendorTypes } from '@redhat-cloud-services/frontend-components-sources/esm/filterTypes';
 
 import { filterSources, pageAndSize } from '../redux/sources/actions';
 import SourcesTable from '../components/SourcesTable/SourcesTable';
@@ -23,7 +23,7 @@ const SourceRemoveModal = lazy(() =>
 );
 const AddSourceWizard = lazy(() =>
   import(
-    /* webpackChunkName: "addSource" */ '@redhat-cloud-services/frontend-components-sources/cjs/addSourceWizard'
+    /* webpackChunkName: "addSource" */ '@redhat-cloud-services/frontend-components-sources/esm/addSourceWizard'
   ).then((module) => ({ default: module.AddSourceWizard }))
 );
 
@@ -41,7 +41,7 @@ import {
 import { useIsLoaded } from '../hooks/useIsLoaded';
 import { useHasWritePermissions } from '../hooks/useHasWritePermissions';
 import CustomRoute from '../components/CustomRoute/CustomRoute';
-import { Tooltip } from '@patternfly/react-core/dist/js/components/Tooltip/Tooltip';
+import { Tooltip } from '@patternfly/react-core/dist/esm/components/Tooltip/Tooltip';
 import { PaginationLoader } from '../components/SourcesTable/loaders';
 import TabNavigation from '../components/TabNavigation';
 import CloudCards from '../components/CloudTiles/CloudCards';

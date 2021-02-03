@@ -1,7 +1,7 @@
 import { addedDiff, updatedDiff } from 'deep-object-diff';
-import { handleError } from '@redhat-cloud-services/frontend-components-sources/cjs/handleError';
-import { checkAppAvailability } from '@redhat-cloud-services/frontend-components-sources/cjs/getApplicationStatus';
-import { timeoutedApps } from '@redhat-cloud-services/frontend-components-sources/cjs/constants';
+import { handleError } from '@redhat-cloud-services/frontend-components-sources/esm/handleError';
+import { checkAppAvailability } from '@redhat-cloud-services/frontend-components-sources/esm/getApplicationStatus';
+import { timeoutedApps } from '@redhat-cloud-services/frontend-components-sources/esm/constants';
 
 import isEmpty from 'lodash/isEmpty';
 import merge from 'lodash/merge';

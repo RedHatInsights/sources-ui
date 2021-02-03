@@ -1,7 +1,7 @@
 import { mount } from 'enzyme';
 import { Route } from 'react-router-dom';
 
-import rendererContext from '@data-driven-forms/react-form-renderer/dist/cjs/renderer-context';
+import rendererContext from '@data-driven-forms/react-form-renderer/dist/esm/renderer-context';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { sourceTypesData, OPENSHIFT_ID } from '../../__mocks__/sourceTypesData';

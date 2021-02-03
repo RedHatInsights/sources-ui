@@ -3,13 +3,13 @@ import { useIntl } from 'react-intl';
 import { shallowEqual, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import { Card } from '@patternfly/react-core/dist/js/components/Card/Card';
-import { CardBody } from '@patternfly/react-core/dist/js/components/Card/CardBody';
-import { CardTitle } from '@patternfly/react-core/dist/js/components/Card/CardTitle';
-import { Switch } from '@patternfly/react-core/dist/js/components/Switch/Switch';
-import { FormGroup } from '@patternfly/react-core/dist/js/components/Form/FormGroup';
+import { Card } from '@patternfly/react-core/dist/esm/components/Card/Card';
+import { CardBody } from '@patternfly/react-core/dist/esm/components/Card/CardBody';
+import { CardTitle } from '@patternfly/react-core/dist/esm/components/Card/CardTitle';
+import { Switch } from '@patternfly/react-core/dist/esm/components/Switch/Switch';
+import { FormGroup } from '@patternfly/react-core/dist/esm/components/Form/FormGroup';
 
-import filterApps from '@redhat-cloud-services/frontend-components-sources/cjs/filterApps';
+import filterApps from '@redhat-cloud-services/frontend-components-sources/esm/filterApps';
 
 import { useSource } from '../../hooks/useSource';
 import { replaceRouteId, routes } from '../../Routes';

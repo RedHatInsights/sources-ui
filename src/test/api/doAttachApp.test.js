@@ -1,6 +1,6 @@
 import { doAttachApp, removeEmpty } from '../../api/doAttachApp';
 import * as api from '../../api/entities';
-import * as appStatus from '@redhat-cloud-services/frontend-components-sources/cjs/getApplicationStatus';
+import * as appStatus from '@redhat-cloud-services/frontend-components-sources/esm/getApplicationStatus';
 
 const prepareFormApi = (values) => ({
   getState: () => ({
@@ -8,7 +8,7 @@ const prepareFormApi = (values) => ({
   }),
 });
 
-jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/constants', () => ({
+jest.mock('@redhat-cloud-services/frontend-components-sources/esm/constants', () => ({
   __esModule: true,
   timeoutedApps: () => [],
 }));

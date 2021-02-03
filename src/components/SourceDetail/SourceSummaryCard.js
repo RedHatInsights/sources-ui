@@ -2,13 +2,13 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 import { shallowEqual, useSelector } from 'react-redux';
 
-import { Card } from '@patternfly/react-core/dist/js/components/Card/Card';
-import { CardBody } from '@patternfly/react-core/dist/js/components/Card/CardBody';
-import { CardTitle } from '@patternfly/react-core/dist/js/components/Card/CardTitle';
-import { DescriptionList } from '@patternfly/react-core/dist/js/components/DescriptionList/DescriptionList';
-import { DescriptionListGroup } from '@patternfly/react-core/dist/js/components/DescriptionList/DescriptionListGroup';
-import { DescriptionListTerm } from '@patternfly/react-core/dist/js/components/DescriptionList/DescriptionListTerm';
-import { DescriptionListDescription } from '@patternfly/react-core/dist/js/components/DescriptionList/DescriptionListDescription';
+import { Card } from '@patternfly/react-core/dist/esm/components/Card/Card';
+import { CardBody } from '@patternfly/react-core/dist/esm/components/Card/CardBody';
+import { CardTitle } from '@patternfly/react-core/dist/esm/components/Card/CardTitle';
+import { DescriptionList } from '@patternfly/react-core/dist/esm/components/DescriptionList/DescriptionList';
+import { DescriptionListGroup } from '@patternfly/react-core/dist/esm/components/DescriptionList/DescriptionListGroup';
+import { DescriptionListTerm } from '@patternfly/react-core/dist/esm/components/DescriptionList/DescriptionListTerm';
+import { DescriptionListDescription } from '@patternfly/react-core/dist/esm/components/DescriptionList/DescriptionListDescription';
 
 import { useSource } from '../../hooks/useSource';
 import { dateFormatter, sourceTypeFormatter } from '../../views/formatters';

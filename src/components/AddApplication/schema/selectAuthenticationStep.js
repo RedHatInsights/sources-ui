@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import get from 'lodash/get';
 import { useIntl } from 'react-intl';
 
-import componentTypes from '@data-driven-forms/react-form-renderer/dist/cjs/component-types';
-import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
+import componentTypes from '@data-driven-forms/react-form-renderer/dist/esm/component-types';
+import validatorTypes from '@data-driven-forms/react-form-renderer/dist/esm/validator-types';
 
-import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
-import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
+import { Text, TextVariants } from '@patternfly/react-core/dist/esm/components/Text/Text';
+import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
 
 import { AuthTypeSetter } from '../AuthTypeSetter';
 

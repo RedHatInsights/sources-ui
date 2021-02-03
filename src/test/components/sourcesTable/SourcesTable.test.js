@@ -5,6 +5,8 @@ import { act } from 'react-dom/test-utils';
 import ArrowsAltVIcon from '@patternfly/react-icons/dist/js/icons/arrows-alt-v-icon';
 import LongArrowAltDownIcon from '@patternfly/react-icons/dist/js/icons/long-arrow-alt-down-icon';
 
+import { DropdownItem } from '@patternfly/react-core/dist/esm/components/Dropdown/DropdownItem';
+
 import SourcesTable, {
   insertEditAction,
   actionResolver,
@@ -23,7 +25,6 @@ import * as API from '../../../api/entities';
 import { replaceRouteId, routes } from '../../../Routes';
 import { defaultSourcesState } from '../../../redux/sources/reducer';
 import { sourcesColumns } from '../../../views/sourcesViewDefinition';
-import { DropdownItem } from '@patternfly/react-core';
 import mockStore from '../../__mocks__/mockStore';
 
 describe('SourcesTable', () => {

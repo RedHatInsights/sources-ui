@@ -2,7 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { Route } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
-import { Spinner } from '@patternfly/react-core/dist/js/components/Spinner';
+import { Spinner } from '@patternfly/react-core/dist/esm/components/Spinner';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import SourceEditModal from '../../../components/SourceEditForm/SourceEditModal';
@@ -10,7 +10,13 @@ import { routes, replaceRouteId } from '../../../Routes';
 import { applicationTypesData, CATALOG_APP } from '../../__mocks__/applicationTypesData';
 import { sourceTypesData, ANSIBLE_TOWER_ID } from '../../__mocks__/sourceTypesData';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
-import { Button, Form, Alert, EmptyState, TextInput } from '@patternfly/react-core';
+
+import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
+import { EmptyState } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyState';
+import { TextInput } from '@patternfly/react-core/dist/esm/components/TextInput/TextInput';
+import { Alert } from '@patternfly/react-core/dist/esm/components/Alert/Alert';
+import { Form } from '@patternfly/react-core/dist/esm/components/Form/Form';
+
 import * as editApi from '../../../api/doLoadSourceForEdit';
 import * as submit from '../../../components/SourceEditForm/onSubmit';
 import reducer from '../../../components/SourceEditForm/reducer';
@@ -19,14 +25,14 @@ import SubmittingModal from '../../../components/SourceEditForm/SubmittingModal'
 import EditAlert from '../../../components/SourceEditForm/parser/EditAlert';
 import ErroredModal from '../../../components/SourceEditForm/ErroredModal';
 import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
-import { Switch } from '@data-driven-forms/pf4-component-mapper';
+import Switch from '@data-driven-forms/pf4-component-mapper/dist/esm/switch';
 import { ACTION_TYPES } from '../../../redux/sources/actionTypes';
 import { useDispatch } from 'react-redux';
 import { UNAVAILABLE } from '../../../views/formatters';
 import mockStore from '../../__mocks__/mockStore';
 import { getStore } from '../../../utilities/store';
 
-jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/SourceAddSchema', () => ({
+jest.mock('@redhat-cloud-services/frontend-components-sources/esm/SourceAddSchema', () => ({
   __esModule: true,
   asyncValidatorDebounced: jest.fn(),
 }));

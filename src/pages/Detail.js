@@ -1,7 +1,7 @@
 import React, { lazy, Suspense } from 'react';
 
-import { Grid } from '@patternfly/react-core/dist/js/layouts/Grid/Grid';
-import { GridItem } from '@patternfly/react-core/dist/js/layouts/Grid/GridItem';
+import { Grid } from '@patternfly/react-core/dist/esm/layouts/Grid/Grid';
+import { GridItem } from '@patternfly/react-core/dist/esm/layouts/Grid/GridItem';
 
 import SourceSummaryCard from '../components/SourceDetail/SourceSummaryCard';
 import ApplicationsCard from '../components/SourceDetail/ApplicationsCard';
