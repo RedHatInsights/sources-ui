@@ -164,14 +164,10 @@ export const removeSource = (sourceId, title) => (dispatch) => {
     );
 };
 
-export const removeMessage = (id) => (dispatch, getState) => {
-  const messageId = getState().notifications.find(({ customId }) => customId === id)?.id;
-
-  return dispatch({
-    type: REMOVE_NOTIFICATION,
-    payload: messageId,
-  });
-};
+export const removeMessage = (id) => ({
+  type: REMOVE_NOTIFICATION,
+  payload: id,
+});
 
 export const removeApplication = (appId, sourceId, successTitle, errorTitle) => (dispatch) => {
   dispatch({
