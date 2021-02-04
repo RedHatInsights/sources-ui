@@ -1,31 +1,13 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { routes } from '../../Routes';
 
-import { Tile } from '@patternfly/react-core/dist/js/components/Tile/Tile';
-import { Tooltip } from '@patternfly/react-core/dist/js/components/Tooltip/Tooltip';
+import { Tile } from '@patternfly/react-core/dist/esm/components/Tile/Tile';
 
-import ImageWithPlaceholder from './ImageWithPlaceholder';
+import ImageWithPlaceholder from '../TilesShared/ImageWithPlaceholder';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
-
-const DisabledTile = (props) => {
-  const intl = useIntl();
-
-  const tooltip = intl.formatMessage({
-    id: 'sources.notAdminButton',
-    defaultMessage: 'To perform this action, you must be granted write permissions from your Organization Administrator.',
-  });
-
-  return (
-    <Tooltip content={tooltip}>
-      <div className="disabled-tile-with-tooltip">
-        <Tile {...props} isDisabled />
-      </div>
-    </Tooltip>
-  );
-};
+import DisabledTile from '../TilesShared/DisabledTile';
 
 const CloudTiles = ({ setSelectedType }) => {
   const { push } = useHistory();
@@ -55,6 +37,19 @@ const CloudTiles = ({ setSelectedType }) => {
       />
       <TileComponent
         isStacked
+        title="Google Cloud"
+        className="tile pf-u-mr-md-on-md pf-u-mt-md pf-u-mt-0-on-md"
+        onClick={() => openWizard('google')}
+        icon={
+          <ImageWithPlaceholder
+            className="provider-icon pf-u-mb-sm disabled-icon"
+            src="/apps/frontend-assets/partners-icons/google-cloud-short.svg"
+            alt="google logo"
+          />
+        }
+      />
+      <TileComponent
+        isStacked
         title="Microsoft Azure"
         onClick={() => openWizard('azure')}
         className="tile pf-u-mr-md-on-md pf-u-mt-md pf-u-mt-0-on-md"
@@ -75,19 +70,3 @@ CloudTiles.propTypes = {
 };
 
 export default CloudTiles;
-
-/* USE WHEN GOOGLE IS READY
-          <TileComponent
-            isDisabled
-            isStacked
-            className="tile pf-u-mt-md pf-u-mt-0-on-md"
-            title="Google Cloud"
-            icon={
-              <ImageWithPlaceholder
-                className="provider-icon pf-u-mb-sm disabled-icon"
-                src="/apps/frontend-assets/partners-icons/google-cloud-short.svg"
-                alt="azure logo"
-              />
-            }
-          />
-*/

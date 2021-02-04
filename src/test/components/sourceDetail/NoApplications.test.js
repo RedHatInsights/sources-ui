@@ -1,9 +1,13 @@
 import React from 'react';
-import { EmptyState, EmptyStateBody, EmptyStateIcon, Title } from '@patternfly/react-core';
+
+import { EmptyState } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyState';
+import { EmptyStateIcon } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateIcon';
+import { EmptyStateBody } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateBody';
+import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import NoApplications from '../../../components/SourceDetail/NoApplications';
-import PlusCircleIcon from '@patternfly/react-icons/dist/js/icons/plus-circle-icon';
+import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-icon';
 
 describe('NoApplications', () => {
   let wrapper;

@@ -2,6 +2,9 @@ import MockAdapter from 'axios-mock-adapter';
 
 import * as api from '../../api/entities';
 
+import { applicationTypesData, COSTMANAGEMENT_APP } from '../__mocks__/applicationTypesData';
+import { AMAZON_ID, sourceTypesData, AZURE_ID } from '../__mocks__/sourceTypesData';
+
 describe('entities spec', () => {
   const ERROR_DETAIL = 'error detail';
 
@@ -172,6 +175,15 @@ describe('entities spec', () => {
         expect(result).toEqual(OK_RESPONSE);
         expect(mock.history[method.toLowerCase()][0].data).toEqual(JSON.stringify(DATA));
       });
+
+      it('showApplication', async () => {
+        const method = 'Get';
+        mock[`on${method}`](`/api/sources/v3.0/applications/${SOURCE_ID}`).reply(200, OK_RESPONSE);
+
+        const result = await api.getSourcesApi().showApplication(SOURCE_ID);
+
+        expect(result).toEqual(OK_RESPONSE);
+      });
     });
 
     it('doRemoveSource fails', async () => {
@@ -281,13 +293,174 @@ describe('entities spec', () => {
 
       mock.onPost(`/api/sources/v3.0/graphql`).reply(200, { data: ENTITIES });
 
-      const result = await api.doLoadApplicationsForEdit(SOURCE_ID);
+      const result = await api.doLoadApplicationsForEdit(SOURCE_ID, applicationTypesData.data, sourceTypesData.data);
 
       expect(result).toEqual(ENTITIES);
 
       expect(mock.history.post[0].data.includes('id')).toEqual(true);
       expect(mock.history.post[0].data.includes('eq')).toEqual(true);
       expect(mock.history.post[0].data.includes(SOURCE_ID)).toEqual(true);
+    });
+
+    it('doLoadApplicationsForEdit - load extra for applications', async () => {
+      const ENTITIES = {
+        sources: [
+          {
+            applications: [{ id: '123' }, { id: '456' }],
+          },
+        ],
+      };
+
+      mock.onPost(`/api/sources/v3.0/graphql`).reply(200, { data: ENTITIES });
+      mock.onGet(`/api/sources/v3.0/applications/123`).reply(200, { extra: { dataset: '134' } });
+      mock.onGet(`/api/sources/v3.0/applications/456`).reply(200, { extra: { username: 'jsmith' } });
+
+      const result = await api.doLoadApplicationsForEdit(SOURCE_ID, applicationTypesData.data, sourceTypesData.data);
+
+      expect(result).toEqual({
+        sources: [
+          {
+            applications: [
+              { extra: { dataset: '134' }, id: '123' },
+              { extra: { username: 'jsmith' }, id: '456' },
+            ],
+          },
+        ],
+      });
+    });
+
+    describe('cost management temporarily loader', () => {
+      it('doLoadApplicationsForEdit - load extra for old cost management - amazon', async () => {
+        const ENTITIES = {
+          sources: [
+            {
+              source_type_id: AMAZON_ID,
+              applications: [{ id: '123' }],
+            },
+          ],
+        };
+
+        mock.onPost(`/api/sources/v3.0/graphql`).reply(200, { data: ENTITIES });
+        mock.onGet(`/api/sources/v3.0/applications/123`).reply(200, { application_type_id: COSTMANAGEMENT_APP.id, extra: {} });
+        mock.onGet(`/api/cost-management/v1/sources/${SOURCE_ID}/`).reply(200, {
+          billing_source: {
+            data_source: {
+              bucket: 'some-bucket',
+              resource_group: 'some-resource-group',
+              storage_account: 'some-storage_account',
+            },
+          },
+          authentication: {
+            credentials: {
+              subscription_id: 'some-sub-id',
+            },
+          },
+        });
+
+        const result = await api.doLoadApplicationsForEdit(SOURCE_ID, applicationTypesData.data, sourceTypesData.data);
+
+        expect(result).toEqual({
+          sources: [
+            {
+              source_type_id: AMAZON_ID,
+              applications: [
+                {
+                  id: '123',
+                  extra: {
+                    bucket: 'some-bucket',
+                    resource_group: 'some-resource-group',
+                    storage_account: 'some-storage_account',
+                    subscription_id: 'some-sub-id',
+                  },
+                },
+              ],
+            },
+          ],
+        });
+      });
+
+      it('doLoadApplicationsForEdit - load extra for old cost management - azure', async () => {
+        const ENTITIES = {
+          sources: [
+            {
+              source_type_id: AZURE_ID,
+              applications: [{ id: '123' }],
+            },
+          ],
+        };
+
+        mock.onPost(`/api/sources/v3.0/graphql`).reply(200, { data: ENTITIES });
+        mock.onGet(`/api/sources/v3.0/applications/123`).reply(200, { application_type_id: COSTMANAGEMENT_APP.id, extra: {} });
+        mock.onGet(`/api/cost-management/v1/sources/${SOURCE_ID}/`).reply(200, {
+          billing_source: {
+            data_source: {
+              bucket: 'some-bucket',
+              resource_group: 'some-resource-group',
+              storage_account: 'some-storage_account',
+            },
+          },
+          authentication: {
+            credentials: {
+              subscription_id: 'some-sub-id',
+            },
+          },
+        });
+
+        const result = await api.doLoadApplicationsForEdit(SOURCE_ID, applicationTypesData.data, sourceTypesData.data);
+
+        expect(result).toEqual({
+          sources: [
+            {
+              source_type_id: AZURE_ID,
+              applications: [
+                {
+                  id: '123',
+                  extra: {
+                    bucket: 'some-bucket',
+                    resource_group: 'some-resource-group',
+                    storage_account: 'some-storage_account',
+                    subscription_id: 'some-sub-id',
+                  },
+                },
+              ],
+            },
+          ],
+        });
+      });
+
+      it('doLoadApplicationsForEdit - does not load extra for old cost management - azure', async () => {
+        const ENTITIES = {
+          sources: [
+            {
+              source_type_id: AZURE_ID,
+              applications: [{ id: '123' }],
+            },
+          ],
+        };
+
+        mock.onPost(`/api/sources/v3.0/graphql`).reply(200, { data: ENTITIES });
+        mock
+          .onGet(`/api/sources/v3.0/applications/123`)
+          .reply(200, { application_type_id: COSTMANAGEMENT_APP.id, extra: { some: 'extra' } });
+
+        const result = await api.doLoadApplicationsForEdit(SOURCE_ID, applicationTypesData.data, sourceTypesData.data);
+
+        expect(result).toEqual({
+          sources: [
+            {
+              source_type_id: AZURE_ID,
+              applications: [
+                {
+                  id: '123',
+                  extra: {
+                    some: 'extra',
+                  },
+                },
+              ],
+            },
+          ],
+        });
+      });
     });
   });
 

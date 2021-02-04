@@ -1,8 +1,14 @@
 import axios from 'axios';
+import get from 'lodash/get';
+import set from 'lodash/set';
+
+import { APP_NAMES } from '../components/SourceEditForm/parser/application';
 import * as interceptors from '../frontend-components-copies/interceptors';
 import { CLOUD_VENDOR, CLOUD_VENDORS, REDHAT_VENDOR } from '../utilities/constants';
+import { AVAILABLE, PARTIALLY_UNAVAILABLE, UNAVAILABLE } from '../views/formatters';
 
 import { SOURCES_API_BASE_V3 } from './constants';
+import { cmConvertTypes, cmValuesMapper, getCmValues } from './getCmValues';
 
 export const graphQlErrorInterceptor = (response) => {
   if (response.errors && response.errors.length > 0) {
@@ -55,6 +61,7 @@ export const getSourcesApi = () => ({
   deleteAuthentication: (id) => axiosInstanceInsights.delete(`${SOURCES_API_BASE_V3}/authentications/${id}`),
   showAuthentication: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/authentications/${id}`),
   updateApplication: (id, data) => axiosInstanceInsights.patch(`${SOURCES_API_BASE_V3}/applications/${id}`, data),
+  showApplication: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/applications/${id}`),
 });
 
 export const doLoadAppTypes = () => getSourcesApi().doLoadAppTypes();
@@ -91,11 +98,11 @@ export const filtering = (filterValue = {}, activeVendor) => {
     filterQueries.push(`name: { contains_i: "${filterValue.name}" }`);
   }
 
-  if (filterValue.source_type_id && filterValue.source_type_id.length > 0) {
+  if (filterValue.source_type_id?.length > 0) {
     filterQueries.push(`source_type_id: { eq: [${filterValue.source_type_id.map((x) => `"${x}"`).join(', ')}] }`);
   }
 
-  if (filterValue.applications && filterValue.applications.length > 0) {
+  if (filterValue.applications?.length > 0) {
     filterQueries.push(
       `applications: { application_type_id: { eq: [${filterValue.applications.map((x) => `"${x}"`).join(', ')}] }}`
     );
@@ -107,6 +114,15 @@ export const filtering = (filterValue = {}, activeVendor) => {
 
   if (activeVendor === REDHAT_VENDOR) {
     filterQueries.push('source_type: { vendor: "Red Hat" }');
+  }
+
+  const status = filterValue.availability_status?.[0];
+  if (status) {
+    if (status === AVAILABLE) {
+      filterQueries.push(`availability_status: { eq: "${AVAILABLE}" }`);
+    } else if (status === UNAVAILABLE) {
+      filterQueries.push(`availability_status: { eq: ["${PARTIALLY_UNAVAILABLE}", "${UNAVAILABLE}"] }`);
+    }
   }
 
   if (filterQueries.length > 0) {
@@ -159,11 +175,11 @@ export const restFilterGenerator = (filterValue = {}, activeVendor) => {
     filterQueries.push(`filter[name][contains_i]=${filterValue.name}`);
   }
 
-  if (filterValue.source_type_id && filterValue.source_type_id.length > 0) {
+  if (filterValue.source_type_id?.length > 0) {
     filterValue.source_type_id.map((id) => filterQueries.push(`filter[source_type_id][]=${id}`));
   }
 
-  if (filterValue.applications && filterValue.applications.length > 0) {
+  if (filterValue.applications?.length > 0) {
     filterValue.applications.map((id) => filterQueries.push(`filter[applications][application_type_id][eq][]=${id}`));
   }
 
@@ -173,6 +189,16 @@ export const restFilterGenerator = (filterValue = {}, activeVendor) => {
 
   if (activeVendor === REDHAT_VENDOR) {
     filterQueries.push('filter[source_type][vendor]=Red Hat');
+  }
+
+  const status = filterValue.availability_status?.[0];
+  if (status) {
+    if (status === AVAILABLE) {
+      filterQueries.push(`filter[availability_status]=${AVAILABLE}`);
+    } else if (status === UNAVAILABLE) {
+      filterQueries.push(`filter[availability_status][]=${PARTIALLY_UNAVAILABLE}`);
+      filterQueries.push(`filter[availability_status][]=${UNAVAILABLE}`);
+    }
   }
 
   if (filterQueries.length > 0) {
@@ -194,21 +220,58 @@ export const doLoadSource = (id) =>
     })
     .then(({ data }) => data);
 
-export const doLoadApplicationsForEdit = (id) =>
-  getSourcesApi()
-    .postGraphQL({
-      query: `{ sources(filter: { id: { eq: ${id}}})
-            { applications {
-                application_type_id,
-                id,
-                availability_status_error,
-                availability_status,
-                authentications {
-                    id
-                }
-            } }
-        }`,
-    })
-    .then(({ data }) => data);
+export const doLoadApplicationsForEdit = async (id, appTypes, sourceTypes) => {
+  let graphql = await getSourcesApi().postGraphQL({
+    query: `{ sources(filter: { id: { eq: ${id}}})
+          { source_type_id, applications {
+              application_type_id,
+              id,
+              availability_status_error,
+              availability_status,
+              authentications {
+                  id
+              }
+          } }
+      }`,
+  });
+
+  const promises = [];
+  graphql.data.sources?.[0]?.applications?.forEach((app) => {
+    promises.push(getSourcesApi().showApplication(app.id));
+  });
+
+  const results = await Promise.all(promises);
+
+  const sourceType = sourceTypes.find(({ id }) => id === graphql.data.sources?.[0]?.source_type_id);
+  const costManagementApp = appTypes.find(({ name }) => name === APP_NAMES.COST_MANAGAMENT);
+
+  if (results.length) {
+    // Doing for as forEach has some issues in jest with nested async functions
+    for (let index = 0; index < results.length; index++) {
+      const { extra, application_type_id } = results[index];
+      const newExtra = { ...extra };
+
+      if (
+        application_type_id === costManagementApp.id &&
+        cmConvertTypes.includes(sourceType.name) &&
+        !Object.keys(extra).length
+      ) {
+        const cmValues = await getCmValues(id);
+        Object.keys(cmValuesMapper).forEach((key) => {
+          const value = get(cmValues, key);
+
+          value && set(newExtra, cmValuesMapper[key], value);
+        });
+      }
+
+      graphql.data.sources[0].applications[index] = {
+        ...graphql.data.sources[0].applications[index],
+        extra: newExtra,
+      };
+    }
+  }
+
+  return graphql.data;
+};
 
 export const doDeleteAuthentication = (id) => getSourcesApi().deleteAuthentication(id);

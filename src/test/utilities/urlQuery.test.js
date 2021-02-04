@@ -1,5 +1,6 @@
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../utilities/constants';
 import { parseQuery, updateQuery } from '../../utilities/urlQuery';
+import { AVAILABLE, PARTIALLY_UNAVAILABLE, UNAVAILABLE } from '../../views/formatters';
 
 describe('urlQuery helpers', () => {
   let tmpLocation;
@@ -237,6 +238,30 @@ describe('urlQuery helpers', () => {
         expect(result).toEqual({
           filterValue: {
             applications: ['3', '2'],
+          },
+        });
+      });
+
+      it('handles available filtering', () => {
+        window.location.search = `?filter[availability_status]=${AVAILABLE}`;
+
+        const result = parseQuery();
+
+        expect(result).toEqual({
+          filterValue: {
+            availability_status: [AVAILABLE],
+          },
+        });
+      });
+
+      it('handles unavailable filtering', () => {
+        window.location.search = `?filter[availability_status][]=${PARTIALLY_UNAVAILABLE}&filter[availability_status][]=${UNAVAILABLE}`;
+
+        const result = parseQuery();
+
+        expect(result).toEqual({
+          filterValue: {
+            availability_status: [UNAVAILABLE],
           },
         });
       });

@@ -1,6 +1,6 @@
 import get from 'lodash/get';
-import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
-import hardcodedSchemas from '@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas';
+import validatorTypes from '@data-driven-forms/react-form-renderer/dist/esm/validator-types';
+import hardcodedSchemas from '@redhat-cloud-services/frontend-components-sources/esm/hardcodedSchemas';
 
 export const createAuthFieldName = (fieldName, id) => `authentications.a${id}.${fieldName.replace('authentication.', '')}`;
 
@@ -20,7 +20,7 @@ export const getAdditionalAuthSteps = (sourceType, authtype, appName = 'generic'
 export const getAdditionalAuthStepsKeys = (sourceType, authtype, appName = 'generic') =>
   get(hardcodedSchemas, [sourceType, 'authentication', authtype, appName, 'includeStepKeyFields'], []);
 
-export const getAdditionalFields = (auth, stepKey) => auth?.fields?.filter((field) => field.stepKey === stepKey) || [];
+export const getAdditionalFields = (auth, stepKey) => auth?.fields?.filter((field) => stepKey && field.stepKey === stepKey) || [];
 
 export const modifyAuthSchemas = (fields, id, appId) =>
   fields.map((field) => {
@@ -43,28 +43,6 @@ export const modifyAuthSchemas = (fields, id, appId) =>
 
     return finalField;
   });
-
-const specialModifierAWS = (field, authtype) => {
-  if (getLastPartOfName(field.name) !== 'password') {
-    return field;
-  }
-
-  if (authtype === 'arn') {
-    return {
-      ...field,
-      label: 'Cost Management ARN',
-    };
-  }
-
-  if (authtype === 'cloud-meter-arn') {
-    return {
-      ...field,
-      label: 'Subscription Watch ARN',
-    };
-  }
-
-  return field;
-};
 
 export const authenticationFields = (authentications, sourceType, appName, appId) => {
   if (!authentications || authentications.length === 0 || !sourceType.schema || !sourceType.schema.authentication) {
@@ -91,17 +69,13 @@ export const authenticationFields = (authentications, sourceType, appName, appId
       .filter(
         (field) =>
           additionalStepsFields.includes(field.name) ||
-          !field.stepKey ||
+          (!additionalStepsFields.length && !field.stepKey) ||
           (field.stepKey && additionalStepKeys.includes(field.stepKey))
       )
       .map((field) => ({
         ...field,
         ...getEnhancedAuthField(sourceType.name, auth.authtype, field.name, appName),
       }));
-
-    if (!appName && sourceType.name === 'amazon') {
-      enhancedFields = enhancedFields.map((field) => specialModifierAWS(field, auth.authtype));
-    }
 
     return modifyAuthSchemas(enhancedFields, auth.id, appId);
   });

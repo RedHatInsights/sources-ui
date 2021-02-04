@@ -217,10 +217,6 @@ If you want to add an additional API endpoint for application-specific values, p
 
 `application.` will be sent to createApplication endpoint (please, do not use `application.application_type_id` otherwise you will rewrite user's selection.)
 
-`billing_source.` cost management billing source.
-
-`credentials.` cost management credentials (send together with billing_source.)
-
 # Quick check-list
 
 - [ ] Check API definition - Sources API

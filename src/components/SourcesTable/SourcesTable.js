@@ -11,7 +11,6 @@ import EmptyStateTable from './EmptyStateTable';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import { replaceRouteId, routes } from '../../Routes';
-import SourcesEmptyState from './SourcesEmptyState';
 
 const itemToCells = (item, columns, sourceTypes, appTypes) =>
   columns
@@ -122,7 +121,6 @@ const SourcesTable = () => {
     sortDirection,
     numberOfEntities,
     removingSources,
-    filterValue,
   } = useSelector(({ sources }) => sources, shallowEqual);
   const reduxDispatch = useDispatch();
 
@@ -165,18 +163,13 @@ const SourcesTable = () => {
 
   let shownRows = state.rows;
   if (numberOfEntities === 0 && state.isLoaded) {
-    const hasSomeFilter =
-      Object.entries(filterValue)
-        .map(([_key, value]) => value && (!Array.isArray(value) || (Array.isArray(value) && value.length > 0)))
-        .filter(Boolean).length > 0;
-
     shownRows = [
       {
         heightAuto: true,
         cells: [
           {
             props: { colSpan: COLUMN_COUNT },
-            title: hasSomeFilter ? <EmptyStateTable /> : <SourcesEmptyState />,
+            title: <EmptyStateTable />,
           },
         ],
       },

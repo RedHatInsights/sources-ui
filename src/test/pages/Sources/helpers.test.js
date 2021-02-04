@@ -1,3 +1,5 @@
+import { act } from 'react-dom/test-utils';
+
 import {
   afterSuccess,
   afterSuccessLoadParameters,
@@ -7,12 +9,16 @@ import {
   prepareChips,
   loadedTypes,
   prepareApplicationTypeSelection,
+  checkSubmit,
 } from '../../../pages/Sources/helpers';
 
 import * as actions from '../../../redux/sources/actions';
-import { sourceTypesData } from '../../__mocks__/sourceTypesData';
+import { AMAZON, AMAZON_ID, sourceTypesData } from '../../__mocks__/sourceTypesData';
 import { applicationTypesData } from '../../__mocks__/applicationTypesData';
-import { CLOUD_VENDOR, CLOUD_VENDORS, REDHAT_VENDOR } from '../../../utilities/constants';
+import { REDHAT_VENDOR } from '../../../utilities/constants';
+import { AVAILABLE, UNAVAILABLE } from '../../../views/formatters';
+import { replaceRouteId, routes } from '../../../Routes';
+import { mount } from 'enzyme';
 
 describe('Source page helpers', () => {
   describe('afterSuccess', () => {
@@ -100,6 +106,36 @@ describe('Source page helpers', () => {
       });
     });
 
+    it('returns chips for unavailable status', () => {
+      const key = 'availability_status';
+      const intl = { formatMessage: ({ defaultMessage }) => defaultMessage };
+
+      const filterValue = {
+        availability_status: [UNAVAILABLE],
+      };
+
+      expect(chipsFormatters(key, filterValue, sourceTypesData.data, applicationTypesData.data, intl)()).toEqual({
+        category: 'Status',
+        chips: [{ name: 'Unavailable', value: 'unavailable' }],
+        key: 'availability_status',
+      });
+    });
+
+    it('returns chips for available status', () => {
+      const key = 'availability_status';
+      const intl = { formatMessage: ({ defaultMessage }) => defaultMessage };
+
+      const filterValue = {
+        availability_status: [AVAILABLE],
+      };
+
+      expect(chipsFormatters(key, filterValue, sourceTypesData.data, applicationTypesData.data, intl)()).toEqual({
+        category: 'Status',
+        chips: [{ name: 'Available', value: 'available' }],
+        key: 'availability_status',
+      });
+    });
+
     it('returns chips for unknown', () => {
       const key = 'unknown';
 
@@ -110,27 +146,13 @@ describe('Source page helpers', () => {
   });
 
   describe('prepareSourceTypeSelection', () => {
-    it('parses source types into selection when CLOUD vendor set', () => {
-      const sourceTypes = [
-        { id: '23', product_name: 'Hidden type', vendor: REDHAT_VENDOR },
-        { id: '12', product_name: 'First type', vendor: CLOUD_VENDORS[0] },
-        { id: '14', product_name: 'Last type', vendor: CLOUD_VENDORS[1] },
-        { id: '25', product_name: 'Also hidden type', vendor: REDHAT_VENDOR },
-      ];
-
-      expect(prepareSourceTypeSelection(sourceTypes, CLOUD_VENDOR)).toEqual([
-        { value: '12', label: 'First type' },
-        { value: '14', label: 'Last type' },
-      ]);
-    });
-
     it('parses source types into selection', () => {
       const sourceTypes = [
         { id: '23', product_name: 'First type', vendor: REDHAT_VENDOR },
         { id: '12', product_name: 'Last type', vendor: REDHAT_VENDOR },
       ];
 
-      expect(prepareSourceTypeSelection(sourceTypes, REDHAT_VENDOR)).toEqual([
+      expect(prepareSourceTypeSelection(sourceTypes)).toEqual([
         { label: 'First type', value: '23' },
         { label: 'Last type', value: '12' },
       ]);
@@ -234,6 +256,196 @@ describe('Source page helpers', () => {
       loaded = true;
 
       expect(loadedTypes(types, loaded)).toEqual(undefined);
+    });
+  });
+
+  describe('checkSubmit', () => {
+    let tmpLocation;
+    let state;
+    let dispatch;
+    let push;
+    let intl;
+    let stateDispatch;
+
+    let messageActionLinks;
+    let messageId;
+    let wrapper;
+
+    beforeEach(() => {
+      tmpLocation = Object.assign({}, window.location);
+
+      delete window.location;
+
+      window.location = {};
+
+      window.location.pathname = routes.sources.path;
+
+      state = {};
+      dispatch = jest.fn().mockImplementation((func) => func);
+      push = jest.fn();
+      intl = {
+        formatMessage: ({ defaultMessage }) => defaultMessage.replace('{name}', 'some-name').replace('{type}', 'some-type'),
+      };
+
+      actions.addMessage = jest.fn().mockImplementation(({ actionLinks, customId }) => {
+        messageActionLinks = actionLinks;
+        messageId = customId;
+      });
+      actions.removeMessage = jest.fn();
+    });
+
+    afterEach(() => {
+      window.location = tmpLocation;
+    });
+
+    it('is called when wizard is open', () => {
+      window.location.pathname = routes.sourcesNew.path;
+
+      checkSubmit(state, dispatch, push, intl);
+
+      expect(dispatch).not.toHaveBeenCalled();
+      expect(actions.addMessage).not.toHaveBeenCalled();
+      expect(push).not.toHaveBeenCalled();
+    });
+
+    it('error', async () => {
+      stateDispatch = jest.fn();
+      const wizardState = {
+        activeStep: '123',
+        activeStepIndex: '3',
+        maxStepIndex: 3,
+        prevSteps: ['prev-step'],
+        registeredFieldsHistory: { cosi: ['name'] },
+      };
+      state = { isErrored: true, values: { source: { name: 'some-name' } }, error: 'some-error', wizardState };
+
+      checkSubmit(state, dispatch, push, intl, stateDispatch);
+
+      expect(dispatch).toHaveBeenCalled();
+      expect(actions.addMessage).toHaveBeenCalledWith({
+        actionLinks: expect.any(Object),
+        customId: expect.any(String),
+        description:
+          'There was a problem while trying to add source some-name. Please try again. If the error persists, open a support case.',
+        title: 'Error adding source',
+        variant: 'danger',
+      });
+      expect(push).not.toHaveBeenCalled();
+      expect(stateDispatch).not.toHaveBeenCalled();
+
+      wrapper = mount(messageActionLinks);
+
+      expect(wrapper.find('button').text()).toEqual('Retry');
+
+      await act(async () => {
+        wrapper.find('button').simulate('click');
+      });
+      wrapper.update();
+
+      expect(push).toHaveBeenCalledWith(routes.sourcesNew.path);
+      expect(actions.removeMessage).toHaveBeenCalledWith(messageId);
+      expect(stateDispatch).toHaveBeenCalledWith({
+        type: 'retryWizard',
+        initialValues: { source: { name: 'some-name' } },
+        initialState: wizardState,
+      });
+    });
+
+    it('unavailable', async () => {
+      state = {
+        isSubmitted: true,
+        createdSource: {
+          source_type_id: AMAZON_ID,
+          id: '1234',
+          name: 'some-name',
+          applications: [{ availability_status: UNAVAILABLE, availability_status_error: 'Some app error' }],
+        },
+        sourceTypes: [AMAZON],
+      };
+
+      checkSubmit(state, dispatch, push, intl);
+
+      expect(dispatch).toHaveBeenCalled();
+      expect(actions.addMessage).toHaveBeenCalledWith({
+        actionLinks: expect.any(Object),
+        customId: expect.any(String),
+        description: expect.any(Object),
+        title: 'Source configuration unsuccessful',
+        variant: 'danger',
+      });
+      expect(push).not.toHaveBeenCalled();
+
+      wrapper = mount(messageActionLinks);
+
+      expect(wrapper.find('button').text()).toEqual('Edit source');
+
+      await act(async () => {
+        wrapper.find('button').simulate('click');
+      });
+      wrapper.update();
+
+      expect(push).toHaveBeenCalledWith(replaceRouteId(routes.sourcesDetail.path, '1234'));
+      expect(actions.removeMessage).toHaveBeenCalledWith(messageId);
+    });
+
+    it('timeout', () => {
+      state = {
+        isSubmitted: true,
+        createdSource: {
+          source_type_id: AMAZON_ID,
+          name: 'some-name',
+          applications: [{ availability_status: null }],
+        },
+        sourceTypes: [AMAZON],
+      };
+
+      checkSubmit(state, dispatch, push, intl);
+
+      expect(dispatch).toHaveBeenCalled();
+      expect(actions.addMessage).toHaveBeenCalledWith({
+        description:
+          'We are still working to confirm credentials for source some-name. To track progress, check the Status column in the Sources table.',
+        title: 'Source configuration in progress',
+        variant: 'info',
+      });
+      expect(push).not.toHaveBeenCalled();
+    });
+
+    it('available', async () => {
+      state = {
+        isSubmitted: true,
+        createdSource: {
+          source_type_id: AMAZON_ID,
+          id: '1234',
+          name: 'some-name',
+          applications: [{ availability_status: AVAILABLE }],
+        },
+        sourceTypes: [AMAZON],
+      };
+
+      checkSubmit(state, dispatch, push, intl);
+
+      expect(dispatch).toHaveBeenCalled();
+      expect(actions.addMessage).toHaveBeenCalledWith({
+        actionLinks: expect.any(Object),
+        customId: expect.any(String),
+        description: 'Source some-name was successfully added',
+        title: 'some-type connection successful',
+        variant: 'success',
+      });
+      expect(push).not.toHaveBeenCalled();
+
+      wrapper = mount(messageActionLinks);
+
+      expect(wrapper.find('button').text()).toEqual('View source details');
+
+      await act(async () => {
+        wrapper.find('button').simulate('click');
+      });
+      wrapper.update();
+
+      expect(push).toHaveBeenCalledWith(replaceRouteId(routes.sourcesDetail.path, '1234'));
+      expect(actions.removeMessage).toHaveBeenCalledWith(messageId);
     });
   });
 });

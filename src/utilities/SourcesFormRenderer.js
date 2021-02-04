@@ -1,11 +1,11 @@
 import React from 'react';
 
-import FormRenderer from '@data-driven-forms/react-form-renderer/dist/cjs/form-renderer';
+import FormRenderer from '@data-driven-forms/react-form-renderer/dist/esm/form-renderer';
 
-import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/cjs/form-template';
-import componentMapper from '@data-driven-forms/pf4-component-mapper/dist/cjs/component-mapper';
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
+import componentMapper from '@data-driven-forms/pf4-component-mapper/dist/esm/component-mapper';
 
-import { mapperExtension } from '@redhat-cloud-services/frontend-components-sources/cjs/sourceFormRenderer';
+import { mapperExtension } from '@redhat-cloud-services/frontend-components-sources/esm/sourceFormRenderer';
 
 import Authentication from '../components/Authentication';
 

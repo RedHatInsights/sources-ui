@@ -130,25 +130,49 @@
 }
 
 .ins-c-sources__info-card {
-  min-height: 100%;
-
-  .center {
-    text-align: center;
+  .text {
+    font-size: 14px;
   }
 
-  .tile {
-    width: 210px;
+  .gold-images-title {
+    color: #3D2C00;
+    line-height: 18px;
+    font-weight: bold;
   }
 
-  .provider-icon {
-    height: 40px;
+  .insights-title {
+    color: #7D1007;
+    line-height: 18px;
+    font-weight: bold;
   }
 
-  .disabled-tile-with-tooltip {
-    display: inline-block;
+  .subwatch-title {
+    color: #1F0066;
+    line-height: 18px;
+    font-weight: bold;
+  }
 
-    .provider-icon {
-      opacity: 0.5;
+  .pf-c-divider {
+    margin: 24px;
+    margin-right: calc(24px - var(--pf-l-grid--m-gutter--GridGap));
+    height: calc(100% - 16px);
+    max-height: calc(100% - 16px);
+    min-height: calc(100% - 16px);
+  }
+
+  .flex {
+    display: flex;
+  }
+
+  .custom-icon {
+    height: 16px;
+    width: auto;
+    vertical-align: -2px;
+  }
+
+  @media (max-width: 768px) {
+    .pf-c-divider  {
+      display: none;
     }
   }
 }
@@ -163,7 +187,6 @@
 
 .ins-c-sources__cloud-empty-state-card {
   box-shadow: none !important;
-  cursor: initial !important;
 
   .catalog-link {
     font-size: 14px;
@@ -183,6 +206,10 @@
 
   .provider-icon {
     height: 40px;
+  }
+
+  .redhat-icon {
+    height: 50px;
   }
 
   .disabled-tile-with-tooltip {

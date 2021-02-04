@@ -1,7 +1,9 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import { Card, Tile, Tooltip } from '@patternfly/react-core';
+import { Card } from '@patternfly/react-core/dist/esm/components/Card/Card';
+import { Tooltip } from '@patternfly/react-core/dist/esm/components/Tooltip/Tooltip';
+import { Tile } from '@patternfly/react-core/dist/esm/components/Tile/Tile';
 
 import componentWrapperIntl from '../../../utilities/testsHelpers';
 import CloudEmptyState from '../../../components/CloudTiles/CloudEmptyState';
@@ -32,8 +34,8 @@ describe('CloudEmptyState', () => {
 
     expect(wrapper.find(Card)).toHaveLength(1);
     expect(wrapper.find(CloudTiles)).toHaveLength(1);
-    expect(wrapper.find(Tile)).toHaveLength(2);
-    expect(wrapper.find('img')).toHaveLength(2);
+    expect(wrapper.find(Tile)).toHaveLength(3);
+    expect(wrapper.find('img')).toHaveLength(3);
 
     expect(wrapper.find(Tile).first().props().isDisabled).toEqual(undefined);
     expect(wrapper.find(Tile).last().props().isDisabled).toEqual(undefined);

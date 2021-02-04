@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { RowWrapper } from '@patternfly/react-table';
-import { Spinner } from '@patternfly/react-core/dist/js/components/Spinner';
-import { Bullseye } from '@patternfly/react-core/dist/js/layouts/Bullseye';
-import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/cjs/PageHeader';
-import { Section } from '@redhat-cloud-services/frontend-components/components/cjs/Section';
-import { Grid } from '@patternfly/react-core/dist/js/layouts/Grid/Grid';
-import { GridItem } from '@patternfly/react-core/dist/js/layouts/Grid/GridItem';
-import { Card } from '@patternfly/react-core/dist/js/components/Card/Card';
-import { CardBody } from '@patternfly/react-core/dist/js/components/Card/CardBody';
+import { Spinner } from '@patternfly/react-core/dist/esm/components/Spinner';
+import { Bullseye } from '@patternfly/react-core/dist/esm/layouts/Bullseye';
+import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/esm/PageHeader';
+import { Section } from '@redhat-cloud-services/frontend-components/components/esm/Section';
+import { Grid } from '@patternfly/react-core/dist/esm/layouts/Grid/Grid';
+import { GridItem } from '@patternfly/react-core/dist/esm/layouts/Grid/GridItem';
+import { Card } from '@patternfly/react-core/dist/esm/components/Card/Card';
+import { CardBody } from '@patternfly/react-core/dist/esm/components/Card/CardBody';
 
 import { COLUMN_COUNT } from '../../views/sourcesViewDefinition';
 

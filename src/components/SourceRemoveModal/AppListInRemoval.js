@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, shallowEqual } from 'react-redux';
 
-import { TextList } from '@patternfly/react-core/dist/js/components/Text/TextList';
-import { TextListItem } from '@patternfly/react-core/dist/js/components/Text/TextListItem';
-import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
+import { TextList } from '@patternfly/react-core/dist/esm/components/Text/TextList';
+import { TextListItem } from '@patternfly/react-core/dist/esm/components/Text/TextListItem';
+import { Text, TextVariants } from '@patternfly/react-core/dist/esm/components/Text/Text';
 
 import { idToName } from './helpers';
 
