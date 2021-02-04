@@ -287,9 +287,9 @@ describe('Source page helpers', () => {
         formatMessage: ({ defaultMessage }) => defaultMessage.replace('{name}', 'some-name').replace('{type}', 'some-type'),
       };
 
-      actions.addMessage = jest.fn().mockImplementation(({ actionLinks, customId }) => {
+      actions.addMessage = jest.fn().mockImplementation(({ actionLinks, id }) => {
         messageActionLinks = actionLinks;
-        messageId = customId;
+        messageId = id;
       });
       actions.removeMessage = jest.fn();
     });
@@ -324,7 +324,7 @@ describe('Source page helpers', () => {
       expect(dispatch).toHaveBeenCalled();
       expect(actions.addMessage).toHaveBeenCalledWith({
         actionLinks: expect.any(Object),
-        customId: expect.any(String),
+        id: expect.any(String),
         description:
           'There was a problem while trying to add source some-name. Please try again. If the error persists, open a support case.',
         title: 'Error adding source',
@@ -368,7 +368,7 @@ describe('Source page helpers', () => {
       expect(dispatch).toHaveBeenCalled();
       expect(actions.addMessage).toHaveBeenCalledWith({
         actionLinks: expect.any(Object),
-        customId: expect.any(String),
+        id: expect.any(String),
         description: expect.any(Object),
         title: 'Source configuration unsuccessful',
         variant: 'danger',
@@ -428,7 +428,7 @@ describe('Source page helpers', () => {
       expect(dispatch).toHaveBeenCalled();
       expect(actions.addMessage).toHaveBeenCalledWith({
         actionLinks: expect.any(Object),
-        customId: expect.any(String),
+        id: expect.any(String),
         description: 'Source some-name was successfully added',
         title: 'some-type connection successful',
         variant: 'success',

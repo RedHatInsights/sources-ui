@@ -1,19 +1,19 @@
 import React from 'react';
-import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/components/esm/PrimaryToolbar';
+import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/PrimaryToolbar';
 import { act } from 'react-dom/test-utils';
 
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
+import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
 import { Tooltip } from '@patternfly/react-core/dist/esm/components/Tooltip/Tooltip';
 import { Tile } from '@patternfly/react-core/dist/esm/components/Tile/Tile';
-import { Alert } from '@patternfly/react-core/dist/esm/components/Alert/Alert';
-import { Pagination } from '@patternfly/react-core/dist/esm/components/Pagination/Pagination';
+import { Alert } from '@patternfly/react-core/dist/js/components/Alert/Alert';
+import { Pagination } from '@patternfly/react-core/dist/js/components/Pagination/Pagination';
 import { AlertActionLink } from '@patternfly/react-core/dist/esm/components/Alert/AlertActionLink';
-import { Chip } from '@patternfly/react-core/dist/esm/components/ChipGroup/Chip';
-import { Select } from '@patternfly/react-core/dist/esm/components/Select/Select';
+import { Chip } from '@patternfly/react-core/dist/js/components/ChipGroup/Chip';
+import { Select } from '@patternfly/react-core/dist/js/components/Select/Select';
 
 import { MemoryRouter, Link } from 'react-router-dom';
 import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources/esm/addSourceWizard';
-import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/esm/NotificationPortal';
+import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/NotificationPortal';
 
 import SourcesPageOriginal from '../../pages/Sources';
 import SourcesTable from '../../components/SourcesTable/SourcesTable';
