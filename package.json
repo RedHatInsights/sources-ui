@@ -11,14 +11,14 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@data-driven-forms/pf4-component-mapper": "^2.19.1",
-    "@data-driven-forms/react-form-renderer": "^2.19.1",
-    "@patternfly/react-core": "^4.84.4",
-    "@patternfly/react-icons": "^4.7.22",
+    "@data-driven-forms/pf4-component-mapper": "^2.21.1",
+    "@data-driven-forms/react-form-renderer": "^2.21.1",
+    "@patternfly/react-core": "^4.90.2",
+    "@patternfly/react-icons": "^4.8.3",
     "@patternfly/react-table": "^4.19.45",
-    "@redhat-cloud-services/frontend-components": "2.5.8",
+    "@redhat-cloud-services/frontend-components": "2.5.10",
     "@redhat-cloud-services/frontend-components-notifications": "2.2.4",
-    "@redhat-cloud-services/frontend-components-sources": "2.2.31",
+    "@redhat-cloud-services/frontend-components-sources": "2.2.43",
     "@redhat-cloud-services/frontend-components-utilities": "2.2.9",
     "@sentry/minimal": "5.29.2",
     "axios": "0.21.1",
@@ -52,7 +52,10 @@
     ],
     "moduleNameMapper": {
       "\\.(css|scss)$": "identity-obj-proxy"
-    }
+    },
+    "transformIgnorePatterns": [
+      "<rootDir>/node_modules/(?!(@patternfly|@redhat-cloud-services|@data-driven-forms)).*$"
+    ]
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",

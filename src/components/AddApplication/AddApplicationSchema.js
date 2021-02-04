@@ -1,11 +1,11 @@
 import React from 'react';
-import componentTypes from '@data-driven-forms/react-form-renderer/dist/cjs/component-types';
+import componentTypes from '@data-driven-forms/react-form-renderer/dist/esm/component-types';
 
-import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
-import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
+import { Text, TextVariants } from '@patternfly/react-core/dist/esm/components/Text/Text';
+import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
 
 import { useIntl } from 'react-intl';
-import * as schemaBuilder from '@redhat-cloud-services/frontend-components-sources/cjs/schemaBuilder';
+import * as schemaBuilder from '@redhat-cloud-services/frontend-components-sources/esm/schemaBuilder';
 import get from 'lodash/get';
 
 import authenticationSelectionStep from './schema/authenticationSelectionStep';

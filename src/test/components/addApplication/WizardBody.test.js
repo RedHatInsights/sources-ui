@@ -1,4 +1,4 @@
-import { Wizard } from '@patternfly/react-core';
+import { Wizard } from '@patternfly/react-core/dist/esm/components/Wizard/Wizard';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import WizardBodyAttach from '../../../components/AddApplication/WizardBody';

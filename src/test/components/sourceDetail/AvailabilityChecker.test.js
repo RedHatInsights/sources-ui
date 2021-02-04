@@ -1,7 +1,10 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
-import { Button, Spinner } from '@patternfly/react-core';
-import RedoIcon from '@patternfly/react-icons/dist/js/icons/redo-icon';
+
+import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
+import { Spinner } from '@patternfly/react-core/dist/esm/components/Spinner/Spinner';
+
+import RedoIcon from '@patternfly/react-icons/dist/esm/icons/redo-icon';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { Route } from 'react-router-dom';
@@ -62,10 +65,10 @@ describe('AvailabilityChecker', () => {
     expect(wrapper.find(RedoIcon)).toHaveLength(1);
     expect(wrapper.find(Spinner)).toHaveLength(0);
 
-    expect(actions.addMessage).toHaveBeenCalledWith(
-      'Request to check source status was sent',
-      'info',
-      'Check this page later for updates'
-    );
+    expect(actions.addMessage).toHaveBeenCalledWith({
+      title: 'Request to check source status was sent',
+      variant: 'info',
+      description: 'Check this page later for updates',
+    });
   });
 });

@@ -1,7 +1,8 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import { Tile, Tooltip } from '@patternfly/react-core';
+import { Tooltip } from '@patternfly/react-core/dist/esm/components/Tooltip/Tooltip';
+import { Tile } from '@patternfly/react-core/dist/esm/components/Tile/Tile';
 
 import componentWrapperIntl from '../../../utilities/testsHelpers';
 import { MemoryRouter } from 'react-router-dom';
@@ -32,8 +33,8 @@ describe('CloudTiles', () => {
     wrapper.update();
 
     expect(wrapper.find(CloudTiles)).toHaveLength(1);
-    expect(wrapper.find(Tile)).toHaveLength(2);
-    expect(wrapper.find('img')).toHaveLength(2);
+    expect(wrapper.find(Tile)).toHaveLength(3);
+    expect(wrapper.find('img')).toHaveLength(3);
 
     expect(wrapper.find(Tile).first().props().isDisabled).toEqual(undefined);
     expect(wrapper.find(Tile).last().props().isDisabled).toEqual(undefined);
@@ -48,11 +49,11 @@ describe('CloudTiles', () => {
     });
     wrapper.update();
 
-    expect(wrapper.find(Tile)).toHaveLength(2);
-    expect(wrapper.find('img')).toHaveLength(2);
+    expect(wrapper.find(Tile)).toHaveLength(3);
+    expect(wrapper.find('img')).toHaveLength(3);
     expect(wrapper.find(Tile).first().props().isDisabled).toEqual(true);
     expect(wrapper.find(Tile).last().props().isDisabled).toEqual(true);
-    expect(wrapper.find(Tooltip)).toHaveLength(2);
+    expect(wrapper.find(Tooltip)).toHaveLength(3);
     expect(wrapper.find(Tooltip).first().props().content).toEqual(
       'To perform this action, you must be granted write permissions from your Organization Administrator.'
     );
@@ -73,7 +74,7 @@ describe('CloudTiles', () => {
     expect(setSelectedType).toHaveBeenCalledWith('amazon');
   });
 
-  it('sets azure', async () => {
+  it('sets gcp', async () => {
     await act(async () => {
       wrapper = mount(componentWrapperIntl(<CloudTiles {...initialProps} />, store));
     });
@@ -85,10 +86,10 @@ describe('CloudTiles', () => {
     wrapper.update();
 
     expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
-    expect(setSelectedType).toHaveBeenCalledWith('azure');
+    expect(setSelectedType).toHaveBeenCalledWith('google');
   });
 
-  it.skip('does not set gcp', async () => {
+  it('sets azure', async () => {
     await act(async () => {
       wrapper = mount(componentWrapperIntl(<CloudTiles {...initialProps} />, store));
     });
@@ -99,7 +100,7 @@ describe('CloudTiles', () => {
     });
     wrapper.update();
 
-    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual('/');
-    expect(setSelectedType).not.toHaveBeenCalled();
+    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
+    expect(setSelectedType).toHaveBeenCalledWith('azure');
   });
 });

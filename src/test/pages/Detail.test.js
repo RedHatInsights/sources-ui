@@ -1,7 +1,9 @@
 import React from 'react';
-import { Grid, GridItem } from '@patternfly/react-core';
 import { Route } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
+
+import { GridItem } from '@patternfly/react-core/dist/esm/layouts/Grid/GridItem';
+import { Grid } from '@patternfly/react-core/dist/esm/layouts/Grid/Grid';
 
 import Detail from '../../pages/Detail';
 import { DetailLoader } from '../../components/SourcesTable/loaders';

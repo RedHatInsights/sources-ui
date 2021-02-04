@@ -5,7 +5,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 
-import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources/cjs/addSourceWizard';
+import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources/esm/addSourceWizard';
 
 import SourcesPage from '../../pages/Sources';
 
@@ -22,7 +22,7 @@ import * as typesApi from '../../api/source_types';
 import { routes } from '../../Routes';
 import UserReducer from '../../redux/user/reducer';
 
-jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/addSourceWizard', () => ({
+jest.mock('@redhat-cloud-services/frontend-components-sources/esm/addSourceWizard', () => ({
   __esModule: true,
   AddSourceWizard: jest.fn().mockImplementation(() => <h2>AddSource mock</h2>),
 }));

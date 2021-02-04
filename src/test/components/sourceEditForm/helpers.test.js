@@ -5,7 +5,7 @@ import {
   selectOnlyEditedValues,
 } from '../../../components/SourceEditForm/helpers';
 import { UNAVAILABLE } from '../../../views/formatters';
-import applicationTypesData, { COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
+import applicationTypesData from '../../__mocks__/applicationTypesData';
 
 describe('edit form helpers', () => {
   describe('selectOnlyEditedValues', () => {
@@ -181,21 +181,26 @@ describe('edit form helpers', () => {
       );
     });
 
-    it('prepares initial values with cost management values', () => {
-      const SOURCE_WITH_UNDEF_ENDPOINTS = {
+    it('prepares initial values with application extra values', () => {
+      const SOURCE_WITH_APPS_EXTRA = {
         ...SOURCE,
-        billing_source: { bucket: 'bucket' },
-        credentials: { subscription_id: '122' },
+        applications: [
+          { id: '123', extra: { dataset: '123dataset' }, authentications: [] },
+          { id: 'withoutdataset', authentications: [] },
+          { id: 'cosi', extra: { username: 'joesmith' }, authentications: [] },
+        ],
       };
 
-      const EXPECTED_INITIAL_VALUES_WITH_UNDEF_ENDPOINTS = {
+      const EXPECTED_INITIAL_VALUES_SOURCE_WITH_APPS_EXTRA = {
         ...EXPECTED_INITIAL_VALUES,
-        billing_source: { bucket: 'bucket' },
-        credentials: { subscription_id: '122' },
+        applications: {
+          a123: { extra: { dataset: '123dataset' } },
+          acosi: { extra: { username: 'joesmith' } },
+        },
       };
 
-      expect(prepareInitialValues(SOURCE_WITH_UNDEF_ENDPOINTS, SOURCE_TYPE_NAME)).toEqual(
-        EXPECTED_INITIAL_VALUES_WITH_UNDEF_ENDPOINTS
+      expect(prepareInitialValues(SOURCE_WITH_APPS_EXTRA, SOURCE_TYPE_NAME)).toEqual(
+        EXPECTED_INITIAL_VALUES_SOURCE_WITH_APPS_EXTRA
       );
     });
   });
@@ -262,36 +267,6 @@ describe('edit form helpers', () => {
       };
 
       expect(getEditedApplications(source, edited, appTypes)).toEqual(['check-endpoint-123', 'check-endpoint-456']);
-    });
-
-    it('edit cost management billing_source', () => {
-      source = {
-        applications: [
-          { id: '123', authentications: [] },
-          { id: '456', application_type_id: COSTMANAGEMENT_APP.id },
-        ],
-      };
-
-      edited = {
-        'billing_source.role': true,
-      };
-
-      expect(getEditedApplications(source, edited, appTypes)).toEqual(['456']);
-    });
-
-    it('edit cost management credentials', () => {
-      source = {
-        applications: [
-          { id: '123', authentications: [] },
-          { id: '456', application_type_id: COSTMANAGEMENT_APP.id },
-        ],
-      };
-
-      edited = {
-        'credentials.role': true,
-      };
-
-      expect(getEditedApplications(source, edited, appTypes)).toEqual(['456']);
     });
   });
 

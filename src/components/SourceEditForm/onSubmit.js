@@ -1,4 +1,4 @@
-import { checkAppAvailability } from '@redhat-cloud-services/frontend-components-sources/cjs/getApplicationStatus';
+import { checkAppAvailability } from '@redhat-cloud-services/frontend-components-sources/esm/getApplicationStatus';
 
 import { CHECK_ENDPOINT_COMMAND, getEditedApplications, selectOnlyEditedValues } from './helpers';
 import { loadEntities } from '../../redux/sources/actions';
@@ -7,13 +7,13 @@ import { doUpdateSource } from '../../api/doUpdateSource';
 
 import { AVAILABLE, UNAVAILABLE } from '../../views/formatters';
 
-export const onSubmit = async (values, editing, dispatch, source, intl, setState, appTypes) => {
+export const onSubmit = async (values, editing, dispatch, source, intl, setState) => {
   setState({ type: 'submit', values, editing });
 
   const startDate = new Date();
 
   try {
-    await doUpdateSource(source, selectOnlyEditedValues(values, editing));
+    await doUpdateSource(source, selectOnlyEditedValues(values, editing), values);
   } catch {
     await dispatch(loadEntities());
     setState({ type: 'submitFailed' });
@@ -25,7 +25,7 @@ export const onSubmit = async (values, editing, dispatch, source, intl, setState
 
   let messages = {};
 
-  const checkApplications = getEditedApplications(source, editing, appTypes);
+  const checkApplications = getEditedApplications(source, editing);
 
   const promises = [];
 

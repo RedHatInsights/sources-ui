@@ -1,9 +1,13 @@
 import React from 'react';
-import { EmptyState, EmptyStateBody, EmptyStateIcon, Title } from '@patternfly/react-core';
+
+import { EmptyState } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyState';
+import { EmptyStateIcon } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateIcon';
+import { EmptyStateBody } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateBody';
+import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import NoPermissions from '../../../components/SourceDetail/NoPermissions';
-import PrivateIcon from '@patternfly/react-icons/dist/js/icons/private-icon';
+import PrivateIcon from '@patternfly/react-icons/dist/esm/icons/private-icon';
 
 describe('NoPermissions', () => {
   let wrapper;

@@ -1,4 +1,4 @@
-import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications/cjs/actionTypes';
+import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications/esm/actionTypes';
 import {
   ACTION_TYPES,
   SORT_ENTITIES,
@@ -126,15 +126,12 @@ export const filterSources = (value) => (dispatch) => {
   return dispatch(loadEntities());
 };
 
-export const addMessage = (title, variant, description, customId) => (dispatch) =>
+export const addMessage = (props) => (dispatch) =>
   dispatch({
     type: ADD_NOTIFICATION,
     payload: {
-      title,
-      variant,
-      description,
       dismissable: true,
-      customId,
+      ...props,
     },
   });
 
@@ -155,7 +152,7 @@ export const removeSource = (sourceId, title) => (dispatch) => {
           sourceId,
         },
       });
-      dispatch(addMessage(title, 'success'));
+      dispatch(addMessage({ title, variant: 'success' }));
     })
     .catch(() =>
       dispatch({
@@ -167,11 +164,14 @@ export const removeSource = (sourceId, title) => (dispatch) => {
     );
 };
 
-export const removeMessage = (id) => (dispatch) =>
-  dispatch({
+export const removeMessage = (id) => (dispatch, getState) => {
+  const messageId = getState().notifications.find(({ customId }) => customId === id)?.id;
+
+  return dispatch({
     type: REMOVE_NOTIFICATION,
-    payload: id,
+    payload: messageId,
   });
+};
 
 export const removeApplication = (appId, sourceId, successTitle, errorTitle) => (dispatch) => {
   dispatch({

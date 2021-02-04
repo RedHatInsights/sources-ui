@@ -3,7 +3,7 @@ import { act } from 'react-dom/test-utils';
 
 import componentWrapperIntl from '../../../utilities/testsHelpers';
 import { Loader } from '../../../components/SourcesTable/loaders';
-import ImageWithPlaceholder from '../../../components/CloudTiles/ImageWithPlaceholder';
+import ImageWithPlaceholder from '../../../components/TilesShared/ImageWithPlaceholder';
 
 describe('ImageWithPlaceholder', () => {
   let wrapper;

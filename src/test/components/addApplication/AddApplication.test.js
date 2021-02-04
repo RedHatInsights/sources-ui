@@ -1,14 +1,20 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { EmptyStateBody, Radio, Button, Title, EmptyStateSecondaryActions } from '@patternfly/react-core';
+
+import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
+import { EmptyStateBody } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateBody';
+import { EmptyStateSecondaryActions } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateSecondaryActions';
+import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
+import { Radio } from '@patternfly/react-core/dist/esm/components/Radio/Radio';
+
 import { Route, MemoryRouter } from 'react-router-dom';
 
-import CloseModal from '@redhat-cloud-services/frontend-components-sources/cjs/CloseModal';
-import LoadingStep from '@redhat-cloud-services/frontend-components-sources/cjs/LoadingStep';
-import ErroredStep from '@redhat-cloud-services/frontend-components-sources/cjs/ErroredStep';
-import SummaryStep from '@redhat-cloud-services/frontend-components-sources/cjs/SourceWizardSummary';
-import FinishedStep from '@redhat-cloud-services/frontend-components-sources/cjs/FinishedStep';
-import AmazonFinishedStep from '@redhat-cloud-services/frontend-components-sources/cjs/AmazonFinishedStep';
+import CloseModal from '@redhat-cloud-services/frontend-components-sources/esm/CloseModal';
+import LoadingStep from '@redhat-cloud-services/frontend-components-sources/esm/LoadingStep';
+import ErroredStep from '@redhat-cloud-services/frontend-components-sources/esm/ErroredStep';
+import SummaryStep from '@redhat-cloud-services/frontend-components-sources/esm/SourceWizardSummary';
+import FinishedStep from '@redhat-cloud-services/frontend-components-sources/esm/FinishedStep';
+import AmazonFinishedStep from '@redhat-cloud-services/frontend-components-sources/esm/AmazonFinishedStep';
 
 import { act } from 'react-dom/test-utils';
 
@@ -25,7 +31,7 @@ import { routes, replaceRouteId } from '../../../Routes';
 import { AuthTypeSetter } from '../../../components/AddApplication/AuthTypeSetter';
 import reducer from '../../../components/AddApplication/reducer';
 import * as removeAppSubmit from '../../../components/AddApplication/removeAppSubmit';
-import TimeoutStep from '@redhat-cloud-services/frontend-components-sources/cjs/TimeoutStep';
+import TimeoutStep from '@redhat-cloud-services/frontend-components-sources/esm/TimeoutStep';
 
 import mockStore from '../../__mocks__/mockStore';
 
@@ -674,7 +680,7 @@ describe('AddApplication', () => {
       wrapper.update();
 
       expect(wrapper.find(TimeoutStep)).toHaveLength(1);
-      expect(wrapper.find(Title).last().text()).toEqual('Configuration not yet complete');
+      expect(wrapper.find(Title).last().text()).toEqual('Configuration in progress');
       expect(wrapper.find(EmptyStateBody).last().text()).toEqual(
         'We are still working to confirm credentials and app settings.To track progress, check the Status column in the Sources table.'
       );
@@ -709,7 +715,7 @@ describe('AddApplication', () => {
       wrapper.update();
 
       expect(wrapper.find(TimeoutStep)).toHaveLength(1);
-      expect(wrapper.find(Title).last().text()).toEqual('Configuration not yet complete');
+      expect(wrapper.find(Title).last().text()).toEqual('Configuration in progress');
       expect(wrapper.find(EmptyStateBody).last().text()).toEqual(
         'We are still working to confirm credentials and app settings.To track progress, check the Status column in the Sources table.'
       );

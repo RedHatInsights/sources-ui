@@ -1,18 +1,19 @@
-import React, { useEffect, useState, lazy, Suspense } from 'react';
+import React, { useEffect, lazy, Suspense, useReducer } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
+import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
 import { useIntl } from 'react-intl';
 
-import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/components/cjs/PrimaryToolbar';
-import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/cjs/PageHeader';
-import { Section } from '@redhat-cloud-services/frontend-components/components/cjs/Section';
-import { filterVendorAppTypes } from '@redhat-cloud-services/frontend-components-sources/cjs/filterApps';
+import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/components/esm/PrimaryToolbar';
+import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/esm/PageHeader';
+import { Section } from '@redhat-cloud-services/frontend-components/components/esm/Section';
+import { filterVendorAppTypes } from '@redhat-cloud-services/frontend-components-sources/esm/filterApps';
+import { filterVendorTypes } from '@redhat-cloud-services/frontend-components-sources/esm/filterTypes';
 
 import { filterSources, pageAndSize } from '../redux/sources/actions';
 import SourcesTable from '../components/SourcesTable/SourcesTable';
 import SourcesErrorState from '../components/SourcesErrorState';
-import { replaceRouteId, routes } from '../Routes';
+import { routes } from '../Routes';
 
 const SourceRemoveModal = lazy(() =>
   import(
@@ -22,7 +23,7 @@ const SourceRemoveModal = lazy(() =>
 );
 const AddSourceWizard = lazy(() =>
   import(
-    /* webpackChunkName: "addSource" */ '@redhat-cloud-services/frontend-components-sources/cjs/addSourceWizard'
+    /* webpackChunkName: "addSource" */ '@redhat-cloud-services/frontend-components-sources/esm/addSourceWizard'
   ).then((module) => ({ default: module.AddSourceWizard }))
 );
 
@@ -35,20 +36,42 @@ import {
   afterSuccess,
   loadedTypes,
   prepareApplicationTypeSelection,
+  checkSubmit,
 } from './Sources/helpers';
 import { useIsLoaded } from '../hooks/useIsLoaded';
 import { useHasWritePermissions } from '../hooks/useHasWritePermissions';
 import CustomRoute from '../components/CustomRoute/CustomRoute';
-import { Tooltip } from '@patternfly/react-core/dist/js/components/Tooltip/Tooltip';
+import { Tooltip } from '@patternfly/react-core/dist/esm/components/Tooltip/Tooltip';
 import { PaginationLoader } from '../components/SourcesTable/loaders';
 import TabNavigation from '../components/TabNavigation';
 import CloudCards from '../components/CloudTiles/CloudCards';
-import { CLOUD_VENDOR } from '../utilities/constants';
+import { CLOUD_VENDOR, REDHAT_VENDOR } from '../utilities/constants';
 import CloudEmptyState from '../components/CloudTiles/CloudEmptyState';
+import { AVAILABLE, UNAVAILABLE } from '../views/formatters';
+import RedHatEmptyState from '../components/RedHatTiles/RedHatEmptyState';
+
+const initialState = {
+  filter: undefined,
+  selectedType: undefined,
+  wizardInitialState: undefined,
+  wizardInitialValues: undefined,
+};
+
+const reducer = (state, { type, value, selectedType, initialValues, initialState }) => {
+  switch (type) {
+    case 'setFilterValue':
+      return { ...state, filter: value };
+    case 'setSelectedType':
+      return { ...state, selectedType };
+    case 'retryWizard':
+      return { ...state, wizardInitialState: initialState, wizardInitialValues: initialValues };
+    case 'closeWizard':
+      return { ...state, selectedType: undefined, wizardInitialState: undefined, wizardInitialValues: undefined };
+  }
+};
 
 const SourcesPage = () => {
-  const [filter, setFilterValue] = useState();
-  const [selectedType, setSelectedType] = useState();
+  const [{ filter, selectedType, wizardInitialState, wizardInitialValues }, stateDispatch] = useReducer(reducer, initialState);
 
   const entitiesLoaded = useIsLoaded();
   const hasWritePermissions = useHasWritePermissions();
@@ -78,7 +101,7 @@ const SourcesPage = () => {
 
   useEffect(() => {
     if (filter !== filterValue.name) {
-      setFilterValue(filterValue.name);
+      stateDispatch({ type: 'setFilterValue', value: filterValue.name });
     }
   }, [filterValue.name]);
 
@@ -112,6 +135,8 @@ const SourcesPage = () => {
   };
 
   const showPaginationLoader = (!loaded || !appTypesLoaded || !sourceTypesLoaded) && !paginationClicked;
+
+  const filteredSourceTypes = sourceTypes.filter(filterVendorTypes);
 
   const mainContent = () => (
     <React.Fragment>
@@ -166,7 +191,7 @@ const SourcesPage = () => {
                   defaultMessage: 'Filter by name',
                 }),
                 onChange: (_event, value) => {
-                  setFilterValue(value);
+                  stateDispatch({ type: 'setFilterValue', value });
                   debouncedFiltering(() => setFilter('name', value, dispatch));
                 },
                 value: filter,
@@ -180,7 +205,7 @@ const SourcesPage = () => {
               type: 'checkbox',
               filterValues: {
                 onChange: (_event, value) => setFilter('source_type_id', value, dispatch),
-                items: prepareSourceTypeSelection(sourceTypes || [], activeVendor),
+                items: prepareSourceTypeSelection(filteredSourceTypes),
                 value: filterValue.source_type_id,
               },
             },
@@ -192,14 +217,33 @@ const SourcesPage = () => {
               type: 'checkbox',
               filterValues: {
                 onChange: (_event, value) => setFilter('applications', value, dispatch),
-                items: prepareApplicationTypeSelection(appTypes?.filter(filterVendorAppTypes(sourceTypes)) || []),
+                items: prepareApplicationTypeSelection(appTypes?.filter(filterVendorAppTypes(filteredSourceTypes)) || []),
                 value: filterValue.applications,
+              },
+            },
+            {
+              label: intl.formatMessage({
+                id: 'sources.availabilityStatus',
+                defaultMessage: 'Status',
+              }),
+              type: 'checkbox',
+              filterValues: {
+                onChange: (event, _value, selectedValue) =>
+                  setFilter('availability_status', event.target.checked ? [selectedValue] : [], dispatch),
+                items: [
+                  { label: intl.formatMessage({ id: 'sources.available', defaultMessage: 'Available' }), value: AVAILABLE },
+                  {
+                    label: intl.formatMessage({ id: 'sources.unavailable', defaultMessage: 'Unavailable' }),
+                    value: UNAVAILABLE,
+                  },
+                ],
+                value: filterValue.availability_status,
               },
             },
           ],
         }}
         activeFiltersConfig={{
-          filters: prepareChips(filterValue, sourceTypes, appTypes),
+          filters: prepareChips(filterValue, sourceTypes, appTypes, intl),
           onDelete: (_event, chips, deleteAll) => dispatch(filterSources(removeChips(chips, filterValue, deleteAll))),
         }}
       />
@@ -215,8 +259,10 @@ const SourcesPage = () => {
       .map(([_key, value]) => value && (!Array.isArray(value) || (Array.isArray(value) && value.length > 0)))
       .filter(Boolean).length > 0;
 
-  const showEmptyState = loaded && numberOfEntities === 0 && !hasSomeFilter && activeVendor === CLOUD_VENDOR;
+  const showEmptyState = loaded && numberOfEntities === 0 && !hasSomeFilter;
   const showInfoCards = activeVendor === CLOUD_VENDOR && !showEmptyState;
+
+  const setSelectedType = (selectedType) => stateDispatch({ type: 'setSelectedType', selectedType });
 
   return (
     <React.Fragment>
@@ -230,14 +276,16 @@ const SourcesPage = () => {
             sourceTypes: loadedTypes(sourceTypes, sourceTypesLoaded),
             applicationTypes: loadedTypes(appTypes, appTypesLoaded),
             isOpen: true,
-            onClose: (_values, source) => {
-              setSelectedType(undefined);
-              source?.id ? history.push(replaceRouteId(routes.sourcesDetail.path, source.id)) : history.push(routes.sources.path);
+            onClose: () => {
+              stateDispatch({ type: 'closeWizard' });
+              history.push(routes.sources.path);
             },
             afterSuccess: (source) => afterSuccess(dispatch, source),
             hideSourcesButton: true,
-            returnButtonTitle: intl.formatMessage({ id: 'sources.returnButtonTitle', defaultMessage: 'Exit to source details' }),
             selectedType,
+            submitCallback: (state) => checkSubmit(state, dispatch, history.push, intl, stateDispatch),
+            initialValues: wizardInitialValues,
+            initialWizardState: wizardInitialState,
           }}
         />
       </Suspense>
@@ -251,9 +299,14 @@ const SourcesPage = () => {
         <TabNavigation />
       </PageHeader>
       <Section type="content">
-        {showInfoCards && <CloudCards setSelectedType={setSelectedType} />}
+        {showInfoCards && <CloudCards />}
         {fetchingError && <SourcesErrorState />}
-        {!fetchingError && showEmptyState && <CloudEmptyState setSelectedType={setSelectedType} />}
+        {!fetchingError && showEmptyState && activeVendor === CLOUD_VENDOR && (
+          <CloudEmptyState setSelectedType={setSelectedType} />
+        )}
+        {!fetchingError && showEmptyState && activeVendor === REDHAT_VENDOR && (
+          <RedHatEmptyState setSelectedType={setSelectedType} />
+        )}
         {!fetchingError && !showEmptyState && mainContent()}
       </Section>
     </React.Fragment>

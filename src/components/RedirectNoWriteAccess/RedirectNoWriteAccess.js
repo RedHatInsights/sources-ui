@@ -25,7 +25,7 @@ const RedirectNoWriteAccess = () => {
         defaultMessage: 'To perform this action, you must be granted write permissions from your Organization Administrator.',
       });
 
-      dispatch(addMessage(title, 'danger', description));
+      dispatch(addMessage({ title, variant: 'danger', description }));
     }
   }, [writePermissions]);
 
