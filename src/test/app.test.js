@@ -1,6 +1,6 @@
 import React from 'react';
-import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/esm/NotificationPortal';
-import { Main } from '@redhat-cloud-services/frontend-components/components/esm/Main';
+import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/NotificationPortal';
+import { Main } from '@redhat-cloud-services/frontend-components/Main';
 import { act } from 'react-dom/test-utils';
 import { BrowserRouter as Router } from 'react-router-dom';
 

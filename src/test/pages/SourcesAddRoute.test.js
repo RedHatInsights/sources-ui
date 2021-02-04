@@ -1,6 +1,6 @@
 import thunk from 'redux-thunk';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
-import { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/files/ReducerRegistry';
+import { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/ReducerRegistry';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';

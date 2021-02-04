@@ -1,4 +1,4 @@
-import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications/esm/actionTypes';
+import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications/redux';
 import {
   ACTION_TYPES,
   SORT_ENTITIES,

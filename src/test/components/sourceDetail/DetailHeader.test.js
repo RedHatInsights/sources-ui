@@ -9,7 +9,7 @@ import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import applicationTypesData from '../../__mocks__/applicationTypesData';
 import DetailHeader from '../../../components/SourceDetail/DetailHeader';
 import Breadcrumbs from '../../../components/SourceDetail/Breadcrumbs';
-import { PageHeader } from '@redhat-cloud-services/frontend-components/components/esm/PageHeader';
+import { PageHeader } from '@redhat-cloud-services/frontend-components/PageHeader';
 import SourceKebab from '../../../components/SourceDetail/SourceKebab';
 import * as formatters from '../../../views/formatters';
 import mockStore from '../../__mocks__/mockStore';
