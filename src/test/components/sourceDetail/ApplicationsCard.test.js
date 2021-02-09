@@ -128,11 +128,11 @@ describe('ApplicationsCard', () => {
     });
 
     it('renders correctly descriptions', () => {
-      expect(wrapper.find('.ins-c-sources__wizard--switch-description')).toHaveLength(2);
-      expect(wrapper.find('.ins-c-sources__wizard--switch-description').first().text()).toEqual(
+      expect(wrapper.find('.ins-c-sources__switch-description')).toHaveLength(2);
+      expect(wrapper.find('.ins-c-sources__switch-description').first().text()).toEqual(
         'Analyze, forecast, and optimize your Red Hat OpenShift cluster costs in hybrid cloud environments.'
       );
-      expect(wrapper.find('.ins-c-sources__wizard--switch-description').last().text()).toEqual(
+      expect(wrapper.find('.ins-c-sources__switch-description').last().text()).toEqual(
         'Includes access to Red Hat Gold Images, high precision subscription watch data, autoregistration, and Red Hat Connector.'
       );
     });
