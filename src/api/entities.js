@@ -62,6 +62,7 @@ export const getSourcesApi = () => ({
   showAuthentication: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/authentications/${id}`),
   updateApplication: (id, data) => axiosInstanceInsights.patch(`${SOURCES_API_BASE_V3}/applications/${id}`, data),
   showApplication: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/applications/${id}`),
+  listSourceAuthentications: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/sources/${id}/authentications`),
 });
 
 export const doLoadAppTypes = () => getSourcesApi().doLoadAppTypes();

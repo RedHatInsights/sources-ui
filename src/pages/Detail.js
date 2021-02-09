@@ -43,6 +43,13 @@ const SourceRenameModal = lazy(() =>
   )
 );
 
+const EditCredentials = lazy(() =>
+  import(
+    /* webpackChunkName: "credentialsForm" */
+    '../components/CredentialsForm/CredentialsForm'
+  )
+);
+
 const Detail = () => {
   const source = useSource();
 
@@ -69,6 +76,7 @@ const Detail = () => {
         <CustomRoute exact route={routes.sourcesDetailAddApp} Component={AddApplication} />
         <CustomRoute exact route={routes.sourcesDetailRemoveApp} Component={RemoveAppModal} />
         <CustomRoute exact route={routes.sourcesDetailRename} Component={SourceRenameModal} />
+        <CustomRoute exact route={routes.sourcesDetailEditCredentials} Component={EditCredentials} />
       </Suspense>
       <DetailHeader />
       <Grid>
