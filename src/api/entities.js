@@ -228,6 +228,7 @@ export const doLoadApplicationsForEdit = async (id, appTypes, sourceTypes) => {
               id,
               availability_status_error,
               availability_status,
+              created_at,
               authentications {
                   id
               }
