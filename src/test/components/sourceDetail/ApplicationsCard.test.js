@@ -16,6 +16,9 @@ import applicationTypesData, { COSTMANAGEMENT_APP, SUBWATCH_APP } from '../../__
 import ApplicationStatusLabel from '../../../components/SourceDetail/ApplicationStatusLabel';
 import mockStore from '../../__mocks__/mockStore';
 
+import * as api from '../../../api/entities';
+import * as actions from '../../../redux/sources/actions';
+
 describe('ApplicationsCard', () => {
   let wrapper;
   let store;
@@ -125,6 +128,121 @@ describe('ApplicationsCard', () => {
       expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
         replaceRouteId(routes.sourcesDetailAddApp.path, sourceId).replace(':app_type_id', SUBWATCH_APP.id)
       );
+    });
+  });
+
+  describe('super key variant', () => {
+    beforeEach(() => {
+      store = mockStore({
+        sources: {
+          entities: [
+            {
+              id: sourceId,
+              source_type_id: AMAZON_ID,
+              applications: [{ id: '123', application_type_id: COSTMANAGEMENT_APP.id }],
+              app_creation_workflow: 'account_authorization',
+            },
+          ],
+          sourceTypes: sourceTypesData.data,
+          appTypes: updateAppData,
+        },
+        user: { isOrgAdmin: true, writePermissions: true },
+      });
+
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+
+      actions.loadEntities = jest.fn().mockImplementation(() => ({ type: 'nonsense' }));
+    });
+
+    it('adds application and blocks clicking again', async () => {
+      jest.useFakeTimers();
+
+      api.doCreateApplication = jest.fn().mockImplementation(() => new Promise((res) => setTimeout(() => res('ok'), 1000)));
+
+      expect(wrapper.find(Switch).last().props().isChecked).toEqual(false);
+
+      await act(async () => {
+        wrapper
+          .find('input')
+          .last()
+          .simulate('change', { target: { checked: true } });
+      });
+      wrapper.update();
+
+      expect(wrapper.find(Switch).last().props().isChecked).toEqual(true);
+
+      expect(api.doCreateApplication).toHaveBeenCalledWith({
+        application_type_id: SUBWATCH_APP.id,
+        source_id: sourceId,
+      });
+      api.doCreateApplication.mockClear();
+
+      await act(async () => {
+        wrapper
+          .find('input')
+          .last()
+          .simulate('change', { target: { checked: true } });
+      });
+      wrapper.update();
+
+      expect(api.doCreateApplication).not.toHaveBeenCalled();
+      expect(actions.loadEntities).not.toHaveBeenCalled();
+
+      await act(async () => {
+        jest.runAllTimers();
+      });
+      wrapper.update();
+
+      expect(actions.loadEntities).toHaveBeenCalled();
+    });
+
+    it('removes application and blocks clicking again', async () => {
+      jest.useFakeTimers();
+
+      const deleteApplication = jest.fn().mockImplementation(() => new Promise((res) => setTimeout(() => res('ok'), 1000)));
+
+      api.getSourcesApi = () => ({
+        deleteApplication,
+      });
+
+      expect(wrapper.find(Switch).first().props().isChecked).toEqual(true);
+
+      await act(async () => {
+        wrapper
+          .find('input')
+          .first()
+          .simulate('change', { target: { checked: false } });
+      });
+      wrapper.update();
+
+      expect(wrapper.find(Switch).first().props().isChecked).toEqual(false);
+
+      expect(deleteApplication).toHaveBeenCalledWith('123');
+      deleteApplication.mockClear();
+
+      await act(async () => {
+        wrapper
+          .find('input')
+          .first()
+          .simulate('change', { target: { checked: false } });
+      });
+      wrapper.update();
+
+      expect(deleteApplication).not.toHaveBeenCalled();
+      expect(actions.loadEntities).not.toHaveBeenCalled();
+
+      await act(async () => {
+        jest.runAllTimers();
+      });
+      wrapper.update();
+
+      expect(actions.loadEntities).toHaveBeenCalled();
     });
   });
 });
