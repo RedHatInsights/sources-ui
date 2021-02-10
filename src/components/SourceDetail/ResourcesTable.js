@@ -1,9 +1,11 @@
 import React, { useEffect, useReducer } from 'react';
+import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { shallowEqual, useSelector } from 'react-redux';
 import get from 'lodash/get';
 
 import { Table, TableHeader, TableBody } from '@patternfly/react-table';
+import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
 
 import { Card } from '@patternfly/react-core/dist/esm/components/Card/Card';
 import { CardBody } from '@patternfly/react-core/dist/esm/components/Card/CardBody';
@@ -12,8 +14,10 @@ import { Text } from '@patternfly/react-core/dist/esm/components/Text';
 import { Spinner } from '@patternfly/react-core/dist/esm/components/Spinner';
 import { Bullseye } from '@patternfly/react-core/dist/esm/layouts/Bullseye';
 import { Tabs, Tab, TabTitleText } from '@patternfly/react-core/dist/esm/components/Tabs';
-
-import { DateFormat } from '@redhat-cloud-services/frontend-components/DateFormat';
+import { EmptyState, EmptyStateVariant } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyState';
+import { EmptyStateIcon } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateIcon';
+import { EmptyStateBody } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateBody';
+import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
 
 import NoApplications from './NoApplications';
 import { useSource } from '../../hooks/useSource';
@@ -22,39 +26,47 @@ import { doLoadSourceForEdit } from '../../api/doLoadSourceForEdit';
 import { authenticationFields } from '../SourceEditForm/parser/authentication';
 import { prepareInitialValues } from '../SourceEditForm/helpers';
 
-const createColumns = (intl) => [
-  intl.formatMessage({ id: 'resourceTable.resourceType', defaultMessage: 'Resource type' }),
-  intl.formatMessage({ id: 'resourceTable.resourceValue', defaultMessage: 'Value' }),
-  intl.formatMessage({ id: 'resourceTable.resourceDate', defaultMessage: 'Date created' }),
-];
-
-const findDate = (name, source) => {
-  let date;
-
-  if (name.startsWith('applications')) {
-    const id = name.replace(/([a-z]|\.)/g, '');
-    date = source.applications.find((app) => app.id === id)?.created_at;
-  } else {
-    date = source.source.created_at;
-  }
+const ResourcesEmptyState = ({ applicationName }) => {
+  const intl = useIntl();
 
   return (
-    <span className="ins-c-sources__help-cursor">
-      <DateFormat type="relative" date={date} />
-    </span>
+    <Bullseye>
+      <EmptyState variant={EmptyStateVariant.small}>
+        <EmptyStateIcon icon={WrenchIcon} />
+        <Title headingLevel="h2" size="lg">
+          {intl.formatMessage({
+            id: 'resourceTable.emptyStateTitle',
+            defaultMessage: 'No application resources',
+          })}
+        </Title>
+        <EmptyStateBody>
+          {intl.formatMessage(
+            {
+              id: 'resourceTable.emptyStateDescription',
+              defaultMessage: '{applicationName} resources will appear here when created.',
+            },
+            { applicationName }
+          )}
+        </EmptyStateBody>
+      </EmptyState>
+    </Bullseye>
   );
 };
 
-const convertFieldsToRows = (fields, initialValues, source) =>
+ResourcesEmptyState.propTypes = {
+  applicationName: PropTypes.string.isRequired,
+};
+
+const createColumns = (intl) => [
+  intl.formatMessage({ id: 'resourceTable.resourceType', defaultMessage: 'Resource type' }),
+  intl.formatMessage({ id: 'resourceTable.resourceValue', defaultMessage: 'Value' }),
+];
+
+const convertFieldsToRows = (fields, initialValues) =>
   fields
     .flatMap((x) => x)
     .map(
-      (field) =>
-        !field.hideField && [
-          <React.Fragment key="label">{field.label}</React.Fragment>,
-          get(initialValues, field.name),
-          findDate(field.name, source),
-        ]
+      (field) => !field.hideField && [<React.Fragment key="label">{field.label}</React.Fragment>, get(initialValues, field.name)]
     )
     .filter(Boolean);
 
@@ -70,7 +82,7 @@ const createRows = (source, appTypes, sourceType) => {
     );
 
     const initialValues = prepareInitialValues(source, sourceType.product_name);
-    const applicationRows = convertFieldsToRows(applicationFieldsSchema, initialValues, source);
+    const applicationRows = convertFieldsToRows(applicationFieldsSchema, initialValues);
 
     return { ...acc, [app.id]: applicationRows };
   }, {});
@@ -78,12 +90,12 @@ const createRows = (source, appTypes, sourceType) => {
   return applicationsRows;
 };
 
-const initialValues = {
-  loading: true,
+const initialValues = (source) => ({
+  loading: Boolean(source.applications?.length),
   columns: [],
   applicationsRows: {},
   activeTab: 0,
-};
+});
 
 const reducer = (state, { type, intl, source, activeTab, appTypes, sourceType }) => {
   switch (type) {
@@ -110,10 +122,10 @@ const ResourcesTable = () => {
 
   const { sourceTypes, appTypes, sourceTypesLoaded, appTypesLoaded } = useSelector(({ sources }) => sources, shallowEqual);
 
-  const [{ activeTab, loading, columns, applicationsRows }, dispatch] = useReducer(reducer, initialValues);
+  const [{ activeTab, loading, columns, applicationsRows }, dispatch] = useReducer(reducer, initialValues(source));
 
   useEffect(() => {
-    if (source && isLoaded && appTypesLoaded && sourceTypesLoaded) {
+    if (source && isLoaded && appTypesLoaded && sourceTypesLoaded && source?.applications?.length) {
       doLoadSourceForEdit(source, appTypes, sourceTypes).then((source) => {
         const sourceType = sourceTypes.find(({ id }) => id === source.source.source_type_id);
 
@@ -137,7 +149,7 @@ const ResourcesTable = () => {
           </Bullseye>
         )}
         {!loading && !source.applications.length && <NoApplications />}
-        {!loading && source.applications.length && (
+        {!loading && source.applications.length > 0 && (
           <React.Fragment>
             <Text className="pf-u-mb-md">
               {intl.formatMessage({
@@ -146,31 +158,32 @@ const ResourcesTable = () => {
               })}
             </Text>
             <Tabs isBox activeKey={activeTab} onSelect={(_e, activeTab) => dispatch({ type: 'switchTab', activeTab })}>
-              {source.applications.map((app) => (
-                <Tab
-                  eventKey={app.id}
-                  key={app.id}
-                  title={
-                    <TabTitleText>
-                      {appTypes.find(({ id }) => id === app.application_type_id)?.display_name || app.application_type_id}
-                    </TabTitleText>
-                  }
-                >
-                  <Table
-                    aria-label={intl.formatMessage({
-                      id: 'resourceTable.title',
-                      defaultMessage: 'Connected application resources',
-                    })}
-                    variant="compact"
-                    cells={columns}
-                    rows={applicationsRows[app.id]}
-                    className="pf-u-mt-md"
-                  >
-                    <TableHeader />
-                    <TableBody />
-                  </Table>
-                </Tab>
-              ))}
+              {source.applications.map((app) => {
+                const appName =
+                  appTypes.find(({ id }) => id === app.application_type_id)?.display_name || app.application_type_id;
+
+                return (
+                  <Tab eventKey={app.id} key={app.id} title={<TabTitleText>{appName}</TabTitleText>}>
+                    {applicationsRows[app.id].length ? (
+                      <Table
+                        aria-label={intl.formatMessage({
+                          id: 'resourceTable.title',
+                          defaultMessage: 'Connected application resources',
+                        })}
+                        variant="compact"
+                        cells={columns}
+                        rows={applicationsRows[app.id]}
+                        className="pf-u-mt-md"
+                      >
+                        <TableHeader />
+                        <TableBody />
+                      </Table>
+                    ) : (
+                      <ResourcesEmptyState applicationName={appName} />
+                    )}
+                  </Tab>
+                );
+              })}
             </Tabs>
           </React.Fragment>
         )}
