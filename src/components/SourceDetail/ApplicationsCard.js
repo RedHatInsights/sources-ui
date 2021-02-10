@@ -53,7 +53,7 @@ const ApplicationsCard = () => {
 
   if (isSuperKey(source)) {
     removeApp = async (id, typeId) => {
-      if (typeof selectedApps[id] !== 'boolean') {
+      if (typeof selectedApps[typeId] !== 'boolean') {
         stateDispatch({ type: 'removeApp', id: typeId });
         await getSourcesApi().deleteApplication(id);
         stateDispatch({ type: 'clean', id: typeId });
