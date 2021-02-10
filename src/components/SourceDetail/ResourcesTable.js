@@ -26,7 +26,7 @@ import { doLoadSourceForEdit } from '../../api/doLoadSourceForEdit';
 import { authenticationFields } from '../SourceEditForm/parser/authentication';
 import { prepareInitialValues } from '../SourceEditForm/helpers';
 
-const ResourcesEmptyState = ({ applicationName }) => {
+export const ResourcesEmptyState = ({ applicationName }) => {
   const intl = useIntl();
 
   return (
@@ -164,7 +164,7 @@ const ResourcesTable = () => {
 
                 return (
                   <Tab eventKey={app.id} key={app.id} title={<TabTitleText>{appName}</TabTitleText>}>
-                    {applicationsRows[app.id].length ? (
+                    {applicationsRows[app.id]?.length ? (
                       <Table
                         aria-label={intl.formatMessage({
                           id: 'resourceTable.title',
