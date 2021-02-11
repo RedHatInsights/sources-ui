@@ -7,6 +7,7 @@ import EditAlert from './EditAlert';
 
 export const APP_NAMES = {
   COST_MANAGAMENT: '/insights/platform/cost-management',
+  CLOUD_METER: '/insights/platform/cloud-meter',
 };
 
 export const appendClusterIdentifier = (sourceType) =>

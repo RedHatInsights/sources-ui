@@ -113,6 +113,7 @@
   .summary-card {
     cursor: initial !important;
     background-clip: content-box;
+    height: calc(100% - 48px); // margin 2x24px
   }
 
   .applications-card {
@@ -219,4 +220,14 @@
       opacity: 0.5;
     }
   }
+}
+
+.ins-c-sources__hide-me {
+  opacity: 0;
+}
+
+.ins-c-sources__switch-description {
+  font-size: 14px;
+  color:	#6a6e73;
+  line-height: 24px;
 }

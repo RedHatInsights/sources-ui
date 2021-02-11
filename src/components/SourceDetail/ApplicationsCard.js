@@ -15,6 +15,20 @@ import { useSource } from '../../hooks/useSource';
 import { replaceRouteId, routes } from '../../Routes';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import ApplicationStatusLabel from './ApplicationStatusLabel';
+import { APP_NAMES } from '../SourceEditForm/parser/application';
+
+const descriptionMapper = (name, intl) =>
+  ({
+    [APP_NAMES.COST_MANAGAMENT]: intl.formatMessage({
+      id: 'cost.app.description',
+      defaultMessage: 'Analyze, forecast, and optimize your Red Hat OpenShift cluster costs in hybrid cloud environments.',
+    }),
+    [APP_NAMES.CLOUD_METER]: intl.formatMessage({
+      id: 'cost.app.description',
+      defaultMessage:
+        'Includes access to Red Hat Gold Images, high precision subscription watch data, autoregistration, and Red Hat Connector.',
+    }),
+  }[name]);
 
 const ApplicationsCard = () => {
   const intl = useIntl();
@@ -49,6 +63,7 @@ const ApplicationsCard = () => {
         <div className="pf-c-form">
           {filteredAppTypes.map((app) => {
             const connectedApp = source.applications.find((connectedApp) => connectedApp.application_type_id === app.id);
+            const description = descriptionMapper(app.name, intl);
 
             return (
               <FormGroup key={app.id}>
@@ -64,6 +79,12 @@ const ApplicationsCard = () => {
                   }
                 />
                 {Boolean(connectedApp) && <ApplicationStatusLabel app={connectedApp} />}
+                {description && (
+                  <div className="pf-c-switch pf-u-mt-sm">
+                    <span className="pf-c-switch__toggle ins-c-sources__hide-me" />
+                    <div className="pf-c-switch__label ins-c-sources__switch-description">{description}</div>
+                  </div>
+                )}
               </FormGroup>
             );
           })}
