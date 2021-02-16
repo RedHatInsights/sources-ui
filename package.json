@@ -42,7 +42,9 @@
       "!src/**/stories/*",
       "!src/entry.js",
       "!src/entry-dev.js",
-      "!src/frontend-components-copies/*"
+      "!src/frontend-components-copies/*",
+      "!src/bootstrap.js",
+      "!src/bootstrap-dev.js"
     ],
     "setupFiles": [
       "<rootDir>/config/setupTests.js"
@@ -91,17 +93,20 @@
     "whatwg-fetch": "^3.5.0"
   },
   "scripts": {
-    "build": "NODE_ENV=production webpack --config config/prod.webpack.config.js",
     "test": "jest --coverage",
     "lint": "npm-run-all lint:*",
     "lint:js": "eslint config src",
-    "prod": "NODE_ENV=production webpack serve --config config/dev.webpack.config.js",
     "server:ctr": "node src/server/generateServerKey.js",
-    "start": "BETA=true NODE_ENV=development webpack serve --config config/dev.webpack.config.js",
-    "start:link": "LINKED=TRUE NODE_ENV=development BETA=true webpack serve --config config/dev.webpack.config.js",
     "travis:build": "webpack --config config/test.webpack.config.js",
     "travis:verify": "npm-run-all travis:build lint test",
     "verify": "npm-run-all build lint test",
-    "extract:messages": "npx @formatjs/cli extract 'src/**/*.{js,jsx}' --out-file ./translations/messages.json"
+    "extract:messages": "npx @formatjs/cli extract 'src/**/*.{js,jsx}' --out-file ./translations/messages.json",
+    "prod": "NODE_ENV=production webpack serve --config config/dev.webpack.config.js",
+    "prod:beta": "NODE_ENV=production BETA=true webpack serve --config config/dev.webpack.config.js",
+    "start": "NODE_ENV=development webpack serve --config config/dev.webpack.config.js",
+    "start:beta": "NODE_ENV=development BETA=true webpack serve --config config/dev.webpack.config.js",
+    "build": "webpack --config config/prod.webpack.config.js",
+    "analyze": "NODE_ENV=production webpack --config config/prod.webpack.config.js --env analyze=true",
+    "build:prod": "NODE_ENV=production webpack --config config/prod.webpack.config.js"
   }
 }
