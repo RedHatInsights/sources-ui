@@ -1,11 +1,10 @@
 import { Provider } from 'react-redux';
 
-import { ProdEntry } from '../entries';
-import { DevEntry } from '../entries-dev';
 import * as app from '../App';
 import * as stores from '../utilities/store';
 import * as getDevStore from '../utilities/getDevStore';
 import mockStore from './__mocks__/mockStore';
+import AppEntry from '../AppEntry';
 
 describe('entries test', () => {
   let store;
@@ -17,7 +16,7 @@ describe('entries test', () => {
   });
 
   it('dev is rendered correctly', () => {
-    const wrapper = mount(<DevEntry />);
+    const wrapper = mount(<AppEntry store={getDevStore.getDevStore()} />);
 
     expect(wrapper.find(Provider)).toHaveLength(1);
     expect(wrapper.find('h1')).toHaveLength(1);
@@ -26,7 +25,7 @@ describe('entries test', () => {
   });
 
   it('prod is rendered correctly', () => {
-    const wrapper = mount(<ProdEntry />);
+    const wrapper = mount(<AppEntry />);
 
     expect(wrapper.find(Provider)).toHaveLength(1);
     expect(wrapper.find('h1')).toHaveLength(1);
