@@ -10,12 +10,10 @@ if (!store) {
   store = getProdStore();
 }
 
-const AppEntry = () => {
-  return (
-    <Provider store={store}>
-      <App />
-    </Provider>
-  );
-};
+const AppEntry = () => (
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
 
 export default AppEntry;
