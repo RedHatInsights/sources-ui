@@ -55,7 +55,7 @@ const RemoveAppModal = () => {
 
   return (
     <Modal
-      className="ins-c-sources__dialog--warning"
+      className="sources"
       isOpen={true}
       onClose={onCancel}
       variant="small"
@@ -64,7 +64,7 @@ const RemoveAppModal = () => {
         defaultMessage: 'Remove application?',
       })}
       header={
-        <Title headingLevel="h1" size="2xl">
+        <Title headingLevel="h1" size="2xl" className="sources">
           <ExclamationTriangleIcon size="sm" className="ins-m-alert ins-c-source__delete-icon pf-u-mr-sm" />
           {intl.formatMessage({
             id: 'sources.deleteAppTitle',
