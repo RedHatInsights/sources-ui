@@ -9,6 +9,7 @@ import componentWrapperIntl from '../../../utilities/testsHelpers';
 import CloudEmptyState from '../../../components/CloudTiles/CloudEmptyState';
 import CloudTiles from '../../../components/CloudTiles/CloudTiles';
 import mockStore from '../../__mocks__/mockStore';
+import sourceTypes, { googleType } from '../../__mocks__/sourceTypesData';
 
 describe('CloudEmptyState', () => {
   let wrapper;
@@ -23,7 +24,7 @@ describe('CloudEmptyState', () => {
       setSelectedType,
     };
 
-    store = mockStore({ user: { isOrgAdmin: true } });
+    store = mockStore({ user: { isOrgAdmin: true }, sources: { sourceTypes: [...sourceTypes.data, googleType] } });
   });
 
   it('renders correctly', async () => {

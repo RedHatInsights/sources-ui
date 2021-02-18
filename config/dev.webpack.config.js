@@ -5,6 +5,7 @@ webpackConfig.devServer = {
   port: 8002,
   contentBase: config.paths.public,
   historyApiFallback: true,
+  disableHostCheck: true,
 };
 
 module.exports = {
