@@ -1,25 +1,26 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
-import configureStore from 'redux-mock-store';
 
-import { Tabs } from '@patternfly/react-core/dist/js/components/Tabs/Tabs';
-import { TabButton } from '@patternfly/react-core/dist/js/components/Tabs/TabButton';
-import { TabTitleIcon } from '@patternfly/react-core/dist/js/components/Tabs/TabTitleIcon';
-import { TabTitleText } from '@patternfly/react-core/dist/js/components/Tabs/TabTitleText';
-import RedhatIcon from '@patternfly/react-icons/dist/js/icons/redhat-icon';
-import CloudIcon from '@patternfly/react-icons/dist/js/icons/cloud-icon';
+import { Tabs } from '@patternfly/react-core/dist/esm/components/Tabs/Tabs';
+import { TabButton } from '@patternfly/react-core/dist/esm/components/Tabs/TabButton';
+import { TabTitleIcon } from '@patternfly/react-core/dist/esm/components/Tabs/TabTitleIcon';
+import { TabTitleText } from '@patternfly/react-core/dist/esm/components/Tabs/TabTitleText';
+import RedhatIcon from '@patternfly/react-icons/dist/esm/icons/redhat-icon';
+import CloudIcon from '@patternfly/react-icons/dist/esm/icons/cloud-icon';
 
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../utilities/constants';
 import TabNavigation from '../../components/TabNavigation';
 import * as actions from '../../redux/sources/actions';
 
+import mockStore from '../__mocks__/mockStore';
+
 describe('TabNavigation', () => {
   let store;
   let wrapper;
 
   it('renders correctly on Cloud vendor', () => {
-    store = configureStore()({
+    store = mockStore({
       sources: {
         activeVendor: CLOUD_VENDOR,
       },
@@ -37,7 +38,7 @@ describe('TabNavigation', () => {
   });
 
   it('renders correctly on Red Hat vendor', () => {
-    store = configureStore()({
+    store = mockStore({
       sources: {
         activeVendor: REDHAT_VENDOR,
       },

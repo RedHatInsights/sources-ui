@@ -52,10 +52,16 @@ describe('redux actions', () => {
 
   it('removeMessage creates an object', () => {
     const ID = '123456';
-    expect(removeMessage(ID)(dispatch)).toEqual(
+    const notId = 'some-generated-id';
+
+    const getState = () => ({
+      notifications: [{ id: notId, customId: ID }],
+    });
+
+    expect(removeMessage(ID)(dispatch, getState)).toEqual(
       expect.objectContaining({
         type: REMOVE_NOTIFICATION,
-        payload: ID,
+        payload: notId,
       })
     );
   });

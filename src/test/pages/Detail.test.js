@@ -1,8 +1,9 @@
 import React from 'react';
-import configureStore from 'redux-mock-store';
-import { Grid, GridItem } from '@patternfly/react-core';
 import { Route } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
+
+import { GridItem } from '@patternfly/react-core/dist/esm/layouts/Grid/GridItem';
+import { Grid } from '@patternfly/react-core/dist/esm/layouts/Grid/Grid';
 
 import Detail from '../../pages/Detail';
 import { DetailLoader } from '../../components/SourcesTable/loaders';
@@ -19,6 +20,7 @@ import * as SourceRemoveModal from '../../components/SourceRemoveModal/SourceRem
 import * as AddApplication from '../../components/AddApplication/AddApplication';
 import * as RemoveAppModal from '../../components/AddApplication/RemoveAppModal';
 import * as SourceRenameModal from '../../components/SourceDetail/SourceRenameModal';
+import mockStore from '../__mocks__/mockStore';
 
 jest.mock('../../components/SourceRemoveModal/SourceRemoveModal', () => ({
   __esModule: true,
@@ -54,7 +56,7 @@ describe('SourceDetail', () => {
   it('renders loading', async () => {
     RedirectNoId.default = () => <span>Mock redirect</span>;
 
-    store = configureStore()({
+    store = mockStore({
       sources: {
         entities: [],
       },
@@ -73,7 +75,7 @@ describe('SourceDetail', () => {
   });
 
   it('renders correctly', async () => {
-    store = configureStore()({
+    store = mockStore({
       sources: {
         entities: [
           {
@@ -108,7 +110,7 @@ describe('SourceDetail', () => {
 
   describe('routes', () => {
     beforeEach(() => {
-      store = configureStore()({
+      store = mockStore({
         sources: {
           entities: [
             {
@@ -193,7 +195,7 @@ describe('SourceDetail', () => {
 
     describe('unloaded', () => {
       beforeEach(() => {
-        store = configureStore()({
+        store = mockStore({
           sources: {
             entities: [],
           },

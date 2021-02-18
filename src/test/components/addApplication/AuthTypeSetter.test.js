@@ -1,22 +1,16 @@
 import { mount } from 'enzyme';
-import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { Route } from 'react-router-dom';
 
-import rendererContext from '@data-driven-forms/react-form-renderer/dist/cjs/renderer-context';
+import rendererContext from '@data-driven-forms/react-form-renderer/dist/esm/renderer-context';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { sourceTypesData, OPENSHIFT_ID } from '../../__mocks__/sourceTypesData';
 import { AuthTypeSetter } from '../../../components/AddApplication/AuthTypeSetter';
 import { routes, replaceRouteId } from '../../../Routes';
+import mockStore from '../../__mocks__/mockStore';
 
 describe('AuthTypeSetter', () => {
   let store;
-  let mockStore;
-
-  const middlewares = [thunk, notificationsMiddleware()];
-
   let initialProps;
   let formOptions;
   let changeSpy;
@@ -80,7 +74,6 @@ describe('AuthTypeSetter', () => {
   }
 
   beforeEach(() => {
-    mockStore = configureStore(middlewares);
     store = mockStore({
       sources: {
         entities: [SOURCE],

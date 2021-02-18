@@ -1,7 +1,9 @@
-import { Card, CardBody, CardTitle } from '@patternfly/react-core';
+import { Card } from '@patternfly/react-core/dist/esm/components/Card/Card';
+import { CardBody } from '@patternfly/react-core/dist/esm/components/Card/CardBody';
+import { CardTitle } from '@patternfly/react-core/dist/esm/components/Card/CardTitle';
+
 import React from 'react';
 import { Route } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
 
 import ApplicationResourcesCard from '../../../components/SourceDetail/ApplicationResourcesCard';
 import NoApplications from '../../../components/SourceDetail/NoApplications';
@@ -9,6 +11,7 @@ import NoPermissions from '../../../components/SourceDetail/NoPermissions';
 import * as SourceEditModal from '../../../components/SourceEditForm/SourceEditModal';
 import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
+import mockStore from '../../__mocks__/mockStore';
 
 describe('ApplicationResourcesCard', () => {
   let wrapper;
@@ -18,7 +21,7 @@ describe('ApplicationResourcesCard', () => {
   const initialEntry = [replaceRouteId(routes.sourcesDetail.path, sourceId)];
 
   it('renders with no permissions', async () => {
-    store = configureStore()({
+    store = mockStore({
       sources: {
         entities: [{ id: sourceId, applications: [] }],
       },
@@ -42,7 +45,7 @@ describe('ApplicationResourcesCard', () => {
   });
 
   it('renders with no applications', async () => {
-    store = configureStore()({
+    store = mockStore({
       sources: {
         entities: [{ id: sourceId, applications: [] }],
       },
@@ -68,7 +71,7 @@ describe('ApplicationResourcesCard', () => {
   it('renders with applications', async () => {
     SourceEditModal.default = () => <span>Mock component</span>;
 
-    store = configureStore()({
+    store = mockStore({
       sources: {
         entities: [{ id: sourceId, applications: [{ id: 123 }] }],
       },

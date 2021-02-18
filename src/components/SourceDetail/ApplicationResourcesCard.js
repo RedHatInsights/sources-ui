@@ -1,9 +1,9 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 
-import { Card } from '@patternfly/react-core/dist/js/components/Card/Card';
-import { CardBody } from '@patternfly/react-core/dist/js/components/Card/CardBody';
-import { CardTitle } from '@patternfly/react-core/dist/js/components/Card/CardTitle';
+import { Card } from '@patternfly/react-core/dist/esm/components/Card/Card';
+import { CardBody } from '@patternfly/react-core/dist/esm/components/Card/CardBody';
+import { CardTitle } from '@patternfly/react-core/dist/esm/components/Card/CardTitle';
 
 import NoApplications from './NoApplications';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';

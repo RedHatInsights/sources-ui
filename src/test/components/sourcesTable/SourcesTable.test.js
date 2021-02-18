@@ -1,12 +1,11 @@
 import React from 'react';
-import thunk from 'redux-thunk';
-import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
-import configureStore from 'redux-mock-store';
 import { Table, TableHeader, TableBody, RowWrapper, sortable, ActionsColumn, wrappable } from '@patternfly/react-table';
 import { MemoryRouter } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
 import ArrowsAltVIcon from '@patternfly/react-icons/dist/js/icons/arrows-alt-v-icon';
 import LongArrowAltDownIcon from '@patternfly/react-icons/dist/js/icons/long-arrow-alt-down-icon';
+
+import { DropdownItem } from '@patternfly/react-core/dist/esm/components/Dropdown/DropdownItem';
 
 import SourcesTable, {
   insertEditAction,
@@ -26,19 +25,15 @@ import * as API from '../../../api/entities';
 import { replaceRouteId, routes } from '../../../Routes';
 import { defaultSourcesState } from '../../../redux/sources/reducer';
 import { sourcesColumns } from '../../../views/sourcesViewDefinition';
-import { DropdownItem } from '@patternfly/react-core';
-import SourcesEmptyState from '../../../components/SourcesTable/SourcesEmptyState';
+import mockStore from '../../__mocks__/mockStore';
 
 describe('SourcesTable', () => {
-  const middlewares = [thunk, notificationsMiddleware()];
   let loadedProps;
-  let mockStore;
   let initialProps;
   let initialState;
 
   beforeEach(() => {
     initialProps = {};
-    mockStore = configureStore(middlewares);
     initialState = {
       sources: defaultSourcesState,
       user: {
@@ -188,38 +183,6 @@ describe('SourcesTable', () => {
     wrapper.update();
 
     expect(wrapper.find(EmptyStateTable)).toHaveLength(1);
-    expect(wrapper.find(Table)).toHaveLength(1);
-    expect(wrapper.find(TableHeader)).toHaveLength(1);
-    expect(wrapper.find(TableBody)).toHaveLength(1);
-    expect(wrapper.find(ActionsColumn)).toHaveLength(0);
-    expect(wrapper.find(ArrowsAltVIcon)).toHaveLength(0);
-  });
-
-  it('renders empty state table - no filters', async () => {
-    initialState = {
-      ...initialState,
-      sources: {
-        ...initialState.sources,
-        ...loadedProps,
-        entities: [],
-        numberOfEntities: 0,
-        filterValue: {
-          name: undefined,
-          source_type_id: [],
-        },
-      },
-    };
-
-    const store = mockStore(initialState);
-    let wrapper;
-
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
-    });
-    wrapper.update();
-
-    expect(wrapper.find(EmptyStateTable)).toHaveLength(0);
-    expect(wrapper.find(SourcesEmptyState)).toHaveLength(1);
     expect(wrapper.find(Table)).toHaveLength(1);
     expect(wrapper.find(TableHeader)).toHaveLength(1);
     expect(wrapper.find(TableBody)).toHaveLength(1);

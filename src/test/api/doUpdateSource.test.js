@@ -1,6 +1,5 @@
 import * as api from '../../api/entities';
 import { doUpdateSource, parseUrl, urlOrHost } from '../../api/doUpdateSource';
-import * as cmApi from '../../api/patchCmValues';
 
 describe('doUpdateSource', () => {
   const HOST = 'mycluster.net';
@@ -51,7 +50,6 @@ describe('doUpdateSource', () => {
       updateAuthentication: authenticationSpy,
       updateApplication: applicationSpy,
     });
-    cmApi.patchCmValues = patchCostManagementSpy;
   });
 
   it('sends nothing', () => {
@@ -210,8 +208,10 @@ describe('doUpdateSource', () => {
   it('sends multiple application values', () => {
     const APP_ID = '1234234243';
     const APP_ID_2 = '7232490239';
-    const APPLICATION_VALUES = { password: '123456' };
-    const APPLICATION_VALUES_2 = { usernamen: 'QWERTY' };
+    const APP_ID_3 = '32386783';
+
+    const APPLICATION_VALUES = { extra: { password: '123456' } };
+    const APPLICATION_VALUES_2 = { extra: { username: 'QWERTY' } };
 
     FORM_DATA = {
       applications: {
@@ -220,7 +220,15 @@ describe('doUpdateSource', () => {
       },
     };
 
-    doUpdateSource(SOURCE, FORM_DATA);
+    const VALUES = {
+      applications: {
+        [`a${APP_ID}`]: { extra: { original: 1, password: '123456' } },
+        [`a${APP_ID_2}`]: APPLICATION_VALUES_2,
+        [`a${APP_ID_3}`]: { extra: { dataset: 'dataset-123' } },
+      },
+    };
+
+    doUpdateSource(SOURCE, FORM_DATA, VALUES);
 
     expect(sourceSpy).not.toHaveBeenCalled();
     expect(endpointSpy).not.toHaveBeenCalled();
@@ -229,70 +237,11 @@ describe('doUpdateSource', () => {
 
     expect(applicationSpy.mock.calls.length).toEqual(Object.keys(FORM_DATA.applications).length);
 
-    expect(applicationSpy.mock.calls[0][0]).toBe(APP_ID);
-    expect(applicationSpy.mock.calls[0][1]).toBe(APPLICATION_VALUES);
+    expect(applicationSpy.mock.calls[0][0]).toEqual(APP_ID);
+    expect(applicationSpy.mock.calls[0][1]).toEqual({ extra: { original: 1, password: '123456' } });
 
-    expect(applicationSpy.mock.calls[1][0]).toBe(APP_ID_2);
-    expect(applicationSpy.mock.calls[1][1]).toBe(APPLICATION_VALUES_2);
-  });
-
-  describe('cost management endpoint', () => {
-    const BILLING_SOURCE_VALUES = { bucket: '123456' };
-    const CREDENTIALS_VALUES = { subscription_id: '123456' };
-
-    it('sends billing_source values', () => {
-      FORM_DATA = {
-        billing_source: BILLING_SOURCE_VALUES,
-      };
-
-      const EXPECTED_CM_DATA = { ...FORM_DATA };
-
-      doUpdateSource(SOURCE, FORM_DATA);
-
-      expect(sourceSpy).not.toHaveBeenCalled();
-      expect(endpointSpy).not.toHaveBeenCalled();
-      expect(authenticationSpy).not.toHaveBeenCalled();
-      expect(applicationSpy).not.toHaveBeenCalled();
-      expect(patchCostManagementSpy).toHaveBeenCalledWith(SOURCE_ID, EXPECTED_CM_DATA);
-    });
-
-    it('sends credentials values', () => {
-      FORM_DATA = {
-        credentials: CREDENTIALS_VALUES,
-      };
-
-      const EXPECTED_CM_DATA = { authentication: FORM_DATA };
-
-      doUpdateSource(SOURCE, FORM_DATA);
-
-      expect(sourceSpy).not.toHaveBeenCalled();
-      expect(endpointSpy).not.toHaveBeenCalled();
-      expect(authenticationSpy).not.toHaveBeenCalled();
-      expect(applicationSpy).not.toHaveBeenCalled();
-      expect(patchCostManagementSpy).toHaveBeenCalledWith(SOURCE_ID, EXPECTED_CM_DATA);
-    });
-
-    it('sends credentials + billing_source values', () => {
-      FORM_DATA = {
-        billing_source: BILLING_SOURCE_VALUES,
-        credentials: CREDENTIALS_VALUES,
-      };
-
-      const EXPECTED_CM_DATA = {
-        billing_source: BILLING_SOURCE_VALUES,
-        authentication: {
-          credentials: CREDENTIALS_VALUES,
-        },
-      };
-
-      doUpdateSource(SOURCE, FORM_DATA);
-
-      expect(sourceSpy).not.toHaveBeenCalled();
-      expect(endpointSpy).not.toHaveBeenCalled();
-      expect(authenticationSpy).not.toHaveBeenCalled();
-      expect(applicationSpy).not.toHaveBeenCalled();
-      expect(patchCostManagementSpy).toHaveBeenCalledWith(SOURCE_ID, EXPECTED_CM_DATA);
-    });
+    expect(applicationSpy.mock.calls[1][0]).toEqual(APP_ID_2);
+    expect(applicationSpy.mock.calls[1][1]).toEqual(APPLICATION_VALUES_2);
   });
 
   describe('failures', () => {

@@ -1,31 +1,35 @@
 import React from 'react';
-import thunk from 'redux-thunk';
-import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
-import { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/files/ReducerRegistry';
-import { createStore, combineReducers, applyMiddleware } from 'redux';
-import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/components/cjs/PrimaryToolbar';
+import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/components/esm/PrimaryToolbar';
 import { act } from 'react-dom/test-utils';
-import { Chip, Select, Pagination, Button, Tooltip, Tile } from '@patternfly/react-core';
+
+import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
+import { Tooltip } from '@patternfly/react-core/dist/esm/components/Tooltip/Tooltip';
+import { Tile } from '@patternfly/react-core/dist/esm/components/Tile/Tile';
+import { Alert } from '@patternfly/react-core/dist/esm/components/Alert/Alert';
+import { Pagination } from '@patternfly/react-core/dist/esm/components/Pagination/Pagination';
+import { AlertActionLink } from '@patternfly/react-core/dist/esm/components/Alert/AlertActionLink';
+import { Chip } from '@patternfly/react-core/dist/esm/components/ChipGroup/Chip';
+import { Select } from '@patternfly/react-core/dist/esm/components/Select/Select';
+
 import { MemoryRouter, Link } from 'react-router-dom';
-import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources/cjs/addSourceWizard';
+import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources/esm/addSourceWizard';
+import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/esm/NotificationPortal';
 
 import SourcesPageOriginal from '../../pages/Sources';
-import SourcesEmptyState from '../../components/SourcesTable/SourcesEmptyState';
 import SourcesTable from '../../components/SourcesTable/SourcesTable';
 
 import { sourcesDataGraphQl, SOURCE_ALL_APS_ID } from '../__mocks__/sourcesData';
-import { sourceTypesData, OPENSHIFT_ID } from '../__mocks__/sourceTypesData';
+import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID } from '../__mocks__/sourceTypesData';
 import { applicationTypesData, CATALOG_APP } from '../__mocks__/applicationTypesData';
 
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
 
-import ReducersProviders, { defaultSourcesState } from '../../redux/sources/reducer';
+import { defaultSourcesState } from '../../redux/sources/reducer';
 import * as api from '../../api/entities';
 import * as typesApi from '../../api/source_types';
 import EmptyStateTable from '../../components/SourcesTable/EmptyStateTable';
 import { routes, replaceRouteId } from '../../Routes';
 import * as helpers from '../../pages/Sources/helpers';
-import UserReducer from '../../redux/user/reducer';
 import RedirectNoWriteAccess from '../../components/RedirectNoWriteAccess/RedirectNoWriteAccess';
 import * as SourceRemoveModal from '../../components/SourceRemoveModal/SourceRemoveModal';
 import * as urlQuery from '../../utilities/urlQuery';
@@ -37,13 +41,14 @@ import TabNavigation from '../../components/TabNavigation';
 import CloudCards from '../../components/CloudTiles/CloudCards';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../utilities/constants';
 import CloudEmptyState from '../../components/CloudTiles/CloudEmptyState';
+import { getStore } from '../../utilities/store';
+import { AVAILABLE, UNAVAILABLE } from '../../views/formatters';
+import RedHatEmptyState from '../../components/RedHatTiles/RedHatEmptyState';
 
 describe('SourcesPage', () => {
-  const middlewares = [thunk, notificationsMiddleware()];
   let initialProps;
   let store;
   let wrapper;
-
   const SourcesPage = (props) => (
     <React.Fragment>
       <DataLoader />
@@ -61,13 +66,9 @@ describe('SourcesPage', () => {
     api.doLoadAppTypes = jest.fn().mockImplementation(() => Promise.resolve(applicationTypesData));
     typesApi.doLoadSourceTypes = jest.fn().mockImplementation(() => Promise.resolve(sourceTypesData.data));
 
-    store = createStore(
-      combineReducers({
-        sources: applyReducerHash(ReducersProviders, defaultSourcesState),
-        user: applyReducerHash(UserReducer, { isOrgAdmin: true }),
-      }),
-      applyMiddleware(...middlewares)
-    );
+    store = getStore([], {
+      user: { isOrgAdmin: true },
+    });
 
     urlQuery.updateQuery = jest.fn();
     urlQuery.parseQuery = jest.fn();
@@ -85,7 +86,6 @@ describe('SourcesPage', () => {
     wrapper.update();
 
     expect(wrapper.find(TabNavigation)).toHaveLength(1);
-    expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
     expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
     expect(wrapper.find(CloudCards)).toHaveLength(1);
     expect(wrapper.find(SourcesTable)).toHaveLength(1);
@@ -99,27 +99,14 @@ describe('SourcesPage', () => {
 
     expect(urlQuery.parseQuery.mock.calls).toHaveLength(1);
     expect(urlQuery.updateQuery.mock.calls).toHaveLength(1);
-    expect(urlQuery.updateQuery).toHaveBeenCalledWith({
-      ...defaultSourcesState,
-      loaded: 0,
-      appTypesLoaded: true,
-      sourceTypesLoaded: true,
-      sourceTypes: sourceTypesData.data,
-      appTypes: applicationTypesData.data,
-      numberOfEntities: sourcesDataGraphQl.length,
-      entities: sourcesDataGraphQl,
-      paginationClicked: false,
-    });
+    expect(urlQuery.updateQuery).toHaveBeenCalledWith(defaultSourcesState);
   });
 
   it('do not show CloudCards on Red Hat page', async () => {
-    store = createStore(
-      combineReducers({
-        sources: applyReducerHash(ReducersProviders, { ...defaultSourcesState, activeVendor: REDHAT_VENDOR }),
-        user: applyReducerHash(UserReducer, { isOrgAdmin: true }),
-      }),
-      applyMiddleware(...middlewares)
-    );
+    store = getStore([], {
+      sources: { activeVendor: REDHAT_VENDOR },
+      user: { isOrgAdmin: true },
+    });
 
     await act(async () => {
       wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
@@ -131,13 +118,10 @@ describe('SourcesPage', () => {
   });
 
   it('renders empty state when there are no Sources - CLOUD', async () => {
-    store = createStore(
-      combineReducers({
-        sources: applyReducerHash(ReducersProviders, { ...defaultSourcesState, activeVendor: CLOUD_VENDOR }),
-        user: applyReducerHash(UserReducer, { isOrgAdmin: true }),
-      }),
-      applyMiddleware(...middlewares)
-    );
+    store = getStore([], {
+      sources: { activeVendor: CLOUD_VENDOR },
+      user: { isOrgAdmin: true },
+    });
 
     api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
     api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
@@ -149,19 +133,16 @@ describe('SourcesPage', () => {
     wrapper.update();
 
     expect(wrapper.find(CloudEmptyState)).toHaveLength(1);
-    expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
+    expect(wrapper.find(RedHatEmptyState)).toHaveLength(0);
     expect(wrapper.find(PrimaryToolbar)).toHaveLength(0);
     expect(wrapper.find(SourcesTable)).toHaveLength(0);
   });
 
   it('renders empty state when there are no Sources and open AWS selection', async () => {
-    store = createStore(
-      combineReducers({
-        sources: applyReducerHash(ReducersProviders, { ...defaultSourcesState, activeVendor: CLOUD_VENDOR }),
-        user: applyReducerHash(UserReducer, { isOrgAdmin: true }),
-      }),
-      applyMiddleware(...middlewares)
-    );
+    store = getStore([], {
+      sources: { activeVendor: CLOUD_VENDOR },
+      user: { isOrgAdmin: true },
+    });
 
     api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
     api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
@@ -183,13 +164,10 @@ describe('SourcesPage', () => {
   });
 
   it('renders empty state when there are no Sources - RED HAT', async () => {
-    store = createStore(
-      combineReducers({
-        sources: applyReducerHash(ReducersProviders, { ...defaultSourcesState, activeVendor: REDHAT_VENDOR }),
-        user: applyReducerHash(UserReducer, { isOrgAdmin: true }),
-      }),
-      applyMiddleware(...middlewares)
-    );
+    store = getStore([], {
+      sources: { activeVendor: REDHAT_VENDOR },
+      user: { isOrgAdmin: true },
+    });
 
     api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
     api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
@@ -199,10 +177,35 @@ describe('SourcesPage', () => {
     });
 
     wrapper.update();
+    expect(wrapper.find(RedHatEmptyState)).toHaveLength(1);
     expect(wrapper.find(CloudEmptyState)).toHaveLength(0);
-    expect(wrapper.find(SourcesEmptyState)).toHaveLength(1);
-    expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
-    expect(wrapper.find(SourcesTable)).toHaveLength(1);
+    expect(wrapper.find(PrimaryToolbar)).toHaveLength(0);
+    expect(wrapper.find(SourcesTable)).toHaveLength(0);
+  });
+
+  it('renders empty state when there are no Sources and open ansible-tower selection', async () => {
+    store = getStore([], {
+      sources: { activeVendor: REDHAT_VENDOR },
+      user: { isOrgAdmin: true },
+    });
+
+    api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
+    api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+
+    await act(async () => {
+      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    });
+    wrapper.update();
+
+    expect(wrapper.find(RedHatEmptyState)).toHaveLength(1);
+
+    await act(async () => {
+      wrapper.find(Tile).first().simulate('click');
+    });
+    wrapper.update();
+
+    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
+    expect(wrapper.find(AddSourceWizard).props().selectedType).toEqual('ansible-tower');
   });
 
   it('renders error state when there is fetching (loadEntities) error', async () => {
@@ -238,69 +241,101 @@ describe('SourcesPage', () => {
       wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
     });
 
-    expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
     expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
     expect(wrapper.find(SourcesTable)).toHaveLength(1);
     expect(wrapper.find(PaginationLoader)).toHaveLength(2);
   });
 
   it('renders table and filtering - loading with paginationClicked: true, do not show paginationLoader', async () => {
-    const modifiedState = {
-      ...defaultSourcesState,
-      loaded: 1,
-      paginationClicked: true,
-      numberOfEntities: 5,
-    };
-
-    store = createStore(
-      combineReducers({
-        sources: applyReducerHash(ReducersProviders, modifiedState),
-        user: applyReducerHash(UserReducer, { isOrgAdmin: true }),
-      }),
-      applyMiddleware(...middlewares)
-    );
+    store = getStore([], {
+      sources: { loaded: 1, paginationClicked: true, numberOfEntities: 5 },
+      user: { isOrgAdmin: true },
+    });
 
     await act(async () => {
       wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
     });
 
-    expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
     expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
     expect(wrapper.find(SourcesTable)).toHaveLength(1);
     expect(wrapper.find(PaginationLoader)).toHaveLength(0);
     expect(wrapper.find(Pagination)).toHaveLength(2);
   });
 
-  it('opens wizard from info card and clears selection after leaving', async () => {
-    api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
-    api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 1 } }));
+  describe('filter source type selection', () => {
+    let tmpLocation;
 
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    beforeEach(() => {
+      tmpLocation = Object.assign({}, window.location);
+
+      delete window.location;
+
+      window.location = {};
+
+      window.location.pathname = routes.sources.path;
     });
-    wrapper.update();
 
-    expect(wrapper.find(CloudCards)).toHaveLength(1);
-
-    await act(async () => {
-      wrapper.find(Tile).first().simulate('click');
+    afterEach(() => {
+      window.location = tmpLocation;
     });
-    wrapper.update();
 
-    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
-    expect(wrapper.find(AddSourceWizard).props().selectedType).toEqual('amazon');
+    it('shows only Red Hat sources in the selection (filters satellite out)', async () => {
+      window.location.search = `?activeVendor=${REDHAT_VENDOR}`;
 
-    await act(async () => {
-      wrapper.find(AddSourceWizard).props().onClose();
+      store = getStore([], {
+        sources: {
+          loaded: 1,
+          numberOfEntities: 5,
+          sourceTypes: sourceTypesData.data,
+          activeVendor: REDHAT_VENDOR,
+        },
+        user: { isOrgAdmin: true },
+      });
+
+      await act(async () => {
+        wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+      });
+
+      expect(
+        wrapper
+          .find(PrimaryToolbar)
+          .first()
+          .props()
+          .filterConfig.items[1].filterValues.items.map(({ label }) => label)
+      ).toEqual([
+        'Ansible Tower',
+        'OpenShift Container Platform',
+        'Red Hat CloudForms',
+        'Red Hat OpenStack',
+        'Red Hat Virtualization',
+      ]);
     });
-    wrapper.update();
 
-    await act(async () => {
-      wrapper.find(Link).first().simulate('click', { button: 0 });
+    it('shows only Cloud sources in the selection', async () => {
+      window.location.search = `?activeVendor=${CLOUD_VENDOR}`;
+
+      store = getStore([], {
+        sources: {
+          loaded: 1,
+          numberOfEntities: 5,
+          sourceTypes: sourceTypesData.data,
+          activeVendor: CLOUD_VENDOR,
+        },
+        user: { isOrgAdmin: true },
+      });
+
+      await act(async () => {
+        wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+      });
+
+      expect(
+        wrapper
+          .find(PrimaryToolbar)
+          .first()
+          .props()
+          .filterConfig.items[1].filterValues.items.map(({ label }) => label)
+      ).toEqual(['Amazon Web Services', 'Microsoft Azure', 'VMware vSphere']);
     });
-    wrapper.update();
-
-    expect(wrapper.find(AddSourceWizard).props().selectedType).toEqual(undefined);
   });
 
   it('renders addSourceWizard', async () => {
@@ -320,16 +355,10 @@ describe('SourcesPage', () => {
   });
 
   it('renders and decreased page number if it is too great', async () => {
-    store = createStore(
-      combineReducers({
-        sources: applyReducerHash(ReducersProviders, {
-          ...defaultSourcesState,
-          pageNumber: 20,
-        }),
-        user: applyReducerHash(UserReducer, { isOrgAdmin: true }),
-      }),
-      applyMiddleware(...middlewares)
-    );
+    store = getStore([], {
+      sources: { pageNumber: 20 },
+      user: { isOrgAdmin: true },
+    });
 
     await act(async () => {
       wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
@@ -362,31 +391,6 @@ describe('SourcesPage', () => {
     expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sources.path);
   });
 
-  it('closes addSourceWizard and redirects to detail when source is created', async () => {
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-    });
-    wrapper.update();
-
-    await act(async () => {
-      wrapper.find(Link).first().simulate('click', { button: 0 });
-    });
-    wrapper.update();
-
-    expect(wrapper.find(RedirectNoWriteAccess)).toHaveLength(1);
-
-    const SOURCE_ID = '544615';
-
-    await act(async () => {
-      wrapper.find(AddSourceWizard).props().onClose(null, { id: SOURCE_ID });
-    });
-    wrapper.update();
-
-    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
-      replaceRouteId(routes.sourcesDetail.path, SOURCE_ID)
-    );
-  });
-
   it('afterSuccess addSourceWizard', async () => {
     helpers.afterSuccess = jest.fn();
 
@@ -414,6 +418,147 @@ describe('SourcesPage', () => {
     wrapper.update();
 
     expect(helpers.afterSuccess).toHaveBeenCalledWith(expect.any(Function), source);
+  });
+
+  it('submitCallback addSourceWizard - available', async () => {
+    const checkSubmitSpy = jest.spyOn(helpers, 'checkSubmit');
+
+    const source = {
+      isSubmitted: true,
+      sourceTypes: sourceTypesData.data,
+      createdSource: {
+        id: '544615',
+        source_type_id: AMAZON_ID,
+        name: 'name of created source',
+        applications: [{ availability_status: AVAILABLE }],
+      },
+    };
+
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <React.Fragment>
+            <NotificationsPortal />
+            <SourcesPage {...initialProps} />
+          </React.Fragment>,
+          store
+        )
+      );
+    });
+    wrapper.update();
+
+    await act(async () => {
+      wrapper.find(Link).first().simulate('click', { button: 0 });
+    });
+    wrapper.update();
+
+    await act(async () => {
+      wrapper.find(AddSourceWizard).props().submitCallback(source);
+    });
+    wrapper.update();
+
+    expect(checkSubmitSpy).toHaveBeenCalledWith(
+      source,
+      expect.any(Function),
+      expect.any(Function),
+      expect.objectContaining({ formatMessage: expect.any(Function) }),
+      expect.any(Function)
+    );
+
+    expect(wrapper.find(Alert).text()).toEqual(
+      'Success alert:Amazon Web Services connection successfulSource name of created source was successfully addedView source details'
+    );
+    expect(wrapper.find(Alert).props().variant).toEqual('success');
+
+    await act(async () => {
+      wrapper.find(AlertActionLink).find('button').simulate('click');
+    });
+    wrapper.update();
+
+    expect(wrapper.find(Alert)).toHaveLength(0);
+
+    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
+      replaceRouteId(routes.sourcesDetail.path, '544615')
+    );
+  });
+
+  it('submitCallback addSourceWizard - open wizard on error', async () => {
+    const checkSubmitSpy = jest.spyOn(helpers, 'checkSubmit');
+
+    const wizardState = {
+      activeStep: 'name_step',
+      activeStepIndex: '0',
+      maxStepIndex: 3,
+      prevSteps: [],
+      registeredFieldsHistory: {},
+    };
+
+    const source = {
+      isErrored: true,
+      sourceTypes: sourceTypesData.data,
+      values: { source: { name: 'some-name' } },
+      wizardState,
+    };
+
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <React.Fragment>
+            <NotificationsPortal />
+            <SourcesPage {...initialProps} />
+          </React.Fragment>,
+          store
+        )
+      );
+    });
+    wrapper.update();
+
+    await act(async () => {
+      wrapper.find(Link).first().simulate('click', { button: 0 });
+    });
+    wrapper.update();
+
+    await act(async () => {
+      wrapper.find(AddSourceWizard).props().submitCallback(source);
+    });
+    wrapper.update();
+
+    expect(checkSubmitSpy).toHaveBeenCalledWith(
+      source,
+      expect.any(Function),
+      expect.any(Function),
+      expect.objectContaining({ formatMessage: expect.any(Function) }),
+      expect.any(Function)
+    );
+
+    expect(wrapper.find(Alert).text()).toEqual(
+      'Danger alert:Error adding sourceThere was a problem while trying to add source some-name. Please try again. If the error persists, open a support case.Retry'
+    );
+
+    await act(async () => {
+      wrapper.find(AlertActionLink).find('button').simulate('click');
+    });
+    wrapper.update();
+
+    expect(wrapper.find(Alert)).toHaveLength(0);
+
+    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
+    expect(wrapper.find(AddSourceWizard).props().initialValues).toEqual({ source: { name: 'some-name' } });
+    expect(wrapper.find(AddSourceWizard).props().initialWizardState).toEqual(wizardState);
+
+    // reopen wizard to remove the initial values
+    await act(async () => {
+      wrapper.find(AddSourceWizard).props().onClose();
+    });
+    wrapper.update();
+
+    await act(async () => {
+      wrapper.find(Link).first().simulate('click', { button: 0 });
+    });
+    wrapper.update();
+
+    expect(wrapper.find(AddSourceWizard).props().initialValues).toEqual(undefined);
+    expect(wrapper.find(AddSourceWizard).props().initialWizardState).toEqual(undefined);
   });
 
   it('renders loading state when is loading', async () => {
@@ -509,6 +654,52 @@ describe('SourcesPage', () => {
       }, 500);
     });
 
+    it('should call onFilterSelect with available status', (done) => {
+      setTimeout(() => {
+        wrapper.update();
+        expect(wrapper.find(Chip)).toHaveLength(1);
+
+        // Switch to status type in conditional filter
+        wrapper.find('ConditionalFilter').setState({ stateValue: 3 });
+        wrapper.update();
+
+        const checkboxDropdownProps = wrapper.find(Select).last().props();
+
+        const EVENT = { target: { checked: true } };
+        const EVENT_FALSE = { target: { checked: false } };
+
+        // Select available
+        checkboxDropdownProps.onSelect(EVENT, AVAILABLE);
+        wrapper.update();
+
+        expect(wrapper.find(Chip)).toHaveLength(2);
+        expect(store.getState().sources.filterValue).toEqual({
+          name: SEARCH_TERM,
+          availability_status: [AVAILABLE],
+        });
+
+        // Select unavailable
+        checkboxDropdownProps.onSelect(EVENT, UNAVAILABLE);
+        wrapper.update();
+
+        expect(store.getState().sources.filterValue).toEqual({
+          name: SEARCH_TERM,
+          availability_status: [UNAVAILABLE],
+        });
+
+        // Deselect unavailable
+        checkboxDropdownProps.onSelect(EVENT_FALSE, UNAVAILABLE);
+        wrapper.update();
+
+        expect(store.getState().sources.filterValue).toEqual({
+          name: SEARCH_TERM,
+          availability_status: [],
+        });
+
+        done();
+      }, 500);
+    });
+
     it('filtered value is shown in the input', () => {
       expect(filterInput(wrapper).props().value).toEqual(SEARCH_TERM);
     });
@@ -592,13 +783,10 @@ describe('SourcesPage', () => {
     });
 
     it('show empty state table after clicking on clears all filter in empty table state - RED HAT', async (done) => {
-      store = createStore(
-        combineReducers({
-          sources: applyReducerHash(ReducersProviders, { ...defaultSourcesState, activeVendor: REDHAT_VENDOR }),
-          user: applyReducerHash(UserReducer, { isOrgAdmin: true }),
-        }),
-        applyMiddleware(...middlewares)
-      );
+      store = getStore([], {
+        sources: { activeVendor: REDHAT_VENDOR },
+        user: { isOrgAdmin: true },
+      });
 
       await act(async () => {
         wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
@@ -636,7 +824,7 @@ describe('SourcesPage', () => {
           });
           wrapper.update();
 
-          expect(wrapper.find(SourcesEmptyState)).toHaveLength(1);
+          expect(wrapper.find(RedHatEmptyState)).toHaveLength(1);
           done();
         }, 500);
       }, 500);
@@ -679,13 +867,10 @@ describe('SourcesPage', () => {
 
   describe('not org admin', () => {
     beforeEach(async () => {
-      store = createStore(
-        combineReducers({
-          sources: applyReducerHash(ReducersProviders, defaultSourcesState),
-          user: applyReducerHash(UserReducer, { isOrgAdmin: false }),
-        }),
-        applyMiddleware(...middlewares)
-      );
+      store = getStore([], {
+        sources: {},
+        user: { isOrgAdmin: false },
+      });
 
       await act(async () => {
         wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
@@ -698,7 +883,6 @@ describe('SourcesPage', () => {
       expect(api.doLoadAppTypes).toHaveBeenCalled();
       expect(typesApi.doLoadSourceTypes).toHaveBeenCalled();
 
-      expect(wrapper.find(SourcesEmptyState)).toHaveLength(0);
       expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
       expect(wrapper.find(SourcesTable)).toHaveLength(1);
       expect(wrapper.find(Pagination)).toHaveLength(2);
@@ -752,13 +936,9 @@ describe('SourcesPage', () => {
 
     describe('not org admin, redirect back to sources', () => {
       beforeEach(() => {
-        store = createStore(
-          combineReducers({
-            sources: applyReducerHash(ReducersProviders, defaultSourcesState),
-            user: applyReducerHash(UserReducer, { isOrgAdmin: false }),
-          }),
-          applyMiddleware(...middlewares)
-        );
+        store = getStore([], {
+          user: { isOrgAdmin: false },
+        });
       });
 
       it('when remove', async () => {

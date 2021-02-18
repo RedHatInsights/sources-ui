@@ -2,9 +2,9 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 
-import { Text } from '@patternfly/react-core/dist/js/components/Text/Text';
+import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
 
-import ErroredStep from '@redhat-cloud-services/frontend-components-sources/cjs/ErroredStep';
+import ErroredStep from '@redhat-cloud-services/frontend-components-sources/esm/ErroredStep';
 
 const ErroredModal = ({ onRetry }) => {
   const intl = useIntl();

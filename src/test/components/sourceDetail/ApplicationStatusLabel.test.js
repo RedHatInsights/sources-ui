@@ -1,13 +1,15 @@
-import { Label, Popover } from '@patternfly/react-core';
+import { Popover } from '@patternfly/react-core/dist/esm/components/Popover/Popover';
+import { Label } from '@patternfly/react-core/dist/esm/components/Label/Label';
+
 import React from 'react';
 import { Route } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
 
 import ApplicationStatusLabel from '../../../components/SourceDetail/ApplicationStatusLabel';
 import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { AVAILABLE, UNAVAILABLE } from '../../../views/formatters';
 import applicationTypesData, { COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
+import mockStore from '../../__mocks__/mockStore';
 
 describe('ApplicationStatusLabel', () => {
   let wrapper;
@@ -21,7 +23,7 @@ describe('ApplicationStatusLabel', () => {
       application_type_id: COSTMANAGEMENT_APP.id,
       availability_status: AVAILABLE,
     };
-    store = configureStore()({
+    store = mockStore({
       sources: {
         entities: [
           {
@@ -44,7 +46,7 @@ describe('ApplicationStatusLabel', () => {
       application_type_id: COSTMANAGEMENT_APP.id,
       availability_status: UNAVAILABLE,
     };
-    store = configureStore()({
+    store = mockStore({
       sources: {
         entities: [
           {
@@ -68,7 +70,7 @@ describe('ApplicationStatusLabel', () => {
       availability_status: UNAVAILABLE,
       availability_status_error: 'app-error',
     };
-    store = configureStore()({
+    store = mockStore({
       sources: {
         entities: [
           {
@@ -91,7 +93,7 @@ describe('ApplicationStatusLabel', () => {
       application_type_id: COSTMANAGEMENT_APP.id,
       authentications: [{ resource_type: 'Endpoint' }],
     };
-    store = configureStore()({
+    store = mockStore({
       sources: {
         entities: [
           {

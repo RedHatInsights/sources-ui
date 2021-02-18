@@ -1,4 +1,5 @@
 import { restFilterGenerator } from '../api/entities';
+import { AVAILABLE, UNAVAILABLE } from '../views/formatters';
 import { sourcesColumns } from '../views/sourcesViewDefinition';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from './constants';
 
@@ -93,6 +94,18 @@ export const parseQuery = () => {
     filterValue = {
       ...filterValue,
       applications: applicationTypes,
+    };
+  }
+
+  if (urlParams.get('filter[availability_status]')) {
+    filterValue = {
+      ...filterValue,
+      availability_status: [AVAILABLE],
+    };
+  } else if (urlParams.get('filter[availability_status][]')) {
+    filterValue = {
+      ...filterValue,
+      availability_status: [UNAVAILABLE],
     };
   }
 

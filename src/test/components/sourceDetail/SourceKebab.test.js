@@ -1,13 +1,16 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
 import { act } from 'react-dom/test-utils';
-import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
+
+import { Dropdown } from '@patternfly/react-core/dist/esm/components/Dropdown/Dropdown';
+import { DropdownItem } from '@patternfly/react-core/dist/esm/components/Dropdown/DropdownItem';
+import { KebabToggle } from '@patternfly/react-core/dist/esm/components/Dropdown/KebabToggle';
 
 import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import SourceKebab from '../../../components/SourceDetail/SourceKebab';
-import { InternalDropdownItem } from '@patternfly/react-core/dist/js/components/Dropdown/InternalDropdownItem';
+import { InternalDropdownItem } from '@patternfly/react-core/dist/esm/components/Dropdown/InternalDropdownItem';
+import mockStore from '../../__mocks__/mockStore';
 
 describe('SourceKebab', () => {
   let wrapper;
@@ -17,7 +20,7 @@ describe('SourceKebab', () => {
   const initialEntry = [replaceRouteId(routes.sourcesDetail.path, sourceId)];
 
   it('renders with no permissions', async () => {
-    store = configureStore()({
+    store = mockStore({
       sources: {
         entities: [{ id: sourceId }],
       },
@@ -54,7 +57,7 @@ describe('SourceKebab', () => {
 
   describe('with permissions', () => {
     beforeEach(() => {
-      store = configureStore()({
+      store = mockStore({
         sources: {
           entities: [{ id: sourceId }],
         },
