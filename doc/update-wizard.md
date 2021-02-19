@@ -94,11 +94,9 @@ An application type is defined by several basic attributes:
 
 With using the two mentioned configuration files, you can easily add a new application or a source type with all needed configuration. All these files are directly transformed into Add source wizard, Add application wizard and Edit source forms. However, all these fields can be enhanced and modified in the UI to comply with our UX vision and design.
 
-The wizard is self-contained [package](https://github.com/RedHatInsights/frontend-components/tree/master/packages/sources) (because of the ability to use it in multiple applications). Each change of steps has to be done there. Sources UI is using the wizard as a dependency, so after updating the steps, you have to also update the package version in the UI.
+All changes are made in `hardcodedSchemas` file (link [here](https://github.com/RedHatInsights/sources-ui/blob/master/src/addSourceWizard/addSourceWizard/hardcodedSchemas.js)).
 
-All changes are made in `hardcodedSchemas` file (link [here](https://github.com/RedHatInsights/frontend-components/blob/master/packages/sources/src/addSourceWizard/hardcodedSchemas.js)).
-
-This file is a similar config with the following structure:
+This file is a similar config to the following structure:
 
 ```js
 {
@@ -219,15 +217,13 @@ If you want to add an additional API endpoint for application-specific values, p
 
 # Quick check-list
 
-- [ ] Check API definition - Sources API
-- [ ] Update hardcoded schemas - Frontend Components/Sources
+- [ ] Check API definition - [Sources API](https://github.com/RedHatInsights/sources-api/tree/master/db/seeds)
+- [ ] Update [hardcoded schemas](https://github.com/RedHatInsights/sources-ui/blob/master/src/addSourceWizard/addSourceWizard/hardcodedSchemas.js)
   - [ ] Authtype is always selected
   - [ ] Users can switch between source/app types and the wizard should always work
   - [ ] Summary shows correct labels (see `aria-label`, otherwise the summary works automatically)
   - [ ] Custom components are tested (100% coverage)
-  - [ ] Release (contact @rvsia, @khala, @hyperkid123, ui-reviewers)
 - [ ] Integration with Sources UI
   - [ ] Wizard works, the source is successfully created with all needed values
   - [ ] Edit form works (should be automatic, otherwise there is a bug in the implementation)
   - [ ] Add application works (should be automatic, otherwise there is a bug in the implementation)
-  - [ ] Update package.json
