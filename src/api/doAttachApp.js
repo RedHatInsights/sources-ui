@@ -1,7 +1,4 @@
 import { addedDiff, updatedDiff } from 'deep-object-diff';
-import { handleError } from '@redhat-cloud-services/frontend-components-sources/esm/handleError';
-import { checkAppAvailability } from '@redhat-cloud-services/frontend-components-sources/esm/getApplicationStatus';
-import { timeoutedApps } from '@redhat-cloud-services/frontend-components-sources/esm/constants';
 
 import isEmpty from 'lodash/isEmpty';
 import merge from 'lodash/merge';
@@ -9,6 +6,9 @@ import cloneDeep from 'lodash/cloneDeep';
 
 import { getSourcesApi, doCreateApplication } from './entities';
 import { urlOrHost } from './doUpdateSource';
+import { checkAppAvailability } from '../addSourceWizard/api/getApplicationStatus';
+import { timeoutedApps } from '../addSourceWizard/api/constants';
+import handleError from '../addSourceWizard/api/handleError';
 
 // modification of https://stackoverflow.com/a/38340374
 export const removeEmpty = (obj) => {
