@@ -126,7 +126,7 @@ export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
             { name: <b>{state.values.source.name}</b> }
           ),
           variant: 'danger',
-          customId: id,
+          id,
           actionLinks: (
             <AlertActionLink
               onClick={() => {
@@ -168,7 +168,7 @@ export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
                 </React.Fragment>
               ),
               variant: 'danger',
-              customId: id,
+              id,
               actionLinks: (
                 <AlertActionLink
                   onClick={() => {
@@ -222,7 +222,7 @@ export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
                 { name: <b>{state.createdSource.name}</b> }
               ),
               variant: 'success',
-              customId: id,
+              id,
               actionLinks: (
                 <AlertActionLink
                   onClick={() => {

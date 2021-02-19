@@ -30,6 +30,7 @@ const SourceRenameModal = () => {
       onClose={returnToSource}
       isOpen
       variant="medium"
+      className="sources"
     >
       <SourcesFormRenderer
         FormTemplate={(props) => (

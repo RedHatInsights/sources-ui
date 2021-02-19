@@ -106,13 +106,13 @@ const SourceRemoveModal = ({ backPath }) => {
 
   return (
     <Modal
-      className="ins-c-sources__dialog--warning"
+      className="sources"
       aria-label={intl.formatMessage({
         id: 'sources.deleteTitle',
         defaultMessage: `Remove source?`,
       })}
       header={
-        <Title headingLevel="h1" size="2xl">
+        <Title headingLevel="h1" size="2xl" className="sources">
           <ExclamationTriangleIcon size="sm" className="ins-m-alert ins-c-source__delete-icon pf-u-mr-sm" />
           {intl.formatMessage({
             id: 'sources.deleteTitle',

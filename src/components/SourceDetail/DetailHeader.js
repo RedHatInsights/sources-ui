@@ -2,7 +2,7 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 import { shallowEqual, useSelector } from 'react-redux';
 
-import { PageHeader } from '@redhat-cloud-services/frontend-components/components/esm/PageHeader';
+import { PageHeader } from '@redhat-cloud-services/frontend-components/PageHeader';
 import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
 import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
 import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';

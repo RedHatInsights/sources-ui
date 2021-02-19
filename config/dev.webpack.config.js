@@ -1,14 +1,24 @@
-const webpackConfig = require('./base.webpack.config');
-const config = require('./webpack.common.js');
+const { resolve } = require('path');
+const config = require('@redhat-cloud-services/frontend-components-config');
+const { config: webpackConfig, plugins } = config({
+  rootFolder: resolve(__dirname, '../'),
+  debug: true,
+  https: false,
+  useFileHash: false,
+  deployment: process.env.BETA ? 'beta/apps' : 'apps',
+});
 
-webpackConfig.devServer = {
-  port: 8002,
-  contentBase: config.paths.public,
-  historyApiFallback: true,
-  disableHostCheck: true,
-};
+plugins.push(
+  require('@redhat-cloud-services/frontend-components-config/federated-modules')({
+    root: resolve(__dirname, '../'),
+    useFileHash: false,
+    exposes: {
+      './RootApp': resolve(__dirname, '../src/DevEntry'),
+    },
+  })
+);
 
 module.exports = {
   ...webpackConfig,
-  ...require('./dev.webpack.plugins.js'),
+  plugins,
 };

@@ -4,9 +4,9 @@ import { Link, useHistory } from 'react-router-dom';
 import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
 import { useIntl } from 'react-intl';
 
-import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/components/esm/PrimaryToolbar';
-import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/esm/PageHeader';
-import { Section } from '@redhat-cloud-services/frontend-components/components/esm/Section';
+import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/PrimaryToolbar';
+import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
+import { Section } from '@redhat-cloud-services/frontend-components/Section';
 import { filterVendorAppTypes } from '@redhat-cloud-services/frontend-components-sources/esm/filterApps';
 import { filterVendorTypes } from '@redhat-cloud-services/frontend-components-sources/esm/filterTypes';
 
