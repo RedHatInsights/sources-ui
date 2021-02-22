@@ -12,7 +12,6 @@ import { Chip } from '@patternfly/react-core/dist/js/components/ChipGroup/Chip';
 import { Select } from '@patternfly/react-core/dist/js/components/Select/Select';
 
 import { MemoryRouter, Link } from 'react-router-dom';
-import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources/esm/addSourceWizard';
 import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/NotificationPortal';
 
 import SourcesPageOriginal from '../../pages/Sources';
@@ -44,6 +43,7 @@ import CloudEmptyState from '../../components/CloudTiles/CloudEmptyState';
 import { getStore } from '../../utilities/store';
 import { AVAILABLE, UNAVAILABLE } from '../../views/formatters';
 import RedHatEmptyState from '../../components/RedHatTiles/RedHatEmptyState';
+import { AddSourceWizard } from '../../addSourceWizard/addSourceWizard';
 
 describe('SourcesPage', () => {
   let initialProps;

@@ -13,8 +13,8 @@ import { EmptyState } from '@patternfly/react-core/dist/esm/components/EmptyStat
 import { EmptyStateBody } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateBody';
 import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
 
-import ErroredStep from '@redhat-cloud-services/frontend-components-sources/esm/ErroredStep';
 import mockStore from '../../__mocks__/mockStore';
+import ErroredStep from '../../../addSourceWizard/addSourceWizard/steps/ErroredStep';
 
 describe('ErroredModal', () => {
   let store;
