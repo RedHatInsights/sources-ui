@@ -461,4 +461,47 @@ export const AMAZON = sourceTypesData.data[AMAZON_INDEX];
 export const ANSIBLE_TOWER = sourceTypesData.data[ANSIBLE_TOWER_INDEX];
 export const SATELLITE = sourceTypesData.data[SATELLITE_INDEX];
 
+export const googleType = {
+  created_at: '2021-01-22T16:53:04Z',
+  icon_url: '/apps/frontend-assets/partners-icons/google-cloud.svg',
+  id: '10',
+  name: 'google',
+  product_name: 'Google Cloud',
+  schema: {
+    endpoint: {
+      fields: [
+        { name: 'endpoint.role', component: 'text-field', hideField: true, initialValue: 'google', initializeOnMount: true },
+      ],
+      hidden: true,
+    },
+    authentication: [
+      {
+        name: 'Project ID and Service Account JSON',
+        type: 'project_id_service_account_json',
+        fields: [
+          {
+            name: 'authentication.authtype',
+            component: 'text-field',
+            hideField: true,
+            initialValue: 'project_id_service_account_json',
+            initializeOnMount: true,
+          },
+          { name: 'authentication.username', label: 'Project ID', component: 'text-field' },
+          { name: 'authentication.password', label: 'Service Account JSON', component: 'textarea' },
+          {
+            name: 'application.extra.dataset',
+            label: 'Dataset name',
+            stepKey: 'cost-management',
+            validate: [{ type: 'required' }],
+            component: 'text-field',
+            isRequired: true,
+          },
+        ],
+      },
+    ],
+  },
+  updated_at: '2021-01-22T16:53:04Z',
+  vendor: 'Google',
+};
+
 export default sourceTypesData;

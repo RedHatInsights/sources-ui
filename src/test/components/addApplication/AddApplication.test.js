@@ -9,12 +9,13 @@ import { Radio } from '@patternfly/react-core/dist/esm/components/Radio/Radio';
 
 import { Route, MemoryRouter } from 'react-router-dom';
 
-import CloseModal from '@redhat-cloud-services/frontend-components-sources/esm/CloseModal';
-import LoadingStep from '@redhat-cloud-services/frontend-components-sources/esm/LoadingStep';
-import ErroredStep from '@redhat-cloud-services/frontend-components-sources/esm/ErroredStep';
-import SummaryStep from '@redhat-cloud-services/frontend-components-sources/esm/SourceWizardSummary';
-import FinishedStep from '@redhat-cloud-services/frontend-components-sources/esm/FinishedStep';
-import AmazonFinishedStep from '@redhat-cloud-services/frontend-components-sources/esm/AmazonFinishedStep';
+import CloseModal from '../../../addSourceWizard/addSourceWizard/CloseModal';
+import LoadingStep from '../../../addSourceWizard/addSourceWizard/steps/LoadingStep';
+import ErroredStep from '../../../addSourceWizard/addSourceWizard/steps/ErroredStep';
+import SummaryStep from '../../../addSourceWizard/sourceFormRenderer/components/SourceWizardSummary';
+import FinishedStep from '../../../addSourceWizard/addSourceWizard/steps/FinishedStep';
+import TimeoutStep from '../../../addSourceWizard/addSourceWizard/steps/TimeoutStep';
+import AmazonFinishedStep from '../../../addSourceWizard/addSourceWizard/steps/AmazonFinishedStep';
 
 import { act } from 'react-dom/test-utils';
 
@@ -31,7 +32,6 @@ import { routes, replaceRouteId } from '../../../Routes';
 import { AuthTypeSetter } from '../../../components/AddApplication/AuthTypeSetter';
 import reducer from '../../../components/AddApplication/reducer';
 import * as removeAppSubmit from '../../../components/AddApplication/removeAppSubmit';
-import TimeoutStep from '@redhat-cloud-services/frontend-components-sources/esm/TimeoutStep';
 
 import mockStore from '../../__mocks__/mockStore';
 
