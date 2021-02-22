@@ -2,8 +2,6 @@
 set -e
 set -x
 
-npm run build
-
 if [ "${TRAVIS_BRANCH}" = "master" ]
 then
     for env in ci qa
