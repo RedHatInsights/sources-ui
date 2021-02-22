@@ -35,7 +35,11 @@ const SubWatchDescription = ({ id }) => {
   const intl = useIntl();
   const { getState } = useFormApi();
 
-  const isEnabled = getState().values.application?.application_type_id === id;
+  const values = getState().values;
+
+  const isEnabled =
+    (values.source.app_creation_workflow === 'account_authorization' && values.applications?.includes(id)) ||
+    (values.source.app_creation_workflow !== 'account_authorization' && values.application?.application_type_id === id);
 
   return (
     <Stack>
