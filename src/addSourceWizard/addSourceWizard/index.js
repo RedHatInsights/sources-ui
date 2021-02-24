@@ -100,7 +100,7 @@ const AddSourceWizard = ({
   if (!isSubmitted) {
     return (
       <React.Fragment>
-        <CloseModal isOpen={isCancelling} onExit={onExit} onStay={() => dispatch({ type: 'onStay' })} />
+        {isCancelling && <CloseModal onExit={onExit} onStay={() => dispatch({ type: 'onStay' })} />}
         <Form
           isCancelling={isCancelling}
           values={values}

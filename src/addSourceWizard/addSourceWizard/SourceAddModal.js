@@ -94,7 +94,7 @@ const SourceAddModal = ({
   }, []);
 
   useEffect(() => {
-    container.current.hidden = isCancelling;
+    container.current.style.opacity = isCancelling ? 0 : 1;
   }, [isCancelling]);
 
   if (isLoading) {

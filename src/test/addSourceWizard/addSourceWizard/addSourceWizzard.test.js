@@ -264,7 +264,7 @@ describe('AddSourceWizard', () => {
 
     wrapper.update();
 
-    expect(wrapper.find(CloseModal).props().isOpen).toEqual(true);
+    expect(wrapper.find(CloseModal)).toHaveLength(1);
 
     await act(async () => {
       wrapper.find('button#on-exit-button').simulate('click');
@@ -306,14 +306,14 @@ describe('AddSourceWizard', () => {
     });
     wrapper.update();
 
-    expect(wrapper.find(CloseModal).props().isOpen).toEqual(true);
+    expect(wrapper.find(CloseModal)).toHaveLength(1);
 
     await act(async () => {
       wrapper.find('button#on-stay-button').simulate('click');
     });
     wrapper.update();
 
-    expect(wrapper.find(CloseModal).props().isOpen).toEqual(false);
+    expect(wrapper.find(CloseModal)).toHaveLength(0);
 
     expect(onClose).not.toHaveBeenCalled();
     expect(wrapper.find('input').instance().value).toEqual(NAME);

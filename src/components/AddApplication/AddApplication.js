@@ -361,7 +361,7 @@ const AddApplication = () => {
   const onSubmitFinal = hasAvailableApps ? onSubmitWrapper : goToSources;
 
   const onStay = () => {
-    container.current.hidden = false;
+    container.current.style.opacity = 1;
     setState({ type: 'toggleCancelling' });
   };
 
@@ -374,7 +374,7 @@ const AddApplication = () => {
     const isChanged = !isEmpty(diff(initialValues, newValues));
 
     if (isChanged) {
-      container.current.hidden = true;
+      container.current.style.opacity = 0;
       setState({ type: 'toggleCancelling', values });
     } else {
       goToSources();
@@ -383,15 +383,16 @@ const AddApplication = () => {
 
   return (
     <React.Fragment>
-      <CloseModal
-        title={intl.formatMessage({
-          id: 'sources.manageAppsCloseModalTitle',
-          defaultMessage: 'Exit application adding?',
-        })}
-        isOpen={state.isCancelling}
-        onStay={onStay}
-        onExit={goToSources}
-      />
+      {state.isCancelling && (
+        <CloseModal
+          title={intl.formatMessage({
+            id: 'sources.manageAppsCloseModalTitle',
+            defaultMessage: 'Exit application adding?',
+          })}
+          onStay={onStay}
+          onExit={goToSources}
+        />
+      )}
       <SourcesFormRenderer
         schema={schema}
         showFormControls={false}

@@ -348,7 +348,7 @@ describe('AddApplication', () => {
       });
       wrapper.update();
 
-      expect(wrapper.find(CloseModal).props().isOpen).toEqual(true);
+      expect(wrapper.find(CloseModal)).toHaveLength(1);
 
       await act(async () => {
         const leaveButton = wrapper.find(Button).at(1);
@@ -377,7 +377,7 @@ describe('AddApplication', () => {
       });
       wrapper.update();
 
-      expect(wrapper.find(CloseModal).props().isOpen).toEqual(true);
+      expect(wrapper.find(CloseModal)).toHaveLength(1);
 
       await act(async () => {
         const stayButton = wrapper.find(Button).at(0);
@@ -385,7 +385,7 @@ describe('AddApplication', () => {
       });
       wrapper.update();
 
-      expect(wrapper.find(CloseModal).props().isOpen).toEqual(false);
+      expect(wrapper.find(CloseModal)).toHaveLength(0);
       expect(wrapper.find('input[name="source.nested.source_ref"]').instance().value).toEqual(value);
     });
 

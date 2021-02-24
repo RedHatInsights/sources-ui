@@ -72,4 +72,16 @@ describe('CloseModal', () => {
     expect(onStay).toHaveBeenCalled();
     onStay.mockClear();
   });
+
+  it('calls onStay when pressed escape second time', () => {
+    const wrapper = mount(<CloseModal {...initialProps} />);
+
+    wrapper.find(Modal).at(0).props().onEscapePress();
+
+    expect(onStay).not.toHaveBeenCalled();
+
+    wrapper.find(Modal).at(0).props().onEscapePress();
+
+    expect(onStay).toHaveBeenCalled();
+  });
 });

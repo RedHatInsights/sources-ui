@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl, FormattedMessage } from 'react-intl';
 
@@ -8,11 +8,17 @@ import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
 
 import ExclamationTriangleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-triangle-icon';
 
-const CloseModal = ({ onExit, onStay, isOpen, title, exitTitle, stayTitle, description }) => {
+const CloseModal = ({ onExit, onStay, title, exitTitle, stayTitle, description }) => {
   const intl = useIntl();
+
+  const isMounted = useRef(false);
 
   return (
     <Modal
+      onEscapePress={(e) => {
+        isMounted.current ? onStay(e) : undefined;
+        isMounted.current = true;
+      }}
       className="sources"
       variant="small"
       title={title}
@@ -23,7 +29,7 @@ const CloseModal = ({ onExit, onStay, isOpen, title, exitTitle, stayTitle, descr
           {title}
         </Title>
       }
-      isOpen={isOpen}
+      isOpen
       onClose={onStay}
       actions={[
         <Button key="confirm" variant="primary" id="on-exit-button" onClick={onExit}>
@@ -42,7 +48,6 @@ const CloseModal = ({ onExit, onStay, isOpen, title, exitTitle, stayTitle, descr
 CloseModal.propTypes = {
   onExit: PropTypes.func.isRequired,
   onStay: PropTypes.func.isRequired,
-  isOpen: PropTypes.bool.isRequired,
   title: PropTypes.node,
   exitTitle: PropTypes.node,
   stayTitle: PropTypes.node,
