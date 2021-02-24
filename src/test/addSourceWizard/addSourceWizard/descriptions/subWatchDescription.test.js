@@ -21,12 +21,12 @@ describe('SubWatchDescription', () => {
       />
     );
 
-    expect(wrapper.find(CheckCircleIcon)).toHaveLength(3);
-    expect(wrapper.find(Text)).toHaveLength(6);
+    expect(wrapper.find(CheckCircleIcon)).toHaveLength(4);
+    expect(wrapper.find(Text)).toHaveLength(8);
     expect(wrapper.find(Stack)).toHaveLength(1);
-    expect(wrapper.find(StackItem)).toHaveLength(3);
-    expect(wrapper.find(Flex)).toHaveLength(3);
-    expect(wrapper.find(FlexItem)).toHaveLength(6);
+    expect(wrapper.find(StackItem)).toHaveLength(4);
+    expect(wrapper.find(Flex)).toHaveLength(4);
+    expect(wrapper.find(FlexItem)).toHaveLength(8);
 
     expect(wrapper.find(CheckCircleIcon).first().props().fill).toEqual('#3E8635');
   });
