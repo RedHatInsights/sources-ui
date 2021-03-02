@@ -139,6 +139,14 @@ describe('SourcesPage', () => {
   });
 
   it('renders empty state when there are no Sources and open AWS selection', async () => {
+    let tmpLocation;
+
+    tmpLocation = Object.assign({}, window.location);
+    delete window.location;
+    window.location = {};
+    window.location.pathname = routes.sources.path;
+    window.location.search = `?activeVendor=${CLOUD_VENDOR}`;
+
     store = getStore([], {
       sources: { activeVendor: CLOUD_VENDOR },
       user: { isOrgAdmin: true },
@@ -161,6 +169,8 @@ describe('SourcesPage', () => {
 
     expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
     expect(wrapper.find(AddSourceWizard).props().selectedType).toEqual('amazon');
+
+    window.location = tmpLocation;
   });
 
   it('renders empty state when there are no Sources - RED HAT', async () => {
