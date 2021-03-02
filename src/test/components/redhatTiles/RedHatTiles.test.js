@@ -9,6 +9,8 @@ import { MemoryRouter } from 'react-router-dom';
 import { routes } from '../../../Routes';
 import mockStore from '../../__mocks__/mockStore';
 import RedHatTiles from '../../../components/RedHatTiles/RedHatTiles';
+import sourceTypes from '../../__mocks__/sourceTypesData';
+import * as constants from '../../../utilities/constants';
 
 describe('RedhatTiles', () => {
   let wrapper;
@@ -23,7 +25,9 @@ describe('RedhatTiles', () => {
       setSelectedType,
     };
 
-    store = mockStore({ user: { isOrgAdmin: true } });
+    store = mockStore({ user: { isOrgAdmin: true }, sources: { sourceTypes: sourceTypes.data } });
+
+    constants.getActiveVendor = () => constants.REDHAT_VENDOR;
   });
 
   it('renders correctly', async () => {
@@ -41,7 +45,7 @@ describe('RedhatTiles', () => {
   });
 
   it('renders correctly when no permissions', async () => {
-    store = mockStore({ user: { isOrgAdmin: false } });
+    store = mockStore({ user: { isOrgAdmin: false }, sources: { sourceTypes: sourceTypes.data } });
 
     await act(async () => {
       wrapper = mount(componentWrapperIntl(<RedHatTiles {...initialProps} />, store));
