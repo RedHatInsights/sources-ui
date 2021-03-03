@@ -47,7 +47,7 @@ describe('AddSourceWizard', () => {
     expect(wrapper.find(Form)).toHaveLength(1);
     expect(wrapper.find(Modal)).toHaveLength(1);
 
-    expect(wrapper.find(SourcesFormRenderer).props().schema.fields[0].fields[1].title).toEqual('Select source type');
+    expect(wrapper.find(SourcesFormRenderer).props().schema.fields[0].fields[1].title).toEqual('Source type and application');
   });
 
   it('renders correctly without sourceTypes', async () => {
@@ -265,7 +265,7 @@ describe('AddSourceWizard', () => {
 
     wrapper.update();
 
-    expect(wrapper.find(CloseModal).props().isOpen).toEqual(true);
+    expect(wrapper.find(CloseModal)).toHaveLength(1);
 
     await act(async () => {
       wrapper.find('button#on-exit-button').simulate('click');
@@ -307,14 +307,14 @@ describe('AddSourceWizard', () => {
     });
     wrapper.update();
 
-    expect(wrapper.find(CloseModal).props().isOpen).toEqual(true);
+    expect(wrapper.find(CloseModal)).toHaveLength(1);
 
     await act(async () => {
       wrapper.find('button#on-stay-button').simulate('click');
     });
     wrapper.update();
 
-    expect(wrapper.find(CloseModal).props().isOpen).toEqual(false);
+    expect(wrapper.find(CloseModal)).toHaveLength(0);
 
     expect(onClose).not.toHaveBeenCalled();
     expect(wrapper.find('input').instance().value).toEqual(NAME);

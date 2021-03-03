@@ -69,7 +69,7 @@ const CloudCards = () => {
                       {intl.formatMessage({
                         id: 'cloud.goldImages.description',
                         defaultMessage:
-                          'Connecting to Amazon Web Services unlocks automatic access to Red Hat Gold Images. View Gold Images in your provider console.',
+                          'Connecting to Amazon Web Services or Microsoft Azure unlocks automatic access to Red Hat Gold Images. View Gold Images in your provider console.',
                       })}
                     </Text>
                     <Text className="text" component="a" href={GOLD_IMAGES_AWS} target="_blank" rel="noopener noreferrer">

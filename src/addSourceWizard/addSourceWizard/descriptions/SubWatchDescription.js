@@ -76,6 +76,18 @@ const SubWatchDescription = ({ id }) => {
           id: 'rhelbundle.goldImages.description',
           defaultMessage: 'Cloud instances automatically connect to cloud.redhat.com when provisioned.',
         })}
+        className="pf-u-mb-sm"
+        isEnabled={isEnabled}
+      />
+      <Point
+        title={intl.formatMessage({
+          id: 'rhelbundle.redhatconnector.title',
+          defaultMessage: 'Red Hat Connector',
+        })}
+        description={intl.formatMessage({
+          id: 'rhelbundle.redhatconnector.description',
+          defaultMessage: 'Simplified set up and registration of connected hosts.',
+        })}
         isEnabled={isEnabled}
       />
     </Stack>
