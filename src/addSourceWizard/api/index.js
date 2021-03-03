@@ -22,6 +22,7 @@ export const getSourcesApi = () => ({
   checkAvailabilitySource: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/sources/${id}/check_availability`),
   getGoogleAccount: () => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/app_meta_data?filter[name]=gcp_service_account`),
   bulkCreate: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/bulk_create`, data),
+  getAuthentication: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/authentications/${id}`),
 });
 
 export const doLoadSourceTypes = () =>

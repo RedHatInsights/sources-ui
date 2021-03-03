@@ -47,7 +47,7 @@ describe('AddSourceWizard', () => {
     expect(wrapper.find(Form)).toHaveLength(1);
     expect(wrapper.find(Modal)).toHaveLength(1);
 
-    expect(wrapper.find(SourcesFormRenderer).props().schema.fields[0].fields[1].title).toEqual('Source type and application');
+    expect(wrapper.find(SourcesFormRenderer).props().schema.fields[0].fields[1].title).toEqual('Select source type');
   });
 
   it('renders correctly without sourceTypes', async () => {
