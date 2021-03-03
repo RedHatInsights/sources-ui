@@ -17,6 +17,7 @@ import LoadingStep from '../../../addSourceWizard/addSourceWizard/steps/LoadingS
 
 import mount from '../__mocks__/mount';
 import SourcesFormRenderer from '../../../addSourceWizard/sourceFormRenderer';
+import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../../utilities/constants';
 
 describe('AddSourceWizard', () => {
   let initialProps;
@@ -46,7 +47,7 @@ describe('AddSourceWizard', () => {
     expect(wrapper.find(Form)).toHaveLength(1);
     expect(wrapper.find(Modal)).toHaveLength(1);
 
-    expect(wrapper.find(SourcesFormRenderer).props().schema.fields[0].fields[1].title).toEqual('Source type and application');
+    expect(wrapper.find(SourcesFormRenderer).props().schema.fields[0].fields[1].title).toEqual('Select source type');
   });
 
   it('renders correctly without sourceTypes', async () => {
@@ -264,7 +265,7 @@ describe('AddSourceWizard', () => {
 
     wrapper.update();
 
-    expect(wrapper.find(CloseModal).props().isOpen).toEqual(true);
+    expect(wrapper.find(CloseModal)).toHaveLength(1);
 
     await act(async () => {
       wrapper.find('button#on-exit-button').simulate('click');
@@ -306,14 +307,14 @@ describe('AddSourceWizard', () => {
     });
     wrapper.update();
 
-    expect(wrapper.find(CloseModal).props().isOpen).toEqual(true);
+    expect(wrapper.find(CloseModal)).toHaveLength(1);
 
     await act(async () => {
       wrapper.find('button#on-stay-button').simulate('click');
     });
     wrapper.update();
 
-    expect(wrapper.find(CloseModal).props().isOpen).toEqual(false);
+    expect(wrapper.find(CloseModal)).toHaveLength(0);
 
     expect(onClose).not.toHaveBeenCalled();
     expect(wrapper.find('input').instance().value).toEqual(NAME);
@@ -356,13 +357,106 @@ describe('AddSourceWizard', () => {
     jest.useRealTimers();
   });
 
-  it('show application step when selectedType is set', async () => {
-    await act(async () => {
-      wrapper = mount(<AddSourceWizard {...initialProps} selectedType="amazon" />);
-    });
-    wrapper.update();
+  describe('different variants', () => {
+    let tmpLocation;
 
-    expect(wrapper.find(SourcesFormRenderer).props().schema.fields[0].fields[1].title).toEqual('Select application');
+    const getNavigation = (wrapper) => wrapper.find('.pf-c-wizard__nav-item').map((item) => item.text());
+
+    beforeEach(() => {
+      tmpLocation = Object.assign({}, window.location);
+
+      delete window.location;
+
+      window.location = {};
+    });
+
+    afterEach(() => {
+      window.location = tmpLocation;
+    });
+
+    it('show configuration step when selectedType is set - CLOUD', async () => {
+      window.location.search = `activeVendor=${CLOUD_VENDOR}`;
+
+      await act(async () => {
+        wrapper = mount(<AddSourceWizard {...initialProps} selectedType="amazon" />);
+      });
+      wrapper.update();
+
+      expect(getNavigation(wrapper)).toEqual(['Name source', 'Select configuration']);
+    });
+
+    it('show source type selection when CLOUD', async () => {
+      window.location.search = `activeVendor=${CLOUD_VENDOR}`;
+
+      await act(async () => {
+        wrapper = mount(<AddSourceWizard {...initialProps} initialValues={{ source_type: 'amazon' }} />);
+      });
+      wrapper.update();
+
+      expect(getNavigation(wrapper)).toEqual(['Name source', 'Select source type', 'Select configuration']);
+    });
+
+    it('show application step when selectedType is set and configuration is selected to true', async () => {
+      window.location.search = `activeVendor=${CLOUD_VENDOR}`;
+
+      await act(async () => {
+        wrapper = mount(
+          <AddSourceWizard
+            {...initialProps}
+            selectedType="amazon"
+            initialValues={{ source: { app_creation_workflow: 'account_authorization' } }}
+          />
+        );
+      });
+      wrapper.update();
+
+      expect(getNavigation(wrapper)).toEqual(['Name source', 'Select configuration', 'Select applications', 'Review details']);
+    });
+
+    it('show application step when selectedType is set and configuration is selected to false', async () => {
+      window.location.search = `activeVendor=${CLOUD_VENDOR}`;
+
+      await act(async () => {
+        wrapper = mount(
+          <AddSourceWizard
+            {...initialProps}
+            selectedType="amazon"
+            initialValues={{ source: { app_creation_workflow: 'manual_configuration' } }}
+          />
+        );
+      });
+      wrapper.update();
+
+      expect(getNavigation(wrapper)).toEqual(['Name source', 'Select configuration', 'Select application', 'Credentials']);
+    });
+
+    it('show application step when selectedType is set - RED HAT', async () => {
+      window.location.search = `activeVendor=${REDHAT_VENDOR}`;
+
+      await act(async () => {
+        wrapper = mount(<AddSourceWizard {...initialProps} selectedType="openshift" />);
+      });
+      wrapper.update();
+
+      expect(getNavigation(wrapper)).toEqual([
+        'Name source',
+        'Select application',
+        'Credentials',
+        'Configure OpenShift endpoint',
+        'Review details',
+      ]);
+    });
+
+    it('show source type selection when REDHAT', async () => {
+      window.location.search = `activeVendor=${REDHAT_VENDOR}`;
+
+      await act(async () => {
+        wrapper = mount(<AddSourceWizard {...initialProps} />);
+      });
+      wrapper.update();
+
+      expect(getNavigation(wrapper)).toEqual(['Name source', 'Source type and application']);
+    });
   });
 
   it('pass initialWizardState to wizard', async () => {

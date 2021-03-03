@@ -7,7 +7,7 @@ import { DescriptionListDescription } from '@patternfly/react-core/dist/esm/comp
 import { DescriptionListGroup } from '@patternfly/react-core/dist/esm/components/DescriptionList/DescriptionListGroup';
 import { DescriptionListTerm } from '@patternfly/react-core/dist/esm/components/DescriptionList/DescriptionListTerm';
 
-import applicationTypes, { COST_MANAGEMENT_APP, SUB_WATCH_APP } from '../../helpers/applicationTypes';
+import applicationTypes, { COST_MANAGEMENT_APP, SUB_WATCH_APP, TOPOLOGY_INV_APP } from '../../helpers/applicationTypes';
 import sourceTypes from '../../helpers/sourceTypes';
 import RendererContext from '@data-driven-forms/react-form-renderer/dist/esm/renderer-context';
 import mount from '../../__mocks__/mount';
@@ -76,8 +76,8 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'openshift'],
-        ['Application', 'Not selected'],
         ['Source type', 'OpenShift Container Platform'],
+        ['Application', 'Not selected'],
         ['Authentication type', 'Token'],
         ['Token', '●●●●●●●●●●●●'],
         ['URL', 'neznam.cz'],
@@ -95,8 +95,8 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'openshift'],
-        ['Application', 'Not selected'],
         ['Source type', 'OpenShift Container Platform'],
+        ['Application', 'Not selected'],
         ['Authentication type', 'Token'],
         ['Token', '●●●●●●●●●●●●'],
         ['URL', 'neznam.cz'],
@@ -104,18 +104,6 @@ describe('SourceWizardSummary component', () => {
         ['SSL Certificate', 'authority'],
       ]);
 
-      expect(wrapper.find(Alert)).toHaveLength(0);
-    });
-
-    it('name is first', () => {
-      const wrapper = mount(<SourceWizardSummary {...initialProps} formOptions={formOptions('openshift', 'token')} />);
-      expect(wrapper.find(DescriptionListDescription).at(0).text()).toEqual('openshift');
-      expect(wrapper.find(Alert)).toHaveLength(0);
-    });
-
-    it('type is third', () => {
-      const wrapper = mount(<SourceWizardSummary {...initialProps} formOptions={formOptions('openshift', 'token')} />);
-      expect(wrapper.find(DescriptionListDescription).at(2).text()).toEqual('OpenShift Container Platform');
       expect(wrapper.find(Alert)).toHaveLength(0);
     });
 
@@ -128,8 +116,8 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'openshift'],
-        ['Application', 'Not selected'],
         ['Source type', 'Amazon Web Services'],
+        ['Application', 'Not selected'],
         ['Authentication type', 'AWS Secret Key'],
         ['Access key ID', 'user_name'],
         ['Secret access key', '●●●●●●●●●●●●'],
@@ -151,8 +139,8 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'openshift'],
-        ['Application', 'Not selected'],
         ['Source type', 'Amazon Web Services'],
+        ['Application', 'Not selected'],
         ['Authentication type', 'ARN'],
         ['ARN', 'user_name'],
       ]);
@@ -180,9 +168,8 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'cosi'],
-        ['Application', 'Cost Management'],
         ['Source type', 'Amazon Web Services'],
-        ['Authentication type', 'ARN'],
+        ['Application', 'Cost Management'],
         ['S3 bucket name', 'gfghf'],
         ['ARN', 'arn:aws:132'],
       ]);
@@ -213,9 +200,8 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'cosi'],
-        ['Application', 'Cost Management'],
         ['Source type', 'Google Cloud'],
-        ['Authentication type', 'Project ID and Service Account JSON'],
+        ['Application', 'Cost Management'],
         ['Project ID', 'project_id_123'],
         ['Dataset ID', 'dataset_id_123'],
       ]);
@@ -242,8 +228,8 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'cosi'],
-        ['Application', 'Cost Management'],
         ['Source type', 'OpenShift Container Platform'],
+        ['Application', 'Cost Management'],
         ['Cluster Identifier', 'CLUSTER ID123'],
       ]);
 
@@ -253,7 +239,92 @@ describe('SourceWizardSummary component', () => {
       );
     });
 
-    it('amazon - ARN subwatch - includes auto registration', () => {
+    it('account authorization', () => {
+      formOptions = {
+        getState: () => ({
+          values: {
+            source: { name: 'cosi', app_creation_workflow: 'account_authorization' },
+            applications: [COST_MANAGEMENT_APP.id, TOPOLOGY_INV_APP.id],
+            source_type: 'amazon',
+            authentication: { username: 'arn:aws:132', authtype: 'access_key_secret_key', password: 'secret_key' },
+            fixasyncvalidation: '',
+            endpoint: { role: 'aws' },
+          },
+        }),
+      };
+
+      const wrapper = mount(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+
+      const data = getListData(wrapper);
+
+      expect(data).toEqual([
+        ['Name', 'cosi'],
+        ['Source type', 'Amazon Web Services'],
+        ['Configuration mode', 'Account authorization'],
+        ['Applications', 'Cost ManagementTopological Inventory'],
+        ['Access key ID', 'arn:aws:132'],
+        ['Secret access key', '●●●●●●●●●●●●'],
+      ]);
+    });
+
+    it('account authorization - no apps', () => {
+      formOptions = {
+        getState: () => ({
+          values: {
+            source: { name: 'cosi', app_creation_workflow: 'account_authorization' },
+            applications: [],
+            source_type: 'amazon',
+            authentication: { username: 'arn:aws:132', authtype: 'access_key_secret_key', password: 'secret_key' },
+            fixasyncvalidation: '',
+            endpoint: { role: 'aws' },
+          },
+        }),
+      };
+
+      const wrapper = mount(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+
+      const data = getListData(wrapper);
+
+      expect(data).toEqual([
+        ['Name', 'cosi'],
+        ['Source type', 'Amazon Web Services'],
+        ['Configuration mode', 'Account authorization'],
+        ['Applications', 'None'],
+        ['Access key ID', 'arn:aws:132'],
+        ['Secret access key', '●●●●●●●●●●●●'],
+      ]);
+    });
+
+    it('manual authorization - no apps', () => {
+      formOptions = {
+        getState: () => ({
+          values: {
+            source: { name: 'cosi', app_creation_workflow: 'manual_configuration' },
+            applications: [],
+            source_type: 'amazon',
+            authentication: { username: 'arn:aws:132', authtype: 'access_key_secret_key', password: 'secret_key' },
+            fixasyncvalidation: '',
+            endpoint: { role: 'aws' },
+          },
+        }),
+      };
+
+      const wrapper = mount(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+
+      const data = getListData(wrapper);
+
+      expect(data).toEqual([
+        ['Name', 'cosi'],
+        ['Source type', 'Amazon Web Services'],
+        ['Configuration mode', 'Manual configuration'],
+        ['Application', 'Not selected'],
+        ['Authentication type', 'AWS Secret Key'],
+        ['Access key ID', 'arn:aws:132'],
+        ['Secret access key', '●●●●●●●●●●●●'],
+      ]);
+    });
+
+    it('amazon - ARN subwatch - does not include auto registration', () => {
       formOptions = {
         getState: () => ({
           values: {
@@ -272,9 +343,8 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'cosi'],
-        ['Application', 'Subscription Watch'],
         ['Source type', 'Amazon Web Services'],
-        ['Authentication type', 'Subscription Watch ARN'],
+        ['Application', 'Subscription Watch'],
         ['ARN', 'arn:aws:132'],
       ]);
     });
@@ -287,8 +357,8 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'openshift'],
-        ['Application', 'Not selected'],
         ['Source type', 'Ansible Tower'],
+        ['Application', 'Not selected'],
         ['Authentication type', 'Username and password'],
         ['Username', 'user_name'],
         ['Password', '●●●●●●●●●●●●'],
@@ -308,9 +378,8 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'openshift'],
-        ['Application', 'Catalog'],
         ['Source type', 'Ansible Tower'],
-        ['Authentication type', 'Username and password'],
+        ['Application', 'Catalog'],
         ['Hostname', 'neznam.cz'],
         ['Verify SSL', 'Enabled'],
         ['Certificate authority', 'authority'],
@@ -332,7 +401,6 @@ describe('SourceWizardSummary component', () => {
       expect(data).toEqual([
         ['Name', 'openshift'],
         ['Source type', 'Ansible Tower'],
-        ['Authentication type', 'Username and password'],
         ['Hostname', 'neznam.cz'],
         ['Verify SSL', 'Enabled'],
         ['Certificate authority', 'authority'],

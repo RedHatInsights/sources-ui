@@ -13,6 +13,8 @@ import { wizardTitle } from '../utilities/stringConstants';
 import CloseModal from './CloseModal';
 
 import { timeoutedApps } from '../api/constants';
+import createSuperSource from '../api/createSuperSource';
+import isSuperKey from '../../utilities/isSuperKey';
 
 const prepareInitialValues = (initialValues) => ({
   isSubmitted: false,
@@ -72,7 +74,9 @@ const AddSourceWizard = ({
   const onSubmit = (formValues, sourceTypes, wizardState) => {
     dispatch({ type: 'prepareSubmitState', values: formValues, sourceTypes });
 
-    return doCreateSource(formValues, sourceTypes, timeoutedApps(applicationTypes))
+    const fn = isSuperKey(formValues.source) ? createSuperSource : doCreateSource;
+
+    return fn(formValues, sourceTypes, timeoutedApps(applicationTypes))
       .then((data) => {
         afterSuccess && afterSuccess(data);
         submitCallback && submitCallback({ isSubmitted: true, createdSource: data, sourceTypes });
@@ -100,7 +104,7 @@ const AddSourceWizard = ({
   if (!isSubmitted) {
     return (
       <React.Fragment>
-        <CloseModal isOpen={isCancelling} onExit={onExit} onStay={() => dispatch({ type: 'onStay' })} />
+        {isCancelling && <CloseModal onExit={onExit} onStay={() => dispatch({ type: 'onStay' })} />}
         <Form
           isCancelling={isCancelling}
           values={values}

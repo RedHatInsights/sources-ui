@@ -10,6 +10,7 @@ import CloudEmptyState from '../../../components/CloudTiles/CloudEmptyState';
 import CloudTiles from '../../../components/CloudTiles/CloudTiles';
 import mockStore from '../../__mocks__/mockStore';
 import sourceTypes, { googleType } from '../../__mocks__/sourceTypesData';
+import * as constants from '../../../utilities/constants';
 
 describe('CloudEmptyState', () => {
   let wrapper;
@@ -25,6 +26,8 @@ describe('CloudEmptyState', () => {
     };
 
     store = mockStore({ user: { isOrgAdmin: true }, sources: { sourceTypes: [...sourceTypes.data, googleType] } });
+
+    constants.getActiveVendor = () => constants.CLOUD_VENDOR;
   });
 
   it('renders correctly', async () => {
