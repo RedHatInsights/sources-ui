@@ -69,8 +69,8 @@ const ApplicationsCard = () => {
       if (typeof selectedApps[typeId] !== 'boolean') {
         stateDispatch({ type: 'removeApp', id: typeId });
         await getSourcesApi().deleteApplication(id);
-        stateDispatch({ type: 'clean', id: typeId });
         await dispatch(loadEntities());
+        stateDispatch({ type: 'clean', id: typeId });
       }
     };
 
@@ -78,8 +78,8 @@ const ApplicationsCard = () => {
       if (typeof selectedApps[id] !== 'boolean') {
         stateDispatch({ type: 'addApp', id });
         await doCreateApplication({ source_id: source.id, application_type_id: id });
-        stateDispatch({ type: 'clean', id });
         await dispatch(loadEntities());
+        stateDispatch({ type: 'clean', id });
       }
     };
   }

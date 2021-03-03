@@ -143,6 +143,7 @@ export const graphQlAttributes = `
     last_checked_at,
     updated_at,
     last_available_at,
+    app_creation_workflow,
     applications { application_type_id, id, availability_status_error, availability_status, authentications { id, resource_type } },
     endpoints { id, scheme, host, port, path, receptor_node, role, certificate_authority, verify_ssl, availability_status_error, availability_status, authentications { authtype, availability_status, availability_status_error } }
 `;

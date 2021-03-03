@@ -30,7 +30,7 @@ describe('entities spec', () => {
     it('doLoadAppTypes loads appTypes', async () => {
       const APP_TYPES = ['1223', { x: '54651' }];
 
-      mock.onGet('/api/sources/v3.0/application_types').reply(200, { data: APP_TYPES });
+      mock.onGet('/api/sources/v3.1/application_types').reply(200, { data: APP_TYPES });
 
       const result = await api.doLoadAppTypes();
 
@@ -40,7 +40,7 @@ describe('entities spec', () => {
     it('doDeleteAuthentication deletes authentication', async () => {
       const AUTH_ID = '123232';
 
-      mock.onDelete(`/api/sources/v3.0/authentications/${AUTH_ID}`).reply(200, OK_RESPONSE);
+      mock.onDelete(`/api/sources/v3.1/authentications/${AUTH_ID}`).reply(200, OK_RESPONSE);
 
       const result = await api.doDeleteAuthentication(AUTH_ID);
 
@@ -48,7 +48,7 @@ describe('entities spec', () => {
     });
 
     it('doRemoveSource deletes source', async () => {
-      mock.onDelete(`/api/sources/v3.0/sources/${SOURCE_ID}`).reply(200, OK_RESPONSE);
+      mock.onDelete(`/api/sources/v3.1/sources/${SOURCE_ID}`).reply(200, OK_RESPONSE);
 
       const result = await api.doRemoveSource(SOURCE_ID);
 
@@ -60,7 +60,7 @@ describe('entities spec', () => {
 
       it('updateSource', async () => {
         const method = 'Patch';
-        mock[`on${method}`](`/api/sources/v3.0/sources/${SOURCE_ID}`).reply(200, OK_RESPONSE);
+        mock[`on${method}`](`/api/sources/v3.1/sources/${SOURCE_ID}`).reply(200, OK_RESPONSE);
 
         const result = await api.getSourcesApi().updateSource(SOURCE_ID, DATA);
 
@@ -70,7 +70,7 @@ describe('entities spec', () => {
 
       it('updateEndpoint', async () => {
         const method = 'Patch';
-        mock[`on${method}`](`/api/sources/v3.0/endpoints/${SOURCE_ID}`).reply(200, OK_RESPONSE);
+        mock[`on${method}`](`/api/sources/v3.1/endpoints/${SOURCE_ID}`).reply(200, OK_RESPONSE);
 
         const result = await api.getSourcesApi().updateEndpoint(SOURCE_ID, DATA);
 
@@ -80,7 +80,7 @@ describe('entities spec', () => {
 
       it('createEndpoint', async () => {
         const method = 'Post';
-        mock[`on${method}`](`/api/sources/v3.0/endpoints`).reply(200, OK_RESPONSE);
+        mock[`on${method}`](`/api/sources/v3.1/endpoints`).reply(200, OK_RESPONSE);
 
         const result = await api.getSourcesApi().createEndpoint(DATA);
 
@@ -90,7 +90,7 @@ describe('entities spec', () => {
 
       it('updateAuthentication', async () => {
         const method = 'Patch';
-        mock[`on${method}`](`/api/sources/v3.0/authentications/${SOURCE_ID}`).reply(200, OK_RESPONSE);
+        mock[`on${method}`](`/api/sources/v3.1/authentications/${SOURCE_ID}`).reply(200, OK_RESPONSE);
 
         const result = await api.getSourcesApi().updateAuthentication(SOURCE_ID, DATA);
 
@@ -100,7 +100,7 @@ describe('entities spec', () => {
 
       it('createAuthentication', async () => {
         const method = 'Post';
-        mock[`on${method}`](`/api/sources/v3.0/authentications`).reply(200, OK_RESPONSE);
+        mock[`on${method}`](`/api/sources/v3.1/authentications`).reply(200, OK_RESPONSE);
 
         const result = await api.getSourcesApi().createAuthentication(DATA);
 
@@ -110,7 +110,7 @@ describe('entities spec', () => {
 
       it('showSource', async () => {
         const method = 'Get';
-        mock[`on${method}`](`/api/sources/v3.0/sources/${SOURCE_ID}`).reply(200, OK_RESPONSE);
+        mock[`on${method}`](`/api/sources/v3.1/sources/${SOURCE_ID}`).reply(200, OK_RESPONSE);
 
         const result = await api.getSourcesApi().showSource(SOURCE_ID);
 
@@ -119,7 +119,7 @@ describe('entities spec', () => {
 
       it('listSourceEndpoints', async () => {
         const method = 'Get';
-        mock[`on${method}`](`/api/sources/v3.0/sources/${SOURCE_ID}/endpoints`).reply(200, OK_RESPONSE);
+        mock[`on${method}`](`/api/sources/v3.1/sources/${SOURCE_ID}/endpoints`).reply(200, OK_RESPONSE);
 
         const result = await api.getSourcesApi().listSourceEndpoints(SOURCE_ID);
 
@@ -128,7 +128,7 @@ describe('entities spec', () => {
 
       it('listSourceApplications', async () => {
         const method = 'Get';
-        mock[`on${method}`](`/api/sources/v3.0/sources/${SOURCE_ID}/applications`).reply(200, OK_RESPONSE);
+        mock[`on${method}`](`/api/sources/v3.1/sources/${SOURCE_ID}/applications`).reply(200, OK_RESPONSE);
 
         const result = await api.getSourcesApi().listSourceApplications(SOURCE_ID);
 
@@ -137,7 +137,7 @@ describe('entities spec', () => {
 
       it('listEndpointAuthentications', async () => {
         const method = 'Get';
-        mock[`on${method}`](`/api/sources/v3.0/endpoints/${SOURCE_ID}/authentications`).reply(200, OK_RESPONSE);
+        mock[`on${method}`](`/api/sources/v3.1/endpoints/${SOURCE_ID}/authentications`).reply(200, OK_RESPONSE);
 
         const result = await api.getSourcesApi().listEndpointAuthentications(SOURCE_ID);
 
@@ -145,7 +145,7 @@ describe('entities spec', () => {
       });
 
       it('createAuthApp', async () => {
-        mock.onPost(`/api/sources/v3.0/application_authentications`).reply(200, OK_RESPONSE);
+        mock.onPost(`/api/sources/v3.1/application_authentications`).reply(200, OK_RESPONSE);
 
         const result = await api.getSourcesApi().createAuthApp({
           application_type: 'app_id',
@@ -159,7 +159,7 @@ describe('entities spec', () => {
 
       it('showAuthentication', async () => {
         const method = 'Get';
-        mock[`on${method}`](`/api/sources/v3.0/authentications/${SOURCE_ID}`).reply(200, OK_RESPONSE);
+        mock[`on${method}`](`/api/sources/v3.1/authentications/${SOURCE_ID}`).reply(200, OK_RESPONSE);
 
         const result = await api.getSourcesApi().showAuthentication(SOURCE_ID);
 
@@ -168,7 +168,7 @@ describe('entities spec', () => {
 
       it('updateApplication', async () => {
         const method = 'Patch';
-        mock[`on${method}`](`/api/sources/v3.0/applications/${SOURCE_ID}`).reply(200, OK_RESPONSE);
+        mock[`on${method}`](`/api/sources/v3.1/applications/${SOURCE_ID}`).reply(200, OK_RESPONSE);
 
         const result = await api.getSourcesApi().updateApplication(SOURCE_ID, DATA);
 
@@ -178,7 +178,7 @@ describe('entities spec', () => {
 
       it('showApplication', async () => {
         const method = 'Get';
-        mock[`on${method}`](`/api/sources/v3.0/applications/${SOURCE_ID}`).reply(200, OK_RESPONSE);
+        mock[`on${method}`](`/api/sources/v3.1/applications/${SOURCE_ID}`).reply(200, OK_RESPONSE);
 
         const result = await api.getSourcesApi().showApplication(SOURCE_ID);
 
@@ -189,7 +189,7 @@ describe('entities spec', () => {
     it('doRemoveSource fails', async () => {
       expect.assertions(1);
 
-      mock.onDelete(`/api/sources/v3.0/sources/${SOURCE_ID}`).reply(500, ERROR_RESPONSE);
+      mock.onDelete(`/api/sources/v3.1/sources/${SOURCE_ID}`).reply(500, ERROR_RESPONSE);
 
       try {
         await api.doRemoveSource(SOURCE_ID);
@@ -201,7 +201,7 @@ describe('entities spec', () => {
     it('doLoadEntities loads sources', async () => {
       const ENTITIES = [{ entity1: true }, { entity2: true }];
 
-      mock.onPost(`/api/sources/v3.0/graphql`).reply(200, { data: ENTITIES });
+      mock.onPost(`/api/sources/v3.1/graphql`).reply(200, { data: ENTITIES });
 
       const result = await api.doLoadEntities(params);
 
@@ -224,7 +224,7 @@ describe('entities spec', () => {
     it('doCreateApplication creates app', async () => {
       const APP_TYPE_ID = '1212';
 
-      mock.onPost('/api/sources/v3.0/applications').reply(200, OK_RESPONSE);
+      mock.onPost('/api/sources/v3.1/applications').reply(200, OK_RESPONSE);
 
       const result = await api.doCreateApplication({ source_id: SOURCE_ID, application_type_id: APP_TYPE_ID });
 
@@ -241,7 +241,7 @@ describe('entities spec', () => {
     it('doDeleteApplication deletes app', async () => {
       const APP_ID = '4546518132165';
 
-      mock.onDelete(`/api/sources/v3.0/applications/${APP_ID}`).reply(200, OK_RESPONSE);
+      mock.onDelete(`/api/sources/v3.1/applications/${APP_ID}`).reply(200, OK_RESPONSE);
 
       const result = await api.doDeleteApplication(APP_ID, 'error');
 
@@ -252,7 +252,7 @@ describe('entities spec', () => {
       const APP_ID = '4546518132165';
       const ERROR_TITLE = 'error title';
 
-      mock.onDelete(`/api/sources/v3.0/applications/${APP_ID}`).reply(500, ERROR_RESPONSE);
+      mock.onDelete(`/api/sources/v3.1/applications/${APP_ID}`).reply(500, ERROR_RESPONSE);
 
       try {
         await api.doDeleteApplication(APP_ID, ERROR_TITLE);
@@ -267,7 +267,7 @@ describe('entities spec', () => {
     });
 
     it('doLoadCountOfSources loads count of sources', async () => {
-      mock.onGet(`/api/sources/v3.0/sources?filter[name][contains_i]=pepa`).reply(200, { response: 'spec response' });
+      mock.onGet(`/api/sources/v3.1/sources?filter[name][contains_i]=pepa`).reply(200, { response: 'spec response' });
 
       const result = await api.doLoadCountOfSources({ name: 'pepa' });
 
@@ -277,7 +277,7 @@ describe('entities spec', () => {
     it('doLoadSource', async () => {
       const ENTITIES = [{ entity1: true }];
 
-      mock.onPost(`/api/sources/v3.0/graphql`).reply(200, { data: ENTITIES });
+      mock.onPost(`/api/sources/v3.1/graphql`).reply(200, { data: ENTITIES });
 
       const result = await api.doLoadSource(SOURCE_ID);
 
@@ -291,7 +291,7 @@ describe('entities spec', () => {
     it('doLoadApplicationsForEdit', async () => {
       const ENTITIES = [{ entity1: true }];
 
-      mock.onPost(`/api/sources/v3.0/graphql`).reply(200, { data: ENTITIES });
+      mock.onPost(`/api/sources/v3.1/graphql`).reply(200, { data: ENTITIES });
 
       const result = await api.doLoadApplicationsForEdit(SOURCE_ID, applicationTypesData.data, sourceTypesData.data);
 
@@ -311,9 +311,9 @@ describe('entities spec', () => {
         ],
       };
 
-      mock.onPost(`/api/sources/v3.0/graphql`).reply(200, { data: ENTITIES });
-      mock.onGet(`/api/sources/v3.0/applications/123`).reply(200, { extra: { dataset: '134' } });
-      mock.onGet(`/api/sources/v3.0/applications/456`).reply(200, { extra: { username: 'jsmith' } });
+      mock.onPost(`/api/sources/v3.1/graphql`).reply(200, { data: ENTITIES });
+      mock.onGet(`/api/sources/v3.1/applications/123`).reply(200, { extra: { dataset: '134' } });
+      mock.onGet(`/api/sources/v3.1/applications/456`).reply(200, { extra: { username: 'jsmith' } });
 
       const result = await api.doLoadApplicationsForEdit(SOURCE_ID, applicationTypesData.data, sourceTypesData.data);
 
@@ -340,8 +340,8 @@ describe('entities spec', () => {
           ],
         };
 
-        mock.onPost(`/api/sources/v3.0/graphql`).reply(200, { data: ENTITIES });
-        mock.onGet(`/api/sources/v3.0/applications/123`).reply(200, { application_type_id: COSTMANAGEMENT_APP.id, extra: {} });
+        mock.onPost(`/api/sources/v3.1/graphql`).reply(200, { data: ENTITIES });
+        mock.onGet(`/api/sources/v3.1/applications/123`).reply(200, { application_type_id: COSTMANAGEMENT_APP.id, extra: {} });
         mock.onGet(`/api/cost-management/v1/sources/${SOURCE_ID}/`).reply(200, {
           billing_source: {
             data_source: {
@@ -389,8 +389,8 @@ describe('entities spec', () => {
           ],
         };
 
-        mock.onPost(`/api/sources/v3.0/graphql`).reply(200, { data: ENTITIES });
-        mock.onGet(`/api/sources/v3.0/applications/123`).reply(200, { application_type_id: COSTMANAGEMENT_APP.id, extra: {} });
+        mock.onPost(`/api/sources/v3.1/graphql`).reply(200, { data: ENTITIES });
+        mock.onGet(`/api/sources/v3.1/applications/123`).reply(200, { application_type_id: COSTMANAGEMENT_APP.id, extra: {} });
         mock.onGet(`/api/cost-management/v1/sources/${SOURCE_ID}/`).reply(200, {
           billing_source: {
             data_source: {
@@ -438,9 +438,9 @@ describe('entities spec', () => {
           ],
         };
 
-        mock.onPost(`/api/sources/v3.0/graphql`).reply(200, { data: ENTITIES });
+        mock.onPost(`/api/sources/v3.1/graphql`).reply(200, { data: ENTITIES });
         mock
-          .onGet(`/api/sources/v3.0/applications/123`)
+          .onGet(`/api/sources/v3.1/applications/123`)
           .reply(200, { application_type_id: COSTMANAGEMENT_APP.id, extra: { some: 'extra' } });
 
         const result = await api.doLoadApplicationsForEdit(SOURCE_ID, applicationTypesData.data, sourceTypesData.data);
