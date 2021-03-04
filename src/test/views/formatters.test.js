@@ -1,5 +1,7 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
+import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
+
 import {
   nameFormatter,
   dateFormatter,
@@ -24,7 +26,7 @@ import {
   getStatusColor,
   configurationModeFormatter,
 } from '../../views/formatters';
-import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX } from '../__mocks__/sourceTypesData';
+import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX, AMAZON } from '../__mocks__/sourceTypesData';
 import {
   sourcesDataGraphQl,
   SOURCE_CATALOGAPP_INDEX,
@@ -1029,6 +1031,69 @@ describe('formatters', () => {
       expect(wrapper.text()).toEqual('Account authorizationEdit credentials');
       expect(wrapper.find(Link).props().to).toEqual(replaceRouteId(routes.sourcesDetailEditCredentials.path, SOURCE_ID));
       expect(wrapper.find(Button)).toHaveLength(1);
+
+      expect(wrapper.find(Tooltip)).toHaveLength(0);
+      expect(wrapper.find(ExclamationCircleIcon)).toHaveLength(0);
+    });
+
+    it('account_authorization with an error', () => {
+      const wrapper = mount(
+        <MemoryRouter>
+          {wrapperWithIntl(
+            configurationModeFormatter(
+              'account_authorization',
+              {
+                id: SOURCE_ID,
+                authentications: [
+                  {
+                    authtype: 'different type',
+                    availability_status: UNAVAILABLE,
+                    availability_status_error: 'some-error',
+                  },
+                  {
+                    authtype: 'access_key_secret_key',
+                    availability_status: UNAVAILABLE,
+                    availability_status_error: 'Your username is wrong',
+                  },
+                ],
+              },
+              { intl: INTL, sourceType: AMAZON }
+            )
+          )}
+        </MemoryRouter>
+      );
+
+      expect(wrapper.text()).toEqual('Account authorizationEdit credentials');
+      expect(wrapper.find(Link).props().to).toEqual(replaceRouteId(routes.sourcesDetailEditCredentials.path, SOURCE_ID));
+      expect(wrapper.find(Button)).toHaveLength(1);
+
+      expect(wrapper.find(Tooltip).props().content).toEqual('Your username is wrong');
+      expect(wrapper.find(ExclamationCircleIcon)).toHaveLength(1);
+    });
+
+    it('account_authorization with default errror', () => {
+      const wrapper = mount(
+        <MemoryRouter>
+          {wrapperWithIntl(
+            configurationModeFormatter(
+              'account_authorization',
+              {
+                id: SOURCE_ID,
+                authentications: [
+                  {
+                    authtype: 'access_key_secret_key',
+                    availability_status: UNAVAILABLE,
+                  },
+                ],
+              },
+              { intl: INTL, sourceType: AMAZON }
+            )
+          )}
+        </MemoryRouter>
+      );
+
+      expect(wrapper.find(Tooltip).props().content).toEqual('Edit credentials required.');
+      expect(wrapper.find(ExclamationCircleIcon)).toHaveLength(1);
     });
 
     it('manual_configuration', () => {

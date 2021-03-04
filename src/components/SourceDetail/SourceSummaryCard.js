@@ -101,7 +101,7 @@ const SourceSummaryCard = () => {
                 id: 'detail.summary.configurationMode',
                 defaultMessage: 'Configuration mode',
               })}
-              description={configurationModeFormatter(source.app_creation_workflow, source, { intl })}
+              description={configurationModeFormatter(source.app_creation_workflow, source, { intl, sourceType: type })}
             />
           )}
           {awsAccountNumber && (
