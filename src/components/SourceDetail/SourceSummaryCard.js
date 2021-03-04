@@ -1,6 +1,7 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 import { shallowEqual, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import { Card } from '@patternfly/react-core/dist/esm/components/Card/Card';
 import { CardBody } from '@patternfly/react-core/dist/esm/components/Card/CardBody';
@@ -11,8 +12,20 @@ import { DescriptionListTerm } from '@patternfly/react-core/dist/esm/components/
 import { DescriptionListDescription } from '@patternfly/react-core/dist/esm/components/DescriptionList/DescriptionListDescription';
 
 import { useSource } from '../../hooks/useSource';
-import { dateFormatter, sourceTypeFormatter } from '../../views/formatters';
+import { configurationModeFormatter, dateFormatter, sourceTypeFormatter } from '../../views/formatters';
 import AvailabilityChecker from './AvailabilityChecker';
+
+const DescriptionListItem = ({ term, description }) => (
+  <DescriptionListGroup>
+    <DescriptionListTerm>{term}</DescriptionListTerm>
+    <DescriptionListDescription>{description}</DescriptionListDescription>
+  </DescriptionListGroup>
+);
+
+DescriptionListItem.propTypes = {
+  term: PropTypes.node,
+  description: PropTypes.node,
+};
 
 const SourceSummaryCard = () => {
   const intl = useIntl();
@@ -33,52 +46,53 @@ const SourceSummaryCard = () => {
             default: '2Col',
           }}
         >
-          <DescriptionListGroup>
-            <DescriptionListTerm>
-              {intl.formatMessage({
-                id: 'detail.summary.type',
-                defaultMessage: 'Source type',
+          <DescriptionListItem
+            term={intl.formatMessage({
+              id: 'detail.summary.type',
+              defaultMessage: 'Source type',
+            })}
+            description={sourceTypeFormatter(source.source_type_id, undefined, { sourceTypes })}
+          />
+          <DescriptionListItem
+            term={intl.formatMessage({
+              id: 'detail.summary.lastChecked',
+              defaultMessage: 'Last availability check',
+            })}
+            description={
+              <React.Fragment>
+                {source.last_checked_at || source.last_available_at
+                  ? dateFormatter(source.last_checked_at || source.last_available_at)
+                  : intl.formatMessage({
+                      id: 'detail.summary.notChecked',
+                      defaultMessage: 'Not checked yet',
+                    })}
+                <AvailabilityChecker />
+              </React.Fragment>
+            }
+          />
+          <DescriptionListItem
+            term={intl.formatMessage({
+              id: 'detail.summary.dateAdded',
+              defaultMessage: 'Date added',
+            })}
+            description={dateFormatter(source.created_at)}
+          />
+          <DescriptionListItem
+            term={intl.formatMessage({
+              id: 'detail.summary.lastModified',
+              defaultMessage: 'Last modified',
+            })}
+            description={dateFormatter(source.updated_at)}
+          />
+          {source.app_creation_workflow && (
+            <DescriptionListItem
+              term={intl.formatMessage({
+                id: 'detail.summary.configurationMode',
+                defaultMessage: 'Configuration mode',
               })}
-            </DescriptionListTerm>
-            <DescriptionListDescription>
-              {sourceTypeFormatter(source.source_type_id, undefined, { sourceTypes })}
-            </DescriptionListDescription>
-          </DescriptionListGroup>
-          <DescriptionListGroup>
-            <DescriptionListTerm>
-              {intl.formatMessage({
-                id: 'detail.summary.lastChecked',
-                defaultMessage: 'Last availability check',
-              })}
-            </DescriptionListTerm>
-            <DescriptionListDescription>
-              {source.last_checked_at || source.last_available_at
-                ? dateFormatter(source.last_checked_at || source.last_available_at)
-                : intl.formatMessage({
-                    id: 'detail.summary.notChecked',
-                    defaultMessage: 'Not checked yet',
-                  })}
-              <AvailabilityChecker />
-            </DescriptionListDescription>
-          </DescriptionListGroup>
-          <DescriptionListGroup>
-            <DescriptionListTerm>
-              {intl.formatMessage({
-                id: 'detail.summary.dateAdded',
-                defaultMessage: 'Date added',
-              })}
-            </DescriptionListTerm>
-            <DescriptionListDescription>{dateFormatter(source.created_at)}</DescriptionListDescription>
-          </DescriptionListGroup>
-          <DescriptionListGroup>
-            <DescriptionListTerm>
-              {intl.formatMessage({
-                id: 'detail.summary.lastModified',
-                defaultMessage: 'Last modified',
-              })}
-            </DescriptionListTerm>
-            <DescriptionListDescription>{dateFormatter(source.updated_at)}</DescriptionListDescription>
-          </DescriptionListGroup>
+              description={configurationModeFormatter(source.app_creation_workflow, source, { intl })}
+            />
+          )}
         </DescriptionList>
       </CardBody>
     </Card>

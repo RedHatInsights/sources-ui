@@ -8,6 +8,7 @@ import { Popover } from '@patternfly/react-core/dist/esm/components/Popover/Popo
 import { Tooltip } from '@patternfly/react-core/dist/esm/components/Tooltip/Tooltip';
 import { Label } from '@patternfly/react-core/dist/esm/components/Label/Label';
 import { LabelGroup } from '@patternfly/react-core/dist/esm/components/LabelGroup/LabelGroup';
+import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
 
 import { FormattedMessage, useIntl } from 'react-intl';
 import { DateFormat } from '@redhat-cloud-services/frontend-components/DateFormat';
@@ -388,4 +389,32 @@ export const applicationFormatter = (apps, item, { appTypes }) => {
   }
 
   return <EnhancedLabelGroup numLabels={2} collapsedText applications={applications} />;
+};
+
+export const configurationModeFormatter = (mode, item, { intl }) => {
+  if (mode === 'account_authorization') {
+    return (
+      <React.Fragment>
+        {intl.formatMessage({
+          id: 'configurationMode.trust',
+          defaultMessage: 'Account authorization',
+        })}
+        <div className="pf-u-mt-sm">
+          <Link to={replaceRouteId(routes.sourcesDetailEditCredentials.path, item.id)}>
+            <Button variant="link" id="edit-super-credentials" isInline>
+              {intl.formatMessage({
+                id: 'sources.editCredentials',
+                defaultMessage: 'Edit credentials',
+              })}
+            </Button>
+          </Link>
+        </div>
+      </React.Fragment>
+    );
+  }
+
+  return intl.formatMessage({
+    id: 'configurationMode.manual',
+    defaultMessage: 'Manual configuration',
+  });
 };

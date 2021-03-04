@@ -22,6 +22,7 @@ import {
   UNAVAILABLE,
   UnknownError,
   getStatusColor,
+  configurationModeFormatter,
 } from '../../views/formatters';
 import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX } from '../__mocks__/sourceTypesData';
 import {
@@ -45,10 +46,13 @@ import { Popover } from '@patternfly/react-core/dist/esm/components/Popover/Popo
 import { Tooltip } from '@patternfly/react-core/dist/esm/components/Tooltip/Tooltip';
 import { Label } from '@patternfly/react-core/dist/esm/components/Label/Label';
 import { LabelGroup } from '@patternfly/react-core/dist/esm/components/LabelGroup/LabelGroup';
+import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
 
 import { DateFormat } from '@redhat-cloud-services/frontend-components/DateFormat';
 import { IntlProvider } from 'react-intl';
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
+import { Link, MemoryRouter } from 'react-router-dom';
+import { replaceRouteId, routes } from '../../Routes';
 
 describe('formatters', () => {
   const wrapperWithIntl = (children) => <IntlProvider locale="en">{children}</IntlProvider>;
@@ -1008,6 +1012,35 @@ describe('formatters', () => {
           status: UNAVAILABLE,
         });
       });
+    });
+  });
+
+  describe('configuration mode', () => {
+    const INTL = { formatMessage: ({ defaultMessage }) => defaultMessage };
+    const SOURCE_ID = 'some-source-id';
+
+    it('account_authorization', () => {
+      const wrapper = mount(
+        <MemoryRouter>
+          {wrapperWithIntl(configurationModeFormatter('account_authorization', { id: SOURCE_ID }, { intl: INTL }))}
+        </MemoryRouter>
+      );
+
+      expect(wrapper.text()).toEqual('Account authorizationEdit credentials');
+      expect(wrapper.find(Link).props().to).toEqual(replaceRouteId(routes.sourcesDetailEditCredentials.path, SOURCE_ID));
+      expect(wrapper.find(Button)).toHaveLength(1);
+    });
+
+    it('manual_configuration', () => {
+      const wrapper = mount(
+        <MemoryRouter>
+          {wrapperWithIntl(configurationModeFormatter('manual_configuration', { id: SOURCE_ID }, { intl: INTL }))}
+        </MemoryRouter>
+      );
+
+      expect(wrapper.text()).toEqual('Manual configuration');
+      expect(wrapper.find(Link)).toHaveLength(0);
+      expect(wrapper.find(Button)).toHaveLength(0);
     });
   });
 });
