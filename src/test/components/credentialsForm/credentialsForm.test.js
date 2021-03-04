@@ -10,8 +10,6 @@ import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button
 import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import sourceTypesData, { AMAZON, AMAZON_ID } from '../../__mocks__/sourceTypesData';
-import applicationTypesData, { COSTMANAGEMENT_APP, SUBWATCH_APP } from '../../__mocks__/applicationTypesData';
-import ApplicationStatusLabel from '../../../components/SourceDetail/ApplicationStatusLabel';
 import mockStore from '../../__mocks__/mockStore';
 import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
 import CredentialsForm from '../../../components/CredentialsForm/CredentialsForm';
@@ -27,8 +25,6 @@ describe('CredentialsForm', () => {
 
   const sourceId = '3627987';
   const initialEntry = [replaceRouteId(routes.sourcesDetailEditCredentials.path, sourceId)];
-
-  const updateAppData = [...applicationTypesData.data, SUBWATCH_APP];
 
   let listSourceAuthentications;
 
@@ -57,7 +53,6 @@ describe('CredentialsForm', () => {
       sources: {
         entities: [{ id: sourceId, source_type_id: AMAZON_ID }],
         sourceTypes: sourceTypesData.data,
-        appTypes: updateAppData,
       },
     });
   });
