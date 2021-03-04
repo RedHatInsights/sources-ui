@@ -29,7 +29,7 @@ DescriptionListItem.propTypes = {
 
 const SourceSummaryCard = () => {
   const intl = useIntl();
-  const source = { ...useSource(), app_creation_workflow: 'trust' };
+  const source = useSource();
   const sourceTypes = useSelector(({ sources }) => sources.sourceTypes, shallowEqual);
 
   return (

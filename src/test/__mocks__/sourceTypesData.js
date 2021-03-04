@@ -102,6 +102,7 @@ export const sourceTypesData = {
           {
             name: 'AWS Secret Key',
             type: 'access_key_secret_key',
+            is_superkey: true,
             fields: [
               {
                 name: 'authentication.authtype',

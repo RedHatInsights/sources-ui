@@ -392,7 +392,7 @@ export const applicationFormatter = (apps, item, { appTypes }) => {
 };
 
 export const configurationModeFormatter = (mode, item, { intl }) => {
-  if (mode === 'trust') {
+  if (mode === 'account_authorization') {
     return (
       <React.Fragment>
         {intl.formatMessage({

@@ -184,6 +184,15 @@ describe('entities spec', () => {
 
         expect(result).toEqual(OK_RESPONSE);
       });
+
+      it('listSourceAuthentications', async () => {
+        const method = 'Get';
+        mock[`on${method}`](`/api/sources/v3.1/sources/${SOURCE_ID}/authentications`).reply(200, OK_RESPONSE);
+
+        const result = await api.getSourcesApi().listSourceAuthentications(SOURCE_ID);
+
+        expect(result).toEqual(OK_RESPONSE);
+      });
     });
 
     it('doRemoveSource fails', async () => {

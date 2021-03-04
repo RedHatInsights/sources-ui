@@ -7,8 +7,6 @@ import { Modal } from '@patternfly/react-core/dist/esm/components/Modal';
 import { Spinner } from '@patternfly/react-core/dist/esm/components/Spinner';
 import { Bullseye } from '@patternfly/react-core/dist/esm/layouts/Bullseye';
 
-import generateSuperKeyFields from '@redhat-cloud-services/frontend-components-sources/esm/generateSuperKeyFields';
-
 import { useSource } from '../../hooks/useSource';
 
 import { replaceRouteId, routes } from '../../Routes';
@@ -17,6 +15,7 @@ import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
 import ModalFormTemplate from './ModalFormTemplate';
 import { getSourcesApi } from '../../api/entities';
 import { addMessage } from '../../redux/sources/actions';
+import generateSuperKeyFields from '../../addSourceWizard/addSourceWizard/superKey/generateSuperKeyFields';
 
 const initialState = {
   loading: true,
@@ -41,7 +40,7 @@ const CredentialsForm = () => {
   const history = useHistory();
   const intl = useIntl();
   const reduxDispatch = useDispatch();
-  const { sourceTypes } = useSelector(({ sources }) => sources, shallowEqual);
+  const sourceTypes = useSelector(({ sources }) => sources.sourceTypes, shallowEqual);
   const sourceTypeName = sourceTypes.find(({ id }) => id === source.source_type_id).name;
 
   const [{ loading, initialValues }, dispatch] = useReducer(reducer, initialState);
@@ -61,7 +60,7 @@ const CredentialsForm = () => {
       .then(({ data }) => {
         const authhype = sourceTypes
           .find(({ name }) => name === sourceTypeName)
-          ?.schema.authentication.find(({ is_super_key, type }) => is_super_key || type === 'access_key_secret_key');
+          ?.schema.authentication.find(({ is_superkey }) => is_superkey);
 
         const values = data.find(({ authtype }) => authtype === authhype.type);
 
