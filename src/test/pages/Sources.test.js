@@ -12,7 +12,6 @@ import { Chip } from '@patternfly/react-core/dist/js/components/ChipGroup/Chip';
 import { Select } from '@patternfly/react-core/dist/js/components/Select/Select';
 
 import { MemoryRouter, Link } from 'react-router-dom';
-import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources/esm/addSourceWizard';
 import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/NotificationPortal';
 
 import SourcesPageOriginal from '../../pages/Sources';
@@ -44,6 +43,7 @@ import CloudEmptyState from '../../components/CloudTiles/CloudEmptyState';
 import { getStore } from '../../utilities/store';
 import { AVAILABLE, UNAVAILABLE } from '../../views/formatters';
 import RedHatEmptyState from '../../components/RedHatTiles/RedHatEmptyState';
+import { AddSourceWizard } from '../../addSourceWizard/addSourceWizard';
 
 describe('SourcesPage', () => {
   let initialProps;
@@ -139,6 +139,14 @@ describe('SourcesPage', () => {
   });
 
   it('renders empty state when there are no Sources and open AWS selection', async () => {
+    let tmpLocation;
+
+    tmpLocation = Object.assign({}, window.location);
+    delete window.location;
+    window.location = {};
+    window.location.pathname = routes.sources.path;
+    window.location.search = `?activeVendor=${CLOUD_VENDOR}`;
+
     store = getStore([], {
       sources: { activeVendor: CLOUD_VENDOR },
       user: { isOrgAdmin: true },
@@ -161,6 +169,8 @@ describe('SourcesPage', () => {
 
     expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
     expect(wrapper.find(AddSourceWizard).props().selectedType).toEqual('amazon');
+
+    window.location = tmpLocation;
   });
 
   it('renders empty state when there are no Sources - RED HAT', async () => {

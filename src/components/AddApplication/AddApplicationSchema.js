@@ -5,7 +5,7 @@ import { Text, TextVariants } from '@patternfly/react-core/dist/esm/components/T
 import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
 
 import { useIntl } from 'react-intl';
-import * as schemaBuilder from '@redhat-cloud-services/frontend-components-sources/esm/schemaBuilder';
+import * as schemaBuilder from '../../addSourceWizard/addSourceWizard/schemaBuilder';
 import get from 'lodash/get';
 
 import authenticationSelectionStep from './schema/authenticationSelectionStep';
@@ -103,6 +103,7 @@ const fields = (intl, sourceType, appType, authenticationValues, source, contain
     fields: [
       {
         component: componentTypes.WIZARD,
+        className: 'sources',
         name: 'wizard',
         title,
         inModal: true,

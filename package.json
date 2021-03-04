@@ -11,17 +11,17 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@data-driven-forms/pf4-component-mapper": "^2.21.1",
-    "@data-driven-forms/react-form-renderer": "^2.21.1",
+    "@data-driven-forms/pf4-component-mapper": "^2.23.3",
+    "@data-driven-forms/react-form-renderer": "^2.23.3",
     "@patternfly/react-core": "^4.97.2",
     "@patternfly/react-icons": "^4.9.2",
     "@patternfly/react-table": "^4.23.2",
-    "@redhat-cloud-services/frontend-components": "3.0.8",
-    "@redhat-cloud-services/frontend-components-notifications": "3.0.3",
-    "@redhat-cloud-services/frontend-components-sources": "2.2.47",
+    "@redhat-cloud-services/frontend-components": "3.0.11",
+    "@redhat-cloud-services/frontend-components-notifications": "3.0.4",
     "@redhat-cloud-services/frontend-components-utilities": "3.0.3",
     "@sentry/minimal": "6.1.0",
     "axios": "0.21.1",
+    "awesome-debounce-promise": "^2.1.0",
     "classnames": "^2.2.6",
     "deep-object-diff": "^1.1.0",
     "lodash": "^4.17.20",
@@ -56,7 +56,7 @@
       "\\.(css|scss)$": "identity-obj-proxy"
     },
     "transformIgnorePatterns": [
-      "<rootDir>/node_modules/(?!(@patternfly|@redhat-cloud-services|@data-driven-forms)).*$"
+      "<rootDir>/node_modules/(?!(@patternfly|@data-driven-forms)).*$"
     ]
   },
   "devDependencies": {
@@ -67,7 +67,7 @@
     "@babel/plugin-transform-runtime": "^7.12.15",
     "@babel/preset-env": "^7.12.16",
     "@babel/preset-react": "^7.12.13",
-    "@redhat-cloud-services/frontend-components-config": "^4.0.8",
+    "@redhat-cloud-services/frontend-components-config": "^4.0.11",
     "axios-mock-adapter": "^1.19.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.1.0",
@@ -97,7 +97,7 @@
     "lint": "npm-run-all lint:*",
     "lint:js": "eslint config src",
     "server:ctr": "node src/server/generateServerKey.js",
-    "travis:verify": "NODE_ENV=production npm-run-all build:prod lint test",
+    "travis:verify": "npm-run-all lint test build:prod",
     "verify": "npm-run-all build lint test",
     "extract:messages": "npx @formatjs/cli extract 'src/**/*.{js,jsx}' --out-file ./translations/messages.json",
     "prod": "NODE_ENV=production webpack serve --config config/dev.webpack.config.js",

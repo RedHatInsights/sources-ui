@@ -9,6 +9,8 @@ import componentWrapperIntl from '../../../utilities/testsHelpers';
 import mockStore from '../../__mocks__/mockStore';
 import RedHatEmptyState from '../../../components/RedHatTiles/RedHatEmptyState';
 import RedHatTiles from '../../../components/RedHatTiles/RedHatTiles';
+import sourceTypes from '../../__mocks__/sourceTypesData';
+import * as constants from '../../../utilities/constants';
 
 describe('RedhatEmptyState', () => {
   let wrapper;
@@ -23,7 +25,9 @@ describe('RedhatEmptyState', () => {
       setSelectedType,
     };
 
-    store = mockStore({ user: { isOrgAdmin: true } });
+    store = mockStore({ user: { isOrgAdmin: true }, sources: { sourceTypes: sourceTypes.data } });
+
+    constants.getActiveVendor = () => constants.REDHAT_VENDOR;
   });
 
   it('renders correctly', async () => {

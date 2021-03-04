@@ -1,11 +1,10 @@
-import { checkAppAvailability } from '@redhat-cloud-services/frontend-components-sources/esm/getApplicationStatus';
-
 import { CHECK_ENDPOINT_COMMAND, getEditedApplications, selectOnlyEditedValues } from './helpers';
 import { loadEntities } from '../../redux/sources/actions';
 import { checkSourceStatus } from '../../api/checkSourceStatus';
 import { doUpdateSource } from '../../api/doUpdateSource';
 
 import { AVAILABLE, UNAVAILABLE } from '../../views/formatters';
+import { checkAppAvailability } from '../../addSourceWizard/api/getApplicationStatus';
 
 export const onSubmit = async (values, editing, dispatch, source, intl, setState) => {
   setState({ type: 'submit', values, editing });

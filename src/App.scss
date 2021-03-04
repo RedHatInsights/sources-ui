@@ -1,6 +1,4 @@
-@import './src/utilities.scss';
 @import '~@redhat-cloud-services/frontend-components-notifications/index.css';
-@import '~@redhat-cloud-services/frontend-components-sources/index.css';
 
 .ins-c-sources__sources-placeholder-loader {
   margin: 0px;
@@ -162,6 +160,10 @@
     display: inline-block;
 
     .provider-icon {
+      opacity: 0.5;
+    }
+
+    .redhat-icon {
       opacity: 0.5;
     }
   }

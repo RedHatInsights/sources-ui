@@ -7,8 +7,6 @@ import { useIntl } from 'react-intl';
 import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/PrimaryToolbar';
 import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
 import { Section } from '@redhat-cloud-services/frontend-components/Section';
-import { filterVendorAppTypes } from '@redhat-cloud-services/frontend-components-sources/esm/filterApps';
-import { filterVendorTypes } from '@redhat-cloud-services/frontend-components-sources/esm/filterTypes';
 
 import { filterSources, pageAndSize } from '../redux/sources/actions';
 import SourcesTable from '../components/SourcesTable/SourcesTable';
@@ -22,9 +20,9 @@ const SourceRemoveModal = lazy(() =>
   )
 );
 const AddSourceWizard = lazy(() =>
-  import(
-    /* webpackChunkName: "addSource" */ '@redhat-cloud-services/frontend-components-sources/esm/addSourceWizard'
-  ).then((module) => ({ default: module.AddSourceWizard }))
+  import(/* webpackChunkName: "addSource" */ '../addSourceWizard/addSourceWizard/index').then((module) => ({
+    default: module.AddSourceWizard,
+  }))
 );
 
 import {
@@ -49,6 +47,8 @@ import { CLOUD_VENDOR, REDHAT_VENDOR } from '../utilities/constants';
 import CloudEmptyState from '../components/CloudTiles/CloudEmptyState';
 import { AVAILABLE, UNAVAILABLE } from '../views/formatters';
 import RedHatEmptyState from '../components/RedHatTiles/RedHatEmptyState';
+import { filterVendorTypes } from '../addSourceWizard/utilities/filterTypes';
+import { filterVendorAppTypes } from '../addSourceWizard/utilities/filterApps';
 
 const initialState = {
   filter: undefined,

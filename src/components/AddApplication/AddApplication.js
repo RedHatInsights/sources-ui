@@ -4,15 +4,6 @@ import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { useIntl } from 'react-intl';
 import isEmpty from 'lodash/isEmpty';
 
-import filterApps from '@redhat-cloud-services/frontend-components-sources/esm/filterApps';
-import CloseModal from '@redhat-cloud-services/frontend-components-sources/esm/CloseModal';
-import LoadingStep from '@redhat-cloud-services/frontend-components-sources/esm/LoadingStep';
-import ErroredStep from '@redhat-cloud-services/frontend-components-sources/esm/ErroredStep';
-import FinishedStep from '@redhat-cloud-services/frontend-components-sources/esm/FinishedStep';
-import TimeoutStep from '@redhat-cloud-services/frontend-components-sources/esm/TimeoutStep';
-import computeSourceStatus from '@redhat-cloud-services/frontend-components-sources/esm/computeSourceStatus';
-import AmazonFinishedStep from '@redhat-cloud-services/frontend-components-sources/esm/AmazonFinishedStep';
-
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
 
 import { loadEntities } from '../../redux/sources/actions';
@@ -36,6 +27,14 @@ import { Text } from '@patternfly/react-core/dist/esm/components/Text';
 
 import removeAppSubmit from './removeAppSubmit';
 import { diff } from 'deep-object-diff';
+import LoadingStep from '../../addSourceWizard/addSourceWizard/steps/LoadingStep';
+import ErroredStep from '../../addSourceWizard/addSourceWizard/steps/ErroredStep';
+import AmazonFinishedStep from '../../addSourceWizard/addSourceWizard/steps/AmazonFinishedStep';
+import FinishedStep from '../../addSourceWizard/addSourceWizard/steps/FinishedStep';
+import TimeoutStep from '../../addSourceWizard/addSourceWizard/steps/TimeoutStep';
+import computeSourceStatus from '../../addSourceWizard/utilities/computeSourceStatus';
+import CloseModal from '../../addSourceWizard/addSourceWizard/CloseModal';
+import filterApps from '../../addSourceWizard/utilities/filterApps';
 
 export const onSubmit = (
   values,
@@ -362,7 +361,7 @@ const AddApplication = () => {
   const onSubmitFinal = hasAvailableApps ? onSubmitWrapper : goToSources;
 
   const onStay = () => {
-    container.current.hidden = false;
+    container.current.style.opacity = 1;
     setState({ type: 'toggleCancelling' });
   };
 
@@ -375,7 +374,7 @@ const AddApplication = () => {
     const isChanged = !isEmpty(diff(initialValues, newValues));
 
     if (isChanged) {
-      container.current.hidden = true;
+      container.current.style.opacity = 0;
       setState({ type: 'toggleCancelling', values });
     } else {
       goToSources();
@@ -384,15 +383,16 @@ const AddApplication = () => {
 
   return (
     <React.Fragment>
-      <CloseModal
-        title={intl.formatMessage({
-          id: 'sources.manageAppsCloseModalTitle',
-          defaultMessage: 'Exit application adding?',
-        })}
-        isOpen={state.isCancelling}
-        onStay={onStay}
-        onExit={goToSources}
-      />
+      {state.isCancelling && (
+        <CloseModal
+          title={intl.formatMessage({
+            id: 'sources.manageAppsCloseModalTitle',
+            defaultMessage: 'Exit application adding?',
+          })}
+          onStay={onStay}
+          onExit={goToSources}
+        />
+      )}
       <SourcesFormRenderer
         schema={schema}
         showFormControls={false}

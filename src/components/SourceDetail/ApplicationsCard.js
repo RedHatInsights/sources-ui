@@ -9,13 +9,12 @@ import { CardTitle } from '@patternfly/react-core/dist/esm/components/Card/CardT
 import { Switch } from '@patternfly/react-core/dist/esm/components/Switch/Switch';
 import { FormGroup } from '@patternfly/react-core/dist/esm/components/Form/FormGroup';
 
-import filterApps from '@redhat-cloud-services/frontend-components-sources/esm/filterApps';
-
 import { useSource } from '../../hooks/useSource';
 import { replaceRouteId, routes } from '../../Routes';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import ApplicationStatusLabel from './ApplicationStatusLabel';
 import { APP_NAMES } from '../SourceEditForm/parser/application';
+import filterApps from '../../addSourceWizard/utilities/filterApps';
 
 const descriptionMapper = (name, intl) =>
   ({
