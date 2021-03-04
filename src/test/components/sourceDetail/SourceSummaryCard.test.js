@@ -196,4 +196,51 @@ describe('SourceSummaryCard', () => {
       ['Configuration mode', 'Manual configuration'],
     ]);
   });
+
+  it('renders correctly with aws account number', async () => {
+    formatters.dateFormatter = jest.fn().mockImplementation(() => 'some date');
+
+    store = mockStore({
+      sources: {
+        entities: [
+          {
+            id: sourceId,
+            source_type_id: AMAZON_ID,
+            created_at: '2020-11-27T15:49:59.640Z',
+            updated_at: '2020-11-27T15:49:59.640Z',
+            app_creation_workflow: 'account-authorization',
+            authentications: [
+              { authtype: 'password', username: 'some-password' },
+              { authtype: 'cloud-meter-arn', username: 'arn:aws:iam::123456789012:group/*' },
+            ],
+          },
+        ],
+        sourceTypes: sourceTypesData.data,
+      },
+    });
+
+    wrapper = mount(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetail.path} render={(...args) => <SourceSummaryCard {...args} />} />,
+        store,
+        initialEntry
+      )
+    );
+
+    expect(wrapper.find(DescriptionList)).toHaveLength(1);
+    expect(wrapper.find(DescriptionListGroup)).toHaveLength(6);
+    expect(wrapper.find(DescriptionListTerm)).toHaveLength(6);
+    expect(wrapper.find(DescriptionListDescription)).toHaveLength(6);
+
+    const categories = getCategories(wrapper);
+
+    expect(categories).toEqual([
+      ['Source type', 'Amazon Web Services'],
+      ['Last availability check', 'Not checked yet'],
+      ['Date added', 'some date'],
+      ['Last modified', 'some date'],
+      ['Configuration mode', 'Manual configuration'],
+      ['AWS account number', '123456789012'],
+    ]);
+  });
 });

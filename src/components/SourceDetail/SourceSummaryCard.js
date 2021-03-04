@@ -31,6 +31,17 @@ const SourceSummaryCard = () => {
   const intl = useIntl();
   const source = useSource();
   const sourceTypes = useSelector(({ sources }) => sources.sourceTypes, shallowEqual);
+  const type = sourceTypes.find((type) => type.id === source.source_type_id);
+
+  let awsAccountNumber;
+
+  if (type.name === 'amazon') {
+    const arnType = source.authentications?.find(({ authtype }) => authtype.includes('arn'));
+
+    if (arnType?.username) {
+      awsAccountNumber = arnType.username.match(/:\d+/)?.[0]?.replace(/:/g, '');
+    }
+  }
 
   return (
     <Card className="pf-m-selectable pf-m-selected card summary-card pf-u-m-lg pf-u-mr-sm-on-md">
@@ -91,6 +102,15 @@ const SourceSummaryCard = () => {
                 defaultMessage: 'Configuration mode',
               })}
               description={configurationModeFormatter(source.app_creation_workflow, source, { intl })}
+            />
+          )}
+          {awsAccountNumber && (
+            <DescriptionListItem
+              term={intl.formatMessage({
+                id: 'detail.summary.awsAccountNumber',
+                defaultMessage: 'AWS account number',
+              })}
+              description={awsAccountNumber}
             />
           )}
         </DescriptionList>
