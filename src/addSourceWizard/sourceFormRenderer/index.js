@@ -14,6 +14,7 @@ import CardSelect from './components/CardSelect';
 import AuthSelect from './components/AuthSelect';
 import Authentication from './components/Authentication';
 import EnhancedRadio from './components/EnhancedRadio';
+import SwitchGroup from './components/SwitchGroup';
 
 export const mapperExtension = {
   'auth-select': AuthSelect,
@@ -22,6 +23,7 @@ export const mapperExtension = {
   summary: SourceWizardSummary,
   authentication: Authentication,
   'enhanced-radio': EnhancedRadio,
+  'switch-group': SwitchGroup,
 };
 
 const FormTemplateWrapper = (props) => <FormTemplate {...props} showFormControls={false} />;

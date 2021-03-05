@@ -7,9 +7,9 @@ import {
   sourceTypeMutator,
   typesStep,
   compileAllSourcesComboOptions,
-  compileAllApplicationComboOptions,
   appMutatorRedHat,
   applicationStep,
+  cloudTypesStep,
 } from '../../../addSourceWizard/addSourceWizard/SourceAddSchema';
 import sourceTypes, { OPENSHIFT_TYPE } from '../helpers/sourceTypes';
 import applicationTypes from '../helpers/applicationTypes';
@@ -21,6 +21,7 @@ import mount from '../__mocks__/mount';
 import { NO_APPLICATION_VALUE } from '../../../addSourceWizard/utilities/stringConstants';
 import SubWatchDescription from '../../../addSourceWizard/addSourceWizard/descriptions/SubWatchDescription';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../../utilities/constants';
+import componentTypes from '@data-driven-forms/react-form-renderer/dist/esm/component-types';
 
 describe('Add source schema', () => {
   const INTL = { formatMessage: ({ defaultMessage }) => defaultMessage };
@@ -183,40 +184,21 @@ describe('Add source schema', () => {
   });
 
   describe('typesStep', () => {
-    let tmpLocation;
-
-    beforeEach(() => {
-      tmpLocation = Object.assign({}, window.location);
-
-      delete window.location;
-
-      window.location = {};
-    });
-
-    afterEach(() => {
-      window.location = tmpLocation;
-    });
-
     it('cloud type selection', () => {
-      window.location.search = `activeVendor=${CLOUD_VENDOR}`;
-
-      const result = typesStep(sourceTypes, applicationTypes, false, INTL);
+      const result = cloudTypesStep(sourceTypes, applicationTypes, INTL);
 
       expect(result.fields).toHaveLength(3);
-      expect(result.fields[0].name).toEqual('source_type');
-      expect(result.fields[0].mutator).toEqual(expect.any(Function));
-      expect(result.fields[1].name).toEqual('application.application_type_id');
-      expect(result.fields[1].component).toEqual('enhanced-radio');
-      expect(result.fields[1].isRequired).toEqual(undefined);
-      expect(result.fields[1].validate).toEqual(undefined);
-      expect(result.fields[1].placeholder).toEqual(expect.any(String));
-      expect(result.fields[1].condition).toEqual(undefined);
-      expect(result.fields[1].mutator.toString()).toEqual(appMutatorRedHat(applicationTypes).toString());
+      expect(result.name).toEqual('types_step');
+      expect(result.title).toEqual('Select source type');
+
+      expect(result.fields[0].component).toEqual(componentTypes.PLAIN_TEXT);
+      expect(result.fields[0].label).toEqual('Select a cloud provider to connect to your Red Hat account.');
+
+      expect(result.fields[1].name).toEqual('source_type');
+      expect(result.fields[1].label).toEqual('Select a cloud provider');
     });
 
     it('red hat type selection', () => {
-      window.location.search = `activeVendor=${REDHAT_VENDOR}`;
-
       const result = typesStep(sourceTypes, applicationTypes, false, INTL);
 
       expect(result.fields).toHaveLength(3);
@@ -233,8 +215,8 @@ describe('Add source schema', () => {
   });
 
   describe('application step', () => {
-    it('generate steps and filters application not belonging to the type', () => {
-      const result = applicationStep(applicationTypes, 'amazon', INTL);
+    it('generate steps', () => {
+      const result = applicationStep(applicationTypes, INTL);
 
       expect(result.title).toEqual('Select application');
       expect(result.fields.map(({ name }) => name)).toEqual([
@@ -243,6 +225,7 @@ describe('Add source schema', () => {
         'source_type',
       ]);
       expect(result.fields[1].options).toEqual([
+        { label: 'Catalog', value: '1', description: undefined },
         {
           label: 'Cost Management',
           value: '2',
@@ -295,43 +278,6 @@ describe('Add source schema', () => {
       expect(compileAllSourcesComboOptions(mockSourceTypes)).toEqual([
         { label: 'Openshift', value: 'ops' },
         { label: 'Satellite', value: 'sat' },
-      ]);
-    });
-  });
-
-  describe('compileAllApplicationComboOptions', () => {
-    let tmpLocation;
-
-    const mockAppTypes = [{ name: 'app', display_name: 'Application', id: '1' }];
-
-    const INTl = { formatMessage: ({ defaultMessage }) => defaultMessage };
-
-    beforeEach(() => {
-      tmpLocation = Object.assign({}, window.location);
-
-      delete window.location;
-
-      window.location = {};
-    });
-
-    afterEach(() => {
-      window.location = tmpLocation;
-    });
-
-    it('cloud type selection - has none application', () => {
-      window.location.search = `activeVendor=${CLOUD_VENDOR}`;
-
-      expect(compileAllApplicationComboOptions(mockAppTypes, INTl)).toEqual([
-        { label: 'Application', value: '1', description: undefined },
-        { label: 'No application', value: NO_APPLICATION_VALUE },
-      ]);
-    });
-
-    it('red hat type selection - is none', () => {
-      window.location.search = `activeVendor=${REDHAT_VENDOR}`;
-
-      expect(compileAllApplicationComboOptions(mockAppTypes, INTl)).toEqual([
-        { label: 'Application', value: '1', description: undefined },
       ]);
     });
   });

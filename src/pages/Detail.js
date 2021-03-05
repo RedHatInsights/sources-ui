@@ -12,6 +12,8 @@ import { DetailLoader } from '../components/SourcesTable/loaders';
 import CustomRoute from '../components/CustomRoute/CustomRoute';
 import { replaceRouteId, routes } from '../Routes';
 import DetailHeader from '../components/SourceDetail/DetailHeader';
+import isSuperKey from '../utilities/isSuperKey';
+import ResourcesTable from '../components/SourceDetail/ResourcesTable';
 
 const SourceRemoveModal = lazy(() =>
   import(
@@ -41,6 +43,13 @@ const SourceRenameModal = lazy(() =>
   )
 );
 
+const EditCredentials = lazy(() =>
+  import(
+    /* webpackChunkName: "credentialsForm" */
+    '../components/CredentialsForm/CredentialsForm'
+  )
+);
+
 const Detail = () => {
   const source = useSource();
 
@@ -52,6 +61,8 @@ const Detail = () => {
       </React.Fragment>
     );
   }
+
+  const superKey = isSuperKey(source);
 
   return (
     <div className="ins-c-sources__detail-page">
@@ -65,6 +76,7 @@ const Detail = () => {
         <CustomRoute exact route={routes.sourcesDetailAddApp} Component={AddApplication} />
         <CustomRoute exact route={routes.sourcesDetailRemoveApp} Component={RemoveAppModal} />
         <CustomRoute exact route={routes.sourcesDetailRename} Component={SourceRenameModal} />
+        <CustomRoute exact route={routes.sourcesDetailEditCredentials} Component={EditCredentials} />
       </Suspense>
       <DetailHeader />
       <Grid>
@@ -74,9 +86,7 @@ const Detail = () => {
         <GridItem md="6">
           <ApplicationsCard />
         </GridItem>
-        <GridItem md="12">
-          <ApplicationResourcesCard />
-        </GridItem>
+        <GridItem md="12">{superKey ? <ResourcesTable /> : <ApplicationResourcesCard />}</GridItem>
       </Grid>
     </div>
   );

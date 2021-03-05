@@ -13,11 +13,11 @@ import SubWatchDescription from '../../../../addSourceWizard/addSourceWizard/des
 import FormRenderer from '../../../../addSourceWizard/sourceFormRenderer';
 
 describe('SubWatchDescription', () => {
-  it('Renders correctly when enabled', () => {
+  it('Renders correctly when enabled - not super key mode ', () => {
     const wrapper = mount(
       <FormRenderer
         schema={{ fields: [{ name: 'desc', component: 'description', Content: () => <SubWatchDescription id="1" /> }] }}
-        initialValues={{ application: { application_type_id: '1' } }}
+        initialValues={{ application: { application_type_id: '1' }, source: { app_creation_workflow: 'manual_configuration' } }}
       />
     );
 
@@ -31,11 +31,32 @@ describe('SubWatchDescription', () => {
     expect(wrapper.find(CheckCircleIcon).first().props().fill).toEqual('#3E8635');
   });
 
-  it('Renders correctly when not enabled', () => {
+  it('Renders correctly when enabled - super key mode', () => {
     const wrapper = mount(
       <FormRenderer
         schema={{ fields: [{ name: 'desc', component: 'description', Content: () => <SubWatchDescription id="1" /> }] }}
-        initialValues={{ application: { application_type_id: '2' } }}
+        initialValues={{ applications: ['1'], source: { app_creation_workflow: 'account_authorization' } }}
+      />
+    );
+    expect(wrapper.find(CheckCircleIcon).first().props().fill).toEqual('#3E8635');
+  });
+
+  it('Renders correctly when not enabled - not super key mode', () => {
+    const wrapper = mount(
+      <FormRenderer
+        schema={{ fields: [{ name: 'desc', component: 'description', Content: () => <SubWatchDescription id="1" /> }] }}
+        initialValues={{ application: { application_type_id: '2' }, source: { app_creation_workflow: 'manual_configuration' } }}
+      />
+    );
+
+    expect(wrapper.find(CheckCircleIcon).first().props().fill).toEqual('#6A6E73');
+  });
+
+  it('Renders correctly when not enabled - super key mode', () => {
+    const wrapper = mount(
+      <FormRenderer
+        schema={{ fields: [{ name: 'desc', component: 'description', Content: () => <SubWatchDescription id="1" /> }] }}
+        initialValues={{ applications: [], source: { app_creation_workflow: 'account_authorization' } }}
       />
     );
 
