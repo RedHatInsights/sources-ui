@@ -35,6 +35,7 @@ import TimeoutStep from '../../addSourceWizard/addSourceWizard/steps/TimeoutStep
 import computeSourceStatus from '../../addSourceWizard/utilities/computeSourceStatus';
 import CloseModal from '../../addSourceWizard/addSourceWizard/CloseModal';
 import filterApps from '../../addSourceWizard/utilities/filterApps';
+import computeSourceError from '../../addSourceWizard/utilities/computeSourceError';
 
 export const onSubmit = (
   values,
@@ -278,14 +279,7 @@ const AddApplication = () => {
             <ErroredStep
               onRetry={onReset}
               onClose={goToSources}
-              message={
-                state.data.applications?.[0]?.availability_status_error ||
-                state.data.endpoint?.[0]?.availability_status_error ||
-                intl.formatMessage({
-                  id: 'wizard.unknownError',
-                  defaultMessage: 'Unknown error',
-                })
-              }
+              message={computeSourceError(state.data, intl)}
               title={intl.formatMessage({
                 id: 'sources.configurationSuccessful',
                 defaultMessage: 'Configuration unsuccessful',

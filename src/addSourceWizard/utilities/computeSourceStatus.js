@@ -1,21 +1,19 @@
 export const computeSourceStatus = (source) => {
-  const appStatus = source.applications?.[0]?.availability_status;
-  const endpointStatus = source.endpoint?.[0]?.availability_status;
-  const statuses = [appStatus, endpointStatus];
+  const appStatuses = source.applications?.map(({ availability_status }) => availability_status || 'timeout') || [];
+  const endpointStatuses = source.endpoint?.map(({ availability_status }) => availability_status || 'timeout') || [];
+  const authenticationsStatuses = source.authentiations?.map(({ availability_status }) => availability_status || 'timeout') || [];
+
+  const statuses = [...appStatuses, ...endpointStatuses, ...authenticationsStatuses];
 
   if (statuses.includes('unavailable')) {
     return 'unavailable';
   }
 
-  if (
-    (appStatus === 'available' && !source.endpoint?.[0]) ||
-    (endpointStatus === 'available' && !source.applications?.[0]) ||
-    (appStatus === 'available' && endpointStatus === 'available')
-  ) {
+  if (statuses.length > 0 && statuses.every((status) => status === 'available')) {
     return 'available';
   }
 
-  if (source.applications?.[0] || source.endpoint?.[0]) {
+  if (statuses.includes('timeout')) {
     return 'timeout';
   }
 
