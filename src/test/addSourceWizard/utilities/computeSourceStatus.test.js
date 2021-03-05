@@ -48,7 +48,7 @@ describe('computeSourceStatus', () => {
       ],
       applications: [
         {
-          availability_status: 'null',
+          availability_status: null,
         },
       ],
     };
@@ -101,7 +101,7 @@ describe('computeSourceStatus', () => {
     source = {
       applications: [
         {
-          availability_status: 'null',
+          availability_status: null,
         },
       ],
     };

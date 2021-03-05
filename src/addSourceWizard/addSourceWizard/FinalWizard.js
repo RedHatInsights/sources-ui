@@ -17,6 +17,7 @@ import { wizardDescription, wizardTitle } from '../utilities/stringConstants';
 import { getSourcesApi } from '../api';
 import computeSourceStatus from '../utilities/computeSourceStatus';
 import EditLink from './EditLink';
+import computeSourceError from '../utilities/computeSourceError';
 
 const FinalWizard = ({
   afterSubmit,
@@ -94,11 +95,7 @@ const FinalWizard = ({
               </Button>
             }
             Component={() => <EditLink id={createdSource.id} />}
-            message={
-              createdSource.applications?.[0]?.availability_status_error ||
-              createdSource.endpoint?.[0]?.availability_status_error ||
-              intl.formatMessage({ id: 'wizard.unknownError', defaultMessage: 'Unknown error' })
-            }
+            message={computeSourceError(createdSource, intl)}
             title={intl.formatMessage({ id: 'wizard.configurationUnsuccessful', defaultMessage: 'Configuration unsuccessful' })}
           />
         );
