@@ -120,4 +120,16 @@ describe('computeSourceStatus', () => {
 
     expect(computeSourceStatus(source)).toEqual('finished');
   });
+
+  it('auhtentiation is available', () => {
+    source = {
+      authentications: [
+        {
+          availability_status: 'available',
+        },
+      ],
+    };
+
+    expect(computeSourceStatus(source)).toEqual('available');
+  });
 });

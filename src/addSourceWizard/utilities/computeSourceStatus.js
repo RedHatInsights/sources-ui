@@ -4,7 +4,7 @@ export const computeSourceStatus = (source) => {
   const endpointStatuses =
     source.endpoint?.filter(Boolean).map(({ availability_status }) => availability_status || 'timeout') || [];
   const authenticationsStatuses =
-    source.authentiations?.filter(Boolean).map(({ availability_status }) => availability_status || 'timeout') || [];
+    source.authentications?.filter(Boolean).map(({ availability_status }) => availability_status || 'timeout') || [];
 
   const statuses = [...appStatuses, ...endpointStatuses, ...authenticationsStatuses];
 
