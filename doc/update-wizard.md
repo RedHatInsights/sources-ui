@@ -218,7 +218,7 @@ If you want to add an additional API endpoint for application-specific values, p
 # Quick check-list
 
 - [ ] Check API definition - [Sources API](https://github.com/RedHatInsights/sources-api/tree/master/db/seeds)
-- [ ] Update [hardcoded schemas](https://github.com/RedHatInsights/sources-ui/blob/master/s../components/addSourceWizard/hardcodedSchemas.js)
+- [ ] Update [hardcoded schemas](https://github.com/RedHatInsights/sources-ui/blob/master/src/components/addSourceWizard/hardcodedSchemas.js)
   - [ ] Authtype is always selected
   - [ ] Users can switch between source/app types and the wizard should always work
   - [ ] Summary shows correct labels (see `aria-label`, otherwise the summary works automatically)
