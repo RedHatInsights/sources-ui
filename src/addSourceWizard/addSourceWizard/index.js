@@ -9,12 +9,12 @@ import Form from './SourceAddModal';
 import FinalWizard from './FinalWizard';
 
 import { wizardTitle } from '../utilities/stringConstants';
-import CloseModal from './CloseModal';
 
 import isSuperKey from '../../utilities/isSuperKey';
 import { timeoutedApps } from '../../utilities/constants';
 import createSuperSource from '../../api/createSuperSource';
 import { doCreateSource } from '../../api/createSource';
+import CloseModal from '../../components/CloseModal';
 
 const prepareInitialValues = (initialValues) => ({
   isSubmitted: false,

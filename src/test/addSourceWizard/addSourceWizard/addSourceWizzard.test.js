@@ -12,12 +12,12 @@ import sourceTypes from '../helpers/sourceTypes';
 import applicationTypes from '../helpers/applicationTypes';
 import * as dependency from '../../../api/wizardHelpers';
 import * as createSource from '../../../api/createSource';
-import CloseModal from '../../../addSourceWizard/addSourceWizard/CloseModal';
 import LoadingStep from '../../../addSourceWizard/addSourceWizard/steps/LoadingStep';
 
 import mount from '../__mocks__/mount';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../../utilities/constants';
 import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
+import CloseModal from '../../../components/CloseModal';
 
 describe('AddSourceWizard', () => {
   let initialProps;

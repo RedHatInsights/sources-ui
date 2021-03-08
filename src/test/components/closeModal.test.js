@@ -6,9 +6,8 @@ import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
 
 import ExclamationTriangleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-triangle-icon';
 
-import CloseModal from '../../../addSourceWizard/addSourceWizard/CloseModal';
-
-import mount from '../__mocks__/mount';
+import mount from '../addSourceWizard/__mocks__/mount';
+import CloseModal from '../../components/CloseModal';
 
 describe('CloseModal', () => {
   let initialProps;

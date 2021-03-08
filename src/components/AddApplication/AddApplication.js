@@ -33,9 +33,9 @@ import AmazonFinishedStep from '../../addSourceWizard/addSourceWizard/steps/Amaz
 import FinishedStep from '../../addSourceWizard/addSourceWizard/steps/FinishedStep';
 import TimeoutStep from '../../addSourceWizard/addSourceWizard/steps/TimeoutStep';
 import computeSourceStatus from '../../utilities/computeSourceStatus';
-import CloseModal from '../../addSourceWizard/addSourceWizard/CloseModal';
 import filterApps from '../../utilities/filterApps';
 import computeSourceError from '../../utilities/computeSourceError';
+import CloseModal from '../CloseModal';
 
 export const onSubmit = (
   values,

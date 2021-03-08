@@ -9,7 +9,7 @@ import { Radio } from '@patternfly/react-core/dist/esm/components/Radio/Radio';
 
 import { Route, MemoryRouter } from 'react-router-dom';
 
-import CloseModal from '../../../addSourceWizard/addSourceWizard/CloseModal';
+import CloseModal from '../../../components/CloseModal';
 import LoadingStep from '../../../addSourceWizard/addSourceWizard/steps/LoadingStep';
 import ErroredStep from '../../../addSourceWizard/addSourceWizard/steps/ErroredStep';
 import SummaryStep from '../../../components/FormComponents/SourceWizardSummary';
