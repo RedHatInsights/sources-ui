@@ -7,17 +7,17 @@ import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/Tex
 import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
 import { Wizard } from '@patternfly/react-core/dist/esm/components/Wizard/Wizard';
 
-import FinishedStep from './steps/FinishedStep';
-import ErroredStep from './steps/ErroredStep';
-import LoadingStep from './steps/LoadingStep';
-import TimeoutStep from './steps/TimeoutStep';
-import AmazonFinishedStep from './steps/AmazonFinishedStep';
-
 import { wizardDescription, wizardTitle } from '../utilities/stringConstants';
 import { getSourcesApi } from '../../api/entities';
 import computeSourceStatus from '../../utilities/computeSourceStatus';
 import EditLink from './EditLink';
 import computeSourceError from '../../utilities/computeSourceError';
+
+import FinishedStep from '../../components/steps/FinishedStep';
+import LoadingStep from '../../components/steps/LoadingStep';
+import ErroredStep from '../../components/steps/ErroredStep';
+import TimeoutStep from '../../components/steps/TimeoutStep';
+import AmazonFinishedStep from '../../components/steps/AmazonFinishedStep';
 
 const FinalWizard = ({
   afterSubmit,

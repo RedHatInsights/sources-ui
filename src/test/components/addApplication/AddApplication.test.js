@@ -10,12 +10,12 @@ import { Radio } from '@patternfly/react-core/dist/esm/components/Radio/Radio';
 import { Route, MemoryRouter } from 'react-router-dom';
 
 import CloseModal from '../../../components/CloseModal';
-import LoadingStep from '../../../addSourceWizard/addSourceWizard/steps/LoadingStep';
-import ErroredStep from '../../../addSourceWizard/addSourceWizard/steps/ErroredStep';
 import SummaryStep from '../../../components/FormComponents/SourceWizardSummary';
-import FinishedStep from '../../../addSourceWizard/addSourceWizard/steps/FinishedStep';
-import TimeoutStep from '../../../addSourceWizard/addSourceWizard/steps/TimeoutStep';
-import AmazonFinishedStep from '../../../addSourceWizard/addSourceWizard/steps/AmazonFinishedStep';
+import LoadingStep from '../../../components/steps/LoadingStep';
+import FinishedStep from '../../../components/steps/FinishedStep';
+import AmazonFinishedStep from '../../../components/steps/AmazonFinishedStep';
+import TimeoutStep from '../../../components/steps/TimeoutStep';
+import ErroredStep from '../../../components/steps/ErroredStep';
 
 import { act } from 'react-dom/test-utils';
 

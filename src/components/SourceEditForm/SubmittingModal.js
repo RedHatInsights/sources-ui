@@ -1,7 +1,6 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
-
-import LoadingStep from '../../addSourceWizard/addSourceWizard/steps/LoadingStep';
+import LoadingStep from '../steps/LoadingStep';
 
 const SubmittingModal = () => {
   const intl = useIntl();

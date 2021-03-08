@@ -11,7 +11,7 @@ import { Spinner } from '@patternfly/react-core/dist/esm/components/Spinner/Spin
 
 import SubmittingModal from '../../../components/SourceEditForm/SubmittingModal';
 import mockStore from '../../__mocks__/mockStore';
-import LoadingStep from '../../../addSourceWizard/addSourceWizard/steps/LoadingStep';
+import LoadingStep from '../../../components/steps/LoadingStep';
 
 describe('SubmittingModal', () => {
   let store;

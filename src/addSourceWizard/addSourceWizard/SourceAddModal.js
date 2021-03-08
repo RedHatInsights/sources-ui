@@ -8,12 +8,12 @@ import { Wizard } from '@patternfly/react-core/dist/esm/components/Wizard/Wizard
 
 import createSchema from './SourceAddSchema';
 import { doLoadSourceTypes, doLoadApplicationTypes } from '../../api/wizardHelpers';
-import LoadingStep from './steps/LoadingStep';
 import { wizardDescription, wizardTitle } from '../utilities/stringConstants';
 import filterApps, { filterVendorAppTypes } from '../../utilities/filterApps';
 import filterTypes, { filterVendorTypes } from '../../utilities/filterTypes';
 import Authentication from '../../components/FormComponents/Authentication';
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
+import LoadingStep from '../../components/steps/LoadingStep';
 
 const initialValues = {
   schema: {},

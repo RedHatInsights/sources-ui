@@ -8,17 +8,17 @@ import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button
 import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
 
 import FinalWizard from '../../../addSourceWizard/addSourceWizard/FinalWizard';
-import FinishedStep from '../../../addSourceWizard/addSourceWizard/steps/FinishedStep';
-import LoadingStep from '../../../addSourceWizard/addSourceWizard/steps/LoadingStep';
-import ErroredStep from '../../../addSourceWizard/addSourceWizard/steps/ErroredStep';
-import TimeoutStep from '../../../addSourceWizard/addSourceWizard/steps/TimeoutStep';
+import LoadingStep from '../../../components/steps/LoadingStep';
+import FinishedStep from '../../../components/steps/FinishedStep';
+import ErroredStep from '../../../components/steps/ErroredStep';
+import AmazonFinishedStep from '../../../components/steps/AmazonFinishedStep';
+import TimeoutStep from '../../../components/steps/TimeoutStep';
 
 import mount from '../__mocks__/mount';
 import sourceTypes, { AMAZON_TYPE } from '../helpers/sourceTypes';
 
 import * as api from '../../../api/entities';
 import { MemoryRouter } from 'react-router-dom';
-import AmazonFinishedStep from '../../../addSourceWizard/addSourceWizard/steps/AmazonFinishedStep';
 
 describe('Final wizard', () => {
   let initialProps;

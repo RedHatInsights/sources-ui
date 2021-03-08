@@ -11,7 +11,7 @@ import { Bullseye } from '@patternfly/react-core/dist/esm/layouts/Bullseye/Bulls
 import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
 
 import CheckCircleIcon from '@patternfly/react-icons/dist/esm/icons/check-circle-icon';
-import computeSourcesUrl from '../../../utilities/computeSourcesUrl';
+import computeSourcesUrl from '../../utilities/computeSourcesUrl';
 
 const FinishedStep = ({
   onClose,
