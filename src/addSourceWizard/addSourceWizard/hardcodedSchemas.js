@@ -19,7 +19,7 @@ import * as CMGoogle from './hardcodedComponents/gcp/costManagement';
 import * as TowerCatalog from './hardcodedComponents/tower/catalog';
 import * as Openshift from './hardcodedComponents/openshift/endpoint';
 
-import { COST_MANAGEMENT_APP_NAME, CLOUD_METER_APP_NAME, CATALOG_APP } from '../api/constants';
+import { CATALOG_APP, CLOUD_METER_APP_NAME, COST_MANAGEMENT_APP_NAME } from '../../utilities/constants';
 
 const arnMessagePattern = <FormattedMessage id="wizard.arnPattern" defaultMessage="ARN must start with arn:aws:" />;
 const arnMessageLength = <FormattedMessage id="wizard.arnLength" defaultMessage="ARN should have at least 10 characters" />;

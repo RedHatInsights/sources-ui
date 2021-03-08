@@ -1,6 +1,6 @@
 import axiosInstanceInsights from '@redhat-cloud-services/frontend-components-utilities/interceptors';
 
-import { SOURCES_API_BASE_V3 } from './constants';
+import { SOURCES_API_BASE_V3 } from '../../api/constants';
 
 const axiosInstance = axiosInstanceInsights;
 

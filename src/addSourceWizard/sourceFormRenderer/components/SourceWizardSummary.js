@@ -19,8 +19,8 @@ import {
 } from '../../addSourceWizard/schemaBuilder';
 import ValuePopover from './ValuePopover';
 import useFormApi from '@data-driven-forms/react-form-renderer/dist/esm/use-form-api';
-import { COST_MANAGEMENT_APP_NAME } from '../../api/constants';
 import { NO_APPLICATION_VALUE } from '../../utilities/stringConstants';
+import { COST_MANAGEMENT_APP_NAME } from '../../../utilities/constants';
 
 const alertMapper = (appName, sourceType, intl) => {
   if (appName === COST_MANAGEMENT_APP_NAME && sourceType !== 'google') {

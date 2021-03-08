@@ -12,9 +12,9 @@ import { doCreateSource } from '../api/createSource';
 import { wizardTitle } from '../utilities/stringConstants';
 import CloseModal from './CloseModal';
 
-import { timeoutedApps } from '../api/constants';
 import createSuperSource from '../api/createSuperSource';
 import isSuperKey from '../../utilities/isSuperKey';
+import { timeoutedApps } from '../../utilities/constants';
 
 const prepareInitialValues = (initialValues) => ({
   isSubmitted: false,

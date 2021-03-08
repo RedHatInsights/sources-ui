@@ -8,7 +8,7 @@ const prepareFormApi = (values) => ({
   }),
 });
 
-jest.mock('../../addSourceWizard/api/constants', () => ({
+jest.mock('../../utilities/constants', () => ({
   __esModule: true,
   timeoutedApps: () => [],
 }));

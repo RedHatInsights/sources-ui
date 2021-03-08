@@ -2,10 +2,9 @@ import React from 'react';
 
 import { NO_APPLICATION_VALUE } from '../utilities/stringConstants';
 
-import { COST_MANAGEMENT_APP_NAME, CLOUD_METER_APP_NAME } from '../api/constants';
 import { Label } from '@patternfly/react-core/dist/esm/components/Label/Label';
 import SubWatchDescription from './descriptions/SubWatchDescription';
-import { getActiveVendor, REDHAT_VENDOR } from '../../utilities/constants';
+import { CLOUD_METER_APP_NAME, COST_MANAGEMENT_APP_NAME, getActiveVendor, REDHAT_VENDOR } from '../../utilities/constants';
 
 export const descriptionMapper = (type, intl) =>
   ({
