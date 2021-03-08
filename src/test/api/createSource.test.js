@@ -5,7 +5,7 @@ import { COST_MANAGEMENT_APP } from '../addSourceWizard/helpers/applicationTypes
 import * as api from '../../api/entities';
 import * as errorHandling from '../../api/handleError';
 import * as checkApp from '../../api/getApplicationStatus';
-import { NO_APPLICATION_VALUE } from '../../addSourceWizard/utilities/stringConstants';
+import { NO_APPLICATION_VALUE } from '../../components/addSourceWizard/stringConstants';
 
 describe('doCreateSource', () => {
   const HOST = 'mycluster.net';

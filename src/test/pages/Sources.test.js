@@ -43,7 +43,7 @@ import CloudEmptyState from '../../components/CloudTiles/CloudEmptyState';
 import { getStore } from '../../utilities/store';
 import { AVAILABLE, UNAVAILABLE } from '../../views/formatters';
 import RedHatEmptyState from '../../components/RedHatTiles/RedHatEmptyState';
-import { AddSourceWizard } from '../../addSourceWizard/addSourceWizard';
+import { AddSourceWizard } from '../../components/addSourceWizard';
 
 describe('SourcesPage', () => {
   let initialProps;

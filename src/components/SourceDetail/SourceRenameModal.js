@@ -12,7 +12,7 @@ import { useSource } from '../../hooks/useSource';
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
 import { replaceRouteId, routes } from '../../Routes';
 import { renameSource } from '../../redux/sources/actions';
-import { asyncValidatorDebounced } from '../../addSourceWizard/addSourceWizard/SourceAddSchema';
+import { asyncValidatorDebounced } from '../../components/addSourceWizard/SourceAddSchema';
 import validated from '../../utilities/resolveProps/validated';
 
 const SourceRenameModal = () => {

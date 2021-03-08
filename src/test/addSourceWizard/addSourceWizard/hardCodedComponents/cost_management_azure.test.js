@@ -4,7 +4,7 @@ import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
 import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
 import { ClipboardCopy } from '@patternfly/react-core/dist/esm/components/ClipboardCopy/ClipboardCopy';
 
-import * as Cm from '.../../../../addSourceWizard/addSourceWizard/hardcodedComponents/azure/costManagement';
+import * as Cm from '.../../../../components/addSourceWizard/hardcodedComponents/azure/costManagement';
 import RenderContext from '@data-driven-forms/react-form-renderer/dist/esm/renderer-context';
 import mount from '../../__mocks__/mount';
 

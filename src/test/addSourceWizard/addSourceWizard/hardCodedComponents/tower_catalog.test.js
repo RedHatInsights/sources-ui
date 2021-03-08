@@ -4,7 +4,7 @@ import mount from '../../__mocks__/mount';
 import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
 import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
 
-import * as TowerCatalog from '../../../../addSourceWizard/addSourceWizard/hardcodedComponents/tower/catalog';
+import * as TowerCatalog from '../../../../components/addSourceWizard/hardcodedComponents/tower/catalog';
 
 describe('Tower Catalog', () => {
   it('Auth description', () => {

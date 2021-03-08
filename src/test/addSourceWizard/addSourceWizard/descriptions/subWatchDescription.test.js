@@ -9,7 +9,7 @@ import { FlexItem } from '@patternfly/react-core/dist/esm/layouts/Flex/FlexItem'
 import CheckCircleIcon from '@patternfly/react-icons/dist/esm/icons/check-circle-icon';
 
 import mount from '../../__mocks__/mount';
-import SubWatchDescription from '../../../../addSourceWizard/addSourceWizard/descriptions/SubWatchDescription';
+import SubWatchDescription from '../../../../components/addSourceWizard/descriptions/SubWatchDescription';
 import SourcesFormRenderer from '../../../../utilities/SourcesFormRenderer';
 
 describe('SubWatchDescription', () => {

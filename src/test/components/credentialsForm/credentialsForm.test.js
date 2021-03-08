@@ -17,7 +17,7 @@ import CredentialsForm from '../../../components/CredentialsForm/CredentialsForm
 import * as api from '../../../api/entities';
 import * as actions from '../../../redux/sources/actions';
 import ModalFormTemplate from '../../../components/CredentialsForm/ModalFormTemplate';
-import generateSuperKeyFields from '../../../addSourceWizard/addSourceWizard/superKey/generateSuperKeyFields';
+import generateSuperKeyFields from '../../../components/addSourceWizard/superKey/generateSuperKeyFields';
 
 describe('CredentialsForm', () => {
   let wrapper;

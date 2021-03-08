@@ -13,7 +13,7 @@ import QuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/question-
 
 import useFormApi from '@data-driven-forms/react-form-renderer/dist/esm/use-form-api';
 
-import { HCCM_DOCS_PREFIX } from '../../../utilities/stringConstants';
+import { HCCM_DOCS_PREFIX } from '../../stringConstants';
 
 const CREATE_S3_BUCKET = `${HCCM_DOCS_PREFIX}/html/getting_started_with_cost_management/assembly_adding_sources_cost#creating_an_aws_s3_bucket`;
 const ENABLE_AWS_ACCOUNT = `${HCCM_DOCS_PREFIX}/html/getting_started_with_cost_management/assembly_adding_sources_cost#enabling_aws_account_access`;

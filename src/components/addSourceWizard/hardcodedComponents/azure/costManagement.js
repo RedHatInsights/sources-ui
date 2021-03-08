@@ -7,7 +7,7 @@ import { TextList, TextListVariants } from '@patternfly/react-core/dist/esm/comp
 import { TextListItem, TextListItemVariants } from '@patternfly/react-core/dist/esm/components/Text/TextListItem';
 import { ClipboardCopy } from '@patternfly/react-core/dist/esm/components/ClipboardCopy/ClipboardCopy';
 
-import { HCCM_DOCS_PREFIX } from '../../../utilities/stringConstants';
+import { HCCM_DOCS_PREFIX } from '../../stringConstants';
 import useFormApi from '@data-driven-forms/react-form-renderer/dist/esm/use-form-api';
 
 const CREATE_AZURE_STORAGE = `${HCCM_DOCS_PREFIX}/html/getting_started_with_cost_management/assembly_adding_sources_cost#creating_an_azure_storage_account`;

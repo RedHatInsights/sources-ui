@@ -13,7 +13,7 @@ import TextField from '@data-driven-forms/pf4-component-mapper/dist/esm/text-fie
 import * as actions from '../../../redux/sources/actions';
 import mockStore from '../../__mocks__/mockStore';
 
-jest.mock('../../../addSourceWizard/addSourceWizard/SourceAddSchema', () => ({
+jest.mock('../../../components/addSourceWizard/SourceAddSchema', () => ({
   __esModule: true,
   asyncValidatorDebounced: jest.fn(),
 }));

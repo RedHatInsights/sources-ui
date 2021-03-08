@@ -5,7 +5,7 @@ import { Text, TextVariants } from '@patternfly/react-core/dist/esm/components/T
 import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
 
 import { useIntl } from 'react-intl';
-import * as schemaBuilder from '../../addSourceWizard/addSourceWizard/schemaBuilder';
+import * as schemaBuilder from '../../components/addSourceWizard/schemaBuilder';
 import get from 'lodash/get';
 
 import authenticationSelectionStep from './schema/authenticationSelectionStep';

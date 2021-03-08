@@ -9,7 +9,7 @@ import { ClipboardCopy } from '@patternfly/react-core/dist/esm/components/Clipbo
 
 import * as api from '../../../../api/entities';
 
-import * as Cm from '../../../../addSourceWizard/addSourceWizard/hardcodedComponents/gcp/costManagement';
+import * as Cm from '../../../../components/addSourceWizard/hardcodedComponents/gcp/costManagement';
 import mount from '../../__mocks__/mount';
 import SourcesFormRenderer from '../../../../utilities/SourcesFormRenderer';
 

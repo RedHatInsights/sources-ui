@@ -1,10 +1,10 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import { AddSourceWizard } from '../../../addSourceWizard/addSourceWizard/index';
-import Form from '../../../addSourceWizard/addSourceWizard/SourceAddModal';
-import Modal from '../../../addSourceWizard/addSourceWizard/SourceAddModal';
-import FinalWizard from '../../../addSourceWizard/addSourceWizard/FinalWizard';
+import { AddSourceWizard } from '../../../components/addSourceWizard/index';
+import Form from '../../../components/addSourceWizard/SourceAddModal';
+import Modal from '../../../components/addSourceWizard/SourceAddModal';
+import FinalWizard from '../../../components/addSourceWizard/FinalWizard';
 
 import sourceTypes from '../helpers/sourceTypes';
 import applicationTypes from '../helpers/applicationTypes';

@@ -9,7 +9,7 @@ import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/Tex
 import debouncePromise from '../../utilities/debouncePromise';
 import { findSource } from '../../api/wizardHelpers';
 import { schemaBuilder } from './schemaBuilder';
-import { NO_APPLICATION_VALUE, wizardDescription, wizardTitle } from '../utilities/stringConstants';
+import { NO_APPLICATION_VALUE, wizardDescription, wizardTitle } from './stringConstants';
 import ValidatorReset from './ValidatorReset';
 import configurationStep from './superKey/configurationStep';
 import { compileAllApplicationComboOptions } from './compileAllApplicationComboOptions';

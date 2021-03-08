@@ -7,7 +7,7 @@ import { EmptyStateSecondaryActions } from '@patternfly/react-core/dist/esm/comp
 import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
 import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
 
-import FinalWizard from '../../../addSourceWizard/addSourceWizard/FinalWizard';
+import FinalWizard from '../../../components/addSourceWizard/FinalWizard';
 import LoadingStep from '../../../components/steps/LoadingStep';
 import FinishedStep from '../../../components/steps/FinishedStep';
 import ErroredStep from '../../../components/steps/ErroredStep';

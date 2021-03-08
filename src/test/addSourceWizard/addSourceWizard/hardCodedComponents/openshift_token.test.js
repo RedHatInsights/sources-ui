@@ -5,7 +5,7 @@ import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/Tex
 import { TextList } from '@patternfly/react-core/dist/esm/components/Text/TextList';
 import { TextListItem } from '@patternfly/react-core/dist/esm/components/Text/TextListItem';
 
-import * as OpToken from '../../../../addSourceWizard/addSourceWizard/hardcodedComponents/openshift/token';
+import * as OpToken from '../../../../components/addSourceWizard/hardcodedComponents/openshift/token';
 
 describe('AWS-Access key hardcoded schemas', () => {
   it('ARN DESCRIPTION is rendered correctly', () => {

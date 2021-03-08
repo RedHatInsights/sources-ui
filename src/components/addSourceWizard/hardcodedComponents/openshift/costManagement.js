@@ -1,6 +1,6 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
-import { HCCM_DOCS_PREFIX } from '../../../utilities/stringConstants';
+import { HCCM_DOCS_PREFIX } from '../../stringConstants';
 
 import { Text, TextVariants } from '@patternfly/react-core/dist/esm/components/Text/Text';
 import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';

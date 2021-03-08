@@ -4,7 +4,7 @@ import get from 'lodash/get';
 
 import useFormApi from '@data-driven-forms/react-form-renderer/dist/esm/use-form-api';
 import Radio from '@data-driven-forms/pf4-component-mapper/dist/esm/radio';
-import { NO_APPLICATION_VALUE } from '../../addSourceWizard/utilities/stringConstants';
+import { NO_APPLICATION_VALUE } from '../../components/addSourceWizard/stringConstants';
 
 const EnhancedRadio = ({ options, mutator, ...props }) => {
   const formOptions = useFormApi();

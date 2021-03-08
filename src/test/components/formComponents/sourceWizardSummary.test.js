@@ -18,7 +18,7 @@ import RendererContext from '@data-driven-forms/react-form-renderer/dist/esm/ren
 import mount from '../../addSourceWizard/__mocks__/mount';
 
 import Summary, { createItem } from '../../../components/FormComponents/SourceWizardSummary';
-import { NO_APPLICATION_VALUE } from '../../../addSourceWizard/utilities/stringConstants';
+import { NO_APPLICATION_VALUE } from '../../../components/addSourceWizard/stringConstants';
 import ValuePopover from '../../../components/FormComponents/ValuePopover';
 
 describe('SourceWizardSummary component', () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { NO_APPLICATION_VALUE } from '../utilities/stringConstants';
+import { NO_APPLICATION_VALUE } from './stringConstants';
 
 import { Label } from '@patternfly/react-core/dist/esm/components/Label/Label';
 import SubWatchDescription from './descriptions/SubWatchDescription';

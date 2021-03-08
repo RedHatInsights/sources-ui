@@ -2,7 +2,7 @@ import React from 'react';
 import mount from '../../__mocks__/mount';
 
 import sourceTypes from '../../helpers/sourceTypes';
-import SuperKeyCredentials from '../../../../addSourceWizard/addSourceWizard/superKey/SuperKeyCredentials';
+import SuperKeyCredentials from '../../../../components/addSourceWizard/superKey/SuperKeyCredentials';
 import SourcesFormRenderer from '../../../../utilities/SourcesFormRenderer';
 
 describe('SuperKeyCredentials', () => {

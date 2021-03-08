@@ -20,7 +20,7 @@ const SourceRemoveModal = lazy(() =>
   )
 );
 const AddSourceWizard = lazy(() =>
-  import(/* webpackChunkName: "addSource" */ '../addSourceWizard/addSourceWizard/index').then((module) => ({
+  import(/* webpackChunkName: "addSource" */ '../components/addSourceWizard/index').then((module) => ({
     default: module.AddSourceWizard,
   }))
 );

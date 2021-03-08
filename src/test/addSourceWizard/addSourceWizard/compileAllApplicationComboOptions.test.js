@@ -1,6 +1,6 @@
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../../utilities/constants';
-import { compileAllApplicationComboOptions } from '../../../addSourceWizard/addSourceWizard/compileAllApplicationComboOptions';
-import { NO_APPLICATION_VALUE } from '../../../addSourceWizard/utilities/stringConstants';
+import { compileAllApplicationComboOptions } from '../../../components/addSourceWizard/compileAllApplicationComboOptions';
+import { NO_APPLICATION_VALUE } from '../../../components/addSourceWizard/stringConstants';
 
 describe('compileAllApplicationComboOptions', () => {
   let tmpLocation;

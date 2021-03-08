@@ -8,7 +8,7 @@ import componentMapper from '@data-driven-forms/pf4-component-mapper/dist/esm/co
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
 
 import EnhancedRadio from '../../../components/FormComponents/EnhancedRadio';
-import { NO_APPLICATION_VALUE } from '../../../addSourceWizard/utilities/stringConstants';
+import { NO_APPLICATION_VALUE } from '../../../components/addSourceWizard/stringConstants';
 
 describe('EnhancedRadio', () => {
   let onSubmit;

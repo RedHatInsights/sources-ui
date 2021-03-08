@@ -1,6 +1,6 @@
-import { createGenericAuthTypeSelection } from '../../../../addSourceWizard/addSourceWizard/schemaBuilder';
+import { createGenericAuthTypeSelection } from '../../../../components/addSourceWizard/schemaBuilder';
 
-jest.mock('../../../../addSourceWizard/addSourceWizard/hardcodedSchemas', () => ({
+jest.mock('../../../../components/addSourceWizard/hardcodedSchemas', () => ({
   openshift: {
     authentication: {
       token: {

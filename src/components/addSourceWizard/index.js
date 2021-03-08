@@ -8,13 +8,13 @@ import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button
 import Form from './SourceAddModal';
 import FinalWizard from './FinalWizard';
 
-import { wizardTitle } from '../utilities/stringConstants';
+import { wizardTitle } from './stringConstants';
 
 import isSuperKey from '../../utilities/isSuperKey';
 import { timeoutedApps } from '../../utilities/constants';
 import createSuperSource from '../../api/createSuperSource';
 import { doCreateSource } from '../../api/createSource';
-import CloseModal from '../../components/CloseModal';
+import CloseModal from '../CloseModal';
 
 const prepareInitialValues = (initialValues) => ({
   isSubmitted: false,

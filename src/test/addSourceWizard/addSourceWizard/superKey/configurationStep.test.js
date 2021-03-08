@@ -3,8 +3,8 @@ import { Label } from '@patternfly/react-core/dist/esm/components/Label/Label';
 
 import componentTypes from '@data-driven-forms/react-form-renderer/dist/esm/component-types';
 import sourceTypes from '../../helpers/sourceTypes';
-import configurationStep from '../../../../addSourceWizard/addSourceWizard/superKey/configurationStep';
-import SuperKeyCredentials from '../../../../addSourceWizard/addSourceWizard/superKey/SuperKeyCredentials';
+import configurationStep from '../../../../components/addSourceWizard/superKey/configurationStep';
+import SuperKeyCredentials from '../../../../components/addSourceWizard/superKey/SuperKeyCredentials';
 
 describe('configurationSteps', () => {
   it('generates configuration step', () => {

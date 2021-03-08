@@ -7,7 +7,7 @@ import componentTypes from '@data-driven-forms/react-form-renderer/dist/esm/comp
 import TextField from '@data-driven-forms/pf4-component-mapper/dist/esm/text-field';
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
 
-import ValidatorReset from '../../../addSourceWizard/addSourceWizard/ValidatorReset';
+import ValidatorReset from '../../../components/addSourceWizard/ValidatorReset';
 
 describe('validatorReset', () => {
   it('sets value on timeout after mount and remove value after unmnout', async () => {

@@ -14,15 +14,15 @@ import get from 'lodash/get';
 import useFormApi from '@data-driven-forms/react-form-renderer/dist/esm/use-form-api';
 
 import ValuePopover from './ValuePopover';
-import hardcodedSchemas from '../../addSourceWizard/addSourceWizard/hardcodedSchemas';
+import hardcodedSchemas from '../../components/addSourceWizard/hardcodedSchemas';
 import { COST_MANAGEMENT_APP_NAME } from '../../utilities/constants';
-import { NO_APPLICATION_VALUE } from '../../addSourceWizard/utilities/stringConstants';
+import { NO_APPLICATION_VALUE } from '../../components/addSourceWizard/stringConstants';
 import {
   getAdditionalSteps,
   injectAuthFieldsInfo,
   injectEndpointFieldsInfo,
   shouldSkipEndpoint,
-} from '../../addSourceWizard/addSourceWizard/schemaBuilder';
+} from '../../components/addSourceWizard/schemaBuilder';
 
 const alertMapper = (appName, sourceType, intl) => {
   if (appName === COST_MANAGEMENT_APP_NAME && sourceType !== 'google') {

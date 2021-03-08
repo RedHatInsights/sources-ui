@@ -8,7 +8,7 @@ import { ClipboardCopy } from '@patternfly/react-core/dist/esm/components/Clipbo
 
 import RendererContext from '@data-driven-forms/react-form-renderer/dist/esm/renderer-context';
 
-import * as AwsArn from '../../../../addSourceWizard/addSourceWizard/hardcodedComponents/aws/arn';
+import * as AwsArn from '../../../../components/addSourceWizard/hardcodedComponents/aws/arn';
 import mount from '../../__mocks__/mount';
 
 describe('AWS-ARN hardcoded schemas', () => {

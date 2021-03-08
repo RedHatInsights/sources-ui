@@ -2,7 +2,7 @@ import { handleError } from './handleError';
 
 import { getSourcesApi } from './entities';
 import { checkAppAvailability } from './getApplicationStatus';
-import { NO_APPLICATION_VALUE } from '../addSourceWizard/utilities/stringConstants';
+import { NO_APPLICATION_VALUE } from '../components/addSourceWizard/stringConstants';
 
 export const parseUrl = (url) => {
   if (!url) {
