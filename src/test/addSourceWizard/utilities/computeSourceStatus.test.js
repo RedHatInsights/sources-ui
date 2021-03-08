@@ -114,4 +114,10 @@ describe('computeSourceStatus', () => {
 
     expect(computeSourceStatus(source)).toEqual('finished');
   });
+
+  it('handle falsy values', () => {
+    source = { endpoint: [undefined, false] };
+
+    expect(computeSourceStatus(source)).toEqual('finished');
+  });
 });

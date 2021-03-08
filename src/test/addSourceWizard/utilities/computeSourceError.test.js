@@ -49,4 +49,14 @@ describe('computeSourceError', () => {
 
     expect(computeSourceError(source, INTL)).toEqual('Unknown error');
   });
+
+  it('handle falsy values', () => {
+    source = {
+      applications: [undefined, {}],
+      authentications: [false],
+      endpoint: [{}],
+    };
+
+    expect(computeSourceError(source, INTL)).toEqual('Unknown error');
+  });
 });
