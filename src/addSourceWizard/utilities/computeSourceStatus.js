@@ -1,7 +1,10 @@
 export const computeSourceStatus = (source) => {
-  const appStatuses = source.applications?.map(({ availability_status }) => availability_status || 'timeout') || [];
-  const endpointStatuses = source.endpoint?.map(({ availability_status }) => availability_status || 'timeout') || [];
-  const authenticationsStatuses = source.authentiations?.map(({ availability_status }) => availability_status || 'timeout') || [];
+  const appStatuses =
+    source.applications?.filter(Boolean).map(({ availability_status }) => availability_status || 'timeout') || [];
+  const endpointStatuses =
+    source.endpoint?.filter(Boolean).map(({ availability_status }) => availability_status || 'timeout') || [];
+  const authenticationsStatuses =
+    source.authentications?.filter(Boolean).map(({ availability_status }) => availability_status || 'timeout') || [];
 
   const statuses = [...appStatuses, ...endpointStatuses, ...authenticationsStatuses];
 
