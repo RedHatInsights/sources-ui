@@ -9,9 +9,8 @@ import createSchema from './SourceAddSchema';
 import { doLoadSourceTypes, doLoadApplicationTypes } from '../api/index';
 import LoadingStep from './steps/LoadingStep';
 import { wizardDescription, wizardTitle } from '../utilities/stringConstants';
-
-import filterApps, { filterVendorAppTypes } from '../utilities/filterApps';
-import filterTypes, { filterVendorTypes } from '../utilities/filterTypes';
+import filterApps, { filterVendorAppTypes } from '../../utilities/filterApps';
+import filterTypes, { filterVendorTypes } from '../../utilities/filterTypes';
 
 const initialValues = {
   schema: {},

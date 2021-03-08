@@ -1,4 +1,4 @@
-import { CLOUD_VENDOR, getActiveVendor, REDHAT_VENDOR } from '../../utilities/constants';
+import { CLOUD_VENDOR, getActiveVendor, REDHAT_VENDOR } from './constants';
 
 const filterTypes = (type) => type.schema?.authentication && type.schema?.endpoint;
 

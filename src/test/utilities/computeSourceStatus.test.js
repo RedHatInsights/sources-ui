@@ -1,4 +1,4 @@
-import computeSourceStatus from '../../../addSourceWizard/utilities/computeSourceStatus';
+import computeSourceStatus from '../../utilities/computeSourceStatus';
 
 describe('computeSourceStatus', () => {
   let source;

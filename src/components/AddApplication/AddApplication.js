@@ -32,10 +32,10 @@ import ErroredStep from '../../addSourceWizard/addSourceWizard/steps/ErroredStep
 import AmazonFinishedStep from '../../addSourceWizard/addSourceWizard/steps/AmazonFinishedStep';
 import FinishedStep from '../../addSourceWizard/addSourceWizard/steps/FinishedStep';
 import TimeoutStep from '../../addSourceWizard/addSourceWizard/steps/TimeoutStep';
-import computeSourceStatus from '../../addSourceWizard/utilities/computeSourceStatus';
+import computeSourceStatus from '../../utilities/computeSourceStatus';
 import CloseModal from '../../addSourceWizard/addSourceWizard/CloseModal';
-import filterApps from '../../addSourceWizard/utilities/filterApps';
-import computeSourceError from '../../addSourceWizard/utilities/computeSourceError';
+import filterApps from '../../utilities/filterApps';
+import computeSourceError from '../../utilities/computeSourceError';
 
 export const onSubmit = (
   values,

@@ -47,8 +47,8 @@ import { CLOUD_VENDOR, REDHAT_VENDOR } from '../utilities/constants';
 import CloudEmptyState from '../components/CloudTiles/CloudEmptyState';
 import { AVAILABLE, UNAVAILABLE } from '../views/formatters';
 import RedHatEmptyState from '../components/RedHatTiles/RedHatEmptyState';
-import { filterVendorTypes } from '../addSourceWizard/utilities/filterTypes';
-import { filterVendorAppTypes } from '../addSourceWizard/utilities/filterApps';
+import { filterVendorTypes } from '../utilities/filterTypes';
+import { filterVendorAppTypes } from '../utilities/filterApps';
 
 const initialState = {
   filter: undefined,

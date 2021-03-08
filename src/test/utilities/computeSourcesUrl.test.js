@@ -1,4 +1,4 @@
-import computeSourcesUrl from '../../../addSourceWizard/utilities/computeSourcesUrl';
+import computeSourcesUrl from '../../utilities/computeSourcesUrl';
 
 describe('computeSourcesUrl', () => {
   let tmpInsights;

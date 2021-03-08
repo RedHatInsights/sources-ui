@@ -1,4 +1,4 @@
-import computeSourceError from '../../../addSourceWizard/utilities/computeSourceError';
+import computeSourceError from '../../utilities/computeSourceError';
 
 describe('computeSourceError', () => {
   let source;

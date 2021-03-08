@@ -7,7 +7,7 @@ import { Tile } from '@patternfly/react-core/dist/esm/components/Tile/Tile';
 
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import DisabledTile from '../TilesShared/DisabledTile';
-import { filterVendorTypes } from '../../addSourceWizard/utilities/filterTypes';
+import { filterVendorTypes } from '../../utilities/filterTypes';
 
 const TilesArray = ({ setSelectedType, mapper }) => {
   const sourceTypes = useSelector(({ sources }) => sources.sourceTypes, shallowEqual);

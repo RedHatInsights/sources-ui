@@ -1,6 +1,6 @@
-import filterApps, { filterVendorAppTypes } from '../../../addSourceWizard/utilities/filterApps';
-import { CLOUD_VENDOR, REDHAT_VENDOR, TOPOLOGY_INV_NAME } from '../../../utilities/constants';
-import applicationTypes from '../helpers/applicationTypes';
+import { CLOUD_VENDOR, REDHAT_VENDOR, TOPOLOGY_INV_NAME } from '../../utilities/constants';
+import filterApps, { filterVendorAppTypes } from '../../utilities/filterApps';
+import applicationTypes from '../addSourceWizard/helpers/applicationTypes';
 
 describe('filterApps', () => {
   it('filters topology invetory app from app types', () => {

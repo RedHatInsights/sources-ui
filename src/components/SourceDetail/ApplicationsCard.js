@@ -17,7 +17,7 @@ import isSuperKey from '../../utilities/isSuperKey';
 import { getSourcesApi, doCreateApplication } from '../../api/entities';
 import { loadEntities } from '../../redux/sources/actions';
 import { APP_NAMES } from '../SourceEditForm/parser/application';
-import filterApps from '../../addSourceWizard/utilities/filterApps';
+import filterApps from '../../utilities/filterApps';
 
 const initialState = {
   selectedApps: {},

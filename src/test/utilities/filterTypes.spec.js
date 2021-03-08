@@ -1,5 +1,5 @@
-import filterTypes, { filterVendorTypes } from '../../../addSourceWizard/utilities/filterTypes';
-import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../../utilities/constants';
+import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../utilities/constants';
+import filterTypes, { filterVendorTypes } from '../../utilities/filterTypes';
 
 describe('filterTypes', () => {
   it('filters types that does not have any endpoint or authentication', () => {

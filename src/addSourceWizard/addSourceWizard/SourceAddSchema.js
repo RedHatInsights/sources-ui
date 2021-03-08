@@ -6,7 +6,7 @@ import validatorTypes from '@data-driven-forms/react-form-renderer/dist/esm/vali
 import { Text, TextVariants } from '@patternfly/react-core/dist/esm/components/Text/Text';
 import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
 
-import debouncePromise from '../utilities/debouncePromise';
+import debouncePromise from '../../utilities/debouncePromise';
 import { findSource } from '../api';
 import { schemaBuilder } from './schemaBuilder';
 import { NO_APPLICATION_VALUE, wizardDescription, wizardTitle } from '../utilities/stringConstants';

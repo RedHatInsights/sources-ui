@@ -1,4 +1,4 @@
-import { CLOUD_VENDOR, getActiveVendor, REDHAT_VENDOR, TOPOLOGY_INV_NAME } from '../../utilities/constants';
+import { CLOUD_VENDOR, getActiveVendor, REDHAT_VENDOR, TOPOLOGY_INV_NAME } from './constants';
 
 const filterApps = (type) => type.name !== TOPOLOGY_INV_NAME;
 
