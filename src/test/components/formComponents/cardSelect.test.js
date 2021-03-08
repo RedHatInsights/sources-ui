@@ -6,7 +6,8 @@ import { AwsIcon, OpenshiftIcon } from '@patternfly/react-icons';
 
 import FormRenderer from '@data-driven-forms/react-form-renderer/dist/esm/form-renderer';
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
-import CardSelect from '../../../../addSourceWizard/sourceFormRenderer/components/CardSelect';
+
+import CardSelect from '../../../components/FormComponents/CardSelect';
 
 describe('CardSelect component', () => {
   let initialProps;

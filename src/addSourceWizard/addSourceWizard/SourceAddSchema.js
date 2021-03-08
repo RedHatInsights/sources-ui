@@ -12,11 +12,11 @@ import { schemaBuilder } from './schemaBuilder';
 import { NO_APPLICATION_VALUE, wizardDescription, wizardTitle } from '../utilities/stringConstants';
 import ValidatorReset from './ValidatorReset';
 import { handleError } from '../api/handleError';
-import validated from '../sourceFormRenderer/resolveProps/validated';
 import configurationStep from './superKey/configurationStep';
 import { compileAllApplicationComboOptions } from './compileAllApplicationComboOptions';
 import applicationsStep from './superKey/applicationsStep';
 import { getActiveVendor, REDHAT_VENDOR } from '../../utilities/constants';
+import validated from '../../utilities/resolveProps/validated';
 
 export const asyncValidator = async (value, sourceId = undefined, intl) => {
   if (!value) {

@@ -10,17 +10,19 @@ import { DescriptionListGroup } from '@patternfly/react-core/dist/esm/components
 import { DescriptionListTerm } from '@patternfly/react-core/dist/esm/components/DescriptionList/DescriptionListTerm';
 
 import get from 'lodash/get';
-import hardcodedSchemas from '../../addSourceWizard/hardcodedSchemas';
+
+import useFormApi from '@data-driven-forms/react-form-renderer/dist/esm/use-form-api';
+
+import ValuePopover from './ValuePopover';
+import hardcodedSchemas from '../../addSourceWizard/addSourceWizard/hardcodedSchemas';
+import { COST_MANAGEMENT_APP_NAME } from '../../utilities/constants';
+import { NO_APPLICATION_VALUE } from '../../addSourceWizard/utilities/stringConstants';
 import {
+  getAdditionalSteps,
   injectAuthFieldsInfo,
   injectEndpointFieldsInfo,
-  getAdditionalSteps,
   shouldSkipEndpoint,
-} from '../../addSourceWizard/schemaBuilder';
-import ValuePopover from './ValuePopover';
-import useFormApi from '@data-driven-forms/react-form-renderer/dist/esm/use-form-api';
-import { NO_APPLICATION_VALUE } from '../../utilities/stringConstants';
-import { COST_MANAGEMENT_APP_NAME } from '../../../utilities/constants';
+} from '../../addSourceWizard/addSourceWizard/schemaBuilder';
 
 const alertMapper = (appName, sourceType, intl) => {
   if (appName === COST_MANAGEMENT_APP_NAME && sourceType !== 'google') {

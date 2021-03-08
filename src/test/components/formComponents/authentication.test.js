@@ -4,9 +4,9 @@ import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-re
 import componentMapper from '@data-driven-forms/pf4-component-mapper/dist/esm/component-mapper';
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
 
-import mount from '../__mocks__/mount';
-import Authentication from '../../../addSourceWizard/sourceFormRenderer/components/Authentication';
-import SourcesFormRenderer from '../../../addSourceWizard/sourceFormRenderer';
+import mount from '../../addSourceWizard/__mocks__/mount';
+import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
+import Authentication from '../../../components/FormComponents/Authentication';
 
 describe('Authentication test', () => {
   let schema;
@@ -32,7 +32,7 @@ describe('Authentication test', () => {
     };
     onSubmit = jest.fn();
     initialProps = {
-      formFieldsMapper: {
+      componentMapper: {
         ...componentMapper,
         authentication: Authentication,
       },

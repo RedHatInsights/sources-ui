@@ -3,8 +3,8 @@ import React from 'react';
 import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
 import { Popover } from '@patternfly/react-core/dist/esm/components/Popover/Popover';
 
-import mount from '../../__mocks__/mount';
-import ValuePopover from '../../../../addSourceWizard/sourceFormRenderer/components/ValuePopover';
+import mount from '../../addSourceWizard/__mocks__/mount';
+import ValuePopover from '../../../components/FormComponents/ValuePopover';
 
 describe('ValuePopover', () => {
   it('renders correctly', () => {

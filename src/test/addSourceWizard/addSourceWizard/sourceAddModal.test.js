@@ -4,10 +4,10 @@ import { act } from 'react-dom/test-utils';
 import AddSourceWizard from '../../../addSourceWizard/addSourceWizard/SourceAddModal';
 import sourceTypes from '../helpers/sourceTypes';
 import applicationTypes from '../helpers/applicationTypes';
-import SourcesFormRenderer from '../../../addSourceWizard/sourceFormRenderer/index';
 
 import * as dependency from '../../../addSourceWizard/api/index';
 import mount from '../__mocks__/mount';
+import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
 
 describe('sourceAddModal', () => {
   let initialProps;

@@ -2,15 +2,18 @@ import React, { useRef, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
+
 import { Wizard } from '@patternfly/react-core/dist/esm/components/Wizard/Wizard';
 
-import SourcesFormRenderer from '../sourceFormRenderer/index';
 import createSchema from './SourceAddSchema';
 import { doLoadSourceTypes, doLoadApplicationTypes } from '../api/index';
 import LoadingStep from './steps/LoadingStep';
 import { wizardDescription, wizardTitle } from '../utilities/stringConstants';
 import filterApps, { filterVendorAppTypes } from '../../utilities/filterApps';
 import filterTypes, { filterVendorTypes } from '../../utilities/filterTypes';
+import Authentication from '../../components/FormComponents/Authentication';
+import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
 
 const initialValues = {
   schema: {},
@@ -40,6 +43,8 @@ const reducer = (
       };
   }
 };
+
+const FormTemplateWrapper = (props) => <FormTemplate {...props} showFormControls={false} />;
 
 const SourceAddModal = ({
   sourceTypes,
@@ -124,6 +129,11 @@ const SourceAddModal = ({
       schema={schema}
       onSubmit={(values, _formApi, wizardState) => onSubmit(values, stateSourceTypes, wizardState)}
       onCancel={onCancel}
+      FormTemplate={FormTemplateWrapper}
+      subscription={{ values: true }}
+      componentMapper={{
+        authentication: Authentication,
+      }}
     />
   );
 };

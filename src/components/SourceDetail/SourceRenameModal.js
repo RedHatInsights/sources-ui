@@ -12,8 +12,8 @@ import { useSource } from '../../hooks/useSource';
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
 import { replaceRouteId, routes } from '../../Routes';
 import { renameSource } from '../../redux/sources/actions';
-import validated from '../../addSourceWizard/sourceFormRenderer/resolveProps/validated';
 import { asyncValidatorDebounced } from '../../addSourceWizard/addSourceWizard/SourceAddSchema';
+import validated from '../../utilities/resolveProps/validated';
 
 const SourceRenameModal = () => {
   const source = useSource();

@@ -12,7 +12,7 @@ import { Route, MemoryRouter } from 'react-router-dom';
 import CloseModal from '../../../addSourceWizard/addSourceWizard/CloseModal';
 import LoadingStep from '../../../addSourceWizard/addSourceWizard/steps/LoadingStep';
 import ErroredStep from '../../../addSourceWizard/addSourceWizard/steps/ErroredStep';
-import SummaryStep from '../../../addSourceWizard/sourceFormRenderer/components/SourceWizardSummary';
+import SummaryStep from '../../../components/FormComponents/SourceWizardSummary';
 import FinishedStep from '../../../addSourceWizard/addSourceWizard/steps/FinishedStep';
 import TimeoutStep from '../../../addSourceWizard/addSourceWizard/steps/TimeoutStep';
 import AmazonFinishedStep from '../../../addSourceWizard/addSourceWizard/steps/AmazonFinishedStep';

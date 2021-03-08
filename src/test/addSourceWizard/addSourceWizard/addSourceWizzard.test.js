@@ -16,8 +16,8 @@ import CloseModal from '../../../addSourceWizard/addSourceWizard/CloseModal';
 import LoadingStep from '../../../addSourceWizard/addSourceWizard/steps/LoadingStep';
 
 import mount from '../__mocks__/mount';
-import SourcesFormRenderer from '../../../addSourceWizard/sourceFormRenderer';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../../utilities/constants';
+import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
 
 describe('AddSourceWizard', () => {
   let initialProps;

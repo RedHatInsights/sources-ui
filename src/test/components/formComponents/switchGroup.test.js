@@ -8,7 +8,7 @@ import { Switch } from '@patternfly/react-core/dist/esm/components/Switch/Switch
 import FormRenderer from '@data-driven-forms/react-form-renderer/dist/esm/form-renderer';
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
 
-import SwitchGroup from '../../../../addSourceWizard/sourceFormRenderer/components/SwitchGroup';
+import SwitchGroup from '../../../components/FormComponents/SwitchGroup';
 
 describe('Switch group', () => {
   let onSubmit;

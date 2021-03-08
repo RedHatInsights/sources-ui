@@ -4,8 +4,9 @@ import { Radio } from '@patternfly/react-core/dist/esm/components/Radio/Radio';
 import FormRenderer from '@data-driven-forms/react-form-renderer/dist/esm/form-renderer';
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
 
-import mount from '../../__mocks__/mount';
-import AuthSelect from '../../../../addSourceWizard/sourceFormRenderer/components/AuthSelect';
+import mount from '../../addSourceWizard/__mocks__/mount';
+
+import AuthSelect from '../../../components/FormComponents/AuthSelect';
 
 describe('AuthSelect component', () => {
   let initialProps;

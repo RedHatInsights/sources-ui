@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 
-import Description from '../../../../addSourceWizard/sourceFormRenderer/components/Description';
+import Description from '../../../components/FormComponents/Description';
 
 describe('Description component', () => {
   describe('should render correctly', () => {

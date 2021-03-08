@@ -6,8 +6,9 @@ import { componentTypes } from '@data-driven-forms/react-form-renderer';
 import FormRenderer from '@data-driven-forms/react-form-renderer/dist/esm/form-renderer';
 import componentMapper from '@data-driven-forms/pf4-component-mapper/dist/esm/component-mapper';
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
-import EnhancedRadio from '../../../../addSourceWizard/sourceFormRenderer/components/EnhancedRadio';
-import { NO_APPLICATION_VALUE } from '../../../../addSourceWizard/utilities/stringConstants';
+
+import EnhancedRadio from '../../../components/FormComponents/EnhancedRadio';
+import { NO_APPLICATION_VALUE } from '../../../addSourceWizard/utilities/stringConstants';
 
 describe('EnhancedRadio', () => {
   let onSubmit;
