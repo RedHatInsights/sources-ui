@@ -1,5 +1,5 @@
-import * as api from '../../../addSourceWizard/api/index';
-import { checkAppAvailability } from '../../../addSourceWizard/api/getApplicationStatus';
+import * as api from '../../api/entities';
+import { checkAppAvailability } from '../../api/getApplicationStatus';
 
 describe('patch cost management source', () => {
   let getApplication;

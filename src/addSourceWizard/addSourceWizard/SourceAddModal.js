@@ -7,7 +7,7 @@ import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-
 import { Wizard } from '@patternfly/react-core/dist/esm/components/Wizard/Wizard';
 
 import createSchema from './SourceAddSchema';
-import { doLoadSourceTypes, doLoadApplicationTypes } from '../api/index';
+import { doLoadSourceTypes, doLoadApplicationTypes } from '../../api/wizardHelpers';
 import LoadingStep from './steps/LoadingStep';
 import { wizardDescription, wizardTitle } from '../utilities/stringConstants';
 import filterApps, { filterVendorAppTypes } from '../../utilities/filterApps';

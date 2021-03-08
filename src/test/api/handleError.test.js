@@ -1,5 +1,5 @@
-import handleError from '../../../addSourceWizard/api/handleError';
-import * as api from '../../../addSourceWizard/api/index';
+import handleError from '../../api/handleError';
+import * as api from '../../api/entities';
 
 describe('handleError', () => {
   let spyDelete;

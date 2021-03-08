@@ -16,7 +16,7 @@ import TimeoutStep from '../../../addSourceWizard/addSourceWizard/steps/TimeoutS
 import mount from '../__mocks__/mount';
 import sourceTypes, { AMAZON_TYPE } from '../helpers/sourceTypes';
 
-import * as api from '../../../addSourceWizard/api';
+import * as api from '../../../api/entities';
 import { MemoryRouter } from 'react-router-dom';
 import AmazonFinishedStep from '../../../addSourceWizard/addSourceWizard/steps/AmazonFinishedStep';
 

@@ -10,8 +10,8 @@ import ErroredStep from '../../../addSourceWizard/addSourceWizard/steps/ErroredS
 
 import sourceTypes from '../helpers/sourceTypes';
 import applicationTypes from '../helpers/applicationTypes';
-import * as dependency from '../../../addSourceWizard/api/index';
-import * as createSource from '../../../addSourceWizard/api/createSource';
+import * as dependency from '../../../api/wizardHelpers';
+import * as createSource from '../../../api/createSource';
 import CloseModal from '../../../addSourceWizard/addSourceWizard/CloseModal';
 import LoadingStep from '../../../addSourceWizard/addSourceWizard/steps/LoadingStep';
 

@@ -14,7 +14,7 @@ import TimeoutStep from './steps/TimeoutStep';
 import AmazonFinishedStep from './steps/AmazonFinishedStep';
 
 import { wizardDescription, wizardTitle } from '../utilities/stringConstants';
-import { getSourcesApi } from '../api';
+import { getSourcesApi } from '../../api/entities';
 import computeSourceStatus from '../../utilities/computeSourceStatus';
 import EditLink from './EditLink';
 import computeSourceError from '../../utilities/computeSourceError';

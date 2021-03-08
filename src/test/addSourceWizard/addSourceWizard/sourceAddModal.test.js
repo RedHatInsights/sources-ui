@@ -5,7 +5,7 @@ import AddSourceWizard from '../../../addSourceWizard/addSourceWizard/SourceAddM
 import sourceTypes from '../helpers/sourceTypes';
 import applicationTypes from '../helpers/applicationTypes';
 
-import * as dependency from '../../../addSourceWizard/api/index';
+import * as dependency from '../../../api/wizardHelpers';
 import mount from '../__mocks__/mount';
 import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
 

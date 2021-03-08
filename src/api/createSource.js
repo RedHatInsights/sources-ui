@@ -1,8 +1,8 @@
 import { handleError } from './handleError';
 
-import { getSourcesApi } from './index';
+import { getSourcesApi } from './entities';
 import { checkAppAvailability } from './getApplicationStatus';
-import { NO_APPLICATION_VALUE } from '../utilities/stringConstants';
+import { NO_APPLICATION_VALUE } from '../addSourceWizard/utilities/stringConstants';
 
 export const parseUrl = (url) => {
   if (!url) {

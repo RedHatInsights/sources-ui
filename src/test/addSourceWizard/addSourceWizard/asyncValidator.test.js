@@ -3,7 +3,7 @@ import {
   asyncValidatorDebouncedWrapper,
   setFirstValidated,
 } from '../../../addSourceWizard/addSourceWizard/SourceAddSchema';
-import * as actions from '../../../addSourceWizard/api/index';
+import * as actions from '../../../api/wizardHelpers';
 
 describe('asyncNameValidator', () => {
   const returnedSourceResponse = {

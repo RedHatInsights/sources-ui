@@ -1,4 +1,4 @@
-import { getSourcesApi } from '.';
+import { getSourcesApi } from './entities';
 import { delay } from './delay';
 
 export const checkAppAvailability = (id, timeout = 10000, interval = 1000, entity = 'getApplication', updatedTime) =>

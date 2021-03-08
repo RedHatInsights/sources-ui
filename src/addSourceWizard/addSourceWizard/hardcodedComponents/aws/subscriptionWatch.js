@@ -6,8 +6,7 @@ import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/Tex
 import { TextList, TextListVariants } from '@patternfly/react-core/dist/esm/components/Text/TextList';
 import { TextListItem } from '@patternfly/react-core/dist/esm/components/Text/TextListItem';
 import { ClipboardCopy, ClipboardCopyVariant } from '@patternfly/react-core/dist/esm/components/ClipboardCopy/ClipboardCopy';
-
-import { getSubWatchConfig } from '../../../api/subscriptionWatch';
+import { getSubWatchConfig } from '../../../../api/subscriptionWatch';
 
 const b = (chunks) => <b key={`b-${chunks.length}-${Math.floor(Math.random() * 1000)}`}>{chunks}</b>;
 

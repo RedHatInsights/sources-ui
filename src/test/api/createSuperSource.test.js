@@ -1,10 +1,10 @@
-import createSuperSource from '../../../addSourceWizard/api/createSuperSource';
-import { COST_MANAGEMENT_APP, SUB_WATCH_APP } from '../helpers/applicationTypes';
+import createSuperSource from '../../api/createSuperSource';
+import { COST_MANAGEMENT_APP, SUB_WATCH_APP } from '../addSourceWizard/helpers/applicationTypes';
 
-import * as api from '../../../addSourceWizard/api/index';
-import * as errorHandling from '../../../addSourceWizard/api/handleError';
-import * as checkApp from '../../../addSourceWizard/api/getApplicationStatus';
-import * as checkSourceStatus from '../../../api/checkSourceStatus';
+import * as api from '../../api/entities';
+import * as errorHandling from '../../api/handleError';
+import * as checkApp from '../../api/getApplicationStatus';
+import * as checkSourceStatus from '../../api/checkSourceStatus';
 
 describe('createSuperSource', () => {
   let CREATE_SOURCE_DATA_OUT;

@@ -1,5 +1,5 @@
-import { getSourcesApi } from '.';
-import checkSourceStatus from '../../api/checkSourceStatus';
+import { getSourcesApi } from './entities';
+import checkSourceStatus from './checkSourceStatus';
 import { checkAppAvailability } from './getApplicationStatus';
 import handleError from './handleError';
 

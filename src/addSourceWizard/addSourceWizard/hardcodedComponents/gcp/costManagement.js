@@ -12,7 +12,7 @@ import { HintBody } from '@patternfly/react-core/dist/esm/components/Hint/HintBo
 
 import useFormApi from '@data-driven-forms/react-form-renderer/dist/esm/use-form-api';
 
-import { getSourcesApi } from '../../../api';
+import { getSourcesApi } from '../../../../api/entities';
 
 const b = (chunks) => <b key={`b-${chunks.length}-${Math.floor(Math.random() * 1000)}`}>{chunks}</b>;
 

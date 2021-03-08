@@ -7,16 +7,16 @@ import { Text, TextVariants } from '@patternfly/react-core/dist/esm/components/T
 import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
 
 import debouncePromise from '../../utilities/debouncePromise';
-import { findSource } from '../api';
+import { findSource } from '../../api/wizardHelpers';
 import { schemaBuilder } from './schemaBuilder';
 import { NO_APPLICATION_VALUE, wizardDescription, wizardTitle } from '../utilities/stringConstants';
 import ValidatorReset from './ValidatorReset';
-import { handleError } from '../api/handleError';
 import configurationStep from './superKey/configurationStep';
 import { compileAllApplicationComboOptions } from './compileAllApplicationComboOptions';
 import applicationsStep from './superKey/applicationsStep';
 import { getActiveVendor, REDHAT_VENDOR } from '../../utilities/constants';
 import validated from '../../utilities/resolveProps/validated';
+import handleError from '../../api/handleError';
 
 export const asyncValidator = async (value, sourceId = undefined, intl) => {
   if (!value) {

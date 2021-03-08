@@ -1,4 +1,4 @@
-import { getSourcesApi } from './index';
+import { getSourcesApi } from './entities';
 import get from 'lodash/get';
 
 export const handleError = (error, sourceId = undefined) => {

@@ -9,7 +9,7 @@ import { TextListItem } from '@patternfly/react-core/dist/esm/components/Text/Te
 import { ClipboardCopy } from '@patternfly/react-core/dist/esm/components/ClipboardCopy/ClipboardCopy';
 
 import * as SubsAwsArn from '../../../../addSourceWizard/addSourceWizard/hardcodedComponents/aws/subscriptionWatch';
-import * as api from '../../../../addSourceWizard/api/subscriptionWatch';
+import * as api from '../../../../api/subscriptionWatch';
 
 describe('AWS-ARN hardcoded schemas', () => {
   it('ARN DESCRIPTION is rendered correctly', () => {

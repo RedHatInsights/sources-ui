@@ -2,9 +2,9 @@ import { CHECK_ENDPOINT_COMMAND, getEditedApplications, selectOnlyEditedValues }
 import { loadEntities } from '../../redux/sources/actions';
 import { checkSourceStatus } from '../../api/checkSourceStatus';
 import { doUpdateSource } from '../../api/doUpdateSource';
+import { checkAppAvailability } from '../../api/getApplicationStatus';
 
 import { AVAILABLE, UNAVAILABLE } from '../../views/formatters';
-import { checkAppAvailability } from '../../addSourceWizard/api/getApplicationStatus';
 
 export const onSubmit = async (values, editing, dispatch, source, intl, setState) => {
   setState({ type: 'submit', values, editing });

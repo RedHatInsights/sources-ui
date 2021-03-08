@@ -1,11 +1,11 @@
-import { doCreateSource, parseUrl, urlOrHost } from '../../../addSourceWizard/api/createSource';
-import sourceTypes, { OPENSHIFT_TYPE } from '../helpers/sourceTypes';
-import { COST_MANAGEMENT_APP } from '../helpers/applicationTypes';
+import { doCreateSource, parseUrl, urlOrHost } from '../../api/createSource';
+import sourceTypes, { OPENSHIFT_TYPE } from '../addSourceWizard/helpers/sourceTypes';
+import { COST_MANAGEMENT_APP } from '../addSourceWizard/helpers/applicationTypes';
 
-import * as api from '../../../addSourceWizard/api/index';
-import * as errorHandling from '../../../addSourceWizard/api/handleError';
-import * as checkApp from '../../../addSourceWizard/api/getApplicationStatus';
-import { NO_APPLICATION_VALUE } from '../../../addSourceWizard/utilities/stringConstants';
+import * as api from '../../api/entities';
+import * as errorHandling from '../../api/handleError';
+import * as checkApp from '../../api/getApplicationStatus';
+import { NO_APPLICATION_VALUE } from '../../addSourceWizard/utilities/stringConstants';
 
 describe('doCreateSource', () => {
   const HOST = 'mycluster.net';
