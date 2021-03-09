@@ -9,7 +9,7 @@ import Form from '../../../components/addSourceWizard/SourceAddModal';
 import mount from '../__mocks__/mount';
 
 describe('AddSourceButton', () => {
-  it('opens wizard', async () => {
+  it('opens wizard and close wizard', async () => {
     let wrapper;
 
     await act(async () => {
@@ -24,5 +24,13 @@ describe('AddSourceButton', () => {
     wrapper.update();
 
     expect(wrapper.find(Form).length).toBe(1);
+
+    await act(async () => {
+      wrapper.find('button.pf-c-wizard__close').simulate('click');
+    });
+
+    wrapper.update();
+
+    expect(wrapper.find(Form).length).toBe(0);
   });
 });

@@ -358,6 +358,155 @@ describe('AddSourceWizard', () => {
     jest.useRealTimers();
   });
 
+  it('afterError closes wizard with no values', async () => {
+    const closeCallback = jest.fn();
+    jest.useFakeTimers();
+
+    createSource.doCreateSource = jest.fn(() => Promise.resolve(SOURCE_DATA_OUT));
+    dependency.findSource = jest.fn(() => Promise.resolve({ data: { sources: [] } }));
+
+    await act(async () => {
+      wrapper = mount(<AddSourceWizard {...initialProps} onClose={closeCallback} />);
+    });
+    wrapper.update();
+
+    await act(async () => {
+      wrapper.find('input').instance().value = 'somename';
+      wrapper.find('input').simulate('change');
+    });
+    wrapper.update();
+
+    await act(async () => {
+      jest.advanceTimersByTime(1000);
+    });
+    wrapper.update();
+
+    await act(async () => {
+      wrapper.find('form').simulate('submit');
+    });
+    wrapper.update();
+
+    expect(closeCallback).not.toHaveBeenCalled();
+
+    await act(async () => {
+      wrapper.find(FinalWizard).props().afterError();
+    });
+    wrapper.update();
+
+    expect(closeCallback).toHaveBeenCalledWith({});
+  });
+
+  it('afterSubmit closes wizard with values', async () => {
+    const closeCallback = jest.fn();
+    jest.useFakeTimers();
+
+    createSource.doCreateSource = jest.fn(() => Promise.resolve(SOURCE_DATA_OUT));
+    dependency.findSource = jest.fn(() => Promise.resolve({ data: { sources: [] } }));
+
+    await act(async () => {
+      wrapper = mount(<AddSourceWizard {...initialProps} onClose={closeCallback} />);
+    });
+    wrapper.update();
+
+    await act(async () => {
+      wrapper.find('input').instance().value = 'somename';
+      wrapper.find('input').simulate('change');
+    });
+    wrapper.update();
+
+    await act(async () => {
+      jest.advanceTimersByTime(1000);
+    });
+    wrapper.update();
+
+    await act(async () => {
+      wrapper.find('form').simulate('submit');
+    });
+    wrapper.update();
+
+    expect(closeCallback).not.toHaveBeenCalled();
+
+    await act(async () => {
+      wrapper.find(FinalWizard).props().afterSubmit();
+    });
+    wrapper.update();
+
+    expect(closeCallback).toHaveBeenCalledWith(undefined, SOURCE_DATA_OUT);
+  });
+
+  it('reset - resets initialValues', async () => {
+    jest.useFakeTimers();
+
+    createSource.doCreateSource = jest.fn(() => Promise.resolve(SOURCE_DATA_OUT));
+    dependency.findSource = jest.fn(() => Promise.resolve({ data: { sources: [] } }));
+
+    await act(async () => {
+      wrapper = mount(<AddSourceWizard {...initialProps} />);
+    });
+    wrapper.update();
+
+    await act(async () => {
+      wrapper.find('input').instance().value = 'somename';
+      wrapper.find('input').simulate('change');
+    });
+    wrapper.update();
+
+    await act(async () => {
+      jest.advanceTimersByTime(1000);
+    });
+    wrapper.update();
+
+    await act(async () => {
+      wrapper.find('form').simulate('submit');
+    });
+    wrapper.update();
+
+    await act(async () => {
+      wrapper.find(FinalWizard).props().reset();
+    });
+    wrapper.update();
+
+    expect(wrapper.find('input').instance().value).toEqual('');
+  });
+
+  it('tryAgain retries the request', async () => {
+    jest.useFakeTimers();
+
+    createSource.doCreateSource = jest.fn(() => Promise.resolve(SOURCE_DATA_OUT));
+    dependency.findSource = jest.fn(() => Promise.resolve({ data: { sources: [] } }));
+
+    await act(async () => {
+      wrapper = mount(<AddSourceWizard {...initialProps} />);
+    });
+    wrapper.update();
+
+    await act(async () => {
+      wrapper.find('input').instance().value = 'somename';
+      wrapper.find('input').simulate('change');
+    });
+    wrapper.update();
+
+    await act(async () => {
+      jest.advanceTimersByTime(1000);
+    });
+    wrapper.update();
+
+    await act(async () => {
+      wrapper.find('form').simulate('submit');
+    });
+    wrapper.update();
+
+    createSource.doCreateSource.mockClear();
+    expect(createSource.doCreateSource).not.toHaveBeenCalled();
+
+    await act(async () => {
+      wrapper.find(FinalWizard).props().tryAgain();
+    });
+    wrapper.update();
+
+    expect(createSource.doCreateSource).toHaveBeenCalledWith({ source: { name: 'somename' } }, sourceTypes, expect.any(Array));
+  });
+
   describe('different variants', () => {
     let tmpLocation;
 

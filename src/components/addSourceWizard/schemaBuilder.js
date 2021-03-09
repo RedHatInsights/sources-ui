@@ -102,6 +102,7 @@ export const createGenericAuthTypeSelection = (type, endpointFields, disableAuth
   const stepMapper = {};
 
   if (hasMultipleAuthTypes) {
+    fields = [];
     auths.forEach((auth) => {
       const additionalIncludesStepKeys = getAdditionalStepKeys(type.name, auth.type);
 
@@ -109,10 +110,6 @@ export const createGenericAuthTypeSelection = (type, endpointFields, disableAuth
 
       const onlyHiddenFields = getOnlyHiddenFields(type.name, auth.type);
       const authFields = onlyHiddenFields ? auth.fields.filter(({ hideField }) => hideField) : auth.fields;
-
-      if (shouldUseAppAuth(type.name, auth.type)) {
-        fields = [];
-      }
 
       fields.push({
         component: 'auth-select',
@@ -131,6 +128,7 @@ export const createGenericAuthTypeSelection = (type, endpointFields, disableAuth
         name: `${auth.type}-subform`,
         className: 'pf-u-pl-md',
         fields: [
+          ...(!shouldUseAppAuth(type.name, auth.type) ? endpointFields : []),
           ...getAdditionalAuthFields(type.name, auth.type),
           ...injectAuthFieldsInfo(getNoStepsFields(authFields, additionalIncludesStepKeys), type.name, auth.type),
         ],
@@ -212,14 +210,11 @@ export const createSpecificAuthTypeSelection = (type, appType, endpointFields, d
   const stepMapper = {};
 
   if (hasMultipleAuthTypes) {
+    fields = [];
     auths
       .filter(({ type: authType }) => supportedAuthTypes.includes(authType))
       .forEach((auth) => {
         const appName = hardcodedSchema(type.name, auth.type, appType.name) ? appType.name : 'generic';
-
-        if (shouldUseAppAuth(type.name, auth.type, appName)) {
-          fields = [];
-        }
 
         const skipEndpoint = shouldSkipEndpoint(type.name, auth.type, appName);
         const customSteps = hasCustomSteps(type.name, auth.type, appName);
@@ -257,6 +252,7 @@ export const createSpecificAuthTypeSelection = (type, appType, endpointFields, d
           name: `${auth.type}-subform`,
           className: 'pf-u-pl-md',
           fields: [
+            ...(!shouldUseAppAuth(type.name, auth.type, appName) ? endpointFields : []),
             ...getAdditionalAuthFields(type.name, auth.type, appName),
             ...injectAuthFieldsInfo(getNoStepsFields(authFields, additionalIncludesStepKeys), type.name, auth.type, appName),
           ],

@@ -1,7 +1,7 @@
 import { getSourcesApi } from './entities';
 import { delay } from './delay';
 
-export const checkAppAvailability = (id, timeout = 10000, interval = 1000, entity = 'getApplication', updatedTime) =>
+export const checkAppAvailability = (id, timeout = 10000, interval = 1000, entity = 'showApplication', updatedTime) =>
   new Promise((res, rej) => {
     const start = Date.now();
 

@@ -7,7 +7,7 @@ export const doLoadSourceTypes = () =>
 
 export const doLoadApplicationTypes = () =>
   getSourcesApi()
-    .listApplicationTypes()
+    .doLoadAppTypes()
     .then((data) => ({ applicationTypes: data.data }));
 
 export const findSource = (name) =>

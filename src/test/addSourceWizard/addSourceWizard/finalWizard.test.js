@@ -117,10 +117,10 @@ describe('Final wizard', () => {
 
   it('removes source on errored step correctly - when unavailable', async () => {
     const ERROR_MSG = 'Some error message';
-    const removeSource = jest.fn().mockImplementation(() => Promise.resolve());
+    const deleteSource = jest.fn().mockImplementation(() => Promise.resolve());
 
     api.getSourcesApi = () => ({
-      removeSource,
+      deleteSource,
     });
 
     const wrapper = mount(
@@ -147,18 +147,18 @@ describe('Final wizard', () => {
     });
     wrapper.update();
 
-    expect(removeSource).toHaveBeenCalledWith(id);
+    expect(deleteSource).toHaveBeenCalledWith(id);
     expect(wrapper.find(FinishedStep)).toHaveLength(1);
     expect(wrapper.find(EmptyState).find(Title).text()).toEqual('Removing successful');
   });
 
   it('removes source on errored step correctly with afterSucces - when unavailable', async () => {
     const ERROR_MSG = 'Some error message';
-    const removeSource = jest.fn().mockImplementation(() => Promise.resolve());
+    const deleteSource = jest.fn().mockImplementation(() => Promise.resolve());
     const afterSuccess = jest.fn();
 
     api.getSourcesApi = () => ({
-      removeSource,
+      deleteSource,
     });
 
     const wrapper = mount(
@@ -187,15 +187,15 @@ describe('Final wizard', () => {
     wrapper.update();
 
     expect(afterSuccess).toHaveBeenCalled();
-    expect(removeSource).toHaveBeenCalledWith(id);
+    expect(deleteSource).toHaveBeenCalledWith(id);
   });
 
   it('removes source on errored step correctly, restart when removing failed', async () => {
     const ERROR_MSG = 'Some error message';
-    const removeSource = jest.fn().mockImplementation(() => Promise.reject());
+    const deleteSource = jest.fn().mockImplementation(() => Promise.reject());
 
     api.getSourcesApi = () => ({
-      removeSource,
+      deleteSource,
     });
 
     const wrapper = mount(

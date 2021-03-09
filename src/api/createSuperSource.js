@@ -21,11 +21,11 @@ const createSuperSource = async (formData, _sourceTypes, _timetoutedApps) => {
     const checkStatusPromises = [];
 
     checkStatusPromises.push(
-      checkAppAvailability(sourceData.authentications[0].id, undefined, undefined, 'getAuthentication', startDate)
+      checkAppAvailability(sourceData.authentications[0].id, undefined, undefined, 'showAuthentication', startDate)
     );
 
     sourceData.applications.forEach(({ id }) =>
-      checkStatusPromises.push(checkAppAvailability(id, undefined, undefined, 'getApplication', startDate))
+      checkStatusPromises.push(checkAppAvailability(id, undefined, undefined, 'showApplication', startDate))
     );
 
     const [authenticationDataOut, ...applications] = await Promise.all(checkStatusPromises);

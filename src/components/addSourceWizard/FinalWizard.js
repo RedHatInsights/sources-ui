@@ -42,7 +42,7 @@ const FinalWizard = ({
     setIsDeleting(true);
 
     return getSourcesApi()
-      .removeSource(createdSource.id)
+      .deleteSource(createdSource.id)
       .then(() => {
         afterSuccess && afterSuccess();
         setDeleted(true);

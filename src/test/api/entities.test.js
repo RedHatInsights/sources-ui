@@ -166,6 +166,15 @@ describe('entities spec', () => {
         expect(result).toEqual(OK_RESPONSE);
       });
 
+      it('getEndpoint', async () => {
+        const method = 'Get';
+        mock[`on${method}`](`/api/sources/v3.1/endpoints/${SOURCE_ID}`).reply(200, OK_RESPONSE);
+
+        const result = await api.getSourcesApi().getEndpoint(SOURCE_ID);
+
+        expect(result).toEqual(OK_RESPONSE);
+      });
+
       it('updateApplication', async () => {
         const method = 'Patch';
         mock[`on${method}`](`/api/sources/v3.1/applications/${SOURCE_ID}`).reply(200, OK_RESPONSE);
@@ -190,6 +199,35 @@ describe('entities spec', () => {
         mock[`on${method}`](`/api/sources/v3.1/sources/${SOURCE_ID}/authentications`).reply(200, OK_RESPONSE);
 
         const result = await api.getSourcesApi().listSourceAuthentications(SOURCE_ID);
+
+        expect(result).toEqual(OK_RESPONSE);
+      });
+
+      it('createSource', async () => {
+        const method = 'Post';
+        mock[`on${method}`](`/api/sources/v3.1/sources`).reply(200, OK_RESPONSE);
+
+        const result = await api.getSourcesApi().createSource(DATA);
+
+        expect(result).toEqual(OK_RESPONSE);
+        expect(mock.history[method.toLowerCase()][0].data).toEqual(JSON.stringify(DATA));
+      });
+
+      it('bulkCreate', async () => {
+        const method = 'Post';
+        mock[`on${method}`](`/api/sources/v3.1/bulk_create`).reply(200, OK_RESPONSE);
+
+        const result = await api.getSourcesApi().bulkCreate(DATA);
+
+        expect(result).toEqual(OK_RESPONSE);
+        expect(mock.history[method.toLowerCase()][0].data).toEqual(JSON.stringify(DATA));
+      });
+
+      it('getGoogleAccount', async () => {
+        const method = 'Get';
+        mock[`on${method}`](`/api/sources/v3.1/app_meta_data?filter[name]=gcp_service_account`).reply(200, OK_RESPONSE);
+
+        const result = await api.getSourcesApi().getGoogleAccount();
 
         expect(result).toEqual(OK_RESPONSE);
       });

@@ -220,6 +220,30 @@ describe('generate auth selection pages', () => {
           expectedSchema
         );
       });
+
+      it('do not contain endpoint fields when useApplicationAuth set', () => {
+        const MULTIPLE_SELECTION_TYPE_USE_AUTH_APP = {
+          ...MULTIPLE_SELECTION_TYPE,
+          name: 'useAppAuth',
+        };
+
+        expectedSchema = expect.objectContaining({
+          fields: expect.arrayContaining([firstAuth, secondAuth]),
+          title: expect.any(Object),
+          name: MULTIPLE_SELECTION_TYPE_USE_AUTH_APP.name,
+          nextStep: {
+            when: expect.any(String),
+            stepMapper: {
+              [firstTypeName]: 'summary',
+              [secondTypeName]: 'summary',
+            },
+          },
+        });
+
+        expect(createGenericAuthTypeSelection(MULTIPLE_SELECTION_TYPE_USE_AUTH_APP, APPEND_ENDPOINT_FIELDS, NOT_EDITING)).toEqual(
+          expectedSchema
+        );
+      });
     });
   });
 });
