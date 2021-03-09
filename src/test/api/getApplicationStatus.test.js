@@ -2,46 +2,46 @@ import * as api from '../../api/entities';
 import { checkAppAvailability } from '../../api/getApplicationStatus';
 
 describe('patch cost management source', () => {
-  let getApplication;
+  let showApplication;
 
   const TIMEOUT = 100;
   const INTERVAL = 11;
   const ID = '10';
 
   it('resolve available', async () => {
-    getApplication = jest.fn(() => Promise.resolve({ availability_status: 'available' }));
+    showApplication = jest.fn(() => Promise.resolve({ availability_status: 'available' }));
 
     api.getSourcesApi = () => ({
-      getApplication,
+      showApplication,
     });
 
     await checkAppAvailability(ID, TIMEOUT, INTERVAL);
 
-    expect(getApplication).toHaveBeenCalledWith(ID);
+    expect(showApplication).toHaveBeenCalledWith(ID);
   });
 
   it('resolve unavailable', async () => {
-    getApplication = jest.fn(() => Promise.resolve({ availability_status: 'unavailable' }));
+    showApplication = jest.fn(() => Promise.resolve({ availability_status: 'unavailable' }));
 
     api.getSourcesApi = () => ({
-      getApplication,
+      showApplication,
     });
 
     await checkAppAvailability(ID, TIMEOUT, INTERVAL);
 
-    expect(getApplication).toHaveBeenCalledWith(ID);
+    expect(showApplication).toHaveBeenCalledWith(ID);
   });
 
   it('resolve timeout', async () => {
-    getApplication = jest.fn(() => Promise.resolve({ availability_status: null }));
+    showApplication = jest.fn(() => Promise.resolve({ availability_status: null }));
 
     api.getSourcesApi = () => ({
-      getApplication,
+      showApplication,
     });
 
     await checkAppAvailability(ID, TIMEOUT, INTERVAL);
 
-    expect(getApplication).toHaveBeenCalledWith(ID);
+    expect(showApplication).toHaveBeenCalledWith(ID);
   });
 
   it('resolve error', async () => {
@@ -49,10 +49,10 @@ describe('patch cost management source', () => {
 
     const ERROR = { some: 'error' };
 
-    getApplication = jest.fn(() => Promise.reject(ERROR));
+    showApplication = jest.fn(() => Promise.reject(ERROR));
 
     api.getSourcesApi = () => ({
-      getApplication,
+      showApplication,
     });
 
     try {
@@ -63,26 +63,26 @@ describe('patch cost management source', () => {
   });
 
   it('two checks', async () => {
-    getApplication = jest
+    showApplication = jest
       .fn()
       .mockImplementationOnce(() => Promise.resolve({ availability_status: null }))
       .mockImplementationOnce(() => Promise.resolve({ availability_status: null }))
       .mockImplementationOnce(() => Promise.resolve({ availability_status: 'available' }));
 
     api.getSourcesApi = () => ({
-      getApplication,
+      showApplication,
     });
 
     await checkAppAvailability(ID, TIMEOUT, INTERVAL);
 
-    expect(getApplication.mock.calls.length).toBe(3);
+    expect(showApplication.mock.calls.length).toBe(3);
   });
 
   it('with updated time', async () => {
     const UPDATED_TIME = new Date();
-    const ENTITY = 'getApplication';
+    const ENTITY = 'showApplication';
 
-    getApplication = jest
+    showApplication = jest
       .fn()
       .mockImplementationOnce(() => Promise.resolve({ availability_status: 'available', updated_at: UPDATED_TIME }))
       .mockImplementationOnce(() => Promise.resolve({ availability_status: 'available', updated_at: UPDATED_TIME }))
@@ -91,19 +91,19 @@ describe('patch cost management source', () => {
       );
 
     api.getSourcesApi = () => ({
-      getApplication,
+      showApplication,
     });
 
     await checkAppAvailability(ID, TIMEOUT, INTERVAL, ENTITY, UPDATED_TIME);
 
-    expect(getApplication.mock.calls.length).toBe(3);
+    expect(showApplication.mock.calls.length).toBe(3);
   });
 
   it('with updated time - with last_checked_at', async () => {
     const UPDATED_TIME = new Date();
-    const ENTITY = 'getApplication';
+    const ENTITY = 'showApplication';
 
-    getApplication = jest
+    showApplication = jest
       .fn()
       .mockImplementationOnce(() => Promise.resolve({ availability_status: 'available', updated_at: UPDATED_TIME }))
       .mockImplementationOnce(() => Promise.resolve({ availability_status: 'available', updated_at: UPDATED_TIME }))
@@ -116,24 +116,24 @@ describe('patch cost management source', () => {
       );
 
     api.getSourcesApi = () => ({
-      getApplication,
+      showApplication,
     });
 
     await checkAppAvailability(ID, TIMEOUT, INTERVAL, ENTITY, UPDATED_TIME);
 
-    expect(getApplication.mock.calls.length).toBe(3);
+    expect(showApplication.mock.calls.length).toBe(3);
   });
 
   it('timeouts with updated time', async () => {
     const UPDATED_TIME = new Date();
-    const ENTITY = 'getApplication';
+    const ENTITY = 'showApplication';
 
-    getApplication = jest
+    showApplication = jest
       .fn()
       .mockImplementation(() => Promise.resolve({ availability_status: 'available', updated_at: UPDATED_TIME }));
 
     api.getSourcesApi = () => ({
-      getApplication,
+      showApplication,
     });
 
     const result = await checkAppAvailability(ID, TIMEOUT, INTERVAL, ENTITY, UPDATED_TIME);

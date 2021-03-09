@@ -88,9 +88,11 @@ const AddSourceWizard = ({
       });
   };
 
+  const reset = () => dispatch({ type: 'reset', initialValues });
+
   const afterSubmit = () => {
     onClose(undefined, createdSource);
-    dispatch({ type: 'reset', initialValues });
+    reset();
   };
 
   const onCancelBeforeExit = (values) => (isEmpty(values) ? onClose({}) : dispatch({ type: 'showCancelModal', values }));
@@ -130,7 +132,7 @@ const AddSourceWizard = ({
       hideSourcesButton={hideSourcesButton}
       returnButtonTitle={returnButtonTitle}
       errorMessage={error}
-      reset={() => dispatch({ type: 'reset', initialValues })}
+      reset={reset}
       createdSource={createdSource}
       tryAgain={() => onSubmit(values, state.sourceTypes)}
       afterSuccess={afterSuccess}

@@ -1,6 +1,8 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
+import { Button } from '@patternfly/react-core/dist/esm/components/Button';
+
 import AddSourceWizard from '../../../components/addSourceWizard/SourceAddModal';
 import sourceTypes from '../helpers/sourceTypes';
 import applicationTypes from '../helpers/applicationTypes';
@@ -8,6 +10,7 @@ import applicationTypes from '../helpers/applicationTypes';
 import * as dependency from '../../../api/wizardHelpers';
 import mount from '../__mocks__/mount';
 import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
+import LoadingStep from '../../../components/steps/LoadingStep';
 
 describe('sourceAddModal', () => {
   let initialProps;
@@ -80,5 +83,41 @@ describe('sourceAddModal', () => {
     expect(dependency.doLoadSourceTypes).toHaveBeenCalled();
     expect(dependency.doLoadApplicationTypes).toHaveBeenCalled();
     expect(wrapper.find(SourcesFormRenderer)).toHaveLength(1);
+  });
+
+  it('clicks on onCancel when loading', async () => {
+    jest.useFakeTimers();
+
+    const onCancel = jest.fn();
+
+    dependency.doLoadSourceTypes = jest
+      .fn()
+      .mockImplementation(() => new Promise((resolve) => setTimeout(() => resolve({ sourceTypes }), 100)));
+    dependency.doLoadApplicationTypes = jest
+      .fn()
+      .mockImplementation(() => new Promise((resolve) => resolve({ applicationTypes })));
+
+    await act(async () => {
+      wrapper = mount(<AddSourceWizard {...initialProps} onCancel={onCancel} />);
+    });
+    wrapper.update();
+
+    expect(wrapper.find(LoadingStep)).toHaveLength(1);
+
+    expect(onCancel).not.toHaveBeenCalled();
+
+    await act(async () => {
+      wrapper.find(Button).at(1).simulate('click');
+    });
+    wrapper.update();
+
+    expect(onCancel).toHaveBeenCalledWith();
+
+    await act(async () => {
+      jest.runAllTimers();
+    });
+    wrapper.update();
+
+    expect(wrapper.find(LoadingStep)).toHaveLength(0);
   });
 });
