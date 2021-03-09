@@ -19,7 +19,7 @@ import * as typesApi from '../../api/source_types';
 
 import { routes } from '../../Routes';
 import UserReducer from '../../redux/user/reducer';
-import * as wizard from '../../addSourceWizard/addSourceWizard';
+import * as wizard from '../../components/addSourceWizard';
 
 describe('SourcesPage - addSource route', () => {
   const middlewares = [thunk, notificationsMiddleware()];

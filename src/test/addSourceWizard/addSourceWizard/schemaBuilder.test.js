@@ -14,8 +14,8 @@ import {
   createGenericAuthTypeSelection,
   createSpecificAuthTypeSelection,
   shouldUseAppAuth,
-} from '../../../addSourceWizard/addSourceWizard/schemaBuilder';
-import hardcodedSchemas from '../../../addSourceWizard/addSourceWizard/hardcodedSchemas';
+} from '../../../components/addSourceWizard/schemaBuilder';
+import hardcodedSchemas from '../../../components/addSourceWizard/hardcodedSchemas';
 import sourceTypes, { AMAZON_TYPE, OPENSHIFT_TYPE, AZURE_TYPE } from '../helpers/sourceTypes';
 import applicationTypes, { COST_MANAGEMENT_APP, TOPOLOGY_INV_APP } from '../helpers/applicationTypes';
 import { validatorTypes } from '@data-driven-forms/react-form-renderer';

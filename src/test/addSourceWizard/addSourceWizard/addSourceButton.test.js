@@ -1,10 +1,10 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import { AddSourceButton } from '../../../addSourceWizard/addSourceWizard/';
+import { AddSourceButton } from '../../../components/addSourceWizard/';
 import sourceTypes from '../helpers/sourceTypes';
 import applicationTypes from '../helpers/applicationTypes';
-import Form from '../../../addSourceWizard/addSourceWizard/SourceAddModal';
+import Form from '../../../components/addSourceWizard/SourceAddModal';
 
 import mount from '../__mocks__/mount';
 

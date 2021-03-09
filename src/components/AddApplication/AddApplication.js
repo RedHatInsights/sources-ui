@@ -27,15 +27,15 @@ import { Text } from '@patternfly/react-core/dist/esm/components/Text';
 
 import removeAppSubmit from './removeAppSubmit';
 import { diff } from 'deep-object-diff';
-import LoadingStep from '../../addSourceWizard/addSourceWizard/steps/LoadingStep';
-import ErroredStep from '../../addSourceWizard/addSourceWizard/steps/ErroredStep';
-import AmazonFinishedStep from '../../addSourceWizard/addSourceWizard/steps/AmazonFinishedStep';
-import FinishedStep from '../../addSourceWizard/addSourceWizard/steps/FinishedStep';
-import TimeoutStep from '../../addSourceWizard/addSourceWizard/steps/TimeoutStep';
-import computeSourceStatus from '../../addSourceWizard/utilities/computeSourceStatus';
-import CloseModal from '../../addSourceWizard/addSourceWizard/CloseModal';
-import filterApps from '../../addSourceWizard/utilities/filterApps';
-import computeSourceError from '../../addSourceWizard/utilities/computeSourceError';
+import LoadingStep from '../steps/LoadingStep';
+import ErroredStep from '../steps/ErroredStep';
+import AmazonFinishedStep from '../steps/AmazonFinishedStep';
+import FinishedStep from '../steps/FinishedStep';
+import TimeoutStep from '../steps/TimeoutStep';
+import computeSourceStatus from '../../utilities/computeSourceStatus';
+import filterApps from '../../utilities/filterApps';
+import computeSourceError from '../../utilities/computeSourceError';
+import CloseModal from '../CloseModal';
 
 export const onSubmit = (
   values,

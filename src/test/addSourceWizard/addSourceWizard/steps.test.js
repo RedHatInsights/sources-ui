@@ -13,13 +13,13 @@ import CheckCircleIcon from '@patternfly/react-icons/dist/esm/icons/check-circle
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
 
-import FinishedStep from '../../../addSourceWizard/addSourceWizard/steps/FinishedStep';
-import LoadingStep from '../../../addSourceWizard/addSourceWizard/steps/LoadingStep';
-import ErroredStep from '../../../addSourceWizard/addSourceWizard/steps/ErroredStep';
-import TimeoutStep from '../../../addSourceWizard/addSourceWizard/steps/TimeoutStep';
-
 import mount from '../__mocks__/mount';
-import AmazonFinishedStep from '../../../addSourceWizard/addSourceWizard/steps/AmazonFinishedStep';
+
+import FinishedStep from '../../../components/steps/FinishedStep';
+import LoadingStep from '../../../components/steps/LoadingStep';
+import ErroredStep from '../../../components/steps/ErroredStep';
+import TimeoutStep from '../../../components/steps/TimeoutStep';
+import AmazonFinishedStep from '../../../components/steps/AmazonFinishedStep';
 
 describe('Steps components', () => {
   let initialProps;

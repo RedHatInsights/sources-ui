@@ -63,6 +63,14 @@ export const getSourcesApi = () => ({
   updateApplication: (id, data) => axiosInstanceInsights.patch(`${SOURCES_API_BASE_V3}/applications/${id}`, data),
   showApplication: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/applications/${id}`),
   listSourceAuthentications: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/sources/${id}/authentications`),
+  listApplicationTypes: () => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/application_types`),
+  createSource: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/sources`, data),
+  getApplication: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/applications/${id}`),
+  getEndpoint: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/endpoints/${id}`),
+  removeSource: (id) => axiosInstanceInsights.delete(`${SOURCES_API_BASE_V3}/sources/${id}`),
+  getGoogleAccount: () => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/app_meta_data?filter[name]=gcp_service_account`),
+  bulkCreate: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/bulk_create`, data),
+  getAuthentication: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/authentications/${id}`),
 });
 
 export const doLoadAppTypes = () => getSourcesApi().doLoadAppTypes();

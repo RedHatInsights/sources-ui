@@ -10,7 +10,7 @@ import {
   appMutatorRedHat,
   applicationStep,
   cloudTypesStep,
-} from '../../../addSourceWizard/addSourceWizard/SourceAddSchema';
+} from '../../../components/addSourceWizard/SourceAddSchema';
 import sourceTypes, { OPENSHIFT_TYPE } from '../helpers/sourceTypes';
 import applicationTypes from '../helpers/applicationTypes';
 
@@ -18,8 +18,8 @@ import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
 import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
 
 import mount from '../__mocks__/mount';
-import { NO_APPLICATION_VALUE } from '../../../addSourceWizard/utilities/stringConstants';
-import SubWatchDescription from '../../../addSourceWizard/addSourceWizard/descriptions/SubWatchDescription';
+import { NO_APPLICATION_VALUE } from '../../../components/addSourceWizard/stringConstants';
+import SubWatchDescription from '../../../components/addSourceWizard/descriptions/SubWatchDescription';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../../utilities/constants';
 import componentTypes from '@data-driven-forms/react-form-renderer/dist/esm/component-types';
 

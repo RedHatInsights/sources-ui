@@ -1,13 +1,13 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import AddSourceWizard from '../../../addSourceWizard/addSourceWizard/SourceAddModal';
+import AddSourceWizard from '../../../components/addSourceWizard/SourceAddModal';
 import sourceTypes from '../helpers/sourceTypes';
 import applicationTypes from '../helpers/applicationTypes';
-import SourcesFormRenderer from '../../../addSourceWizard/sourceFormRenderer/index';
 
-import * as dependency from '../../../addSourceWizard/api/index';
+import * as dependency from '../../../api/wizardHelpers';
 import mount from '../__mocks__/mount';
+import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
 
 describe('sourceAddModal', () => {
   let initialProps;

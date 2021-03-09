@@ -4,7 +4,7 @@ import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
 import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
 import { Popover } from '@patternfly/react-core/dist/esm/components/Popover/Popover';
 
-import * as AwsAccess from '../../../../addSourceWizard/addSourceWizard/hardcodedComponents/aws/access_key';
+import * as AwsAccess from '../../../../components/addSourceWizard/hardcodedComponents/aws/access_key';
 import mount from '../../__mocks__/mount';
 
 describe('AWS-Access key hardcoded schemas', () => {

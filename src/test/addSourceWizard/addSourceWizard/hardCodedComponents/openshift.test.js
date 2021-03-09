@@ -3,7 +3,7 @@ import mount from '../../__mocks__/mount';
 import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
 import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
 
-import * as OpenShift from '../../../../addSourceWizard/addSourceWizard/hardcodedComponents/openshift/endpoint';
+import * as OpenShift from '../../../../components/addSourceWizard/hardcodedComponents/openshift/endpoint';
 
 describe('Tower Catalog', () => {
   it('Endpoint description', () => {

@@ -1,23 +1,24 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import { AddSourceWizard } from '../../../addSourceWizard/addSourceWizard/index';
-import Form from '../../../addSourceWizard/addSourceWizard/SourceAddModal';
-import Modal from '../../../addSourceWizard/addSourceWizard/SourceAddModal';
-import FinalWizard from '../../../addSourceWizard/addSourceWizard/FinalWizard';
-import FinishedStep from '../../../addSourceWizard/addSourceWizard/steps/FinishedStep';
-import ErroredStep from '../../../addSourceWizard/addSourceWizard/steps/ErroredStep';
+import { AddSourceWizard } from '../../../components/addSourceWizard/index';
+import Form from '../../../components/addSourceWizard/SourceAddModal';
+import Modal from '../../../components/addSourceWizard/SourceAddModal';
+import FinalWizard from '../../../components/addSourceWizard/FinalWizard';
 
 import sourceTypes from '../helpers/sourceTypes';
 import applicationTypes from '../helpers/applicationTypes';
-import * as dependency from '../../../addSourceWizard/api/index';
-import * as createSource from '../../../addSourceWizard/api/createSource';
-import CloseModal from '../../../addSourceWizard/addSourceWizard/CloseModal';
-import LoadingStep from '../../../addSourceWizard/addSourceWizard/steps/LoadingStep';
+import * as dependency from '../../../api/wizardHelpers';
+import * as createSource from '../../../api/createSource';
 
 import mount from '../__mocks__/mount';
-import SourcesFormRenderer from '../../../addSourceWizard/sourceFormRenderer';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../../utilities/constants';
+import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
+import CloseModal from '../../../components/CloseModal';
+
+import LoadingStep from '../../../components/steps/LoadingStep';
+import ErroredStep from '../../../components/steps/ErroredStep';
+import FinishedStep from '../../../components/steps/FinishedStep';
 
 describe('AddSourceWizard', () => {
   let initialProps;

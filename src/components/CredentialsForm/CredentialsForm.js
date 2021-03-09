@@ -15,7 +15,7 @@ import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
 import ModalFormTemplate from './ModalFormTemplate';
 import { getSourcesApi } from '../../api/entities';
 import { addMessage } from '../../redux/sources/actions';
-import generateSuperKeyFields from '../../addSourceWizard/addSourceWizard/superKey/generateSuperKeyFields';
+import generateSuperKeyFields from '../../components/addSourceWizard/superKey/generateSuperKeyFields';
 
 const initialState = {
   loading: true,

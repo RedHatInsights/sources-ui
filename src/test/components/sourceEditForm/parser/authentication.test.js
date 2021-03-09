@@ -12,7 +12,7 @@ import {
   createAuthAppFieldName,
 } from '../../../../components/SourceEditForm/parser/authentication';
 
-jest.mock('../../../../addSourceWizard/addSourceWizard/hardcodedSchemas', () => ({
+jest.mock('../../../../components/addSourceWizard/hardcodedSchemas', () => ({
   __esModule: true,
   default: {
     aws: {

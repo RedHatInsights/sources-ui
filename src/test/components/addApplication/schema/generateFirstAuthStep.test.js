@@ -1,6 +1,6 @@
 import generateFirstAuthStep from '../../../../components/AddApplication/schema/generateFirstAuthStep';
 
-jest.mock('../../../../addSourceWizard/addSourceWizard/schemaBuilder', () => ({
+jest.mock('../../../../components/addSourceWizard/schemaBuilder', () => ({
   __esModule: true,
   shouldSkipEndpoint: (type) => ['shouldskip', 'tosummary'].includes(type),
   hasCustomSteps: (type) => type === 'enhanced',

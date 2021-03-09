@@ -3,7 +3,7 @@ import * as actions from '../../../redux/sources/actions';
 import * as checkSourceStatus from '../../../api/checkSourceStatus';
 import * as doUpdateSource from '../../../api/doUpdateSource';
 
-import * as getAppStatus from '../../../addSourceWizard/api/getApplicationStatus';
+import * as getAppStatus from '../../..//api/getApplicationStatus';
 import { UNAVAILABLE, AVAILABLE } from '../../../views/formatters';
 import applicationTypesData from '../../__mocks__/applicationTypesData';
 

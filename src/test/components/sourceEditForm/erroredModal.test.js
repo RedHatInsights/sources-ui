@@ -14,7 +14,7 @@ import { EmptyStateBody } from '@patternfly/react-core/dist/esm/components/Empty
 import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
 
 import mockStore from '../../__mocks__/mockStore';
-import ErroredStep from '../../../addSourceWizard/addSourceWizard/steps/ErroredStep';
+import ErroredStep from '../../../components/steps/ErroredStep';
 
 describe('ErroredModal', () => {
   let store;

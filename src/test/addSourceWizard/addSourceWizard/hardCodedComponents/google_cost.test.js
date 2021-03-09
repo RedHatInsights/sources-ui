@@ -7,11 +7,11 @@ import { TextList } from '@patternfly/react-core/dist/esm/components/Text/TextLi
 import { TextListItem } from '@patternfly/react-core/dist/esm/components/Text/TextListItem';
 import { ClipboardCopy } from '@patternfly/react-core/dist/esm/components/ClipboardCopy/ClipboardCopy';
 
-import * as api from '../../../../addSourceWizard/api/index';
+import * as api from '../../../../api/entities';
 
-import * as Cm from '../../../../addSourceWizard/addSourceWizard/hardcodedComponents/gcp/costManagement';
+import * as Cm from '../../../../components/addSourceWizard/hardcodedComponents/gcp/costManagement';
 import mount from '../../__mocks__/mount';
-import FormRenderer from '../../../../addSourceWizard/sourceFormRenderer';
+import SourcesFormRenderer from '../../../../utilities/SourcesFormRenderer';
 
 describe('Cost Management Google steps components', () => {
   it('Project', () => {
@@ -79,7 +79,7 @@ describe('Cost Management Google steps components', () => {
 
   it('Dataset', () => {
     const wrapper = mount(
-      <FormRenderer
+      <SourcesFormRenderer
         onSubmit={jest.fn()}
         schema={{
           fields: [
