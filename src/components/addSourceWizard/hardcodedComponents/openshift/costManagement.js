@@ -5,7 +5,7 @@ import { HCCM_DOCS_PREFIX } from '../../stringConstants';
 import { Text, TextVariants } from '@patternfly/react-core/dist/esm/components/Text/Text';
 import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
 
-const INSTALL_PREREQUISITE = `${HCCM_DOCS_PREFIX}/html/getting_started_with_cost_management/index#assembly_koku_cost_management_installing`;
+const INSTALL_PREREQUISITE = `${HCCM_DOCS_PREFIX}/html/getting_started_with_cost_management/assembly_koku_cost_management_installing#proc_installation-overview-ocp45`;
 
 export const ConfigureCostOperator = () => {
   const intl = useIntl();
