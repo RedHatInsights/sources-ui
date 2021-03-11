@@ -14,7 +14,7 @@ import applicationTypes, {
 } from '../../addSourceWizard/helpers/applicationTypes';
 import sourceTypes from '../../addSourceWizard/helpers/sourceTypes';
 
-import RendererContext from '@data-driven-forms/react-form-renderer/dist/esm/renderer-context';
+import RendererContext from '@data-driven-forms/react-form-renderer/renderer-context';
 import mount from '../../addSourceWizard/__mocks__/mount';
 
 import Summary, { createItem } from '../../../components/FormComponents/SourceWizardSummary';

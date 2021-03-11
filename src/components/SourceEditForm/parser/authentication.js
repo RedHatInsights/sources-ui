@@ -1,5 +1,5 @@
 import get from 'lodash/get';
-import validatorTypes from '@data-driven-forms/react-form-renderer/dist/esm/validator-types';
+import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
 import hardcodedSchemas from '../../../components/addSourceWizard/hardcodedSchemas';
 
 export const createAuthFieldName = (fieldName, id) => `authentications.a${id}.${fieldName.replace('authentication.', '')}`;

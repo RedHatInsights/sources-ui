@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
-import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 
 import { Wizard } from '@patternfly/react-core/dist/esm/components/Wizard/Wizard';
 

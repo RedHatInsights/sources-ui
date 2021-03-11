@@ -5,7 +5,7 @@ import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/Tex
 import { ClipboardCopy } from '@patternfly/react-core/dist/esm/components/ClipboardCopy/ClipboardCopy';
 
 import * as Cm from '.../../../../components/addSourceWizard/hardcodedComponents/azure/costManagement';
-import RenderContext from '@data-driven-forms/react-form-renderer/dist/esm/renderer-context';
+import RenderContext from '@data-driven-forms/react-form-renderer/renderer-context';
 import mount from '../../__mocks__/mount';
 
 describe('Cost Management Azure steps components', () => {

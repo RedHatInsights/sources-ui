@@ -1,7 +1,7 @@
 import { act } from 'react-dom/test-utils';
 
-import componentTypes from '@data-driven-forms/react-form-renderer/dist/esm/component-types';
-import componentMapper from '@data-driven-forms/pf4-component-mapper/dist/esm/component-mapper';
+import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
+import componentMapper from '@data-driven-forms/pf4-component-mapper/component-mapper';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';

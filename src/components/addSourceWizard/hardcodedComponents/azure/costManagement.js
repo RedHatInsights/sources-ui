@@ -8,7 +8,7 @@ import { TextListItem, TextListItemVariants } from '@patternfly/react-core/dist/
 import { ClipboardCopy } from '@patternfly/react-core/dist/esm/components/ClipboardCopy/ClipboardCopy';
 
 import { HCCM_DOCS_PREFIX } from '../../stringConstants';
-import useFormApi from '@data-driven-forms/react-form-renderer/dist/esm/use-form-api';
+import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 
 const CREATE_AZURE_STORAGE = `${HCCM_DOCS_PREFIX}/html/getting_started_with_cost_management/adding_an_azure_source#creating_an_azure_storage_account`;
 const AZURE_CREDS_URL = `${HCCM_DOCS_PREFIX}/html/getting_started_with_cost_management/adding_an_azure_source#configuring_azure_roles`;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Label } from '@patternfly/react-core/dist/esm/components/Label/Label';
 
-import componentTypes from '@data-driven-forms/react-form-renderer/dist/esm/component-types';
+import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import sourceTypes from '../../helpers/sourceTypes';
 import configurationStep from '../../../../components/addSourceWizard/superKey/configurationStep';
 import SuperKeyCredentials from '../../../../components/addSourceWizard/superKey/SuperKeyCredentials';

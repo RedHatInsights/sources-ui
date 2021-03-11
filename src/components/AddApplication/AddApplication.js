@@ -4,7 +4,7 @@ import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { useIntl } from 'react-intl';
 import isEmpty from 'lodash/isEmpty';
 
-import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 
 import { loadEntities } from '../../redux/sources/actions';
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';

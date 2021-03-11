@@ -1,8 +1,8 @@
 import React from 'react';
-import componentTypes from '@data-driven-forms/react-form-renderer/dist/esm/component-types';
-import componentMapper from '@data-driven-forms/pf4-component-mapper/dist/esm/component-mapper';
-import useFormApi from '@data-driven-forms/react-form-renderer/dist/esm/use-form-api';
-import validatorTypes from '@data-driven-forms/react-form-renderer/dist/esm/validator-types';
+import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
+import componentMapper from '@data-driven-forms/pf4-component-mapper/component-mapper';
+import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
+import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
 import { useIntl } from 'react-intl';
 
 const Authentication = (rest) => {

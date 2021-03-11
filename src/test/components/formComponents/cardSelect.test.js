@@ -4,8 +4,8 @@ import { mount } from 'enzyme';
 import { Tile } from '@patternfly/react-core/dist/esm/components/Tile/Tile';
 import { AwsIcon, OpenshiftIcon } from '@patternfly/react-icons';
 
-import FormRenderer from '@data-driven-forms/react-form-renderer/dist/esm/form-renderer';
-import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
+import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 
 import CardSelect from '../../../components/FormComponents/CardSelect';
 

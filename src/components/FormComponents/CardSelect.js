@@ -6,8 +6,8 @@ import { GridItem } from '@patternfly/react-core/dist/esm/layouts/Grid/GridItem'
 import { Tile } from '@patternfly/react-core/dist/esm/components/Tile/Tile';
 import { Grid } from '@patternfly/react-core/dist/esm/layouts/Grid/Grid';
 
-import useFieldApi from '@data-driven-forms/react-form-renderer/dist/esm/use-field-api';
-import useFormApi from '@data-driven-forms/react-form-renderer/dist/esm/use-form-api';
+import useFieldApi from '@data-driven-forms/react-form-renderer/use-field-api';
+import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 
 const handleKeyPress = (event, value, onClick) => {
   const spaceBar = 32;

@@ -1,4 +1,4 @@
-import componentTypes from '@data-driven-forms/react-form-renderer/dist/esm/component-types';
+import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import { compileAllApplicationComboOptions } from '../compileAllApplicationComboOptions';
 
 const applicationsStep = (applicationTypes, intl) => ({

@@ -11,7 +11,7 @@ import { DescriptionListTerm } from '@patternfly/react-core/dist/esm/components/
 
 import get from 'lodash/get';
 
-import useFormApi from '@data-driven-forms/react-form-renderer/dist/esm/use-form-api';
+import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 
 import ValuePopover from './ValuePopover';
 import hardcodedSchemas from '../../components/addSourceWizard/hardcodedSchemas';

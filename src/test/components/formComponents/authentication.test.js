@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
-import componentMapper from '@data-driven-forms/pf4-component-mapper/dist/esm/component-mapper';
-import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
+import componentMapper from '@data-driven-forms/pf4-component-mapper/component-mapper';
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 
 import mount from '../../addSourceWizard/__mocks__/mount';
 import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';

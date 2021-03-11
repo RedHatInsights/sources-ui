@@ -4,9 +4,9 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import { Modal } from '@patternfly/react-core/dist/esm/components/Modal/Modal';
-import componentTypes from '@data-driven-forms/react-form-renderer/dist/esm/component-types';
-import validatorTypes from '@data-driven-forms/react-form-renderer/dist/esm/validator-types';
-import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
+import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
+import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 
 import { useSource } from '../../hooks/useSource';
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';

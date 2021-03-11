@@ -1,5 +1,5 @@
 import React from 'react';
-import componentTypes from '@data-driven-forms/react-form-renderer/dist/esm/component-types';
+import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 
 import { Text, TextVariants } from '@patternfly/react-core/dist/esm/components/Text/Text';
 import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';

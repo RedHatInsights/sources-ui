@@ -4,7 +4,7 @@ import mount from '../../addSourceWizard/__mocks__/mount';
 import { Spinner } from '@patternfly/react-core/dist/esm/components/Spinner/Spinner';
 import { FormHelperText } from '@patternfly/react-core/dist/esm/components/Form/FormHelperText';
 
-import Form from '@data-driven-forms/react-form-renderer/dist/esm/form';
+import Form from '@data-driven-forms/react-form-renderer/form';
 
 import validated, { ValidatingSpinner } from '../../../utilities/resolveProps/validated';
 
