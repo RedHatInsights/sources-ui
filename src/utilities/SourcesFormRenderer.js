@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import FormRenderer from '@data-driven-forms/react-form-renderer/dist/esm/form-renderer';
+import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 
-import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
-import pf4ComponentMapper from '@data-driven-forms/pf4-component-mapper/dist/esm/component-mapper';
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
+import pf4ComponentMapper from '@data-driven-forms/pf4-component-mapper/component-mapper';
 
 import Authentication from '../components/Authentication';
 

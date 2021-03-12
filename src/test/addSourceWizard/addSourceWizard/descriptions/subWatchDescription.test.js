@@ -18,6 +18,7 @@ describe('SubWatchDescription', () => {
       <SourcesFormRenderer
         schema={{ fields: [{ name: 'desc', component: 'description', Content: () => <SubWatchDescription id="1" /> }] }}
         initialValues={{ application: { application_type_id: '1' }, source: { app_creation_workflow: 'manual_configuration' } }}
+        onSubmit={jest.fn()}
       />
     );
 
@@ -36,6 +37,7 @@ describe('SubWatchDescription', () => {
       <SourcesFormRenderer
         schema={{ fields: [{ name: 'desc', component: 'description', Content: () => <SubWatchDescription id="1" /> }] }}
         initialValues={{ applications: ['1'], source: { app_creation_workflow: 'account_authorization' } }}
+        onSubmit={jest.fn()}
       />
     );
     expect(wrapper.find(CheckCircleIcon).first().props().fill).toEqual('#3E8635');
@@ -46,6 +48,7 @@ describe('SubWatchDescription', () => {
       <SourcesFormRenderer
         schema={{ fields: [{ name: 'desc', component: 'description', Content: () => <SubWatchDescription id="1" /> }] }}
         initialValues={{ application: { application_type_id: '2' }, source: { app_creation_workflow: 'manual_configuration' } }}
+        onSubmit={jest.fn()}
       />
     );
 
@@ -57,6 +60,7 @@ describe('SubWatchDescription', () => {
       <SourcesFormRenderer
         schema={{ fields: [{ name: 'desc', component: 'description', Content: () => <SubWatchDescription id="1" /> }] }}
         initialValues={{ applications: [], source: { app_creation_workflow: 'account_authorization' } }}
+        onSubmit={jest.fn()}
       />
     );
 

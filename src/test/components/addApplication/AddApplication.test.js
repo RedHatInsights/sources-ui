@@ -1,11 +1,10 @@
 import React from 'react';
 import { mount } from 'enzyme';
 
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
 import { EmptyStateBody } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateBody';
 import { EmptyStateSecondaryActions } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateSecondaryActions';
 import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
-import { Radio } from '@patternfly/react-core/dist/esm/components/Radio/Radio';
+import { Radio } from '@patternfly/react-core/dist/js/components/Radio/Radio';
 
 import { Route, MemoryRouter } from 'react-router-dom';
 
@@ -322,7 +321,7 @@ describe('AddApplication', () => {
 
     it('closes immedietaly when no value is filled', async () => {
       await act(async () => {
-        const closeButton = wrapper.find(Button).at(0);
+        const closeButton = wrapper.find('Button').at(0);
         closeButton.simulate('click');
       });
       wrapper.update();
@@ -343,7 +342,7 @@ describe('AddApplication', () => {
       wrapper.update();
 
       await act(async () => {
-        const closeButton = wrapper.find(Button).at(0);
+        const closeButton = wrapper.find('Button').at(0);
         closeButton.simulate('click');
       });
       wrapper.update();
@@ -351,7 +350,7 @@ describe('AddApplication', () => {
       expect(wrapper.find(CloseModal)).toHaveLength(1);
 
       await act(async () => {
-        const leaveButton = wrapper.find(Button).at(1);
+        const leaveButton = wrapper.find('Button').at(1);
         leaveButton.simulate('click');
       });
       wrapper.update();
@@ -372,7 +371,7 @@ describe('AddApplication', () => {
       wrapper.update();
 
       await act(async () => {
-        const closeButton = wrapper.find(Button).at(0);
+        const closeButton = wrapper.find('Button').at(0);
         closeButton.simulate('click');
       });
       wrapper.update();
@@ -380,7 +379,7 @@ describe('AddApplication', () => {
       expect(wrapper.find(CloseModal)).toHaveLength(1);
 
       await act(async () => {
-        const stayButton = wrapper.find(Button).at(0);
+        const stayButton = wrapper.find('Button').at(0);
         stayButton.simulate('click');
       });
       wrapper.update();
@@ -462,7 +461,7 @@ describe('AddApplication', () => {
       wrapper.update();
 
       await act(async () => {
-        const nextButton = wrapper.find(Button).at(1);
+        const nextButton = wrapper.find('Button').at(1);
         nextButton.simulate('click');
       });
       wrapper.update();
@@ -477,7 +476,7 @@ describe('AddApplication', () => {
       wrapper.update();
 
       await act(async () => {
-        const nextButton = wrapper.find(Button).at(1);
+        const nextButton = wrapper.find('Button').at(1);
         nextButton.simulate('click');
       });
       wrapper.update();
@@ -491,7 +490,7 @@ describe('AddApplication', () => {
       );
 
       await act(async () => {
-        const submitButton = wrapper.find(Button).at(1);
+        const submitButton = wrapper.find('Button').at(1);
         submitButton.simulate('click');
       });
       wrapper.update();
@@ -548,7 +547,7 @@ describe('AddApplication', () => {
       );
 
       expect(wrapper.find(SummaryStep)).toHaveLength(1);
-      expect(wrapper.find(Button).at(1).text()).toEqual('Add');
+      expect(wrapper.find('Button').at(1).text()).toEqual('Add');
     });
 
     it('calls on submit function', async () => {
@@ -570,7 +569,7 @@ describe('AddApplication', () => {
       );
 
       await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
+        wrapper.find('Button').at(1).simulate('click');
       });
       wrapper.update();
 
@@ -589,7 +588,7 @@ describe('AddApplication', () => {
       expect(wrapper.find(FinishedStep).length).toEqual(1);
       expect(wrapper.find(Title).last().text()).toEqual('Configuration successful');
       expect(wrapper.find(EmptyStateBody).last().text()).toEqual('Your application was successfully added.');
-      expect(wrapper.find(Button).at(1).text()).toEqual('Exit');
+      expect(wrapper.find('Button').at(1).text()).toEqual('Exit');
     });
 
     it('shows aws specific step', async () => {
@@ -628,7 +627,7 @@ describe('AddApplication', () => {
       );
 
       await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
+        wrapper.find('Button').at(1).simulate('click');
       });
       wrapper.update();
 
@@ -649,7 +648,7 @@ describe('AddApplication', () => {
       expect(wrapper.find(EmptyStateBody).last().text()).toEqual(
         'Discover the benefits of your connection or exit to manage your new source.View enabled AWS Gold imagesSubscription Watch usageGet started with Red Hat InsightsCost Management reporting'
       );
-      expect(wrapper.find(Button).at(1).text()).toEqual('Exit');
+      expect(wrapper.find('Button').at(1).text()).toEqual('Exit');
     });
 
     it('renders timeouted step when endpoint', async () => {
@@ -675,7 +674,7 @@ describe('AddApplication', () => {
       );
 
       await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
+        wrapper.find('Button').at(1).simulate('click');
       });
       wrapper.update();
 
@@ -684,7 +683,7 @@ describe('AddApplication', () => {
       expect(wrapper.find(EmptyStateBody).last().text()).toEqual(
         'We are still working to confirm credentials and app settings.To track progress, check the Status column in the Sources table.'
       );
-      expect(wrapper.find(Button).at(1).text()).toEqual('Exit');
+      expect(wrapper.find('Button').at(1).text()).toEqual('Exit');
     });
 
     it('renders timeouted step', async () => {
@@ -710,7 +709,7 @@ describe('AddApplication', () => {
       );
 
       await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
+        wrapper.find('Button').at(1).simulate('click');
       });
       wrapper.update();
 
@@ -719,7 +718,7 @@ describe('AddApplication', () => {
       expect(wrapper.find(EmptyStateBody).last().text()).toEqual(
         'We are still working to confirm credentials and app settings.To track progress, check the Status column in the Sources table.'
       );
-      expect(wrapper.find(Button).at(1).text()).toEqual('Exit');
+      expect(wrapper.find('Button').at(1).text()).toEqual('Exit');
     });
 
     it('redirects to edit when unavailable', async () => {
@@ -748,7 +747,7 @@ describe('AddApplication', () => {
       );
 
       await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
+        wrapper.find('Button').at(1).simulate('click');
       });
       wrapper.update();
 
@@ -757,11 +756,11 @@ describe('AddApplication', () => {
       expect(wrapper.find(ErroredStep).length).toEqual(1);
       expect(wrapper.find(Title).last().text()).toEqual('Configuration unsuccessful');
       expect(wrapper.find(EmptyStateBody).last().text()).toEqual(ERROR);
-      expect(wrapper.find(Button).at(1).text()).toEqual('Edit source');
-      expect(wrapper.find(Button).at(2).text()).toEqual('Remove application');
+      expect(wrapper.find('Button').at(1).text()).toEqual('Edit source');
+      expect(wrapper.find('Button').at(2).text()).toEqual('Remove application');
 
       await act(async () => {
-        wrapper.find(Button).at(1).simulate('click', { button: 0 });
+        wrapper.find('Button').at(1).simulate('click', { button: 0 });
       });
       wrapper.update();
 
@@ -799,7 +798,7 @@ describe('AddApplication', () => {
       );
 
       await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
+        wrapper.find('Button').at(1).simulate('click');
       });
       wrapper.update();
 
@@ -808,15 +807,15 @@ describe('AddApplication', () => {
       expect(wrapper.find(ErroredStep).length).toEqual(1);
       expect(wrapper.find(Title).last().text()).toEqual('Configuration unsuccessful');
       expect(wrapper.find(EmptyStateBody).last().text()).toEqual(ERROR);
-      expect(wrapper.find(Button).at(1).text()).toEqual('Edit source');
-      expect(wrapper.find(Button).at(2).text()).toEqual('Remove application');
+      expect(wrapper.find('Button').at(1).text()).toEqual('Edit source');
+      expect(wrapper.find('Button').at(2).text()).toEqual('Remove application');
 
       removeAppSubmit.default = jest.fn().mockImplementation(() => Promise.resolve('OK'));
 
       expect(removeAppSubmit.default).not.toHaveBeenCalled();
 
       await act(async () => {
-        wrapper.find(Button).at(2).simulate('click');
+        wrapper.find('Button').at(2).simulate('click');
       });
       wrapper.update();
 
@@ -843,7 +842,7 @@ describe('AddApplication', () => {
       );
 
       await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
+        wrapper.find('Button').at(1).simulate('click');
       });
       wrapper.update();
 
@@ -863,7 +862,7 @@ describe('AddApplication', () => {
       expect(wrapper.find(EmptyStateBody).last().text()).toEqual(
         'There was a problem while trying to add your source. Please try again. If the error persists, open a support case.'
       );
-      expect(wrapper.find(Button).at(1).text()).toEqual('Retry');
+      expect(wrapper.find('Button').at(1).text()).toEqual('Retry');
       expect(wrapper.find(EmptyStateSecondaryActions).text()).toEqual('Open a support case');
     });
 
@@ -881,7 +880,7 @@ describe('AddApplication', () => {
       );
 
       await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
+        wrapper.find('Button').at(1).simulate('click');
       });
       wrapper.update();
 
@@ -907,7 +906,7 @@ describe('AddApplication', () => {
       );
 
       await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
+        wrapper.find('Button').at(1).simulate('click');
       });
       wrapper.update();
 
@@ -927,7 +926,7 @@ describe('AddApplication', () => {
 
       jest.useFakeTimers();
       await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
+        wrapper.find('Button').at(1).simulate('click');
       });
       jest.useRealTimers();
 

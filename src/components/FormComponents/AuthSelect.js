@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Radio } from '@patternfly/react-core/dist/esm/components/Radio/Radio';
-import useFieldApi from '@data-driven-forms/react-form-renderer/dist/esm/use-field-api';
+import useFieldApi from '@data-driven-forms/react-form-renderer/use-field-api';
 
 const AuthRadio = (props) => {
   const { label, input, authName, supportedAuthTypes, disableAuthType } = useFieldApi(props);

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import useFormApi from '@data-driven-forms/react-form-renderer/dist/esm/use-form-api';
+import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 import generateSuperKeyFields from './generateSuperKeyFields';
 
 const SuperKeyCredentials = ({ sourceTypes }) => {

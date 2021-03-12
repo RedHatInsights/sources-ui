@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 import { Spinner } from '@patternfly/react-core/dist/esm/components/Spinner';
 import { Bullseye } from '@patternfly/react-core/dist/esm/layouts/Bullseye';
 
-import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
 import { doLoadSourceForEdit } from '../../api/doLoadSourceForEdit';

@@ -21,7 +21,7 @@ import mount from '../__mocks__/mount';
 import { NO_APPLICATION_VALUE } from '../../../components/addSourceWizard/stringConstants';
 import SubWatchDescription from '../../../components/addSourceWizard/descriptions/SubWatchDescription';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../../utilities/constants';
-import componentTypes from '@data-driven-forms/react-form-renderer/dist/esm/component-types';
+import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 
 describe('Add source schema', () => {
   const INTL = { formatMessage: ({ defaultMessage }) => defaultMessage };

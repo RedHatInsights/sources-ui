@@ -5,8 +5,8 @@ import { FormGroup } from '@patternfly/react-core/dist/esm/components/Form/FormG
 import { Stack } from '@patternfly/react-core/dist/esm/layouts/Stack/Stack';
 import { StackItem } from '@patternfly/react-core/dist/esm/layouts/Stack/StackItem';
 
-import useFieldApi from '@data-driven-forms/react-form-renderer/dist/esm/use-field-api';
-import useFormApi from '@data-driven-forms/react-form-renderer/dist/esm/use-form-api';
+import useFieldApi from '@data-driven-forms/react-form-renderer/use-field-api';
+import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 
 const SwitchGroup = (props) => {
   const { label, input, options, applicationTypes } = useFieldApi(props);

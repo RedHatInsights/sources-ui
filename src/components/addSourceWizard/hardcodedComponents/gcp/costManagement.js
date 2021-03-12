@@ -10,7 +10,7 @@ import { Hint } from '@patternfly/react-core/dist/esm/components/Hint/Hint';
 import { HintTitle } from '@patternfly/react-core/dist/esm/components/Hint/HintTitle';
 import { HintBody } from '@patternfly/react-core/dist/esm/components/Hint/HintBody';
 
-import useFormApi from '@data-driven-forms/react-form-renderer/dist/esm/use-form-api';
+import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 
 import { getSourcesApi } from '../../../../api/entities';
 

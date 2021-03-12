@@ -11,7 +11,7 @@ import { ClipboardCopy, ClipboardCopyVariant } from '@patternfly/react-core/dist
 
 import QuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/question-circle-icon';
 
-import useFormApi from '@data-driven-forms/react-form-renderer/dist/esm/use-form-api';
+import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 
 import { HCCM_DOCS_PREFIX } from '../../stringConstants';
 

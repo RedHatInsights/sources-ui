@@ -10,7 +10,7 @@ import { Popover } from '@patternfly/react-core/dist/esm/components/Popover/Popo
 
 import QuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/question-circle-icon';
 
-import RendererContext from '@data-driven-forms/react-form-renderer/dist/esm/renderer-context';
+import RendererContext from '@data-driven-forms/react-form-renderer/renderer-context';
 
 import * as AwsArn from '../../../../components/addSourceWizard/hardcodedComponents/aws/arn';
 import mount from '../../__mocks__/mount';

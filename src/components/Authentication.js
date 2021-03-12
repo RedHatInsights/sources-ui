@@ -4,9 +4,9 @@ import get from 'lodash/get';
 import { FormGroup } from '@patternfly/react-core/dist/esm/components/Form/FormGroup';
 import { TextInput } from '@patternfly/react-core/dist/esm/components/TextInput/TextInput';
 
-import TextField from '@data-driven-forms/pf4-component-mapper/dist/esm/text-field';
-import useFormApi from '@data-driven-forms/react-form-renderer/dist/esm/use-form-api';
-import validatorTypes from '@data-driven-forms/react-form-renderer/dist/esm/validator-types';
+import TextField from '@data-driven-forms/pf4-component-mapper/text-field';
+import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
+import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
 
 import validated from '../utilities/resolveProps/validated';
 
