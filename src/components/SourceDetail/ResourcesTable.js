@@ -112,6 +112,11 @@ const reducer = (state, { type, intl, source, activeTab, appTypes, sourceType })
         ...state,
         activeTab,
       };
+    case 'setLoading':
+      return {
+        ...state,
+        loading: true,
+      };
   }
 };
 
@@ -126,6 +131,8 @@ const ResourcesTable = () => {
 
   useEffect(() => {
     if (source && isLoaded && appTypesLoaded && sourceTypesLoaded && source?.applications?.length) {
+      dispatch({ type: 'setLoading' });
+
       doLoadSourceForEdit(source, appTypes, sourceTypes).then((source) => {
         const sourceType = sourceTypes.find(({ id }) => id === source.source.source_type_id);
 
