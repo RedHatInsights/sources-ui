@@ -14,8 +14,7 @@ import {
 import sourceTypes, { OPENSHIFT_TYPE } from '../helpers/sourceTypes';
 import applicationTypes from '../helpers/applicationTypes';
 
-import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
+import { Text, TextContent } from '@patternfly/react-core';
 
 import mount from '../__mocks__/mount';
 import { NO_APPLICATION_VALUE } from '../../../components/addSourceWizard/stringConstants';

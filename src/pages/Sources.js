@@ -1,7 +1,7 @@
 import React, { useEffect, lazy, Suspense, useReducer } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
+import { Button, Tooltip } from '@patternfly/react-core';
 import { useIntl } from 'react-intl';
 
 import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/PrimaryToolbar';
@@ -39,7 +39,6 @@ import {
 import { useIsLoaded } from '../hooks/useIsLoaded';
 import { useHasWritePermissions } from '../hooks/useHasWritePermissions';
 import CustomRoute from '../components/CustomRoute/CustomRoute';
-import { Tooltip } from '@patternfly/react-core/dist/esm/components/Tooltip/Tooltip';
 import { PaginationLoader } from '../components/SourcesTable/loaders';
 import TabNavigation from '../components/TabNavigation';
 import CloudCards from '../components/CloudTiles/CloudCards';

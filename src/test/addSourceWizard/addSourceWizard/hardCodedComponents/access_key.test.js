@@ -1,8 +1,6 @@
 import React from 'react';
 
-import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
-import { Popover } from '@patternfly/react-core/dist/esm/components/Popover/Popover';
+import { Text, TextContent, Popover } from '@patternfly/react-core';
 
 import * as AwsAccess from '../../../../components/addSourceWizard/hardcodedComponents/aws/access_key';
 import mount from '../../__mocks__/mount';

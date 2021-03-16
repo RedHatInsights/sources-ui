@@ -1,10 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 
-import { EmptyStateBody } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateBody';
-import { EmptyStateSecondaryActions } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateSecondaryActions';
-import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
-import { Radio } from '@patternfly/react-core/dist/js/components/Radio/Radio';
+import { EmptyStateBody, EmptyStateSecondaryActions, Title, Radio } from '@patternfly/react-core';
 
 import { Route, MemoryRouter } from 'react-router-dom';
 

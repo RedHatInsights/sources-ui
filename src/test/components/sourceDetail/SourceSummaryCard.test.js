@@ -1,14 +1,16 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import { Card } from '@patternfly/react-core/dist/esm/components/Card/Card';
-import { CardBody } from '@patternfly/react-core/dist/esm/components/Card/CardBody';
-import { CardTitle } from '@patternfly/react-core/dist/esm/components/Card/CardTitle';
-import { DescriptionList } from '@patternfly/react-core/dist/esm/components/DescriptionList/DescriptionList';
-import { DescriptionListDescription } from '@patternfly/react-core/dist/esm/components/DescriptionList/DescriptionListDescription';
-import { DescriptionListGroup } from '@patternfly/react-core/dist/esm/components/DescriptionList/DescriptionListGroup';
-import { DescriptionListTerm } from '@patternfly/react-core/dist/esm/components/DescriptionList/DescriptionListTerm';
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
+import {
+  Card,
+  CardBody,
+  CardTitle,
+  DescriptionList,
+  DescriptionListDescription,
+  DescriptionListGroup,
+  DescriptionListTerm,
+  Button,
+} from '@patternfly/react-core';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import sourceTypesData, { AMAZON_ID } from '../../__mocks__/sourceTypesData';

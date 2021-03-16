@@ -1,11 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import { Label } from '@patternfly/react-core/dist/esm/components/Label/Label';
-import { Alert } from '@patternfly/react-core/dist/esm/components/Alert/Alert';
-import { DescriptionListDescription } from '@patternfly/react-core/dist/esm/components/DescriptionList/DescriptionListDescription';
-import { DescriptionListGroup } from '@patternfly/react-core/dist/esm/components/DescriptionList/DescriptionListGroup';
-import { DescriptionListTerm } from '@patternfly/react-core/dist/esm/components/DescriptionList/DescriptionListTerm';
+import { Label, Alert, DescriptionListDescription, DescriptionListGroup, DescriptionListTerm } from '@patternfly/react-core';
 
 import applicationTypes, {
   COST_MANAGEMENT_APP,

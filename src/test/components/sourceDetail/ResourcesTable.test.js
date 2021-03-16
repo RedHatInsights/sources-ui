@@ -1,13 +1,7 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import { CardBody } from '@patternfly/react-core/dist/esm/components/Card/CardBody';
-import { CardTitle } from '@patternfly/react-core/dist/esm/components/Card/CardTitle';
-import { EmptyState } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyState';
-import { EmptyStateBody } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateBody';
-import { Spinner } from '@patternfly/react-core/dist/esm/components/Spinner';
-import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
-import { Tabs, TabTitleText } from '@patternfly/react-core/dist/esm/components/Tabs';
+import { CardBody, CardTitle, EmptyState, EmptyStateBody, Spinner, Title, Tabs, TabTitleText } from '@patternfly/react-core';
 
 import { Table } from '@patternfly/react-table';
 

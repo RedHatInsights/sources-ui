@@ -2,18 +2,20 @@
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
-import { Grid } from '@patternfly/react-core/dist/esm/layouts/Grid/Grid';
-import { GridItem } from '@patternfly/react-core/dist/esm/layouts/Grid/GridItem';
-import { Stack } from '@patternfly/react-core/dist/esm/layouts/Stack/Stack';
-import { StackItem } from '@patternfly/react-core/dist/esm/layouts/Stack/StackItem';
-import { Card } from '@patternfly/react-core/dist/esm/components/Card/Card';
-import { CardBody } from '@patternfly/react-core/dist/esm/components/Card/CardBody';
-import { CardTitle } from '@patternfly/react-core/dist/esm/components/Card/CardTitle';
-import { CardHeader } from '@patternfly/react-core/dist/esm/components/Card/CardHeader';
-import { CardExpandableContent } from '@patternfly/react-core/dist/esm/components/Card/CardExpandableContent';
-import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
-import { Label } from '@patternfly/react-core/dist/esm/components/Label/Label';
+import {
+  Grid,
+  GridItem,
+  Stack,
+  StackItem,
+  Card,
+  CardBody,
+  CardTitle,
+  CardHeader,
+  CardExpandableContent,
+  Text,
+  TextContent,
+  Label,
+} from '@patternfly/react-core';
 
 import ArrowRightIcon from '@patternfly/react-icons/dist/esm/icons/arrow-right-icon';
 import BuilderImageIcon from '@patternfly/react-icons/dist/esm/icons/builder-image-icon';

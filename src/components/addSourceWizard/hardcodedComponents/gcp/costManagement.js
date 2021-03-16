@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
-import { Text, TextVariants } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
-import { TextList, TextListVariants } from '@patternfly/react-core/dist/esm/components/Text/TextList';
-import { TextListItem } from '@patternfly/react-core/dist/esm/components/Text/TextListItem';
-import { ClipboardCopy } from '@patternfly/react-core/dist/esm/components/ClipboardCopy/ClipboardCopy';
-import { Hint } from '@patternfly/react-core/dist/esm/components/Hint/Hint';
-import { HintTitle } from '@patternfly/react-core/dist/esm/components/Hint/HintTitle';
-import { HintBody } from '@patternfly/react-core/dist/esm/components/Hint/HintBody';
+import {
+  Text,
+  TextVariants,
+  TextContent,
+  TextList,
+  TextListVariants,
+  TextListItem,
+  ClipboardCopy,
+  Hint,
+  HintTitle,
+  HintBody,
+} from '@patternfly/react-core';
 
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 

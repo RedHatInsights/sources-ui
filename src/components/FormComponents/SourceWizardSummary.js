@@ -2,12 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { Label } from '@patternfly/react-core/dist/esm/components/Label/Label';
-import { Alert } from '@patternfly/react-core/dist/esm/components/Alert/Alert';
-import { DescriptionList } from '@patternfly/react-core/dist/esm/components/DescriptionList/DescriptionList';
-import { DescriptionListDescription } from '@patternfly/react-core/dist/esm/components/DescriptionList/DescriptionListDescription';
-import { DescriptionListGroup } from '@patternfly/react-core/dist/esm/components/DescriptionList/DescriptionListGroup';
-import { DescriptionListTerm } from '@patternfly/react-core/dist/esm/components/DescriptionList/DescriptionListTerm';
+import {
+  Label,
+  Alert,
+  DescriptionList,
+  DescriptionListDescription,
+  DescriptionListGroup,
+  DescriptionListTerm,
+} from '@patternfly/react-core';
 
 import get from 'lodash/get';
 

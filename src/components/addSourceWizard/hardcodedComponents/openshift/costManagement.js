@@ -2,8 +2,7 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 import { HCCM_DOCS_PREFIX } from '../../stringConstants';
 
-import { Text, TextVariants } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
+import { Text, TextVariants, TextContent } from '@patternfly/react-core';
 
 const INSTALL_PREREQUISITE = `${HCCM_DOCS_PREFIX}/html/getting_started_with_cost_management/assembly_koku_cost_management_installing#proc_installation-overview-ocp45`;
 

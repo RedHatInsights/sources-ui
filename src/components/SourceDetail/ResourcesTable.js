@@ -7,17 +7,22 @@ import get from 'lodash/get';
 import { Table, TableHeader, TableBody } from '@patternfly/react-table';
 import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
 
-import { Card } from '@patternfly/react-core/dist/esm/components/Card/Card';
-import { CardBody } from '@patternfly/react-core/dist/esm/components/Card/CardBody';
-import { CardTitle } from '@patternfly/react-core/dist/esm/components/Card/CardTitle';
-import { Text } from '@patternfly/react-core/dist/esm/components/Text';
-import { Spinner } from '@patternfly/react-core/dist/esm/components/Spinner';
-import { Bullseye } from '@patternfly/react-core/dist/esm/layouts/Bullseye';
-import { Tabs, Tab, TabTitleText } from '@patternfly/react-core/dist/esm/components/Tabs';
-import { EmptyState, EmptyStateVariant } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyState';
-import { EmptyStateIcon } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateIcon';
-import { EmptyStateBody } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateBody';
-import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
+import {
+  Card,
+  CardBody,
+  CardTitle,
+  Text,
+  Spinner,
+  Bullseye,
+  Tabs,
+  Tab,
+  TabTitleText,
+  EmptyState,
+  EmptyStateVariant,
+  EmptyStateIcon,
+  EmptyStateBody,
+  Title,
+} from '@patternfly/react-core';
 
 import NoApplications from './NoApplications';
 import { useSource } from '../../hooks/useSource';

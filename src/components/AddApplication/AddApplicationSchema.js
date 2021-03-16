@@ -1,9 +1,7 @@
 import React from 'react';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 
-import { Text, TextVariants } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
-
+import { Text, TextVariants, TextContent } from '@patternfly/react-core';
 import { useIntl } from 'react-intl';
 import * as schemaBuilder from '../../components/addSourceWizard/schemaBuilder';
 import get from 'lodash/get';

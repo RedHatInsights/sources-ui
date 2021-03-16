@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 
-import { Wizard } from '@patternfly/react-core/dist/esm/components/Wizard/Wizard';
+import { Wizard } from '@patternfly/react-core';
 
 import createSchema from './SourceAddSchema';
 import { doLoadSourceTypes, doLoadApplicationTypes } from '../../api/wizardHelpers';

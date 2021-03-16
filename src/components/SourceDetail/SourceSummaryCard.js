@@ -3,13 +3,15 @@ import { useIntl } from 'react-intl';
 import { shallowEqual, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { Card } from '@patternfly/react-core/dist/esm/components/Card/Card';
-import { CardBody } from '@patternfly/react-core/dist/esm/components/Card/CardBody';
-import { CardTitle } from '@patternfly/react-core/dist/esm/components/Card/CardTitle';
-import { DescriptionList } from '@patternfly/react-core/dist/esm/components/DescriptionList/DescriptionList';
-import { DescriptionListGroup } from '@patternfly/react-core/dist/esm/components/DescriptionList/DescriptionListGroup';
-import { DescriptionListTerm } from '@patternfly/react-core/dist/esm/components/DescriptionList/DescriptionListTerm';
-import { DescriptionListDescription } from '@patternfly/react-core/dist/esm/components/DescriptionList/DescriptionListDescription';
+import {
+  Card,
+  CardBody,
+  CardTitle,
+  DescriptionList,
+  DescriptionListGroup,
+  DescriptionListTerm,
+  DescriptionListDescription,
+} from '@patternfly/react-core';
 
 import { useSource } from '../../hooks/useSource';
 import { configurationModeFormatter, dateFormatter, sourceTypeFormatter } from '../../views/formatters';

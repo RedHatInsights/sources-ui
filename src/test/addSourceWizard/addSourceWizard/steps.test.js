@@ -1,13 +1,15 @@
 import React from 'react';
 
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
-import { EmptyState } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyState';
-import { EmptyStateBody } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateBody';
-import { EmptyStateSecondaryActions } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateSecondaryActions';
-import { Bullseye } from '@patternfly/react-core/dist/esm/layouts/Bullseye/Bullseye';
-import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
-import { Alert } from '@patternfly/react-core/dist/esm/components/Alert/Alert';
-import { Spinner } from '@patternfly/react-core/dist/esm/components/Spinner/Spinner';
+import {
+  Button,
+  EmptyState,
+  EmptyStateBody,
+  EmptyStateSecondaryActions,
+  Bullseye,
+  Title,
+  Alert,
+  Spinner,
+} from '@patternfly/react-core';
 
 import CheckCircleIcon from '@patternfly/react-icons/dist/esm/icons/check-circle-icon';
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';

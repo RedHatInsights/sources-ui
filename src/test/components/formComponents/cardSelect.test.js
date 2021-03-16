@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 
-import { Tile } from '@patternfly/react-core/dist/esm/components/Tile/Tile';
+import { Tile } from '@patternfly/react-core';
 import { AwsIcon, OpenshiftIcon } from '@patternfly/react-icons';
 
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';

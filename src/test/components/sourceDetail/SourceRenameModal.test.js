@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Modal } from '@patternfly/react-core/dist/esm/components/Modal/Modal';
+import { Modal } from '@patternfly/react-core';
 
 import { act } from 'react-dom/test-utils';
 

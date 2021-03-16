@@ -1,14 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Text, TextVariants } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
-import { Badge } from '@patternfly/react-core/dist/esm/components/Badge/Badge';
-import { Popover } from '@patternfly/react-core/dist/esm/components/Popover/Popover';
-import { Tooltip } from '@patternfly/react-core/dist/esm/components/Tooltip/Tooltip';
-import { Label } from '@patternfly/react-core/dist/esm/components/Label/Label';
-import { LabelGroup } from '@patternfly/react-core/dist/esm/components/LabelGroup/LabelGroup';
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
+import { Text, TextVariants, TextContent, Badge, Popover, Tooltip, Label, LabelGroup, Button } from '@patternfly/react-core';
 
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 

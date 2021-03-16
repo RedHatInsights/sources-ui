@@ -1,9 +1,7 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 
-import { Text, TextVariants } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
-import { Popover } from '@patternfly/react-core/dist/esm/components/Popover/Popover';
+import { Text, TextVariants, TextContent, Popover } from '@patternfly/react-core';
 
 import QuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/question-circle-icon';
 

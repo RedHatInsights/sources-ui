@@ -2,10 +2,7 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
 
-import { Modal } from '@patternfly/react-core/dist/esm/components/Modal';
-import { Spinner } from '@patternfly/react-core/dist/esm/components/Spinner';
-import { Bullseye } from '@patternfly/react-core/dist/esm/layouts/Bullseye';
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
+import { Modal, Spinner, Bullseye, Button } from '@patternfly/react-core';
 
 import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';

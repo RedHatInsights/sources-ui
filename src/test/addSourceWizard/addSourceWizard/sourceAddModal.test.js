@@ -1,7 +1,7 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import { Button } from '@patternfly/react-core/dist/esm/components/Button';
+import { Button } from '@patternfly/react-core';
 
 import AddSourceWizard from '../../../components/addSourceWizard/SourceAddModal';
 import sourceTypes from '../helpers/sourceTypes';

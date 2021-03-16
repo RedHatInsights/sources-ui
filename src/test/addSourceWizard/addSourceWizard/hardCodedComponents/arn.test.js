@@ -1,12 +1,6 @@
 import React from 'react';
 
-import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
-import { TextList } from '@patternfly/react-core/dist/esm/components/Text/TextList';
-import { TextListItem } from '@patternfly/react-core/dist/esm/components/Text/TextListItem';
-import { ClipboardCopy } from '@patternfly/react-core/dist/esm/components/ClipboardCopy/ClipboardCopy';
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
-import { Popover } from '@patternfly/react-core/dist/esm/components/Popover/Popover';
+import { Text, TextContent, TextList, TextListItem, ClipboardCopy, Button, Popover } from '@patternfly/react-core';
 
 import QuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/question-circle-icon';
 

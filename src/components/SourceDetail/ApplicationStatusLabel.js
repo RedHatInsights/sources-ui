@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 
-import { Label } from '@patternfly/react-core/dist/esm/components/Label/Label';
-import { Popover } from '@patternfly/react-core/dist/esm/components/Popover/Popover';
+import { Label, Popover } from '@patternfly/react-core';
 
 import { useSource } from '../../hooks/useSource';
 import { getAppStatus, getStatusTooltipTextApp, getStatusColor, getStatusText } from '../../views/formatters';

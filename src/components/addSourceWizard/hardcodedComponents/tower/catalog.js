@@ -1,8 +1,7 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 
-import { Text, TextVariants } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
+import { Text, TextVariants, TextContent } from '@patternfly/react-core';
 
 export const AllFieldAreRequired = () => {
   const intl = useIntl();

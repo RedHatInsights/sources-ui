@@ -6,8 +6,7 @@ import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { routes, replaceRouteId } from '../../../Routes';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
 
-import { EmptyState } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyState';
-import { Spinner } from '@patternfly/react-core/dist/esm/components/Spinner/Spinner';
+import { EmptyState, Spinner } from '@patternfly/react-core';
 
 import SubmittingModal from '../../../components/SourceEditForm/SubmittingModal';
 import mockStore from '../../__mocks__/mockStore';

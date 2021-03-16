@@ -1,5 +1,5 @@
 import React from 'react';
-import { Radio } from '@patternfly/react-core/dist/esm/components/Radio/Radio';
+import { Radio } from '@patternfly/react-core';
 
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';

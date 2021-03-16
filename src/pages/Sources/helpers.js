@@ -1,7 +1,7 @@
 import React from 'react';
 import awesomeDebounce from 'awesome-debounce-promise';
 
-import { AlertActionLink } from '@patternfly/react-core/dist/esm/components/Alert/AlertActionLink';
+import { AlertActionLink } from '@patternfly/react-core';
 
 import { loadEntities, filterSources, addMessage, removeMessage } from '../../redux/sources/actions';
 import { replaceRouteId, routes } from '../../Routes';

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
+import { Button } from '@patternfly/react-core';
 import computeSourcesUrl from '../../utilities/computeSourcesUrl';
 
 const EditLink = ({ id }) => {

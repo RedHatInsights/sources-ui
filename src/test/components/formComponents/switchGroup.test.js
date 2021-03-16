@@ -2,8 +2,7 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { mount } from 'enzyme';
 
-import { FormGroup } from '@patternfly/react-core/dist/esm/components/Form/FormGroup';
-import { Switch } from '@patternfly/react-core/dist/esm/components/Switch/Switch';
+import { FormGroup, Switch } from '@patternfly/react-core';
 
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';

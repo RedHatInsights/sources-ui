@@ -1,8 +1,7 @@
 import React, { useEffect, useReducer } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { Spinner } from '@patternfly/react-core/dist/esm/components/Spinner';
-import { Bullseye } from '@patternfly/react-core/dist/esm/layouts/Bullseye';
+import { Spinner, Bullseye } from '@patternfly/react-core';
 
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 

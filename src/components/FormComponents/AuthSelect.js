@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Radio } from '@patternfly/react-core/dist/esm/components/Radio/Radio';
+import { Radio } from '@patternfly/react-core';
 import useFieldApi from '@data-driven-forms/react-form-renderer/use-field-api';
 
 const AuthRadio = (props) => {

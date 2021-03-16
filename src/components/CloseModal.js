@@ -2,9 +2,7 @@ import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl, FormattedMessage } from 'react-intl';
 
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
-import { Modal } from '@patternfly/react-core/dist/esm/components/Modal/Modal';
-import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
+import { Button, Modal, Title } from '@patternfly/react-core';
 
 import ExclamationTriangleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-triangle-icon';
 

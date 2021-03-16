@@ -56,7 +56,7 @@
       "\\.(css|scss)$": "identity-obj-proxy"
     },
     "transformIgnorePatterns": [
-      "<rootDir>/node_modules/(?!(@patternfly)).*$"
+      "<rootDir>/node_modules/(?!(@patternfly/react-icons)).*$"
     ]
   },
   "devDependencies": {

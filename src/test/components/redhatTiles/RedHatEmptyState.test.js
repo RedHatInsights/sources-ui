@@ -1,9 +1,7 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import { Card } from '@patternfly/react-core/dist/esm/components/Card/Card';
-import { Tooltip } from '@patternfly/react-core/dist/esm/components/Tooltip/Tooltip';
-import { Tile } from '@patternfly/react-core/dist/esm/components/Tile/Tile';
+import { Card, Tooltip, Tile } from '@patternfly/react-core';
 
 import componentWrapperIntl from '../../../utilities/testsHelpers';
 import mockStore from '../../__mocks__/mockStore';

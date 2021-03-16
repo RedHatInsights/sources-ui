@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
-import { Popover } from '@patternfly/react-core/dist/esm/components/Popover/Popover';
+import { Button, Popover } from '@patternfly/react-core';
 
 import mount from '../../addSourceWizard/__mocks__/mount';
 import ValuePopover from '../../../components/FormComponents/ValuePopover';

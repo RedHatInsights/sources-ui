@@ -1,13 +1,20 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 
-import { Text, TextVariants } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
-import { Button, ButtonVariant } from '@patternfly/react-core/dist/esm/components/Button/Button';
-import { Popover } from '@patternfly/react-core/dist/esm/components/Popover/Popover';
-import { TextList, TextListVariants } from '@patternfly/react-core/dist/esm/components/Text/TextList';
-import { TextListItem, TextListItemVariants } from '@patternfly/react-core/dist/esm/components/Text/TextListItem';
-import { ClipboardCopy, ClipboardCopyVariant } from '@patternfly/react-core/dist/esm/components/ClipboardCopy/ClipboardCopy';
+import {
+  Text,
+  TextVariants,
+  TextContent,
+  Button,
+  ButtonVariant,
+  Popover,
+  TextList,
+  TextListVariants,
+  TextListItem,
+  TextListItemVariants,
+  ClipboardCopy,
+  ClipboardCopyVariant,
+} from '@patternfly/react-core';
 
 import QuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/question-circle-icon';
 

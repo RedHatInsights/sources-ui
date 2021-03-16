@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { FormHelperText } from '@patternfly/react-core/dist/esm/components/Form/FormHelperText';
+import { FormHelperText } from '@patternfly/react-core';
 
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';

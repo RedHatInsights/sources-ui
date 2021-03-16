@@ -1,8 +1,7 @@
 import React from 'react';
 import mount from '../../addSourceWizard/__mocks__/mount';
 
-import { Spinner } from '@patternfly/react-core/dist/esm/components/Spinner/Spinner';
-import { FormHelperText } from '@patternfly/react-core/dist/esm/components/Form/FormHelperText';
+import { Spinner, FormHelperText } from '@patternfly/react-core';
 
 import Form from '@data-driven-forms/react-form-renderer/form';
 

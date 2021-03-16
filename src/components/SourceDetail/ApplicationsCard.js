@@ -3,11 +3,7 @@ import { useIntl } from 'react-intl';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import { Card } from '@patternfly/react-core/dist/esm/components/Card/Card';
-import { CardBody } from '@patternfly/react-core/dist/esm/components/Card/CardBody';
-import { CardTitle } from '@patternfly/react-core/dist/esm/components/Card/CardTitle';
-import { Switch } from '@patternfly/react-core/dist/esm/components/Switch/Switch';
-import { FormGroup } from '@patternfly/react-core/dist/esm/components/Form/FormGroup';
+import { Card, CardBody, CardTitle, Switch, FormGroup } from '@patternfly/react-core';
 
 import { useSource } from '../../hooks/useSource';
 import { replaceRouteId, routes } from '../../Routes';
