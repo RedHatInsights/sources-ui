@@ -20,6 +20,6 @@ export const wizardTitle = () =>
   ) : (
     <FormattedMessage id="wizard.wizardTitleRedhat" defaultMessage="Add Red Hat source" />
   );
-export const HCCM_DOCS_PREFIX = 'https://access.redhat.com/documentation/en-us/openshift_container_platform/4.6';
+export const HCCM_DOCS_PREFIX = 'https://access.redhat.com/documentation/en-us/cost_management_service/2021';
 
 export const NO_APPLICATION_VALUE = 'no-application';
