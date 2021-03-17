@@ -1,5 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
+import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
 
@@ -163,7 +165,7 @@ const redhatTypes = ({ intl, sourceTypes, applicationTypes, disableAppSelection 
       id: 'wizard.selectApplication',
       defaultMessage: 'B. Application',
     }),
-    options: compileAllApplicationComboOptions(applicationTypes, intl, sourceTypes, REDHAT_VENDOR),
+    options: compileAllApplicationComboOptions(applicationTypes, intl, REDHAT_VENDOR),
     mutator: appMutatorRedHat(applicationTypes),
     isDisabled: disableAppSelection,
     isRequired: true,
@@ -211,7 +213,18 @@ export const typesStep = (sourceTypes, applicationTypes, disableAppSelection, in
   }),
   name: 'types_step',
   nextStep: 'name_step',
-  fields: redhatTypes({ intl, sourceTypes, applicationTypes, disableAppSelection }),
+  fields: [
+    {
+      component: componentTypes.PLAIN_TEXT,
+      name: 'plain-text',
+      label: intl.formatMessage({
+        id: 'wizard.selectRedHatType',
+        defaultMessage:
+          'To import data for an application, you need to connect to a data source. Start by selecting your source type and application.',
+      }),
+    },
+    ...redhatTypes({ intl, sourceTypes, applicationTypes, disableAppSelection }),
+  ],
 });
 
 export const cloudTypesStep = (sourceTypes, applicationTypes, intl) => ({
@@ -227,7 +240,8 @@ export const cloudTypesStep = (sourceTypes, applicationTypes, intl) => ({
       name: 'plain-text',
       label: intl.formatMessage({
         id: 'wizard.selectCloudType',
-        defaultMessage: 'Select a cloud provider to connect to your Red Hat account.',
+        defaultMessage:
+          'To import data for an application, you need to connect to a data source. Start by selecting your source type.',
       }),
     },
     {
@@ -240,21 +254,29 @@ export const cloudTypesStep = (sourceTypes, applicationTypes, intl) => ({
   ],
 });
 
-export const NameDescription = () => {
+export const NameDescription = ({ sourceTypes }) => {
   const intl = useIntl();
+  const { getState } = useFormApi();
+
+  const typeName = sourceTypes.find(({ name }) => name === getState().values.source_type)?.product_name;
 
   return (
     <TextContent key="step1">
       <Text component={TextVariants.p}>
-        {intl.formatMessage({
-          id: 'wizard.nameDescription',
-          // eslint-disable-next-line max-len
-          defaultMessage:
-            'To import data for an application, you need to connect to a data source. Enter a name, then proceed to select your application and source type.',
-        })}
+        {intl.formatMessage(
+          {
+            id: 'wizard.nameDescription',
+            defaultMessage: 'Enter a name for your {typeName} source.',
+          },
+          { typeName }
+        )}
       </Text>
     </TextContent>
   );
+};
+
+NameDescription.propTypes = {
+  sourceTypes: PropTypes.array,
 };
 
 const nameStep = (intl, selectedType, sourceTypes, activeVendor) => ({
@@ -269,6 +291,7 @@ const nameStep = (intl, selectedType, sourceTypes, activeVendor) => ({
       component: 'description',
       name: 'description-summary',
       Content: NameDescription,
+      sourceTypes,
     },
     {
       component: componentTypes.TEXT_FIELD,
