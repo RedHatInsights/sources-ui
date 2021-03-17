@@ -1,9 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { Switch } from '@patternfly/react-core/dist/esm/components/Switch/Switch';
-import { FormGroup } from '@patternfly/react-core/dist/esm/components/Form/FormGroup';
-import { Stack } from '@patternfly/react-core/dist/esm/layouts/Stack/Stack';
-import { StackItem } from '@patternfly/react-core/dist/esm/layouts/Stack/StackItem';
+import { Switch, FormGroup, Stack, StackItem } from '@patternfly/react-core';
 
 import useFieldApi from '@data-driven-forms/react-form-renderer/use-field-api';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';

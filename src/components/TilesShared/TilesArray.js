@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { shallowEqual, useSelector } from 'react-redux';
 import { routes } from '../../Routes';
 
-import { Tile } from '@patternfly/react-core/dist/esm/components/Tile/Tile';
+import { Tile } from '@patternfly/react-core';
 
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import DisabledTile from '../TilesShared/DisabledTile';

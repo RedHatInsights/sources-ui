@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import isEmpty from 'lodash/isEmpty';
 import { FormattedMessage } from 'react-intl';
 
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
+import { Button } from '@patternfly/react-core';
 
 import Form from './SourceAddModal';
 import FinalWizard from './FinalWizard';

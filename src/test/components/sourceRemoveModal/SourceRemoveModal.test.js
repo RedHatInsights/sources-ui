@@ -2,8 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { Route } from 'react-router-dom';
 
-import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
+import { Text, Button } from '@patternfly/react-core';
 
 import { MemoryRouter } from 'react-router-dom';
 

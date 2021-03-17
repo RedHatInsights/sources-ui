@@ -2,7 +2,6 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { Route } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
-import { Spinner } from '@patternfly/react-core/dist/esm/components/Spinner';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import SourceEditModal from '../../../components/SourceEditForm/SourceEditModal';
@@ -11,10 +10,7 @@ import { applicationTypesData, CATALOG_APP } from '../../__mocks__/applicationTy
 import { sourceTypesData, ANSIBLE_TOWER_ID } from '../../__mocks__/sourceTypesData';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
 
-import { EmptyState } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyState';
-import { TextInput } from '@patternfly/react-core/dist/js/components/TextInput/TextInput';
-import { Alert } from '@patternfly/react-core/dist/esm/components/Alert/Alert';
-import { Form } from '@patternfly/react-core/dist/js/components/Form/Form';
+import { Spinner, EmptyState, TextInput, Alert, Form } from '@patternfly/react-core';
 
 import * as editApi from '../../../api/doLoadSourceForEdit';
 import * as submit from '../../../components/SourceEditForm/onSubmit';

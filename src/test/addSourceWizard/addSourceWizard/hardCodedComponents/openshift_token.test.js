@@ -1,9 +1,6 @@
 import React from 'react';
 import mount from '../../__mocks__/mount';
-import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
-import { TextList } from '@patternfly/react-core/dist/esm/components/Text/TextList';
-import { TextListItem } from '@patternfly/react-core/dist/esm/components/Text/TextListItem';
+import { Text, TextContent, TextList, TextListItem } from '@patternfly/react-core';
 
 import * as OpToken from '../../../../components/addSourceWizard/hardcodedComponents/openshift/token';
 

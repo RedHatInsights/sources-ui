@@ -1,8 +1,7 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
+import { Text, Title } from '@patternfly/react-core';
 
 import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';

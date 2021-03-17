@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Popover } from '@patternfly/react-core/dist/esm/components/Popover/Popover';
+import { Popover } from '@patternfly/react-core';
 
 import QuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/question-circle-icon';
 

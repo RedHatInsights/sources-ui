@@ -1,7 +1,6 @@
 import React from 'react';
 import mount from '../../__mocks__/mount';
-import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
+import { Text, TextContent } from '@patternfly/react-core';
 
 import * as OpenShift from '../../../../components/addSourceWizard/hardcodedComponents/openshift/endpoint';
 

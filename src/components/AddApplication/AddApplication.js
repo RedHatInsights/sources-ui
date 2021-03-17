@@ -22,8 +22,7 @@ import { doAttachApp } from '../../api/doAttachApp';
 import { checkSourceStatus } from '../../api/checkSourceStatus';
 
 import reducer, { initialState } from './reducer';
-import { Button } from '@patternfly/react-core/dist/esm/components/Button';
-import { Text } from '@patternfly/react-core/dist/esm/components/Text';
+import { Button, Text } from '@patternfly/react-core';
 
 import removeAppSubmit from './removeAppSubmit';
 import { diff } from 'deep-object-diff';

@@ -1,11 +1,7 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import { EmptyState } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyState';
-import { EmptyStateBody } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateBody';
-import { EmptyStateSecondaryActions } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateSecondaryActions';
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
-import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
+import { EmptyState, EmptyStateBody, EmptyStateSecondaryActions, Button, Title } from '@patternfly/react-core';
 
 import FinalWizard from '../../../components/addSourceWizard/FinalWizard';
 import LoadingStep from '../../../components/steps/LoadingStep';

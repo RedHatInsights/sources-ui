@@ -1,9 +1,6 @@
 import React from 'react';
 
-import { EmptyState } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyState';
-import { EmptyStateIcon } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateIcon';
-import { EmptyStateBody } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateBody';
-import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
+import { EmptyState, EmptyStateIcon, EmptyStateBody, Title } from '@patternfly/react-core';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import NoApplications from '../../../components/SourceDetail/NoApplications';

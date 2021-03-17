@@ -1,11 +1,7 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 
-import { Text, TextVariants } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
-import { TextList } from '@patternfly/react-core/dist/esm/components/Text/TextList';
-import { TextListItem } from '@patternfly/react-core/dist/esm/components/Text/TextListItem';
-import { ClipboardCopy } from '@patternfly/react-core/dist/esm/components/ClipboardCopy/ClipboardCopy';
+import { Text, TextVariants, TextContent, TextList, TextListItem, ClipboardCopy } from '@patternfly/react-core';
 
 export const DescriptionSummary = () => {
   const intl = useIntl();

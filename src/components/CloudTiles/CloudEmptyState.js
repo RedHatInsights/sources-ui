@@ -3,11 +3,7 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 
-import { Card } from '@patternfly/react-core/dist/esm/components/Card/Card';
-import { CardBody } from '@patternfly/react-core/dist/esm/components/Card/CardBody';
-import { CardTitle } from '@patternfly/react-core/dist/esm/components/Card/CardTitle';
-import { CardFooter } from '@patternfly/react-core/dist/esm/components/Card/CardFooter';
-import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
+import { Card, CardBody, CardTitle, CardFooter, Text } from '@patternfly/react-core';
 
 import CloudTiles from './CloudTiles';
 

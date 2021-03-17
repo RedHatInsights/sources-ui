@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import { Modal } from '@patternfly/react-core/dist/esm/components/Modal/Modal';
+import { Modal } from '@patternfly/react-core';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';

@@ -2,17 +2,20 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
-import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
-import { EmptyState, EmptyStateVariant } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyState';
-import { EmptyStateIcon } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateIcon';
-import { EmptyStateBody } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateBody';
-import { EmptyStateSecondaryActions } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateSecondaryActions';
-import { Bullseye } from '@patternfly/react-core/dist/esm/layouts/Bullseye/Bullseye';
-import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
-import { GridItem } from '@patternfly/react-core/dist/esm/layouts/Grid/GridItem';
-import { Alert } from '@patternfly/react-core/dist/esm/components/Alert/Alert';
-import { Grid } from '@patternfly/react-core/dist/esm/layouts/Grid/Grid';
+import {
+  Text,
+  Button,
+  EmptyState,
+  EmptyStateVariant,
+  EmptyStateIcon,
+  EmptyStateBody,
+  EmptyStateSecondaryActions,
+  Bullseye,
+  Title,
+  GridItem,
+  Alert,
+  Grid,
+} from '@patternfly/react-core';
 
 import CheckCircleIcon from '@patternfly/react-icons/dist/esm/icons/check-circle-icon';
 

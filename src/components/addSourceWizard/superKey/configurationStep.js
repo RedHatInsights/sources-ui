@@ -1,7 +1,7 @@
 import React from 'react';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
-import { Label } from '@patternfly/react-core/dist/esm/components/Label/Label';
+import { Label } from '@patternfly/react-core';
 import SuperKeyCredentials from './SuperKeyCredentials';
 
 const configurationStep = (intl, sourceTypes) => ({

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { NO_APPLICATION_VALUE } from './stringConstants';
 
-import { Label } from '@patternfly/react-core/dist/esm/components/Label/Label';
+import { Label } from '@patternfly/react-core';
 import SubWatchDescription from './descriptions/SubWatchDescription';
 import { CLOUD_METER_APP_NAME, COST_MANAGEMENT_APP_NAME, getActiveVendor, REDHAT_VENDOR } from '../../utilities/constants';
 

@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 
-import { Text, TextVariants } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
-import { TextList, TextListVariants } from '@patternfly/react-core/dist/esm/components/Text/TextList';
-import { TextListItem } from '@patternfly/react-core/dist/esm/components/Text/TextListItem';
-import { ClipboardCopy, ClipboardCopyVariant } from '@patternfly/react-core/dist/esm/components/ClipboardCopy/ClipboardCopy';
+import {
+  Text,
+  TextVariants,
+  TextContent,
+  TextList,
+  TextListVariants,
+  TextListItem,
+  ClipboardCopy,
+  ClipboardCopyVariant,
+} from '@patternfly/react-core';
+
 import { getSubWatchConfig } from '../../../../api/subscriptionWatch';
 
 const b = (chunks) => <b key={`b-${chunks.length}-${Math.floor(Math.random() * 1000)}`}>{chunks}</b>;

@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
-import { Popover } from '@patternfly/react-core/dist/esm/components/Popover/Popover';
+import { Button, Popover } from '@patternfly/react-core';
 
 const ValuePopover = ({ label, value }) => {
   const intl = useIntl();

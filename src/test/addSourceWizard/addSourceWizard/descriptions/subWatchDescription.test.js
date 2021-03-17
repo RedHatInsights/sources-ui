@@ -1,11 +1,7 @@
 /* eslint-disable react/display-name */
 import React from 'react';
 
-import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { Stack } from '@patternfly/react-core/dist/esm/layouts/Stack/Stack';
-import { StackItem } from '@patternfly/react-core/dist/esm/layouts/Stack/StackItem';
-import { Flex } from '@patternfly/react-core/dist/esm/layouts/Flex/Flex';
-import { FlexItem } from '@patternfly/react-core/dist/esm/layouts/Flex/FlexItem';
+import { Text, Stack, StackItem, Flex, FlexItem } from '@patternfly/react-core';
 import CheckCircleIcon from '@patternfly/react-icons/dist/esm/icons/check-circle-icon';
 
 import mount from '../../__mocks__/mount';

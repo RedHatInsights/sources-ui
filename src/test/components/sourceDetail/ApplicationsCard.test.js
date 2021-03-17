@@ -2,11 +2,7 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
 
-import { Card } from '@patternfly/react-core/dist/esm/components/Card/Card';
-import { CardBody } from '@patternfly/react-core/dist/esm/components/Card/CardBody';
-import { FormGroup } from '@patternfly/react-core/dist/esm/components/Form/FormGroup';
-import { CardTitle } from '@patternfly/react-core/dist/esm/components/Card/CardTitle';
-import { Switch } from '@patternfly/react-core/dist/esm/components/Switch/Switch';
+import { Card, CardBody, FormGroup, CardTitle, Switch } from '@patternfly/react-core';
 
 import ApplicationsCard from '../../../components/SourceDetail/ApplicationsCard';
 import { replaceRouteId, routes } from '../../../Routes';

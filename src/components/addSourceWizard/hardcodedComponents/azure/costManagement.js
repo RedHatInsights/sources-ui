@@ -1,11 +1,16 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 
-import { Text, TextVariants } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
-import { TextList, TextListVariants } from '@patternfly/react-core/dist/esm/components/Text/TextList';
-import { TextListItem, TextListItemVariants } from '@patternfly/react-core/dist/esm/components/Text/TextListItem';
-import { ClipboardCopy } from '@patternfly/react-core/dist/esm/components/ClipboardCopy/ClipboardCopy';
+import {
+  Text,
+  TextVariants,
+  TextContent,
+  TextList,
+  TextListVariants,
+  TextListItem,
+  TextListItemVariants,
+  ClipboardCopy,
+} from '@patternfly/react-core';
 
 import { HCCM_DOCS_PREFIX } from '../../stringConstants';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
