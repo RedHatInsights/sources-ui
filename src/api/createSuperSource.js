@@ -3,7 +3,7 @@ import checkSourceStatus from './checkSourceStatus';
 import { checkAppAvailability } from './getApplicationStatus';
 import handleError from './handleError';
 
-const createSuperSource = async (formData, _sourceTypes, _timetoutedApps) => {
+const createSuperSource = async (formData) => {
   try {
     const startDate = new Date();
 

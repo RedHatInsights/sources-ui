@@ -26,7 +26,7 @@ const prepareInitialValues = (initialValues) => ({
   error: undefined,
 });
 
-const reducer = (state, { type, values, data, error, initialValues, sourceTypes }) => {
+const reducer = (state, { type, values, data, error, initialValues, sourceTypes, applicationTypes }) => {
   switch (type) {
     case 'reset':
       return prepareInitialValues(initialValues);
@@ -39,6 +39,7 @@ const reducer = (state, { type, values, data, error, initialValues, sourceTypes 
         isSubmitted: true,
         values,
         sourceTypes,
+        applicationTypes,
       };
     case 'setSubmitted':
       return { ...state, isFinished: true, createdSource: data };
@@ -71,12 +72,12 @@ const AddSourceWizard = ({
     prepareInitialValues(initialValues)
   );
 
-  const onSubmit = (formValues, sourceTypes, wizardState) => {
-    dispatch({ type: 'prepareSubmitState', values: formValues, sourceTypes });
+  const onSubmit = (formValues, sourceTypes, wizardState, applicationTypes) => {
+    dispatch({ type: 'prepareSubmitState', values: formValues, sourceTypes, applicationTypes });
 
     const fn = isSuperKey(formValues.source) ? createSuperSource : doCreateSource;
 
-    return fn(formValues, sourceTypes, timeoutedApps(applicationTypes))
+    return fn(formValues, timeoutedApps(applicationTypes), applicationTypes)
       .then((data) => {
         afterSuccess && afterSuccess(data);
         submitCallback && submitCallback({ isSubmitted: true, createdSource: data, sourceTypes });
@@ -134,7 +135,7 @@ const AddSourceWizard = ({
       errorMessage={error}
       reset={reset}
       createdSource={createdSource}
-      tryAgain={() => onSubmit(values, state.sourceTypes)}
+      tryAgain={() => onSubmit(values, state.sourceTypes, undefined, state.applicationTypes)}
       afterSuccess={afterSuccess}
       sourceTypes={state.sourceTypes}
     />

@@ -504,7 +504,11 @@ describe('AddSourceWizard', () => {
     });
     wrapper.update();
 
-    expect(createSource.doCreateSource).toHaveBeenCalledWith({ source: { name: 'somename' } }, sourceTypes, expect.any(Array));
+    expect(createSource.doCreateSource).toHaveBeenCalledWith(
+      { source: { name: 'somename' } },
+      expect.any(Array),
+      applicationTypes
+    );
   });
 
   describe('different variants', () => {
