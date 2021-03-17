@@ -20,6 +20,7 @@ import mount from '../__mocks__/mount';
 import { NO_APPLICATION_VALUE } from '../../../components/addSourceWizard/stringConstants';
 import SubWatchDescription from '../../../components/addSourceWizard/descriptions/SubWatchDescription';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
+import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
 
 describe('Add source schema', () => {
   const INTL = { formatMessage: ({ defaultMessage }) => defaultMessage };
@@ -100,10 +101,17 @@ describe('Add source schema', () => {
 
   describe('descriptions', () => {
     it('renders name description', () => {
-      const wrapper = mount(<NameDescription />);
+      const wrapper = mount(
+        <SourcesFormRenderer
+          onSubmit={jest.fn()}
+          initialValues={{ source_type: 'amazon' }}
+          schema={{ fields: [{ component: 'description', name: 'desc', Content: NameDescription, sourceTypes }] }}
+        />
+      );
 
       expect(wrapper.find(TextContent)).toHaveLength(1);
       expect(wrapper.find(Text)).toHaveLength(1);
+      expect(wrapper.find(Text).text()).toEqual('Enter a name for your Amazon Web Services source.');
     });
 
     it('renders summary description', () => {
@@ -190,7 +198,9 @@ describe('Add source schema', () => {
       expect(result.title).toEqual('Select source type');
 
       expect(result.fields[0].component).toEqual(componentTypes.PLAIN_TEXT);
-      expect(result.fields[0].label).toEqual('Select a cloud provider to connect to your Red Hat account.');
+      expect(result.fields[0].label).toEqual(
+        'To import data for an application, you need to connect to a data source. Start by selecting your source type.'
+      );
 
       expect(result.fields[1].name).toEqual('source_type');
       expect(result.fields[1].label).toEqual('Select a cloud provider');
@@ -199,16 +209,20 @@ describe('Add source schema', () => {
     it('red hat type selection', () => {
       const result = typesStep(sourceTypes, applicationTypes, false, INTL);
 
-      expect(result.fields).toHaveLength(2);
-      expect(result.fields[0].name).toEqual('source_type');
-      expect(result.fields[0].mutator).toEqual(undefined);
-      expect(result.fields[1].name).toEqual('application.application_type_id');
-      expect(result.fields[1].component).toEqual('enhanced-radio');
-      expect(result.fields[1].isRequired).toEqual(true);
-      expect(result.fields[1].validate).toEqual([{ type: 'required' }]);
-      expect(result.fields[1].placeholder).toEqual(undefined);
-      expect(result.fields[1].condition).toEqual({ isNotEmpty: true, when: 'source_type' });
-      expect(result.fields[1].mutator.toString()).toEqual(appMutatorRedHat(applicationTypes).toString());
+      expect(result.fields[0].component).toEqual(componentTypes.PLAIN_TEXT);
+      expect(result.fields[0].label).toEqual(
+        'To import data for an application, you need to connect to a data source. Start by selecting your source type and application.'
+      );
+      expect(result.fields).toHaveLength(3);
+      expect(result.fields[1].name).toEqual('source_type');
+      expect(result.fields[1].mutator).toEqual(undefined);
+      expect(result.fields[2].name).toEqual('application.application_type_id');
+      expect(result.fields[2].component).toEqual('enhanced-radio');
+      expect(result.fields[2].isRequired).toEqual(true);
+      expect(result.fields[2].validate).toEqual([{ type: 'required' }]);
+      expect(result.fields[2].placeholder).toEqual(undefined);
+      expect(result.fields[2].condition).toEqual({ isNotEmpty: true, when: 'source_type' });
+      expect(result.fields[2].mutator.toString()).toEqual(appMutatorRedHat(applicationTypes).toString());
     });
   });
 
