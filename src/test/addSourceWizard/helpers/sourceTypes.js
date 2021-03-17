@@ -89,6 +89,7 @@ const sourceTypes = [
         {
           type: 'access_key_secret_key',
           name: 'AWS Secret Key',
+          is_superkey: true,
           fields: [
             {
               component: 'text-field',

@@ -9,7 +9,7 @@ import { routes } from '../../../Routes';
 import CloudTiles from '../../../components/CloudTiles/CloudTiles';
 import mockStore from '../../__mocks__/mockStore';
 import sourceTypes, { googleType } from '../../__mocks__/sourceTypesData';
-import * as constants from '../../../utilities/constants';
+import { CLOUD_VENDOR } from '../../../utilities/constants';
 
 describe('CloudTiles', () => {
   let wrapper;
@@ -24,9 +24,10 @@ describe('CloudTiles', () => {
       setSelectedType,
     };
 
-    store = mockStore({ user: { isOrgAdmin: true }, sources: { sourceTypes: [...sourceTypes.data, googleType] } });
-
-    constants.getActiveVendor = () => constants.CLOUD_VENDOR;
+    store = mockStore({
+      user: { isOrgAdmin: true },
+      sources: { sourceTypes: [...sourceTypes.data, googleType], activeVendor: CLOUD_VENDOR },
+    });
   });
 
   it('renders correctly', async () => {
@@ -45,7 +46,10 @@ describe('CloudTiles', () => {
   });
 
   it('renders correctly when no permissions', async () => {
-    store = mockStore({ user: { isOrgAdmin: false }, sources: { sourceTypes: [...sourceTypes.data, googleType] } });
+    store = mockStore({
+      user: { isOrgAdmin: false },
+      sources: { sourceTypes: [...sourceTypes.data, googleType], activeVendor: CLOUD_VENDOR },
+    });
 
     await act(async () => {
       wrapper = mount(componentWrapperIntl(<CloudTiles {...initialProps} />, store));

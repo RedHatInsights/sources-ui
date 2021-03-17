@@ -7,13 +7,16 @@ import applicationTypes from '../helpers/applicationTypes';
 import Form from '../../../components/addSourceWizard/SourceAddModal';
 
 import mount from '../__mocks__/mount';
+import { CLOUD_VENDOR } from '../../../utilities/constants';
 
 describe('AddSourceButton', () => {
   it('opens wizard and close wizard', async () => {
     let wrapper;
 
     await act(async () => {
-      wrapper = mount(<AddSourceButton sourceTypes={sourceTypes} applicationTypes={applicationTypes} />);
+      wrapper = mount(
+        <AddSourceButton sourceTypes={sourceTypes} applicationTypes={applicationTypes} activeVendor={CLOUD_VENDOR} />
+      );
     });
     wrapper.update();
 

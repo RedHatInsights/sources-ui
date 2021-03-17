@@ -12,8 +12,6 @@ describe('filterApps', () => {
   });
 
   describe('vendor filter', () => {
-    let tmpLocation;
-
     const sourceTypesVendors = [
       { id: '1', name: 'azure', vendor: 'Microsoft' },
       { id: '2', name: 'aws', vendor: 'amazon' },
@@ -28,22 +26,8 @@ describe('filterApps', () => {
       { id: '1', name: 'remediations', supported_source_types: ['openshift'] },
     ];
 
-    beforeEach(() => {
-      tmpLocation = Object.assign({}, window.location);
-
-      delete window.location;
-
-      window.location = {};
-    });
-
-    afterEach(() => {
-      window.location = tmpLocation;
-    });
-
     it('filters CLOUD source types', () => {
-      window.location.search = `activeVendor=${CLOUD_VENDOR}`;
-
-      expect(appTypes.filter(filterVendorAppTypes(sourceTypesVendors))).toEqual([
+      expect(appTypes.filter(filterVendorAppTypes(sourceTypesVendors, CLOUD_VENDOR))).toEqual([
         { id: '123', name: 'cost', supported_source_types: ['aws'] },
         { id: '13', name: 'sub watch', supported_source_types: ['azure'] },
         { id: '9089', name: 'topology', supported_source_types: ['openshift', 'vmware'] },
@@ -57,9 +41,7 @@ describe('filterApps', () => {
         { id: '4', name: 'vmware', vendor: 'vmware' },
       ];
 
-      window.location.search = `activeVendor=${CLOUD_VENDOR}`;
-
-      expect(appTypes.filter(filterVendorAppTypes(onlyCloudTypes))).toEqual([
+      expect(appTypes.filter(filterVendorAppTypes(onlyCloudTypes, CLOUD_VENDOR))).toEqual([
         { id: '123', name: 'cost', supported_source_types: ['aws'] },
         { id: '13', name: 'sub watch', supported_source_types: ['azure'] },
         { id: '9089', name: 'topology', supported_source_types: ['openshift', 'vmware'] },
@@ -67,9 +49,7 @@ describe('filterApps', () => {
     });
 
     it('filters RED HAT source types', () => {
-      window.location.search = `activeVendor=${REDHAT_VENDOR}`;
-
-      expect(appTypes.filter(filterVendorAppTypes(sourceTypesVendors))).toEqual([
+      expect(appTypes.filter(filterVendorAppTypes(sourceTypesVendors, REDHAT_VENDOR))).toEqual([
         { id: '9089', name: 'topology', supported_source_types: ['openshift', 'vmware'] },
         { id: '1', name: 'remediations', supported_source_types: ['openshift'] },
       ]);

@@ -11,6 +11,8 @@ import { filterVendorTypes } from '../../utilities/filterTypes';
 
 const TilesArray = ({ setSelectedType, mapper }) => {
   const sourceTypes = useSelector(({ sources }) => sources.sourceTypes, shallowEqual);
+  const activeVendor = useSelector(({ sources }) => sources.activeVendor);
+
   const { push } = useHistory();
   const hasWritePermissions = useHasWritePermissions();
 
@@ -22,7 +24,7 @@ const TilesArray = ({ setSelectedType, mapper }) => {
   const TileComponent = hasWritePermissions ? Tile : DisabledTile;
 
   return sourceTypes
-    .filter(filterVendorTypes)
+    .filter(filterVendorTypes(activeVendor))
     .sort((a, b) => a.product_name.localeCompare(b.product_name))
     .map(({ name }) => mapper(name, openWizard, TileComponent));
 };

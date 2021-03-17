@@ -12,7 +12,7 @@ import * as dependency from '../../../api/wizardHelpers';
 import * as createSource from '../../../api/createSource';
 
 import mount from '../__mocks__/mount';
-import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../../utilities/constants';
+import { ANSIBLE_TOWER_NAME, CLOUD_VENDOR, REDHAT_VENDOR } from '../../../utilities/constants';
 import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
 import CloseModal from '../../../components/CloseModal';
 
@@ -48,7 +48,8 @@ describe('AddSourceWizard', () => {
     expect(wrapper.find(Form)).toHaveLength(1);
     expect(wrapper.find(Modal)).toHaveLength(1);
 
-    expect(wrapper.find(SourcesFormRenderer).props().schema.fields[0].fields[1].title).toEqual('Select source type');
+    expect(wrapper.find(SourcesFormRenderer).props().schema.fields[0].fields[0].title).toEqual('Select source type');
+    expect(wrapper.find(SourcesFormRenderer).props().schema.fields[0].fields[1].title).toEqual('Name source');
   });
 
   it('renders correctly without sourceTypes', async () => {
@@ -69,7 +70,6 @@ describe('AddSourceWizard', () => {
     expect.assertions(8);
 
     createSource.doCreateSource = jest.fn(() => new Promise((resolve) => setTimeout(() => resolve(SOURCE_DATA_OUT), 100)));
-    dependency.findSource = jest.fn(() => Promise.resolve({ data: { sources: [] } }));
 
     await act(async () => {
       wrapper = mount(<AddSourceWizard {...initialProps} />);
@@ -77,13 +77,7 @@ describe('AddSourceWizard', () => {
     wrapper.update();
 
     await act(async () => {
-      wrapper.find('input').instance().value = 'somename';
-      wrapper.find('input').simulate('change');
-    });
-    wrapper.update();
-
-    await act(async () => {
-      jest.advanceTimersByTime(1000);
+      wrapper.find('Tile').first().simulate('click');
     });
     wrapper.update();
 
@@ -111,11 +105,8 @@ describe('AddSourceWizard', () => {
   });
 
   it('pass created source to afterSuccess function', async () => {
-    jest.useFakeTimers();
-
     const afterSubmitMock = jest.fn();
     createSource.doCreateSource = jest.fn(() => new Promise((resolve) => resolve({ name: 'source', applications: [] })));
-    dependency.findSource = jest.fn(() => Promise.resolve({ data: { sources: [] } }));
 
     await act(async () => {
       wrapper = mount(<AddSourceWizard {...initialProps} afterSuccess={afterSubmitMock} />);
@@ -123,13 +114,7 @@ describe('AddSourceWizard', () => {
     wrapper.update();
 
     await act(async () => {
-      wrapper.find('input').instance().value = 'somename';
-      wrapper.find('input').simulate('change');
-    });
-    wrapper.update();
-
-    await act(async () => {
-      jest.advanceTimersByTime(1000);
+      wrapper.find('Tile').first().simulate('click');
     });
     wrapper.update();
 
@@ -138,22 +123,12 @@ describe('AddSourceWizard', () => {
     });
     wrapper.update();
 
-    await act(async () => {
-      jest.runAllTimers();
-    });
-    wrapper.update();
-
     expect(afterSubmitMock).toHaveBeenCalledWith({ name: 'source', applications: [] });
-
-    jest.useRealTimers();
   });
 
   it('pass created source to submitCallback function when success', async () => {
-    jest.useFakeTimers();
-
     const submitCallback = jest.fn();
     createSource.doCreateSource = jest.fn(() => new Promise((resolve) => resolve({ name: 'source', applications: [] })));
-    dependency.findSource = jest.fn(() => Promise.resolve({ data: { sources: [] } }));
 
     await act(async () => {
       wrapper = mount(<AddSourceWizard {...initialProps} submitCallback={submitCallback} />);
@@ -161,23 +136,12 @@ describe('AddSourceWizard', () => {
     wrapper.update();
 
     await act(async () => {
-      wrapper.find('input').instance().value = 'somename';
-      wrapper.find('input').simulate('change');
-    });
-    wrapper.update();
-
-    await act(async () => {
-      jest.advanceTimersByTime(1000);
+      wrapper.find('Tile').first().simulate('click');
     });
     wrapper.update();
 
     await act(async () => {
       wrapper.find('form').simulate('submit');
-    });
-    wrapper.update();
-
-    await act(async () => {
-      jest.runAllTimers();
     });
     wrapper.update();
 
@@ -186,16 +150,11 @@ describe('AddSourceWizard', () => {
       isSubmitted: true,
       sourceTypes,
     });
-
-    jest.useRealTimers();
   });
 
   it('pass values to submitCallback function when errors', async () => {
-    jest.useFakeTimers();
-
     const submitCallback = jest.fn();
     createSource.doCreateSource = jest.fn(() => new Promise((_, reject) => reject('Error - wrong name')));
-    dependency.findSource = jest.fn(() => Promise.resolve({ data: { sources: [] } }));
 
     await act(async () => {
       wrapper = mount(<AddSourceWizard {...initialProps} submitCallback={submitCallback} />);
@@ -203,13 +162,7 @@ describe('AddSourceWizard', () => {
     wrapper.update();
 
     await act(async () => {
-      wrapper.find('input').instance().value = 'somename';
-      wrapper.find('input').simulate('change');
-    });
-    wrapper.update();
-
-    await act(async () => {
-      jest.advanceTimersByTime(1000);
+      wrapper.find('Tile').first().simulate('click');
     });
     wrapper.update();
 
@@ -218,13 +171,8 @@ describe('AddSourceWizard', () => {
     });
     wrapper.update();
 
-    await act(async () => {
-      jest.runAllTimers();
-    });
-    wrapper.update();
-
     expect(submitCallback).toHaveBeenCalledWith({
-      values: { source: { name: 'somename' } },
+      values: { source_type: ANSIBLE_TOWER_NAME },
       isErrored: true,
       sourceTypes,
       error: 'Error - wrong name',
@@ -232,17 +180,11 @@ describe('AddSourceWizard', () => {
       // the state is not included
       wizardState: expect.any(Function),
     });
-
-    jest.useRealTimers();
   });
 
   it('pass values to onClose function', async () => {
-    jest.useFakeTimers();
-
     const CANCEL_BUTTON_INDEX = 3;
-    const NAME = 'name';
     const onClose = jest.fn();
-    dependency.findSource = jest.fn(() => Promise.resolve({ data: { sources: [] } }));
 
     await act(async () => {
       wrapper = mount(<AddSourceWizard {...initialProps} onClose={onClose} />);
@@ -250,13 +192,7 @@ describe('AddSourceWizard', () => {
     wrapper.update();
 
     await act(async () => {
-      wrapper.find('input').instance().value = NAME;
-      wrapper.find('input').simulate('change');
-    });
-    wrapper.update();
-
-    await act(async () => {
-      jest.advanceTimersByTime(1000);
+      wrapper.find('Tile').first().simulate('click');
     });
     wrapper.update();
 
@@ -274,18 +210,12 @@ describe('AddSourceWizard', () => {
 
     wrapper.update();
 
-    expect(onClose).toHaveBeenCalledWith({ source: { name: NAME } });
-
-    jest.useRealTimers();
+    expect(onClose).toHaveBeenCalledWith({ source_type: ANSIBLE_TOWER_NAME });
   });
 
   it('stay on the wizard', async () => {
-    jest.useFakeTimers();
-
     const CANCEL_BUTTON_INDEX = 3;
-    const NAME = 'name';
     const onClose = jest.fn();
-    dependency.findSource = jest.fn(() => Promise.resolve({ data: { sources: [] } }));
 
     await act(async () => {
       wrapper = mount(<AddSourceWizard {...initialProps} onClose={onClose} />);
@@ -293,13 +223,7 @@ describe('AddSourceWizard', () => {
     wrapper.update();
 
     await act(async () => {
-      wrapper.find('input').instance().value = NAME;
-      wrapper.find('input').simulate('change');
-    });
-    wrapper.update();
-
-    await act(async () => {
-      jest.advanceTimersByTime(1000);
+      wrapper.find('Tile').first().simulate('click');
     });
     wrapper.update();
 
@@ -318,15 +242,10 @@ describe('AddSourceWizard', () => {
     expect(wrapper.find(CloseModal)).toHaveLength(0);
 
     expect(onClose).not.toHaveBeenCalled();
-    expect(wrapper.find('input').instance().value).toEqual(NAME);
-
-    jest.useRealTimers();
+    expect(wrapper.find('Tile').first().props().isSelected).toEqual(true);
   });
 
   it('show error step after failing the form', async () => {
-    jest.useFakeTimers();
-
-    dependency.findSource = jest.fn(() => Promise.resolve({ data: { sources: [] } }));
     const ERROR_MESSAGE = 'fail';
     createSource.doCreateSource = jest.fn(() => new Promise((_resolve, reject) => reject(ERROR_MESSAGE)));
 
@@ -336,13 +255,7 @@ describe('AddSourceWizard', () => {
     wrapper.update();
 
     await act(async () => {
-      wrapper.find('input').instance().value = 'somename';
-      wrapper.find('input').simulate('change');
-    });
-    wrapper.update();
-
-    await act(async () => {
-      jest.advanceTimersByTime(1000);
+      wrapper.find('Tile').first().simulate('click');
     });
     wrapper.update();
 
@@ -354,16 +267,12 @@ describe('AddSourceWizard', () => {
     expect(wrapper.find(FinalWizard)).toHaveLength(1);
     expect(wrapper.find(FinishedStep)).toHaveLength(0);
     expect(wrapper.find(ErroredStep)).toHaveLength(1);
-
-    jest.useRealTimers();
   });
 
   it('afterError closes wizard with no values', async () => {
     const closeCallback = jest.fn();
-    jest.useFakeTimers();
 
     createSource.doCreateSource = jest.fn(() => Promise.resolve(SOURCE_DATA_OUT));
-    dependency.findSource = jest.fn(() => Promise.resolve({ data: { sources: [] } }));
 
     await act(async () => {
       wrapper = mount(<AddSourceWizard {...initialProps} onClose={closeCallback} />);
@@ -371,13 +280,7 @@ describe('AddSourceWizard', () => {
     wrapper.update();
 
     await act(async () => {
-      wrapper.find('input').instance().value = 'somename';
-      wrapper.find('input').simulate('change');
-    });
-    wrapper.update();
-
-    await act(async () => {
-      jest.advanceTimersByTime(1000);
+      wrapper.find('Tile').first().simulate('click');
     });
     wrapper.update();
 
@@ -398,10 +301,8 @@ describe('AddSourceWizard', () => {
 
   it('afterSubmit closes wizard with values', async () => {
     const closeCallback = jest.fn();
-    jest.useFakeTimers();
 
     createSource.doCreateSource = jest.fn(() => Promise.resolve(SOURCE_DATA_OUT));
-    dependency.findSource = jest.fn(() => Promise.resolve({ data: { sources: [] } }));
 
     await act(async () => {
       wrapper = mount(<AddSourceWizard {...initialProps} onClose={closeCallback} />);
@@ -409,13 +310,7 @@ describe('AddSourceWizard', () => {
     wrapper.update();
 
     await act(async () => {
-      wrapper.find('input').instance().value = 'somename';
-      wrapper.find('input').simulate('change');
-    });
-    wrapper.update();
-
-    await act(async () => {
-      jest.advanceTimersByTime(1000);
+      wrapper.find('Tile').first().simulate('click');
     });
     wrapper.update();
 
@@ -435,10 +330,7 @@ describe('AddSourceWizard', () => {
   });
 
   it('reset - resets initialValues', async () => {
-    jest.useFakeTimers();
-
     createSource.doCreateSource = jest.fn(() => Promise.resolve(SOURCE_DATA_OUT));
-    dependency.findSource = jest.fn(() => Promise.resolve({ data: { sources: [] } }));
 
     await act(async () => {
       wrapper = mount(<AddSourceWizard {...initialProps} />);
@@ -446,13 +338,7 @@ describe('AddSourceWizard', () => {
     wrapper.update();
 
     await act(async () => {
-      wrapper.find('input').instance().value = 'somename';
-      wrapper.find('input').simulate('change');
-    });
-    wrapper.update();
-
-    await act(async () => {
-      jest.advanceTimersByTime(1000);
+      wrapper.find('Tile').first().simulate('click');
     });
     wrapper.update();
 
@@ -466,14 +352,11 @@ describe('AddSourceWizard', () => {
     });
     wrapper.update();
 
-    expect(wrapper.find('input').instance().value).toEqual('');
+    expect(wrapper.find('Tile').first().props().isSelected).toEqual(false);
   });
 
   it('tryAgain retries the request', async () => {
-    jest.useFakeTimers();
-
     createSource.doCreateSource = jest.fn(() => Promise.resolve(SOURCE_DATA_OUT));
-    dependency.findSource = jest.fn(() => Promise.resolve({ data: { sources: [] } }));
 
     await act(async () => {
       wrapper = mount(<AddSourceWizard {...initialProps} />);
@@ -481,13 +364,7 @@ describe('AddSourceWizard', () => {
     wrapper.update();
 
     await act(async () => {
-      wrapper.find('input').instance().value = 'somename';
-      wrapper.find('input').simulate('change');
-    });
-    wrapper.update();
-
-    await act(async () => {
-      jest.advanceTimersByTime(1000);
+      wrapper.find('Tile').first().simulate('click');
     });
     wrapper.update();
 
@@ -505,34 +382,18 @@ describe('AddSourceWizard', () => {
     wrapper.update();
 
     expect(createSource.doCreateSource).toHaveBeenCalledWith(
-      { source: { name: 'somename' } },
+      { source_type: ANSIBLE_TOWER_NAME },
       expect.any(Array),
       applicationTypes
     );
   });
 
   describe('different variants', () => {
-    let tmpLocation;
-
     const getNavigation = (wrapper) => wrapper.find('.pf-c-wizard__nav-item').map((item) => item.text());
 
-    beforeEach(() => {
-      tmpLocation = Object.assign({}, window.location);
-
-      delete window.location;
-
-      window.location = {};
-    });
-
-    afterEach(() => {
-      window.location = tmpLocation;
-    });
-
     it('show configuration step when selectedType is set - CLOUD', async () => {
-      window.location.search = `activeVendor=${CLOUD_VENDOR}`;
-
       await act(async () => {
-        wrapper = mount(<AddSourceWizard {...initialProps} selectedType="amazon" />);
+        wrapper = mount(<AddSourceWizard {...initialProps} selectedType="amazon" activeVendor={CLOUD_VENDOR} />);
       });
       wrapper.update();
 
@@ -540,25 +401,24 @@ describe('AddSourceWizard', () => {
     });
 
     it('show source type selection when CLOUD', async () => {
-      window.location.search = `activeVendor=${CLOUD_VENDOR}`;
-
       await act(async () => {
-        wrapper = mount(<AddSourceWizard {...initialProps} initialValues={{ source_type: 'amazon' }} />);
+        wrapper = mount(
+          <AddSourceWizard {...initialProps} initialValues={{ source_type: 'amazon' }} activeVendor={CLOUD_VENDOR} />
+        );
       });
       wrapper.update();
 
-      expect(getNavigation(wrapper)).toEqual(['Name source', 'Select source type', 'Select configuration']);
+      expect(getNavigation(wrapper)).toEqual(['Select source type', 'Name source', 'Select configuration']);
     });
 
     it('show application step when selectedType is set and configuration is selected to true', async () => {
-      window.location.search = `activeVendor=${CLOUD_VENDOR}`;
-
       await act(async () => {
         wrapper = mount(
           <AddSourceWizard
             {...initialProps}
             selectedType="amazon"
             initialValues={{ source: { app_creation_workflow: 'account_authorization' } }}
+            activeVendor={CLOUD_VENDOR}
           />
         );
       });
@@ -568,14 +428,13 @@ describe('AddSourceWizard', () => {
     });
 
     it('show application step when selectedType is set and configuration is selected to false', async () => {
-      window.location.search = `activeVendor=${CLOUD_VENDOR}`;
-
       await act(async () => {
         wrapper = mount(
           <AddSourceWizard
             {...initialProps}
             selectedType="amazon"
             initialValues={{ source: { app_creation_workflow: 'manual_configuration' } }}
+            activeVendor={CLOUD_VENDOR}
           />
         );
       });
@@ -585,10 +444,8 @@ describe('AddSourceWizard', () => {
     });
 
     it('show application step when selectedType is set - RED HAT', async () => {
-      window.location.search = `activeVendor=${REDHAT_VENDOR}`;
-
       await act(async () => {
-        wrapper = mount(<AddSourceWizard {...initialProps} selectedType="openshift" />);
+        wrapper = mount(<AddSourceWizard {...initialProps} selectedType="openshift" activeVendor={REDHAT_VENDOR} />);
       });
       wrapper.update();
 
@@ -602,14 +459,12 @@ describe('AddSourceWizard', () => {
     });
 
     it('show source type selection when REDHAT', async () => {
-      window.location.search = `activeVendor=${REDHAT_VENDOR}`;
-
       await act(async () => {
-        wrapper = mount(<AddSourceWizard {...initialProps} />);
+        wrapper = mount(<AddSourceWizard {...initialProps} activeVendor={REDHAT_VENDOR} />);
       });
       wrapper.update();
 
-      expect(getNavigation(wrapper)).toEqual(['Name source', 'Source type and application']);
+      expect(getNavigation(wrapper)).toEqual(['Source type and application', 'Name source']);
     });
   });
 
