@@ -4,7 +4,7 @@ import { NO_APPLICATION_VALUE } from './stringConstants';
 
 import { Label } from '@patternfly/react-core';
 import SubWatchDescription from './descriptions/SubWatchDescription';
-import { CLOUD_METER_APP_NAME, COST_MANAGEMENT_APP_NAME, getActiveVendor, REDHAT_VENDOR } from '../../utilities/constants';
+import { CLOUD_METER_APP_NAME, COST_MANAGEMENT_APP_NAME, REDHAT_VENDOR } from '../../utilities/constants';
 
 export const descriptionMapper = (type, intl) =>
   ({
@@ -27,7 +27,7 @@ export const labelMapper = (type, intl) =>
     ),
   }[type.name]);
 
-export const compileAllApplicationComboOptions = (applicationTypes, intl) => [
+export const compileAllApplicationComboOptions = (applicationTypes, intl, activeVendor) => [
   ...applicationTypes
     .sort((a, b) => a.display_name.localeCompare(b.display_name))
     .map((t) => ({
@@ -35,7 +35,7 @@ export const compileAllApplicationComboOptions = (applicationTypes, intl) => [
       label: labelMapper(t, intl) || t.display_name,
       description: descriptionMapper(t, intl),
     })),
-  ...(getActiveVendor() !== REDHAT_VENDOR
+  ...(activeVendor !== REDHAT_VENDOR
     ? [
         {
           label: intl.formatMessage({

@@ -23,20 +23,21 @@ const initialValues = {
 
 const reducer = (
   state,
-  { type, sourceTypes, applicationTypes, container, disableAppSelection, intl, selectedType, initialWizardState }
+  { type, sourceTypes, applicationTypes, container, disableAppSelection, intl, selectedType, initialWizardState, activeVendor }
 ) => {
   switch (type) {
     case 'loaded':
       return {
         ...state,
         schema: createSchema(
-          sourceTypes.filter(filterTypes).filter(filterVendorTypes),
-          applicationTypes.filter(filterApps).filter(filterVendorAppTypes(sourceTypes)),
+          sourceTypes.filter(filterTypes).filter(filterVendorTypes(activeVendor)),
+          applicationTypes.filter(filterApps).filter(filterVendorAppTypes(sourceTypes, activeVendor)),
           disableAppSelection,
           container,
           intl,
           selectedType,
-          initialWizardState
+          initialWizardState,
+          activeVendor
         ),
         isLoading: false,
         sourceTypes,
@@ -57,6 +58,7 @@ const SourceAddModal = ({
   onSubmit,
   selectedType,
   initialWizardState,
+  activeVendor,
 }) => {
   const [{ schema, sourceTypes: stateSourceTypes, applicationTypes: stateApplicationTypes, isLoading }, dispatch] = useReducer(
     reducer,
@@ -92,6 +94,7 @@ const SourceAddModal = ({
           intl,
           selectedType,
           initialWizardState,
+          activeVendor,
         });
       }
     });
@@ -111,8 +114,8 @@ const SourceAddModal = ({
         className="sources"
         isOpen={true}
         onClose={onCancel}
-        title={wizardTitle()}
-        description={wizardDescription()}
+        title={wizardTitle(activeVendor)}
+        description={wizardDescription(activeVendor)}
         steps={[
           {
             name: 'Loading',
@@ -168,6 +171,7 @@ SourceAddModal.propTypes = {
   isCancelling: PropTypes.bool,
   selectedType: PropTypes.string,
   initialWizardState: PropTypes.object,
+  activeVendor: PropTypes.string,
 };
 
 SourceAddModal.defaultProps = {

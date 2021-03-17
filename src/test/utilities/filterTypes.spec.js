@@ -16,8 +16,6 @@ describe('filterTypes', () => {
   });
 
   describe('vendor filter', () => {
-    let tmpLocation;
-
     const sourceTypesVendors = [
       { id: '1', name: 'azure', vendor: 'Microsoft' },
       { id: '2', name: 'aws', vendor: 'amazon' },
@@ -25,22 +23,8 @@ describe('filterTypes', () => {
       { id: '4', name: 'vmware', vendor: 'vmware' },
     ];
 
-    beforeEach(() => {
-      tmpLocation = Object.assign({}, window.location);
-
-      delete window.location;
-
-      window.location = {};
-    });
-
-    afterEach(() => {
-      window.location = tmpLocation;
-    });
-
     it('filters CLOUD source types', () => {
-      window.location.search = `activeVendor=${CLOUD_VENDOR}`;
-
-      expect(sourceTypesVendors.filter(filterVendorTypes)).toEqual([
+      expect(sourceTypesVendors.filter(filterVendorTypes(CLOUD_VENDOR))).toEqual([
         { id: '1', name: 'azure', vendor: 'Microsoft' },
         { id: '2', name: 'aws', vendor: 'amazon' },
         { id: '4', name: 'vmware', vendor: 'vmware' },
@@ -48,9 +32,9 @@ describe('filterTypes', () => {
     });
 
     it('filters RED HAT source types', () => {
-      window.location.search = `activeVendor=${REDHAT_VENDOR}`;
-
-      expect(sourceTypesVendors.filter(filterVendorTypes)).toEqual([{ id: '3', name: 'openshift', vendor: 'Red Hat' }]);
+      expect(sourceTypesVendors.filter(filterVendorTypes(REDHAT_VENDOR))).toEqual([
+        { id: '3', name: 'openshift', vendor: 'Red Hat' },
+      ]);
     });
   });
 });

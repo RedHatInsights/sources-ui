@@ -19,7 +19,6 @@ import { Text, TextContent } from '@patternfly/react-core';
 import mount from '../__mocks__/mount';
 import { NO_APPLICATION_VALUE } from '../../../components/addSourceWizard/stringConstants';
 import SubWatchDescription from '../../../components/addSourceWizard/descriptions/SubWatchDescription';
-import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../../utilities/constants';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 
 describe('Add source schema', () => {
@@ -35,7 +34,7 @@ describe('Add source schema', () => {
     };
 
     it('returns nextstep without selected app', () => {
-      expect(nextStep(formState)).toEqual(OPENSHIFT);
+      expect(nextStep()(formState)).toEqual(OPENSHIFT);
     });
 
     it('returns nextstep with selected app', () => {
@@ -48,7 +47,7 @@ describe('Add source schema', () => {
         },
       };
 
-      expect(nextStep(formState)).toEqual(`${OPENSHIFT}-${APP_ID}`);
+      expect(nextStep()(formState)).toEqual(`${OPENSHIFT}-${APP_ID}`);
     });
 
     it('returns nextstep with empty application', () => {
@@ -59,7 +58,7 @@ describe('Add source schema', () => {
         },
       };
 
-      expect(nextStep(formState)).toEqual(OPENSHIFT);
+      expect(nextStep()(formState)).toEqual(OPENSHIFT);
     });
   });
 
@@ -186,7 +185,7 @@ describe('Add source schema', () => {
     it('cloud type selection', () => {
       const result = cloudTypesStep(sourceTypes, applicationTypes, INTL);
 
-      expect(result.fields).toHaveLength(3);
+      expect(result.fields).toHaveLength(2);
       expect(result.name).toEqual('types_step');
       expect(result.title).toEqual('Select source type');
 
@@ -200,7 +199,7 @@ describe('Add source schema', () => {
     it('red hat type selection', () => {
       const result = typesStep(sourceTypes, applicationTypes, false, INTL);
 
-      expect(result.fields).toHaveLength(3);
+      expect(result.fields).toHaveLength(2);
       expect(result.fields[0].name).toEqual('source_type');
       expect(result.fields[0].mutator).toEqual(undefined);
       expect(result.fields[1].name).toEqual('application.application_type_id');
@@ -238,23 +237,7 @@ describe('Add source schema', () => {
   });
 
   describe('compileAllSourcesComboOptions', () => {
-    let tmpLocation;
-
-    beforeEach(() => {
-      tmpLocation = Object.assign({}, window.location);
-
-      delete window.location;
-
-      window.location = {};
-    });
-
-    afterEach(() => {
-      window.location = tmpLocation;
-    });
-
     it('cloud type selection', () => {
-      window.location.search = `activeVendor=${CLOUD_VENDOR}`;
-
       const mockSourceTypes = [
         { name: 'google', product_name: 'Google Cloud Provider', id: '1' },
         { name: 'aws', product_name: 'Amazon Web Services', id: '2' },
@@ -267,8 +250,6 @@ describe('Add source schema', () => {
     });
 
     it('red hat type selection - remove red hat', () => {
-      window.location.search = `activeVendor=${REDHAT_VENDOR}`;
-
       const mockSourceTypes = [
         { name: 'ops', product_name: 'Red Hat Openshift', vendor: 'Red Hat', id: '1' },
         { name: 'sat', product_name: 'Red Hat Satellite', vendor: 'Red Hat', id: '2' },

@@ -135,7 +135,7 @@ const SourcesPage = () => {
 
   const showPaginationLoader = (!loaded || !appTypesLoaded || !sourceTypesLoaded) && !paginationClicked;
 
-  const filteredSourceTypes = sourceTypes.filter(filterVendorTypes);
+  const filteredSourceTypes = sourceTypes.filter(filterVendorTypes(activeVendor));
 
   const mainContent = () => (
     <React.Fragment>
@@ -216,7 +216,9 @@ const SourcesPage = () => {
               type: 'checkbox',
               filterValues: {
                 onChange: (_event, value) => setFilter('applications', value, dispatch),
-                items: prepareApplicationTypeSelection(appTypes?.filter(filterVendorAppTypes(filteredSourceTypes)) || []),
+                items: prepareApplicationTypeSelection(
+                  appTypes?.filter(filterVendorAppTypes(filteredSourceTypes, activeVendor)) || []
+                ),
                 value: filterValue.applications,
               },
             },
@@ -285,6 +287,7 @@ const SourcesPage = () => {
             submitCallback: (state) => checkSubmit(state, dispatch, history.push, intl, stateDispatch),
             initialValues: wizardInitialValues,
             initialWizardState: wizardInitialState,
+            activeVendor,
           }}
         />
       </Suspense>

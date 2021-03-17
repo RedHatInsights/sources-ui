@@ -9,11 +9,10 @@ import debouncePromise from '../../utilities/debouncePromise';
 import { findSource } from '../../api/wizardHelpers';
 import { schemaBuilder } from './schemaBuilder';
 import { NO_APPLICATION_VALUE, wizardDescription, wizardTitle } from './stringConstants';
-import ValidatorReset from './ValidatorReset';
 import configurationStep from './superKey/configurationStep';
 import { compileAllApplicationComboOptions } from './compileAllApplicationComboOptions';
 import applicationsStep from './superKey/applicationsStep';
-import { getActiveVendor, REDHAT_VENDOR } from '../../utilities/constants';
+import { REDHAT_VENDOR } from '../../utilities/constants';
 import validated from '../../utilities/resolveProps/validated';
 import handleError from '../../api/handleError';
 
@@ -119,11 +118,23 @@ export const iconMapper = (sourceTypes) => (name) => {
   return Icon;
 };
 
-export const nextStep = ({ values: { application, source_type } }) => {
+export const nextStep = (selectedType) => ({ values: { application, source_type } }) => {
+  if (selectedType) {
+    return 'application_step';
+  }
+
   const appId = application && application.application_type_id !== NO_APPLICATION_VALUE && application.application_type_id;
   const resultedStep = appId ? `${source_type}-${appId}` : source_type;
 
   return resultedStep;
+};
+
+export const hasSuperKeyType = (sourceType) => sourceType?.schema.authentication.find(({ is_superkey }) => is_superkey);
+
+export const nextStepCloud = (sourceTypes) => ({ values }) => {
+  const sourceType = sourceTypes.find(({ name }) => name === values.source_type);
+
+  return hasSuperKeyType(sourceType) ? 'configuration_step' : 'application_step';
 };
 
 const sourceTypeSelect = ({ intl, sourceTypes, applicationTypes }) => ({
@@ -152,7 +163,7 @@ const redhatTypes = ({ intl, sourceTypes, applicationTypes, disableAppSelection 
       id: 'wizard.selectApplication',
       defaultMessage: 'B. Application',
     }),
-    options: compileAllApplicationComboOptions(applicationTypes, intl, sourceTypes),
+    options: compileAllApplicationComboOptions(applicationTypes, intl, sourceTypes, REDHAT_VENDOR),
     mutator: appMutatorRedHat(applicationTypes),
     isDisabled: disableAppSelection,
     isRequired: true,
@@ -161,13 +172,13 @@ const redhatTypes = ({ intl, sourceTypes, applicationTypes, disableAppSelection 
   },
 ];
 
-export const applicationStep = (applicationTypes, intl) => ({
+export const applicationStep = (applicationTypes, intl, activeVendor) => ({
   name: 'application_step',
   title: intl.formatMessage({
     id: 'wizard.selectApplication',
     defaultMessage: 'Select application',
   }),
-  nextStep,
+  nextStep: nextStep(),
   fields: [
     {
       component: componentTypes.PLAIN_TEXT,
@@ -181,7 +192,7 @@ export const applicationStep = (applicationTypes, intl) => ({
     {
       component: 'enhanced-radio',
       name: 'application.application_type_id',
-      options: compileAllApplicationComboOptions(applicationTypes, intl),
+      options: compileAllApplicationComboOptions(applicationTypes, intl, activeVendor),
       mutator: appMutatorRedHat(applicationTypes),
       menuIsPortal: true,
     },
@@ -199,19 +210,9 @@ export const typesStep = (sourceTypes, applicationTypes, disableAppSelection, in
     defaultMessage: 'Source type and application',
   }),
   name: 'types_step',
-  nextStep,
-  fields: [
-    ...redhatTypes({ intl, sourceTypes, applicationTypes, disableAppSelection }),
-    {
-      component: 'description',
-      name: 'fixasyncvalidation',
-      Content: ValidatorReset,
-    },
-  ],
+  nextStep: 'name_step',
+  fields: redhatTypes({ intl, sourceTypes, applicationTypes, disableAppSelection }),
 });
-
-export const hasSuperKeyType = (sourceType) =>
-  sourceType?.schema.authentication.find(({ is_superkey, type }) => is_superkey || type === 'access_key_secret_key');
 
 export const cloudTypesStep = (sourceTypes, applicationTypes, intl) => ({
   title: intl.formatMessage({
@@ -219,15 +220,7 @@ export const cloudTypesStep = (sourceTypes, applicationTypes, intl) => ({
     defaultMessage: 'Select source type',
   }),
   name: 'types_step',
-  nextStep: ({ values }) => {
-    if (!values.source_type) {
-      return;
-    }
-
-    const sourceType = sourceTypes.find(({ name }) => name === values.source_type);
-
-    return hasSuperKeyType(sourceType) ? 'configuration_step' : 'application_step';
-  },
+  nextStep: 'name_step',
   fields: [
     {
       component: componentTypes.PLAIN_TEXT,
@@ -243,11 +236,6 @@ export const cloudTypesStep = (sourceTypes, applicationTypes, intl) => ({
         id: 'wizard.selectCloudProvider',
         defaultMessage: 'Select a cloud provider',
       }),
-    },
-    {
-      component: 'description',
-      name: 'fixasyncvalidation',
-      Content: ValidatorReset,
     },
   ],
 });
@@ -269,23 +257,13 @@ export const NameDescription = () => {
   );
 };
 
-const nameStep = (intl, selectedType, sourceTypes) => ({
+const nameStep = (intl, selectedType, sourceTypes, activeVendor) => ({
   title: intl.formatMessage({
     id: 'wizard.nameSource',
     defaultMessage: 'Name source',
   }),
   name: 'name_step',
-  nextStep: () => {
-    if (selectedType) {
-      if (hasSuperKeyType(sourceTypes.find(({ name }) => name === selectedType))) {
-        return 'configuration_step';
-      }
-
-      return 'application_step';
-    }
-
-    return 'types_step';
-  },
+  nextStep: activeVendor === REDHAT_VENDOR ? nextStep(selectedType) : nextStepCloud(sourceTypes),
   fields: [
     {
       component: 'description',
@@ -351,7 +329,16 @@ const summaryStep = (sourceTypes, applicationTypes, intl) => ({
   }),
 });
 
-export default (sourceTypes, applicationTypes, disableAppSelection, container, intl, selectedType, initialWizardState) => {
+export default (
+  sourceTypes,
+  applicationTypes,
+  disableAppSelection,
+  container,
+  intl,
+  selectedType,
+  initialWizardState,
+  activeVendor
+) => {
   setFirstValidated(true);
 
   return {
@@ -360,9 +347,9 @@ export default (sourceTypes, applicationTypes, disableAppSelection, container, i
         component: componentTypes.WIZARD,
         name: 'wizard',
         className: 'sources',
-        title: wizardTitle(),
+        title: wizardTitle(activeVendor),
         inModal: true,
-        description: wizardDescription(),
+        description: wizardDescription(activeVendor),
         buttonLabels: {
           submit: intl.formatMessage({
             id: 'sources.add',
@@ -386,13 +373,15 @@ export default (sourceTypes, applicationTypes, disableAppSelection, container, i
         initialState: initialWizardState,
         crossroads: ['application.application_type_id', 'source_type', 'auth_select', 'source.app_creation_workflow'],
         fields: [
-          nameStep(intl, selectedType, sourceTypes),
-          !selectedType && getActiveVendor() === REDHAT_VENDOR
-            ? typesStep(sourceTypes, applicationTypes, disableAppSelection, intl)
-            : cloudTypesStep(sourceTypes, applicationTypes, intl),
+          ...(!selectedType
+            ? activeVendor === REDHAT_VENDOR
+              ? [typesStep(sourceTypes, applicationTypes, disableAppSelection, intl)]
+              : [cloudTypesStep(sourceTypes, applicationTypes, intl)]
+            : []),
+          nameStep(intl, selectedType, sourceTypes, activeVendor),
           configurationStep(intl, sourceTypes),
           applicationsStep(applicationTypes, intl),
-          applicationStep(applicationTypes, intl),
+          applicationStep(applicationTypes, intl, activeVendor),
           ...schemaBuilder(sourceTypes, applicationTypes),
           summaryStep(sourceTypes, applicationTypes, intl),
         ],
