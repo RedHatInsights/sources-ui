@@ -1,11 +1,13 @@
 import { doCreateSource, parseUrl, urlOrHost } from '../../api/createSource';
-import sourceTypes, { OPENSHIFT_TYPE } from '../addSourceWizard/helpers/sourceTypes';
-import { COST_MANAGEMENT_APP } from '../addSourceWizard/helpers/applicationTypes';
+import { OPENSHIFT_TYPE } from '../addSourceWizard/helpers/sourceTypes';
+import applicationTypes, { COST_MANAGEMENT_APP } from '../addSourceWizard/helpers/applicationTypes';
 
 import * as api from '../../api/entities';
 import * as errorHandling from '../../api/handleError';
 import * as checkApp from '../../api/getApplicationStatus';
+import * as checkSourceStatus from '../../api/checkSourceStatus';
 import { NO_APPLICATION_VALUE } from '../../components/addSourceWizard/stringConstants';
+import { COST_MANAGEMENT_APP_NAME } from '../../utilities/constants';
 
 describe('doCreateSource', () => {
   const HOST = 'mycluster.net';
@@ -38,31 +40,12 @@ describe('doCreateSource', () => {
     let CREATE_SOURCE_DATA_OUT;
 
     let CREATED_EDNPOINT_ID;
-    let CREATE_EDNPOINT_DATA_OUT;
+    let CREATED_APP_ID;
+    let CREATED_AUTH_ID;
 
-    let CREATE_AUTHENTICATION_DATA_OUT;
-    let CREATE_APPLICATION_DATA_OUT;
-    let CREATE_AUTH_APP_DATA_OUT;
-    let COST_MGMT_AUTH_OUT;
-
-    let createSource;
-    let createEndpoint;
-    let createApplication;
-    let createAuthentication;
-    let createAuthApp;
-
-    let patchSource;
-
-    let checkAvailabilitySource;
-
+    let bulkCreate;
     let checkAppMock;
-
     let mocks;
-
-    let EXPECTED_CREATE_SOURCE_ARG;
-    let EXPECTED_AUTHENTICATION_SOURCE_ARG;
-    let EXPECTED_CREATE_ENDPOINT_SOURCE_ARG;
-    let EXPECTED_CREATE_AUTH_APP_ARG;
 
     beforeEach(() => {
       TYPE_NAME = OPENSHIFT_TYPE.name;
@@ -86,92 +69,64 @@ describe('doCreateSource', () => {
       };
 
       CREATED_SOURCE_ID = '12349876';
-      CREATE_SOURCE_DATA_OUT = { id: CREATED_SOURCE_ID };
+      CREATE_SOURCE_DATA_OUT = { sources: [{ id: CREATED_SOURCE_ID }] };
 
-      CREATED_EDNPOINT_ID = '8765';
-      CREATE_EDNPOINT_DATA_OUT = { id: CREATED_EDNPOINT_ID };
+      CREATED_EDNPOINT_ID = 'endpoint-id';
+      CREATED_APP_ID = 'app-id';
+      CREATED_AUTH_ID = 'auth-id';
 
-      CREATE_AUTHENTICATION_DATA_OUT = { something: '123', id: '989' };
-      CREATE_APPLICATION_DATA_OUT = { application: 234, id: '234', application_type_id: COST_MANAGEMENT_APP.id };
-      CREATE_AUTH_APP_DATA_OUT = { application_id: '234', authentication_id: '989' };
-      COST_MGMT_AUTH_OUT = { authentication: 1 };
+      bulkCreate = jest.fn().mockImplementation((data) =>
+        Promise.resolve({
+          ...CREATE_SOURCE_DATA_OUT,
+          ...(data.endpoints.length > 0 && { endpoints: [{ id: CREATED_EDNPOINT_ID }] }),
+          ...(data.applications.length > 0 && { applications: [{ id: CREATED_APP_ID }] }),
+          ...(data.authentications.length > 0 && { authentications: [{ id: CREATED_AUTH_ID }] }),
+        })
+      );
 
-      createSource = jest.fn().mockImplementation(() => Promise.resolve(CREATE_SOURCE_DATA_OUT));
-      createEndpoint = jest.fn().mockImplementation(() => Promise.resolve(CREATE_EDNPOINT_DATA_OUT));
-      createAuthentication = jest.fn().mockImplementation(() => Promise.resolve(CREATE_AUTHENTICATION_DATA_OUT));
-      createApplication = jest.fn().mockImplementation(() => Promise.resolve(CREATE_APPLICATION_DATA_OUT));
-      createAuthApp = jest.fn().mockImplementation(() => Promise.resolve(CREATE_AUTH_APP_DATA_OUT));
+      mocks = {
+        bulkCreate,
+      };
 
-      patchSource = jest.fn().mockImplementation(() => Promise.resolve(COST_MGMT_AUTH_OUT));
+      api.getSourcesApi = () => mocks;
+
+      checkSourceStatus.default = jest.fn();
 
       checkAppMock = jest
         .fn()
         .mockImplementation((id, timeout, delay, entity) =>
-          entity === 'getEndpoint' ? Promise.resolve(CREATE_EDNPOINT_DATA_OUT) : Promise.resolve(CREATE_APPLICATION_DATA_OUT)
+          entity === 'getEndpoint' ? Promise.resolve({ id: CREATED_EDNPOINT_ID }) : Promise.resolve({ id: CREATED_APP_ID })
         );
       checkApp.checkAppAvailability = checkAppMock;
-
-      checkAvailabilitySource = jest.fn();
-
-      mocks = {
-        createSource,
-        createEndpoint,
-        createApplication,
-        createAuthentication,
-        createAuthApp,
-        checkAvailabilitySource,
-      };
-
-      EXPECTED_CREATE_SOURCE_ARG = { ...SOURCE_FORM_DATA, source_type_id: OPENSHIFT_TYPE.id };
-      EXPECTED_AUTHENTICATION_SOURCE_ARG = {
-        ...AUTHENTICATION_FORM_DATA,
-        resource_id: CREATED_EDNPOINT_ID,
-        resource_type: 'Endpoint',
-        source_id: CREATED_SOURCE_ID,
-      };
-      EXPECTED_CREATE_ENDPOINT_SOURCE_ARG = {
-        ...ENDPOINT_FORM_DATA,
-        default: true,
-        source_id: CREATED_SOURCE_ID,
-      };
-
-      EXPECTED_CREATE_AUTH_APP_ARG = {
-        application_id: CREATE_APPLICATION_DATA_OUT.id,
-        authentication_id: CREATE_AUTHENTICATION_DATA_OUT.id,
-      };
-    });
-
-    afterEach(() => {
-      createSource.mockReset();
-      createEndpoint.mockReset();
-      createApplication.mockReset();
-      createAuthentication.mockReset();
     });
 
     it('create source with no app', async () => {
       const FORM_DATA = {
         ...INITIAL_VALUES,
       };
-      const EXPECTED_RESULT = {
-        id: CREATED_SOURCE_ID,
-        endpoint: [{ ...CREATE_EDNPOINT_DATA_OUT }],
-        applications: [undefined],
-      };
 
-      api.getSourcesApi = () => mocks;
+      const result = await doCreateSource(FORM_DATA);
 
-      const result = await doCreateSource(FORM_DATA, sourceTypes);
+      expect(result).toEqual({ applications: [], endpoint: [{ id: CREATED_EDNPOINT_ID }], id: CREATED_SOURCE_ID });
 
-      expect(result).toEqual(EXPECTED_RESULT);
-
-      expect(createSource).toHaveBeenCalledWith(EXPECTED_CREATE_SOURCE_ARG);
-      expect(createEndpoint).toHaveBeenCalledWith(EXPECTED_CREATE_ENDPOINT_SOURCE_ARG);
-      expect(createAuthentication).toHaveBeenCalledWith(EXPECTED_AUTHENTICATION_SOURCE_ARG);
-      expect(createApplication).not.toHaveBeenCalled();
-      expect(patchSource).not.toHaveBeenCalled();
-      expect(createAuthApp).not.toHaveBeenCalled();
-      expect(checkAppMock).toHaveBeenCalledWith(CREATE_EDNPOINT_DATA_OUT.id, undefined, undefined, 'getEndpoint');
-      expect(checkAvailabilitySource).toHaveBeenCalledWith(CREATE_SOURCE_DATA_OUT.id);
+      expect(bulkCreate).toHaveBeenCalledWith({
+        applications: [],
+        authentications: [{ password: '123455', resource_type: 'endpoint', resource_name: undefined }],
+        endpoints: [
+          {
+            default: true,
+            host: undefined,
+            path: undefined,
+            port: undefined,
+            scheme: undefined,
+            source_name: 'some name',
+            url: 'https//',
+          },
+        ],
+        sources: [{ name: 'some name', source_type_name: 'openshift' }],
+      });
+      expect(checkAppMock).toHaveBeenCalledWith(CREATED_EDNPOINT_ID, undefined, undefined, 'getEndpoint');
+      expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
     });
 
     it('create source with no app - ignore NO_APPLICATION_VALUE', async () => {
@@ -179,26 +134,29 @@ describe('doCreateSource', () => {
         ...INITIAL_VALUES,
         application: { application_type_id: NO_APPLICATION_VALUE },
       };
-      const EXPECTED_RESULT = {
-        id: CREATED_SOURCE_ID,
-        endpoint: [{ ...CREATE_EDNPOINT_DATA_OUT }],
-        applications: [undefined],
-      };
 
-      api.getSourcesApi = () => mocks;
+      const result = await doCreateSource(FORM_DATA);
 
-      const result = await doCreateSource(FORM_DATA, sourceTypes);
+      expect(result).toEqual({ applications: [], endpoint: [{ id: CREATED_EDNPOINT_ID }], id: CREATED_SOURCE_ID });
 
-      expect(result).toEqual(EXPECTED_RESULT);
-
-      expect(createSource).toHaveBeenCalledWith(EXPECTED_CREATE_SOURCE_ARG);
-      expect(createEndpoint).toHaveBeenCalledWith(EXPECTED_CREATE_ENDPOINT_SOURCE_ARG);
-      expect(createAuthentication).toHaveBeenCalledWith(EXPECTED_AUTHENTICATION_SOURCE_ARG);
-      expect(createApplication).not.toHaveBeenCalled();
-      expect(patchSource).not.toHaveBeenCalled();
-      expect(createAuthApp).not.toHaveBeenCalled();
-      expect(checkAppMock).toHaveBeenCalledWith(CREATE_EDNPOINT_DATA_OUT.id, undefined, undefined, 'getEndpoint');
-      expect(checkAvailabilitySource).toHaveBeenCalledWith(CREATE_SOURCE_DATA_OUT.id);
+      expect(bulkCreate).toHaveBeenCalledWith({
+        applications: [],
+        authentications: [{ password: '123455', resource_type: 'endpoint', resource_name: undefined }],
+        endpoints: [
+          {
+            default: true,
+            host: undefined,
+            path: undefined,
+            port: undefined,
+            scheme: undefined,
+            source_name: 'some name',
+            url: 'https//',
+          },
+        ],
+        sources: [{ name: 'some name', source_type_name: 'openshift' }],
+      });
+      expect(checkAppMock).toHaveBeenCalledWith(CREATED_EDNPOINT_ID, undefined, undefined, 'getEndpoint');
+      expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
     });
 
     it('create source with noEndpoint set', async () => {
@@ -206,26 +164,19 @@ describe('doCreateSource', () => {
         ...INITIAL_VALUES,
         endpoint: undefined,
       };
-      const EXPECTED_RESULT = {
-        id: CREATED_SOURCE_ID,
-        endpoint: [undefined],
-        applications: [undefined],
-      };
 
-      api.getSourcesApi = () => mocks;
+      const result = await doCreateSource(FORM_DATA);
 
-      const result = await doCreateSource(FORM_DATA, sourceTypes);
+      expect(result).toEqual({ applications: [], endpoint: [], id: '12349876' });
 
-      expect(result).toEqual(EXPECTED_RESULT);
-
-      expect(createSource).toHaveBeenCalledWith(EXPECTED_CREATE_SOURCE_ARG);
-      expect(createEndpoint).not.toHaveBeenCalled();
-      expect(createAuthentication).not.toHaveBeenCalled();
-      expect(createApplication).not.toHaveBeenCalled();
-      expect(patchSource).not.toHaveBeenCalled();
-      expect(createAuthApp).not.toHaveBeenCalled();
+      expect(bulkCreate).toHaveBeenCalledWith({
+        applications: [],
+        authentications: [{ password: '123455', resource_type: 'source', resource_name: 'some name' }],
+        endpoints: [],
+        sources: [{ name: 'some name', source_type_name: 'openshift' }],
+      });
       expect(checkAppMock).not.toHaveBeenCalled();
-      expect(checkAvailabilitySource).toHaveBeenCalledWith(CREATE_SOURCE_DATA_OUT.id);
+      expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
     });
 
     it('create source with url', async () => {
@@ -233,32 +184,29 @@ describe('doCreateSource', () => {
         ...INITIAL_VALUES,
         url: URL,
       };
-      const EXPECTED_RESULT = {
-        id: CREATED_SOURCE_ID,
-        endpoint: [CREATE_EDNPOINT_DATA_OUT],
-        applications: [undefined],
-      };
 
-      api.getSourcesApi = () => mocks;
+      const result = await doCreateSource(FORM_DATA);
 
-      const result = await doCreateSource(FORM_DATA, sourceTypes);
+      expect(result).toEqual({ applications: [], endpoint: [{ id: 'endpoint-id' }], id: '12349876' });
 
-      const EXPECTED_ENDPOINT_ARG_WITH_URL_PORT_IS_NUMBER = {
-        ...EXPECTED_CREATE_ENDPOINT_SOURCE_ARG,
-        ...EXPECTED_URL_OBJECT,
-        port: Number(EXPECTED_URL_OBJECT.port),
-      };
-
-      expect(result).toEqual(EXPECTED_RESULT);
-
-      expect(createSource).toHaveBeenCalledWith(EXPECTED_CREATE_SOURCE_ARG);
-      expect(createEndpoint).toHaveBeenCalledWith(EXPECTED_ENDPOINT_ARG_WITH_URL_PORT_IS_NUMBER);
-      expect(createAuthentication).toHaveBeenCalledWith(EXPECTED_AUTHENTICATION_SOURCE_ARG);
-      expect(createApplication).not.toHaveBeenCalled();
-      expect(patchSource).not.toHaveBeenCalled();
-      expect(createAuthApp).not.toHaveBeenCalled();
-      expect(checkAppMock).toHaveBeenCalledWith(CREATE_EDNPOINT_DATA_OUT.id, undefined, undefined, 'getEndpoint');
-      expect(checkAvailabilitySource).toHaveBeenCalledWith(CREATE_SOURCE_DATA_OUT.id);
+      expect(bulkCreate).toHaveBeenCalledWith({
+        applications: [],
+        authentications: [{ password: '123455', resource_type: 'endpoint', resource_name: HOST }],
+        endpoints: [
+          {
+            default: true,
+            host: 'mycluster.net',
+            path: '/path',
+            port: 1234,
+            scheme: 'https',
+            source_name: 'some name',
+            url: 'https//',
+          },
+        ],
+        sources: [{ name: 'some name', source_type_name: 'openshift' }],
+      });
+      expect(checkAppMock).toHaveBeenCalledWith(CREATED_EDNPOINT_ID, undefined, undefined, 'getEndpoint');
+      expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
     });
 
     it('create source with app', async () => {
@@ -268,36 +216,29 @@ describe('doCreateSource', () => {
         ...INITIAL_VALUES,
         application: { ...APPLICATION_FORM_DATA, application_type_id: APP_ID },
       };
-      const EXPECTED_RESULT = {
-        id: CREATED_SOURCE_ID,
-        endpoint: [{ ...CREATE_EDNPOINT_DATA_OUT }],
-        applications: [
+
+      const result = await doCreateSource(FORM_DATA);
+
+      expect(result).toEqual({ applications: [{ id: 'app-id' }], endpoint: [{ id: 'endpoint-id' }], id: '12349876' });
+
+      expect(bulkCreate).toHaveBeenCalledWith({
+        applications: [{ application_type_id: '2', collect_info: true, source_name: 'some name' }],
+        authentications: [{ password: '123455', resource_type: 'endpoint', source_name: undefined }],
+        endpoints: [
           {
-            ...CREATE_APPLICATION_DATA_OUT,
+            default: true,
+            host: undefined,
+            path: undefined,
+            port: undefined,
+            scheme: undefined,
+            source_name: 'some name',
+            url: 'https//',
           },
         ],
-      };
-
-      const EXPECTED_CREATE_APPLICATION_ARG = {
-        ...APPLICATION_FORM_DATA,
-        source_id: CREATED_SOURCE_ID,
-        application_type_id: APP_ID,
-      };
-
-      api.getSourcesApi = () => mocks;
-
-      const result = await doCreateSource(FORM_DATA, sourceTypes);
-
-      expect(result).toEqual(EXPECTED_RESULT);
-
-      expect(createSource).toHaveBeenCalledWith(EXPECTED_CREATE_SOURCE_ARG);
-      expect(createEndpoint).toHaveBeenCalledWith(EXPECTED_CREATE_ENDPOINT_SOURCE_ARG);
-      expect(createAuthentication).toHaveBeenCalledWith(EXPECTED_AUTHENTICATION_SOURCE_ARG);
-      expect(createApplication).toHaveBeenCalledWith(EXPECTED_CREATE_APPLICATION_ARG);
-      expect(patchSource).not.toHaveBeenCalled();
-      expect(createAuthApp).toHaveBeenCalledWith(EXPECTED_CREATE_AUTH_APP_ARG);
-      expect(checkAppMock).toHaveBeenCalledWith(CREATE_APPLICATION_DATA_OUT.id, 0);
-      expect(checkAvailabilitySource).toHaveBeenCalledWith(CREATE_SOURCE_DATA_OUT.id);
+        sources: [{ name: 'some name', source_type_name: 'openshift' }],
+      });
+      expect(checkAppMock).toHaveBeenCalledWith(CREATED_APP_ID, 0);
+      expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
     });
 
     it('create source with app with timeout', async () => {
@@ -307,38 +248,50 @@ describe('doCreateSource', () => {
         ...INITIAL_VALUES,
         application: { ...APPLICATION_FORM_DATA, application_type_id: APP_ID },
       };
-      const EXPECTED_RESULT = {
-        id: CREATED_SOURCE_ID,
-        endpoint: [{ ...CREATE_EDNPOINT_DATA_OUT }],
-        applications: [
-          {
-            ...CREATE_APPLICATION_DATA_OUT,
-          },
-        ],
-      };
 
-      const EXPECTED_CREATE_APPLICATION_ARG = {
-        ...APPLICATION_FORM_DATA,
-        source_id: CREATED_SOURCE_ID,
-        application_type_id: APP_ID,
+      const timeoutedApps = [COST_MANAGEMENT_APP.id];
+
+      bulkCreate = jest.fn().mockImplementation((data) =>
+        Promise.resolve({
+          ...CREATE_SOURCE_DATA_OUT,
+          ...(data.endpoints.length > 0 && { endpoints: [{ id: CREATED_EDNPOINT_ID }] }),
+          ...(data.applications.length > 0 && {
+            applications: [{ id: CREATED_APP_ID, application_type_id: COST_MANAGEMENT_APP.id }],
+          }),
+          ...(data.authentications.length > 0 && { authentications: [{ id: CREATED_AUTH_ID }] }),
+        })
+      );
+
+      mocks = {
+        bulkCreate,
       };
 
       api.getSourcesApi = () => mocks;
 
-      const timeoutedApps = [COST_MANAGEMENT_APP.id];
+      const result = await doCreateSource(FORM_DATA, timeoutedApps);
 
-      const result = await doCreateSource(FORM_DATA, sourceTypes, timeoutedApps);
+      expect(result).toEqual({ applications: [{ id: 'app-id' }], endpoint: [{ id: 'endpoint-id' }], id: '12349876' });
 
-      expect(result).toEqual(EXPECTED_RESULT);
-
-      expect(createSource).toHaveBeenCalledWith(EXPECTED_CREATE_SOURCE_ARG);
-      expect(createEndpoint).toHaveBeenCalledWith(EXPECTED_CREATE_ENDPOINT_SOURCE_ARG);
-      expect(createAuthentication).toHaveBeenCalledWith(EXPECTED_AUTHENTICATION_SOURCE_ARG);
-      expect(createApplication).toHaveBeenCalledWith(EXPECTED_CREATE_APPLICATION_ARG);
-      expect(patchSource).not.toHaveBeenCalled();
-      expect(createAuthApp).toHaveBeenCalledWith(EXPECTED_CREATE_AUTH_APP_ARG);
-      expect(checkAppMock).toHaveBeenCalledWith(CREATE_APPLICATION_DATA_OUT.id, 10000);
-      expect(checkAvailabilitySource).toHaveBeenCalledWith(CREATE_SOURCE_DATA_OUT.id);
+      expect(bulkCreate).toHaveBeenCalledWith({
+        applications: [{ application_type_id: '2', collect_info: true, source_name: 'some name' }],
+        authentications: [{ password: '123455', resource_type: 'endpoint', resource_name: undefined }],
+        endpoints: [
+          {
+            default: true,
+            host: undefined,
+            path: undefined,
+            port: undefined,
+            scheme: undefined,
+            source_name: 'some name',
+            url: 'https//',
+          },
+        ],
+        sources: [{ name: 'some name', source_type_name: 'openshift' }],
+      });
+      expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
+      expect(checkAppMock.mock.calls[0][0]).toEqual(CREATED_APP_ID);
+      expect(checkAppMock.mock.calls[0][1]).toEqual(10000);
+      expect(checkAppMock.mock.calls[1][0]).toEqual(CREATED_EDNPOINT_ID);
     });
 
     it('create source with app and no endpoint set', async () => {
@@ -351,39 +304,21 @@ describe('doCreateSource', () => {
         authentication: undefined,
       };
 
-      const EXPECTED_RESULT = {
-        id: CREATED_SOURCE_ID,
-        endpoint: [undefined],
-        applications: [
-          {
-            ...CREATE_APPLICATION_DATA_OUT,
-          },
-        ],
-      };
+      const result = await doCreateSource(FORM_DATA);
 
-      const EXPECTED_CREATE_APPLICATION_ARG = {
-        ...APPLICATION_FORM_DATA,
-        source_id: CREATED_SOURCE_ID,
-        application_type_id: APP_ID,
-      };
+      expect(result).toEqual({ applications: [{ id: 'app-id' }], endpoint: [], id: '12349876' });
 
-      api.getSourcesApi = () => mocks;
-
-      const result = await doCreateSource(FORM_DATA, sourceTypes);
-
-      expect(result).toEqual(EXPECTED_RESULT);
-
-      expect(createSource).toHaveBeenCalledWith(EXPECTED_CREATE_SOURCE_ARG);
-      expect(createEndpoint).not.toHaveBeenCalled();
-      expect(createAuthentication).not.toHaveBeenCalled();
-      expect(createApplication).toHaveBeenCalledWith(EXPECTED_CREATE_APPLICATION_ARG);
-      expect(patchSource).not.toHaveBeenCalled();
-      expect(createAuthApp).not.toHaveBeenCalled();
-      expect(checkAppMock).toHaveBeenCalledWith(CREATE_APPLICATION_DATA_OUT.id, 0);
-      expect(checkAvailabilitySource).toHaveBeenCalledWith(CREATE_SOURCE_DATA_OUT.id);
+      expect(bulkCreate).toHaveBeenCalledWith({
+        applications: [{ application_type_id: '2', collect_info: true, source_name: 'some name' }],
+        authentications: [],
+        endpoints: [],
+        sources: [{ name: 'some name', source_type_name: 'openshift' }],
+      });
+      expect(checkAppMock).toHaveBeenCalledWith(CREATED_APP_ID, 0);
+      expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
     });
 
-    it('create source with app and no endpoint set', async () => {
+    it('create source with app, auth and no endpoint set', async () => {
       const APP_ID = COST_MANAGEMENT_APP.id;
 
       const FORM_DATA = {
@@ -393,48 +328,35 @@ describe('doCreateSource', () => {
         authentication: AUTHENTICATION_FORM_DATA,
       };
 
-      const EXPECTED_RESULT = {
-        id: CREATED_SOURCE_ID,
-        endpoint: [undefined],
-        applications: [
-          {
-            ...CREATE_APPLICATION_DATA_OUT,
-          },
-        ],
-      };
+      bulkCreate = jest.fn().mockImplementation((data) =>
+        Promise.resolve({
+          ...CREATE_SOURCE_DATA_OUT,
+          ...(data.endpoints.length > 0 && { endpoints: [{ id: CREATED_EDNPOINT_ID }] }),
+          ...(data.applications.length > 0 && {
+            applications: [{ id: CREATED_APP_ID, application_type_id: COST_MANAGEMENT_APP.id }],
+          }),
+          ...(data.authentications.length > 0 && { authentications: [{ id: CREATED_AUTH_ID }] }),
+        })
+      );
 
-      const EXPECTED_CREATE_APPLICATION_ARG = {
-        ...APPLICATION_FORM_DATA,
-        source_id: CREATED_SOURCE_ID,
-        application_type_id: APP_ID,
-      };
-
-      EXPECTED_AUTHENTICATION_SOURCE_ARG = {
-        ...AUTHENTICATION_FORM_DATA,
-        resource_id: CREATE_APPLICATION_DATA_OUT.id,
-        resource_type: 'Application',
-        source_id: CREATED_SOURCE_ID,
-      };
-
-      EXPECTED_CREATE_AUTH_APP_ARG = {
-        application_id: CREATE_APPLICATION_DATA_OUT.id,
-        authentication_id: CREATE_AUTHENTICATION_DATA_OUT.id,
+      mocks = {
+        bulkCreate,
       };
 
       api.getSourcesApi = () => mocks;
 
-      const result = await doCreateSource(FORM_DATA, sourceTypes);
+      const result = await doCreateSource(FORM_DATA, [], applicationTypes);
 
-      expect(result).toEqual(EXPECTED_RESULT);
+      expect(result).toEqual({ applications: [{ id: 'app-id' }], endpoint: [], id: '12349876' });
 
-      expect(createSource).toHaveBeenCalledWith(EXPECTED_CREATE_SOURCE_ARG);
-      expect(createEndpoint).not.toHaveBeenCalled();
-      expect(createAuthentication).toHaveBeenCalledWith(EXPECTED_AUTHENTICATION_SOURCE_ARG);
-      expect(createApplication).toHaveBeenCalledWith(EXPECTED_CREATE_APPLICATION_ARG);
-      expect(patchSource).not.toHaveBeenCalled();
-      expect(createAuthApp).toHaveBeenCalledWith(EXPECTED_CREATE_AUTH_APP_ARG);
-      expect(checkAppMock).toHaveBeenCalledWith(CREATE_APPLICATION_DATA_OUT.id, 0);
-      expect(checkAvailabilitySource).toHaveBeenCalledWith(CREATE_SOURCE_DATA_OUT.id);
+      expect(bulkCreate).toHaveBeenCalledWith({
+        applications: [{ application_type_id: '2', collect_info: true, source_name: 'some name' }],
+        authentications: [{ password: '123455', resource_type: 'application', resource_name: COST_MANAGEMENT_APP_NAME }],
+        endpoints: [],
+        sources: [{ name: 'some name', source_type_name: 'openshift' }],
+      });
+      expect(checkAppMock).toHaveBeenCalledWith(CREATED_APP_ID, 0);
+      expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
     });
 
     describe('failures', () => {
@@ -451,20 +373,15 @@ describe('doCreateSource', () => {
         };
       });
 
-      afterEach(() => {
-        errorHandling.handleError.mockReset();
-        returnError.mockReset();
-      });
-
       it('source creation failed', async () => {
         api.getSourcesApi = () => ({
           ...mocks,
-          createSource: returnError,
+          bulkCreate: returnError,
         });
 
         let result;
         try {
-          result = await doCreateSource(FORM_DATA, sourceTypes);
+          result = await doCreateSource(FORM_DATA);
         } catch (error) {
           result = error;
         }
@@ -472,90 +389,9 @@ describe('doCreateSource', () => {
         expect(result).toEqual(ERROR_MESSAGE);
         expect(returnError).toHaveBeenCalled();
 
-        expect(createEndpoint).not.toHaveBeenCalled();
-        expect(createAuthentication).not.toHaveBeenCalled();
-        expect(createApplication).not.toHaveBeenCalled();
-        expect(patchSource).not.toHaveBeenCalled();
-        expect(createAuthApp).not.toHaveBeenCalled();
+        expect(bulkCreate).not.toHaveBeenCalled();
         expect(checkAppMock).not.toHaveBeenCalled();
-        expect(checkAvailabilitySource).not.toHaveBeenCalled();
-      });
-
-      it('source creation failed because of endpoint', async () => {
-        api.getSourcesApi = () => ({
-          ...mocks,
-          createEndpoint: returnError,
-        });
-
-        let result;
-        try {
-          result = await doCreateSource(FORM_DATA, sourceTypes);
-        } catch (error) {
-          result = error;
-        }
-
-        expect(result).toEqual(ERROR_MESSAGE);
-        expect(returnError).toHaveBeenCalled();
-        expect(errorHandling.handleError).toHaveBeenCalledWith(ERROR_MESSAGE, CREATED_SOURCE_ID);
-
-        expect(createAuthentication).not.toHaveBeenCalled();
-        expect(createApplication).not.toHaveBeenCalled();
-        expect(patchSource).not.toHaveBeenCalled();
-        expect(createAuthApp).not.toHaveBeenCalled();
-        expect(checkAppMock).not.toHaveBeenCalled();
-        expect(checkAvailabilitySource).not.toHaveBeenCalled();
-      });
-
-      it('source creation failed because of authentication', async () => {
-        api.getSourcesApi = () => ({
-          ...mocks,
-          createAuthentication: returnError,
-        });
-
-        let result;
-        try {
-          result = await doCreateSource(FORM_DATA, sourceTypes);
-        } catch (error) {
-          result = error;
-        }
-
-        expect(result).toEqual(ERROR_MESSAGE);
-        expect(returnError).toHaveBeenCalled();
-        expect(errorHandling.handleError).toHaveBeenCalledWith(ERROR_MESSAGE, CREATED_SOURCE_ID);
-
-        expect(createApplication).not.toHaveBeenCalled();
-        expect(patchSource).not.toHaveBeenCalled();
-        expect(createAuthApp).not.toHaveBeenCalled();
-        expect(checkAppMock).not.toHaveBeenCalled();
-        expect(checkAvailabilitySource).not.toHaveBeenCalled();
-      });
-
-      it('source creation failed because of application', async () => {
-        FORM_DATA = {
-          ...FORM_DATA,
-          application: { application_type_id: '1' },
-        };
-
-        api.getSourcesApi = () => ({
-          ...mocks,
-          createApplication: returnError,
-        });
-
-        let result;
-        try {
-          result = await doCreateSource(FORM_DATA, sourceTypes);
-        } catch (error) {
-          result = error;
-        }
-
-        expect(result).toEqual(ERROR_MESSAGE);
-        expect(returnError).toHaveBeenCalled();
-        expect(errorHandling.handleError).toHaveBeenCalledWith(ERROR_MESSAGE, CREATED_SOURCE_ID);
-
-        expect(patchSource).not.toHaveBeenCalled();
-        expect(createAuthApp).not.toHaveBeenCalled();
-        expect(checkAppMock).not.toHaveBeenCalled();
-        expect(checkAvailabilitySource).not.toHaveBeenCalled();
+        expect(checkSourceStatus.default).not.toHaveBeenCalled();
       });
     });
   });

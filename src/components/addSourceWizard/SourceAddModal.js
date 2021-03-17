@@ -40,6 +40,7 @@ const reducer = (
         ),
         isLoading: false,
         sourceTypes,
+        applicationTypes,
       };
   }
 };
@@ -57,7 +58,10 @@ const SourceAddModal = ({
   selectedType,
   initialWizardState,
 }) => {
-  const [{ schema, sourceTypes: stateSourceTypes, isLoading }, dispatch] = useReducer(reducer, initialValues);
+  const [{ schema, sourceTypes: stateSourceTypes, applicationTypes: stateApplicationTypes, isLoading }, dispatch] = useReducer(
+    reducer,
+    initialValues
+  );
   const isMounted = useRef(false);
   const container = useRef(document.createElement('div'));
   const intl = useIntl();
@@ -127,7 +131,7 @@ const SourceAddModal = ({
         ...(selectedType && { source_type: selectedType }),
       }}
       schema={schema}
-      onSubmit={(values, _formApi, wizardState) => onSubmit(values, stateSourceTypes, wizardState)}
+      onSubmit={(values, _formApi, wizardState) => onSubmit(values, stateSourceTypes, wizardState, stateApplicationTypes)}
       onCancel={onCancel}
       FormTemplate={FormTemplateWrapper}
       subscription={{ values: true }}
