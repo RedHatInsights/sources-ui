@@ -173,4 +173,4 @@ const CloudCards = () => {
   );
 };
 
-export default CloudCards;
+export default React.memo(CloudCards);
