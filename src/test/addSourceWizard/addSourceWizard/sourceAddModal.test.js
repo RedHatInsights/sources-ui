@@ -28,10 +28,6 @@ describe('sourceAddModal', () => {
     };
   });
 
-  afterEach(() => {
-    spyFunction.mockReset();
-  });
-
   it('renders correctly with sourceTypes and applicationTypes', async () => {
     await act(async () => {
       wrapper = mount(<AddSourceWizard {...initialProps} sourceTypes={sourceTypes} applicationTypes={applicationTypes} />);

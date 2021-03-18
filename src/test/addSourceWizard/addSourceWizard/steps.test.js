@@ -33,11 +33,6 @@ describe('Steps components', () => {
     spyFunctionSecond = jest.fn();
   });
 
-  afterEach(() => {
-    spyFunction.mockReset();
-    spyFunctionSecond.mockReset();
-  });
-
   describe('FinishedStep', () => {
     beforeEach(() => {
       initialProps = {
