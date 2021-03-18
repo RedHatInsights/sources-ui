@@ -22,10 +22,6 @@ describe('Description component', () => {
       };
     });
 
-    afterEach(() => {
-      getStateSpy.mockReset();
-    });
-
     it('content', () => {
       const wrapper = mount(<Description {...initialProps} />);
       expect(wrapper.find(Content)).toHaveLength(1);
