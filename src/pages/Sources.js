@@ -139,6 +139,7 @@ const SourcesPage = () => {
   const mainContent = () => (
     <React.Fragment>
       <PrimaryToolbar
+        className="sources-toolbar"
         pagination={showPaginationLoader ? <PaginationLoader /> : numberOfEntities > 0 ? paginationConfig : undefined}
         actionsConfig={
           hasWritePermissions

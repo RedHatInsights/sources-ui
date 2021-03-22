@@ -178,3 +178,17 @@
   color:	#6a6e73;
   line-height: 24px;
 }
+
+// mobile fixes
+@media only screen and (max-width: 768px) {
+  .pf-c-dropdown__menu { right: 0; } // position all dropdown contents left in mobile
+
+  .sources-toolbar .pf-c-dropdown button { // make button emulate link styling in kebab
+    --pf-c-button--disabled--BackgroundColor: transparent;
+    --pf-c-button--m-primary--BackgroundColor: transparent;
+    --pf-c-button--after--BorderColor: transparent;
+    --pf-c-button--hover--after--BorderWidth: 0;
+    color: var(--pf-global--Color--200);
+  }
+}
+
