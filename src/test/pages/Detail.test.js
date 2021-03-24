@@ -113,106 +113,115 @@ describe('SourceDetail', () => {
   });
 
   describe('routes', () => {
-    beforeEach(() => {
-      store = mockStore({
-        sources: {
-          entities: [
-            {
-              id: sourceId,
-            },
-          ],
-        },
+    describe('loaded', () => {
+      const timeout = () => new Promise((resolve) => setTimeout(resolve, 2));
+
+      beforeEach(() => {
+        store = mockStore({
+          sources: {
+            entities: [
+              {
+                id: sourceId,
+              },
+            ],
+          },
+        });
       });
-    });
 
-    it('routes to remove source', async () => {
-      const initialEntry = [replaceRouteId(routes.sourcesDetailRemove.path, sourceId)];
+      it('routes to remove source', async () => {
+        const initialEntry = [replaceRouteId(routes.sourcesDetailRemove.path, sourceId)];
 
-      await act(async () => {
-        wrapper = mount(
-          componentWrapperIntl(
-            <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
-            store,
-            initialEntry
-          )
-        );
+        await act(async () => {
+          wrapper = mount(
+            componentWrapperIntl(
+              <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
+              store,
+              initialEntry
+            )
+          );
+          await timeout();
+        });
+        wrapper.update();
+
+        expect(wrapper.find(SourceRemoveModal.default)).toHaveLength(1);
+        expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
       });
-      wrapper.update();
 
-      expect(wrapper.find(SourceRemoveModal.default)).toHaveLength(1);
-      expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
-    });
+      it('routes to rename source', async () => {
+        const initialEntry = [replaceRouteId(routes.sourcesDetailRename.path, sourceId)];
 
-    it('routes to rename source', async () => {
-      const initialEntry = [replaceRouteId(routes.sourcesDetailRename.path, sourceId)];
+        await act(async () => {
+          wrapper = mount(
+            componentWrapperIntl(
+              <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
+              store,
+              initialEntry
+            )
+          );
+          await timeout();
+        });
+        wrapper.update();
 
-      await act(async () => {
-        wrapper = mount(
-          componentWrapperIntl(
-            <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
-            store,
-            initialEntry
-          )
-        );
+        expect(wrapper.find(SourceRenameModal.default)).toHaveLength(1);
+        expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
       });
-      wrapper.update();
 
-      expect(wrapper.find(SourceRenameModal.default)).toHaveLength(1);
-      expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
-    });
+      it('routes to add app', async () => {
+        const initialEntry = [replaceRouteId(routes.sourcesDetailAddApp.path, sourceId).replace(':app_type_id', '2')];
 
-    it('routes to add app', async () => {
-      const initialEntry = [replaceRouteId(routes.sourcesDetailAddApp.path, sourceId).replace(':app_type_id', '2')];
+        await act(async () => {
+          wrapper = mount(
+            componentWrapperIntl(
+              <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
+              store,
+              initialEntry
+            )
+          );
+          await timeout();
+        });
+        wrapper.update();
 
-      await act(async () => {
-        wrapper = mount(
-          componentWrapperIntl(
-            <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
-            store,
-            initialEntry
-          )
-        );
+        expect(wrapper.find(AddApplication.default)).toHaveLength(1);
+        expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
       });
-      wrapper.update();
 
-      expect(wrapper.find(AddApplication.default)).toHaveLength(1);
-      expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
-    });
+      it('routes to remove app', async () => {
+        const initialEntry = [replaceRouteId(routes.sourcesDetailRemoveApp.path, sourceId).replace(':app_id', '344')];
 
-    it('routes to remove app', async () => {
-      const initialEntry = [replaceRouteId(routes.sourcesDetailRemoveApp.path, sourceId).replace(':app_id', '344')];
+        await act(async () => {
+          wrapper = mount(
+            componentWrapperIntl(
+              <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
+              store,
+              initialEntry
+            )
+          );
+          await timeout();
+        });
+        wrapper.update();
 
-      await act(async () => {
-        wrapper = mount(
-          componentWrapperIntl(
-            <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
-            store,
-            initialEntry
-          )
-        );
+        expect(wrapper.find(RemoveAppModal.default)).toHaveLength(1);
+        expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
       });
-      wrapper.update();
 
-      expect(wrapper.find(RemoveAppModal.default)).toHaveLength(1);
-      expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
-    });
+      it('routes to credentials form', async () => {
+        const initialEntry = [replaceRouteId(routes.sourcesDetailEditCredentials.path, sourceId)];
 
-    it('routes to credentials form', async () => {
-      const initialEntry = [replaceRouteId(routes.sourcesDetailEditCredentials.path, sourceId)];
+        await act(async () => {
+          wrapper = mount(
+            componentWrapperIntl(
+              <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
+              store,
+              initialEntry
+            )
+          );
+          await timeout();
+        });
+        wrapper.update();
 
-      await act(async () => {
-        wrapper = mount(
-          componentWrapperIntl(
-            <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
-            store,
-            initialEntry
-          )
-        );
+        expect(wrapper.find(CredentialsForm.default)).toHaveLength(1);
+        expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
       });
-      wrapper.update();
-
-      expect(wrapper.find(CredentialsForm.default)).toHaveLength(1);
-      expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
     });
 
     describe('unloaded', () => {
