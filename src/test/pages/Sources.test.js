@@ -38,6 +38,40 @@ import { AVAILABLE, UNAVAILABLE } from '../../views/formatters';
 import RedHatEmptyState from '../../components/RedHatTiles/RedHatEmptyState';
 import { AddSourceWizard } from '../../components/addSourceWizard';
 
+jest.mock('react', () => {
+  const React = jest.requireActual('react');
+  const Suspense = ({ children }) => {
+    return children;
+  };
+
+  const lazy = jest.fn().mockImplementation((fn) => {
+    const Component = (props) => {
+      const [C, setC] = React.useState();
+      const mounted = React.useRef(true);
+
+      React.useEffect(() => {
+        fn().then((v) => {
+          mounted.current && setC(v);
+        });
+
+        return () => {
+          mounted.current = false;
+        };
+      }, []);
+
+      return C ? <C.default {...props} /> : null;
+    };
+
+    return Component;
+  });
+
+  return {
+    ...React,
+    lazy,
+    Suspense,
+  };
+});
+
 describe('SourcesPage', () => {
   let initialProps;
   let store;
@@ -560,7 +594,7 @@ describe('SourcesPage', () => {
     });
     wrapper.update();
 
-    expect(wrapper.find(AddSourceWizard).props().initialValues).toEqual(undefined);
+    expect(wrapper.find(AddSourceWizard).props().initialValues).toEqual({});
     expect(wrapper.find(AddSourceWizard).props().initialWizardState).toEqual(undefined);
   });
 
