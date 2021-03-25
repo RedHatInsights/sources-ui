@@ -6,6 +6,7 @@ const { config: webpackConfig, plugins } = config({
   useFileHash: false,
   deployment: process.env.BETA ? 'beta/apps' : 'apps',
   useProxy: true,
+  appUrl: process.env.BETA ? '/beta/settings/sources' : '/settings/sources',
 });
 
 plugins.push(

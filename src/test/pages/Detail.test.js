@@ -43,6 +43,35 @@ jest.mock('../../components/CredentialsForm/CredentialsForm', () => ({
   default: () => <span>Credentials form</span>,
 }));
 
+jest.mock('react', () => {
+  const React = jest.requireActual('react');
+  const Suspense = ({ children }) => {
+    return children;
+  };
+
+  const lazy = jest.fn().mockImplementation((fn) => {
+    const Component = (props) => {
+      const [C, setC] = React.useState();
+
+      React.useEffect(() => {
+        fn().then((v) => {
+          setC(v);
+        });
+      }, []);
+
+      return C ? <C.default {...props} /> : null;
+    };
+
+    return Component;
+  });
+
+  return {
+    ...React,
+    lazy,
+    Suspense,
+  };
+});
+
 describe('SourceDetail', () => {
   let wrapper;
   let store;
@@ -114,8 +143,6 @@ describe('SourceDetail', () => {
 
   describe('routes', () => {
     describe('loaded', () => {
-      const timeout = () => new Promise((resolve) => setTimeout(resolve, 2));
-
       beforeEach(() => {
         store = mockStore({
           sources: {
@@ -139,7 +166,6 @@ describe('SourceDetail', () => {
               initialEntry
             )
           );
-          await timeout();
         });
         wrapper.update();
 
@@ -158,7 +184,6 @@ describe('SourceDetail', () => {
               initialEntry
             )
           );
-          await timeout();
         });
         wrapper.update();
 
@@ -177,7 +202,6 @@ describe('SourceDetail', () => {
               initialEntry
             )
           );
-          await timeout();
         });
         wrapper.update();
 
@@ -196,7 +220,6 @@ describe('SourceDetail', () => {
               initialEntry
             )
           );
-          await timeout();
         });
         wrapper.update();
 
@@ -215,7 +238,6 @@ describe('SourceDetail', () => {
               initialEntry
             )
           );
-          await timeout();
         });
         wrapper.update();
 
