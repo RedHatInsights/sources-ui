@@ -344,6 +344,11 @@ const summaryStep = (sourceTypes, applicationTypes, intl) => ({
       sourceTypes,
       applicationTypes,
     },
+    {
+      name: 'source_type',
+      component: componentTypes.TEXT_FIELD,
+      hideField: true,
+    },
   ],
   name: 'summary',
   title: intl.formatMessage({
