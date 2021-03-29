@@ -5,15 +5,15 @@ import { useHistory } from 'react-router-dom';
 
 import { Modal } from '@patternfly/react-core/dist/esm/components/Modal/Modal';
 import componentTypes from '@data-driven-forms/react-form-renderer/dist/esm/component-types';
-import { asyncValidatorDebounced } from '@redhat-cloud-services/frontend-components-sources/esm/SourceAddSchema';
 import validatorTypes from '@data-driven-forms/react-form-renderer/dist/esm/validator-types';
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
-import validated from '@redhat-cloud-services/frontend-components-sources/esm/validated';
 
 import { useSource } from '../../hooks/useSource';
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
 import { replaceRouteId, routes } from '../../Routes';
 import { renameSource } from '../../redux/sources/actions';
+import validated from '../../addSourceWizard/sourceFormRenderer/resolveProps/validated';
+import { asyncValidatorDebounced } from '../../addSourceWizard/addSourceWizard/SourceAddSchema';
 
 const SourceRenameModal = () => {
   const source = useSource();
@@ -30,6 +30,7 @@ const SourceRenameModal = () => {
       onClose={returnToSource}
       isOpen
       variant="medium"
+      className="sources"
     >
       <SourcesFormRenderer
         FormTemplate={(props) => (

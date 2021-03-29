@@ -10,7 +10,7 @@ import { Label } from '@patternfly/react-core/dist/esm/components/Label/Label';
 import { LabelGroup } from '@patternfly/react-core/dist/esm/components/LabelGroup/LabelGroup';
 
 import { FormattedMessage, useIntl } from 'react-intl';
-import { DateFormat } from '@redhat-cloud-services/frontend-components/components/esm/DateFormat';
+import { DateFormat } from '@redhat-cloud-services/frontend-components/DateFormat';
 import { Link } from 'react-router-dom';
 import { replaceRouteId, routes } from '../Routes';
 

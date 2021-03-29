@@ -1,11 +1,9 @@
 import thunk from 'redux-thunk';
 import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
-import { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/files/ReducerRegistry';
+import { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/ReducerRegistry';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
-
-import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources/esm/addSourceWizard';
 
 import SourcesPage from '../../pages/Sources';
 
@@ -21,11 +19,7 @@ import * as typesApi from '../../api/source_types';
 
 import { routes } from '../../Routes';
 import UserReducer from '../../redux/user/reducer';
-
-jest.mock('@redhat-cloud-services/frontend-components-sources/esm/addSourceWizard', () => ({
-  __esModule: true,
-  AddSourceWizard: jest.fn().mockImplementation(() => <h2>AddSource mock</h2>),
-}));
+import * as wizard from '../../addSourceWizard/addSourceWizard';
 
 describe('SourcesPage - addSource route', () => {
   const middlewares = [thunk, notificationsMiddleware()];
@@ -36,6 +30,8 @@ describe('SourcesPage - addSource route', () => {
     wrapper.find(MemoryRouter).instance().history.location.pathname === routes.sources.path;
 
   beforeEach(() => {
+    wizard.AddSourceWizard = () => <h2>AddSource mock</h2>;
+
     api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: sourcesDataGraphQl }));
     api.doLoadCountOfSources = jest
       .fn()
@@ -60,7 +56,7 @@ describe('SourcesPage - addSource route', () => {
     });
     wrapper.update();
 
-    expect(wrapper.find(AddSourceWizard)).toHaveLength(0);
+    expect(wrapper.find(wizard.AddSourceWizard)).toHaveLength(0);
     expect(wasRedirectedToRoot(wrapper)).toEqual(true);
   });
 });

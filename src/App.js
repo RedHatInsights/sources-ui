@@ -1,11 +1,15 @@
 import React, { useEffect } from 'react';
-import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/esm/NotificationPortal';
-import { Main } from '@redhat-cloud-services/frontend-components/components/esm/Main';
+import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/NotificationPortal';
+import { Main } from '@redhat-cloud-services/frontend-components/Main';
 import { IntlProvider } from 'react-intl';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import Routes from './Routes';
+
 import './App.scss';
+import './addSourceWizard/styles/authSelect.scss';
+import './addSourceWizard/styles/cardSelect.scss';
+import './addSourceWizard/styles/costManagement.scss';
 
 import ErrorBoundary from './components/ErrorBoundary';
 import PermissionsChecker from './components/PermissionsChecker';

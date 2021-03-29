@@ -10,8 +10,8 @@ import { EmptyState } from '@patternfly/react-core/dist/esm/components/EmptyStat
 import { Spinner } from '@patternfly/react-core/dist/esm/components/Spinner/Spinner';
 
 import SubmittingModal from '../../../components/SourceEditForm/SubmittingModal';
-import LoadingStep from '@redhat-cloud-services/frontend-components-sources/esm/LoadingStep';
 import mockStore from '../../__mocks__/mockStore';
+import LoadingStep from '../../../addSourceWizard/addSourceWizard/steps/LoadingStep';
 
 describe('SubmittingModal', () => {
   let store;

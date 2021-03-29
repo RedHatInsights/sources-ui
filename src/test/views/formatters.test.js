@@ -46,7 +46,7 @@ import { Tooltip } from '@patternfly/react-core/dist/esm/components/Tooltip/Tool
 import { Label } from '@patternfly/react-core/dist/esm/components/Label/Label';
 import { LabelGroup } from '@patternfly/react-core/dist/esm/components/LabelGroup/LabelGroup';
 
-import { DateFormat } from '@redhat-cloud-services/frontend-components/components/esm/DateFormat';
+import { DateFormat } from '@redhat-cloud-services/frontend-components/DateFormat';
 import { IntlProvider } from 'react-intl';
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
 

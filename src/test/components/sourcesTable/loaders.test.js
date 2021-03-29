@@ -7,8 +7,8 @@ import { Bullseye } from '@patternfly/react-core/dist/esm/layouts/Bullseye';
 import { Card } from '@patternfly/react-core/dist/esm/components/Card/Card';
 import { CardBody } from '@patternfly/react-core/dist/esm/components/Card/CardBody';
 
-import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/esm/PageHeader';
-import { Section } from '@redhat-cloud-services/frontend-components/components/esm/Section';
+import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
+import { Section } from '@redhat-cloud-services/frontend-components/Section';
 
 import {
   PlaceHolderTable,

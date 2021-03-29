@@ -7,7 +7,7 @@ import { TextInput } from '@patternfly/react-core/dist/esm/components/TextInput/
 import TextField from '@data-driven-forms/pf4-component-mapper/dist/esm/text-field';
 import useFormApi from '@data-driven-forms/react-form-renderer/dist/esm/use-form-api';
 import validatorTypes from '@data-driven-forms/react-form-renderer/dist/esm/validator-types';
-import validated from '@redhat-cloud-services/frontend-components-sources/esm/validated';
+import validated from '../addSourceWizard/sourceFormRenderer/resolveProps/validated';
 
 const Authentication = (rest) => {
   const formOptions = useFormApi();

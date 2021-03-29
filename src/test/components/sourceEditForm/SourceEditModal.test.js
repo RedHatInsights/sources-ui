@@ -32,11 +32,6 @@ import { UNAVAILABLE } from '../../../views/formatters';
 import mockStore from '../../__mocks__/mockStore';
 import { getStore } from '../../../utilities/store';
 
-jest.mock('@redhat-cloud-services/frontend-components-sources/esm/SourceAddSchema', () => ({
-  __esModule: true,
-  asyncValidatorDebounced: jest.fn(),
-}));
-
 describe('SourceEditModal', () => {
   let store;
   let initialEntry;
