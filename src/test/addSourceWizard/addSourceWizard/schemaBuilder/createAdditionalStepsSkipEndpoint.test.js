@@ -1,6 +1,6 @@
-import { createAdditionalSteps } from '../../../../addSourceWizard/addSourceWizard/schemaBuilder';
+import { createAdditionalSteps } from '../../../../components/addSourceWizard/schemaBuilder';
 
-jest.mock('../../../../addSourceWizard/addSourceWizard/hardcodedSchemas', () => ({
+jest.mock('../../../../components/addSourceWizard/hardcodedSchemas', () => ({
   red: {
     authentication: {
       hat: {

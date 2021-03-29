@@ -1,11 +1,6 @@
 import React from 'react';
 
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
-import { EmptyState, EmptyStateVariant } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyState';
-import { EmptyStateIcon } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateIcon';
-import { EmptyStateBody } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateBody';
-import { Bullseye } from '@patternfly/react-core/dist/esm/layouts/Bullseye/Bullseye';
-import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
+import { Button, EmptyState, EmptyStateVariant, EmptyStateIcon, EmptyStateBody, Bullseye, Title } from '@patternfly/react-core';
 import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';

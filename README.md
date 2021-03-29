@@ -15,10 +15,9 @@ This application allows to
 **Table of Contents**
 - [Sources](#sources)
 - [Getting Started](#getting-started)
-- [Running locally](#running-locally)
-- [Build app](#build-app)
+  - [Run app](#run-app)
   - [Debug functions](#debug-functions)
-  - [Testing](#testing)
+- [Testing](#testing)
 - [Patternfly](#patternfly)
 - [Data-driven forms](#data-driven-forms)
 - [Insights Components](#insights-components)
@@ -33,31 +32,20 @@ This application allows to
 - [License](#license)
 
 # Getting Started
-
-There is a [comprehensive quick start guide in the Storybook Documentation](https://github.com/RedHatInsights/insights-frontend-storybook/blob/master/src/docs/welcome/quickStart/DOC.md) to setting up an Insights environment complete with:
-
-- Insights Frontend Starter App
-
-- [Insights Chroming](https://github.com/RedHatInsights/insights-chrome)
-- [Insights Proxy](https://github.com/RedHatInsights/insights-proxy)
-
-Note: You will need to set up the Insights environment if you want to develop
-Sources UI due to the consumption of the chroming service as well as
-setting up your global/app navigation through the API.
-
-# Running locally
-Have [insights-proxy](https://github.com/RedHatInsights/insights-proxy) installed under PROXY_PATH
-
-```shell
-SPANDX_CONFIG="./config/spandx.config.js" bash $PROXY_PATH/scripts/run.sh
-```
-
-# Build app
+## Run app
 
 1. ```npm install```
 
-2. ```npm run start```
-    - starts webpack bundler and serves the files with webpack dev server
+2.  ```npm run start```
+    - starts webpack bundler and serves the files with webpack dev server on `https://ci.foo.redhat.com:1337/settings/sources/`
+
+2.  ```npm run start:beta```
+    - starts webpack bundler and serves the files with webpack dev server on `https://ci.foo.redhat.com:1337/beta/settings/sources/`
+
+You have to be connected to Red Hat VPN.
+
+Check our [proxy documenation](https://github.com/RedHatInsights/frontend-components/tree/master/packages/config#useproxy) for more options.
+
 ## Debug functions
 
 Sources UI provides easy way how to test different states of the application when running in dev environment.
@@ -80,7 +68,7 @@ Removes write permissions.
 
 Grants write permissions.
 
-## Testing
+# Testing
 
 - Travis is used to test the build for this code.
   - `npm run test` will run tests,

@@ -1,6 +1,6 @@
-import { createGenericAuthTypeSelection } from '../../../../addSourceWizard/addSourceWizard/schemaBuilder';
+import { createGenericAuthTypeSelection } from '../../../../components/addSourceWizard/schemaBuilder';
 
-jest.mock('../../../../addSourceWizard/addSourceWizard/hardcodedSchemas', () => ({
+jest.mock('../../../../components/addSourceWizard/hardcodedSchemas', () => ({
   openshiftAdditionalStep: {
     authentication: {
       token: {
@@ -217,6 +217,30 @@ describe('generate auth selection pages', () => {
         });
 
         expect(createGenericAuthTypeSelection(MULTIPLE_SELECTION_TYPE, EMPTY_APPEND_ENDPOINT, NOT_EDITING)).toEqual(
+          expectedSchema
+        );
+      });
+
+      it('do not contain endpoint fields when useApplicationAuth set', () => {
+        const MULTIPLE_SELECTION_TYPE_USE_AUTH_APP = {
+          ...MULTIPLE_SELECTION_TYPE,
+          name: 'useAppAuth',
+        };
+
+        expectedSchema = expect.objectContaining({
+          fields: expect.arrayContaining([firstAuth, secondAuth]),
+          title: expect.any(Object),
+          name: MULTIPLE_SELECTION_TYPE_USE_AUTH_APP.name,
+          nextStep: {
+            when: expect.any(String),
+            stepMapper: {
+              [firstTypeName]: 'summary',
+              [secondTypeName]: 'summary',
+            },
+          },
+        });
+
+        expect(createGenericAuthTypeSelection(MULTIPLE_SELECTION_TYPE_USE_AUTH_APP, APPEND_ENDPOINT_FIELDS, NOT_EDITING)).toEqual(
           expectedSchema
         );
       });

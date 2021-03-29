@@ -1,8 +1,8 @@
 import React from 'react';
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
+import { Button } from '@patternfly/react-core';
 import { Link } from 'react-router-dom';
 
-import EditLink from '../../../addSourceWizard/addSourceWizard/EditLink';
+import EditLink from '../../../components/addSourceWizard/EditLink';
 import mount from '../__mocks__/mount';
 
 describe('EditLink', () => {

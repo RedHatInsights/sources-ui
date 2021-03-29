@@ -102,6 +102,7 @@ export const sourceTypesData = {
           {
             name: 'AWS Secret Key',
             type: 'access_key_secret_key',
+            is_superkey: true,
             fields: [
               {
                 name: 'authentication.authtype',
@@ -166,6 +167,30 @@ export const sourceTypesData = {
                     type: 'min-length',
                     threshold: 10,
                   },
+                ],
+                component: 'text-field',
+                isRequired: true,
+              },
+            ],
+          },
+          {
+            name: 'Subscription Watch ARN',
+            type: 'cloud-meter-arn',
+            fields: [
+              {
+                name: 'authentication.authtype',
+                component: 'text-field',
+                hideField: true,
+                initialValue: 'cloud-meter-arn',
+                initializeOnMount: true,
+              },
+              {
+                name: 'authentication.username',
+                label: 'ARN',
+                validate: [
+                  { type: 'required' },
+                  { type: 'pattern', pattern: '^arn:aws:.*' },
+                  { type: 'min-length', threshold: 10 },
                 ],
                 component: 'text-field',
                 isRequired: true,

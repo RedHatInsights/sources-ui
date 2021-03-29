@@ -1,6 +1,6 @@
 import React from 'react';
-import componentTypes from '@data-driven-forms/react-form-renderer/dist/esm/component-types';
-import validatorTypes from '@data-driven-forms/react-form-renderer/dist/esm/validator-types';
+import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
+import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
 import { FormattedMessage } from 'react-intl';
 import { authenticationFields } from './authentication';
 import EditAlert from './EditAlert';

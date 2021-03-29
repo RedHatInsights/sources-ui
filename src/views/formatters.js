@@ -1,13 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Text, TextVariants } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
-import { Badge } from '@patternfly/react-core/dist/esm/components/Badge/Badge';
-import { Popover } from '@patternfly/react-core/dist/esm/components/Popover/Popover';
-import { Tooltip } from '@patternfly/react-core/dist/esm/components/Tooltip/Tooltip';
-import { Label } from '@patternfly/react-core/dist/esm/components/Label/Label';
-import { LabelGroup } from '@patternfly/react-core/dist/esm/components/LabelGroup/LabelGroup';
+import { Text, TextVariants, TextContent, Badge, Popover, Tooltip, Label, LabelGroup, Button } from '@patternfly/react-core';
+
+import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 
 import { FormattedMessage, useIntl } from 'react-intl';
 import { DateFormat } from '@redhat-cloud-services/frontend-components/DateFormat';
@@ -388,4 +384,51 @@ export const applicationFormatter = (apps, item, { appTypes }) => {
   }
 
   return <EnhancedLabelGroup numLabels={2} collapsedText applications={applications} />;
+};
+
+export const configurationModeFormatter = (mode, item, { intl, sourceType }) => {
+  if (mode === 'account_authorization') {
+    const superKeyType = sourceType?.schema.authentication.find(({ is_superkey }) => is_superkey);
+    const superKeyAuth = item?.authentications?.find(({ authtype }) => authtype && authtype === superKeyType.type);
+
+    return (
+      <React.Fragment>
+        {intl.formatMessage({
+          id: 'configurationMode.trust',
+          defaultMessage: 'Account authorization',
+        })}
+        {superKeyAuth?.availability_status === UNAVAILABLE && (
+          <Tooltip
+            position="top"
+            content={
+              superKeyAuth.availability_status_error ||
+              intl.formatMessage({
+                id: 'configurationMode.trustmode.defaultError',
+                defaultMessage: 'Edit credentials required.',
+              })
+            }
+          >
+            <span className="pf-u-ml-sm">
+              <ExclamationCircleIcon fill="#C9190B" />
+            </span>
+          </Tooltip>
+        )}
+        <div className="pf-u-mt-sm">
+          <Link to={replaceRouteId(routes.sourcesDetailEditCredentials.path, item.id)}>
+            <Button variant="link" id="edit-super-credentials" isInline>
+              {intl.formatMessage({
+                id: 'sources.editCredentials',
+                defaultMessage: 'Edit credentials',
+              })}
+            </Button>
+          </Link>
+        </div>
+      </React.Fragment>
+    );
+  }
+
+  return intl.formatMessage({
+    id: 'configurationMode.manual',
+    defaultMessage: 'Manual configuration',
+  });
 };

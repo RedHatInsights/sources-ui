@@ -2,8 +2,7 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
 
-import { GridItem } from '@patternfly/react-core/dist/esm/layouts/Grid/GridItem';
-import { Grid } from '@patternfly/react-core/dist/esm/layouts/Grid/Grid';
+import { GridItem, Grid } from '@patternfly/react-core';
 
 import Detail from '../../pages/Detail';
 import { DetailLoader } from '../../components/SourcesTable/loaders';
@@ -20,6 +19,7 @@ import * as SourceRemoveModal from '../../components/SourceRemoveModal/SourceRem
 import * as AddApplication from '../../components/AddApplication/AddApplication';
 import * as RemoveAppModal from '../../components/AddApplication/RemoveAppModal';
 import * as SourceRenameModal from '../../components/SourceDetail/SourceRenameModal';
+import * as CredentialsForm from '../../components/CredentialsForm/CredentialsForm';
 import mockStore from '../__mocks__/mockStore';
 
 jest.mock('../../components/SourceRemoveModal/SourceRemoveModal', () => ({
@@ -38,6 +38,39 @@ jest.mock('../../components/SourceDetail/SourceRenameModal', () => ({
   __esModule: true,
   default: () => <span>Rename</span>,
 }));
+jest.mock('../../components/CredentialsForm/CredentialsForm', () => ({
+  __esModule: true,
+  default: () => <span>Credentials form</span>,
+}));
+
+jest.mock('react', () => {
+  const React = jest.requireActual('react');
+  const Suspense = ({ children }) => {
+    return children;
+  };
+
+  const lazy = jest.fn().mockImplementation((fn) => {
+    const Component = (props) => {
+      const [C, setC] = React.useState();
+
+      React.useEffect(() => {
+        fn().then((v) => {
+          setC(v);
+        });
+      }, []);
+
+      return C ? <C.default {...props} /> : null;
+    };
+
+    return Component;
+  });
+
+  return {
+    ...React,
+    lazy,
+    Suspense,
+  };
+});
 
 describe('SourceDetail', () => {
   let wrapper;
@@ -99,7 +132,7 @@ describe('SourceDetail', () => {
     expect(wrapper.find(SourceSummaryCard.default)).toHaveLength(1);
     expect(wrapper.find(ApplicationsCard.default)).toHaveLength(1);
     expect(wrapper.find(ApplicationResourcesCard.default)).toHaveLength(1);
-    expect(wrapper.find(CustomRoute)).toHaveLength(4);
+    expect(wrapper.find(CustomRoute)).toHaveLength(5);
     expect(wrapper.find(SourceRemoveModal.default)).toHaveLength(0);
     expect(wrapper.find(AddApplication.default)).toHaveLength(0);
     expect(wrapper.find(RemoveAppModal.default)).toHaveLength(0);
@@ -109,88 +142,108 @@ describe('SourceDetail', () => {
   });
 
   describe('routes', () => {
-    beforeEach(() => {
-      store = mockStore({
-        sources: {
-          entities: [
-            {
-              id: sourceId,
-            },
-          ],
-        },
+    describe('loaded', () => {
+      beforeEach(() => {
+        store = mockStore({
+          sources: {
+            entities: [
+              {
+                id: sourceId,
+              },
+            ],
+          },
+        });
       });
-    });
 
-    it('routes to remove source', async () => {
-      const initialEntry = [replaceRouteId(routes.sourcesDetailRemove.path, sourceId)];
+      it('routes to remove source', async () => {
+        const initialEntry = [replaceRouteId(routes.sourcesDetailRemove.path, sourceId)];
 
-      await act(async () => {
-        wrapper = mount(
-          componentWrapperIntl(
-            <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
-            store,
-            initialEntry
-          )
-        );
+        await act(async () => {
+          wrapper = mount(
+            componentWrapperIntl(
+              <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
+              store,
+              initialEntry
+            )
+          );
+        });
+        wrapper.update();
+
+        expect(wrapper.find(SourceRemoveModal.default)).toHaveLength(1);
+        expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
       });
-      wrapper.update();
 
-      expect(wrapper.find(SourceRemoveModal.default)).toHaveLength(1);
-      expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
-    });
+      it('routes to rename source', async () => {
+        const initialEntry = [replaceRouteId(routes.sourcesDetailRename.path, sourceId)];
 
-    it('routes to rename source', async () => {
-      const initialEntry = [replaceRouteId(routes.sourcesDetailRename.path, sourceId)];
+        await act(async () => {
+          wrapper = mount(
+            componentWrapperIntl(
+              <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
+              store,
+              initialEntry
+            )
+          );
+        });
+        wrapper.update();
 
-      await act(async () => {
-        wrapper = mount(
-          componentWrapperIntl(
-            <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
-            store,
-            initialEntry
-          )
-        );
+        expect(wrapper.find(SourceRenameModal.default)).toHaveLength(1);
+        expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
       });
-      wrapper.update();
 
-      expect(wrapper.find(SourceRenameModal.default)).toHaveLength(1);
-      expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
-    });
+      it('routes to add app', async () => {
+        const initialEntry = [replaceRouteId(routes.sourcesDetailAddApp.path, sourceId).replace(':app_type_id', '2')];
 
-    it('routes to add app', async () => {
-      const initialEntry = [replaceRouteId(routes.sourcesDetailAddApp.path, sourceId).replace(':app_type_id', '2')];
+        await act(async () => {
+          wrapper = mount(
+            componentWrapperIntl(
+              <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
+              store,
+              initialEntry
+            )
+          );
+        });
+        wrapper.update();
 
-      await act(async () => {
-        wrapper = mount(
-          componentWrapperIntl(
-            <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
-            store,
-            initialEntry
-          )
-        );
+        expect(wrapper.find(AddApplication.default)).toHaveLength(1);
+        expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
       });
-      wrapper.update();
 
-      expect(wrapper.find(AddApplication.default)).toHaveLength(1);
-      expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
-    });
+      it('routes to remove app', async () => {
+        const initialEntry = [replaceRouteId(routes.sourcesDetailRemoveApp.path, sourceId).replace(':app_id', '344')];
 
-    it('routes to remove app', async () => {
-      const initialEntry = [replaceRouteId(routes.sourcesDetailRemoveApp.path, sourceId).replace(':app_id', '344')];
+        await act(async () => {
+          wrapper = mount(
+            componentWrapperIntl(
+              <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
+              store,
+              initialEntry
+            )
+          );
+        });
+        wrapper.update();
 
-      await act(async () => {
-        wrapper = mount(
-          componentWrapperIntl(
-            <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
-            store,
-            initialEntry
-          )
-        );
+        expect(wrapper.find(RemoveAppModal.default)).toHaveLength(1);
+        expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
       });
-      wrapper.update();
 
-      expect(wrapper.find(RemoveAppModal.default)).toHaveLength(1);
-      expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
+      it('routes to credentials form', async () => {
+        const initialEntry = [replaceRouteId(routes.sourcesDetailEditCredentials.path, sourceId)];
+
+        await act(async () => {
+          wrapper = mount(
+            componentWrapperIntl(
+              <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
+              store,
+              initialEntry
+            )
+          );
+        });
+        wrapper.update();
+
+        expect(wrapper.find(CredentialsForm.default)).toHaveLength(1);
+        expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
+      });
     });
 
     describe('unloaded', () => {
@@ -255,6 +308,23 @@ describe('SourceDetail', () => {
 
       it('routes to remove app', async () => {
         const initialEntry = [replaceRouteId(routes.sourcesDetailRemoveApp.path, sourceId).replace(':app_id', '344')];
+
+        await act(async () => {
+          wrapper = mount(
+            componentWrapperIntl(
+              <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
+              store,
+              initialEntry
+            )
+          );
+        });
+        wrapper.update();
+
+        expect(wrapper.find(RedirectNoId.default)).toHaveLength(1);
+      });
+
+      it('routes to credentials form', async () => {
+        const initialEntry = [replaceRouteId(routes.sourcesDetailEditCredentials.path, sourceId)];
 
         await act(async () => {
           wrapper = mount(

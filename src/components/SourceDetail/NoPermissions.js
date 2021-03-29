@@ -1,10 +1,7 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 
-import { EmptyState } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyState';
-import { EmptyStateIcon } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateIcon';
-import { EmptyStateBody } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateBody';
-import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
+import { EmptyState, EmptyStateIcon, EmptyStateBody, Title } from '@patternfly/react-core';
 import PrivateIcon from '@patternfly/react-icons/dist/esm/icons/private-icon';
 
 const NoPermissions = () => {

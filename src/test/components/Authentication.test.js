@@ -1,14 +1,12 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
-import { FormGroup } from '@patternfly/react-core/dist/esm/components/Form/FormGroup';
-import { TextInput } from '@patternfly/react-core/dist/esm/components/TextInput/TextInput';
+import { Button } from '@patternfly/react-core';
 
 import { validatorTypes } from '@data-driven-forms/react-form-renderer';
 
-import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
-import TextField from '@data-driven-forms/pf4-component-mapper/dist/esm/text-field';
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
+import TextField from '@data-driven-forms/pf4-component-mapper/text-field';
 
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
 
@@ -153,12 +151,12 @@ describe('Authentication test', () => {
       )
     );
 
-    expect(wrapper.find(FormGroup)).toHaveLength(1);
-    expect(wrapper.find(TextInput)).toHaveLength(1);
-    expect(wrapper.find(TextInput).props().value).toEqual('•••••••••••••');
+    expect(wrapper.find('FormGroup')).toHaveLength(1);
+    expect(wrapper.find('TextInput')).toHaveLength(1);
+    expect(wrapper.find('TextInput').props().value).toEqual('•••••••••••••');
 
     await act(async () => {
-      wrapper.find(FormGroup).first().simulate('focus');
+      wrapper.find('FormGroup').first().simulate('focus');
     });
     wrapper.update();
 
@@ -201,13 +199,13 @@ describe('Authentication test', () => {
       );
     });
 
-    expect(wrapper.find(FormGroup)).toHaveLength(1);
-    expect(wrapper.find(TextInput)).toHaveLength(1);
-    expect(wrapper.find(TextInput).props().value).toEqual('•••••••••••••');
+    expect(wrapper.find('FormGroup')).toHaveLength(1);
+    expect(wrapper.find('TextInput')).toHaveLength(1);
+    expect(wrapper.find('TextInput').props().value).toEqual('•••••••••••••');
     expect(wrapper.find(TextField)).toHaveLength(0);
 
     await act(async () => {
-      wrapper.find(FormGroup).first().simulate('focus');
+      wrapper.find('FormGroup').first().simulate('focus');
     });
     wrapper.update();
 
@@ -227,9 +225,9 @@ describe('Authentication test', () => {
     });
     wrapper.update();
 
-    expect(wrapper.find(FormGroup)).toHaveLength(1);
-    expect(wrapper.find(TextInput)).toHaveLength(1);
-    expect(wrapper.find(TextInput).props().value).toEqual('•••••••••••••');
+    expect(wrapper.find('FormGroup')).toHaveLength(1);
+    expect(wrapper.find('TextInput')).toHaveLength(1);
+    expect(wrapper.find('TextInput').props().value).toEqual('•••••••••••••');
     expect(wrapper.find(TextField)).toHaveLength(0);
   });
 });

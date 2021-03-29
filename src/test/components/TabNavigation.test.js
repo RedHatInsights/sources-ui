@@ -1,10 +1,7 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import { Tabs } from '@patternfly/react-core/dist/esm/components/Tabs/Tabs';
-import { TabButton } from '@patternfly/react-core/dist/esm/components/Tabs/TabButton';
-import { TabTitleIcon } from '@patternfly/react-core/dist/esm/components/Tabs/TabTitleIcon';
-import { TabTitleText } from '@patternfly/react-core/dist/esm/components/Tabs/TabTitleText';
+import { Tabs, TabTitleIcon, TabTitleText } from '@patternfly/react-core';
 import RedhatIcon from '@patternfly/react-icons/dist/esm/icons/redhat-icon';
 import CloudIcon from '@patternfly/react-icons/dist/esm/icons/cloud-icon';
 
@@ -61,7 +58,7 @@ describe('TabNavigation', () => {
     expect(actions.setActiveVendor).not.toHaveBeenCalled();
 
     await act(async () => {
-      wrapper.find(TabButton).first().simulate('click');
+      wrapper.find('TabButton').first().simulate('click');
     });
     wrapper.update();
 
@@ -70,7 +67,7 @@ describe('TabNavigation', () => {
     actions.setActiveVendor.mockClear();
 
     await act(async () => {
-      wrapper.find(TabButton).last().simulate('click');
+      wrapper.find('TabButton').last().simulate('click');
     });
     wrapper.update();
 

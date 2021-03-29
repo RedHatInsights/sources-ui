@@ -1,12 +1,12 @@
 import React from 'react';
 import awesomeDebounce from 'awesome-debounce-promise';
 
-import { AlertActionLink } from '@patternfly/react-core/dist/esm/components/Alert/AlertActionLink';
+import { AlertActionLink } from '@patternfly/react-core';
 
 import { loadEntities, filterSources, addMessage, removeMessage } from '../../redux/sources/actions';
 import { replaceRouteId, routes } from '../../Routes';
 import { AVAILABLE } from '../../views/formatters';
-import computeSourceStatus from '../../addSourceWizard/utilities/computeSourceStatus';
+import computeSourceStatus from '../../utilities/computeSourceStatus';
 
 export const debouncedFiltering = awesomeDebounce((refresh) => refresh(), 500);
 

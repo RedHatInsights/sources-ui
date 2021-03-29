@@ -2,14 +2,7 @@ import React from 'react';
 import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/PrimaryToolbar';
 import { act } from 'react-dom/test-utils';
 
-import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
-import { Tooltip } from '@patternfly/react-core/dist/esm/components/Tooltip/Tooltip';
-import { Tile } from '@patternfly/react-core/dist/esm/components/Tile/Tile';
-import { Alert } from '@patternfly/react-core/dist/js/components/Alert/Alert';
-import { Pagination } from '@patternfly/react-core/dist/js/components/Pagination/Pagination';
-import { AlertActionLink } from '@patternfly/react-core/dist/esm/components/Alert/AlertActionLink';
-import { Chip } from '@patternfly/react-core/dist/js/components/ChipGroup/Chip';
-import { Select } from '@patternfly/react-core/dist/js/components/Select/Select';
+import { Button, Tooltip, Tile, Alert, Pagination, AlertActionLink, Chip, Select } from '@patternfly/react-core';
 
 import { MemoryRouter, Link } from 'react-router-dom';
 import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/NotificationPortal';
@@ -43,7 +36,41 @@ import CloudEmptyState from '../../components/CloudTiles/CloudEmptyState';
 import { getStore } from '../../utilities/store';
 import { AVAILABLE, UNAVAILABLE } from '../../views/formatters';
 import RedHatEmptyState from '../../components/RedHatTiles/RedHatEmptyState';
-import { AddSourceWizard } from '../../addSourceWizard/addSourceWizard';
+import { AddSourceWizard } from '../../components/addSourceWizard';
+
+jest.mock('react', () => {
+  const React = jest.requireActual('react');
+  const Suspense = ({ children }) => {
+    return children;
+  };
+
+  const lazy = jest.fn().mockImplementation((fn) => {
+    const Component = (props) => {
+      const [C, setC] = React.useState();
+      const mounted = React.useRef(true);
+
+      React.useEffect(() => {
+        fn().then((v) => {
+          mounted.current && setC(v);
+        });
+
+        return () => {
+          mounted.current = false;
+        };
+      }, []);
+
+      return C ? <C.default {...props} /> : null;
+    };
+
+    return Component;
+  });
+
+  return {
+    ...React,
+    lazy,
+    Suspense,
+  };
+});
 
 describe('SourcesPage', () => {
   let initialProps;
@@ -567,7 +594,7 @@ describe('SourcesPage', () => {
     });
     wrapper.update();
 
-    expect(wrapper.find(AddSourceWizard).props().initialValues).toEqual(undefined);
+    expect(wrapper.find(AddSourceWizard).props().initialValues).toEqual({});
     expect(wrapper.find(AddSourceWizard).props().initialWizardState).toEqual(undefined);
   });
 

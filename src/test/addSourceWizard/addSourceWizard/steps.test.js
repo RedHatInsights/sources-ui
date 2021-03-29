@@ -1,25 +1,27 @@
 import React from 'react';
 
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
-import { EmptyState } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyState';
-import { EmptyStateBody } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateBody';
-import { EmptyStateSecondaryActions } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateSecondaryActions';
-import { Bullseye } from '@patternfly/react-core/dist/esm/layouts/Bullseye/Bullseye';
-import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
-import { Alert } from '@patternfly/react-core/dist/esm/components/Alert/Alert';
-import { Spinner } from '@patternfly/react-core/dist/esm/components/Spinner/Spinner';
+import {
+  Button,
+  EmptyState,
+  EmptyStateBody,
+  EmptyStateSecondaryActions,
+  Bullseye,
+  Title,
+  Alert,
+  Spinner,
+} from '@patternfly/react-core';
 
 import CheckCircleIcon from '@patternfly/react-icons/dist/esm/icons/check-circle-icon';
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
 
-import FinishedStep from '../../../addSourceWizard/addSourceWizard/steps/FinishedStep';
-import LoadingStep from '../../../addSourceWizard/addSourceWizard/steps/LoadingStep';
-import ErroredStep from '../../../addSourceWizard/addSourceWizard/steps/ErroredStep';
-import TimeoutStep from '../../../addSourceWizard/addSourceWizard/steps/TimeoutStep';
-
 import mount from '../__mocks__/mount';
-import AmazonFinishedStep from '../../../addSourceWizard/addSourceWizard/steps/AmazonFinishedStep';
+
+import FinishedStep from '../../../components/steps/FinishedStep';
+import LoadingStep from '../../../components/steps/LoadingStep';
+import ErroredStep from '../../../components/steps/ErroredStep';
+import TimeoutStep from '../../../components/steps/TimeoutStep';
+import AmazonFinishedStep from '../../../components/steps/AmazonFinishedStep';
 
 describe('Steps components', () => {
   let initialProps;
@@ -29,11 +31,6 @@ describe('Steps components', () => {
   beforeEach(() => {
     spyFunction = jest.fn();
     spyFunctionSecond = jest.fn();
-  });
-
-  afterEach(() => {
-    spyFunction.mockReset();
-    spyFunctionSecond.mockReset();
   });
 
   describe('FinishedStep', () => {

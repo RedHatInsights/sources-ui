@@ -42,6 +42,11 @@ export const routes = {
     redirectNoId: true,
     writeAccess: true,
   },
+  sourcesDetailEditCredentials: {
+    path: '/sources/detail/:id/edit_credentials',
+    redirectNoId: true,
+    writeAccess: true,
+  },
 };
 
 export const replaceRouteId = (path, id) => path.replace(':id', id);

@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { Popover } from '@patternfly/react-core/dist/esm/components/Popover/Popover';
+import { Popover } from '@patternfly/react-core';
 
 import QuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/question-circle-icon';
 
-import SSLFormLabel from '../../../addSourceWizard/addSourceWizard/SSLFormLabel';
+import SSLFormLabel from '../../../components/addSourceWizard/SSLFormLabel';
 import mount from '../__mocks__/mount';
 
 describe('SSLFormLabel', () => {

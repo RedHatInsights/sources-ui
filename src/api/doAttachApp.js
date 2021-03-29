@@ -6,9 +6,9 @@ import cloneDeep from 'lodash/cloneDeep';
 
 import { getSourcesApi, doCreateApplication } from './entities';
 import { urlOrHost } from './doUpdateSource';
-import { checkAppAvailability } from '../addSourceWizard/api/getApplicationStatus';
-import { timeoutedApps } from '../addSourceWizard/api/constants';
-import handleError from '../addSourceWizard/api/handleError';
+import { checkAppAvailability } from '../api/getApplicationStatus';
+import handleError from '../api/handleError';
+import { timeoutedApps } from '../utilities/constants';
 
 // modification of https://stackoverflow.com/a/38340374
 export const removeEmpty = (obj) => {

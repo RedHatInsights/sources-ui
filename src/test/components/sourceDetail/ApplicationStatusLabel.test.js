@@ -1,5 +1,4 @@
-import { Popover } from '@patternfly/react-core/dist/esm/components/Popover/Popover';
-import { Label } from '@patternfly/react-core/dist/esm/components/Label/Label';
+import { Popover, Label } from '@patternfly/react-core';
 
 import React from 'react';
 import { Route } from 'react-router-dom';

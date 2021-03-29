@@ -1,6 +1,6 @@
 import { doAttachApp, removeEmpty } from '../../api/doAttachApp';
 import * as api from '../../api/entities';
-import * as appStatus from '../../addSourceWizard/api/getApplicationStatus';
+import * as appStatus from '../..//api/getApplicationStatus';
 
 const prepareFormApi = (values) => ({
   getState: () => ({
@@ -8,7 +8,7 @@ const prepareFormApi = (values) => ({
   }),
 });
 
-jest.mock('../../addSourceWizard/api/constants', () => ({
+jest.mock('../../utilities/constants', () => ({
   __esModule: true,
   timeoutedApps: () => [],
 }));

@@ -7,9 +7,9 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import Routes from './Routes';
 
 import './App.scss';
-import './addSourceWizard/styles/authSelect.scss';
-import './addSourceWizard/styles/cardSelect.scss';
-import './addSourceWizard/styles/costManagement.scss';
+import './styles/authSelect.scss';
+import './styles/cardSelect.scss';
+import './styles/costManagement.scss';
 
 import ErrorBoundary from './components/ErrorBoundary';
 import PermissionsChecker from './components/PermissionsChecker';

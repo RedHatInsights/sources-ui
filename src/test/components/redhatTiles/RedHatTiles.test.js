@@ -1,8 +1,7 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import { Tooltip } from '@patternfly/react-core/dist/esm/components/Tooltip/Tooltip';
-import { Tile } from '@patternfly/react-core/dist/esm/components/Tile/Tile';
+import { Tooltip, Tile } from '@patternfly/react-core';
 
 import componentWrapperIntl from '../../../utilities/testsHelpers';
 import { MemoryRouter } from 'react-router-dom';
@@ -10,7 +9,7 @@ import { routes } from '../../../Routes';
 import mockStore from '../../__mocks__/mockStore';
 import RedHatTiles from '../../../components/RedHatTiles/RedHatTiles';
 import sourceTypes from '../../__mocks__/sourceTypesData';
-import * as constants from '../../../utilities/constants';
+import { REDHAT_VENDOR } from '../../../utilities/constants';
 
 describe('RedhatTiles', () => {
   let wrapper;
@@ -25,9 +24,10 @@ describe('RedhatTiles', () => {
       setSelectedType,
     };
 
-    store = mockStore({ user: { isOrgAdmin: true }, sources: { sourceTypes: sourceTypes.data } });
-
-    constants.getActiveVendor = () => constants.REDHAT_VENDOR;
+    store = mockStore({
+      user: { isOrgAdmin: true },
+      sources: { sourceTypes: sourceTypes.data, activeVendor: REDHAT_VENDOR },
+    });
   });
 
   it('renders correctly', async () => {
