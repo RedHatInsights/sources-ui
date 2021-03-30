@@ -17,6 +17,7 @@ This application allows to
 - [Getting Started](#getting-started)
   - [Run app](#run-app)
   - [Debug functions](#debug-functions)
+- [Queries](#queries)
 - [Testing](#testing)
 - [Patternfly](#patternfly)
 - [Data-driven forms](#data-driven-forms)
@@ -66,6 +67,10 @@ Removes write permissions.
 - ```sourcesDebug.setPermissions```
 
 Grants write permissions.
+
+# Queries
+
+You can use queries to modify the initial state of the application. Read more [here](doc/update-wizard.md).
 
 # Testing
 
