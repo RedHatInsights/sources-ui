@@ -373,6 +373,29 @@ describe('SourcesPage', () => {
           .filterConfig.items[1].filterValues.items.map(({ label }) => label)
       ).toEqual(['Amazon Web Services', 'Microsoft Azure', 'VMware vSphere']);
     });
+
+    it('renders correctly with type/application, loads all data', async () => {
+      window.location.search = '?type=amazon';
+
+      store = getStore([], {
+        sources: {
+          loaded: 1,
+          numberOfEntities: 5,
+          sourceTypes: sourceTypesData.data,
+          activeVendor: CLOUD_VENDOR,
+        },
+        user: { isOrgAdmin: true },
+      });
+
+      await act(async () => {
+        wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+      });
+      wrapper.update();
+
+      expect(api.doLoadEntities).toHaveBeenCalled();
+      expect(api.doLoadAppTypes).toHaveBeenCalled();
+      expect(typesApi.doLoadSourceTypes).toHaveBeenCalled();
+    });
   });
 
   it('renders addSourceWizard', async () => {
