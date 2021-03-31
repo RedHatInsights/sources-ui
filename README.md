@@ -70,7 +70,7 @@ Grants write permissions.
 
 # Queries
 
-You can use queries to modify the initial state of the application. Read more [here](doc/update-wizard.md).
+You can use queries to modify the initial state of the application. Read more [here](doc/url-query.md).
 
 # Testing
 
