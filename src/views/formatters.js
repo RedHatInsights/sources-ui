@@ -294,11 +294,17 @@ export const availabilityFormatter = (_status, source, { appTypes }) => {
   const status = meta.status;
 
   return (
-    <Popover showClose={false} aria-label={`${status} popover`} bodyContent={getStatusTooltipText(status, appTypes, meta.errors)}>
-      <Label className="clickable" color={getStatusColor(status)}>
-        {getStatusText(status)}
-      </Label>
-    </Popover>
+    <span>
+      <Popover
+        showClose={false}
+        aria-label={`${status} popover`}
+        bodyContent={getStatusTooltipText(status, appTypes, meta.errors)}
+      >
+        <Label className="clickable" color={getStatusColor(status)}>
+          {getStatusText(status)}
+        </Label>
+      </Popover>
+    </span>
   );
 };
 
