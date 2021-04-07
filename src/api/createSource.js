@@ -71,10 +71,10 @@ export const doCreateSource = async (formData, timetoutedApps = [], applicationT
         ...formData.authentication,
         resource_type: hasEndpoint ? 'endpoint' : hasApplication ? 'application' : 'source',
         resource_name: formData.source.name,
-        ...(hasEndpoint && { resource_name: urlOrHost(formData).host }),
         ...(hasApplication && {
           resource_name: applicationTypes?.find(({ id }) => id === formData.application.application_type_id)?.name,
         }),
+        ...(hasEndpoint && { resource_name: urlOrHost(formData).host }),
       });
     }
 

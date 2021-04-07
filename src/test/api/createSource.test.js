@@ -241,6 +241,39 @@ describe('doCreateSource', () => {
       expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
     });
 
+    it('create source with app and URL', async () => {
+      const APP_ID = COST_MANAGEMENT_APP.id;
+
+      const FORM_DATA = {
+        ...INITIAL_VALUES,
+        endpoint: undefined,
+        url: URL,
+        application: { ...APPLICATION_FORM_DATA, application_type_id: APP_ID },
+      };
+
+      const result = await doCreateSource(FORM_DATA);
+
+      expect(result).toEqual({ applications: [{ id: 'app-id' }], endpoint: [{ id: 'endpoint-id' }], id: '12349876' });
+
+      expect(bulkCreate).toHaveBeenCalledWith({
+        applications: [{ application_type_id: '2', collect_info: true, source_name: 'some name' }],
+        authentications: [{ password: '123455', resource_type: 'endpoint', resource_name: HOST }],
+        endpoints: [
+          {
+            default: true,
+            host: HOST,
+            path: PATH,
+            port: Number(PORT),
+            scheme: SCHEME,
+            source_name: 'some name',
+          },
+        ],
+        sources: [{ name: 'some name', source_type_name: 'openshift' }],
+      });
+      expect(checkAppMock).toHaveBeenCalledWith(CREATED_APP_ID, 0);
+      expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
+    });
+
     it('create source with app with timeout', async () => {
       const APP_ID = COST_MANAGEMENT_APP.id;
 
