@@ -23,7 +23,7 @@ import { doLoadSourceTypes } from '../../api/source_types';
 export const loadEntities = (options) => (dispatch, getState) => {
   dispatch({
     type: ACTION_TYPES.LOAD_ENTITIES_PENDING,
-    options,
+    options: typeof options === 'function' ? options(getState) : options,
   });
 
   const { pageSize, pageNumber, sortBy, sortDirection, filterValue, activeVendor } = getState().sources;

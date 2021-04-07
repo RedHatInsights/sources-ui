@@ -17,6 +17,7 @@ This application allows to
 - [Getting Started](#getting-started)
   - [Run app](#run-app)
   - [Debug functions](#debug-functions)
+- [Queries](#queries)
 - [Testing](#testing)
 - [Patternfly](#patternfly)
 - [Data-driven forms](#data-driven-forms)
@@ -26,7 +27,6 @@ This application allows to
 - [API](#api)
   - [Sources Javascript API client](#sources-javascript-api-client)
 - [Insights Frontend Assets](#insights-frontend-assets)
-- [Technologies](#technologies)
 - [Deploying](#deploying)
   - [How it works](#how-it-works)
 - [License](#license)
@@ -67,6 +67,10 @@ Removes write permissions.
 - ```sourcesDebug.setPermissions```
 
 Grants write permissions.
+
+# Queries
+
+You can use queries to modify the initial state of the application. Read more [here](doc/url-query.md).
 
 # Testing
 
@@ -113,11 +117,7 @@ This API client is no longer in the UI because of its huge bundle size. However,
 
 # Insights Frontend Assets
 
-Static assets are deployed to [Insights Frontend Assets](https://github.com/RedHatInsights/insights-frontend-assets) repository. If you need to add/change/remove some icon, please do it there.
-
-# Technologies
-
-- See [Technologies](doc/technologies.md).
+Static assets are deployed to [Insights Frontend Assets](https://github.com/RedHatInsights/frontend-assets) repository. If you need to add/change/remove some icon, please do it there.
 
 # Deploying
 
