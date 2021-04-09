@@ -14,7 +14,8 @@ describe('Cost Management Google steps components', () => {
     const wrapper = mount(<Cm.Project />);
 
     expect(wrapper.find(TextContent)).toHaveLength(1);
-    expect(wrapper.find(Text)).toHaveLength(1);
+    expect(wrapper.find(Text)).toHaveLength(2);
+    expect(wrapper.find('a')).toHaveLength(1);
   });
 
   describe('Assign access', () => {
