@@ -44,11 +44,11 @@ const applicationTypes = [
   {
     created_at: '2020-02-05T21:08:50Z',
     dependent_applications: [],
-    display_name: 'Subscription Watch',
+    display_name: 'RHEL management',
     id: '5',
     name: '/insights/platform/cloud-meter',
     supported_authentication_types: { amazon: ['cloud-meter-arn'] },
-    supported_source_types: ['amazon'],
+    supported_source_types: ['amazon', 'azure'],
     updated_at: '2020-02-18T19:38:52Z',
   },
 ];
