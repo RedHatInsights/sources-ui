@@ -11,6 +11,7 @@ import * as AwsSecret from './hardcodedComponents/aws/access_key';
 import * as AwsArn from './hardcodedComponents/aws/arn';
 
 import * as SWAwsArn from './hardcodedComponents/aws/subscriptionWatch';
+import * as SWAzure from './hardcodedComponents/azure/subscriptionWatch';
 
 import * as CMOpenshift from './hardcodedComponents/openshift/costManagement';
 import * as CMAzure from './hardcodedComponents/azure/costManagement';
@@ -20,6 +21,7 @@ import * as TowerCatalog from './hardcodedComponents/tower/catalog';
 import * as Openshift from './hardcodedComponents/openshift/endpoint';
 
 import { CATALOG_APP, CLOUD_METER_APP_NAME, COST_MANAGEMENT_APP_NAME } from '../../utilities/constants';
+import emptyAuthType from './emptyAuthType';
 
 const arnMessagePattern = <FormattedMessage id="wizard.arnPattern" defaultMessage="ARN must start with arn:aws:" />;
 const arnMessageLength = <FormattedMessage id="wizard.arnLength" defaultMessage="ARN should have at least 10 characters" />;
@@ -179,6 +181,49 @@ const hardcodedSchemas = {
   },
   azure: {
     authentication: {
+      [emptyAuthType.type]: {
+        [CLOUD_METER_APP_NAME]: {
+          skipSelection: true,
+          useApplicationAuth: true,
+          customSteps: true,
+          additionalSteps: [
+            {
+              title: <FormattedMessage id="subwatch.azure.tokenTitle" defaultMessage="Obtain offline token" />,
+              nextStep: 'cost-azure-playbook',
+              substepOf: {
+                name: 'eaa',
+                title: <FormattedMessage id="subwatch.azure.substepTitle" defaultMessage="Enable account access" />,
+              },
+              fields: [
+                {
+                  name: 'azure-1',
+                  component: 'description',
+                  Content: SWAzure.OfflineToken,
+                },
+                {
+                  component: componentTypes.TEXT_FIELD,
+                  name: 'authentication.authtype',
+                  hideField: true,
+                  initialValue: emptyAuthType.type,
+                  initializeOnMount: true,
+                },
+              ],
+            },
+            {
+              title: <FormattedMessage id="subwatch.azure.playbookTitle" defaultMessage="Run ansible playbook" />,
+              name: 'cost-azure-playbook',
+              substepOf: 'eaa',
+              fields: [
+                {
+                  name: 'azure-2',
+                  component: 'description',
+                  Content: SWAzure.AnsiblePlaybook,
+                },
+              ],
+            },
+          ],
+        },
+      },
       tenant_id_client_id_client_secret: {
         [COST_MANAGEMENT_APP_NAME]: {
           useApplicationAuth: true,
