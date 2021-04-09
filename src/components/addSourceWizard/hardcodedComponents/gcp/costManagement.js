@@ -20,17 +20,32 @@ import { getSourcesApi } from '../../../../api/entities';
 
 const b = (chunks) => <b key={`b-${chunks.length}-${Math.floor(Math.random() * 1000)}`}>{chunks}</b>;
 
+const PROJECT_LINK =
+  'https://access.redhat.com/documentation/en-us/cost_management_service/2021/html/getting_started_with_cost_management/assembly-adding-gcp-sources';
+
 export const Project = () => {
   const intl = useIntl();
 
   return (
     <TextContent>
       <Text component={TextVariants.p} className="pf-u-mb-lg">
-        {intl.formatMessage({
-          id: 'cost.gcp.projectDescription',
-          defaultMessage:
-            'Enter the ID of a project within your Google Cloud Platform (GCP) billing account. We’ll use this project to set up your BigQuery billing export.',
-        })}
+        {intl.formatMessage(
+          {
+            id: 'cost.gcp.projectDescription',
+            defaultMessage:
+              'Enter the ID of a project within your Google Cloud Platform (GCP) billing account. We’ll use this project to set up your BigQuery billing export. {link}',
+          },
+          {
+            link: (
+              <Text key="link" component={TextVariants.a} href={PROJECT_LINK} rel="noopener noreferrer" target="_blank">
+                {intl.formatMessage({
+                  id: 'wizard.learnMore',
+                  defaultMessage: 'Learn more',
+                })}
+              </Text>
+            ),
+          }
+        )}
       </Text>
       <Hint>
         <HintTitle>
