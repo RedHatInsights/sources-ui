@@ -380,7 +380,53 @@ describe('schema builder', () => {
       );
 
       expect(schema).toEqual(expect.arrayContaining([expect.any(Object)]));
-      expect(schema).toHaveLength(40);
+      expect(schema).toHaveLength(43);
+
+      expect(schema.map(({ name }) => name)).toEqual([
+        'openshift',
+        'openshift-2',
+        'openshift-3',
+        'openshift-token-/insights/platform/cost-management-additional-step',
+        'openshift-endpoint',
+        'amazon',
+        'amazon-2',
+        'amazon-3',
+        'amazon-5',
+        'amazon-access_key_secret_key-generic-additional-step',
+        'amazon-arn-/insights/platform/cost-management-additional-step',
+        'tags',
+        'iam-policy',
+        'iam-role',
+        'arn',
+        'amazon-cloud-meter-arn-/insights/platform/cloud-meter-additional-step',
+        'subs-iam-role',
+        'subs-arn',
+        'ansible-tower',
+        'ansible-tower-1',
+        'ansible-tower-3',
+        'ansible-tower-username_password-generic-additional-step',
+        'ansible-tower-credentials-no-app',
+        'ansible-tower-username_password-/insights/platform/catalog-additional-step',
+        'catalog-ansible-tower',
+        'ansible-tower-endpoint',
+        'azure',
+        'azure-2',
+        'azure-3',
+        'azure-5',
+        'azure-tenant_id_client_id_client_secret-/insights/platform/cost-management-additional-step',
+        'azure-sub-id',
+        'configure-roles',
+        'export-schedule',
+        'azure-empty-/insights/platform/cloud-meter-additional-step',
+        'cost-azure-playbook',
+        'google',
+        'google-2',
+        'google-project_id_service_account_json-/insights/platform/cost-management-additional-step',
+        'cost-gcp-iam',
+        'cost-gcp-access',
+        'cost-gcp-dataset',
+        'cost-gcp-billing-export',
+      ]);
     });
   });
 });

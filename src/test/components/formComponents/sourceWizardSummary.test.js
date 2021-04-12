@@ -346,7 +346,7 @@ describe('SourceWizardSummary component', () => {
       expect(data).toEqual([
         ['Name', 'cosi'],
         ['Source type', 'Amazon Web Services'],
-        ['Application', 'Subscription Watch'],
+        ['Application', 'RHEL management'],
         ['ARN', 'arn:aws:132'],
       ]);
     });

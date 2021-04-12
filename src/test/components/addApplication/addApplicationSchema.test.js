@@ -1,6 +1,6 @@
 import addApplicationSchema, { hasAlreadySupportedAuthType } from '../../../components/AddApplication/AddApplicationSchema';
-import { OPENSHIFT_ID, OPENSHIFT } from '../../__mocks__/sourceTypesData';
-import { COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
+import { OPENSHIFT_ID, OPENSHIFT, AZURE_ID, AZURE } from '../../__mocks__/sourceTypesData';
+import { COSTMANAGEMENT_APP, SUBWATCH_APP } from '../../__mocks__/applicationTypesData';
 
 describe('AddApplicationSchema', () => {
   const intl = { formatMessage: ({ defaultMessage }) => defaultMessage };
@@ -20,6 +20,21 @@ describe('AddApplicationSchema', () => {
       'summary',
       'openshift-token-/insights/platform/cost-management-additional-step',
       'openshift-endpoint',
+    ]);
+  });
+
+  it('azure+rhel management schema (empty auth type)', () => {
+    const source = {
+      source_type_id: AZURE_ID,
+    };
+
+    const result = addApplicationSchema(intl, AZURE, SUBWATCH_APP, authenticationValues, source, TITLE, DESCRIPTION);
+
+    expect(result.fields[0].fields.map(({ name }) => name)).toEqual([
+      'azure-5-empty',
+      'summary',
+      'azure-empty-/insights/platform/cloud-meter-additional-step',
+      'cost-azure-playbook',
     ]);
   });
 

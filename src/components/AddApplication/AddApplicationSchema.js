@@ -9,6 +9,7 @@ import get from 'lodash/get';
 import authenticationSelectionStep from './schema/authenticationSelectionStep';
 import generateFirstAuthStep from './schema/generateFirstAuthStep';
 import selectAuthenticationStep from './schema/selectAuthenticationStep';
+import emptyAuthType from '../addSourceWizard/emptyAuthType';
 
 export const ApplicationSummary = () => {
   const intl = useIntl();
@@ -39,13 +40,20 @@ const fields = (intl, sourceType, appType, authenticationValues, source, contain
     const appendEndpoint = sourceType.schema.endpoint.hidden ? sourceType.schema.endpoint.fields : [];
     const hasEndpointStep = appendEndpoint.length === 0;
 
+    const shouldAddEmpty =
+      !appType.supported_authentication_types[sourceType.name] ||
+      appType.supported_authentication_types[sourceType.name].length === 0;
+
+    const authTypes = shouldAddEmpty ? [emptyAuthType.type] : appType.supported_authentication_types[sourceType.name];
+    const authentications = shouldAddEmpty ? [emptyAuthType] : sourceType.schema.authentication;
+
     if (appType.supported_source_types.includes(sourceType.name)) {
-      appType.supported_authentication_types[sourceType.name].forEach((authtype) => {
-        authenticationFields.push(generateFirstAuthStep(sourceType, appType, appendEndpoint, authtype, intl));
+      authTypes.forEach((authtype) => {
+        authenticationFields.push(generateFirstAuthStep(sourceType, appType, appendEndpoint, authtype, intl, shouldAddEmpty));
       });
     }
 
-    sourceType.schema.authentication.forEach((auth) => {
+    authentications.forEach((auth) => {
       if (appType.supported_source_types.includes(sourceType.name)) {
         const appAdditionalSteps = schemaBuilder.getAdditionalSteps(sourceType.name, auth.type, appType.name);
 

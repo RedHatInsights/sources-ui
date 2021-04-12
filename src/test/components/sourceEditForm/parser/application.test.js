@@ -1,4 +1,7 @@
 import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
+import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-icon';
+
+import ResourcesEmptyState from '../../../../components/SourceDetail/ResourcesEmptyState';
 import { applicationsFields, appendClusterIdentifier } from '../../../../components/SourceEditForm/parser/application';
 import EditAlert from '../../../../components/SourceEditForm/parser/EditAlert';
 import { applicationTypesData, COSTMANAGEMENT_APP, CATALOG_APP } from '../../../__mocks__/applicationTypesData';
@@ -84,6 +87,56 @@ describe('application edit form parser', () => {
                 Content: EditAlert,
               },
               [{ name: 'billing_source.field1' }, { name: 'field2' }],
+            ],
+          },
+        ],
+      },
+    ];
+
+    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, APP_TYPES);
+
+    expect(result).toEqual(EXPECTED_RESULT);
+  });
+
+  it('appends empty state when no resources', () => {
+    APPLICATIONS = [
+      {
+        id: 'app-id',
+        application_type_id: COSTMANAGEMENT_APP.id,
+        authentications: [],
+      },
+    ];
+
+    const EXPECTED_RESULT = [
+      {
+        component: componentTypes.TABS,
+        name: 'app-tabs',
+        isBox: true,
+        fields: [
+          {
+            name: COSTMANAGEMENT_APP.id,
+            title: COSTMANAGEMENT_APP.display_name,
+            fields: [
+              {
+                name: 'messages.app-id',
+                component: 'description',
+                condition: {
+                  isNotEmpty: true,
+                  when: expect.any(Function),
+                },
+                Content: EditAlert,
+              },
+              {
+                component: 'description',
+                name: 'no-credentials',
+                Content: ResourcesEmptyState,
+                message: {
+                  id: 'resourceTable.emptyStateDescription',
+                  defaultMessage: '{applicationName} resources will be added here when created.',
+                },
+                applicationName: COSTMANAGEMENT_APP.display_name,
+                Icon: PlusCircleIcon,
+              },
             ],
           },
         ],
