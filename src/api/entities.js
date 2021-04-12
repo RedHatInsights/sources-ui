@@ -4,7 +4,7 @@ import set from 'lodash/set';
 
 import { APP_NAMES } from '../components/SourceEditForm/parser/application';
 import * as interceptors from '../frontend-components-copies/interceptors';
-import { CLOUD_VENDOR, CLOUD_VENDORS, REDHAT_VENDOR } from '../utilities/constants';
+import { CLOUD_VENDOR, REDHAT_VENDOR } from '../utilities/constants';
 import { AVAILABLE, PARTIALLY_UNAVAILABLE, UNAVAILABLE } from '../views/formatters';
 
 import { SOURCES_API_BASE_V3 } from './constants';
@@ -114,7 +114,7 @@ export const filtering = (filterValue = {}, activeVendor) => {
   }
 
   if (activeVendor === CLOUD_VENDOR) {
-    filterQueries.push(`source_type: { vendor: { eq: [${CLOUD_VENDORS.map((x) => `"${x}"`).join(', ')}]} }`);
+    filterQueries.push(`source_type: { vendor: { not_eq: "Red Hat"} }`);
   }
 
   if (activeVendor === REDHAT_VENDOR) {
@@ -191,7 +191,7 @@ export const restFilterGenerator = (filterValue = {}, activeVendor) => {
   }
 
   if (activeVendor === CLOUD_VENDOR) {
-    CLOUD_VENDORS.forEach((vendor) => filterQueries.push(`filter[source_type][vendor][eq][]=${vendor}`));
+    filterQueries.push(`filter[source_type][vendor][not_eq]=Red Hat`);
   }
 
   if (activeVendor === REDHAT_VENDOR) {
@@ -216,7 +216,7 @@ export const restFilterGenerator = (filterValue = {}, activeVendor) => {
 };
 
 export const doLoadCountOfSources = (filterValue = {}, activeVendor) =>
-  axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/sources?${restFilterGenerator(filterValue, activeVendor)}`);
+  axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/sources?${restFilterGenerator(filterValue, activeVendor)}&limit=1`);
 
 export const doLoadSource = (id) =>
   getSourcesApi()
