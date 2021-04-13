@@ -9,6 +9,7 @@ import { urlOrHost } from './doUpdateSource';
 import { checkAppAvailability } from '../api/getApplicationStatus';
 import handleError from '../api/handleError';
 import { timeoutedApps } from '../utilities/constants';
+import emptyAuthType from '../components/addSourceWizard/emptyAuthType';
 
 // modification of https://stackoverflow.com/a/38340374
 export const removeEmpty = (obj) => {
@@ -115,7 +116,11 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
 
     let authenticationDataOut;
 
-    if (filteredValues.authentication && !isEmpty(filteredValues.authentication)) {
+    if (
+      filteredValues.authentication &&
+      !isEmpty(filteredValues.authentication) &&
+      filteredValues.authentication.authtype !== emptyAuthType.type
+    ) {
       if (selectedAuthId) {
         authenticationDataOut = await getSourcesApi().updateAuthentication(selectedAuthId, filteredValues.authentication);
       } else {
