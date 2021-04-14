@@ -8,6 +8,7 @@ import * as checkApp from '../../api/getApplicationStatus';
 import * as checkSourceStatus from '../../api/checkSourceStatus';
 import { NO_APPLICATION_VALUE } from '../../components/addSourceWizard/stringConstants';
 import { COST_MANAGEMENT_APP_NAME } from '../../utilities/constants';
+import emptyAuthType from '../../components/addSourceWizard/emptyAuthType';
 
 describe('doCreateSource', () => {
   const HOST = 'mycluster.net';
@@ -385,6 +386,47 @@ describe('doCreateSource', () => {
       expect(bulkCreate).toHaveBeenCalledWith({
         applications: [{ application_type_id: '2', collect_info: true, source_name: 'some name' }],
         authentications: [{ password: '123455', resource_type: 'application', resource_name: COST_MANAGEMENT_APP_NAME }],
+        endpoints: [],
+        sources: [{ name: 'some name', source_type_name: 'openshift' }],
+      });
+      expect(checkAppMock).toHaveBeenCalledWith(CREATED_APP_ID, 0);
+      expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
+    });
+
+    it('ignore empty auth type', async () => {
+      const APP_ID = COST_MANAGEMENT_APP.id;
+
+      const FORM_DATA = {
+        ...INITIAL_VALUES,
+        application: { ...APPLICATION_FORM_DATA, application_type_id: APP_ID },
+        endpoint: undefined,
+        authentication: { ...AUTHENTICATION_FORM_DATA, authtype: emptyAuthType.type },
+      };
+
+      bulkCreate = jest.fn().mockImplementation((data) =>
+        Promise.resolve({
+          ...CREATE_SOURCE_DATA_OUT,
+          ...(data.endpoints.length > 0 && { endpoints: [{ id: CREATED_EDNPOINT_ID }] }),
+          ...(data.applications.length > 0 && {
+            applications: [{ id: CREATED_APP_ID, application_type_id: COST_MANAGEMENT_APP.id }],
+          }),
+          ...(data.authentications.length > 0 && { authentications: [{ id: CREATED_AUTH_ID }] }),
+        })
+      );
+
+      mocks = {
+        bulkCreate,
+      };
+
+      api.getSourcesApi = () => mocks;
+
+      const result = await doCreateSource(FORM_DATA, [], applicationTypes);
+
+      expect(result).toEqual({ applications: [{ id: 'app-id' }], endpoint: [], id: '12349876' });
+
+      expect(bulkCreate).toHaveBeenCalledWith({
+        applications: [{ application_type_id: '2', collect_info: true, source_name: 'some name' }],
+        authentications: [],
         endpoints: [],
         sources: [{ name: 'some name', source_type_name: 'openshift' }],
       });
