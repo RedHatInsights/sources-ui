@@ -140,42 +140,39 @@ const SourcesPage = () => {
     <React.Fragment>
       <PrimaryToolbar
         pagination={showPaginationLoader ? <PaginationLoader /> : numberOfEntities > 0 ? paginationConfig : undefined}
-        actionsConfig={
-          hasWritePermissions
-            ? {
-                actions: [
-                  <Link to={routes.sourcesNew.path} key="addSourceButton">
-                    <Button variant="primary" id="addSourceButton">
+        actionsConfig={{
+          dropdownProps: { position: 'right' },
+          actions: hasWritePermissions
+            ? [
+                <Link to={routes.sourcesNew.path} key="addSourceButton">
+                  <Button variant="primary" id="addSourceButton">
+                    {intl.formatMessage({
+                      id: 'sources.addSource',
+                      defaultMessage: 'Add source',
+                    })}
+                  </Button>
+                </Link>,
+              ]
+            : [
+                <Tooltip
+                  content={intl.formatMessage({
+                    id: 'sources.notAdminAddButton',
+                    defaultMessage:
+                      'To add a source, you must be granted write permissions from your Organization Administrator.',
+                  })}
+                  key="addSourceButton"
+                >
+                  <span tabIndex="0">
+                    <Button variant="primary" isDisabled id="addSourceButton">
                       {intl.formatMessage({
                         id: 'sources.addSource',
                         defaultMessage: 'Add source',
                       })}
                     </Button>
-                  </Link>,
-                ],
-              }
-            : {
-                actions: [
-                  <Tooltip
-                    content={intl.formatMessage({
-                      id: 'sources.notAdminAddButton',
-                      defaultMessage:
-                        'To add a source, you must be granted write permissions from your Organization Administrator.',
-                    })}
-                    key="addSourceButton"
-                  >
-                    <span tabIndex="0">
-                      <Button variant="primary" isDisabled id="addSourceButton">
-                        {intl.formatMessage({
-                          id: 'sources.addSource',
-                          defaultMessage: 'Add source',
-                        })}
-                      </Button>
-                    </span>
-                  </Tooltip>,
-                ],
-              }
-        }
+                  </span>
+                </Tooltip>,
+              ],
+        }}
         filterConfig={{
           items: [
             {
