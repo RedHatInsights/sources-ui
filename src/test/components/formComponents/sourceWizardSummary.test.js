@@ -16,6 +16,7 @@ import mount from '../../addSourceWizard/__mocks__/mount';
 import Summary, { createItem } from '../../../components/FormComponents/SourceWizardSummary';
 import { NO_APPLICATION_VALUE } from '../../../components/addSourceWizard/stringConstants';
 import ValuePopover from '../../../components/FormComponents/ValuePopover';
+import emptyAuthType from '../../../components/addSourceWizard/emptyAuthType';
 
 describe('SourceWizardSummary component', () => {
   describe('should render correctly', () => {
@@ -238,6 +239,35 @@ describe('SourceWizardSummary component', () => {
       expect(wrapper.find(Alert).props().title).toEqual('Manage permissions in User Access');
       expect(wrapper.find(Alert).props().children).toEqual(
         'Make sure to manage permissions for this source in custom roles that contain permissions for Cost Management.'
+      );
+    });
+
+    it('azure rhel management - include error message', () => {
+      formOptions = {
+        getState: () => ({
+          values: {
+            source: { name: 'cosi' },
+            application: { application_type_id: SUB_WATCH_APP.id },
+            source_type: 'azure',
+            authentication: { authtype: emptyAuthType.type },
+            auth_select: 'token',
+          },
+        }),
+      };
+
+      const wrapper = mount(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+
+      const data = getListData(wrapper);
+
+      expect(data).toEqual([
+        ['Name', 'cosi'],
+        ['Source type', 'Microsoft Azure'],
+        ['Application', 'RHEL management'],
+      ]);
+
+      expect(wrapper.find(Alert).props().title).toEqual('This source will not be monitored in Sources');
+      expect(wrapper.find(Alert).props().children).toEqual(
+        'This source will be represented in the Sources list, but will not reflect true status or resources.'
       );
     });
 
