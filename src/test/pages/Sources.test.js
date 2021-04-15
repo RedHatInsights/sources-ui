@@ -120,6 +120,7 @@ describe('SourcesPage', () => {
     expect(wrapper.find(PaginationLoader)).toHaveLength(0);
     expect(wrapper.find(PrimaryToolbar).first().props().actionsConfig).toEqual({
       actions: expect.any(Array),
+      dropdownProps: { position: 'right' },
     });
     expect(wrapper.find(PrimaryToolbar).last().props().actionsConfig).toEqual(undefined);
     expect(wrapper.find(RedirectNoWriteAccess)).toHaveLength(0);
