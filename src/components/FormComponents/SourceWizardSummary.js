@@ -17,7 +17,7 @@ import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 
 import ValuePopover from './ValuePopover';
 import hardcodedSchemas from '../../components/addSourceWizard/hardcodedSchemas';
-import { COST_MANAGEMENT_APP_NAME } from '../../utilities/constants';
+import { COST_MANAGEMENT_APP_NAME, CLOUD_METER_APP_NAME } from '../../utilities/constants';
 import { NO_APPLICATION_VALUE } from '../../components/addSourceWizard/stringConstants';
 import {
   getAdditionalSteps,
@@ -38,6 +38,24 @@ const alertMapper = (appName, sourceType, intl) => {
           id: 'cost.rbacWarningDescription',
           defaultMessage:
             'Make sure to manage permissions for this source in custom roles that contain permissions for Cost Management.',
+        })}
+      </Alert>
+    );
+  }
+
+  if (appName === CLOUD_METER_APP_NAME && sourceType === 'azure') {
+    return (
+      <Alert
+        variant="info"
+        isInline
+        title={intl.formatMessage({
+          id: 'azure.rhelWarningTitle',
+          defaultMessage: 'This source will not be monitored in Sources',
+        })}
+      >
+        {intl.formatMessage({
+          id: 'azure.rhelWarningDescription',
+          defaultMessage: 'This source will be represented in the Sources list, but will not reflect true status or resources.',
         })}
       </Alert>
     );
