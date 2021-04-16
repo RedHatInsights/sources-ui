@@ -182,3 +182,13 @@
 .ins-c-sources__application_fake_switch {
   width: 100%;
 }
+
+.ins-c-sources__checkbox-with-icon {
+  display: flex;
+
+  // for some reason popover does not work properly in wizard
+  .pf-c-popover {
+    visibility: initial;
+    pointer-events: initial;
+  }
+}
