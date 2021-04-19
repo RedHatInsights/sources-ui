@@ -94,7 +94,7 @@ An application type is defined by several basic attributes:
 
 With using the two mentioned configuration files, you can easily add a new application or a source type with all needed configuration. All these files are directly transformed into Add source wizard, Add application wizard and Edit source forms. However, all these fields can be enhanced and modified in the UI to comply with our UX vision and design.
 
-All changes are made in `hardcodedSchemas` file (link [here](https://github.com/RedHatInsights/sources-ui/blob/master/src/addSourceWizard/addSourceWizard/hardcodedSchemas.js)).
+All changes are made in `hardcodedSchemas` file (link [here](https://github.com/RedHatInsights/sources-ui/blob/master/src/components/addSourceWizard/hardcodedSchemas.js)).
 
 This file is a similar config to the following structure:
 
@@ -218,7 +218,7 @@ If you want to add an additional API endpoint for application-specific values, p
 # Quick check-list
 
 - [ ] Check API definition - [Sources API](https://github.com/RedHatInsights/sources-api/tree/master/db/seeds)
-- [ ] Update [hardcoded schemas](https://github.com/RedHatInsights/sources-ui/blob/master/src/addSourceWizard/addSourceWizard/hardcodedSchemas.js)
+- [ ] Update [hardcoded schemas](https://github.com/RedHatInsights/sources-ui/blob/master/src/components/addSourceWizard/hardcodedSchemas.js)
   - [ ] Authtype is always selected
   - [ ] Users can switch between source/app types and the wizard should always work
   - [ ] Summary shows correct labels (see `aria-label`, otherwise the summary works automatically)

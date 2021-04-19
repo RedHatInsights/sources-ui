@@ -34,10 +34,6 @@ describe('redux actions', () => {
     dispatch = jest.fn().mockImplementation((x) => x);
   });
 
-  afterEach(() => {
-    dispatch.mockReset();
-  });
-
   it('undoValues creates an object', () => {
     const SOURCE = { name: 'Stuart' };
     expect(addHiddenSource(SOURCE)).toEqual(

@@ -1,8 +1,8 @@
 import get from 'lodash/get';
-import componentTypes from '@data-driven-forms/react-form-renderer/dist/esm/component-types';
-import validatorTypes from '@data-driven-forms/react-form-renderer/dist/esm/validator-types';
+import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
+import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
 
-import hardcodedSchemas from '../../../addSourceWizard/addSourceWizard/hardcodedSchemas';
+import hardcodedSchemas from '../../../components/addSourceWizard/hardcodedSchemas';
 
 export const getEnhancedEndpointField = (sourceType, name) => get(hardcodedSchemas, [sourceType, 'endpoint', name], {});
 

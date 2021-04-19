@@ -1,4 +1,4 @@
-import { createAdditionalSteps } from '../../../../addSourceWizard/addSourceWizard/schemaBuilder';
+import { createAdditionalSteps } from '../../../../components/addSourceWizard/schemaBuilder';
 
 describe('createAdditionalSteps no skipEndpoint', () => {
   const ADDITIONAL_STEPS = [{ fields: ['a'] }];

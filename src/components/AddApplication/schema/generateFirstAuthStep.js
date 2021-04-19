@@ -1,4 +1,4 @@
-import * as schemaBuilder from '../../../addSourceWizard/addSourceWizard/schemaBuilder';
+import * as schemaBuilder from '../../../components/addSourceWizard/schemaBuilder';
 
 const generateFirstAuthStep = (type, appType, endpointFields, authtype, intl) => {
   let fields = [...endpointFields];

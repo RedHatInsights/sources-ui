@@ -21,7 +21,19 @@ export const updateQuery = ({ sortBy, sortDirection, pageNumber, pageSize, filte
   return null;
 };
 
-export const parseQuery = () => {
+export const loadEnhancedAttributes = (params) => {
+  const urlParams = params || new URLSearchParams(window.location.search);
+
+  const applications = urlParams.getAll('application');
+  const types = urlParams.getAll('type');
+
+  return {
+    applications: applications.length && applications,
+    types: types.length && types,
+  };
+};
+
+export const parseQuery = (getState) => {
   let fetchOptions = {};
 
   const urlParams = new URLSearchParams(window.location.search);
@@ -106,6 +118,21 @@ export const parseQuery = () => {
     filterValue = {
       ...filterValue,
       availability_status: [UNAVAILABLE],
+    };
+  }
+
+  const { applications, types } = loadEnhancedAttributes(urlParams);
+
+  if (applications || types) {
+    const { appTypes, sourceTypes } = getState().sources;
+
+    const applicationIds = applications.map?.((app) => appTypes.find(({ name }) => name.includes(app))?.id).filter(Boolean);
+    const typeIds = types.map?.((type) => sourceTypes.find(({ name }) => name === type)?.id).filter(Boolean);
+
+    filterValue = {
+      ...filterValue,
+      ...(applicationIds?.length && { applications: applicationIds }),
+      ...(typeIds?.length && { source_type_id: typeIds }),
     };
   }
 

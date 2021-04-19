@@ -1,24 +1,20 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import { EmptyState } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyState';
-import { EmptyStateBody } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateBody';
-import { EmptyStateSecondaryActions } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateSecondaryActions';
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
-import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
+import { EmptyState, EmptyStateBody, EmptyStateSecondaryActions, Button, Title } from '@patternfly/react-core';
 
-import FinalWizard from '../../../addSourceWizard/addSourceWizard/FinalWizard';
-import FinishedStep from '../../../addSourceWizard/addSourceWizard/steps/FinishedStep';
-import LoadingStep from '../../../addSourceWizard/addSourceWizard/steps/LoadingStep';
-import ErroredStep from '../../../addSourceWizard/addSourceWizard/steps/ErroredStep';
-import TimeoutStep from '../../../addSourceWizard/addSourceWizard/steps/TimeoutStep';
+import FinalWizard from '../../../components/addSourceWizard/FinalWizard';
+import LoadingStep from '../../../components/steps/LoadingStep';
+import FinishedStep from '../../../components/steps/FinishedStep';
+import ErroredStep from '../../../components/steps/ErroredStep';
+import AmazonFinishedStep from '../../../components/steps/AmazonFinishedStep';
+import TimeoutStep from '../../../components/steps/TimeoutStep';
 
 import mount from '../__mocks__/mount';
 import sourceTypes, { AMAZON_TYPE } from '../helpers/sourceTypes';
 
-import * as api from '../../../addSourceWizard/api';
+import * as api from '../../../api/entities';
 import { MemoryRouter } from 'react-router-dom';
-import AmazonFinishedStep from '../../../addSourceWizard/addSourceWizard/steps/AmazonFinishedStep';
 
 describe('Final wizard', () => {
   let initialProps;
@@ -117,10 +113,10 @@ describe('Final wizard', () => {
 
   it('removes source on errored step correctly - when unavailable', async () => {
     const ERROR_MSG = 'Some error message';
-    const removeSource = jest.fn().mockImplementation(() => Promise.resolve());
+    const deleteSource = jest.fn().mockImplementation(() => Promise.resolve());
 
     api.getSourcesApi = () => ({
-      removeSource,
+      deleteSource,
     });
 
     const wrapper = mount(
@@ -147,18 +143,18 @@ describe('Final wizard', () => {
     });
     wrapper.update();
 
-    expect(removeSource).toHaveBeenCalledWith(id);
+    expect(deleteSource).toHaveBeenCalledWith(id);
     expect(wrapper.find(FinishedStep)).toHaveLength(1);
     expect(wrapper.find(EmptyState).find(Title).text()).toEqual('Removing successful');
   });
 
   it('removes source on errored step correctly with afterSucces - when unavailable', async () => {
     const ERROR_MSG = 'Some error message';
-    const removeSource = jest.fn().mockImplementation(() => Promise.resolve());
+    const deleteSource = jest.fn().mockImplementation(() => Promise.resolve());
     const afterSuccess = jest.fn();
 
     api.getSourcesApi = () => ({
-      removeSource,
+      deleteSource,
     });
 
     const wrapper = mount(
@@ -187,15 +183,15 @@ describe('Final wizard', () => {
     wrapper.update();
 
     expect(afterSuccess).toHaveBeenCalled();
-    expect(removeSource).toHaveBeenCalledWith(id);
+    expect(deleteSource).toHaveBeenCalledWith(id);
   });
 
   it('removes source on errored step correctly, restart when removing failed', async () => {
     const ERROR_MSG = 'Some error message';
-    const removeSource = jest.fn().mockImplementation(() => Promise.reject());
+    const deleteSource = jest.fn().mockImplementation(() => Promise.reject());
 
     api.getSourcesApi = () => ({
-      removeSource,
+      deleteSource,
     });
 
     const wrapper = mount(

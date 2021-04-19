@@ -3,11 +3,7 @@ import { useIntl } from 'react-intl';
 import { shallowEqual, useSelector } from 'react-redux';
 
 import { PageHeader } from '@redhat-cloud-services/frontend-components/PageHeader';
-import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
-import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
-import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { Flex } from '@patternfly/react-core/dist/esm/layouts/Flex/Flex';
-import { FlexItem } from '@patternfly/react-core/dist/esm/layouts/Flex/FlexItem';
+import { Title, TextContent, Text, Flex, FlexItem } from '@patternfly/react-core';
 
 import Breadcrumbs from './Breadcrumbs';
 import { useSource } from '../../hooks/useSource';

@@ -2,18 +2,20 @@
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
-import { Grid } from '@patternfly/react-core/dist/esm/layouts/Grid/Grid';
-import { GridItem } from '@patternfly/react-core/dist/esm/layouts/Grid/GridItem';
-import { Stack } from '@patternfly/react-core/dist/esm/layouts/Stack/Stack';
-import { StackItem } from '@patternfly/react-core/dist/esm/layouts/Stack/StackItem';
-import { Card } from '@patternfly/react-core/dist/esm/components/Card/Card';
-import { CardBody } from '@patternfly/react-core/dist/esm/components/Card/CardBody';
-import { CardTitle } from '@patternfly/react-core/dist/esm/components/Card/CardTitle';
-import { CardHeader } from '@patternfly/react-core/dist/esm/components/Card/CardHeader';
-import { CardExpandableContent } from '@patternfly/react-core/dist/esm/components/Card/CardExpandableContent';
-import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
-import { Label } from '@patternfly/react-core/dist/esm/components/Label/Label';
+import {
+  Grid,
+  GridItem,
+  Stack,
+  StackItem,
+  Card,
+  CardBody,
+  CardTitle,
+  CardHeader,
+  CardExpandableContent,
+  Text,
+  TextContent,
+  Label,
+} from '@patternfly/react-core';
 
 import ArrowRightIcon from '@patternfly/react-icons/dist/esm/icons/arrow-right-icon';
 import BuilderImageIcon from '@patternfly/react-icons/dist/esm/icons/builder-image-icon';
@@ -28,8 +30,8 @@ const GOLD_IMAGES_AZURE =
 const GOLD_IMAGES_MORE =
   'https://access.redhat.com/documentation/en-us/red_hat_subscription_management/1/html/red_hat_cloud_access_reference_guide/cloud-access-gold-images_cloud-access';
 const INSIGHTS_REF = 'https://www.redhat.com/en/technologies/management/insights';
-const INSIGHTS_SERVICES = `/${PREFIX}insights/dashboard#workloads=All+workloads`;
-const SUBWATCH_HREF = `/${PREFIX}subscriptions`;
+const INSIGHTS_SERVICES = `/${PREFIX}settings/connector`;
+const SUBWATCH_HREF = `/${PREFIX}insights/subscriptions/rhel`;
 const SUBWATCH_MORE_HREF = 'https://access.redhat.com/products/subscription-central';
 
 export const CLOUD_CARDS_KEY = 'ins-c-sources__cloud_cards_expanded';
@@ -134,7 +136,7 @@ const CloudCards = () => {
                 <Stack>
                   <StackItem className="pf-u-mb-sm">
                     <Label color="purple" icon={<SubWatchIcon className="custom-icon" />}>
-                      {intl.formatMessage({ id: 'cloud.subwatch', defaultMessage: 'Track usage with Subscription Watch' })}
+                      {intl.formatMessage({ id: 'cloud.subwatch', defaultMessage: 'Track usage with Subscriptions' })}
                     </Label>
                   </StackItem>
                   <StackItem isFilled>
@@ -142,13 +144,13 @@ const CloudCards = () => {
                       {intl.formatMessage({
                         id: 'cloud.subwatch.description',
                         defaultMessage:
-                          'See precise RHEL subscription usage information across your hybrid cloud infrastructure.',
+                          'Use the Subscriptions service to monitor account-level summaries of your Red Hat subscription profile.',
                       })}
                     </Text>
                     <Text className="text" component="a" href={SUBWATCH_MORE_HREF} target="_blank" rel="noopener noreferrer">
                       {intl.formatMessage({
                         id: 'cloud.subwatch.learnMore',
-                        defaultMessage: 'Learn more about Subscription Watch',
+                        defaultMessage: 'Learn more about Subscriptions',
                       })}
                     </Text>
                   </StackItem>
@@ -156,7 +158,7 @@ const CloudCards = () => {
                     <Text className="text" component="a" href={SUBWATCH_HREF} target="_blank" rel="noopener noreferrer">
                       {intl.formatMessage({
                         id: 'cloud.subwatch.goTo',
-                        defaultMessage: 'Go to Subscription Watch',
+                        defaultMessage: 'Go to Subscriptions',
                       })}
                       <ArrowRightIcon className="pf-u-ml-sm" />
                     </Text>
@@ -171,4 +173,4 @@ const CloudCards = () => {
   );
 };
 
-export default CloudCards;
+export default React.memo(CloudCards);

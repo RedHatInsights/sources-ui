@@ -4,7 +4,7 @@ import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { useIntl } from 'react-intl';
 import isEmpty from 'lodash/isEmpty';
 
-import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 
 import { loadEntities } from '../../redux/sources/actions';
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
@@ -22,19 +22,19 @@ import { doAttachApp } from '../../api/doAttachApp';
 import { checkSourceStatus } from '../../api/checkSourceStatus';
 
 import reducer, { initialState } from './reducer';
-import { Button } from '@patternfly/react-core/dist/esm/components/Button';
-import { Text } from '@patternfly/react-core/dist/esm/components/Text';
+import { Button, Text } from '@patternfly/react-core';
 
 import removeAppSubmit from './removeAppSubmit';
 import { diff } from 'deep-object-diff';
-import LoadingStep from '../../addSourceWizard/addSourceWizard/steps/LoadingStep';
-import ErroredStep from '../../addSourceWizard/addSourceWizard/steps/ErroredStep';
-import AmazonFinishedStep from '../../addSourceWizard/addSourceWizard/steps/AmazonFinishedStep';
-import FinishedStep from '../../addSourceWizard/addSourceWizard/steps/FinishedStep';
-import TimeoutStep from '../../addSourceWizard/addSourceWizard/steps/TimeoutStep';
-import computeSourceStatus from '../../addSourceWizard/utilities/computeSourceStatus';
-import CloseModal from '../../addSourceWizard/addSourceWizard/CloseModal';
-import filterApps from '../../addSourceWizard/utilities/filterApps';
+import LoadingStep from '../steps/LoadingStep';
+import ErroredStep from '../steps/ErroredStep';
+import AmazonFinishedStep from '../steps/AmazonFinishedStep';
+import FinishedStep from '../steps/FinishedStep';
+import TimeoutStep from '../steps/TimeoutStep';
+import computeSourceStatus from '../../utilities/computeSourceStatus';
+import filterApps from '../../utilities/filterApps';
+import computeSourceError from '../../utilities/computeSourceError';
+import CloseModal from '../CloseModal';
 
 export const onSubmit = (
   values,
@@ -278,14 +278,7 @@ const AddApplication = () => {
             <ErroredStep
               onRetry={onReset}
               onClose={goToSources}
-              message={
-                state.data.applications?.[0]?.availability_status_error ||
-                state.data.endpoint?.[0]?.availability_status_error ||
-                intl.formatMessage({
-                  id: 'wizard.unknownError',
-                  defaultMessage: 'Unknown error',
-                })
-              }
+              message={computeSourceError(state.data, intl)}
               title={intl.formatMessage({
                 id: 'sources.configurationSuccessful',
                 defaultMessage: 'Configuration unsuccessful',

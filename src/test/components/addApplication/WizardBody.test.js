@@ -1,4 +1,4 @@
-import { Wizard } from '@patternfly/react-core/dist/esm/components/Wizard/Wizard';
+import { Wizard } from '@patternfly/react-core';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import WizardBodyAttach from '../../../components/AddApplication/WizardBody';
@@ -16,10 +16,6 @@ describe('AddApplication wizard - ErroredStep', () => {
       goToSources,
       step: <Step />,
     };
-  });
-
-  afterEach(() => {
-    goToSources.mockReset();
   });
 
   it('renders correctly', () => {

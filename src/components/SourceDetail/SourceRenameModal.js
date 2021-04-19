@@ -3,17 +3,17 @@ import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import { Modal } from '@patternfly/react-core/dist/esm/components/Modal/Modal';
-import componentTypes from '@data-driven-forms/react-form-renderer/dist/esm/component-types';
-import validatorTypes from '@data-driven-forms/react-form-renderer/dist/esm/validator-types';
-import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
+import { Modal } from '@patternfly/react-core';
+import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
+import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 
 import { useSource } from '../../hooks/useSource';
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
 import { replaceRouteId, routes } from '../../Routes';
 import { renameSource } from '../../redux/sources/actions';
-import validated from '../../addSourceWizard/sourceFormRenderer/resolveProps/validated';
-import { asyncValidatorDebounced } from '../../addSourceWizard/addSourceWizard/SourceAddSchema';
+import { asyncValidatorDebounced } from '../../components/addSourceWizard/SourceAddSchema';
+import validated from '../../utilities/resolveProps/validated';
 
 const SourceRenameModal = () => {
   const source = useSource();

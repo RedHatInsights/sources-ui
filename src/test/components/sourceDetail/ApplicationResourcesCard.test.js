@@ -1,6 +1,4 @@
-import { Card } from '@patternfly/react-core/dist/esm/components/Card/Card';
-import { CardBody } from '@patternfly/react-core/dist/esm/components/Card/CardBody';
-import { CardTitle } from '@patternfly/react-core/dist/esm/components/Card/CardTitle';
+import { Card, CardBody, CardTitle } from '@patternfly/react-core';
 
 import React from 'react';
 import { Route } from 'react-router-dom';

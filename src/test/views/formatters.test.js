@@ -1,5 +1,7 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
+import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
+
 import {
   nameFormatter,
   dateFormatter,
@@ -22,8 +24,9 @@ import {
   UNAVAILABLE,
   UnknownError,
   getStatusColor,
+  configurationModeFormatter,
 } from '../../views/formatters';
-import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX } from '../__mocks__/sourceTypesData';
+import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX, AMAZON } from '../__mocks__/sourceTypesData';
 import {
   sourcesDataGraphQl,
   SOURCE_CATALOGAPP_INDEX,
@@ -40,15 +43,13 @@ import {
   CATALOG_APP,
 } from '../__mocks__/applicationTypesData';
 
-import { Badge } from '@patternfly/react-core/dist/esm/components/Badge/Badge';
-import { Popover } from '@patternfly/react-core/dist/esm/components/Popover/Popover';
-import { Tooltip } from '@patternfly/react-core/dist/esm/components/Tooltip/Tooltip';
-import { Label } from '@patternfly/react-core/dist/esm/components/Label/Label';
-import { LabelGroup } from '@patternfly/react-core/dist/esm/components/LabelGroup/LabelGroup';
+import { Badge, Popover, Tooltip, Label, LabelGroup, Button } from '@patternfly/react-core';
 
 import { DateFormat } from '@redhat-cloud-services/frontend-components/DateFormat';
 import { IntlProvider } from 'react-intl';
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
+import { Link, MemoryRouter } from 'react-router-dom';
+import { replaceRouteId, routes } from '../../Routes';
 
 describe('formatters', () => {
   const wrapperWithIntl = (children) => <IntlProvider locale="en">{children}</IntlProvider>;
@@ -1008,6 +1009,98 @@ describe('formatters', () => {
           status: UNAVAILABLE,
         });
       });
+    });
+  });
+
+  describe('configuration mode', () => {
+    const INTL = { formatMessage: ({ defaultMessage }) => defaultMessage };
+    const SOURCE_ID = 'some-source-id';
+
+    it('account_authorization', () => {
+      const wrapper = mount(
+        <MemoryRouter>
+          {wrapperWithIntl(configurationModeFormatter('account_authorization', { id: SOURCE_ID }, { intl: INTL }))}
+        </MemoryRouter>
+      );
+
+      expect(wrapper.text()).toEqual('Account authorizationEdit credentials');
+      expect(wrapper.find(Link).props().to).toEqual(replaceRouteId(routes.sourcesDetailEditCredentials.path, SOURCE_ID));
+      expect(wrapper.find(Button)).toHaveLength(1);
+
+      expect(wrapper.find(Tooltip)).toHaveLength(0);
+      expect(wrapper.find(ExclamationCircleIcon)).toHaveLength(0);
+    });
+
+    it('account_authorization with an error', () => {
+      const wrapper = mount(
+        <MemoryRouter>
+          {wrapperWithIntl(
+            configurationModeFormatter(
+              'account_authorization',
+              {
+                id: SOURCE_ID,
+                authentications: [
+                  {
+                    authtype: 'different type',
+                    availability_status: UNAVAILABLE,
+                    availability_status_error: 'some-error',
+                  },
+                  {
+                    authtype: 'access_key_secret_key',
+                    availability_status: UNAVAILABLE,
+                    availability_status_error: 'Your username is wrong',
+                  },
+                ],
+              },
+              { intl: INTL, sourceType: AMAZON }
+            )
+          )}
+        </MemoryRouter>
+      );
+
+      expect(wrapper.text()).toEqual('Account authorizationEdit credentials');
+      expect(wrapper.find(Link).props().to).toEqual(replaceRouteId(routes.sourcesDetailEditCredentials.path, SOURCE_ID));
+      expect(wrapper.find(Button)).toHaveLength(1);
+
+      expect(wrapper.find(Tooltip).props().content).toEqual('Your username is wrong');
+      expect(wrapper.find(ExclamationCircleIcon)).toHaveLength(1);
+    });
+
+    it('account_authorization with default errror', () => {
+      const wrapper = mount(
+        <MemoryRouter>
+          {wrapperWithIntl(
+            configurationModeFormatter(
+              'account_authorization',
+              {
+                id: SOURCE_ID,
+                authentications: [
+                  {
+                    authtype: 'access_key_secret_key',
+                    availability_status: UNAVAILABLE,
+                  },
+                ],
+              },
+              { intl: INTL, sourceType: AMAZON }
+            )
+          )}
+        </MemoryRouter>
+      );
+
+      expect(wrapper.find(Tooltip).props().content).toEqual('Edit credentials required.');
+      expect(wrapper.find(ExclamationCircleIcon)).toHaveLength(1);
+    });
+
+    it('manual_configuration', () => {
+      const wrapper = mount(
+        <MemoryRouter>
+          {wrapperWithIntl(configurationModeFormatter('manual_configuration', { id: SOURCE_ID }, { intl: INTL }))}
+        </MemoryRouter>
+      );
+
+      expect(wrapper.text()).toEqual('Manual configuration');
+      expect(wrapper.find(Link)).toHaveLength(0);
+      expect(wrapper.find(Button)).toHaveLength(0);
     });
   });
 });

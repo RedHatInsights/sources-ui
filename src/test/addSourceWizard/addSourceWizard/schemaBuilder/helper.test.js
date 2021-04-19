@@ -1,4 +1,4 @@
-import { acronymMapper } from '../../../../addSourceWizard/addSourceWizard/schemaBuilder';
+import { acronymMapper } from '../../../../components/addSourceWizard/schemaBuilder';
 
 describe('schemaBuilder helper tests', () => {
   describe('acronym mapper', () => {

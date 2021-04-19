@@ -1,14 +1,12 @@
 import React from 'react';
 
-import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
-import { TextList } from '@patternfly/react-core/dist/esm/components/Text/TextList';
-import { TextListItem } from '@patternfly/react-core/dist/esm/components/Text/TextListItem';
-import { ClipboardCopy } from '@patternfly/react-core/dist/esm/components/ClipboardCopy/ClipboardCopy';
+import { Text, TextContent, TextList, TextListItem, ClipboardCopy, Button, Popover } from '@patternfly/react-core';
 
-import RendererContext from '@data-driven-forms/react-form-renderer/dist/esm/renderer-context';
+import QuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/question-circle-icon';
 
-import * as AwsArn from '../../../../addSourceWizard/addSourceWizard/hardcodedComponents/aws/arn';
+import RendererContext from '@data-driven-forms/react-form-renderer/renderer-context';
+
+import * as AwsArn from '../../../../components/addSourceWizard/hardcodedComponents/aws/arn';
 import mount from '../../__mocks__/mount';
 
 describe('AWS-ARN hardcoded schemas', () => {
@@ -101,5 +99,23 @@ describe('AWS-ARN hardcoded schemas', () => {
     expect(wrapper.find(Text)).toHaveLength(2);
     expect(wrapper.find(TextList)).toHaveLength(2);
     expect(wrapper.find(TextListItem)).toHaveLength(9);
+  });
+
+  it('IncludeAliasesLabel description is rendered correctly', () => {
+    const wrapper = mount(<AwsArn.IncludeAliasesLabel />);
+    wrapper.find('span').simulate('click');
+
+    expect(wrapper.find(Popover)).toHaveLength(1);
+    expect(wrapper.find(Button)).toHaveLength(1);
+    expect(wrapper.find(QuestionCircleIcon)).toHaveLength(1);
+  });
+
+  it('IncludeOrgUnitsLabel description is rendered correctly', () => {
+    const wrapper = mount(<AwsArn.IncludeOrgUnitsLabel />);
+    wrapper.find('span').simulate('click');
+
+    expect(wrapper.find(Popover)).toHaveLength(1);
+    expect(wrapper.find(Button)).toHaveLength(1);
+    expect(wrapper.find(QuestionCircleIcon)).toHaveLength(1);
   });
 });

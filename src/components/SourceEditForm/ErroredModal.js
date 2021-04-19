@@ -2,8 +2,9 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 
-import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import ErroredStep from '../../addSourceWizard/addSourceWizard/steps/ErroredStep';
+import { Text } from '@patternfly/react-core';
+
+import ErroredStep from '../steps/ErroredStep';
 
 const ErroredModal = ({ onRetry }) => {
   const intl = useIntl();

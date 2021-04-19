@@ -1,6 +1,8 @@
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../utilities/constants';
 import { parseQuery, updateQuery } from '../../utilities/urlQuery';
 import { AVAILABLE, PARTIALLY_UNAVAILABLE, UNAVAILABLE } from '../../views/formatters';
+import applicationTypesData, { COSTMANAGEMENT_APP, TOPOLOGICALINVENTORY_APP } from '../__mocks__/applicationTypesData';
+import sourceTypesData, { AMAZON_ID, OPENSHIFT_ID } from '../__mocks__/sourceTypesData';
 
 describe('urlQuery helpers', () => {
   let tmpLocation;
@@ -263,6 +265,52 @@ describe('urlQuery helpers', () => {
           filterValue: {
             availability_status: [UNAVAILABLE],
           },
+        });
+      });
+
+      describe('enhanced attributes', () => {
+        const getState = () => ({
+          sources: {
+            appTypes: applicationTypesData.data,
+            sourceTypes: sourceTypesData.data,
+          },
+        });
+
+        it('handles sourceType filtering - type variant', () => {
+          window.location.search = '?type=amazon';
+
+          const result = parseQuery(getState);
+
+          expect(result).toEqual({
+            filterValue: {
+              source_type_id: [AMAZON_ID],
+            },
+          });
+        });
+
+        it('handles application filtering - application variant', () => {
+          window.location.search = '?application=cost';
+
+          const result = parseQuery(getState);
+
+          expect(result).toEqual({
+            filterValue: {
+              applications: [COSTMANAGEMENT_APP.id],
+            },
+          });
+        });
+
+        it('handles application/types filtering - multiple & combined', () => {
+          window.location.search = '?application=cost&application=topo&type=openshift&type=amazon';
+
+          const result = parseQuery(getState);
+
+          expect(result).toEqual({
+            filterValue: {
+              applications: [COSTMANAGEMENT_APP.id, TOPOLOGICALINVENTORY_APP.id],
+              source_type_id: [OPENSHIFT_ID, AMAZON_ID],
+            },
+          });
         });
       });
     });

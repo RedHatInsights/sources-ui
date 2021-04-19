@@ -1,6 +1,6 @@
 import SourcesFormRenderer from '../../../../utilities/SourcesFormRenderer';
 import EditAlert from '../../../../components/SourceEditForm/parser/EditAlert';
-import { Alert } from '@patternfly/react-core/dist/esm/components/Alert/Alert';
+import { Alert } from '@patternfly/react-core';
 
 describe('EditAlert', () => {
   it('renders correctly', () => {
