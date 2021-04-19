@@ -1,14 +1,10 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { RowWrapper } from '@patternfly/react-table';
-import { Spinner } from '@patternfly/react-core/dist/esm/components/Spinner';
-import { Bullseye } from '@patternfly/react-core/dist/esm/layouts/Bullseye';
+import { Spinner, Bullseye, Card, CardBody } from '@patternfly/react-core';
 
-import { Card } from '@patternfly/react-core/dist/esm/components/Card/Card';
-import { CardBody } from '@patternfly/react-core/dist/esm/components/Card/CardBody';
-
-import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/esm/PageHeader';
-import { Section } from '@redhat-cloud-services/frontend-components/components/esm/Section';
+import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
+import { Section } from '@redhat-cloud-services/frontend-components/Section';
 
 import {
   PlaceHolderTable,

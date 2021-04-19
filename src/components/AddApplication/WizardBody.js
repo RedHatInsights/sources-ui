@@ -1,6 +1,6 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
-import { Wizard } from '@patternfly/react-core/dist/esm/components/Wizard/Wizard';
+import { Wizard } from '@patternfly/react-core';
 
 const WizardBodyAttach = ({ step, goToSources, title, description }) => (
   <Wizard

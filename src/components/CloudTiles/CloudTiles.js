@@ -1,14 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
-import { shallowEqual, useSelector } from 'react-redux';
-import { routes } from '../../Routes';
-
-import { Tile } from '@patternfly/react-core/dist/esm/components/Tile/Tile';
-
 import ImageWithPlaceholder from '../TilesShared/ImageWithPlaceholder';
-import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
-import DisabledTile from '../TilesShared/DisabledTile';
+import TilesArray from '../TilesShared/TilesArray';
 
 const mapper = (type, openWizard, TileComponent) =>
   ({
@@ -37,7 +29,7 @@ const mapper = (type, openWizard, TileComponent) =>
         onClick={() => openWizard('google')}
         icon={
           <ImageWithPlaceholder
-            className="provider-icon pf-u-mb-sm disabled-icon"
+            className="provider-icon pf-u-mb-sm"
             src="/apps/frontend-assets/partners-icons/google-cloud-short.svg"
             alt="google logo"
           />
@@ -62,25 +54,6 @@ const mapper = (type, openWizard, TileComponent) =>
     ),
   }[type]);
 
-const CloudTiles = ({ setSelectedType }) => {
-  const { sourceTypes } = useSelector(({ sources }) => sources, shallowEqual);
-  const { push } = useHistory();
-  const hasWritePermissions = useHasWritePermissions();
-
-  const openWizard = (type) => {
-    setSelectedType(type);
-    push(routes.sourcesNew.path);
-  };
-
-  const TileComponent = hasWritePermissions ? Tile : DisabledTile;
-
-  return sourceTypes
-    .sort((a, b) => a.product_name.localeCompare(b.product_name))
-    .map(({ name }) => mapper(name, openWizard, TileComponent));
-};
-
-CloudTiles.propTypes = {
-  setSelectedType: PropTypes.func.isRequired,
-};
+const CloudTiles = (props) => <TilesArray {...props} mapper={mapper} />;
 
 export default CloudTiles;

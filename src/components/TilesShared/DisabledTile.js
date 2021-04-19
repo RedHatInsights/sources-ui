@@ -1,8 +1,7 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 
-import { Tile } from '@patternfly/react-core/dist/esm/components/Tile/Tile';
-import { Tooltip } from '@patternfly/react-core/dist/esm/components/Tooltip/Tooltip';
+import { Tile, Tooltip } from '@patternfly/react-core';
 
 const DisabledTile = (props) => {
   const intl = useIntl();

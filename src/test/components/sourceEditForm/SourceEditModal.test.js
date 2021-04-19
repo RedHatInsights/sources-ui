@@ -2,7 +2,6 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { Route } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
-import { Spinner } from '@patternfly/react-core/dist/esm/components/Spinner';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import SourceEditModal from '../../../components/SourceEditForm/SourceEditModal';
@@ -11,11 +10,7 @@ import { applicationTypesData, CATALOG_APP } from '../../__mocks__/applicationTy
 import { sourceTypesData, ANSIBLE_TOWER_ID } from '../../__mocks__/sourceTypesData';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
 
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
-import { EmptyState } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyState';
-import { TextInput } from '@patternfly/react-core/dist/esm/components/TextInput/TextInput';
-import { Alert } from '@patternfly/react-core/dist/esm/components/Alert/Alert';
-import { Form } from '@patternfly/react-core/dist/esm/components/Form/Form';
+import { Spinner, EmptyState, TextInput, Alert, Form } from '@patternfly/react-core';
 
 import * as editApi from '../../../api/doLoadSourceForEdit';
 import * as submit from '../../../components/SourceEditForm/onSubmit';
@@ -25,17 +20,12 @@ import SubmittingModal from '../../../components/SourceEditForm/SubmittingModal'
 import EditAlert from '../../../components/SourceEditForm/parser/EditAlert';
 import ErroredModal from '../../../components/SourceEditForm/ErroredModal';
 import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
-import Switch from '@data-driven-forms/pf4-component-mapper/dist/esm/switch';
+import Switch from '@data-driven-forms/pf4-component-mapper/switch';
 import { ACTION_TYPES } from '../../../redux/sources/actionTypes';
 import { useDispatch } from 'react-redux';
 import { UNAVAILABLE } from '../../../views/formatters';
 import mockStore from '../../__mocks__/mockStore';
 import { getStore } from '../../../utilities/store';
-
-jest.mock('@redhat-cloud-services/frontend-components-sources/esm/SourceAddSchema', () => ({
-  __esModule: true,
-  asyncValidatorDebounced: jest.fn(),
-}));
 
 describe('SourceEditModal', () => {
   let store;
@@ -126,7 +116,7 @@ describe('SourceEditModal', () => {
     expect(wrapper.find(TextInput).at(3).props().name).toEqual('endpoint.receptor_node');
 
     expect(wrapper.find(Switch)).toHaveLength(2);
-    expect(wrapper.find(Button)).toHaveLength(BUTTONS.length);
+    expect(wrapper.find('button.pf-c-button')).toHaveLength(BUTTONS.length);
   });
 
   it('renders correctly with initial message', async () => {
@@ -447,7 +437,7 @@ describe('SourceEditModal', () => {
 
       // try again via retry button
       await act(async () => {
-        wrapper.find(ErroredModal).find(EmptyState).find(Button).simulate('click');
+        wrapper.find(ErroredModal).find(EmptyState).find('Button').simulate('click');
       });
       wrapper.update();
 

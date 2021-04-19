@@ -1,15 +1,14 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import { Card } from '@patternfly/react-core/dist/esm/components/Card/Card';
-import { Tooltip } from '@patternfly/react-core/dist/esm/components/Tooltip/Tooltip';
-import { Tile } from '@patternfly/react-core/dist/esm/components/Tile/Tile';
+import { Card, Tooltip, Tile } from '@patternfly/react-core';
 
 import componentWrapperIntl from '../../../utilities/testsHelpers';
 import CloudEmptyState from '../../../components/CloudTiles/CloudEmptyState';
 import CloudTiles from '../../../components/CloudTiles/CloudTiles';
 import mockStore from '../../__mocks__/mockStore';
 import sourceTypes, { googleType } from '../../__mocks__/sourceTypesData';
+import { CLOUD_VENDOR } from '../../../utilities/constants';
 
 describe('CloudEmptyState', () => {
   let wrapper;
@@ -24,7 +23,10 @@ describe('CloudEmptyState', () => {
       setSelectedType,
     };
 
-    store = mockStore({ user: { isOrgAdmin: true }, sources: { sourceTypes: [...sourceTypes.data, googleType] } });
+    store = mockStore({
+      user: { isOrgAdmin: true },
+      sources: { sourceTypes: [...sourceTypes.data, googleType], activeVendor: CLOUD_VENDOR },
+    });
   });
 
   it('renders correctly', async () => {

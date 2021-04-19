@@ -1,14 +1,7 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
-import { EmptyState } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyState';
-import { EmptyStateIcon } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateIcon';
-import { EmptyStateBody } from '@patternfly/react-core/dist/esm/components/EmptyState/EmptyStateBody';
-import { Bullseye } from '@patternfly/react-core/dist/esm/layouts/Bullseye/Bullseye';
-import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
-import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
-
+import { Button, EmptyState, EmptyStateIcon, EmptyStateBody, Bullseye, Title, Text } from '@patternfly/react-core';
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 
 const SourcesErrorState = () => {

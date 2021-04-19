@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Modal } from '@patternfly/react-core/dist/esm/components/Modal/Modal';
+import { Modal } from '@patternfly/react-core';
 
 import { act } from 'react-dom/test-utils';
 
@@ -9,11 +9,11 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { replaceRouteId, routes } from '../../../Routes';
 import SourceRenameModal from '../../../components/SourceDetail/SourceRenameModal';
 import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
-import TextField from '@data-driven-forms/pf4-component-mapper/dist/esm/text-field';
+import TextField from '@data-driven-forms/pf4-component-mapper/text-field';
 import * as actions from '../../../redux/sources/actions';
 import mockStore from '../../__mocks__/mockStore';
 
-jest.mock('@redhat-cloud-services/frontend-components-sources/esm/SourceAddSchema', () => ({
+jest.mock('../../../components/addSourceWizard/SourceAddSchema', () => ({
   __esModule: true,
   asyncValidatorDebounced: jest.fn(),
 }));

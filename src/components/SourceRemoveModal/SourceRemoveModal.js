@@ -4,12 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { useIntl } from 'react-intl';
 
-import { Text, TextVariants } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
-import { Modal } from '@patternfly/react-core/dist/esm/components/Modal/Modal';
-import { Checkbox } from '@patternfly/react-core/dist/esm/components/Checkbox/Checkbox';
-import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
+import { Text, TextVariants, TextContent, Button, Modal, Checkbox, Title } from '@patternfly/react-core';
 
 import ExclamationTriangleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-triangle-icon';
 
@@ -106,13 +101,13 @@ const SourceRemoveModal = ({ backPath }) => {
 
   return (
     <Modal
-      className="ins-c-sources__dialog--warning"
+      className="sources"
       aria-label={intl.formatMessage({
         id: 'sources.deleteTitle',
         defaultMessage: `Remove source?`,
       })}
       header={
-        <Title headingLevel="h1" size="2xl">
+        <Title headingLevel="h1" size="2xl" className="sources">
           <ExclamationTriangleIcon size="sm" className="ins-m-alert ins-c-source__delete-icon pf-u-mr-sm" />
           {intl.formatMessage({
             id: 'sources.deleteTitle',

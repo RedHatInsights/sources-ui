@@ -1,14 +1,11 @@
 import React, { useEffect, lazy, Suspense, useReducer } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
+import { Button, Tooltip } from '@patternfly/react-core';
 import { useIntl } from 'react-intl';
 
-import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/components/esm/PrimaryToolbar';
-import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/esm/PageHeader';
-import { Section } from '@redhat-cloud-services/frontend-components/components/esm/Section';
-import { filterVendorAppTypes } from '@redhat-cloud-services/frontend-components-sources/esm/filterApps';
-import { filterVendorTypes } from '@redhat-cloud-services/frontend-components-sources/esm/filterTypes';
+import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/PrimaryToolbar';
+import { Section } from '@redhat-cloud-services/frontend-components/Section';
 
 import { filterSources, pageAndSize } from '../redux/sources/actions';
 import SourcesTable from '../components/SourcesTable/SourcesTable';
@@ -22,9 +19,9 @@ const SourceRemoveModal = lazy(() =>
   )
 );
 const AddSourceWizard = lazy(() =>
-  import(
-    /* webpackChunkName: "addSource" */ '@redhat-cloud-services/frontend-components-sources/esm/addSourceWizard'
-  ).then((module) => ({ default: module.AddSourceWizard }))
+  import(/* webpackChunkName: "addSource" */ '../components/addSourceWizard/index').then((module) => ({
+    default: module.AddSourceWizard,
+  }))
 );
 
 import {
@@ -41,14 +38,15 @@ import {
 import { useIsLoaded } from '../hooks/useIsLoaded';
 import { useHasWritePermissions } from '../hooks/useHasWritePermissions';
 import CustomRoute from '../components/CustomRoute/CustomRoute';
-import { Tooltip } from '@patternfly/react-core/dist/esm/components/Tooltip/Tooltip';
 import { PaginationLoader } from '../components/SourcesTable/loaders';
-import TabNavigation from '../components/TabNavigation';
 import CloudCards from '../components/CloudTiles/CloudCards';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../utilities/constants';
 import CloudEmptyState from '../components/CloudTiles/CloudEmptyState';
 import { AVAILABLE, UNAVAILABLE } from '../views/formatters';
 import RedHatEmptyState from '../components/RedHatTiles/RedHatEmptyState';
+import { filterVendorTypes } from '../utilities/filterTypes';
+import { filterVendorAppTypes } from '../utilities/filterApps';
+import SourcesHeader from '../components/SourcesHeader';
 
 const initialState = {
   filter: undefined,
@@ -136,7 +134,7 @@ const SourcesPage = () => {
 
   const showPaginationLoader = (!loaded || !appTypesLoaded || !sourceTypesLoaded) && !paginationClicked;
 
-  const filteredSourceTypes = sourceTypes.filter(filterVendorTypes);
+  const filteredSourceTypes = sourceTypes.filter(filterVendorTypes(activeVendor));
 
   const mainContent = () => (
     <React.Fragment>
@@ -217,7 +215,9 @@ const SourcesPage = () => {
               type: 'checkbox',
               filterValues: {
                 onChange: (_event, value) => setFilter('applications', value, dispatch),
-                items: prepareApplicationTypeSelection(appTypes?.filter(filterVendorAppTypes(filteredSourceTypes)) || []),
+                items: prepareApplicationTypeSelection(
+                  appTypes?.filter(filterVendorAppTypes(filteredSourceTypes, activeVendor)) || []
+                ),
                 value: filterValue.applications,
               },
             },
@@ -286,18 +286,11 @@ const SourcesPage = () => {
             submitCallback: (state) => checkSubmit(state, dispatch, history.push, intl, stateDispatch),
             initialValues: wizardInitialValues,
             initialWizardState: wizardInitialState,
+            activeVendor,
           }}
         />
       </Suspense>
-      <PageHeader className="pf-u-pb-0">
-        <PageHeaderTitle
-          title={intl.formatMessage({
-            id: 'sources.sources',
-            defaultMessage: 'Sources',
-          })}
-        />
-        <TabNavigation />
-      </PageHeader>
+      <SourcesHeader />
       <Section type="content">
         {showInfoCards && <CloudCards />}
         {fetchingError && <SourcesErrorState />}

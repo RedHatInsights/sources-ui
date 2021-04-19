@@ -1,9 +1,7 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import { Card } from '@patternfly/react-core/dist/esm/components/Card/Card';
-import { CardHeader } from '@patternfly/react-core/dist/esm/components/Card/CardHeader';
-import { GridItem } from '@patternfly/react-core/dist/esm/layouts/Grid/GridItem';
+import { Card, CardHeader, GridItem } from '@patternfly/react-core';
 
 import CloudCards, { CLOUD_CARDS_KEY } from '../../../components/CloudTiles/CloudCards';
 

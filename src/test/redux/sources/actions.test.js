@@ -34,10 +34,6 @@ describe('redux actions', () => {
     dispatch = jest.fn().mockImplementation((x) => x);
   });
 
-  afterEach(() => {
-    dispatch.mockReset();
-  });
-
   it('undoValues creates an object', () => {
     const SOURCE = { name: 'Stuart' };
     expect(addHiddenSource(SOURCE)).toEqual(
@@ -52,18 +48,11 @@ describe('redux actions', () => {
 
   it('removeMessage creates an object', () => {
     const ID = '123456';
-    const notId = 'some-generated-id';
 
-    const getState = () => ({
-      notifications: [{ id: notId, customId: ID }],
+    expect(removeMessage(ID)).toEqual({
+      type: REMOVE_NOTIFICATION,
+      payload: ID,
     });
-
-    expect(removeMessage(ID)(dispatch, getState)).toEqual(
-      expect.objectContaining({
-        type: REMOVE_NOTIFICATION,
-        payload: notId,
-      })
-    );
   });
 
   it('filterSources creates an object', async () => {

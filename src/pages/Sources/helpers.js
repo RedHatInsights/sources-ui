@@ -1,13 +1,12 @@
 import React from 'react';
 import awesomeDebounce from 'awesome-debounce-promise';
 
-import { AlertActionLink } from '@patternfly/react-core/dist/esm/components/Alert/AlertActionLink';
-
-import computeSourceStatus from '@redhat-cloud-services/frontend-components-sources/esm/computeSourceStatus';
+import { AlertActionLink } from '@patternfly/react-core';
 
 import { loadEntities, filterSources, addMessage, removeMessage } from '../../redux/sources/actions';
 import { replaceRouteId, routes } from '../../Routes';
 import { AVAILABLE } from '../../views/formatters';
+import computeSourceStatus from '../../utilities/computeSourceStatus';
 
 export const debouncedFiltering = awesomeDebounce((refresh) => refresh(), 500);
 
@@ -126,7 +125,7 @@ export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
             { name: <b>{state.values.source.name}</b> }
           ),
           variant: 'danger',
-          customId: id,
+          id,
           actionLinks: (
             <AlertActionLink
               onClick={() => {
@@ -168,7 +167,7 @@ export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
                 </React.Fragment>
               ),
               variant: 'danger',
-              customId: id,
+              id,
               actionLinks: (
                 <AlertActionLink
                   onClick={() => {
@@ -222,7 +221,7 @@ export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
                 { name: <b>{state.createdSource.name}</b> }
               ),
               variant: 'success',
-              customId: id,
+              id,
               actionLinks: (
                 <AlertActionLink
                   onClick={() => {

@@ -4,16 +4,7 @@ import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { useIntl } from 'react-intl';
 import isEmpty from 'lodash/isEmpty';
 
-import filterApps from '@redhat-cloud-services/frontend-components-sources/esm/filterApps';
-import CloseModal from '@redhat-cloud-services/frontend-components-sources/esm/CloseModal';
-import LoadingStep from '@redhat-cloud-services/frontend-components-sources/esm/LoadingStep';
-import ErroredStep from '@redhat-cloud-services/frontend-components-sources/esm/ErroredStep';
-import FinishedStep from '@redhat-cloud-services/frontend-components-sources/esm/FinishedStep';
-import TimeoutStep from '@redhat-cloud-services/frontend-components-sources/esm/TimeoutStep';
-import computeSourceStatus from '@redhat-cloud-services/frontend-components-sources/esm/computeSourceStatus';
-import AmazonFinishedStep from '@redhat-cloud-services/frontend-components-sources/esm/AmazonFinishedStep';
-
-import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/esm/form-template';
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 
 import { loadEntities } from '../../redux/sources/actions';
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
@@ -31,11 +22,19 @@ import { doAttachApp } from '../../api/doAttachApp';
 import { checkSourceStatus } from '../../api/checkSourceStatus';
 
 import reducer, { initialState } from './reducer';
-import { Button } from '@patternfly/react-core/dist/esm/components/Button';
-import { Text } from '@patternfly/react-core/dist/esm/components/Text';
+import { Button, Text } from '@patternfly/react-core';
 
 import removeAppSubmit from './removeAppSubmit';
 import { diff } from 'deep-object-diff';
+import LoadingStep from '../steps/LoadingStep';
+import ErroredStep from '../steps/ErroredStep';
+import AmazonFinishedStep from '../steps/AmazonFinishedStep';
+import FinishedStep from '../steps/FinishedStep';
+import TimeoutStep from '../steps/TimeoutStep';
+import computeSourceStatus from '../../utilities/computeSourceStatus';
+import filterApps from '../../utilities/filterApps';
+import computeSourceError from '../../utilities/computeSourceError';
+import CloseModal from '../CloseModal';
 
 export const onSubmit = (
   values,
@@ -279,14 +278,7 @@ const AddApplication = () => {
             <ErroredStep
               onRetry={onReset}
               onClose={goToSources}
-              message={
-                state.data.applications?.[0]?.availability_status_error ||
-                state.data.endpoint?.[0]?.availability_status_error ||
-                intl.formatMessage({
-                  id: 'wizard.unknownError',
-                  defaultMessage: 'Unknown error',
-                })
-              }
+              message={computeSourceError(state.data, intl)}
               title={intl.formatMessage({
                 id: 'sources.configurationSuccessful',
                 defaultMessage: 'Configuration unsuccessful',
@@ -362,7 +354,7 @@ const AddApplication = () => {
   const onSubmitFinal = hasAvailableApps ? onSubmitWrapper : goToSources;
 
   const onStay = () => {
-    container.current.hidden = false;
+    container.current.style.opacity = 1;
     setState({ type: 'toggleCancelling' });
   };
 
@@ -375,7 +367,7 @@ const AddApplication = () => {
     const isChanged = !isEmpty(diff(initialValues, newValues));
 
     if (isChanged) {
-      container.current.hidden = true;
+      container.current.style.opacity = 0;
       setState({ type: 'toggleCancelling', values });
     } else {
       goToSources();
@@ -384,15 +376,16 @@ const AddApplication = () => {
 
   return (
     <React.Fragment>
-      <CloseModal
-        title={intl.formatMessage({
-          id: 'sources.manageAppsCloseModalTitle',
-          defaultMessage: 'Exit application adding?',
-        })}
-        isOpen={state.isCancelling}
-        onStay={onStay}
-        onExit={goToSources}
-      />
+      {state.isCancelling && (
+        <CloseModal
+          title={intl.formatMessage({
+            id: 'sources.manageAppsCloseModalTitle',
+            defaultMessage: 'Exit application adding?',
+          })}
+          onStay={onStay}
+          onExit={goToSources}
+        />
+      )}
       <SourcesFormRenderer
         schema={schema}
         showFormControls={false}

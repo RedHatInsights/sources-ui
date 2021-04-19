@@ -1,51 +1,36 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
-import { routes } from '../../Routes';
-
-import { Tile } from '@patternfly/react-core/dist/esm/components/Tile/Tile';
 
 import ImageWithPlaceholder from '../TilesShared/ImageWithPlaceholder';
-import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
-import DisabledTile from '../TilesShared/DisabledTile';
+import TilesArray from '../TilesShared/TilesArray';
 
-const RedHatTiles = ({ setSelectedType }) => {
-  const { push } = useHistory();
-  const hasWritePermissions = useHasWritePermissions();
+const icon = (
+  <ImageWithPlaceholder className="redhat-icon" src="/apps/frontend-assets/red-hat-logos/stacked.svg" alt="red hat logo" />
+);
 
-  const openWizard = (type) => {
-    setSelectedType(type);
-    push(routes.sourcesNew.path);
-  };
-
-  const TileComponent = hasWritePermissions ? Tile : DisabledTile;
-
-  const icon = (
-    <ImageWithPlaceholder className="redhat-icon" src="/apps/frontend-assets/red-hat-logos/stacked.svg" alt="red hat logo" />
-  );
-
-  return (
-    <React.Fragment>
+const mapper = (type, openWizard, TileComponent) =>
+  ({
+    ['ansible-tower']: (
       <TileComponent
         isStacked
+        key={type}
         title="Ansible Automation Platform"
         onClick={() => openWizard('ansible-tower')}
         className="tile pf-u-mr-md-on-md pf-u-mt-md pf-u-mt-0-on-md"
         icon={icon}
       />
+    ),
+    openshift: (
       <TileComponent
         isStacked
+        key={type}
         title="OpenShift Container Platfrom"
         className="tile pf-u-mr-md-on-md pf-u-mt-md pf-u-mt-0-on-md"
         onClick={() => openWizard('openshift')}
         icon={icon}
       />
-    </React.Fragment>
-  );
-};
+    ),
+  }[type]);
 
-RedHatTiles.propTypes = {
-  setSelectedType: PropTypes.func.isRequired,
-};
+const RedHatTiles = (props) => <TilesArray {...props} mapper={mapper} />;
 
 export default RedHatTiles;

@@ -2,20 +2,20 @@
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
-import { Grid } from '@patternfly/react-core/dist/esm/layouts/Grid/Grid';
-import { GridItem } from '@patternfly/react-core/dist/esm/layouts/Grid/GridItem';
-import { Stack } from '@patternfly/react-core/dist/esm/layouts/Stack/Stack';
-import { StackItem } from '@patternfly/react-core/dist/esm/layouts/Stack/StackItem';
-import { Card } from '@patternfly/react-core/dist/esm/components/Card/Card';
-import { CardBody } from '@patternfly/react-core/dist/esm/components/Card/CardBody';
-import { CardTitle } from '@patternfly/react-core/dist/esm/components/Card/CardTitle';
-import { CardHeader } from '@patternfly/react-core/dist/esm/components/Card/CardHeader';
-import { CardExpandableContent } from '@patternfly/react-core/dist/esm/components/Card/CardExpandableContent';
-import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { Divider } from '@patternfly/react-core/dist/esm/components/Divider/Divider';
-import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
-import { TextList } from '@patternfly/react-core/dist/esm/components/Text/TextList';
-import { TextListItem } from '@patternfly/react-core/dist/esm/components/Text/TextListItem';
+import {
+  Grid,
+  GridItem,
+  Stack,
+  StackItem,
+  Card,
+  CardBody,
+  CardTitle,
+  CardHeader,
+  CardExpandableContent,
+  Text,
+  TextContent,
+  Label,
+} from '@patternfly/react-core';
 
 import ArrowRightIcon from '@patternfly/react-icons/dist/esm/icons/arrow-right-icon';
 import BuilderImageIcon from '@patternfly/react-icons/dist/esm/icons/builder-image-icon';
@@ -30,8 +30,8 @@ const GOLD_IMAGES_AZURE =
 const GOLD_IMAGES_MORE =
   'https://access.redhat.com/documentation/en-us/red_hat_subscription_management/1/html/red_hat_cloud_access_reference_guide/cloud-access-gold-images_cloud-access';
 const INSIGHTS_REF = 'https://www.redhat.com/en/technologies/management/insights';
-const INSIGHTS_SERVICES = `/${PREFIX}insights/dashboard#workloads=All+workloads`;
-const SUBWATCH_HREF = `/${PREFIX}subscriptions`;
+const INSIGHTS_SERVICES = `/${PREFIX}settings/connector`;
+const SUBWATCH_HREF = `/${PREFIX}insights/subscriptions/rhel`;
 const SUBWATCH_MORE_HREF = 'https://access.redhat.com/products/subscription-central';
 
 export const CLOUD_CARDS_KEY = 'ins-c-sources__cloud_cards_expanded';
@@ -59,40 +59,34 @@ const CloudCards = () => {
         <CardBody>
           <TextContent>
             <Grid hasGutter>
-              <GridItem md={4} className="flex">
+              <GridItem md={4}>
                 <Stack>
                   <StackItem className="pf-u-mb-sm">
-                    <BuilderImageIcon fill="#F4C145" className="pf-u-mr-sm" />
-                    <Text component="span" className="gold-images-title text">
+                    <Label color="orange" icon={<BuilderImageIcon fill="#F4C145" />}>
                       {intl.formatMessage({ id: 'cloud.goldImages', defaultMessage: 'Use Gold Images' })}
-                    </Text>
+                    </Label>
                   </StackItem>
                   <StackItem isFilled>
                     <Text className="text pf-u-mb-sm">
                       {intl.formatMessage({
                         id: 'cloud.goldImages.description',
                         defaultMessage:
-                          'Connecting to Amazon Web Services unlocks automatic access to Red Hat Gold Images. View Gold Images in your provider console.',
+                          'Connecting to Amazon Web Services or Microsoft Azure unlocks automatic access to Red Hat Gold Images. View Gold Images in your provider console.',
                       })}
                     </Text>
-                    <TextList className="pf-u-ml-0">
-                      <Text className="text" component="a" href={GOLD_IMAGES_AWS} target="_blank" rel="noopener noreferrer">
-                        <TextListItem>
-                          {intl.formatMessage({
-                            id: 'cloud.goldImages.awsLink',
-                            defaultMessage: 'Use Red Hat Gold Images in AWS',
-                          })}
-                        </TextListItem>
-                      </Text>
-                      <Text className="text" component="a" href={GOLD_IMAGES_AZURE} target="_blank" rel="noopener noreferrer">
-                        <TextListItem>
-                          {intl.formatMessage({
-                            id: 'cloud.goldImages.azureLink',
-                            defaultMessage: 'Use Red Hat Gold Images in Microsoft Azure',
-                          })}
-                        </TextListItem>
-                      </Text>
-                    </TextList>
+                    <Text className="text" component="a" href={GOLD_IMAGES_AWS} target="_blank" rel="noopener noreferrer">
+                      {intl.formatMessage({
+                        id: 'cloud.goldImages.awsLink',
+                        defaultMessage: 'Use Red Hat Gold Images in AWS',
+                      })}
+                    </Text>
+                    <br />
+                    <Text className="text" component="a" href={GOLD_IMAGES_AZURE} target="_blank" rel="noopener noreferrer">
+                      {intl.formatMessage({
+                        id: 'cloud.goldImages.azureLink',
+                        defaultMessage: 'Use Red Hat Gold Images in Microsoft Azure',
+                      })}
+                    </Text>
                   </StackItem>
                   <StackItem className="pf-u-mt-lg">
                     <Text className="text" component="a" href={GOLD_IMAGES_MORE} target="_blank" rel="noopener noreferrer">
@@ -104,15 +98,13 @@ const CloudCards = () => {
                     </Text>
                   </StackItem>
                 </Stack>
-                <Divider isVertical className="pf-u-mt-sm pf-u-mb-sm" />
               </GridItem>
-              <GridItem md={4} className="flex">
+              <GridItem md={4}>
                 <Stack>
                   <StackItem className="pf-u-mb-sm">
-                    <img src={INSIGHTS_ICON} fill="#EE0000" className="pf-u-mr-sm custom-icon" />
-                    <Text component="span" className="insights-title text">
+                    <Label color="red" icon={<img src={INSIGHTS_ICON} fill="#EE0000" className="custom-icon" />}>
                       {intl.formatMessage({ id: 'cloud.insights', defaultMessage: 'Explore Red Hat Insights' })}
-                    </Text>
+                    </Label>
                   </StackItem>
                   <StackItem isFilled>
                     <Text className="text pf-u-mb-sm">
@@ -122,16 +114,12 @@ const CloudCards = () => {
                           'Use RHEL instances in the cloud and gain other value-add services, such as predictive analytics.',
                       })}
                     </Text>
-                    <TextList className="pf-u-ml-0">
-                      <Text className="text" component="a" href={INSIGHTS_REF} target="_blank" rel="noopener noreferrer">
-                        <TextListItem>
-                          {intl.formatMessage({
-                            id: 'cloud.insights.insightsLinkt',
-                            defaultMessage: 'Learn more about Red Hat Insights',
-                          })}
-                        </TextListItem>
-                      </Text>
-                    </TextList>
+                    <Text className="text" component="a" href={INSIGHTS_REF} target="_blank" rel="noopener noreferrer">
+                      {intl.formatMessage({
+                        id: 'cloud.insights.insightsLinkt',
+                        defaultMessage: 'Learn more about Red Hat Insights',
+                      })}
+                    </Text>
                   </StackItem>
                   <StackItem className="pf-u-mt-lg">
                     <Text className="text" component="a" href={INSIGHTS_SERVICES} target="_blank" rel="noopener noreferrer">
@@ -143,40 +131,34 @@ const CloudCards = () => {
                     </Text>
                   </StackItem>
                 </Stack>
-                <Divider isVertical className="pf-u-mt-sm pf-u-mb-sm" />
               </GridItem>
-              <GridItem md={4} className="flex">
+              <GridItem md={4}>
                 <Stack>
                   <StackItem className="pf-u-mb-sm">
-                    <SubWatchIcon className="pf-u-mr-sm custom-icon" />
-                    <Text component="span" className="subwatch-title text">
-                      {intl.formatMessage({ id: 'cloud.subwatch', defaultMessage: 'Track usage with Subscription Watch' })}
-                    </Text>
+                    <Label color="purple" icon={<SubWatchIcon className="custom-icon" />}>
+                      {intl.formatMessage({ id: 'cloud.subwatch', defaultMessage: 'Track usage with Subscriptions' })}
+                    </Label>
                   </StackItem>
                   <StackItem isFilled>
                     <Text className="text pf-u-mb-sm">
                       {intl.formatMessage({
                         id: 'cloud.subwatch.description',
                         defaultMessage:
-                          'See precise RHEL subscription usage information across your hybrid cloud infrastructure.',
+                          'Use the Subscriptions service to monitor account-level summaries of your Red Hat subscription profile.',
                       })}
                     </Text>
-                    <TextList className="pf-u-ml-0">
-                      <Text className="text" component="a" href={SUBWATCH_MORE_HREF} target="_blank" rel="noopener noreferrer">
-                        <TextListItem>
-                          {intl.formatMessage({
-                            id: 'cloud.subwatch.learnMore',
-                            defaultMessage: 'Learn more about Subscription Watch',
-                          })}
-                        </TextListItem>
-                      </Text>
-                    </TextList>
+                    <Text className="text" component="a" href={SUBWATCH_MORE_HREF} target="_blank" rel="noopener noreferrer">
+                      {intl.formatMessage({
+                        id: 'cloud.subwatch.learnMore',
+                        defaultMessage: 'Learn more about Subscriptions',
+                      })}
+                    </Text>
                   </StackItem>
                   <StackItem className="pf-u-mt-lg">
                     <Text className="text" component="a" href={SUBWATCH_HREF} target="_blank" rel="noopener noreferrer">
                       {intl.formatMessage({
                         id: 'cloud.subwatch.goTo',
-                        defaultMessage: 'Go to Subscription Watch',
+                        defaultMessage: 'Go to Subscriptions',
                       })}
                       <ArrowRightIcon className="pf-u-ml-sm" />
                     </Text>
@@ -191,4 +173,4 @@ const CloudCards = () => {
   );
 };
 
-export default CloudCards;
+export default React.memo(CloudCards);

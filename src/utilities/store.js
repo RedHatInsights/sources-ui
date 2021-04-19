@@ -1,8 +1,6 @@
-import ReducerRegistry, {
-  applyReducerHash,
-} from '@redhat-cloud-services/frontend-components-utilities/files/esm/ReducerRegistry';
-import notificationsMiddleware from '@redhat-cloud-services/frontend-components-notifications/esm/notificationsMiddleware';
-import notifications from '@redhat-cloud-services/frontend-components-notifications/esm/notifications';
+import ReducerRegistry, { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/ReducerRegistry';
+import notificationsMiddleware from '@redhat-cloud-services/frontend-components-notifications/notificationsMiddleware';
+import { notificationsReducer } from '@redhat-cloud-services/frontend-components-notifications/redux';
 import thunk from 'redux-thunk';
 import promise from 'redux-promise-middleware';
 
@@ -38,7 +36,7 @@ export const getStore = (addMiddlewares = [], initialState = {}) => {
     sources: applyReducerHash(SourcesReducer, { ...defaultSourcesState, ...initialState.sources }),
   });
   registry.register({ user: applyReducerHash(UserReducer, { ...defaultUserState, ...initialState.user }) });
-  registry.register({ notifications });
+  registry.register({ notifications: notificationsReducer });
 
   return registry.getStore();
 };

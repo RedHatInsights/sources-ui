@@ -15,11 +15,10 @@ This application allows to
 **Table of Contents**
 - [Sources](#sources)
 - [Getting Started](#getting-started)
-- [Running locally](#running-locally)
-- [Build app](#build-app)
-  - [With locally linked Sources Wizard package](#with-locally-linked-sources-wizard-package)
+  - [Run app](#run-app)
   - [Debug functions](#debug-functions)
-  - [Testing](#testing)
+- [Queries](#queries)
+- [Testing](#testing)
 - [Patternfly](#patternfly)
 - [Data-driven forms](#data-driven-forms)
 - [Insights Components](#insights-components)
@@ -28,45 +27,24 @@ This application allows to
 - [API](#api)
   - [Sources Javascript API client](#sources-javascript-api-client)
 - [Insights Frontend Assets](#insights-frontend-assets)
-- [Technologies](#technologies)
 - [Deploying](#deploying)
   - [How it works](#how-it-works)
 - [License](#license)
 
 # Getting Started
-
-There is a [comprehensive quick start guide in the Storybook Documentation](https://github.com/RedHatInsights/insights-frontend-storybook/blob/master/src/docs/welcome/quickStart/DOC.md) to setting up an Insights environment complete with:
-
-- Insights Frontend Starter App
-
-- [Insights Chroming](https://github.com/RedHatInsights/insights-chrome)
-- [Insights Proxy](https://github.com/RedHatInsights/insights-proxy)
-
-Note: You will need to set up the Insights environment if you want to develop
-Sources UI due to the consumption of the chroming service as well as
-setting up your global/app navigation through the API.
-
-# Running locally
-Have [insights-proxy](https://github.com/RedHatInsights/insights-proxy) installed under PROXY_PATH
-
-```shell
-SPANDX_CONFIG="./config/spandx.config.js" bash $PROXY_PATH/scripts/run.sh
-```
-
-# Build app
+## Run app
 
 1. ```npm install```
 
-2. ```npm run start```
-    - starts webpack bundler and serves the files with webpack dev server
+2.  ```npm run start```
+    - starts webpack bundler and serves the files with webpack dev server on `https://ci.foo.redhat.com:1337/settings/sources/`
 
-## With locally linked Sources Wizard package
+2.  ```npm run start:beta```
+    - starts webpack bundler and serves the files with webpack dev server on `https://ci.foo.redhat.com:1337/beta/settings/sources/`
 
-If you linked Sources Wizard package via npm link, run the application with a following command:
+You have to be connected to Red Hat VPN.
 
-- ```npm run start:link```
-
-This command ensures that the application and the package is using the same node_modules folder and it prevents any conflicts between various React instancies.
+Check our [proxy documenation](https://github.com/RedHatInsights/frontend-components/tree/master/packages/config#useproxy) for more options.
 
 ## Debug functions
 
@@ -90,7 +68,11 @@ Removes write permissions.
 
 Grants write permissions.
 
-## Testing
+# Queries
+
+You can use queries to modify the initial state of the application. Read more [here](doc/url-query.md).
+
+# Testing
 
 - Travis is used to test the build for this code.
   - `npm run test` will run tests,
@@ -115,7 +97,9 @@ Insights Platform will deliver components and static assets through [npm](https:
 
 ## AddSourceWizard
 
-This application use a [AddSourceWizard](https://github.com/RedHatInsights/frontend-components/tree/master/packages/sources), which provides the Wizard component. For creating the DDF schema, it uses information provided by Sources API and components included in the AddSourceWizard package.
+**ADD SOURCE WIZARD WAS MOVED TO THIS REPOSITORY!**
+
+Documentation is [here](doc/wizard.md).
 
 ## Updating steps in the wizard
 
@@ -133,11 +117,7 @@ This API client is no longer in the UI because of its huge bundle size. However,
 
 # Insights Frontend Assets
 
-Static assets are deployed to [Insights Frontend Assets](https://github.com/RedHatInsights/insights-frontend-assets) repository. If you need to add/change/remove some icon, please do it there.
-
-# Technologies
-
-- See [Technologies](doc/technologies.md).
+Static assets are deployed to [Insights Frontend Assets](https://github.com/RedHatInsights/frontend-assets) repository. If you need to add/change/remove some icon, please do it there.
 
 # Deploying
 

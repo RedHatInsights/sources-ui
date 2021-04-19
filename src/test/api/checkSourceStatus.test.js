@@ -15,7 +15,7 @@ describe('checkSourceStatus', () => {
   it('calls checkAvalibilityStatus with source id', async () => {
     const response = { id: sourceId };
 
-    mock.onPost(`/api/sources/v3.0/sources/${sourceId}/check_availability`).reply(200, response);
+    mock.onPost(`/api/sources/v3.1/sources/${sourceId}/check_availability`).reply(200, response);
 
     const result = await checkSourceStatus(sourceId);
 
@@ -23,7 +23,7 @@ describe('checkSourceStatus', () => {
   });
 
   it('be totally cool when an error happens', async () => {
-    mock.onPost(`/api/sources/v3.0/sources/${sourceId}/check_availability`).reply(500, 'MEGA ERROR');
+    mock.onPost(`/api/sources/v3.1/sources/${sourceId}/check_availability`).reply(500, 'MEGA ERROR');
 
     const result = await checkSourceStatus(sourceId);
 

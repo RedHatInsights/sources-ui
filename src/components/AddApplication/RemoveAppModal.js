@@ -3,12 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
 
-import { Text, TextVariants } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { TextContent } from '@patternfly/react-core/dist/esm/components/Text/TextContent';
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
-import { Modal } from '@patternfly/react-core/dist/esm/components/Modal/Modal';
-import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
-
+import { Text, TextVariants, TextContent, Button, Modal, Title } from '@patternfly/react-core';
 import ExclamationTriangleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-triangle-icon';
 
 import { useSource } from '../../hooks/useSource';
@@ -55,7 +50,7 @@ const RemoveAppModal = () => {
 
   return (
     <Modal
-      className="ins-c-sources__dialog--warning"
+      className="sources"
       isOpen={true}
       onClose={onCancel}
       variant="small"
@@ -64,7 +59,7 @@ const RemoveAppModal = () => {
         defaultMessage: 'Remove application?',
       })}
       header={
-        <Title headingLevel="h1" size="2xl">
+        <Title headingLevel="h1" size="2xl" className="sources">
           <ExclamationTriangleIcon size="sm" className="ins-m-alert ins-c-source__delete-icon pf-u-mr-sm" />
           {intl.formatMessage({
             id: 'sources.deleteAppTitle',

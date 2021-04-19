@@ -1,15 +1,14 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-import { Text } from '@patternfly/react-core/dist/esm/components/Text/Text';
-import { Title } from '@patternfly/react-core/dist/esm/components/Title/Title';
+import { Text, Title } from '@patternfly/react-core';
 
 import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import applicationTypesData from '../../__mocks__/applicationTypesData';
 import DetailHeader from '../../../components/SourceDetail/DetailHeader';
 import Breadcrumbs from '../../../components/SourceDetail/Breadcrumbs';
-import { PageHeader } from '@redhat-cloud-services/frontend-components/components/esm/PageHeader';
+import { PageHeader } from '@redhat-cloud-services/frontend-components/PageHeader';
 import SourceKebab from '../../../components/SourceDetail/SourceKebab';
 import * as formatters from '../../../views/formatters';
 import mockStore from '../../__mocks__/mockStore';

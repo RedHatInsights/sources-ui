@@ -3,7 +3,7 @@ import { applicationsFields, appendClusterIdentifier } from '../../../../compone
 import EditAlert from '../../../../components/SourceEditForm/parser/EditAlert';
 import { applicationTypesData, COSTMANAGEMENT_APP, CATALOG_APP } from '../../../__mocks__/applicationTypesData';
 
-jest.mock('@redhat-cloud-services/frontend-components-sources/esm/hardcodedSchemas', () => ({
+jest.mock('../../../../components/addSourceWizard/hardcodedSchemas', () => ({
   __esModule: true,
   default: {
     aws: {

@@ -1,4 +1,4 @@
-import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications/esm/actionTypes';
+import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications/redux';
 import {
   ACTION_TYPES,
   SORT_ENTITIES,
@@ -23,7 +23,7 @@ import { doLoadSourceTypes } from '../../api/source_types';
 export const loadEntities = (options) => (dispatch, getState) => {
   dispatch({
     type: ACTION_TYPES.LOAD_ENTITIES_PENDING,
-    options,
+    options: typeof options === 'function' ? options(getState) : options,
   });
 
   const { pageSize, pageNumber, sortBy, sortDirection, filterValue, activeVendor } = getState().sources;
@@ -164,14 +164,10 @@ export const removeSource = (sourceId, title) => (dispatch) => {
     );
 };
 
-export const removeMessage = (id) => (dispatch, getState) => {
-  const messageId = getState().notifications.find(({ customId }) => customId === id)?.id;
-
-  return dispatch({
-    type: REMOVE_NOTIFICATION,
-    payload: messageId,
-  });
-};
+export const removeMessage = (id) => ({
+  type: REMOVE_NOTIFICATION,
+  payload: id,
+});
 
 export const removeApplication = (appId, sourceId, successTitle, errorTitle) => (dispatch) => {
   dispatch({

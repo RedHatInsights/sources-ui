@@ -1,5 +1,5 @@
 {
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "env": {
     "browser": true,
     "es6": true,
@@ -12,7 +12,7 @@
   },
   "extends": [
     "plugin:prettier/recommended",
-    "prettier/react",
+    "prettier",
     "eslint:recommended",
     "plugin:react/recommended"
   ],

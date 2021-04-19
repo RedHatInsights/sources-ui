@@ -1,19 +1,11 @@
 import React from 'react';
-import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/components/esm/PrimaryToolbar';
+import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/PrimaryToolbar';
 import { act } from 'react-dom/test-utils';
 
-import { Button } from '@patternfly/react-core/dist/esm/components/Button/Button';
-import { Tooltip } from '@patternfly/react-core/dist/esm/components/Tooltip/Tooltip';
-import { Tile } from '@patternfly/react-core/dist/esm/components/Tile/Tile';
-import { Alert } from '@patternfly/react-core/dist/esm/components/Alert/Alert';
-import { Pagination } from '@patternfly/react-core/dist/esm/components/Pagination/Pagination';
-import { AlertActionLink } from '@patternfly/react-core/dist/esm/components/Alert/AlertActionLink';
-import { Chip } from '@patternfly/react-core/dist/esm/components/ChipGroup/Chip';
-import { Select } from '@patternfly/react-core/dist/esm/components/Select/Select';
+import { Button, Tooltip, Tile, Alert, Pagination, AlertActionLink, Chip, Select } from '@patternfly/react-core';
 
 import { MemoryRouter, Link } from 'react-router-dom';
-import { AddSourceWizard } from '@redhat-cloud-services/frontend-components-sources/esm/addSourceWizard';
-import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/esm/NotificationPortal';
+import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/NotificationPortal';
 
 import SourcesPageOriginal from '../../pages/Sources';
 import SourcesTable from '../../components/SourcesTable/SourcesTable';
@@ -44,6 +36,41 @@ import CloudEmptyState from '../../components/CloudTiles/CloudEmptyState';
 import { getStore } from '../../utilities/store';
 import { AVAILABLE, UNAVAILABLE } from '../../views/formatters';
 import RedHatEmptyState from '../../components/RedHatTiles/RedHatEmptyState';
+import { AddSourceWizard } from '../../components/addSourceWizard';
+
+jest.mock('react', () => {
+  const React = jest.requireActual('react');
+  const Suspense = ({ children }) => {
+    return children;
+  };
+
+  const lazy = jest.fn().mockImplementation((fn) => {
+    const Component = (props) => {
+      const [C, setC] = React.useState();
+      const mounted = React.useRef(true);
+
+      React.useEffect(() => {
+        fn().then((v) => {
+          mounted.current && setC(v);
+        });
+
+        return () => {
+          mounted.current = false;
+        };
+      }, []);
+
+      return C ? <C.default {...props} /> : null;
+    };
+
+    return Component;
+  });
+
+  return {
+    ...React,
+    lazy,
+    Suspense,
+  };
+});
 
 describe('SourcesPage', () => {
   let initialProps;
@@ -139,6 +166,14 @@ describe('SourcesPage', () => {
   });
 
   it('renders empty state when there are no Sources and open AWS selection', async () => {
+    let tmpLocation;
+
+    tmpLocation = Object.assign({}, window.location);
+    delete window.location;
+    window.location = {};
+    window.location.pathname = routes.sources.path;
+    window.location.search = `?activeVendor=${CLOUD_VENDOR}`;
+
     store = getStore([], {
       sources: { activeVendor: CLOUD_VENDOR },
       user: { isOrgAdmin: true },
@@ -161,6 +196,8 @@ describe('SourcesPage', () => {
 
     expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
     expect(wrapper.find(AddSourceWizard).props().selectedType).toEqual('amazon');
+
+    window.location = tmpLocation;
   });
 
   it('renders empty state when there are no Sources - RED HAT', async () => {
@@ -335,6 +372,29 @@ describe('SourcesPage', () => {
           .props()
           .filterConfig.items[1].filterValues.items.map(({ label }) => label)
       ).toEqual(['Amazon Web Services', 'Microsoft Azure', 'VMware vSphere']);
+    });
+
+    it('renders correctly with type/application, loads all data', async () => {
+      window.location.search = '?type=amazon';
+
+      store = getStore([], {
+        sources: {
+          loaded: 1,
+          numberOfEntities: 5,
+          sourceTypes: sourceTypesData.data,
+          activeVendor: CLOUD_VENDOR,
+        },
+        user: { isOrgAdmin: true },
+      });
+
+      await act(async () => {
+        wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+      });
+      wrapper.update();
+
+      expect(api.doLoadEntities).toHaveBeenCalled();
+      expect(api.doLoadAppTypes).toHaveBeenCalled();
+      expect(typesApi.doLoadSourceTypes).toHaveBeenCalled();
     });
   });
 
@@ -557,7 +617,7 @@ describe('SourcesPage', () => {
     });
     wrapper.update();
 
-    expect(wrapper.find(AddSourceWizard).props().initialValues).toEqual(undefined);
+    expect(wrapper.find(AddSourceWizard).props().initialValues).toEqual({});
     expect(wrapper.find(AddSourceWizard).props().initialWizardState).toEqual(undefined);
   });
 
