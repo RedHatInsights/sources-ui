@@ -1,28 +1,11 @@
 import React, { useEffect, useReducer } from 'react';
-import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { shallowEqual, useSelector } from 'react-redux';
 import get from 'lodash/get';
 
 import { Table, TableHeader, TableBody } from '@patternfly/react-table';
-import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
 
-import {
-  Card,
-  CardBody,
-  CardTitle,
-  Text,
-  Spinner,
-  Bullseye,
-  Tabs,
-  Tab,
-  TabTitleText,
-  EmptyState,
-  EmptyStateVariant,
-  EmptyStateIcon,
-  EmptyStateBody,
-  Title,
-} from '@patternfly/react-core';
+import { Card, CardBody, CardTitle, Text, Spinner, Bullseye, Tabs, Tab, TabTitleText } from '@patternfly/react-core';
 
 import NoApplications from './NoApplications';
 import { useSource } from '../../hooks/useSource';
@@ -30,37 +13,7 @@ import { useIsLoaded } from '../../hooks/useIsLoaded';
 import { doLoadSourceForEdit } from '../../api/doLoadSourceForEdit';
 import { authenticationFields } from '../SourceEditForm/parser/authentication';
 import { prepareInitialValues } from '../SourceEditForm/helpers';
-
-export const ResourcesEmptyState = ({ applicationName }) => {
-  const intl = useIntl();
-
-  return (
-    <Bullseye>
-      <EmptyState variant={EmptyStateVariant.small}>
-        <EmptyStateIcon icon={WrenchIcon} />
-        <Title headingLevel="h2" size="lg">
-          {intl.formatMessage({
-            id: 'resourceTable.emptyStateTitle',
-            defaultMessage: 'No application resources',
-          })}
-        </Title>
-        <EmptyStateBody>
-          {intl.formatMessage(
-            {
-              id: 'resourceTable.emptyStateDescription',
-              defaultMessage: '{applicationName} resources will appear here when created.',
-            },
-            { applicationName }
-          )}
-        </EmptyStateBody>
-      </EmptyState>
-    </Bullseye>
-  );
-};
-
-ResourcesEmptyState.propTypes = {
-  applicationName: PropTypes.string.isRequired,
-};
+import ResourcesEmptyState from './ResourcesEmptyState';
 
 const createColumns = (intl) => [
   intl.formatMessage({ id: 'resourceTable.resourceType', defaultMessage: 'Resource type' }),

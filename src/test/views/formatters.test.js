@@ -25,6 +25,7 @@ import {
   UnknownError,
   getStatusColor,
   configurationModeFormatter,
+  IN_PROGRESS,
 } from '../../views/formatters';
 import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX, AMAZON } from '../__mocks__/sourceTypesData';
 import {
@@ -443,6 +444,10 @@ describe('formatters', () => {
         expect(getStatusColor(UNAVAILABLE)).toEqual('red');
       });
 
+      it('returns IN_PROGRESS color', () => {
+        expect(getStatusColor(IN_PROGRESS)).toEqual('grey');
+      });
+
       it('returns unknown color by default', () => {
         expect(getStatusColor(null)).toEqual('grey');
       });
@@ -467,6 +472,12 @@ describe('formatters', () => {
         expect(wrapper.text()).toEqual('Unavailable');
       });
 
+      it('returns OK text', () => {
+        const wrapper = mount(wrapperWithIntl(getStatusText('in_progress')));
+
+        expect(wrapper.text()).toEqual('In progress');
+      });
+
       it('returns unknown by default', () => {
         const wrapper = mount(wrapperWithIntl(getStatusText('some nonsense')));
 
@@ -482,6 +493,12 @@ describe('formatters', () => {
         const wrapper = mount(wrapperWithIntl(getStatusTooltipText(AVAILABLE, APPTYPES)));
 
         expect(wrapper.text()).toEqual('Everything works fine.');
+      });
+
+      it('returns IN PROGRESS text', () => {
+        const wrapper = mount(wrapperWithIntl(getStatusTooltipText(IN_PROGRESS, APPTYPES)));
+
+        expect(wrapper.text()).toEqual('We are still working to validate credentials. Check back for status updates.');
       });
 
       it('returns WARNING text', () => {
@@ -565,6 +582,17 @@ describe('formatters', () => {
         expect(wrapper.text().includes('Unavailable')).toEqual(true);
       });
 
+      it('returns in progress text', () => {
+        const SOURCE = {
+          availability_status: IN_PROGRESS,
+        };
+
+        const wrapper = mount(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES })));
+
+        expect(wrapper.find(Label)).toHaveLength(1);
+        expect(wrapper.text().includes('In progress')).toEqual(true);
+      });
+
       it('returns unknown by default', () => {
         const SOURCE = {};
 
@@ -643,6 +671,13 @@ describe('formatters', () => {
 
     describe('getAllErrors', () => {
       const errorMsg = 'This is error msg';
+
+      it('in progress source', () => {
+        expect(getAllErrors({ availability_status: IN_PROGRESS })).toEqual({
+          errors: {},
+          status: IN_PROGRESS,
+        });
+      });
 
       it('available source', () => {
         expect(getAllErrors({ availability_status: AVAILABLE })).toEqual({

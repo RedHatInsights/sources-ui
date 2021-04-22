@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
 import {
@@ -341,60 +342,54 @@ export const ArnDescription = () => {
   );
 };
 
-export const IncludeAliasesLabel = () => {
+export const IncludeAliasesLabel = ({ appendTo }) => {
   const intl = useIntl();
 
   return (
-    <React.Fragment>
-      {intl.formatMessage({
-        id: 'cost.arn.includesAliases',
-        defaultMessage: 'Include AWS account aliases',
+    <Popover
+      appendTo={appendTo}
+      aria-label="Help text"
+      position="right"
+      maxWidth="40%"
+      bodyContent={intl.formatMessage({
+        id: 'cost.arn.includeAliasesPopover',
+        defaultMessage:
+          'If there are account aliases, they will appear and be used for filtering when reporting on AWS accounts. This will include "iam:ListAccountAliases" to the Action of the IAM Policy.',
       })}
-      <span onClick={(e) => e.preventDefault()}>
-        <Popover
-          aria-label="Help text"
-          position="right"
-          maxWidth="40%"
-          bodyContent={intl.formatMessage({
-            id: 'cost.arn.includeAliasesPopover',
-            defaultMessage:
-              'If there are account aliases, they will appear and be used for filtering when reporting on AWS accounts. This will include "iam:ListAccountAliases" to the Action of the IAM Policy.',
-          })}
-        >
-          <Button variant={ButtonVariant.plain}>
-            <QuestionCircleIcon className="pf-u-ml-sm" />
-          </Button>
-        </Popover>
-      </span>
-    </React.Fragment>
+    >
+      <Button className="pf-u-p-0 pf-u-m-0" variant={ButtonVariant.plain}>
+        <QuestionCircleIcon className="pf-u-ml-sm" />
+      </Button>
+    </Popover>
   );
 };
 
-export const IncludeOrgUnitsLabel = () => {
+IncludeAliasesLabel.propTypes = {
+  appendTo: PropTypes.instanceOf(Element).isRequired,
+};
+
+export const IncludeOrgUnitsLabel = ({ appendTo }) => {
   const intl = useIntl();
 
   return (
-    <React.Fragment>
-      {intl.formatMessage({
-        id: 'cost.arn.includeOrgUnits',
-        defaultMessage: 'Include AWS organizational units',
+    <Popover
+      appendTo={appendTo}
+      aria-label="Help text"
+      position="right"
+      maxWidth="35%"
+      bodyContent={intl.formatMessage({
+        id: 'cost.arn.includeOrgUnitsPopover',
+        defaultMessage:
+          'If there are organizational units, they will be used for filtering when reporting on AWS resources. This will include "organizations:List*" and "organizations:Describe*" to the Action of the IAM Policy',
       })}
-      <span onClick={(e) => e.preventDefault()}>
-        <Popover
-          aria-label="Help text"
-          position="right"
-          maxWidth="35%"
-          bodyContent={intl.formatMessage({
-            id: 'cost.arn.includeOrgUnitsPopover',
-            defaultMessage:
-              'If there are organizational units, they will be used for filtering when reporting on AWS resources. This will include "organizations:List*" and "organizations:Describe*" to the Action of the IAM Policy',
-          })}
-        >
-          <Button variant={ButtonVariant.plain}>
-            <QuestionCircleIcon className="pf-u-ml-sm" />
-          </Button>
-        </Popover>
-      </span>
-    </React.Fragment>
+    >
+      <Button className="pf-u-p-0 pf-u-m-0" variant={ButtonVariant.plain}>
+        <QuestionCircleIcon className="pf-u-ml-sm" />
+      </Button>
+    </Popover>
   );
+};
+
+IncludeOrgUnitsLabel.propTypes = {
+  appendTo: PropTypes.instanceOf(Element).isRequired,
 };

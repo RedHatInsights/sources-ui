@@ -36,6 +36,7 @@ import {
   checkSubmit,
 } from './Sources/helpers';
 import { useIsLoaded } from '../hooks/useIsLoaded';
+import useScreen, { variants } from '../hooks/useScreen';
 import { useHasWritePermissions } from '../hooks/useHasWritePermissions';
 import CustomRoute from '../components/CustomRoute/CustomRoute';
 import { PaginationLoader } from '../components/SourcesTable/loaders';
@@ -76,6 +77,8 @@ const SourcesPage = () => {
 
   const history = useHistory();
   const intl = useIntl();
+
+  const screenSize = useScreen();
 
   const sources = useSelector(({ sources }) => sources, shallowEqual);
 
@@ -136,45 +139,60 @@ const SourcesPage = () => {
 
   const filteredSourceTypes = sourceTypes.filter(filterVendorTypes(activeVendor));
 
+  const addSourceText = intl.formatMessage({
+    id: 'sources.addSource',
+    defaultMessage: 'Add source',
+  });
+  const noPermissionsText = intl.formatMessage({
+    id: 'sources.notAdminAddButton',
+    defaultMessage: 'To add a source, you must be granted write permissions from your Organization Administrator.',
+  });
+
+  let actionsConfig;
+  if (variants.indexOf(screenSize) <= variants.indexOf('sm')) {
+    actionsConfig = {
+      dropdownProps: { position: 'right' },
+      actions: hasWritePermissions
+        ? [{ label: addSourceText, props: { to: routes.sourcesNew.path, component: Link } }]
+        : [
+            {
+              label: addSourceText,
+              props: {
+                component: 'div',
+                isDisabled: true,
+                tooltip: noPermissionsText,
+                className: 'ins-c-sources__disabled-drodpown-item',
+              },
+            },
+          ],
+    };
+  }
+
   const mainContent = () => (
     <React.Fragment>
       <PrimaryToolbar
         pagination={showPaginationLoader ? <PaginationLoader /> : numberOfEntities > 0 ? paginationConfig : undefined}
         actionsConfig={
-          hasWritePermissions
-            ? {
-                actions: [
+          actionsConfig || {
+            dropdownProps: { position: 'right' },
+            actions: hasWritePermissions
+              ? [
                   <Link to={routes.sourcesNew.path} key="addSourceButton">
                     <Button variant="primary" id="addSourceButton">
-                      {intl.formatMessage({
-                        id: 'sources.addSource',
-                        defaultMessage: 'Add source',
-                      })}
+                      {addSourceText}
                     </Button>
                   </Link>,
-                ],
-              }
-            : {
-                actions: [
-                  <Tooltip
-                    content={intl.formatMessage({
-                      id: 'sources.notAdminAddButton',
-                      defaultMessage:
-                        'To add a source, you must be granted write permissions from your Organization Administrator.',
-                    })}
-                    key="addSourceButton"
-                  >
+                ]
+              : [
+                  <Tooltip content={noPermissionsText} key="addSourceButton">
                     <span tabIndex="0">
                       <Button variant="primary" isDisabled id="addSourceButton">
-                        {intl.formatMessage({
-                          id: 'sources.addSource',
-                          defaultMessage: 'Add source',
-                        })}
+                        {addSourceText}
                       </Button>
                     </span>
                   </Tooltip>,
                 ],
-              }
+          }
         }
         filterConfig={{
           items: [

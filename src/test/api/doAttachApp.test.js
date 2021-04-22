@@ -1,6 +1,7 @@
 import { doAttachApp, removeEmpty } from '../../api/doAttachApp';
 import * as api from '../../api/entities';
 import * as appStatus from '../..//api/getApplicationStatus';
+import emptyAuthType from '../../components/addSourceWizard/emptyAuthType';
 
 const prepareFormApi = (values) => ({
   getState: () => ({
@@ -562,6 +563,38 @@ describe('doAttachApp', () => {
       resource_type: 'Application',
       source_id: SOURCE_ID,
     });
+    expect(endpointCreate).not.toHaveBeenCalled();
+    expect(appCreate).not.toHaveBeenCalled();
+    expect(createAuthApp).not.toHaveBeenCalled();
+    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint', expect.any(Date));
+    expect(appDelete).not.toHaveBeenCalled();
+  });
+
+  it('ignore empty auth type', async () => {
+    INITIAL_VALUES = {
+      source: {
+        id: SOURCE_ID,
+      },
+      endpoint: {
+        id: ENDPOINT_ID,
+      },
+    };
+
+    FORM_API = prepareFormApi(INITIAL_VALUES);
+
+    VALUES = {
+      authentication: {
+        password: 'pepa',
+        authtype: emptyAuthType.type,
+      },
+    };
+
+    await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
+
+    expect(sourceUpdate).not.toHaveBeenCalled();
+    expect(authUpdate).not.toHaveBeenCalled();
+    expect(endpointUpdate).not.toHaveBeenCalledWith();
+    expect(authCreate).not.toHaveBeenCalledWith();
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).not.toHaveBeenCalled();
     expect(createAuthApp).not.toHaveBeenCalled();

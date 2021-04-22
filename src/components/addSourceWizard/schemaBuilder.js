@@ -4,6 +4,14 @@ import componentTypes from '@data-driven-forms/react-form-renderer/component-typ
 import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
 import hardcodedSchemas from './hardcodedSchemas';
 import get from 'lodash/get';
+import emptyAuthType from './emptyAuthType';
+
+export const shouldAppendEmptyType = (type, appTypes) =>
+  appTypes.some(
+    ({ supported_source_types, supported_authentication_types }) =>
+      supported_source_types.includes(type.name) &&
+      (!supported_authentication_types[type.name] || !supported_authentication_types[type.name].length === 0)
+  );
 
 export const acronymMapper = (value) =>
   ({
@@ -203,7 +211,8 @@ export const createGenericAuthTypeSelection = (type, endpointFields, disableAuth
 
 export const createSpecificAuthTypeSelection = (type, appType, endpointFields, disableAuthType) => {
   const auths = type.schema.authentication;
-  const supportedAuthTypes = appType.supported_authentication_types[type.name];
+  const supportedAuthTypes = appType.supported_authentication_types[type.name] || [emptyAuthType.type];
+
   const hasMultipleAuthTypes = supportedAuthTypes.length > 1;
 
   let fields = [...endpointFields];
@@ -275,7 +284,7 @@ export const createSpecificAuthTypeSelection = (type, appType, endpointFields, d
       },
     };
   } else {
-    const auth = auths.find(({ type: authType }) => supportedAuthTypes.includes(authType));
+    const auth = [emptyAuthType, ...auths].find(({ type: authType }) => supportedAuthTypes.includes(authType));
     const appName = hardcodedSchema(type.name, auth.type, appType.name) ? appType.name : 'generic';
 
     const additionalStepName = `${type.name}-${auth.type}-${appType.name}-additional-step`;
@@ -352,7 +361,13 @@ export const schemaBuilder = (sourceTypes, appTypes, disableAuthType) => {
       }
     });
 
-    type.schema.authentication.forEach((auth) => {
+    const auhtentications = type.schema.authentication;
+
+    if (shouldAppendEmptyType(type, appTypes)) {
+      auhtentications.push(emptyAuthType);
+    }
+
+    auhtentications.forEach((auth) => {
       const additionalSteps = getAdditionalSteps(type.name, auth.type);
 
       if (additionalSteps.length > 0) {
