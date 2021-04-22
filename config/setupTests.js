@@ -34,4 +34,6 @@ global.insights = {
   },
 };
 
+global.innerWidth = 1080;
+
 Element.prototype.scrollTo = () => {};
