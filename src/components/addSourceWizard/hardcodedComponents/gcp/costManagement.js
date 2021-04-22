@@ -14,14 +14,14 @@ import {
   HintBody,
 } from '@patternfly/react-core';
 
+import { HCCM_DOCS_PREFIX } from '../../stringConstants';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 
 import { getSourcesApi } from '../../../../api/entities';
 
 const b = (chunks) => <b key={`b-${chunks.length}-${Math.floor(Math.random() * 1000)}`}>{chunks}</b>;
 
-const PROJECT_LINK =
-  'https://access.redhat.com/documentation/en-us/cost_management_service/2021/html/getting_started_with_cost_management/assembly-adding-gcp-sources';
+const PROJECT_LINK = `${HCCM_DOCS_PREFIX}/html-single/getting_started_with_cost_management/index#assembly-adding-gcp-sources`;
 
 export const Project = () => {
   const intl = useIntl();
