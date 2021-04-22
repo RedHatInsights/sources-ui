@@ -38,6 +38,12 @@ import { AVAILABLE, UNAVAILABLE } from '../../views/formatters';
 import RedHatEmptyState from '../../components/RedHatTiles/RedHatEmptyState';
 import { AddSourceWizard } from '../../components/addSourceWizard';
 
+jest.mock('../../hooks/useScreen', () => ({
+  __esModule: true,
+  variants: ['xs', 'sm', 'md', 'lg', '2xl'],
+  default: () => global.mockWidth || 'md',
+}));
+
 jest.mock('react', () => {
   const React = jest.requireActual('react');
   const Suspense = ({ children }) => {
@@ -128,6 +134,30 @@ describe('SourcesPage', () => {
     expect(urlQuery.parseQuery.mock.calls).toHaveLength(1);
     expect(urlQuery.updateQuery.mock.calls).toHaveLength(1);
     expect(urlQuery.updateQuery).toHaveBeenCalledWith(defaultSourcesState);
+  });
+
+  it('should use object config on small screen', async () => {
+    global.mockWidth = 'sm';
+
+    await act(async () => {
+      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    });
+    wrapper.update();
+
+    expect(wrapper.find(PrimaryToolbar).first().props().actionsConfig).toEqual({
+      actions: [
+        {
+          label: 'Add source',
+          props: {
+            to: routes.sourcesNew.path,
+            component: Link,
+          },
+        },
+      ],
+      dropdownProps: { position: 'right' },
+    });
+
+    global.mockWidth = undefined;
   });
 
   it('do not show CloudCards on Red Hat page', async () => {
@@ -927,19 +957,19 @@ describe('SourcesPage', () => {
   });
 
   describe('not org admin', () => {
-    beforeEach(async () => {
+    beforeEach(() => {
       store = getStore([], {
         sources: {},
         user: { isOrgAdmin: false },
       });
+    });
 
+    it('should fetch sources and source types on component mount', async () => {
       await act(async () => {
         wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
       });
       wrapper.update();
-    });
 
-    it('should fetch sources and source types on component mount', async () => {
       expect(api.doLoadEntities).toHaveBeenCalled();
       expect(api.doLoadAppTypes).toHaveBeenCalled();
       expect(typesApi.doLoadSourceTypes).toHaveBeenCalled();
@@ -951,6 +981,32 @@ describe('SourcesPage', () => {
       expect(wrapper.find('#addSourceButton').first().props().isDisabled).toEqual(true);
       expect(wrapper.find(PrimaryToolbar).find(Tooltip)).toHaveLength(1);
       expect(wrapper.find(RedirectNoWriteAccess)).toHaveLength(0);
+    });
+
+    it('should use object config on small screen', async () => {
+      global.mockWidth = 'sm';
+
+      await act(async () => {
+        wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+      });
+      wrapper.update();
+
+      expect(wrapper.find(PrimaryToolbar).first().props().actionsConfig).toEqual({
+        actions: [
+          {
+            label: 'Add source',
+            props: {
+              className: 'ins-c-sources__disabled-drodpown-item',
+              component: 'div',
+              tooltip: 'To add a source, you must be granted write permissions from your Organization Administrator.',
+              isDisabled: true,
+            },
+          },
+        ],
+        dropdownProps: { position: 'right' },
+      });
+
+      global.mockWidth = undefined;
     });
   });
 
