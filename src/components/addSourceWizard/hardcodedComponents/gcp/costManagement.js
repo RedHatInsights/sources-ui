@@ -14,11 +14,14 @@ import {
   HintBody,
 } from '@patternfly/react-core';
 
+import { HCCM_DOCS_PREFIX } from '../../stringConstants';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 
 import { getSourcesApi } from '../../../../api/entities';
 
 const b = (chunks) => <b key={`b-${chunks.length}-${Math.floor(Math.random() * 1000)}`}>{chunks}</b>;
+
+const PROJECT_LINK = `${HCCM_DOCS_PREFIX}/html-single/getting_started_with_cost_management/index#assembly-adding-gcp-sources`;
 
 export const Project = () => {
   const intl = useIntl();
@@ -26,11 +29,23 @@ export const Project = () => {
   return (
     <TextContent>
       <Text component={TextVariants.p} className="pf-u-mb-lg">
-        {intl.formatMessage({
-          id: 'cost.gcp.projectDescription',
-          defaultMessage:
-            'Enter the ID of a project within your Google Cloud Platform (GCP) billing account. We’ll use this project to set up your BigQuery billing export.',
-        })}
+        {intl.formatMessage(
+          {
+            id: 'cost.gcp.projectDescription',
+            defaultMessage:
+              'Enter the ID of a project within your Google Cloud Platform (GCP) billing account. We’ll use this project to set up your BigQuery billing export. {link}',
+          },
+          {
+            link: (
+              <Text key="link" component={TextVariants.a} href={PROJECT_LINK} rel="noopener noreferrer" target="_blank">
+                {intl.formatMessage({
+                  id: 'wizard.learnMore',
+                  defaultMessage: 'Learn more',
+                })}
+              </Text>
+            ),
+          }
+        )}
       </Text>
       <Hint>
         <HintTitle>

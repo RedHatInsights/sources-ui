@@ -14,6 +14,7 @@ import CardSelect from '../components/FormComponents/CardSelect';
 import AuthSelect from '../components/FormComponents/AuthSelect';
 import EnhancedRadio from '../components/FormComponents/EnhancedRadio';
 import SwitchGroup from '../components/FormComponents/SwitchGroup';
+import CheckboxWithIcon from '../components/FormComponents/CheckboxWithIcon';
 
 export const mapperExtension = {
   'auth-select': AuthSelect,
@@ -23,6 +24,7 @@ export const mapperExtension = {
   'enhanced-radio': EnhancedRadio,
   'switch-group': SwitchGroup,
   authentication: Authentication,
+  'checkbox-with-icon': CheckboxWithIcon,
 };
 
 const SourcesFormRenderer = ({ componentMapper, ...props }) => (

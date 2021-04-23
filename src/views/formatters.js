@@ -98,6 +98,7 @@ export const AVAILABLE = 'available';
 export const UNAVAILABLE = 'unavailable';
 export const UNKNOWN = 'unknown';
 export const PARTIALLY_UNAVAILABLE = 'partially_available';
+export const IN_PROGRESS = 'in_progress';
 
 export const getStatusColor = (status) =>
   ({
@@ -111,6 +112,7 @@ export const getStatusText = (status) =>
     [UNAVAILABLE]: <FormattedMessage id="sources.unavailable" defaultMessage="Unavailable" />,
     [AVAILABLE]: <FormattedMessage id="sources.available" defaultMessage="Available" />,
     [PARTIALLY_UNAVAILABLE]: <FormattedMessage id="sources.partiallyAvailable" defaultMessage="Partially available" />,
+    [IN_PROGRESS]: <FormattedMessage id="sources.inProgress" defaultMessage="In progress" />,
   }[status] || <FormattedMessage id="sources.unknown" defaultMessage="Unknown" />);
 
 export const UnknownError = () => <FormattedMessage id="sources.unknownError" defaultMessage="unavailable" />;
@@ -202,6 +204,12 @@ export const getStatusTooltipText = (status, appTypes, errors = {}) =>
         {formatAvailibilityErrors(appTypes, errors)}
       </React.Fragment>
     ),
+    [IN_PROGRESS]: (
+      <FormattedMessage
+        id="sources.inProgressStatus"
+        defaultMessage="We are still working to validate credentials. Check back for status updates."
+      />
+    ),
   }[status] || <FormattedMessage id="sources.appStatusUnknown" defaultMessage="Status has not been verified." />);
 
 export const getAllErrors = ({
@@ -210,6 +218,10 @@ export const getAllErrors = ({
   applications = [],
   endpoints: [endpoint] = [],
 }) => {
+  if (availability_status === IN_PROGRESS) {
+    return { errors: {}, status: IN_PROGRESS };
+  }
+
   let errors = {};
   let statusesCount = 0;
   let errorsCount = 0;

@@ -4,6 +4,7 @@ import { getSourcesApi } from './entities';
 import { checkAppAvailability } from './getApplicationStatus';
 import checkSourceStatus from './checkSourceStatus';
 import { NO_APPLICATION_VALUE } from '../components/addSourceWizard/stringConstants';
+import emptyAuthType from '../components/addSourceWizard/emptyAuthType';
 
 export const parseUrl = (url) => {
   if (!url) {
@@ -66,7 +67,7 @@ export const doCreateSource = async (formData, timetoutedApps = [], applicationT
       });
     }
 
-    if (formData.authentication) {
+    if (formData.authentication && formData.authentication.authtype !== emptyAuthType.type) {
       payload.authentications.push({
         ...formData.authentication,
         resource_type: hasEndpoint ? 'endpoint' : hasApplication ? 'application' : 'source',

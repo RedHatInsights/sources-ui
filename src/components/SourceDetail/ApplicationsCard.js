@@ -114,7 +114,7 @@ const ApplicationsCard = () => {
                 />
                 {Boolean(connectedApp) && <ApplicationStatusLabel app={connectedApp} />}
                 {description && (
-                  <div className="pf-c-switch pf-u-mt-sm">
+                  <div className="pf-c-switch pf-u-mt-sm ins-c-sources__application_fake_switch">
                     <span className="pf-c-switch__toggle ins-c-sources__hide-me" />
                     <div className="pf-c-switch__label ins-c-sources__switch-description">{description}</div>
                   </div>

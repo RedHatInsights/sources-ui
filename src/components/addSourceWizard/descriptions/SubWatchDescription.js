@@ -37,6 +37,36 @@ const SubWatchDescription = ({ id }) => {
     (values.source.app_creation_workflow === 'account_authorization' && values.applications?.includes(id)) ||
     (values.source.app_creation_workflow !== 'account_authorization' && values.application?.application_type_id === id);
 
+  if (values.source_type === 'azure') {
+    return (
+      <Stack>
+        <Point
+          title={intl.formatMessage({
+            id: 'rhelbundle.goldImages.title',
+            defaultMessage: 'Red Hat Gold Images',
+          })}
+          description={intl.formatMessage({
+            id: 'rhelbundle.goldImages.azure.description',
+            defaultMessage: 'Unlock cloud images in Microsoft Azure and bring your own subscription instead of paying hourly.',
+          })}
+          className="pf-u-mb-sm"
+          isEnabled={isEnabled}
+        />
+        <Point
+          title={intl.formatMessage({
+            id: 'rhelbundle.autoregistration.title',
+            defaultMessage: 'Autoregistration',
+          })}
+          description={intl.formatMessage({
+            id: 'rhelbundle.goldImages.description',
+            defaultMessage: 'Cloud instances automatically connect to cloud.redhat.com when provisioned.',
+          })}
+          isEnabled={isEnabled}
+        />
+      </Stack>
+    );
+  }
+
   return (
     <Stack>
       <Point
@@ -71,18 +101,6 @@ const SubWatchDescription = ({ id }) => {
         description={intl.formatMessage({
           id: 'rhelbundle.goldImages.description',
           defaultMessage: 'Cloud instances automatically connect to cloud.redhat.com when provisioned.',
-        })}
-        className="pf-u-mb-sm"
-        isEnabled={isEnabled}
-      />
-      <Point
-        title={intl.formatMessage({
-          id: 'rhelbundle.redhatconnector.title',
-          defaultMessage: 'Red Hat Connector',
-        })}
-        description={intl.formatMessage({
-          id: 'rhelbundle.redhatconnector.description',
-          defaultMessage: 'Simplified set up and registration of connected hosts.',
         })}
         isEnabled={isEnabled}
       />

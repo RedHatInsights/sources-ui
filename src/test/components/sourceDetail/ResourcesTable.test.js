@@ -12,8 +12,9 @@ import applicationTypesData, { COSTMANAGEMENT_APP, SUBWATCH_APP } from '../../__
 import { Route } from 'react-router-dom';
 import { replaceRouteId, routes } from '../../../Routes';
 import mockStore from '../../__mocks__/mockStore';
-import ResourcesTable, { ResourcesEmptyState } from '../../../components/SourceDetail/ResourcesTable';
+import ResourcesTable from '../../../components/SourceDetail/ResourcesTable';
 import NoApplications from '../../../components/SourceDetail/NoApplications';
+import ResourcesEmptyState from '../../../components/SourceDetail/ResourcesEmptyState';
 
 import * as api from '../../../api/doLoadSourceForEdit';
 

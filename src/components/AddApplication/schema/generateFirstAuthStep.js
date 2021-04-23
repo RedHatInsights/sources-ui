@@ -1,13 +1,14 @@
 import * as schemaBuilder from '../../../components/addSourceWizard/schemaBuilder';
+import emptyAuthType from '../../addSourceWizard/emptyAuthType';
 
-const generateFirstAuthStep = (type, appType, endpointFields, authtype, intl) => {
+const generateFirstAuthStep = (type, appType, endpointFields, authtype, intl, shouldAddEmpty) => {
   let fields = [...endpointFields];
 
   if (schemaBuilder.shouldUseAppAuth(type.name, authtype, appType.name)) {
     fields = [];
   }
 
-  const auth = type.schema.authentication.find(({ type }) => type === authtype);
+  const auth = [...type.schema.authentication, shouldAddEmpty ? emptyAuthType : undefined].find(({ type }) => type === authtype);
 
   const additionalStepName = `${type.name}-${authtype}-${appType.name}-additional-step`;
 
