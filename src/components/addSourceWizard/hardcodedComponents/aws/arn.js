@@ -26,7 +26,6 @@ import { HCCM_DOCS_PREFIX } from '../../stringConstants';
 const CREATE_S3_BUCKET = `${HCCM_DOCS_PREFIX}/html-single/getting_started_with_cost_management/index#creating-an-aws-s3-bucket_adding-aws-sources`;
 const ENABLE_AWS_ACCOUNT = `${HCCM_DOCS_PREFIX}/html-single/getting_started_with_cost_management/index#enabling-additional-aws-account-access_adding-aws-sources`;
 
-
 export const UsageDescription = () => {
   const intl = useIntl();
 
