@@ -23,8 +23,8 @@ import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 
 import { HCCM_DOCS_PREFIX } from '../../stringConstants';
 
-const CREATE_S3_BUCKET = `${HCCM_DOCS_PREFIX}/html/getting_started_with_cost_management/adding_an_aws_source#creating_an_aws_s3_bucket`;
-const ENABLE_AWS_ACCOUNT = `${HCCM_DOCS_PREFIX}/html/getting_started_with_cost_management/adding_an_aws_source#enabling_aws_account_access`;
+const CREATE_S3_BUCKET = `${HCCM_DOCS_PREFIX}/html-single/getting_started_with_cost_management/index#creating-an-aws-s3-bucket_adding-aws-sources`;
+const ENABLE_AWS_ACCOUNT = `${HCCM_DOCS_PREFIX}/html-single/getting_started_with_cost_management/index#enabling-additional-aws-account-access_adding-aws-sources`;
 
 export const UsageDescription = () => {
   const intl = useIntl();
