@@ -38,8 +38,7 @@ const descriptionMapper = (name, intl) =>
     }),
     [APP_NAMES.CLOUD_METER]: intl.formatMessage({
       id: 'cost.app.description',
-      defaultMessage:
-        'Includes access to Red Hat Gold Images, high precision subscription watch data, autoregistration, and Red Hat Connector.',
+      defaultMessage: 'Includes access to Red Hat Gold Images, high precision subscription watch data, and autoregistration.',
     }),
   }[name]);
 

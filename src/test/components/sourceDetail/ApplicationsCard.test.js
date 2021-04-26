@@ -132,7 +132,7 @@ describe('ApplicationsCard', () => {
         'Analyze, forecast, and optimize your Red Hat OpenShift cluster costs in hybrid cloud environments.'
       );
       expect(wrapper.find('.ins-c-sources__switch-description').last().text()).toEqual(
-        'Includes access to Red Hat Gold Images, high precision subscription watch data, autoregistration, and Red Hat Connector.'
+        'Includes access to Red Hat Gold Images, high precision subscription watch data, and autoregistration.'
       );
     });
   });
