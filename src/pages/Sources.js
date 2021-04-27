@@ -6,10 +6,10 @@ import { useIntl } from 'react-intl';
 
 import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/PrimaryToolbar';
 import { Section } from '@redhat-cloud-services/frontend-components/Section';
+import { ErrorState } from '@redhat-cloud-services/frontend-components/ErrorState';
 
 import { filterSources, pageAndSize } from '../redux/sources/actions';
 import SourcesTable from '../components/SourcesTable/SourcesTable';
-import SourcesErrorState from '../components/SourcesErrorState';
 import { routes } from '../Routes';
 
 const SourceRemoveModal = lazy(() =>
@@ -311,7 +311,7 @@ const SourcesPage = () => {
       <SourcesHeader />
       <Section type="content">
         {showInfoCards && <CloudCards />}
-        {fetchingError && <SourcesErrorState />}
+        {fetchingError && <ErrorState />}
         {!fetchingError && showEmptyState && activeVendor === CLOUD_VENDOR && (
           <CloudEmptyState setSelectedType={setSelectedType} />
         )}
