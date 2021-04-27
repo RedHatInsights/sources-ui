@@ -6,6 +6,7 @@ import { Button, Tooltip, Tile, Alert, Pagination, AlertActionLink, Chip, Select
 
 import { MemoryRouter, Link } from 'react-router-dom';
 import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/NotificationPortal';
+import ErrorState from '@redhat-cloud-services/frontend-components/ErrorState';
 
 import SourcesPageOriginal from '../../pages/Sources';
 import SourcesTable from '../../components/SourcesTable/SourcesTable';
@@ -27,7 +28,7 @@ import * as SourceRemoveModal from '../../components/SourceRemoveModal/SourceRem
 import * as urlQuery from '../../utilities/urlQuery';
 import { PlaceHolderTable, PaginationLoader } from '../../components/SourcesTable/loaders';
 import { Table } from '@patternfly/react-table';
-import SourcesErrorState from '../../components/SourcesErrorState';
+
 import DataLoader from '../../components/DataLoader';
 import TabNavigation from '../../components/TabNavigation';
 import CloudCards from '../../components/CloudTiles/CloudCards';
@@ -285,7 +286,7 @@ describe('SourcesPage', () => {
     });
 
     wrapper.update();
-    expect(wrapper.find(SourcesErrorState)).toHaveLength(1);
+    expect(wrapper.find(ErrorState)).toHaveLength(1);
     expect(wrapper.find(PrimaryToolbar)).toHaveLength(0);
     expect(wrapper.find(SourcesTable)).toHaveLength(0);
   });
@@ -299,7 +300,7 @@ describe('SourcesPage', () => {
     });
 
     wrapper.update();
-    expect(wrapper.find(SourcesErrorState)).toHaveLength(1);
+    expect(wrapper.find(ErrorState)).toHaveLength(1);
     expect(wrapper.find(PrimaryToolbar)).toHaveLength(0);
     expect(wrapper.find(SourcesTable)).toHaveLength(0);
   });
