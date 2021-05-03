@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Text, TextVariants, TextContent, Badge, Popover, Tooltip, Label, LabelGroup, Button } from '@patternfly/react-core';
 
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
+import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
 
 import { FormattedMessage, useIntl } from 'react-intl';
 import { DateFormat } from '@redhat-cloud-services/frontend-components/DateFormat';
@@ -312,7 +313,11 @@ export const availabilityFormatter = (_status, source, { appTypes }) => {
         aria-label={`${status} popover`}
         bodyContent={getStatusTooltipText(status, appTypes, meta.errors)}
       >
-        <Label className="clickable" color={getStatusColor(status)}>
+        <Label
+          className="clickable"
+          color={getStatusColor(status)}
+          {...(source.availability_status === IN_PROGRESS && { icon: <WrenchIcon /> })}
+        >
           {getStatusText(status)}
         </Label>
       </Popover>
@@ -327,6 +332,12 @@ export const getStatusTooltipTextApp = (status, error, intl) =>
       defaultMessage: 'Everything works fine.',
     }),
     [UNAVAILABLE]: error || intl.formatMessage({ id: 'sources.unknownError', defaultMessage: 'Unknown error' }),
+    [IN_PROGRESS]: (
+      <FormattedMessage
+        id="sources.inProgressStatus"
+        defaultMessage="We are still working to validate credentials. Check back for status updates."
+      />
+    ),
   }[status] ||
   intl.formatMessage({
     id: 'sources.appStatusUnknown',
@@ -352,7 +363,11 @@ const EnhancedLabelGroup = ({ applications, ...props }) => {
           aria-label={`${app.display_name} popover`}
           bodyContent={getStatusTooltipTextApp(app.availability_status, app.availability_status_error, intl)}
         >
-          <Label className="clickable" color={getStatusColor(app.availability_status)}>
+          <Label
+            className="clickable"
+            color={getStatusColor(app.availability_status)}
+            {...(app.availability_status === IN_PROGRESS && { icon: <WrenchIcon /> })}
+          >
             {app.display_name}
           </Label>
         </Popover>

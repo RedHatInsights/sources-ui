@@ -4,9 +4,10 @@ import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 
 import { Label, Popover } from '@patternfly/react-core';
+import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
 
 import { useSource } from '../../hooks/useSource';
-import { getAppStatus, getStatusTooltipTextApp, getStatusColor, getStatusText } from '../../views/formatters';
+import { getAppStatus, getStatusTooltipTextApp, getStatusColor, getStatusText, IN_PROGRESS } from '../../views/formatters';
 
 const ApplicationStatusLabel = ({ app }) => {
   const intl = useIntl();
@@ -22,7 +23,11 @@ const ApplicationStatusLabel = ({ app }) => {
       aria-label={`${finalApp.display_name} popover`}
       bodyContent={getStatusTooltipTextApp(finalApp.availability_status, finalApp.availability_status_error, intl)}
     >
-      <Label className="pf-u-ml-sm clickable" color={getStatusColor(finalApp.availability_status)}>
+      <Label
+        className="pf-u-ml-sm clickable"
+        color={getStatusColor(finalApp.availability_status)}
+        {...(finalApp.availability_status === IN_PROGRESS && { icon: <WrenchIcon /> })}
+      >
         {getStatusText(finalApp.availability_status)}
       </Label>
     </Popover>
