@@ -1,4 +1,5 @@
 import { Popover, Label } from '@patternfly/react-core';
+import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
 
 import React from 'react';
 import { Route } from 'react-router-dom';
@@ -6,7 +7,7 @@ import { Route } from 'react-router-dom';
 import ApplicationStatusLabel from '../../../components/SourceDetail/ApplicationStatusLabel';
 import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import { AVAILABLE, UNAVAILABLE } from '../../../views/formatters';
+import { AVAILABLE, IN_PROGRESS, UNAVAILABLE } from '../../../views/formatters';
 import applicationTypesData, { COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
 import mockStore from '../../__mocks__/mockStore';
 
@@ -38,6 +39,40 @@ describe('ApplicationStatusLabel', () => {
     expect(wrapper.find(Label).text()).toEqual('Available');
     expect(wrapper.find(Label).props().color).toEqual('green');
     expect(wrapper.find(Popover).props().bodyContent).toEqual('Everything works fine.');
+  });
+
+  it('renders in progress', async () => {
+    app = {
+      application_type_id: COSTMANAGEMENT_APP.id,
+      availability_status: IN_PROGRESS,
+    };
+    store = mockStore({
+      sources: {
+        entities: [
+          {
+            id: sourceId,
+          },
+        ],
+        appTypes: applicationTypesData.data,
+      },
+    });
+
+    wrapper = mount(componentWrapperIntl(<ApplicationStatusLabel app={app} />, store));
+
+    expect(wrapper.find('.pf-c-label').text()).toEqual('In progress');
+    const LabelJSX = wrapper.find(Label).debug();
+    /* For some reason, when trying to print props,
+    it got stuck because of "circular structure to json" issue.
+    It's caused by react node as a prop.*/
+    expect(LabelJSX.match(/<Label.*>/)[0].includes('color="grey"'));
+    expect(wrapper.find(WrenchIcon)).toHaveLength(1);
+
+    const PopoverJSX = wrapper.find(Popover).debug();
+    expect(
+      PopoverJSX.match(/<Popover.*>/)[0].includes(
+        'bodyContent="We are still working to validate credentials. Check back for status updates."'
+      )
+    );
   });
 
   it('renders unavailable - no error set', async () => {

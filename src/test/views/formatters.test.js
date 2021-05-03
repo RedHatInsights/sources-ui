@@ -1,6 +1,7 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
+import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
 
 import {
   nameFormatter,
@@ -274,6 +275,36 @@ describe('formatters', () => {
       );
 
       expect(wrapper.find(Popover).props().bodyContent).toEqual(ERROR);
+    });
+
+    it('show in progress label', () => {
+      const wrapper = mount(
+        componentWrapperIntl(
+          <React.Fragment>
+            {applicationFormatter(
+              [
+                {
+                  application_type_id: COSTMANAGEMENT_APP.id,
+                  availability_status: IN_PROGRESS,
+                  availability_status_error: null,
+                },
+              ],
+              undefined,
+              {
+                appTypes: applicationTypesData.data,
+              }
+            )}
+          </React.Fragment>
+        )
+      );
+
+      const PopoverJSX = wrapper.find(Popover).debug();
+      expect(
+        PopoverJSX.match(/<Popover.*>/)[0].includes(
+          'bodyContent="We are still working to validate credentials. Check back for status updates."'
+        )
+      );
+      expect(wrapper.find(WrenchIcon)).toHaveLength(1);
     });
 
     it('show unavailable popover - unknown error', () => {
@@ -590,7 +621,8 @@ describe('formatters', () => {
         const wrapper = mount(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES })));
 
         expect(wrapper.find(Label)).toHaveLength(1);
-        expect(wrapper.text().includes('In progress')).toEqual(true);
+        expect(wrapper.find('.pf-c-label').text()).toEqual('In progress');
+        expect(wrapper.find(WrenchIcon)).toHaveLength(1);
       });
 
       it('returns unknown by default', () => {
