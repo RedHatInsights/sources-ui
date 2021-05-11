@@ -69,10 +69,8 @@ const AddSourceWizard = ({
   submitCallback,
   activeVendor: propsActiveVendor,
 }) => {
-  const [
-    { isErrored, isFinished, isSubmitted, values, error, isCancelling, createdSource, activeVendor, ...state },
-    dispatch,
-  ] = useReducer(reducer, prepareInitialValues(initialValues, propsActiveVendor));
+  const [{ isErrored, isFinished, isSubmitted, values, error, isCancelling, createdSource, activeVendor, ...state }, dispatch] =
+    useReducer(reducer, prepareInitialValues(initialValues, propsActiveVendor));
 
   const onSubmit = (formValues, sourceTypes, wizardState, applicationTypes) => {
     dispatch({ type: 'prepareSubmitState', values: formValues, sourceTypes, applicationTypes });

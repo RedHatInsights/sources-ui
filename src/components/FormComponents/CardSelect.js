@@ -15,19 +15,8 @@ const handleKeyPress = (event, value, onClick) => {
 };
 
 const CardSelect = (originalProps) => {
-  const {
-    isRequired,
-    label,
-    helperText,
-    hideLabel,
-    meta,
-    input,
-    options,
-    mutator,
-    DefaultIcon,
-    iconMapper,
-    ...props
-  } = useFieldApi(originalProps);
+  const { isRequired, label, helperText, hideLabel, meta, input, options, mutator, DefaultIcon, iconMapper, ...props } =
+    useFieldApi(originalProps);
   const formOptions = useFormApi();
   const [icons] = useState(() => {
     const components = {};

@@ -120,24 +120,28 @@ export const iconMapper = (sourceTypes) => (name) => {
   return Icon;
 };
 
-export const nextStep = (selectedType) => ({ values: { application, source_type } }) => {
-  if (selectedType) {
-    return 'application_step';
-  }
+export const nextStep =
+  (selectedType) =>
+  ({ values: { application, source_type } }) => {
+    if (selectedType) {
+      return 'application_step';
+    }
 
-  const appId = application && application.application_type_id !== NO_APPLICATION_VALUE && application.application_type_id;
-  const resultedStep = appId ? `${source_type}-${appId}` : source_type;
+    const appId = application && application.application_type_id !== NO_APPLICATION_VALUE && application.application_type_id;
+    const resultedStep = appId ? `${source_type}-${appId}` : source_type;
 
-  return resultedStep;
-};
+    return resultedStep;
+  };
 
 export const hasSuperKeyType = (sourceType) => sourceType?.schema.authentication.find(({ is_superkey }) => is_superkey);
 
-export const nextStepCloud = (sourceTypes) => ({ values }) => {
-  const sourceType = sourceTypes.find(({ name }) => name === values.source_type);
+export const nextStepCloud =
+  (sourceTypes) =>
+  ({ values }) => {
+    const sourceType = sourceTypes.find(({ name }) => name === values.source_type);
 
-  return hasSuperKeyType(sourceType) ? 'configuration_step' : 'application_step';
-};
+    return hasSuperKeyType(sourceType) ? 'configuration_step' : 'application_step';
+  };
 
 const sourceTypeSelect = ({ intl, sourceTypes, applicationTypes }) => ({
   component: 'card-select',

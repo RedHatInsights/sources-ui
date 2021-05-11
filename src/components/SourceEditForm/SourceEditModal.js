@@ -21,19 +21,8 @@ const SourceEditModal = () => {
   const sourceRedux = useSource();
   const isLoaded = useIsLoaded();
 
-  const {
-    loading,
-    editing,
-    source,
-    initialValues,
-    schema,
-    isSubmitting,
-    initialLoad,
-    message,
-    messages,
-    submitError,
-    values,
-  } = state;
+  const { loading, editing, source, initialValues, schema, isSubmitting, initialLoad, message, messages, submitError, values } =
+    state;
 
   const intl = useIntl();
 

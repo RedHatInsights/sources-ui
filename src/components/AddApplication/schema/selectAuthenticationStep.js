@@ -80,8 +80,9 @@ const selectAuthenticationStep = ({ intl, source, authenticationValues, sourceTy
       const hasAvailableAuthentications = authenticationValues.find(({ authtype }) => authtype === supportedAuthType);
 
       if (hasAvailableAuthentications) {
-        const supportedAuthTypeName = get(sourceType, `schema.authentication`, {}).find(({ type }) => type === supportedAuthType)
-          .name;
+        const supportedAuthTypeName = get(sourceType, `schema.authentication`, {}).find(
+          ({ type }) => type === supportedAuthType
+        ).name;
 
         fields.push({
           component: componentTypes.SUB_FORM,
