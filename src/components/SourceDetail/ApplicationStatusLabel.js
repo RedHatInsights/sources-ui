@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 
 import { Label, Popover } from '@patternfly/react-core';
 import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
+import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 
 import { useSource } from '../../hooks/useSource';
 import { getAppStatus, getStatusTooltipTextApp, getStatusColor, getStatusText, IN_PROGRESS } from '../../views/formatters';
@@ -27,6 +28,7 @@ const ApplicationStatusLabel = ({ app }) => {
         className="pf-u-ml-sm clickable"
         color={getStatusColor(finalApp.availability_status)}
         {...(finalApp.availability_status === IN_PROGRESS && { icon: <WrenchIcon /> })}
+        {...(app.paused_at && { icon: <PauseIcon /> })}
       >
         {getStatusText(finalApp.availability_status)}
       </Label>
@@ -39,6 +41,7 @@ ApplicationStatusLabel.propTypes = {
     availability_status: PropTypes.string,
     availability_status_error: PropTypes.string,
     display_name: PropTypes.string,
+    paused_at: PropTypes.string,
   }).isRequired,
 };
 

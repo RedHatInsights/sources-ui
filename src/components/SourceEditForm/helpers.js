@@ -1,3 +1,6 @@
+import React from 'react';
+import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
+
 import get from 'lodash/get';
 import set from 'lodash/set';
 
@@ -103,11 +106,33 @@ export const getEditedApplications = (source, editing) => {
   return editedApplications.filter(Boolean);
 };
 
-export const prepareMessages = (source, intl) => {
+export const prepareMessages = (source, intl, appTypes) => {
   const messages = {};
 
-  source.applications.forEach(({ id, availability_status_error, availability_status }) => {
-    if (availability_status === UNAVAILABLE) {
+  source.applications.forEach(({ id, application_type_id, availability_status_error, availability_status, paused_at }) => {
+    if (paused_at) {
+      const application = appTypes.find((type) => type.id === application_type_id)?.display_name || id;
+      messages[id] = {
+        title: intl.formatMessage(
+          {
+            id: 'wizard.pausedApplication',
+            defaultMessage: '{application} is paused',
+          },
+          { application }
+        ),
+        description: intl.formatMessage(
+          {
+            id: 'wizard.pausedApplicationDescription',
+            defaultMessage:
+              'To resume data collection for this application, switch {application} on in the <b>Applications</b> section of this page.',
+          },
+          // eslint-disable-next-line react/display-name
+          { application, b: (chunks) => <b key="bold">{chunks}</b> }
+        ),
+        variant: 'default',
+        customIcon: <PauseIcon />,
+      };
+    } else if (availability_status === UNAVAILABLE) {
       messages[id] = {
         title: intl.formatMessage({
           id: 'wizard.failEditToastTitleBeforeEdit',
@@ -121,7 +146,9 @@ export const prepareMessages = (source, intl) => {
 
   if (source.endpoints?.[0]?.availability_status_error) {
     const applicationsUsingEndpoint = source.applications
-      .map((app) => (app.authentications.find(({ resource_type }) => resource_type === 'Endpoint') ? app.id : undefined))
+      .map((app) =>
+        app.authentications.find(({ resource_type }) => !app.paused_at && resource_type === 'Endpoint') ? app.id : undefined
+      )
       .filter(Boolean);
 
     applicationsUsingEndpoint.forEach((id) => {
