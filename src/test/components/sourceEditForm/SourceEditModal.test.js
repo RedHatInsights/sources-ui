@@ -11,6 +11,7 @@ import { sourceTypesData, ANSIBLE_TOWER_ID } from '../../__mocks__/sourceTypesDa
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
 
 import { Spinner, EmptyState, TextInput, Alert, Form } from '@patternfly/react-core';
+import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 
 import * as editApi from '../../../api/doLoadSourceForEdit';
 import * as submit from '../../../components/SourceEditForm/onSubmit';
@@ -194,6 +195,7 @@ describe('SourceEditModal', () => {
           },
         },
       });
+      setState({ type: 'sourceChanged' });
     });
 
     const form = wrapper.find(Form);
@@ -210,6 +212,71 @@ describe('SourceEditModal', () => {
     expect(wrapper.find(EditAlert).find(Alert).props().title).toEqual('success title');
     expect(wrapper.find(EditAlert).find(Alert).props().variant).toEqual('success');
     expect(wrapper.find(EditAlert).find(Alert).props().children).toEqual(undefined);
+  });
+
+  it('renders correctly with paused application', async () => {
+    editApi.doLoadSourceForEdit = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        source: {
+          name: 'Name',
+          source_type_id: ANSIBLE_TOWER_ID,
+          applications: [
+            {
+              id: '123',
+              application_type_id: CATALOG_APP.id,
+              availability_status_error: 'app-error',
+              availability_status: UNAVAILABLE,
+              authentications: [{ id: '343' }],
+              paused_at: 'today',
+            },
+          ],
+          endpoints: [{ id: '10953' }],
+        },
+        applications: [
+          {
+            application_type_id: CATALOG_APP.id,
+            id: '123',
+            availability_status_error: 'app-error',
+            availability_status: UNAVAILABLE,
+            authentications: [{ type: 'username_password', username: '123', id: '343' }],
+            paused_at: 'today',
+          },
+        ],
+        endpoints: [
+          {
+            certificate_authority: 'sadas',
+            default: true,
+            host: 'myopenshiftcluster.mycompany.com',
+            id: '10953',
+            path: '/',
+            role: 'ansible',
+            scheme: 'https',
+            verify_ssl: true,
+          },
+        ],
+        authentications: [],
+      })
+    );
+
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <SourceEditModal {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+    });
+    wrapper.update();
+
+    expect(wrapper.find(EditAlert)).toHaveLength(1);
+
+    expect(wrapper.find(EditAlert).find(Alert).props().title).toEqual('Catalog is paused');
+    expect(wrapper.find(EditAlert).find(Alert).props().variant).toEqual('default');
+    expect(wrapper.find(EditAlert).find(Alert).text()).toEqual(
+      'Default alert:Catalog is pausedTo resume data collection for this application, switch Catalog on in the Applications section of this page.'
+    );
+    expect(wrapper.find(EditAlert).find(Alert).find(PauseIcon)).toHaveLength(1);
   });
 
   it('reload data when source from redux is changed', async () => {
@@ -332,6 +399,7 @@ describe('SourceEditModal', () => {
 
         setTimeout(() => {
           setState({ type: 'submitFinished', source, messages });
+          setState({ type: 'sourceChanged' });
         }, 1000);
       });
 
@@ -377,6 +445,7 @@ describe('SourceEditModal', () => {
           };
 
           setState({ type: 'submitFinished', messages });
+          setState({ type: 'sourceChanged' });
         }, 1000);
       });
 

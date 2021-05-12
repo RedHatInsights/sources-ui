@@ -98,6 +98,48 @@ describe('application edit form parser', () => {
     expect(result).toEqual(EXPECTED_RESULT);
   });
 
+  it('disable all inputs when app is paused', () => {
+    APPLICATIONS = [
+      {
+        ...APPLICATIONS[0],
+        paused_at: 'today',
+      },
+    ];
+
+    const EXPECTED_RESULT = [
+      {
+        component: componentTypes.TABS,
+        name: 'app-tabs',
+        isBox: true,
+        fields: [
+          {
+            name: COSTMANAGEMENT_APP.id,
+            title: COSTMANAGEMENT_APP.display_name,
+            fields: [
+              {
+                name: 'messages.app-id',
+                component: 'description',
+                condition: {
+                  isNotEmpty: true,
+                  when: expect.any(Function),
+                },
+                Content: EditAlert,
+              },
+              [
+                { name: 'billing_source.field1', isDisabled: true },
+                { name: 'field2', isDisabled: true },
+              ],
+            ],
+          },
+        ],
+      },
+    ];
+
+    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, APP_TYPES);
+
+    expect(result).toEqual(EXPECTED_RESULT);
+  });
+
   it('appends empty state when no resources', () => {
     APPLICATIONS = [
       {

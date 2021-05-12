@@ -74,6 +74,9 @@ export const applicationsFields = (applications, sourceType, appTypes) => [
           name: appType?.id,
           title: appType?.display_name,
           fields,
+          ...(app.paused_at && {
+            fields: [fields[0], fields[1].map((field) => ({ ...field, isDisabled: true }))],
+          }),
         };
       }),
     ],

@@ -21,19 +21,8 @@ const SourceEditModal = () => {
   const sourceRedux = useSource();
   const isLoaded = useIsLoaded();
 
-  const {
-    loading,
-    editing,
-    source,
-    initialValues,
-    schema,
-    isSubmitting,
-    initialLoad,
-    message,
-    messages,
-    submitError,
-    values,
-  } = state;
+  const { loading, editing, source, initialValues, schema, isSubmitting, initialLoad, message, messages, submitError, values } =
+    state;
 
   const intl = useIntl();
 
@@ -50,7 +39,7 @@ const SourceEditModal = () => {
   useEffect(() => {
     if (sourceRedux && initialLoad && appTypesLoaded) {
       doLoadSourceForEdit(sourceRedux, appTypes, sourceTypes).then((source) => {
-        const messages = prepareMessages(source, intl);
+        const messages = prepareMessages(source, intl, appTypes);
 
         setState({ type: 'setSource', source, messages });
       });

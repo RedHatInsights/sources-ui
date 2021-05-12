@@ -67,6 +67,8 @@ export const getSourcesApi = () => ({
   getEndpoint: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/endpoints/${id}`),
   getGoogleAccount: () => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/app_meta_data?filter[name]=gcp_service_account`),
   bulkCreate: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/bulk_create`, data),
+  pauseApplication: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/applications/${id}/pause`),
+  unpauseApplication: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/applications/${id}/unpause`),
 });
 
 export const doLoadAppTypes = () => getSourcesApi().doLoadAppTypes();
@@ -150,7 +152,7 @@ export const graphQlAttributes = `
     last_available_at,
     app_creation_workflow,
     authentications { authtype, username, availability_status_error, availability_status }
-    applications { application_type_id, id, availability_status_error, availability_status, authentications { id, resource_type } },
+    applications { application_type_id, id, availability_status_error, availability_status, paused_at, authentications { id, resource_type } },
     endpoints { id, scheme, host, port, path, receptor_node, role, certificate_authority, verify_ssl, availability_status_error, availability_status, authentications { authtype, availability_status, availability_status_error } }
 `;
 
@@ -235,6 +237,7 @@ export const doLoadApplicationsForEdit = async (id, appTypes, sourceTypes) => {
               id,
               availability_status_error,
               availability_status,
+              paused_at,
               authentications {
                   id
               }

@@ -10,6 +10,7 @@ export const initialState = {
   isSubmitting: false,
   initialLoad: true,
   submitError: false,
+  submitMessages: undefined,
 };
 
 const reducer = (state, { type, source, sourceType, appTypes, intl, values, editing, messages }) => {
@@ -27,10 +28,11 @@ const reducer = (state, { type, source, sourceType, appTypes, intl, values, edit
         ...state,
         messages: {
           ...messages,
-          ...state.messages,
+          ...state.submitMessages,
         },
         source,
         initialLoad: false,
+        submitMessages: undefined,
       };
     case 'submit':
       return {
@@ -45,7 +47,7 @@ const reducer = (state, { type, source, sourceType, appTypes, intl, values, edit
         ...state,
         isSubmitting: false,
         source,
-        messages,
+        submitMessages: messages,
       };
     case 'submitFailed':
       return {

@@ -2,6 +2,7 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
+import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 
 import {
   nameFormatter,
@@ -305,6 +306,37 @@ describe('formatters', () => {
         )
       );
       expect(wrapper.find(WrenchIcon)).toHaveLength(1);
+    });
+
+    it('show paused icon', () => {
+      const wrapper = mount(
+        componentWrapperIntl(
+          <React.Fragment>
+            {applicationFormatter(
+              [
+                {
+                  application_type_id: COSTMANAGEMENT_APP.id,
+                  availability_status: IN_PROGRESS,
+                  availability_status_error: null,
+                  paused_at: 'today',
+                },
+              ],
+              undefined,
+              {
+                appTypes: applicationTypesData.data,
+              }
+            )}
+          </React.Fragment>
+        )
+      );
+
+      const PopoverJSX = wrapper.find(Popover).debug();
+      expect(
+        PopoverJSX.match(/<Popover.*>/)[0].includes(
+          'bodyContent="We are still working to validate credentials. Check back for status updates."'
+        )
+      );
+      expect(wrapper.find(PauseIcon)).toHaveLength(1);
     });
 
     it('show unavailable popover - unknown error', () => {

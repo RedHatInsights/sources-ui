@@ -56,23 +56,39 @@ const ApplicationsCard = () => {
   const sourceTypeName = sourceType?.name;
   const filteredAppTypes = appTypes.filter((type) => type.supported_source_types.includes(sourceTypeName)).filter(filterApps);
 
-  let removeApp = (id) => push(replaceRouteId(routes.sourcesDetailRemoveApp.path, source.id).replace(':app_id', id));
-  let addApp = (id) => push(replaceRouteId(routes.sourcesDetailAddApp.path, source.id).replace(':app_type_id', id));
-
-  if (isSuperKey(source)) {
-    removeApp = async (id, typeId) => {
-      if (typeof selectedApps[typeId] !== 'boolean') {
-        stateDispatch({ type: 'removeApp', id: typeId });
-        await getSourcesApi().deleteApplication(id);
-        await dispatch(loadEntities());
-        stateDispatch({ type: 'clean', id: typeId });
-      }
-    };
-
-    addApp = async (id) => {
+  let addApp = async (id, isPaused) => {
+    if (!isPaused) {
+      push(replaceRouteId(routes.sourcesDetailAddApp.path, source.id).replace(':app_type_id', id));
+    } else {
       if (typeof selectedApps[id] !== 'boolean') {
         stateDispatch({ type: 'addApp', id });
-        await doCreateApplication({ source_id: source.id, application_type_id: id });
+        await getSourcesApi().unpauseApplication(isPaused);
+        await dispatch(loadEntities());
+        stateDispatch({ type: 'clean', id });
+      }
+    }
+  };
+
+  const removeApp = async (id, typeId) => {
+    if (typeof selectedApps[typeId] !== 'boolean') {
+      stateDispatch({ type: 'removeApp', id: typeId });
+      await getSourcesApi().pauseApplication(id);
+      await dispatch(loadEntities());
+      stateDispatch({ type: 'clean', id: typeId });
+    }
+  };
+
+  if (isSuperKey(source)) {
+    addApp = async (id, isPaused) => {
+      if (typeof selectedApps[id] !== 'boolean') {
+        stateDispatch({ type: 'addApp', id });
+
+        if (isPaused) {
+          await getSourcesApi().unpauseApplication(isPaused);
+        } else {
+          await doCreateApplication({ source_id: source.id, application_type_id: id });
+        }
+
         await dispatch(loadEntities());
         stateDispatch({ type: 'clean', id });
       }
@@ -102,14 +118,21 @@ const ApplicationsCard = () => {
             const connectedApp = source.applications.find((connectedApp) => connectedApp.application_type_id === app.id);
             const description = descriptionMapper(app.name, intl);
 
+            const appExist = Boolean(connectedApp);
+            const isPaused = Boolean(connectedApp?.paused_at);
+
+            const pausedApp = isPaused ? false : appExist;
+
+            const isChecked = typeof selectedApps[app.id] === 'boolean' ? selectedApps[app.id] : pausedApp;
+
             return (
               <FormGroup key={app.id}>
                 <Switch
                   id={`app-switch-${app.id}`}
                   label={app.display_name}
-                  isChecked={typeof selectedApps[app.id] === 'boolean' ? selectedApps[app.id] : Boolean(connectedApp)}
+                  isChecked={isChecked}
                   isDisabled={connectedApp?.isDeleting || !hasRightAccess}
-                  onChange={(value) => (!value ? removeApp(connectedApp.id, app.id) : addApp(app.id))}
+                  onChange={(value) => (!value ? removeApp(connectedApp.id, app.id) : addApp(app.id, connectedApp?.id))}
                 />
                 {Boolean(connectedApp) && <ApplicationStatusLabel app={connectedApp} />}
                 {description && (
