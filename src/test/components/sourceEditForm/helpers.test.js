@@ -1,3 +1,4 @@
+import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 import {
   getEditedApplications,
   prepareInitialValues,
@@ -5,7 +6,7 @@ import {
   selectOnlyEditedValues,
 } from '../../../components/SourceEditForm/helpers';
 import { UNAVAILABLE } from '../../../views/formatters';
-import applicationTypesData from '../../__mocks__/applicationTypesData';
+import applicationTypesData, { COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
 
 describe('edit form helpers', () => {
   describe('selectOnlyEditedValues', () => {
@@ -280,10 +281,17 @@ describe('edit form helpers', () => {
           { id: 'app1', availability_status: UNAVAILABLE, availability_status_error: 'some error' },
           { id: 'app2' },
           { id: 'app3', availability_status: UNAVAILABLE, availability_status_error: 'some error 3' },
+          {
+            application_type_id: COSTMANAGEMENT_APP.id,
+            id: 'app4',
+            availability_status: UNAVAILABLE,
+            availability_status_error: 'some error 3',
+            paused_at: 'today',
+          },
         ],
       };
 
-      expect(prepareMessages(source, intl)).toEqual({
+      expect(prepareMessages(source, intl, applicationTypesData.data)).toEqual({
         app1: {
           description: 'some error',
           title: 'This application is unavailable',
@@ -294,6 +302,13 @@ describe('edit form helpers', () => {
           title: 'This application is unavailable',
           variant: 'danger',
         },
+        app4: {
+          title: '{application} is paused',
+          description:
+            'To resume data collection for this application, switch {application} on in the <b>Applications</b> section of this page.',
+          variant: 'default',
+          customIcon: <PauseIcon />,
+        },
       });
     });
 
@@ -303,11 +318,17 @@ describe('edit form helpers', () => {
           { id: 'app1', authentications: [{ resource_type: 'Endpoint' }] },
           { id: 'app2', authentications: [] },
           { id: 'app3', authentications: [{ resource_type: 'Endpoint' }] },
+          {
+            id: 'app4',
+            authentications: [{ resource_type: 'Endpoint' }],
+            paused_at: 'today',
+            application_type_id: COSTMANAGEMENT_APP.id,
+          },
         ],
         endpoints: [{ availability_status_error: 'endpoint error' }],
       };
 
-      expect(prepareMessages(source, intl)).toEqual({
+      expect(prepareMessages(source, intl, applicationTypesData.data)).toEqual({
         app1: {
           description: 'endpoint error',
           title: 'This application is unavailable',
@@ -317,6 +338,13 @@ describe('edit form helpers', () => {
           description: 'endpoint error',
           title: 'This application is unavailable',
           variant: 'danger',
+        },
+        app4: {
+          title: '{application} is paused',
+          description:
+            'To resume data collection for this application, switch {application} on in the <b>Applications</b> section of this page.',
+          variant: 'default',
+          customIcon: <PauseIcon />,
         },
       });
     });

@@ -1,5 +1,6 @@
 import { Popover, Label } from '@patternfly/react-core';
 import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
+import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 
 import React from 'react';
 import { Route } from 'react-router-dom';
@@ -66,6 +67,41 @@ describe('ApplicationStatusLabel', () => {
     It's caused by react node as a prop.*/
     expect(LabelJSX.match(/<Label.*>/)[0].includes('color="grey"'));
     expect(wrapper.find(WrenchIcon)).toHaveLength(1);
+
+    const PopoverJSX = wrapper.find(Popover).debug();
+    expect(
+      PopoverJSX.match(/<Popover.*>/)[0].includes(
+        'bodyContent="We are still working to validate credentials. Check back for status updates."'
+      )
+    );
+  });
+
+  it('renders paused', async () => {
+    app = {
+      application_type_id: COSTMANAGEMENT_APP.id,
+      availability_status: null,
+      paused_at: 'today',
+    };
+    store = mockStore({
+      sources: {
+        entities: [
+          {
+            id: sourceId,
+          },
+        ],
+        appTypes: applicationTypesData.data,
+      },
+    });
+
+    wrapper = mount(componentWrapperIntl(<ApplicationStatusLabel app={app} />, store));
+
+    expect(wrapper.find('.pf-c-label').text()).toEqual('Unknown');
+    const LabelJSX = wrapper.find(Label).debug();
+    /* For some reason, when trying to print props,
+    it got stuck because of "circular structure to json" issue.
+    It's caused by react node as a prop.*/
+    expect(LabelJSX.match(/<Label.*>/)[0].includes('color="grey"'));
+    expect(wrapper.find(PauseIcon)).toHaveLength(1);
 
     const PopoverJSX = wrapper.find(Popover).debug();
     expect(

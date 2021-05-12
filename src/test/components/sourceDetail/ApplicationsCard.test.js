@@ -99,6 +99,18 @@ describe('ApplicationsCard', () => {
     });
 
     it('remove application', async () => {
+      actions.loadEntities = jest.fn().mockImplementation(() => ({ type: 'nonsense' }));
+
+      jest.useFakeTimers();
+
+      const pauseApplication = jest.fn().mockImplementation(() => new Promise((res) => setTimeout(() => res('ok'), 1000)));
+
+      api.getSourcesApi = () => ({
+        pauseApplication,
+      });
+
+      expect(wrapper.find(Switch).first().props().isChecked).toEqual(true);
+
       await act(async () => {
         wrapper
           .find('input')
@@ -107,9 +119,28 @@ describe('ApplicationsCard', () => {
       });
       wrapper.update();
 
-      expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
-        replaceRouteId(routes.sourcesDetailRemoveApp.path, sourceId).replace(':app_id', '123')
-      );
+      expect(wrapper.find(Switch).first().props().isChecked).toEqual(false);
+
+      expect(pauseApplication).toHaveBeenCalledWith('123');
+      pauseApplication.mockClear();
+
+      await act(async () => {
+        wrapper
+          .find('input')
+          .first()
+          .simulate('change', { target: { checked: false } });
+      });
+      wrapper.update();
+
+      expect(pauseApplication).not.toHaveBeenCalled();
+      expect(actions.loadEntities).not.toHaveBeenCalled();
+
+      await act(async () => {
+        jest.runAllTimers();
+      });
+      wrapper.update();
+
+      expect(actions.loadEntities).toHaveBeenCalled();
     });
 
     it('add application', async () => {
@@ -124,6 +155,74 @@ describe('ApplicationsCard', () => {
       expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
         replaceRouteId(routes.sourcesDetailAddApp.path, sourceId).replace(':app_type_id', SUBWATCH_APP.id)
       );
+    });
+
+    it('unpause application', async () => {
+      store = mockStore({
+        sources: {
+          entities: [
+            {
+              id: sourceId,
+              source_type_id: AMAZON_ID,
+              applications: [{ id: '123', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
+            },
+          ],
+          sourceTypes: sourceTypesData.data,
+          appTypes: [COSTMANAGEMENT_APP],
+        },
+        user: { isOrgAdmin: true, writePermissions: true },
+      });
+
+      actions.loadEntities = jest.fn().mockImplementation(() => ({ type: 'nonsense' }));
+
+      jest.useFakeTimers();
+
+      const unpauseApplication = jest.fn().mockImplementation(() => new Promise((res) => setTimeout(() => res('ok'), 1000)));
+
+      api.getSourcesApi = () => ({
+        unpauseApplication,
+      });
+
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+
+      expect(wrapper.find(Switch).first().props().isChecked).toEqual(false);
+
+      await act(async () => {
+        wrapper
+          .find('input')
+          .first()
+          .simulate('change', { target: { checked: true } });
+      });
+      wrapper.update();
+
+      expect(wrapper.find(Switch).first().props().isChecked).toEqual(true);
+
+      expect(unpauseApplication).toHaveBeenCalledWith('123');
+      unpauseApplication.mockClear();
+
+      await act(async () => {
+        wrapper
+          .find('input')
+          .first()
+          .simulate('change', { target: { checked: true } });
+      });
+      wrapper.update();
+
+      expect(unpauseApplication).not.toHaveBeenCalled();
+      expect(actions.loadEntities).not.toHaveBeenCalled();
+
+      await act(async () => {
+        jest.runAllTimers();
+      });
+      wrapper.update();
+
+      expect(actions.loadEntities).toHaveBeenCalled();
     });
 
     it('renders correctly descriptions', () => {
@@ -164,6 +263,73 @@ describe('ApplicationsCard', () => {
       );
 
       actions.loadEntities = jest.fn().mockImplementation(() => ({ type: 'nonsense' }));
+    });
+
+    it('unpaused application and blocks clicking again', async () => {
+      store = mockStore({
+        sources: {
+          entities: [
+            {
+              id: sourceId,
+              source_type_id: AMAZON_ID,
+              applications: [{ id: '123', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
+              app_creation_workflow: 'account_authorization',
+            },
+          ],
+          sourceTypes: sourceTypesData.data,
+          appTypes: [COSTMANAGEMENT_APP],
+        },
+        user: { isOrgAdmin: true, writePermissions: true },
+      });
+
+      jest.useFakeTimers();
+
+      const unpauseApplication = jest.fn().mockImplementation(() => new Promise((res) => setTimeout(() => res('ok'), 1000)));
+
+      api.getSourcesApi = () => ({
+        unpauseApplication,
+      });
+
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+
+      expect(wrapper.find(Switch).last().props().isChecked).toEqual(false);
+
+      await act(async () => {
+        wrapper
+          .find('input')
+          .last()
+          .simulate('change', { target: { checked: true } });
+      });
+      wrapper.update();
+
+      expect(wrapper.find(Switch).last().props().isChecked).toEqual(true);
+
+      expect(unpauseApplication).toHaveBeenCalledWith('123');
+      unpauseApplication.mockClear();
+
+      await act(async () => {
+        wrapper
+          .find('input')
+          .last()
+          .simulate('change', { target: { checked: true } });
+      });
+      wrapper.update();
+
+      expect(unpauseApplication).not.toHaveBeenCalled();
+      expect(actions.loadEntities).not.toHaveBeenCalled();
+
+      await act(async () => {
+        jest.runAllTimers();
+      });
+      wrapper.update();
+
+      expect(actions.loadEntities).toHaveBeenCalled();
     });
 
     it('adds application and blocks clicking again', async () => {
@@ -208,13 +374,13 @@ describe('ApplicationsCard', () => {
       expect(actions.loadEntities).toHaveBeenCalled();
     });
 
-    it('removes application and blocks clicking again', async () => {
+    it('pause application and blocks clicking again', async () => {
       jest.useFakeTimers();
 
-      const deleteApplication = jest.fn().mockImplementation(() => new Promise((res) => setTimeout(() => res('ok'), 1000)));
+      const pauseApplication = jest.fn().mockImplementation(() => new Promise((res) => setTimeout(() => res('ok'), 1000)));
 
       api.getSourcesApi = () => ({
-        deleteApplication,
+        pauseApplication,
       });
 
       expect(wrapper.find(Switch).first().props().isChecked).toEqual(true);
@@ -229,8 +395,8 @@ describe('ApplicationsCard', () => {
 
       expect(wrapper.find(Switch).first().props().isChecked).toEqual(false);
 
-      expect(deleteApplication).toHaveBeenCalledWith('123');
-      deleteApplication.mockClear();
+      expect(pauseApplication).toHaveBeenCalledWith('123');
+      pauseApplication.mockClear();
 
       await act(async () => {
         wrapper
@@ -240,7 +406,7 @@ describe('ApplicationsCard', () => {
       });
       wrapper.update();
 
-      expect(deleteApplication).not.toHaveBeenCalled();
+      expect(pauseApplication).not.toHaveBeenCalled();
       expect(actions.loadEntities).not.toHaveBeenCalled();
 
       await act(async () => {

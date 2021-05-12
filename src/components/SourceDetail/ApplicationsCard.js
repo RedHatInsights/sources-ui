@@ -60,7 +60,7 @@ const ApplicationsCard = () => {
     if (!isPaused) {
       push(replaceRouteId(routes.sourcesDetailAddApp.path, source.id).replace(':app_type_id', id));
     } else {
-      if (typeof selectedApps[isPaused] !== 'boolean') {
+      if (typeof selectedApps[id] !== 'boolean') {
         stateDispatch({ type: 'addApp', id });
         await getSourcesApi().unpauseApplication(isPaused);
         await dispatch(loadEntities());
