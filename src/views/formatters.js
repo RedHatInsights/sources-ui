@@ -5,6 +5,7 @@ import { Text, TextVariants, TextContent, Badge, Popover, Tooltip, Label, LabelG
 
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
+import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 
 import { FormattedMessage, useIntl } from 'react-intl';
 import { DateFormat } from '@redhat-cloud-services/frontend-components/DateFormat';
@@ -367,6 +368,7 @@ const EnhancedLabelGroup = ({ applications, ...props }) => {
             className="clickable"
             color={getStatusColor(app.availability_status)}
             {...(app.availability_status === IN_PROGRESS && { icon: <WrenchIcon /> })}
+            {...(app.paused_at && { icon: <PauseIcon /> })}
           >
             {app.display_name}
           </Label>
@@ -382,6 +384,7 @@ EnhancedLabelGroup.propTypes = {
       display_name: PropTypes.string.isRequired,
       availability_status: PropTypes.string,
       availability_status_error: PropTypes.string,
+      paused_at: PropTypes.string,
     })
   ).isRequired,
 };
@@ -400,6 +403,7 @@ export const getAppStatus = (app, source, appTypes) => {
 
     return {
       display_name: application.display_name,
+      paused_at: app.paused_at,
       availability_status,
       availability_status_error,
     };
