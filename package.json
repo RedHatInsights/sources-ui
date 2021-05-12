@@ -11,8 +11,8 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@data-driven-forms/pf4-component-mapper": "^3.6.1",
-    "@data-driven-forms/react-form-renderer": "^3.6.1",
+    "@data-driven-forms/pf4-component-mapper": "^3.6.2",
+    "@data-driven-forms/react-form-renderer": "^3.6.2",
     "@patternfly/react-core": "^4.115.2",
     "@patternfly/react-icons": "^4.10.2",
     "@patternfly/react-table": "^4.26.7",
