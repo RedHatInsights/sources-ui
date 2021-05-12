@@ -195,6 +195,7 @@ describe('SourceEditModal', () => {
           },
         },
       });
+      setState({ type: 'sourceChanged' });
     });
 
     const form = wrapper.find(Form);
@@ -398,6 +399,7 @@ describe('SourceEditModal', () => {
 
         setTimeout(() => {
           setState({ type: 'submitFinished', source, messages });
+          setState({ type: 'sourceChanged' });
         }, 1000);
       });
 
@@ -443,6 +445,7 @@ describe('SourceEditModal', () => {
           };
 
           setState({ type: 'submitFinished', messages });
+          setState({ type: 'sourceChanged' });
         }, 1000);
       });
 
