@@ -80,7 +80,9 @@ const CredentialsForm = () => {
     <SourcesFormRenderer
       clearedValue={null}
       schema={{
-        fields: [generateSuperKeyFields(sourceTypes, sourceTypeName)],
+        fields: [...generateSuperKeyFields(sourceTypes, sourceTypeName)].map((field) =>
+          source.paused_at ? { ...field, isDisabled: true } : field
+        ),
       }}
       // eslint-disable-next-line no-unused-vars
       onSubmit={async ({ authentication: { tenant, source_id, id, authtype, resource_id, ...values } }) => {

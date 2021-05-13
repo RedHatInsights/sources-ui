@@ -231,7 +231,8 @@ describe('SourcesTable', () => {
 
   describe('actions', () => {
     const EDIT_SOURCE_INDEX = 0;
-    const DELETE_SOURCE_INDEX = 1;
+    const PAUSE_SOURCE_INDEX = 1;
+    const DELETE_SOURCE_INDEX = 2;
     let wrapper;
 
     beforeEach(async () => {
@@ -375,13 +376,23 @@ describe('SourcesTable', () => {
 
       const EDIT_TITLE = 'Edit';
       const DELETE_TITLE = 'Remove';
+      const PAUSE_TITLE = 'Pause';
+      const UNPAUSE_TITLE = 'Resume';
 
       it('create actions for editable source', () => {
         const EDITABLE_DATA = { imported: undefined };
 
         const actions = actionResolver(INTL_MOCK, pushMock)(EDITABLE_DATA);
 
-        expect(actions).toEqual(expect.arrayContaining([actionObject(EDIT_TITLE), actionObject(DELETE_TITLE)]));
+        expect(actions).toEqual([actionObject(EDIT_TITLE), actionObject(PAUSE_TITLE), actionObject(DELETE_TITLE)]);
+      });
+
+      it('create actions for paused source', () => {
+        const EDITABLE_DATA = { imported: undefined, paused_at: 'today' };
+
+        const actions = actionResolver(INTL_MOCK, pushMock)(EDITABLE_DATA);
+
+        expect(actions).toEqual([actionObject(EDIT_TITLE), actionObject(UNPAUSE_TITLE), actionObject(DELETE_TITLE)]);
       });
 
       it('create actions for uneditable source', () => {
@@ -389,7 +400,7 @@ describe('SourcesTable', () => {
 
         const actions = actionResolver(INTL_MOCK, pushMock)(UNEDITABLE_DATA);
 
-        expect(actions).toEqual(expect.arrayContaining([actionObject(DELETE_TITLE)]));
+        expect(actions).toEqual([actionObject(PAUSE_TITLE), actionObject(DELETE_TITLE)]);
       });
     });
   });

@@ -29,6 +29,7 @@ import {
   configurationModeFormatter,
   IN_PROGRESS,
   ApplicationLabel,
+  PAUSED,
 } from '../../views/formatters';
 import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX, AMAZON } from '../__mocks__/sourceTypesData';
 import {
@@ -515,6 +516,10 @@ describe('formatters', () => {
       it('returns unknown color by default', () => {
         expect(getStatusColor(null)).toEqual('grey');
       });
+
+      it('returns paused color', () => {
+        expect(getStatusColor(PAUSED)).toEqual('cyan');
+      });
     });
 
     describe('getStatusText', () => {
@@ -546,6 +551,12 @@ describe('formatters', () => {
         const wrapper = mount(wrapperWithIntl(getStatusText('some nonsense')));
 
         expect(wrapper.text()).toEqual('Unknown');
+      });
+
+      it('returns unknown by default', () => {
+        const wrapper = mount(wrapperWithIntl(getStatusText('paused_at')));
+
+        expect(wrapper.text()).toEqual('Paused');
       });
     });
 
@@ -609,6 +620,12 @@ describe('formatters', () => {
 
         expect(wrapper.text()).toEqual('Status has not been verified.');
       });
+
+      it('returns paused text', () => {
+        const wrapper = mount(wrapperWithIntl(getStatusTooltipText(PAUSED, APPTYPES)));
+
+        expect(wrapper.text()).toEqual('Data collection is temporarily disabled. Resume source to reestablish connection.');
+      });
     });
 
     describe('availabilityFormatter', () => {
@@ -665,6 +682,18 @@ describe('formatters', () => {
 
         expect(wrapper.find(Label)).toHaveLength(1);
         expect(wrapper.text().includes('Unknown')).toEqual(true);
+      });
+
+      it('returns paused text', () => {
+        const SOURCE = {
+          availability_status: IN_PROGRESS,
+          paused_at: 'today',
+        };
+
+        const wrapper = mount(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES })));
+
+        expect(wrapper.find(Label)).toHaveLength(1);
+        expect(wrapper.find('.pf-c-label').text()).toEqual('Paused');
       });
     });
 
@@ -1129,6 +1158,18 @@ describe('formatters', () => {
 
       expect(wrapper.find(Tooltip)).toHaveLength(0);
       expect(wrapper.find(ExclamationCircleIcon)).toHaveLength(0);
+    });
+
+    it('account_authorization with paused source', () => {
+      const wrapper = mount(
+        <MemoryRouter>
+          {wrapperWithIntl(
+            configurationModeFormatter('account_authorization', { id: SOURCE_ID, paused_at: 'today' }, { intl: INTL })
+          )}
+        </MemoryRouter>
+      );
+
+      expect(wrapper.text()).toEqual('Account authorizationView credentials');
     });
 
     it('account_authorization with an error', () => {

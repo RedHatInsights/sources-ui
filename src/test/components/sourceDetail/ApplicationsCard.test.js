@@ -59,6 +59,36 @@ describe('ApplicationsCard', () => {
     expect(wrapper.find(Switch).last().props().isDisabled).toEqual(true);
   });
 
+  it('renders paused source', () => {
+    store = mockStore({
+      sources: {
+        entities: [
+          {
+            id: sourceId,
+            source_type_id: AMAZON_ID,
+            applications: [{ id: '123', application_type_id: COSTMANAGEMENT_APP.id }],
+            paused_at: 'today',
+          },
+        ],
+        sourceTypes: sourceTypesData.data,
+        appTypes: updateAppData,
+      },
+      user: { isOrgAdmin: true, writePermissions: true },
+    });
+
+    wrapper = mount(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+        store,
+        initialEntry
+      )
+    );
+
+    expect(wrapper.find(Switch)).toHaveLength(2);
+    expect(wrapper.find(Switch).first().props().isDisabled).toEqual(true);
+    expect(wrapper.find(Switch).last().props().isDisabled).toEqual(true);
+  });
+
   describe('with permissions', () => {
     beforeEach(() => {
       store = mockStore({

@@ -215,6 +215,85 @@ describe('SourceEditModal', () => {
     expect(wrapper.find(EditAlert).find(Alert).props().children).toEqual(undefined);
   });
 
+  it('do not show initial messages when in paused source', async () => {
+    store = mockStore({
+      sources: {
+        entities: [
+          {
+            id: '14',
+            source_type_id: ANSIBLE_TOWER_ID,
+            paused_at: 'today',
+            applications: [
+              {
+                id: '123',
+                authentications: [{ id: '343' }],
+              },
+            ],
+          },
+        ],
+        appTypes: applicationTypesData.data,
+        sourceTypes: sourceTypesData.data,
+        appTypesLoaded: true,
+        sourceTypesLoaded: true,
+      },
+    });
+
+    editApi.doLoadSourceForEdit = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        source: {
+          name: 'Name',
+          paused_at: 'today',
+          source_type_id: ANSIBLE_TOWER_ID,
+          applications: [
+            {
+              id: '123',
+              application_type_id: CATALOG_APP.id,
+              availability_status_error: 'app-error',
+              availability_status: UNAVAILABLE,
+              authentications: [{ id: '343' }],
+            },
+          ],
+          endpoints: [{ id: '10953' }],
+        },
+        applications: [
+          {
+            application_type_id: CATALOG_APP.id,
+            id: '123',
+            availability_status_error: 'app-error',
+            availability_status: UNAVAILABLE,
+            authentications: [{ type: 'username_password', username: '123', id: '343' }],
+          },
+        ],
+        endpoints: [
+          {
+            certificate_authority: 'sadas',
+            default: true,
+            host: 'myopenshiftcluster.mycompany.com',
+            id: '10953',
+            path: '/',
+            role: 'ansible',
+            scheme: 'https',
+            verify_ssl: true,
+          },
+        ],
+        authentications: [],
+      })
+    );
+
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <SourceEditModal {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+    });
+    wrapper.update();
+
+    expect(wrapper.find(EditAlert)).toHaveLength(0);
+  });
+
   it('renders correctly with paused application', async () => {
     editApi.doLoadSourceForEdit = jest.fn().mockImplementation(() =>
       Promise.resolve({
