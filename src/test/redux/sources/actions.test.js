@@ -276,11 +276,9 @@ describe('redux actions', () => {
 
     api.doDeleteApplication = jest.fn().mockImplementation(() => Promise.resolve('OK'));
 
-    await removeApplication(appId, sourceId, successTitle, errorTitle)(dispatch);
+    const result = await removeApplication(appId, sourceId, successTitle, errorTitle);
 
-    expect(dispatch.mock.calls).toHaveLength(1);
-
-    expect(dispatch.mock.calls[0][0]).toEqual({
+    expect(result).toEqual({
       type: ACTION_TYPES.REMOVE_APPLICATION,
       payload: expect.any(Function),
       meta: {
@@ -296,11 +294,9 @@ describe('redux actions', () => {
       },
     });
 
-    const resultObject = dispatch.mock.calls[0][0];
-
     expect(api.doDeleteApplication).not.toHaveBeenCalled();
 
-    await resultObject.payload();
+    await result.payload();
 
     expect(api.doDeleteApplication).toHaveBeenCalledWith(appId, errorTitle);
   });

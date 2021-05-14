@@ -169,23 +169,21 @@ export const removeMessage = (id) => ({
   payload: id,
 });
 
-export const removeApplication = (appId, sourceId, successTitle, errorTitle) => (dispatch) => {
-  dispatch({
-    type: ACTION_TYPES.REMOVE_APPLICATION,
-    payload: () => doDeleteApplication(appId, errorTitle),
-    meta: {
-      appId,
-      sourceId,
-      notifications: {
-        fulfilled: {
-          variant: 'success',
-          title: successTitle,
-          dismissable: true,
-        },
+export const removeApplication = (appId, sourceId, successTitle, errorTitle) => ({
+  type: ACTION_TYPES.REMOVE_APPLICATION,
+  payload: () => doDeleteApplication(appId, errorTitle),
+  meta: {
+    appId,
+    sourceId,
+    notifications: {
+      fulfilled: {
+        variant: 'success',
+        title: successTitle,
+        dismissable: true,
       },
     },
-  });
-};
+  },
+});
 
 export const addAppToSource = (sourceId, app) => ({
   type: ADD_APP_TO_SOURCE,
