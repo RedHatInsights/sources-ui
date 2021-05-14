@@ -1,8 +1,8 @@
-import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
+import { componentTypes } from '@data-driven-forms/react-form-renderer';
 import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-icon';
 
 import ResourcesEmptyState from '../../../../components/SourceDetail/ResourcesEmptyState';
-import { applicationsFields, appendClusterIdentifier } from '../../../../components/SourceEditForm/parser/application';
+import { applicationsFields } from '../../../../components/SourceEditForm/parser/application';
 import EditAlert from '../../../../components/SourceEditForm/parser/EditAlert';
 import { applicationTypesData, COSTMANAGEMENT_APP, CATALOG_APP } from '../../../__mocks__/applicationTypesData';
 
@@ -245,29 +245,5 @@ describe('application edit form parser', () => {
     const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, APP_TYPES);
 
     expect(result).toEqual(EXPECTED_RESULT);
-  });
-});
-
-describe('helpers', () => {
-  describe('appendClusterIdentifier', () => {
-    const SOURCE_TYPE = { name: 'openshift' };
-
-    it('returns cluster identifier field when type is openshift', () => {
-      expect(appendClusterIdentifier(SOURCE_TYPE)).toEqual([
-        {
-          name: 'source.source_ref',
-          label: expect.any(Object),
-          isRequired: true,
-          validate: [{ type: validatorTypes.REQUIRED }],
-          component: componentTypes.TEXT_FIELD,
-        },
-      ]);
-    });
-
-    it('dont return cluster identifier field when type is not openshift', () => {
-      const AWS_SOURCE_TYPE = { name: 'aws' };
-
-      expect(appendClusterIdentifier(AWS_SOURCE_TYPE)).toEqual([]);
-    });
   });
 });
