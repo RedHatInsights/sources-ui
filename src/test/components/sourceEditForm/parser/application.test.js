@@ -246,4 +246,100 @@ describe('application edit form parser', () => {
 
     expect(result).toEqual(EXPECTED_RESULT);
   });
+
+  it('returns endpoint fields', () => {
+    APPLICATIONS = [
+      {
+        id: 'app-id',
+        application_type_id: COSTMANAGEMENT_APP.id,
+        authentications: [{ id: '1234', authtype: 'arn', resource_type: 'Endpoint' }],
+      },
+    ];
+    SOURCE_TYPE = {
+      name: 'aws',
+      product_name: 'Amazon',
+      schema: {
+        authentication: [
+          {
+            name: 'ARN',
+            type: 'arn',
+            fields: FIELDS,
+          },
+          {
+            name: 'unused-type',
+            type: 'unused',
+            fields: [],
+          },
+        ],
+        endpoint: {
+          title: 'Configure endpoint',
+          fields: [
+            {
+              component: 'text-field',
+              name: 'endpoint.role',
+              hideField: true,
+              initialValue: 'kubernetes',
+            },
+            {
+              component: 'text-field',
+              name: 'url',
+              label: 'URL',
+              validate: [
+                {
+                  type: 'url-validator',
+                },
+              ],
+            },
+          ],
+        },
+      },
+    };
+
+    const EXPECTED_RESULT = [
+      {
+        component: 'tabs',
+        fields: [
+          {
+            fields: [
+              {
+                Content: EditAlert,
+                component: 'description',
+                condition: { isNotEmpty: true, when: expect.any(Function) },
+                name: 'messages.app-id',
+              },
+              [
+                { name: 'billing_source.field1' },
+                { name: 'field2' },
+                {
+                  component: 'sub-form',
+                  fields: [
+                    { component: 'text-field', hideField: true, initialValue: 'kubernetes', name: 'endpoint.role' },
+                    {
+                      component: 'text-field',
+                      label: 'URL',
+                      name: 'url',
+                      validate: [
+                        {
+                          type: 'url-validator',
+                        },
+                      ],
+                    },
+                  ],
+                  name: 'endpoint',
+                },
+              ],
+            ],
+            name: '2',
+            title: 'Cost Management',
+          },
+        ],
+        isBox: true,
+        name: 'app-tabs',
+      },
+    ];
+
+    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, APP_TYPES);
+
+    expect(result).toEqual(EXPECTED_RESULT);
+  });
 });

@@ -76,7 +76,7 @@ describe('SourceEditModal', () => {
           {
             application_type_id: CATALOG_APP.id,
             id: '123',
-            authentications: [{ type: 'username_password', username: '123', id: '343' }],
+            authentications: [{ type: 'username_password', username: '123', id: '343', resource_type: 'Endpoint' }],
           },
         ],
         endpoints: [
@@ -143,7 +143,7 @@ describe('SourceEditModal', () => {
             id: '123',
             availability_status_error: 'app-error',
             availability_status: UNAVAILABLE,
-            authentications: [{ type: 'username_password', username: '123', id: '343' }],
+            authentications: [{ type: 'username_password', username: '123', id: '343', resource_type: 'Endpoint' }],
           },
         ],
         endpoints: [
