@@ -21,6 +21,8 @@ describe('filterTypes', () => {
       { id: '2', name: 'aws', vendor: 'amazon' },
       { id: '3', name: 'openshift', vendor: 'Red Hat' },
       { id: '4', name: 'vmware', vendor: 'vmware' },
+      { id: '5', name: 'ansible-tower', vendor: 'Red Hat' },
+      { id: '6', name: 'satellite', vendor: 'Red Hat' },
     ];
 
     it('filters CLOUD source types', () => {
@@ -34,6 +36,14 @@ describe('filterTypes', () => {
     it('filters RED HAT source types', () => {
       expect(sourceTypesVendors.filter(filterVendorTypes(REDHAT_VENDOR))).toEqual([
         { id: '3', name: 'openshift', vendor: 'Red Hat' },
+      ]);
+    });
+
+    it('filters RED HAT source types and show hidden', () => {
+      expect(sourceTypesVendors.filter(filterVendorTypes(REDHAT_VENDOR, true))).toEqual([
+        { id: '3', name: 'openshift', vendor: 'Red Hat' },
+        { id: '5', name: 'ansible-tower', vendor: 'Red Hat' },
+        { id: '6', name: 'satellite', vendor: 'Red Hat' },
       ]);
     });
   });

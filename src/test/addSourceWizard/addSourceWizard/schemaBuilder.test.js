@@ -16,7 +16,7 @@ import {
   shouldUseAppAuth,
 } from '../../../components/addSourceWizard/schemaBuilder';
 import hardcodedSchemas from '../../../components/addSourceWizard/hardcodedSchemas';
-import sourceTypes, { AMAZON_TYPE, OPENSHIFT_TYPE, AZURE_TYPE } from '../helpers/sourceTypes';
+import sourceTypes, { AMAZON_TYPE, OPENSHIFT_TYPE, AZURE_TYPE, ANSIBLE_TOWER_TYPE } from '../helpers/sourceTypes';
 import applicationTypes, { COST_MANAGEMENT_APP, TOPOLOGY_INV_APP } from '../helpers/applicationTypes';
 import { validatorTypes } from '@data-driven-forms/react-form-renderer';
 
@@ -426,6 +426,31 @@ describe('schema builder', () => {
         'cost-gcp-access',
         'cost-gcp-dataset',
         'cost-gcp-billing-export',
+      ]);
+    });
+
+    it('builds ansible schema without recepotr', () => {
+      const sourceType = [
+        {
+          ...ANSIBLE_TOWER_TYPE,
+          schema: {
+            ...ANSIBLE_TOWER_TYPE.schema,
+            authentication: [ANSIBLE_TOWER_TYPE.schema.authentication[0]],
+          },
+        },
+      ];
+
+      const schema = schemaBuilder(sourceType, applicationTypes);
+
+      expect(schema.map(({ name }) => name)).toEqual([
+        'ansible-tower',
+        'ansible-tower-1',
+        'ansible-tower-3',
+        'ansible-tower-username_password-generic-additional-step',
+        'ansible-tower-credentials-no-app',
+        'ansible-tower-username_password-/insights/platform/catalog-additional-step',
+        'catalog-ansible-tower',
+        'ansible-tower-endpoint',
       ]);
     });
   });
