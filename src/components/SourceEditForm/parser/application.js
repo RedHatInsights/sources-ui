@@ -2,6 +2,7 @@ import componentTypes from '@data-driven-forms/react-form-renderer/component-typ
 import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-icon';
 
 import { authenticationFields } from './authentication';
+import { endpointFields } from './endpoint';
 import EditAlert from './EditAlert';
 import ResourcesEmptyState from '../../SourceDetail/ResourcesEmptyState';
 
@@ -37,7 +38,13 @@ export const applicationsFields = (applications, sourceType, appTypes) => [
       ...applications.map((app) => {
         const appType = appTypes.find(({ id }) => id === app.application_type_id);
 
-        const fields = createOneAppFields(appType, sourceType, app);
+        let fields = createOneAppFields(appType, sourceType, app);
+
+        const hasEndpoint = app.authentications.find(({ resource_type }) => resource_type === 'Endpoint');
+
+        if (hasEndpoint) {
+          fields = [fields[0], [...(fields[1] || []), endpointFields(sourceType)]];
+        }
 
         if (fields.length === 1) {
           fields.push({
@@ -51,15 +58,14 @@ export const applicationsFields = (applications, sourceType, appTypes) => [
             applicationName: appType?.display_name,
             Icon: PlusCircleIcon,
           });
+        } else if (app.paused_at) {
+          fields = [fields[0], fields[1].map((field) => ({ ...field, isDisabled: true }))];
         }
 
         return {
           name: appType?.id,
           title: appType?.display_name,
           fields,
-          ...(app.paused_at && {
-            fields: [fields[0], fields[1].map((field) => ({ ...field, isDisabled: true }))],
-          }),
         };
       }),
     ],

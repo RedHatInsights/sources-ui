@@ -45,6 +45,7 @@ describe('doCreateSource', () => {
     let CREATED_AUTH_ID;
 
     let bulkCreate;
+    let createAuthApp;
     let checkAppMock;
     let mocks;
 
@@ -85,8 +86,11 @@ describe('doCreateSource', () => {
         })
       );
 
+      createAuthApp = jest.fn().mockImplementation(() => Promise.resolve());
+
       mocks = {
         bulkCreate,
+        createAuthApp,
       };
 
       api.getSourcesApi = () => mocks;
@@ -126,6 +130,7 @@ describe('doCreateSource', () => {
         ],
         sources: [{ name: 'some name', source_type_name: 'openshift' }],
       });
+      expect(createAuthApp).not.toHaveBeenCalled();
       expect(checkAppMock).toHaveBeenCalledWith(CREATED_EDNPOINT_ID, undefined, undefined, 'getEndpoint');
       expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
     });
@@ -156,6 +161,7 @@ describe('doCreateSource', () => {
         ],
         sources: [{ name: 'some name', source_type_name: 'openshift' }],
       });
+      expect(createAuthApp).not.toHaveBeenCalled();
       expect(checkAppMock).toHaveBeenCalledWith(CREATED_EDNPOINT_ID, undefined, undefined, 'getEndpoint');
       expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
     });
@@ -176,6 +182,7 @@ describe('doCreateSource', () => {
         endpoints: [],
         sources: [{ name: 'some name', source_type_name: 'openshift' }],
       });
+      expect(createAuthApp).not.toHaveBeenCalled();
       expect(checkAppMock).not.toHaveBeenCalled();
       expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
     });
@@ -206,6 +213,7 @@ describe('doCreateSource', () => {
         ],
         sources: [{ name: 'some name', source_type_name: 'openshift' }],
       });
+      expect(createAuthApp).not.toHaveBeenCalled();
       expect(checkAppMock).toHaveBeenCalledWith(CREATED_EDNPOINT_ID, undefined, undefined, 'getEndpoint');
       expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
     });
@@ -238,6 +246,7 @@ describe('doCreateSource', () => {
         ],
         sources: [{ name: 'some name', source_type_name: 'openshift' }],
       });
+      expect(createAuthApp).toHaveBeenCalledWith({ application_id: 'app-id', authentication_id: 'auth-id' });
       expect(checkAppMock).toHaveBeenCalledWith(CREATED_APP_ID, 0);
       expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
     });
@@ -271,6 +280,7 @@ describe('doCreateSource', () => {
         ],
         sources: [{ name: 'some name', source_type_name: 'openshift' }],
       });
+      expect(createAuthApp).toHaveBeenCalledWith({ application_id: 'app-id', authentication_id: 'auth-id' });
       expect(checkAppMock).toHaveBeenCalledWith(CREATED_APP_ID, 0);
       expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
     });
@@ -297,6 +307,7 @@ describe('doCreateSource', () => {
       );
 
       mocks = {
+        createAuthApp,
         bulkCreate,
       };
 
@@ -322,6 +333,7 @@ describe('doCreateSource', () => {
         ],
         sources: [{ name: 'some name', source_type_name: 'openshift' }],
       });
+      expect(createAuthApp).toHaveBeenCalledWith({ application_id: 'app-id', authentication_id: 'auth-id' });
       expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
       expect(checkAppMock.mock.calls[0][0]).toEqual(CREATED_APP_ID);
       expect(checkAppMock.mock.calls[0][1]).toEqual(10000);
@@ -348,6 +360,7 @@ describe('doCreateSource', () => {
         endpoints: [],
         sources: [{ name: 'some name', source_type_name: 'openshift' }],
       });
+      expect(createAuthApp).not.toHaveBeenCalled();
       expect(checkAppMock).toHaveBeenCalledWith(CREATED_APP_ID, 0);
       expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
     });
@@ -389,6 +402,7 @@ describe('doCreateSource', () => {
         endpoints: [],
         sources: [{ name: 'some name', source_type_name: 'openshift' }],
       });
+      expect(createAuthApp).not.toHaveBeenCalled();
       expect(checkAppMock).toHaveBeenCalledWith(CREATED_APP_ID, 0);
       expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
     });
@@ -430,6 +444,7 @@ describe('doCreateSource', () => {
         endpoints: [],
         sources: [{ name: 'some name', source_type_name: 'openshift' }],
       });
+      expect(createAuthApp).not.toHaveBeenCalled();
       expect(checkAppMock).toHaveBeenCalledWith(CREATED_APP_ID, 0);
       expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
     });
