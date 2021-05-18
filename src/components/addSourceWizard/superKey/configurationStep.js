@@ -90,7 +90,7 @@ const configurationStep = (intl, sourceTypes) => ({
           description: intl.formatMessage({
             id: 'wizard.manualAuth.desc',
             defaultMessage:
-              'Configure and manage your source manually if you do not wish to provide Superkey credentials. You will set up sources the same way you do today.',
+              'Configure and manage your source manually if you do not wish to provide account authorization credentials. You will set up sources the same way you do today.',
           }),
           value: 'manual_configuration',
         },
