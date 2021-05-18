@@ -63,7 +63,7 @@ const CloudCards = () => {
                 <Stack>
                   <StackItem className="pf-u-mb-sm">
                     <Label color="orange" icon={<BuilderImageIcon fill="#F4C145" />}>
-                      {intl.formatMessage({ id: 'cloud.goldImages', defaultMessage: 'Use Gold Images' })}
+                      {intl.formatMessage({ id: 'cloud.goldImages', defaultMessage: 'Use gold images' })}
                     </Label>
                   </StackItem>
                   <StackItem isFilled>
@@ -71,20 +71,20 @@ const CloudCards = () => {
                       {intl.formatMessage({
                         id: 'cloud.goldImages.description',
                         defaultMessage:
-                          'Connecting to Amazon Web Services or Microsoft Azure unlocks automatic access to Red Hat Gold Images. View Gold Images in your provider console.',
+                          'Connecting to Amazon Web Services or Microsoft Azure unlocks automatic access to Red Hat gold images. View gold images in your provider console.',
                       })}
                     </Text>
                     <Text className="text" component="a" href={GOLD_IMAGES_AWS} target="_blank" rel="noopener noreferrer">
                       {intl.formatMessage({
                         id: 'cloud.goldImages.awsLink',
-                        defaultMessage: 'Use Red Hat Gold Images in AWS',
+                        defaultMessage: 'Use Red Hat gold images in AWS',
                       })}
                     </Text>
                     <br />
                     <Text className="text" component="a" href={GOLD_IMAGES_AZURE} target="_blank" rel="noopener noreferrer">
                       {intl.formatMessage({
                         id: 'cloud.goldImages.azureLink',
-                        defaultMessage: 'Use Red Hat Gold Images in Microsoft Azure',
+                        defaultMessage: 'Use Red Hat gold images in Microsoft Azure',
                       })}
                     </Text>
                   </StackItem>
@@ -92,7 +92,7 @@ const CloudCards = () => {
                     <Text className="text" component="a" href={GOLD_IMAGES_MORE} target="_blank" rel="noopener noreferrer">
                       {intl.formatMessage({
                         id: 'cloud.goldImages.moreLink',
-                        defaultMessage: 'Learn more about Red Hat Gold Images',
+                        defaultMessage: 'Learn more about Red Hat gold images',
                       })}
                       <ArrowRightIcon className="pf-u-ml-sm" />
                     </Text>
