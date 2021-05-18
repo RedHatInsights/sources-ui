@@ -70,7 +70,7 @@ const AmazonFinishedStep = ({ onClose }) => {
             <Grid hasGutter className="ins-c-source__aws-grid pf-u-mt-md">
               <GridItem md="6">
                 <AwsLink href={GOLDIMAGES_HREF}>
-                  {intl.formatMessage({ id: 'aws.goldImages', defaultMessage: 'View enabled AWS Gold images' })}
+                  {intl.formatMessage({ id: 'aws.goldImages', defaultMessage: 'View enabled AWS gold images' })}
                 </AwsLink>
               </GridItem>
               <GridItem md="6">
