@@ -447,3 +447,4 @@ export default sourceTypes;
 export const AMAZON_TYPE = sourceTypes[1];
 export const OPENSHIFT_TYPE = sourceTypes[0];
 export const AZURE_TYPE = sourceTypes[7];
+export const ANSIBLE_TOWER_TYPE = sourceTypes[2];

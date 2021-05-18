@@ -12,7 +12,7 @@ import * as dependency from '../../../api/wizardHelpers';
 import * as createSource from '../../../api/createSource';
 
 import mount from '../__mocks__/mount';
-import { ANSIBLE_TOWER_NAME, CLOUD_VENDOR, REDHAT_VENDOR } from '../../../utilities/constants';
+import { OPENSHIFT_NAME, CLOUD_VENDOR, REDHAT_VENDOR } from '../../../utilities/constants';
 import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
 import CloseModal from '../../../components/CloseModal';
 
@@ -172,7 +172,7 @@ describe('AddSourceWizard', () => {
     wrapper.update();
 
     expect(submitCallback).toHaveBeenCalledWith({
-      values: { source_type: ANSIBLE_TOWER_NAME },
+      values: { source_type: OPENSHIFT_NAME },
       isErrored: true,
       sourceTypes,
       error: 'Error - wrong name',
@@ -210,7 +210,7 @@ describe('AddSourceWizard', () => {
 
     wrapper.update();
 
-    expect(onClose).toHaveBeenCalledWith({ source_type: ANSIBLE_TOWER_NAME });
+    expect(onClose).toHaveBeenCalledWith({ source_type: OPENSHIFT_NAME });
   });
 
   it('stay on the wizard', async () => {
@@ -382,7 +382,7 @@ describe('AddSourceWizard', () => {
     wrapper.update();
 
     expect(createSource.doCreateSource).toHaveBeenCalledWith(
-      { source_type: ANSIBLE_TOWER_NAME },
+      { source_type: OPENSHIFT_NAME },
       expect.any(Array),
       applicationTypes
     );

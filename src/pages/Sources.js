@@ -137,7 +137,7 @@ const SourcesPage = () => {
 
   const showPaginationLoader = (!loaded || !appTypesLoaded || !sourceTypesLoaded) && !paginationClicked;
 
-  const filteredSourceTypes = sourceTypes.filter(filterVendorTypes(activeVendor));
+  const filteredSourceTypes = sourceTypes.filter(filterVendorTypes(activeVendor, true));
 
   const addSourceText = intl.formatMessage({
     id: 'sources.addSource',
