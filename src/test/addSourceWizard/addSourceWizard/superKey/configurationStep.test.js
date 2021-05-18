@@ -60,7 +60,7 @@ describe('configurationSteps', () => {
     expect(result.fields[3].options).toEqual([
       {
         description:
-          'Configure and manage your source manually if you do not wish to provide Superkey credentials. You will set up sources the same way you do today.',
+          'Configure and manage your source manually if you do not wish to provide account authorization credentials. You will set up sources the same way you do today.',
         label: 'Manual configuration',
         value: 'manual_configuration',
       },
