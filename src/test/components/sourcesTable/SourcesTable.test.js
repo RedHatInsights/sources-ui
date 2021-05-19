@@ -230,9 +230,9 @@ describe('SourcesTable', () => {
   });
 
   describe('actions', () => {
-    const EDIT_SOURCE_INDEX = 0;
-    const PAUSE_SOURCE_INDEX = 1;
-    const DELETE_SOURCE_INDEX = 2;
+    const PAUSE_SOURCE_INDEX = 0;
+    const DELETE_SOURCE_INDEX = 1;
+    const EDIT_SOURCE_INDEX = 2;
     let wrapper;
 
     beforeEach(async () => {
@@ -319,22 +319,6 @@ describe('SourcesTable', () => {
     const INTL_MOCK = { formatMessage: ({ defaultMessage }) => defaultMessage };
     const pushMock = jest.fn();
 
-    describe('insertEditAction', () => {
-      it('inserts edit item to index 1', () => {
-        const ACTIONS = ['first', 'second'];
-
-        insertEditAction(ACTIONS, INTL_MOCK, pushMock);
-
-        expect(ACTIONS).toHaveLength(3);
-        expect(ACTIONS[1]).toEqual(
-          expect.objectContaining({
-            title: expect.any(String),
-            onClick: expect.any(Function),
-          })
-        );
-      });
-    });
-
     describe('prepareColumnsCells', () => {
       it('prepares columns cells', () => {
         const columns = [
@@ -375,6 +359,7 @@ describe('SourcesTable', () => {
         });
 
       const EDIT_TITLE = 'Edit';
+      const VIEW_TITLE = 'View details';
       const DELETE_TITLE = 'Remove';
       const PAUSE_TITLE = 'Pause';
       const UNPAUSE_TITLE = 'Resume';
@@ -384,7 +369,7 @@ describe('SourcesTable', () => {
 
         const actions = actionResolver(INTL_MOCK, pushMock)(EDITABLE_DATA);
 
-        expect(actions).toEqual([actionObject(EDIT_TITLE), actionObject(PAUSE_TITLE), actionObject(DELETE_TITLE)]);
+        expect(actions).toEqual([actionObject(PAUSE_TITLE), actionObject(DELETE_TITLE), actionObject(EDIT_TITLE)]);
       });
 
       it('create actions for paused source', () => {
@@ -392,15 +377,7 @@ describe('SourcesTable', () => {
 
         const actions = actionResolver(INTL_MOCK, pushMock)(EDITABLE_DATA);
 
-        expect(actions).toEqual([actionObject(EDIT_TITLE), actionObject(UNPAUSE_TITLE), actionObject(DELETE_TITLE)]);
-      });
-
-      it('create actions for uneditable source', () => {
-        const UNEDITABLE_DATA = { imported: true };
-
-        const actions = actionResolver(INTL_MOCK, pushMock)(UNEDITABLE_DATA);
-
-        expect(actions).toEqual([actionObject(PAUSE_TITLE), actionObject(DELETE_TITLE)]);
+        expect(actions).toEqual([actionObject(UNPAUSE_TITLE), actionObject(DELETE_TITLE), actionObject(VIEW_TITLE)]);
       });
     });
   });

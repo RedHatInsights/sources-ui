@@ -169,10 +169,9 @@ describe('SourceDetail', () => {
     expect(wrapper.find(SourceSummaryCard.default)).toHaveLength(1);
     expect(wrapper.find(ApplicationsCard.default)).toHaveLength(1);
     expect(wrapper.find(ApplicationResourcesCard.default)).toHaveLength(1);
-    expect(wrapper.find(CustomRoute)).toHaveLength(5);
+    expect(wrapper.find(CustomRoute)).toHaveLength(4);
     expect(wrapper.find(SourceRemoveModal.default)).toHaveLength(0);
     expect(wrapper.find(AddApplication.default)).toHaveLength(0);
-    expect(wrapper.find(RemoveAppModal.default)).toHaveLength(0);
     expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(0);
     expect(wrapper.find(RedirectNoId.default)).toHaveLength(0);
     expect(wrapper.find(SourceRenameModal.default)).toHaveLength(0);

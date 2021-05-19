@@ -62,16 +62,6 @@ const initialState = (columns) => ({
   cells: prepareColumnsCells(columns),
 });
 
-export const insertEditAction = (actions, intl, push, isOrgAdmin, disabledProps) =>
-  actions.splice(1, 0, {
-    title: intl.formatMessage({
-      id: 'sources.edit',
-      defaultMessage: 'Edit',
-    }),
-    onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesDetail.path, id)),
-    ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
-  });
-
 export const actionResolver = (intl, push, isOrgAdmin) => (rowData) => {
   const tooltip = intl.formatMessage({
     id: 'sources.notAdminButton',
@@ -85,12 +75,6 @@ export const actionResolver = (intl, push, isOrgAdmin) => (rowData) => {
   };
 
   const actions = [];
-
-  const isSourceEditable = !rowData.imported;
-
-  if (isSourceEditable) {
-    insertEditAction(actions, intl, push, isOrgAdmin, disabledProps);
-  }
 
   if (rowData.paused_at) {
     actions.push({
@@ -130,6 +114,20 @@ export const actionResolver = (intl, push, isOrgAdmin) => (rowData) => {
       defaultMessage: 'Permanently delete this source and all collected data',
     }),
     onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesRemove.path, id)),
+    ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
+  });
+
+  actions.push({
+    title: !rowData.paused_at
+      ? intl.formatMessage({
+          id: 'sources.edit',
+          defaultMessage: 'Edit',
+        })
+      : intl.formatMessage({
+          id: 'sources.viewDetails',
+          defaultMessage: 'View details',
+        }),
+    onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesDetail.path, id)),
     ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
   });
 
