@@ -7,10 +7,13 @@ import { KebabToggle, Dropdown, DropdownItem } from '@patternfly/react-core';
 
 import { replaceRouteId, routes } from '../../Routes';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
+import { useSource } from '../../hooks/useSource';
 
 const ApplicationKebab = ({ app, removeApp, addApp }) => {
   const [isOpen, setOpen] = useState(false);
   const intl = useIntl();
+  const source = useSource();
+  const { push } = useHistory();
   const hasRightAccess = useHasWritePermissions();
 
   const wrappedFunction = (func) => () => {
@@ -69,6 +72,9 @@ const ApplicationKebab = ({ app, removeApp, addApp }) => {
         id: 'app.kebab.remove.title',
         defaultMessage: 'Permanently stop data collection for this application.',
       })}
+      onClick={wrappedFunction(() =>
+        push(replaceRouteId(routes.sourcesDetailRemoveApp.path, source.id).replace(':app_id', app.id))
+      )}
     >
       {intl.formatMessage({
         id: 'app.kebab.pause.button',
