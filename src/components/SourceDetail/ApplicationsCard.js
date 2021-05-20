@@ -5,12 +5,15 @@ import { useHistory } from 'react-router-dom';
 
 import { Card, CardBody, CardTitle, Switch, FormGroup } from '@patternfly/react-core';
 
+import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
+import PlayIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
+
 import { useSource } from '../../hooks/useSource';
 import { replaceRouteId, routes } from '../../Routes';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import isSuperKey from '../../utilities/isSuperKey';
 import { getSourcesApi, doCreateApplication } from '../../api/entities';
-import { loadEntities } from '../../redux/sources/actions';
+import { addMessage, loadEntities } from '../../redux/sources/actions';
 import { APP_NAMES } from '../SourceEditForm/parser/application';
 import filterApps from '../../utilities/filterApps';
 import ApplicationKebab from './ApplicationKebab';
@@ -43,6 +46,50 @@ const descriptionMapper = (name, intl) =>
     }),
   }[name]);
 
+const addResumeNotification = (typeId, dispatch, intl, appTypes) => {
+  const appName = appTypes.find((type) => type.id === typeId)?.display_name;
+
+  dispatch(
+    addMessage({
+      title: intl.formatMessage(
+        {
+          id: 'detail.applications.resumed.alert.title',
+          defaultMessage: '{appName} connection resumed',
+        },
+        { appName }
+      ),
+      variant: 'default',
+      customIcon: <PlayIcon />,
+    })
+  );
+};
+
+const addPausedNotification = (typeId, dispatch, intl, appTypes) => {
+  const appName = appTypes.find((type) => type.id === typeId)?.display_name;
+
+  dispatch(
+    addMessage({
+      title: intl.formatMessage(
+        {
+          id: 'detail.applications.paused.alert.title',
+          defaultMessage: '{appName} connection paused',
+        },
+        { appName }
+      ),
+      description: intl.formatMessage(
+        {
+          id: 'detail.applications.paused.alert.description',
+          defaultMessage:
+            'Your applications will not update with the most recent information until {appName} connection is resumed.',
+        },
+        { appName }
+      ),
+      variant: 'default',
+      customIcon: <PauseIcon />,
+    })
+  );
+};
+
 const ApplicationsCard = () => {
   const intl = useIntl();
   const source = useSource();
@@ -64,6 +111,7 @@ const ApplicationsCard = () => {
       if (typeof selectedApps[id] !== 'boolean') {
         stateDispatch({ type: 'addApp', id });
         await getSourcesApi().unpauseApplication(isPaused);
+        addResumeNotification(id, dispatch, intl, appTypes);
         await dispatch(loadEntities());
         stateDispatch({ type: 'clean', id });
       }
@@ -74,6 +122,7 @@ const ApplicationsCard = () => {
     if (typeof selectedApps[typeId] !== 'boolean') {
       stateDispatch({ type: 'removeApp', id: typeId });
       await getSourcesApi().pauseApplication(id);
+      addPausedNotification(typeId, dispatch, intl, appTypes);
       await dispatch(loadEntities());
       stateDispatch({ type: 'clean', id: typeId });
     }
@@ -86,6 +135,7 @@ const ApplicationsCard = () => {
 
         if (isPaused) {
           await getSourcesApi().unpauseApplication(isPaused);
+          addResumeNotification(id, dispatch, intl, appTypes);
         } else {
           await doCreateApplication({ source_id: source.id, application_type_id: id });
         }
