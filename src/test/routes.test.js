@@ -31,5 +31,9 @@ describe('routes', () => {
     it('replaces :id in detail/addApp path', () => {
       expect(replaceRouteId(routes.sourcesDetailAddApp.path, id)).toEqual(`/sources/detail/${id}/add_app/:app_type_id`);
     });
+
+    it('replaces :id in detail/removeApp path', () => {
+      expect(replaceRouteId(routes.sourcesDetailRemoveApp.path, id)).toEqual(`/sources/detail/${id}/remove_app/:app_id`);
+    });
   });
 });
