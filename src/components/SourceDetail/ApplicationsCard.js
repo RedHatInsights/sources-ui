@@ -14,6 +14,7 @@ import { getSourcesApi, doCreateApplication } from '../../api/entities';
 import { loadEntities } from '../../redux/sources/actions';
 import { APP_NAMES } from '../SourceEditForm/parser/application';
 import filterApps from '../../utilities/filterApps';
+import ApplicationKebab from './ApplicationKebab';
 
 const initialState = {
   selectedApps: {},
@@ -127,20 +128,31 @@ const ApplicationsCard = () => {
 
             return (
               <FormGroup key={app.id}>
-                <Switch
-                  id={`app-switch-${app.id}`}
-                  label={app.display_name}
-                  isChecked={isChecked}
-                  isDisabled={connectedApp?.isDeleting || !hasRightAccess}
-                  onChange={(value) => (!value ? removeApp(connectedApp.id, app.id) : addApp(app.id, connectedApp?.id))}
-                />
-                {Boolean(connectedApp) && <ApplicationStatusLabel app={connectedApp} />}
-                {description && (
-                  <div className="pf-c-switch pf-u-mt-sm ins-c-sources__application_fake_switch">
-                    <span className="pf-c-switch__toggle ins-c-sources__hide-me" />
-                    <div className="pf-c-switch__label ins-c-sources__switch-description">{description}</div>
+                <div className="ins-c-sources__application_flex">
+                  <div>
+                    <Switch
+                      id={`app-switch-${app.id}`}
+                      label={app.display_name}
+                      isChecked={isChecked}
+                      isDisabled={connectedApp?.isDeleting || !hasRightAccess}
+                      onChange={(value) => (!value ? removeApp(connectedApp.id, app.id) : addApp(app.id, connectedApp?.id))}
+                    />
+                    {Boolean(connectedApp) && <ApplicationStatusLabel app={connectedApp} />}
+                    {description && (
+                      <div className="pf-c-switch pf-u-mt-sm ins-c-sources__application_fake_switch">
+                        <span className="pf-c-switch__toggle ins-c-sources__hide-me" />
+                        <div className="pf-c-switch__label ins-c-sources__switch-description">{description}</div>
+                      </div>
+                    )}
                   </div>
-                )}
+                  {(isPaused || appExist) && (
+                    <ApplicationKebab
+                      app={connectedApp}
+                      removeApp={() => removeApp(connectedApp.id, app.id)}
+                      addApp={() => addApp(app.id, connectedApp.id)}
+                    />
+                  )}
+                </div>
               </FormGroup>
             );
           })}
