@@ -9,8 +9,8 @@ import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import sourceTypesData, { AMAZON_ID } from '../../__mocks__/sourceTypesData';
 import applicationTypesData, { COSTMANAGEMENT_APP, SUBWATCH_APP } from '../../__mocks__/applicationTypesData';
-import ApplicationStatusLabel from '../../../components/SourceDetail/ApplicationStatusLabel';
 import mockStore from '../../__mocks__/mockStore';
+import { ApplicationLabel } from '../../../views/formatters';
 
 import * as api from '../../../api/entities';
 import * as actions from '../../../redux/sources/actions';
@@ -95,7 +95,7 @@ describe('ApplicationsCard', () => {
       expect(wrapper.find(Switch).last().props().label).toEqual('Subscription Watch');
       expect(wrapper.find(Switch).last().props().isDisabled).toEqual(false);
       expect(wrapper.find(Switch).last().props().isChecked).toEqual(false);
-      expect(wrapper.find(ApplicationStatusLabel)).toHaveLength(1);
+      expect(wrapper.find(ApplicationLabel)).toHaveLength(1);
     });
 
     it('remove application', async () => {

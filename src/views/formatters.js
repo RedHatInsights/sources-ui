@@ -345,6 +345,54 @@ export const getStatusTooltipTextApp = (status, error, intl) =>
     defaultMessage: 'Status has not been verified.',
   }));
 
+export const ApplicationLabel = ({ app, showStatusText, ...props }) => {
+  const intl = useIntl();
+
+  const statusText = getStatusTooltipTextApp(app.availability_status, app.availability_status_error, intl);
+
+  return (
+    <Popover
+      showClose={false}
+      key={app.display_name}
+      aria-label={`${app.display_name} popover`}
+      bodyContent={
+        app.paused_at
+          ? `${statusText} ${intl.formatMessage({
+              id: 'appplication.paused.additionalText',
+              defaultMessage: 'Resume this application to continue data collection.',
+            })}`
+          : statusText
+      }
+      {...(app.paused_at && {
+        headerContent: intl.formatMessage({
+          id: 'application.paused.header',
+          defaultMessage: 'Application paused',
+        }),
+      })}
+    >
+      <Label
+        className="clickable"
+        color={getStatusColor(app.availability_status)}
+        {...(app.availability_status === IN_PROGRESS && { icon: <WrenchIcon /> })}
+        {...(app.paused_at && { icon: <PauseIcon /> })}
+        {...props}
+      >
+        {showStatusText ? getStatusText(app.availability_status) : app.display_name}
+      </Label>
+    </Popover>
+  );
+};
+
+ApplicationLabel.propTypes = {
+  app: PropTypes.shape({
+    display_name: PropTypes.string.isRequired,
+    availability_status: PropTypes.string,
+    availability_status_error: PropTypes.string,
+    paused_at: PropTypes.string,
+  }),
+  showStatusText: PropTypes.bool,
+};
+
 const EnhancedLabelGroup = ({ applications, ...props }) => {
   const intl = useIntl();
 
@@ -358,21 +406,7 @@ const EnhancedLabelGroup = ({ applications, ...props }) => {
       )}
     >
       {applications.map((app) => (
-        <Popover
-          showClose={false}
-          key={app.display_name}
-          aria-label={`${app.display_name} popover`}
-          bodyContent={getStatusTooltipTextApp(app.availability_status, app.availability_status_error, intl)}
-        >
-          <Label
-            className="clickable"
-            color={getStatusColor(app.availability_status)}
-            {...(app.availability_status === IN_PROGRESS && { icon: <WrenchIcon /> })}
-            {...(app.paused_at && { icon: <PauseIcon /> })}
-          >
-            {app.display_name}
-          </Label>
-        </Popover>
+        <ApplicationLabel app={app} key={app.id} />
       ))}
     </LabelGroup>
   );
@@ -381,6 +415,7 @@ const EnhancedLabelGroup = ({ applications, ...props }) => {
 EnhancedLabelGroup.propTypes = {
   applications: PropTypes.arrayOf(
     PropTypes.shape({
+      id: PropTypes.string.isRequired,
       display_name: PropTypes.string.isRequired,
       availability_status: PropTypes.string,
       availability_status_error: PropTypes.string,

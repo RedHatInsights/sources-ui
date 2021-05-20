@@ -8,13 +8,13 @@ import { Card, CardBody, CardTitle, Switch, FormGroup } from '@patternfly/react-
 import { useSource } from '../../hooks/useSource';
 import { replaceRouteId, routes } from '../../Routes';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
-import ApplicationStatusLabel from './ApplicationStatusLabel';
 import isSuperKey from '../../utilities/isSuperKey';
 import { getSourcesApi, doCreateApplication } from '../../api/entities';
 import { loadEntities } from '../../redux/sources/actions';
 import { APP_NAMES } from '../SourceEditForm/parser/application';
 import filterApps from '../../utilities/filterApps';
 import ApplicationKebab from './ApplicationKebab';
+import { ApplicationLabel } from '../../views/formatters';
 
 const initialState = {
   selectedApps: {},
@@ -137,7 +137,9 @@ const ApplicationsCard = () => {
                       isDisabled={connectedApp?.isDeleting || !hasRightAccess}
                       onChange={(value) => (!value ? removeApp(connectedApp.id, app.id) : addApp(app.id, connectedApp?.id))}
                     />
-                    {Boolean(connectedApp) && <ApplicationStatusLabel app={connectedApp} />}
+                    {Boolean(connectedApp) && (
+                      <ApplicationLabel className="pf-u-ml-sm clickable" app={connectedApp} showStatusText />
+                    )}
                     {description && (
                       <div className="pf-c-switch pf-u-mt-sm ins-c-sources__application_fake_switch">
                         <span className="pf-c-switch__toggle ins-c-sources__hide-me" />
