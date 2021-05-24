@@ -37,6 +37,11 @@ export const routes = {
     redirectNoId: true,
     writeAccess: true,
   },
+  sourcesDetailRemoveApp: {
+    path: '/sources/detail/:id/remove_app/:app_id',
+    redirectNoId: true,
+    writeAccess: true,
+  },
   sourcesDetailEditCredentials: {
     path: '/sources/detail/:id/edit_credentials',
     redirectNoId: true,

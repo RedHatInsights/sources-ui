@@ -28,6 +28,7 @@ import {
   getStatusColor,
   configurationModeFormatter,
   IN_PROGRESS,
+  ApplicationLabel,
 } from '../../views/formatters';
 import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX, AMAZON } from '../__mocks__/sourceTypesData';
 import {
@@ -1200,6 +1201,39 @@ describe('formatters', () => {
       expect(wrapper.text()).toEqual('Manual configuration');
       expect(wrapper.find(Link)).toHaveLength(0);
       expect(wrapper.find(Button)).toHaveLength(0);
+    });
+  });
+
+  describe('ApplicationLabel', () => {
+    it('renders paused', () => {
+      const app = {
+        display_name: 'Cost management',
+        availability_status: AVAILABLE,
+        availability_status_error: null,
+        paused_at: 'today',
+      };
+
+      const wrapper = mount(wrapperWithIntl(<ApplicationLabel app={app} />));
+
+      expect(wrapper.find(Popover).props().bodyContent).toEqual(
+        'Everything works fine. Resume this application to continue data collection.'
+      );
+      expect(wrapper.find(Popover).props().headerContent).toEqual('Application paused');
+
+      expect(wrapper.find(Label).props().color).toEqual('green');
+      expect(wrapper.find(Label).text()).toEqual('Cost management');
+      expect(wrapper.find(PauseIcon)).toHaveLength(1);
+    });
+
+    it('renders with status', () => {
+      const app = {
+        display_name: 'Cost management',
+        availability_status: UNAVAILABLE,
+        availability_status_error: null,
+      };
+
+      const wrapper = mount(wrapperWithIntl(<ApplicationLabel app={app} showStatusText />));
+      expect(wrapper.find(Label).text()).toEqual('Unavailable');
     });
   });
 });

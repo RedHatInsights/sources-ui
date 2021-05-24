@@ -28,6 +28,13 @@ const AddApplication = lazy(() =>
   )
 );
 
+const RemoveAppModal = lazy(() =>
+  import(
+    /* webpackChunkName: "removeApplication" */
+    '../components/AddApplication/RemoveAppModal'
+  )
+);
+
 const SourceRenameModal = lazy(() =>
   import(
     /* webpackChunkName: "renameSource" */
@@ -66,6 +73,7 @@ const Detail = () => {
           componentProps={{ backPath: replaceRouteId(routes.sourcesDetail.path, source.id) }}
         />
         <CustomRoute exact route={routes.sourcesDetailAddApp} Component={AddApplication} />
+        <CustomRoute exact route={routes.sourcesDetailRemoveApp} Component={RemoveAppModal} />
         <CustomRoute exact route={routes.sourcesDetailRename} Component={SourceRenameModal} />
         <CustomRoute exact route={routes.sourcesDetailEditCredentials} Component={EditCredentials} />
       </Suspense>
