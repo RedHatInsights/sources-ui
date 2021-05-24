@@ -385,7 +385,7 @@ export const ApplicationLabel = ({ app, showStatusText, ...props }) => {
 
 ApplicationLabel.propTypes = {
   app: PropTypes.shape({
-    display_name: PropTypes.string.isRequired,
+    display_name: PropTypes.string,
     availability_status: PropTypes.string,
     availability_status_error: PropTypes.string,
     paused_at: PropTypes.string,
@@ -405,8 +405,8 @@ const EnhancedLabelGroup = ({ applications, ...props }) => {
         { remaining: '${remaining}' }
       )}
     >
-      {applications.map((app) => (
-        <ApplicationLabel app={app} key={app.id} />
+      {applications.map((app, index) => (
+        <ApplicationLabel app={app} key={app.id || index} />
       ))}
     </LabelGroup>
   );
@@ -415,8 +415,7 @@ const EnhancedLabelGroup = ({ applications, ...props }) => {
 EnhancedLabelGroup.propTypes = {
   applications: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      display_name: PropTypes.string.isRequired,
+      display_name: PropTypes.string,
       availability_status: PropTypes.string,
       availability_status_error: PropTypes.string,
       paused_at: PropTypes.string,

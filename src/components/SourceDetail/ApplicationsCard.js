@@ -79,8 +79,7 @@ const addPausedNotification = (typeId, dispatch, intl, appTypes) => {
       description: intl.formatMessage(
         {
           id: 'detail.applications.paused.alert.description',
-          defaultMessage:
-            'Your applications will not update with the most recent information until {appName} connection is resumed.',
+          defaultMessage: 'Your application will not reflect the most recent data until {appName} connection is resumed',
         },
         { appName }
       ),

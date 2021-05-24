@@ -2,7 +2,9 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
 
-import { Card, CardBody, FormGroup, CardTitle, Switch } from '@patternfly/react-core';
+import { Card, CardBody, FormGroup, CardTitle, Switch, KebabToggle, DropdownItem } from '@patternfly/react-core';
+import PlayIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
+import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 
 import ApplicationsCard from '../../../components/SourceDetail/ApplicationsCard';
 import { replaceRouteId, routes } from '../../../Routes';
@@ -14,6 +16,7 @@ import { ApplicationLabel } from '../../../views/formatters';
 
 import * as api from '../../../api/entities';
 import * as actions from '../../../redux/sources/actions';
+import ApplicationKebab from '../../../components/SourceDetail/ApplicationKebab';
 
 describe('ApplicationsCard', () => {
   let wrapper;
@@ -73,6 +76,8 @@ describe('ApplicationsCard', () => {
         user: { isOrgAdmin: true, writePermissions: true },
       });
 
+      actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'undefined' }));
+
       wrapper = mount(
         componentWrapperIntl(
           <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
@@ -96,6 +101,7 @@ describe('ApplicationsCard', () => {
       expect(wrapper.find(Switch).last().props().isDisabled).toEqual(false);
       expect(wrapper.find(Switch).last().props().isChecked).toEqual(false);
       expect(wrapper.find(ApplicationLabel)).toHaveLength(1);
+      expect(wrapper.find(ApplicationKebab)).toHaveLength(1);
     });
 
     it('remove application', async () => {
@@ -222,6 +228,71 @@ describe('ApplicationsCard', () => {
       });
       wrapper.update();
 
+      expect(actions.addMessage).toHaveBeenCalledWith({
+        customIcon: <PlayIcon />,
+        title: 'Cost Management connection resumed',
+        variant: 'default',
+      });
+      expect(actions.loadEntities).toHaveBeenCalled();
+    });
+
+    it('renders correctly descriptions', () => {
+      expect(wrapper.find('.ins-c-sources__switch-description')).toHaveLength(2);
+      expect(wrapper.find('.ins-c-sources__switch-description').first().text()).toEqual(
+        'Analyze, forecast, and optimize your Red Hat OpenShift cluster costs in hybrid cloud environments.'
+      );
+      expect(wrapper.find('.ins-c-sources__switch-description').last().text()).toEqual(
+        'Includes access to Red Hat gold images, high precision subscription watch data, and autoregistration.'
+      );
+    });
+
+    it('unpause application via dropdown', async () => {
+      store = mockStore({
+        sources: {
+          entities: [
+            {
+              id: sourceId,
+              source_type_id: AMAZON_ID,
+              applications: [{ id: '123', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
+            },
+          ],
+          sourceTypes: sourceTypesData.data,
+          appTypes: [COSTMANAGEMENT_APP],
+        },
+        user: { isOrgAdmin: true, writePermissions: true },
+      });
+
+      actions.loadEntities = jest.fn().mockImplementation(() => ({ type: 'nonsense' }));
+      const unpauseApplication = jest.fn().mockImplementation(() => Promise.resolve('ok'));
+
+      api.getSourcesApi = () => ({
+        unpauseApplication,
+      });
+
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+
+      await act(async () => {
+        wrapper.find(KebabToggle).props().onToggle();
+      });
+      wrapper.update();
+
+      await act(async () => {
+        wrapper.find(DropdownItem).first().simulate('click');
+      });
+      wrapper.update();
+
+      expect(unpauseApplication).toHaveBeenCalledWith('123');
+      expect(actions.addMessage).toHaveBeenCalledWith({
+        customIcon: <PlayIcon />,
+        title: 'Cost Management connection resumed',
+        variant: 'default',
+      });
       expect(actions.loadEntities).toHaveBeenCalled();
     });
 
@@ -385,6 +456,8 @@ describe('ApplicationsCard', () => {
 
       expect(wrapper.find(Switch).first().props().isChecked).toEqual(true);
 
+      actions.addMessage.mockClear();
+
       await act(async () => {
         wrapper
           .find('input')
@@ -414,7 +487,40 @@ describe('ApplicationsCard', () => {
       });
       wrapper.update();
 
+      expect(actions.addMessage).toHaveBeenCalledWith({
+        customIcon: <PauseIcon />,
+        description: 'Your application will not reflect the most recent data until Cost Management connection is resumed',
+        title: 'Cost Management connection paused',
+        variant: 'default',
+      });
       expect(actions.loadEntities).toHaveBeenCalled();
+    });
+
+    it('pause application via dropdown', async () => {
+      const pauseApplication = jest.fn().mockImplementation(() => Promise.resolve('ok'));
+
+      api.getSourcesApi = () => ({
+        pauseApplication,
+      });
+
+      await act(async () => {
+        wrapper.find(KebabToggle).props().onToggle();
+      });
+      wrapper.update();
+
+      await act(async () => {
+        wrapper.find(DropdownItem).first().simulate('click');
+      });
+      wrapper.update();
+
+      expect(pauseApplication).toHaveBeenCalled();
+      expect(actions.loadEntities).toHaveBeenCalled();
+      expect(actions.addMessage).toHaveBeenCalledWith({
+        customIcon: <PauseIcon />,
+        description: 'Your application will not reflect the most recent data until Cost Management connection is resumed',
+        title: 'Cost Management connection paused',
+        variant: 'default',
+      });
     });
   });
 });

@@ -51,7 +51,6 @@ const ApplicationKebab = ({ app, removeApp, addApp }) => {
     <DropdownItem
       {...(!hasRightAccess && disabledProps)}
       key="pause"
-      on
       description={intl.formatMessage({
         id: 'app.kebab.pause.title',
         defaultMessage: 'Temporarily stop this application from collecting data.',
