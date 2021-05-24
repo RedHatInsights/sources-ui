@@ -21,7 +21,17 @@ const configurationStep = (intl, sourceTypes) => ({
     {
       component: componentTypes.PLAIN_TEXT,
       name: 'conf-desc',
-      label: 'Configure your source manually or let us manage all necessary credentials by selecting Superkey configuration.',
+      label: intl.formatMessage(
+        {
+          id: 'wizard.accountAuthDescription',
+          defaultMessage:
+            'Configure your source manually or let us manage all necessary credentials by selecting <b>account authorization</b> configuration.',
+        },
+        {
+          // eslint-disable-next-line react/display-name
+          b: (chunks) => <b key={`b-${chunks.length}-${Math.floor(Math.random() * 1000)}`}>{chunks}</b>,
+        }
+      ),
     },
     {
       component: componentTypes.RADIO,
