@@ -350,4 +350,77 @@ describe('ResourcesTable', () => {
 
     expect(wrapper.find(Tabs).props().activeKey).toEqual('20199');
   });
+
+  it('renders correctly with paused app', async () => {
+    api.doLoadSourceForEdit = api.doLoadSourceForEdit = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        source: {
+          id: sourceId,
+          source_type_id: AMAZON_ID,
+          applications: [
+            {
+              application_type_id: COSTMANAGEMENT_APP.id,
+              id: '20198',
+              authentications: [{ id: '19896', resource_type: 'Application' }],
+              paused_at: 'today',
+            },
+          ],
+          endpoints: [],
+        },
+        applications: [
+          {
+            application_type_id: COSTMANAGEMENT_APP.id,
+            id: '20198',
+            authentications: [
+              { id: '19896' },
+              {
+                authtype: 'arn',
+                id: '19896',
+                resource_id: '20198',
+                resource_type: 'Application',
+                source_id: '20641',
+                username: 'arn:aws:1234',
+                tenant: '6089719',
+              },
+            ],
+            extra: { bucket: 'adsadsad' },
+            paused_at: 'today',
+          },
+        ],
+      })
+    );
+
+    source = {
+      id: sourceId,
+      source_type_id: AMAZON_ID,
+      applications: [{ id: '20198', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
+    };
+
+    store = mockStore({
+      sources: {
+        entities: [source],
+        sourceTypes: sourceTypesData.data,
+        appTypes: applicationTypesData.data,
+        appTypesLoaded: true,
+        sourceTypesLoaded: true,
+        loaded: 0,
+      },
+    });
+
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+    });
+    wrapper.update();
+
+    expect(wrapper.find(Alert).text()).toEqual(
+      'Default alert:Cost Management is pausedTo resume data collection for this application, switch Cost Management on in the Applications section of this page.'
+    );
+    expect(wrapper.find(Alert).find(PauseIcon)).toHaveLength(1);
+  });
 });
