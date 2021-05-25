@@ -4,24 +4,35 @@ import { useIntl } from 'react-intl';
 
 import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
 
-import { Bullseye, EmptyState, EmptyStateVariant, EmptyStateIcon, EmptyStateBody, Title } from '@patternfly/react-core';
+import { Bullseye, EmptyState, EmptyStateVariant, EmptyStateIcon, EmptyStateBody, Title, Alert } from '@patternfly/react-core';
 
-export const ResourcesEmptyState = ({ applicationName, message, Icon }) => {
+import { pausedAppAlert } from '../../utilities/alerts';
+
+export const ResourcesEmptyState = ({ applicationName, message, Icon, isPaused }) => {
   const intl = useIntl();
 
+  let { description, ...alertProps } = isPaused ? pausedAppAlert(intl, applicationName) : {};
+
   return (
-    <Bullseye>
-      <EmptyState variant={EmptyStateVariant.small}>
-        <EmptyStateIcon icon={Icon} />
-        <Title headingLevel="h2" size="lg">
-          {intl.formatMessage({
-            id: 'resourceTable.emptyStateTitle',
-            defaultMessage: 'No application resources',
-          })}
-        </Title>
-        <EmptyStateBody>{intl.formatMessage(message, { applicationName })}</EmptyStateBody>
-      </EmptyState>
-    </Bullseye>
+    <React.Fragment>
+      {isPaused && (
+        <Alert isInline className="pf-u-mt-lg" {...alertProps}>
+          {description}
+        </Alert>
+      )}
+      <Bullseye>
+        <EmptyState variant={EmptyStateVariant.small}>
+          <EmptyStateIcon icon={Icon} />
+          <Title headingLevel="h2" size="lg">
+            {intl.formatMessage({
+              id: 'resourceTable.emptyStateTitle',
+              defaultMessage: 'No application resources',
+            })}
+          </Title>
+          <EmptyStateBody>{intl.formatMessage(message, { applicationName })}</EmptyStateBody>
+        </EmptyState>
+      </Bullseye>
+    </React.Fragment>
   );
 };
 
@@ -32,6 +43,7 @@ ResourcesEmptyState.propTypes = {
     defaultMessage: PropTypes.isRequired,
   }),
   Icon: PropTypes.elementType,
+  isPaused: PropTypes.string,
 };
 
 ResourcesEmptyState.defaultProps = {

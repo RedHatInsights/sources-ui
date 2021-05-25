@@ -144,7 +144,7 @@ const ResourcesTable = () => {
                         <TableBody />
                       </Table>
                     ) : (
-                      <ResourcesEmptyState applicationName={appName} />
+                      <ResourcesEmptyState applicationName={appName} isPaused={app.paused_at} />
                     )}
                   </Tab>
                 );
