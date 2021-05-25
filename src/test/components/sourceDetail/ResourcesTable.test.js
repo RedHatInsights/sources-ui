@@ -1,8 +1,18 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import { CardBody, CardTitle, EmptyState, EmptyStateBody, Spinner, Title, Tabs, TabTitleText } from '@patternfly/react-core';
-
+import {
+  CardBody,
+  CardTitle,
+  EmptyState,
+  EmptyStateBody,
+  Spinner,
+  Title,
+  Tabs,
+  TabTitleText,
+  Alert,
+} from '@patternfly/react-core';
+import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 import { Table } from '@patternfly/react-table';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
@@ -142,6 +152,69 @@ describe('ResourcesTable', () => {
     expect(wrapper.find(TabTitleText).text()).toEqual('Cost Management');
 
     expect(api.doLoadSourceForEdit).toHaveBeenCalledWith(source, applicationTypesData.data, sourceTypesData.data);
+  });
+
+  it('renders empty state when no resources for paused app', async () => {
+    api.doLoadSourceForEdit = api.doLoadSourceForEdit = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        source: {
+          id: sourceId,
+          source_type_id: AMAZON_ID,
+          applications: [
+            {
+              id: '123',
+              application_type_id: COSTMANAGEMENT_APP.id,
+              authentications: [],
+              paused_at: 'today',
+            },
+          ],
+          endpoints: [],
+        },
+        applications: [
+          {
+            application_type_id: COSTMANAGEMENT_APP.id,
+            id: '123',
+            authentications: [],
+            paused_at: 'today',
+          },
+        ],
+        endpoints: [],
+        authentications: [],
+      })
+    );
+
+    source = {
+      id: sourceId,
+      source_type_id: AMAZON_ID,
+      applications: [{ id: '12344', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
+    };
+
+    store = mockStore({
+      sources: {
+        entities: [source],
+        sourceTypes: sourceTypesData.data,
+        appTypes: applicationTypesData.data,
+        appTypesLoaded: true,
+        sourceTypesLoaded: true,
+        loaded: 0,
+      },
+    });
+
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+    });
+    wrapper.update();
+
+    expect(wrapper.find(Alert).text()).toEqual(
+      'Default alert:Cost Management is pausedTo resume data collection for this application, switch Cost Management on in the Applications section of this page.'
+    );
+    expect(wrapper.find(Alert).find(PauseIcon)).toHaveLength(1);
   });
 
   it('renders correctly with multiple apps', async () => {

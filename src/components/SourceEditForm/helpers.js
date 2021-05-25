@@ -1,10 +1,8 @@
-import React from 'react';
-import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
-
 import get from 'lodash/get';
 import set from 'lodash/set';
 
 import { endpointToUrl, UNAVAILABLE } from '../../views/formatters';
+import { pausedAppAlert } from '../../utilities/alerts';
 
 export const CHECK_ENDPOINT_COMMAND = 'check-endpoint';
 
@@ -112,26 +110,7 @@ export const prepareMessages = (source, intl, appTypes) => {
   source.applications.forEach(({ id, application_type_id, availability_status_error, availability_status, paused_at }) => {
     if (paused_at) {
       const application = appTypes.find((type) => type.id === application_type_id)?.display_name || id;
-      messages[id] = {
-        title: intl.formatMessage(
-          {
-            id: 'wizard.pausedApplication',
-            defaultMessage: '{application} is paused',
-          },
-          { application }
-        ),
-        description: intl.formatMessage(
-          {
-            id: 'wizard.pausedApplicationDescription',
-            defaultMessage:
-              'To resume data collection for this application, switch {application} on in the <b>Applications</b> section of this page.',
-          },
-          // eslint-disable-next-line react/display-name
-          { application, b: (chunks) => <b key="bold">{chunks}</b> }
-        ),
-        variant: 'default',
-        customIcon: <PauseIcon />,
-      };
+      messages[id] = pausedAppAlert(intl, application);
     } else if (availability_status === UNAVAILABLE) {
       messages[id] = {
         title: intl.formatMessage({
