@@ -9,6 +9,7 @@ import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import mockStore from '../../__mocks__/mockStore';
 import PauseAlert from '../../../components/SourceDetail/PauseAlert';
+import * as actions from '../../../redux/sources/actions';
 
 describe('DetailHeader', () => {
   let wrapper;
@@ -93,9 +94,16 @@ describe('DetailHeader', () => {
       )
     );
 
+    actions.resumeSource = jest.fn().mockImplementation(() => ({ type: 'mock-resume-source' }));
+
     await act(async () => {
       wrapper.find('button').simulate('click');
     });
     wrapper.update();
+
+    expect(actions.resumeSource).toHaveBeenCalledWith(sourceId);
+
+    const calledActions = store.getActions();
+    expect(calledActions[calledActions.length - 1]).toEqual({ type: 'mock-resume-source' });
   });
 });
