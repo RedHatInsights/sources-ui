@@ -17,6 +17,7 @@ import applicationsStep from './superKey/applicationsStep';
 import { REDHAT_VENDOR } from '../../utilities/constants';
 import validated from '../../utilities/resolveProps/validated';
 import handleError from '../../api/handleError';
+import { bold } from '../../utilities/intlShared';
 
 export const asyncValidator = async (value, sourceId = undefined, intl) => {
   if (!value) {
@@ -326,8 +327,7 @@ export const SummaryDescription = () => {
               'Review the information below and click <b>Add</b> to add your source. To edit details in previous steps, click <b>Back</b>.',
           },
           {
-            // eslint-disable-next-line react/display-name
-            b: (chunks) => <b key={`b-${chunks.length}-${Math.floor(Math.random() * 1000)}`}>{chunks}</b>,
+            b: bold,
           }
         )}
       </Text>

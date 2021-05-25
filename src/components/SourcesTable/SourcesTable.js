@@ -34,6 +34,7 @@ const renderSources = (entities, columns, sourceTypes, appTypes, removingSources
         ...acc,
         {
           ...item,
+          originalName: item.name,
           isOpen: !!item.expanded,
           cells: itemToCells(item, columns, sourceTypes, appTypes),
           disableActions: isDeleting,
@@ -86,7 +87,7 @@ export const actionResolver = (intl, push, isOrgAdmin, dispatch) => (rowData) =>
         id: 'sources.resume.description',
         defaultMessage: 'Unpause data collection for this source',
       }),
-      onClick: (_ev, _i, { id }) => dispatch(resumeSource(id)),
+      onClick: (_ev, _i, { id }) => dispatch(resumeSource(id, rowData.originalName, intl)),
       ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
     });
   } else {
@@ -99,7 +100,7 @@ export const actionResolver = (intl, push, isOrgAdmin, dispatch) => (rowData) =>
         id: 'sources.pause.description',
         defaultMessage: 'Temporarily disable data collection',
       }),
-      onClick: (_ev, _i, { id }) => dispatch(pauseSource(id)),
+      onClick: (_ev, _i, { id }) => dispatch(pauseSource(id, rowData.originalName, intl)),
       ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
     });
   }

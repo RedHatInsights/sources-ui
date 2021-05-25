@@ -101,7 +101,7 @@ describe('DetailHeader', () => {
     });
     wrapper.update();
 
-    expect(actions.resumeSource).toHaveBeenCalledWith(sourceId);
+    expect(actions.resumeSource).toHaveBeenCalledWith(sourceId, 'Name of this source', expect.any(Object));
 
     const calledActions = store.getActions();
     expect(calledActions[calledActions.length - 1]).toEqual({ type: 'mock-resume-source' });

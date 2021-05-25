@@ -1,3 +1,8 @@
+import React from 'react';
+
+import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
+import PlayIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
+
 import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications/redux';
 import {
   ACTION_TYPES,
@@ -19,6 +24,7 @@ import {
   getSourcesApi,
 } from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
+import { bold } from '../../utilities/intlShared';
 
 export const loadEntities = (options) => (dispatch, getState) => {
   dispatch({
@@ -232,14 +238,47 @@ export const setActiveVendor = (vendor) => (dispatch) => {
   return dispatch(loadEntities());
 };
 
-export const pauseSource = (sourceId) => (dispatch) => {
+export const pauseSource = (sourceId, sourceName, intl) => (dispatch) => {
   return getSourcesApi()
     .pauseSource(sourceId)
-    .then(() => dispatch(loadEntities({ loaded: 0 })));
+    .then(() => {
+      dispatch(
+        addMessage({
+          title: intl.formatMessage({ id: 'source.paused.alert.title', defaultMessage: 'Source paused' }),
+          description: intl.formatMessage(
+            {
+              id: 'source.paused.alert.description',
+              defaultMessage:
+                'Source <b>{ sourceName }</b> is now paused. Data collection for all connected applications will be disabled until the source is resumed.',
+            },
+            { sourceName, b: bold }
+          ),
+          variant: 'default',
+          customIcon: <PauseIcon />,
+        })
+      );
+      dispatch(loadEntities({ loaded: 0 }));
+    });
 };
 
-export const resumeSource = (sourceId) => (dispatch) => {
+export const resumeSource = (sourceId, sourceName, intl) => (dispatch) => {
   return getSourcesApi()
     .unpauseSource(sourceId)
-    .then(() => dispatch(loadEntities({ loaded: 0 })));
+    .then(() => {
+      dispatch(
+        addMessage({
+          title: intl.formatMessage({ id: 'source.resumed.alert.title', defaultMessage: 'Source resumed' }),
+          description: intl.formatMessage(
+            {
+              id: 'source.resumed.alert.description',
+              defaultMessage: 'Source <b>{ sourceName }</b> will recontinue data collection for connected applications.',
+            },
+            { sourceName, b: bold }
+          ),
+          variant: 'default',
+          customIcon: <PlayIcon />,
+        })
+      );
+      dispatch(loadEntities({ loaded: 0 }));
+    });
 };

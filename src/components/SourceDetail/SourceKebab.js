@@ -40,7 +40,7 @@ const SourceKebab = () => {
           <DropdownItem
             {...(!hasRightAccess && disabledProps)}
             key="unpause"
-            onClick={() => dispatch(resumeSource(source.id))}
+            onClick={() => dispatch(resumeSource(source.id, source.name, intl))}
             description={intl.formatMessage({
               id: 'detail.resume.description',
               defaultMessage: 'Unpause data collection for this source',
@@ -55,7 +55,7 @@ const SourceKebab = () => {
           <DropdownItem
             {...(!hasRightAccess && disabledProps)}
             key="pause"
-            onClick={() => dispatch(pauseSource(source.id))}
+            onClick={() => dispatch(pauseSource(source.id, source.name, intl))}
             description={intl.formatMessage({
               id: 'detail.pause.description',
               defaultMessage: 'Temporarily disable data collection',

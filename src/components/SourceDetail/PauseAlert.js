@@ -27,7 +27,7 @@ const PauseAlert = () => {
         })}
         actionLinks={
           writePermissions ? (
-            <AlertActionLink onClick={() => dispatch(resumeSource(source.id))}>
+            <AlertActionLink onClick={() => dispatch(resumeSource(source.id, source.name, intl))}>
               {intl.formatMessage({
                 id: 'source.detail.resumeConnection',
                 defaultMessage: 'Resume connection',

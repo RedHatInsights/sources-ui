@@ -15,6 +15,7 @@ describe('SourceKebab', () => {
   let store;
 
   const sourceId = '3627987';
+  const sourceName = 'source-name-123';
   const initialEntry = [replaceRouteId(routes.sourcesDetail.path, sourceId)];
 
   const PAUSE_RESUME_INDEX = 0;
@@ -122,7 +123,7 @@ describe('SourceKebab', () => {
   it('unpause source', async () => {
     store = mockStore({
       sources: {
-        entities: [{ id: sourceId, paused_at: 'today' }],
+        entities: [{ id: sourceId, paused_at: 'today', name: sourceName }],
       },
       user: { isOrgAdmin: true, writePermissions: true },
     });
@@ -147,14 +148,14 @@ describe('SourceKebab', () => {
     });
     wrapper.update();
 
-    expect(actions.resumeSource).toHaveBeenCalledWith(sourceId);
+    expect(actions.resumeSource).toHaveBeenCalledWith(sourceId, sourceName, expect.any(Object));
   });
 
   describe('with permissions', () => {
     beforeEach(() => {
       store = mockStore({
         sources: {
-          entities: [{ id: sourceId }],
+          entities: [{ id: sourceId, name: sourceName }],
         },
         user: { isOrgAdmin: true, writePermissions: true },
       });
@@ -231,7 +232,7 @@ describe('SourceKebab', () => {
       });
       wrapper.update();
 
-      expect(actions.pauseSource).toHaveBeenCalledWith(sourceId);
+      expect(actions.pauseSource).toHaveBeenCalledWith(sourceId, sourceName, expect.any(Object));
     });
 
     it('rename source', async () => {
