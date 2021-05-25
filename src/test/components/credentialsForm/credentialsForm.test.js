@@ -127,6 +127,10 @@ describe('CredentialsForm', () => {
     });
     wrapper.update();
 
+    expect(wrapper.find(Modal).props().title).toEqual('View account authorization credentials');
+    expect(wrapper.find(Modal).props().description).toEqual(undefined);
+    expect(wrapper.find(Modal).props().footer).toEqual(null);
+
     expect(
       wrapper
         .find(SourcesFormRenderer)
