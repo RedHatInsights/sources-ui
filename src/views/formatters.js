@@ -327,6 +327,7 @@ export const availabilityFormatter = (_status, source, { appTypes }) => {
           className="clickable"
           color={getStatusColor(status)}
           {...(source.availability_status === IN_PROGRESS && { icon: <WrenchIcon /> })}
+          {...(source.paused_at && { icon: <PauseIcon /> })}
         >
           {getStatusText(status)}
         </Label>

@@ -694,6 +694,7 @@ describe('formatters', () => {
 
         expect(wrapper.find(Label)).toHaveLength(1);
         expect(wrapper.find('.pf-c-label').text()).toEqual('Paused');
+        expect(wrapper.find(PauseIcon)).toHaveLength(1);
       });
     });
 
