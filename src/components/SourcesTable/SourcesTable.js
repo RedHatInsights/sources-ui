@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { Table, TableHeader, TableBody, sortable, wrappable } from '@patternfly/react-table';
 import { useIntl } from 'react-intl';
 
-import { sortEntities } from '../../redux/sources/actions';
+import { pauseSource, resumeSource, sortEntities } from '../../redux/sources/actions';
 import { PlaceHolderTable, RowWrapperLoader } from './loaders';
 import { sourcesColumns, COLUMN_COUNT } from '../../views/sourcesViewDefinition';
 import EmptyStateTable from './EmptyStateTable';
@@ -62,7 +62,7 @@ const initialState = (columns) => ({
   cells: prepareColumnsCells(columns),
 });
 
-export const actionResolver = (intl, push, isOrgAdmin) => (rowData) => {
+export const actionResolver = (intl, push, isOrgAdmin, dispatch) => (rowData) => {
   const tooltip = intl.formatMessage({
     id: 'sources.notAdminButton',
     defaultMessage: 'To perform this action, you must be granted write permissions from your Organization Administrator.',
@@ -86,7 +86,7 @@ export const actionResolver = (intl, push, isOrgAdmin) => (rowData) => {
         id: 'sources.resume.description',
         defaultMessage: 'Unpause data collection for this source',
       }),
-      //onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesRemove.path, id)),
+      onClick: (_ev, _i, { id }) => dispatch(resumeSource(id)),
       ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
     });
   } else {
@@ -99,7 +99,7 @@ export const actionResolver = (intl, push, isOrgAdmin) => (rowData) => {
         id: 'sources.pause.description',
         defaultMessage: 'Temporarily disable data collection',
       }),
-      //onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesRemove.path, id)),
+      onClick: (_ev, _i, { id }) => dispatch(pauseSource(id)),
       ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
     });
   }
@@ -235,7 +235,7 @@ const SourcesTable = () => {
       }}
       rows={shownRows}
       cells={state.cells}
-      actionResolver={loaded && numberOfEntities > 0 ? actionResolver(intl, push, writePermissions) : undefined}
+      actionResolver={loaded && numberOfEntities > 0 ? actionResolver(intl, push, writePermissions, reduxDispatch) : undefined}
       rowWrapper={RowWrapperLoader}
     >
       <TableHeader />

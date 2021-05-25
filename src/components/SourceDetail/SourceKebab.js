@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
 
 import { replaceRouteId, routes } from '../../Routes';
 import { useSource } from '../../hooks/useSource';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
+import { pauseSource, resumeSource } from '../../redux/sources/actions';
 
 const SourceKebab = () => {
   const [isOpen, setOpen] = useState(false);
@@ -14,6 +16,7 @@ const SourceKebab = () => {
   const { push } = useHistory();
   const source = useSource();
   const hasRightAccess = useHasWritePermissions();
+  const dispatch = useDispatch();
 
   const tooltip = intl.formatMessage({
     id: 'sources.notAdminButton',
@@ -37,7 +40,7 @@ const SourceKebab = () => {
           <DropdownItem
             {...(!hasRightAccess && disabledProps)}
             key="unpause"
-            //onClick={() => push(replaceRouteId(routes.sourcesDetailRemove.path, source.id))}
+            onClick={() => dispatch(resumeSource(source.id))}
             description={intl.formatMessage({
               id: 'detail.resume.description',
               defaultMessage: 'Unpause data collection for this source',
@@ -52,7 +55,7 @@ const SourceKebab = () => {
           <DropdownItem
             {...(!hasRightAccess && disabledProps)}
             key="pause"
-            //onClick={() => push(replaceRouteId(routes.sourcesDetailRemove.path, source.id))}
+            onClick={() => dispatch(pauseSource(source.id))}
             description={intl.formatMessage({
               id: 'detail.pause.description',
               defaultMessage: 'Temporarily disable data collection',

@@ -7,11 +7,7 @@ import LongArrowAltDownIcon from '@patternfly/react-icons/dist/js/icons/long-arr
 
 import { DropdownItem } from '@patternfly/react-core';
 
-import SourcesTable, {
-  insertEditAction,
-  actionResolver,
-  prepareColumnsCells,
-} from '../../../components/SourcesTable/SourcesTable';
+import SourcesTable, { actionResolver, prepareColumnsCells } from '../../../components/SourcesTable/SourcesTable';
 import { PlaceHolderTable, RowWrapperLoader, Loader } from '../../../components/SourcesTable/loaders';
 import EmptyStateTable from '../../../components/SourcesTable/EmptyStateTable';
 
@@ -234,6 +230,7 @@ describe('SourcesTable', () => {
     const DELETE_SOURCE_INDEX = 1;
     const EDIT_SOURCE_INDEX = 2;
     let wrapper;
+    let store;
 
     beforeEach(async () => {
       initialState = {

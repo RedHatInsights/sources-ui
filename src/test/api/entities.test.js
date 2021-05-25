@@ -249,6 +249,24 @@ describe('entities spec', () => {
 
         expect(result).toEqual(OK_RESPONSE);
       });
+
+      it('pauseSource', async () => {
+        const method = 'Post';
+        mock[`on${method}`](`/api/sources/v3.1/sources/${SOURCE_ID}/pause`).reply(200, OK_RESPONSE);
+
+        const result = await api.getSourcesApi().pauseSource(SOURCE_ID);
+
+        expect(result).toEqual(OK_RESPONSE);
+      });
+
+      it('unpauseSource', async () => {
+        const method = 'Post';
+        mock[`on${method}`](`/api/sources/v3.1/sources/${SOURCE_ID}/unpause`).reply(200, OK_RESPONSE);
+
+        const result = await api.getSourcesApi().unpauseSource(SOURCE_ID);
+
+        expect(result).toEqual(OK_RESPONSE);
+      });
     });
 
     it('doRemoveSource fails', async () => {

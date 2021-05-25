@@ -11,6 +11,8 @@ import {
   loadSourceTypes,
   renameSource,
   setActiveVendor,
+  pauseSource,
+  resumeSource,
 } from '../../../redux/sources/actions';
 import {
   ADD_HIDDEN_SOURCE,
@@ -384,5 +386,45 @@ describe('redux actions', () => {
     expect(dispatch.mock.calls).toHaveLength(2);
     expect(dispatch.mock.calls[0][0]).toEqual({ type: SET_VENDOR, payload: { vendor: CLOUD_VENDOR } });
     expect(dispatch.mock.calls[1][0]).toEqual(expect.any(Function));
+  });
+
+  describe('pausing and unpausing source', () => {
+    const sourceId = '123-source';
+    let innerDispatch;
+
+    beforeEach(() => {
+      innerDispatch = jest.fn();
+      dispatch = jest.fn().mockImplementation((x) => x(innerDispatch, () => ({ sources: {} })));
+    });
+
+    it('pauseSource', async () => {
+      const pauseSourceApi = jest.fn().mockImplementation(() => Promise.resolve('ok'));
+
+      api.getSourcesApi = () => ({
+        pauseSource: pauseSourceApi,
+      });
+
+      await pauseSource(sourceId)(dispatch);
+
+      expect(pauseSourceApi).toHaveBeenCalledWith(sourceId);
+
+      const types = innerDispatch.mock.calls.map(([{ type }]) => type);
+      expect(types).toEqual(['LOAD_ENTITIES_PENDING', 'SET_COUNT', 'LOAD_ENTITIES_REJECTED']);
+    });
+
+    it('resumeSource', async () => {
+      const unpauseSourceApi = jest.fn().mockImplementation(() => Promise.resolve('ok'));
+
+      api.getSourcesApi = () => ({
+        unpauseSource: unpauseSourceApi,
+      });
+
+      await resumeSource(sourceId)(dispatch);
+
+      expect(unpauseSourceApi).toHaveBeenCalledWith(sourceId);
+
+      const types = innerDispatch.mock.calls.map(([{ type }]) => type);
+      expect(types).toEqual(['LOAD_ENTITIES_PENDING', 'SET_COUNT', 'LOAD_ENTITIES_REJECTED']);
+    });
   });
 });

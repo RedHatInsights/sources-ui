@@ -8,6 +8,7 @@ import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import SourceKebab from '../../../components/SourceDetail/SourceKebab';
 import mockStore from '../../__mocks__/mockStore';
+import * as actions from '../../../redux/sources/actions';
 
 describe('SourceKebab', () => {
   let wrapper;
@@ -118,6 +119,37 @@ describe('SourceKebab', () => {
     expect(wrapper.find('InternalDropdownItem').at(RENAME_INDEX).text()).toEqual('Rename');
   });
 
+  it('unpause source', async () => {
+    store = mockStore({
+      sources: {
+        entities: [{ id: sourceId, paused_at: 'today' }],
+      },
+      user: { isOrgAdmin: true, writePermissions: true },
+    });
+
+    wrapper = mount(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetail.path} render={(...args) => <SourceKebab {...args} />} />,
+        store,
+        initialEntry
+      )
+    );
+
+    await act(async () => {
+      wrapper.find(KebabToggle).props().onToggle();
+    });
+    wrapper.update();
+
+    actions.resumeSource = jest.fn().mockImplementation(() => ({ type: 'undefined' }));
+
+    await act(async () => {
+      wrapper.find(DropdownItem).at(PAUSE_RESUME_INDEX).simulate('click');
+    });
+    wrapper.update();
+
+    expect(actions.resumeSource).toHaveBeenCalledWith(sourceId);
+  });
+
   describe('with permissions', () => {
     beforeEach(() => {
       store = mockStore({
@@ -192,30 +224,14 @@ describe('SourceKebab', () => {
       });
       wrapper.update();
 
+      actions.pauseSource = jest.fn().mockImplementation(() => ({ type: 'undefined' }));
+
       await act(async () => {
-        wrapper.find(DropdownItem).at(REMOVE_INDEX).simulate('click');
+        wrapper.find(DropdownItem).at(PAUSE_RESUME_INDEX).simulate('click');
       });
       wrapper.update();
 
-      expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
-        replaceRouteId(routes.sourcesDetailRemove.path, sourceId)
-      );
-    });
-
-    it('unpause source', async () => {
-      await act(async () => {
-        wrapper.find(KebabToggle).props().onToggle();
-      });
-      wrapper.update();
-
-      await act(async () => {
-        wrapper.find(DropdownItem).at(REMOVE_INDEX).simulate('click');
-      });
-      wrapper.update();
-
-      expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
-        replaceRouteId(routes.sourcesDetailRemove.path, sourceId)
-      );
+      expect(actions.pauseSource).toHaveBeenCalledWith(sourceId);
     });
 
     it('rename source', async () => {

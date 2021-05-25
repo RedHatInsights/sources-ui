@@ -69,6 +69,8 @@ export const getSourcesApi = () => ({
   bulkCreate: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/bulk_create`, data),
   pauseApplication: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/applications/${id}/pause`),
   unpauseApplication: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/applications/${id}/unpause`),
+  pauseSource: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/sources/${id}/pause`),
+  unpauseSource: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/sources/${id}/unpause`),
 });
 
 export const doLoadAppTypes = () => getSourcesApi().doLoadAppTypes();

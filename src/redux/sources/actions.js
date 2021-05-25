@@ -231,3 +231,15 @@ export const setActiveVendor = (vendor) => (dispatch) => {
 
   return dispatch(loadEntities());
 };
+
+export const pauseSource = (sourceId) => (dispatch) => {
+  return getSourcesApi()
+    .pauseSource(sourceId)
+    .then(() => dispatch(loadEntities({ loaded: 0 })));
+};
+
+export const resumeSource = (sourceId) => (dispatch) => {
+  return getSourcesApi()
+    .unpauseSource(sourceId)
+    .then(() => dispatch(loadEntities({ loaded: 0 })));
+};
