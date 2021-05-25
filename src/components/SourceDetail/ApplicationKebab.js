@@ -32,8 +32,20 @@ const ApplicationKebab = ({ app, removeApp, addApp }) => {
     className: 'ins-c-sources__disabled-drodpown-item',
   };
 
+  const pausedTooltip = intl.formatMessage({
+    id: 'sources.pausedSourceAction',
+    defaultMessage: 'You cannot perform this action on a paused source.',
+  });
+
+  const pausedProps = {
+    tooltip: pausedTooltip,
+    isDisabled: true,
+    className: 'ins-c-sources__disabled-drodpown-item',
+  };
+
   const pausedButton = app.paused_at ? (
     <DropdownItem
+      {...(source.paused_at && pausedProps)}
       {...(!hasRightAccess && disabledProps)}
       key="resume"
       description={intl.formatMessage({
@@ -49,6 +61,7 @@ const ApplicationKebab = ({ app, removeApp, addApp }) => {
     </DropdownItem>
   ) : (
     <DropdownItem
+      {...(source.paused_at && pausedProps)}
       {...(!hasRightAccess && disabledProps)}
       key="pause"
       description={intl.formatMessage({
@@ -65,6 +78,7 @@ const ApplicationKebab = ({ app, removeApp, addApp }) => {
   );
   const removedButton = (
     <DropdownItem
+      {...(source.paused_at && pausedProps)}
       {...(!hasRightAccess && disabledProps)}
       key="remove"
       description={intl.formatMessage({

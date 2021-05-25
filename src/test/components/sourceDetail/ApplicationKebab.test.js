@@ -206,6 +206,54 @@ describe('ApplicationKebab', () => {
     });
   });
 
+  describe('paused source', () => {
+    it('renders correctly', async () => {
+      store = mockStore({
+        sources: {
+          entities: [{ id: sourceId, paused_at: 'now' }],
+        },
+        user: { isOrgAdmin: true, writePermissions: true },
+      });
+
+      app = {
+        ...app,
+        paused_at: 'today',
+      };
+
+      initialProps = { ...initialProps, app };
+
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationKebab {...args} {...initialProps} />} />,
+          store,
+          initialEntry
+        )
+      );
+
+      expect(wrapper.find(Dropdown)).toHaveLength(1);
+
+      await act(async () => {
+        wrapper.find(KebabToggle).props().onToggle();
+      });
+      wrapper.update();
+
+      expect(wrapper.find(DropdownItem)).toHaveLength(2);
+      expect(wrapper.find(DropdownItem).first().props().isDisabled).toEqual(true);
+      expect(wrapper.find(DropdownItem).first().props().tooltip).toEqual('You cannot perform this action on a paused source.');
+      expect(wrapper.find('InternalDropdownItem').first().text()).toEqual('ResumeResume data collection for this application.');
+      expect(wrapper.find(DropdownItem).first().props().description).toEqual('Resume data collection for this application.');
+
+      expect(wrapper.find(DropdownItem).last().props().isDisabled).toEqual(true);
+      expect(wrapper.find(DropdownItem).last().props().tooltip).toEqual('You cannot perform this action on a paused source.');
+      expect(wrapper.find(DropdownItem).last().props().description).toEqual(
+        'Permanently stop data collection for this application.'
+      );
+      expect(wrapper.find('InternalDropdownItem').last().text()).toEqual(
+        'RemovePermanently stop data collection for this application.'
+      );
+    });
+  });
+
   describe('with permissions and paused', () => {
     beforeEach(() => {
       store = mockStore({
