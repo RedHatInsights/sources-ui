@@ -72,12 +72,20 @@ const SourceEditModal = () => {
     );
   }
 
+  const hideFormControls = source.source.paused_at || source.applications.every(({ paused_at }) => paused_at);
+
   return (
     <SourcesFormRenderer
       schema={schema}
       onSubmit={(values, formApi) => onSubmit(values, formApi.getState().dirtyFields, dispatch, source, intl, setState)}
       FormTemplate={(props) => (
-        <FormTemplate canReset submitLabel="Save changes" disableSubmit={['pristine', 'invalid']} {...props} />
+        <FormTemplate
+          canReset
+          showFormControls={!hideFormControls}
+          submitLabel="Save changes"
+          disableSubmit={['pristine', 'invalid']}
+          {...props}
+        />
       )}
       clearedValue={null}
       initialValues={{

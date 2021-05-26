@@ -6,7 +6,7 @@ import { act } from 'react-dom/test-utils';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import SourceEditModal from '../../../components/SourceEditForm/SourceEditModal';
 import { routes, replaceRouteId } from '../../../Routes';
-import { applicationTypesData, CATALOG_APP } from '../../__mocks__/applicationTypesData';
+import { applicationTypesData, CATALOG_APP, TOPOLOGICALINVENTORY_APP } from '../../__mocks__/applicationTypesData';
 import { sourceTypesData, ANSIBLE_TOWER_ID } from '../../__mocks__/sourceTypesData';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
 
@@ -27,6 +27,7 @@ import { useDispatch } from 'react-redux';
 import { UNAVAILABLE } from '../../../views/formatters';
 import mockStore from '../../__mocks__/mockStore';
 import { getStore } from '../../../utilities/store';
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 
 describe('SourceEditModal', () => {
   let store;
@@ -277,6 +278,157 @@ describe('SourceEditModal', () => {
       'Default alert:Catalog is pausedTo resume data collection for this application, switch Catalog on in the Applications section of this page.'
     );
     expect(wrapper.find(EditAlert).find(Alert).find(PauseIcon)).toHaveLength(1);
+    expect(wrapper.find(FormTemplate).props().showFormControls).toEqual(false);
+  });
+
+  it('renders correctly with paused applications', async () => {
+    editApi.doLoadSourceForEdit = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        source: {
+          name: 'Name',
+          source_type_id: ANSIBLE_TOWER_ID,
+          applications: [
+            {
+              id: '123',
+              application_type_id: CATALOG_APP.id,
+              authentications: [{ id: '343' }],
+              paused_at: 'today',
+            },
+            {
+              id: '124',
+              application_type_id: TOPOLOGICALINVENTORY_APP.id,
+              authentications: [{ id: '3434' }],
+              paused_at: 'today',
+            },
+          ],
+          endpoints: [],
+        },
+        applications: [
+          {
+            application_type_id: CATALOG_APP.id,
+            id: '123',
+            authentications: [{ type: 'username_password', username: '123', id: '343' }],
+            paused_at: 'today',
+          },
+          {
+            id: '124',
+            application_type_id: TOPOLOGICALINVENTORY_APP.id,
+            authentications: [{ id: '3434', type: 'arn' }],
+            paused_at: 'today',
+          },
+        ],
+        endpoints: [],
+        authentications: [],
+      })
+    );
+
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <SourceEditModal {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+    });
+    wrapper.update();
+
+    expect(wrapper.find(FormTemplate).props().showFormControls).toEqual(false);
+  });
+
+  it('renders correctly with paused application and unpaused application', async () => {
+    editApi.doLoadSourceForEdit = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        source: {
+          name: 'Name',
+          source_type_id: ANSIBLE_TOWER_ID,
+          applications: [
+            {
+              id: '123',
+              application_type_id: CATALOG_APP.id,
+              authentications: [{ id: '343' }],
+              paused_at: 'today',
+            },
+            {
+              id: '124',
+              application_type_id: TOPOLOGICALINVENTORY_APP.id,
+              authentications: [{ id: '3434' }],
+            },
+          ],
+          endpoints: [],
+        },
+        applications: [
+          {
+            application_type_id: CATALOG_APP.id,
+            id: '123',
+            authentications: [{ type: 'username_password', username: '123', id: '343' }],
+            paused_at: 'today',
+          },
+          {
+            id: '124',
+            application_type_id: TOPOLOGICALINVENTORY_APP.id,
+            authentications: [{ id: '3434', type: 'arn' }],
+          },
+        ],
+        endpoints: [],
+        authentications: [],
+      })
+    );
+
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <SourceEditModal {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+    });
+    wrapper.update();
+
+    expect(wrapper.find(FormTemplate).props().showFormControls).toEqual(true);
+  });
+
+  it('renders correctly with paused source', async () => {
+    editApi.doLoadSourceForEdit = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        source: {
+          name: 'Name',
+          paused_at: 'today',
+          source_type_id: ANSIBLE_TOWER_ID,
+          applications: [
+            {
+              id: '123',
+              application_type_id: CATALOG_APP.id,
+              authentications: [{ id: '343' }],
+            },
+          ],
+          endpoints: [],
+        },
+        applications: [
+          {
+            application_type_id: CATALOG_APP.id,
+            id: '123',
+            authentications: [{ type: 'username_password', username: '123', id: '343' }],
+          },
+        ],
+        endpoints: [],
+        authentications: [],
+      })
+    );
+
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <SourceEditModal {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+    });
+    wrapper.update();
+
+    expect(wrapper.find(FormTemplate).props().showFormControls).toEqual(false);
   });
 
   it('reload data when source from redux is changed', async () => {
