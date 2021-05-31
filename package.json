@@ -36,6 +36,7 @@
     "redux-thunk": "^2.3.0"
   },
   "jest": {
+    "testEnvironment": "jsdom",
     "collectCoverage": true,
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}",

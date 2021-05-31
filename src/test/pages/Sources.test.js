@@ -675,6 +675,8 @@ describe('SourcesPage', () => {
     const filterInput = (wrapper) => wrapper.find('input').at(FILTER_INPUT_INDEX);
 
     beforeEach(async () => {
+      jest.useFakeTimers();
+
       await act(async () => {
         wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
       });
@@ -688,194 +690,202 @@ describe('SourcesPage', () => {
       wrapper.update();
     });
 
-    it('should call onFilterSelect', (done) => {
-      setTimeout(() => {
-        expect(store.getState().sources.filterValue).toEqual({
-          name: SEARCH_TERM,
-        });
-        done();
-      }, 500);
+    afterEach(async () => {
+      await act(async () => {
+        jest.runAllTimers();
+      });
+      jest.useRealTimers();
     });
 
-    it('should call onFilterSelect with type', (done) => {
-      setTimeout(() => {
-        wrapper.update();
-        expect(wrapper.find(Chip)).toHaveLength(1);
+    it('should call onFilterSelect', async () => {
+      await act(async () => {
+        jest.advanceTimersByTime(500);
+      });
 
-        // Switch to source type in conditional filter
-        wrapper.find('ConditionalFilter').setState({ stateValue: 1 });
-        wrapper.update();
-
-        const checkboxDropdownProps = wrapper.find(Select).last().props();
-
-        // Select openshift
-        const EVENT = {};
-        checkboxDropdownProps.onSelect(EVENT, OPENSHIFT_ID);
-        wrapper.update();
-
-        expect(wrapper.find(Chip)).toHaveLength(2);
-        expect(store.getState().sources.filterValue).toEqual({
-          name: SEARCH_TERM,
-          source_type_id: [OPENSHIFT_ID],
-        });
-        done();
-      }, 500);
+      expect(store.getState().sources.filterValue).toEqual({
+        name: SEARCH_TERM,
+      });
     });
 
-    it('should call onFilterSelect with applications', (done) => {
-      setTimeout(() => {
-        wrapper.update();
-        expect(wrapper.find(Chip)).toHaveLength(1);
+    it('should call onFilterSelect with type', async () => {
+      await act(async () => {
+        jest.advanceTimersByTime(500);
+      });
+      wrapper.update();
 
-        // Switch to source type in conditional filter
-        wrapper.find('ConditionalFilter').setState({ stateValue: 2 });
-        wrapper.update();
+      expect(wrapper.find(Chip)).toHaveLength(1);
 
-        const checkboxDropdownProps = wrapper.find(Select).last().props();
+      // Switch to source type in conditional filter
+      wrapper.find('ConditionalFilter').setState({ stateValue: 1 });
+      wrapper.update();
 
-        // Select openshift
-        const EVENT = {};
-        checkboxDropdownProps.onSelect(EVENT, CATALOG_APP.id);
-        wrapper.update();
+      const checkboxDropdownProps = wrapper.find(Select).last().props();
 
-        expect(wrapper.find(Chip)).toHaveLength(2);
-        expect(store.getState().sources.filterValue).toEqual({
-          name: SEARCH_TERM,
-          applications: [CATALOG_APP.id],
-        });
-        done();
-      }, 500);
+      // Select openshift
+      const EVENT = {};
+      checkboxDropdownProps.onSelect(EVENT, OPENSHIFT_ID);
+      wrapper.update();
+
+      expect(wrapper.find(Chip)).toHaveLength(2);
+      expect(store.getState().sources.filterValue).toEqual({
+        name: SEARCH_TERM,
+        source_type_id: [OPENSHIFT_ID],
+      });
     });
 
-    it('should call onFilterSelect with available status', (done) => {
-      setTimeout(() => {
-        wrapper.update();
-        expect(wrapper.find(Chip)).toHaveLength(1);
+    it('should call onFilterSelect with applications', async () => {
+      await act(async () => {
+        jest.advanceTimersByTime(500);
+      });
+      wrapper.update();
 
-        // Switch to status type in conditional filter
-        wrapper.find('ConditionalFilter').setState({ stateValue: 3 });
-        wrapper.update();
+      expect(wrapper.find(Chip)).toHaveLength(1);
 
-        const checkboxDropdownProps = wrapper.find(Select).last().props();
+      // Switch to source type in conditional filter
+      wrapper.find('ConditionalFilter').setState({ stateValue: 2 });
+      wrapper.update();
 
-        const EVENT = { target: { checked: true } };
-        const EVENT_FALSE = { target: { checked: false } };
+      const checkboxDropdownProps = wrapper.find(Select).last().props();
 
-        // Select available
-        checkboxDropdownProps.onSelect(EVENT, AVAILABLE);
-        wrapper.update();
+      // Select openshift
+      const EVENT = {};
+      checkboxDropdownProps.onSelect(EVENT, CATALOG_APP.id);
+      wrapper.update();
 
-        expect(wrapper.find(Chip)).toHaveLength(2);
-        expect(store.getState().sources.filterValue).toEqual({
-          name: SEARCH_TERM,
-          availability_status: [AVAILABLE],
-        });
+      expect(wrapper.find(Chip)).toHaveLength(2);
+      expect(store.getState().sources.filterValue).toEqual({
+        name: SEARCH_TERM,
+        applications: [CATALOG_APP.id],
+      });
+    });
 
-        // Select unavailable
-        checkboxDropdownProps.onSelect(EVENT, UNAVAILABLE);
-        wrapper.update();
+    it('should call onFilterSelect with available status', async () => {
+      await act(async () => {
+        jest.advanceTimersByTime(500);
+      });
+      wrapper.update();
+      expect(wrapper.find(Chip)).toHaveLength(1);
 
-        expect(store.getState().sources.filterValue).toEqual({
-          name: SEARCH_TERM,
-          availability_status: [UNAVAILABLE],
-        });
+      // Switch to status type in conditional filter
+      wrapper.find('ConditionalFilter').setState({ stateValue: 3 });
+      wrapper.update();
 
-        // Deselect unavailable
-        checkboxDropdownProps.onSelect(EVENT_FALSE, UNAVAILABLE);
-        wrapper.update();
+      const checkboxDropdownProps = wrapper.find(Select).last().props();
 
-        expect(store.getState().sources.filterValue).toEqual({
-          name: SEARCH_TERM,
-          availability_status: [],
-        });
+      const EVENT = { target: { checked: true } };
+      const EVENT_FALSE = { target: { checked: false } };
 
-        done();
-      }, 500);
+      // Select available
+      checkboxDropdownProps.onSelect(EVENT, AVAILABLE);
+      wrapper.update();
+
+      expect(wrapper.find(Chip)).toHaveLength(2);
+      expect(store.getState().sources.filterValue).toEqual({
+        name: SEARCH_TERM,
+        availability_status: [AVAILABLE],
+      });
+
+      // Select unavailable
+      checkboxDropdownProps.onSelect(EVENT, UNAVAILABLE);
+      wrapper.update();
+
+      expect(store.getState().sources.filterValue).toEqual({
+        name: SEARCH_TERM,
+        availability_status: [UNAVAILABLE],
+      });
+
+      // Deselect unavailable
+      checkboxDropdownProps.onSelect(EVENT_FALSE, UNAVAILABLE);
+      wrapper.update();
+
+      expect(store.getState().sources.filterValue).toEqual({
+        name: SEARCH_TERM,
+        availability_status: [],
+      });
     });
 
     it('filtered value is shown in the input', () => {
       expect(filterInput(wrapper).props().value).toEqual(SEARCH_TERM);
     });
 
-    it('should remove the name badge when clicking on remove icon in chip', (done) => {
-      setTimeout(async () => {
-        wrapper.update();
+    it('should remove the name badge when clicking on remove icon in chip', async () => {
+      await act(async () => {
+        jest.advanceTimersByTime(500);
+      });
+      wrapper.update();
 
-        expect(wrapper.find(Chip)).toHaveLength(1);
+      expect(wrapper.find(Chip)).toHaveLength(1);
 
-        const chipButton = wrapper.find(Chip).find(Button);
+      const chipButton = wrapper.find(Chip).find(Button);
 
-        await act(async () => chipButton.simulate('click'));
-        wrapper.update();
+      await act(async () => chipButton.simulate('click'));
+      wrapper.update();
 
-        expect(wrapper.find(Chip)).toHaveLength(0);
-        expect(filterInput(wrapper).props().value).toEqual(EMPTY_VALUE);
-
-        done();
-      }, 500);
+      expect(wrapper.find(Chip)).toHaveLength(0);
+      expect(filterInput(wrapper).props().value).toEqual(EMPTY_VALUE);
     });
 
-    it('should not remove the name badge when clicking on chip', (done) => {
-      setTimeout(async () => {
-        wrapper.update();
+    it('should not remove the name badge when clicking on chip', async () => {
+      await act(async () => {
+        jest.advanceTimersByTime(500);
+      });
+      wrapper.update();
 
-        expect(wrapper.find(Chip)).toHaveLength(1);
+      expect(wrapper.find(Chip)).toHaveLength(1);
 
-        await act(async () => wrapper.find(Chip).simulate('click'));
-        wrapper.update();
+      await act(async () => wrapper.find(Chip).simulate('click'));
+      wrapper.update();
 
-        expect(wrapper.find(Chip)).toHaveLength(1);
-        expect(filterInput(wrapper).props().value).toEqual(SEARCH_TERM);
-
-        done();
-      }, 500);
+      expect(wrapper.find(Chip)).toHaveLength(1);
+      expect(filterInput(wrapper).props().value).toEqual(SEARCH_TERM);
     });
 
-    it('should remove the name badge when clicking on Clear filters button', (done) => {
+    it('should remove the name badge when clicking on Clear filters button', async () => {
       const clearFillterButtonSelector = '.pf-m-link';
 
-      setTimeout(async () => {
-        wrapper.update();
+      await act(async () => {
+        jest.advanceTimersByTime(500);
+      });
+      wrapper.update();
 
-        expect(wrapper.find(clearFillterButtonSelector)).toHaveLength(1);
+      expect(wrapper.find(clearFillterButtonSelector)).toHaveLength(1);
 
-        await act(async () => wrapper.find(clearFillterButtonSelector).simulate('click'));
-        wrapper.update();
+      await act(async () => wrapper.find(clearFillterButtonSelector).simulate('click'));
+      wrapper.update();
 
-        expect(wrapper.find(clearFillterButtonSelector)).toHaveLength(0);
-        done();
-      }, 500);
+      expect(wrapper.find(clearFillterButtonSelector)).toHaveLength(0);
     });
 
-    it('renders emptyStateTable when no entities found', (done) => {
-      setTimeout(async () => {
-        wrapper.update();
+    it('renders emptyStateTable when no entities found', async () => {
+      await act(async () => {
+        jest.advanceTimersByTime(500);
+      });
+      wrapper.update();
 
-        api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
-        api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+      api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
+      api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
 
-        const totalNonsense = '122#$@#%#^$#@!^$#^$#^546454abcerd';
+      const totalNonsense = '122#$@#%#^$#@!^$#^$#^546454abcerd';
 
-        await act(async () => {
-          filterInput(wrapper).simulate('change', {
-            target: { value: totalNonsense },
-          });
+      await act(async () => {
+        filterInput(wrapper).simulate('change', {
+          target: { value: totalNonsense },
         });
+      });
 
-        setTimeout(() => {
-          wrapper.update();
-          expect(store.getState().sources.filterValue).toEqual({
-            name: totalNonsense,
-          });
-          expect(store.getState().sources.numberOfEntities).toEqual(0);
-          expect(wrapper.find(EmptyStateTable)).toHaveLength(1);
-          expect(wrapper.find(Pagination)).toHaveLength(0);
-          done();
-        }, 500);
-      }, 500);
+      await act(async () => {
+        jest.advanceTimersByTime(500);
+      });
+      wrapper.update();
+      expect(store.getState().sources.filterValue).toEqual({
+        name: totalNonsense,
+      });
+      expect(store.getState().sources.numberOfEntities).toEqual(0);
+      expect(wrapper.find(EmptyStateTable)).toHaveLength(1);
+      expect(wrapper.find(Pagination)).toHaveLength(0);
     });
 
-    it('show empty state table after clicking on clears all filter in empty table state - RED HAT', async (done) => {
+    it('show empty state table after clicking on clears all filter in empty table state - RED HAT', async () => {
       store = getStore([], {
         sources: { activeVendor: REDHAT_VENDOR },
         user: { isOrgAdmin: true },
@@ -887,74 +897,82 @@ describe('SourcesPage', () => {
       wrapper.update();
 
       await act(async () => {
+        jest.runAllTimers();
+      });
+      wrapper.update();
+
+      await act(async () => {
         filterInput(wrapper).simulate('change', {
           target: { value: SEARCH_TERM },
         });
       });
       wrapper.update();
 
-      setTimeout(async () => {
-        wrapper.update();
+      await act(async () => {
+        jest.runAllTimers();
+      });
+      wrapper.update();
 
-        api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
-        api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+      api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
+      api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
 
-        const totalNonsense = '122#$@#%#^$#@!^$#^$#^546454abcerd';
+      const totalNonsense = '122#$@#%#^$#@!^$#^$#^546454abcerd';
 
-        await act(async () => {
-          filterInput(wrapper).simulate('change', {
-            target: { value: totalNonsense },
-          });
+      await act(async () => {
+        filterInput(wrapper).simulate('change', {
+          target: { value: totalNonsense },
         });
+      });
+      wrapper.update();
 
-        setTimeout(async () => {
-          wrapper.update();
+      await act(async () => {
+        jest.runAllTimers();
+      });
+      wrapper.update();
 
-          expect(filterInput(wrapper).props().value).toEqual(totalNonsense);
+      expect(filterInput(wrapper).props().value).toEqual(totalNonsense);
 
-          await act(async () => {
-            wrapper.find(Button).last().simulate('click');
-          });
-          wrapper.update();
+      await act(async () => {
+        wrapper.find(Button).last().simulate('click');
+      });
+      wrapper.update();
 
-          expect(wrapper.find(RedHatEmptyState)).toHaveLength(1);
-          done();
-        }, 500);
-      }, 500);
+      expect(wrapper.find(RedHatEmptyState)).toHaveLength(1);
     });
 
-    it('clears filter value in the name input when clicking on clears all filter in empty table state and show table', (done) => {
-      setTimeout(async () => {
-        wrapper.update();
+    it('clears filter value in the name input when clicking on clears all filter in empty table state and show table', async () => {
+      await act(async () => {
+        jest.advanceTimersByTime(500);
+      });
+      wrapper.update();
 
-        api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
-        api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+      api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
+      api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
 
-        const totalNonsense = '122#$@#%#^$#@!^$#^$#^546454abcerd';
+      const totalNonsense = '122#$@#%#^$#@!^$#^$#^546454abcerd';
 
-        await act(async () => {
-          filterInput(wrapper).simulate('change', {
-            target: { value: totalNonsense },
-          });
+      await act(async () => {
+        filterInput(wrapper).simulate('change', {
+          target: { value: totalNonsense },
         });
+      });
 
-        setTimeout(async () => {
-          wrapper.update();
+      await act(async () => {
+        jest.advanceTimersByTime(500);
+      });
+      wrapper.update();
 
-          expect(filterInput(wrapper).props().value).toEqual(totalNonsense);
+      expect(filterInput(wrapper).props().value).toEqual(totalNonsense);
 
-          api.doLoadEntities.mockImplementation(() => Promise.resolve({ sources: sourcesDataGraphQl }));
-          api.doLoadCountOfSources.mockImplementation(() => Promise.resolve({ meta: { count: sourcesDataGraphQl.length } }));
+      api.doLoadEntities.mockImplementation(() => Promise.resolve({ sources: sourcesDataGraphQl }));
+      api.doLoadCountOfSources.mockImplementation(() => Promise.resolve({ meta: { count: sourcesDataGraphQl.length } }));
 
-          await act(async () => {
-            wrapper.find(Button).last().simulate('click');
-          });
-          wrapper.update();
+      await act(async () => {
+        wrapper.find(Button).last().simulate('click');
+      });
+      wrapper.update();
 
-          expect(filterInput(wrapper).props().value).toEqual(EMPTY_VALUE);
-          done();
-        }, 500);
-      }, 500);
+      expect(filterInput(wrapper).props().value).toEqual(EMPTY_VALUE);
     });
   });
 
