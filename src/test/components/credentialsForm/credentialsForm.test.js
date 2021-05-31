@@ -98,6 +98,8 @@ describe('CredentialsForm', () => {
     expect(wrapper.find(SourcesFormRenderer).props().schema).toEqual({
       fields: [generateSuperKeyFields(sourceTypesData.data, AMAZON.name)],
     });
+
+    jest.useRealTimers();
   });
 
   it('closes via cross icon', async () => {
@@ -197,6 +199,8 @@ describe('CredentialsForm', () => {
       title: 'New credentials saved',
       variant: 'info',
     });
+
+    jest.useRealTimers();
   });
 
   it('submit - fail', async () => {
@@ -255,5 +259,7 @@ describe('CredentialsForm', () => {
       title: 'Error updating credentials',
       variant: 'danger',
     });
+
+    jest.useRealTimers();
   });
 });

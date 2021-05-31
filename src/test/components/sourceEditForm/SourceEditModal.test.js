@@ -579,6 +579,8 @@ describe('SourceEditModal', () => {
       expect(wrapper.find(EditAlert).find(Alert).props().children).toEqual(message.description);
 
       expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
+
+      jest.useRealTimers();
     });
 
     it('calls onSubmit - timeout - return to edit', async () => {
@@ -621,6 +623,8 @@ describe('SourceEditModal', () => {
       expect(wrapper.find(Alert).props().variant).toEqual(variant);
       expect(wrapper.find(Alert).props().title).toEqual(title);
       expect(wrapper.find(Alert).text().includes(description)).toEqual(true);
+
+      jest.useRealTimers();
     });
 
     it('calls onSubmit - server error', async () => {
@@ -663,6 +667,8 @@ describe('SourceEditModal', () => {
       wrapper.update();
 
       expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
+
+      jest.useRealTimers();
     });
   });
 

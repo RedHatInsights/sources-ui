@@ -64,7 +64,7 @@ describe('SourcesTable', () => {
     expect(wrapper.find(LongArrowAltDownIcon)).toHaveLength(0);
   });
 
-  it('renders removing row', (done) => {
+  it('renders removing row', async () => {
     initialState = {
       ...initialState,
       sources: {
@@ -75,19 +75,17 @@ describe('SourcesTable', () => {
     };
 
     const store = mockStore(initialState);
-    const wrapper = mount(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
-
-    setTimeout(() => {
-      setTimeout(() => {
-        wrapper.update();
-        expect(wrapper.find(RowWrapperLoader)).toHaveLength(sourcesDataGraphQl.length);
-        expect(wrapper.find(Loader)).toHaveLength(1);
-        done();
-      });
+    let wrapper;
+    await act(async () => {
+      wrapper = mount(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
     });
+    wrapper.update();
+
+    expect(wrapper.find(RowWrapperLoader)).toHaveLength(sourcesDataGraphQl.length);
+    expect(wrapper.find(Loader)).toHaveLength(1);
   });
 
-  it('renders table when loaded', (done) => {
+  it('renders table when loaded', async () => {
     const ROW_WRAPPER_CLASSNAME = 'ins-c-sources__row-vertical-centered';
     initialState = {
       ...initialState,
@@ -98,27 +96,26 @@ describe('SourcesTable', () => {
     };
 
     const store = mockStore(initialState);
-    const wrapper = mount(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
+
+    let wrapper;
+    await act(async () => {
+      wrapper = mount(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
+    });
+    wrapper.update();
 
     const activeSortingIcon = 1;
     const expectSortableColumns =
       sourcesColumns({ formatMessage: () => {} }).filter((x) => x.sortable).length - activeSortingIcon;
 
-    setTimeout(() => {
-      setTimeout(() => {
-        wrapper.update();
-        expect(wrapper.find(PlaceHolderTable)).toHaveLength(0);
-        expect(wrapper.find(Table)).toHaveLength(1);
-        expect(wrapper.find(TableHeader)).toHaveLength(1);
-        expect(wrapper.find(TableBody)).toHaveLength(1);
-        expect(wrapper.find(RowWrapper)).toHaveLength(sourcesDataGraphQl.length);
-        expect(wrapper.find(ActionsColumn)).toHaveLength(sourcesDataGraphQl.length);
-        expect(wrapper.find(RowWrapper).first().props().className).toEqual(ROW_WRAPPER_CLASSNAME);
-        expect(wrapper.find(LongArrowAltDownIcon)).toHaveLength(1);
-        expect(wrapper.find(ArrowsAltVIcon)).toHaveLength(expectSortableColumns);
-        done();
-      });
-    });
+    expect(wrapper.find(PlaceHolderTable)).toHaveLength(0);
+    expect(wrapper.find(Table)).toHaveLength(1);
+    expect(wrapper.find(TableHeader)).toHaveLength(1);
+    expect(wrapper.find(TableBody)).toHaveLength(1);
+    expect(wrapper.find(RowWrapper)).toHaveLength(sourcesDataGraphQl.length);
+    expect(wrapper.find(ActionsColumn)).toHaveLength(sourcesDataGraphQl.length);
+    expect(wrapper.find(RowWrapper).first().props().className).toEqual(ROW_WRAPPER_CLASSNAME);
+    expect(wrapper.find(LongArrowAltDownIcon)).toHaveLength(1);
+    expect(wrapper.find(ArrowsAltVIcon)).toHaveLength(expectSortableColumns);
   });
 
   it('renders table when loaded and its not org admin - no action column', async () => {
@@ -216,8 +213,8 @@ describe('SourcesTable', () => {
     await act(async () => {
       wrapper = mount(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
     });
-
     wrapper.update();
+
     expect(wrapper.find(RowWrapper)).toHaveLength(sourcesDataGraphQl.length);
 
     mockStoreFn.mockImplementation(() => initialStateUpdated);
@@ -237,7 +234,7 @@ describe('SourcesTable', () => {
     const DELETE_SOURCE_INDEX = 1;
     let wrapper;
 
-    beforeEach(() => {
+    beforeEach(async () => {
       initialState = {
         ...initialState,
         sources: {
@@ -247,41 +244,46 @@ describe('SourcesTable', () => {
       };
 
       const store = mockStore(initialState);
-      wrapper = mount(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
+
+      await act(async () => {
+        wrapper = mount(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
+      });
+      wrapper.update();
     });
 
-    it('redirect to edit', (done) => {
-      setTimeout(() => {
-        setTimeout(() => {
-          wrapper.update();
-          wrapper.find('.pf-c-dropdown__toggle').first().simulate('click');
-          wrapper.update();
-          wrapper.find('.pf-c-dropdown__menu-item').at(EDIT_SOURCE_INDEX).simulate('click');
-
-          const expectedPath = replaceRouteId(routes.sourcesDetail.path, sourcesDataGraphQl[0].id);
-          expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(expectedPath);
-          done();
-        });
+    it('redirect to edit', async () => {
+      await act(async () => {
+        wrapper.find('.pf-c-dropdown__toggle').first().simulate('click');
       });
+      wrapper.update();
+
+      await act(async () => {
+        wrapper.find('.pf-c-dropdown__menu-item').at(EDIT_SOURCE_INDEX).simulate('click');
+      });
+      wrapper.update();
+
+      const expectedPath = replaceRouteId(routes.sourcesDetail.path, sourcesDataGraphQl[0].id);
+      expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(expectedPath);
     });
 
-    it('redirect to delete', (done) => {
-      setTimeout(() => {
-        setTimeout(() => {
-          wrapper.update();
-          wrapper.find('.pf-c-dropdown__toggle').first().simulate('click');
-          wrapper.update();
-          wrapper.find('.pf-c-dropdown__menu-item').at(DELETE_SOURCE_INDEX).simulate('click');
-
-          const expectedPath = replaceRouteId(routes.sourcesRemove.path, sourcesDataGraphQl[0].id);
-          expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(expectedPath);
-          done();
-        });
+    it('redirect to delete', async () => {
+      await act(async () => {
+        wrapper.find('.pf-c-dropdown__toggle').first().simulate('click');
       });
+
+      wrapper.update();
+
+      await act(async () => {
+        wrapper.find('.pf-c-dropdown__menu-item').at(DELETE_SOURCE_INDEX).simulate('click');
+      });
+      wrapper.update();
+
+      const expectedPath = replaceRouteId(routes.sourcesRemove.path, sourcesDataGraphQl[0].id);
+      expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(expectedPath);
     });
   });
 
-  it('calls sortEntities', (done) => {
+  it('calls sortEntities', async () => {
     const spy = jest.spyOn(actions, 'sortEntities');
 
     initialState = {
@@ -293,21 +295,23 @@ describe('SourcesTable', () => {
     };
 
     const store = mockStore(initialState);
-    const wrapper = mount(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
 
-    setTimeout(() => {
-      setTimeout(() => {
-        wrapper.update();
-        wrapper.find('button').first().simulate('click');
-        expect(spy).toHaveBeenCalledWith('name', 'asc');
-
-        wrapper.update();
-        wrapper.find('button').at(1).simulate('click');
-        expect(spy).toHaveBeenCalledWith('source_type_id', 'asc');
-
-        done();
-      });
+    let wrapper;
+    await act(async () => {
+      wrapper = mount(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
     });
+    wrapper.update();
+
+    await act(async () => {
+      wrapper.find('button').first().simulate('click');
+    });
+    wrapper.update();
+    expect(spy).toHaveBeenCalledWith('name', 'asc');
+
+    await act(async () => {
+      wrapper.find('button').at(1).simulate('click');
+    });
+    expect(spy).toHaveBeenCalledWith('source_type_id', 'asc');
   });
 
   describe('helper functions', () => {

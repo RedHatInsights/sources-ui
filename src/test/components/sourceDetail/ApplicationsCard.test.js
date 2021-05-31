@@ -147,6 +147,8 @@ describe('ApplicationsCard', () => {
       wrapper.update();
 
       expect(actions.loadEntities).toHaveBeenCalled();
+
+      jest.useRealTimers();
     });
 
     it('add application', async () => {
@@ -234,6 +236,8 @@ describe('ApplicationsCard', () => {
         variant: 'default',
       });
       expect(actions.loadEntities).toHaveBeenCalled();
+
+      jest.useRealTimers();
     });
 
     it('renders correctly descriptions', () => {
@@ -401,6 +405,8 @@ describe('ApplicationsCard', () => {
       wrapper.update();
 
       expect(actions.loadEntities).toHaveBeenCalled();
+
+      jest.useRealTimers();
     });
 
     it('adds application and blocks clicking again', async () => {
@@ -443,6 +449,8 @@ describe('ApplicationsCard', () => {
       wrapper.update();
 
       expect(actions.loadEntities).toHaveBeenCalled();
+
+      jest.useRealTimers();
     });
 
     it('pause application and blocks clicking again', async () => {
@@ -494,6 +502,8 @@ describe('ApplicationsCard', () => {
         variant: 'default',
       });
       expect(actions.loadEntities).toHaveBeenCalled();
+
+      jest.useRealTimers();
     });
 
     it('pause application via dropdown', async () => {

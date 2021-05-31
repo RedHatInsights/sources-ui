@@ -115,5 +115,7 @@ describe('sourceAddModal', () => {
     wrapper.update();
 
     expect(wrapper.find(LoadingStep)).toHaveLength(0);
+
+    jest.useRealTimers();
   });
 });
