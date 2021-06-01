@@ -241,7 +241,7 @@ describe('SourcesTable', () => {
         },
       };
 
-      const store = mockStore(initialState);
+      store = mockStore(initialState);
 
       await act(async () => {
         wrapper = mount(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
@@ -279,6 +279,69 @@ describe('SourcesTable', () => {
       const expectedPath = replaceRouteId(routes.sourcesRemove.path, sourcesDataGraphQl[0].id);
       expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(expectedPath);
     });
+
+    it('pause source', async () => {
+      await act(async () => {
+        wrapper.find('.pf-c-dropdown__toggle').first().simulate('click');
+      });
+
+      wrapper.update();
+
+      actions.pauseSource = jest.fn().mockImplementation(() => ({ type: 'undefined-pause' }));
+
+      await act(async () => {
+        wrapper.find('.pf-c-dropdown__menu-item').at(PAUSE_SOURCE_INDEX).simulate('click');
+      });
+      wrapper.update();
+
+      expect(actions.pauseSource).toHaveBeenCalledWith(sourcesDataGraphQl[0].id, sourcesDataGraphQl[0].name, expect.any(Object));
+
+      const calledActions = store.getActions();
+      expect(calledActions[calledActions.length - 1]).toEqual({ type: 'undefined-pause' });
+    });
+  });
+
+  it('unpausing', async () => {
+    const UNPAUSE_SOURCE_INDEX = 0;
+    let wrapper;
+
+    initialState = {
+      ...initialState,
+      sources: {
+        ...initialState.sources,
+        ...loadedProps,
+        entities: [
+          {
+            ...sourcesDataGraphQl[0],
+            paused_at: '123',
+          },
+        ],
+      },
+    };
+
+    const store = mockStore(initialState);
+
+    await act(async () => {
+      wrapper = mount(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
+    });
+    wrapper.update();
+
+    await act(async () => {
+      wrapper.find('.pf-c-dropdown__toggle').first().simulate('click');
+    });
+    wrapper.update();
+
+    actions.resumeSource = jest.fn().mockImplementation(() => ({ type: 'undefined-resume' }));
+
+    await act(async () => {
+      wrapper.find('.pf-c-dropdown__menu-item').at(UNPAUSE_SOURCE_INDEX).simulate('click');
+    });
+    wrapper.update();
+
+    expect(actions.resumeSource).toHaveBeenCalledWith(sourcesDataGraphQl[0].id, sourcesDataGraphQl[0].name, expect.any(Object));
+
+    const calledActions = store.getActions();
+    expect(calledActions[calledActions.length - 1]).toEqual({ type: 'undefined-resume' });
   });
 
   it('calls sortEntities', async () => {
