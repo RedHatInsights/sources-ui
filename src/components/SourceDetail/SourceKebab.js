@@ -18,6 +18,11 @@ const SourceKebab = () => {
   const hasRightAccess = useHasWritePermissions();
   const dispatch = useDispatch();
 
+  const wrappedFunction = (func) => () => {
+    setOpen(false);
+    func();
+  };
+
   const tooltip = intl.formatMessage({
     id: 'sources.notAdminButton',
     defaultMessage: 'To perform this action, you must be granted write permissions from your Organization Administrator.',
@@ -40,7 +45,7 @@ const SourceKebab = () => {
           <DropdownItem
             {...(!hasRightAccess && disabledProps)}
             key="unpause"
-            onClick={() => dispatch(resumeSource(source.id, source.name, intl))}
+            onClick={wrappedFunction(() => dispatch(resumeSource(source.id, source.name, intl)))}
             description={intl.formatMessage({
               id: 'detail.resume.description',
               defaultMessage: 'Unpause data collection for this source',
@@ -55,7 +60,7 @@ const SourceKebab = () => {
           <DropdownItem
             {...(!hasRightAccess && disabledProps)}
             key="pause"
-            onClick={() => dispatch(pauseSource(source.id, source.name, intl))}
+            onClick={wrappedFunction(() => dispatch(pauseSource(source.id, source.name, intl)))}
             description={intl.formatMessage({
               id: 'detail.pause.description',
               defaultMessage: 'Temporarily disable data collection',
