@@ -8,6 +8,7 @@ import Detail from '../../pages/Detail';
 import { DetailLoader } from '../../components/SourcesTable/loaders';
 import * as RedirectNoId from '../../components/RedirectNoId/RedirectNoId';
 import * as RedirectNoWriteAccess from '../../components/RedirectNoWriteAccess/RedirectNoWriteAccess';
+import * as RedirectNoPaused from '../../components/RedirectNoPaused/RedirectNoPaused';
 import CustomRoute from '../../components/CustomRoute/CustomRoute';
 import * as ApplicationResourcesCard from '../../components/SourceDetail/ApplicationResourcesCard';
 import * as ApplicationsCard from '../../components/SourceDetail/ApplicationsCard';
@@ -86,6 +87,7 @@ describe('SourceDetail', () => {
   ApplicationResourcesCard.default = () => <span>ResourcesCard</span>;
   RedirectNoId.default = () => <span>Mock redirect</span>;
   RedirectNoWriteAccess.default = () => <span>Mock redirect</span>;
+  RedirectNoPaused.default = () => <span>Mock redirect</span>;
 
   it('renders loading', async () => {
     RedirectNoId.default = () => <span>Mock redirect</span>;
@@ -208,6 +210,7 @@ describe('SourceDetail', () => {
 
         expect(wrapper.find(SourceRemoveModal.default)).toHaveLength(1);
         expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
+        expect(wrapper.find(RedirectNoPaused.default)).toHaveLength(0);
       });
 
       it('routes to rename source', async () => {
@@ -226,6 +229,7 @@ describe('SourceDetail', () => {
 
         expect(wrapper.find(SourceRenameModal.default)).toHaveLength(1);
         expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
+        expect(wrapper.find(RedirectNoPaused.default)).toHaveLength(0);
       });
 
       it('routes to add app', async () => {
@@ -244,6 +248,7 @@ describe('SourceDetail', () => {
 
         expect(wrapper.find(AddApplication.default)).toHaveLength(1);
         expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
+        expect(wrapper.find(RedirectNoPaused.default)).toHaveLength(1);
       });
 
       it('routes to remove app', async () => {
@@ -262,6 +267,7 @@ describe('SourceDetail', () => {
 
         expect(wrapper.find(RemoveAppModal.default)).toHaveLength(1);
         expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
+        expect(wrapper.find(RedirectNoPaused.default)).toHaveLength(1);
       });
 
       it('routes to credentials form', async () => {
@@ -280,6 +286,7 @@ describe('SourceDetail', () => {
 
         expect(wrapper.find(CredentialsForm.default)).toHaveLength(1);
         expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
+        expect(wrapper.find(RedirectNoPaused.default)).toHaveLength(0);
       });
     });
 
