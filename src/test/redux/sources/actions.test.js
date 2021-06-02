@@ -432,6 +432,28 @@ describe('redux actions', () => {
       });
     });
 
+    it('pauseSource - fail', async () => {
+      const pauseSourceApi = jest.fn().mockImplementation(() => Promise.reject('error message'));
+
+      api.getSourcesApi = () => ({
+        pauseSource: pauseSourceApi,
+      });
+
+      await pauseSource(sourceId, sourceName, intl)(dispatch);
+
+      expect(pauseSourceApi).toHaveBeenCalledWith(sourceId);
+
+      const types = innerDispatch.mock.calls.map(([{ type }]) => type);
+      expect(types).toEqual([ADD_NOTIFICATION]);
+
+      expect(innerDispatch.mock.calls[0][0].payload).toEqual({
+        description: 'error message',
+        dismissable: true,
+        title: 'Source { sourceName } pausing was unsuccessful',
+        variant: 'danger',
+      });
+    });
+
     it('resumeSource', async () => {
       const unpauseSourceApi = jest.fn().mockImplementation(() => Promise.resolve('ok'));
 
@@ -452,6 +474,28 @@ describe('redux actions', () => {
         dismissable: true,
         title: 'Source resumed',
         variant: 'default',
+      });
+    });
+
+    it('resumeSource - fail', async () => {
+      const unpauseSourceApi = jest.fn().mockImplementation(() => Promise.reject('Some error'));
+
+      api.getSourcesApi = () => ({
+        unpauseSource: unpauseSourceApi,
+      });
+
+      await resumeSource(sourceId, sourceName, intl)(dispatch);
+
+      expect(unpauseSourceApi).toHaveBeenCalledWith(sourceId);
+
+      const types = innerDispatch.mock.calls.map(([{ type }]) => type);
+      expect(types).toEqual([ADD_NOTIFICATION]);
+
+      expect(innerDispatch.mock.calls[0][0].payload).toEqual({
+        description: 'Some error',
+        dismissable: true,
+        title: 'Source { sourceName } resuming was unsuccessful',
+        variant: 'danger',
       });
     });
   });

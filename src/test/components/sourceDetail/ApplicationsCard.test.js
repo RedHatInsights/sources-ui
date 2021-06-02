@@ -270,6 +270,51 @@ describe('ApplicationsCard', () => {
       jest.useRealTimers();
     });
 
+    it('unpause application and fails', async () => {
+      store = mockStore({
+        sources: {
+          entities: [
+            {
+              id: sourceId,
+              source_type_id: AMAZON_ID,
+              applications: [{ id: '123', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
+            },
+          ],
+          sourceTypes: sourceTypesData.data,
+          appTypes: [COSTMANAGEMENT_APP],
+        },
+        user: { isOrgAdmin: true, writePermissions: true },
+      });
+
+      const unpauseApplication = jest.fn().mockImplementation(() => Promise.reject('Some backend error'));
+
+      api.getSourcesApi = () => ({
+        unpauseApplication,
+      });
+
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+
+      await act(async () => {
+        wrapper
+          .find('input')
+          .first()
+          .simulate('change', { target: { checked: true } });
+      });
+      wrapper.update();
+
+      expect(actions.addMessage).toHaveBeenCalledWith({
+        description: 'Some backend error',
+        title: 'Cost Management resuming unsuccessful',
+        variant: 'danger',
+      });
+    });
+
     it('renders correctly descriptions', () => {
       expect(wrapper.find('.ins-c-sources__switch-description')).toHaveLength(2);
       expect(wrapper.find('.ins-c-sources__switch-description').first().text()).toEqual(
@@ -437,6 +482,97 @@ describe('ApplicationsCard', () => {
       expect(actions.loadEntities).toHaveBeenCalled();
 
       jest.useRealTimers();
+    });
+
+    it('adds application and fail', async () => {
+      api.doCreateApplication = jest.fn().mockImplementation(() => Promise.reject('Some backend error'));
+      actions.addMessage.mockClear();
+
+      await act(async () => {
+        wrapper
+          .find('input')
+          .last()
+          .simulate('change', { target: { checked: true } });
+      });
+      wrapper.update();
+
+      expect(actions.addMessage).toHaveBeenCalledWith({
+        description: 'Some backend error',
+        title: 'Subscription Watch adding unsuccessful',
+        variant: 'danger',
+      });
+    });
+
+    it('pauses application and fail', async () => {
+      const pauseApplication = jest.fn().mockImplementation(() => Promise.reject('Some backend error'));
+
+      actions.addMessage.mockClear();
+
+      api.getSourcesApi = () => ({
+        pauseApplication,
+      });
+
+      await act(async () => {
+        wrapper
+          .find('input')
+          .first()
+          .simulate('change', { target: { checked: false } });
+      });
+      wrapper.update();
+
+      expect(actions.addMessage).toHaveBeenCalledWith({
+        description: 'Some backend error',
+        title: 'Cost Management pausing unsuccessful',
+        variant: 'danger',
+      });
+    });
+
+    it('resumes application and fail', async () => {
+      store = mockStore({
+        sources: {
+          entities: [
+            {
+              id: sourceId,
+              source_type_id: AMAZON_ID,
+              applications: [{ id: '123', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
+              app_creation_workflow: 'account_authorization',
+            },
+          ],
+          sourceTypes: sourceTypesData.data,
+          appTypes: [COSTMANAGEMENT_APP],
+        },
+        user: { isOrgAdmin: true, writePermissions: true },
+      });
+
+      const unpauseApplication = jest.fn().mockImplementation(() => Promise.reject('Some backend error'));
+
+      api.getSourcesApi = () => ({
+        unpauseApplication,
+      });
+
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+
+      actions.addMessage.mockClear();
+
+      await act(async () => {
+        wrapper
+          .find('input')
+          .last()
+          .simulate('change', { target: { checked: true } });
+      });
+      wrapper.update();
+
+      expect(actions.addMessage).toHaveBeenCalledWith({
+        description: 'Some backend error',
+        title: 'Cost Management resuming unsuccessful',
+        variant: 'danger',
+      });
     });
 
     it('adds application and blocks clicking again', async () => {

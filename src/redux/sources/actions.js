@@ -25,6 +25,7 @@ import {
 } from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
 import { bold } from '../../utilities/intlShared';
+import handleError from '../../api/handleError';
 
 export const loadEntities = (options) => (dispatch, getState) => {
   dispatch({
@@ -258,6 +259,18 @@ export const pauseSource = (sourceId, sourceName, intl) => (dispatch) => {
         })
       );
       dispatch(loadEntities({ loaded: 0 }));
+    })
+    .catch((error) => {
+      dispatch(
+        addMessage({
+          title: intl.formatMessage(
+            { id: 'source.paused.alert.error', defaultMessage: 'Source { sourceName } pausing was unsuccessful' },
+            { sourceName }
+          ),
+          description: handleError(error),
+          variant: 'danger',
+        })
+      );
     });
 };
 
@@ -280,5 +293,17 @@ export const resumeSource = (sourceId, sourceName, intl) => (dispatch) => {
         })
       );
       dispatch(loadEntities({ loaded: 0 }));
+    })
+    .catch((error) => {
+      dispatch(
+        addMessage({
+          title: intl.formatMessage(
+            { id: 'source.resume.alert.error', defaultMessage: 'Source { sourceName } resuming was unsuccessful' },
+            { sourceName }
+          ),
+          description: handleError(error),
+          variant: 'danger',
+        })
+      );
     });
 };
