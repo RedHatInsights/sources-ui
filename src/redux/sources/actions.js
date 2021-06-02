@@ -26,6 +26,7 @@ import {
 import { doLoadSourceTypes } from '../../api/source_types';
 import { bold } from '../../utilities/intlShared';
 import handleError from '../../api/handleError';
+import tryAgainMessage from '../../utilities/tryAgainMessage';
 
 export const loadEntities = (options) => (dispatch, getState) => {
   dispatch({
@@ -263,11 +264,8 @@ export const pauseSource = (sourceId, sourceName, intl) => (dispatch) => {
     .catch((error) => {
       dispatch(
         addMessage({
-          title: intl.formatMessage(
-            { id: 'source.paused.alert.error', defaultMessage: 'Source { sourceName } pausing was unsuccessful' },
-            { sourceName }
-          ),
-          description: handleError(error),
+          title: intl.formatMessage({ id: 'source.paused.alert.error', defaultMessage: 'Source pause failed' }),
+          description: tryAgainMessage(intl, handleError(error)),
           variant: 'danger',
         })
       );
@@ -297,11 +295,8 @@ export const resumeSource = (sourceId, sourceName, intl) => (dispatch) => {
     .catch((error) => {
       dispatch(
         addMessage({
-          title: intl.formatMessage(
-            { id: 'source.resume.alert.error', defaultMessage: 'Source { sourceName } resuming was unsuccessful' },
-            { sourceName }
-          ),
-          description: handleError(error),
+          title: intl.formatMessage({ id: 'source.resume.alert.error', defaultMessage: 'Source resume failed' }),
+          description: tryAgainMessage(intl, handleError(error)),
           variant: 'danger',
         })
       );
