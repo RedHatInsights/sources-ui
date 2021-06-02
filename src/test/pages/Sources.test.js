@@ -251,7 +251,7 @@ describe('SourcesPage', () => {
     expect(wrapper.find(SourcesTable)).toHaveLength(0);
   });
 
-  it('renders empty state when there are no Sources and open ansible-tower selection', async () => {
+  it('renders empty state when there are no Sources and open openshift selection', async () => {
     store = getStore([], {
       sources: { activeVendor: REDHAT_VENDOR },
       user: { isOrgAdmin: true },
@@ -273,7 +273,7 @@ describe('SourcesPage', () => {
     wrapper.update();
 
     expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
-    expect(wrapper.find(AddSourceWizard).props().selectedType).toEqual('ansible-tower');
+    expect(wrapper.find(AddSourceWizard).props().selectedType).toEqual('openshift');
   });
 
   it('renders error state when there is fetching (loadEntities) error', async () => {
@@ -347,7 +347,7 @@ describe('SourcesPage', () => {
       window.location = tmpLocation;
     });
 
-    it('shows only Red Hat sources in the selection (filters satellite out)', async () => {
+    it('shows only Red Hat sources in the selection (do not filter hidden types)', async () => {
       window.location.search = `?activeVendor=${REDHAT_VENDOR}`;
 
       store = getStore([], {
@@ -375,6 +375,7 @@ describe('SourcesPage', () => {
         'OpenShift Container Platform',
         'Red Hat CloudForms',
         'Red Hat OpenStack',
+        'Red Hat Satellite',
         'Red Hat Virtualization',
       ]);
     });
