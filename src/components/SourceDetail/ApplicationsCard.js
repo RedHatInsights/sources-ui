@@ -183,7 +183,7 @@ const ApplicationsCard = () => {
                       id={`app-switch-${app.id}`}
                       label={app.display_name}
                       isChecked={isChecked}
-                      isDisabled={connectedApp?.isDeleting || !hasRightAccess}
+                      isDisabled={connectedApp?.isDeleting || !hasRightAccess || Boolean(source.paused_at)}
                       onChange={(value) => (!value ? removeApp(connectedApp.id, app.id) : addApp(app.id, connectedApp?.id))}
                     />
                     {Boolean(connectedApp) && (

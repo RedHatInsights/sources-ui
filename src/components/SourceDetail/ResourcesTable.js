@@ -132,7 +132,7 @@ const ResourcesTable = () => {
 
                 return (
                   <Tab eventKey={app.id} key={app.id} title={<TabTitleText>{appName}</TabTitleText>}>
-                    {app.paused_at && (
+                    {app.paused_at && !source.paused_at && (
                       <Alert isInline className="pf-u-mt-lg" {...alertProps}>
                         {description}
                       </Alert>

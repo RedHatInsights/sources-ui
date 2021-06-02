@@ -20,6 +20,7 @@ import * as AddApplication from '../../components/AddApplication/AddApplication'
 import * as RemoveAppModal from '../../components/AddApplication/RemoveAppModal';
 import * as SourceRenameModal from '../../components/SourceDetail/SourceRenameModal';
 import * as CredentialsForm from '../../components/CredentialsForm/CredentialsForm';
+import PauseAlert from '../../components/SourceDetail/PauseAlert';
 import mockStore from '../__mocks__/mockStore';
 
 jest.mock('../../components/SourceRemoveModal/SourceRemoveModal', () => ({
@@ -139,6 +140,42 @@ describe('SourceDetail', () => {
     expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(0);
     expect(wrapper.find(RedirectNoId.default)).toHaveLength(0);
     expect(wrapper.find(SourceRenameModal.default)).toHaveLength(0);
+    expect(wrapper.find(PauseAlert)).toHaveLength(0);
+  });
+
+  it('renders paused source', async () => {
+    store = mockStore({
+      sources: {
+        entities: [
+          {
+            id: sourceId,
+            paused_at: 'today',
+          },
+        ],
+      },
+    });
+
+    wrapper = mount(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
+        store,
+        initialEntry
+      )
+    );
+
+    expect(wrapper.find(Grid)).toHaveLength(1);
+    expect(wrapper.find(GridItem)).toHaveLength(4);
+    expect(wrapper.find(DetailHeader.default)).toHaveLength(1);
+    expect(wrapper.find(SourceSummaryCard.default)).toHaveLength(1);
+    expect(wrapper.find(ApplicationsCard.default)).toHaveLength(1);
+    expect(wrapper.find(ApplicationResourcesCard.default)).toHaveLength(1);
+    expect(wrapper.find(CustomRoute)).toHaveLength(5);
+    expect(wrapper.find(SourceRemoveModal.default)).toHaveLength(0);
+    expect(wrapper.find(AddApplication.default)).toHaveLength(0);
+    expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(0);
+    expect(wrapper.find(RedirectNoId.default)).toHaveLength(0);
+    expect(wrapper.find(SourceRenameModal.default)).toHaveLength(0);
+    expect(wrapper.find(PauseAlert)).toHaveLength(1);
   });
 
   describe('routes', () => {

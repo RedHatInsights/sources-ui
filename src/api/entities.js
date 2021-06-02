@@ -69,6 +69,8 @@ export const getSourcesApi = () => ({
   bulkCreate: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/bulk_create`, data),
   pauseApplication: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/applications/${id}/pause`),
   unpauseApplication: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/applications/${id}/unpause`),
+  pauseSource: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/sources/${id}/pause`),
+  unpauseSource: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/sources/${id}/unpause`),
 });
 
 export const doLoadAppTypes = () => getSourcesApi().doLoadAppTypes();
@@ -151,6 +153,7 @@ export const graphQlAttributes = `
     updated_at,
     last_available_at,
     app_creation_workflow,
+    paused_at,
     authentications { authtype, username, availability_status_error, availability_status }
     applications { application_type_id, id, availability_status_error, availability_status, paused_at, authentications { id, resource_type } },
     endpoints { id, scheme, host, port, path, receptor_node, role, certificate_authority, verify_ssl, availability_status_error, availability_status, authentications { authtype, availability_status, availability_status_error } }

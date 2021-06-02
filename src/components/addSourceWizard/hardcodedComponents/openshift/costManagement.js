@@ -4,6 +4,8 @@ import { HCCM_DOCS_PREFIX } from '../../stringConstants';
 
 import { Text, TextVariants, TextContent } from '@patternfly/react-core';
 
+import { bold } from '../../../../utilities/intlShared';
+
 const INSTALL_PREREQUISITE = `${HCCM_DOCS_PREFIX}/html-single/getting_started_with_cost_management/index?lb_target=production#assembly-adding-openshift-container-platform-source`;
 
 export const ConfigureCostOperator = () => {
@@ -39,8 +41,7 @@ export const ConfigureCostOperator = () => {
               'If you configured the operator to create a source (create_source: true), <b>STOP</b> here and <b>CANCEL</b> out of this flow.',
           },
           {
-            // eslint-disable-next-line react/display-name
-            b: (chunks) => <b key={`b-${chunks.length}-${Math.floor(Math.random() * 1000)}`}>{chunks}</b>,
+            b: bold,
           }
         )}
       </Text>

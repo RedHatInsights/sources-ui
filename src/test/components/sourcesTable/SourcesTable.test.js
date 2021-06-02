@@ -7,11 +7,7 @@ import LongArrowAltDownIcon from '@patternfly/react-icons/dist/js/icons/long-arr
 
 import { DropdownItem } from '@patternfly/react-core';
 
-import SourcesTable, {
-  insertEditAction,
-  actionResolver,
-  prepareColumnsCells,
-} from '../../../components/SourcesTable/SourcesTable';
+import SourcesTable, { actionResolver, prepareColumnsCells } from '../../../components/SourcesTable/SourcesTable';
 import { PlaceHolderTable, RowWrapperLoader, Loader } from '../../../components/SourcesTable/loaders';
 import EmptyStateTable from '../../../components/SourcesTable/EmptyStateTable';
 
@@ -230,9 +226,11 @@ describe('SourcesTable', () => {
   });
 
   describe('actions', () => {
-    const EDIT_SOURCE_INDEX = 0;
+    const PAUSE_SOURCE_INDEX = 0;
     const DELETE_SOURCE_INDEX = 1;
+    const EDIT_SOURCE_INDEX = 2;
     let wrapper;
+    let store;
 
     beforeEach(async () => {
       initialState = {
@@ -243,7 +241,7 @@ describe('SourcesTable', () => {
         },
       };
 
-      const store = mockStore(initialState);
+      store = mockStore(initialState);
 
       await act(async () => {
         wrapper = mount(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
@@ -281,6 +279,69 @@ describe('SourcesTable', () => {
       const expectedPath = replaceRouteId(routes.sourcesRemove.path, sourcesDataGraphQl[0].id);
       expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(expectedPath);
     });
+
+    it('pause source', async () => {
+      await act(async () => {
+        wrapper.find('.pf-c-dropdown__toggle').first().simulate('click');
+      });
+
+      wrapper.update();
+
+      actions.pauseSource = jest.fn().mockImplementation(() => ({ type: 'undefined-pause' }));
+
+      await act(async () => {
+        wrapper.find('.pf-c-dropdown__menu-item').at(PAUSE_SOURCE_INDEX).simulate('click');
+      });
+      wrapper.update();
+
+      expect(actions.pauseSource).toHaveBeenCalledWith(sourcesDataGraphQl[0].id, sourcesDataGraphQl[0].name, expect.any(Object));
+
+      const calledActions = store.getActions();
+      expect(calledActions[calledActions.length - 1]).toEqual({ type: 'undefined-pause' });
+    });
+  });
+
+  it('unpausing', async () => {
+    const UNPAUSE_SOURCE_INDEX = 0;
+    let wrapper;
+
+    initialState = {
+      ...initialState,
+      sources: {
+        ...initialState.sources,
+        ...loadedProps,
+        entities: [
+          {
+            ...sourcesDataGraphQl[0],
+            paused_at: '123',
+          },
+        ],
+      },
+    };
+
+    const store = mockStore(initialState);
+
+    await act(async () => {
+      wrapper = mount(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
+    });
+    wrapper.update();
+
+    await act(async () => {
+      wrapper.find('.pf-c-dropdown__toggle').first().simulate('click');
+    });
+    wrapper.update();
+
+    actions.resumeSource = jest.fn().mockImplementation(() => ({ type: 'undefined-resume' }));
+
+    await act(async () => {
+      wrapper.find('.pf-c-dropdown__menu-item').at(UNPAUSE_SOURCE_INDEX).simulate('click');
+    });
+    wrapper.update();
+
+    expect(actions.resumeSource).toHaveBeenCalledWith(sourcesDataGraphQl[0].id, sourcesDataGraphQl[0].name, expect.any(Object));
+
+    const calledActions = store.getActions();
+    expect(calledActions[calledActions.length - 1]).toEqual({ type: 'undefined-resume' });
   });
 
   it('calls sortEntities', async () => {
@@ -317,22 +378,6 @@ describe('SourcesTable', () => {
   describe('helper functions', () => {
     const INTL_MOCK = { formatMessage: ({ defaultMessage }) => defaultMessage };
     const pushMock = jest.fn();
-
-    describe('insertEditAction', () => {
-      it('inserts edit item to index 1', () => {
-        const ACTIONS = ['first', 'second'];
-
-        insertEditAction(ACTIONS, INTL_MOCK, pushMock);
-
-        expect(ACTIONS).toHaveLength(3);
-        expect(ACTIONS[1]).toEqual(
-          expect.objectContaining({
-            title: expect.any(String),
-            onClick: expect.any(Function),
-          })
-        );
-      });
-    });
 
     describe('prepareColumnsCells', () => {
       it('prepares columns cells', () => {
@@ -374,22 +419,25 @@ describe('SourcesTable', () => {
         });
 
       const EDIT_TITLE = 'Edit';
+      const VIEW_TITLE = 'View details';
       const DELETE_TITLE = 'Remove';
+      const PAUSE_TITLE = 'Pause';
+      const UNPAUSE_TITLE = 'Resume';
 
       it('create actions for editable source', () => {
         const EDITABLE_DATA = { imported: undefined };
 
         const actions = actionResolver(INTL_MOCK, pushMock)(EDITABLE_DATA);
 
-        expect(actions).toEqual(expect.arrayContaining([actionObject(EDIT_TITLE), actionObject(DELETE_TITLE)]));
+        expect(actions).toEqual([actionObject(PAUSE_TITLE), actionObject(DELETE_TITLE), actionObject(EDIT_TITLE)]);
       });
 
-      it('create actions for uneditable source', () => {
-        const UNEDITABLE_DATA = { imported: true };
+      it('create actions for paused source', () => {
+        const EDITABLE_DATA = { imported: undefined, paused_at: 'today' };
 
-        const actions = actionResolver(INTL_MOCK, pushMock)(UNEDITABLE_DATA);
+        const actions = actionResolver(INTL_MOCK, pushMock)(EDITABLE_DATA);
 
-        expect(actions).toEqual(expect.arrayContaining([actionObject(DELETE_TITLE)]));
+        expect(actions).toEqual([actionObject(UNPAUSE_TITLE), actionObject(DELETE_TITLE), actionObject(VIEW_TITLE)]);
       });
     });
   });

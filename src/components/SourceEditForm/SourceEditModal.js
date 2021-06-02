@@ -90,8 +90,8 @@ const SourceEditModal = () => {
       clearedValue={null}
       initialValues={{
         ...initialValues,
-        message,
-        messages,
+        ...(!sourceRedux.paused_at && { message }),
+        ...(!sourceRedux.paused_at && { messages }),
       }}
     />
   );

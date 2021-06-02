@@ -101,12 +101,14 @@ export const UNAVAILABLE = 'unavailable';
 export const UNKNOWN = 'unknown';
 export const PARTIALLY_UNAVAILABLE = 'partially_available';
 export const IN_PROGRESS = 'in_progress';
+export const PAUSED = 'paused_at';
 
 export const getStatusColor = (status) =>
   ({
     [UNAVAILABLE]: 'red',
     [AVAILABLE]: 'green',
     [PARTIALLY_UNAVAILABLE]: 'orange',
+    [PAUSED]: 'cyan',
   }[status] || 'grey');
 
 export const getStatusText = (status) =>
@@ -115,6 +117,7 @@ export const getStatusText = (status) =>
     [AVAILABLE]: <FormattedMessage id="sources.available" defaultMessage="Available" />,
     [PARTIALLY_UNAVAILABLE]: <FormattedMessage id="sources.partiallyAvailable" defaultMessage="Partially available" />,
     [IN_PROGRESS]: <FormattedMessage id="sources.inProgress" defaultMessage="In progress" />,
+    [PAUSED]: <FormattedMessage id="sources.paused" defaultMessage="Paused" />,
   }[status] || <FormattedMessage id="sources.unknown" defaultMessage="Unknown" />);
 
 export const UnknownError = () => <FormattedMessage id="sources.unknownError" defaultMessage="unavailable" />;
@@ -212,6 +215,12 @@ export const getStatusTooltipText = (status, appTypes, errors = {}) =>
         defaultMessage="We are still working to validate credentials. Check back for status updates."
       />
     ),
+    [PAUSED]: (
+      <FormattedMessage
+        id="sources.pausedStatus"
+        defaultMessage="Data collection is temporarily disabled. Resume source to reestablish connection."
+      />
+    ),
   }[status] || <FormattedMessage id="sources.appStatusUnknown" defaultMessage="Status has not been verified." />);
 
 export const getAllErrors = ({
@@ -305,7 +314,7 @@ export const getAllErrors = ({
 
 export const availabilityFormatter = (_status, source, { appTypes }) => {
   const meta = getAllErrors(source);
-  const status = meta.status;
+  const status = source.paused_at ? PAUSED : meta.status;
 
   return (
     <span>
@@ -318,6 +327,7 @@ export const availabilityFormatter = (_status, source, { appTypes }) => {
           className="clickable"
           color={getStatusColor(status)}
           {...(source.availability_status === IN_PROGRESS && { icon: <WrenchIcon /> })}
+          {...(source.paused_at && { icon: <PauseIcon /> })}
         >
           {getStatusText(status)}
         </Label>
@@ -487,10 +497,15 @@ export const configurationModeFormatter = (mode, item, { intl, sourceType }) => 
         <div className="pf-u-mt-sm">
           <Link to={replaceRouteId(routes.sourcesDetailEditCredentials.path, item.id)}>
             <Button variant="link" id="edit-super-credentials" isInline>
-              {intl.formatMessage({
-                id: 'sources.editCredentials',
-                defaultMessage: 'Edit credentials',
-              })}
+              {item.paused_at
+                ? intl.formatMessage({
+                    id: 'sources.viewCredentials',
+                    defaultMessage: 'View credentials',
+                  })
+                : intl.formatMessage({
+                    id: 'sources.editCredentials',
+                    defaultMessage: 'Edit credentials',
+                  })}
             </Button>
           </Link>
         </div>

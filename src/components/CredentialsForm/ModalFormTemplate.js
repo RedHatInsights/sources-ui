@@ -51,7 +51,7 @@ const CustomButtons = () => {
 };
 
 const ModalFormTemplate = ({ ModalProps, ...props }) => (
-  <Modal {...ModalProps} footer={<CustomButtons />}>
+  <Modal footer={<CustomButtons />} {...ModalProps}>
     <FormTemplate {...props} showFormControls={false} FormWrapper={CustomFormWrapper} />
   </Modal>
 );
