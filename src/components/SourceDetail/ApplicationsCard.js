@@ -18,6 +18,7 @@ import { APP_NAMES } from '../SourceEditForm/parser/application';
 import filterApps from '../../utilities/filterApps';
 import ApplicationKebab from './ApplicationKebab';
 import { ApplicationLabel } from '../../views/formatters';
+import handleError from '../../api/handleError';
 
 const initialState = {
   selectedApps: {},
@@ -89,6 +90,49 @@ const addPausedNotification = (typeId, dispatch, intl, appTypes) => {
   );
 };
 
+const addErrorNotification = (typeId, dispatch, intl, appTypes, action, error) => {
+  const appName = appTypes.find((type) => type.id === typeId)?.display_name;
+
+  const title = {
+    remove: intl.formatMessage(
+      {
+        id: 'detail.applications.remove.error',
+        defaultMessage: '{appName} removing unsuccessful',
+      },
+      { appName }
+    ),
+    create: intl.formatMessage(
+      {
+        id: 'detail.applications.add.error',
+        defaultMessage: '{appName} adding unsuccessful',
+      },
+      { appName }
+    ),
+    pause: intl.formatMessage(
+      {
+        id: 'detail.applications.pause.error',
+        defaultMessage: '{appName} pausing unsuccessful',
+      },
+      { appName }
+    ),
+    resume: intl.formatMessage(
+      {
+        id: 'detail.applications.resume.error',
+        defaultMessage: '{appName} resuming unsuccessful',
+      },
+      { appName }
+    ),
+  }[action];
+
+  dispatch(
+    addMessage({
+      title,
+      description: handleError(error),
+      variant: 'danger',
+    })
+  );
+};
+
 const ApplicationsCard = () => {
   const intl = useIntl();
   const source = useSource();
@@ -109,9 +153,15 @@ const ApplicationsCard = () => {
     } else {
       if (typeof selectedApps[id] !== 'boolean') {
         stateDispatch({ type: 'addApp', id });
-        await getSourcesApi().unpauseApplication(isPaused);
-        addResumeNotification(id, dispatch, intl, appTypes);
-        await dispatch(loadEntities());
+
+        try {
+          await getSourcesApi().unpauseApplication(isPaused);
+          addResumeNotification(id, dispatch, intl, appTypes);
+          await dispatch(loadEntities());
+        } catch (e) {
+          addErrorNotification(id, dispatch, intl, appTypes, 'resume', e);
+        }
+
         stateDispatch({ type: 'clean', id });
       }
     }
@@ -120,9 +170,14 @@ const ApplicationsCard = () => {
   const removeApp = async (id, typeId) => {
     if (typeof selectedApps[typeId] !== 'boolean') {
       stateDispatch({ type: 'removeApp', id: typeId });
-      await getSourcesApi().pauseApplication(id);
-      addPausedNotification(typeId, dispatch, intl, appTypes);
-      await dispatch(loadEntities());
+      try {
+        await getSourcesApi().pauseApplication(id);
+        addPausedNotification(typeId, dispatch, intl, appTypes);
+        await dispatch(loadEntities());
+      } catch (e) {
+        addErrorNotification(typeId, dispatch, intl, appTypes, 'pause', e);
+      }
+
       stateDispatch({ type: 'clean', id: typeId });
     }
   };
@@ -133,13 +188,22 @@ const ApplicationsCard = () => {
         stateDispatch({ type: 'addApp', id });
 
         if (isPaused) {
-          await getSourcesApi().unpauseApplication(isPaused);
-          addResumeNotification(id, dispatch, intl, appTypes);
+          try {
+            await getSourcesApi().unpauseApplication(isPaused);
+            addResumeNotification(id, dispatch, intl, appTypes);
+            await dispatch(loadEntities());
+          } catch (e) {
+            addErrorNotification(id, dispatch, intl, appTypes, 'resume', e);
+          }
         } else {
-          await doCreateApplication({ source_id: source.id, application_type_id: id });
+          try {
+            await doCreateApplication({ source_id: source.id, application_type_id: id });
+            await dispatch(loadEntities());
+          } catch (e) {
+            addErrorNotification(id, dispatch, intl, appTypes, 'create', e);
+          }
         }
 
-        await dispatch(loadEntities());
         stateDispatch({ type: 'clean', id });
       }
     };
