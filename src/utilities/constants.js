@@ -6,6 +6,7 @@ export const TOPOLOGY_INV_NAME = '/insights/platform/topological-inventory';
 export const COST_MANAGEMENT_APP_NAME = '/insights/platform/cost-management';
 export const CLOUD_METER_APP_NAME = '/insights/platform/cloud-meter';
 export const CATALOG_APP = '/insights/platform/catalog';
+export const OPENSHIFT_NAME = 'openshift';
 
 export const getActiveVendor = () => new URLSearchParams(window.location.search).get('activeVendor');
 
