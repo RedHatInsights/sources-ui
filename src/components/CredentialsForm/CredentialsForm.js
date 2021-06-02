@@ -86,7 +86,7 @@ const CredentialsForm = () => {
     <SourcesFormRenderer
       clearedValue={null}
       schema={{
-        fields: [...generateSuperKeyFields(sourceTypes, sourceTypeName)].map((field) =>
+        fields: generateSuperKeyFields(sourceTypes, sourceTypeName).map((field) =>
           source.paused_at ? { ...field, isDisabled: true } : field
         ),
       }}
