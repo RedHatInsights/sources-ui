@@ -19,6 +19,7 @@ import filterApps from '../../utilities/filterApps';
 import ApplicationKebab from './ApplicationKebab';
 import { ApplicationLabel } from '../../views/formatters';
 import handleError from '../../api/handleError';
+import tryAgainMessage from '../../utilities/tryAgainMessage';
 
 const initialState = {
   selectedApps: {},
@@ -90,44 +91,26 @@ const addPausedNotification = (typeId, dispatch, intl, appTypes) => {
   );
 };
 
-const addErrorNotification = (typeId, dispatch, intl, appTypes, action, error) => {
-  const appName = appTypes.find((type) => type.id === typeId)?.display_name;
-
+const addErrorNotification = (dispatch, intl, action, error) => {
   const title = {
-    remove: intl.formatMessage(
-      {
-        id: 'detail.applications.remove.error',
-        defaultMessage: '{appName} removing unsuccessful',
-      },
-      { appName }
-    ),
-    create: intl.formatMessage(
-      {
-        id: 'detail.applications.add.error',
-        defaultMessage: '{appName} adding unsuccessful',
-      },
-      { appName }
-    ),
-    pause: intl.formatMessage(
-      {
-        id: 'detail.applications.pause.error',
-        defaultMessage: '{appName} pausing unsuccessful',
-      },
-      { appName }
-    ),
-    resume: intl.formatMessage(
-      {
-        id: 'detail.applications.resume.error',
-        defaultMessage: '{appName} resuming unsuccessful',
-      },
-      { appName }
-    ),
+    create: intl.formatMessage({
+      id: 'detail.applications.add.error',
+      defaultMessage: 'Application create failed',
+    }),
+    pause: intl.formatMessage({
+      id: 'detail.applications.pause.error',
+      defaultMessage: 'Application pause failed',
+    }),
+    resume: intl.formatMessage({
+      id: 'detail.applications.resume.error',
+      defaultMessage: 'Application resume failed',
+    }),
   }[action];
 
   dispatch(
     addMessage({
       title,
-      description: handleError(error),
+      description: tryAgainMessage(intl, handleError(error)),
       variant: 'danger',
     })
   );
@@ -159,7 +142,7 @@ const ApplicationsCard = () => {
           addResumeNotification(id, dispatch, intl, appTypes);
           await dispatch(loadEntities());
         } catch (e) {
-          addErrorNotification(id, dispatch, intl, appTypes, 'resume', e);
+          addErrorNotification(dispatch, intl, 'resume', e);
         }
 
         stateDispatch({ type: 'clean', id });
@@ -175,7 +158,7 @@ const ApplicationsCard = () => {
         addPausedNotification(typeId, dispatch, intl, appTypes);
         await dispatch(loadEntities());
       } catch (e) {
-        addErrorNotification(typeId, dispatch, intl, appTypes, 'pause', e);
+        addErrorNotification(dispatch, intl, 'pause', e);
       }
 
       stateDispatch({ type: 'clean', id: typeId });
@@ -193,14 +176,14 @@ const ApplicationsCard = () => {
             addResumeNotification(id, dispatch, intl, appTypes);
             await dispatch(loadEntities());
           } catch (e) {
-            addErrorNotification(id, dispatch, intl, appTypes, 'resume', e);
+            addErrorNotification(dispatch, intl, 'resume', e);
           }
         } else {
           try {
             await doCreateApplication({ source_id: source.id, application_type_id: id });
             await dispatch(loadEntities());
           } catch (e) {
-            addErrorNotification(id, dispatch, intl, appTypes, 'create', e);
+            addErrorNotification(dispatch, intl, 'create', e);
           }
         }
 

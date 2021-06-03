@@ -309,8 +309,8 @@ describe('ApplicationsCard', () => {
       wrapper.update();
 
       expect(actions.addMessage).toHaveBeenCalledWith({
-        description: 'Some backend error',
-        title: 'Cost Management resuming unsuccessful',
+        description: 'Some backend error. Please try again.',
+        title: 'Application resume failed',
         variant: 'danger',
       });
     });
@@ -497,8 +497,8 @@ describe('ApplicationsCard', () => {
       wrapper.update();
 
       expect(actions.addMessage).toHaveBeenCalledWith({
-        description: 'Some backend error',
-        title: 'Subscription Watch adding unsuccessful',
+        description: 'Some backend error. Please try again.',
+        title: 'Application create failed',
         variant: 'danger',
       });
     });
@@ -521,8 +521,8 @@ describe('ApplicationsCard', () => {
       wrapper.update();
 
       expect(actions.addMessage).toHaveBeenCalledWith({
-        description: 'Some backend error',
-        title: 'Cost Management pausing unsuccessful',
+        description: 'Some backend error. Please try again.',
+        title: 'Application pause failed',
         variant: 'danger',
       });
     });
@@ -569,8 +569,8 @@ describe('ApplicationsCard', () => {
       wrapper.update();
 
       expect(actions.addMessage).toHaveBeenCalledWith({
-        description: 'Some backend error',
-        title: 'Cost Management resuming unsuccessful',
+        description: 'Some backend error. Please try again.',
+        title: 'Application resume failed',
         variant: 'danger',
       });
     });

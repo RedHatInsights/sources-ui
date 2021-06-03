@@ -447,9 +447,9 @@ describe('redux actions', () => {
       expect(types).toEqual([ADD_NOTIFICATION]);
 
       expect(innerDispatch.mock.calls[0][0].payload).toEqual({
-        description: 'error message',
+        description: '{ error }. Please try again.',
         dismissable: true,
-        title: 'Source { sourceName } pausing was unsuccessful',
+        title: 'Source pause failed',
         variant: 'danger',
       });
     });
@@ -492,9 +492,9 @@ describe('redux actions', () => {
       expect(types).toEqual([ADD_NOTIFICATION]);
 
       expect(innerDispatch.mock.calls[0][0].payload).toEqual({
-        description: 'Some error',
+        description: '{ error }. Please try again.',
         dismissable: true,
-        title: 'Source { sourceName } resuming was unsuccessful',
+        title: 'Source resume failed',
         variant: 'danger',
       });
     });
