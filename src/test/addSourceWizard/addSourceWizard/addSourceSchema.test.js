@@ -4,7 +4,6 @@ import {
   iconMapper,
   NameDescription,
   SummaryDescription,
-  sourceTypeMutator,
   typesStep,
   compileAllSourcesComboOptions,
   appMutatorRedHat,
@@ -147,31 +146,6 @@ describe('Add source schema', () => {
         display_name: 'cost',
       },
     ];
-
-    it('source type mutator limits available source types', () => {
-      const formOptions = {
-        getState: () => ({
-          values: {
-            application: {
-              application_type_id: 'selected',
-            },
-          },
-        }),
-      };
-
-      const mutator = sourceTypeMutator(applicationTypes, sourceTypes);
-
-      expect(mutator({ label: 'differen type', value: 'ops' }, formOptions)).toEqual({
-        label: 'differen type',
-        value: 'ops',
-        isDisabled: true,
-      });
-      expect(mutator({ label: 'Amazon', value: 'amazon' }, formOptions)).toEqual({
-        label: 'Amazon',
-        value: 'amazon',
-        isDisabled: false,
-      });
-    });
 
     it('appMutatorRedHat - undfined when unable', () => {
       const formOptions = {
