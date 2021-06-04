@@ -122,18 +122,6 @@ describe('Add source schema', () => {
   });
 
   describe('mutators', () => {
-    const sourceTypes = [
-      {
-        product_name: 'Amazon',
-        name: 'amazon',
-        id: 'amazon',
-      },
-      {
-        product_name: 'differen type',
-        name: 'ops',
-        id: 'openshift',
-      },
-    ];
     const applicationTypes = [
       {
         id: 'selected',
