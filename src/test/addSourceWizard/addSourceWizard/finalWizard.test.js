@@ -84,6 +84,15 @@ describe('Final wizard', () => {
     expect(wrapper.find(EmptyState).find(Title).text()).toEqual('Configuration successful');
   });
 
+  it('renders finished step correctly with default props', () => {
+    // eslint-disable-next-line no-unused-vars
+    const { createdSource, ...rest } = initialProps;
+
+    const wrapper = mount(<FinalWizard {...rest} isFinished={true} />);
+    expect(wrapper.find(FinishedStep)).toHaveLength(1);
+    expect(wrapper.find(EmptyState).find(Title).text()).toEqual('Configuration successful');
+  });
+
   it('calls reset', () => {
     const wrapper = mount(<FinalWizard {...initialProps} isFinished={true} hideSourcesButton={true} />);
     wrapper.find(EmptyStateSecondaryActions).find(Button).simulate('click');
