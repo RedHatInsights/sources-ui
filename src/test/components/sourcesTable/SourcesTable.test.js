@@ -7,7 +7,7 @@ import LongArrowAltDownIcon from '@patternfly/react-icons/dist/js/icons/long-arr
 
 import { DropdownItem } from '@patternfly/react-core';
 
-import SourcesTable, { actionResolver, prepareColumnsCells } from '../../../components/SourcesTable/SourcesTable';
+import SourcesTable, { actionResolver, itemToCells, prepareColumnsCells } from '../../../components/SourcesTable/SourcesTable';
 import { PlaceHolderTable, RowWrapperLoader, Loader } from '../../../components/SourcesTable/loaders';
 import EmptyStateTable from '../../../components/SourcesTable/EmptyStateTable';
 
@@ -409,6 +409,21 @@ describe('SourcesTable', () => {
             transforms: [sortable, wrappable],
           },
         ]);
+      });
+    });
+
+    describe('itemToCells', () => {
+      it('no formatter and no value', () => {
+        const appTypes = [];
+        const sourceTypes = [];
+
+        let item = { name: 'some-name' };
+        let columns = [
+          { title: 'Column 1', value: 'name' },
+          { title: 'Column 2', value: 'missing-attribute' },
+        ];
+
+        expect(itemToCells(item, columns, sourceTypes, appTypes)).toEqual([{ title: 'some-name' }, { title: '' }]);
       });
     });
 

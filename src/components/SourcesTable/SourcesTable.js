@@ -12,7 +12,7 @@ import { useIsLoaded } from '../../hooks/useIsLoaded';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import { replaceRouteId, routes } from '../../Routes';
 
-const itemToCells = (item, columns, sourceTypes, appTypes) =>
+export const itemToCells = (item, columns, sourceTypes, appTypes) =>
   columns
     .filter((column) => column.title || column.hidden)
     .map((col) => ({

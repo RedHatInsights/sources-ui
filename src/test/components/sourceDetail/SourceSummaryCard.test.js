@@ -80,6 +80,42 @@ describe('SourceSummaryCard', () => {
     expect(formatters.dateFormatter).toHaveBeenCalled();
   });
 
+  it('renders correctly with last_checked_at', async () => {
+    formatters.dateFormatter = jest.fn().mockImplementation(() => 'some date');
+
+    store = mockStore({
+      sources: {
+        entities: [
+          {
+            id: sourceId,
+            source_type_id: AMAZON_ID,
+            created_at: '2020-11-27T15:49:59.640Z',
+            updated_at: '2020-11-27T15:49:59.640Z',
+            last_checked_at: '2020-11-27T15:49:59.640Z',
+          },
+        ],
+        sourceTypes: sourceTypesData.data,
+      },
+    });
+
+    wrapper = mount(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetail.path} render={(...args) => <SourceSummaryCard {...args} />} />,
+        store,
+        initialEntry
+      )
+    );
+
+    const categories = getCategories(wrapper);
+
+    expect(categories).toEqual([
+      ['Source type', 'Amazon Web Services'],
+      ['Last availability check', 'some date'],
+      ['Date added', 'some date'],
+      ['Last modified', 'some date'],
+    ]);
+  });
+
   it('renders correctly with super key source - account authorization', async () => {
     formatters.dateFormatter = jest.fn().mockImplementation(() => 'some date');
 

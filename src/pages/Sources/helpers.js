@@ -7,6 +7,7 @@ import { loadEntities, filterSources, addMessage, removeMessage } from '../../re
 import { replaceRouteId, routes } from '../../Routes';
 import { AVAILABLE } from '../../views/formatters';
 import computeSourceStatus from '../../utilities/computeSourceStatus';
+import { bold } from '../../utilities/intlShared';
 
 export const debouncedFiltering = awesomeDebounce((refresh) => refresh(), 500);
 
@@ -155,16 +156,22 @@ export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
                 id: 'alert.error.title',
                 defaultMessage: 'Source configuration unsuccessful',
               }),
-              description: (
-                <React.Fragment>
-                  {state.createdSource.applications?.[0]?.availability_status_error ||
+              description: intl.formatMessage(
+                {
+                  id: 'error.notification',
+                  defaultMessage: '{error} [<b>{name}</b>]',
+                },
+                {
+                  error:
+                    state.createdSource.applications?.[0]?.availability_status_error ||
                     state.createdSource.endpoint?.[0]?.availability_status_error ||
                     intl.formatMessage({
                       id: 'wizard.unknownError',
                       defaultMessage: 'Unknown error',
-                    })}
-                  &nbsp;[<b>{state.createdSource.name}</b>]
-                </React.Fragment>
+                    }),
+                  name: state.createdSource.name,
+                  b: bold,
+                }
               ),
               variant: 'danger',
               id,

@@ -80,20 +80,6 @@ export const appMutatorRedHat = (appTypes) => (option, formOptions) => {
   return option;
 };
 
-export const sourceTypeMutator = (appTypes, sourceTypes) => (option, formOptions) => {
-  const selectedApp = formOptions.getState().values.application
-    ? formOptions.getState().values.application.application_type_id
-    : undefined;
-  const appType = appTypes.find((app) => app.id === selectedApp);
-  const isEnabled = appType
-    ? appType.supported_source_types.includes(sourceTypes.find((type) => type.product_name === option.label).name)
-    : true;
-  return {
-    ...option,
-    isDisabled: !isEnabled,
-  };
-};
-
 const shortIcons = {
   amazon: '/apps/frontend-assets/partners-icons/aws.svg',
   'ansible-tower': '/apps/frontend-assets/red-hat-logos/stacked.svg',
