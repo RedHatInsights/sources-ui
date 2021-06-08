@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { useIntl } from 'react-intl';
 
-import { Text, TextVariants } from '@patternfly/react-core/dist/js/components/Text/Text';
-import { TextContent } from '@patternfly/react-core/dist/js/components/Text/TextContent';
-import { Button } from '@patternfly/react-core/dist/js/components/Button/Button';
-import { Modal } from '@patternfly/react-core/dist/js/components/Modal/Modal';
-import { Checkbox } from '@patternfly/react-core/dist/js/components/Checkbox/Checkbox';
-import { Title } from '@patternfly/react-core/dist/js/components/Title/Title';
+import { Text, TextVariants, TextContent, Button, Modal, Checkbox, Title } from '@patternfly/react-core';
 
-import ExclamationTriangleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-triangle-icon';
+import ExclamationTriangleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-triangle-icon';
 
 import { removeSource } from '../../redux/sources/actions';
 import { useSource } from '../../hooks/useSource';
@@ -19,7 +15,7 @@ import { routes } from '../../Routes';
 import { bodyVariants, typesWithExtendedText } from './helpers';
 import AppListInRemoval from './AppListInRemoval';
 
-const SourceRemoveModal = () => {
+const SourceRemoveModal = ({ backPath }) => {
   const { push } = useHistory();
 
   const [acknowledge, setAcknowledge] = useState(false);
@@ -31,10 +27,10 @@ const SourceRemoveModal = () => {
 
   const { sourceTypes } = useSelector(({ sources }) => sources, shallowEqual);
 
-  const returnToSources = () => push(routes.sources.path);
+  const returnToSources = () => push(backPath);
 
   const onSubmit = () => {
-    returnToSources();
+    push(routes.sources.path);
     dispatch(
       removeSource(
         source.id,
@@ -105,13 +101,13 @@ const SourceRemoveModal = () => {
 
   return (
     <Modal
-      className="ins-c-sources__dialog--warning"
+      className="sources"
       aria-label={intl.formatMessage({
         id: 'sources.deleteTitle',
         defaultMessage: `Remove source?`,
       })}
       header={
-        <Title headingLevel="h1" size="2xl">
+        <Title headingLevel="h1" size="2xl" className="sources">
           <ExclamationTriangleIcon size="sm" className="ins-m-alert ins-c-source__delete-icon pf-u-mr-sm" />
           {intl.formatMessage({
             id: 'sources.deleteTitle',
@@ -127,6 +123,14 @@ const SourceRemoveModal = () => {
       {body}
     </Modal>
   );
+};
+
+SourceRemoveModal.propTypes = {
+  backPath: PropTypes.string,
+};
+
+SourceRemoveModal.defaultProps = {
+  backPath: routes.sources.path,
 };
 
 export default SourceRemoveModal;

@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { RowWrapper } from '@patternfly/react-table';
-import { Spinner } from '@patternfly/react-core/dist/js/components/Spinner';
-import { Bullseye } from '@patternfly/react-core/dist/js/layouts/Bullseye';
-import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/cjs/PageHeader';
-import { Section } from '@redhat-cloud-services/frontend-components/components/cjs/Section';
+import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
+import { Section } from '@redhat-cloud-services/frontend-components/Section';
+
+import { Spinner, Bullseye, Grid, GridItem, Card, CardBody } from '@patternfly/react-core';
 
 import { COLUMN_COUNT } from '../../views/sourcesViewDefinition';
 
@@ -65,3 +65,30 @@ export const RowWrapperLoader = ({ row: { isDeleting, ...row }, ...initialProps 
 RowWrapperLoader.propTypes = {
   row: PropTypes.object.isRequired,
 };
+
+export const CardLoader = (props) => (
+  <Card className="card pf-u-m-md">
+    <CardBody>
+      <Loader {...props} />
+    </CardBody>
+  </Card>
+);
+
+export const DetailLoader = () => (
+  <div className="ins-c-sources__detail-page">
+    <PageHeader>
+      <Loader height={96} />
+    </PageHeader>
+    <Grid>
+      <GridItem md="6">
+        <CardLoader height={218} />
+      </GridItem>
+      <GridItem md="6">
+        <CardLoader height={218} />
+      </GridItem>
+      <GridItem md="12">
+        <CardLoader height={324} />
+      </GridItem>
+    </Grid>
+  </div>
+);

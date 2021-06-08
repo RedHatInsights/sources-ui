@@ -10,10 +10,10 @@ export const initialState = {
   isSubmitting: false,
   initialLoad: true,
   submitError: false,
-  isTimeouted: false,
+  submitMessages: undefined,
 };
 
-const reducer = (state, { type, source, sourceType, appTypes, intl, message, values, editing, removingAuth, authId }) => {
+const reducer = (state, { type, source, sourceType, appTypes, intl, values, editing, messages }) => {
   switch (type) {
     case 'createForm':
       return {
@@ -26,8 +26,13 @@ const reducer = (state, { type, source, sourceType, appTypes, intl, message, val
     case 'setSource':
       return {
         ...state,
+        messages: {
+          ...messages,
+          ...state.submitMessages,
+        },
         source,
         initialLoad: false,
+        submitMessages: undefined,
       };
     case 'submit':
       return {
@@ -42,68 +47,20 @@ const reducer = (state, { type, source, sourceType, appTypes, intl, message, val
         ...state,
         isSubmitting: false,
         source,
-        message,
+        submitMessages: messages,
       };
     case 'submitFailed':
       return {
         ...state,
         isSubmitting: false,
         submitError: true,
+        messages: undefined,
       };
-    case 'submitTimetouted':
+    case 'sourceChanged':
       return {
         ...state,
-        isSubmitting: false,
-        isTimeouted: true,
-      };
-    case 'removeAuthPending':
-      return {
-        ...state,
-        isAuthRemoving: null,
-        source: {
-          ...state.source,
-          authentications: state.source.authentications.map((auth) =>
-            auth.id === authId
-              ? {
-                  ...auth,
-                  isDeleting: true,
-                }
-              : auth
-          ),
-        },
-      };
-    case 'removeAuthRejected':
-      return {
-        ...state,
-        source: {
-          ...state.source,
-          authentications: state.source.authentications.map((auth) =>
-            auth.id === authId
-              ? {
-                  ...auth,
-                  isDeleting: false,
-                }
-              : auth
-          ),
-        },
-      };
-    case 'removeAuthFulfill':
-      return {
-        ...state,
-        source: {
-          ...state.source,
-          authentications: state.source.authentications.filter((auth) => auth.id !== authId),
-        },
-      };
-    case 'setAuthRemoving':
-      return {
-        ...state,
-        isAuthRemoving: removingAuth,
-      };
-    case 'closeAuthRemoving':
-      return {
-        ...state,
-        isAuthRemoving: null,
+        initialLoad: true,
+        loading: true,
       };
     default:
       return state;

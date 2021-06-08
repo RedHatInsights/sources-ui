@@ -1,24 +1,21 @@
 import { Route } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 
 import AppListInRemoval from '../../../components/SourceRemoveModal/AppListInRemoval';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { replaceRouteId, routes } from '../../../Routes';
 import { applicationTypesData, CATALOG_APP, COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
+
 import { Text, TextList, TextListItem } from '@patternfly/react-core';
+
+import mockStore from '../../__mocks__/mockStore';
 
 describe('AppListInRemoval', () => {
   let wrapper;
   let initialProps;
 
-  const middlewares = [thunk, notificationsMiddleware()];
-  let mockStore;
   let store;
 
   beforeEach(() => {
-    mockStore = configureStore(middlewares);
     store = mockStore({
       sources: { appTypes: applicationTypesData.data },
     });

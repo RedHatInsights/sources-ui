@@ -1,16 +1,17 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { EmptyStateBody, Radio, Button, Title, EmptyStateSecondaryActions } from '@patternfly/react-core';
-import { Route, MemoryRouter } from 'react-router-dom';
-import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
-import CloseModal from '@redhat-cloud-services/frontend-components-sources/cjs/CloseModal';
-import LoadingStep from '@redhat-cloud-services/frontend-components-sources/cjs/LoadingStep';
-import ErroredStep from '@redhat-cloud-services/frontend-components-sources/cjs/ErroredStep';
-import SummaryStep from '@redhat-cloud-services/frontend-components-sources/cjs/SourceWizardSummary';
-import FinishedStep from '@redhat-cloud-services/frontend-components-sources/cjs/FinishedStep';
+import { EmptyStateBody, EmptyStateSecondaryActions, Title, Radio } from '@patternfly/react-core';
+
+import { Route, MemoryRouter } from 'react-router-dom';
+
+import CloseModal from '../../../components/CloseModal';
+import SummaryStep from '../../../components/FormComponents/SourceWizardSummary';
+import LoadingStep from '../../../components/steps/LoadingStep';
+import FinishedStep from '../../../components/steps/FinishedStep';
+import AmazonFinishedStep from '../../../components/steps/AmazonFinishedStep';
+import TimeoutStep from '../../../components/steps/TimeoutStep';
+import ErroredStep from '../../../components/steps/ErroredStep';
 
 import { act } from 'react-dom/test-utils';
 
@@ -20,28 +21,26 @@ import * as attachSource from '../../../api/doAttachApp';
 
 import AddApplication from '../../../components/AddApplication/AddApplication';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import { sourceTypesData, OPENSHIFT_ID } from '../../__mocks__/sourceTypesData';
-import { SOURCE_ALL_APS_ID, SOURCE_NO_APS_ID } from '../../__mocks__/sourcesData';
-import { applicationTypesData, COSTMANAGEMENT_APP, TOPOLOGICALINVENTORY_APP } from '../../__mocks__/applicationTypesData';
-import AddApplicationDescription from '../../../components/AddApplication/AddApplicationDescription';
+import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID } from '../../__mocks__/sourceTypesData';
+import { SOURCE_NO_APS_ID } from '../../__mocks__/sourcesData';
+import { applicationTypesData, COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
 import { routes, replaceRouteId } from '../../../Routes';
 import { AuthTypeSetter } from '../../../components/AddApplication/AuthTypeSetter';
 import reducer from '../../../components/AddApplication/reducer';
 import * as removeAppSubmit from '../../../components/AddApplication/removeAppSubmit';
-import TimeoutStep from '@redhat-cloud-services/frontend-components-sources/cjs/TimeoutStep';
-import ApplicationSelect from '../../../components/AddApplication/ApplicationSelect';
+
+import mockStore from '../../__mocks__/mockStore';
 
 describe('AddApplication', () => {
   let store;
   let initialEntry;
-  let mockStore;
   let checkAvailabilitySource;
-  const middlewares = [thunk, notificationsMiddleware()];
 
   beforeEach(() => {
     checkAvailabilitySource = jest.fn().mockImplementation(() => Promise.resolve());
-    initialEntry = [replaceRouteId(routes.sourceManageApps.path, SOURCE_NO_APS_ID)];
-    mockStore = configureStore(middlewares);
+    initialEntry = [
+      replaceRouteId(routes.sourcesDetailAddApp.path, SOURCE_NO_APS_ID).replace(':app_type_id', COSTMANAGEMENT_APP.id),
+    ];
     store = mockStore({
       sources: {
         entities: [
@@ -49,20 +48,6 @@ describe('AddApplication', () => {
             id: SOURCE_NO_APS_ID,
             source_type_id: OPENSHIFT_ID,
             applications: [],
-          },
-          {
-            id: SOURCE_ALL_APS_ID,
-            source_type_id: OPENSHIFT_ID,
-            applications: [
-              {
-                application_type_id: COSTMANAGEMENT_APP.id,
-                id: '13242323',
-              },
-              {
-                application_type_id: TOPOLOGICALINVENTORY_APP.id,
-                id: '878253887',
-              },
-            ],
           },
         ],
         appTypes: applicationTypesData.data,
@@ -76,27 +61,6 @@ describe('AddApplication', () => {
       listEndpointAuthentications: jest.fn().mockImplementation(() => Promise.resolve({ data: [] })),
       checkAvailabilitySource,
     });
-  });
-
-  it('renders limited options of applications correctly', async () => {
-    let wrapper;
-
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourceManageApps.path} render={(...args) => <AddApplication {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
-    wrapper.update();
-
-    expect(wrapper.find(SourcesFormRenderer).length).toEqual(1);
-    expect(wrapper.find(AddApplicationDescription).length).toEqual(1);
-    expect(wrapper.find(ApplicationSelect).length).toEqual(1);
-    expect(wrapper.find(ApplicationSelect).find(Radio).length).toEqual(1); // one app is not compatible, one app is topology inventory
-    expect(wrapper.find(Button).at(1).text()).toEqual('Next');
   });
 
   it('loads with endpoint values - not removing of source', async () => {
@@ -117,20 +81,6 @@ describe('AddApplication', () => {
             applications: [],
             endpoints: [{ id: ENDPOINT_ID }],
           },
-          {
-            id: SOURCE_ALL_APS_ID,
-            source_type_id: OPENSHIFT_ID,
-            applications: [
-              {
-                application_type_id: COSTMANAGEMENT_APP.id,
-                id: '13242323',
-              },
-              {
-                application_type_id: TOPOLOGICALINVENTORY_APP.id,
-                id: '132423232342323',
-              },
-            ],
-          },
         ],
         appTypes: applicationTypesData.data,
         sourceTypes: sourceTypesData.data,
@@ -145,7 +95,7 @@ describe('AddApplication', () => {
     await act(async () => {
       wrapper = mount(
         componentWrapperIntl(
-          <Route path={routes.sourceManageApps.path} render={(...args) => <AddApplication {...args} />} />,
+          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
           store,
           initialEntry
         )
@@ -155,10 +105,6 @@ describe('AddApplication', () => {
 
     expect(loadAuthsSpy).toHaveBeenCalledWith(ENDPOINT_ID);
     expect(wrapper.find(SourcesFormRenderer).length).toEqual(1);
-    expect(wrapper.find(AddApplicationDescription).length).toEqual(1);
-    expect(wrapper.find(ApplicationSelect).length).toEqual(1);
-    expect(wrapper.find(ApplicationSelect).find(Radio).length).toEqual(1);
-    expect(wrapper.find(Button).at(1).text()).toEqual('Next');
   });
 
   it('renders loading state when is not loaded', async () => {
@@ -177,7 +123,7 @@ describe('AddApplication', () => {
     await act(async () => {
       wrapper = mount(
         componentWrapperIntl(
-          <Route path={routes.sourceManageApps.path} render={(...args) => <AddApplication {...args} />} />,
+          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
           store,
           initialEntry
         )
@@ -186,6 +132,108 @@ describe('AddApplication', () => {
     wrapper.update();
 
     expect(wrapper.find(LoadingStep)).toHaveLength(1);
+  });
+
+  describe('redirects', () => {
+    const APP = {
+      id: '1543897',
+      name: 'custom-app',
+      supported_source_types: [],
+    };
+
+    initialEntry = [replaceRouteId(routes.sourcesDetailAddApp.path, SOURCE_NO_APS_ID).replace(':app_type_id', APP.id)];
+
+    it('when type does exist', async () => {
+      store = mockStore({
+        sources: {
+          entities: [{ id: SOURCE_NO_APS_ID, source_type_id: AMAZON_ID, applications: [] }],
+          appTypes: [],
+          sourceTypes: sourceTypesData.data,
+          appTypesLoaded: true,
+          sourceTypesLoaded: true,
+          loaded: 0,
+        },
+      });
+
+      let wrapper;
+
+      await act(async () => {
+        wrapper = mount(
+          componentWrapperIntl(
+            <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
+            store,
+            initialEntry
+          )
+        );
+      });
+      wrapper.update();
+
+      expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
+        replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID)
+      );
+    });
+
+    it('when type does is not supported', async () => {
+      store = mockStore({
+        sources: {
+          entities: [{ id: SOURCE_NO_APS_ID, source_type_id: AMAZON_ID, applications: [] }],
+          appTypes: [APP],
+          sourceTypes: sourceTypesData.data,
+          appTypesLoaded: true,
+          sourceTypesLoaded: true,
+          loaded: 0,
+        },
+      });
+
+      let wrapper;
+
+      await act(async () => {
+        wrapper = mount(
+          componentWrapperIntl(
+            <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
+            store,
+            initialEntry
+          )
+        );
+      });
+      wrapper.update();
+
+      expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
+        replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID)
+      );
+    });
+
+    it('when type is already attached', async () => {
+      store = mockStore({
+        sources: {
+          entities: [
+            { id: SOURCE_NO_APS_ID, source_type_id: AMAZON_ID, applications: [{ id: '234', application_type_id: APP.id }] },
+          ],
+          appTypes: [{ ...APP, supported_source_types: ['amazon'] }],
+          sourceTypes: sourceTypesData.data,
+          appTypesLoaded: true,
+          sourceTypesLoaded: true,
+          loaded: 0,
+        },
+      });
+
+      let wrapper;
+
+      await act(async () => {
+        wrapper = mount(
+          componentWrapperIntl(
+            <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
+            store,
+            initialEntry
+          )
+        );
+      });
+      wrapper.update();
+
+      expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
+        replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID)
+      );
+    });
   });
 
   describe('custom type - integration tests', () => {
@@ -254,10 +302,12 @@ describe('AddApplication', () => {
         },
       });
 
+      initialEntry = [replaceRouteId(routes.sourcesDetailAddApp.path, SOURCE_NO_APS_ID).replace(':app_type_id', application.id)];
+
       await act(async () => {
         wrapper = mount(
           componentWrapperIntl(
-            <Route path={routes.sourceManageApps.path} render={(...args) => <AddApplication {...args} />} />,
+            <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
             store,
             initialEntry
           )
@@ -268,89 +318,71 @@ describe('AddApplication', () => {
 
     it('closes immedietaly when no value is filled', async () => {
       await act(async () => {
-        const closeButton = wrapper.find(Button).at(0);
+        const closeButton = wrapper.find('Button').at(0);
         closeButton.simulate('click');
       });
       wrapper.update();
 
-      expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sources.path);
+      expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
+        replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID)
+      );
     });
 
     it('opens a modal on cancel and closes the wizard', async () => {
-      await act(async () => {
-        wrapper.find(ApplicationSelect).find(Radio).find('input').first().simulate('change');
-      });
-      wrapper.update();
-
-      await act(async () => {
-        const nextButton = wrapper.find(Button).at(1);
-        nextButton.simulate('click');
-      });
-      wrapper.update();
-
       const value = 'SOURCE_REF_CHANGED';
 
       await act(async () => {
-        const sourceRefInput = wrapper.find('input').last();
+        const sourceRefInput = wrapper.find('input[name="source.nested.source_ref"]');
         sourceRefInput.instance().value = value;
         sourceRefInput.simulate('change');
       });
       wrapper.update();
 
       await act(async () => {
-        const closeButton = wrapper.find(Button).at(0);
+        const closeButton = wrapper.find('Button').at(0);
         closeButton.simulate('click');
       });
       wrapper.update();
 
-      expect(wrapper.find(CloseModal).props().isOpen).toEqual(true);
+      expect(wrapper.find(CloseModal)).toHaveLength(1);
 
       await act(async () => {
-        const leaveButton = wrapper.find(Button).at(1);
+        const leaveButton = wrapper.find('Button').at(1);
         leaveButton.simulate('click');
       });
       wrapper.update();
 
-      expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sources.path);
+      expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
+        replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID)
+      );
     });
 
     it('opens a modal on cancel and stay on the wizard', async () => {
-      await act(async () => {
-        wrapper.find(ApplicationSelect).find(Radio).find('input').first().simulate('change');
-      });
-      wrapper.update();
-
-      await act(async () => {
-        const nextButton = wrapper.find(Button).at(1);
-        nextButton.simulate('click');
-      });
-      wrapper.update();
-
       const value = 'SOURCE_REF_CHANGED';
 
       await act(async () => {
-        const sourceRefInput = wrapper.find('input').last();
+        const sourceRefInput = wrapper.find('input[name="source.nested.source_ref"]');
         sourceRefInput.instance().value = value;
         sourceRefInput.simulate('change');
       });
       wrapper.update();
 
       await act(async () => {
-        const closeButton = wrapper.find(Button).at(0);
+        const closeButton = wrapper.find('Button').at(0);
         closeButton.simulate('click');
       });
       wrapper.update();
 
-      expect(wrapper.find(CloseModal).props().isOpen).toEqual(true);
+      expect(wrapper.find(CloseModal)).toHaveLength(1);
 
       await act(async () => {
-        const stayButton = wrapper.find(Button).at(0);
+        const stayButton = wrapper.find('Button').at(0);
         stayButton.simulate('click');
       });
       wrapper.update();
 
-      expect(wrapper.find(CloseModal).props().isOpen).toEqual(false);
-      expect(wrapper.find('input').last().instance().value).toEqual(value);
+      expect(wrapper.find(CloseModal)).toHaveLength(0);
+      expect(wrapper.find('input[name="source.nested.source_ref"]').instance().value).toEqual(value);
     });
 
     it('renders authentication selection', async () => {
@@ -408,7 +440,7 @@ describe('AddApplication', () => {
       await act(async () => {
         wrapper = mount(
           componentWrapperIntl(
-            <Route path={routes.sourceManageApps.path} render={(...args) => <AddApplication {...args} />} />,
+            <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
             store,
             initialEntry
           )
@@ -416,28 +448,17 @@ describe('AddApplication', () => {
       });
       wrapper.update();
 
-      await act(async () => {
-        wrapper.find(ApplicationSelect).find(Radio).find('input').first().simulate('change');
-      });
-      wrapper.update();
-
-      await act(async () => {
-        const nextButton = wrapper.find(Button).at(2);
-        nextButton.simulate('click');
-      });
-      wrapper.update();
-
       expect(wrapper.find(Radio)).toHaveLength(2);
       expect(wrapper.find(AuthTypeSetter)).toHaveLength(1);
 
       await act(async () => {
-        const selectExistingAuth = wrapper.find('input').last();
+        const selectExistingAuth = wrapper.find('input').at(1);
         selectExistingAuth.simulate('change');
       });
       wrapper.update();
 
       await act(async () => {
-        const nextButton = wrapper.find(Button).at(1);
+        const nextButton = wrapper.find('Button').at(1);
         nextButton.simulate('click');
       });
       wrapper.update();
@@ -445,14 +466,14 @@ describe('AddApplication', () => {
       const value = 'SOURCE_REF_CHANGED';
 
       await act(async () => {
-        const sourceRefInput = wrapper.find('input').last();
+        const sourceRefInput = wrapper.find('input[name="source.nested.source_ref"]');
         sourceRefInput.instance().value = value;
         sourceRefInput.simulate('change');
       });
       wrapper.update();
 
       await act(async () => {
-        const nextButton = wrapper.find(Button).at(1);
+        const nextButton = wrapper.find('Button').at(1);
         nextButton.simulate('click');
       });
       wrapper.update();
@@ -466,7 +487,7 @@ describe('AddApplication', () => {
       );
 
       await act(async () => {
-        const submitButton = wrapper.find(Button).at(1);
+        const submitButton = wrapper.find('Button').at(1);
         submitButton.simulate('click');
       });
       wrapper.update();
@@ -516,25 +537,14 @@ describe('AddApplication', () => {
     it('renders review', async () => {
       const wrapper = mount(
         componentWrapperIntl(
-          <Route path={routes.sourceManageApps.path} render={(...args) => <AddApplication {...args} />} />,
+          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
           store,
           initialEntry
         )
       );
 
-      await act(async () => {
-        wrapper.find(ApplicationSelect).find(Radio).find('input').first().simulate('change');
-      });
-      wrapper.update();
-
-      await act(async () => {
-        const nextButton = wrapper.find(Button).at(1);
-        nextButton.simulate('click');
-      });
-      wrapper.update();
-
       expect(wrapper.find(SummaryStep)).toHaveLength(1);
-      expect(wrapper.find(Button).at(1).text()).toEqual('Add');
+      expect(wrapper.find('Button').at(1).text()).toEqual('Add');
     });
 
     it('calls on submit function', async () => {
@@ -549,25 +559,14 @@ describe('AddApplication', () => {
 
       const wrapper = mount(
         componentWrapperIntl(
-          <Route path={routes.sourceManageApps.path} render={(...args) => <AddApplication {...args} />} />,
+          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
           store,
           initialEntry
         )
       );
 
       await act(async () => {
-        wrapper.find(ApplicationSelect).find(Radio).find('input').first().simulate('change');
-        wrapper.find(Button).at(1).simulate('click');
-      });
-      wrapper.update();
-
-      await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
-      });
-      wrapper.update();
-
-      await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
+        wrapper.find('Button').at(1).simulate('click');
       });
       wrapper.update();
 
@@ -586,8 +585,67 @@ describe('AddApplication', () => {
       expect(wrapper.find(FinishedStep).length).toEqual(1);
       expect(wrapper.find(Title).last().text()).toEqual('Configuration successful');
       expect(wrapper.find(EmptyStateBody).last().text()).toEqual('Your application was successfully added.');
-      expect(wrapper.find(Button).at(1).text()).toEqual('Back to Sources');
-      expect(wrapper.find(Button).at(2).text()).toEqual('Continue managing applications');
+      expect(wrapper.find('Button').at(1).text()).toEqual('Exit');
+    });
+
+    it('shows aws specific step', async () => {
+      source = {
+        ...source,
+        source_type_id: AMAZON_ID,
+      };
+
+      store = mockStore({
+        sources: {
+          entities: [source],
+          appTypes: applicationTypesData.data,
+          sourceTypes: sourceTypesData.data,
+          appTypesLoaded: true,
+          sourceTypesLoaded: true,
+          loaded: 0,
+        },
+      });
+      initialValues = { application: undefined, source };
+
+      attachSource.doAttachApp = jest.fn().mockImplementation(() =>
+        Promise.resolve({
+          availability_status: 'available',
+        })
+      );
+
+      entities.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
+      entities.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+
+      const wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+
+      await act(async () => {
+        wrapper.find('Button').at(1).simulate('click');
+      });
+      wrapper.update();
+
+      const formValues = {
+        application: {
+          application_type_id: '2',
+        },
+      };
+      const formApi = expect.any(Object);
+      const authenticationValues = expect.any(Array);
+      const appTypes = expect.any(Array);
+
+      expect(checkAvailabilitySource).toHaveBeenCalledWith(source.id);
+
+      expect(attachSource.doAttachApp).toHaveBeenCalledWith(formValues, formApi, authenticationValues, initialValues, appTypes);
+      expect(wrapper.find(AmazonFinishedStep).length).toEqual(1);
+      expect(wrapper.find(Title).last().text()).toEqual('Amazon Web Services connection established');
+      expect(wrapper.find(EmptyStateBody).last().text()).toEqual(
+        'Discover the benefits of your connection or exit to manage your new source.View enabled AWS gold imagesSubscription Watch usageGet started with Red Hat InsightsCost Management reporting'
+      );
+      expect(wrapper.find('Button').at(1).text()).toEqual('Exit');
     });
 
     it('renders timeouted step when endpoint', async () => {
@@ -606,35 +664,23 @@ describe('AddApplication', () => {
 
       const wrapper = mount(
         componentWrapperIntl(
-          <Route path={routes.sourceManageApps.path} render={(...args) => <AddApplication {...args} />} />,
+          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
           store,
           initialEntry
         )
       );
 
       await act(async () => {
-        wrapper.find(ApplicationSelect).find(Radio).find('input').first().simulate('change');
-        wrapper.find(Button).at(1).simulate('click');
-      });
-      wrapper.update();
-
-      await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
-      });
-      wrapper.update();
-
-      await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
+        wrapper.find('Button').at(1).simulate('click');
       });
       wrapper.update();
 
       expect(wrapper.find(TimeoutStep)).toHaveLength(1);
-      expect(wrapper.find(Title).last().text()).toEqual('Configuration not yet complete');
+      expect(wrapper.find(Title).last().text()).toEqual('Configuration in progress');
       expect(wrapper.find(EmptyStateBody).last().text()).toEqual(
         'We are still working to confirm credentials and app settings.To track progress, check the Status column in the Sources table.'
       );
-      expect(wrapper.find(Button).at(1).text()).toEqual('Back to Sources');
-      expect(wrapper.find(Button).at(2).text()).toEqual('Continue managing applications');
+      expect(wrapper.find('Button').at(1).text()).toEqual('Exit');
     });
 
     it('renders timeouted step', async () => {
@@ -653,35 +699,23 @@ describe('AddApplication', () => {
 
       const wrapper = mount(
         componentWrapperIntl(
-          <Route path={routes.sourceManageApps.path} render={(...args) => <AddApplication {...args} />} />,
+          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
           store,
           initialEntry
         )
       );
 
       await act(async () => {
-        wrapper.find(ApplicationSelect).find(Radio).find('input').first().simulate('change');
-        wrapper.find(Button).at(1).simulate('click');
-      });
-      wrapper.update();
-
-      await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
-      });
-      wrapper.update();
-
-      await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
+        wrapper.find('Button').at(1).simulate('click');
       });
       wrapper.update();
 
       expect(wrapper.find(TimeoutStep)).toHaveLength(1);
-      expect(wrapper.find(Title).last().text()).toEqual('Configuration not yet complete');
+      expect(wrapper.find(Title).last().text()).toEqual('Configuration in progress');
       expect(wrapper.find(EmptyStateBody).last().text()).toEqual(
         'We are still working to confirm credentials and app settings.To track progress, check the Status column in the Sources table.'
       );
-      expect(wrapper.find(Button).at(1).text()).toEqual('Back to Sources');
-      expect(wrapper.find(Button).at(2).text()).toEqual('Continue managing applications');
+      expect(wrapper.find('Button').at(1).text()).toEqual('Exit');
     });
 
     it('redirects to edit when unavailable', async () => {
@@ -703,25 +737,14 @@ describe('AddApplication', () => {
 
       const wrapper = mount(
         componentWrapperIntl(
-          <Route path={routes.sourceManageApps.path} render={(...args) => <AddApplication {...args} />} />,
+          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
           store,
           initialEntry
         )
       );
 
       await act(async () => {
-        wrapper.find(ApplicationSelect).find(Radio).find('input').first().simulate('change');
-        wrapper.find(Button).at(1).simulate('click');
-      });
-      wrapper.update();
-
-      await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
-      });
-      wrapper.update();
-
-      await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
+        wrapper.find('Button').at(1).simulate('click');
       });
       wrapper.update();
 
@@ -730,16 +753,16 @@ describe('AddApplication', () => {
       expect(wrapper.find(ErroredStep).length).toEqual(1);
       expect(wrapper.find(Title).last().text()).toEqual('Configuration unsuccessful');
       expect(wrapper.find(EmptyStateBody).last().text()).toEqual(ERROR);
-      expect(wrapper.find(Button).at(1).text()).toEqual('Edit source');
-      expect(wrapper.find(Button).at(2).text()).toEqual('Remove application');
+      expect(wrapper.find('Button').at(1).text()).toEqual('Edit source');
+      expect(wrapper.find('Button').at(2).text()).toEqual('Remove application');
 
       await act(async () => {
-        wrapper.find(Button).at(1).simulate('click', { button: 0 });
+        wrapper.find('Button').at(1).simulate('click', { button: 0 });
       });
       wrapper.update();
 
       expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
-        replaceRouteId(routes.sourcesEdit.path, source.id)
+        replaceRouteId(routes.sourcesDetail.path, source.id)
       );
     });
 
@@ -765,25 +788,14 @@ describe('AddApplication', () => {
 
       const wrapper = mount(
         componentWrapperIntl(
-          <Route path={routes.sourceManageApps.path} render={(...args) => <AddApplication {...args} />} />,
+          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
           store,
           initialEntry
         )
       );
 
       await act(async () => {
-        wrapper.find(ApplicationSelect).find(Radio).find('input').first().simulate('change');
-        wrapper.find(Button).at(1).simulate('click');
-      });
-      wrapper.update();
-
-      await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
-      });
-      wrapper.update();
-
-      await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
+        wrapper.find('Button').at(1).simulate('click');
       });
       wrapper.update();
 
@@ -792,15 +804,15 @@ describe('AddApplication', () => {
       expect(wrapper.find(ErroredStep).length).toEqual(1);
       expect(wrapper.find(Title).last().text()).toEqual('Configuration unsuccessful');
       expect(wrapper.find(EmptyStateBody).last().text()).toEqual(ERROR);
-      expect(wrapper.find(Button).at(1).text()).toEqual('Edit source');
-      expect(wrapper.find(Button).at(2).text()).toEqual('Remove application');
+      expect(wrapper.find('Button').at(1).text()).toEqual('Edit source');
+      expect(wrapper.find('Button').at(2).text()).toEqual('Remove application');
 
       removeAppSubmit.default = jest.fn().mockImplementation(() => Promise.resolve('OK'));
 
       expect(removeAppSubmit.default).not.toHaveBeenCalled();
 
       await act(async () => {
-        wrapper.find(Button).at(2).simulate('click');
+        wrapper.find('Button').at(2).simulate('click');
       });
       wrapper.update();
 
@@ -820,25 +832,14 @@ describe('AddApplication', () => {
 
       const wrapper = mount(
         componentWrapperIntl(
-          <Route path={routes.sourceManageApps.path} render={(...args) => <AddApplication {...args} />} />,
+          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
           store,
           initialEntry
         )
       );
 
       await act(async () => {
-        wrapper.find(ApplicationSelect).find(Radio).find('input').first().simulate('change');
-        wrapper.find(Button).at(1).simulate('click');
-      });
-      wrapper.update();
-
-      await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
-      });
-      wrapper.update();
-
-      await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
+        wrapper.find('Button').at(1).simulate('click');
       });
       wrapper.update();
 
@@ -858,7 +859,7 @@ describe('AddApplication', () => {
       expect(wrapper.find(EmptyStateBody).last().text()).toEqual(
         'There was a problem while trying to add your source. Please try again. If the error persists, open a support case.'
       );
-      expect(wrapper.find(Button).at(1).text()).toEqual('Retry');
+      expect(wrapper.find('Button').at(1).text()).toEqual('Retry');
       expect(wrapper.find(EmptyStateSecondaryActions).text()).toEqual('Open a support case');
     });
 
@@ -869,25 +870,14 @@ describe('AddApplication', () => {
 
       const wrapper = mount(
         componentWrapperIntl(
-          <Route path={routes.sourceManageApps.path} render={(...args) => <AddApplication {...args} />} />,
+          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
           store,
           initialEntry
         )
       );
 
       await act(async () => {
-        wrapper.find(ApplicationSelect).find(Radio).find('input').first().simulate('change');
-        wrapper.find(Button).at(1).simulate('click');
-      });
-      wrapper.update();
-
-      await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
-      });
-      wrapper.update();
-
-      await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
+        wrapper.find('Button').at(1).simulate('click');
       });
       wrapper.update();
 
@@ -913,7 +903,7 @@ describe('AddApplication', () => {
       );
 
       await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
+        wrapper.find('Button').at(1).simulate('click');
       });
       wrapper.update();
 
@@ -925,26 +915,15 @@ describe('AddApplication', () => {
 
       const wrapper = mount(
         componentWrapperIntl(
-          <Route path={routes.sourceManageApps.path} render={(...args) => <AddApplication {...args} />} />,
+          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
           store,
           initialEntry
         )
       );
 
-      await act(async () => {
-        wrapper.find(ApplicationSelect).find(Radio).find('input').first().simulate('change');
-        wrapper.find(Button).at(1).simulate('click');
-      });
-      wrapper.update();
-
-      await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
-      });
-      wrapper.update();
-
       jest.useFakeTimers();
       await act(async () => {
-        wrapper.find(Button).at(1).simulate('click');
+        wrapper.find('Button').at(1).simulate('click');
       });
       jest.useRealTimers();
 

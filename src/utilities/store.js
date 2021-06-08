@@ -1,8 +1,6 @@
-import ReducerRegistry, {
-  applyReducerHash,
-} from '@redhat-cloud-services/frontend-components-utilities/files/cjs/ReducerRegistry';
-import notificationsMiddleware from '@redhat-cloud-services/frontend-components-notifications/cjs/notificationsMiddleware';
-import notifications from '@redhat-cloud-services/frontend-components-notifications/cjs/notifications';
+import ReducerRegistry, { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/ReducerRegistry';
+import notificationsMiddleware from '@redhat-cloud-services/frontend-components-notifications/notificationsMiddleware';
+import { notificationsReducer } from '@redhat-cloud-services/frontend-components-notifications/redux';
 import thunk from 'redux-thunk';
 import promise from 'redux-promise-middleware';
 
@@ -14,14 +12,13 @@ import { ACTION_TYPES } from '../redux/sources/actionTypes';
 export const urlQueryMiddleware = (store) => (next) => (action) => {
   if (action.type === ACTION_TYPES.LOAD_ENTITIES_PENDING) {
     const sources = store.getState().sources;
-
     updateQuery({ ...sources, ...action.options });
   }
 
   next(action);
 };
 
-export const getStore = (addMiddlewares = []) => {
+export const getStore = (addMiddlewares = [], initialState = {}) => {
   const middlewares = [
     thunk,
     notificationsMiddleware({
@@ -36,10 +33,10 @@ export const getStore = (addMiddlewares = []) => {
   const registry = new ReducerRegistry({}, middlewares);
 
   registry.register({
-    sources: applyReducerHash(SourcesReducer, defaultSourcesState),
+    sources: applyReducerHash(SourcesReducer, { ...defaultSourcesState, ...initialState.sources }),
   });
-  registry.register({ user: applyReducerHash(UserReducer, defaultUserState) });
-  registry.register({ notifications });
+  registry.register({ user: applyReducerHash(UserReducer, { ...defaultUserState, ...initialState.user }) });
+  registry.register({ notifications: notificationsReducer });
 
   return registry.getStore();
 };

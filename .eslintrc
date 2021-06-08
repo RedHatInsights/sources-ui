@@ -1,5 +1,5 @@
 {
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "env": {
     "browser": true,
     "es6": true,
@@ -12,7 +12,7 @@
   },
   "extends": [
     "plugin:prettier/recommended",
-    "prettier/react",
+    "prettier",
     "eslint:recommended",
     "plugin:react/recommended"
   ],
@@ -38,12 +38,6 @@
   },
   "rules": {
     "comma-dangle": 0,
-    "comma-spacing": [
-      2,
-      {
-        "after": true
-      }
-    ],
     "comma-style": 2,
     "camelcase": 0,
     "curly": [

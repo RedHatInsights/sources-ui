@@ -1,22 +1,16 @@
 import { mount } from 'enzyme';
-import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { Route } from 'react-router-dom';
 
-import rendererContext from '@data-driven-forms/react-form-renderer/dist/cjs/renderer-context';
+import rendererContext from '@data-driven-forms/react-form-renderer/renderer-context';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { sourceTypesData, OPENSHIFT_ID } from '../../__mocks__/sourceTypesData';
 import { AuthTypeSetter } from '../../../components/AddApplication/AuthTypeSetter';
 import { routes, replaceRouteId } from '../../../Routes';
+import mockStore from '../../__mocks__/mockStore';
 
 describe('AuthTypeSetter', () => {
   let store;
-  let mockStore;
-
-  const middlewares = [thunk, notificationsMiddleware()];
-
   let initialProps;
   let formOptions;
   let changeSpy;
@@ -63,7 +57,7 @@ describe('AuthTypeSetter', () => {
     applications: [],
   };
 
-  const initialEntry = [replaceRouteId(routes.sourceManageApps.path, SOURCE_ID)];
+  const initialEntry = [replaceRouteId(routes.sourcesDetail.path, SOURCE_ID)];
 
   class Wrapper extends React.Component {
     render() {
@@ -71,7 +65,7 @@ describe('AuthTypeSetter', () => {
 
       return componentWrapperIntl(
         <rendererContext.Provider value={{ formOptions }}>
-          <Route path={routes.sourceManageApps.path} render={(...args) => <AuthTypeSetter {...args} {...props} />} />
+          <Route path={routes.sourcesDetail.path} render={(...args) => <AuthTypeSetter {...args} {...props} />} />
         </rendererContext.Provider>,
         store,
         initialEntry
@@ -80,7 +74,6 @@ describe('AuthTypeSetter', () => {
   }
 
   beforeEach(() => {
-    mockStore = configureStore(middlewares);
     store = mockStore({
       sources: {
         entities: [SOURCE],

@@ -1,12 +1,13 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import CustomRoute from '../../../components/CustomRoute/CustomRoute';
 import RedirectNoWriteAccess from '../../../components/RedirectNoWriteAccess/RedirectNoWriteAccess';
 import * as RedirectNoId from '../../../components/RedirectNoId/RedirectNoId';
+import * as RedirectNoPaused from '../../../components/RedirectNoPaused/RedirectNoPaused';
 import * as useSource from '../../../hooks/useSource';
+import mockStore from '../../__mocks__/mockStore';
 
 describe('CustomRoute', () => {
   const PokusComponent = (props) => <h1 {...props}>Custom component</h1>;
@@ -62,7 +63,7 @@ describe('CustomRoute', () => {
   });
 
   it('renders RedirectNotAdmin when writeAccess set', () => {
-    store = configureStore([])({ user: { isOrgAdmin: true } });
+    store = mockStore({ user: { isOrgAdmin: true } });
 
     route = {
       ...route,
@@ -90,5 +91,20 @@ describe('CustomRoute', () => {
 
     expect(wrapper.find(RedirectNoId.default)).toHaveLength(1);
     expect(useSource.useSource).toHaveBeenCalled();
+  });
+
+  it('renders RedirectNoPaused when no paused set', () => {
+    useSource.useSource = jest.fn().mockImplementation(() => ({ paused_at: 'today' }));
+    RedirectNoPaused.default = () => <h1>Redirect no paused mock</h1>;
+
+    route = {
+      ...route,
+      noPaused: true,
+    };
+
+    const wrapper = mount(componentWrapperIntl(<CustomRoute exact route={route} Component={PokusComponent} />, store, ['/path']));
+
+    expect(wrapper.find(PokusComponent)).toHaveLength(1);
+    expect(wrapper.find(RedirectNoPaused.default)).toHaveLength(1);
   });
 });

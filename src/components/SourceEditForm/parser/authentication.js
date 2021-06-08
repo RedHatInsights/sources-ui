@@ -1,9 +1,10 @@
 import get from 'lodash/get';
-import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
-import hardcodedSchemas from '@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas';
-import GridLayout from './GridLayout';
+import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
+import hardcodedSchemas from '../../../components/addSourceWizard/hardcodedSchemas';
 
 export const createAuthFieldName = (fieldName, id) => `authentications.a${id}.${fieldName.replace('authentication.', '')}`;
+
+export const createAuthAppFieldName = (fieldName, id) => `applications.a${id}.${fieldName.replace('application.', '')}`;
 
 export const getLastPartOfName = (fieldName) => fieldName.split('.').pop();
 
@@ -19,11 +20,15 @@ export const getAdditionalAuthSteps = (sourceType, authtype, appName = 'generic'
 export const getAdditionalAuthStepsKeys = (sourceType, authtype, appName = 'generic') =>
   get(hardcodedSchemas, [sourceType, 'authentication', authtype, appName, 'includeStepKeyFields'], []);
 
-export const getAdditionalFields = (auth, stepKey) => auth?.fields?.filter((field) => field.stepKey === stepKey) || [];
+export const getAdditionalFields = (auth, stepKey) => auth?.fields?.filter((field) => stepKey && field.stepKey === stepKey) || [];
 
-export const modifyAuthSchemas = (fields, id) =>
+export const modifyAuthSchemas = (fields, id, appId) =>
   fields.map((field) => {
-    const editedName = field.name.startsWith('authentication') ? createAuthFieldName(field.name, id) : field.name;
+    let editedName = field.name.startsWith('authentication')
+      ? createAuthFieldName(field.name, id)
+      : field.name.startsWith('application')
+      ? createAuthAppFieldName(field.name, appId)
+      : field.name;
 
     const finalField = {
       ...field,
@@ -39,29 +44,7 @@ export const modifyAuthSchemas = (fields, id) =>
     return finalField;
   });
 
-const specialModifierAWS = (field, authtype) => {
-  if (getLastPartOfName(field.name) !== 'password') {
-    return field;
-  }
-
-  if (authtype === 'arn') {
-    return {
-      ...field,
-      label: 'Cost Management ARN',
-    };
-  }
-
-  if (authtype === 'cloud-meter-arn') {
-    return {
-      ...field,
-      label: 'Subscription Watch ARN',
-    };
-  }
-
-  return field;
-};
-
-export const authenticationFields = (authentications, sourceType, appName) => {
+export const authenticationFields = (authentications, sourceType, appName, appId) => {
   if (!authentications || authentications.length === 0 || !sourceType.schema || !sourceType.schema.authentication) {
     return [];
   }
@@ -86,7 +69,7 @@ export const authenticationFields = (authentications, sourceType, appName) => {
       .filter(
         (field) =>
           additionalStepsFields.includes(field.name) ||
-          !field.stepKey ||
+          (!additionalStepsFields.length && !field.stepKey) ||
           (field.stepKey && additionalStepKeys.includes(field.stepKey))
       )
       .map((field) => ({
@@ -94,22 +77,6 @@ export const authenticationFields = (authentications, sourceType, appName) => {
         ...getEnhancedAuthField(sourceType.name, auth.authtype, field.name, appName),
       }));
 
-    if (!appName && sourceType.name === 'amazon') {
-      enhancedFields = enhancedFields.map((field) => specialModifierAWS(field, auth.authtype));
-    }
-
-    if (!appName) {
-      return [
-        {
-          name: `authentication-${auth.id}`,
-          component: 'description',
-          id: auth.id,
-          Content: GridLayout,
-          fields: modifyAuthSchemas(enhancedFields, auth.id),
-        },
-      ];
-    }
-
-    return modifyAuthSchemas(enhancedFields, auth.id);
+    return modifyAuthSchemas(enhancedFields, auth.id, appId);
   });
 };

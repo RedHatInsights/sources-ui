@@ -1,8 +1,7 @@
 import { configure, mount, render, shallow } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import React from 'react';
 import 'babel-polyfill';
-import toJson from 'enzyme-to-json';
 
 import 'whatwg-fetch'; // fetch for Nodejs
 
@@ -12,19 +11,15 @@ global.shallow = shallow;
 global.render = render;
 global.mount = mount;
 global.React = React;
-global.toJson = toJson;
 
-window.SVGPathElement = window.Element;
-//var svgjs = require('svg.js')(window)
-
-/**
- * setup ENV vars
- */
 process.env.BASE_PATH = '/api';
 
 global.insights = {
   chrome: {
+    init: () => {},
     identifyApp: () => ({}),
+    isBeta: () => true,
+    on: () => undefined,
     auth: {
       getUser: () =>
         new Promise((resolve) =>
@@ -39,5 +34,7 @@ global.insights = {
     },
   },
 };
+
+global.innerWidth = 1080;
 
 Element.prototype.scrollTo = () => {};

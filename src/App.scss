@@ -1,15 +1,4 @@
-@import './src/utilities.scss';
 @import '~@redhat-cloud-services/frontend-components-notifications/index.css';
-@import '~@redhat-cloud-services/frontend-components-sources/index.css';
-
-.pf-l-gallery {
-  padding-bottom: 20px
-  /* padding-bottom: var(--pf-c-form--section--PaddingBottom) */
-}
-
-.pf-c-backdrop > .pf-l-bullseye > .pf-l-bullseye {
-  flex: 1
-}
 
 .ins-c-sources__sources-placeholder-loader {
   margin: 0px;
@@ -17,10 +6,8 @@
   min-height: 500px;
 }
 
-.ins-c-sources__dialog--warning {
-  .ins-c-source__delete-icon {
-    color: var(--pf-global--warning-color--100);
-  }
+.ins-c-source__delete-icon {
+  color: var(--pf-global--warning-color--100);
 }
 
 .ins-c-sources__dialog--spinnerContainer {
@@ -38,36 +25,6 @@
   &:hover {
     cursor: help;
   }
-}
-
-.ins-c-sources__edit-field-group {
-  min-height: 36px;
-  display: table;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-
-  .ins-c-sources__edit-field-group-text-content {
-    display: table-cell;
-    vertical-align: middle;
-    color: var(--pf-global--disabled-color--100);
-
-    &.clickable {
-      &:hover {
-        color: var(--pf-global--Color--100);
-      }
-    }
-  }
-}
-
-.ins-c-sources__edit-field-value {
-  display: inline-block;
-  max-width: calc(100% - 24px);
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  vertical-align: middle;
 }
 
 .ins-c-sources__availability-ok {
@@ -133,4 +90,114 @@
       visibility: visible !important;
     }
   }
+}
+
+.ins-c-sources__detail-page {
+  .card {
+    box-shadow: none !important;
+  }
+
+  .summary-card {
+    cursor: initial !important;
+    background-clip: content-box;
+    height: calc(100% - 48px); // margin 2x24px
+  }
+
+  .applications-card {
+    min-height: 100%;
+    background-clip: content-box;
+  }
+
+  .empty-state-body {
+    max-width: 536px;
+  }
+
+  .pf-c-empty-state.pf-u-mt-4xl {
+    margin-top: 0px !important;
+  }
+}
+
+.ins-c-sources__info-card {
+  .text {
+    font-size: 14px;
+  }
+
+  .custom-icon {
+    height: 1em;
+    width: auto;
+    vertical-align: -2px;
+  }
+}
+
+.ins-c-sources__cloud-empty-state-card {
+  box-shadow: none !important;
+
+  .catalog-link {
+    font-size: 14px;
+  }
+
+  .cloud-footer {
+    text-align: center;
+  }
+
+  .provider-tiles {
+    text-align: center;
+
+    .tile {
+      width:  284px;
+    }
+  }
+
+  .provider-icon {
+    height: 40px;
+  }
+
+  .redhat-icon {
+    height: 50px;
+  }
+
+  .disabled-tile-with-tooltip {
+    display: inline-block;
+
+    .provider-icon {
+      opacity: 0.5;
+    }
+
+    .redhat-icon {
+      opacity: 0.5;
+    }
+  }
+}
+
+.ins-c-sources__hide-me {
+  opacity: 0;
+}
+
+.ins-c-sources__switch-description {
+  font-size: 14px;
+  color:	#6a6e73;
+  line-height: 24px;
+}
+
+.ins-c-sources__application_fake_switch {
+  width: 100%;
+}
+
+.ins-c-sources__checkbox-with-icon {
+  display: flex;
+
+  // for some reason popover does not work properly in wizard
+  .pf-c-popover {
+    visibility: initial;
+    pointer-events: initial;
+  }
+}
+
+.ins-c-sources__application_flex {
+  display: flex;
+}
+
+.ins-c-sources__application_kebab {
+  max-height: 32px;
+  margin-left: auto;
 }

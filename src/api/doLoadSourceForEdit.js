@@ -1,13 +1,11 @@
 import { getSourcesApi, doLoadApplicationsForEdit } from './entities';
-import { getCmValues } from './getCmValues';
 
-export const doLoadSourceForEdit = (source, hasCostManagement) =>
+export const doLoadSourceForEdit = (source, appTypes, sourceTypes) =>
   Promise.all([
     getSourcesApi().showSource(source.id),
     getSourcesApi().listSourceEndpoints(source.id),
-    doLoadApplicationsForEdit(source.id),
-    hasCostManagement && getCmValues(source.id).catch(() => undefined),
-  ]).then(async ([sourceData, endpoints, applications, costManagement]) => {
+    doLoadApplicationsForEdit(source.id, appTypes, sourceTypes),
+  ]).then(async ([sourceData, endpoints, applications]) => {
     const endpoint = endpoints && endpoints.data && endpoints.data[0];
 
     const apps = applications?.sources[0]?.applications || [];
@@ -19,14 +17,6 @@ export const doLoadSourceForEdit = (source, hasCostManagement) =>
       },
       applications: apps,
     };
-
-    if (costManagement) {
-      basicValues = {
-        ...basicValues,
-        billing_source: costManagement.billing_source,
-        credentials: costManagement.authentication.credentials,
-      };
-    }
 
     const promises = [];
     let appAuths;

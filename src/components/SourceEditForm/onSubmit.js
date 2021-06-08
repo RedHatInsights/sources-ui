@@ -1,83 +1,96 @@
-import { checkAppAvailability } from '@redhat-cloud-services/frontend-components-sources/cjs/getApplicationStatus';
-
-import { selectOnlyEditedValues } from './helpers';
+import { CHECK_ENDPOINT_COMMAND, getEditedApplications, selectOnlyEditedValues } from './helpers';
 import { loadEntities } from '../../redux/sources/actions';
 import { checkSourceStatus } from '../../api/checkSourceStatus';
-import { doLoadSourceForEdit } from '../../api/doLoadSourceForEdit';
 import { doUpdateSource } from '../../api/doUpdateSource';
+import { checkAppAvailability } from '../../api/getApplicationStatus';
 
-import { UNAVAILABLE } from '../SourcesTable/formatters';
+import { AVAILABLE, IN_PROGRESS, UNAVAILABLE } from '../../views/formatters';
 
 export const onSubmit = async (values, editing, dispatch, source, intl, setState) => {
   setState({ type: 'submit', values, editing });
 
+  const startDate = new Date();
+
   try {
-    await doUpdateSource(source, selectOnlyEditedValues(values, editing));
+    await doUpdateSource(source, selectOnlyEditedValues(values, editing), values);
   } catch {
+    await dispatch(loadEntities());
     setState({ type: 'submitFailed' });
 
     return;
   }
 
   checkSourceStatus(source.source.id);
-  dispatch(loadEntities());
 
-  let message;
+  let messages = {};
 
-  const sourceData = await doLoadSourceForEdit({ id: source.source.id });
+  const checkApplications = getEditedApplications(source, editing);
 
-  const promises = source.applications?.map(({ id }) => checkAppAvailability(id)) || [];
+  const promises = [];
 
-  if (source.endpoints?.[0]?.id) {
-    promises.push(checkAppAvailability(source.endpoints[0].id, undefined, undefined, 'getEndpoint'));
-  }
+  checkApplications.forEach((checkInfo) => {
+    if (checkInfo.includes(CHECK_ENDPOINT_COMMAND)) {
+      promises.push(
+        checkAppAvailability(source.endpoints[0].id, undefined, undefined, 'getEndpoint', startDate).then((data) => ({
+          ...data,
+          id: checkInfo.replace(`${CHECK_ENDPOINT_COMMAND}-`, ''),
+        }))
+      );
+    } else {
+      promises.push(checkAppAvailability(checkInfo, undefined, undefined, undefined, startDate));
+    }
+  });
 
   let statusResults;
   if (promises.length > 0) {
     try {
       statusResults = await Promise.all(promises);
     } catch (error) {
+      await dispatch(loadEntities());
       setState({ type: 'submitFailed' });
-
       return;
     }
 
-    const unavailableApp = statusResults.find(({ availability_status }) => availability_status === UNAVAILABLE);
+    statusResults.forEach(({ availability_status, availability_status_error, id }) => {
+      if (availability_status === AVAILABLE) {
+        messages[id] = {
+          title: intl.formatMessage({
+            id: 'wizard.successEditToastTitle',
+            defaultMessage: 'Application credentials were edited successfully.',
+          }),
+          description: availability_status_error,
+          variant: 'success',
+        };
+      }
 
-    if (unavailableApp) {
-      message = {
-        title: intl.formatMessage({
-          id: 'wizard.failEditToastTitle',
-          defaultMessage: 'Edit source failed',
-        }),
-        description: unavailableApp.availability_status_error,
-        variant: 'danger',
-      };
+      if (availability_status === UNAVAILABLE) {
+        messages[id] = {
+          title: intl.formatMessage({
+            id: 'wizard.failEditToastTitle',
+            defaultMessage: 'Edit application credentials failed.',
+          }),
+          description: availability_status_error,
+          variant: 'danger',
+        };
+      }
 
-      setState({ type: 'submitFinished', source: sourceData, message });
-
-      return;
-    }
-
-    const anyTimetouted = statusResults.some(({ availability_status }) => !availability_status);
-
-    if (anyTimetouted) {
-      setState({ type: 'submitTimetouted' });
-
-      return;
-    }
+      if (!availability_status || availability_status === IN_PROGRESS) {
+        messages[id] = {
+          title: intl.formatMessage({
+            id: 'wizard.timeoutEditToastTitle',
+            defaultMessage: 'Edit in progress',
+          }),
+          description: intl.formatMessage({
+            id: 'wizard.timeoutEditToastDescription',
+            defaultMessage:
+              'We are still working to confirm your updated credentials. Changes will be reflected in this table when complete.',
+          }),
+          variant: 'warning',
+        };
+      }
+    });
   }
 
-  message = {
-    title: intl.formatMessage(
-      {
-        id: 'wizard.successEditToastTitle',
-        defaultMessage: 'Source ‘{name}’ was edited successfully.',
-      },
-      { name: source.source.name }
-    ),
-    variant: 'success',
-  };
-
-  setState({ type: 'submitFinished', source: sourceData, message });
+  await dispatch(loadEntities());
+  setState({ type: 'submitFinished', messages });
 };

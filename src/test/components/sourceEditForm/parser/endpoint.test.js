@@ -1,7 +1,7 @@
 import { getEnhancedEndpointField, endpointFields } from '../../../../components/SourceEditForm/parser/endpoint';
 import { componentTypes } from '@data-driven-forms/react-form-renderer';
 
-jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas', () => ({
+jest.mock('../../../../components/addSourceWizard/hardcodedSchemas', () => ({
   __esModule: true,
   default: {
     aws: {

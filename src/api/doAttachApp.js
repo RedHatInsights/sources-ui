@@ -1,8 +1,4 @@
 import { addedDiff, updatedDiff } from 'deep-object-diff';
-import { patchSource } from '@redhat-cloud-services/frontend-components-sources/cjs/costManagementAuthentication';
-import { handleError } from '@redhat-cloud-services/frontend-components-sources/cjs/handleError';
-import { checkAppAvailability } from '@redhat-cloud-services/frontend-components-sources/cjs/getApplicationStatus';
-import { timeoutedApps } from '@redhat-cloud-services/frontend-components-sources/cjs/constants';
 
 import isEmpty from 'lodash/isEmpty';
 import merge from 'lodash/merge';
@@ -10,6 +6,10 @@ import cloneDeep from 'lodash/cloneDeep';
 
 import { getSourcesApi, doCreateApplication } from './entities';
 import { urlOrHost } from './doUpdateSource';
+import { checkAppAvailability } from '../api/getApplicationStatus';
+import handleError from '../api/handleError';
+import { timeoutedApps } from '../utilities/constants';
+import emptyAuthType from '../components/addSourceWizard/emptyAuthType';
 
 // modification of https://stackoverflow.com/a/38340374
 export const removeEmpty = (obj) => {
@@ -57,6 +57,7 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
       throw 'Missing source id';
     }
 
+    const startDate = new Date();
     const sourceId = allFormValues.source.id;
     let endpointId = allFormValues?.endpoint?.id;
 
@@ -100,7 +101,12 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
     }
 
     if (filteredValues.application?.application_type_id) {
-      promises.push(doCreateApplication(sourceId, filteredValues.application.application_type_id));
+      const applicationData = {
+        ...filteredValues.application,
+        source_id: sourceId,
+      };
+
+      promises.push(doCreateApplication(applicationData));
     } else {
       promises.push(Promise.resolve(undefined));
     }
@@ -110,7 +116,11 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
 
     let authenticationDataOut;
 
-    if (filteredValues.authentication && !isEmpty(filteredValues.authentication)) {
+    if (
+      filteredValues.authentication &&
+      !isEmpty(filteredValues.authentication) &&
+      filteredValues.authentication.authtype !== emptyAuthType.type
+    ) {
       if (selectedAuthId) {
         authenticationDataOut = await getSourcesApi().updateAuthentication(selectedAuthId, filteredValues.authentication);
       } else {
@@ -118,6 +128,7 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
           ...filteredValues.authentication,
           resource_id: endpointDataOut?.id || applicationDataOut?.id,
           resource_type: endpointDataOut?.id ? 'Endpoint' : 'Application',
+          source_id: sourceId,
         };
 
         authenticationDataOut = await getSourcesApi().createAuthentication(authenticationData);
@@ -128,31 +139,18 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
 
     const authenticationId = selectedAuthId || authenticationDataOut?.id;
 
-    const promisesSecondRound = [];
-
     if (applicationDataOut?.id && authenticationId) {
       const authAppData = {
         application_id: applicationDataOut.id,
         authentication_id: authenticationId,
       };
 
-      promisesSecondRound.push(getSourcesApi().createAuthApp(authAppData));
+      await getSourcesApi().createAuthApp(authAppData);
     }
-
-    const isAttachingCostManagement = filteredValues.credentials || filteredValues.billing_source;
-    if (isAttachingCostManagement) {
-      const { credentials, billing_source } = filteredValues;
-      let data = {};
-      data = credentials ? { authentication: { credentials } } : {};
-      data = billing_source ? { ...data, billing_source } : data;
-      promisesSecondRound.push(patchSource({ id: sourceId, ...data }));
-    }
-
-    await Promise.all(promisesSecondRound);
 
     let endpoint;
     if (endpointId) {
-      endpoint = await checkAppAvailability(endpointId, undefined, undefined, 'getEndpoint');
+      endpoint = await checkAppAvailability(endpointId, undefined, undefined, 'getEndpoint', startDate);
     }
 
     if (applicationDataOut) {

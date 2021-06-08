@@ -1,61 +1,57 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { Route, MemoryRouter } from 'react-router-dom';
-import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import { Route } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
-import { Spinner } from '@patternfly/react-core/dist/js/components/Spinner';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import SourceEditModal from '../../../components/SourceEditForm/SourceEditModal';
 import { routes, replaceRouteId } from '../../../Routes';
-import { applicationTypesData, COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
-import { sourceTypesData, OPENSHIFT_ID } from '../../__mocks__/sourceTypesData';
+import { applicationTypesData, CATALOG_APP, TOPOLOGICALINVENTORY_APP } from '../../__mocks__/applicationTypesData';
+import { sourceTypesData, ANSIBLE_TOWER_ID } from '../../__mocks__/sourceTypesData';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
-import { Modal, Button, FormGroup, TextInput, Form, Alert, EmptyState } from '@patternfly/react-core';
+
+import { Spinner, EmptyState, TextInput, Alert, Form } from '@patternfly/react-core';
+import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
+
 import * as editApi from '../../../api/doLoadSourceForEdit';
 import * as submit from '../../../components/SourceEditForm/onSubmit';
-import * as redirect from '../../../components/SourceEditForm/importedRedirect';
 import reducer from '../../../components/SourceEditForm/reducer';
 
 import SubmittingModal from '../../../components/SourceEditForm/SubmittingModal';
 import EditAlert from '../../../components/SourceEditForm/parser/EditAlert';
-import TimeoutedModal from '../../../components/SourceEditForm/TimeoutedModal';
 import ErroredModal from '../../../components/SourceEditForm/ErroredModal';
-
-import RemoveAuth from '../../../components/SourceEditForm/parser/RemoveAuth';
-import * as api from '../../../api/entities';
-import RemoveAuthPlaceholder from '../../../components/SourceEditForm/parser/RemoveAuthPlaceholder';
-import GridLayout from '../../../components/SourceEditForm/parser/GridLayout';
-
-jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/SourceAddSchema', () => ({
-  __esModule: true,
-  asyncValidatorDebounced: jest.fn(),
-}));
+import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
+import Switch from '@data-driven-forms/pf4-component-mapper/switch';
+import { ACTION_TYPES } from '../../../redux/sources/actionTypes';
+import { useDispatch } from 'react-redux';
+import { UNAVAILABLE } from '../../../views/formatters';
+import mockStore from '../../__mocks__/mockStore';
+import { getStore } from '../../../utilities/store';
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 
 describe('SourceEditModal', () => {
   let store;
   let initialEntry;
-  let mockStore;
   let wrapper;
 
-  const middlewares = [thunk, notificationsMiddleware()];
-
-  const BUTTONS = ['closeIcon', 'submit', 'reset', 'cancel'];
-
-  const CANCEL_POS = BUTTONS.indexOf('cancel');
-  //const RESET_POS = BUTTONS.indexOf('reset');
-  const ONCLOSE_POS = BUTTONS.indexOf('closeIcon');
-
-  const getCurrentAddress = (wrapper) => wrapper.find(MemoryRouter).instance().history.location.pathname;
+  const BUTTONS = ['submit', 'reset'];
 
   beforeEach(async () => {
-    initialEntry = [replaceRouteId(routes.sourcesEdit.path, '14')];
-    mockStore = configureStore(middlewares);
+    initialEntry = [replaceRouteId(routes.sourcesDetail.path, '14')];
     store = mockStore({
       sources: {
-        entities: sourcesDataGraphQl,
+        entities: [
+          {
+            id: '14',
+            source_type_id: ANSIBLE_TOWER_ID,
+            applications: [
+              {
+                id: '123',
+                authentications: [{ id: '343' }],
+              },
+            ],
+          },
+        ],
         appTypes: applicationTypesData.data,
         sourceTypes: sourceTypesData.data,
         appTypesLoaded: true,
@@ -67,10 +63,35 @@ describe('SourceEditModal', () => {
       Promise.resolve({
         source: {
           name: 'Name',
-          source_type_id: OPENSHIFT_ID,
+          source_type_id: ANSIBLE_TOWER_ID,
+          applications: [
+            {
+              id: '123',
+              application_type_id: CATALOG_APP.id,
+              authentications: [{ id: '343' }],
+            },
+          ],
+          endpoints: [{ id: '10953' }],
         },
-        applications: [],
-        endpoints: [],
+        applications: [
+          {
+            application_type_id: CATALOG_APP.id,
+            id: '123',
+            authentications: [{ type: 'username_password', username: '123', id: '343', resource_type: 'Endpoint' }],
+          },
+        ],
+        endpoints: [
+          {
+            certificate_authority: 'sadas',
+            default: true,
+            host: 'myopenshiftcluster.mycompany.com',
+            id: '10953',
+            path: '/',
+            role: 'ansible',
+            scheme: 'https',
+            verify_ssl: true,
+          },
+        ],
         authentications: [],
       })
     );
@@ -78,7 +99,7 @@ describe('SourceEditModal', () => {
     await act(async () => {
       wrapper = mount(
         componentWrapperIntl(
-          <Route path={routes.sourcesEdit.path} render={(...args) => <SourceEditModal {...args} />} />,
+          <Route path={routes.sourcesDetail.path} render={(...args) => <SourceEditModal {...args} />} />,
           store,
           initialEntry
         )
@@ -88,27 +109,293 @@ describe('SourceEditModal', () => {
   });
 
   it('renders correctly', () => {
-    expect(wrapper.find(Modal)).toHaveLength(1);
-    expect(wrapper.find(TextInput).length).toBeGreaterThan(0);
-    expect(wrapper.find(Button)).toHaveLength(BUTTONS.length);
+    expect(wrapper.find(SourcesFormRenderer)).toHaveLength(1);
+    expect(wrapper.find(TextInput)).toHaveLength(4);
+
+    expect(wrapper.find(TextInput).at(0).props().name).toEqual('endpoint.role');
+    expect(wrapper.find(TextInput).at(1).props().name).toEqual('url');
+    expect(wrapper.find(TextInput).at(2).props().name).toEqual('endpoint.certificate_authority');
+    expect(wrapper.find(TextInput).at(3).props().name).toEqual('endpoint.receptor_node');
+
+    expect(wrapper.find(Switch)).toHaveLength(2);
+    expect(wrapper.find('button.pf-c-button')).toHaveLength(BUTTONS.length);
   });
 
-  it('calls redirectWhenImported when imported source', async () => {
-    const DISPATCH = expect.any(Function);
-    const INTL = expect.any(Object);
-    const HISTORY = expect.any(Object);
-    const SOURCE_NAME = 'some name';
+  it('renders correctly with initial message', async () => {
+    editApi.doLoadSourceForEdit = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        source: {
+          name: 'Name',
+          source_type_id: ANSIBLE_TOWER_ID,
+          applications: [
+            {
+              id: '123',
+              application_type_id: CATALOG_APP.id,
+              availability_status_error: 'app-error',
+              availability_status: UNAVAILABLE,
+              authentications: [{ id: '343' }],
+            },
+          ],
+          endpoints: [{ id: '10953' }],
+        },
+        applications: [
+          {
+            application_type_id: CATALOG_APP.id,
+            id: '123',
+            availability_status_error: 'app-error',
+            availability_status: UNAVAILABLE,
+            authentications: [{ type: 'username_password', username: '123', id: '343', resource_type: 'Endpoint' }],
+          },
+        ],
+        endpoints: [
+          {
+            certificate_authority: 'sadas',
+            default: true,
+            host: 'myopenshiftcluster.mycompany.com',
+            id: '10953',
+            path: '/',
+            role: 'ansible',
+            scheme: 'https',
+            verify_ssl: true,
+          },
+        ],
+        authentications: [],
+      })
+    );
 
-    redirect.redirectWhenImported = jest.fn();
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <SourceEditModal {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+    });
+    wrapper.update();
+
+    expect(wrapper.find(EditAlert)).toHaveLength(1);
+
+    expect(wrapper.find(EditAlert).find(Alert).props().title).toEqual('This application is unavailable');
+    expect(wrapper.find(EditAlert).find(Alert).props().variant).toEqual('danger');
+    expect(wrapper.find(EditAlert).find(Alert).props().children).toEqual('app-error');
+
+    await act(async () => {
+      wrapper.find(TextInput).at(2).find('input').instance().value = 'different-value';
+      wrapper.find(TextInput).at(2).simulate('change');
+    });
+    wrapper.update();
+
+    submit.onSubmit = jest.fn().mockImplementation((values, editing, _dispatch, source, _intl, setState) => {
+      setState({
+        type: 'submitFinished',
+        messages: {
+          123: {
+            variant: 'success',
+            title: 'success title',
+          },
+        },
+      });
+      setState({ type: 'sourceChanged' });
+    });
+
+    const form = wrapper.find(Form);
+
+    expect(wrapper.find(SubmittingModal)).toHaveLength(0);
+
+    await act(async () => {
+      form.simulate('submit');
+    });
+    wrapper.update();
+
+    expect(wrapper.find(EditAlert)).toHaveLength(1);
+
+    expect(wrapper.find(EditAlert).find(Alert).props().title).toEqual('success title');
+    expect(wrapper.find(EditAlert).find(Alert).props().variant).toEqual('success');
+    expect(wrapper.find(EditAlert).find(Alert).props().children).toEqual(undefined);
+  });
+
+  it('do not show initial messages when in paused source', async () => {
+    store = mockStore({
+      sources: {
+        entities: [
+          {
+            id: '14',
+            source_type_id: ANSIBLE_TOWER_ID,
+            paused_at: 'today',
+            applications: [
+              {
+                id: '123',
+                authentications: [{ id: '343' }],
+              },
+            ],
+          },
+        ],
+        appTypes: applicationTypesData.data,
+        sourceTypes: sourceTypesData.data,
+        appTypesLoaded: true,
+        sourceTypesLoaded: true,
+      },
+    });
 
     editApi.doLoadSourceForEdit = jest.fn().mockImplementation(() =>
       Promise.resolve({
         source: {
-          name: SOURCE_NAME,
-          source_type_id: OPENSHIFT_ID,
-          imported: 'cfme',
+          name: 'Name',
+          paused_at: 'today',
+          source_type_id: ANSIBLE_TOWER_ID,
+          applications: [
+            {
+              id: '123',
+              application_type_id: CATALOG_APP.id,
+              availability_status_error: 'app-error',
+              availability_status: UNAVAILABLE,
+              authentications: [{ id: '343' }],
+            },
+          ],
+          endpoints: [{ id: '10953' }],
         },
-        applications: [],
+        applications: [
+          {
+            application_type_id: CATALOG_APP.id,
+            id: '123',
+            availability_status_error: 'app-error',
+            availability_status: UNAVAILABLE,
+            authentications: [{ type: 'username_password', username: '123', id: '343' }],
+          },
+        ],
+        endpoints: [
+          {
+            certificate_authority: 'sadas',
+            default: true,
+            host: 'myopenshiftcluster.mycompany.com',
+            id: '10953',
+            path: '/',
+            role: 'ansible',
+            scheme: 'https',
+            verify_ssl: true,
+          },
+        ],
+        authentications: [],
+      })
+    );
+
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <SourceEditModal {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+    });
+    wrapper.update();
+
+    expect(wrapper.find(EditAlert)).toHaveLength(0);
+  });
+
+  it('renders correctly with paused application', async () => {
+    editApi.doLoadSourceForEdit = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        source: {
+          name: 'Name',
+          source_type_id: ANSIBLE_TOWER_ID,
+          applications: [
+            {
+              id: '123',
+              application_type_id: CATALOG_APP.id,
+              availability_status_error: 'app-error',
+              availability_status: UNAVAILABLE,
+              authentications: [{ id: '343' }],
+              paused_at: 'today',
+            },
+          ],
+          endpoints: [{ id: '10953' }],
+        },
+        applications: [
+          {
+            application_type_id: CATALOG_APP.id,
+            id: '123',
+            availability_status_error: 'app-error',
+            availability_status: UNAVAILABLE,
+            authentications: [{ type: 'username_password', username: '123', id: '343' }],
+            paused_at: 'today',
+          },
+        ],
+        endpoints: [
+          {
+            certificate_authority: 'sadas',
+            default: true,
+            host: 'myopenshiftcluster.mycompany.com',
+            id: '10953',
+            path: '/',
+            role: 'ansible',
+            scheme: 'https',
+            verify_ssl: true,
+          },
+        ],
+        authentications: [],
+      })
+    );
+
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <SourceEditModal {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+    });
+    wrapper.update();
+
+    expect(wrapper.find(EditAlert)).toHaveLength(1);
+
+    expect(wrapper.find(EditAlert).find(Alert).props().title).toEqual('Catalog is paused');
+    expect(wrapper.find(EditAlert).find(Alert).props().variant).toEqual('default');
+    expect(wrapper.find(EditAlert).find(Alert).text()).toEqual(
+      'Default alert:Catalog is pausedTo resume data collection for this application, switch Catalog on in the Applications section of this page.'
+    );
+    expect(wrapper.find(EditAlert).find(Alert).find(PauseIcon)).toHaveLength(1);
+    expect(wrapper.find(FormTemplate).props().showFormControls).toEqual(false);
+  });
+
+  it('renders correctly with paused applications', async () => {
+    editApi.doLoadSourceForEdit = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        source: {
+          name: 'Name',
+          source_type_id: ANSIBLE_TOWER_ID,
+          applications: [
+            {
+              id: '123',
+              application_type_id: CATALOG_APP.id,
+              authentications: [{ id: '343' }],
+              paused_at: 'today',
+            },
+            {
+              id: '124',
+              application_type_id: TOPOLOGICALINVENTORY_APP.id,
+              authentications: [{ id: '3434' }],
+              paused_at: 'today',
+            },
+          ],
+          endpoints: [],
+        },
+        applications: [
+          {
+            application_type_id: CATALOG_APP.id,
+            id: '123',
+            authentications: [{ type: 'username_password', username: '123', id: '343' }],
+            paused_at: 'today',
+          },
+          {
+            id: '124',
+            application_type_id: TOPOLOGICALINVENTORY_APP.id,
+            authentications: [{ id: '3434', type: 'arn' }],
+            paused_at: 'today',
+          },
+        ],
         endpoints: [],
         authentications: [],
       })
@@ -117,7 +404,7 @@ describe('SourceEditModal', () => {
     await act(async () => {
       wrapper = mount(
         componentWrapperIntl(
-          <Route path={routes.sourcesEdit.path} render={(...args) => <SourceEditModal {...args} />} />,
+          <Route path={routes.sourcesDetail.path} render={(...args) => <SourceEditModal {...args} />} />,
           store,
           initialEntry
         )
@@ -125,19 +412,191 @@ describe('SourceEditModal', () => {
     });
     wrapper.update();
 
-    expect(redirect.redirectWhenImported).toHaveBeenCalledWith(DISPATCH, INTL, HISTORY, SOURCE_NAME);
+    expect(wrapper.find(FormTemplate).props().showFormControls).toEqual(false);
+  });
+
+  it('renders correctly with paused application and unpaused application', async () => {
+    editApi.doLoadSourceForEdit = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        source: {
+          name: 'Name',
+          source_type_id: ANSIBLE_TOWER_ID,
+          applications: [
+            {
+              id: '123',
+              application_type_id: CATALOG_APP.id,
+              authentications: [{ id: '343' }],
+              paused_at: 'today',
+            },
+            {
+              id: '124',
+              application_type_id: TOPOLOGICALINVENTORY_APP.id,
+              authentications: [{ id: '3434' }],
+            },
+          ],
+          endpoints: [],
+        },
+        applications: [
+          {
+            application_type_id: CATALOG_APP.id,
+            id: '123',
+            authentications: [{ type: 'username_password', username: '123', id: '343' }],
+            paused_at: 'today',
+          },
+          {
+            id: '124',
+            application_type_id: TOPOLOGICALINVENTORY_APP.id,
+            authentications: [{ id: '3434', type: 'arn' }],
+          },
+        ],
+        endpoints: [],
+        authentications: [],
+      })
+    );
+
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <SourceEditModal {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+    });
+    wrapper.update();
+
+    expect(wrapper.find(FormTemplate).props().showFormControls).toEqual(true);
+  });
+
+  it('renders correctly with paused source', async () => {
+    editApi.doLoadSourceForEdit = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        source: {
+          name: 'Name',
+          paused_at: 'today',
+          source_type_id: ANSIBLE_TOWER_ID,
+          applications: [
+            {
+              id: '123',
+              application_type_id: CATALOG_APP.id,
+              authentications: [{ id: '343' }],
+            },
+          ],
+          endpoints: [],
+        },
+        applications: [
+          {
+            application_type_id: CATALOG_APP.id,
+            id: '123',
+            authentications: [{ type: 'username_password', username: '123', id: '343' }],
+          },
+        ],
+        endpoints: [],
+        authentications: [],
+      })
+    );
+
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <SourceEditModal {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+    });
+    wrapper.update();
+
+    expect(wrapper.find(FormTemplate).props().showFormControls).toEqual(false);
+  });
+
+  it('reload data when source from redux is changed', async () => {
+    const ChangeSourceComponent = () => {
+      const dispatch = useDispatch();
+
+      return (
+        <button
+          id="change-redux-source"
+          onClick={() =>
+            dispatch({
+              type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
+              payload: [
+                {
+                  id: '14',
+                  source_type_id: ANSIBLE_TOWER_ID,
+                  applications: [],
+                },
+              ],
+            })
+          }
+        />
+      );
+    };
+
+    editApi.doLoadSourceForEdit.mockClear();
+
+    store = getStore([], {
+      sources: {
+        entities: [
+          {
+            id: '14',
+            source_type_id: ANSIBLE_TOWER_ID,
+            applications: [
+              {
+                id: '123',
+                authentications: [{ id: '343' }],
+              },
+            ],
+          },
+        ],
+        appTypes: applicationTypesData.data,
+        sourceTypes: sourceTypesData.data,
+        appTypesLoaded: true,
+        sourceTypesLoaded: true,
+        loaded: 0,
+      },
+      user: { isOrgAdmin: true },
+    });
+
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route
+            path={routes.sourcesDetail.path}
+            render={(...args) => (
+              <React.Fragment>
+                <ChangeSourceComponent />
+                <SourceEditModal {...args} />
+              </React.Fragment>
+            )}
+          />,
+          store,
+          initialEntry
+        )
+      );
+    });
+    wrapper.update();
+
+    expect(editApi.doLoadSourceForEdit.mock.calls).toHaveLength(1);
+
+    await act(async () => {
+      wrapper.find('#change-redux-source').simulate('click');
+    });
+    wrapper.update();
+
+    expect(editApi.doLoadSourceForEdit.mock.calls).toHaveLength(2);
   });
 
   describe('submit', () => {
-    const NEW_NAME_VALUE = 'new name';
+    const NEW_CA = 'new name';
 
     const VALUES = expect.objectContaining({
-      source: expect.objectContaining({
-        name: NEW_NAME_VALUE,
+      endpoint: expect.objectContaining({
+        certificate_authority: NEW_CA,
       }),
     });
     const EDITING = {
-      'source.name': true,
+      'endpoint.certificate_authority': true,
     };
     const DISPATCH = expect.any(Function);
     const SET_STATE = expect.any(Function);
@@ -147,15 +606,9 @@ describe('SourceEditModal', () => {
     });
 
     beforeEach(async () => {
-      const nameFormGroup = wrapper.find(FormGroup).first();
       await act(async () => {
-        nameFormGroup.simulate('click');
-      });
-      wrapper.update();
-
-      await act(async () => {
-        wrapper.find('input').instance().value = NEW_NAME_VALUE;
-        wrapper.find('input').simulate('change');
+        wrapper.find(TextInput).at(2).find('input').instance().value = NEW_CA;
+        wrapper.find(TextInput).at(2).simulate('change');
       });
       wrapper.update();
     });
@@ -168,12 +621,16 @@ describe('SourceEditModal', () => {
         variant: 'danger',
         description: 'some description',
       };
+      const messages = {
+        123: message,
+      };
 
       submit.onSubmit = jest.fn().mockImplementation((values, editing, _dispatch, source, _intl, setState) => {
         setState({ type: 'submit', values, editing });
 
         setTimeout(() => {
-          setState({ type: 'submitFinished', source, message });
+          setState({ type: 'submitFinished', source, messages });
+          setState({ type: 'sourceChanged' });
         }, 1000);
       });
 
@@ -201,16 +658,27 @@ describe('SourceEditModal', () => {
       expect(wrapper.find(EditAlert).find(Alert).props().children).toEqual(message.description);
 
       expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
+
+      jest.useRealTimers();
     });
 
-    it('calls onSubmit - timeout', async () => {
+    it('calls onSubmit - timeout - return to edit', async () => {
       jest.useFakeTimers();
+
+      const variant = 'warning';
+      const title = 'some title';
+      const description = 'description of timeout';
 
       submit.onSubmit = jest.fn().mockImplementation((values, editing, _dispatch, source, _intl, setState) => {
         setState({ type: 'submit', values, editing });
 
         setTimeout(() => {
-          setState({ type: 'submitTimetouted' });
+          const messages = {
+            123: { variant, title, description },
+          };
+
+          setState({ type: 'submitFinished', messages });
+          setState({ type: 'sourceChanged' });
         }, 1000);
       });
 
@@ -230,9 +698,12 @@ describe('SourceEditModal', () => {
       });
       wrapper.update();
 
-      expect(wrapper.find(TimeoutedModal)).toHaveLength(1);
+      expect(wrapper.find(EditAlert)).toHaveLength(1);
+      expect(wrapper.find(Alert).props().variant).toEqual(variant);
+      expect(wrapper.find(Alert).props().title).toEqual(title);
+      expect(wrapper.find(Alert).text().includes(description)).toEqual(true);
 
-      expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
+      jest.useRealTimers();
     });
 
     it('calls onSubmit - server error', async () => {
@@ -270,34 +741,14 @@ describe('SourceEditModal', () => {
 
       // try again via retry button
       await act(async () => {
-        wrapper.find(ErroredModal).find(EmptyState).find(Button).simulate('click');
+        wrapper.find(ErroredModal).find(EmptyState).find('Button').simulate('click');
       });
       wrapper.update();
 
       expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);
+
+      jest.useRealTimers();
     });
-  });
-
-  it('calls onCancel via onClose icon and returns to root', async () => {
-    const closeButton = wrapper.find(Button).at(ONCLOSE_POS);
-
-    await act(async () => {
-      closeButton.simulate('click');
-    });
-    wrapper.update();
-
-    expect(getCurrentAddress(wrapper)).toEqual(routes.sources.path);
-  });
-
-  it('calls onCancel via cancel button and returns to root', async () => {
-    const cancelButton = wrapper.find(Button).at(CANCEL_POS);
-
-    await act(async () => {
-      cancelButton.simulate('click');
-    });
-    wrapper.update();
-
-    expect(getCurrentAddress(wrapper)).toEqual(routes.sources.path);
   });
 
   it('renders loading modal', async () => {
@@ -314,7 +765,7 @@ describe('SourceEditModal', () => {
     await act(async () => {
       wrapper = mount(
         componentWrapperIntl(
-          <Route path={routes.sourcesEdit.path} render={(...args) => <SourceEditModal {...args} />} />,
+          <Route path={routes.sourcesDetail.path} render={(...args) => <SourceEditModal {...args} />} />,
           store,
           initialEntry
         )
@@ -322,205 +773,7 @@ describe('SourceEditModal', () => {
     });
     wrapper.update();
 
-    expect(wrapper.find(Modal)).toHaveLength(1);
     expect(wrapper.find(Spinner)).toHaveLength(1);
-  });
-
-  it('calls onClose from loading screen', async () => {
-    store = mockStore({
-      sources: {
-        entities: sourcesDataGraphQl,
-        appTypes: applicationTypesData.data,
-        sourceTypes: sourceTypesData.data,
-        appTypesLoaded: false,
-        sourceTypesLoaded: false,
-      },
-    });
-
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesEdit.path} render={(...args) => <SourceEditModal {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
-    wrapper.update();
-
-    const closeButton = wrapper.find(Button).at(ONCLOSE_POS);
-
-    await act(async () => {
-      closeButton.simulate('click');
-    });
-    wrapper.update();
-
-    expect(getCurrentAddress(wrapper)).toEqual(routes.sources.path);
-  });
-
-  it('do not load cost management values', async () => {
-    editApi.doLoadSourceForEdit.mockClear();
-
-    const source = { id: '14', applications: [] };
-
-    store = mockStore({
-      sources: {
-        entities: [source],
-        appTypes: applicationTypesData.data,
-        sourceTypes: sourceTypesData.data,
-        appTypesLoaded: true,
-        sourceTypesLoaded: true,
-      },
-    });
-
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesEdit.path} render={(...args) => <SourceEditModal {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
-    wrapper.update();
-
-    expect(editApi.doLoadSourceForEdit).toHaveBeenCalledWith(source, false);
-  });
-
-  it('do load cost management values', async () => {
-    editApi.doLoadSourceForEdit.mockClear();
-
-    const source = { id: '14', applications: [{ application_type_id: COSTMANAGEMENT_APP.id }] };
-
-    store = mockStore({
-      sources: {
-        entities: [source],
-        appTypes: applicationTypesData.data,
-        sourceTypes: sourceTypesData.data,
-        appTypesLoaded: true,
-        sourceTypesLoaded: true,
-      },
-    });
-
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesEdit.path} render={(...args) => <SourceEditModal {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
-    wrapper.update();
-
-    expect(editApi.doLoadSourceForEdit).toHaveBeenCalledWith(source, true);
-  });
-
-  describe('remove auth integration', () => {
-    beforeEach(() => {
-      editApi.doLoadSourceForEdit = jest.fn().mockImplementation(() =>
-        Promise.resolve({
-          source: {
-            name: 'Name',
-            source_type_id: OPENSHIFT_ID,
-            applications: [],
-          },
-          applications: [],
-          endpoints: [],
-          authentications: [
-            {
-              id: 'authid',
-              authtype: 'token',
-            },
-          ],
-        })
-      );
-
-      initialEntry = [replaceRouteId(routes.sourcesEdit.path, '406')];
-    });
-
-    it('removes authentication successfully and shows loading during that', async () => {
-      await act(async () => {
-        wrapper = mount(
-          componentWrapperIntl(
-            <Route path={routes.sourcesEdit.path} render={(...args) => <SourceEditModal {...args} />} />,
-            store,
-            initialEntry
-          )
-        );
-      });
-      wrapper.update();
-
-      expect(wrapper.find(GridLayout)).toHaveLength(1);
-      expect(wrapper.find(RemoveAuthPlaceholder)).toHaveLength(0);
-      expect(wrapper.find(Modal)).toHaveLength(1);
-
-      await act(async () => {
-        const removeButton = wrapper.find(Button).at(1);
-        removeButton.simulate('click');
-      });
-      wrapper.update();
-
-      api.doDeleteAuthentication = jest.fn().mockImplementation(() => new Promise((res) => setTimeout(() => res('OK'), 1)));
-
-      expect(api.doDeleteAuthentication).not.toHaveBeenCalled();
-      expect(wrapper.find(Modal)).toHaveLength(2);
-      expect(wrapper.find(Modal).first().props().isOpen).toEqual(true);
-      expect(wrapper.find(Modal).last().props().isOpen).toEqual(false);
-
-      jest.useFakeTimers();
-      await act(async () => {
-        const removeConfirmButton = wrapper.find(RemoveAuth).find(Button).at(1);
-        removeConfirmButton.simulate('click');
-      });
-      wrapper.update();
-      expect(api.doDeleteAuthentication).toHaveBeenCalledWith('authid');
-      expect(wrapper.find(RemoveAuthPlaceholder)).toHaveLength(1);
-      expect(wrapper.find(Modal)).toHaveLength(1);
-      expect(wrapper.find(Modal).props().isOpen).toEqual(true);
-
-      await act(async () => {
-        jest.advanceTimersByTime(1000);
-      });
-      wrapper.update();
-
-      expect(wrapper.find(RemoveAuthPlaceholder)).toHaveLength(0);
-      expect(wrapper.find(GridLayout)).toHaveLength(0);
-    });
-
-    it('removes authentication unsuccessfully', async () => {
-      await act(async () => {
-        wrapper = mount(
-          componentWrapperIntl(
-            <Route path={routes.sourcesEdit.path} render={(...args) => <SourceEditModal {...args} />} />,
-            store,
-            initialEntry
-          )
-        );
-      });
-      wrapper.update();
-
-      expect(wrapper.find(GridLayout)).toHaveLength(1);
-
-      await act(async () => {
-        const removeButton = wrapper.find(Button).at(1);
-        removeButton.simulate('click');
-      });
-      wrapper.update();
-
-      api.doDeleteAuthentication = jest.fn().mockImplementation(() => Promise.reject('Error'));
-
-      expect(api.doDeleteAuthentication).not.toHaveBeenCalled();
-
-      await act(async () => {
-        const removeConfirmButton = wrapper.find(RemoveAuth).find(Button).at(1);
-        removeConfirmButton.simulate('click');
-      });
-      wrapper.update();
-
-      expect(api.doDeleteAuthentication).toHaveBeenCalledWith('authid');
-      expect(wrapper.find(GridLayout)).toHaveLength(1);
-    });
   });
 
   describe('reducer', () => {

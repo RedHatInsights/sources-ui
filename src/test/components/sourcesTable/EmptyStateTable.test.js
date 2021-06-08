@@ -1,5 +1,6 @@
 import React from 'react';
-import { Bullseye, Button, EmptyState, EmptyStateBody } from '@patternfly/react-core';
+
+import { Button, EmptyState, EmptyStateBody, Bullseye } from '@patternfly/react-core';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import EmptyStateTable from '../../../components/SourcesTable/EmptyStateTable';

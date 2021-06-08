@@ -7,7 +7,9 @@ import {
   SET_COUNT,
   ADD_HIDDEN_SOURCE,
   CLEAR_FILTERS,
+  SET_VENDOR,
 } from './actionTypes';
+import { CLOUD_VENDOR } from '../../utilities/constants';
 
 export const defaultSourcesState = {
   loaded: 0,
@@ -22,6 +24,9 @@ export const defaultSourcesState = {
   sortBy: 'created_at',
   sortDirection: 'desc',
   removingSources: [],
+  activeVendor: CLOUD_VENDOR,
+  appTypes: [],
+  sourceTypes: [],
 };
 
 export const entitiesPending = (state, { options }) => ({
@@ -49,6 +54,11 @@ export const sourceTypesPending = (state) => ({
   sourceTypesLoaded: false,
 });
 
+export const sourceTypesRejected = (state, { payload: { error } }) => ({
+  ...state,
+  fetchingError: error,
+});
+
 export const sourceTypesLoaded = (state, { payload: sourceTypes }) => ({
   ...state,
   sourceTypes,
@@ -65,6 +75,11 @@ export const appTypesLoaded = (state, { payload: appTypes }) => ({
   ...state,
   appTypes,
   appTypesLoaded: true,
+});
+
+export const appTypesRejected = (state, { payload: { error } }) => ({
+  ...state,
+  fetchingError: error,
 });
 
 export const sortEntities = (state, { payload: { column, direction } }) => ({
@@ -182,20 +197,46 @@ export const clearFilters = (state) => ({
   pageNumber: 1,
 });
 
+export const sourceRenamePending = (state, { payload: { id, name } }) => ({
+  ...state,
+  entities: state.entities.map((entity) =>
+    entity.id === id
+      ? {
+          ...entity,
+          name,
+        }
+      : entity
+  ),
+});
+
+const setVendor = (state, { payload: { vendor } }) => ({
+  ...state,
+  filterValue: {
+    ...state.filterValue,
+    source_type_id: [],
+    applications: [],
+  },
+  activeVendor: vendor,
+});
+
 export default {
   [ACTION_TYPES.LOAD_ENTITIES_PENDING]: entitiesPending,
   [ACTION_TYPES.LOAD_ENTITIES_FULFILLED]: entitiesLoaded,
   [ACTION_TYPES.LOAD_ENTITIES_REJECTED]: entitiesRejected,
   [ACTION_TYPES.LOAD_SOURCE_TYPES_PENDING]: sourceTypesPending,
   [ACTION_TYPES.LOAD_SOURCE_TYPES_FULFILLED]: sourceTypesLoaded,
+  [ACTION_TYPES.LOAD_SOURCE_TYPES_REJECTED]: sourceTypesRejected,
   [ACTION_TYPES.LOAD_APP_TYPES_PENDING]: appTypesPending,
   [ACTION_TYPES.LOAD_APP_TYPES_FULFILLED]: appTypesLoaded,
+  [ACTION_TYPES.LOAD_APP_TYPES_REJECTED]: appTypesRejected,
   [ACTION_TYPES.REMOVE_SOURCE_PENDING]: sourceEditRemovePending,
   [ACTION_TYPES.REMOVE_SOURCE_FULFILLED]: sourceEditRemoveFulfilled,
   [ACTION_TYPES.REMOVE_SOURCE_REJECTED]: sourceEditRemoveRejected,
   [ACTION_TYPES.REMOVE_APPLICATION_PENDING]: appRemovingPending,
   [ACTION_TYPES.REMOVE_APPLICATION_FULFILLED]: appRemovingFulfilled,
   [ACTION_TYPES.REMOVE_APPLICATION_REJECTED]: appRemovingRejected,
+  [ACTION_TYPES.RENAME_SOURCE_PENDING]: sourceRenamePending,
+  [ACTION_TYPES.RENAME_SOURCE_REJECTED]: sourceRenamePending,
 
   [SORT_ENTITIES]: sortEntities,
   [PAGE_AND_SIZE]: setPageAndSize,
@@ -205,4 +246,5 @@ export default {
   [SET_COUNT]: setCount,
   [ADD_HIDDEN_SOURCE]: addHiddenSource,
   [CLEAR_FILTERS]: clearFilters,
+  [SET_VENDOR]: setVendor,
 };

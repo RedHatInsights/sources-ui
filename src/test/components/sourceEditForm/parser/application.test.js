@@ -1,10 +1,12 @@
-import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
-import { FormattedMessage } from 'react-intl';
-import { applicationsFields, appendClusterIdentifier } from '../../../../components/SourceEditForm/parser/application';
-import { applicationTypesData, COSTMANAGEMENT_APP, CATALOG_APP } from '../../../__mocks__/applicationTypesData';
-import { authenticationFields } from '../../../../components/SourceEditForm/parser/authentication';
+import { componentTypes } from '@data-driven-forms/react-form-renderer';
+import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-icon';
 
-jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas', () => ({
+import ResourcesEmptyState from '../../../../components/SourceDetail/ResourcesEmptyState';
+import { applicationsFields } from '../../../../components/SourceEditForm/parser/application';
+import EditAlert from '../../../../components/SourceEditForm/parser/EditAlert';
+import { applicationTypesData, COSTMANAGEMENT_APP, CATALOG_APP } from '../../../__mocks__/applicationTypesData';
+
+jest.mock('../../../../components/addSourceWizard/hardcodedSchemas', () => ({
   __esModule: true,
   default: {
     aws: {
@@ -39,6 +41,7 @@ describe('application edit form parser', () => {
   beforeEach(() => {
     APPLICATIONS = [
       {
+        id: 'app-id',
         application_type_id: COSTMANAGEMENT_APP.id,
         authentications: [{ id: '1234', authtype: 'arn' }],
       },
@@ -63,18 +66,124 @@ describe('application edit form parser', () => {
     };
   });
 
-  it('return [] if applications is undefined', () => {
-    const EXPECTED_RESULT = [];
+  it('return cost management form group', () => {
+    const EXPECTED_RESULT = [
+      {
+        component: componentTypes.TABS,
+        name: 'app-tabs',
+        isBox: true,
+        fields: [
+          {
+            name: COSTMANAGEMENT_APP.id,
+            title: COSTMANAGEMENT_APP.display_name,
+            fields: [
+              {
+                name: 'messages.app-id',
+                component: 'description',
+                condition: {
+                  isNotEmpty: true,
+                  when: expect.any(Function),
+                },
+                Content: EditAlert,
+              },
+              [{ name: 'billing_source.field1' }, { name: 'field2' }],
+            ],
+          },
+        ],
+      },
+    ];
 
-    const UNDEF_APPLICATIONS = undefined;
-
-    const result = applicationsFields(UNDEF_APPLICATIONS, SOURCE_TYPE, APP_TYPES);
+    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, APP_TYPES);
 
     expect(result).toEqual(EXPECTED_RESULT);
   });
 
-  it('return cost management form group', () => {
-    const EXPECTED_RESULT = [[{ name: 'billing_source.field1' }, { name: 'field2' }]];
+  it('disable all inputs when app is paused', () => {
+    APPLICATIONS = [
+      {
+        ...APPLICATIONS[0],
+        paused_at: 'today',
+      },
+    ];
+
+    const EXPECTED_RESULT = [
+      {
+        component: componentTypes.TABS,
+        name: 'app-tabs',
+        isBox: true,
+        fields: [
+          {
+            name: COSTMANAGEMENT_APP.id,
+            title: COSTMANAGEMENT_APP.display_name,
+            fields: [
+              {
+                name: 'messages.app-id',
+                component: 'description',
+                condition: {
+                  isNotEmpty: true,
+                  when: expect.any(Function),
+                },
+                Content: EditAlert,
+              },
+              [
+                { name: 'billing_source.field1', isDisabled: true },
+                { name: 'field2', isDisabled: true },
+              ],
+            ],
+          },
+        ],
+      },
+    ];
+
+    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, APP_TYPES);
+
+    expect(result).toEqual(EXPECTED_RESULT);
+  });
+
+  it('appends empty state when no resources', () => {
+    APPLICATIONS = [
+      {
+        id: 'app-id',
+        application_type_id: COSTMANAGEMENT_APP.id,
+        authentications: [],
+      },
+    ];
+
+    const EXPECTED_RESULT = [
+      {
+        component: componentTypes.TABS,
+        name: 'app-tabs',
+        isBox: true,
+        fields: [
+          {
+            name: COSTMANAGEMENT_APP.id,
+            title: COSTMANAGEMENT_APP.display_name,
+            fields: [
+              {
+                name: 'messages.app-id',
+                component: 'description',
+                condition: {
+                  isNotEmpty: true,
+                  when: expect.any(Function),
+                },
+                Content: EditAlert,
+              },
+              {
+                component: 'description',
+                name: 'no-credentials',
+                Content: ResourcesEmptyState,
+                message: {
+                  id: 'resourceTable.emptyStateDescription',
+                  defaultMessage: '{applicationName} resources will be added here when created.',
+                },
+                applicationName: COSTMANAGEMENT_APP.display_name,
+                Icon: PlusCircleIcon,
+              },
+            ],
+          },
+        ],
+      },
+    ];
 
     const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, APP_TYPES);
 
@@ -85,6 +194,7 @@ describe('application edit form parser', () => {
     APPLICATIONS = [
       ...APPLICATIONS,
       {
+        id: 'app-id-2',
         application_type_id: CATALOG_APP.id,
         authentications: [{ id: '2345', authtype: 'arn' }],
       },
@@ -99,12 +209,34 @@ describe('application edit form parser', () => {
           {
             name: COSTMANAGEMENT_APP.id,
             title: COSTMANAGEMENT_APP.display_name,
-            fields: [[{ name: 'billing_source.field1' }, { name: 'field2' }]],
+            fields: [
+              {
+                name: 'messages.app-id',
+                component: 'description',
+                condition: {
+                  isNotEmpty: true,
+                  when: expect.any(Function),
+                },
+                Content: EditAlert,
+              },
+              [{ name: 'billing_source.field1' }, { name: 'field2' }],
+            ],
           },
           {
             name: CATALOG_APP.id,
             title: CATALOG_APP.display_name,
-            fields: [[{ name: 'billing_source.field1' }, { name: 'field2' }]],
+            fields: [
+              {
+                name: 'messages.app-id-2',
+                component: 'description',
+                condition: {
+                  isNotEmpty: true,
+                  when: expect.any(Function),
+                },
+                Content: EditAlert,
+              },
+              [{ name: 'billing_source.field1' }, { name: 'field2' }],
+            ],
           },
         ],
       },
@@ -115,89 +247,99 @@ describe('application edit form parser', () => {
     expect(result).toEqual(EXPECTED_RESULT);
   });
 
-  it('returns only unused auths', () => {
-    const result = applicationsFields([], SOURCE_TYPE, APP_TYPES, [{ authtype: 'arn', id: '12345' }]);
-
-    expect(result).toEqual([
+  it('returns endpoint fields', () => {
+    APPLICATIONS = [
       {
-        component: 'sub-form',
-        fields: [
-          {
-            component: 'plain-text',
-            label: (
-              <FormattedMessage
-                defaultMessage="The following {length, plural, one {authentication is not} other {authentications are not}} used by any application."
-                id="sources.authNotUsed"
-                values={{ length: 1 }}
-              />
-            ),
-            name: 'unused-auth-warning',
-          },
-          ...authenticationFields([{ authtype: 'arn', id: '12345' }], SOURCE_TYPE),
-        ],
-        name: 'unused-auths-group',
+        id: 'app-id',
+        application_type_id: COSTMANAGEMENT_APP.id,
+        authentications: [{ id: '1234', authtype: 'arn', resource_type: 'Endpoint' }],
       },
-    ]);
-  });
-
-  it('return cost management form group and unused auths', () => {
-    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, APP_TYPES, [{ authtype: 'arn', id: '12345' }]);
-
-    expect(result).toEqual([
-      {
-        component: componentTypes.TABS,
-        name: 'app-tabs',
-        isBox: true,
-        fields: [
+    ];
+    SOURCE_TYPE = {
+      name: 'aws',
+      product_name: 'Amazon',
+      schema: {
+        authentication: [
           {
-            title: 'Cost Management',
-            fields: [FIELDS],
-            name: '2',
+            name: 'ARN',
+            type: 'arn',
+            fields: FIELDS,
           },
           {
-            name: 'unused-auths-tab',
-            title: 'Amazon',
+            name: 'unused-type',
+            type: 'unused',
+            fields: [],
+          },
+        ],
+        endpoint: {
+          title: 'Configure endpoint',
+          fields: [
+            {
+              component: 'text-field',
+              name: 'endpoint.role',
+              hideField: true,
+              initialValue: 'kubernetes',
+            },
+            {
+              component: 'text-field',
+              name: 'url',
+              label: 'URL',
+              validate: [
+                {
+                  type: 'url-validator',
+                },
+              ],
+            },
+          ],
+        },
+      },
+    };
+
+    const EXPECTED_RESULT = [
+      {
+        component: 'tabs',
+        fields: [
+          {
             fields: [
               {
-                component: 'plain-text',
-                label: (
-                  <FormattedMessage
-                    defaultMessage="The following {length, plural, one {authentication is not} other {authentications are not}} used by any application."
-                    id="sources.authNotUsed"
-                    values={{ length: 1 }}
-                  />
-                ),
-                name: 'unused-auth-warning',
+                Content: EditAlert,
+                component: 'description',
+                condition: { isNotEmpty: true, when: expect.any(Function) },
+                name: 'messages.app-id',
               },
-              ...authenticationFields([{ authtype: 'arn', id: '12345' }], SOURCE_TYPE),
+              [
+                { name: 'billing_source.field1' },
+                { name: 'field2' },
+                {
+                  component: 'sub-form',
+                  fields: [
+                    { component: 'text-field', hideField: true, initialValue: 'kubernetes', name: 'endpoint.role' },
+                    {
+                      component: 'text-field',
+                      label: 'URL',
+                      name: 'url',
+                      validate: [
+                        {
+                          type: 'url-validator',
+                        },
+                      ],
+                    },
+                  ],
+                  name: 'endpoint',
+                },
+              ],
             ],
+            name: '2',
+            title: 'Cost Management',
           },
         ],
+        isBox: true,
+        name: 'app-tabs',
       },
-    ]);
-  });
-});
+    ];
 
-describe('helpers', () => {
-  describe('appendClusterIdentifier', () => {
-    const SOURCE_TYPE = { name: 'openshift' };
+    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, APP_TYPES);
 
-    it('returns cluster identifier field when type is openshift', () => {
-      expect(appendClusterIdentifier(SOURCE_TYPE)).toEqual([
-        {
-          name: 'source.source_ref',
-          label: expect.any(Object),
-          isRequired: true,
-          validate: [{ type: validatorTypes.REQUIRED }],
-          component: componentTypes.TEXT_FIELD,
-        },
-      ]);
-    });
-
-    it('dont return cluster identifier field when type is not openshift', () => {
-      const AWS_SOURCE_TYPE = { name: 'aws' };
-
-      expect(appendClusterIdentifier(AWS_SOURCE_TYPE)).toEqual([]);
-    });
+    expect(result).toEqual(EXPECTED_RESULT);
   });
 });

@@ -1,4 +1,8 @@
+import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../utilities/constants';
 import { parseQuery, updateQuery } from '../../utilities/urlQuery';
+import { AVAILABLE, PARTIALLY_UNAVAILABLE, UNAVAILABLE } from '../../views/formatters';
+import applicationTypesData, { COSTMANAGEMENT_APP, TOPOLOGICALINVENTORY_APP } from '../__mocks__/applicationTypesData';
+import sourceTypesData, { AMAZON_ID, OPENSHIFT_ID } from '../__mocks__/sourceTypesData';
 
 describe('urlQuery helpers', () => {
   let tmpLocation;
@@ -47,7 +51,7 @@ describe('urlQuery helpers', () => {
       };
 
       expectedQuery =
-        'sources?sort_by[]=name:asc&limit=50&offset=550&filter[name][contains_i]=pepa&filter[source_type_id][]=125&filter[source_type_id][]=542&filter[source_type_id][]=1';
+        'sources?sort_by[]=name:asc&limit=50&offset=550&activeVendor=Cloud&filter[name][contains_i]=pepa&filter[source_type_id][]=125&filter[source_type_id][]=542&filter[source_type_id][]=1';
     });
 
     afterEach(() => {
@@ -74,7 +78,7 @@ describe('urlQuery helpers', () => {
         filterValue: {},
       };
 
-      expectedQuery = 'sources?sort_by[]=name:asc&limit=50&offset=550';
+      expectedQuery = 'sources?sort_by[]=name:asc&limit=50&offset=550&activeVendor=Cloud';
 
       updateQuery(params);
 
@@ -239,6 +243,76 @@ describe('urlQuery helpers', () => {
           },
         });
       });
+
+      it('handles available filtering', () => {
+        window.location.search = `?filter[availability_status]=${AVAILABLE}`;
+
+        const result = parseQuery();
+
+        expect(result).toEqual({
+          filterValue: {
+            availability_status: [AVAILABLE],
+          },
+        });
+      });
+
+      it('handles unavailable filtering', () => {
+        window.location.search = `?filter[availability_status][]=${PARTIALLY_UNAVAILABLE}&filter[availability_status][]=${UNAVAILABLE}`;
+
+        const result = parseQuery();
+
+        expect(result).toEqual({
+          filterValue: {
+            availability_status: [UNAVAILABLE],
+          },
+        });
+      });
+
+      describe('enhanced attributes', () => {
+        const getState = () => ({
+          sources: {
+            appTypes: applicationTypesData.data,
+            sourceTypes: sourceTypesData.data,
+          },
+        });
+
+        it('handles sourceType filtering - type variant', () => {
+          window.location.search = '?type=amazon';
+
+          const result = parseQuery(getState);
+
+          expect(result).toEqual({
+            filterValue: {
+              source_type_id: [AMAZON_ID],
+            },
+          });
+        });
+
+        it('handles application filtering - application variant', () => {
+          window.location.search = '?application=cost';
+
+          const result = parseQuery(getState);
+
+          expect(result).toEqual({
+            filterValue: {
+              applications: [COSTMANAGEMENT_APP.id],
+            },
+          });
+        });
+
+        it('handles application/types filtering - multiple & combined', () => {
+          window.location.search = '?application=cost&application=topo&type=openshift&type=amazon';
+
+          const result = parseQuery(getState);
+
+          expect(result).toEqual({
+            filterValue: {
+              applications: [COSTMANAGEMENT_APP.id, TOPOLOGICALINVENTORY_APP.id],
+              source_type_id: [OPENSHIFT_ID, AMAZON_ID],
+            },
+          });
+        });
+      });
     });
 
     it('combined query', () => {
@@ -256,6 +330,28 @@ describe('urlQuery helpers', () => {
           name: 'hledamjmeno',
           source_type_id: ['3', '2'],
         },
+      });
+    });
+
+    describe('active vendor', () => {
+      it('red hat vendor', () => {
+        window.location.search = `?activeVendor=${REDHAT_VENDOR}`;
+
+        const result = parseQuery();
+
+        expect(result).toEqual({
+          activeVendor: REDHAT_VENDOR,
+        });
+      });
+
+      it('cloud vendors', () => {
+        window.location.search = `?activeVendor=${CLOUD_VENDOR}`;
+
+        const result = parseQuery();
+
+        expect(result).toEqual({
+          activeVendor: CLOUD_VENDOR,
+        });
       });
     });
   });

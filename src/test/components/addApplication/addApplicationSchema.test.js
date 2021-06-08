@@ -1,76 +1,41 @@
 import addApplicationSchema, { hasAlreadySupportedAuthType } from '../../../components/AddApplication/AddApplicationSchema';
-import { sourceTypesData, OPENSHIFT_ID, OPENSHIFT } from '../../__mocks__/sourceTypesData';
-import { applicationTypesData, COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
+import { OPENSHIFT_ID, OPENSHIFT, AZURE_ID, AZURE } from '../../__mocks__/sourceTypesData';
+import { COSTMANAGEMENT_APP, SUBWATCH_APP } from '../../__mocks__/applicationTypesData';
 
 describe('AddApplicationSchema', () => {
   const intl = { formatMessage: ({ defaultMessage }) => defaultMessage };
-  const sourceTypes = sourceTypesData.data;
-  const applicationTypes = applicationTypesData.data;
   const authenticationValues = [];
-
-  it('imported schema - creates only selection, review', () => {
-    const applications = [];
-    const source = {
-      imported: true,
-      source_type_id: OPENSHIFT.id,
-    };
-
-    const result = addApplicationSchema(applications, intl, sourceTypes, applicationTypes, authenticationValues, source);
-
-    const selectionStep = expect.objectContaining({
-      title: 'Add / remove applications',
-    });
-
-    const summaryStep = expect.objectContaining({
-      title: 'Review details',
-    });
-
-    expect(result.fields[0].fields).toEqual([selectionStep, summaryStep]);
-  });
+  const TITLE = 'someTitle';
+  const DESCRIPTION = 'someDesc';
 
   it('openshift schema', () => {
-    const applications = [
-      {
-        COSTMANAGEMENT_APP,
-      },
-    ];
     const source = {
       source_type_id: OPENSHIFT_ID,
     };
 
-    const result = addApplicationSchema(applications, intl, sourceTypes, applicationTypes, authenticationValues, source);
-
-    expect(result.fields[0].fields).toHaveLength(7);
+    const result = addApplicationSchema(intl, OPENSHIFT, COSTMANAGEMENT_APP, authenticationValues, source, TITLE, DESCRIPTION);
 
     expect(result.fields[0].fields.map(({ name }) => name)).toEqual([
-      'selectAppStep',
-      'summary',
-      'selectAuthentication',
       'openshift-2-token',
-      'openshift-3-token',
+      'summary',
       'openshift-token-/insights/platform/cost-management-additional-step',
       'openshift-endpoint',
     ]);
   });
 
-  it('no available apps', () => {
-    const intl = { formatMessage: ({ defaultMessage }) => defaultMessage };
+  it('azure+rhel management schema (empty auth type)', () => {
     const source = {
-      source_type_id: OPENSHIFT.id,
+      source_type_id: AZURE_ID,
     };
 
-    const result = addApplicationSchema(undefined, intl, sourceTypes, applicationTypes, authenticationValues, source);
+    const result = addApplicationSchema(intl, AZURE, SUBWATCH_APP, authenticationValues, source, TITLE, DESCRIPTION);
 
-    const selectionStep = expect.objectContaining({
-      title: 'Add / remove applications',
-      nextStep: undefined,
-    });
-
-    const summaryStep = expect.objectContaining({
-      title: 'Review details',
-    });
-
-    expect(result.fields[0].fields).toEqual([selectionStep, summaryStep]);
+    expect(result.fields[0].fields.map(({ name }) => name)).toEqual([
+      'azure-5-empty',
+      'summary',
+      'azure-empty-/insights/platform/cloud-meter-additional-step',
+      'cost-azure-playbook',
+    ]);
   });
 
   it('multiple authentication types', () => {
@@ -95,28 +60,19 @@ describe('AddApplicationSchema', () => {
       supported_source_types: [CUSTOM_TYPE.name],
     };
 
-    const applications = [COSTMANAGEMENT_APP];
     const source = {
       source_type_id: CUSTOM_TYPE.id,
     };
 
-    const result = addApplicationSchema(applications, intl, [CUSTOM_TYPE], [CUSTOM_APP_TYPE], authenticationValues, source);
+    const result = addApplicationSchema(intl, CUSTOM_TYPE, CUSTOM_APP_TYPE, authenticationValues, source, TITLE, DESCRIPTION);
 
     expect(result.fields[0].fields.map(({ name }) => name)).toEqual([
-      'selectAppStep',
+      'selectAuthType-24I98',
       'summary',
-      'selectAuthType-24I98', // this indicates multiple authentication types
-      'selectAuthentication',
       'custom-24I98-arn',
       'custom-24I98-password',
       'custom-endpoint',
     ]);
-
-    expect(
-      result.fields[0].fields[0].nextStep({
-        values: { application: { application_type_id: CUSTOM_APP_TYPE.id } },
-      })
-    ).toEqual('selectAuthType-24I98');
   });
 
   describe('hasAlreadySupportedAuthType', () => {

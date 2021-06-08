@@ -22,9 +22,9 @@ Each type is identified by name (`amazon`), this name has to be unique. (Please,
 
 `product_name` defines the name for the UI.
 
-There is also `vendor` key for the identification of the type's vendor. This value is not shown in the UI.
+There is also `vendor` key for the identification of the type's vendor. This value is not shown in the UI, but is used to split the UI to two sections: **Cloud sources** and **Red Hat sources**. Red Hat sources are sources of type with vendor = `Red Hat`. Cloud sources are all other types. The wizard determines what Sources to show depending on a URL query: `?activeVendor=Red Hat|Cloud`.
 
-`icon_url` is a URL leading to images in [Insights Chrome](https://github.com/RedHatInsights/insights-chrome/tree/master/static/images) repository. If you need to add/change/remove some icon, please do it there. The UI has no hardcoded images. It can take some time
+`icon_url` is a URL leading to images in [Insights Frontend Assets](https://github.com/RedHatInsights/insights-frontend-assets) repository. If you need to add/change/remove some icon, please do it there. The UI has no hardcoded images.
 
 The most important attribute for the UI is `schema`. This attribute defines:
 
@@ -94,11 +94,9 @@ An application type is defined by several basic attributes:
 
 With using the two mentioned configuration files, you can easily add a new application or a source type with all needed configuration. All these files are directly transformed into Add source wizard, Add application wizard and Edit source forms. However, all these fields can be enhanced and modified in the UI to comply with our UX vision and design.
 
-The wizard is self-contained [package](https://github.com/RedHatInsights/frontend-components/tree/master/packages/sources) (because of the ability to use it in multiple applications). Each change of steps has to be done there. Sources UI is using the wizard as a dependency, so after updating the steps, you have to also update the package version in the UI.
+All changes are made in `hardcodedSchemas` file (link [here](https://github.com/RedHatInsights/sources-ui/blob/master/src/components/addSourceWizard/hardcodedSchemas.js)).
 
-All changes are made in `hardcodedSchemas` file (link [here](https://github.com/RedHatInsights/frontend-components/blob/master/packages/sources/src/addSourceWizard/hardcodedSchemas.js)).
-
-This file is a similar config with the following structure:
+This file is a similar config to the following structure:
 
 ```js
 {
@@ -217,21 +215,15 @@ If you want to add an additional API endpoint for application-specific values, p
 
 `application.` will be sent to createApplication endpoint (please, do not use `application.application_type_id` otherwise you will rewrite user's selection.)
 
-`billing_source.` cost management billing source.
-
-`credentials.` cost management credentials (send together with billing_source.)
-
 # Quick check-list
 
-- [ ] Check API definition - Sources API
-- [ ] Update hardcoded schemas - Frontend Components/Sources
+- [ ] Check API definition - [Sources API](https://github.com/RedHatInsights/sources-api/tree/master/db/seeds)
+- [ ] Update [hardcoded schemas](https://github.com/RedHatInsights/sources-ui/blob/master/src/components/addSourceWizard/hardcodedSchemas.js)
   - [ ] Authtype is always selected
   - [ ] Users can switch between source/app types and the wizard should always work
   - [ ] Summary shows correct labels (see `aria-label`, otherwise the summary works automatically)
   - [ ] Custom components are tested (100% coverage)
-  - [ ] Release (contact @rvsia, @khala, @hyperkid123, ui-reviewers)
 - [ ] Integration with Sources UI
   - [ ] Wizard works, the source is successfully created with all needed values
   - [ ] Edit form works (should be automatic, otherwise there is a bug in the implementation)
   - [ ] Add application works (should be automatic, otherwise there is a bug in the implementation)
-  - [ ] Update package.json

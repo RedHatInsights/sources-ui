@@ -1,115 +1,73 @@
-import React from 'react';
-import componentTypes from '@data-driven-forms/react-form-renderer/dist/cjs/component-types';
-import validatorTypes from '@data-driven-forms/react-form-renderer/dist/cjs/validator-types';
-import { FormattedMessage } from 'react-intl';
+import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
+import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-icon';
+
 import { authenticationFields } from './authentication';
+import { endpointFields } from './endpoint';
+import EditAlert from './EditAlert';
+import ResourcesEmptyState from '../../SourceDetail/ResourcesEmptyState';
 
 export const APP_NAMES = {
   COST_MANAGAMENT: '/insights/platform/cost-management',
+  CLOUD_METER: '/insights/platform/cloud-meter',
 };
 
-export const appendClusterIdentifier = (sourceType) =>
-  sourceType.name === 'openshift'
-    ? [
-        {
-          name: 'source.source_ref',
-          label: <FormattedMessage id="sources.clusterIdentifier" defaultMessage="Cluster identifier" />,
-          isRequired: true,
-          validate: [{ type: validatorTypes.REQUIRED }],
-          component: componentTypes.TEXT_FIELD,
-        },
-      ]
-    : [];
-
 const createOneAppFields = (appType, sourceType, app) => [
+  {
+    name: `messages.${app.id}`,
+    component: 'description',
+    Content: EditAlert,
+    condition: {
+      when: ({ name }) => name,
+      isNotEmpty: true,
+    },
+  },
   ...authenticationFields(
     app.authentications?.filter((auth) => Object.keys(auth).length > 1),
     sourceType,
-    appType?.name
+    appType?.name,
+    app.id
   ),
-  ...(appType?.name === APP_NAMES.COST_MANAGAMENT ? appendClusterIdentifier(sourceType) : []),
 ];
 
-const unusedAuthsWarning = (length) => ({
-  component: componentTypes.PLAIN_TEXT,
-  name: 'unused-auth-warning',
-  label: (
-    <FormattedMessage
-      id="sources.authNotUsed"
-      defaultMessage="The following {length, plural, one {authentication is not} other {authentications are not}} used by any application."
-      values={{ length }}
-    />
-  ),
-});
+export const applicationsFields = (applications, sourceType, appTypes) => [
+  {
+    component: componentTypes.TABS,
+    name: 'app-tabs',
+    isBox: true,
+    fields: [
+      ...applications.map((app) => {
+        const appType = appTypes.find(({ id }) => id === app.application_type_id);
 
-const unusedAuthentications = (authentications, sourceType, appsLength) => {
-  if (!authentications || authentications.length === 0) {
-    return [];
-  }
+        let fields = createOneAppFields(appType, sourceType, app);
 
-  let authenticationsInputs = sourceType?.schema?.authentication
-    ?.reduce((acc, { type }) => {
-      const auths = authentications.filter(({ authtype }) => type === authtype);
+        const hasEndpoint = app.authentications.find(({ resource_type }) => resource_type === 'Endpoint');
 
-      if (auths?.length > 0) {
-        return [...acc, ...authenticationFields(auths, sourceType)];
-      }
+        if (hasEndpoint) {
+          fields = [fields[0], [...(fields[1] || []), endpointFields(sourceType)]];
+        }
 
-      return acc;
-    }, [])
-    ?.filter(Boolean);
+        if (fields.length === 1) {
+          fields.push({
+            component: 'description',
+            name: 'no-credentials',
+            Content: ResourcesEmptyState,
+            message: {
+              id: 'resourceTable.emptyStateDescription',
+              defaultMessage: '{applicationName} resources will be added here when created.',
+            },
+            applicationName: appType?.display_name,
+            Icon: PlusCircleIcon,
+          });
+        } else if (app.paused_at) {
+          fields = [fields[0], fields[1].map((field) => ({ ...field, isDisabled: true }))];
+        }
 
-  const transformToTabs = appsLength !== 0;
-
-  if (transformToTabs) {
-    authenticationsInputs = [
-      {
-        fields: [unusedAuthsWarning(authenticationsInputs.length), ...authenticationsInputs],
-        title: sourceType.product_name,
-        name: 'unused-auths-tab',
-      },
-    ];
-  } else {
-    authenticationsInputs = [
-      {
-        fields: [unusedAuthsWarning(authenticationsInputs.length), ...authenticationsInputs],
-        component: componentTypes.SUB_FORM,
-        name: 'unused-auths-group',
-      },
-    ];
-  }
-
-  return authenticationsInputs;
-};
-
-export const applicationsFields = (applications, sourceType, appTypes, authentications) => {
-  const authenticationTypesFormGroups = unusedAuthentications(authentications, sourceType, applications?.length);
-
-  if (!applications || applications.length === 0) {
-    return authenticationTypesFormGroups;
-  } else if (applications.length === 1 && authenticationTypesFormGroups.length === 0) {
-    const appType = appTypes.find(({ id }) => id === applications[0].application_type_id);
-
-    return createOneAppFields(appType, sourceType, applications[0]);
-  } else {
-    return [
-      {
-        component: componentTypes.TABS,
-        name: 'app-tabs',
-        isBox: true,
-        fields: [
-          ...applications.map((app) => {
-            const appType = appTypes.find(({ id }) => id === app.application_type_id);
-
-            return {
-              name: appType?.id,
-              title: appType?.display_name,
-              fields: createOneAppFields(appType, sourceType, app),
-            };
-          }),
-          ...authenticationTypesFormGroups,
-        ],
-      },
-    ];
-  }
-};
+        return {
+          name: appType?.id,
+          title: appType?.display_name,
+          fields,
+        };
+      }),
+    ],
+  },
+];

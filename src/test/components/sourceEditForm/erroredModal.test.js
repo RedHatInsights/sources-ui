@@ -1,7 +1,4 @@
 import { mount } from 'enzyme';
-import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { Route } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
 
@@ -9,26 +6,21 @@ import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { routes, replaceRouteId } from '../../../Routes';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
 
-import WrapperModal from '../../../components/SourceEditForm/WrapperModal';
 import ErroredModal from '../../../components/SourceEditForm/ErroredModal';
 
-import { EmptyStateBody, EmptyState } from '@patternfly/react-core/dist/js/components/EmptyState';
-import { Title, Button } from '@patternfly/react-core';
+import { Button, EmptyState, EmptyStateBody, Title } from '@patternfly/react-core';
 
-import ErroredStep from '@redhat-cloud-services/frontend-components-sources/cjs/ErroredStep';
+import mockStore from '../../__mocks__/mockStore';
+import ErroredStep from '../../../components/steps/ErroredStep';
 
 describe('ErroredModal', () => {
   let store;
-  let mockStore;
   let initialEntry;
   let wrapper;
   let onRetry;
 
-  const middlewares = [thunk, notificationsMiddleware()];
-
   beforeEach(async () => {
-    initialEntry = [replaceRouteId(routes.sourcesEdit.path, '14')];
-    mockStore = configureStore(middlewares);
+    initialEntry = [replaceRouteId(routes.sourcesDetail.path, '14')];
     store = mockStore({
       sources: {
         entities: sourcesDataGraphQl,
@@ -39,7 +31,7 @@ describe('ErroredModal', () => {
     await act(async () => {
       wrapper = mount(
         componentWrapperIntl(
-          <Route path={routes.sourcesEdit.path} render={(...args) => <ErroredModal {...args} onRetry={onRetry} />} />,
+          <Route path={routes.sourcesDetail.path} render={(...args) => <ErroredModal {...args} onRetry={onRetry} />} />,
           store,
           initialEntry
         )
@@ -49,7 +41,6 @@ describe('ErroredModal', () => {
   });
 
   it('renders correctly', async () => {
-    expect(wrapper.find(WrapperModal)).toHaveLength(1);
     expect(wrapper.find(ErroredStep)).toHaveLength(1);
 
     expect(wrapper.find(Title).last().text()).toEqual('Something went wrong');

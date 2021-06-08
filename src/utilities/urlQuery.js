@@ -1,10 +1,12 @@
 import { restFilterGenerator } from '../api/entities';
+import { AVAILABLE, UNAVAILABLE } from '../views/formatters';
 import { sourcesColumns } from '../views/sourcesViewDefinition';
+import { CLOUD_VENDOR, REDHAT_VENDOR } from './constants';
 
-export const updateQuery = ({ sortBy, sortDirection, pageNumber, pageSize, filterValue }) => {
+export const updateQuery = ({ sortBy, sortDirection, pageNumber, pageSize, filterValue, activeVendor }) => {
   const sortQuery = `sort_by[]=${sortBy}:${sortDirection}`;
 
-  const paginationQuery = `limit=${pageSize}&offset=${(pageNumber - 1) * pageSize}`;
+  const paginationQuery = `limit=${pageSize}&offset=${(pageNumber - 1) * pageSize}&activeVendor=${activeVendor || CLOUD_VENDOR}`;
 
   const filterQuery = restFilterGenerator(filterValue);
 
@@ -19,7 +21,19 @@ export const updateQuery = ({ sortBy, sortDirection, pageNumber, pageSize, filte
   return null;
 };
 
-export const parseQuery = () => {
+export const loadEnhancedAttributes = (params) => {
+  const urlParams = params || new URLSearchParams(window.location.search);
+
+  const applications = urlParams.getAll('application');
+  const types = urlParams.getAll('type');
+
+  return {
+    applications: applications.length && applications,
+    types: types.length && types,
+  };
+};
+
+export const parseQuery = (getState) => {
   let fetchOptions = {};
 
   const urlParams = new URLSearchParams(window.location.search);
@@ -95,6 +109,33 @@ export const parseQuery = () => {
     };
   }
 
+  if (urlParams.get('filter[availability_status]')) {
+    filterValue = {
+      ...filterValue,
+      availability_status: [AVAILABLE],
+    };
+  } else if (urlParams.get('filter[availability_status][]')) {
+    filterValue = {
+      ...filterValue,
+      availability_status: [UNAVAILABLE],
+    };
+  }
+
+  const { applications, types } = loadEnhancedAttributes(urlParams);
+
+  if (applications || types) {
+    const { appTypes, sourceTypes } = getState().sources;
+
+    const applicationIds = applications.map?.((app) => appTypes.find(({ name }) => name.includes(app))?.id).filter(Boolean);
+    const typeIds = types.map?.((type) => sourceTypes.find(({ name }) => name === type)?.id).filter(Boolean);
+
+    filterValue = {
+      ...filterValue,
+      ...(applicationIds?.length && { applications: applicationIds }),
+      ...(typeIds?.length && { source_type_id: typeIds }),
+    };
+  }
+
   const hasSomeFilterValue =
     Object.entries(filterValue)
       .map(([_key, value]) => value)
@@ -104,6 +145,15 @@ export const parseQuery = () => {
     fetchOptions = {
       ...fetchOptions,
       filterValue,
+    };
+  }
+
+  const activeVendor = urlParams.get('activeVendor');
+
+  if (activeVendor === CLOUD_VENDOR || activeVendor === REDHAT_VENDOR) {
+    fetchOptions = {
+      ...fetchOptions,
+      activeVendor,
     };
   }
 

@@ -18,10 +18,6 @@ describe('AddApplication wizard - ErroredStep', () => {
     };
   });
 
-  afterEach(() => {
-    goToSources.mockReset();
-  });
-
   it('renders correctly', () => {
     const wrapper = mount(componentWrapperIntl(<WizardBodyAttach {...initialProps} />));
 

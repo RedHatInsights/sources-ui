@@ -1,7 +1,7 @@
 import { doAttachApp, removeEmpty } from '../../api/doAttachApp';
 import * as api from '../../api/entities';
-import * as cm from '@redhat-cloud-services/frontend-components-sources/cjs/costManagementAuthentication';
-import * as appStatus from '@redhat-cloud-services/frontend-components-sources/cjs/getApplicationStatus';
+import * as appStatus from '../..//api/getApplicationStatus';
+import emptyAuthType from '../../components/addSourceWizard/emptyAuthType';
 
 const prepareFormApi = (values) => ({
   getState: () => ({
@@ -9,7 +9,7 @@ const prepareFormApi = (values) => ({
   }),
 });
 
-jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/constants', () => ({
+jest.mock('../../utilities/constants', () => ({
   __esModule: true,
   timeoutedApps: () => [],
 }));
@@ -39,8 +39,6 @@ describe('doAttachApp', () => {
   let RETURNED_APP;
   let AUTH_ID;
 
-  let mockPatchSourceSpy;
-
   let mockAppStatus;
 
   let consoleError;
@@ -53,7 +51,6 @@ describe('doAttachApp', () => {
     AUTH_ID = '55643265870983219274209';
     APP_ID = '878776767';
 
-    mockPatchSourceSpy = jest.spyOn(cm, 'patchSource').mockImplementation(() => Promise.resolve('ok'));
     mockAppStatus = jest
       .spyOn(appStatus, 'checkAppAvailability')
       .mockImplementation(() => Promise.resolve({ status: 'available', id: APP_ID }));
@@ -101,12 +98,11 @@ describe('doAttachApp', () => {
 
   afterEach(() => {
     console.erorr = consoleError;
-    mockPatchSourceSpy.mockReset();
     mockAppStatus.mockReset();
   });
 
   it('no values at all - should miss source id (only developer error)', async () => {
-    expect.assertions(11);
+    expect.assertions(10);
 
     FORM_API = prepareFormApi({});
 
@@ -115,7 +111,6 @@ describe('doAttachApp', () => {
     } catch (error) {
       expect(error).toEqual('Missing source id');
 
-      expect(mockPatchSourceSpy).not.toHaveBeenCalled();
       expect(sourceUpdate).not.toHaveBeenCalled();
       expect(authUpdate).not.toHaveBeenCalled();
       expect(endpointUpdate).not.toHaveBeenCalled();
@@ -137,13 +132,37 @@ describe('doAttachApp', () => {
 
     const result = await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
-    expect(mockPatchSourceSpy).not.toHaveBeenCalled();
     expect(sourceUpdate).not.toHaveBeenCalled();
     expect(authUpdate).not.toHaveBeenCalled();
     expect(endpointUpdate).not.toHaveBeenCalled();
     expect(authCreate).not.toHaveBeenCalled();
     expect(endpointCreate).not.toHaveBeenCalled();
-    expect(appCreate).toHaveBeenCalledWith(SOURCE_ID, APP_ID);
+    expect(appCreate).toHaveBeenCalledWith({ source_id: SOURCE_ID, application_type_id: APP_ID });
+    expect(createAuthApp).not.toHaveBeenCalled();
+    expect(mockAppStatus).toHaveBeenCalledWith(APP_ID, 0);
+    expect(appDelete).not.toHaveBeenCalled();
+
+    expect(result).toEqual({ id: APP_ID, applications: [{ id: APP_ID, status: 'available' }] });
+  });
+
+  it('only app with extra changed', async () => {
+    const EXTRA = { billing_source: 'billing-source' };
+
+    VALUES = {
+      application: {
+        application_type_id: APP_ID,
+        extra: EXTRA,
+      },
+    };
+
+    const result = await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
+
+    expect(sourceUpdate).not.toHaveBeenCalled();
+    expect(authUpdate).not.toHaveBeenCalled();
+    expect(endpointUpdate).not.toHaveBeenCalled();
+    expect(authCreate).not.toHaveBeenCalled();
+    expect(endpointCreate).not.toHaveBeenCalled();
+    expect(appCreate).toHaveBeenCalledWith({ source_id: SOURCE_ID, application_type_id: APP_ID, extra: EXTRA });
     expect(createAuthApp).not.toHaveBeenCalled();
     expect(mockAppStatus).toHaveBeenCalledWith(APP_ID, 0);
     expect(appDelete).not.toHaveBeenCalled();
@@ -160,7 +179,6 @@ describe('doAttachApp', () => {
 
     const result = await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
-    expect(mockPatchSourceSpy).not.toHaveBeenCalled();
     expect(sourceUpdate).toHaveBeenCalledWith(SOURCE_ID, {
       source_ref: '2323',
     });
@@ -200,7 +218,6 @@ describe('doAttachApp', () => {
 
     await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
-    expect(mockPatchSourceSpy).not.toHaveBeenCalled();
     expect(sourceUpdate).toHaveBeenCalledWith(SOURCE_ID, {
       cat: null,
       name: '8989',
@@ -266,7 +283,6 @@ describe('doAttachApp', () => {
 
     await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
-    expect(mockPatchSourceSpy).not.toHaveBeenCalled();
     expect(sourceUpdate).toHaveBeenCalledWith(SOURCE_ID, {
       cat: null,
       name: '8989',
@@ -312,7 +328,6 @@ describe('doAttachApp', () => {
 
     await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
-    expect(mockPatchSourceSpy).not.toHaveBeenCalled();
     expect(sourceUpdate).not.toHaveBeenCalled();
     expect(authUpdate).not.toHaveBeenCalled();
     expect(endpointUpdate).toHaveBeenCalledWith(ENDPOINT_ID, {
@@ -325,7 +340,7 @@ describe('doAttachApp', () => {
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).not.toHaveBeenCalled();
     expect(createAuthApp).not.toHaveBeenCalled();
-    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint');
+    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint', expect.any(Date));
     expect(appDelete).not.toHaveBeenCalled();
   });
 
@@ -349,7 +364,6 @@ describe('doAttachApp', () => {
 
     await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
-    expect(mockPatchSourceSpy).not.toHaveBeenCalled();
     expect(sourceUpdate).not.toHaveBeenCalled();
     expect(authUpdate).not.toHaveBeenCalled();
     expect(endpointUpdate).toHaveBeenCalledWith(ENDPOINT_ID, {
@@ -362,7 +376,7 @@ describe('doAttachApp', () => {
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).not.toHaveBeenCalled();
     expect(createAuthApp).not.toHaveBeenCalled();
-    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint');
+    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint', expect.any(Date));
     expect(appDelete).not.toHaveBeenCalled();
   });
 
@@ -384,7 +398,6 @@ describe('doAttachApp', () => {
 
     await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
-    expect(mockPatchSourceSpy).not.toHaveBeenCalled();
     expect(sourceUpdate).not.toHaveBeenCalled();
     expect(authUpdate).not.toHaveBeenCalled();
     expect(endpointUpdate).not.toHaveBeenCalled();
@@ -392,7 +405,7 @@ describe('doAttachApp', () => {
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).not.toHaveBeenCalled();
     expect(createAuthApp).not.toHaveBeenCalled();
-    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint');
+    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint', expect.any(Date));
     expect(appDelete).not.toHaveBeenCalled();
   });
 
@@ -414,7 +427,6 @@ describe('doAttachApp', () => {
 
     await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
-    expect(mockPatchSourceSpy).not.toHaveBeenCalled();
     expect(sourceUpdate).not.toHaveBeenCalled();
     expect(authUpdate).not.toHaveBeenCalled();
     expect(endpointUpdate).toHaveBeenCalledWith(ENDPOINT_ID, {
@@ -427,7 +439,7 @@ describe('doAttachApp', () => {
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).not.toHaveBeenCalled();
     expect(createAuthApp).not.toHaveBeenCalled();
-    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint');
+    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint', expect.any(Date));
     expect(appDelete).not.toHaveBeenCalled();
   });
 
@@ -462,7 +474,6 @@ describe('doAttachApp', () => {
 
     await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
-    expect(mockPatchSourceSpy).not.toHaveBeenCalled();
     expect(sourceUpdate).not.toHaveBeenCalled();
     expect(authUpdate).toHaveBeenCalledWith(AUTH_ID, VALUES.authentication);
     expect(endpointUpdate).not.toHaveBeenCalledWith();
@@ -470,7 +481,7 @@ describe('doAttachApp', () => {
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).not.toHaveBeenCalled();
     expect(createAuthApp).not.toHaveBeenCalled();
-    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint');
+    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint', expect.any(Date));
     expect(appDelete).not.toHaveBeenCalled();
   });
 
@@ -509,7 +520,6 @@ describe('doAttachApp', () => {
 
     await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
-    expect(mockPatchSourceSpy).not.toHaveBeenCalled();
     expect(sourceUpdate).not.toHaveBeenCalled();
     expect(authUpdate).toHaveBeenCalledWith(AUTH_ID, {
       user_name: 'lojza',
@@ -520,7 +530,7 @@ describe('doAttachApp', () => {
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).not.toHaveBeenCalled();
     expect(createAuthApp).not.toHaveBeenCalled();
-    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint');
+    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint', expect.any(Date));
     expect(appDelete).not.toHaveBeenCalled();
   });
 
@@ -544,7 +554,6 @@ describe('doAttachApp', () => {
 
     await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
-    expect(mockPatchSourceSpy).not.toHaveBeenCalled();
     expect(sourceUpdate).not.toHaveBeenCalled();
     expect(authUpdate).not.toHaveBeenCalled();
     expect(endpointUpdate).not.toHaveBeenCalledWith();
@@ -552,11 +561,44 @@ describe('doAttachApp', () => {
       ...VALUES.authentication,
       resource_id: undefined, // no endpoint values
       resource_type: 'Application',
+      source_id: SOURCE_ID,
     });
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).not.toHaveBeenCalled();
     expect(createAuthApp).not.toHaveBeenCalled();
-    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint');
+    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint', expect.any(Date));
+    expect(appDelete).not.toHaveBeenCalled();
+  });
+
+  it('ignore empty auth type', async () => {
+    INITIAL_VALUES = {
+      source: {
+        id: SOURCE_ID,
+      },
+      endpoint: {
+        id: ENDPOINT_ID,
+      },
+    };
+
+    FORM_API = prepareFormApi(INITIAL_VALUES);
+
+    VALUES = {
+      authentication: {
+        password: 'pepa',
+        authtype: emptyAuthType.type,
+      },
+    };
+
+    await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
+
+    expect(sourceUpdate).not.toHaveBeenCalled();
+    expect(authUpdate).not.toHaveBeenCalled();
+    expect(endpointUpdate).not.toHaveBeenCalledWith();
+    expect(authCreate).not.toHaveBeenCalledWith();
+    expect(endpointCreate).not.toHaveBeenCalled();
+    expect(appCreate).not.toHaveBeenCalled();
+    expect(createAuthApp).not.toHaveBeenCalled();
+    expect(mockAppStatus).toHaveBeenCalledWith(ENDPOINT_ID, undefined, undefined, 'getEndpoint', expect.any(Date));
     expect(appDelete).not.toHaveBeenCalled();
   });
 
@@ -567,7 +609,6 @@ describe('doAttachApp', () => {
 
     await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
-    expect(mockPatchSourceSpy).not.toHaveBeenCalled();
     expect(sourceUpdate).not.toHaveBeenCalled();
     expect(authUpdate).not.toHaveBeenCalled();
     expect(endpointUpdate).not.toHaveBeenCalledWith();
@@ -596,7 +637,6 @@ describe('doAttachApp', () => {
 
     await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
-    expect(mockPatchSourceSpy).not.toHaveBeenCalled();
     expect(sourceUpdate).not.toHaveBeenCalled();
     expect(authUpdate).not.toHaveBeenCalled();
     expect(endpointUpdate).not.toHaveBeenCalledWith();
@@ -604,6 +644,7 @@ describe('doAttachApp', () => {
       ...VALUES.authentication,
       resource_id: RETURNED_ENDPOINT.id,
       resource_type: 'Endpoint',
+      source_id: SOURCE_ID,
     });
     expect(endpointCreate).toHaveBeenCalledWith({
       port: 8989,
@@ -628,7 +669,6 @@ describe('doAttachApp', () => {
 
     await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
-    expect(mockPatchSourceSpy).not.toHaveBeenCalled();
     expect(sourceUpdate).not.toHaveBeenCalled();
     expect(authUpdate).not.toHaveBeenCalled();
     expect(endpointUpdate).not.toHaveBeenCalledWith();
@@ -636,6 +676,7 @@ describe('doAttachApp', () => {
       ...VALUES.authentication,
       resource_id: undefined, // empty endpoint values
       resource_type: 'Application',
+      source_id: SOURCE_ID,
     });
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).not.toHaveBeenCalled();
@@ -656,7 +697,6 @@ describe('doAttachApp', () => {
 
     await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
-    expect(mockPatchSourceSpy).not.toHaveBeenCalled();
     expect(sourceUpdate).not.toHaveBeenCalled();
     expect(authUpdate).not.toHaveBeenCalled();
     expect(endpointUpdate).not.toHaveBeenCalledWith();
@@ -664,89 +704,15 @@ describe('doAttachApp', () => {
       ...VALUES.authentication,
       resource_id: RETURNED_APP.id,
       resource_type: 'Application',
+      source_id: SOURCE_ID,
     });
     expect(endpointCreate).not.toHaveBeenCalled();
-    expect(appCreate).toHaveBeenCalledWith(SOURCE_ID, APP_ID);
+    expect(appCreate).toHaveBeenCalledWith({ source_id: SOURCE_ID, application_type_id: APP_ID });
     expect(createAuthApp).toHaveBeenCalledWith({
       authentication_id: AUTH_ID,
       application_id: APP_ID,
     });
     expect(mockAppStatus).toHaveBeenCalledWith(APP_ID, 0);
-    expect(appDelete).not.toHaveBeenCalled();
-  });
-
-  it('cost management is attached and values are updated', async () => {
-    VALUES = {
-      billing_source: { cluster: '12232' },
-      credentials: { subscription_id: '28982id' },
-      nonsense: 'Z7SHADZUSAgd',
-    };
-
-    await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
-
-    expect(mockPatchSourceSpy).toHaveBeenCalledWith({
-      id: SOURCE_ID,
-      billing_source: VALUES.billing_source,
-      authentication: {
-        credentials: VALUES.credentials,
-      },
-    });
-    expect(sourceUpdate).not.toHaveBeenCalled();
-    expect(authUpdate).not.toHaveBeenCalled();
-    expect(endpointUpdate).not.toHaveBeenCalledWith();
-    expect(authCreate).not.toHaveBeenCalledWith();
-    expect(endpointCreate).not.toHaveBeenCalledWith();
-    expect(appCreate).not.toHaveBeenCalled();
-    expect(createAuthApp).not.toHaveBeenCalled();
-    expect(mockAppStatus).not.toHaveBeenCalled();
-    expect(appDelete).not.toHaveBeenCalled();
-  });
-
-  it('cost management is attached and values are updated - only billing_source', async () => {
-    VALUES = {
-      billing_source: { cluster: '12232' },
-      nonsense: 'Z7SHADZUSAgd',
-    };
-
-    await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
-
-    expect(mockPatchSourceSpy).toHaveBeenCalledWith({
-      id: SOURCE_ID,
-      billing_source: VALUES.billing_source,
-    });
-    expect(sourceUpdate).not.toHaveBeenCalled();
-    expect(authUpdate).not.toHaveBeenCalled();
-    expect(endpointUpdate).not.toHaveBeenCalledWith();
-    expect(authCreate).not.toHaveBeenCalledWith();
-    expect(endpointCreate).not.toHaveBeenCalledWith();
-    expect(appCreate).not.toHaveBeenCalled();
-    expect(createAuthApp).not.toHaveBeenCalled();
-    expect(mockAppStatus).not.toHaveBeenCalled();
-    expect(appDelete).not.toHaveBeenCalled();
-  });
-
-  it('cost management is attached and values are updated - only credentials', async () => {
-    VALUES = {
-      credentials: { subscription_id: '28982id' },
-      nonsense: 'Z7SHADZUSAgd',
-    };
-
-    await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
-
-    expect(mockPatchSourceSpy).toHaveBeenCalledWith({
-      id: SOURCE_ID,
-      authentication: {
-        credentials: VALUES.credentials,
-      },
-    });
-    expect(sourceUpdate).not.toHaveBeenCalled();
-    expect(authUpdate).not.toHaveBeenCalled();
-    expect(endpointUpdate).not.toHaveBeenCalledWith();
-    expect(authCreate).not.toHaveBeenCalledWith();
-    expect(endpointCreate).not.toHaveBeenCalledWith();
-    expect(appCreate).not.toHaveBeenCalled();
-    expect(createAuthApp).not.toHaveBeenCalled();
-    expect(mockAppStatus).not.toHaveBeenCalled();
     expect(appDelete).not.toHaveBeenCalled();
   });
 
@@ -764,13 +730,12 @@ describe('doAttachApp', () => {
 
       await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
-      expect(mockPatchSourceSpy).not.toHaveBeenCalled();
       expect(sourceUpdate).not.toHaveBeenCalled();
       expect(authUpdate).not.toHaveBeenCalled();
       expect(endpointUpdate).not.toHaveBeenCalled();
       expect(authCreate).toHaveBeenCalled();
       expect(endpointCreate).toHaveBeenCalled();
-      expect(appCreate).toHaveBeenCalledWith(SOURCE_ID, APP_ID);
+      expect(appCreate).toHaveBeenCalledWith({ source_id: SOURCE_ID, application_type_id: APP_ID });
       expect(createAuthApp).toHaveBeenCalledWith({
         authentication_id: AUTH_ID,
         application_id: APP_ID,
@@ -780,7 +745,7 @@ describe('doAttachApp', () => {
     });
 
     it('new auth - error, app is removed', async () => {
-      expect.assertions(10);
+      expect.assertions(9);
 
       createAuthApp = jest.fn().mockImplementation(() => Promise.reject('error'));
 
@@ -809,13 +774,12 @@ describe('doAttachApp', () => {
       try {
         await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
       } catch {
-        expect(mockPatchSourceSpy).not.toHaveBeenCalled();
         expect(sourceUpdate).not.toHaveBeenCalled();
         expect(authUpdate).not.toHaveBeenCalled();
         expect(endpointUpdate).not.toHaveBeenCalled();
         expect(authCreate).toHaveBeenCalled();
         expect(endpointCreate).toHaveBeenCalled();
-        expect(appCreate).toHaveBeenCalledWith(SOURCE_ID, APP_ID);
+        expect(appCreate).toHaveBeenCalledWith({ source_id: SOURCE_ID, application_type_id: APP_ID });
         expect(createAuthApp).toHaveBeenCalledWith({
           authentication_id: AUTH_ID,
           application_id: APP_ID,
@@ -859,13 +823,12 @@ describe('doAttachApp', () => {
 
       await doAttachApp(VALUES, FORM_API, AUTHENTICATION_INIT, INITIAL_VALUES);
 
-      expect(mockPatchSourceSpy).not.toHaveBeenCalled();
       expect(sourceUpdate).not.toHaveBeenCalled();
       expect(authUpdate).toHaveBeenCalled();
       expect(endpointUpdate).not.toHaveBeenCalled();
       expect(authCreate).not.toHaveBeenCalled();
       expect(endpointCreate).not.toHaveBeenCalled();
-      expect(appCreate).toHaveBeenCalledWith(SOURCE_ID, APP_ID);
+      expect(appCreate).toHaveBeenCalledWith({ source_id: SOURCE_ID, application_type_id: APP_ID });
       expect(createAuthApp).toHaveBeenCalledWith({
         authentication_id: AUTH_ID,
         application_id: APP_ID,

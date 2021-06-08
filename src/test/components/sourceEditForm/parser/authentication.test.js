@@ -9,10 +9,10 @@ import {
   modifyAuthSchemas,
   removeRequiredValidator,
   getAdditionalAuthSteps,
+  createAuthAppFieldName,
 } from '../../../../components/SourceEditForm/parser/authentication';
-import GridLayout from '../../../../components/SourceEditForm/parser/GridLayout';
 
-jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchemas', () => ({
+jest.mock('../../../../components/addSourceWizard/hardcodedSchemas', () => ({
   __esModule: true,
   default: {
     aws: {
@@ -23,11 +23,7 @@ jest.mock('@redhat-cloud-services/frontend-components-sources/cjs/hardcodedSchem
             includeStepKeyFields: ['arn-step'],
             additionalSteps: [
               {
-                fields: [
-                  {
-                    name: 'additional-field',
-                  },
-                ],
+                fields: [{ name: 'additional-field' }, { name: 'authentication.authtype' }, { name: 'billing_source.bucket' }],
               },
             ],
           },
@@ -47,6 +43,17 @@ describe('authentication edit source parser', () => {
         const PREFIXED_NAME = `authentications.a123154.name`;
 
         expect(createAuthFieldName(NAME, ID)).toEqual(PREFIXED_NAME);
+      });
+    });
+
+    describe('createAuthAppFieldName', () => {
+      it('generates prefixed name', () => {
+        const NAME = 'application.name';
+        const ID = '123154';
+
+        const PREFIXED_NAME = `applications.a123154.name`;
+
+        expect(createAuthAppFieldName(NAME, ID)).toEqual(PREFIXED_NAME);
       });
     });
 
@@ -91,11 +98,7 @@ describe('authentication edit source parser', () => {
       it('gets additional steps', () => {
         expect(getAdditionalAuthSteps('aws', 'arn')).toEqual([
           {
-            fields: [
-              {
-                name: 'additional-field',
-              },
-            ],
+            fields: [{ name: 'additional-field' }, { name: 'authentication.authtype' }, { name: 'billing_source.bucket' }],
           },
         ]);
       });
@@ -137,6 +140,13 @@ describe('authentication edit source parser', () => {
           name: createAuthFieldName(FIELD_NAME, ID),
         },
       ]);
+    });
+
+    it('renames application fields', () => {
+      const APP_ID = 'app-id';
+      const result = modifyAuthSchemas([{ name: 'application.extra.billing_source' }], ID, APP_ID);
+
+      expect(result).toEqual([{ name: createAuthAppFieldName('application.extra.billing_source', APP_ID) }]);
     });
 
     it('does not change name for non-authentication values', () => {
@@ -243,15 +253,7 @@ describe('authentication edit source parser', () => {
       const authentication = SOURCE_TYPE.schema.authentication[0];
       const FIELDS_WITHOUT_STEPKEYS = [authentication.fields[0], authentication.fields[1]];
 
-      const ARN_GROUP = [
-        {
-          name: `authentication-${AUTHENTICATIONS[0].id}`,
-          component: 'description',
-          id: AUTHENTICATIONS[0].id,
-          Content: GridLayout,
-          fields: modifyAuthSchemas(FIELDS_WITHOUT_STEPKEYS, ID),
-        },
-      ];
+      const ARN_GROUP = modifyAuthSchemas(FIELDS_WITHOUT_STEPKEYS, ID);
 
       expect(result).toEqual([ARN_GROUP]);
     });
@@ -282,90 +284,6 @@ describe('authentication edit source parser', () => {
       const result = authenticationFields(AUTHENTICATIONS, SOURCE_TYPE_WITHOUT_SCHEMA_AUTH);
 
       expect(result).toEqual(EMPTY_ARRAY);
-    });
-
-    it('rename arn/cloud-meter-arn', () => {
-      SOURCE_TYPE = {
-        name: 'amazon',
-        id: '1',
-        schema: {
-          authentication: [
-            {
-              type: 'arn',
-              fields: [
-                {
-                  component: 'text-field',
-                  name: 'authentication.password',
-                  label: 'arn',
-                },
-              ],
-            },
-            {
-              type: 'cloud-meter-arn',
-              fields: [
-                {
-                  component: 'text-field',
-                  name: 'authentication.password',
-                  label: 'arn',
-                },
-              ],
-            },
-            {
-              type: 'different',
-              fields: [
-                {
-                  component: 'text-field',
-                  name: 'authentication.password',
-                  label: 'arn',
-                },
-                {
-                  component: 'text-field',
-                  name: 'authentication.username',
-                  label: 'username',
-                },
-              ],
-            },
-          ],
-        },
-      };
-
-      AUTHENTICATIONS = [
-        {
-          authtype: 'arn',
-          id: '123',
-        },
-        {
-          authtype: 'cloud-meter-arn',
-          id: '234',
-        },
-        {
-          authtype: 'different',
-          id: '345',
-        },
-      ];
-
-      const result = authenticationFields(AUTHENTICATIONS, SOURCE_TYPE);
-
-      expect(result[0][0].fields[0]).toEqual({
-        component: 'authentication',
-        label: 'Cost Management ARN',
-        name: 'authentications.a123.password',
-      });
-      expect(result[1][0].fields[0]).toEqual({
-        component: 'authentication',
-        label: 'Subscription Watch ARN',
-        name: 'authentications.a234.password',
-      });
-      expect(result[2][0].fields[0]).toEqual({
-        component: 'authentication',
-        label: 'arn',
-        name: 'authentications.a345.password',
-      });
-      expect(result[2][0].fields[1]).toEqual({
-        component: 'text-field',
-        label: 'username',
-        name: 'authentications.a345.username',
-      });
     });
   });
 });

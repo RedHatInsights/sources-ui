@@ -1,7 +1,7 @@
 # Sources
-![Main screen with "Add a new Source" wizard](doc/images/sources-main-add.jpg)
+![Main screen with "Add a new Source" wizard](doc/images/sources-main-add.png)
 
-[![Build Status](https://travis-ci.org/RedHatInsights/sources-ui.svg?branch=master)](https://travis-ci.org/RedHatInsights/sources-ui)
+[![Build Status](https://travis-ci.com/RedHatInsights/sources-ui.svg?branch=master)](https://travis-ci.com/RedHatInsights/sources-ui)
 [![Test Coverage](https://codecov.io/gh/RedHatInsights/sources-ui/branch/master/graph/badge.svg)](https://codecov.io/gh/RedHatInsights/sources-ui)
 
 List of Sources for Red Hat Cloud Services.
@@ -15,9 +15,10 @@ This application allows to
 **Table of Contents**
 - [Sources](#sources)
 - [Getting Started](#getting-started)
-- [Running locally](#running-locally)
-- [Build app](#build-app)
-  - [Testing](#testing)
+  - [Run app](#run-app)
+  - [Debug functions](#debug-functions)
+- [Queries](#queries)
+- [Testing](#testing)
 - [Patternfly](#patternfly)
 - [Data-driven forms](#data-driven-forms)
 - [Insights Components](#insights-components)
@@ -25,39 +26,53 @@ This application allows to
   - [Updating steps in the wizard](#updating-steps-in-the-wizard)
 - [API](#api)
   - [Sources Javascript API client](#sources-javascript-api-client)
-- [Technologies](#technologies)
+- [Insights Frontend Assets](#insights-frontend-assets)
 - [Deploying](#deploying)
   - [How it works](#how-it-works)
 - [License](#license)
 
 # Getting Started
-
-There is a [comprehensive quick start guide in the Storybook Documentation](https://github.com/RedHatInsights/insights-frontend-storybook/blob/master/src/docs/welcome/quickStart/DOC.md) to setting up an Insights environment complete with:
-
-- Insights Frontend Starter App
-
-- [Insights Chroming](https://github.com/RedHatInsights/insights-chrome)
-- [Insights Proxy](https://github.com/RedHatInsights/insights-proxy)
-
-Note: You will need to set up the Insights environment if you want to develop
-Sources UI due to the consumption of the chroming service as well as
-setting up your global/app navigation through the API.
-
-# Running locally
-Have [insights-proxy](https://github.com/RedHatInsights/insights-proxy) installed under PROXY_PATH
-
-```shell
-SPANDX_CONFIG="./config/spandx.config.js" bash $PROXY_PATH/scripts/run.sh
-```
-
-# Build app
+## Run app
 
 1. ```npm install```
 
-2. ```npm run start```
-    - starts webpack bundler and serves the files with webpack dev server
+2.  ```npm run start```
+    - starts webpack bundler and serves the files with webpack dev server on `https://ci.foo.redhat.com:1337/settings/sources/`
 
-## Testing
+2.  ```npm run start:beta```
+    - starts webpack bundler and serves the files with webpack dev server on `https://ci.foo.redhat.com:1337/beta/settings/sources/`
+
+You have to be connected to Red Hat VPN.
+
+Check our [proxy documenation](https://github.com/RedHatInsights/frontend-components/tree/master/packages/config#useproxy) for more options.
+
+## Debug functions
+
+Sources UI provides easy way how to test different states of the application when running in dev environment.
+
+Run from the console one of following commands:
+
+- ```sourcesDebug.showEmptyState```
+
+Sets number of currently loaded sources to 0. Shows empty state.
+
+- ```sourcesDebug.setCount```
+
+Changes number of sources to a value you need.
+
+- ```sourcesDebug.removePermissions```
+
+Removes write permissions.
+
+- ```sourcesDebug.setPermissions```
+
+Grants write permissions.
+
+# Queries
+
+You can use queries to modify the initial state of the application. Read more [here](doc/url-query.md).
+
+# Testing
 
 - Travis is used to test the build for this code.
   - `npm run test` will run tests,
@@ -82,7 +97,9 @@ Insights Platform will deliver components and static assets through [npm](https:
 
 ## AddSourceWizard
 
-This application use a [AddSourceWizard](https://github.com/RedHatInsights/frontend-components/tree/master/packages/sources), which provides the Wizard component. For creating the DDF schema, it uses information provided by Sources API and components included in the AddSourceWizard package.
+**ADD SOURCE WIZARD WAS MOVED TO THIS REPOSITORY!**
+
+Documentation is [here](doc/wizard.md).
 
 ## Updating steps in the wizard
 
@@ -98,9 +115,9 @@ This API client is no longer in the UI because of its huge bundle size. However,
 
 - [Sources API Javascript client](https://github.com/RedHatInsights/javascript-clients/blob/master/packages/sources/doc/README.md)
 
-# Technologies
+# Insights Frontend Assets
 
-- See [Technologies](doc/technologies.md).
+Static assets are deployed to [Insights Frontend Assets](https://github.com/RedHatInsights/frontend-assets) repository. If you need to add/change/remove some icon, please do it there.
 
 # Deploying
 

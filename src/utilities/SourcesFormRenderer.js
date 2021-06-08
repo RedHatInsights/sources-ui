@@ -1,27 +1,46 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-import FormRenderer from '@data-driven-forms/react-form-renderer/dist/cjs/form-renderer';
+import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 
-import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/cjs/form-template';
-import componentMapper from '@data-driven-forms/pf4-component-mapper/dist/cjs/component-mapper';
-
-import { mapperExtension } from '@redhat-cloud-services/frontend-components-sources/cjs/sourceFormRenderer';
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
+import pf4ComponentMapper from '@data-driven-forms/pf4-component-mapper/component-mapper';
 
 import Authentication from '../components/Authentication';
 
-import ApplicationSelect from '../components/AddApplication/ApplicationSelect';
+import SourceWizardSummary from '../components/FormComponents/SourceWizardSummary';
+import Description from '../components/FormComponents/Description';
+import CardSelect from '../components/FormComponents/CardSelect';
+import AuthSelect from '../components/FormComponents/AuthSelect';
+import EnhancedRadio from '../components/FormComponents/EnhancedRadio';
+import SwitchGroup from '../components/FormComponents/SwitchGroup';
+import CheckboxWithIcon from '../components/FormComponents/CheckboxWithIcon';
 
-const SourcesFormRenderer = (props) => (
+export const mapperExtension = {
+  'auth-select': AuthSelect,
+  description: Description,
+  'card-select': CardSelect,
+  summary: SourceWizardSummary,
+  'enhanced-radio': EnhancedRadio,
+  'switch-group': SwitchGroup,
+  authentication: Authentication,
+  'checkbox-with-icon': CheckboxWithIcon,
+};
+
+const SourcesFormRenderer = ({ componentMapper, ...props }) => (
   <FormRenderer
     FormTemplate={FormTemplate}
     componentMapper={{
-      ...componentMapper,
+      ...pf4ComponentMapper,
       ...mapperExtension,
-      authentication: Authentication,
-      'application-select': ApplicationSelect,
+      ...componentMapper,
     }}
     {...props}
   />
 );
+
+SourcesFormRenderer.propTypes = {
+  componentMapper: PropTypes.object,
+};
 
 export default SourcesFormRenderer;

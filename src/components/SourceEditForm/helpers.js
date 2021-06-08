@@ -1,7 +1,10 @@
 import get from 'lodash/get';
 import set from 'lodash/set';
 
-import { endpointToUrl } from '../SourcesTable/formatters';
+import { endpointToUrl, UNAVAILABLE } from '../../views/formatters';
+import { pausedAppAlert } from '../../utilities/alerts';
+
+export const CHECK_ENDPOINT_COMMAND = 'check-endpoint';
 
 export const selectOnlyEditedValues = (values, editing) => {
   const filteredValues = {};
@@ -40,11 +43,104 @@ export const prepareInitialValues = ({ endpoints, authentications, applications,
     url = endpoint.scheme || endpoint.host || endpoint.path || endpoint.port ? endpointToUrl(endpoint) : undefined;
   }
 
+  const applicationsFinal = {};
+  if (applications?.length > 0) {
+    applications.forEach((app) => {
+      if (app.extra && Object.keys(app.extra).length > 0) {
+        applicationsFinal[`a${app.id}`] = { extra: app.extra };
+      }
+    });
+  }
+
   return {
     source_type: sourceTypeName,
     endpoint,
     authentications: auhenticationsFinal,
     url,
+    ...(Object.keys(applicationsFinal).length && {
+      applications: applicationsFinal,
+    }),
     ...rest,
   };
+};
+
+const addIfUnique = (array, item) => !array.includes(item) && array.push(item);
+
+export const getEditedApplications = (source, editing) => {
+  const editedApplications = [];
+
+  const editedFields = Object.keys(editing);
+
+  editedFields.forEach((key) => {
+    if (editing[key]) {
+      const editedId = key.match(/.a\d+/)?.[0]?.replace('.a', '');
+
+      if (key.startsWith('applications')) {
+        addIfUnique(editedApplications, editedId);
+      }
+
+      if (key.startsWith('authentications')) {
+        source.applications.forEach((app) =>
+          app.authentications.forEach(
+            ({ id, resource_type }) =>
+              resource_type &&
+              id === editedId &&
+              addIfUnique(editedApplications, resource_type === 'Application' ? app.id : `${CHECK_ENDPOINT_COMMAND}-${app.id}`)
+          )
+        );
+      }
+
+      if (key.startsWith('url') || key.startsWith('endpoint')) {
+        source.applications.forEach((app) =>
+          app.authentications.forEach(
+            ({ resource_type }) =>
+              resource_type === 'Endpoint' && addIfUnique(editedApplications, `${CHECK_ENDPOINT_COMMAND}-${app.id}`)
+          )
+        );
+      }
+    }
+  });
+
+  return editedApplications.filter(Boolean);
+};
+
+export const prepareMessages = (source, intl, appTypes) => {
+  const messages = {};
+
+  source.applications.forEach(({ id, application_type_id, availability_status_error, availability_status, paused_at }) => {
+    if (paused_at) {
+      const application = appTypes.find((type) => type.id === application_type_id)?.display_name || id;
+      messages[id] = pausedAppAlert(intl, application);
+    } else if (availability_status === UNAVAILABLE) {
+      messages[id] = {
+        title: intl.formatMessage({
+          id: 'wizard.failEditToastTitleBeforeEdit',
+          defaultMessage: 'This application is unavailable',
+        }),
+        description: availability_status_error,
+        variant: 'danger',
+      };
+    }
+  });
+
+  if (source.endpoints?.[0]?.availability_status_error) {
+    const applicationsUsingEndpoint = source.applications
+      .map((app) =>
+        app.authentications.find(({ resource_type }) => !app.paused_at && resource_type === 'Endpoint') ? app.id : undefined
+      )
+      .filter(Boolean);
+
+    applicationsUsingEndpoint.forEach((id) => {
+      messages[id] = {
+        title: intl.formatMessage({
+          id: 'wizard.failEditToastTitleBeforeEdit',
+          defaultMessage: 'This application is unavailable',
+        }),
+        description: source.endpoints?.[0]?.availability_status_error,
+        variant: 'danger',
+      };
+    });
+  }
+
+  return messages;
 };

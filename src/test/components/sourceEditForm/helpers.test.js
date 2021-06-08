@@ -1,4 +1,12 @@
-import { prepareInitialValues, selectOnlyEditedValues } from '../../../components/SourceEditForm/helpers';
+import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
+import {
+  getEditedApplications,
+  prepareInitialValues,
+  prepareMessages,
+  selectOnlyEditedValues,
+} from '../../../components/SourceEditForm/helpers';
+import { UNAVAILABLE } from '../../../views/formatters';
+import applicationTypesData, { COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
 
 describe('edit form helpers', () => {
   describe('selectOnlyEditedValues', () => {
@@ -174,22 +182,171 @@ describe('edit form helpers', () => {
       );
     });
 
-    it('prepares initial values with cost management values', () => {
-      const SOURCE_WITH_UNDEF_ENDPOINTS = {
+    it('prepares initial values with application extra values', () => {
+      const SOURCE_WITH_APPS_EXTRA = {
         ...SOURCE,
-        billing_source: { bucket: 'bucket' },
-        credentials: { subscription_id: '122' },
+        applications: [
+          { id: '123', extra: { dataset: '123dataset' }, authentications: [] },
+          { id: 'withoutdataset', authentications: [] },
+          { id: 'cosi', extra: { username: 'joesmith' }, authentications: [] },
+        ],
       };
 
-      const EXPECTED_INITIAL_VALUES_WITH_UNDEF_ENDPOINTS = {
+      const EXPECTED_INITIAL_VALUES_SOURCE_WITH_APPS_EXTRA = {
         ...EXPECTED_INITIAL_VALUES,
-        billing_source: { bucket: 'bucket' },
-        credentials: { subscription_id: '122' },
+        applications: {
+          a123: { extra: { dataset: '123dataset' } },
+          acosi: { extra: { username: 'joesmith' } },
+        },
       };
 
-      expect(prepareInitialValues(SOURCE_WITH_UNDEF_ENDPOINTS, SOURCE_TYPE_NAME)).toEqual(
-        EXPECTED_INITIAL_VALUES_WITH_UNDEF_ENDPOINTS
+      expect(prepareInitialValues(SOURCE_WITH_APPS_EXTRA, SOURCE_TYPE_NAME)).toEqual(
+        EXPECTED_INITIAL_VALUES_SOURCE_WITH_APPS_EXTRA
       );
+    });
+  });
+
+  describe('getEditedApplications', () => {
+    let source;
+    let edited;
+
+    const appTypes = applicationTypesData.data;
+
+    it('assigns applications to app id', () => {
+      edited = {
+        'applications.a1.password': true,
+        'applications.a1.username': true,
+        'applications.a2.username': false,
+        'applications.a3.password': true,
+      };
+
+      expect(getEditedApplications(source, edited, appTypes)).toEqual(['1', '3']);
+    });
+
+    it('assigns authentications to app id', () => {
+      source = {
+        applications: [
+          { id: '123', authentications: [{ id: '1', resource_type: 'Application' }] },
+          { id: '456', authentications: [{ id: '2', resource_type: 'Endpoint' }] },
+        ],
+      };
+
+      edited = {
+        'authentications.a1.password': true,
+        'authentications.a1.username': true,
+        'authentications.a2.username': true,
+      };
+
+      expect(getEditedApplications(source, edited, appTypes)).toEqual(['123', 'check-endpoint-456']);
+    });
+
+    it('assigns endpoint to app id using URL', () => {
+      source = {
+        applications: [
+          { id: '123', authentications: [] },
+          { id: '456', authentications: [{ id: '2', resource_type: 'Endpoint' }] },
+        ],
+      };
+
+      edited = {
+        url: true,
+      };
+
+      expect(getEditedApplications(source, edited, appTypes)).toEqual(['check-endpoint-456']);
+    });
+
+    it('assigns endpoint to app id using endpoint value', () => {
+      source = {
+        applications: [
+          { id: '123', authentications: [{ id: '234', resource_type: 'Endpoint' }] },
+          { id: '456', authentications: [{ id: '2', resource_type: 'Endpoint' }] },
+        ],
+      };
+
+      edited = {
+        'endpoint.role': true,
+      };
+
+      expect(getEditedApplications(source, edited, appTypes)).toEqual(['check-endpoint-123', 'check-endpoint-456']);
+    });
+  });
+
+  describe('prepareMessages', () => {
+    let source;
+    let intl = { formatMessage: ({ defaultMessage }) => defaultMessage };
+
+    it('prepare application messages', () => {
+      source = {
+        applications: [
+          { id: 'app1', availability_status: UNAVAILABLE, availability_status_error: 'some error' },
+          { id: 'app2' },
+          { id: 'app3', availability_status: UNAVAILABLE, availability_status_error: 'some error 3' },
+          {
+            application_type_id: COSTMANAGEMENT_APP.id,
+            id: 'app4',
+            availability_status: UNAVAILABLE,
+            availability_status_error: 'some error 3',
+            paused_at: 'today',
+          },
+        ],
+      };
+
+      expect(prepareMessages(source, intl, applicationTypesData.data)).toEqual({
+        app1: {
+          description: 'some error',
+          title: 'This application is unavailable',
+          variant: 'danger',
+        },
+        app3: {
+          description: 'some error 3',
+          title: 'This application is unavailable',
+          variant: 'danger',
+        },
+        app4: {
+          title: '{application} is paused',
+          description:
+            'To resume data collection for this application, switch {application} on in the <b>Applications</b> section of this page.',
+          variant: 'default',
+          customIcon: <PauseIcon />,
+        },
+      });
+    });
+
+    it('prepare endpoint messages', () => {
+      source = {
+        applications: [
+          { id: 'app1', authentications: [{ resource_type: 'Endpoint' }] },
+          { id: 'app2', authentications: [] },
+          { id: 'app3', authentications: [{ resource_type: 'Endpoint' }] },
+          {
+            id: 'app4',
+            authentications: [{ resource_type: 'Endpoint' }],
+            paused_at: 'today',
+            application_type_id: COSTMANAGEMENT_APP.id,
+          },
+        ],
+        endpoints: [{ availability_status_error: 'endpoint error' }],
+      };
+
+      expect(prepareMessages(source, intl, applicationTypesData.data)).toEqual({
+        app1: {
+          description: 'endpoint error',
+          title: 'This application is unavailable',
+          variant: 'danger',
+        },
+        app3: {
+          description: 'endpoint error',
+          title: 'This application is unavailable',
+          variant: 'danger',
+        },
+        app4: {
+          title: '{application} is paused',
+          description:
+            'To resume data collection for this application, switch {application} on in the <b>Applications</b> section of this page.',
+          variant: 'default',
+          customIcon: <PauseIcon />,
+        },
+      });
     });
   });
 });

@@ -1,17 +1,10 @@
 import React, { useReducer, useEffect, useRef } from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory, Link, useParams, Redirect } from 'react-router-dom';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { useIntl } from 'react-intl';
+import isEmpty from 'lodash/isEmpty';
 
-import filterApps from '@redhat-cloud-services/frontend-components-sources/cjs/filterApps';
-import CloseModal from '@redhat-cloud-services/frontend-components-sources/cjs/CloseModal';
-import LoadingStep from '@redhat-cloud-services/frontend-components-sources/cjs/LoadingStep';
-import ErroredStep from '@redhat-cloud-services/frontend-components-sources/cjs/ErroredStep';
-import FinishedStep from '@redhat-cloud-services/frontend-components-sources/cjs/FinishedStep';
-import TimeoutStep from '@redhat-cloud-services/frontend-components-sources/cjs/TimeoutStep';
-import computeSourceStatus from '@redhat-cloud-services/frontend-components-sources/cjs/computeSourceStatus';
-
-import FormTemplate from '@data-driven-forms/pf4-component-mapper/dist/cjs/form-template';
+import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 
 import { loadEntities } from '../../redux/sources/actions';
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
@@ -22,29 +15,44 @@ import { getSourcesApi } from '../../api/entities';
 
 import { useSource } from '../../hooks/useSource';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
-import { endpointToUrl } from '../SourcesTable/formatters';
+import { endpointToUrl } from '../../views/formatters';
 import { routes, replaceRouteId } from '../../Routes';
 
 import { doAttachApp } from '../../api/doAttachApp';
 import { checkSourceStatus } from '../../api/checkSourceStatus';
 
 import reducer, { initialState } from './reducer';
-import { Button } from '@patternfly/react-core/dist/js/components/Button';
-import { Text } from '@patternfly/react-core/dist/js/components/Text';
+import { Button, Text } from '@patternfly/react-core';
 
 import removeAppSubmit from './removeAppSubmit';
+import { diff } from 'deep-object-diff';
+import LoadingStep from '../steps/LoadingStep';
+import ErroredStep from '../steps/ErroredStep';
+import AmazonFinishedStep from '../steps/AmazonFinishedStep';
+import FinishedStep from '../steps/FinishedStep';
+import TimeoutStep from '../steps/TimeoutStep';
+import computeSourceStatus from '../../utilities/computeSourceStatus';
+import filterApps from '../../utilities/filterApps';
+import computeSourceError from '../../utilities/computeSourceError';
+import CloseModal from '../CloseModal';
 
-let selectedApp = undefined; // this has to be not-state value, because it shouldn't re-render the component when changes
-const saveSelectedApp = ({ values: { application } }) => (selectedApp = application);
-
-export const onSubmit = (values, formApi, authenticationInitialValues, dispatch, setState, initialValues, appTypes) => {
+export const onSubmit = (
+  values,
+  formApi,
+  authenticationInitialValues,
+  dispatch,
+  setState,
+  initialValues,
+  appTypes,
+  setSelectedApp
+) => {
   setState({ type: 'submit', values, formApi });
 
   return doAttachApp(values, formApi, authenticationInitialValues, initialValues, appTypes)
     .then(async (data) => {
       checkSourceStatus(initialValues.source.id);
       await dispatch(loadEntities());
-      selectedApp = undefined;
+      setSelectedApp({ values: { application: null } });
       return setState({ type: 'finish', data });
     })
     .catch((error) =>
@@ -60,6 +68,9 @@ const FormTemplateWrapper = (props) => <FormTemplate {...props} showFormControls
 const AddApplication = () => {
   const intl = useIntl();
   const history = useHistory();
+  const selectedApp = useRef();
+  const saveSelectedApp = ({ values: { application } }) => (selectedApp.current = application);
+  const { app_type_id } = useParams();
 
   const loaded = useIsLoaded();
 
@@ -72,6 +83,8 @@ const AddApplication = () => {
   const [state, setState] = useReducer(reducer, initialState);
 
   const container = useRef(document.createElement('div'));
+
+  const applicationType = appTypes.find(({ id }) => id === app_type_id);
 
   const removeApp = () => {
     setState({ type: 'reset' });
@@ -87,10 +100,6 @@ const AddApplication = () => {
       source
     );
   };
-
-  useEffect(() => {
-    selectedApp = undefined;
-  }, []);
 
   useEffect(() => {
     if (source) {
@@ -114,7 +123,7 @@ const AddApplication = () => {
                   source,
                   endpoint: source.endpoints[0],
                   url: endpointToUrl(source.endpoints[0]),
-                  application: selectedApp,
+                  application: selectedApp.current,
                 },
                 values: {},
               })
@@ -122,7 +131,7 @@ const AddApplication = () => {
         } else {
           setState({
             type: 'loadWithoutAuthentications',
-            initialValues: { source, application: selectedApp },
+            initialValues: { source, application: selectedApp.current },
             values: {},
           });
         }
@@ -130,12 +139,33 @@ const AddApplication = () => {
     }
   }, [source]);
 
-  const goToSources = () => history.push(routes.sources.path);
+  const goToSources = () => history.push(replaceRouteId(routes.sourcesDetail.path, source.id));
+
+  const title = intl.formatMessage(
+    {
+      id: 'sources.addApplicationNameTitle',
+      defaultMessage: 'Connect {appName}',
+    },
+    {
+      appName: applicationType?.display_name || 'application',
+    }
+  );
+  const description = intl.formatMessage(
+    {
+      id: 'sources.addApplicationNameDescription',
+      defaultMessage: 'Configure {appName} for this source.',
+    },
+    {
+      appName: applicationType?.display_name || 'application',
+    }
+  );
 
   if ((!appTypesLoaded || !sourceTypesLoaded || !loaded || state.state === 'loading') && state.state !== 'submitting') {
     return (
       <WizardBody
         goToSources={goToSources}
+        title={title}
+        description={description}
         step={
           <LoadingStep
             customText={intl.formatMessage({
@@ -154,12 +184,13 @@ const AddApplication = () => {
   }
 
   const onSubmitWrapper = (values, formApi) =>
-    onSubmit(values, formApi, state.authenticationsValues, dispatch, setState, state.initialValues, appTypes);
+    onSubmit(values, formApi, state.authenticationsValues, dispatch, setState, state.initialValues, appTypes, saveSelectedApp);
 
   if (state.state === 'submitting') {
     return (
       <WizardBody
-        name={source.name}
+        title={title}
+        description={description}
         goToSources={goToSources}
         step={
           <LoadingStep
@@ -169,8 +200,13 @@ const AddApplication = () => {
             })}
             onClose={goToSources}
             customText={intl.formatMessage({
-              id: 'wizard.loadingText defaultMessage=Validating source credentials',
-              defaultMessage: 'Validating source credentials',
+              id: 'wizard.loadingText',
+              defaultMessage: 'Validating credentials',
+            })}
+            description={intl.formatMessage({
+              id: 'wizard.loadingDescription',
+              defaultMessage:
+                'This could take a minute. If you prefer not to wait, close this dialog and the process will continue.',
             })}
           />
         }
@@ -179,6 +215,8 @@ const AddApplication = () => {
   }
 
   const onReset = () => setState({ type: 'reset' });
+
+  const sourceType = sourceTypes.find((type) => type.id === source.source_type_id);
 
   if (state.state !== 'wizard') {
     let shownStep;
@@ -211,47 +249,36 @@ const AddApplication = () => {
     } else {
       switch (computeSourceStatus(state.data)) {
         default:
-          shownStep = (
-            <FinishedStep
-              title={intl.formatMessage({
-                id: 'sources.configurationSuccessful',
-                defaultMessage: 'Configuration successful',
-              })}
-              hideSourcesButton={true}
-              onReset={onReset}
-              onClose={goToSources}
-              secondaryActions={
-                <Button variant="link" onClick={onReset}>
-                  {intl.formatMessage({
-                    id: 'sources.continueManageApp',
-                    defaultMessage: 'Continue managing applications',
-                  })}
-                </Button>
-              }
-              returnButtonTitle={intl.formatMessage({
-                id: 'sources.backToSources',
-                defaultMessage: 'Back to Sources',
-              })}
-              successfulMessage={intl.formatMessage({
-                id: 'sources.successAddApp',
-                defaultMessage: 'Your application was successfully added.',
-              })}
-            />
-          );
+          if (sourceType.name === 'amazon') {
+            shownStep = <AmazonFinishedStep onClose={goToSources} />;
+          } else {
+            shownStep = (
+              <FinishedStep
+                title={intl.formatMessage({
+                  id: 'sources.configurationSuccessful',
+                  defaultMessage: 'Configuration successful',
+                })}
+                hideSourcesButton={true}
+                onClose={goToSources}
+                returnButtonTitle={intl.formatMessage({
+                  id: 'sources.exit',
+                  defaultMessage: 'Exit',
+                })}
+                successfulMessage={intl.formatMessage({
+                  id: 'sources.successAddApp',
+                  defaultMessage: 'Your application was successfully added.',
+                })}
+              />
+            );
+          }
+
           break;
         case 'unavailable':
           shownStep = (
             <ErroredStep
               onRetry={onReset}
               onClose={goToSources}
-              message={
-                state.data.applications?.[0]?.availability_status_error ||
-                state.data.endpoint?.[0]?.availability_status_error ||
-                intl.formatMessage({
-                  id: 'wizard.unknownError',
-                  defaultMessage: 'Unknown error',
-                })
-              }
+              message={computeSourceError(state.data, intl)}
               title={intl.formatMessage({
                 id: 'sources.configurationSuccessful',
                 defaultMessage: 'Configuration unsuccessful',
@@ -265,7 +292,7 @@ const AddApplication = () => {
                 </Button>
               }
               Component={() => (
-                <Link to={replaceRouteId(routes.sourcesEdit.path, source.id)}>
+                <Link to={replaceRouteId(routes.sourcesDetail.path, source.id)}>
                   <Button variant="primary" className="pf-u-mt-xl">
                     {intl.formatMessage({
                       id: 'wizard.editSource',
@@ -281,28 +308,19 @@ const AddApplication = () => {
           shownStep = (
             <TimeoutStep
               returnButtonTitle={intl.formatMessage({
-                id: 'sources.backToSources',
-                defaultMessage: 'Back to Sources',
+                id: 'sources.exit',
+                defaultMessage: 'Exit',
               })}
               onClose={goToSources}
-              secondaryActions={
-                <Button variant="link" onClick={onReset}>
-                  {intl.formatMessage({
-                    id: 'sources.continueManageApp',
-                    defaultMessage: 'Continue managing applications',
-                  })}
-                </Button>
-              }
             />
           );
           break;
       }
     }
 
-    return <WizardBody name={source.name} goToSources={goToSources} step={shownStep} />;
+    return <WizardBody title={title} description={description} goToSources={goToSources} step={shownStep} />;
   }
 
-  const sourceType = sourceTypes.find((type) => type.id === source.source_type_id);
   const sourceTypeName = sourceType && sourceType.name;
   const filteredAppTypes = appTypes
     .filter((type) => type.supported_source_types.includes(sourceTypeName))
@@ -312,27 +330,44 @@ const AddApplication = () => {
       label: type.display_name,
     }));
 
+  if (
+    !applicationType ||
+    source.applications.find(({ application_type_id }) => application_type_id === app_type_id) ||
+    !applicationType.supported_source_types.includes(sourceType.name)
+  ) {
+    return <Redirect to={replaceRouteId(routes.sourcesDetail.path, source.id)} />;
+  }
+
   const schema = createSchema(
-    filteredAppTypes,
     intl,
-    sourceTypes,
-    appTypes,
+    sourceType,
+    applicationType,
     state.authenticationsValues,
     source,
-    container.current
+    container.current,
+    title,
+    description,
+    appTypes
   );
 
   const hasAvailableApps = filteredAppTypes.length > 0;
   const onSubmitFinal = hasAvailableApps ? onSubmitWrapper : goToSources;
 
   const onStay = () => {
-    container.current.hidden = false;
+    container.current.style.opacity = 1;
     setState({ type: 'toggleCancelling' });
   };
 
   const cancelBeforeExit = (values) => {
-    if (values?.application) {
-      container.current.hidden = true;
+    // eslint-disable-next-line no-unused-vars
+    const { application: _a, ...initialValues } = state.initialValues;
+    // eslint-disable-next-line no-unused-vars
+    const { application: _a1, ...newValues } = values;
+
+    const isChanged = !isEmpty(diff(initialValues, newValues));
+
+    if (isChanged) {
+      container.current.style.opacity = 0;
       setState({ type: 'toggleCancelling', values });
     } else {
       goToSources();
@@ -341,15 +376,16 @@ const AddApplication = () => {
 
   return (
     <React.Fragment>
-      <CloseModal
-        title={intl.formatMessage({
-          id: 'sources.manageAppsCloseModalTitle',
-          defaultMessage: 'Exit application adding?',
-        })}
-        isOpen={state.isCancelling}
-        onStay={onStay}
-        onExit={goToSources}
-      />
+      {state.isCancelling && (
+        <CloseModal
+          title={intl.formatMessage({
+            id: 'sources.manageAppsCloseModalTitle',
+            defaultMessage: 'Exit application adding?',
+          })}
+          onStay={onStay}
+          onExit={goToSources}
+        />
+      )}
       <SourcesFormRenderer
         schema={schema}
         showFormControls={false}

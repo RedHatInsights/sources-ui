@@ -1,6 +1,7 @@
 import SourcesFormRenderer from '../../../../utilities/SourcesFormRenderer';
 import EditAlert from '../../../../components/SourceEditForm/parser/EditAlert';
 import { Alert } from '@patternfly/react-core';
+import WrenchIcon from '@patternfly/react-icons/dist/js/icons/wrench-icon';
 
 describe('EditAlert', () => {
   it('renders correctly', () => {
@@ -11,7 +12,7 @@ describe('EditAlert', () => {
           fields: [
             {
               component: 'description',
-              name: 'alert',
+              name: 'message',
               Content: EditAlert,
             },
           ],
@@ -21,6 +22,7 @@ describe('EditAlert', () => {
             variant: 'danger',
             title: 'Alert title',
             description: 'Alert description',
+            customIcon: <WrenchIcon />,
           },
         }}
       />
@@ -29,5 +31,7 @@ describe('EditAlert', () => {
     expect(wrapper.find(Alert).props().title).toEqual('Alert title');
     expect(wrapper.find(Alert).props().variant).toEqual('danger');
     expect(wrapper.find(Alert).text()).toEqual('Danger alert:Alert titleAlert description');
+    expect(wrapper.find(Alert).props().customIcon).toEqual(<WrenchIcon />);
+    expect(wrapper.find(WrenchIcon)).toHaveLength(1);
   });
 });

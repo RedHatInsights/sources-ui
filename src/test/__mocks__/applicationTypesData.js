@@ -1,8 +1,8 @@
 export const applicationTypesData = {
   meta: { count: 3, limit: 100, offset: 0 },
   links: {
-    first: '/api/v3.0/application_types?offset=0',
-    last: '/api/v3.0/application_types?offset=0',
+    first: '/api/v3.1/application_types?offset=0',
+    last: '/api/v3.1/application_types?offset=0',
   },
   data: [
     {
@@ -55,3 +55,15 @@ export const TOPOLOGICALINVENTORY_INDEX = 2;
 export const COSTMANAGEMENT_APP = applicationTypesData.data[1];
 export const CATALOG_APP = applicationTypesData.data[0];
 export const TOPOLOGICALINVENTORY_APP = applicationTypesData.data[2];
+export const SUBWATCH_APP = {
+  created_at: '2020-02-05T21:08:50Z',
+  dependent_applications: [],
+  display_name: 'Subscription Watch',
+  id: '5',
+  name: '/insights/platform/cloud-meter',
+  supported_authentication_types: { amazon: ['cloud-meter-arn'] },
+  supported_source_types: ['amazon', 'azure'],
+  updated_at: '2020-02-18T19:38:52Z',
+};
+
+export default applicationTypesData;

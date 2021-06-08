@@ -1,5 +1,4 @@
 import { Route, MemoryRouter } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
 import { mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
 
@@ -7,19 +6,17 @@ import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import * as actions from '../../../redux/sources/actions';
 import RedirectNoWriteAccess from '../../../components/RedirectNoWriteAccess/RedirectNoWriteAccess';
 import { routes, replaceRouteId } from '../../../Routes';
+import mockStore from '../../__mocks__/mockStore';
 
 describe('RedirectNoWriteAccess', () => {
   let initialStore;
   let initialEntry;
-  let mockStore;
 
   const wasRedirectedToRoot = (wrapper) =>
     wrapper.find(MemoryRouter).instance().history.location.pathname === routes.sources.path;
 
   beforeEach(() => {
     initialEntry = [replaceRouteId(routes.sourcesRemove.path, '1')];
-
-    mockStore = configureStore();
 
     actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'ADD_MESSAGE' }));
   });
@@ -84,7 +81,11 @@ describe('RedirectNoWriteAccess', () => {
     });
 
     expect(actions.addMessage).toHaveBeenCalled();
-    expect(actions.addMessage).toHaveBeenCalledWith(expect.any(String), 'danger', expect.any(String));
+    expect(actions.addMessage).toHaveBeenCalledWith({
+      title: expect.any(String),
+      variant: 'danger',
+      description: expect.any(String),
+    });
 
     expect(wasRedirectedToRoot(wrapper)).toEqual(true);
   });

@@ -1,10 +1,9 @@
 import React from 'react';
-import thunk from 'redux-thunk';
 import { mount } from 'enzyme';
-import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
 import { Route } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
+
 import { Text, Button } from '@patternfly/react-core';
+
 import { MemoryRouter } from 'react-router-dom';
 
 import * as actions from '../../../redux/sources/actions';
@@ -16,14 +15,12 @@ import { sourceTypesData, ANSIBLE_TOWER, SATELLITE, OPENSHIFT } from '../../__mo
 
 import { routes, replaceRouteId } from '../../../Routes';
 import AppListInRemoval from '../../../components/SourceRemoveModal/AppListInRemoval';
+import mockStore from '../../__mocks__/mockStore';
 
 describe('SourceRemoveModal', () => {
-  const middlewares = [thunk, notificationsMiddleware()];
-  let mockStore;
   let store;
 
   beforeEach(() => {
-    mockStore = configureStore(middlewares);
     store = mockStore({
       sources: {
         entities: sourcesDataGraphQl,

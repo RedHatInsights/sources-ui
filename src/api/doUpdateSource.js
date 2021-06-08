@@ -1,6 +1,5 @@
-import { defaultPort } from '../components/SourcesTable/formatters';
+import { defaultPort } from '../views/formatters';
 import { getSourcesApi } from './entities';
-import { patchCmValues } from './patchCmValues';
 
 export const parseUrl = (url) => {
   if (url === null) {
@@ -34,7 +33,7 @@ export const parseUrl = (url) => {
 export const urlOrHost = (formData) =>
   formData.url || formData.url === null ? parseUrl(formData.url) : formData.endpoint ? formData.endpoint : formData;
 
-export const doUpdateSource = (source, formData) => {
+export const doUpdateSource = (source, formData, values) => {
   const promises = [];
 
   if (formData.source) {
@@ -64,25 +63,12 @@ export const doUpdateSource = (source, formData) => {
     });
   }
 
-  if (formData.billing_source || formData.credentials) {
-    let cmDataOut = {};
+  if (formData.applications) {
+    Object.keys(formData.applications).forEach((key) => {
+      const idWithoutPrefix = key.replace('a', '');
 
-    if (formData.credentials) {
-      cmDataOut = {
-        authentication: {
-          credentials: formData.credentials,
-        },
-      };
-    }
-
-    if (formData.billing_source) {
-      cmDataOut = {
-        ...cmDataOut,
-        billing_source: formData.billing_source,
-      };
-    }
-
-    promises.push(patchCmValues(source.source.id, cmDataOut));
+      promises.push(getSourcesApi().updateApplication(idWithoutPrefix, { extra: values.applications[key].extra }));
+    });
   }
 
   return Promise.all(promises);
