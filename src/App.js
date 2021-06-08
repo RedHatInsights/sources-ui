@@ -4,7 +4,7 @@ import { Main } from '@redhat-cloud-services/frontend-components/Main';
 import { IntlProvider } from 'react-intl';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-import Routes from './Routes';
+import Routes, { routes } from './Routes';
 
 import './App.scss';
 import './styles/authSelect.scss';
@@ -27,6 +27,8 @@ const App = () => {
       // eslint-disable-next-line no-console
       console.warn('Failed to initialize chrome navigation.');
     }
+
+    insights.chrome.on('APP_NAVIGATION', (event) => event.navId === 'sources' && history.push(routes.sources.path));
 
     return () => {
       sessionStorage.removeItem(CLOUD_CARDS_KEY);
