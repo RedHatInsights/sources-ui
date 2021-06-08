@@ -19,6 +19,7 @@ global.insights = {
     init: () => {},
     identifyApp: () => ({}),
     isBeta: () => true,
+    on: () => undefined,
     auth: {
       getUser: () =>
         new Promise((resolve) =>
