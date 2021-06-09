@@ -28,8 +28,19 @@ const SourceKebab = () => {
     defaultMessage: 'To perform this action, you must be granted write permissions from your Organization Administrator.',
   });
 
+  const pausedTooltip = intl.formatMessage({
+    id: 'sources.pausedSourceAction',
+    defaultMessage: 'You cannot perform this action on a paused source.',
+  });
+
   const disabledProps = {
     tooltip,
+    isDisabled: true,
+    className: 'ins-c-sources__disabled-drodpown-item',
+  };
+
+  const pausedProps = {
+    tooltip: pausedTooltip,
     isDisabled: true,
     className: 'ins-c-sources__disabled-drodpown-item',
   };
@@ -88,6 +99,7 @@ const SourceKebab = () => {
         </DropdownItem>,
         <DropdownItem
           {...(!hasRightAccess && disabledProps)}
+          {...(source.paused_at && pausedProps)}
           key="rename"
           onClick={() => push(replaceRouteId(routes.sourcesDetailRename.path, source.id))}
         >

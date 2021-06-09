@@ -26,6 +26,7 @@ export const routes = {
     path: '/sources/detail/:id/rename',
     redirectNoId: true,
     writeAccess: true,
+    noPaused: true,
   },
   sourcesDetailRemove: {
     path: '/sources/detail/:id/remove',
