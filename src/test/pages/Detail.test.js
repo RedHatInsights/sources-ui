@@ -229,7 +229,7 @@ describe('SourceDetail', () => {
 
         expect(wrapper.find(SourceRenameModal.default)).toHaveLength(1);
         expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
-        expect(wrapper.find(RedirectNoPaused.default)).toHaveLength(0);
+        expect(wrapper.find(RedirectNoPaused.default)).toHaveLength(1);
       });
 
       it('routes to add app', async () => {

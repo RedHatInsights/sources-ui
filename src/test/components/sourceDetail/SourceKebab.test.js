@@ -115,8 +115,10 @@ describe('SourceKebab', () => {
     );
 
     expect(wrapper.find(DropdownItem).at(RENAME_INDEX).props().description).toEqual(undefined);
-    expect(wrapper.find(DropdownItem).at(RENAME_INDEX).props().isDisabled).toEqual(undefined);
-    expect(wrapper.find(DropdownItem).at(RENAME_INDEX).props().tooltip).toEqual(undefined);
+    expect(wrapper.find(DropdownItem).at(RENAME_INDEX).props().isDisabled).toEqual(true);
+    expect(wrapper.find(DropdownItem).at(RENAME_INDEX).props().tooltip).toEqual(
+      'You cannot perform this action on a paused source.'
+    );
     expect(wrapper.find('InternalDropdownItem').at(RENAME_INDEX).text()).toEqual('Rename');
   });
 
