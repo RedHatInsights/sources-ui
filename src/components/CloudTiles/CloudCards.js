@@ -77,14 +77,14 @@ const CloudCards = () => {
                     <Text className="text" component="a" href={GOLD_IMAGES_AWS} target="_blank" rel="noopener noreferrer">
                       {intl.formatMessage({
                         id: 'cloud.goldImages.awsLink',
-                        defaultMessage: 'Use Red Hat Gold Images in AWS',
+                        defaultMessage: 'Use Red Hat gold images on AWS',
                       })}
                     </Text>
                     <br />
                     <Text className="text" component="a" href={GOLD_IMAGES_AZURE} target="_blank" rel="noopener noreferrer">
                       {intl.formatMessage({
                         id: 'cloud.goldImages.azureLink',
-                        defaultMessage: 'Use Red Hat Gold Images in Microsoft Azure',
+                        defaultMessage: 'Use Red Hat gold images on Microsoft Azure',
                       })}
                     </Text>
                   </StackItem>
