@@ -5,7 +5,7 @@ const SubWatchIcon = (props) => (
     <title>Subscription-icon</title>
     <desc>Created with Sketch.</desc>
     <g id="Post-summit-dashboard,-August-19" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-      <g id="RHCS-Landing-Icons-2" transform="translate(-967.000000, -620.000000)" fill="#5955d2" fillRule="nonzero">
+      <g id="RHCS-Landing-Icons-2" transform="translate(-967.000000, -620.000000)" fill="currentColor" fillRule="nonzero">
         <g id="Subscription-icon" transform="translate(967.000000, 620.000000)">
           <path
             d="M36.6,17.5 L22.5,31.9 L17.1,26.4 C16.4,25.8 15.4,25.8 14.8,26.5 C14.2,27.1 14.2,28.1 14.8,28.8 L21.3,35.5 C21.9,36.2 23,36.2 23.6,35.5 L38.9,19.8 C39.5,19.1 39.5,18.1 38.8,17.4 C38.2,16.8 37.2,16.8 36.6,17.5"

@@ -20,6 +20,7 @@ import {
 import ArrowRightIcon from '@patternfly/react-icons/dist/esm/icons/arrow-right-icon';
 import BuilderImageIcon from '@patternfly/react-icons/dist/esm/icons/builder-image-icon';
 import SubWatchIcon from './SubWatchIcon';
+import InsightsIcon from './InsightsIcon';
 
 const PREFIX = insights.chrome.isBeta() ? 'beta/' : '';
 
@@ -35,8 +36,6 @@ const SUBWATCH_HREF = `/${PREFIX}insights/subscriptions/rhel`;
 const SUBWATCH_MORE_HREF = 'https://access.redhat.com/products/subscription-central';
 
 export const CLOUD_CARDS_KEY = 'ins-c-sources__cloud_cards_expanded';
-
-const INSIGHTS_ICON = `/${PREFIX}apps/landing/fonts/Insights.svg`;
 
 const CloudCards = () => {
   const [isExpanded, setExpanded] = useState(() => {
@@ -62,7 +61,7 @@ const CloudCards = () => {
               <GridItem md={4}>
                 <Stack>
                   <StackItem className="pf-u-mb-sm">
-                    <Label color="orange" icon={<BuilderImageIcon fill="#F4C145" />}>
+                    <Label color="blue" icon={<BuilderImageIcon />}>
                       {intl.formatMessage({ id: 'cloud.goldImages', defaultMessage: 'Use gold images' })}
                     </Label>
                   </StackItem>
@@ -102,7 +101,7 @@ const CloudCards = () => {
               <GridItem md={4}>
                 <Stack>
                   <StackItem className="pf-u-mb-sm">
-                    <Label color="red" icon={<img src={INSIGHTS_ICON} fill="#EE0000" className="custom-icon" />}>
+                    <Label color="blue" icon={<InsightsIcon className="custom-icon" />}>
                       {intl.formatMessage({ id: 'cloud.insights', defaultMessage: 'Explore Red Hat Insights' })}
                     </Label>
                   </StackItem>
@@ -135,7 +134,7 @@ const CloudCards = () => {
               <GridItem md={4}>
                 <Stack>
                   <StackItem className="pf-u-mb-sm">
-                    <Label color="purple" icon={<SubWatchIcon className="custom-icon" />}>
+                    <Label color="blue" icon={<SubWatchIcon className="custom-icon" />}>
                       {intl.formatMessage({ id: 'cloud.subwatch', defaultMessage: 'Track usage with Subscriptions' })}
                     </Label>
                   </StackItem>
