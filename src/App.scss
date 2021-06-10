@@ -178,3 +178,14 @@
   color:	#6a6e73;
   line-height: 24px;
 }
+
+.ins-c-table-empty-state.pf-m-grid-lg.pf-c-table {
+    [data-label] {
+        --pf-c-table--cell--hidden-visible--Display: 0;
+    }
+    tr:first-of-type {
+        > td::before { 
+            display: none; 
+        }
+    }
+}
