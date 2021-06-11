@@ -9,16 +9,6 @@ const icon = (
 
 const mapper = (type, openWizard, TileComponent) =>
   ({
-    ['ansible-tower']: (
-      <TileComponent
-        isStacked
-        key={type}
-        title="Ansible Automation Platform"
-        onClick={() => openWizard('ansible-tower')}
-        className="tile pf-u-mr-md-on-md pf-u-mt-md pf-u-mt-0-on-md"
-        icon={icon}
-      />
-    ),
     openshift: (
       <TileComponent
         isStacked

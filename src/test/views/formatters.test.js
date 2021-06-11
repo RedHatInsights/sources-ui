@@ -1,6 +1,8 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
+import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
+import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 
 import {
   nameFormatter,
@@ -25,6 +27,9 @@ import {
   UnknownError,
   getStatusColor,
   configurationModeFormatter,
+  IN_PROGRESS,
+  ApplicationLabel,
+  PAUSED,
 } from '../../views/formatters';
 import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX, AMAZON } from '../__mocks__/sourceTypesData';
 import {
@@ -275,6 +280,67 @@ describe('formatters', () => {
       expect(wrapper.find(Popover).props().bodyContent).toEqual(ERROR);
     });
 
+    it('show in progress label', () => {
+      const wrapper = mount(
+        componentWrapperIntl(
+          <React.Fragment>
+            {applicationFormatter(
+              [
+                {
+                  application_type_id: COSTMANAGEMENT_APP.id,
+                  availability_status: IN_PROGRESS,
+                  availability_status_error: null,
+                },
+              ],
+              undefined,
+              {
+                appTypes: applicationTypesData.data,
+              }
+            )}
+          </React.Fragment>
+        )
+      );
+
+      const PopoverJSX = wrapper.find(Popover).debug();
+      expect(
+        PopoverJSX.match(/<Popover.*>/)[0].includes(
+          'bodyContent="We are still working to validate credentials. Check back for status updates."'
+        )
+      );
+      expect(wrapper.find(WrenchIcon)).toHaveLength(1);
+    });
+
+    it('show paused icon', () => {
+      const wrapper = mount(
+        componentWrapperIntl(
+          <React.Fragment>
+            {applicationFormatter(
+              [
+                {
+                  application_type_id: COSTMANAGEMENT_APP.id,
+                  availability_status: IN_PROGRESS,
+                  availability_status_error: null,
+                  paused_at: 'today',
+                },
+              ],
+              undefined,
+              {
+                appTypes: applicationTypesData.data,
+              }
+            )}
+          </React.Fragment>
+        )
+      );
+
+      const PopoverJSX = wrapper.find(Popover).debug();
+      expect(
+        PopoverJSX.match(/<Popover.*>/)[0].includes(
+          'bodyContent="We are still working to validate credentials. Check back for status updates."'
+        )
+      );
+      expect(wrapper.find(PauseIcon)).toHaveLength(1);
+    });
+
     it('show unavailable popover - unknown error', () => {
       const wrapper = mount(
         componentWrapperIntl(
@@ -443,8 +509,16 @@ describe('formatters', () => {
         expect(getStatusColor(UNAVAILABLE)).toEqual('red');
       });
 
+      it('returns IN_PROGRESS color', () => {
+        expect(getStatusColor(IN_PROGRESS)).toEqual('grey');
+      });
+
       it('returns unknown color by default', () => {
         expect(getStatusColor(null)).toEqual('grey');
+      });
+
+      it('returns paused color', () => {
+        expect(getStatusColor(PAUSED)).toEqual('cyan');
       });
     });
 
@@ -467,10 +541,22 @@ describe('formatters', () => {
         expect(wrapper.text()).toEqual('Unavailable');
       });
 
+      it('returns OK text', () => {
+        const wrapper = mount(wrapperWithIntl(getStatusText('in_progress')));
+
+        expect(wrapper.text()).toEqual('In progress');
+      });
+
       it('returns unknown by default', () => {
         const wrapper = mount(wrapperWithIntl(getStatusText('some nonsense')));
 
         expect(wrapper.text()).toEqual('Unknown');
+      });
+
+      it('returns unknown by default', () => {
+        const wrapper = mount(wrapperWithIntl(getStatusText('paused_at')));
+
+        expect(wrapper.text()).toEqual('Paused');
       });
     });
 
@@ -482,6 +568,12 @@ describe('formatters', () => {
         const wrapper = mount(wrapperWithIntl(getStatusTooltipText(AVAILABLE, APPTYPES)));
 
         expect(wrapper.text()).toEqual('Everything works fine.');
+      });
+
+      it('returns IN PROGRESS text', () => {
+        const wrapper = mount(wrapperWithIntl(getStatusTooltipText(IN_PROGRESS, APPTYPES)));
+
+        expect(wrapper.text()).toEqual('We are still working to validate credentials. Check back for status updates.');
       });
 
       it('returns WARNING text', () => {
@@ -528,6 +620,12 @@ describe('formatters', () => {
 
         expect(wrapper.text()).toEqual('Status has not been verified.');
       });
+
+      it('returns paused text', () => {
+        const wrapper = mount(wrapperWithIntl(getStatusTooltipText(PAUSED, APPTYPES)));
+
+        expect(wrapper.text()).toEqual('Data collection is temporarily disabled. Resume source to reestablish connection.');
+      });
     });
 
     describe('availabilityFormatter', () => {
@@ -565,6 +663,18 @@ describe('formatters', () => {
         expect(wrapper.text().includes('Unavailable')).toEqual(true);
       });
 
+      it('returns in progress text', () => {
+        const SOURCE = {
+          availability_status: IN_PROGRESS,
+        };
+
+        const wrapper = mount(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES })));
+
+        expect(wrapper.find(Label)).toHaveLength(1);
+        expect(wrapper.find('.pf-c-label').text()).toEqual('In progress');
+        expect(wrapper.find(WrenchIcon)).toHaveLength(1);
+      });
+
       it('returns unknown by default', () => {
         const SOURCE = {};
 
@@ -572,6 +682,19 @@ describe('formatters', () => {
 
         expect(wrapper.find(Label)).toHaveLength(1);
         expect(wrapper.text().includes('Unknown')).toEqual(true);
+      });
+
+      it('returns paused text', () => {
+        const SOURCE = {
+          availability_status: IN_PROGRESS,
+          paused_at: 'today',
+        };
+
+        const wrapper = mount(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES })));
+
+        expect(wrapper.find(Label)).toHaveLength(1);
+        expect(wrapper.find('.pf-c-label').text()).toEqual('Paused');
+        expect(wrapper.find(PauseIcon)).toHaveLength(1);
       });
     });
 
@@ -643,6 +766,13 @@ describe('formatters', () => {
 
     describe('getAllErrors', () => {
       const errorMsg = 'This is error msg';
+
+      it('in progress source', () => {
+        expect(getAllErrors({ availability_status: IN_PROGRESS })).toEqual({
+          errors: {},
+          status: IN_PROGRESS,
+        });
+      });
 
       it('available source', () => {
         expect(getAllErrors({ availability_status: AVAILABLE })).toEqual({
@@ -1031,6 +1161,18 @@ describe('formatters', () => {
       expect(wrapper.find(ExclamationCircleIcon)).toHaveLength(0);
     });
 
+    it('account_authorization with paused source', () => {
+      const wrapper = mount(
+        <MemoryRouter>
+          {wrapperWithIntl(
+            configurationModeFormatter('account_authorization', { id: SOURCE_ID, paused_at: 'today' }, { intl: INTL })
+          )}
+        </MemoryRouter>
+      );
+
+      expect(wrapper.text()).toEqual('Account authorizationView credentials');
+    });
+
     it('account_authorization with an error', () => {
       const wrapper = mount(
         <MemoryRouter>
@@ -1101,6 +1243,39 @@ describe('formatters', () => {
       expect(wrapper.text()).toEqual('Manual configuration');
       expect(wrapper.find(Link)).toHaveLength(0);
       expect(wrapper.find(Button)).toHaveLength(0);
+    });
+  });
+
+  describe('ApplicationLabel', () => {
+    it('renders paused', () => {
+      const app = {
+        display_name: 'Cost management',
+        availability_status: AVAILABLE,
+        availability_status_error: null,
+        paused_at: 'today',
+      };
+
+      const wrapper = mount(wrapperWithIntl(<ApplicationLabel app={app} />));
+
+      expect(wrapper.find(Popover).props().bodyContent).toEqual(
+        'Everything works fine. Resume this application to continue data collection.'
+      );
+      expect(wrapper.find(Popover).props().headerContent).toEqual('Application paused');
+
+      expect(wrapper.find(Label).props().color).toEqual('green');
+      expect(wrapper.find(Label).text()).toEqual('Cost management');
+      expect(wrapper.find(PauseIcon)).toHaveLength(1);
+    });
+
+    it('renders with status', () => {
+      const app = {
+        display_name: 'Cost management',
+        availability_status: UNAVAILABLE,
+        availability_status_error: null,
+      };
+
+      const wrapper = mount(wrapperWithIntl(<ApplicationLabel app={app} showStatusText />));
+      expect(wrapper.find(Label).text()).toEqual('Unavailable');
     });
   });
 });

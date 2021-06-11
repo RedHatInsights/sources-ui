@@ -34,11 +34,10 @@ describe('RedhatEmptyState', () => {
 
     expect(wrapper.find(Card)).toHaveLength(1);
     expect(wrapper.find(RedHatTiles)).toHaveLength(1);
-    expect(wrapper.find(Tile)).toHaveLength(2);
-    expect(wrapper.find('img')).toHaveLength(2);
+    expect(wrapper.find(Tile)).toHaveLength(1);
+    expect(wrapper.find('img')).toHaveLength(1);
 
     expect(wrapper.find(Tile).first().props().isDisabled).toEqual(undefined);
-    expect(wrapper.find(Tile).last().props().isDisabled).toEqual(undefined);
     expect(wrapper.find(Tooltip)).toHaveLength(0);
   });
 });

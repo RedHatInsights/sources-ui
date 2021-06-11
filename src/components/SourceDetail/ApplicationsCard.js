@@ -5,15 +5,21 @@ import { useHistory } from 'react-router-dom';
 
 import { Card, CardBody, CardTitle, Switch, FormGroup } from '@patternfly/react-core';
 
+import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
+import PlayIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
+
 import { useSource } from '../../hooks/useSource';
 import { replaceRouteId, routes } from '../../Routes';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
-import ApplicationStatusLabel from './ApplicationStatusLabel';
 import isSuperKey from '../../utilities/isSuperKey';
 import { getSourcesApi, doCreateApplication } from '../../api/entities';
-import { loadEntities } from '../../redux/sources/actions';
+import { addMessage, loadEntities } from '../../redux/sources/actions';
 import { APP_NAMES } from '../SourceEditForm/parser/application';
 import filterApps from '../../utilities/filterApps';
+import ApplicationKebab from './ApplicationKebab';
+import { ApplicationLabel } from '../../views/formatters';
+import handleError from '../../api/handleError';
+import tryAgainMessage from '../../utilities/tryAgainMessage';
 
 const initialState = {
   selectedApps: {},
@@ -38,10 +44,77 @@ const descriptionMapper = (name, intl) =>
     }),
     [APP_NAMES.CLOUD_METER]: intl.formatMessage({
       id: 'cost.app.description',
-      defaultMessage:
-        'Includes access to Red Hat Gold Images, high precision subscription watch data, autoregistration, and Red Hat Connector.',
+      defaultMessage: 'Includes access to Red Hat gold images, high precision subscription watch data, and autoregistration.',
     }),
   }[name]);
+
+const addResumeNotification = (typeId, dispatch, intl, appTypes) => {
+  const appName = appTypes.find((type) => type.id === typeId)?.display_name;
+
+  dispatch(
+    addMessage({
+      title: intl.formatMessage(
+        {
+          id: 'detail.applications.resumed.alert.title',
+          defaultMessage: '{appName} connection resumed',
+        },
+        { appName }
+      ),
+      variant: 'default',
+      customIcon: <PlayIcon />,
+    })
+  );
+};
+
+const addPausedNotification = (typeId, dispatch, intl, appTypes) => {
+  const appName = appTypes.find((type) => type.id === typeId)?.display_name;
+
+  dispatch(
+    addMessage({
+      title: intl.formatMessage(
+        {
+          id: 'detail.applications.paused.alert.title',
+          defaultMessage: '{appName} connection paused',
+        },
+        { appName }
+      ),
+      description: intl.formatMessage(
+        {
+          id: 'detail.applications.paused.alert.description',
+          defaultMessage: 'Your application will not reflect the most recent data until {appName} connection is resumed',
+        },
+        { appName }
+      ),
+      variant: 'default',
+      customIcon: <PauseIcon />,
+    })
+  );
+};
+
+const addErrorNotification = (dispatch, intl, action, error) => {
+  const title = {
+    create: intl.formatMessage({
+      id: 'detail.applications.add.error',
+      defaultMessage: 'Application create failed',
+    }),
+    pause: intl.formatMessage({
+      id: 'detail.applications.pause.error',
+      defaultMessage: 'Application pause failed',
+    }),
+    resume: intl.formatMessage({
+      id: 'detail.applications.resume.error',
+      defaultMessage: 'Application resume failed',
+    }),
+  }[action];
+
+  dispatch(
+    addMessage({
+      title,
+      description: tryAgainMessage(intl, handleError(error)),
+      variant: 'danger',
+    })
+  );
+};
 
 const ApplicationsCard = () => {
   const intl = useIntl();
@@ -57,24 +130,63 @@ const ApplicationsCard = () => {
   const sourceTypeName = sourceType?.name;
   const filteredAppTypes = appTypes.filter((type) => type.supported_source_types.includes(sourceTypeName)).filter(filterApps);
 
-  let removeApp = (id) => push(replaceRouteId(routes.sourcesDetailRemoveApp.path, source.id).replace(':app_id', id));
-  let addApp = (id) => push(replaceRouteId(routes.sourcesDetailAddApp.path, source.id).replace(':app_type_id', id));
-
-  if (isSuperKey(source)) {
-    removeApp = async (id, typeId) => {
-      if (typeof selectedApps[typeId] !== 'boolean') {
-        stateDispatch({ type: 'removeApp', id: typeId });
-        await getSourcesApi().deleteApplication(id);
-        await dispatch(loadEntities());
-        stateDispatch({ type: 'clean', id: typeId });
-      }
-    };
-
-    addApp = async (id) => {
+  let addApp = async (id, isPaused) => {
+    if (!isPaused) {
+      push(replaceRouteId(routes.sourcesDetailAddApp.path, source.id).replace(':app_type_id', id));
+    } else {
       if (typeof selectedApps[id] !== 'boolean') {
         stateDispatch({ type: 'addApp', id });
-        await doCreateApplication({ source_id: source.id, application_type_id: id });
+
+        try {
+          await getSourcesApi().unpauseApplication(isPaused);
+          addResumeNotification(id, dispatch, intl, appTypes);
+          await dispatch(loadEntities());
+        } catch (e) {
+          addErrorNotification(dispatch, intl, 'resume', e);
+        }
+
+        stateDispatch({ type: 'clean', id });
+      }
+    }
+  };
+
+  const removeApp = async (id, typeId) => {
+    if (typeof selectedApps[typeId] !== 'boolean') {
+      stateDispatch({ type: 'removeApp', id: typeId });
+      try {
+        await getSourcesApi().pauseApplication(id);
+        addPausedNotification(typeId, dispatch, intl, appTypes);
         await dispatch(loadEntities());
+      } catch (e) {
+        addErrorNotification(dispatch, intl, 'pause', e);
+      }
+
+      stateDispatch({ type: 'clean', id: typeId });
+    }
+  };
+
+  if (isSuperKey(source)) {
+    addApp = async (id, isPaused) => {
+      if (typeof selectedApps[id] !== 'boolean') {
+        stateDispatch({ type: 'addApp', id });
+
+        if (isPaused) {
+          try {
+            await getSourcesApi().unpauseApplication(isPaused);
+            addResumeNotification(id, dispatch, intl, appTypes);
+            await dispatch(loadEntities());
+          } catch (e) {
+            addErrorNotification(dispatch, intl, 'resume', e);
+          }
+        } else {
+          try {
+            await doCreateApplication({ source_id: source.id, application_type_id: id });
+            await dispatch(loadEntities());
+          } catch (e) {
+            addErrorNotification(dispatch, intl, 'create', e);
+          }
+        }
+
         stateDispatch({ type: 'clean', id });
       }
     };
@@ -103,22 +215,42 @@ const ApplicationsCard = () => {
             const connectedApp = source.applications.find((connectedApp) => connectedApp.application_type_id === app.id);
             const description = descriptionMapper(app.name, intl);
 
+            const appExist = Boolean(connectedApp);
+            const isPaused = Boolean(connectedApp?.paused_at);
+
+            const pausedApp = isPaused ? false : appExist;
+
+            const isChecked = typeof selectedApps[app.id] === 'boolean' ? selectedApps[app.id] : pausedApp;
+
             return (
               <FormGroup key={app.id}>
-                <Switch
-                  id={`app-switch-${app.id}`}
-                  label={app.display_name}
-                  isChecked={typeof selectedApps[app.id] === 'boolean' ? selectedApps[app.id] : Boolean(connectedApp)}
-                  isDisabled={connectedApp?.isDeleting || !hasRightAccess}
-                  onChange={(value) => (!value ? removeApp(connectedApp.id, app.id) : addApp(app.id))}
-                />
-                {Boolean(connectedApp) && <ApplicationStatusLabel app={connectedApp} />}
-                {description && (
-                  <div className="pf-c-switch pf-u-mt-sm">
-                    <span className="pf-c-switch__toggle ins-c-sources__hide-me" />
-                    <div className="pf-c-switch__label ins-c-sources__switch-description">{description}</div>
+                <div className="ins-c-sources__application_flex">
+                  <div>
+                    <Switch
+                      id={`app-switch-${app.id}`}
+                      label={app.display_name}
+                      isChecked={isChecked}
+                      isDisabled={connectedApp?.isDeleting || !hasRightAccess || Boolean(source.paused_at)}
+                      onChange={(value) => (!value ? removeApp(connectedApp.id, app.id) : addApp(app.id, connectedApp?.id))}
+                    />
+                    {Boolean(connectedApp) && (
+                      <ApplicationLabel className="pf-u-ml-sm clickable" app={connectedApp} showStatusText />
+                    )}
+                    {description && (
+                      <div className="pf-c-switch pf-u-mt-sm ins-c-sources__application_fake_switch">
+                        <span className="pf-c-switch__toggle ins-c-sources__hide-me" />
+                        <div className="pf-c-switch__label ins-c-sources__switch-description">{description}</div>
+                      </div>
+                    )}
                   </div>
-                )}
+                  {(isPaused || appExist) && (
+                    <ApplicationKebab
+                      app={connectedApp}
+                      removeApp={() => removeApp(connectedApp.id, app.id)}
+                      addApp={() => addApp(app.id, connectedApp.id)}
+                    />
+                  )}
+                </div>
               </FormGroup>
             );
           })}

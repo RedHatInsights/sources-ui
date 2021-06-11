@@ -4,7 +4,7 @@ import set from 'lodash/set';
 
 import { APP_NAMES } from '../components/SourceEditForm/parser/application';
 import * as interceptors from '../frontend-components-copies/interceptors';
-import { CLOUD_VENDOR, CLOUD_VENDORS, REDHAT_VENDOR } from '../utilities/constants';
+import { CLOUD_VENDOR, REDHAT_VENDOR } from '../utilities/constants';
 import { AVAILABLE, PARTIALLY_UNAVAILABLE, UNAVAILABLE } from '../views/formatters';
 
 import { SOURCES_API_BASE_V3 } from './constants';
@@ -67,6 +67,10 @@ export const getSourcesApi = () => ({
   getEndpoint: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/endpoints/${id}`),
   getGoogleAccount: () => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/app_meta_data?filter[name]=gcp_service_account`),
   bulkCreate: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/bulk_create`, data),
+  pauseApplication: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/applications/${id}/pause`),
+  unpauseApplication: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/applications/${id}/unpause`),
+  pauseSource: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/sources/${id}/pause`),
+  unpauseSource: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/sources/${id}/unpause`),
 });
 
 export const doLoadAppTypes = () => getSourcesApi().doLoadAppTypes();
@@ -114,7 +118,7 @@ export const filtering = (filterValue = {}, activeVendor) => {
   }
 
   if (activeVendor === CLOUD_VENDOR) {
-    filterQueries.push(`source_type: { vendor: { eq: [${CLOUD_VENDORS.map((x) => `"${x}"`).join(', ')}]} }`);
+    filterQueries.push(`source_type: { vendor: { not_eq: "Red Hat"} }`);
   }
 
   if (activeVendor === REDHAT_VENDOR) {
@@ -149,8 +153,9 @@ export const graphQlAttributes = `
     updated_at,
     last_available_at,
     app_creation_workflow,
+    paused_at,
     authentications { authtype, username, availability_status_error, availability_status }
-    applications { application_type_id, id, availability_status_error, availability_status, authentications { id, resource_type } },
+    applications { application_type_id, id, availability_status_error, availability_status, paused_at, authentications { id, resource_type } },
     endpoints { id, scheme, host, port, path, receptor_node, role, certificate_authority, verify_ssl, availability_status_error, availability_status, authentications { authtype, availability_status, availability_status_error } }
 `;
 
@@ -191,7 +196,7 @@ export const restFilterGenerator = (filterValue = {}, activeVendor) => {
   }
 
   if (activeVendor === CLOUD_VENDOR) {
-    CLOUD_VENDORS.forEach((vendor) => filterQueries.push(`filter[source_type][vendor][eq][]=${vendor}`));
+    filterQueries.push(`filter[source_type][vendor][not_eq]=Red Hat`);
   }
 
   if (activeVendor === REDHAT_VENDOR) {
@@ -216,7 +221,7 @@ export const restFilterGenerator = (filterValue = {}, activeVendor) => {
 };
 
 export const doLoadCountOfSources = (filterValue = {}, activeVendor) =>
-  axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/sources?${restFilterGenerator(filterValue, activeVendor)}`);
+  axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/sources?${restFilterGenerator(filterValue, activeVendor)}&limit=1`);
 
 export const doLoadSource = (id) =>
   getSourcesApi()
@@ -235,6 +240,7 @@ export const doLoadApplicationsForEdit = async (id, appTypes, sourceTypes) => {
               id,
               availability_status_error,
               availability_status,
+              paused_at,
               authentications {
                   id
               }

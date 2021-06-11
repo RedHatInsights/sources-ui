@@ -2,7 +2,9 @@ import React from 'react';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
 import { Label } from '@patternfly/react-core';
+
 import SuperKeyCredentials from './SuperKeyCredentials';
+import { bold } from '../../../utilities/intlShared';
 
 const configurationStep = (intl, sourceTypes) => ({
   name: 'configuration_step',
@@ -21,7 +23,16 @@ const configurationStep = (intl, sourceTypes) => ({
     {
       component: componentTypes.PLAIN_TEXT,
       name: 'conf-desc',
-      label: 'Configure your source manually or let us manage all necessary credentials by selecting Superkey configuration.',
+      label: intl.formatMessage(
+        {
+          id: 'wizard.accountAuthDescription',
+          defaultMessage:
+            'Configure your source manually or let us manage all necessary credentials by selecting <b>account authorization</b> configuration.',
+        },
+        {
+          b: bold,
+        }
+      ),
     },
     {
       component: componentTypes.RADIO,
@@ -80,7 +91,7 @@ const configurationStep = (intl, sourceTypes) => ({
           description: intl.formatMessage({
             id: 'wizard.manualAuth.desc',
             defaultMessage:
-              'Configure and manage your source manually if you do not wish to provide Superkey credentials. You will set up sources the same way you do today.',
+              'Configure and manage your source manually if you do not wish to provide account authorization credentials. You will set up sources the same way you do today.',
           }),
           value: 'manual_configuration',
         },

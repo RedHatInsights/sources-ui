@@ -4,7 +4,7 @@ import * as checkSourceStatus from '../../../api/checkSourceStatus';
 import * as doUpdateSource from '../../../api/doUpdateSource';
 
 import * as getAppStatus from '../../..//api/getApplicationStatus';
-import { UNAVAILABLE, AVAILABLE } from '../../../views/formatters';
+import { UNAVAILABLE, AVAILABLE, IN_PROGRESS } from '../../../views/formatters';
 import applicationTypesData from '../../__mocks__/applicationTypesData';
 
 describe('editSourceModal - on submit', () => {
@@ -368,6 +368,65 @@ describe('editSourceModal - on submit', () => {
     getAppStatus.checkAppAvailability = jest.fn().mockImplementation(() =>
       Promise.resolve({
         availability_status: null,
+        id: 'application-id',
+      })
+    );
+
+    SOURCE = {
+      ...SOURCE,
+      applications: [{ id: 'application-id', authentications: [{ id: '123', resource_type: 'Application' }] }],
+    };
+
+    EDITING = {
+      ...EDITING,
+      'authentications.a123.username': true,
+    };
+
+    doUpdateSource.doUpdateSource = jest.fn().mockImplementation(() => Promise.resolve('OK'));
+
+    const FILTERED_VALUES = {
+      source: {
+        type: 'openshift',
+      },
+      authentications: {
+        a123: { username: undefined },
+      },
+    };
+
+    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, APP_TYPES);
+
+    expect(doUpdateSource.doUpdateSource).toHaveBeenCalledWith(SOURCE, FILTERED_VALUES, VALUES);
+    expect(SET_STATE.mock.calls[0][0]).toEqual({
+      type: 'submit',
+      values: VALUES,
+      editing: EDITING,
+    });
+    expect(actions.loadEntities).toHaveBeenCalled();
+    expect(checkSourceStatus.checkSourceStatus).toHaveBeenCalledWith('2342');
+    expect(getAppStatus.checkAppAvailability).toHaveBeenCalledWith(
+      'application-id',
+      undefined,
+      undefined,
+      undefined,
+      expect.any(Date)
+    );
+    expect(SET_STATE.mock.calls[1][0]).toEqual({
+      type: 'submitFinished',
+      messages: {
+        'application-id': {
+          variant: 'warning',
+          title: 'Edit in progress',
+          description:
+            'We are still working to confirm your updated credentials. Changes will be reflected in this table when complete.',
+        },
+      },
+    });
+  });
+
+  it('check app availablity status - in progress', async () => {
+    getAppStatus.checkAppAvailability = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        availability_status: IN_PROGRESS,
         id: 'application-id',
       })
     );

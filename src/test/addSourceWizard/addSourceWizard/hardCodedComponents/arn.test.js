@@ -102,8 +102,7 @@ describe('AWS-ARN hardcoded schemas', () => {
   });
 
   it('IncludeAliasesLabel description is rendered correctly', () => {
-    const wrapper = mount(<AwsArn.IncludeAliasesLabel />);
-    wrapper.find('span').simulate('click');
+    const wrapper = mount(<AwsArn.IncludeAliasesLabel appendTo={document.body} />);
 
     expect(wrapper.find(Popover)).toHaveLength(1);
     expect(wrapper.find(Button)).toHaveLength(1);
@@ -111,8 +110,7 @@ describe('AWS-ARN hardcoded schemas', () => {
   });
 
   it('IncludeOrgUnitsLabel description is rendered correctly', () => {
-    const wrapper = mount(<AwsArn.IncludeOrgUnitsLabel />);
-    wrapper.find('span').simulate('click');
+    const wrapper = mount(<AwsArn.IncludeOrgUnitsLabel appendTo={document.body} />);
 
     expect(wrapper.find(Popover)).toHaveLength(1);
     expect(wrapper.find(Button)).toHaveLength(1);

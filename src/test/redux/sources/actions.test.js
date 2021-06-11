@@ -1,3 +1,8 @@
+import React from 'react';
+
+import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
+import PlayIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
+
 import {
   removeMessage,
   addHiddenSource,
@@ -11,6 +16,8 @@ import {
   loadSourceTypes,
   renameSource,
   setActiveVendor,
+  pauseSource,
+  resumeSource,
 } from '../../../redux/sources/actions';
 import {
   ADD_HIDDEN_SOURCE,
@@ -22,7 +29,7 @@ import {
   CLEAR_FILTERS,
   SET_VENDOR,
 } from '../../../redux/sources/actionTypes';
-import { REMOVE_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications';
+import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications';
 import * as api from '../../../api/entities';
 import * as types_api from '../../../api/source_types';
 import { CLOUD_VENDOR } from '../../../utilities/constants';
@@ -276,11 +283,9 @@ describe('redux actions', () => {
 
     api.doDeleteApplication = jest.fn().mockImplementation(() => Promise.resolve('OK'));
 
-    await removeApplication(appId, sourceId, successTitle, errorTitle)(dispatch);
+    const result = await removeApplication(appId, sourceId, successTitle, errorTitle);
 
-    expect(dispatch.mock.calls).toHaveLength(1);
-
-    expect(dispatch.mock.calls[0][0]).toEqual({
+    expect(result).toEqual({
       type: ACTION_TYPES.REMOVE_APPLICATION,
       payload: expect.any(Function),
       meta: {
@@ -296,11 +301,9 @@ describe('redux actions', () => {
       },
     });
 
-    const resultObject = dispatch.mock.calls[0][0];
-
     expect(api.doDeleteApplication).not.toHaveBeenCalled();
 
-    await resultObject.payload();
+    await result.payload();
 
     expect(api.doDeleteApplication).toHaveBeenCalledWith(appId, errorTitle);
   });
@@ -388,5 +391,112 @@ describe('redux actions', () => {
     expect(dispatch.mock.calls).toHaveLength(2);
     expect(dispatch.mock.calls[0][0]).toEqual({ type: SET_VENDOR, payload: { vendor: CLOUD_VENDOR } });
     expect(dispatch.mock.calls[1][0]).toEqual(expect.any(Function));
+  });
+
+  describe('pausing and unpausing source', () => {
+    const sourceId = '123-source';
+    const sourceName = 'source-name';
+    const intl = { formatMessage: ({ defaultMessage }) => defaultMessage };
+
+    let innerDispatch;
+
+    beforeEach(() => {
+      innerDispatch = jest.fn();
+      dispatch = jest.fn().mockImplementation((x) => x(innerDispatch, () => ({ sources: {} })));
+
+      api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
+      api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+    });
+
+    it('pauseSource', async () => {
+      const pauseSourceApi = jest.fn().mockImplementation(() => Promise.resolve('ok'));
+
+      api.getSourcesApi = () => ({
+        pauseSource: pauseSourceApi,
+      });
+
+      await pauseSource(sourceId, sourceName, intl)(dispatch);
+
+      expect(pauseSourceApi).toHaveBeenCalledWith(sourceId);
+
+      const types = innerDispatch.mock.calls.map(([{ type }]) => type);
+      expect(types).toEqual([ADD_NOTIFICATION, 'LOAD_ENTITIES_PENDING', 'SET_COUNT']);
+
+      expect(innerDispatch.mock.calls[0][0].payload).toEqual({
+        customIcon: <PauseIcon />,
+        description:
+          'Source <b>{ sourceName }</b> is now paused. Data collection for all connected applications will be disabled until the source is resumed.',
+        dismissable: true,
+        title: 'Source paused',
+        variant: 'default',
+      });
+    });
+
+    it('pauseSource - fail', async () => {
+      const pauseSourceApi = jest.fn().mockImplementation(() => Promise.reject('error message'));
+
+      api.getSourcesApi = () => ({
+        pauseSource: pauseSourceApi,
+      });
+
+      await pauseSource(sourceId, sourceName, intl)(dispatch);
+
+      expect(pauseSourceApi).toHaveBeenCalledWith(sourceId);
+
+      const types = innerDispatch.mock.calls.map(([{ type }]) => type);
+      expect(types).toEqual([ADD_NOTIFICATION]);
+
+      expect(innerDispatch.mock.calls[0][0].payload).toEqual({
+        description: '{ error }. Please try again.',
+        dismissable: true,
+        title: 'Source pause failed',
+        variant: 'danger',
+      });
+    });
+
+    it('resumeSource', async () => {
+      const unpauseSourceApi = jest.fn().mockImplementation(() => Promise.resolve('ok'));
+
+      api.getSourcesApi = () => ({
+        unpauseSource: unpauseSourceApi,
+      });
+
+      await resumeSource(sourceId, sourceName, intl)(dispatch);
+
+      expect(unpauseSourceApi).toHaveBeenCalledWith(sourceId);
+
+      const types = innerDispatch.mock.calls.map(([{ type }]) => type);
+      expect(types).toEqual([ADD_NOTIFICATION, 'LOAD_ENTITIES_PENDING', 'SET_COUNT']);
+
+      expect(innerDispatch.mock.calls[0][0].payload).toEqual({
+        customIcon: <PlayIcon />,
+        description: 'Source <b>{ sourceName }</b> will recontinue data collection for connected applications.',
+        dismissable: true,
+        title: 'Source resumed',
+        variant: 'default',
+      });
+    });
+
+    it('resumeSource - fail', async () => {
+      const unpauseSourceApi = jest.fn().mockImplementation(() => Promise.reject('Some error'));
+
+      api.getSourcesApi = () => ({
+        unpauseSource: unpauseSourceApi,
+      });
+
+      await resumeSource(sourceId, sourceName, intl)(dispatch);
+
+      expect(unpauseSourceApi).toHaveBeenCalledWith(sourceId);
+
+      const types = innerDispatch.mock.calls.map(([{ type }]) => type);
+      expect(types).toEqual([ADD_NOTIFICATION]);
+
+      expect(innerDispatch.mock.calls[0][0].payload).toEqual({
+        description: '{ error }. Please try again.',
+        dismissable: true,
+        title: 'Source resume failed',
+        variant: 'danger',
+      });
+    });
   });
 });

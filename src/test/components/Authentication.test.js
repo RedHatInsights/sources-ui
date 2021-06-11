@@ -230,4 +230,43 @@ describe('Authentication test', () => {
     expect(wrapper.find('TextInput').props().value).toEqual('•••••••••••••');
     expect(wrapper.find(TextField)).toHaveLength(0);
   });
+
+  it('renders disabled with no focus event', async () => {
+    const wrapper = mount(
+      componentWrapperIntl(
+        <SourcesFormRenderer
+          {...initialProps}
+          schema={{
+            fields: [
+              {
+                component: 'authentication',
+                name: 'authentication.password',
+                isDisabled: true,
+              },
+            ],
+          }}
+          initialValues={{
+            authentication: {
+              id: 'someid',
+            },
+          }}
+        />
+      )
+    );
+
+    expect(wrapper.find('FormGroup')).toHaveLength(1);
+    expect(wrapper.find('TextInput')).toHaveLength(1);
+    expect(wrapper.find('TextInput').props().value).toEqual('•••••••••••••');
+    expect(wrapper.find('TextInput').props().isDisabled).toEqual(true);
+
+    await act(async () => {
+      wrapper.find('FormGroup').first().simulate('focus');
+    });
+    wrapper.update();
+
+    expect(wrapper.find('FormGroup')).toHaveLength(1);
+    expect(wrapper.find('TextInput')).toHaveLength(1);
+    expect(wrapper.find('TextInput').props().value).toEqual('•••••••••••••');
+    expect(wrapper.find('TextInput').props().isDisabled).toEqual(true);
+  });
 });

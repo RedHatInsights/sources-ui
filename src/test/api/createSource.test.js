@@ -8,6 +8,7 @@ import * as checkApp from '../../api/getApplicationStatus';
 import * as checkSourceStatus from '../../api/checkSourceStatus';
 import { NO_APPLICATION_VALUE } from '../../components/addSourceWizard/stringConstants';
 import { COST_MANAGEMENT_APP_NAME } from '../../utilities/constants';
+import emptyAuthType from '../../components/addSourceWizard/emptyAuthType';
 
 describe('doCreateSource', () => {
   const HOST = 'mycluster.net';
@@ -44,6 +45,7 @@ describe('doCreateSource', () => {
     let CREATED_AUTH_ID;
 
     let bulkCreate;
+    let createAuthApp;
     let checkAppMock;
     let mocks;
 
@@ -84,8 +86,11 @@ describe('doCreateSource', () => {
         })
       );
 
+      createAuthApp = jest.fn().mockImplementation(() => Promise.resolve());
+
       mocks = {
         bulkCreate,
+        createAuthApp,
       };
 
       api.getSourcesApi = () => mocks;
@@ -125,6 +130,7 @@ describe('doCreateSource', () => {
         ],
         sources: [{ name: 'some name', source_type_name: 'openshift' }],
       });
+      expect(createAuthApp).not.toHaveBeenCalled();
       expect(checkAppMock).toHaveBeenCalledWith(CREATED_EDNPOINT_ID, undefined, undefined, 'getEndpoint');
       expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
     });
@@ -155,6 +161,7 @@ describe('doCreateSource', () => {
         ],
         sources: [{ name: 'some name', source_type_name: 'openshift' }],
       });
+      expect(createAuthApp).not.toHaveBeenCalled();
       expect(checkAppMock).toHaveBeenCalledWith(CREATED_EDNPOINT_ID, undefined, undefined, 'getEndpoint');
       expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
     });
@@ -175,6 +182,7 @@ describe('doCreateSource', () => {
         endpoints: [],
         sources: [{ name: 'some name', source_type_name: 'openshift' }],
       });
+      expect(createAuthApp).not.toHaveBeenCalled();
       expect(checkAppMock).not.toHaveBeenCalled();
       expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
     });
@@ -205,6 +213,7 @@ describe('doCreateSource', () => {
         ],
         sources: [{ name: 'some name', source_type_name: 'openshift' }],
       });
+      expect(createAuthApp).not.toHaveBeenCalled();
       expect(checkAppMock).toHaveBeenCalledWith(CREATED_EDNPOINT_ID, undefined, undefined, 'getEndpoint');
       expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
     });
@@ -237,6 +246,41 @@ describe('doCreateSource', () => {
         ],
         sources: [{ name: 'some name', source_type_name: 'openshift' }],
       });
+      expect(createAuthApp).toHaveBeenCalledWith({ application_id: 'app-id', authentication_id: 'auth-id' });
+      expect(checkAppMock).toHaveBeenCalledWith(CREATED_APP_ID, 0);
+      expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
+    });
+
+    it('create source with app and URL', async () => {
+      const APP_ID = COST_MANAGEMENT_APP.id;
+
+      const FORM_DATA = {
+        ...INITIAL_VALUES,
+        endpoint: undefined,
+        url: URL,
+        application: { ...APPLICATION_FORM_DATA, application_type_id: APP_ID },
+      };
+
+      const result = await doCreateSource(FORM_DATA);
+
+      expect(result).toEqual({ applications: [{ id: 'app-id' }], endpoint: [{ id: 'endpoint-id' }], id: '12349876' });
+
+      expect(bulkCreate).toHaveBeenCalledWith({
+        applications: [{ application_type_id: '2', collect_info: true, source_name: 'some name' }],
+        authentications: [{ password: '123455', resource_type: 'endpoint', resource_name: HOST }],
+        endpoints: [
+          {
+            default: true,
+            host: HOST,
+            path: PATH,
+            port: Number(PORT),
+            scheme: SCHEME,
+            source_name: 'some name',
+          },
+        ],
+        sources: [{ name: 'some name', source_type_name: 'openshift' }],
+      });
+      expect(createAuthApp).toHaveBeenCalledWith({ application_id: 'app-id', authentication_id: 'auth-id' });
       expect(checkAppMock).toHaveBeenCalledWith(CREATED_APP_ID, 0);
       expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
     });
@@ -263,6 +307,7 @@ describe('doCreateSource', () => {
       );
 
       mocks = {
+        createAuthApp,
         bulkCreate,
       };
 
@@ -288,6 +333,7 @@ describe('doCreateSource', () => {
         ],
         sources: [{ name: 'some name', source_type_name: 'openshift' }],
       });
+      expect(createAuthApp).toHaveBeenCalledWith({ application_id: 'app-id', authentication_id: 'auth-id' });
       expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
       expect(checkAppMock.mock.calls[0][0]).toEqual(CREATED_APP_ID);
       expect(checkAppMock.mock.calls[0][1]).toEqual(10000);
@@ -314,6 +360,7 @@ describe('doCreateSource', () => {
         endpoints: [],
         sources: [{ name: 'some name', source_type_name: 'openshift' }],
       });
+      expect(createAuthApp).not.toHaveBeenCalled();
       expect(checkAppMock).toHaveBeenCalledWith(CREATED_APP_ID, 0);
       expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
     });
@@ -355,6 +402,49 @@ describe('doCreateSource', () => {
         endpoints: [],
         sources: [{ name: 'some name', source_type_name: 'openshift' }],
       });
+      expect(createAuthApp).not.toHaveBeenCalled();
+      expect(checkAppMock).toHaveBeenCalledWith(CREATED_APP_ID, 0);
+      expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
+    });
+
+    it('ignore empty auth type', async () => {
+      const APP_ID = COST_MANAGEMENT_APP.id;
+
+      const FORM_DATA = {
+        ...INITIAL_VALUES,
+        application: { ...APPLICATION_FORM_DATA, application_type_id: APP_ID },
+        endpoint: undefined,
+        authentication: { ...AUTHENTICATION_FORM_DATA, authtype: emptyAuthType.type },
+      };
+
+      bulkCreate = jest.fn().mockImplementation((data) =>
+        Promise.resolve({
+          ...CREATE_SOURCE_DATA_OUT,
+          ...(data.endpoints.length > 0 && { endpoints: [{ id: CREATED_EDNPOINT_ID }] }),
+          ...(data.applications.length > 0 && {
+            applications: [{ id: CREATED_APP_ID, application_type_id: COST_MANAGEMENT_APP.id }],
+          }),
+          ...(data.authentications.length > 0 && { authentications: [{ id: CREATED_AUTH_ID }] }),
+        })
+      );
+
+      mocks = {
+        bulkCreate,
+      };
+
+      api.getSourcesApi = () => mocks;
+
+      const result = await doCreateSource(FORM_DATA, [], applicationTypes);
+
+      expect(result).toEqual({ applications: [{ id: 'app-id' }], endpoint: [], id: '12349876' });
+
+      expect(bulkCreate).toHaveBeenCalledWith({
+        applications: [{ application_type_id: '2', collect_info: true, source_name: 'some name' }],
+        authentications: [],
+        endpoints: [],
+        sources: [{ name: 'some name', source_type_name: 'openshift' }],
+      });
+      expect(createAuthApp).not.toHaveBeenCalled();
       expect(checkAppMock).toHaveBeenCalledWith(CREATED_APP_ID, 0);
       expect(checkSourceStatus.default).toHaveBeenCalledWith(CREATED_SOURCE_ID);
     });

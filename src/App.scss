@@ -179,6 +179,29 @@
   line-height: 24px;
 }
 
+.ins-c-sources__application_fake_switch {
+  width: 100%;
+}
+
+.ins-c-sources__checkbox-with-icon {
+  display: flex;
+
+  // for some reason popover does not work properly in wizard
+  .pf-c-popover {
+    visibility: initial;
+    pointer-events: initial;
+  }
+}
+
+.ins-c-sources__application_flex {
+  display: flex;
+}
+
+.ins-c-sources__application_kebab {
+  max-height: 32px;
+  margin-left: auto;
+}
+
 .ins-c-table-empty-state.pf-m-grid-lg.pf-c-table {
     [data-label] {
         --pf-c-table--cell--hidden-visible--Display: 0;

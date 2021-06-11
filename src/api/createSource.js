@@ -4,6 +4,7 @@ import { getSourcesApi } from './entities';
 import { checkAppAvailability } from './getApplicationStatus';
 import checkSourceStatus from './checkSourceStatus';
 import { NO_APPLICATION_VALUE } from '../components/addSourceWizard/stringConstants';
+import emptyAuthType from '../components/addSourceWizard/emptyAuthType';
 
 export const parseUrl = (url) => {
   if (!url) {
@@ -66,15 +67,15 @@ export const doCreateSource = async (formData, timetoutedApps = [], applicationT
       });
     }
 
-    if (formData.authentication) {
+    if (formData.authentication && formData.authentication.authtype !== emptyAuthType.type) {
       payload.authentications.push({
         ...formData.authentication,
         resource_type: hasEndpoint ? 'endpoint' : hasApplication ? 'application' : 'source',
         resource_name: formData.source.name,
-        ...(hasEndpoint && { resource_name: urlOrHost(formData).host }),
         ...(hasApplication && {
           resource_name: applicationTypes?.find(({ id }) => id === formData.application.application_type_id)?.name,
         }),
+        ...(hasEndpoint && { resource_name: urlOrHost(formData).host }),
       });
     }
 
@@ -83,6 +84,14 @@ export const doCreateSource = async (formData, timetoutedApps = [], applicationT
     source = dataOut.sources?.[0];
     let app = dataOut.applications?.[0];
     let endpoint = dataOut.endpoints?.[0];
+    let auth = dataOut.authentications?.[0];
+
+    if (hasEndpoint && hasApplication) {
+      await getSourcesApi().createAuthApp({
+        application_id: app.id,
+        authentication_id: auth.id,
+      });
+    }
 
     await checkSourceStatus(source.id);
 

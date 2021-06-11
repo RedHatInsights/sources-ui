@@ -9,10 +9,10 @@ import { Alert } from '@patternfly/react-core';
 const EditAlert = ({ name }) => {
   const formOptions = useFormApi();
 
-  const { variant, title, description } = get(formOptions.getState().values, name);
+  const { variant, title, description, customIcon } = get(formOptions.getState().values, name);
 
   return (
-    <Alert variant={variant} isInline title={title}>
+    <Alert variant={variant} isInline title={title} customIcon={customIcon}>
       {description}
     </Alert>
   );

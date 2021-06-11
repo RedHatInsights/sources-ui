@@ -15,19 +15,12 @@ import ErrorBoundary from './components/ErrorBoundary';
 import PermissionsChecker from './components/PermissionsChecker';
 import DataLoader from './components/DataLoader';
 import { CLOUD_CARDS_KEY } from './components/CloudTiles/CloudCards';
+import NavigationListener from './components/NavigationListener';
 
 import { getBaseName } from './frontend-components-copies/getBaseName';
 
 const App = () => {
   useEffect(() => {
-    insights.chrome.init();
-    try {
-      insights.chrome.identifyApp('sources');
-    } catch (_exception) {
-      // eslint-disable-next-line no-console
-      console.warn('Failed to initialize chrome navigation.');
-    }
-
     return () => {
       sessionStorage.removeItem(CLOUD_CARDS_KEY);
     };
@@ -42,6 +35,7 @@ const App = () => {
             <PermissionsChecker>
               <Main style={{ padding: 0 }}>
                 <DataLoader />
+                <NavigationListener />
                 <Routes />
               </Main>
             </PermissionsChecker>

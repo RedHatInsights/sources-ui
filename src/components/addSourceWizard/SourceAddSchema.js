@@ -17,6 +17,7 @@ import applicationsStep from './superKey/applicationsStep';
 import { REDHAT_VENDOR } from '../../utilities/constants';
 import validated from '../../utilities/resolveProps/validated';
 import handleError from '../../api/handleError';
+import { bold } from '../../utilities/intlShared';
 
 export const asyncValidator = async (value, sourceId = undefined, intl) => {
   if (!value) {
@@ -79,20 +80,6 @@ export const appMutatorRedHat = (appTypes) => (option, formOptions) => {
   return option;
 };
 
-export const sourceTypeMutator = (appTypes, sourceTypes) => (option, formOptions) => {
-  const selectedApp = formOptions.getState().values.application
-    ? formOptions.getState().values.application.application_type_id
-    : undefined;
-  const appType = appTypes.find((app) => app.id === selectedApp);
-  const isEnabled = appType
-    ? appType.supported_source_types.includes(sourceTypes.find((type) => type.product_name === option.label).name)
-    : true;
-  return {
-    ...option,
-    isDisabled: !isEnabled,
-  };
-};
-
 const shortIcons = {
   amazon: '/apps/frontend-assets/partners-icons/aws.svg',
   'ansible-tower': '/apps/frontend-assets/red-hat-logos/stacked.svg',
@@ -120,24 +107,28 @@ export const iconMapper = (sourceTypes) => (name) => {
   return Icon;
 };
 
-export const nextStep = (selectedType) => ({ values: { application, source_type } }) => {
-  if (selectedType) {
-    return 'application_step';
-  }
+export const nextStep =
+  (selectedType) =>
+  ({ values: { application, source_type } }) => {
+    if (selectedType) {
+      return 'application_step';
+    }
 
-  const appId = application && application.application_type_id !== NO_APPLICATION_VALUE && application.application_type_id;
-  const resultedStep = appId ? `${source_type}-${appId}` : source_type;
+    const appId = application && application.application_type_id !== NO_APPLICATION_VALUE && application.application_type_id;
+    const resultedStep = appId ? `${source_type}-${appId}` : source_type;
 
-  return resultedStep;
-};
+    return resultedStep;
+  };
 
 export const hasSuperKeyType = (sourceType) => sourceType?.schema.authentication.find(({ is_superkey }) => is_superkey);
 
-export const nextStepCloud = (sourceTypes) => ({ values }) => {
-  const sourceType = sourceTypes.find(({ name }) => name === values.source_type);
+export const nextStepCloud =
+  (sourceTypes) =>
+  ({ values }) => {
+    const sourceType = sourceTypes.find(({ name }) => name === values.source_type);
 
-  return hasSuperKeyType(sourceType) ? 'configuration_step' : 'application_step';
-};
+    return hasSuperKeyType(sourceType) ? 'configuration_step' : 'application_step';
+  };
 
 const sourceTypeSelect = ({ intl, sourceTypes, applicationTypes }) => ({
   component: 'card-select',
@@ -322,8 +313,7 @@ export const SummaryDescription = () => {
               'Review the information below and click <b>Add</b> to add your source. To edit details in previous steps, click <b>Back</b>.',
           },
           {
-            // eslint-disable-next-line react/display-name
-            b: (chunks) => <b key={`b-${chunks.length}-${Math.floor(Math.random() * 1000)}`}>{chunks}</b>,
+            b: bold,
           }
         )}
       </Text>
@@ -343,6 +333,11 @@ const summaryStep = (sourceTypes, applicationTypes, intl) => ({
       component: 'summary',
       sourceTypes,
       applicationTypes,
+    },
+    {
+      name: 'source_type',
+      component: componentTypes.TEXT_FIELD,
+      hideField: true,
     },
   ],
   name: 'summary',

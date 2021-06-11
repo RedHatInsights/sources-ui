@@ -69,5 +69,7 @@ describe('AvailabilityChecker', () => {
       variant: 'info',
       description: 'Check this page later for updates',
     });
+
+    jest.useRealTimers();
   });
 });

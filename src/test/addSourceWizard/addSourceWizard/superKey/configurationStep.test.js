@@ -27,7 +27,7 @@ describe('configurationSteps', () => {
 
     expect(result.fields[0].component).toEqual(componentTypes.PLAIN_TEXT);
     expect(result.fields[0].label).toEqual(
-      'Configure your source manually or let us manage all necessary credentials by selecting Superkey configuration.'
+      'Configure your source manually or let us manage all necessary credentials by selecting <b>account authorization</b> configuration.'
     );
 
     expect(result.fields[1].component).toEqual(componentTypes.RADIO);
@@ -60,7 +60,7 @@ describe('configurationSteps', () => {
     expect(result.fields[3].options).toEqual([
       {
         description:
-          'Configure and manage your source manually if you do not wish to provide Superkey credentials. You will set up sources the same way you do today.',
+          'Configure and manage your source manually if you do not wish to provide account authorization credentials. You will set up sources the same way you do today.',
         label: 'Manual configuration',
         value: 'manual_configuration',
       },

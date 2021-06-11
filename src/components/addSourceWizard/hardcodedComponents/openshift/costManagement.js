@@ -4,7 +4,9 @@ import { HCCM_DOCS_PREFIX } from '../../stringConstants';
 
 import { Text, TextVariants, TextContent } from '@patternfly/react-core';
 
-const INSTALL_PREREQUISITE = `${HCCM_DOCS_PREFIX}/html/getting_started_with_cost_management/assembly_koku_cost_management_installing#proc_installation-overview-ocp45`;
+import { bold } from '../../../../utilities/intlShared';
+
+const INSTALL_PREREQUISITE = `${HCCM_DOCS_PREFIX}/html-single/getting_started_with_cost_management/index?lb_target=production#assembly-adding-openshift-container-platform-source`;
 
 export const ConfigureCostOperator = () => {
   const intl = useIntl();
@@ -16,10 +18,10 @@ export const ConfigureCostOperator = () => {
           {
             id: 'cost.openshift.description',
             defaultMessage:
-              'For Red Hat OpenShift Container Platform 4.5 and later, install the {operator} from the OpenShift Container Platform web console.',
+              'For Red Hat OpenShift Container Platform 4.6 and later, install the {operator} from the OpenShift Container Platform web console.',
           },
           {
-            operator: <b key="bold">koku-metrics-operator</b>,
+            operator: <b key="bold">costmanagement-metrics-operator</b>,
           }
         )}
       </Text>
@@ -39,8 +41,7 @@ export const ConfigureCostOperator = () => {
               'If you configured the operator to create a source (create_source: true), <b>STOP</b> here and <b>CANCEL</b> out of this flow.',
           },
           {
-            // eslint-disable-next-line react/display-name
-            b: (chunks) => <b key={`b-${chunks.length}-${Math.floor(Math.random() * 1000)}`}>{chunks}</b>,
+            b: bold,
           }
         )}
       </Text>
