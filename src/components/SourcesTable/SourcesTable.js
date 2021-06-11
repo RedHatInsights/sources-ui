@@ -238,6 +238,7 @@ const SourcesTable = () => {
       cells={state.cells}
       actionResolver={loaded && numberOfEntities > 0 ? actionResolver(intl, push, writePermissions, reduxDispatch) : undefined}
       rowWrapper={RowWrapperLoader}
+      className={numberOfEntities === 0 && state.isLoaded ? 'ins-c-table-empty-state' : ''}
     >
       <TableHeader />
       <TableBody />
