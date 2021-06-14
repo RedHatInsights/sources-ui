@@ -8,6 +8,7 @@ import { KebabToggle, Dropdown, DropdownItem } from '@patternfly/react-core';
 import { replaceRouteId, routes } from '../../Routes';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import { useSource } from '../../hooks/useSource';
+import disabledTooltipProps from '../../utilities/disabledTooltipProps';
 
 const ApplicationKebab = ({ app, removeApp, addApp }) => {
   const [isOpen, setOpen] = useState(false);
@@ -21,16 +22,7 @@ const ApplicationKebab = ({ app, removeApp, addApp }) => {
     func();
   };
 
-  const tooltip = intl.formatMessage({
-    id: 'sources.notAdminButton',
-    defaultMessage: 'To perform this action, you must be granted write permissions from your Organization Administrator.',
-  });
-
-  const disabledProps = {
-    tooltip,
-    isDisabled: true,
-    className: 'ins-c-sources__disabled-drodpown-item',
-  };
+  const disabledProps = disabledTooltipProps(intl);
 
   const pausedTooltip = intl.formatMessage({
     id: 'sources.pausedSourceAction',
@@ -38,9 +30,8 @@ const ApplicationKebab = ({ app, removeApp, addApp }) => {
   });
 
   const pausedProps = {
+    ...disabledProps,
     tooltip: pausedTooltip,
-    isDisabled: true,
-    className: 'ins-c-sources__disabled-drodpown-item',
   };
 
   const pausedButton = app.paused_at ? (
