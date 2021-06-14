@@ -6,6 +6,7 @@ import { useIntl } from 'react-intl';
 import { addMessage } from '../../redux/sources/actions';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import { routes } from '../../Routes';
+import { disabledMessage } from '../../utilities/disabledTooltipProps';
 
 const RedirectNoWriteAccess = () => {
   const intl = useIntl();
@@ -20,10 +21,7 @@ const RedirectNoWriteAccess = () => {
         id: 'sources.insufficietnPerms',
         defaultMessage: 'Insufficient permissions',
       });
-      const description = intl.formatMessage({
-        id: 'sources.notAdminButton',
-        defaultMessage: 'To perform this action, you must be granted write permissions from your Organization Administrator.',
-      });
+      const description = disabledMessage(intl);
 
       dispatch(addMessage({ title, variant: 'danger', description }));
     }
