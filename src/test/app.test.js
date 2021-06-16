@@ -6,7 +6,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import App from '../App';
 import { componentWrapperIntl } from '../utilities/testsHelpers';
-import Routes from '../Routes';
+import Routes, { routes } from '../Routes';
 import { getProdStore } from '../utilities/store';
 import * as PermissionsChecker from '../components/PermissionsChecker';
 import * as DataLoader from '../components/DataLoader';
@@ -26,10 +26,18 @@ describe('App spec js', () => {
 
   let initSpy;
   let identifyAppSpy;
+  let on;
+  let unregister;
+  let callbackState;
 
   beforeEach(() => {
     initSpy = jest.fn();
     identifyAppSpy = jest.fn();
+    unregister = jest.fn();
+    on = jest.fn().mockImplementation((_name, callback) => {
+      callbackState = callback;
+      return unregister;
+    });
 
     PermissionsChecker.default = ({ children }) => <h1>{children}</h1>;
     DataLoader.default = ({ children }) => <span>{children}</span>;
@@ -39,6 +47,7 @@ describe('App spec js', () => {
         ...insights.chrome,
         init: initSpy,
         identifyApp: identifyAppSpy,
+        on,
       },
     };
   });
@@ -52,6 +61,58 @@ describe('App spec js', () => {
 
     expect(initSpy).toHaveBeenCalled();
     expect(identifyAppSpy).toHaveBeenCalledWith('sources');
+    expect(on).toHaveBeenCalledWith('APP_NAVIGATION', expect.any(Function));
+  });
+
+  it('goes to sources on chrome nav event when source', async () => {
+    let tmpLocation;
+    tmpLocation = Object.assign({}, window.location);
+
+    delete window.location;
+
+    window.location = {
+      assign: jest.fn(),
+      replace: jest.fn(),
+      reload: jest.fn(),
+      href: 'http://localhost/',
+      toString: jest.fn(),
+      origin: 'http://localhost',
+      protocol: 'http:',
+      host: 'localhost',
+      hostname: 'localhost',
+      port: '',
+      pathname: '/',
+      search: '',
+      hash: '',
+    };
+
+    const event = { navId: 'sources' };
+    const wrapper = mount(componentWrapperIntl(<App />));
+
+    expect(wrapper.find(Router).instance().history.location.pathname).toEqual('/');
+
+    await act(async () => {
+      callbackState(event);
+    });
+    wrapper.update();
+
+    expect(wrapper.find(Router).instance().history.location.pathname).toEqual(routes.sources.path);
+
+    window.location = tmpLocation;
+  });
+
+  it('stays same when chrom nav event is not sources', async () => {
+    const event = { navId: 'catalog' };
+    const wrapper = mount(componentWrapperIntl(<App />));
+
+    expect(wrapper.find(Router).instance().history.location.pathname).toEqual('/');
+
+    await act(async () => {
+      callbackState(event);
+    });
+    wrapper.update();
+
+    expect(wrapper.find(Router).instance().history.location.pathname).toEqual('/');
   });
 
   it('unmounts app and clears localStorage', async () => {
@@ -78,12 +139,15 @@ describe('App spec js', () => {
     expect(localStorage).toEqual({
       [CLOUD_CARDS_KEY]: 'some-value',
     });
+    expect(unregister).not.toHaveBeenCalled();
 
     await act(async () => {
       wrapper.unmount();
     });
+    wrapper.update();
 
     expect(localStorage).toEqual({});
+    expect(unregister).toHaveBeenCalled();
 
     Object.assign(Storage, protoTmp);
   });
@@ -120,6 +184,7 @@ describe('App spec js', () => {
     await act(async () => {
       wrapper = mount(componentWrapperIntl(<App />, getProdStore(), ['']));
     });
+    wrapper.update();
 
     expect(wrapper.find(NotificationsPortal)).toHaveLength(1);
     expect(wrapper.find(Main)).toHaveLength(1);
