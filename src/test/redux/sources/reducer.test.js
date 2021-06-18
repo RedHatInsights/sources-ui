@@ -11,10 +11,12 @@ describe('redux > sources reducer', () => {
       { id: '1', name: 'name1' },
       { id: '2', name: 'name2' },
     ];
-    const DATA = { payload: SOURCES };
+    const COUNT = 1234;
+    const DATA = { payload: { sources: SOURCES, sources_aggregate: { aggregate: { total_count: COUNT } } } };
 
     const EXPECTED_STATE = {
       ...defaultSourcesState,
+      numberOfEntities: COUNT,
       entities: SOURCES,
       loaded: 0,
     };

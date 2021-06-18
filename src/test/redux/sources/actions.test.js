@@ -23,7 +23,6 @@ import {
   ADD_HIDDEN_SOURCE,
   PAGE_AND_SIZE,
   ACTION_TYPES,
-  SET_COUNT,
   SORT_ENTITIES,
   FILTER_SOURCES,
   CLEAR_FILTERS,
@@ -41,7 +40,7 @@ describe('redux actions', () => {
     dispatch = jest.fn().mockImplementation((x) => x);
   });
 
-  it('undoValues creates an object', () => {
+  it('add hidden source', () => {
     const SOURCE = { name: 'Stuart' };
     expect(addHiddenSource(SOURCE)).toEqual(
       expect.objectContaining({
@@ -125,27 +124,24 @@ describe('redux actions', () => {
       },
     });
 
+    const sources_aggregate = { aggregate: { total_count: count } };
+
     beforeEach(() => {
-      api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources }));
-      api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count } }));
+      api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources, sources_aggregate }));
     });
 
     it('loads entities', async () => {
       await loadEntities()(dispatch, getState);
 
-      expect(dispatch.mock.calls).toHaveLength(3);
+      expect(dispatch.mock.calls).toHaveLength(2);
 
       expect(dispatch.mock.calls[0][0]).toEqual({
         type: ACTION_TYPES.LOAD_ENTITIES_PENDING,
         options: undefined,
       });
       expect(dispatch.mock.calls[1][0]).toEqual({
-        type: SET_COUNT,
-        payload: { count },
-      });
-      expect(dispatch.mock.calls[2][0]).toEqual({
         type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
-        payload: sources,
+        payload: { sources, sources_aggregate },
       });
     });
 
@@ -154,19 +150,15 @@ describe('redux actions', () => {
 
       await loadEntities(options)(dispatch, getState);
 
-      expect(dispatch.mock.calls).toHaveLength(3);
+      expect(dispatch.mock.calls).toHaveLength(2);
 
       expect(dispatch.mock.calls[0][0]).toEqual({
         type: ACTION_TYPES.LOAD_ENTITIES_PENDING,
         options,
       });
       expect(dispatch.mock.calls[1][0]).toEqual({
-        type: SET_COUNT,
-        payload: { count },
-      });
-      expect(dispatch.mock.calls[2][0]).toEqual({
         type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
-        payload: sources,
+        payload: { sources, sources_aggregate },
       });
     });
 
@@ -178,13 +170,13 @@ describe('redux actions', () => {
 
       await loadEntities()(dispatch, getState);
 
-      expect(dispatch.mock.calls).toHaveLength(3);
+      expect(dispatch.mock.calls).toHaveLength(2);
 
       expect(dispatch.mock.calls[0][0]).toEqual({
         type: ACTION_TYPES.LOAD_ENTITIES_PENDING,
         options: undefined,
       });
-      expect(dispatch.mock.calls[2][0]).toEqual({
+      expect(dispatch.mock.calls[1][0]).toEqual({
         type: ACTION_TYPES.LOAD_ENTITIES_REJECTED,
         meta: { noError: true },
         payload: { error: { detail: ERROR_DETAIL, title: expect.any(String) } },
@@ -200,13 +192,13 @@ describe('redux actions', () => {
 
       await loadEntities()(dispatch, getState);
 
-      expect(dispatch.mock.calls).toHaveLength(3);
+      expect(dispatch.mock.calls).toHaveLength(2);
 
       expect(dispatch.mock.calls[0][0]).toEqual({
         type: ACTION_TYPES.LOAD_ENTITIES_PENDING,
         options: undefined,
       });
-      expect(dispatch.mock.calls[2][0]).toEqual({
+      expect(dispatch.mock.calls[1][0]).toEqual({
         type: ACTION_TYPES.LOAD_ENTITIES_REJECTED,
         meta: { noError: true },
         payload: { error: { detail: ERROR_DETAIL, title: ERROR_TITLE } },
@@ -404,8 +396,9 @@ describe('redux actions', () => {
       innerDispatch = jest.fn();
       dispatch = jest.fn().mockImplementation((x) => x(innerDispatch, () => ({ sources: {} })));
 
-      api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
-      api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+      api.doLoadEntities = jest
+        .fn()
+        .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
     });
 
     it('pauseSource', async () => {
@@ -420,7 +413,7 @@ describe('redux actions', () => {
       expect(pauseSourceApi).toHaveBeenCalledWith(sourceId);
 
       const types = innerDispatch.mock.calls.map(([{ type }]) => type);
-      expect(types).toEqual([ADD_NOTIFICATION, 'LOAD_ENTITIES_PENDING', 'SET_COUNT']);
+      expect(types).toEqual([ADD_NOTIFICATION, 'LOAD_ENTITIES_PENDING', 'LOAD_ENTITIES_FULFILLED']);
 
       expect(innerDispatch.mock.calls[0][0].payload).toEqual({
         customIcon: <PauseIcon />,
@@ -466,7 +459,7 @@ describe('redux actions', () => {
       expect(unpauseSourceApi).toHaveBeenCalledWith(sourceId);
 
       const types = innerDispatch.mock.calls.map(([{ type }]) => type);
-      expect(types).toEqual([ADD_NOTIFICATION, 'LOAD_ENTITIES_PENDING', 'SET_COUNT']);
+      expect(types).toEqual([ADD_NOTIFICATION, 'LOAD_ENTITIES_PENDING', 'LOAD_ENTITIES_FULFILLED']);
 
       expect(innerDispatch.mock.calls[0][0].payload).toEqual({
         customIcon: <PlayIcon />,

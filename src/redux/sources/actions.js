@@ -10,19 +10,11 @@ import {
   PAGE_AND_SIZE,
   FILTER_SOURCES,
   ADD_APP_TO_SOURCE,
-  SET_COUNT,
   ADD_HIDDEN_SOURCE,
   CLEAR_FILTERS,
   SET_VENDOR,
 } from './actionTypes';
-import {
-  doLoadAppTypes,
-  doRemoveSource,
-  doLoadEntities,
-  doDeleteApplication,
-  doLoadCountOfSources,
-  getSourcesApi,
-} from '../../api/entities';
+import { doLoadAppTypes, doRemoveSource, doLoadEntities, doDeleteApplication, getSourcesApi } from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
 import { bold } from '../../utilities/intlShared';
 import handleError from '../../api/handleError';
@@ -36,23 +28,18 @@ export const loadEntities = (options) => (dispatch, getState) => {
 
   const { pageSize, pageNumber, sortBy, sortDirection, filterValue, activeVendor } = getState().sources;
 
-  return Promise.all([
-    doLoadEntities({
-      pageSize,
-      pageNumber,
-      sortBy,
-      sortDirection,
-      filterValue,
-      activeVendor,
-    }),
-    doLoadCountOfSources(filterValue, activeVendor).then(({ meta: { count } }) =>
-      dispatch({ type: SET_COUNT, payload: { count } })
-    ),
-  ])
-    .then(([{ sources }]) =>
+  return doLoadEntities({
+    pageSize,
+    pageNumber,
+    sortBy,
+    sortDirection,
+    filterValue,
+    activeVendor,
+  })
+    .then(({ sources, sources_aggregate }) =>
       dispatch({
         type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
-        payload: sources,
+        payload: { sources, sources_aggregate },
       })
     )
     .catch((error) =>
