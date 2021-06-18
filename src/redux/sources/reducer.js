@@ -19,7 +19,6 @@ export const defaultSourcesState = {
   numberOfEntities: 0,
   appTypesLoaded: false,
   sourceTypesLoaded: false,
-  undoValues: {},
   filterValue: {},
   sortBy: 'created_at',
   sortDirection: 'desc',
@@ -36,10 +35,11 @@ export const entitiesPending = (state, { options }) => ({
   ...options,
 });
 
-export const entitiesLoaded = (state, { payload: rows, options }) => ({
+export const entitiesLoaded = (state, { payload: { sources, sources_aggregate }, options }) => ({
   ...state,
   loaded: Math.max(state.loaded - 1, 0),
-  entities: rows,
+  entities: sources,
+  numberOfEntities: sources_aggregate?.aggregate?.total_count,
   ...options,
 });
 

@@ -520,13 +520,16 @@ describe('SourceEditModal', () => {
           onClick={() =>
             dispatch({
               type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
-              payload: [
-                {
-                  id: '14',
-                  source_type_id: ANSIBLE_TOWER_ID,
-                  applications: [],
-                },
-              ],
+              payload: {
+                sources: [
+                  {
+                    id: '14',
+                    source_type_id: ANSIBLE_TOWER_ID,
+                    applications: [],
+                  },
+                ],
+                sources_aggregate: { aggregate: { total_count: 1 } },
+              },
             })
           }
         />

@@ -93,10 +93,12 @@ describe('SourcesPage', () => {
   beforeEach(() => {
     initialProps = {};
 
-    api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: sourcesDataGraphQl }));
-    api.doLoadCountOfSources = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve({ meta: { count: sourcesDataGraphQl.length } }));
+    api.doLoadEntities = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        sources: sourcesDataGraphQl,
+        sources_aggregate: { aggregate: { total_count: sourcesDataGraphQl.length } },
+      })
+    );
     api.doLoadAppTypes = jest.fn().mockImplementation(() => Promise.resolve(applicationTypesData));
     typesApi.doLoadSourceTypes = jest.fn().mockImplementation(() => Promise.resolve(sourceTypesData.data));
 
@@ -182,8 +184,9 @@ describe('SourcesPage', () => {
       user: { isOrgAdmin: true },
     });
 
-    api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
-    api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+    api.doLoadEntities = jest
+      .fn()
+      .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
 
     await act(async () => {
       wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
@@ -211,8 +214,9 @@ describe('SourcesPage', () => {
       user: { isOrgAdmin: true },
     });
 
-    api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
-    api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+    api.doLoadEntities = jest
+      .fn()
+      .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
 
     await act(async () => {
       wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
@@ -238,8 +242,9 @@ describe('SourcesPage', () => {
       user: { isOrgAdmin: true },
     });
 
-    api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
-    api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+    api.doLoadEntities = jest
+      .fn()
+      .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
 
     await act(async () => {
       wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
@@ -258,8 +263,9 @@ describe('SourcesPage', () => {
       user: { isOrgAdmin: true },
     });
 
-    api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
-    api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+    api.doLoadEntities = jest
+      .fn()
+      .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
 
     await act(async () => {
       wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
@@ -862,8 +868,9 @@ describe('SourcesPage', () => {
       });
       wrapper.update();
 
-      api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
-      api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+      api.doLoadEntities = jest
+        .fn()
+        .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
 
       const totalNonsense = '122#$@#%#^$#@!^$#^$#^546454abcerd';
 
@@ -913,8 +920,9 @@ describe('SourcesPage', () => {
       });
       wrapper.update();
 
-      api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
-      api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+      api.doLoadEntities = jest
+        .fn()
+        .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
 
       const totalNonsense = '122#$@#%#^$#@!^$#^$#^546454abcerd';
 
@@ -946,8 +954,9 @@ describe('SourcesPage', () => {
       });
       wrapper.update();
 
-      api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
-      api.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+      api.doLoadEntities = jest
+        .fn()
+        .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
 
       const totalNonsense = '122#$@#%#^$#@!^$#^$#^546454abcerd';
 
@@ -964,8 +973,12 @@ describe('SourcesPage', () => {
 
       expect(filterInput(wrapper).props().value).toEqual(totalNonsense);
 
-      api.doLoadEntities.mockImplementation(() => Promise.resolve({ sources: sourcesDataGraphQl }));
-      api.doLoadCountOfSources.mockImplementation(() => Promise.resolve({ meta: { count: sourcesDataGraphQl.length } }));
+      api.doLoadEntities.mockImplementation(() =>
+        Promise.resolve({
+          sources: sourcesDataGraphQl,
+          sources_aggregate: { aggregate: { total_count: sourcesDataGraphQl.length } },
+        })
+      );
 
       await act(async () => {
         wrapper.find(Button).last().simulate('click');

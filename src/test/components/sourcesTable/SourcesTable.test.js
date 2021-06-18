@@ -45,10 +45,12 @@ describe('SourcesTable', () => {
       appTypes: applicationTypesData.data,
       sourceTypes: sourceTypesData.data,
     };
-    API.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: sourcesDataGraphQl }));
-    API.doLoadCountOfSources = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve({ meta: { count: sourcesDataGraphQl.length } }));
+    API.doLoadEntities = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        sources: sourcesDataGraphQl,
+        sources_aggregate: { aggregate: { total_count: sourcesDataGraphQl.length } },
+      })
+    );
   });
 
   it('renders loading state', () => {

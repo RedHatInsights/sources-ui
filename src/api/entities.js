@@ -90,14 +90,14 @@ export const sorting = (sortBy, sortDirection) => {
   }
 
   if (sortBy === 'source_type_id') {
-    return `,sort_by:{source_type:{product_name:"${sortDirection}"}}`;
+    return `sort_by:{source_type:{product_name:"${sortDirection}"}}`;
   }
 
   if (sortBy === 'applications') {
-    return `,sort_by:{applications:{__count:"${sortDirection}"}}`;
+    return `sort_by:{applications:{__count:"${sortDirection}"}}`;
   }
 
-  return `,sort_by:{${sortBy}:"${sortDirection}"}`;
+  return `sort_by:{${sortBy}:"${sortDirection}"}`;
 };
 
 export const filtering = (filterValue = {}, activeVendor) => {
@@ -135,7 +135,7 @@ export const filtering = (filterValue = {}, activeVendor) => {
   }
 
   if (filterQueries.length > 0) {
-    return `, filter: { ${filterQueries.join(', ')} }`;
+    return `filter: { ${filterQueries.join(', ')} }`;
   }
 
   return '';
@@ -159,17 +159,20 @@ export const graphQlAttributes = `
     endpoints { id, scheme, host, port, path, receptor_node, role, certificate_authority, verify_ssl, availability_status_error, availability_status, authentications { authtype, availability_status, availability_status_error } }
 `;
 
-export const doLoadEntities = ({ pageSize, pageNumber, sortBy, sortDirection, filterValue, activeVendor }) =>
-  getSourcesApi()
+export const doLoadEntities = ({ pageSize, pageNumber, sortBy, sortDirection, filterValue, activeVendor }) => {
+  const filter = filtering(filterValue, activeVendor);
+
+  const filterSection = [pagination(pageSize, pageNumber), sorting(sortBy, sortDirection), filter].join(',');
+
+  return getSourcesApi()
     .postGraphQL({
-      query: `{ sources(${pagination(pageSize, pageNumber)}${sorting(sortBy, sortDirection)}${filtering(
-        filterValue,
-        activeVendor
-      )})
-        { ${graphQlAttributes} }
+      query: `{ sources(${filterSection})
+      { ${graphQlAttributes} },
+     sources_aggregate(${filter}){aggregate{total_count}}
     }`,
     })
     .then(({ data }) => data);
+};
 
 export const doCreateApplication = (data) => getSourcesApi().createApplication(data);
 
@@ -219,9 +222,6 @@ export const restFilterGenerator = (filterValue = {}, activeVendor) => {
 
   return '';
 };
-
-export const doLoadCountOfSources = (filterValue = {}, activeVendor) =>
-  axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/sources?${restFilterGenerator(filterValue, activeVendor)}&limit=1`);
 
 export const doLoadSource = (id) =>
   getSourcesApi()
