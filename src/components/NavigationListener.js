@@ -12,7 +12,9 @@ const NavigationListener = () => {
       insights.chrome.identifyApp('sources');
       const unregister = insights.chrome.on(
         'APP_NAVIGATION',
-        (event) => event.navId === 'sources' && history.push(routes.sources.path)
+        (event) =>
+          (event.navId.split('/').pop() || event.domEvent?.href.split('/').pop()) === 'sources' &&
+          history.push(routes.sources.path)
       );
 
       return () => unregister?.();
