@@ -64,55 +64,76 @@ describe('App spec js', () => {
     expect(on).toHaveBeenCalledWith('APP_NAVIGATION', expect.any(Function));
   });
 
-  it('goes to sources on chrome nav event when source', async () => {
+  describe('global nav event', () => {
     let tmpLocation;
-    tmpLocation = Object.assign({}, window.location);
 
-    delete window.location;
+    beforeEach(() => {
+      tmpLocation = Object.assign({}, window.location);
 
-    window.location = {
-      assign: jest.fn(),
-      replace: jest.fn(),
-      reload: jest.fn(),
-      href: 'http://localhost/',
-      toString: jest.fn(),
-      origin: 'http://localhost',
-      protocol: 'http:',
-      host: 'localhost',
-      hostname: 'localhost',
-      port: '',
-      pathname: '/',
-      search: '',
-      hash: '',
-    };
+      delete window.location;
 
-    const event = { domEvent: { href: '/beta/settings/sources' } };
-    const wrapper = mount(componentWrapperIntl(<App />));
-
-    expect(wrapper.find(Router).instance().history.location.pathname).toEqual('/');
-
-    await act(async () => {
-      callbackState(event);
+      window.location = {
+        assign: jest.fn(),
+        replace: jest.fn(),
+        reload: jest.fn(),
+        href: 'http://localhost/',
+        toString: jest.fn(),
+        origin: 'http://localhost',
+        protocol: 'http:',
+        host: 'localhost',
+        hostname: 'localhost',
+        port: '',
+        pathname: '/',
+        search: '',
+        hash: '',
+      };
     });
-    wrapper.update();
 
-    expect(wrapper.find(Router).instance().history.location.pathname).toEqual(routes.sources.path);
-
-    window.location = tmpLocation;
-  });
-
-  it('stays same when chrom nav event is not sources', async () => {
-    const event = { domEvent: { href: '/beta/settings/catalog' } };
-    const wrapper = mount(componentWrapperIntl(<App />));
-
-    expect(wrapper.find(Router).instance().history.location.pathname).toEqual('/');
-
-    await act(async () => {
-      callbackState(event);
+    afterEach(() => {
+      window.location = tmpLocation;
     });
-    wrapper.update();
 
-    expect(wrapper.find(Router).instance().history.location.pathname).toEqual('/');
+    it('goes to sources on chrome nav event when source', async () => {
+      const event = { navId: '/', domEvent: { href: '/beta/settings/sources' } };
+      const wrapper = mount(componentWrapperIntl(<App />));
+
+      expect(wrapper.find(Router).instance().history.location.pathname).toEqual('/');
+
+      await act(async () => {
+        callbackState(event);
+      });
+      wrapper.update();
+
+      expect(wrapper.find(Router).instance().history.location.pathname).toEqual(routes.sources.path);
+    });
+
+    it('goes to sources on chrome nav event when source [olderEnv]', async () => {
+      const event = { navId: 'sources', domEvent: { href: '/beta/settings/catalog' } };
+      const wrapper = mount(componentWrapperIntl(<App />));
+
+      expect(wrapper.find(Router).instance().history.location.pathname).toEqual('/');
+
+      await act(async () => {
+        callbackState(event);
+      });
+      wrapper.update();
+
+      expect(wrapper.find(Router).instance().history.location.pathname).toEqual(routes.sources.path);
+    });
+
+    it('stays same when chrom nav event is not sources', async () => {
+      const event = { navId: '/', domEvent: { href: '/beta/settings/catalog' } };
+      const wrapper = mount(componentWrapperIntl(<App />));
+
+      expect(wrapper.find(Router).instance().history.location.pathname).toEqual('/');
+
+      await act(async () => {
+        callbackState(event);
+      });
+      wrapper.update();
+
+      expect(wrapper.find(Router).instance().history.location.pathname).toEqual('/');
+    });
   });
 
   it('unmounts app and clears localStorage', async () => {
