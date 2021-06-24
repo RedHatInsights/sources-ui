@@ -7,6 +7,9 @@ const { config: webpackConfig, plugins } = config({
   deployment: process.env.BETA ? 'beta/apps' : 'apps',
   useProxy: true,
   appUrl: process.env.BETA ? '/beta/settings/sources' : '/settings/sources',
+  useCloud: true,
+  //localChrome: process.env.INSIGHTS_CHROME,
+  //proxyVerbose: true,
 });
 
 plugins.push(
