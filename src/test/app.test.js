@@ -86,7 +86,7 @@ describe('App spec js', () => {
       hash: '',
     };
 
-    const event = { navId: 'sources' };
+    const event = { domEvent: { href: '/beta/settings/sources' } };
     const wrapper = mount(componentWrapperIntl(<App />));
 
     expect(wrapper.find(Router).instance().history.location.pathname).toEqual('/');
@@ -102,7 +102,7 @@ describe('App spec js', () => {
   });
 
   it('stays same when chrom nav event is not sources', async () => {
-    const event = { navId: 'catalog' };
+    const event = { domEvent: { href: '/beta/settings/catalog' } };
     const wrapper = mount(componentWrapperIntl(<App />));
 
     expect(wrapper.find(Router).instance().history.location.pathname).toEqual('/');
