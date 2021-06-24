@@ -13,7 +13,7 @@
   "dependencies": {
     "@data-driven-forms/pf4-component-mapper": "^3.7.0",
     "@data-driven-forms/react-form-renderer": "^3.7.0",
-    "@patternfly/react-core": "^4.128.2",
+    "@patternfly/react-core": "^4.135.0",
     "@patternfly/react-icons": "^4.10.11",
     "@patternfly/react-table": "^4.27.24",
     "@redhat-cloud-services/frontend-components": "3.2.8",
