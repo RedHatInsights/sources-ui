@@ -22,7 +22,7 @@
     "@patternfly/react-table": "^4.29.0",
     "@redhat-cloud-services/frontend-components": "3.3.4",
     "@redhat-cloud-services/frontend-components-notifications": "3.2.2",
-    "@redhat-cloud-services/frontend-components-utilities": "3.2.2",
+    "@redhat-cloud-services/frontend-components-utilities": "3.2.3",
     "@sentry/minimal": "6.7.2",
     "awesome-debounce-promise": "^2.1.0",
     "axios": "0.21.1",
