@@ -8,6 +8,8 @@ import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/Prima
 import { Section } from '@redhat-cloud-services/frontend-components/Section';
 import { ErrorState } from '@redhat-cloud-services/frontend-components/ErrorState';
 
+import { downloadFile } from '@redhat-cloud-services/frontend-components-utilities/helpers';
+
 import { filterSources, pageAndSize } from '../redux/sources/actions';
 import SourcesTable from '../components/SourcesTable/SourcesTable';
 import { routes } from '../Routes';
@@ -48,6 +50,8 @@ import RedHatEmptyState from '../components/RedHatTiles/RedHatEmptyState';
 import { filterVendorTypes } from '../utilities/filterTypes';
 import { filterVendorAppTypes } from '../utilities/filterApps';
 import SourcesHeader from '../components/SourcesHeader';
+import generateCSV from '../utilities/generateCSV';
+import generateJSON from '../utilities/generateJSON';
 
 const initialState = {
   filter: undefined,
@@ -94,6 +98,7 @@ const SourcesPage = () => {
     appTypesLoaded,
     sourceTypesLoaded,
     activeVendor,
+    entities,
   } = sources;
 
   const loaded = entitiesLoaded && sourceTypesLoaded && appTypesLoaded;
@@ -263,6 +268,16 @@ const SourcesPage = () => {
         activeFiltersConfig={{
           filters: prepareChips(filterValue, sourceTypes, appTypes, intl),
           onDelete: (_event, chips, deleteAll) => dispatch(filterSources(removeChips(chips, filterValue, deleteAll))),
+        }}
+        exportConfig={{
+          isDisabled: !loaded,
+          onSelect: (_e, type) => {
+            const data =
+              type === 'csv'
+                ? generateCSV(entities, intl, appTypes, sourceTypes)
+                : generateJSON(entities, intl, appTypes, sourceTypes);
+            downloadFile(data, `sources-${new Date().toISOString()}`, type);
+          },
         }}
       />
       <SourcesTable />

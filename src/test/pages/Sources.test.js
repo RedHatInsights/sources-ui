@@ -2,11 +2,25 @@ import React from 'react';
 import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/PrimaryToolbar';
 import { act } from 'react-dom/test-utils';
 
-import { Button, Tooltip, Tile, Alert, Pagination, AlertActionLink, Chip, Select } from '@patternfly/react-core';
+import {
+  Button,
+  Tooltip,
+  Tile,
+  Alert,
+  Pagination,
+  AlertActionLink,
+  Chip,
+  Select,
+  Dropdown,
+  DropdownItem,
+} from '@patternfly/react-core';
 
 import { MemoryRouter, Link } from 'react-router-dom';
 import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/NotificationPortal';
 import ErrorState from '@redhat-cloud-services/frontend-components/ErrorState';
+import DownloadButton from '@redhat-cloud-services/frontend-components/DownloadButton';
+
+import * as utilsHelpers from '@redhat-cloud-services/frontend-components-utilities/helpers/helpers';
 
 import SourcesPageOriginal from '../../pages/Sources';
 import SourcesTable from '../../components/SourcesTable/SourcesTable';
@@ -38,6 +52,7 @@ import { getStore } from '../../utilities/store';
 import { AVAILABLE, UNAVAILABLE } from '../../views/formatters';
 import RedHatEmptyState from '../../components/RedHatTiles/RedHatEmptyState';
 import { AddSourceWizard } from '../../components/addSourceWizard';
+import { CSV_FILE, JSON_FILE_STRING } from '../__mocks__/fileMocks';
 
 jest.mock('../../hooks/useScreen', () => ({
   __esModule: true,
@@ -667,9 +682,48 @@ describe('SourcesPage', () => {
 
     expect(wrapper.find(PlaceHolderTable)).toHaveLength(1);
     expect(wrapper.find(Table)).toHaveLength(1);
+    expect(wrapper.find(DownloadButton).props().isDisabled).toEqual(true);
     wrapper.update();
     expect(wrapper.find(PlaceHolderTable)).toHaveLength(0);
     expect(wrapper.find(Table)).toHaveLength(1);
+    expect(wrapper.find(DownloadButton).props().isDisabled).toEqual(false);
+  });
+
+  it('should call export to csv and export to json', async () => {
+    utilsHelpers.downloadFile = jest.fn();
+
+    const CSV_INDEX = 0;
+    const JSON_INDEX = 1;
+
+    await act(async () => {
+      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    });
+    wrapper.update();
+
+    await act(async () => {
+      wrapper.find(DownloadButton).find(Dropdown).find('Toggle').simulate('click');
+    });
+    wrapper.update();
+
+    await act(async () => {
+      wrapper.find(DownloadButton).find(DropdownItem).at(CSV_INDEX).simulate('click');
+    });
+    wrapper.update();
+
+    expect(utilsHelpers.downloadFile).toHaveBeenCalledWith(CSV_FILE, expect.any(String), 'csv');
+    utilsHelpers.downloadFile.mockClear();
+
+    await act(async () => {
+      wrapper.find(DownloadButton).find(Dropdown).find('Toggle').simulate('click');
+    });
+    wrapper.update();
+
+    await act(async () => {
+      wrapper.find(DownloadButton).find(DropdownItem).at(JSON_INDEX).simulate('click');
+    });
+    wrapper.update();
+
+    expect(utilsHelpers.downloadFile).toHaveBeenCalledWith(JSON_FILE_STRING, expect.any(String), 'json');
   });
 
   describe('filtering', () => {

@@ -26,6 +26,7 @@ export const sourcesDataGraphQl = [
     tenant: '1234567',
     uid: '00273be5-9fb9-43ea-b4d2-db6002b3a3e9',
     updated_at: '2019-07-25T09:40:36.432Z',
+    availability_status: 'available',
     applications: [],
     endpoints: [
       {
@@ -65,6 +66,7 @@ export const sourcesDataGraphQl = [
     uid: '1a6eec2e-0f97-4c67-94a5-20d97e0f6f81',
     updated_at: '2019-05-27T14:13:45.773Z',
     applications: [],
+    availability_status: null,
     endpoints: [
       {
         id: '32',
@@ -83,6 +85,7 @@ export const sourcesDataGraphQl = [
     tenant: '1234567',
     uid: '9d6677e9-dd0b-4dbe-a663-4dc8c34c647c',
     updated_at: '2019-08-06T12:18:25.410Z',
+    availability_status: 'unavailable',
     applications: [
       {
         application_type_id: '1',
@@ -126,6 +129,7 @@ export const sourcesDataGraphQl = [
     tenant: '1234567',
     uid: 'a19aeba7-81af-42e3-9729-a57a5012303f',
     updated_at: '2019-08-06T12:54:07.119Z',
+    availability_status: 'partially_available',
     applications: [
       {
         application_type_id: '1',
