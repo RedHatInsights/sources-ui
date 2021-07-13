@@ -59,7 +59,7 @@ const SubWatchDescription = ({ id }) => {
           })}
           description={intl.formatMessage({
             id: 'rhelbundle.goldImages.description',
-            defaultMessage: 'Cloud instances automatically connect to cloud.redhat.com when provisioned.',
+            defaultMessage: 'Cloud instances automatically connect to console.redhat.com when provisioned.',
           })}
           isEnabled={isEnabled}
         />
@@ -100,7 +100,7 @@ const SubWatchDescription = ({ id }) => {
         })}
         description={intl.formatMessage({
           id: 'rhelbundle.goldImages.description',
-          defaultMessage: 'Cloud instances automatically connect to cloud.redhat.com when provisioned.',
+          defaultMessage: 'Cloud instances automatically connect to console.redhat.com when provisioned.',
         })}
         isEnabled={isEnabled}
       />
