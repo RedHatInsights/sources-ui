@@ -32,10 +32,12 @@ describe('SourcesPage - addSource route', () => {
   beforeEach(() => {
     wizard.AddSourceWizard = () => <h2>AddSource mock</h2>;
 
-    api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: sourcesDataGraphQl }));
-    api.doLoadCountOfSources = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve({ meta: { count: sourcesDataGraphQl.length } }));
+    api.doLoadEntities = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        sources: sourcesDataGraphQl,
+        sources_aggregate: { aggregate: { total_count: sourcesDataGraphQl.length } },
+      })
+    );
     api.doLoadAppTypes = jest.fn().mockImplementation(() => Promise.resolve(applicationTypesData));
     typesApi.doLoadSourceTypes = jest.fn().mockImplementation(() => Promise.resolve(sourceTypesData.data));
 

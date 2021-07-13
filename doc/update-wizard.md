@@ -24,7 +24,7 @@ Each type is identified by name (`amazon`), this name has to be unique. (Please,
 
 There is also `vendor` key for the identification of the type's vendor. This value is not shown in the UI, but is used to split the UI to two sections: **Cloud sources** and **Red Hat sources**. Red Hat sources are sources of type with vendor = `Red Hat`. Cloud sources are all other types. The wizard determines what Sources to show depending on a URL query: `?activeVendor=Red Hat|Cloud`.
 
-`icon_url` is a URL leading to images in [Insights Frontend Assets](https://github.com/RedHatInsights/insights-frontend-assets) repository. If you need to add/change/remove some icon, please do it there. The UI has no hardcoded images.
+`icon_url` is a URL leading to images in [Insights Frontend Assets](https://github.com/RedHatInsights/frontend-assets) repository. If you need to add/change/remove some icon, please do it there. The UI has no hardcoded images.
 
 The most important attribute for the UI is `schema`. This attribute defines:
 

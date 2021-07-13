@@ -1,7 +1,6 @@
 import { configure, mount, render, shallow } from 'enzyme';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import React from 'react';
-import 'babel-polyfill';
 
 import 'whatwg-fetch'; // fetch for Nodejs
 
@@ -19,7 +18,7 @@ global.insights = {
     init: () => {},
     identifyApp: () => ({}),
     isBeta: () => true,
-    on: () => undefined,
+    on: () => () => undefined,
     auth: {
       getUser: () =>
         new Promise((resolve) =>

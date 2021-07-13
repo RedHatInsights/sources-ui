@@ -3,6 +3,7 @@ import { useIntl } from 'react-intl';
 
 import { EmptyState, EmptyStateIcon, EmptyStateBody, Title } from '@patternfly/react-core';
 import PrivateIcon from '@patternfly/react-icons/dist/esm/icons/private-icon';
+import { disabledMessage } from '../../utilities/disabledTooltipProps';
 
 const NoPermissions = () => {
   const intl = useIntl();
@@ -16,12 +17,7 @@ const NoPermissions = () => {
           defaultMessage: 'Missing permissions',
         })}
       </Title>
-      <EmptyStateBody className="empty-state-body">
-        {intl.formatMessage({
-          id: 'detail.nopermissions.description',
-          defaultMessage: 'To perform this action, you must be granted write permissions from your Organization Administrator.',
-        })}
-      </EmptyStateBody>
+      <EmptyStateBody className="empty-state-body">{disabledMessage(intl)}</EmptyStateBody>
     </EmptyState>
   );
 };

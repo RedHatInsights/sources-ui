@@ -2,8 +2,11 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 
 import { Card, CardHeader, GridItem } from '@patternfly/react-core';
+import BuilderImageIcon from '@patternfly/react-icons/dist/esm/icons/builder-image-icon';
 
 import CloudCards, { CLOUD_CARDS_KEY } from '../../../components/CloudTiles/CloudCards';
+import InsightsIcon from '../../../components/CloudTiles/InsightsIcon';
+import SubWatchIcon from '../../../components/CloudTiles/SubWatchIcon';
 
 import componentWrapperIntl from '../../../utilities/testsHelpers';
 
@@ -39,8 +42,12 @@ describe('CloudCards', () => {
     wrapper.update();
 
     expect(wrapper.find(Card)).toHaveLength(1);
-    expect(wrapper.find('svg')).toHaveLength(6);
+    expect(wrapper.find('svg')).toHaveLength(7);
     expect(wrapper.find(GridItem)).toHaveLength(3);
+
+    expect(wrapper.find(SubWatchIcon)).toHaveLength(1);
+    expect(wrapper.find(InsightsIcon)).toHaveLength(1);
+    expect(wrapper.find(BuilderImageIcon)).toHaveLength(1);
 
     expect(wrapper.find(Card).first().props().isExpanded).toEqual(true);
 

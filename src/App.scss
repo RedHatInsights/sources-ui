@@ -90,6 +90,16 @@
       visibility: visible !important;
     }
   }
+  .ins-c-table-empty-state.pf-m-grid-lg.pf-c-table {
+    [data-label] {
+        --pf-c-table--cell--hidden-visible--Display: 0;
+    }
+    tr:first-of-type {
+        > td::before { 
+            display: none; 
+        }
+    }
+  }
 }
 
 .ins-c-sources__detail-page {

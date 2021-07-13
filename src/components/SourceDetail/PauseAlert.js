@@ -8,6 +8,7 @@ import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import { resumeSource } from '../../redux/sources/actions';
+import { disabledMessage } from '../../utilities/disabledTooltipProps';
 
 const PauseAlert = () => {
   const intl = useIntl();
@@ -34,13 +35,7 @@ const PauseAlert = () => {
               })}
             </AlertActionLink>
           ) : (
-            <Tooltip
-              content={intl.formatMessage({
-                id: 'sources.notAdminButton',
-                defaultMessage:
-                  'To perform this action, you must be granted write permissions from your Organization Administrator.',
-              })}
-            >
+            <Tooltip content={disabledMessage(intl)}>
               <AlertActionLink isDisabled>
                 {intl.formatMessage({
                   id: 'source.detail.resumeConnection',

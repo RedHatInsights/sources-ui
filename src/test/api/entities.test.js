@@ -349,14 +349,6 @@ describe('entities spec', () => {
       }
     });
 
-    it('doLoadCountOfSources loads count of sources', async () => {
-      mock.onGet(`/api/sources/v3.1/sources?filter[name][contains_i]=pepa&limit=1`).reply(200, { response: 'spec response' });
-
-      const result = await api.doLoadCountOfSources({ name: 'pepa' });
-
-      expect(result).toEqual({ response: 'spec response' });
-    });
-
     it('doLoadSource', async () => {
       const ENTITIES = [{ entity1: true }];
 

@@ -9,6 +9,7 @@ import { replaceRouteId, routes } from '../../Routes';
 import { useSource } from '../../hooks/useSource';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import { pauseSource, resumeSource } from '../../redux/sources/actions';
+import disabledTooltipProps from '../../utilities/disabledTooltipProps';
 
 const SourceKebab = () => {
   const [isOpen, setOpen] = useState(false);
@@ -23,15 +24,16 @@ const SourceKebab = () => {
     func();
   };
 
-  const tooltip = intl.formatMessage({
-    id: 'sources.notAdminButton',
-    defaultMessage: 'To perform this action, you must be granted write permissions from your Organization Administrator.',
+  const pausedTooltip = intl.formatMessage({
+    id: 'sources.pausedSourceAction',
+    defaultMessage: 'You cannot perform this action on a paused source.',
   });
 
-  const disabledProps = {
-    tooltip,
-    isDisabled: true,
-    className: 'ins-c-sources__disabled-drodpown-item',
+  const disabledProps = disabledTooltipProps(intl);
+
+  const pausedProps = {
+    ...disabledProps,
+    tooltip: pausedTooltip,
   };
 
   return (
@@ -88,6 +90,7 @@ const SourceKebab = () => {
         </DropdownItem>,
         <DropdownItem
           {...(!hasRightAccess && disabledProps)}
+          {...(source.paused_at && pausedProps)}
           key="rename"
           onClick={() => push(replaceRouteId(routes.sourcesDetailRename.path, source.id))}
         >

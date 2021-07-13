@@ -11,6 +11,7 @@ import EmptyStateTable from './EmptyStateTable';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import { replaceRouteId, routes } from '../../Routes';
+import disabledTooltipProps from '../../utilities/disabledTooltipProps';
 
 export const itemToCells = (item, columns, sourceTypes, appTypes) =>
   columns
@@ -64,17 +65,7 @@ const initialState = (columns) => ({
 });
 
 export const actionResolver = (intl, push, isOrgAdmin, dispatch) => (rowData) => {
-  const tooltip = intl.formatMessage({
-    id: 'sources.notAdminButton',
-    defaultMessage: 'To perform this action, you must be granted write permissions from your Organization Administrator.',
-  });
-
-  const disabledProps = {
-    tooltip,
-    isDisabled: true,
-    className: 'ins-c-sources__disabled-drodpown-item',
-  };
-
+  const disabledProps = disabledTooltipProps(intl);
   const actions = [];
 
   if (rowData.paused_at) {
@@ -238,6 +229,7 @@ const SourcesTable = () => {
       cells={state.cells}
       actionResolver={loaded && numberOfEntities > 0 ? actionResolver(intl, push, writePermissions, reduxDispatch) : undefined}
       rowWrapper={RowWrapperLoader}
+      className={numberOfEntities === 0 && state.isLoaded ? 'ins-c-table-empty-state' : ''}
     >
       <TableHeader />
       <TableBody />
