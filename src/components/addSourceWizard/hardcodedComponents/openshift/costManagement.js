@@ -4,7 +4,7 @@ import { HCCM_DOCS_PREFIX } from '../../stringConstants';
 
 import { Text, TextVariants, TextContent } from '@patternfly/react-core';
 
-const INSTALL_PREREQUISITE = `${HCCM_DOCS_PREFIX}/html-single/getting_started_with_cost_management/index?lb_target=production#assembly-adding-openshift-container-platform-source`;
+const INSTALL_PREREQUISITE = `${HCCM_DOCS_PREFIX}/html-single/adding_an_openshift_container_platform_source_to_cost_management`;
 
 export const ConfigureCostOperator = () => {
   const intl = useIntl();

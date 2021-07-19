@@ -15,9 +15,9 @@ import {
 import { HCCM_DOCS_PREFIX } from '../../stringConstants';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 
-const CREATE_AZURE_STORAGE = `${HCCM_DOCS_PREFIX}/html-single/getting_started_with_cost_management/index#assembly-adding-azure-sources`;
-const AZURE_CREDS_URL = `${HCCM_DOCS_PREFIX}/html-single/getting_started_with_cost_management/index#configuring-azure-roles_adding-an-azure-source`;
-const RECURRING_TASK_URL = `${HCCM_DOCS_PREFIX}/html-single/getting_started_with_cost_management/index#configuring-an-azure-daily-export-schedule_adding-an-azure-source`;
+const CREATE_AZURE_STORAGE = `${HCCM_DOCS_PREFIX}/html-single/adding_a_microsoft_azure_source_to_cost_management/index#creating-an-azure-storage-account_adding-an-azure-source`;
+const AZURE_CREDS_URL = `${HCCM_DOCS_PREFIX}/html-single/adding_a_microsoft_azure_source_to_cost_management/index#configuring-azure-roles_adding-an-azure-source`;
+const RECURRING_TASK_URL = `${HCCM_DOCS_PREFIX}/html-single/adding_a_microsoft_azure_source_to_cost_management/index#configuring-an-azure-daily-export-schedule_adding-an-azure-source`;
 
 export const ConfigureResourceGroupAndStorageAccount = () => {
   const intl = useIntl();
