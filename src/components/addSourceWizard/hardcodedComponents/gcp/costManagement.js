@@ -21,7 +21,7 @@ import { getSourcesApi } from '../../../../api/entities';
 
 const b = (chunks) => <b key={`b-${chunks.length}-${Math.floor(Math.random() * 1000)}`}>{chunks}</b>;
 
-const PROJECT_LINK = `${HCCM_DOCS_PREFIX}/html-single/getting_started_with_cost_management/index#assembly-adding-gcp-sources`;
+const PROJECT_LINK = `${HCCM_DOCS_PREFIX}/html-single/adding_a_google_cloud_source_to_cost_management`;
 
 export const Project = () => {
   const intl = useIntl();
