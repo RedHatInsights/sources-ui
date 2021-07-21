@@ -25,6 +25,7 @@ import { HCCM_DOCS_PREFIX } from '../../stringConstants';
 
 const CREATE_S3_BUCKET = `${HCCM_DOCS_PREFIX}/html-single/adding_an_amazon_web_services_aws_source_to_cost_management/index#creating-an-aws-s3-bucket_adding-aws-sources`;
 const ENABLE_AWS_ACCOUNT = `${HCCM_DOCS_PREFIX}/html-single/adding_an_amazon_web_services_aws_source_to_cost_management/index#enabling-aws-account-access_adding-aws-sources`;
+const CONFIG_AWS_TAGS = `${HCCM_DOCS_PREFIX}/html-single/adding_an_amazon_web_services_aws_source_to_cost_management/index#configure-tagging-next-step_next-steps-aws`;
 
 export const UsageDescription = () => {
   const intl = useIntl();
@@ -274,7 +275,7 @@ export const TagsDescription = () => {
   return (
     <TextContent>
       <Text>
-        <Text component={TextVariants.a} rel="noopener noreferrer" target="_blank" href={ENABLE_AWS_ACCOUNT}>
+        <Text component={TextVariants.a} rel="noopener noreferrer" target="_blank" href={CONFIG_AWS_TAGS}>
           {intl.formatMessage({
             id: 'cost.tags.readMeLink',
             defaultMessage: 'Learn more',
