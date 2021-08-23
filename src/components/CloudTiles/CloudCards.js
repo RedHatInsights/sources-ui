@@ -14,13 +14,12 @@ import {
   CardExpandableContent,
   Text,
   TextContent,
-  Label,
 } from '@patternfly/react-core';
 
 import ArrowRightIcon from '@patternfly/react-icons/dist/esm/icons/arrow-right-icon';
 import BuilderImageIcon from '@patternfly/react-icons/dist/esm/icons/builder-image-icon';
-import SubWatchIcon from './SubWatchIcon';
-import InsightsIcon from './InsightsIcon';
+import TrendUpIcon from '@patternfly/react-icons/dist/esm/icons/trend-up-icon';
+import ListIcon from '@patternfly/react-icons/dist/esm/icons/list-icon';
 
 const PREFIX = insights.chrome.isBeta() ? 'beta/' : '';
 
@@ -61,9 +60,10 @@ const CloudCards = () => {
               <GridItem md={4}>
                 <Stack>
                   <StackItem className="pf-u-mb-sm">
-                    <Label color="blue" icon={<BuilderImageIcon />}>
+                    <Text className="ins-c-sources__info-card-header">
+                      <BuilderImageIcon className="pf-u-mr-sm" color="#0066cc" />
                       {intl.formatMessage({ id: 'cloud.goldImages', defaultMessage: 'Use gold images' })}
-                    </Label>
+                    </Text>
                   </StackItem>
                   <StackItem isFilled>
                     <Text className="text pf-u-mb-sm">
@@ -101,9 +101,10 @@ const CloudCards = () => {
               <GridItem md={4}>
                 <Stack>
                   <StackItem className="pf-u-mb-sm">
-                    <Label color="blue" icon={<InsightsIcon className="custom-icon" />}>
+                    <Text className="ins-c-sources__info-card-header">
+                      <TrendUpIcon className="pf-u-mr-sm" color="#0066cc" />
                       {intl.formatMessage({ id: 'cloud.insights', defaultMessage: 'Explore Red Hat Insights' })}
-                    </Label>
+                    </Text>
                   </StackItem>
                   <StackItem isFilled>
                     <Text className="text pf-u-mb-sm">
@@ -134,9 +135,10 @@ const CloudCards = () => {
               <GridItem md={4}>
                 <Stack>
                   <StackItem className="pf-u-mb-sm">
-                    <Label color="blue" icon={<SubWatchIcon className="custom-icon" />}>
+                    <Text className="ins-c-sources__info-card-header">
+                      <ListIcon className="pf-u-mr-sm" color="#0066cc" />
                       {intl.formatMessage({ id: 'cloud.subwatch', defaultMessage: 'Track usage with Subscriptions' })}
-                    </Label>
+                    </Text>
                   </StackItem>
                   <StackItem isFilled>
                     <Text className="text pf-u-mb-sm">
