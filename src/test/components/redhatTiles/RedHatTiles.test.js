@@ -25,7 +25,7 @@ describe('RedhatTiles', () => {
     };
 
     store = mockStore({
-      user: { isOrgAdmin: true },
+      user: { writePermissions: true },
       sources: { sourceTypes: sourceTypes.data, activeVendor: REDHAT_VENDOR },
     });
   });
@@ -44,7 +44,7 @@ describe('RedhatTiles', () => {
   });
 
   it('renders correctly when no permissions', async () => {
-    store = mockStore({ user: { isOrgAdmin: false }, sources: { sourceTypes: sourceTypes.data } });
+    store = mockStore({ user: { writePermissions: false }, sources: { sourceTypes: sourceTypes.data } });
 
     await act(async () => {
       wrapper = mount(componentWrapperIntl(<RedHatTiles {...initialProps} />, store));

@@ -23,7 +23,7 @@ describe('RedhatEmptyState', () => {
       setSelectedType,
     };
 
-    store = mockStore({ user: { isOrgAdmin: true }, sources: { sourceTypes: sourceTypes.data }, activeVendor: REDHAT_VENDOR });
+    store = mockStore({ user: { writePermissions: true }, sources: { sourceTypes: sourceTypes.data }, activeVendor: REDHAT_VENDOR });
   });
 
   it('renders correctly', async () => {

@@ -64,7 +64,7 @@ const initialState = (columns) => ({
   cells: prepareColumnsCells(columns),
 });
 
-export const actionResolver = (intl, push, isOrgAdmin, dispatch) => (rowData) => {
+export const actionResolver = (intl, push, hasWritePermissions, dispatch) => (rowData) => {
   const disabledProps = disabledTooltipProps(intl);
   const actions = [];
 
@@ -79,7 +79,7 @@ export const actionResolver = (intl, push, isOrgAdmin, dispatch) => (rowData) =>
         defaultMessage: 'Unpause data collection for this source',
       }),
       onClick: (_ev, _i, { id }) => dispatch(resumeSource(id, rowData.originalName, intl)),
-      ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
+      ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
     });
   } else {
     actions.push({
@@ -92,7 +92,7 @@ export const actionResolver = (intl, push, isOrgAdmin, dispatch) => (rowData) =>
         defaultMessage: 'Temporarily disable data collection',
       }),
       onClick: (_ev, _i, { id }) => dispatch(pauseSource(id, rowData.originalName, intl)),
-      ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
+      ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
     });
   }
 
@@ -106,7 +106,7 @@ export const actionResolver = (intl, push, isOrgAdmin, dispatch) => (rowData) =>
       defaultMessage: 'Permanently delete this source and all collected data',
     }),
     onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesRemove.path, id)),
-    ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
+    ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
   });
 
   actions.push({
@@ -120,7 +120,7 @@ export const actionResolver = (intl, push, isOrgAdmin, dispatch) => (rowData) =>
           defaultMessage: 'View details',
         }),
     onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesDetail.path, id)),
-    ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
+    ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
   });
 
   return actions;

@@ -22,7 +22,7 @@ describe('RedirectNoWriteAccess', () => {
   });
 
   it('Renders null if user is admin', () => {
-    initialStore = mockStore({ user: { isOrgAdmin: true } });
+    initialStore = mockStore({ user: { writePermissions: true } });
 
     const wrapper = mount(
       componentWrapperIntl(
@@ -50,7 +50,7 @@ describe('RedirectNoWriteAccess', () => {
   });
 
   it('Renders null if app does not if user is admin (undefined)', () => {
-    initialStore = mockStore({ user: { isOrgAdmin: undefined } });
+    initialStore = mockStore({ user: { writePermissions: undefined } });
 
     const wrapper = mount(
       componentWrapperIntl(
@@ -68,7 +68,7 @@ describe('RedirectNoWriteAccess', () => {
   it('Renders redirect and creates message if user is not admin', async () => {
     let wrapper;
 
-    initialStore = mockStore({ user: { isOrgAdmin: false, writePermissions: false } });
+    initialStore = mockStore({ user: { writePermissions: false, writePermissions: false } });
 
     await act(async () => {
       wrapper = mount(
