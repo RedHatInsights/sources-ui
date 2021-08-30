@@ -154,7 +154,10 @@ const SourcesPage = () => {
   });
 
   let actionsConfig;
-  if (variants.indexOf(screenSize) <= variants.indexOf('sm')) {
+
+  const isSmallScreen = variants.indexOf(screenSize) <= variants.indexOf('sm');
+
+  if (isSmallScreen) {
     actionsConfig = {
       dropdownProps: { position: 'right' },
       actions: hasWritePermissions
@@ -176,6 +179,7 @@ const SourcesPage = () => {
   const mainContent = () => (
     <React.Fragment>
       <PrimaryToolbar
+        useMobileLayout
         pagination={showPaginationLoader ? <PaginationLoader /> : numberOfEntities > 0 ? paginationConfig : undefined}
         actionsConfig={
           actionsConfig || {
@@ -270,6 +274,7 @@ const SourcesPage = () => {
           onDelete: (_event, chips, deleteAll) => dispatch(filterSources(removeChips(chips, filterValue, deleteAll))),
         }}
         exportConfig={{
+          ...(isSmallScreen && { position: 'right' }),
           isDisabled: !loaded,
           onSelect: (_e, type) => {
             const data =
