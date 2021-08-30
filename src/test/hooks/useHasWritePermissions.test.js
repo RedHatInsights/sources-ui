@@ -12,7 +12,7 @@ describe('useHasWritePermissions', () => {
 
   it('returns undefined when is not loaded', () => {
     mockStore = {
-      user: { isOrgAdmin: undefined },
+      user: { writePermissions: undefined },
     };
 
     redux.useSelector = jest.fn().mockImplementation((fn) => fn(mockStore));
@@ -25,33 +25,7 @@ describe('useHasWritePermissions', () => {
 
   it('returns true when is loaded - has write permissions', () => {
     mockStore = {
-      user: { isOrgAdmin: false, writePermissions: true },
-    };
-
-    redux.useSelector = jest.fn().mockImplementation((fn) => fn(mockStore));
-
-    const result = useHasWritePermissions();
-
-    expect(result).toEqual(true);
-    expect(redux.useSelector).toHaveBeenCalledWith(inputFn);
-  });
-
-  it('returns true when is loaded - isOrgAdmin', () => {
-    mockStore = {
-      user: { isOrgAdmin: true, writePermissions: false },
-    };
-
-    redux.useSelector = jest.fn().mockImplementation((fn) => fn(mockStore));
-
-    const result = useHasWritePermissions();
-
-    expect(result).toEqual(true);
-    expect(redux.useSelector).toHaveBeenCalledWith(inputFn);
-  });
-
-  it('returns true when is loaded - has write permissions and is admin', () => {
-    mockStore = {
-      user: { isOrgAdmin: true, writePermissions: true },
+      user: { writePermissions: true },
     };
 
     redux.useSelector = jest.fn().mockImplementation((fn) => fn(mockStore));
@@ -64,7 +38,7 @@ describe('useHasWritePermissions', () => {
 
   it('returns false when is loaded', () => {
     mockStore = {
-      user: { isOrgAdmin: false, writePermissions: false },
+      user: { writePermissions: false },
     };
 
     redux.useSelector = jest.fn().mockImplementation((fn) => fn(mockStore));

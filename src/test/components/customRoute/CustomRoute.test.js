@@ -63,7 +63,7 @@ describe('CustomRoute', () => {
   });
 
   it('renders RedirectNotAdmin when writeAccess set', () => {
-    store = mockStore({ user: { isOrgAdmin: true } });
+    store = mockStore({ user: { writePermissions: true } });
 
     route = {
       ...route,

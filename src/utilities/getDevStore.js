@@ -9,12 +9,12 @@ export const getDevStore = () => {
   const store = getStore([logger]);
 
   const removePermissions = () => {
-    store.dispatch({ type: ACTION_TYPES.SET_ORG_ADMIN_FULFILLED, payload: false });
+    store.dispatch({ type: ACTION_TYPES.SET_WRITE_PERMISSIONS_FULFILLED, payload: false });
     store.dispatch({ type: ACTION_TYPES.SET_WRITE_PERMISSIONS_FULFILLED, payload: false });
   };
 
   const setPermissions = () => {
-    store.dispatch({ type: ACTION_TYPES.SET_ORG_ADMIN_FULFILLED, payload: true });
+    store.dispatch({ type: ACTION_TYPES.SET_WRITE_PERMISSIONS_FULFILLED, payload: true });
   };
 
   const setCount = (count) =>

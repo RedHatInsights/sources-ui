@@ -1,16 +1,13 @@
 import { useEffect } from 'react';
-import { useDispatch, batch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-import { loadOrgAdmin, loadWritePermissions } from '../redux/user/actions';
+import { loadWritePermissions } from '../redux/user/actions';
 
 const PermissionsChecker = ({ children }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    batch(() => {
-      dispatch(loadOrgAdmin());
-      dispatch(loadWritePermissions());
-    });
+    dispatch(loadWritePermissions());
   }, []);
 
   return children;

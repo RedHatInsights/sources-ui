@@ -558,7 +558,7 @@ describe('SourceEditModal', () => {
         sourceTypesLoaded: true,
         loaded: 0,
       },
-      user: { isOrgAdmin: true },
+      user: { writePermissions: true },
     });
 
     await act(async () => {

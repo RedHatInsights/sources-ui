@@ -44,7 +44,7 @@ describe('SourcesPage - addSource route', () => {
     store = createStore(
       combineReducers({
         sources: applyReducerHash(ReducersProviders, defaultSourcesState),
-        user: applyReducerHash(UserReducer, { isOrgAdmin: false }),
+        user: applyReducerHash(UserReducer, { writePermissions: false }),
       }),
       applyMiddleware(...middlewares)
     );
