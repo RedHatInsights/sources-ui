@@ -34,7 +34,7 @@ describe('ApplicationsCard', () => {
         sourceTypes: sourceTypesData.data,
         appTypes: updateAppData,
       },
-      user: { writePermissions: false, writePermissions: false },
+      user: { writePermissions: false },
     });
 
     wrapper = mount(
@@ -73,7 +73,7 @@ describe('ApplicationsCard', () => {
         sourceTypes: sourceTypesData.data,
         appTypes: updateAppData,
       },
-      user: { writePermissions: true, writePermissions: true },
+      user: { writePermissions: true },
     });
 
     wrapper = mount(
@@ -103,7 +103,7 @@ describe('ApplicationsCard', () => {
           sourceTypes: sourceTypesData.data,
           appTypes: updateAppData,
         },
-        user: { writePermissions: true, writePermissions: true },
+        user: { writePermissions: true },
       });
 
       actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'undefined' }));
@@ -208,7 +208,7 @@ describe('ApplicationsCard', () => {
           sourceTypes: sourceTypesData.data,
           appTypes: [COSTMANAGEMENT_APP],
         },
-        user: { writePermissions: true, writePermissions: true },
+        user: { writePermissions: true },
       });
 
       actions.loadEntities = jest.fn().mockImplementation(() => ({ type: 'nonsense' }));
@@ -283,7 +283,7 @@ describe('ApplicationsCard', () => {
           sourceTypes: sourceTypesData.data,
           appTypes: [COSTMANAGEMENT_APP],
         },
-        user: { writePermissions: true, writePermissions: true },
+        user: { writePermissions: true },
       });
 
       const unpauseApplication = jest.fn().mockImplementation(() => Promise.reject('Some backend error'));
@@ -338,7 +338,7 @@ describe('ApplicationsCard', () => {
           sourceTypes: sourceTypesData.data,
           appTypes: [COSTMANAGEMENT_APP],
         },
-        user: { writePermissions: true, writePermissions: true },
+        user: { writePermissions: true },
       });
 
       actions.loadEntities = jest.fn().mockImplementation(() => ({ type: 'nonsense' }));
@@ -401,7 +401,7 @@ describe('ApplicationsCard', () => {
           sourceTypes: sourceTypesData.data,
           appTypes: updateAppData,
         },
-        user: { writePermissions: true, writePermissions: true },
+        user: { writePermissions: true },
       });
 
       wrapper = mount(
@@ -429,7 +429,7 @@ describe('ApplicationsCard', () => {
           sourceTypes: sourceTypesData.data,
           appTypes: [COSTMANAGEMENT_APP],
         },
-        user: { writePermissions: true, writePermissions: true },
+        user: { writePermissions: true },
       });
 
       jest.useFakeTimers();
@@ -541,7 +541,7 @@ describe('ApplicationsCard', () => {
           sourceTypes: sourceTypesData.data,
           appTypes: [COSTMANAGEMENT_APP],
         },
-        user: { writePermissions: true, writePermissions: true },
+        user: { writePermissions: true },
       });
 
       const unpauseApplication = jest.fn().mockImplementation(() => Promise.reject('Some backend error'));

@@ -27,7 +27,7 @@ describe('SourceKebab', () => {
       sources: {
         entities: [{ id: sourceId }],
       },
-      user: { writePermissions: false, writePermissions: false },
+      user: { writePermissions: false },
     });
 
     wrapper = mount(
@@ -76,7 +76,7 @@ describe('SourceKebab', () => {
       sources: {
         entities: [{ id: sourceId, paused_at: 'today' }],
       },
-      user: { writePermissions: true, writePermissions: true },
+      user: { writePermissions: true },
     });
 
     wrapper = mount(
@@ -127,7 +127,7 @@ describe('SourceKebab', () => {
       sources: {
         entities: [{ id: sourceId, paused_at: 'today', name: sourceName }],
       },
-      user: { writePermissions: true, writePermissions: true },
+      user: { writePermissions: true },
     });
 
     wrapper = mount(
@@ -159,7 +159,7 @@ describe('SourceKebab', () => {
         sources: {
           entities: [{ id: sourceId, name: sourceName }],
         },
-        user: { writePermissions: true, writePermissions: true },
+        user: { writePermissions: true },
       });
 
       wrapper = mount(

@@ -21,7 +21,7 @@ describe('Breadcrumbs', () => {
       sources: {
         entities: [{ id: sourceId, name: 'Somename' }],
       },
-      user: { writePermissions: false, writePermissions: false },
+      user: { writePermissions: false },
     });
 
     wrapper = mount(

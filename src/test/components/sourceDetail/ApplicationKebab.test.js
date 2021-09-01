@@ -37,7 +37,7 @@ describe('ApplicationKebab', () => {
       sources: {
         entities: [{ id: sourceId }],
       },
-      user: { writePermissions: false, writePermissions: false },
+      user: { writePermissions: false },
     });
 
     wrapper = mount(
@@ -84,7 +84,7 @@ describe('ApplicationKebab', () => {
       sources: {
         entities: [{ id: sourceId }],
       },
-      user: { writePermissions: false, writePermissions: false },
+      user: { writePermissions: false },
     });
 
     app = {
@@ -135,7 +135,7 @@ describe('ApplicationKebab', () => {
         sources: {
           entities: [{ id: sourceId }],
         },
-        user: { writePermissions: true, writePermissions: true },
+        user: { writePermissions: true },
       });
 
       wrapper = mount(
@@ -212,7 +212,7 @@ describe('ApplicationKebab', () => {
         sources: {
           entities: [{ id: sourceId, paused_at: 'now' }],
         },
-        user: { writePermissions: true, writePermissions: true },
+        user: { writePermissions: true },
       });
 
       app = {
@@ -260,7 +260,7 @@ describe('ApplicationKebab', () => {
         sources: {
           entities: [{ id: sourceId }],
         },
-        user: { writePermissions: true, writePermissions: true },
+        user: { writePermissions: true },
       });
 
       app = {

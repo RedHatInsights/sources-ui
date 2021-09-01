@@ -23,7 +23,7 @@ describe('ApplicationResourcesCard', () => {
       sources: {
         entities: [{ id: sourceId, applications: [] }],
       },
-      user: { writePermissions: false, writePermissions: false },
+      user: { writePermissions: false },
     });
 
     wrapper = mount(
@@ -47,7 +47,7 @@ describe('ApplicationResourcesCard', () => {
       sources: {
         entities: [{ id: sourceId, applications: [] }],
       },
-      user: { writePermissions: true, writePermissions: true },
+      user: { writePermissions: true },
     });
 
     wrapper = mount(
@@ -73,7 +73,7 @@ describe('ApplicationResourcesCard', () => {
       sources: {
         entities: [{ id: sourceId, applications: [{ id: 123 }] }],
       },
-      user: { writePermissions: true, writePermissions: true },
+      user: { writePermissions: true },
     });
 
     wrapper = mount(
