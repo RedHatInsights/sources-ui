@@ -68,7 +68,7 @@ describe('RedirectNoWriteAccess', () => {
   it('Renders redirect and creates message if user is not admin', async () => {
     let wrapper;
 
-    initialStore = mockStore({ user: { writePermissions: false, writePermissions: false } });
+    initialStore = mockStore({ user: { writePermissions: false } });
 
     await act(async () => {
       wrapper = mount(
