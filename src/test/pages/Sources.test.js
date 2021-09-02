@@ -54,10 +54,10 @@ import RedHatEmptyState from '../../components/RedHatTiles/RedHatEmptyState';
 import { AddSourceWizard } from '../../components/addSourceWizard';
 import { CSV_FILE, JSON_FILE_STRING } from '../__mocks__/fileMocks';
 
-jest.mock('../../hooks/useScreen', () => ({
+jest.mock('@redhat-cloud-services/frontend-components/useScreenSize', () => ({
   __esModule: true,
-  variants: ['xs', 'sm', 'md', 'lg', '2xl'],
-  default: () => global.mockWidth || 'md',
+  isSmallScreen: (size) => size === 'sm',
+  useScreenSize: () => global.mockWidth || 'md',
 }));
 
 jest.mock('react', () => {

@@ -7,6 +7,7 @@ import { useIntl } from 'react-intl';
 import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/PrimaryToolbar';
 import { Section } from '@redhat-cloud-services/frontend-components/Section';
 import { ErrorState } from '@redhat-cloud-services/frontend-components/ErrorState';
+import { useScreenSize, isSmallScreen } from '@redhat-cloud-services/frontend-components/useScreenSize';
 
 import { downloadFile } from '@redhat-cloud-services/frontend-components-utilities/helpers';
 
@@ -38,7 +39,6 @@ import {
   checkSubmit,
 } from './Sources/helpers';
 import { useIsLoaded } from '../hooks/useIsLoaded';
-import useScreen, { variants } from '../hooks/useScreen';
 import { useHasWritePermissions } from '../hooks/useHasWritePermissions';
 import CustomRoute from '../components/CustomRoute/CustomRoute';
 import { PaginationLoader } from '../components/SourcesTable/loaders';
@@ -82,7 +82,7 @@ const SourcesPage = () => {
   const history = useHistory();
   const intl = useIntl();
 
-  const screenSize = useScreen();
+  const screenSize = useScreenSize();
 
   const sources = useSelector(({ sources }) => sources, shallowEqual);
 
@@ -155,9 +155,7 @@ const SourcesPage = () => {
 
   let actionsConfig;
 
-  const isSmallScreen = variants.indexOf(screenSize) <= variants.indexOf('sm');
-
-  if (isSmallScreen) {
+  if (isSmallScreen(screenSize)) {
     actionsConfig = {
       dropdownProps: { position: 'right' },
       actions: hasWritePermissions
