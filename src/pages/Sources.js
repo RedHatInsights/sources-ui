@@ -6,10 +6,13 @@ import { useIntl } from 'react-intl';
 
 import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/PrimaryToolbar';
 import { Section } from '@redhat-cloud-services/frontend-components/Section';
+import { ErrorState } from '@redhat-cloud-services/frontend-components/ErrorState';
+import { useScreenSize, isSmallScreen } from '@redhat-cloud-services/frontend-components/useScreenSize';
+
+import { downloadFile } from '@redhat-cloud-services/frontend-components-utilities/helpers';
 
 import { filterSources, pageAndSize } from '../redux/sources/actions';
 import SourcesTable from '../components/SourcesTable/SourcesTable';
-import SourcesErrorState from '../components/SourcesErrorState';
 import { routes } from '../Routes';
 
 const SourceRemoveModal = lazy(() =>
@@ -36,7 +39,6 @@ import {
   checkSubmit,
 } from './Sources/helpers';
 import { useIsLoaded } from '../hooks/useIsLoaded';
-import useScreen, { variants } from '../hooks/useScreen';
 import { useHasWritePermissions } from '../hooks/useHasWritePermissions';
 import CustomRoute from '../components/CustomRoute/CustomRoute';
 import { PaginationLoader } from '../components/SourcesTable/loaders';
@@ -48,6 +50,8 @@ import RedHatEmptyState from '../components/RedHatTiles/RedHatEmptyState';
 import { filterVendorTypes } from '../utilities/filterTypes';
 import { filterVendorAppTypes } from '../utilities/filterApps';
 import SourcesHeader from '../components/SourcesHeader';
+import generateCSV from '../utilities/generateCSV';
+import generateJSON from '../utilities/generateJSON';
 
 const initialState = {
   filter: undefined,
@@ -78,7 +82,7 @@ const SourcesPage = () => {
   const history = useHistory();
   const intl = useIntl();
 
-  const screenSize = useScreen();
+  const screenSize = useScreenSize();
 
   const sources = useSelector(({ sources }) => sources, shallowEqual);
 
@@ -94,6 +98,7 @@ const SourcesPage = () => {
     appTypesLoaded,
     sourceTypesLoaded,
     activeVendor,
+    entities,
   } = sources;
 
   const loaded = entitiesLoaded && sourceTypesLoaded && appTypesLoaded;
@@ -149,7 +154,8 @@ const SourcesPage = () => {
   });
 
   let actionsConfig;
-  if (variants.indexOf(screenSize) <= variants.indexOf('sm')) {
+
+  if (isSmallScreen(screenSize)) {
     actionsConfig = {
       dropdownProps: { position: 'right' },
       actions: hasWritePermissions
@@ -171,6 +177,7 @@ const SourcesPage = () => {
   const mainContent = () => (
     <React.Fragment>
       <PrimaryToolbar
+        useMobileLayout
         pagination={showPaginationLoader ? <PaginationLoader /> : numberOfEntities > 0 ? paginationConfig : undefined}
         actionsConfig={
           actionsConfig || {
@@ -264,6 +271,17 @@ const SourcesPage = () => {
           filters: prepareChips(filterValue, sourceTypes, appTypes, intl),
           onDelete: (_event, chips, deleteAll) => dispatch(filterSources(removeChips(chips, filterValue, deleteAll))),
         }}
+        exportConfig={{
+          ...(isSmallScreen && { position: 'right' }),
+          isDisabled: !loaded,
+          onSelect: (_e, type) => {
+            const data =
+              type === 'csv'
+                ? generateCSV(entities, intl, appTypes, sourceTypes)
+                : generateJSON(entities, intl, appTypes, sourceTypes);
+            downloadFile(data, `sources-${new Date().toISOString()}`, type);
+          },
+        }}
       />
       <SourcesTable />
       <PrimaryToolbar
@@ -311,7 +329,7 @@ const SourcesPage = () => {
       <SourcesHeader />
       <Section type="content">
         {showInfoCards && <CloudCards />}
-        {fetchingError && <SourcesErrorState />}
+        {fetchingError && <ErrorState />}
         {!fetchingError && showEmptyState && activeVendor === CLOUD_VENDOR && (
           <CloudEmptyState setSelectedType={setSelectedType} />
         )}

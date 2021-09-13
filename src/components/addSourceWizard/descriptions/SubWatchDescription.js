@@ -43,7 +43,7 @@ const SubWatchDescription = ({ id }) => {
         <Point
           title={intl.formatMessage({
             id: 'rhelbundle.goldImages.title',
-            defaultMessage: 'Red Hat Gold Images',
+            defaultMessage: 'Red Hat gold images',
           })}
           description={intl.formatMessage({
             id: 'rhelbundle.goldImages.azure.description',
@@ -72,7 +72,7 @@ const SubWatchDescription = ({ id }) => {
       <Point
         title={intl.formatMessage({
           id: 'rhelbundle.goldImages.title',
-          defaultMessage: 'Red Hat Gold Images',
+          defaultMessage: 'Red Hat gold images',
         })}
         description={intl.formatMessage({
           id: 'rhelbundle.goldImages.description',

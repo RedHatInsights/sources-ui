@@ -5,9 +5,8 @@ import PermissionsChecker from '../../components/PermissionsChecker';
 import * as actions from '../../redux/user/actions';
 
 describe('PermissionChecker', () => {
-  it('load userIsOrgAdmin on mount', async () => {
+  it('load write permission on mount', async () => {
     const Children = () => <h1>App</h1>;
-    actions.loadOrgAdmin = jest.fn().mockImplementation(() => ({ type: 'type' }));
     actions.loadWritePermissions = jest.fn().mockImplementation(() => ({ type: 'type' }));
 
     let wrapper;
@@ -22,7 +21,6 @@ describe('PermissionChecker', () => {
     });
 
     expect(wrapper.find(Children)).toHaveLength(1);
-    expect(actions.loadOrgAdmin).toHaveBeenCalled();
     expect(actions.loadWritePermissions).toHaveBeenCalled();
   });
 });

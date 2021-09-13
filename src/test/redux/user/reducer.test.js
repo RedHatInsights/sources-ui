@@ -5,88 +5,44 @@ describe('userReducer', () => {
   let result;
 
   it('resets state when pending', () => {
-    result = userReducer[ACTION_TYPES.SET_ORG_ADMIN_PENDING]({
+    result = userReducer[ACTION_TYPES.SET_WRITE_PERMISSIONS_PENDING]({
       ...defaultUserState,
-      isOrgAdmin: 'nonsense',
+      writePermissions: 'nonsense',
     });
 
     expect(result).toEqual({
       ...defaultUserState,
-      isOrgAdmin: undefined,
-    });
-  });
-
-  it('sets isOrgAdmin when true', () => {
-    result = userReducer[ACTION_TYPES.SET_ORG_ADMIN_FULFILLED](defaultUserState, { payload: true });
-
-    expect(result).toEqual({
-      ...defaultUserState,
-      isOrgAdmin: true,
+      writePermissions: undefined,
     });
   });
 
-  it('sets isOrgAdmin when false', () => {
-    result = userReducer[ACTION_TYPES.SET_ORG_ADMIN_FULFILLED](defaultUserState, { payload: false });
+  it('sets permissions when true', () => {
+    result = userReducer[ACTION_TYPES.SET_WRITE_PERMISSIONS_FULFILLED](defaultUserState, { payload: true });
 
     expect(result).toEqual({
       ...defaultUserState,
-      isOrgAdmin: false,
+      writePermissions: true,
+    });
+  });
+
+  it('sets permissions when false', () => {
+    result = userReducer[ACTION_TYPES.SET_WRITE_PERMISSIONS_FULFILLED](defaultUserState, { payload: false });
+
+    expect(result).toEqual({
+      ...defaultUserState,
+      writePermissions: false,
     });
   });
 
   it('resets state when rejected', () => {
-    result = userReducer[ACTION_TYPES.SET_ORG_ADMIN_REJECTED]({
+    result = userReducer[ACTION_TYPES.SET_WRITE_PERMISSIONS_REJECTED]({
       ...defaultUserState,
-      isOrgAdmin: 'nonsense',
+      writePermissions: 'nonsense',
     });
 
     expect(result).toEqual({
       ...defaultUserState,
-      isOrgAdmin: undefined,
-    });
-  });
-
-  describe('write permissions', () => {
-    it('resets state when pending', () => {
-      result = userReducer[ACTION_TYPES.SET_WRITE_PERMISSIONS_PENDING]({
-        ...defaultUserState,
-        writePermissions: 'nonsense',
-      });
-
-      expect(result).toEqual({
-        ...defaultUserState,
-        writePermissions: undefined,
-      });
-    });
-
-    it('sets isOrgAdmin when true', () => {
-      result = userReducer[ACTION_TYPES.SET_WRITE_PERMISSIONS_FULFILLED](defaultUserState, { payload: true });
-
-      expect(result).toEqual({
-        ...defaultUserState,
-        writePermissions: true,
-      });
-    });
-
-    it('sets isOrgAdmin when false', () => {
-      result = userReducer[ACTION_TYPES.SET_WRITE_PERMISSIONS_FULFILLED](defaultUserState, { payload: false });
-
-      expect(result).toEqual({
-        ...defaultUserState,
-        writePermissions: false,
-      });
-    });
-
-    it('resets state when rejected', () => {
-      result = userReducer[ACTION_TYPES.SET_WRITE_PERMISSIONS_REJECTED]({
-        ...defaultUserState,
-        writePermissions: 'nonsense',
-      });
-
-      expect(result).toEqual({
-        ...defaultUserState,
-        writePermissions: undefined,
-      });
+      writePermissions: undefined,
     });
   });
 });

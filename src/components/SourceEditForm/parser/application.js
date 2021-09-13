@@ -1,10 +1,8 @@
-import React from 'react';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
-import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
-import { FormattedMessage } from 'react-intl';
 import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-icon';
 
 import { authenticationFields } from './authentication';
+import { endpointFields } from './endpoint';
 import EditAlert from './EditAlert';
 import ResourcesEmptyState from '../../SourceDetail/ResourcesEmptyState';
 
@@ -12,19 +10,6 @@ export const APP_NAMES = {
   COST_MANAGAMENT: '/insights/platform/cost-management',
   CLOUD_METER: '/insights/platform/cloud-meter',
 };
-
-export const appendClusterIdentifier = (sourceType) =>
-  sourceType.name === 'openshift'
-    ? [
-        {
-          name: 'source.source_ref',
-          label: <FormattedMessage id="sources.clusterIdentifier" defaultMessage="Cluster identifier" />,
-          isRequired: true,
-          validate: [{ type: validatorTypes.REQUIRED }],
-          component: componentTypes.TEXT_FIELD,
-        },
-      ]
-    : [];
 
 const createOneAppFields = (appType, sourceType, app) => [
   {
@@ -42,7 +27,6 @@ const createOneAppFields = (appType, sourceType, app) => [
     appType?.name,
     app.id
   ),
-  ...(appType?.name === APP_NAMES.COST_MANAGAMENT ? appendClusterIdentifier(sourceType) : []),
 ];
 
 export const applicationsFields = (applications, sourceType, appTypes) => [
@@ -54,7 +38,13 @@ export const applicationsFields = (applications, sourceType, appTypes) => [
       ...applications.map((app) => {
         const appType = appTypes.find(({ id }) => id === app.application_type_id);
 
-        const fields = createOneAppFields(appType, sourceType, app);
+        let fields = createOneAppFields(appType, sourceType, app);
+
+        const hasEndpoint = app.authentications.find(({ resource_type }) => resource_type === 'Endpoint');
+
+        if (hasEndpoint) {
+          fields = [fields[0], [...(fields[1] || []), endpointFields(sourceType)]];
+        }
 
         if (fields.length === 1) {
           fields.push({
@@ -68,6 +58,8 @@ export const applicationsFields = (applications, sourceType, appTypes) => [
             applicationName: appType?.display_name,
             Icon: PlusCircleIcon,
           });
+        } else if (app.paused_at) {
+          fields = [fields[0], fields[1].map((field) => ({ ...field, isDisabled: true }))];
         }
 
         return {

@@ -1,3 +1,8 @@
+import React from 'react';
+
+import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
+import PlayIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
+
 import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications/redux';
 import {
   ACTION_TYPES,
@@ -5,20 +10,15 @@ import {
   PAGE_AND_SIZE,
   FILTER_SOURCES,
   ADD_APP_TO_SOURCE,
-  SET_COUNT,
   ADD_HIDDEN_SOURCE,
   CLEAR_FILTERS,
   SET_VENDOR,
 } from './actionTypes';
-import {
-  doLoadAppTypes,
-  doRemoveSource,
-  doLoadEntities,
-  doDeleteApplication,
-  doLoadCountOfSources,
-  getSourcesApi,
-} from '../../api/entities';
+import { doLoadAppTypes, doRemoveSource, doLoadEntities, doDeleteApplication, getSourcesApi } from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
+import { bold } from '../../utilities/intlShared';
+import handleError from '../../api/handleError';
+import tryAgainMessage from '../../utilities/tryAgainMessage';
 
 export const loadEntities = (options) => (dispatch, getState) => {
   dispatch({
@@ -28,23 +28,18 @@ export const loadEntities = (options) => (dispatch, getState) => {
 
   const { pageSize, pageNumber, sortBy, sortDirection, filterValue, activeVendor } = getState().sources;
 
-  return Promise.all([
-    doLoadEntities({
-      pageSize,
-      pageNumber,
-      sortBy,
-      sortDirection,
-      filterValue,
-      activeVendor,
-    }),
-    doLoadCountOfSources(filterValue, activeVendor).then(({ meta: { count } }) =>
-      dispatch({ type: SET_COUNT, payload: { count } })
-    ),
-  ])
-    .then(([{ sources }]) =>
+  return doLoadEntities({
+    pageSize,
+    pageNumber,
+    sortBy,
+    sortDirection,
+    filterValue,
+    activeVendor,
+  })
+    .then(({ sources, sources_aggregate }) =>
       dispatch({
         type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
-        payload: sources,
+        payload: { sources, sources_aggregate },
       })
     )
     .catch((error) =>
@@ -169,23 +164,21 @@ export const removeMessage = (id) => ({
   payload: id,
 });
 
-export const removeApplication = (appId, sourceId, successTitle, errorTitle) => (dispatch) => {
-  dispatch({
-    type: ACTION_TYPES.REMOVE_APPLICATION,
-    payload: () => doDeleteApplication(appId, errorTitle),
-    meta: {
-      appId,
-      sourceId,
-      notifications: {
-        fulfilled: {
-          variant: 'success',
-          title: successTitle,
-          dismissable: true,
-        },
+export const removeApplication = (appId, sourceId, successTitle, errorTitle) => ({
+  type: ACTION_TYPES.REMOVE_APPLICATION,
+  payload: () => doDeleteApplication(appId, errorTitle),
+  meta: {
+    appId,
+    sourceId,
+    notifications: {
+      fulfilled: {
+        variant: 'success',
+        title: successTitle,
+        dismissable: true,
       },
     },
-  });
-};
+  },
+});
 
 export const addAppToSource = (sourceId, app) => ({
   type: ADD_APP_TO_SOURCE,
@@ -232,4 +225,67 @@ export const setActiveVendor = (vendor) => (dispatch) => {
   });
 
   return dispatch(loadEntities());
+};
+
+export const pauseSource = (sourceId, sourceName, intl) => (dispatch) => {
+  return getSourcesApi()
+    .pauseSource(sourceId)
+    .then(() => {
+      dispatch(
+        addMessage({
+          title: intl.formatMessage({ id: 'source.paused.alert.title', defaultMessage: 'Source paused' }),
+          description: intl.formatMessage(
+            {
+              id: 'source.paused.alert.description',
+              defaultMessage:
+                'Source <b>{ sourceName }</b> is now paused. Data collection for all connected applications will be disabled until the source is resumed.',
+            },
+            { sourceName, b: bold }
+          ),
+          variant: 'default',
+          customIcon: <PauseIcon />,
+        })
+      );
+      dispatch(loadEntities({ loaded: 0 }));
+    })
+    .catch((error) => {
+      dispatch(
+        addMessage({
+          title: intl.formatMessage({ id: 'source.paused.alert.error', defaultMessage: 'Source pause failed' }),
+          description: tryAgainMessage(intl, handleError(error)),
+          variant: 'danger',
+        })
+      );
+    });
+};
+
+export const resumeSource = (sourceId, sourceName, intl) => (dispatch) => {
+  return getSourcesApi()
+    .unpauseSource(sourceId)
+    .then(() => {
+      dispatch(
+        addMessage({
+          title: intl.formatMessage({ id: 'source.resumed.alert.title', defaultMessage: 'Source resumed' }),
+          description: intl.formatMessage(
+            {
+              id: 'source.resumed.alert.description',
+              defaultMessage: 'Source <b>{ sourceName }</b> will recontinue data collection for connected applications.',
+            },
+            { sourceName, b: bold }
+          ),
+          variant: 'default',
+          customIcon: <PlayIcon />,
+        })
+      );
+      dispatch(loadEntities({ loaded: 0 }));
+    })
+    .catch((error) => {
+      dispatch(
+        addMessage({
+          title: intl.formatMessage({ id: 'source.resume.alert.error', defaultMessage: 'Source resume failed' }),
+          description: tryAgainMessage(intl, handleError(error)),
+          variant: 'danger',
+        })
+      );
+    });
 };

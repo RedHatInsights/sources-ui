@@ -67,6 +67,10 @@ export const getSourcesApi = () => ({
   getEndpoint: (id) => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/endpoints/${id}`),
   getGoogleAccount: () => axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/app_meta_data?filter[name]=gcp_service_account`),
   bulkCreate: (data) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/bulk_create`, data),
+  pauseApplication: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/applications/${id}/pause`),
+  unpauseApplication: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/applications/${id}/unpause`),
+  pauseSource: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/sources/${id}/pause`),
+  unpauseSource: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/sources/${id}/unpause`),
 });
 
 export const doLoadAppTypes = () => getSourcesApi().doLoadAppTypes();
@@ -86,14 +90,14 @@ export const sorting = (sortBy, sortDirection) => {
   }
 
   if (sortBy === 'source_type_id') {
-    return `,sort_by:{source_type:{product_name:"${sortDirection}"}}`;
+    return `sort_by:{source_type:{product_name:"${sortDirection}"}}`;
   }
 
   if (sortBy === 'applications') {
-    return `,sort_by:{applications:{__count:"${sortDirection}"}}`;
+    return `sort_by:{applications:{__count:"${sortDirection}"}}`;
   }
 
-  return `,sort_by:{${sortBy}:"${sortDirection}"}`;
+  return `sort_by:{${sortBy}:"${sortDirection}"}`;
 };
 
 export const filtering = (filterValue = {}, activeVendor) => {
@@ -131,7 +135,7 @@ export const filtering = (filterValue = {}, activeVendor) => {
   }
 
   if (filterQueries.length > 0) {
-    return `, filter: { ${filterQueries.join(', ')} }`;
+    return `filter: { ${filterQueries.join(', ')} }`;
   }
 
   return '';
@@ -149,22 +153,26 @@ export const graphQlAttributes = `
     updated_at,
     last_available_at,
     app_creation_workflow,
+    paused_at,
     authentications { authtype, username, availability_status_error, availability_status }
-    applications { application_type_id, id, availability_status_error, availability_status, authentications { id, resource_type } },
+    applications { application_type_id, id, availability_status_error, availability_status, paused_at, authentications { id, resource_type } },
     endpoints { id, scheme, host, port, path, receptor_node, role, certificate_authority, verify_ssl, availability_status_error, availability_status, authentications { authtype, availability_status, availability_status_error } }
 `;
 
-export const doLoadEntities = ({ pageSize, pageNumber, sortBy, sortDirection, filterValue, activeVendor }) =>
-  getSourcesApi()
+export const doLoadEntities = ({ pageSize, pageNumber, sortBy, sortDirection, filterValue, activeVendor }) => {
+  const filter = filtering(filterValue, activeVendor);
+
+  const filterSection = [pagination(pageSize, pageNumber), sorting(sortBy, sortDirection), filter].join(',');
+
+  return getSourcesApi()
     .postGraphQL({
-      query: `{ sources(${pagination(pageSize, pageNumber)}${sorting(sortBy, sortDirection)}${filtering(
-        filterValue,
-        activeVendor
-      )})
-        { ${graphQlAttributes} }
+      query: `{ sources(${filterSection})
+      { ${graphQlAttributes} },
+     sources_aggregate(${filter}){aggregate{total_count}}
     }`,
     })
     .then(({ data }) => data);
+};
 
 export const doCreateApplication = (data) => getSourcesApi().createApplication(data);
 
@@ -215,9 +223,6 @@ export const restFilterGenerator = (filterValue = {}, activeVendor) => {
   return '';
 };
 
-export const doLoadCountOfSources = (filterValue = {}, activeVendor) =>
-  axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/sources?${restFilterGenerator(filterValue, activeVendor)}&limit=1`);
-
 export const doLoadSource = (id) =>
   getSourcesApi()
     .postGraphQL({
@@ -235,6 +240,7 @@ export const doLoadApplicationsForEdit = async (id, appTypes, sourceTypes) => {
               id,
               availability_status_error,
               availability_status,
+              paused_at,
               authentications {
                   id
               }

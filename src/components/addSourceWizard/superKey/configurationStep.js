@@ -2,7 +2,9 @@ import React from 'react';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
 import { Label } from '@patternfly/react-core';
+
 import SuperKeyCredentials from './SuperKeyCredentials';
+import { bold } from '../../../utilities/intlShared';
 
 const configurationStep = (intl, sourceTypes) => ({
   name: 'configuration_step',
@@ -28,8 +30,7 @@ const configurationStep = (intl, sourceTypes) => ({
             'Configure your source manually or let us manage all necessary credentials by selecting <b>account authorization</b> configuration.',
         },
         {
-          // eslint-disable-next-line react/display-name
-          b: (chunks) => <b key={`b-${chunks.length}-${Math.floor(Math.random() * 1000)}`}>{chunks}</b>,
+          b: bold,
         }
       ),
     },

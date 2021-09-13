@@ -26,6 +26,7 @@ export const routes = {
     path: '/sources/detail/:id/rename',
     redirectNoId: true,
     writeAccess: true,
+    noPaused: true,
   },
   sourcesDetailRemove: {
     path: '/sources/detail/:id/remove',
@@ -36,11 +37,13 @@ export const routes = {
     path: '/sources/detail/:id/add_app/:app_type_id',
     redirectNoId: true,
     writeAccess: true,
+    noPaused: true,
   },
   sourcesDetailRemoveApp: {
     path: '/sources/detail/:id/remove_app/:app_id',
     redirectNoId: true,
     writeAccess: true,
+    noPaused: true,
   },
   sourcesDetailEditCredentials: {
     path: '/sources/detail/:id/edit_credentials',

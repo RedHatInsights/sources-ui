@@ -478,8 +478,9 @@ describe('AddApplication', () => {
       });
       wrapper.update();
 
-      entities.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
-      entities.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+      entities.doLoadEntities = jest
+        .fn()
+        .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
       attachSource.doAttachApp = jest.fn().mockImplementation(() =>
         Promise.resolve({
           availability_status: 'available',
@@ -554,8 +555,9 @@ describe('AddApplication', () => {
         })
       );
 
-      entities.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
-      entities.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+      entities.doLoadEntities = jest
+        .fn()
+        .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
 
       const wrapper = mount(
         componentWrapperIntl(
@@ -612,8 +614,9 @@ describe('AddApplication', () => {
         })
       );
 
-      entities.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
-      entities.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+      entities.doLoadEntities = jest
+        .fn()
+        .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
 
       const wrapper = mount(
         componentWrapperIntl(
@@ -643,7 +646,7 @@ describe('AddApplication', () => {
       expect(wrapper.find(AmazonFinishedStep).length).toEqual(1);
       expect(wrapper.find(Title).last().text()).toEqual('Amazon Web Services connection established');
       expect(wrapper.find(EmptyStateBody).last().text()).toEqual(
-        'Discover the benefits of your connection or exit to manage your new source.View enabled AWS Gold imagesSubscription Watch usageGet started with Red Hat InsightsCost Management reporting'
+        'Discover the benefits of your connection or exit to manage your new source.View enabled AWS gold imagesSubscription Watch usageGet started with Red Hat InsightsCost Management reporting'
       );
       expect(wrapper.find('Button').at(1).text()).toEqual('Exit');
     });
@@ -659,8 +662,9 @@ describe('AddApplication', () => {
         })
       );
 
-      entities.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
-      entities.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+      entities.doLoadEntities = jest
+        .fn()
+        .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
 
       const wrapper = mount(
         componentWrapperIntl(
@@ -694,8 +698,9 @@ describe('AddApplication', () => {
         })
       );
 
-      entities.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
-      entities.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+      entities.doLoadEntities = jest
+        .fn()
+        .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
 
       const wrapper = mount(
         componentWrapperIntl(
@@ -732,8 +737,9 @@ describe('AddApplication', () => {
         })
       );
 
-      entities.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
-      entities.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+      entities.doLoadEntities = jest
+        .fn()
+        .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
 
       const wrapper = mount(
         componentWrapperIntl(
@@ -783,8 +789,9 @@ describe('AddApplication', () => {
         })
       );
 
-      entities.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
-      entities.doLoadCountOfSources = jest.fn().mockImplementation(() => Promise.resolve({ meta: { count: 0 } }));
+      entities.doLoadEntities = jest
+        .fn()
+        .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
 
       const wrapper = mount(
         componentWrapperIntl(

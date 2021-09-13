@@ -227,7 +227,7 @@ export const IAMPolicyDescription = () => {
                   Sid: 'VisualEditor1',
                   Effect: 'Allow',
                   Action: [
-                    's3:HeadBucket',
+                    's3:ListBucket',
                     'cur:DescribeReportDefinitions',
                     ...(aliasesEnabled ? ['iam:ListAccountAliases'] : []),
                     ...(orgUnitsEnabled ? ['organizations:List*', 'organizations:Describe*'] : []),

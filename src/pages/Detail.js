@@ -13,6 +13,7 @@ import { replaceRouteId, routes } from '../Routes';
 import DetailHeader from '../components/SourceDetail/DetailHeader';
 import isSuperKey from '../utilities/isSuperKey';
 import ResourcesTable from '../components/SourceDetail/ResourcesTable';
+import PauseAlert from '../components/SourceDetail/PauseAlert';
 
 const SourceRemoveModal = lazy(() =>
   import(
@@ -78,6 +79,7 @@ const Detail = () => {
         <CustomRoute exact route={routes.sourcesDetailEditCredentials} Component={EditCredentials} />
       </Suspense>
       <DetailHeader />
+      {source.paused_at && <PauseAlert />}
       <Grid>
         <GridItem md="6">
           <SourceSummaryCard />

@@ -369,7 +369,7 @@ describe('Source page helpers', () => {
       expect(actions.addMessage).toHaveBeenCalledWith({
         actionLinks: expect.any(Object),
         id: expect.any(String),
-        description: expect.any(Object),
+        description: '{error} [<b>some-name</b>]',
         title: 'Source configuration unsuccessful',
         variant: 'danger',
       });
@@ -386,6 +386,54 @@ describe('Source page helpers', () => {
 
       expect(push).toHaveBeenCalledWith(replaceRouteId(routes.sourcesDetail.path, '1234'));
       expect(actions.removeMessage).toHaveBeenCalledWith(messageId);
+    });
+
+    it('unavailable - endpoint error', async () => {
+      state = {
+        isSubmitted: true,
+        createdSource: {
+          source_type_id: AMAZON_ID,
+          id: '1234',
+          name: 'some-name',
+          applications: [],
+          endpoint: [{ availability_status: UNAVAILABLE, availability_status_error: 'Some endpoint error' }],
+        },
+        sourceTypes: [AMAZON],
+      };
+
+      checkSubmit(state, dispatch, push, intl);
+
+      expect(actions.addMessage).toHaveBeenCalledWith({
+        actionLinks: expect.any(Object),
+        id: expect.any(String),
+        description: '{error} [<b>some-name</b>]',
+        title: 'Source configuration unsuccessful',
+        variant: 'danger',
+      });
+    });
+
+    it('unavailable - endpoint & unknown error', async () => {
+      state = {
+        isSubmitted: true,
+        createdSource: {
+          source_type_id: AMAZON_ID,
+          id: '1234',
+          name: 'some-name',
+          applications: [],
+          endpoint: [{ availability_status: UNAVAILABLE }],
+        },
+        sourceTypes: [AMAZON],
+      };
+
+      checkSubmit(state, dispatch, push, intl);
+
+      expect(actions.addMessage).toHaveBeenCalledWith({
+        actionLinks: expect.any(Object),
+        id: expect.any(String),
+        description: '{error} [<b>some-name</b>]',
+        title: 'Source configuration unsuccessful',
+        variant: 'danger',
+      });
     });
 
     it('timeout', () => {

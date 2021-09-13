@@ -5,7 +5,7 @@ import get from 'lodash/get';
 
 import { Table, TableHeader, TableBody } from '@patternfly/react-table';
 
-import { Card, CardBody, CardTitle, Text, Spinner, Bullseye, Tabs, Tab, TabTitleText } from '@patternfly/react-core';
+import { Card, CardBody, CardTitle, Text, Spinner, Bullseye, Tabs, Tab, TabTitleText, Alert } from '@patternfly/react-core';
 
 import NoApplications from './NoApplications';
 import { useSource } from '../../hooks/useSource';
@@ -14,6 +14,7 @@ import { doLoadSourceForEdit } from '../../api/doLoadSourceForEdit';
 import { authenticationFields } from '../SourceEditForm/parser/authentication';
 import { prepareInitialValues } from '../SourceEditForm/helpers';
 import ResourcesEmptyState from './ResourcesEmptyState';
+import { pausedAppAlert } from '../../utilities/alerts';
 
 const createColumns = (intl) => [
   intl.formatMessage({ id: 'resourceTable.resourceType', defaultMessage: 'Resource type' }),
@@ -127,8 +128,15 @@ const ResourcesTable = () => {
                 const appName =
                   appTypes.find(({ id }) => id === app.application_type_id)?.display_name || app.application_type_id;
 
+                const { description, ...alertProps } = app.paused_at ? pausedAppAlert(intl, appName) : {};
+
                 return (
                   <Tab eventKey={app.id} key={app.id} title={<TabTitleText>{appName}</TabTitleText>}>
+                    {app.paused_at && !source.paused_at && (
+                      <Alert isInline className="pf-u-mt-lg" {...alertProps}>
+                        {description}
+                      </Alert>
+                    )}
                     {applicationsRows[app.id]?.length ? (
                       <Table
                         aria-label={intl.formatMessage({

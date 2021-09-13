@@ -1,8 +1,18 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import { CardBody, CardTitle, EmptyState, EmptyStateBody, Spinner, Title, Tabs, TabTitleText } from '@patternfly/react-core';
-
+import {
+  CardBody,
+  CardTitle,
+  EmptyState,
+  EmptyStateBody,
+  Spinner,
+  Title,
+  Tabs,
+  TabTitleText,
+  Alert,
+} from '@patternfly/react-core';
+import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 import { Table } from '@patternfly/react-table';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
@@ -144,6 +154,69 @@ describe('ResourcesTable', () => {
     expect(api.doLoadSourceForEdit).toHaveBeenCalledWith(source, applicationTypesData.data, sourceTypesData.data);
   });
 
+  it('renders empty state when no resources for paused app', async () => {
+    api.doLoadSourceForEdit = api.doLoadSourceForEdit = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        source: {
+          id: sourceId,
+          source_type_id: AMAZON_ID,
+          applications: [
+            {
+              id: '123',
+              application_type_id: COSTMANAGEMENT_APP.id,
+              authentications: [],
+              paused_at: 'today',
+            },
+          ],
+          endpoints: [],
+        },
+        applications: [
+          {
+            application_type_id: COSTMANAGEMENT_APP.id,
+            id: '123',
+            authentications: [],
+            paused_at: 'today',
+          },
+        ],
+        endpoints: [],
+        authentications: [],
+      })
+    );
+
+    source = {
+      id: sourceId,
+      source_type_id: AMAZON_ID,
+      applications: [{ id: '12344', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
+    };
+
+    store = mockStore({
+      sources: {
+        entities: [source],
+        sourceTypes: sourceTypesData.data,
+        appTypes: applicationTypesData.data,
+        appTypesLoaded: true,
+        sourceTypesLoaded: true,
+        loaded: 0,
+      },
+    });
+
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+    });
+    wrapper.update();
+
+    expect(wrapper.find(Alert).text()).toEqual(
+      'Default alert:Cost Management is pausedTo resume data collection for this application, switch Cost Management on in the Applications section of this page.'
+    );
+    expect(wrapper.find(Alert).find(PauseIcon)).toHaveLength(1);
+  });
+
   it('renders correctly with multiple apps', async () => {
     api.doLoadSourceForEdit = api.doLoadSourceForEdit = jest.fn().mockImplementation(() =>
       Promise.resolve({
@@ -276,5 +349,150 @@ describe('ResourcesTable', () => {
     wrapper.update();
 
     expect(wrapper.find(Tabs).props().activeKey).toEqual('20199');
+  });
+
+  it('renders correctly with paused app', async () => {
+    api.doLoadSourceForEdit = api.doLoadSourceForEdit = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        source: {
+          id: sourceId,
+          source_type_id: AMAZON_ID,
+          applications: [
+            {
+              application_type_id: COSTMANAGEMENT_APP.id,
+              id: '20198',
+              authentications: [{ id: '19896', resource_type: 'Application' }],
+              paused_at: 'today',
+            },
+          ],
+          endpoints: [],
+        },
+        applications: [
+          {
+            application_type_id: COSTMANAGEMENT_APP.id,
+            id: '20198',
+            authentications: [
+              { id: '19896' },
+              {
+                authtype: 'arn',
+                id: '19896',
+                resource_id: '20198',
+                resource_type: 'Application',
+                source_id: '20641',
+                username: 'arn:aws:1234',
+                tenant: '6089719',
+              },
+            ],
+            extra: { bucket: 'adsadsad' },
+            paused_at: 'today',
+          },
+        ],
+      })
+    );
+
+    source = {
+      id: sourceId,
+      source_type_id: AMAZON_ID,
+      applications: [{ id: '20198', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
+    };
+
+    store = mockStore({
+      sources: {
+        entities: [source],
+        sourceTypes: sourceTypesData.data,
+        appTypes: applicationTypesData.data,
+        appTypesLoaded: true,
+        sourceTypesLoaded: true,
+        loaded: 0,
+      },
+    });
+
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+    });
+    wrapper.update();
+
+    expect(wrapper.find(Alert).text()).toEqual(
+      'Default alert:Cost Management is pausedTo resume data collection for this application, switch Cost Management on in the Applications section of this page.'
+    );
+    expect(wrapper.find(Alert).find(PauseIcon)).toHaveLength(1);
+  });
+
+  it('renders correctly with paused and paused source app', async () => {
+    api.doLoadSourceForEdit = api.doLoadSourceForEdit = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        source: {
+          id: sourceId,
+          paused_at: 'now',
+          source_type_id: AMAZON_ID,
+          applications: [
+            {
+              application_type_id: COSTMANAGEMENT_APP.id,
+              id: '20198',
+              authentications: [{ id: '19896', resource_type: 'Application' }],
+              paused_at: 'today',
+            },
+          ],
+          endpoints: [],
+        },
+        applications: [
+          {
+            application_type_id: COSTMANAGEMENT_APP.id,
+            id: '20198',
+            authentications: [
+              { id: '19896' },
+              {
+                authtype: 'arn',
+                id: '19896',
+                resource_id: '20198',
+                resource_type: 'Application',
+                source_id: '20641',
+                username: 'arn:aws:1234',
+                tenant: '6089719',
+              },
+            ],
+            extra: { bucket: 'adsadsad' },
+            paused_at: 'today',
+          },
+        ],
+      })
+    );
+
+    source = {
+      id: sourceId,
+      source_type_id: AMAZON_ID,
+      applications: [{ id: '20198', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
+      paused_at: 'today',
+    };
+
+    store = mockStore({
+      sources: {
+        entities: [source],
+        sourceTypes: sourceTypesData.data,
+        appTypes: applicationTypesData.data,
+        appTypesLoaded: true,
+        sourceTypesLoaded: true,
+        loaded: 0,
+      },
+    });
+
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+    });
+    wrapper.update();
+
+    expect(wrapper.find(Alert)).toHaveLength(0);
   });
 });

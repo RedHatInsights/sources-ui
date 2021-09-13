@@ -4,7 +4,7 @@ import { checkSourceStatus } from '../../api/checkSourceStatus';
 import { doUpdateSource } from '../../api/doUpdateSource';
 import { checkAppAvailability } from '../../api/getApplicationStatus';
 
-import { AVAILABLE, UNAVAILABLE } from '../../views/formatters';
+import { AVAILABLE, IN_PROGRESS, UNAVAILABLE } from '../../views/formatters';
 
 export const onSubmit = async (values, editing, dispatch, source, intl, setState) => {
   setState({ type: 'submit', values, editing });
@@ -74,7 +74,7 @@ export const onSubmit = async (values, editing, dispatch, source, intl, setState
         };
       }
 
-      if (!availability_status) {
+      if (!availability_status || availability_status === IN_PROGRESS) {
         messages[id] = {
           title: intl.formatMessage({
             id: 'wizard.timeoutEditToastTitle',
