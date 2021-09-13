@@ -23,7 +23,7 @@ describe('DetailHeader', () => {
       sources: {
         entities: [{ id: sourceId, name: 'Name of this source', paused_at: 'today' }],
       },
-      user: { isOrgAdmin: false, writePermissions: false },
+      user: { writePermissions: false },
     });
 
     wrapper = mount(
@@ -54,7 +54,7 @@ describe('DetailHeader', () => {
       sources: {
         entities: [{ id: sourceId, name: 'Name of this source', paused_at: 'today' }],
       },
-      user: { isOrgAdmin: true, writePermissions: true },
+      user: { writePermissions: true },
     });
 
     wrapper = mount(
@@ -83,7 +83,7 @@ describe('DetailHeader', () => {
       sources: {
         entities: [{ id: sourceId, name: 'Name of this source', paused_at: 'today' }],
       },
-      user: { isOrgAdmin: true, writePermissions: true },
+      user: { writePermissions: true },
     });
 
     wrapper = mount(

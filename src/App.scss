@@ -95,8 +95,8 @@
         --pf-c-table--cell--hidden-visible--Display: 0;
     }
     tr:first-of-type {
-        > td::before { 
-            display: none; 
+        > td::before {
+            display: none;
         }
     }
   }
@@ -130,12 +130,6 @@
 .ins-c-sources__info-card {
   .text {
     font-size: 14px;
-  }
-
-  .custom-icon {
-    height: 1em;
-    width: auto;
-    vertical-align: -2px;
   }
 }
 
@@ -210,4 +204,9 @@
 .ins-c-sources__application_kebab {
   max-height: 32px;
   margin-left: auto;
+}
+
+.ins-c-sources__info-card-header {
+  font-weight: 600;
+  color: #002952;
 }

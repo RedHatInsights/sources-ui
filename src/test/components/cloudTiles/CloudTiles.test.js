@@ -25,7 +25,7 @@ describe('CloudTiles', () => {
     };
 
     store = mockStore({
-      user: { isOrgAdmin: true },
+      user: { writePermissions: true },
       sources: { sourceTypes: [...sourceTypes.data, googleType], activeVendor: CLOUD_VENDOR },
     });
   });
@@ -47,7 +47,7 @@ describe('CloudTiles', () => {
 
   it('renders correctly when no permissions', async () => {
     store = mockStore({
-      user: { isOrgAdmin: false },
+      user: { writePermissions: false },
       sources: { sourceTypes: [...sourceTypes.data, googleType], activeVendor: CLOUD_VENDOR },
     });
 

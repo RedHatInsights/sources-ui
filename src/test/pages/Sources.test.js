@@ -54,10 +54,10 @@ import RedHatEmptyState from '../../components/RedHatTiles/RedHatEmptyState';
 import { AddSourceWizard } from '../../components/addSourceWizard';
 import { CSV_FILE, JSON_FILE_STRING } from '../__mocks__/fileMocks';
 
-jest.mock('../../hooks/useScreen', () => ({
+jest.mock('@redhat-cloud-services/frontend-components/useScreenSize', () => ({
   __esModule: true,
-  variants: ['xs', 'sm', 'md', 'lg', '2xl'],
-  default: () => global.mockWidth || 'md',
+  isSmallScreen: (size) => size === 'sm',
+  useScreenSize: () => global.mockWidth || 'md',
 }));
 
 jest.mock('react', () => {
@@ -118,7 +118,7 @@ describe('SourcesPage', () => {
     typesApi.doLoadSourceTypes = jest.fn().mockImplementation(() => Promise.resolve(sourceTypesData.data));
 
     store = getStore([], {
-      user: { isOrgAdmin: true },
+      user: { writePermissions: true },
     });
 
     urlQuery.updateQuery = jest.fn();
@@ -181,7 +181,7 @@ describe('SourcesPage', () => {
   it('do not show CloudCards on Red Hat page', async () => {
     store = getStore([], {
       sources: { activeVendor: REDHAT_VENDOR },
-      user: { isOrgAdmin: true },
+      user: { writePermissions: true },
     });
 
     await act(async () => {
@@ -196,7 +196,7 @@ describe('SourcesPage', () => {
   it('renders empty state when there are no Sources - CLOUD', async () => {
     store = getStore([], {
       sources: { activeVendor: CLOUD_VENDOR },
-      user: { isOrgAdmin: true },
+      user: { writePermissions: true },
     });
 
     api.doLoadEntities = jest
@@ -226,7 +226,7 @@ describe('SourcesPage', () => {
 
     store = getStore([], {
       sources: { activeVendor: CLOUD_VENDOR },
-      user: { isOrgAdmin: true },
+      user: { writePermissions: true },
     });
 
     api.doLoadEntities = jest
@@ -254,7 +254,7 @@ describe('SourcesPage', () => {
   it('renders empty state when there are no Sources - RED HAT', async () => {
     store = getStore([], {
       sources: { activeVendor: REDHAT_VENDOR },
-      user: { isOrgAdmin: true },
+      user: { writePermissions: true },
     });
 
     api.doLoadEntities = jest
@@ -275,7 +275,7 @@ describe('SourcesPage', () => {
   it('renders empty state when there are no Sources and open openshift selection', async () => {
     store = getStore([], {
       sources: { activeVendor: REDHAT_VENDOR },
-      user: { isOrgAdmin: true },
+      user: { writePermissions: true },
     });
 
     api.doLoadEntities = jest
@@ -339,7 +339,7 @@ describe('SourcesPage', () => {
   it('renders table and filtering - loading with paginationClicked: true, do not show paginationLoader', async () => {
     store = getStore([], {
       sources: { loaded: 1, paginationClicked: true, numberOfEntities: 5 },
-      user: { isOrgAdmin: true },
+      user: { writePermissions: true },
     });
 
     await act(async () => {
@@ -379,7 +379,7 @@ describe('SourcesPage', () => {
           sourceTypes: sourceTypesData.data,
           activeVendor: REDHAT_VENDOR,
         },
-        user: { isOrgAdmin: true },
+        user: { writePermissions: true },
       });
 
       await act(async () => {
@@ -412,7 +412,7 @@ describe('SourcesPage', () => {
           sourceTypes: sourceTypesData.data,
           activeVendor: CLOUD_VENDOR,
         },
-        user: { isOrgAdmin: true },
+        user: { writePermissions: true },
       });
 
       await act(async () => {
@@ -438,7 +438,7 @@ describe('SourcesPage', () => {
           sourceTypes: sourceTypesData.data,
           activeVendor: CLOUD_VENDOR,
         },
-        user: { isOrgAdmin: true },
+        user: { writePermissions: true },
       });
 
       await act(async () => {
@@ -471,7 +471,7 @@ describe('SourcesPage', () => {
   it('renders and decreased page number if it is too great', async () => {
     store = getStore([], {
       sources: { pageNumber: 20 },
-      user: { isOrgAdmin: true },
+      user: { writePermissions: true },
     });
 
     await act(async () => {
@@ -949,7 +949,7 @@ describe('SourcesPage', () => {
     it('show empty state table after clicking on clears all filter in empty table state - RED HAT', async () => {
       store = getStore([], {
         sources: { activeVendor: REDHAT_VENDOR },
-        user: { isOrgAdmin: true },
+        user: { writePermissions: true },
       });
 
       await act(async () => {
@@ -1047,7 +1047,7 @@ describe('SourcesPage', () => {
     beforeEach(() => {
       store = getStore([], {
         sources: {},
-        user: { isOrgAdmin: false },
+        user: { writePermissions: false },
       });
     });
 
@@ -1141,7 +1141,7 @@ describe('SourcesPage', () => {
     describe('not org admin, redirect back to sources', () => {
       beforeEach(() => {
         store = getStore([], {
-          user: { isOrgAdmin: false },
+          user: { writePermissions: false },
         });
       });
 

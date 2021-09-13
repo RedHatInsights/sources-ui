@@ -33,7 +33,7 @@ describe('SourcesTable', () => {
     initialState = {
       sources: defaultSourcesState,
       user: {
-        isOrgAdmin: true,
+        writePermissions: true,
       },
     };
     loadedProps = {
@@ -120,7 +120,7 @@ describe('SourcesTable', () => {
     const ROW_WRAPPER_CLASSNAME = 'ins-c-sources__row-vertical-centered';
     initialState = {
       user: {
-        isOrgAdmin: false,
+        writePermissions: false,
       },
       sources: {
         ...initialState.sources,
