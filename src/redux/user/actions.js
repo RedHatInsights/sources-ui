@@ -4,7 +4,7 @@ export const loadWritePermissions = () => (dispatch) => {
   dispatch({ type: ACTION_TYPES.SET_WRITE_PERMISSIONS_PENDING });
 
   return insights.chrome
-    .getUserPermissions('sources')
+    .getUserPermissions('sources', true) // bypassCache = true
     .then((permissions) => {
       const allPermission = permissions.reduce((acc, curr) => [...acc, curr?.permission], []);
       const writePermissions = allPermission.includes('sources:*:*') || allPermission.includes('sources:*:write');
