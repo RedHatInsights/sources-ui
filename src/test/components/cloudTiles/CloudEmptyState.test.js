@@ -24,7 +24,7 @@ describe('CloudEmptyState', () => {
     };
 
     store = mockStore({
-      user: { isOrgAdmin: true },
+      user: { writePermissions: true },
       sources: { sourceTypes: [...sourceTypes.data, googleType], activeVendor: CLOUD_VENDOR },
     });
   });

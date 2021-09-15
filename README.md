@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.com/RedHatInsights/sources-ui.svg?branch=master)](https://travis-ci.com/RedHatInsights/sources-ui)
 [![Test Coverage](https://codecov.io/gh/RedHatInsights/sources-ui/branch/master/graph/badge.svg)](https://codecov.io/gh/RedHatInsights/sources-ui)
 
-List of Sources for Red Hat Cloud Services.
+List of Sources for Red Hat Hybrid Cloud Console.
 
 This application allows to
 - view all sources (filtering, sorting)

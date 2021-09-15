@@ -2,6 +2,7 @@ import get from 'lodash/get';
 import set from 'lodash/set';
 
 import { endpointToUrl, UNAVAILABLE } from '../../views/formatters';
+import { pausedAppAlert } from '../../utilities/alerts';
 
 export const CHECK_ENDPOINT_COMMAND = 'check-endpoint';
 
@@ -103,11 +104,14 @@ export const getEditedApplications = (source, editing) => {
   return editedApplications.filter(Boolean);
 };
 
-export const prepareMessages = (source, intl) => {
+export const prepareMessages = (source, intl, appTypes) => {
   const messages = {};
 
-  source.applications.forEach(({ id, availability_status_error, availability_status }) => {
-    if (availability_status === UNAVAILABLE) {
+  source.applications.forEach(({ id, application_type_id, availability_status_error, availability_status, paused_at }) => {
+    if (paused_at) {
+      const application = appTypes.find((type) => type.id === application_type_id)?.display_name || id;
+      messages[id] = pausedAppAlert(intl, application);
+    } else if (availability_status === UNAVAILABLE) {
       messages[id] = {
         title: intl.formatMessage({
           id: 'wizard.failEditToastTitleBeforeEdit',
@@ -121,7 +125,9 @@ export const prepareMessages = (source, intl) => {
 
   if (source.endpoints?.[0]?.availability_status_error) {
     const applicationsUsingEndpoint = source.applications
-      .map((app) => (app.authentications.find(({ resource_type }) => resource_type === 'Endpoint') ? app.id : undefined))
+      .map((app) =>
+        app.authentications.find(({ resource_type }) => !app.paused_at && resource_type === 'Endpoint') ? app.id : undefined
+      )
       .filter(Boolean);
 
     applicationsUsingEndpoint.forEach((id) => {

@@ -4,15 +4,16 @@ import { useHistory } from 'react-router-dom';
 import { Table, TableHeader, TableBody, sortable, wrappable } from '@patternfly/react-table';
 import { useIntl } from 'react-intl';
 
-import { sortEntities } from '../../redux/sources/actions';
+import { pauseSource, resumeSource, sortEntities } from '../../redux/sources/actions';
 import { PlaceHolderTable, RowWrapperLoader } from './loaders';
 import { sourcesColumns, COLUMN_COUNT } from '../../views/sourcesViewDefinition';
 import EmptyStateTable from './EmptyStateTable';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import { replaceRouteId, routes } from '../../Routes';
+import disabledTooltipProps from '../../utilities/disabledTooltipProps';
 
-const itemToCells = (item, columns, sourceTypes, appTypes) =>
+export const itemToCells = (item, columns, sourceTypes, appTypes) =>
   columns
     .filter((column) => column.title || column.hidden)
     .map((col) => ({
@@ -34,6 +35,7 @@ const renderSources = (entities, columns, sourceTypes, appTypes, removingSources
         ...acc,
         {
           ...item,
+          originalName: item.name,
           isOpen: !!item.expanded,
           cells: itemToCells(item, columns, sourceTypes, appTypes),
           disableActions: isDeleting,
@@ -62,34 +64,36 @@ const initialState = (columns) => ({
   cells: prepareColumnsCells(columns),
 });
 
-export const insertEditAction = (actions, intl, push, isOrgAdmin, disabledProps) =>
-  actions.splice(1, 0, {
-    title: intl.formatMessage({
-      id: 'sources.edit',
-      defaultMessage: 'Edit',
-    }),
-    onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesDetail.path, id)),
-    ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
-  });
-
-export const actionResolver = (intl, push, isOrgAdmin) => (rowData) => {
-  const tooltip = intl.formatMessage({
-    id: 'sources.notAdminButton',
-    defaultMessage: 'To perform this action, you must be granted write permissions from your Organization Administrator.',
-  });
-
-  const disabledProps = {
-    tooltip,
-    isDisabled: true,
-    className: 'ins-c-sources__disabled-drodpown-item',
-  };
-
+export const actionResolver = (intl, push, hasWritePermissions, dispatch) => (rowData) => {
+  const disabledProps = disabledTooltipProps(intl);
   const actions = [];
 
-  const isSourceEditable = !rowData.imported;
-
-  if (isSourceEditable) {
-    insertEditAction(actions, intl, push, isOrgAdmin, disabledProps);
+  if (rowData.paused_at) {
+    actions.push({
+      title: intl.formatMessage({
+        id: 'sources.resume',
+        defaultMessage: 'Resume',
+      }),
+      description: intl.formatMessage({
+        id: 'sources.resume.description',
+        defaultMessage: 'Unpause data collection for this source',
+      }),
+      onClick: (_ev, _i, { id }) => dispatch(resumeSource(id, rowData.originalName, intl)),
+      ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
+    });
+  } else {
+    actions.push({
+      title: intl.formatMessage({
+        id: 'sources.pause',
+        defaultMessage: 'Pause',
+      }),
+      description: intl.formatMessage({
+        id: 'sources.pause.description',
+        defaultMessage: 'Temporarily disable data collection',
+      }),
+      onClick: (_ev, _i, { id }) => dispatch(pauseSource(id, rowData.originalName, intl)),
+      ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
+    });
   }
 
   actions.push({
@@ -97,8 +101,26 @@ export const actionResolver = (intl, push, isOrgAdmin) => (rowData) => {
       id: 'sources.remove',
       defaultMessage: 'Remove',
     }),
+    description: intl.formatMessage({
+      id: 'sources.remove.description',
+      defaultMessage: 'Permanently delete this source and all collected data',
+    }),
     onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesRemove.path, id)),
-    ...(!isOrgAdmin ? disabledProps : { component: 'button' }),
+    ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
+  });
+
+  actions.push({
+    title: !rowData.paused_at
+      ? intl.formatMessage({
+          id: 'sources.edit',
+          defaultMessage: 'Edit',
+        })
+      : intl.formatMessage({
+          id: 'sources.viewDetails',
+          defaultMessage: 'View details',
+        }),
+    onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesDetail.path, id)),
+    ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
   });
 
   return actions;
@@ -205,8 +227,9 @@ const SourcesTable = () => {
       }}
       rows={shownRows}
       cells={state.cells}
-      actionResolver={loaded && numberOfEntities > 0 ? actionResolver(intl, push, writePermissions) : undefined}
+      actionResolver={loaded && numberOfEntities > 0 ? actionResolver(intl, push, writePermissions, reduxDispatch) : undefined}
       rowWrapper={RowWrapperLoader}
+      className={numberOfEntities === 0 && state.isLoaded ? 'ins-c-table-empty-state' : ''}
     >
       <TableHeader />
       <TableBody />

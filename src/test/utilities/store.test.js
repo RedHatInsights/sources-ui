@@ -38,10 +38,10 @@ describe('store creator', () => {
     expect(store.getState().sources.numberOfEntities).toEqual(0);
 
     window.sourcesDebug.setPermissions();
-    expect(store.getState().user.isOrgAdmin).toEqual(true);
+    expect(store.getState().user.writePermissions).toEqual(true);
 
     window.sourcesDebug.removePermissions();
-    expect(store.getState().user.isOrgAdmin).toEqual(false);
+    expect(store.getState().user.writePermissions).toEqual(false);
 
     window.sourcesDebug = {};
     console.log = tmp;

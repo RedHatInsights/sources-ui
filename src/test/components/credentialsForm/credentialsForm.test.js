@@ -96,8 +96,47 @@ describe('CredentialsForm', () => {
     expect(wrapper.find(ModalFormTemplate)).toHaveLength(1);
     expect(wrapper.find(SourcesFormRenderer).props().initialValues).toEqual({ authentication: authentications.data[1] });
     expect(wrapper.find(SourcesFormRenderer).props().schema).toEqual({
-      fields: [generateSuperKeyFields(sourceTypesData.data, AMAZON.name)],
+      fields: generateSuperKeyFields(sourceTypesData.data, AMAZON.name),
     });
+
+    jest.useRealTimers();
+  });
+
+  it('renders when paused', async () => {
+    listSourceAuthentications = jest.fn().mockImplementation(() => Promise.resolve(authentications));
+
+    api.getSourcesApi = () => ({
+      listSourceAuthentications,
+    });
+
+    store = mockStore({
+      sources: {
+        entities: [{ id: sourceId, source_type_id: AMAZON_ID, paused_at: 'today' }],
+        sourceTypes: sourceTypesData.data,
+      },
+    });
+
+    await act(async () => {
+      wrapper = mount(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetailEditCredentials.path} render={(...args) => <CredentialsForm {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+    });
+    wrapper.update();
+
+    expect(wrapper.find(Modal).props().title).toEqual('View account authorization credentials');
+    expect(wrapper.find(Modal).props().description).toEqual(undefined);
+    expect(wrapper.find(Modal).props().footer).toEqual(null);
+
+    expect(
+      wrapper
+        .find(SourcesFormRenderer)
+        .props()
+        .schema.fields.every((field) => field.isDisabled)
+    ).toEqual(true);
   });
 
   it('closes via cross icon', async () => {
@@ -197,6 +236,8 @@ describe('CredentialsForm', () => {
       title: 'New credentials saved',
       variant: 'info',
     });
+
+    jest.useRealTimers();
   });
 
   it('submit - fail', async () => {
@@ -255,5 +296,7 @@ describe('CredentialsForm', () => {
       title: 'Error updating credentials',
       variant: 'danger',
     });
+
+    jest.useRealTimers();
   });
 });

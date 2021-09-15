@@ -1,8 +1,8 @@
-import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
+import { componentTypes } from '@data-driven-forms/react-form-renderer';
 import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-icon';
 
 import ResourcesEmptyState from '../../../../components/SourceDetail/ResourcesEmptyState';
-import { applicationsFields, appendClusterIdentifier } from '../../../../components/SourceEditForm/parser/application';
+import { applicationsFields } from '../../../../components/SourceEditForm/parser/application';
 import EditAlert from '../../../../components/SourceEditForm/parser/EditAlert';
 import { applicationTypesData, COSTMANAGEMENT_APP, CATALOG_APP } from '../../../__mocks__/applicationTypesData';
 
@@ -87,6 +87,48 @@ describe('application edit form parser', () => {
                 Content: EditAlert,
               },
               [{ name: 'billing_source.field1' }, { name: 'field2' }],
+            ],
+          },
+        ],
+      },
+    ];
+
+    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, APP_TYPES);
+
+    expect(result).toEqual(EXPECTED_RESULT);
+  });
+
+  it('disable all inputs when app is paused', () => {
+    APPLICATIONS = [
+      {
+        ...APPLICATIONS[0],
+        paused_at: 'today',
+      },
+    ];
+
+    const EXPECTED_RESULT = [
+      {
+        component: componentTypes.TABS,
+        name: 'app-tabs',
+        isBox: true,
+        fields: [
+          {
+            name: COSTMANAGEMENT_APP.id,
+            title: COSTMANAGEMENT_APP.display_name,
+            fields: [
+              {
+                name: 'messages.app-id',
+                component: 'description',
+                condition: {
+                  isNotEmpty: true,
+                  when: expect.any(Function),
+                },
+                Content: EditAlert,
+              },
+              [
+                { name: 'billing_source.field1', isDisabled: true },
+                { name: 'field2', isDisabled: true },
+              ],
             ],
           },
         ],
@@ -204,28 +246,100 @@ describe('application edit form parser', () => {
 
     expect(result).toEqual(EXPECTED_RESULT);
   });
-});
 
-describe('helpers', () => {
-  describe('appendClusterIdentifier', () => {
-    const SOURCE_TYPE = { name: 'openshift' };
-
-    it('returns cluster identifier field when type is openshift', () => {
-      expect(appendClusterIdentifier(SOURCE_TYPE)).toEqual([
-        {
-          name: 'source.source_ref',
-          label: expect.any(Object),
-          isRequired: true,
-          validate: [{ type: validatorTypes.REQUIRED }],
-          component: componentTypes.TEXT_FIELD,
+  it('returns endpoint fields', () => {
+    APPLICATIONS = [
+      {
+        id: 'app-id',
+        application_type_id: COSTMANAGEMENT_APP.id,
+        authentications: [{ id: '1234', authtype: 'arn', resource_type: 'Endpoint' }],
+      },
+    ];
+    SOURCE_TYPE = {
+      name: 'aws',
+      product_name: 'Amazon',
+      schema: {
+        authentication: [
+          {
+            name: 'ARN',
+            type: 'arn',
+            fields: FIELDS,
+          },
+          {
+            name: 'unused-type',
+            type: 'unused',
+            fields: [],
+          },
+        ],
+        endpoint: {
+          title: 'Configure endpoint',
+          fields: [
+            {
+              component: 'text-field',
+              name: 'endpoint.role',
+              hideField: true,
+              initialValue: 'kubernetes',
+            },
+            {
+              component: 'text-field',
+              name: 'url',
+              label: 'URL',
+              validate: [
+                {
+                  type: 'url-validator',
+                },
+              ],
+            },
+          ],
         },
-      ]);
-    });
+      },
+    };
 
-    it('dont return cluster identifier field when type is not openshift', () => {
-      const AWS_SOURCE_TYPE = { name: 'aws' };
+    const EXPECTED_RESULT = [
+      {
+        component: 'tabs',
+        fields: [
+          {
+            fields: [
+              {
+                Content: EditAlert,
+                component: 'description',
+                condition: { isNotEmpty: true, when: expect.any(Function) },
+                name: 'messages.app-id',
+              },
+              [
+                { name: 'billing_source.field1' },
+                { name: 'field2' },
+                {
+                  component: 'sub-form',
+                  fields: [
+                    { component: 'text-field', hideField: true, initialValue: 'kubernetes', name: 'endpoint.role' },
+                    {
+                      component: 'text-field',
+                      label: 'URL',
+                      name: 'url',
+                      validate: [
+                        {
+                          type: 'url-validator',
+                        },
+                      ],
+                    },
+                  ],
+                  name: 'endpoint',
+                },
+              ],
+            ],
+            name: '2',
+            title: 'Cost Management',
+          },
+        ],
+        isBox: true,
+        name: 'app-tabs',
+      },
+    ];
 
-      expect(appendClusterIdentifier(AWS_SOURCE_TYPE)).toEqual([]);
-    });
+    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, APP_TYPES);
+
+    expect(result).toEqual(EXPECTED_RESULT);
   });
 });

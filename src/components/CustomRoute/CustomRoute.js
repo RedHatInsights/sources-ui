@@ -2,9 +2,10 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import RedirectNoWriteAccess from '../RedirectNoWriteAccess/RedirectNoWriteAccess';
 import { useSource } from '../../hooks/useSource';
+import RedirectNoWriteAccess from '../RedirectNoWriteAccess/RedirectNoWriteAccess';
 import RedirectNoId from '../RedirectNoId/RedirectNoId';
+import RedirectNoPaused from '../RedirectNoPaused/RedirectNoPaused';
 
 const CustomRouteInternal = ({ route, children }) => {
   const source = route.redirectNoId && useSource();
@@ -15,6 +16,7 @@ const CustomRouteInternal = ({ route, children }) => {
 
   return (
     <React.Fragment>
+      {route.noPaused && <RedirectNoPaused />}
       {route.writeAccess && <RedirectNoWriteAccess />}
       {children}
     </React.Fragment>
@@ -26,6 +28,7 @@ CustomRouteInternal.propTypes = {
     path: PropTypes.string.isRequired,
     redirectNoId: PropTypes.bool,
     writeAccess: PropTypes.bool,
+    noPaused: PropTypes.bool,
   }).isRequired,
   children: PropTypes.node.isRequired,
 };
@@ -43,6 +46,7 @@ CustomRoute.propTypes = {
     path: PropTypes.string.isRequired,
     redirectNoId: PropTypes.bool,
     writeAccess: PropTypes.bool,
+    noPaused: PropTypes.bool,
   }).isRequired,
   componentProps: PropTypes.any,
   Component: PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired,

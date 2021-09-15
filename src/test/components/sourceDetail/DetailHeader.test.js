@@ -28,7 +28,7 @@ describe('DetailHeader', () => {
         entities: [{ id: sourceId, name: 'Name of this source' }],
         appTypes: applicationTypesData.data,
       },
-      user: { isOrgAdmin: false, writePermissions: false },
+      user: { writePermissions: false },
     });
 
     wrapper = mount(

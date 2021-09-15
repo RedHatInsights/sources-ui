@@ -21,19 +21,8 @@ const SourceEditModal = () => {
   const sourceRedux = useSource();
   const isLoaded = useIsLoaded();
 
-  const {
-    loading,
-    editing,
-    source,
-    initialValues,
-    schema,
-    isSubmitting,
-    initialLoad,
-    message,
-    messages,
-    submitError,
-    values,
-  } = state;
+  const { loading, editing, source, initialValues, schema, isSubmitting, initialLoad, message, messages, submitError, values } =
+    state;
 
   const intl = useIntl();
 
@@ -50,7 +39,7 @@ const SourceEditModal = () => {
   useEffect(() => {
     if (sourceRedux && initialLoad && appTypesLoaded) {
       doLoadSourceForEdit(sourceRedux, appTypes, sourceTypes).then((source) => {
-        const messages = prepareMessages(source, intl);
+        const messages = prepareMessages(source, intl, appTypes);
 
         setState({ type: 'setSource', source, messages });
       });
@@ -83,18 +72,26 @@ const SourceEditModal = () => {
     );
   }
 
+  const hideFormControls = source.source.paused_at || source.applications.every(({ paused_at }) => paused_at);
+
   return (
     <SourcesFormRenderer
       schema={schema}
       onSubmit={(values, formApi) => onSubmit(values, formApi.getState().dirtyFields, dispatch, source, intl, setState)}
       FormTemplate={(props) => (
-        <FormTemplate canReset submitLabel="Save changes" disableSubmit={['pristine', 'invalid']} {...props} />
+        <FormTemplate
+          canReset
+          showFormControls={!hideFormControls}
+          submitLabel="Save changes"
+          disableSubmit={['pristine', 'invalid']}
+          {...props}
+        />
       )}
       clearedValue={null}
       initialValues={{
         ...initialValues,
-        message,
-        messages,
+        ...(!sourceRedux.paused_at && { message }),
+        ...(!sourceRedux.paused_at && { messages }),
       }}
     />
   );

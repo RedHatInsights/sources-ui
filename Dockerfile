@@ -6,7 +6,7 @@ WORKDIR $WORKDIR
 COPY . $WORKDIR
 
 # Enable nodejs & python2.7 module streams to lock versions
-RUN dnf -y --disableplugin=subscription-manager module enable nodejs:10 && \
+RUN dnf -y --disableplugin=subscription-manager module enable nodejs:16 && \
     dnf -y --disableplugin=subscription-manager module enable python27:2.7 && \
     dnf -y --disableplugin=subscription-manager --setopt=tsflags=nodocs install \
        npm nodejs \

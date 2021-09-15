@@ -76,5 +76,7 @@ describe('validatorReset', () => {
 
     expect(onSubmit).toHaveBeenCalledWith({ show: 'false', reset: '' });
     onSubmit.mockClear();
+
+    jest.useRealTimers();
   });
 });

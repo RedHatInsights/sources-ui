@@ -14,12 +14,12 @@ import {
   CardExpandableContent,
   Text,
   TextContent,
-  Label,
 } from '@patternfly/react-core';
 
 import ArrowRightIcon from '@patternfly/react-icons/dist/esm/icons/arrow-right-icon';
 import BuilderImageIcon from '@patternfly/react-icons/dist/esm/icons/builder-image-icon';
-import SubWatchIcon from './SubWatchIcon';
+import TrendUpIcon from '@patternfly/react-icons/dist/esm/icons/trend-up-icon';
+import ListIcon from '@patternfly/react-icons/dist/esm/icons/list-icon';
 
 const PREFIX = insights.chrome.isBeta() ? 'beta/' : '';
 
@@ -30,13 +30,11 @@ const GOLD_IMAGES_AZURE =
 const GOLD_IMAGES_MORE =
   'https://access.redhat.com/documentation/en-us/red_hat_subscription_management/1/html/red_hat_cloud_access_reference_guide/understanding-gold-images_cloud-access';
 const INSIGHTS_REF = 'https://www.redhat.com/en/technologies/management/insights';
-const INSIGHTS_SERVICES = `/${PREFIX}insights`;
+const INSIGHTS_SERVICES = `/${PREFIX}settings/connector`;
 const SUBWATCH_HREF = `/${PREFIX}insights/subscriptions/rhel`;
 const SUBWATCH_MORE_HREF = 'https://access.redhat.com/products/subscription-central';
 
 export const CLOUD_CARDS_KEY = 'ins-c-sources__cloud_cards_expanded';
-
-const INSIGHTS_ICON = `/${PREFIX}apps/landing/fonts/Insights.svg`;
 
 const CloudCards = () => {
   const [isExpanded, setExpanded] = useState(() => {
@@ -62,9 +60,10 @@ const CloudCards = () => {
               <GridItem md={4}>
                 <Stack>
                   <StackItem className="pf-u-mb-sm">
-                    <Label color="orange" icon={<BuilderImageIcon fill="#F4C145" />}>
+                    <Text className="ins-c-sources__info-card-header">
+                      <BuilderImageIcon className="pf-u-mr-sm" color="#0066cc" />
                       {intl.formatMessage({ id: 'cloud.goldImages', defaultMessage: 'Use gold images' })}
-                    </Label>
+                    </Text>
                   </StackItem>
                   <StackItem isFilled>
                     <Text className="text pf-u-mb-sm">
@@ -102,9 +101,10 @@ const CloudCards = () => {
               <GridItem md={4}>
                 <Stack>
                   <StackItem className="pf-u-mb-sm">
-                    <Label color="red" icon={<img src={INSIGHTS_ICON} fill="#EE0000" className="custom-icon" />}>
+                    <Text className="ins-c-sources__info-card-header">
+                      <TrendUpIcon className="pf-u-mr-sm" color="#0066cc" />
                       {intl.formatMessage({ id: 'cloud.insights', defaultMessage: 'Explore Red Hat Insights' })}
-                    </Label>
+                    </Text>
                   </StackItem>
                   <StackItem isFilled>
                     <Text className="text pf-u-mb-sm">
@@ -135,9 +135,10 @@ const CloudCards = () => {
               <GridItem md={4}>
                 <Stack>
                   <StackItem className="pf-u-mb-sm">
-                    <Label color="purple" icon={<SubWatchIcon className="custom-icon" />}>
+                    <Text className="ins-c-sources__info-card-header">
+                      <ListIcon className="pf-u-mr-sm" color="#0066cc" />
                       {intl.formatMessage({ id: 'cloud.subwatch', defaultMessage: 'Track usage with Subscriptions' })}
-                    </Label>
+                    </Text>
                   </StackItem>
                   <StackItem isFilled>
                     <Text className="text pf-u-mb-sm">

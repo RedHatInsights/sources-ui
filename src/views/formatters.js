@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { Text, TextVariants, TextContent, Badge, Popover, Tooltip, Label, LabelGroup, Button } from '@patternfly/react-core';
 
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
+import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
+import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 
 import { FormattedMessage, useIntl } from 'react-intl';
 import { DateFormat } from '@redhat-cloud-services/frontend-components/DateFormat';
@@ -99,12 +101,14 @@ export const UNAVAILABLE = 'unavailable';
 export const UNKNOWN = 'unknown';
 export const PARTIALLY_UNAVAILABLE = 'partially_available';
 export const IN_PROGRESS = 'in_progress';
+export const PAUSED = 'paused_at';
 
 export const getStatusColor = (status) =>
   ({
     [UNAVAILABLE]: 'red',
     [AVAILABLE]: 'green',
     [PARTIALLY_UNAVAILABLE]: 'orange',
+    [PAUSED]: 'cyan',
   }[status] || 'grey');
 
 export const getStatusText = (status) =>
@@ -113,6 +117,7 @@ export const getStatusText = (status) =>
     [AVAILABLE]: <FormattedMessage id="sources.available" defaultMessage="Available" />,
     [PARTIALLY_UNAVAILABLE]: <FormattedMessage id="sources.partiallyAvailable" defaultMessage="Partially available" />,
     [IN_PROGRESS]: <FormattedMessage id="sources.inProgress" defaultMessage="In progress" />,
+    [PAUSED]: <FormattedMessage id="sources.paused" defaultMessage="Paused" />,
   }[status] || <FormattedMessage id="sources.unknown" defaultMessage="Unknown" />);
 
 export const UnknownError = () => <FormattedMessage id="sources.unknownError" defaultMessage="unavailable" />;
@@ -210,6 +215,12 @@ export const getStatusTooltipText = (status, appTypes, errors = {}) =>
         defaultMessage="We are still working to validate credentials. Check back for status updates."
       />
     ),
+    [PAUSED]: (
+      <FormattedMessage
+        id="sources.pausedStatus"
+        defaultMessage="Data collection is temporarily disabled. Resume source to reestablish connection."
+      />
+    ),
   }[status] || <FormattedMessage id="sources.appStatusUnknown" defaultMessage="Status has not been verified." />);
 
 export const getAllErrors = ({
@@ -303,7 +314,7 @@ export const getAllErrors = ({
 
 export const availabilityFormatter = (_status, source, { appTypes }) => {
   const meta = getAllErrors(source);
-  const status = meta.status;
+  const status = source.paused_at ? PAUSED : meta.status;
 
   return (
     <span>
@@ -312,7 +323,12 @@ export const availabilityFormatter = (_status, source, { appTypes }) => {
         aria-label={`${status} popover`}
         bodyContent={getStatusTooltipText(status, appTypes, meta.errors)}
       >
-        <Label className="clickable" color={getStatusColor(status)}>
+        <Label
+          className="clickable"
+          color={getStatusColor(status)}
+          {...(source.availability_status === IN_PROGRESS && { icon: <WrenchIcon /> })}
+          {...(source.paused_at && { icon: <PauseIcon /> })}
+        >
           {getStatusText(status)}
         </Label>
       </Popover>
@@ -327,11 +343,65 @@ export const getStatusTooltipTextApp = (status, error, intl) =>
       defaultMessage: 'Everything works fine.',
     }),
     [UNAVAILABLE]: error || intl.formatMessage({ id: 'sources.unknownError', defaultMessage: 'Unknown error' }),
+    [IN_PROGRESS]: (
+      <FormattedMessage
+        id="sources.inProgressStatus"
+        defaultMessage="We are still working to validate credentials. Check back for status updates."
+      />
+    ),
   }[status] ||
   intl.formatMessage({
     id: 'sources.appStatusUnknown',
     defaultMessage: 'Status has not been verified.',
   }));
+
+export const ApplicationLabel = ({ app, showStatusText, ...props }) => {
+  const intl = useIntl();
+
+  const statusText = getStatusTooltipTextApp(app.availability_status, app.availability_status_error, intl);
+
+  return (
+    <Popover
+      showClose={false}
+      key={app.display_name}
+      aria-label={`${app.display_name} popover`}
+      bodyContent={
+        app.paused_at
+          ? `${statusText} ${intl.formatMessage({
+              id: 'appplication.paused.additionalText',
+              defaultMessage: 'Resume this application to continue data collection.',
+            })}`
+          : statusText
+      }
+      {...(app.paused_at && {
+        headerContent: intl.formatMessage({
+          id: 'application.paused.header',
+          defaultMessage: 'Application paused',
+        }),
+      })}
+    >
+      <Label
+        className="clickable"
+        color={getStatusColor(app.availability_status)}
+        {...(app.availability_status === IN_PROGRESS && { icon: <WrenchIcon /> })}
+        {...(app.paused_at && { icon: <PauseIcon /> })}
+        {...props}
+      >
+        {showStatusText ? getStatusText(app.availability_status) : app.display_name}
+      </Label>
+    </Popover>
+  );
+};
+
+ApplicationLabel.propTypes = {
+  app: PropTypes.shape({
+    display_name: PropTypes.string,
+    availability_status: PropTypes.string,
+    availability_status_error: PropTypes.string,
+    paused_at: PropTypes.string,
+  }),
+  showStatusText: PropTypes.bool,
+};
 
 const EnhancedLabelGroup = ({ applications, ...props }) => {
   const intl = useIntl();
@@ -345,17 +415,8 @@ const EnhancedLabelGroup = ({ applications, ...props }) => {
         { remaining: '${remaining}' }
       )}
     >
-      {applications.map((app) => (
-        <Popover
-          showClose={false}
-          key={app.display_name}
-          aria-label={`${app.display_name} popover`}
-          bodyContent={getStatusTooltipTextApp(app.availability_status, app.availability_status_error, intl)}
-        >
-          <Label className="clickable" color={getStatusColor(app.availability_status)}>
-            {app.display_name}
-          </Label>
-        </Popover>
+      {applications.map((app, index) => (
+        <ApplicationLabel app={app} key={app.id || index} />
       ))}
     </LabelGroup>
   );
@@ -364,9 +425,10 @@ const EnhancedLabelGroup = ({ applications, ...props }) => {
 EnhancedLabelGroup.propTypes = {
   applications: PropTypes.arrayOf(
     PropTypes.shape({
-      display_name: PropTypes.string.isRequired,
+      display_name: PropTypes.string,
       availability_status: PropTypes.string,
       availability_status_error: PropTypes.string,
+      paused_at: PropTypes.string,
     })
   ).isRequired,
 };
@@ -385,6 +447,7 @@ export const getAppStatus = (app, source, appTypes) => {
 
     return {
       display_name: application.display_name,
+      paused_at: app.paused_at,
       availability_status,
       availability_status_error,
     };
@@ -434,10 +497,15 @@ export const configurationModeFormatter = (mode, item, { intl, sourceType }) => 
         <div className="pf-u-mt-sm">
           <Link to={replaceRouteId(routes.sourcesDetailEditCredentials.path, item.id)}>
             <Button variant="link" id="edit-super-credentials" isInline>
-              {intl.formatMessage({
-                id: 'sources.editCredentials',
-                defaultMessage: 'Edit credentials',
-              })}
+              {item.paused_at
+                ? intl.formatMessage({
+                    id: 'sources.viewCredentials',
+                    defaultMessage: 'View credentials',
+                  })
+                : intl.formatMessage({
+                    id: 'sources.editCredentials',
+                    defaultMessage: 'Edit credentials',
+                  })}
             </Button>
           </Link>
         </div>
