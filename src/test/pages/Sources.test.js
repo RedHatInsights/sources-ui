@@ -1085,7 +1085,8 @@ describe('SourcesPage', () => {
             props: {
               className: 'ins-c-sources__disabled-drodpown-item',
               component: 'div',
-              tooltip: 'To add a source, you must be granted write permissions from your Organization Administrator.',
+              tooltip:
+                'To add a source, you must be granted Sources Administrator permissions from your Organization Administrator.',
               isDisabled: true,
             },
           },

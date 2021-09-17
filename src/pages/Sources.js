@@ -150,7 +150,8 @@ const SourcesPage = () => {
   });
   const noPermissionsText = intl.formatMessage({
     id: 'sources.notAdminAddButton',
-    defaultMessage: 'To add a source, you must be granted write permissions from your Organization Administrator.',
+    defaultMessage:
+      'To add a source, you must be granted Sources Administrator permissions from your Organization Administrator.',
   });
 
   let actionsConfig;
