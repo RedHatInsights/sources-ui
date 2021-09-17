@@ -47,7 +47,8 @@ describe('SourceKebab', () => {
 
     expect(wrapper.find(DropdownItem)).toHaveLength(3);
 
-    const tooltipText = 'To perform this action, you must be granted write permissions from your Organization Administrator.';
+    const tooltipText =
+      'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.';
 
     expect(wrapper.find(DropdownItem).at(PAUSE_RESUME_INDEX).props().description).toEqual('Temporarily disable data collection');
     expect(wrapper.find(DropdownItem).at(PAUSE_RESUME_INDEX).props().isDisabled).toEqual(true);

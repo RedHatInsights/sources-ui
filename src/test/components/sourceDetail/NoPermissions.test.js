@@ -17,7 +17,7 @@ describe('NoPermissions', () => {
     expect(wrapper.find(Title).text()).toEqual('Missing permissions');
     expect(wrapper.find(PrivateIcon)).toHaveLength(1);
     expect(wrapper.find(EmptyStateBody).text()).toEqual(
-      'To perform this action, you must be granted write permissions from your Organization Administrator.'
+      'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.'
     );
   });
 });
