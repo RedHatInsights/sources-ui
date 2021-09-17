@@ -62,7 +62,7 @@ describe('CloudTiles', () => {
     expect(wrapper.find(Tile).last().props().isDisabled).toEqual(true);
     expect(wrapper.find(Tooltip)).toHaveLength(3);
     expect(wrapper.find(Tooltip).first().props().content).toEqual(
-      'To perform this action, you must be granted write permissions from your Organization Administrator.'
+      'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.'
     );
   });
 
