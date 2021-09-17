@@ -20,6 +20,7 @@ import ApplicationKebab from './ApplicationKebab';
 import { ApplicationLabel } from '../../views/formatters';
 import handleError from '../../api/handleError';
 import tryAgainMessage from '../../utilities/tryAgainMessage';
+import { disabledMessage } from '../../utilities/disabledTooltipProps';
 
 const initialState = {
   selectedApps: {},
@@ -203,11 +204,7 @@ const ApplicationsCard = () => {
       <CardBody>
         {!hasRightAccess && (
           <div className="pf-u-mb-md" id="no-permissions-applications">
-            {intl.formatMessage({
-              id: 'sources.notAdminButton',
-              defaultMessage:
-                'To perform this adding/removing applications, you must be granted write permissions from your Organization Administrator.',
-            })}
+            {disabledMessage(intl)}
           </div>
         )}
         <div className="pf-c-form">
