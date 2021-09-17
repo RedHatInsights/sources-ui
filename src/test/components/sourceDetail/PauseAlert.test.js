@@ -42,7 +42,7 @@ describe('DetailHeader', () => {
     );
 
     expect(wrapper.find(Tooltip).props().content).toEqual(
-      'To perform this action, you must be granted write permissions from your Organization Administrator.'
+      'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.'
     );
 
     expect(wrapper.find(AlertActionLink).props().isDisabled).toEqual(true);

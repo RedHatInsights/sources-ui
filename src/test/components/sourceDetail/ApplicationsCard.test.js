@@ -49,7 +49,7 @@ describe('ApplicationsCard', () => {
     expect(wrapper.find(CardTitle).text()).toEqual('Applications');
     expect(wrapper.find(CardBody)).toHaveLength(1);
     expect(wrapper.find('#no-permissions-applications').text()).toEqual(
-      'To perform this adding/removing applications, you must be granted write permissions from your Organization Administrator.'
+      'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.'
     );
     expect(wrapper.find(FormGroup)).toHaveLength(2);
     expect(wrapper.find(Switch)).toHaveLength(2);

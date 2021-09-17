@@ -58,7 +58,7 @@ describe('ApplicationKebab', () => {
     expect(wrapper.find(DropdownItem)).toHaveLength(2);
     expect(wrapper.find(DropdownItem).first().props().isDisabled).toEqual(true);
     expect(wrapper.find(DropdownItem).first().props().tooltip).toEqual(
-      'To perform this action, you must be granted write permissions from your Organization Administrator.'
+      'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.'
     );
     expect(wrapper.find('InternalDropdownItem').first().text()).toEqual(
       'PauseTemporarily stop this application from collecting data.'
@@ -69,7 +69,7 @@ describe('ApplicationKebab', () => {
 
     expect(wrapper.find(DropdownItem).last().props().isDisabled).toEqual(true);
     expect(wrapper.find(DropdownItem).last().props().tooltip).toEqual(
-      'To perform this action, you must be granted write permissions from your Organization Administrator.'
+      'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.'
     );
     expect(wrapper.find('InternalDropdownItem').last().text()).toEqual(
       'RemovePermanently stop data collection for this application.'
@@ -112,14 +112,14 @@ describe('ApplicationKebab', () => {
     expect(wrapper.find(DropdownItem)).toHaveLength(2);
     expect(wrapper.find(DropdownItem).first().props().isDisabled).toEqual(true);
     expect(wrapper.find(DropdownItem).first().props().tooltip).toEqual(
-      'To perform this action, you must be granted write permissions from your Organization Administrator.'
+      'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.'
     );
     expect(wrapper.find('InternalDropdownItem').first().text()).toEqual('ResumeResume data collection for this application.');
     expect(wrapper.find(DropdownItem).first().props().description).toEqual('Resume data collection for this application.');
 
     expect(wrapper.find(DropdownItem).last().props().isDisabled).toEqual(true);
     expect(wrapper.find(DropdownItem).last().props().tooltip).toEqual(
-      'To perform this action, you must be granted write permissions from your Organization Administrator.'
+      'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.'
     );
     expect(wrapper.find('InternalDropdownItem').last().text()).toEqual(
       'RemovePermanently stop data collection for this application.'
