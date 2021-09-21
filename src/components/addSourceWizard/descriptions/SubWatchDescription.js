@@ -14,7 +14,7 @@ const Point = ({ title, description, isEnabled, ...props }) => (
         <CheckCircleIcon fill={isEnabled ? '#3E8635' : '#6A6E73'} />
       </FlexItem>
       <FlexItem>
-        <Text className="pf-u-mb-xs ins-c-sources__wizard--rhel-desc-title">{title}</Text>
+        <Text className="pf-u-mb-xs src-c-wizard__rhel-desc-title">{title}</Text>
         <Text>{description}</Text>
       </FlexItem>
     </Flex>

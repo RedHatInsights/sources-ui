@@ -17,7 +17,7 @@ const NoPermissions = () => {
           defaultMessage: 'Missing permissions',
         })}
       </Title>
-      <EmptyStateBody className="empty-state-body">{disabledMessage(intl)}</EmptyStateBody>
+      <EmptyStateBody className="src-c-empty-state__body">{disabledMessage(intl)}</EmptyStateBody>
     </EmptyState>
   );
 };

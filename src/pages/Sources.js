@@ -168,7 +168,7 @@ const SourcesPage = () => {
                 component: 'div',
                 isDisabled: true,
                 tooltip: noPermissionsText,
-                className: 'ins-c-sources__disabled-drodpown-item',
+                className: 'src-m-dropdown-item-disabled',
               },
             },
           ],

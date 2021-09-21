@@ -18,7 +18,7 @@ export const descriptionMapper = (type, intl) =>
 export const labelMapper = (type, intl) =>
   ({
     [CLOUD_METER_APP_NAME]: (
-      <span className="ins-c-sources__wizard--rhel-mag-label">
+      <span className="src-c-wizard__rhel-mag-label">
         RHEL management{' '}
         <Label className="pf-u-ml-sm" color="purple">
           {intl.formatMessage({ id: 'sub.bundle', defaultMessage: 'Bundle' })}

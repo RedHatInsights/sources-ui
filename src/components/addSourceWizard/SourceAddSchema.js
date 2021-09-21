@@ -100,7 +100,7 @@ export const iconMapper = (sourceTypes) => (name) => {
     <img
       src={shortIcons[name] || sourceType.icon_url}
       alt={sourceType.product_name}
-      className={`ins-c-sources__wizard--icon ${sourceType.vendor === 'Red Hat' ? 'redhat-icon' : 'pf-u-mb-sm'}`}
+      className={`src-c-wizard__icon ${sourceType.vendor === 'Red Hat' ? 'redhat-icon' : 'pf-u-mb-sm'}`}
     />
   );
 

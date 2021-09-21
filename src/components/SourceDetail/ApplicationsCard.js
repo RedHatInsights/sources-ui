@@ -194,7 +194,7 @@ const ApplicationsCard = () => {
   }
 
   return (
-    <Card className="card applications-card pf-u-p-lg pf-u-pl-sm-on-md">
+    <Card className="src-c-card-applications pf-u-p-lg pf-u-pl-sm-on-md">
       <CardTitle>
         {intl.formatMessage({
           id: 'detail.applications.title',
@@ -221,7 +221,7 @@ const ApplicationsCard = () => {
 
             return (
               <FormGroup key={app.id}>
-                <div className="ins-c-sources__application_flex">
+                <div className="src-c-application_flex">
                   <div>
                     <Switch
                       id={`app-switch-${app.id}`}
@@ -231,12 +231,12 @@ const ApplicationsCard = () => {
                       onChange={(value) => (!value ? removeApp(connectedApp.id, app.id) : addApp(app.id, connectedApp?.id))}
                     />
                     {Boolean(connectedApp) && (
-                      <ApplicationLabel className="pf-u-ml-sm clickable" app={connectedApp} showStatusText />
+                      <ApplicationLabel className="pf-u-ml-sm src-m-clickable" app={connectedApp} showStatusText />
                     )}
                     {description && (
-                      <div className="pf-c-switch pf-u-mt-sm ins-c-sources__application_fake_switch">
-                        <span className="pf-c-switch__toggle ins-c-sources__hide-me" />
-                        <div className="pf-c-switch__label ins-c-sources__switch-description">{description}</div>
+                      <div className="pf-c-switch pf-u-mt-sm src-c-application_fake_switch">
+                        <span className="pf-c-switch__toggle src-m-hide-me" />
+                        <div className="pf-c-switch__label src-c-switch__description">{description}</div>
                       </div>
                     )}
                   </div>

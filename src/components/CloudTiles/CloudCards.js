@@ -49,7 +49,7 @@ const CloudCards = () => {
   }, [isExpanded]);
 
   return (
-    <Card isExpanded={isExpanded} className="pf-u-mb-lg pf-u-mt-md pf-u-mt-0-on-md ins-c-sources__info-card">
+    <Card isExpanded={isExpanded} className="pf-u-mb-lg pf-u-mt-md pf-u-mt-0-on-md src-c-card-info">
       <CardHeader onExpand={() => setExpanded(!isExpanded)}>
         <CardTitle>{intl.formatMessage({ id: 'cloud.nowWhat', defaultMessage: 'I connected to cloud. Now what?' })}</CardTitle>
       </CardHeader>
@@ -60,7 +60,7 @@ const CloudCards = () => {
               <GridItem md={4}>
                 <Stack>
                   <StackItem className="pf-u-mb-sm">
-                    <Text className="ins-c-sources__info-card-header">
+                    <Text className="src-c-card-info__header">
                       <BuilderImageIcon className="pf-u-mr-sm" color="#0066cc" />
                       {intl.formatMessage({ id: 'cloud.goldImages', defaultMessage: 'Use gold images' })}
                     </Text>
@@ -101,7 +101,7 @@ const CloudCards = () => {
               <GridItem md={4}>
                 <Stack>
                   <StackItem className="pf-u-mb-sm">
-                    <Text className="ins-c-sources__info-card-header">
+                    <Text className="src-c-card-info__header">
                       <TrendUpIcon className="pf-u-mr-sm" color="#0066cc" />
                       {intl.formatMessage({ id: 'cloud.insights', defaultMessage: 'Explore Red Hat Insights' })}
                     </Text>
@@ -135,7 +135,7 @@ const CloudCards = () => {
               <GridItem md={4}>
                 <Stack>
                   <StackItem className="pf-u-mb-sm">
-                    <Text className="ins-c-sources__info-card-header">
+                    <Text className="src-c-card-info__header">
                       <ListIcon className="pf-u-mr-sm" color="#0066cc" />
                       {intl.formatMessage({ id: 'cloud.subwatch', defaultMessage: 'Track usage with Subscriptions' })}
                     </Text>

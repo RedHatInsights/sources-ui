@@ -22,7 +22,7 @@ const ErroredStep = ({ onClose, returnButtonTitle, message, title, customText, p
       <Title headingLevel="h2" size="xl" className="pf-u-mt-xl">
         {title}
       </Title>
-      <EmptyStateBody className="ins-c-sources__wizard--step-text">{message || customText}</EmptyStateBody>
+      <EmptyStateBody className="src-c-wizard--step-text">{message || customText}</EmptyStateBody>
       <Component variant="primary" onClick={primaryAction || onClose}>
         {returnButtonTitle}
       </Component>

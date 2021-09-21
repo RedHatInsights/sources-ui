@@ -63,7 +63,7 @@ const CardSelect = (originalProps) => {
         return (
           <GridItem sm={6} md={4} key={value}>
             <Tile
-              className={`ins-c-sources__wizard--tile${disabled ? ' disabled' : ''}`}
+              className={`src-c-wizard__tile${disabled ? ' disabled' : ''}`}
               onClick={() => onClick(value)}
               tabIndex={disabled ? -1 : 0}
               onKeyPress={(e) => handleKeyPress(e, value, onClick)}
