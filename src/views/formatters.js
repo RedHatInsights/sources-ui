@@ -11,6 +11,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { DateFormat } from '@redhat-cloud-services/frontend-components/DateFormat';
 import { Link } from 'react-router-dom';
 import { replaceRouteId, routes } from '../Routes';
+import isSourceAzureRHEL from '../utilities/isSourceAzureRHEL';
 
 export const defaultPort = (scheme) =>
   ({
@@ -102,6 +103,7 @@ export const UNKNOWN = 'unknown';
 export const PARTIALLY_UNAVAILABLE = 'partially_available';
 export const IN_PROGRESS = 'in_progress';
 export const PAUSED = 'paused_at';
+export const RHELAZURE = 'rhel_azure';
 
 export const getStatusColor = (status) =>
   ({
@@ -221,6 +223,12 @@ export const getStatusTooltipText = (status, appTypes, errors = {}) =>
         defaultMessage="Data collection is temporarily disabled. Resume source to reestablish connection."
       />
     ),
+    [RHELAZURE]: (
+      <FormattedMessage
+        id="sources.rhelAzureStatus"
+        defaultMessage="This source cannot currently be monitored in Sources, and does not reflect true status of resources."
+      />
+    ),
   }[status] || <FormattedMessage id="sources.appStatusUnknown" defaultMessage="Status has not been verified." />);
 
 export const getAllErrors = ({
@@ -312,9 +320,9 @@ export const getAllErrors = ({
   };
 };
 
-export const availabilityFormatter = (_status, source, { appTypes }) => {
+export const availabilityFormatter = (_status, source, { appTypes, sourceTypes }) => {
   const meta = getAllErrors(source);
-  const status = source.paused_at ? PAUSED : meta.status;
+  const status = source.paused_at ? PAUSED : isSourceAzureRHEL({ source, sourceTypes, appTypes }) ? RHELAZURE : meta.status;
 
   return (
     <span>
