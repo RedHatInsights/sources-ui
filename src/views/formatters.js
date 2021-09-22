@@ -226,7 +226,7 @@ export const getStatusTooltipText = (status, appTypes, errors = {}) =>
     [RHELAZURE]: (
       <FormattedMessage
         id="sources.rhelAzureStatus"
-        defaultMessage="This source cannot currently be monitored in Sources, and does not reflect true status of resources."
+        defaultMessage="This source cannot currently be monitored in Sources, and does not reflect true status or resources."
       />
     ),
   }[status] || <FormattedMessage id="sources.appStatusUnknown" defaultMessage="Status has not been verified." />);

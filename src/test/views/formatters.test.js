@@ -634,7 +634,7 @@ describe('formatters', () => {
         const wrapper = mount(wrapperWithIntl(getStatusTooltipText(RHELAZURE, APPTYPES)));
 
         expect(wrapper.text()).toEqual(
-          'This source cannot currently be monitored in Sources, and does not reflect true status of resources.'
+          'This source cannot currently be monitored in Sources, and does not reflect true status or resources.'
         );
       });
     });
