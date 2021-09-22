@@ -14,6 +14,7 @@ const DetailHeader = () => {
   const intl = useIntl();
   const source = useSource();
   const appTypes = useSelector(({ sources }) => sources.appTypes, shallowEqual);
+  const sourceTypes = useSelector(({ sources }) => sources.sourceTypes, shallowEqual);
 
   return (
     <PageHeader>
@@ -24,7 +25,7 @@ const DetailHeader = () => {
             {source.name}
           </Title>
         </FlexItem>
-        <FlexItem>{availabilityFormatter(undefined, source, { appTypes })}</FlexItem>
+        <FlexItem>{availabilityFormatter(undefined, source, { appTypes, sourceTypes })}</FlexItem>
         <FlexItem align={{ default: 'alignRight' }}>
           <SourceKebab />
         </FlexItem>

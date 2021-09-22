@@ -30,8 +30,9 @@ import {
   IN_PROGRESS,
   ApplicationLabel,
   PAUSED,
+  RHELAZURE,
 } from '../../views/formatters';
-import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX, AMAZON } from '../__mocks__/sourceTypesData';
+import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX, AMAZON, AZURE } from '../__mocks__/sourceTypesData';
 import {
   sourcesDataGraphQl,
   SOURCE_CATALOGAPP_INDEX,
@@ -46,6 +47,7 @@ import {
   COSTMANAGEMENET_INDEX,
   COSTMANAGEMENT_APP,
   CATALOG_APP,
+  SUBWATCH_APP,
 } from '../__mocks__/applicationTypesData';
 
 import { Badge, Popover, Tooltip, Label, LabelGroup, Button } from '@patternfly/react-core';
@@ -494,7 +496,8 @@ describe('formatters', () => {
   });
 
   describe('availability status', () => {
-    const APPTYPES = applicationTypesData.data;
+    const APPTYPES = [...applicationTypesData.data, SUBWATCH_APP];
+    const SOURCETYPES = sourceTypesData.data;
 
     describe('getStatusColor', () => {
       it('returns OK color', () => {
@@ -626,6 +629,14 @@ describe('formatters', () => {
 
         expect(wrapper.text()).toEqual('Data collection is temporarily disabled. Resume source to reestablish connection.');
       });
+
+      it('returns RHEL AZURE text', () => {
+        const wrapper = mount(wrapperWithIntl(getStatusTooltipText(RHELAZURE, APPTYPES)));
+
+        expect(wrapper.text()).toEqual(
+          'This source cannot currently be monitored in Sources, and does not reflect true status of resources.'
+        );
+      });
     });
 
     describe('availabilityFormatter', () => {
@@ -634,7 +645,9 @@ describe('formatters', () => {
           applications: [{ availability_status: AVAILABLE }],
         };
 
-        const wrapper = mount(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES })));
+        const wrapper = mount(
+          wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES, sourceTypes: SOURCETYPES }))
+        );
 
         expect(wrapper.find(Label)).toHaveLength(1);
         expect(wrapper.text().includes('Available')).toEqual(true);
@@ -646,7 +659,9 @@ describe('formatters', () => {
           applications: [{ availability_status: AVAILABLE }],
         };
 
-        const wrapper = mount(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES })));
+        const wrapper = mount(
+          wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES, sourceTypes: SOURCETYPES }))
+        );
 
         expect(wrapper.find(Label)).toHaveLength(1);
         expect(wrapper.text().includes('Partially available')).toEqual(true);
@@ -657,7 +672,9 @@ describe('formatters', () => {
           applications: [{ availability_status: UNAVAILABLE }],
         };
 
-        const wrapper = mount(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES })));
+        const wrapper = mount(
+          wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES, sourceTypes: SOURCETYPES }))
+        );
 
         expect(wrapper.find(Label)).toHaveLength(1);
         expect(wrapper.text().includes('Unavailable')).toEqual(true);
@@ -668,7 +685,9 @@ describe('formatters', () => {
           availability_status: IN_PROGRESS,
         };
 
-        const wrapper = mount(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES })));
+        const wrapper = mount(
+          wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES, sourceTypes: SOURCETYPES }))
+        );
 
         expect(wrapper.find(Label)).toHaveLength(1);
         expect(wrapper.find('.pf-c-label').text()).toEqual('In progress');
@@ -678,7 +697,9 @@ describe('formatters', () => {
       it('returns unknown by default', () => {
         const SOURCE = {};
 
-        const wrapper = mount(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES })));
+        const wrapper = mount(
+          wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES, sourceTypes: SOURCETYPES }))
+        );
 
         expect(wrapper.find(Label)).toHaveLength(1);
         expect(wrapper.text().includes('Unknown')).toEqual(true);
@@ -690,11 +711,28 @@ describe('formatters', () => {
           paused_at: 'today',
         };
 
-        const wrapper = mount(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES })));
+        const wrapper = mount(
+          wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES, sourceTypes: SOURCETYPES }))
+        );
 
         expect(wrapper.find(Label)).toHaveLength(1);
         expect(wrapper.find('.pf-c-label').text()).toEqual('Paused');
         expect(wrapper.find(PauseIcon)).toHaveLength(1);
+      });
+
+      it('returns text for Azure + RHEL bundle combo', () => {
+        const SOURCE = {
+          availability_status: undefined,
+          source_type_id: AZURE.id,
+          applications: [{ application_type_id: SUBWATCH_APP.id }],
+        };
+
+        const wrapper = mount(
+          wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES, sourceTypes: SOURCETYPES }))
+        );
+
+        expect(wrapper.find(Label)).toHaveLength(1);
+        expect(wrapper.find('.pf-c-label').text()).toEqual('Unknown');
       });
     });
 
