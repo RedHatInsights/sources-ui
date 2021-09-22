@@ -37,7 +37,7 @@ describe('configurationSteps', () => {
         description:
           'A new automated source configuration method. Provide your AWS account credentials and let Red Hat configure and manage your source for you.',
         label: (
-          <span className="ins-c-sources__wizard--rhel-mag-label">
+          <span className="src-c-wizard__rhel-mag-label">
             Account authorization
             <Label className="pf-u-ml-sm" color="purple">
               Recommended

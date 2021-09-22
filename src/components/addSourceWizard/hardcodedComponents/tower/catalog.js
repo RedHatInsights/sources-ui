@@ -7,7 +7,7 @@ export const AllFieldAreRequired = () => {
   const intl = useIntl();
 
   return (
-    <Text component={TextVariants.p} className="ins-c-sources__wizard--all-required-text">
+    <Text component={TextVariants.p} className="src-wizard--all-required-text">
       {intl.formatMessage({
         id: 'catalog.auth.allFieldsRequired',
         defaultMessage: 'All fields are required.',

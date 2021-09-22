@@ -9,7 +9,7 @@ const ValuePopover = ({ label, value }) => {
 
   return (
     <Popover headerContent={label} bodyContent={value} position="top" maxWidth="80%">
-      <Button variant="link" isInline className="ins-c-sources__wizard--summary-buttonss">
+      <Button variant="link" isInline className="src-c-wizard__summary-buttons">
         {intl.formatMessage({
           id: 'wizard.showMore',
           defaultMessage: 'Show more',

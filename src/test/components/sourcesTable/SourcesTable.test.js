@@ -84,7 +84,7 @@ describe('SourcesTable', () => {
   });
 
   it('renders table when loaded', async () => {
-    const ROW_WRAPPER_CLASSNAME = 'ins-c-sources__row-vertical-centered';
+    const ROW_WRAPPER_CLASSNAME = 'src-c-row-vertical-centered';
     initialState = {
       ...initialState,
       sources: {
@@ -117,7 +117,7 @@ describe('SourcesTable', () => {
   });
 
   it('renders table when loaded and its not org admin - no action column', async () => {
-    const ROW_WRAPPER_CLASSNAME = 'ins-c-sources__row-vertical-centered';
+    const ROW_WRAPPER_CLASSNAME = 'src-c-row-vertical-centered';
     initialState = {
       user: {
         writePermissions: false,

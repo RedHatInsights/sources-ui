@@ -7,7 +7,7 @@ const CheckboxWithIcon = ({ Icon, ...props }) => {
   const ref = useRef();
 
   return (
-    <div className="ins-c-sources__checkbox-with-icon">
+    <div className="src-c-checkbox-with-icon">
       <Checkbox {...props} type="checkbox" />
       <span ref={ref}>
         <Icon appendTo={ref.current} />

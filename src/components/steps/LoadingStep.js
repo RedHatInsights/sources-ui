@@ -21,7 +21,7 @@ const LoadingStep = ({ onClose, customText, cancelTitle, description }) => (
       <Title headingLevel="h2" size="xl" className="pf-u-mt-xl">
         {customText}
       </Title>
-      {description && <EmptyStateBody className="ins-c-sources__wizard--step-text">{description}</EmptyStateBody>}
+      {description && <EmptyStateBody className="src-c-wizard--step-text">{description}</EmptyStateBody>}
       {onClose && (
         <EmptyStateSecondaryActions className="pf-u-mt-xl">
           <Button variant="link" onClick={onClose}>

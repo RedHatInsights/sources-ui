@@ -67,7 +67,7 @@ const AmazonFinishedStep = ({ onClose }) => {
               id: 'aws.successDescription',
               defaultMessage: 'Discover the benefits of your connection or exit to manage your new source.',
             })}
-            <Grid hasGutter className="ins-c-source__aws-grid pf-u-mt-md">
+            <Grid hasGutter className="src-c-aws-grid pf-u-mt-md">
               <GridItem md="6">
                 <AwsLink href={GOLDIMAGES_HREF}>
                   {intl.formatMessage({ id: 'aws.goldImages', defaultMessage: 'View enabled AWS gold images' })}
