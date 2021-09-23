@@ -37,7 +37,7 @@ describe('applicationsStep', () => {
       {
         description: <SubWatchDescription id="5" />,
         label: (
-          <span className="ins-c-sources__wizard--rhel-mag-label">
+          <span className="src-c-wizard__rhel-mag-label">
             RHEL management{' '}
             <Label className="pf-u-ml-sm" color="purple">
               Bundle

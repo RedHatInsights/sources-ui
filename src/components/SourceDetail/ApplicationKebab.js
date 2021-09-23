@@ -93,7 +93,7 @@ const ApplicationKebab = ({ app, removeApp, addApp }) => {
       isOpen={isOpen}
       position="right"
       dropdownItems={[pausedButton, removedButton]}
-      className="ins-c-sources__application_kebab"
+      className="src-c-dropdown__application_kebab"
       toggle={<KebabToggle onToggle={() => setOpen((open) => !open)} />}
     />
   );

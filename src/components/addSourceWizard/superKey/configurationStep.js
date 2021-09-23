@@ -45,7 +45,7 @@ const configurationStep = (intl, sourceTypes) => ({
       options: [
         {
           label: (
-            <span className="ins-c-sources__wizard--rhel-mag-label">
+            <span className="src-c-wizard__rhel-mag-label">
               {intl.formatMessage({
                 id: 'wizard.accountAuth',
                 defaultMessage: 'Account authorization',

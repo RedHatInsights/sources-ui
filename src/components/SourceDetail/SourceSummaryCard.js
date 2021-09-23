@@ -46,7 +46,7 @@ const SourceSummaryCard = () => {
   }
 
   return (
-    <Card className="pf-m-selectable pf-m-selected card summary-card pf-u-m-lg pf-u-mr-sm-on-md">
+    <Card className="pf-m-selectable pf-m-selected src-c-card-summary pf-u-m-lg pf-u-mr-sm-on-md">
       <CardTitle>
         {intl.formatMessage({
           id: 'detail.summary.title',

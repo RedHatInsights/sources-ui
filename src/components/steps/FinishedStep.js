@@ -31,7 +31,7 @@ const FinishedStep = ({
       <Title headingLevel="h2" size="xl" className="pf-u-mt-xl">
         {title}
       </Title>
-      <EmptyStateBody className="ins-c-sources__wizard--step-text">{successfulMessage}</EmptyStateBody>
+      <EmptyStateBody className="src-c-wizard--step-text">{successfulMessage}</EmptyStateBody>
       <Button variant="primary" onClick={onClose} className="pf-u-mt-xl">
         {returnButtonTitle}
       </Button>
