@@ -1,63 +1,47 @@
 @import '~@redhat-cloud-services/frontend-components-notifications/index.css';
 
-.ins-c-sources__sources-placeholder-loader {
-  margin: 0px;
-  padding: 0px;
+.src-c-bullseye__placeholder-loader {
+  margin: 0;
+  padding: 0;
   min-height: 500px;
 }
 
-.ins-c-source__delete-icon {
+.src-c-delete-icon {
   color: var(--pf-global--warning-color--100);
 }
 
-.ins-c-sources__dialog--spinnerContainer {
-  min-height: 128px;
-  text-align: center;
-}
-
-.ins-c-sources__row-vertical-centered {
+.src-c-row-vertical-centered {
   td {
     vertical-align: middle !important;
   }
 }
 
-.ins-c-sources__help-cursor {
+.src-m-help-cursor {
   &:hover {
     cursor: help;
   }
 }
 
-.ins-c-sources__availability-ok {
-  color: var(--pf-global--success-color--100);
+.src-c-detail-page {
+  &-ok {
+    color: var(--pf-global--success-color--100);
+  }
+  &-partially {
+    color: var(--pf-global--warning-color--100);
+  }
+  &-not-ok {
+    color: var(--pf-global--danger-color--100);
+  }
+  &-unknown {
+    color: var(--pf-global--icon--Color--light);
+  }
 }
 
-.ins-c-sources__availability-partially {
-  color: var(--pf-global--warning-color--100);
-}
-
-.ins-c-sources__availability-not-ok {
-  color: var(--pf-global--danger-color--100);
-}
-
-.ins-c-sources__availability-unknown {
-  color: var(--pf-global--icon--Color--light);
-}
-
-.clickable {
+.src-m-clickable {
   cursor: pointer;
 }
 
-.ins-c-sources__pagination-loader-wrapper {
-  width: 200px;
-}
-
-.ins-c-sources__empty-state {
-  // should be 64px from the top, content has padding --pf-global--spacer--lg, so we have to calculate the rest of it
-  padding-top: calc(0px - var(--pf-global--spacer--lg) + 64px) !important;
-  max-width: 576px;
-}
-
-.ins-c-sources__disabled-drodpown-item {
+.src-m-dropdown-item-disabled {
   pointer-events: auto !important;
 }
 
@@ -70,7 +54,7 @@
     display: none;
   }
 
-  .ins-c-sources__row-vertical-centered {
+  .src-c-row-vertical-centered {
     border-bottom: 16px solid var(--pf-c-table--responsive--BorderColor) !important;
   }
 
@@ -102,46 +86,42 @@
   }
 }
 
-.ins-c-sources__detail-page {
-  .card {
+.src-c-detail-page {
+  .pf-c-card {
     box-shadow: none !important;
   }
 
-  .summary-card {
+  .src-c-card-summary {
     cursor: initial !important;
     background-clip: content-box;
     height: calc(100% - 48px); // margin 2x24px
   }
 
-  .applications-card {
+  .src-c-card-applications {
     min-height: 100%;
     background-clip: content-box;
   }
 
-  .empty-state-body {
+  .src-c-empty-state__body {
     max-width: 536px;
   }
 
   .pf-c-empty-state.pf-u-mt-4xl {
-    margin-top: 0px !important;
+    margin-top: 0 !important;
   }
 }
 
-.ins-c-sources__info-card {
+.src-c-card-info {
   .text {
-    font-size: 14px;
+    font-size: var(--pf-global--FontSize--sm);
   }
 }
 
-.ins-c-sources__cloud-empty-state-card {
+.src-c-card__cloud-empty-state {
   box-shadow: none !important;
 
   .catalog-link {
-    font-size: 14px;
-  }
-
-  .cloud-footer {
-    text-align: center;
+    font-size: var(--pf-global--FontSize--sm);
   }
 
   .provider-tiles {
@@ -171,23 +151,26 @@
       opacity: 0.5;
     }
   }
+  .cloud-footer {
+    text-align: center;
+  }
 }
 
-.ins-c-sources__hide-me {
+.src-m-hide-me {
   opacity: 0;
 }
 
-.ins-c-sources__switch-description {
-  font-size: 14px;
-  color:	#6a6e73;
+.src-c-switch__description {
+  color:  var(--pf-global--palette--black-600);
+  font-size: var(--pf-global--FontSize--sm);
   line-height: 24px;
 }
 
-.ins-c-sources__application_fake_switch {
+.src-c-application_fake_switch {
   width: 100%;
 }
 
-.ins-c-sources__checkbox-with-icon {
+.src-c-checkbox-with-icon {
   display: flex;
 
   // for some reason popover does not work properly in wizard
@@ -197,16 +180,16 @@
   }
 }
 
-.ins-c-sources__application_flex {
+.src-c-application_flex {
   display: flex;
 }
 
-.ins-c-sources__application_kebab {
+.src-c-dropdown__application_kebab {
   max-height: 32px;
   margin-left: auto;
 }
 
-.ins-c-sources__info-card-header {
+.src-c-card-info__header {
   font-weight: 600;
-  color: #002952;
+  color: var(--pf-global--palette--blue-600);
 }

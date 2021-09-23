@@ -12,7 +12,7 @@ import './loaders.scss';
 import { useIntl } from 'react-intl';
 
 export const Loader = ({ width = '100%', height = '100%', className = '' }) => (
-  <span className={`ins-c-sources__loader ${className}`} style={{ width, height }} />
+  <span className={`src-c-loader ${className}`} style={{ width, height }} />
 );
 
 Loader.propTypes = {
@@ -35,7 +35,7 @@ export const AppPlaceholder = () => {
         />
       </PageHeader>
       <Section type="content">
-        <div className="ins-c-sources__fake_content pf-u-p-lg">
+        <div className="src-c-fake_content pf-u-p-lg">
           <Loader />
         </div>
       </Section>
@@ -46,7 +46,7 @@ export const AppPlaceholder = () => {
 export const PaginationLoader = () => <Loader className="top-pagination" height={30} width={200} />;
 
 export const PlaceHolderTable = () => (
-  <Bullseye className="ins-c-sources__sources-placeholder-loader">
+  <Bullseye className="src-c-bullseye__placeholder-loader">
     <Spinner size="xl" />
   </Bullseye>
 );
@@ -59,7 +59,7 @@ export const RowWrapperLoader = ({ row: { isDeleting, ...row }, ...initialProps 
       </td>
     </tr>
   ) : (
-    <RowWrapper {...initialProps} row={row} className="ins-c-sources__row-vertical-centered" />
+    <RowWrapper {...initialProps} row={row} className="src-c-row-vertical-centered" />
   );
 
 RowWrapperLoader.propTypes = {
@@ -67,7 +67,7 @@ RowWrapperLoader.propTypes = {
 };
 
 export const CardLoader = (props) => (
-  <Card className="card pf-u-m-md">
+  <Card className="pf-u-m-md">
     <CardBody>
       <Loader {...props} />
     </CardBody>
@@ -75,7 +75,7 @@ export const CardLoader = (props) => (
 );
 
 export const DetailLoader = () => (
-  <div className="ins-c-sources__detail-page">
+  <div className="src-c-detail-page">
     <PageHeader>
       <Loader height={96} />
     </PageHeader>

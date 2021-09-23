@@ -16,7 +16,7 @@ const NoApplications = () => {
           defaultMessage: 'No connected applications',
         })}
       </Title>
-      <EmptyStateBody className="empty-state-body">
+      <EmptyStateBody className="src-c-empty-state__body">
         {intl.formatMessage({
           id: 'detail.noapplications.description',
           defaultMessage: 'You have not connected any applications to this source. Use the switches above to add applications.',

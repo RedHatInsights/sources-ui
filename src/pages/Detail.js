@@ -65,7 +65,7 @@ const Detail = () => {
   const superKey = isSuperKey(source);
 
   return (
-    <div className="ins-c-sources__detail-page">
+    <div className="src-c-detail-page">
       <Suspense fallback={null}>
         <CustomRoute
           exact

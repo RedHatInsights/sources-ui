@@ -28,7 +28,7 @@ const EnhancedRadio = ({ options, mutator, ...props }) => {
     }
   }, [selectedType]);
 
-  return <Radio {...props} options={newOptions} FormGroupProps={{ className: 'ins-c-sources__wizard--radio' }} />;
+  return <Radio {...props} options={newOptions} FormGroupProps={{ className: 'src-c-wizard__radio' }} />;
 };
 
 EnhancedRadio.propTypes = {

@@ -63,7 +63,7 @@ describe('Switch group', () => {
     expect(wrapper.find(Switch).last().text()).toEqual('App 2App 2');
     expect(wrapper.find(Switch).last().props().isChecked).toEqual(true);
 
-    expect(wrapper.find('.ins-c-sources__wizard--switch-description').text()).toEqual('some description');
+    expect(wrapper.find('.src-c-wizard--switch-description').text()).toEqual('some description');
 
     await act(async () => {
       wrapper.find('form').simulate('submit');

@@ -1083,7 +1083,7 @@ describe('SourcesPage', () => {
           {
             label: 'Add source',
             props: {
-              className: 'ins-c-sources__disabled-drodpown-item',
+              className: 'src-m-dropdown-item-disabled',
               component: 'div',
               tooltip:
                 'To add a source, you must be granted Sources Administrator permissions from your Organization Administrator.',
