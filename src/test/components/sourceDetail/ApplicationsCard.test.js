@@ -316,11 +316,11 @@ describe('ApplicationsCard', () => {
     });
 
     it('renders correctly descriptions', () => {
-      expect(wrapper.find('.ins-c-sources__switch-description')).toHaveLength(2);
-      expect(wrapper.find('.ins-c-sources__switch-description').first().text()).toEqual(
+      expect(wrapper.find('.src-c-switch__description')).toHaveLength(2);
+      expect(wrapper.find('.src-c-switch__description').first().text()).toEqual(
         'Analyze, forecast, and optimize your Red Hat OpenShift cluster costs in hybrid cloud environments.'
       );
-      expect(wrapper.find('.ins-c-sources__switch-description').last().text()).toEqual(
+      expect(wrapper.find('.src-c-switch__description').last().text()).toEqual(
         'Includes access to Red Hat gold images, high precision subscription watch data, and autoregistration.'
       );
     });
@@ -376,11 +376,11 @@ describe('ApplicationsCard', () => {
     });
 
     it('renders correctly descriptions', () => {
-      expect(wrapper.find('.ins-c-sources__switch-description')).toHaveLength(2);
-      expect(wrapper.find('.ins-c-sources__switch-description').first().text()).toEqual(
+      expect(wrapper.find('.src-c-switch__description')).toHaveLength(2);
+      expect(wrapper.find('.src-c-switch__description').first().text()).toEqual(
         'Analyze, forecast, and optimize your Red Hat OpenShift cluster costs in hybrid cloud environments.'
       );
-      expect(wrapper.find('.ins-c-sources__switch-description').last().text()).toEqual(
+      expect(wrapper.find('.src-c-switch__description').last().text()).toEqual(
         'Includes access to Red Hat gold images, high precision subscription watch data, and autoregistration.'
       );
     });

@@ -60,7 +60,7 @@ const RemoveAppModal = () => {
       })}
       header={
         <Title headingLevel="h1" size="2xl" className="sources">
-          <ExclamationTriangleIcon size="sm" className="ins-m-alert ins-c-source__delete-icon pf-u-mr-sm" />
+          <ExclamationTriangleIcon size="sm" className="ins-m-alert src-c-delete-icon pf-u-mr-sm" />
           {intl.formatMessage({
             id: 'sources.deleteAppTitle',
             defaultMessage: 'Remove application?',

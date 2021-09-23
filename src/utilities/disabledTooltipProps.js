@@ -8,7 +8,7 @@ export const disabledMessage = (intl) =>
 const disabledTooltipProps = (intl) => ({
   tooltip: disabledMessage(intl),
   isDisabled: true,
-  className: 'ins-c-sources__disabled-drodpown-item',
+  className: 'src-m-dropdown-item-disabled',
 });
 
 export default disabledTooltipProps;

@@ -10,7 +10,7 @@
     }
 }
 
-.ins-c-sources__loader {
+.src-c-loader {
     position: relative;
     overflow: hidden;
     width: 100%;
@@ -20,7 +20,7 @@
     background-color: #f3f3f3;
 }
 
-.ins-c-sources__loader::after {
+.src-c-loader::after {
     animation: 2s loader linear 0.5s infinite;
     background: linear-gradient(90deg, transparent, #ecebeb, transparent);
     content: '';
@@ -33,7 +33,7 @@
     z-index: 1;
 }
 
-.ins-c-sources__fake_content {
+.src-c-fake_content {
     height: 800px;
     width: 100%;
     background-color: var(--pf-global--BackgroundColor--100);

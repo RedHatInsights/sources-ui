@@ -101,7 +101,7 @@ const ResourcesTable = () => {
   }, [source?.applications?.length, isLoaded, appTypesLoaded, sourceTypesLoaded]);
 
   return (
-    <Card className="card pf-u-m-lg pf-u-mt-0">
+    <Card className="pf-u-m-lg pf-u-mt-0">
       <CardTitle>
         {intl.formatMessage({
           id: 'resourceTable.title',

@@ -58,7 +58,7 @@ export const sourceTypeFormatter = (sourceType, _item, { sourceTypes }) => {
 };
 
 export const dateFormatter = (str) => (
-  <span className="ins-c-sources__help-cursor">
+  <span className="src-c-help-cursor">
     <DateFormat type="relative" date={str} />
   </span>
 );
@@ -83,7 +83,7 @@ export const importedFormatter = (value) => {
   if (text) {
     return (
       <Tooltip content={text}>
-        <Badge isRead className="ins-c-sources__help-cursor">
+        <Badge isRead className="src-m-help-cursor">
           <FormattedMessage id="sources.imported" defaultMessage="imported" />
         </Badge>
       </Tooltip>
@@ -226,7 +226,7 @@ export const getStatusTooltipText = (status, appTypes, errors = {}) =>
     [RHELAZURE]: (
       <FormattedMessage
         id="sources.rhelAzureStatus"
-        defaultMessage="This source cannot currently be monitored in Sources, and does not reflect true status of resources."
+        defaultMessage="This source cannot currently be monitored in Sources, and does not reflect true status or resources."
       />
     ),
   }[status] || <FormattedMessage id="sources.appStatusUnknown" defaultMessage="Status has not been verified." />);
@@ -332,7 +332,7 @@ export const availabilityFormatter = (_status, source, { appTypes, sourceTypes }
         bodyContent={getStatusTooltipText(status, appTypes, meta.errors)}
       >
         <Label
-          className="clickable"
+          className="src-m-clickable"
           color={getStatusColor(status)}
           {...(source.availability_status === IN_PROGRESS && { icon: <WrenchIcon /> })}
           {...(source.paused_at && { icon: <PauseIcon /> })}
@@ -389,7 +389,7 @@ export const ApplicationLabel = ({ app, showStatusText, ...props }) => {
       })}
     >
       <Label
-        className="clickable"
+        className="src-m-clickable"
         color={getStatusColor(app.availability_status)}
         {...(app.availability_status === IN_PROGRESS && { icon: <WrenchIcon /> })}
         {...(app.paused_at && { icon: <PauseIcon /> })}
