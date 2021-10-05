@@ -1,5 +1,5 @@
 import { FormattedMessage } from 'react-intl';
-import { createSpecificAuthTypeSelection } from '../../../../components/addSourceWizard/schemaBuilder';
+import { createSpecificAuthTypeSelection, selectAuthTypeField } from '../../../../components/addSourceWizard/schemaBuilder';
 
 jest.mock('../../../../components/addSourceWizard/hardcodedSchemas', () => ({
   openshift: {
@@ -112,7 +112,7 @@ describe('generate auth specific selection pages', () => {
     };
 
     expectedSchema = {
-      fields: [{ customField: true }],
+      fields: [{ customField: true }, selectAuthTypeField('tokenEndpoint')],
       name: 'openshift-undefined',
       nextStep: 'openshift-endpoint',
       title: <FormattedMessage defaultMessage="Credentials" id="wizard.credentials" />,
@@ -137,7 +137,10 @@ describe('generate auth specific selection pages', () => {
           className: 'pf-u-pl-md',
           component: 'sub-form',
           condition: { is: 'token', when: 'auth_select' },
-          fields: [{ component: 'authentication', label: 'Token', name: 'authentication.password' }],
+          fields: [
+            { component: 'authentication', label: 'Token', name: 'authentication.password' },
+            selectAuthTypeField('token'),
+          ],
           hideField: false,
           name: 'token-subform',
         },
@@ -157,6 +160,7 @@ describe('generate auth specific selection pages', () => {
           fields: [
             { component: 'text-field', name: 'endpoit-field' },
             { component: 'authentication', label: 'ARN', name: 'authentication.password' },
+            selectAuthTypeField('arn'),
           ],
           hideField: false,
           name: 'arn-subform',
@@ -188,7 +192,10 @@ describe('generate auth specific selection pages', () => {
           className: 'pf-u-pl-md',
           component: 'sub-form',
           condition: { is: 'token', when: 'auth_select' },
-          fields: [{ component: 'authentication', label: 'Token', name: 'authentication.password' }],
+          fields: [
+            { component: 'authentication', label: 'Token', name: 'authentication.password' },
+            selectAuthTypeField('token'),
+          ],
           hideField: false,
           name: 'token-subform',
         },
@@ -205,7 +212,7 @@ describe('generate auth specific selection pages', () => {
           className: 'pf-u-pl-md',
           component: 'sub-form',
           condition: { is: 'arn', when: 'auth_select' },
-          fields: [{ component: 'authentication', label: 'ARN', name: 'authentication.password' }],
+          fields: [{ component: 'authentication', label: 'ARN', name: 'authentication.password' }, selectAuthTypeField('arn')],
           hideField: false,
           name: 'arn-subform',
         },

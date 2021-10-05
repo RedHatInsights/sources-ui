@@ -360,9 +360,9 @@ const AddApplication = () => {
 
   const cancelBeforeExit = (values) => {
     // eslint-disable-next-line no-unused-vars
-    const { application: _a, ...initialValues } = state.initialValues;
+    const { application: _a, selected_auth_type: _, ...initialValues } = state.initialValues;
     // eslint-disable-next-line no-unused-vars
-    const { application: _a1, ...newValues } = values;
+    const { application: _a1, selected_auth_type: _1, ...newValues } = values;
 
     const isChanged = !isEmpty(diff(initialValues, newValues));
 

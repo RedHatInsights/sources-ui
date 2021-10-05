@@ -1,4 +1,4 @@
-import { createAdditionalSteps } from '../../../../components/addSourceWizard/schemaBuilder';
+import { createAdditionalSteps, selectAuthTypeField } from '../../../../components/addSourceWizard/schemaBuilder';
 
 jest.mock('../../../../components/addSourceWizard/hardcodedSchemas', () => ({
   red: {
@@ -13,7 +13,11 @@ jest.mock('../../../../components/addSourceWizard/hardcodedSchemas', () => ({
 }));
 
 describe('createAdditionalStepsSkipEndpoint', () => {
-  const ADDITIONAL_STEPS = [{ fields: ['a'] }];
+  const ADDITIONAL_STEPS = [
+    {
+      fields: ['a'],
+    },
+  ];
 
   const TYPES_FIELDS = [];
 
@@ -24,7 +28,7 @@ describe('createAdditionalStepsSkipEndpoint', () => {
 
     expect(result).toEqual([
       {
-        ...ADDITIONAL_STEPS[0],
+        fields: ['a', selectAuthTypeField('hat')],
         name: 'red-hat-generic-additional-step',
         nextStep: 'summary',
       },
@@ -38,7 +42,7 @@ describe('createAdditionalStepsSkipEndpoint', () => {
 
     expect(result).toEqual([
       {
-        ...ADDITIONAL_STEPS[0],
+        fields: ['a', selectAuthTypeField('hat')],
         name: 'red-hat-generic-additional-step',
         nextStep: 'summary',
       },

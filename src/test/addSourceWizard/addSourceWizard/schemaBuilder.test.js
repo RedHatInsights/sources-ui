@@ -14,6 +14,7 @@ import {
   createGenericAuthTypeSelection,
   createSpecificAuthTypeSelection,
   shouldUseAppAuth,
+  selectAuthTypeField,
 } from '../../../components/addSourceWizard/schemaBuilder';
 import hardcodedSchemas from '../../../components/addSourceWizard/hardcodedSchemas';
 import sourceTypes, { AMAZON_TYPE, OPENSHIFT_TYPE, AZURE_TYPE, ANSIBLE_TOWER_TYPE } from '../helpers/sourceTypes';
@@ -190,6 +191,7 @@ describe('schema builder', () => {
           fields: [
             ...ADDITIONAL_STEPS[0].fields,
             { ...INSERTED_STEP, stepKey: undefined }, // insert the right field
+            selectAuthTypeField('hat'),
           ],
           nextStep: 'step-2',
           name: 'red-hat-generic-additional-step',
@@ -312,7 +314,10 @@ describe('schema builder', () => {
 
     describe('createSpecificAuthTypeSelection', () => {
       it('generate single selection', () => {
-        const fields = AZURE_TYPE.schema.authentication[0].fields.filter(({ stepKey }) => !stepKey);
+        const fields = [
+          ...AZURE_TYPE.schema.authentication[0].fields.filter(({ stepKey }) => !stepKey),
+          selectAuthTypeField('tenant_id_client_id_client_secret'),
+        ];
         const expectedName = `${AZURE_TYPE.name}-${TOPOLOGY_INV_APP.id}`;
 
         expectedSchema = expect.objectContaining({
@@ -336,11 +341,15 @@ describe('schema builder', () => {
           'all-required',
           'application.extra.resource_group',
           'application.extra.storage_account',
+          'selected_auth_type',
         ]);
       });
 
       it('generate single selection with endpoints', () => {
-        const fields = AZURE_TYPE.schema.authentication[0].fields.filter(({ stepKey }) => !stepKey);
+        const fields = [
+          ...AZURE_TYPE.schema.authentication[0].fields.filter(({ stepKey }) => !stepKey),
+          selectAuthTypeField('tenant_id_client_id_client_secret'),
+        ];
         const expectedName = `${AZURE_TYPE.name}-${TOPOLOGY_INV_APP.id}`;
 
         expectedSchema = expect.objectContaining({

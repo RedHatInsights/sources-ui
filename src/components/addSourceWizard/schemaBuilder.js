@@ -48,8 +48,16 @@ export const shouldUseAppAuth = (typeName, authName, appName = 'generic') =>
 export const getNoStepsFields = (fields, additionalStepKeys = []) =>
   fields.filter((field) => !field.stepKey || additionalStepKeys.includes(field.stepKey));
 
-export const injectAuthFieldsInfo = (fields, type, auth, applicationName) =>
-  fields.map((field) => {
+export const selectAuthTypeField = (initialValue) => ({
+  hideField: true,
+  component: 'text-field',
+  initializeOnMount: true,
+  initialValue,
+  name: 'selected_auth_type',
+});
+
+export const injectAuthFieldsInfo = (fields, type, auth, applicationName) => [
+  ...fields.map((field) => {
     const specificFields = get(hardcodedSchemas, [type, 'authentication', auth, applicationName]);
 
     const hardcodedField = specificFields
@@ -63,7 +71,8 @@ export const injectAuthFieldsInfo = (fields, type, auth, applicationName) =>
     }
 
     return resultedField;
-  });
+  }),
+];
 
 export const injectEndpointFieldsInfo = (fields, type) =>
   fields.map((field) => {
@@ -98,6 +107,7 @@ export const createAdditionalSteps = (additionalSteps, name, authName, hasEndpoi
       fields: [
         ...injectAuthFieldsInfo(step.fields, name, authName, appName),
         ...injectAuthFieldsInfo(getAdditionalStepFields(fields, stepKey), name, authName, appName),
+        selectAuthTypeField(authName),
       ],
     };
   });
@@ -139,6 +149,7 @@ export const createGenericAuthTypeSelection = (type, endpointFields, disableAuth
           ...(!shouldUseAppAuth(type.name, auth.type) ? endpointFields : []),
           ...getAdditionalAuthFields(type.name, auth.type),
           ...injectAuthFieldsInfo(getNoStepsFields(authFields, additionalIncludesStepKeys), type.name, auth.type),
+          selectAuthTypeField(auth.type),
         ],
         condition: {
           when: 'auth_select',
@@ -191,7 +202,11 @@ export const createGenericAuthTypeSelection = (type, endpointFields, disableAuth
 
       stepProps = {
         ...firstAdditonalStep,
-        fields: [...fields, ...injectAuthFieldsInfo([...firstAdditonalStep.fields, ...additionalFields], type.name, auth.type)],
+        fields: [
+          ...fields,
+          ...injectAuthFieldsInfo([...firstAdditonalStep.fields, ...additionalFields], type.name, auth.type),
+          selectAuthTypeField(auth.type),
+        ],
       };
     }
 
@@ -202,6 +217,7 @@ export const createGenericAuthTypeSelection = (type, endpointFields, disableAuth
         ...fields,
         ...getAdditionalAuthFields(type.name, auth.type),
         ...injectAuthFieldsInfo(getNoStepsFields(auth.fields, additionalIncludesStepKeys), type.name, auth.type),
+        selectAuthTypeField(auth.type),
       ],
       nextStep,
       ...stepProps,
@@ -264,6 +280,7 @@ export const createSpecificAuthTypeSelection = (type, appType, endpointFields, d
             ...(!shouldUseAppAuth(type.name, auth.type, appName) ? endpointFields : []),
             ...getAdditionalAuthFields(type.name, auth.type, appName),
             ...injectAuthFieldsInfo(getNoStepsFields(authFields, additionalIncludesStepKeys), type.name, auth.type, appName),
+            selectAuthTypeField(auth.type),
           ],
           condition: {
             when: 'auth_select',
@@ -328,6 +345,7 @@ export const createSpecificAuthTypeSelection = (type, appType, endpointFields, d
         fields: [
           ...fields,
           ...injectAuthFieldsInfo([...firstAdditonalStep.fields, ...additionalFields], type.name, auth.type, appName),
+          selectAuthTypeField(auth.type),
         ],
       };
     }
@@ -339,6 +357,7 @@ export const createSpecificAuthTypeSelection = (type, appType, endpointFields, d
         ...fields,
         ...getAdditionalAuthFields(type.name, auth.type, appName),
         ...injectAuthFieldsInfo(getNoStepsFields(auth.fields, additionalIncludesStepKeys), type.name, auth.type, appName),
+        selectAuthTypeField(auth.type),
       ],
       nextStep,
       ...stepProps,

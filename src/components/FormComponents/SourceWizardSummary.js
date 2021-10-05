@@ -137,7 +137,9 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
   const type = sourceTypes.find((type) => type.name === values.source_type || type.id === values.source.source_type_id);
 
   const hasAuthentication =
-    values.authentication && values.authentication.authtype ? values.authentication.authtype : values.auth_select;
+    values.authentication && values.authentication.authtype
+      ? values.authentication.authtype
+      : values.auth_select || values.selected_auth_type;
 
   let authType;
   let authTypeFields = [];

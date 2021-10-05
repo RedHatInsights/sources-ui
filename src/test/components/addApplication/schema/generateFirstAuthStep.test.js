@@ -28,6 +28,7 @@ jest.mock('../../../../components/addSourceWizard/schemaBuilder', () => ({
   getAdditionalAuthFields: () => [],
   getAdditionalStepFields: () => [],
   shouldUseAppAuth: (typeName) => typeName === 'custom-authapp',
+  selectAuthTypeField: (typeName) => ({ name: 'selected_auth_type', typeName }),
 }));
 
 describe('generateFirstAuthStep', () => {
@@ -59,6 +60,10 @@ describe('generateFirstAuthStep', () => {
           component: 'text',
           name: 'username',
         },
+        {
+          name: 'selected_auth_type',
+          typeName: 'arn',
+        },
       ],
     });
   });
@@ -85,6 +90,10 @@ describe('generateFirstAuthStep', () => {
           component: 'text',
           name: 'username',
         },
+        {
+          name: 'selected_auth_type',
+          typeName: 'arn',
+        },
       ],
     });
   });
@@ -110,6 +119,10 @@ describe('generateFirstAuthStep', () => {
           component: 'text',
           name: 'username',
         },
+        {
+          name: 'selected_auth_type',
+          typeName: 'arn',
+        },
       ],
     });
   });
@@ -133,6 +146,10 @@ describe('generateFirstAuthStep', () => {
           component: 'text',
           name: 'username',
         },
+        {
+          name: 'selected_auth_type',
+          typeName: 'arn',
+        },
       ],
     });
   });
@@ -154,6 +171,10 @@ describe('generateFirstAuthStep', () => {
       fields: [
         {
           component: 'description',
+        },
+        {
+          name: 'selected_auth_type',
+          typeName: 'arn',
         },
       ],
     });
@@ -177,6 +198,10 @@ describe('generateFirstAuthStep', () => {
         {
           component: 'description',
         },
+        {
+          name: 'selected_auth_type',
+          typeName: 'arn',
+        },
       ],
     });
   });
@@ -198,6 +223,10 @@ describe('generateFirstAuthStep', () => {
       fields: [
         {
           component: 'description',
+        },
+        {
+          name: 'selected_auth_type',
+          typeName: 'arn',
         },
       ],
     });
@@ -221,6 +250,10 @@ describe('generateFirstAuthStep', () => {
         {
           component: 'text',
           name: 'username',
+        },
+        {
+          name: 'selected_auth_type',
+          typeName: 'arn',
         },
       ],
     });

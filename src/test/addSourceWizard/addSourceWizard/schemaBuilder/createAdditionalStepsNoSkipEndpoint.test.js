@@ -1,4 +1,4 @@
-import { createAdditionalSteps } from '../../../../components/addSourceWizard/schemaBuilder';
+import { createAdditionalSteps, selectAuthTypeField } from '../../../../components/addSourceWizard/schemaBuilder';
 
 describe('createAdditionalSteps no skipEndpoint', () => {
   const ADDITIONAL_STEPS = [{ fields: ['a'] }];
@@ -12,7 +12,7 @@ describe('createAdditionalSteps no skipEndpoint', () => {
 
     expect(result).toEqual([
       {
-        ...ADDITIONAL_STEPS[0],
+        fields: ['a', selectAuthTypeField('hat')],
         name: 'red-hat-generic-additional-step',
         nextStep: 'red-endpoint',
       },
@@ -26,7 +26,7 @@ describe('createAdditionalSteps no skipEndpoint', () => {
 
     expect(result).toEqual([
       {
-        ...ADDITIONAL_STEPS[0],
+        fields: ['a', selectAuthTypeField('hat')],
         name: 'red-hat-generic-additional-step',
         nextStep: 'summary',
       },

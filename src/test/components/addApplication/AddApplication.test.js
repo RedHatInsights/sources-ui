@@ -502,6 +502,7 @@ describe('AddApplication', () => {
         source: { ...source, nested: { source_ref: value, another_value } },
         authentication,
         selectedAuthentication: 'authid',
+        selected_auth_type: 'receptor',
         url: undefined,
         endpoint: {
           id: '189298',
