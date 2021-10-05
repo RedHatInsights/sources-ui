@@ -61,7 +61,7 @@ export const SUBWATCH_APP = {
   display_name: 'Subscription Watch',
   id: '5',
   name: '/insights/platform/cloud-meter',
-  supported_authentication_types: { amazon: ['cloud-meter-arn'] },
+  supported_authentication_types: { amazon: ['cloud-meter-arn'], azure: ['tenant_id_subscription_id_role_id'] },
   supported_source_types: ['amazon', 'azure'],
   updated_at: '2020-02-18T19:38:52Z',
 };

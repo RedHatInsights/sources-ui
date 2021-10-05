@@ -337,6 +337,45 @@ const sourceTypes = [
     schema: {
       authentication: [
         {
+          name: 'Tenant ID, Subscription ID, Role ID',
+          type: 'tenant_id_subscription_id_role_id',
+          fields: [
+            {
+              name: 'application.extra.tenant_id',
+              label: 'Tenant ID',
+              component: 'text-field',
+              validate: [
+                {
+                  type: 'required',
+                },
+              ],
+              isRequired: true,
+            },
+            {
+              name: 'application.extra.subscription_id',
+              label: 'Subscription ID',
+              component: 'text-field',
+              validate: [
+                {
+                  type: 'required',
+                },
+              ],
+              isRequired: true,
+            },
+            {
+              name: 'application.extra.role_id',
+              label: 'Role assignment ID',
+              component: 'text-field',
+              validate: [
+                {
+                  type: 'required',
+                },
+              ],
+              isRequired: true,
+            },
+          ],
+        },
+        {
           type: 'tenant_id_client_id_client_secret',
           name: 'Tenant ID, Client ID, Client Secret',
           fields: [

@@ -21,7 +21,6 @@ import * as TowerCatalog from './hardcodedComponents/tower/catalog';
 import * as Openshift from './hardcodedComponents/openshift/endpoint';
 
 import { CATALOG_APP, CLOUD_METER_APP_NAME, COST_MANAGEMENT_APP_NAME } from '../../utilities/constants';
-import emptyAuthType from './emptyAuthType';
 
 const arnMessagePattern = <FormattedMessage id="wizard.arnPattern" defaultMessage="ARN must start with arn:aws:" />;
 const arnMessageLength = <FormattedMessage id="wizard.arnLength" defaultMessage="ARN should have at least 10 characters" />;
@@ -181,15 +180,15 @@ const hardcodedSchemas = {
   },
   azure: {
     authentication: {
-      [emptyAuthType.type]: {
+      tenant_id_subscription_id_role_id: {
         [CLOUD_METER_APP_NAME]: {
           skipSelection: true,
           useApplicationAuth: true,
           customSteps: true,
           additionalSteps: [
             {
-              title: <FormattedMessage id="subwatch.azure.tokenTitle" defaultMessage="Obtain offline token" />,
-              nextStep: 'cost-azure-playbook',
+              title: <FormattedMessage id="subwatch.azure.obtainIdsTitle" defaultMessage="Obtain IDs" />,
+              nextStep: 'cost-azure-iamresorces',
               substepOf: {
                 name: 'eaa',
                 title: <FormattedMessage id="subwatch.azure.substepTitle" defaultMessage="Enable account access" />,
@@ -198,26 +197,52 @@ const hardcodedSchemas = {
                 {
                   name: 'azure-1',
                   component: 'description',
-                  Content: SWAzure.OfflineToken,
+                  Content: SWAzure.ObtainIDS,
                 },
                 {
-                  component: componentTypes.TEXT_FIELD,
-                  name: 'authentication.authtype',
-                  hideField: true,
-                  initialValue: emptyAuthType.type,
-                  initializeOnMount: true,
+                  name: 'application.extra.tenant_id',
+                  label: 'Tenant ID',
+                  component: 'text-field',
+                  validate: [
+                    {
+                      type: 'required',
+                    },
+                  ],
+                  isRequired: true,
+                },
+                {
+                  name: 'application.extra.subscription_id',
+                  label: 'Subscription ID',
+                  component: 'text-field',
+                  validate: [
+                    {
+                      type: 'required',
+                    },
+                  ],
+                  isRequired: true,
                 },
               ],
             },
             {
-              title: <FormattedMessage id="subwatch.azure.playbookTitle" defaultMessage="Run ansible playbook" />,
-              name: 'cost-azure-playbook',
+              title: <FormattedMessage id="subwatch.azure.iamResourcesTitle" defaultMessage="Create IAM resources" />,
+              name: 'cost-azure-iamresorces',
               substepOf: 'eaa',
               fields: [
                 {
                   name: 'azure-2',
                   component: 'description',
-                  Content: SWAzure.AnsiblePlaybook,
+                  Content: SWAzure.IamResources,
+                },
+                {
+                  name: 'application.extra.role_id',
+                  label: 'Role assignment ID',
+                  component: 'text-field',
+                  validate: [
+                    {
+                      type: 'required',
+                    },
+                  ],
+                  isRequired: true,
                 },
               ],
             },

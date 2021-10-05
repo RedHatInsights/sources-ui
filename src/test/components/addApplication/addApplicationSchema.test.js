@@ -23,7 +23,7 @@ describe('AddApplicationSchema', () => {
     ]);
   });
 
-  it('azure+rhel management schema (empty auth type)', () => {
+  it('azure+rhel management schema', () => {
     const source = {
       source_type_id: AZURE_ID,
     };
@@ -31,10 +31,10 @@ describe('AddApplicationSchema', () => {
     const result = addApplicationSchema(intl, AZURE, SUBWATCH_APP, authenticationValues, source, TITLE, DESCRIPTION);
 
     expect(result.fields[0].fields.map(({ name }) => name)).toEqual([
-      'azure-5-empty',
+      'azure-5-tenant_id_subscription_id_role_id',
       'summary',
-      'azure-empty-/insights/platform/cloud-meter-additional-step',
-      'cost-azure-playbook',
+      'azure-tenant_id_subscription_id_role_id-/insights/platform/cloud-meter-additional-step',
+      'cost-azure-iamresorces',
     ]);
   });
 

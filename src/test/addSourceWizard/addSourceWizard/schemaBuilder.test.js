@@ -315,7 +315,7 @@ describe('schema builder', () => {
     describe('createSpecificAuthTypeSelection', () => {
       it('generate single selection', () => {
         const fields = [
-          ...AZURE_TYPE.schema.authentication[0].fields.filter(({ stepKey }) => !stepKey),
+          ...AZURE_TYPE.schema.authentication[1].fields.filter(({ stepKey }) => !stepKey),
           selectAuthTypeField('tenant_id_client_id_client_secret'),
         ];
         const expectedName = `${AZURE_TYPE.name}-${TOPOLOGY_INV_APP.id}`;
@@ -347,7 +347,7 @@ describe('schema builder', () => {
 
       it('generate single selection with endpoints', () => {
         const fields = [
-          ...AZURE_TYPE.schema.authentication[0].fields.filter(({ stepKey }) => !stepKey),
+          ...AZURE_TYPE.schema.authentication[1].fields.filter(({ stepKey }) => !stepKey),
           selectAuthTypeField('tenant_id_client_id_client_secret'),
         ];
         const expectedName = `${AZURE_TYPE.name}-${TOPOLOGY_INV_APP.id}`;
@@ -422,12 +422,12 @@ describe('schema builder', () => {
         'azure-2',
         'azure-3',
         'azure-5',
+        'azure-tenant_id_subscription_id_role_id-/insights/platform/cloud-meter-additional-step',
+        'cost-azure-iamresorces',
         'azure-tenant_id_client_id_client_secret-/insights/platform/cost-management-additional-step',
         'azure-sub-id',
         'configure-roles',
         'export-schedule',
-        'azure-empty-/insights/platform/cloud-meter-additional-step',
-        'cost-azure-playbook',
         'google',
         'google-2',
         'google-project_id_service_account_json-/insights/platform/cost-management-additional-step',

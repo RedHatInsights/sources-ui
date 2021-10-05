@@ -16,7 +16,6 @@ import mount from '../../addSourceWizard/__mocks__/mount';
 import Summary, { createItem } from '../../../components/FormComponents/SourceWizardSummary';
 import { NO_APPLICATION_VALUE } from '../../../components/addSourceWizard/stringConstants';
 import ValuePopover from '../../../components/FormComponents/ValuePopover';
-import emptyAuthType from '../../../components/addSourceWizard/emptyAuthType';
 
 describe('SourceWizardSummary component', () => {
   describe('should render correctly', () => {
@@ -242,15 +241,17 @@ describe('SourceWizardSummary component', () => {
       );
     });
 
-    it('azure rhel management - include error message', () => {
+    it('azure rhel management', () => {
       formOptions = {
         getState: () => ({
           values: {
             source: { name: 'cosi' },
-            application: { application_type_id: SUB_WATCH_APP.id },
+            application: {
+              application_type_id: SUB_WATCH_APP.id,
+              extra: { tenant_id: 'tenant-id', subscription_id: 'sub-id', role_id: 'role-id' },
+            },
             source_type: 'azure',
-            authentication: { authtype: emptyAuthType.type },
-            auth_select: 'token',
+            selected_auth_type: 'tenant_id_subscription_id_role_id',
           },
         }),
       };
@@ -263,6 +264,9 @@ describe('SourceWizardSummary component', () => {
         ['Name', 'cosi'],
         ['Source type', 'Microsoft Azure'],
         ['Application', 'RHEL management'],
+        ['Tenant ID', 'tenant-id'],
+        ['Subscription ID', 'sub-id'],
+        ['Role assignment ID', 'role-id'],
       ]);
 
       expect(wrapper.find(Alert).props().title).toEqual('This source will not be monitored in Sources');
