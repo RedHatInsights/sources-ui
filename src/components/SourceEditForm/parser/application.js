@@ -24,8 +24,8 @@ const createOneAppFields = (appType, sourceType, app) => [
   ...authenticationFields(
     app.authentications?.filter((auth) => Object.keys(auth).length > 1),
     sourceType,
-    appType?.name,
-    app.id
+    appType,
+    app
   ),
 ];
 

@@ -44,20 +44,32 @@ export const modifyAuthSchemas = (fields, id, appId) =>
     return finalField;
   });
 
-export const authenticationFields = (authentications, sourceType, appName, appId) => {
-  if (!authentications || authentications.length === 0 || !sourceType.schema || !sourceType.schema.authentication) {
+export const authenticationFields = (authentications, sourceType, appType, app) => {
+  const onlyAppFields = Boolean((!authentications || authentications.length === 0) && Object.keys(app?.extra || {}).length);
+
+  const authenticationsFinal = authentications || [];
+
+  if (onlyAppFields) {
+    const authtype = appType?.supported_authentication_types[sourceType.name]?.[0];
+
+    if (authtype) {
+      authenticationsFinal.push({ authtype });
+    }
+  }
+
+  if (!authenticationsFinal.length || !sourceType.schema || !sourceType.schema.authentication) {
     return [];
   }
 
-  return authentications.map((auth) => {
+  return authenticationsFinal.map((auth) => {
     const schemaAuth = sourceType?.schema?.authentication?.find(({ type }) => type === auth.authtype);
 
     if (!schemaAuth) {
       return [];
     }
 
-    const additionalStepKeys = getAdditionalAuthStepsKeys(sourceType.name, auth.authtype, appName);
-    const additionalStepsFields = getAdditionalAuthSteps(sourceType.name, auth.authtype, appName)
+    const additionalStepKeys = getAdditionalAuthStepsKeys(sourceType.name, auth.authtype, appType?.name);
+    const additionalStepsFields = getAdditionalAuthSteps(sourceType.name, auth.authtype, appType?.name)
       ?.map((step) => ({
         ...step,
         fields: [...step.fields, ...getAdditionalFields(schemaAuth, step.name)],
@@ -74,9 +86,9 @@ export const authenticationFields = (authentications, sourceType, appName, appId
       )
       .map((field) => ({
         ...field,
-        ...getEnhancedAuthField(sourceType.name, auth.authtype, field.name, appName),
+        ...getEnhancedAuthField(sourceType.name, auth.authtype, field.name, appType?.name),
       }));
 
-    return modifyAuthSchemas(enhancedFields, auth.id, appId);
+    return modifyAuthSchemas(enhancedFields, auth.id, app?.id);
   });
 };

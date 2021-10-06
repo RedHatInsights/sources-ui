@@ -285,5 +285,39 @@ describe('authentication edit source parser', () => {
 
       expect(result).toEqual(EMPTY_ARRAY);
     });
+
+    it('returns only app fields schema', () => {
+      const result = authenticationFields(
+        [],
+        {
+          ...SOURCE_TYPE,
+          schema: {
+            authentication: [
+              {
+                type: 'only-app-fields',
+                name: 'Only app fields',
+                fields: [
+                  {
+                    name: 'application.extra.role_id',
+                    component: 'text-field',
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        {
+          id: '1',
+          name: 'customApp',
+          supported_authentication_types: { [SOURCE_TYPE.name]: ['only-app-fields'] },
+        },
+        {
+          id: 'app-id',
+          extra: { role_id: '123' },
+        }
+      );
+
+      expect(result).toEqual([[{ component: 'text-field', name: 'applications.aapp-id.extra.role_id' }]]);
+    });
   });
 });

@@ -36,8 +36,8 @@ const createRows = (source, appTypes, sourceType) => {
     const applicationFieldsSchema = authenticationFields(
       app.authentications?.filter((auth) => Object.keys(auth).length > 1),
       sourceType,
-      appType?.name,
-      app.id
+      appType,
+      app
     );
 
     const initialValues = prepareInitialValues(source, sourceType.product_name);
