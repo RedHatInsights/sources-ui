@@ -43,24 +43,6 @@ const alertMapper = (appName, sourceType, intl) => {
     );
   }
 
-  if (appName === CLOUD_METER_APP_NAME && sourceType === 'azure') {
-    return (
-      <Alert
-        variant="info"
-        isInline
-        title={intl.formatMessage({
-          id: 'azure.rhelWarningTitle',
-          defaultMessage: 'This source will not be monitored in Sources',
-        })}
-      >
-        {intl.formatMessage({
-          id: 'azure.rhelWarningDescription',
-          defaultMessage: 'This source will be represented in the Sources list, but will not reflect true status or resources.',
-        })}
-      </Alert>
-    );
-  }
-
   return null;
 };
 

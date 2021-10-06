@@ -268,11 +268,6 @@ describe('SourceWizardSummary component', () => {
         ['Subscription ID', 'sub-id'],
         ['Role assignment ID', 'role-id'],
       ]);
-
-      expect(wrapper.find(Alert).props().title).toEqual('This source will not be monitored in Sources');
-      expect(wrapper.find(Alert).props().children).toEqual(
-        'This source will be represented in the Sources list, but will not reflect true status or resources.'
-      );
     });
 
     it('account authorization', () => {

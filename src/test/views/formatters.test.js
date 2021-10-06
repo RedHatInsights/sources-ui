@@ -30,7 +30,6 @@ import {
   IN_PROGRESS,
   ApplicationLabel,
   PAUSED,
-  RHELAZURE,
 } from '../../views/formatters';
 import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX, AMAZON, AZURE } from '../__mocks__/sourceTypesData';
 import {
@@ -628,14 +627,6 @@ describe('formatters', () => {
         const wrapper = mount(wrapperWithIntl(getStatusTooltipText(PAUSED, APPTYPES)));
 
         expect(wrapper.text()).toEqual('Data collection is temporarily disabled. Resume source to reestablish connection.');
-      });
-
-      it('returns RHEL AZURE text', () => {
-        const wrapper = mount(wrapperWithIntl(getStatusTooltipText(RHELAZURE, APPTYPES)));
-
-        expect(wrapper.text()).toEqual(
-          'This source cannot currently be monitored in Sources, and does not reflect true status or resources.'
-        );
       });
     });
 
