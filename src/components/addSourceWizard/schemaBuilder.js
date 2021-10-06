@@ -10,7 +10,7 @@ export const shouldAppendEmptyType = (type, appTypes) =>
   appTypes.some(
     ({ supported_source_types, supported_authentication_types }) =>
       supported_source_types.includes(type.name) &&
-      (!supported_authentication_types[type.name] || !supported_authentication_types[type.name].length === 0)
+      (!supported_authentication_types[type.name] || supported_authentication_types[type.name]?.length === 0)
   );
 
 export const acronymMapper = (value) =>
@@ -227,7 +227,9 @@ export const createGenericAuthTypeSelection = (type, endpointFields, disableAuth
 
 export const createSpecificAuthTypeSelection = (type, appType, endpointFields, disableAuthType) => {
   const auths = type.schema.authentication;
-  const supportedAuthTypes = appType.supported_authentication_types[type.name] || [emptyAuthType.type];
+  const supportedAuthTypes = appType.supported_authentication_types[type.name]?.length
+    ? appType.supported_authentication_types[type.name]
+    : [emptyAuthType.type];
 
   const hasMultipleAuthTypes = supportedAuthTypes.length > 1;
 
