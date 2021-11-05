@@ -42,27 +42,37 @@ const configurationStep = (intl, sourceTypes) => ({
         defaultMessage: 'Select a configuration mode',
       }),
       isRequired: true,
-      options: [
-        {
-          label: (
-            <span className="src-c-wizard__rhel-mag-label">
-              {intl.formatMessage({
-                id: 'wizard.accountAuth',
-                defaultMessage: 'Account authorization',
-              })}
-              <Label className="pf-u-ml-sm" color="purple">
-                {intl.formatMessage({ id: 'wizard.confMode.reccomended', defaultMessage: 'Recommended' })}
-              </Label>
-            </span>
-          ),
-          description: intl.formatMessage({
-            id: 'wizard.accountAuth.desc',
-            defaultMessage:
-              'A new automated source configuration method. Provide your AWS account credentials and let Red Hat configure and manage your source for you.',
-          }),
-          value: 'account_authorization',
-        },
-      ],
+      options: [],
+      resolveProps: (_p, _f, formOptions) => ({
+        options: [
+          {
+            label: (
+              <span className="src-c-wizard__rhel-mag-label">
+                {intl.formatMessage({
+                  id: 'wizard.accountAuth',
+                  defaultMessage: 'Account authorization',
+                })}
+                <Label className="pf-u-ml-sm" color="purple">
+                  {intl.formatMessage({ id: 'wizard.confMode.reccomended', defaultMessage: 'Recommended' })}
+                </Label>
+              </span>
+            ),
+            description: intl.formatMessage(
+              {
+                id: 'wizard.accountAuth.desc',
+                defaultMessage:
+                  'A new automated source configuration method. Provide your {type} account credentials and let Red Hat configure and manage your source for you.',
+              },
+              {
+                type:
+                  { amazon: 'AWS', azure: 'Azure' }[formOptions.getState().values.source_type] ||
+                  formOptions.getState().values.source_type,
+              }
+            ),
+            value: 'account_authorization',
+          },
+        ],
+      }),
       validate: [{ type: validatorTypes.REQUIRED }],
     },
     {
