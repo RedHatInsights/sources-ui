@@ -1,0 +1,49 @@
+.marketplace-card {
+    height: 322px;
+    width: 213px;
+}
+
+.marketplace-card-body {
+    overflow: auto;
+    color: #151515;
+    font-size: 14px;
+    line-height: 21px;
+    text-align: left;
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.marketplace-card-body::-webkit-scrollbar {
+    display: none;
+}
+
+.marketplace-label {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+}
+
+.marketplace-flex {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+
+.marketplace-seemore-card {
+    background-color: #FFFFFF;
+    border: 1px dashed #0066CC;
+
+    .card-text {
+        font-size: 14px;
+        line-height: 21px;
+    }
+}
+
+.marketplace-modal-toolbar {
+    .pf-c-toolbar__content {
+        padding-left: 0px;
+    }
+}
