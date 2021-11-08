@@ -2,13 +2,13 @@ import React from 'react';
 import { Label } from '@patternfly/react-core';
 
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
-import sourceTypes from '../../helpers/sourceTypes';
+import sourceTypes, { AMAZON_TYPE, AZURE_TYPE, OPENSHIFT_TYPE } from '../../helpers/sourceTypes';
 import configurationStep from '../../../../components/addSourceWizard/superKey/configurationStep';
 import SuperKeyCredentials from '../../../../components/addSourceWizard/superKey/SuperKeyCredentials';
 
 describe('configurationSteps', () => {
   it('generates configuration step', () => {
-    const INTL = { formatMessage: ({ defaultMessage }) => defaultMessage };
+    const INTL = { formatMessage: ({ defaultMessage }, values) => defaultMessage.replace('{type}', values?.type) };
 
     const result = configurationStep(INTL, sourceTypes);
 
@@ -32,21 +32,64 @@ describe('configurationSteps', () => {
 
     expect(result.fields[1].component).toEqual(componentTypes.RADIO);
     expect(result.fields[1].label).toEqual('Select a configuration mode');
-    expect(result.fields[1].options).toEqual([
-      {
-        description:
-          'A new automated source configuration method. Provide your AWS account credentials and let Red Hat configure and manage your source for you.',
-        label: (
-          <span className="src-c-wizard__rhel-mag-label">
-            Account authorization
-            <Label className="pf-u-ml-sm" color="purple">
-              Recommended
-            </Label>
-          </span>
-        ),
-        value: 'account_authorization',
-      },
-    ]);
+
+    expect(
+      result.fields[1].resolveProps(undefined, undefined, { getState: () => ({ values: { source_type: AMAZON_TYPE.name } }) })
+    ).toEqual({
+      options: [
+        {
+          description:
+            'A new automated source configuration method. Provide your AWS account credentials and let Red Hat configure and manage your source for you.',
+          label: (
+            <span className="src-c-wizard__rhel-mag-label">
+              Account authorization
+              <Label className="pf-u-ml-sm" color="purple">
+                Recommended
+              </Label>
+            </span>
+          ),
+          value: 'account_authorization',
+        },
+      ],
+    });
+    expect(
+      result.fields[1].resolveProps(undefined, undefined, { getState: () => ({ values: { source_type: AZURE_TYPE.name } }) })
+    ).toEqual({
+      options: [
+        {
+          description:
+            'A new automated source configuration method. Provide your Azure account credentials and let Red Hat configure and manage your source for you.',
+          label: (
+            <span className="src-c-wizard__rhel-mag-label">
+              Account authorization
+              <Label className="pf-u-ml-sm" color="purple">
+                Recommended
+              </Label>
+            </span>
+          ),
+          value: 'account_authorization',
+        },
+      ],
+    });
+    expect(
+      result.fields[1].resolveProps(undefined, undefined, { getState: () => ({ values: { source_type: OPENSHIFT_TYPE.name } }) })
+    ).toEqual({
+      options: [
+        {
+          description:
+            'A new automated source configuration method. Provide your openshift account credentials and let Red Hat configure and manage your source for you.',
+          label: (
+            <span className="src-c-wizard__rhel-mag-label">
+              Account authorization
+              <Label className="pf-u-ml-sm" color="purple">
+                Recommended
+              </Label>
+            </span>
+          ),
+          value: 'account_authorization',
+        },
+      ],
+    });
 
     expect(result.fields[2].component).toEqual(componentTypes.SUB_FORM);
     expect(result.fields[2].condition).toEqual({ is: 'account_authorization', when: 'source.app_creation_workflow' });

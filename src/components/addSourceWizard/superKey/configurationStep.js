@@ -42,7 +42,6 @@ const configurationStep = (intl, sourceTypes) => ({
         defaultMessage: 'Select a configuration mode',
       }),
       isRequired: true,
-      options: [],
       resolveProps: (_p, _f, formOptions) => ({
         options: [
           {
