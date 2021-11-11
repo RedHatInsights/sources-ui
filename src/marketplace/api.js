@@ -1,10 +1,13 @@
 import { axiosInstance } from '../api/entities';
 
-const getToken = () => window.marketplacetoken || 'xxx';
+const getAccessToken = () =>
+  axiosInstance.post('https://sandbox.marketplace.redhat.com/api-security/om-auth/cloud/token', {
+    grant_type: 'urn:ibm:params:oauth:grant-type:apikey',
+    apikey: localStorage.getItem('marketplace-key'),
+  });
 
 const query = `
 {
-
   productByIds (ids: [
     "ca54ff2ba24df884a96995f1eefd081b",
     "ccb29628eabe15c81121ecf231a0a8cd",
@@ -38,9 +41,17 @@ const query = `
   }
 }`;
 
-export const getProducts = () =>
-  axiosInstance.post(
+let access_token;
+
+export const getProducts = async () => {
+  if (!access_token) {
+    const res = await getAccessToken();
+    access_token = res.access_token;
+  }
+
+  return axiosInstance.post(
     'https://sandbox.marketplace.redhat.com/catalog/gql',
     { query },
-    { headers: { Authorization: `Bearer ${getToken()}` } }
+    { headers: { Authorization: `Bearer ${access_token}` } }
   );
+};

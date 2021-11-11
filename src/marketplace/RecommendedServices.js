@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Title } from '@patternfly/react-core';
 
 import './marketplace.scss';
@@ -10,10 +10,15 @@ import SkeletonMarketplaceCard from './SkeletonMarketplaceCard';
 
 const RecommendedServices = () => {
   const [data, setData] = useState();
+  const token = useMemo(() => localStorage.getItem('marketplace-key'), []);
 
   useEffect(() => {
-    getProducts().then((res) => setData(res?.data?.productByIds?.products));
+    token && getProducts().then((res) => setData(res?.data?.productByIds?.products));
   }, []);
+
+  if (!token) {
+    return null;
+  }
 
   if (data) {
     return (
