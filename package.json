@@ -21,7 +21,7 @@
     "@patternfly/react-icons": "^4.19.8",
     "@patternfly/react-table": "^4.37.8",
     "@redhat-cloud-services/frontend-components": "3.4.14",
-    "@redhat-cloud-services/frontend-components-notifications": "3.2.4",
+    "@redhat-cloud-services/frontend-components-notifications": "3.2.5",
     "@redhat-cloud-services/frontend-components-utilities": "3.2.5",
     "@sentry/minimal": "6.13.3",
     "awesome-debounce-promise": "^2.1.0",
