@@ -52,7 +52,6 @@ import { filterVendorAppTypes } from '../utilities/filterApps';
 import SourcesHeader from '../components/SourcesHeader';
 import generateCSV from '../utilities/generateCSV';
 import generateJSON from '../utilities/generateJSON';
-import RecommendedServices from '../marketplace/RecommendedServices';
 
 const initialState = {
   filter: undefined,
@@ -330,7 +329,6 @@ const SourcesPage = () => {
       </Suspense>
       <SourcesHeader />
       <Section type="content">
-        <RecommendedServices />
         {showInfoCards && <CloudCards />}
         {fetchingError && <ErrorState />}
         {!fetchingError && showEmptyState && activeVendor === CLOUD_VENDOR && (
