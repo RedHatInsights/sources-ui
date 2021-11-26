@@ -20,8 +20,6 @@ const reducer = (state, { type, payload }) => {
       return { ...state, page: payload };
     case 'SET_PER_PAGE':
       return { ...state, page: 1, perPage: payload };
-    default:
-      return state;
   }
 };
 
@@ -30,7 +28,7 @@ const valuesMapper = (value) =>
     database: 'Database',
   }[value] || value);
 
-const chipFormatters = (key, filter) =>
+export const chipFormatters = (key, filter) =>
   ({
     type: {
       category: 'Type',
@@ -63,6 +61,7 @@ const MarketplaceModal = ({ data, isOpen, onClose }) => {
       variant="large"
     >
       <PrimaryToolbar
+        useMobileLayout
         className="marketplace-modal-toolbar"
         pagination={{
           itemCount: config.itemCount,
@@ -70,6 +69,7 @@ const MarketplaceModal = ({ data, isOpen, onClose }) => {
           perPage: config.perPage,
           onSetPage: (_e, page) => dispatch({ type: 'SET_PAGE', payload: page }),
           onPerPageSelect: (_e, perPage) => dispatch({ type: 'SET_PER_PAGE', payload: perPage }),
+          'data-testid': 'pagination',
         }}
         filterConfig={{
           items: [
@@ -78,7 +78,7 @@ const MarketplaceModal = ({ data, isOpen, onClose }) => {
               placeholder: 'Filter by product type',
               type: 'checkbox',
               filterValues: {
-                onChange: (_event, value) => console.log(value),
+                //onChange: (_event, value) => console.log(value),
                 items: [{ label: 'Database', value: 'database', isDisabled: true }],
                 value: ['database'],
               },
@@ -88,7 +88,7 @@ const MarketplaceModal = ({ data, isOpen, onClose }) => {
         activeFiltersConfig={{
           showDeleteButton: false,
           filters: generateChips(config.filters),
-          onDelete: (_event, chips, deleteAll) => console.log(chips, deleteAll),
+          // onDelete: (_event, chips, deleteAll) => console.log(chips, deleteAll),
         }}
       />
       <div className="pf-u-mb-md marketplace-flex">

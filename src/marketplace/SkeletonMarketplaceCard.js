@@ -4,13 +4,13 @@ import { Card, CardTitle, CardBody, CardFooter, Skeleton } from '@patternfly/rea
 const SkeletonMarketplaceCard = () => (
   <Card isFlat className="marketplace-card">
     <CardTitle>
-      <Skeleton />
+      <Skeleton role="progressbar" />
     </CardTitle>
     <CardBody>
-      <Skeleton />
+      <Skeleton role="progressbar" />
     </CardBody>
     <CardFooter>
-      <Skeleton />
+      <Skeleton role="progressbar" />
     </CardFooter>
   </Card>
 );
