@@ -106,6 +106,7 @@
     "start:beta": "NODE_ENV=development BETA=true webpack serve --config config/dev.webpack.config.js",
     "build": "webpack --config config/prod.webpack.config.js",
     "analyze": "NODE_ENV=production webpack --config config/prod.webpack.config.js --env analyze=true",
-    "build:prod": "NODE_ENV=production webpack --config config/prod.webpack.config.js"
+    "build:prod": "NODE_ENV=production webpack --config config/prod.webpack.config.js",
+    "start:federated": "fec static --config config/dev.webpack.config.js"
   }
 }
