@@ -1,6 +1,10 @@
 .marketplace-card {
     height: 322px;
     width: 213px;
+
+    .marketplace-card-icon {
+        max-height: 24px;
+    }
 }
 
 .marketplace-card-body {

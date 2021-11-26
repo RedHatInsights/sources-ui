@@ -4,6 +4,7 @@ import { Modal } from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 import PrimaryToolbar from '@redhat-cloud-services/frontend-components/PrimaryToolbar/PrimaryToolbar';
 import MarketplaceCard from './MarketplaceCard';
+import { MARKETPLACE_URL } from './constants';
 
 const init = (data) => ({
   page: 1,
@@ -53,7 +54,7 @@ const MarketplaceModal = ({ data, isOpen, onClose }) => {
       description={
         <span>
           A curated selection of offerings available for purchase from{' '}
-          <a href="https://sandbox.marketplace.redhat.com/" target="_blank" rel="noopener noreferrer">
+          <a href={MARKETPLACE_URL} target="_blank" rel="noopener noreferrer">
             Red Hat Marketplace <ExternalLinkAltIcon />
           </a>
         </span>

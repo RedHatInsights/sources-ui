@@ -6,7 +6,7 @@ import ImageWithPlaceholder from '../components/TilesShared/ImageWithPlaceholder
 const MarketplaceCard = (product) => (
   <Card isFlat className="marketplace-card">
     <CardTitle className="pf-u-pl-md pf-u-pr-md">
-      <ImageWithPlaceholder src={product.publishedContent.logo.url} style={{ maxHeight: 24 }} />
+      <ImageWithPlaceholder src={product.publishedContent.logo.url} className="marketplace-card-icon" />
       <br />
       {product.publishedContent.title}
       <br />

@@ -1,7 +1,8 @@
 import { axiosInstance } from '../api/entities';
+import { MARKETPLACE_URL } from './constants';
 
 const getAccessToken = () =>
-  axiosInstance.post('https://sandbox.marketplace.redhat.com/api-security/om-auth/cloud/token', {
+  axiosInstance.post(`${MARKETPLACE_URL}/api-security/om-auth/cloud/token`, {
     grant_type: 'urn:ibm:params:oauth:grant-type:apikey',
     apikey: localStorage.getItem('marketplace-key'),
   });
@@ -50,7 +51,7 @@ export const getProducts = async () => {
   }
 
   return axiosInstance.post(
-    'https://sandbox.marketplace.redhat.com/catalog/gql',
+    `${MARKETPLACE_URL}/catalog/gql`,
     { query },
     { headers: { Authorization: `Bearer ${access_token}` } }
   );
