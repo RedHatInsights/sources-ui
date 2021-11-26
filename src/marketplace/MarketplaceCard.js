@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardTitle, CardBody, CardFooter, Label, Button } from '@patternfly/react-core';
 import { DatabaseIcon, ExternalLinkAltIcon } from '@patternfly/react-icons';
 import ImageWithPlaceholder from '../components/TilesShared/ImageWithPlaceholder';
+import { MARKETPLACE_URL } from './constants';
 
 const MarketplaceCard = (product) => (
   <Card isFlat className="marketplace-card">
@@ -24,7 +25,7 @@ const MarketplaceCard = (product) => (
         icon={<ExternalLinkAltIcon />}
         iconPosition="right"
         component="a"
-        href={`https://sandbox.marketplace.redhat.com/en-us/products/${product.productPageName}`}
+        href={`${MARKETPLACE_URL}/en-us/products/${product.productPageName}`}
         rel="noopener noreferrer"
         target="_blank"
       >
