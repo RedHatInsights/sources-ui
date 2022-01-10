@@ -7,34 +7,11 @@ import products from './__mocks__/products';
 import { chipFormatters } from '../MarketplaceModal';
 
 describe('<RecommendedServices />', () => {
-  let protoTmp = Storage;
-
-  const crunchyProduct = products.data.productByIds.products[0];
-  const mongoProduct = products.data.productByIds.products[1];
+  const crunchyProduct = products[0];
+  const mongoProduct = products[1];
 
   beforeEach(() => {
-    const localStorage = {
-      'marketplace-key': 'some-value',
-    };
-    Object.assign(Storage, {});
-    Storage.prototype.getItem = jest.fn((name) => localStorage[name]);
-
-    api.getProducts = jest.fn().mockResolvedValue(products);
-  });
-
-  afterEach(() => {
-    Object.assign(Storage, protoTmp);
-  });
-
-  it('renders nothing when no token', async () => {
-    const localStorage = {};
-    Object.assign(Storage, {});
-    Storage.prototype.getItem = jest.fn((name) => localStorage[name]);
-
-    render(<RecommendedServices />);
-
-    expect(() => screen.getAllByRole('progressbar')).toThrow();
-    expect(() => screen.getAllByRole(mongoProduct.publishedContent.title)).toThrow();
+    api.getProducts = jest.fn().mockResolvedValue({ data: products });
   });
 
   it('renders page and loads data', async () => {
@@ -42,9 +19,9 @@ describe('<RecommendedServices />', () => {
 
     expect(screen.getAllByRole('progressbar')).toHaveLength(6);
 
-    await waitFor(() => expect(screen.getByText(mongoProduct.publishedContent.title)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(mongoProduct.title)).toBeInTheDocument());
     expect(screen.getByText('Database')).toBeInTheDocument();
-    expect(screen.getByText(mongoProduct.publishedContent.localizedContent.descriptions.short)).toBeInTheDocument();
+    expect(screen.getByText(mongoProduct.description_short)).toBeInTheDocument();
     expect(screen.getByText('Add')).toBeInTheDocument();
 
     expect(
@@ -55,18 +32,14 @@ describe('<RecommendedServices />', () => {
 
   it('renders page and loads data - fallback to the first item', async () => {
     api.getProducts = jest.fn().mockResolvedValue({
-      data: {
-        productByIds: {
-          products: [crunchyProduct],
-        },
-      },
+      data: [crunchyProduct],
     });
 
     render(<RecommendedServices />);
 
-    await waitFor(() => expect(screen.getByText(crunchyProduct.publishedContent.title)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(crunchyProduct.title)).toBeInTheDocument());
     expect(screen.getByText('Database')).toBeInTheDocument();
-    expect(screen.getByText(crunchyProduct.publishedContent.localizedContent.descriptions.short)).toBeInTheDocument();
+    expect(screen.getByText(crunchyProduct.description_short)).toBeInTheDocument();
   });
 
   describe('<SeeMoreCard />', () => {
@@ -79,11 +52,9 @@ describe('<RecommendedServices />', () => {
       expect(screen.getByText('Browse catalog')).toBeInTheDocument();
       expect(screen.getByText('A curated selection of offerings available for purchase from')).toBeInTheDocument();
 
-      products.data.productByIds.products.map((product) => {
-        expect(within(screen.getByRole('dialog')).getByText(product.publishedContent.title)).toBeInTheDocument();
-        expect(
-          within(screen.getByRole('dialog')).getByText(product.publishedContent.localizedContent.descriptions.short)
-        ).toBeInTheDocument();
+      products.map((product) => {
+        expect(within(screen.getByRole('dialog')).getByText(product.title)).toBeInTheDocument();
+        expect(within(screen.getByRole('dialog')).getByText(product.description_short)).toBeInTheDocument();
       });
 
       expect(within(screen.getByRole('dialog')).getAllByText('Add')).toHaveLength(4);
@@ -113,14 +84,10 @@ describe('<RecommendedServices />', () => {
 
     it('change page', async () => {
       api.getProducts = jest.fn().mockResolvedValue({
-        data: {
-          productByIds: {
-            products: [...Array(11)].map((_, index) => ({
-              ...crunchyProduct,
-              id: index,
-            })),
-          },
-        },
+        data: [...Array(11)].map((_, index) => ({
+          ...crunchyProduct,
+          id: index,
+        })),
       });
 
       render(<RecommendedServices />);
