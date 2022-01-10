@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Title } from '@patternfly/react-core';
 
 import './marketplace.scss';
@@ -10,29 +10,24 @@ import SkeletonMarketplaceCard from './SkeletonMarketplaceCard';
 
 const RecommendedServices = () => {
   const [data, setData] = useState();
-  const token = useMemo(() => localStorage.getItem('marketplace-key'), []);
 
   useEffect(() => {
-    token && getProducts().then((res) => setData(res?.data?.productByIds?.products));
+    getProducts().then(({ data }) => setData(data));
   }, []);
-
-  if (!token) {
-    return null;
-  }
 
   if (data) {
     return (
-      <React.Fragment>
+      <div className="sources">
         <Title headingLevel="h4" size="xl" className="pf-u-mb-md">
           Recommended services
         </Title>
         <div className="pf-u-mb-md marketplace-flex">
           <MarketplaceCard
-            {...(data.find((product) => product?.productPageName?.[0] === 'mongodb-enterprise-advanced') || data[0])}
+            {...(data.find((product) => product?.product_page_name === 'mongodb-enterprise-advanced') || data[0])}
           />
           <SeeMoreCard data={data} />
         </div>
-      </React.Fragment>
+      </div>
     );
   }
 
