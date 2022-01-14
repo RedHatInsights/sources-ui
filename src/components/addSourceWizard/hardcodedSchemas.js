@@ -181,6 +181,24 @@ const hardcodedSchemas = {
   },
   azure: {
     authentication: {
+      username_password_tenant_id: {
+        generic: {
+          'authentication.extra.azure.tenant_id': {
+            type: 'password',
+            isRequired: true,
+            validate: [{ type: validatorTypes.REQUIRED }],
+          },
+          'authentication.username': {
+            label: <FormattedMessage id="azure.generic.username" defaultMessage="App ID" />,
+            isRequired: true,
+            validate: [{ type: validatorTypes.REQUIRED }],
+          },
+          'authentication.password': {
+            isRequired: true,
+            validate: [{ type: validatorTypes.REQUIRED }],
+          },
+        },
+      },
       [emptyAuthType.type]: {
         [CLOUD_METER_APP_NAME]: {
           skipSelection: true,
