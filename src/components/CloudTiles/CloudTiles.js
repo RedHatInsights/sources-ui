@@ -10,7 +10,7 @@ const mapper = (type, openWizard, TileComponent) =>
         key={type}
         title="Amazon Web Services"
         onClick={() => openWizard('amazon')}
-        className="tile pf-u-mr-md-on-md pf-u-mt-md pf-u-mt-0-on-md"
+        className="tile pf-u-mr-md pf-u-mt-md"
         icon={
           <ImageWithPlaceholder
             className="provider-icon pf-u-mb-sm"
@@ -25,7 +25,7 @@ const mapper = (type, openWizard, TileComponent) =>
         isStacked
         key={type}
         title="Google Cloud"
-        className="tile pf-u-mr-md-on-md pf-u-mt-md pf-u-mt-0-on-md"
+        className="tile pf-u-mr-md pf-u-mt-md"
         onClick={() => openWizard('google')}
         icon={
           <ImageWithPlaceholder
@@ -42,7 +42,7 @@ const mapper = (type, openWizard, TileComponent) =>
         key={type}
         title="Microsoft Azure"
         onClick={() => openWizard('azure')}
-        className="tile pf-u-mr-md-on-md pf-u-mt-md pf-u-mt-0-on-md"
+        className="tile pf-u-mr-md pf-u-mt-md"
         icon={
           <ImageWithPlaceholder
             className="provider-icon pf-u-mb-sm"

@@ -29,7 +29,7 @@ ResourcesEmptyState.propTypes = {
   applicationName: PropTypes.string.isRequired,
   message: PropTypes.shape({
     id: PropTypes.string.isRequired,
-    defaultMessage: PropTypes.isRequired,
+    defaultMessage: PropTypes.string.isRequired,
   }),
   Icon: PropTypes.elementType,
 };

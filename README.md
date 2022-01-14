@@ -8,9 +8,10 @@ List of Sources for Red Hat Hybrid Cloud Console.
 
 This application allows to
 - view all sources (filtering, sorting)
-- add a new source
-- connect an application to a source
+- add a new source (AWS, Google, Azure, OpenShift, ...)
+- connect an application to a source (Cost Management, RHEL management bundle, ...)
 - remove an application from a source
+- pause/resume a source/application
 
 **Table of Contents**
 - [Sources](#sources)
@@ -21,8 +22,10 @@ This application allows to
 - [Testing](#testing)
 - [Patternfly](#patternfly)
 - [Data-driven forms](#data-driven-forms)
+- [Insights Chrome](#insights-chrome)
+- [Config](#config)
 - [Insights Components](#insights-components)
-  - [AddSourceWizard](#addsourcewizard)
+- [AddSourceWizard](#addsourcewizard)
   - [Updating steps in the wizard](#updating-steps-in-the-wizard)
 - [API](#api)
   - [Sources Javascript API client](#sources-javascript-api-client)
@@ -75,7 +78,7 @@ You can use queries to modify the initial state of the application. Read more [h
 # Testing
 
 - Travis is used to test the build for this code.
-  - `npm run test` will run tests,
+  - `npm run test` will run tests locally,
   - `npm run lint` will run just the linter.
 
 # Patternfly
@@ -86,16 +89,24 @@ You can use queries to modify the initial state of the application. Read more [h
 # Data-driven forms
 
 - This project uses Data-driven forms:
-  - [Data-driven Forms](https://github.com/data-driven-forms)
-  - [Data-driven Demo](http://data-driven-forms.org/)
+  - [Data Driven Forms repository](https://github.com/data-driven-forms)
+  - [Data Driven Forms documentation](http://data-driven-forms.org/)
 
+
+# Insights Chrome
+
+[Insights Chrome](https://github.com/RedHatInsights/insights-chrome) is an application that wraps all the UI applications in Red Hat Hybrid Cloud Console. It using Federated modules to do that.
+
+# Config
+
+[Cloud Services Config](https://github.com/RedHatInsights/cloud-services-config) manages the UI navigation and Akamai configuration.
 # Insights Components
 
 [Red Hat Insights Frontend Components](https://github.com/RedHatInsights/frontend-components)
 
-Insights Platform will deliver components and static assets through [npm](https://www.npmjs.com/package/@redhat-cloud-services/frontend-components). ESI tags are used to import the [chroming](https://github.com/RedHatInsights/insights-chrome) which takes care of the header, sidebar, and footer.
+Insights Platform will deliver components and static assets through [npm](https://www.npmjs.com/package/@redhat-cloud-services/frontend-components).
 
-## AddSourceWizard
+# AddSourceWizard
 
 **ADD SOURCE WIZARD WAS MOVED TO THIS REPOSITORY!**
 
@@ -108,7 +119,7 @@ Documentation is [here](doc/wizard.md).
 # API
 
 - [Sources API](https://github.com/RedHatInsights/sources-api)
-
+- [Sources API GO](https://github.com/RedHatInsights/sources-api-go) - a new GO version of the API
 ## Sources Javascript API client
 
 This API client is no longer in the UI because of its huge bundle size. However, is useful to use is a documentation to the API.
@@ -125,10 +136,16 @@ Static assets are deployed to [Insights Frontend Assets](https://github.com/RedH
 
 ## How it works
 
-- any push to the `{REPO}` `master` branch will deploy to a `{REPO}-build` `master` branch
-- any push to a `{REPO}` `stable/\*` branch will deploy to a `{REPO}-build` `stable` branch
-- Pull requests (based on master) will not be pushed to `{REPO}-build` `master` branch
-  - If the PR is accepted and merged, master will be rebuilt and will deploy to `{REPO}-build` `master` branch
+|Branch|updates|environment|
+|------|:------:|-----------|
+|`master`|=>|**stage/beta**|
+|`stable`|=>|**stage/stable**|
+|`prod-beta`|=>|**prod/beta**|
+|`prod-stable`|=>|**prod/stable**|
+
+Example:
+
+- any push to the `master` branch will deploy to a `sources-ui-build` `master` branch **=> Stage/Beta**
 
 # License
 
