@@ -63,7 +63,7 @@ describe('Cost Management IBM steps', () => {
       )
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveValue(
-      'ibmcloud iam service-policy-create service-id --service-name billing  --roles Viewer        ibmcloud iam service-policy-create service-id --account-management --roles Viewer        ibmcloud iam service-policy-create service-id --service-name enterprise --roles "Usage Report Viewer"        ibmcloud iam service-policy-create service-id --service-name globalcatalog  --roles Viewer'
+      'ibmcloud iam service-policy-create service-id --service-name billing  --roles Vieweribmcloud iam service-policy-create service-id --account-management --roles Vieweribmcloud iam service-policy-create service-id --service-name enterprise --roles "Usage Report Viewer"ibmcloud iam service-policy-create service-id --service-name globalcatalog  --roles Viewer'
     );
   });
 
