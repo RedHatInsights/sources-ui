@@ -95,6 +95,9 @@ const hardcodedSchemas = {
   ibm: {
     authentication: {
       api_token_account_id: {
+        generic: {
+          skipEndpoint: true,
+        },
         [COST_MANAGEMENT_APP_NAME]: {
           skipSelection: true,
           additionalSteps: [
