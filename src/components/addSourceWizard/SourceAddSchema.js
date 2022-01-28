@@ -92,7 +92,7 @@ const shortIcons = {
 export const iconMapper = (sourceTypes) => (name) => {
   const sourceType = sourceTypes.find((type) => type.name === name);
 
-  if (!sourceType || (sourceType.icon_url && !shortIcons[name])) {
+  if (!sourceType || (!sourceType.icon_url && !shortIcons[name])) {
     return null;
   }
 
