@@ -110,7 +110,7 @@ export const ApiKey = () => {
       <Text component={TextVariants.p}>
         {intl.formatMessage({
           id: 'cost.ibm.apiKeyDescription',
-          defaultMessage: 'In the IBM Cloud Shell, run the following command:',
+          defaultMessage: 'In the IBM Cloud Shell, run the following command. Paste the output string into the form field below.',
         })}
       </Text>
       <ClipboardCopy variant="expansion">

@@ -538,8 +538,8 @@ export const ibmType = {
             isRequired: true,
           },
           {
-            name: 'application.extra.api_token',
-            label: 'API Token',
+            name: 'authentication.password',
+            label: 'API Key',
             validate: [
               {
                 type: 'required',
@@ -547,6 +547,7 @@ export const ibmType = {
             ],
             component: 'text-field',
             isRequired: true,
+            type: 'password',
           },
           {
             name: 'application.extra.enterprise_id',

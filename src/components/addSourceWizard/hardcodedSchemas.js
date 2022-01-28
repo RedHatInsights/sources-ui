@@ -203,6 +203,18 @@ const hardcodedSchemas = {
                   name: 'description-summary',
                   Content: CMIbm.ApiKey,
                 },
+                {
+                  name: 'authentication.password',
+                  label: 'API Key',
+                  validate: [
+                    {
+                      type: 'required',
+                    },
+                  ],
+                  component: 'text-field',
+                  isRequired: true,
+                  type: 'password',
+                },
               ],
               name: 'ibm-cm-api-key',
             },

@@ -238,7 +238,7 @@ describe('SourceWizardSummary component', () => {
             source: { name: 'cosi' },
             application: { application_type_id: '2', extra: { enterprise_id: 'enterprise id' } },
             source_type: 'ibm',
-            authentication: { username: 'account id', authtype: 'api_token_account_id' },
+            authentication: { username: 'account id', authtype: 'api_token_account_id', password: 'token1234' },
             auth_select: 'api_token_account_id',
             fixasyncvalidation: '',
           },
@@ -261,6 +261,7 @@ describe('SourceWizardSummary component', () => {
         ['Application', 'Cost Management'],
         ['Enterprise ID', 'enterprise id'],
         ['Account ID', 'account id'],
+        ['API Key', '●●●●●●●●●●●●'],
       ]);
 
       expect(screen.getByText('Manage permissions in User Access')).toBeInTheDocument();

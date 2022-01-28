@@ -80,7 +80,9 @@ describe('Cost Management IBM steps', () => {
       )
     );
 
-    expect(screen.getByText('In the IBM Cloud Shell, run the following command:')).toBeInTheDocument();
+    expect(
+      screen.getByText('In the IBM Cloud Shell, run the following command. Paste the output string into the form field below.')
+    ).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveValue(
       'ibmcloud iam service-api-key-create "Cost Management API Key" service-id -d "Cost Management Service ID API Key" --output JSON | jq -r .apikey'
     );
