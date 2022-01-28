@@ -165,7 +165,7 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
 
   const skipEndpoint = shouldSkipEndpoint(type.name, hasAuthentication, name);
 
-  let endpointFields = type.schema.endpoint.fields;
+  let endpointFields = type.schema.endpoint?.fields || [];
 
   if (skipEndpoint) {
     endpointFields = [];
