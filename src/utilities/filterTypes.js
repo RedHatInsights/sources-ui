@@ -1,6 +1,6 @@
 import { ANSIBLE_TOWER_NAME, CLOUD_VENDOR, REDHAT_VENDOR, SATELLITE_NAME } from './constants';
 
-const filterTypes = (type) => type.schema?.authentication && type.schema?.endpoint;
+const filterTypes = (type) => type.schema;
 
 const hiddenTypes = [SATELLITE_NAME, ANSIBLE_TOWER_NAME];
 
