@@ -17,6 +17,7 @@ import * as SWGoogle from './hardcodedComponents/gcp/subscriptionWatch';
 import * as CMOpenshift from './hardcodedComponents/openshift/costManagement';
 import * as CMAzure from './hardcodedComponents/azure/costManagement';
 import * as CMGoogle from './hardcodedComponents/gcp/costManagement';
+import * as CMIbm from './hardcodedComponents/ibm/costManagement';
 
 import * as TowerCatalog from './hardcodedComponents/tower/catalog';
 import * as Openshift from './hardcodedComponents/openshift/endpoint';
@@ -91,6 +92,122 @@ const ansibleTowerURL = {
 };
 
 const hardcodedSchemas = {
+  ibm: {
+    authentication: {
+      api_token_account_id: {
+        [COST_MANAGEMENT_APP_NAME]: {
+          skipSelection: true,
+          additionalSteps: [
+            {
+              title: <FormattedMessage id="cost.ibm.enterpriseIdTitle" defaultMessage="Add enterprise ID" />,
+              showTitle: false,
+              fields: [
+                {
+                  name: 'authentication.authtype',
+                  component: 'text-field',
+                  hideField: true,
+                  initialValue: 'api_token_account_id',
+                  initializeOnMount: true,
+                },
+                {
+                  component: 'description',
+                  name: 'description-summary',
+                  Content: CMIbm.EnterpriseId,
+                },
+                {
+                  name: 'application.extra.enterprise_id',
+                  label: 'Enterprise ID',
+                  validate: [
+                    {
+                      type: 'required',
+                    },
+                  ],
+                  component: 'text-field',
+                  isRequired: true,
+                },
+              ],
+              nextStep: 'ibm-cm-account-id',
+              substepOf: {
+                name: 'ibm-cm-substep',
+                title: <FormattedMessage id="cost.ibm.substepTitle" defaultMessage="Enter account IDs" />,
+              },
+            },
+            {
+              title: <FormattedMessage id="cost.ibm.accountIdTitle" defaultMessage="Add account ID" />,
+              showTitle: false,
+              fields: [
+                {
+                  component: 'description',
+                  name: 'description-summary',
+                  Content: CMIbm.AccountId,
+                },
+                {
+                  name: 'authentication.username',
+                  label: 'Account ID',
+                  component: 'text-field',
+                  validate: [
+                    {
+                      type: 'required',
+                    },
+                  ],
+                  isRequired: true,
+                },
+              ],
+              nextStep: 'ibm-cm-service-id',
+              substepOf: 'ibm-cm-substep',
+              name: 'ibm-cm-account-id',
+            },
+            {
+              title: <FormattedMessage id="cost.ibm.serviceIdTitle" defaultMessage="Create a service ID" />,
+              fields: [
+                {
+                  component: 'description',
+                  name: 'description-summary',
+                  Content: CMIbm.ServiceId,
+                },
+                {
+                  name: 'cost.service_id',
+                  component: 'text-field',
+                  label: 'Service ID',
+                  validate: [
+                    {
+                      type: 'required',
+                    },
+                  ],
+                  isRequired: true,
+                },
+              ],
+              nextStep: 'ibm-cm-configure-access',
+              name: 'ibm-cm-service-id',
+            },
+            {
+              title: <FormattedMessage id="cost.ibm.accessId" defaultMessage="Configure service ID access" />,
+              fields: [
+                {
+                  component: 'description',
+                  name: 'description-summary',
+                  Content: CMIbm.ConfigureAccess,
+                },
+              ],
+              nextStep: 'ibm-cm-api-key',
+              name: 'ibm-cm-configure-access',
+            },
+            {
+              title: <FormattedMessage id="cost.ibm.apiKeyTitle" defaultMessage="Create an API key" />,
+              fields: [
+                {
+                  component: 'description',
+                  name: 'description-summary',
+                  Content: CMIbm.ApiKey,
+                },
+              ],
+              name: 'ibm-cm-api-key',
+            },
+          ],
+        },
+      },
+    },
+  },
   openshift: {
     authentication: {
       token: {

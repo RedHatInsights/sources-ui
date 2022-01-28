@@ -1,5 +1,6 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, IntlProvider } from 'react-intl';
+import { render, screen } from '@testing-library/react';
 
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -19,6 +20,7 @@ import render from '../../addSourceWizard/__mocks__/render';
 import Summary, { createItem } from '../../../components/FormComponents/SourceWizardSummary';
 import { NO_APPLICATION_VALUE } from '../../../components/addSourceWizard/stringConstants';
 import emptyAuthType from '../../../components/addSourceWizard/emptyAuthType';
+import { ibmType } from '../../__mocks__/sourceTypesData';
 
 describe('SourceWizardSummary component', () => {
   describe('should render correctly', () => {
@@ -67,7 +69,7 @@ describe('SourceWizardSummary component', () => {
       });
 
       initialProps = {
-        sourceTypes,
+        sourceTypes: [...sourceTypes, ibmType],
         applicationTypes,
       };
     });
@@ -221,6 +223,46 @@ describe('SourceWizardSummary component', () => {
         ['Source type', 'OpenShift Container Platform'],
         ['Application', 'Cost Management'],
         ['Cluster Identifier', 'CLUSTER ID123'],
+      ]);
+
+      expect(screen.getByText('Manage permissions in User Access')).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'Make sure to manage permissions for this source in custom roles that contain permissions for Cost Management.'
+        )
+      ).toBeInTheDocument();
+    });
+
+    it('IBM cost management - include appended field from DB and rbac alert message', () => {
+      formOptions = {
+        getState: () => ({
+          values: {
+            source: { name: 'cosi' },
+            application: { application_type_id: '2', extra: { enterprise_id: 'enterprise id' } },
+            source_type: 'ibm',
+            authentication: { username: 'account id', authtype: 'api_token_account_id' },
+            auth_select: 'api_token_account_id',
+            fixasyncvalidation: '',
+          },
+        }),
+      };
+
+      const { container } = render(
+        <IntlProvider locale="en">
+          <SourceWizardSummary {...initialProps} formOptions={formOptions} />
+        </IntlProvider>
+      );
+
+      const data = [...container.getElementsByClassName('pf-c-description-list__group')].map((group) => [
+        ...[...group.getElementsByClassName('pf-c-description-list__text')].map((el) => el.textContent),
+      ]);
+
+      expect(data).toEqual([
+        ['Name', 'cosi'],
+        ['Source type', 'IBM Cloud'],
+        ['Application', 'Cost Management'],
+        ['Enterprise ID', 'enterprise id'],
+        ['Account ID', 'account id'],
       ]);
 
       expect(screen.getByText('Manage permissions in User Access')).toBeInTheDocument();
