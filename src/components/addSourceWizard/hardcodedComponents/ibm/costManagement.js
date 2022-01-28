@@ -43,7 +43,7 @@ export const AccountId = () => {
         {intl.formatMessage({
           id: 'cost.ibm.accountIdDescription',
           defaultMessage:
-            'In the IBM Cloud Shell,  run the following command. Paste the output string into the form fields below.',
+            'In the IBM Cloud Shell, run the following command. Paste the output string into the form fields below.',
         })}
       </Text>
       <ClipboardCopy>ibmcloud account show --output JSON | jq -r .account_id</ClipboardCopy>
@@ -87,15 +87,11 @@ export const ConfigureAccess = () => {
             'Assign policies to the service ID you just created so that Cost Management will have access to account management, billing and usage service APIs.  In the IBM Cloud Shell, run the following command:',
         })}
       </Text>
-      <ClipboardCopy variant="expansion">
-        {`ibmcloud iam service-policy-create ${serviceId} --service-name billing  --roles Viewer`}
-        <br />
-        {`ibmcloud iam service-policy-create ${serviceId} --account-management --roles Viewer`}
-        <br />
-        {`ibmcloud iam service-policy-create ${serviceId} --service-name enterprise --roles "Usage Report Viewer"`}
-        <br />
-        {`ibmcloud iam service-policy-create ${serviceId} --service-name globalcatalog  --roles Viewer`}
-        <br />
+      <ClipboardCopy isCode variant="expansion">
+        {`ibmcloud iam service-policy-create ${serviceId} --service-name billing  --roles Viewer
+        ibmcloud iam service-policy-create ${serviceId} --account-management --roles Viewer
+        ibmcloud iam service-policy-create ${serviceId} --service-name enterprise --roles "Usage Report Viewer"
+        ibmcloud iam service-policy-create ${serviceId} --service-name globalcatalog  --roles Viewer`}
       </ClipboardCopy>
     </TextContent>
   );
