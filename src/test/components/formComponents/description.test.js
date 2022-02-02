@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render, screen } from '@testing-library/react';
 
 import Description from '../../../components/FormComponents/Description';
 
@@ -23,8 +23,9 @@ describe('Description component', () => {
     });
 
     it('content', () => {
-      const wrapper = mount(<Description {...initialProps} />);
-      expect(wrapper.find(Content)).toHaveLength(1);
+      render(<Description {...initialProps} />);
+
+      expect(screen.getByText('Cosi', { selector: 'h1' })).toBeInTheDocument();
     });
   });
 });
