@@ -2,7 +2,6 @@ import React from 'react';
 import { render, screen, fireEvent, createEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { Tile } from '@patternfly/react-core';
 import { AwsIcon, OpenshiftIcon } from '@patternfly/react-icons';
 
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
