@@ -1,8 +1,6 @@
 import React from 'react';
-import { act } from 'react-dom/test-utils';
-import { mount } from 'enzyme';
-
-import { FormGroup, Switch } from '@patternfly/react-core';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
@@ -12,7 +10,6 @@ import SwitchGroup from '../../../components/FormComponents/SwitchGroup';
 describe('Switch group', () => {
   let onSubmit;
   let initialProps;
-  let wrapper;
 
   beforeEach(() => {
     onSubmit = jest.fn();
@@ -49,110 +46,56 @@ describe('Switch group', () => {
   });
 
   it('renders correctly, filters apptypes and sets values on initial', async () => {
-    await act(async () => {
-      wrapper = mount(<FormRenderer {...initialProps} />);
-    });
-    wrapper.update();
+    render(<FormRenderer {...initialProps} />);
 
-    expect(wrapper.find(FormGroup).props().label).toEqual('Some label here');
-    expect(wrapper.find(Switch)).toHaveLength(2);
+    expect(screen.getByText('Some label here')).toBeInTheDocument();
+    expect(screen.getAllByText('App 1')).toBeTruthy();
+    expect(screen.getAllByText('App 2')).toBeTruthy();
 
-    expect(wrapper.find(Switch).first().text()).toEqual('App 1App 1');
-    expect(wrapper.find(Switch).first().props().isChecked).toEqual(true);
+    expect(() => screen.getAllByText('UnsupportedApp')).toThrow();
+    expect(() => screen.getAllByText('Empty value - do not show me')).toThrow();
 
-    expect(wrapper.find(Switch).last().text()).toEqual('App 2App 2');
-    expect(wrapper.find(Switch).last().props().isChecked).toEqual(true);
+    expect(screen.getByText('some description').closest('.src-c-wizard--switch-description')).toBeInTheDocument();
 
-    expect(wrapper.find('.src-c-wizard--switch-description').text()).toEqual('some description');
+    expect(screen.getByLabelText('App 1')).toBeChecked();
+    expect(screen.getByLabelText('App 2')).toBeChecked();
 
-    await act(async () => {
-      wrapper.find('form').simulate('submit');
-    });
-    wrapper.update();
+    userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({ 'switch-group': ['1', '2'] });
   });
 
   it('do not set initial when values exist', async () => {
-    await act(async () => {
-      wrapper = mount(<FormRenderer {...initialProps} initialValues={{ 'switch-group': '123' }} />);
-    });
-    wrapper.update();
+    render(<FormRenderer {...initialProps} initialValues={{ 'switch-group': '123' }} />);
 
-    await act(async () => {
-      wrapper.find('form').simulate('submit');
-    });
-    wrapper.update();
+    userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({ 'switch-group': '123' });
   });
 
   it('handle onChange', async () => {
-    await act(async () => {
-      wrapper = mount(<FormRenderer {...initialProps} />);
-    });
-    wrapper.update();
+    render(<FormRenderer {...initialProps} />);
 
-    await act(async () => {
-      wrapper
-        .find('input')
-        .first()
-        .simulate('change', { target: { checked: false } });
-    });
-    wrapper.update();
-
-    await act(async () => {
-      wrapper.find('form').simulate('submit');
-    });
-    wrapper.update();
+    userEvent.click(screen.getAllByText('App 1')[0]);
+    userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({ 'switch-group': ['2'] });
     onSubmit.mockClear();
 
-    await act(async () => {
-      wrapper
-        .find('input')
-        .last()
-        .simulate('change', { target: { checked: false } });
-    });
-    wrapper.update();
-
-    await act(async () => {
-      wrapper.find('form').simulate('submit');
-    });
-    wrapper.update();
+    userEvent.click(screen.getAllByText('App 2')[0]);
+    userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({ 'switch-group': [] });
     onSubmit.mockClear();
 
-    await act(async () => {
-      wrapper
-        .find('input')
-        .last()
-        .simulate('change', { target: { checked: true } });
-    });
-    wrapper.update();
-
-    await act(async () => {
-      wrapper.find('form').simulate('submit');
-    });
-    wrapper.update();
+    userEvent.click(screen.getAllByText('App 2')[0]);
+    userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({ 'switch-group': ['2'] });
     onSubmit.mockClear();
 
-    await act(async () => {
-      wrapper
-        .find('input')
-        .first()
-        .simulate('change', { target: { checked: true } });
-    });
-    wrapper.update();
-
-    await act(async () => {
-      wrapper.find('form').simulate('submit');
-    });
-    wrapper.update();
+    userEvent.click(screen.getAllByText('App 1')[0]);
+    userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({ 'switch-group': ['2', '1'] });
     onSubmit.mockClear();
