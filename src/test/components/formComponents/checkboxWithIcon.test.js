@@ -1,10 +1,8 @@
 import React from 'react';
-import { act } from 'react-dom/test-utils';
-import { mount } from 'enzyme';
+import { render, screen } from '@testing-library/react';
 
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
-import Checkbox from '@data-driven-forms/pf4-component-mapper/checkbox';
 
 import CheckboxWithIcon from '../../../components/FormComponents/CheckboxWithIcon';
 
@@ -36,14 +34,9 @@ describe('CardSelect component', () => {
   });
 
   it('should render correctly', async () => {
-    let wrapper;
-    await act(async () => {
-      wrapper = mount(<FormRenderer {...initialProps} />);
-    });
-    wrapper.update();
+    render(<FormRenderer {...initialProps} />);
 
-    expect(wrapper.find(Checkbox)).toHaveLength(1);
-    expect(wrapper.find('.pf-c-check__label').text()).toEqual('some label');
+    expect(screen.getByText('some label', { selector: '.pf-c-check__label' })).toBeInTheDocument();
     expect(Icon).toHaveBeenCalledWith({ appendTo: undefined }, {});
   });
 });
