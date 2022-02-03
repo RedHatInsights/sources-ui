@@ -1,6 +1,5 @@
-import { Route, MemoryRouter } from 'react-router-dom';
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
+import { Route } from 'react-router-dom';
+import { render, screen, waitFor } from '@testing-library/react';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import RedirectNoId from '../../../components/RedirectNoId/RedirectNoId';
@@ -13,8 +12,7 @@ describe('RedirectNoId', () => {
   let initialStore;
   let initialEntry;
 
-  const wasRedirectedToRoot = (wrapper) =>
-    wrapper.find(MemoryRouter).instance().history.location.pathname === routes.sources.path;
+  const wasRedirectedToRoot = () => screen.getByTestId('location-display').textContent === routes.sources.path;
 
   beforeEach(() => {
     initialEntry = [replaceRouteId(routes.sourcesRemove.path, '1')];
@@ -28,7 +26,7 @@ describe('RedirectNoId', () => {
       sources: { loaded: 1, appTypesLoaded: true, sourceTypesLoaded: true, entities: [] },
     });
 
-    const wrapper = mount(
+    render(
       componentWrapperIntl(
         <Route path={routes.sourcesRemove.path} render={(...args) => <RedirectNoId {...args} />} />,
         initialStore,
@@ -36,31 +34,30 @@ describe('RedirectNoId', () => {
       )
     );
 
-    expect(wrapper.html()).toEqual('');
+    expect(actions.addMessage).not.toHaveBeenCalled();
+    expect(actions.addHiddenSource).not.toHaveBeenCalled();
+    expect(wasRedirectedToRoot()).toEqual(false);
   });
 
   it('Renders redirect and creates message if loaded and source was not found', async () => {
-    let wrapper;
     api.doLoadSource = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
 
     initialStore = mockStore({
       sources: { loaded: 0, appTypesLoaded: true, sourceTypesLoaded: true, entities: [] },
     });
 
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesRemove.path} render={(...args) => <RedirectNoId {...args} />} />,
-          initialStore,
-          initialEntry
-        )
-      );
-    });
+    render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesRemove.path} render={(...args) => <RedirectNoId {...args} />} />,
+        initialStore,
+        initialEntry
+      )
+    );
 
-    expect(actions.addMessage).toHaveBeenCalled();
+    await waitFor(() => expect(actions.addMessage).toHaveBeenCalled());
     expect(actions.addHiddenSource).toHaveBeenCalled();
 
-    expect(wasRedirectedToRoot(wrapper)).toEqual(true);
+    expect(wasRedirectedToRoot()).toEqual(true);
   });
 
   it('addHiddenSource is called with found source', async () => {
@@ -72,16 +69,14 @@ describe('RedirectNoId', () => {
       sources: { loaded: 0, appTypesLoaded: true, sourceTypesLoaded: true, entities: [] },
     });
 
-    await act(async () => {
-      mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesRemove.path} render={(...args) => <RedirectNoId {...args} />} />,
-          initialStore,
-          initialEntry
-        )
-      );
-    });
+    render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesRemove.path} render={(...args) => <RedirectNoId {...args} />} />,
+        initialStore,
+        initialEntry
+      )
+    );
 
-    expect(actions.addHiddenSource).toHaveBeenCalledWith(SOURCE);
+    await waitFor(() => expect(actions.addHiddenSource).toHaveBeenCalledWith(SOURCE));
   });
 });

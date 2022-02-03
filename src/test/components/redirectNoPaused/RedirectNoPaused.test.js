@@ -1,6 +1,5 @@
-import { Route, MemoryRouter } from 'react-router-dom';
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
+import { Route } from 'react-router-dom';
+import { render, screen, waitFor } from '@testing-library/react';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import RedirectNoPaused from '../../../components/RedirectNoPaused/RedirectNoPaused';
@@ -14,8 +13,8 @@ describe('RedirectNoPaused', () => {
 
   const sourceId = '123';
 
-  const wasRedirectedToDetail = (wrapper) =>
-    wrapper.find(MemoryRouter).instance().history.location.pathname === replaceRouteId(routes.sourcesDetail.path, sourceId);
+  const wasRedirectedToDetail = () =>
+    screen.getByTestId('location-display').textContent === replaceRouteId(routes.sourcesDetail.path, sourceId);
 
   beforeEach(() => {
     initialEntry = [replaceRouteId(routes.sourcesDetailRemoveApp.path, sourceId).replace(':app_id', '546')];
@@ -28,7 +27,7 @@ describe('RedirectNoPaused', () => {
       sources: { entities: [{ id: sourceId, paused_at: null }] },
     });
 
-    const wrapper = mount(
+    render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetailRemoveApp.path} render={(...args) => <RedirectNoPaused {...args} />} />,
         initialStore,
@@ -36,33 +35,31 @@ describe('RedirectNoPaused', () => {
       )
     );
 
-    expect(wrapper.html()).toEqual('');
-    expect(wasRedirectedToDetail(wrapper)).toEqual(false);
+    expect(actions.addMessage).not.toHaveBeenCalled();
+    expect(wasRedirectedToDetail()).toEqual(false);
   });
 
   it('Redirect to source detail when source is paused', async () => {
-    let wrapper;
-
     initialStore = mockStore({
       sources: { entities: [{ id: sourceId, paused_at: 'today' }] },
     });
 
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesDetailRemoveApp.path} render={(...args) => <RedirectNoPaused {...args} />} />,
-          initialStore,
-          initialEntry
-        )
-      );
-    });
+    render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetailRemoveApp.path} render={(...args) => <RedirectNoPaused {...args} />} />,
+        initialStore,
+        initialEntry
+      )
+    );
 
-    expect(actions.addMessage).toHaveBeenCalledWith({
-      description: 'You cannot perform this action on a paused source.',
-      title: 'Source is paused',
-      variant: 'danger',
-    });
+    await waitFor(() =>
+      expect(actions.addMessage).toHaveBeenCalledWith({
+        description: 'You cannot perform this action on a paused source.',
+        title: 'Source is paused',
+        variant: 'danger',
+      })
+    );
 
-    expect(wasRedirectedToDetail(wrapper)).toEqual(true);
+    expect(wasRedirectedToDetail()).toEqual(true);
   });
 });
