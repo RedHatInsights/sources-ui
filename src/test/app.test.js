@@ -1,18 +1,12 @@
 import React from 'react';
-import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/NotificationPortal';
-import { Main } from '@redhat-cloud-services/frontend-components/Main';
-import { act } from 'react-dom/test-utils';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { render, screen, cleanup } from '@testing-library/react';
 
 import App from '../App';
-import { componentWrapperIntl } from '../utilities/testsHelpers';
-import Routes, { routes } from '../Routes';
-import { getProdStore } from '../utilities/store';
+import { componentWrapperIntl, LocationDisplay } from '../utilities/testsHelpers';
+import { routes } from '../Routes';
 import * as PermissionsChecker from '../components/PermissionsChecker';
 import * as DataLoader from '../components/DataLoader';
 import { CLOUD_CARDS_KEY } from '../components/CloudTiles/CloudCards';
-
-import ErrorBoundary from '../components/ErrorBoundary';
 
 jest.mock('../pages/Sources', () => ({
   __esModule: true,
@@ -57,7 +51,7 @@ describe('App spec js', () => {
   });
 
   it('inits chrome', () => {
-    mount(componentWrapperIntl(<App />));
+    render(componentWrapperIntl(<App />));
 
     expect(initSpy).toHaveBeenCalled();
     expect(identifyAppSpy).toHaveBeenCalledWith('sources');
@@ -94,52 +88,48 @@ describe('App spec js', () => {
     });
 
     it('goes to sources on chrome nav event when source', async () => {
+      DataLoader.default = () => <LocationDisplay id="testurl" />;
+
       const event = { navId: '/', domEvent: { href: '/beta/settings/sources' } };
-      const wrapper = mount(componentWrapperIntl(<App />));
+      render(componentWrapperIntl(<App />));
 
-      expect(wrapper.find(Router).instance().history.location.pathname).toEqual('/');
+      expect(screen.getByTestId('testurl').textContent).toEqual('/');
 
-      await act(async () => {
-        callbackState(event);
-      });
-      wrapper.update();
+      callbackState(event);
 
-      expect(wrapper.find(Router).instance().history.location.pathname).toEqual(routes.sources.path);
+      expect(screen.getByTestId('testurl').textContent).toEqual(routes.sources.path);
     });
 
     it('goes to sources on chrome nav event when source [olderEnv]', async () => {
+      DataLoader.default = () => <LocationDisplay id="testurl" />;
+
       const event = { navId: 'sources', domEvent: { href: '/beta/settings/catalog' } };
-      const wrapper = mount(componentWrapperIntl(<App />));
+      render(componentWrapperIntl(<App />));
 
-      expect(wrapper.find(Router).instance().history.location.pathname).toEqual('/');
+      expect(screen.getByTestId('testurl').textContent).toEqual('/');
 
-      await act(async () => {
-        callbackState(event);
-      });
-      wrapper.update();
+      callbackState(event);
 
-      expect(wrapper.find(Router).instance().history.location.pathname).toEqual(routes.sources.path);
+      expect(screen.getByTestId('testurl').textContent).toEqual(routes.sources.path);
     });
 
     it('stays same when chrom nav event is not sources', async () => {
+      DataLoader.default = () => <LocationDisplay id="testurl" />;
+
       const event = { navId: '/', domEvent: { href: '/beta/settings/catalog' } };
-      const wrapper = mount(componentWrapperIntl(<App />));
+      render(componentWrapperIntl(<App />));
 
-      expect(wrapper.find(Router).instance().history.location.pathname).toEqual('/');
+      expect(screen.getByTestId('testurl').textContent).toEqual('/');
 
-      await act(async () => {
-        callbackState(event);
-      });
-      wrapper.update();
+      callbackState(event);
 
-      expect(wrapper.find(Router).instance().history.location.pathname).toEqual('/');
+      expect(screen.getByTestId('testurl').textContent).toEqual('/');
     });
   });
 
-  it('unmounts app and clears localStorage', async () => {
+  it('unrenders app and clears localStorage', async () => {
     let localStorage;
     let protoTmp;
-    let wrapper;
 
     protoTmp = Storage;
 
@@ -152,20 +142,14 @@ describe('App spec js', () => {
       delete localStorage[name];
     });
 
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<App />));
-    });
-    wrapper.update();
+    render(componentWrapperIntl(<App />));
 
     expect(localStorage).toEqual({
       [CLOUD_CARDS_KEY]: 'some-value',
     });
     expect(unregister).not.toHaveBeenCalled();
 
-    await act(async () => {
-      wrapper.unmount();
-    });
-    wrapper.update();
+    await cleanup();
 
     expect(localStorage).toEqual({});
     expect(unregister).toHaveBeenCalled();
@@ -190,30 +174,12 @@ describe('App spec js', () => {
       },
     };
 
-    mount(componentWrapperIntl(<App />));
+    render(componentWrapperIntl(<App />));
 
     expect(initSpy).toHaveBeenCalled();
     expect(spyThrowError).toHaveBeenCalledWith('sources');
     expect(spyConsoleWarn).toHaveBeenCalledWith(expect.any(String));
 
     console.warn = tmpLog;
-  });
-
-  it('renders correctly', async () => {
-    let wrapper;
-
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<App />, getProdStore(), ['']));
-    });
-    wrapper.update();
-
-    expect(wrapper.find(NotificationsPortal)).toHaveLength(1);
-    expect(wrapper.find(Main)).toHaveLength(1);
-    expect(wrapper.find(Routes)).toHaveLength(1);
-    expect(wrapper.find(Router)).toHaveLength(1);
-    expect(wrapper.find(Router).props().basename).toEqual('/');
-    expect(wrapper.find(PermissionsChecker.default)).toHaveLength(1);
-    expect(wrapper.find(DataLoader.default)).toHaveLength(1);
-    expect(wrapper.find(ErrorBoundary)).toHaveLength(1);
   });
 });
