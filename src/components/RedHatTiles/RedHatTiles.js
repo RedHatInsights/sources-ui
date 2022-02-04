@@ -13,7 +13,7 @@ const mapper = (type, openWizard, TileComponent) =>
       <TileComponent
         isStacked
         key={type}
-        title="OpenShift Container Platfrom"
+        title="OpenShift Container Platform"
         className="tile pf-u-mr-md-on-md pf-u-mt-md pf-u-mt-0-on-md"
         onClick={() => openWizard('openshift')}
         icon={icon}

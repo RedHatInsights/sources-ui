@@ -1,57 +1,32 @@
 import React from 'react';
-import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/PrimaryToolbar';
-import { act } from 'react-dom/test-utils';
+import { render, screen, act, waitFor, cleanup } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
-import {
-  Button,
-  Tooltip,
-  Tile,
-  Alert,
-  Pagination,
-  AlertActionLink,
-  Chip,
-  Select,
-  Dropdown,
-  DropdownItem,
-} from '@patternfly/react-core';
-
-import { MemoryRouter, Link } from 'react-router-dom';
 import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/NotificationPortal';
-import ErrorState from '@redhat-cloud-services/frontend-components/ErrorState';
-import DownloadButton from '@redhat-cloud-services/frontend-components/DownloadButton';
 
 import * as utilsHelpers from '@redhat-cloud-services/frontend-components-utilities/helpers/helpers';
 
 import SourcesPageOriginal from '../../pages/Sources';
-import SourcesTable from '../../components/SourcesTable/SourcesTable';
 
 import { sourcesDataGraphQl, SOURCE_ALL_APS_ID } from '../__mocks__/sourcesData';
-import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID } from '../__mocks__/sourceTypesData';
-import { applicationTypesData, CATALOG_APP } from '../__mocks__/applicationTypesData';
+import { sourceTypesData, AMAZON_ID } from '../__mocks__/sourceTypesData';
+import { applicationTypesData, COSTMANAGEMENT_APP } from '../__mocks__/applicationTypesData';
 
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
 
 import { defaultSourcesState } from '../../redux/sources/reducer';
 import * as api from '../../api/entities';
 import * as typesApi from '../../api/source_types';
-import EmptyStateTable from '../../components/SourcesTable/EmptyStateTable';
 import { routes, replaceRouteId } from '../../Routes';
 import * as helpers from '../../pages/Sources/helpers';
-import RedirectNoWriteAccess from '../../components/RedirectNoWriteAccess/RedirectNoWriteAccess';
 import * as SourceRemoveModal from '../../components/SourceRemoveModal/SourceRemoveModal';
 import * as urlQuery from '../../utilities/urlQuery';
-import { PlaceHolderTable, PaginationLoader } from '../../components/SourcesTable/loaders';
-import { Table } from '@patternfly/react-table';
 
 import DataLoader from '../../components/DataLoader';
-import TabNavigation from '../../components/TabNavigation';
-import CloudCards from '../../components/CloudTiles/CloudCards';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../utilities/constants';
-import CloudEmptyState from '../../components/CloudTiles/CloudEmptyState';
 import { getStore } from '../../utilities/store';
 import { AVAILABLE, UNAVAILABLE } from '../../views/formatters';
-import RedHatEmptyState from '../../components/RedHatTiles/RedHatEmptyState';
-import { AddSourceWizard } from '../../components/addSourceWizard';
+import * as AddSourceWizard from '../../components/addSourceWizard';
 import { CSV_FILE, JSON_FILE_STRING } from '../__mocks__/fileMocks';
 
 jest.mock('@redhat-cloud-services/frontend-components/useScreenSize', () => ({
@@ -97,7 +72,7 @@ jest.mock('react', () => {
 describe('SourcesPage', () => {
   let initialProps;
   let store;
-  let wrapper;
+
   const SourcesPage = (props) => (
     <React.Fragment>
       <DataLoader />
@@ -126,28 +101,24 @@ describe('SourcesPage', () => {
   });
 
   it('should fetch sources and source types on component mount', async () => {
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-    });
+    render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
 
     expect(api.doLoadEntities).toHaveBeenCalled();
     expect(api.doLoadAppTypes).toHaveBeenCalled();
     expect(typesApi.doLoadSourceTypes).toHaveBeenCalled();
 
-    wrapper.update();
-
-    expect(wrapper.find(TabNavigation)).toHaveLength(1);
-    expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
-    expect(wrapper.find(CloudCards)).toHaveLength(1);
-    expect(wrapper.find(SourcesTable)).toHaveLength(1);
-    expect(wrapper.find(Pagination)).toHaveLength(2);
-    expect(wrapper.find(PaginationLoader)).toHaveLength(0);
-    expect(wrapper.find(PrimaryToolbar).first().props().actionsConfig).toEqual({
-      actions: expect.any(Array),
-      dropdownProps: { position: 'right' },
-    });
-    expect(wrapper.find(PrimaryToolbar).last().props().actionsConfig).toEqual(undefined);
-    expect(wrapper.find(RedirectNoWriteAccess)).toHaveLength(0);
+    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+    expect(screen.getByText('Cloud sources')).toBeInTheDocument();
+    expect(screen.getByText('Red Hat sources')).toBeInTheDocument();
+    expect(screen.getAllByText('Name')).toHaveLength(2);
+    expect(screen.getByText('Type')).toBeInTheDocument();
+    expect(screen.getByText('Connected applications')).toBeInTheDocument();
+    expect(screen.getByText('Date added')).toBeInTheDocument();
+    expect(screen.getByText('Status')).toBeInTheDocument();
+    expect(screen.getByText('Date added')).toBeInTheDocument();
+    expect(screen.getAllByLabelText('Items per page')).toHaveLength(2);
+    expect(screen.getByText('I connected to cloud. Now what?')).toBeInTheDocument();
+    expect(screen.getByText(sourcesDataGraphQl[0].name)).toBeInTheDocument();
 
     expect(urlQuery.parseQuery.mock.calls).toHaveLength(1);
     expect(urlQuery.updateQuery.mock.calls).toHaveLength(1);
@@ -157,23 +128,10 @@ describe('SourcesPage', () => {
   it('should use object config on small screen', async () => {
     global.mockWidth = 'sm';
 
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-    });
-    wrapper.update();
+    render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-    expect(wrapper.find(PrimaryToolbar).first().props().actionsConfig).toEqual({
-      actions: [
-        {
-          label: 'Add source',
-          props: {
-            to: routes.sourcesNew.path,
-            component: Link,
-          },
-        },
-      ],
-      dropdownProps: { position: 'right' },
-    });
+    expect(screen.getAllByLabelText('Actions')[0].closest('.pf-c-dropdown')).toHaveClass('pf-m-align-right');
 
     global.mockWidth = undefined;
   });
@@ -184,13 +142,10 @@ describe('SourcesPage', () => {
       user: { writePermissions: true },
     });
 
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-    });
+    render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-    wrapper.update();
-
-    expect(wrapper.find(CloudCards)).toHaveLength(0);
+    expect(() => screen.getByText('I connected to cloud. Now what?')).toThrow();
   });
 
   it('renders empty state when there are no Sources - CLOUD', async () => {
@@ -203,16 +158,15 @@ describe('SourcesPage', () => {
       .fn()
       .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
 
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-    });
+    render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-    wrapper.update();
+    expect(screen.getByText('Get started by connecting to your public clouds')).toBeInTheDocument();
 
-    expect(wrapper.find(CloudEmptyState)).toHaveLength(1);
-    expect(wrapper.find(RedHatEmptyState)).toHaveLength(0);
-    expect(wrapper.find(PrimaryToolbar)).toHaveLength(0);
-    expect(wrapper.find(SourcesTable)).toHaveLength(0);
+    expect(() => screen.getByText('I connected to cloud. Now what?')).toThrow();
+    expect(() => screen.getByLabelText('Items per page')).toThrow();
+    expect(() => screen.getByText('Connected applications')).toThrow();
+    expect(() => screen.getByText('Get started by connecting to your Red Hat applications')).toThrow();
   });
 
   it('renders empty state when there are no Sources and open AWS selection', async () => {
@@ -233,20 +187,14 @@ describe('SourcesPage', () => {
       .fn()
       .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
 
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-    });
-    wrapper.update();
+    render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-    expect(wrapper.find(CloudEmptyState)).toHaveLength(1);
+    userEvent.click(screen.getByText('Amazon Web Services'));
 
-    await act(async () => {
-      wrapper.find(Tile).first().simulate('click');
-    });
-    wrapper.update();
+    await waitFor(() => expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path));
 
-    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
-    expect(wrapper.find(AddSourceWizard).props().selectedType).toEqual('amazon');
+    expect(screen.getByText('Enter a name for your Amazon Web Services source.')).toBeInTheDocument();
 
     window.location = tmpLocation;
   });
@@ -261,15 +209,15 @@ describe('SourcesPage', () => {
       .fn()
       .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
 
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-    });
+    render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-    wrapper.update();
-    expect(wrapper.find(RedHatEmptyState)).toHaveLength(1);
-    expect(wrapper.find(CloudEmptyState)).toHaveLength(0);
-    expect(wrapper.find(PrimaryToolbar)).toHaveLength(0);
-    expect(wrapper.find(SourcesTable)).toHaveLength(0);
+    expect(screen.getByText('Get started by connecting to your Red Hat applications')).toBeInTheDocument();
+
+    expect(() => screen.getByText('I connected to cloud. Now what?')).toThrow();
+    expect(() => screen.getByLabelText('Items per page')).toThrow();
+    expect(() => screen.getByText('Connected applications')).toThrow();
+    expect(() => screen.getByText('Get started by connecting to your public clouds')).toThrow();
   });
 
   it('renders empty state when there are no Sources and open openshift selection', async () => {
@@ -282,74 +230,62 @@ describe('SourcesPage', () => {
       .fn()
       .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
 
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-    });
-    wrapper.update();
+    render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-    expect(wrapper.find(RedHatEmptyState)).toHaveLength(1);
+    userEvent.click(screen.getByText('OpenShift Container Platform'));
 
-    await act(async () => {
-      wrapper.find(Tile).first().simulate('click');
-    });
-    wrapper.update();
+    await waitFor(() => expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path));
 
-    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
-    expect(wrapper.find(AddSourceWizard).props().selectedType).toEqual('openshift');
+    expect(screen.getByText('Enter a name for your OpenShift Container Platform source.')).toBeInTheDocument();
   });
 
   it('renders error state when there is fetching (loadEntities) error', async () => {
     const ERROR_MESSAGE = 'ERROR_MESSAGE';
     api.doLoadEntities = jest.fn().mockImplementation(() => Promise.reject({ detail: ERROR_MESSAGE }));
 
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-    });
+    render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
 
-    wrapper.update();
-    expect(wrapper.find(ErrorState)).toHaveLength(1);
-    expect(wrapper.find(PrimaryToolbar)).toHaveLength(0);
-    expect(wrapper.find(SourcesTable)).toHaveLength(0);
+    await waitFor(() => expect(screen.getByText('Something went wrong')).toBeInTheDocument());
+
+    expect(() => screen.getByLabelText('Items per page')).toThrow();
+    expect(() => screen.getByText('Connected applications')).toThrow();
   });
 
   it('renders error state when there is loading (sourceTypes/appTypes) error', async () => {
     const ERROR_MESSAGE = 'ERROR_MESSAGE';
     api.doLoadAppTypes = jest.fn().mockImplementation(() => Promise.reject({ detail: ERROR_MESSAGE }));
 
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-    });
+    render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
 
-    wrapper.update();
-    expect(wrapper.find(ErrorState)).toHaveLength(1);
-    expect(wrapper.find(PrimaryToolbar)).toHaveLength(0);
-    expect(wrapper.find(SourcesTable)).toHaveLength(0);
+    await waitFor(() => expect(screen.getByText('Something went wrong')).toBeInTheDocument());
+
+    expect(() => screen.getByLabelText('Items per page')).toThrow();
+    expect(() => screen.getByText('Connected applications')).toThrow();
   });
 
   it('renders table and filtering - loading', async () => {
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-    });
+    render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
 
-    expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
-    expect(wrapper.find(SourcesTable)).toHaveLength(1);
-    expect(wrapper.find(PaginationLoader)).toHaveLength(2);
+    expect(screen.getAllByRole('progressbar')[0].closest('.top-pagination')).toBeInTheDocument();
+
+    await waitFor(() => expect(screen.getAllByLabelText('Items per page')).toHaveLength(2));
   });
 
   it('renders table and filtering - loading with paginationClicked: true, do not show paginationLoader', async () => {
     store = getStore([], {
-      sources: { loaded: 1, paginationClicked: true, numberOfEntities: 5 },
+      sources: { pageSize: 1 }, // enable pagination
       user: { writePermissions: true },
     });
 
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-    });
+    render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-    expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
-    expect(wrapper.find(SourcesTable)).toHaveLength(1);
-    expect(wrapper.find(PaginationLoader)).toHaveLength(0);
-    expect(wrapper.find(Pagination)).toHaveLength(2);
+    userEvent.click(screen.getAllByLabelText('Go to next page')[0]);
+
+    expect(screen.getAllByRole('progressbar')[0].closest('.top-pagination')).not.toBeInTheDocument();
+
+    await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
   });
 
   describe('filter source type selection', () => {
@@ -382,17 +318,14 @@ describe('SourcesPage', () => {
         user: { writePermissions: true },
       });
 
-      await act(async () => {
-        wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-      });
+      const { container } = render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-      expect(
-        wrapper
-          .find(PrimaryToolbar)
-          .first()
-          .props()
-          .filterConfig.items[1].filterValues.items.map(({ label }) => label)
-      ).toEqual([
+      userEvent.click(screen.getByText('Name', { selector: '.ins-c-conditional-filter__value-selector' }));
+      userEvent.click(screen.getByText('Type', { selector: 'button' }));
+      userEvent.click(screen.getByText('Filter by Type'));
+
+      expect([...container.getElementsByClassName('pf-c-select__menu-item')].map((e) => e.textContent)).toEqual([
         'Ansible Tower',
         'OpenShift Container Platform',
         'Red Hat CloudForms',
@@ -415,17 +348,18 @@ describe('SourcesPage', () => {
         user: { writePermissions: true },
       });
 
-      await act(async () => {
-        wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-      });
+      const { container } = render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-      expect(
-        wrapper
-          .find(PrimaryToolbar)
-          .first()
-          .props()
-          .filterConfig.items[1].filterValues.items.map(({ label }) => label)
-      ).toEqual(['Amazon Web Services', 'Microsoft Azure', 'VMware vSphere']);
+      userEvent.click(screen.getByText('Name', { selector: '.ins-c-conditional-filter__value-selector' }));
+      userEvent.click(screen.getByText('Type', { selector: 'button' }));
+      userEvent.click(screen.getByText('Filter by Type'));
+
+      expect([...container.getElementsByClassName('pf-c-select__menu-item')].map((e) => e.textContent)).toEqual([
+        'Amazon Web Services',
+        'Microsoft Azure',
+        'VMware vSphere',
+      ]);
     });
 
     it('renders correctly with type/application, loads all data', async () => {
@@ -441,11 +375,8 @@ describe('SourcesPage', () => {
         user: { writePermissions: true },
       });
 
-      await act(async () => {
-        wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-      });
-      wrapper.update();
-
+      render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
       expect(api.doLoadEntities).toHaveBeenCalled();
       expect(api.doLoadAppTypes).toHaveBeenCalled();
       expect(typesApi.doLoadSourceTypes).toHaveBeenCalled();
@@ -453,19 +384,19 @@ describe('SourcesPage', () => {
   });
 
   it('renders addSourceWizard', async () => {
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-    });
-    wrapper.update();
+    render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-    await act(async () => {
-      wrapper.find(Link).first().simulate('click', { button: 0 });
-    });
-    wrapper.update();
+    userEvent.click(screen.getByText('Add source'));
 
-    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
-    expect(wrapper.find(AddSourceWizard)).toHaveLength(1);
-    expect(wrapper.find(AddSourceWizard).props().selectedType).toEqual();
+    await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument());
+
+    expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path);
+    expect(
+      screen.getByText(
+        'To import data for an application, you need to connect to a data source. Start by selecting your source type.'
+      )
+    ).toBeInTheDocument();
   });
 
   it('renders and decreased page number if it is too great', async () => {
@@ -474,35 +405,27 @@ describe('SourcesPage', () => {
       user: { writePermissions: true },
     });
 
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-    });
-    wrapper.update();
+    render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-    const paginationInput = wrapper.find('.pf-c-pagination__nav-page-select').first().find('input').first();
-
-    expect(paginationInput.props().value).toEqual(1);
+    expect(screen.getByLabelText('Current page')).toHaveValue(1);
   });
 
   it('closes addSourceWizard', async () => {
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-    });
-    wrapper.update();
+    render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-    await act(async () => {
-      wrapper.find(Link).first().simulate('click', { button: 0 });
-    });
-    wrapper.update();
+    userEvent.click(screen.getByText('Add source'));
 
-    expect(wrapper.find(RedirectNoWriteAccess)).toHaveLength(1);
+    await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument());
 
-    await act(async () => {
-      wrapper.find(AddSourceWizard).props().onClose();
-    });
-    wrapper.update();
+    expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path);
 
-    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sources.path);
+    userEvent.click(screen.getByLabelText('Close wizard'));
+
+    await waitFor(() => expect(() => screen.getByRole('dialog')).toThrow());
+
+    expect(screen.getByTestId('location-display').textContent).toEqual(routes.sources.path);
   });
 
   it('afterSuccess addSourceWizard', async () => {
@@ -510,26 +433,22 @@ describe('SourcesPage', () => {
 
     const source = { id: '544615', name: 'name of created source' };
 
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-    });
-    wrapper.update();
+    AddSourceWizard.AddSourceWizard = ({ afterSuccess }) => <button onClick={() => afterSuccess(source)}>after success</button>;
+
+    render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
     expect(urlQuery.parseQuery.mock.calls).toHaveLength(1);
     expect(urlQuery.updateQuery.mock.calls).toHaveLength(1);
 
-    await act(async () => {
-      wrapper.find(Link).first().simulate('click', { button: 0 });
-    });
-    wrapper.update();
+    userEvent.click(screen.getByText('Add source'));
+
+    await waitFor(() => expect(screen.getByText('after success')).toBeInTheDocument());
 
     expect(urlQuery.parseQuery.mock.calls).toHaveLength(1);
     expect(urlQuery.updateQuery.mock.calls).toHaveLength(2);
 
-    await act(async () => {
-      wrapper.find(AddSourceWizard).props().afterSuccess(source);
-    });
-    wrapper.update();
+    userEvent.click(screen.getByText('after success'));
 
     expect(helpers.afterSuccess).toHaveBeenCalledWith(expect.any(Function), source);
   });
@@ -548,28 +467,26 @@ describe('SourcesPage', () => {
       },
     };
 
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <React.Fragment>
-            <NotificationsPortal />
-            <SourcesPage {...initialProps} />
-          </React.Fragment>,
-          store
-        )
-      );
-    });
-    wrapper.update();
+    AddSourceWizard.AddSourceWizard = ({ submitCallback }) => (
+      <button onClick={() => submitCallback(source)}>submit callback</button>
+    );
 
-    await act(async () => {
-      wrapper.find(Link).first().simulate('click', { button: 0 });
-    });
-    wrapper.update();
+    render(
+      componentWrapperIntl(
+        <React.Fragment>
+          <NotificationsPortal />
+          <SourcesPage {...initialProps} />
+        </React.Fragment>,
+        store
+      )
+    );
+    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-    await act(async () => {
-      wrapper.find(AddSourceWizard).props().submitCallback(source);
-    });
-    wrapper.update();
+    userEvent.click(screen.getByText('Add source'));
+
+    await waitFor(() => expect(screen.getByText('submit callback')).toBeInTheDocument());
+
+    userEvent.click(screen.getByText('submit callback'));
 
     expect(checkSubmitSpy).toHaveBeenCalledWith(
       source,
@@ -579,21 +496,17 @@ describe('SourcesPage', () => {
       expect.any(Function)
     );
 
-    expect(wrapper.find(Alert).text()).toEqual(
-      'Success alert:Amazon Web Services connection successfulSource name of created source was successfully addedView source details'
-    );
-    expect(wrapper.find(Alert).props().variant).toEqual('success');
+    expect(screen.getByText('Success alert:')).toBeInTheDocument();
+    expect(screen.getByText('Amazon Web Services connection successful', { exact: false })).toBeInTheDocument();
+    expect(screen.getByText('name of created source', { selector: 'b' })).toBeInTheDocument();
+    expect(screen.getByText('was successfully added', { exact: false })).toBeInTheDocument();
 
-    await act(async () => {
-      wrapper.find(AlertActionLink).find('button').simulate('click');
-    });
-    wrapper.update();
+    userEvent.click(screen.getByText('View source details'));
 
-    expect(wrapper.find(Alert)).toHaveLength(0);
+    await waitFor(() => expect(() => screen.getByText('Success alert:')).toThrow());
+    expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, '544615'));
 
-    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
-      replaceRouteId(routes.sourcesDetail.path, '544615')
-    );
+    checkSubmitSpy.mockClear();
   });
 
   it('submitCallback addSourceWizard - open wizard on error', async () => {
@@ -614,28 +527,34 @@ describe('SourcesPage', () => {
       wizardState,
     };
 
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <React.Fragment>
-            <NotificationsPortal />
-            <SourcesPage {...initialProps} />
-          </React.Fragment>,
-          store
-        )
+    let props;
+
+    AddSourceWizard.AddSourceWizard = ({ submitCallback, onClose, ...rest }) => {
+      props = rest;
+      return (
+        <div>
+          <button onClick={() => submitCallback(source)}>submit callback</button>
+          <button onClick={onClose}>Close wizard</button>
+        </div>
       );
-    });
-    wrapper.update();
+    };
 
-    await act(async () => {
-      wrapper.find(Link).first().simulate('click', { button: 0 });
-    });
-    wrapper.update();
+    render(
+      componentWrapperIntl(
+        <React.Fragment>
+          <NotificationsPortal />
+          <SourcesPage {...initialProps} />
+        </React.Fragment>,
+        store
+      )
+    );
+    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-    await act(async () => {
-      wrapper.find(AddSourceWizard).props().submitCallback(source);
-    });
-    wrapper.update();
+    userEvent.click(screen.getByText('Add source'));
+
+    await waitFor(() => expect(screen.getByText('submit callback')).toBeInTheDocument());
+
+    userEvent.click(screen.getByText('submit callback'));
 
     expect(checkSubmitSpy).toHaveBeenCalledWith(
       source,
@@ -645,109 +564,84 @@ describe('SourcesPage', () => {
       expect.any(Function)
     );
 
-    expect(wrapper.find(Alert).text()).toEqual(
-      'Danger alert:Error adding sourceThere was a problem while trying to add source some-name. Please try again. If the error persists, open a support case.Retry'
-    );
+    await waitFor(() => expect(screen.getByText('Danger alert:')).toBeInTheDocument());
 
-    await act(async () => {
-      wrapper.find(AlertActionLink).find('button').simulate('click');
-    });
-    wrapper.update();
+    expect(screen.getByText('Error adding source', { exact: false })).toBeInTheDocument();
+    expect(screen.getByText('There was a problem while trying to add source', { exact: false })).toBeInTheDocument();
+    expect(screen.getByText('some-name', { selector: 'b' })).toBeInTheDocument();
+    expect(
+      screen.getByText('Please try again. If the error persists, open a support case.', { exact: false })
+    ).toBeInTheDocument();
 
-    expect(wrapper.find(Alert)).toHaveLength(0);
+    userEvent.click(screen.getByText('Retry'));
 
-    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
-    expect(wrapper.find(AddSourceWizard).props().initialValues).toEqual({ source: { name: 'some-name' } });
-    expect(wrapper.find(AddSourceWizard).props().initialWizardState).toEqual(wizardState);
+    await waitFor(() => expect(() => screen.getByText('Danger alert:')).toThrow());
 
-    // reopen wizard to remove the initial values
-    await act(async () => {
-      wrapper.find(AddSourceWizard).props().onClose();
-    });
-    wrapper.update();
+    expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path);
+    expect(props.initialValues).toEqual({ source: { name: 'some-name' } });
+    expect(props.initialWizardState).toEqual(wizardState);
 
-    await act(async () => {
-      wrapper.find(Link).first().simulate('click', { button: 0 });
-    });
-    wrapper.update();
+    userEvent.click(screen.getByText('Close wizard'));
 
-    expect(wrapper.find(AddSourceWizard).props().initialValues).toEqual({});
-    expect(wrapper.find(AddSourceWizard).props().initialWizardState).toEqual(undefined);
+    await waitFor(() => expect(screen.getByTestId('location-display').textContent).toEqual(routes.sources.path));
+
+    userEvent.click(screen.getByText('Add source'));
+
+    await waitFor(() => expect(screen.getByText('submit callback')).toBeInTheDocument());
+
+    expect(props.initialValues).toEqual(undefined);
+    expect(props.initialWizardState).toEqual(undefined);
+
+    checkSubmitSpy.mockClear();
   });
 
   it('renders loading state when is loading', async () => {
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-    });
+    render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
 
-    expect(wrapper.find(PlaceHolderTable)).toHaveLength(1);
-    expect(wrapper.find(Table)).toHaveLength(1);
-    expect(wrapper.find(DownloadButton).props().isDisabled).toEqual(true);
-    wrapper.update();
-    expect(wrapper.find(PlaceHolderTable)).toHaveLength(0);
-    expect(wrapper.find(Table)).toHaveLength(1);
-    expect(wrapper.find(DownloadButton).props().isDisabled).toEqual(false);
+    expect(screen.getAllByRole('progressbar')).toHaveLength(3);
+
+    const exportButton = screen.getAllByRole('button').find((e) => e.getAttribute('data-ouia-component-id') === 'Export');
+
+    expect(exportButton).toBeDisabled();
+
+    await waitFor(() => expect(exportButton).not.toBeDisabled());
+    expect(() => screen.getAllByRole('progressbar')).toThrow();
   });
 
   it('should call export to csv and export to json', async () => {
     utilsHelpers.downloadFile = jest.fn();
 
-    const CSV_INDEX = 0;
-    const JSON_INDEX = 1;
+    render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-    });
-    wrapper.update();
+    const exportButton = screen.getAllByRole('button').find((e) => e.getAttribute('data-ouia-component-id') === 'Export');
 
-    await act(async () => {
-      wrapper.find(DownloadButton).find(Dropdown).find('Toggle').simulate('click');
-    });
-    wrapper.update();
-
-    await act(async () => {
-      wrapper.find(DownloadButton).find(DropdownItem).at(CSV_INDEX).simulate('click');
-    });
-    wrapper.update();
+    userEvent.click(exportButton);
+    userEvent.click(screen.getByText('Export to CSV'));
 
     expect(utilsHelpers.downloadFile).toHaveBeenCalledWith(CSV_FILE, expect.any(String), 'csv');
     utilsHelpers.downloadFile.mockClear();
 
-    await act(async () => {
-      wrapper.find(DownloadButton).find(Dropdown).find('Toggle').simulate('click');
-    });
-    wrapper.update();
-
-    await act(async () => {
-      wrapper.find(DownloadButton).find(DropdownItem).at(JSON_INDEX).simulate('click');
-    });
-    wrapper.update();
+    userEvent.click(exportButton);
+    userEvent.click(screen.getByText('Export to JSON'));
 
     expect(utilsHelpers.downloadFile).toHaveBeenCalledWith(JSON_FILE_STRING, expect.any(String), 'json');
   });
 
   describe('filtering', () => {
-    const EMPTY_VALUE = '';
     const SEARCH_TERM = 'Pepa';
-    const FILTER_INPUT_INDEX = 0;
-
-    let wrapper;
-    const filterInput = (wrapper) => wrapper.find('input').at(FILTER_INPUT_INDEX);
 
     beforeEach(async () => {
       jest.useFakeTimers();
 
-      await act(async () => {
-        wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-      });
-      wrapper.update();
+      render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+
+      userEvent.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
 
       await act(async () => {
-        filterInput(wrapper).simulate('change', {
-          target: { value: SEARCH_TERM },
-        });
+        jest.runAllTimers();
       });
-      wrapper.update();
     });
 
     afterEach(async () => {
@@ -771,25 +665,20 @@ describe('SourcesPage', () => {
       await act(async () => {
         jest.advanceTimersByTime(500);
       });
-      wrapper.update();
 
-      expect(wrapper.find(Chip)).toHaveLength(1);
+      expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument();
 
-      // Switch to source type in conditional filter
-      wrapper.find('ConditionalFilter').setState({ stateValue: 1 });
-      wrapper.update();
+      userEvent.click(screen.getByText('Name', { selector: '.ins-c-conditional-filter__value-selector' }));
+      userEvent.click(screen.getByText('Type', { selector: 'button' }));
+      userEvent.click(screen.getByText('Filter by Type'));
+      userEvent.click(screen.getByText('Amazon Web Services', { selector: '.pf-c-check__label' }));
 
-      const checkboxDropdownProps = wrapper.find(Select).last().props();
+      expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument();
+      expect(screen.getByText('Amazon Web Services', { selector: '.pf-c-chip__text' })).toBeInTheDocument();
 
-      // Select openshift
-      const EVENT = {};
-      checkboxDropdownProps.onSelect(EVENT, OPENSHIFT_ID);
-      wrapper.update();
-
-      expect(wrapper.find(Chip)).toHaveLength(2);
       expect(store.getState().sources.filterValue).toEqual({
         name: SEARCH_TERM,
-        source_type_id: [OPENSHIFT_ID],
+        source_type_id: [AMAZON_ID],
       });
     });
 
@@ -797,25 +686,18 @@ describe('SourcesPage', () => {
       await act(async () => {
         jest.advanceTimersByTime(500);
       });
-      wrapper.update();
 
-      expect(wrapper.find(Chip)).toHaveLength(1);
+      userEvent.click(screen.getByText('Name', { selector: '.ins-c-conditional-filter__value-selector' }));
+      userEvent.click(screen.getByText('Application', { selector: 'button' }));
+      userEvent.click(screen.getByText('Filter by Application'));
+      userEvent.click(screen.getByText('Cost Management', { selector: '.pf-c-check__label' }));
 
-      // Switch to source type in conditional filter
-      wrapper.find('ConditionalFilter').setState({ stateValue: 2 });
-      wrapper.update();
+      expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument();
+      expect(screen.getByText('Cost Management', { selector: '.pf-c-chip__text' })).toBeInTheDocument();
 
-      const checkboxDropdownProps = wrapper.find(Select).last().props();
-
-      // Select openshift
-      const EVENT = {};
-      checkboxDropdownProps.onSelect(EVENT, CATALOG_APP.id);
-      wrapper.update();
-
-      expect(wrapper.find(Chip)).toHaveLength(2);
       expect(store.getState().sources.filterValue).toEqual({
         name: SEARCH_TERM,
-        applications: [CATALOG_APP.id],
+        applications: [COSTMANAGEMENT_APP.id],
       });
     });
 
@@ -823,40 +705,32 @@ describe('SourcesPage', () => {
       await act(async () => {
         jest.advanceTimersByTime(500);
       });
-      wrapper.update();
-      expect(wrapper.find(Chip)).toHaveLength(1);
+      userEvent.click(screen.getByText('Name', { selector: '.ins-c-conditional-filter__value-selector' }));
+      userEvent.click(screen.getByText('Status', { selector: 'button' }));
+      userEvent.click(screen.getByText('Filter by Status'));
+      userEvent.click(screen.getByText('Available', { selector: '.pf-c-check__label' }));
 
-      // Switch to status type in conditional filter
-      wrapper.find('ConditionalFilter').setState({ stateValue: 3 });
-      wrapper.update();
+      expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument();
+      expect(screen.getByText('Available', { selector: '.pf-c-chip__text' })).toBeInTheDocument();
 
-      const checkboxDropdownProps = wrapper.find(Select).last().props();
-
-      const EVENT = { target: { checked: true } };
-      const EVENT_FALSE = { target: { checked: false } };
-
-      // Select available
-      checkboxDropdownProps.onSelect(EVENT, AVAILABLE);
-      wrapper.update();
-
-      expect(wrapper.find(Chip)).toHaveLength(2);
       expect(store.getState().sources.filterValue).toEqual({
         name: SEARCH_TERM,
         availability_status: [AVAILABLE],
       });
 
-      // Select unavailable
-      checkboxDropdownProps.onSelect(EVENT, UNAVAILABLE);
-      wrapper.update();
+      userEvent.click(screen.getByText('Unavailable', { selector: '.pf-c-check__label' }));
+
+      expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument();
+      expect(screen.getByText('Unavailable', { selector: '.pf-c-chip__text' })).toBeInTheDocument();
 
       expect(store.getState().sources.filterValue).toEqual({
         name: SEARCH_TERM,
         availability_status: [UNAVAILABLE],
       });
 
-      // Deselect unavailable
-      checkboxDropdownProps.onSelect(EVENT_FALSE, UNAVAILABLE);
-      wrapper.update();
+      userEvent.click(screen.getByText('Unavailable', { selector: '.pf-c-check__label' }));
+
+      expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument();
 
       expect(store.getState().sources.filterValue).toEqual({
         name: SEARCH_TERM,
@@ -865,62 +739,47 @@ describe('SourcesPage', () => {
     });
 
     it('filtered value is shown in the input', () => {
-      expect(filterInput(wrapper).props().value).toEqual(SEARCH_TERM);
+      expect(screen.getByPlaceholderText('Filter by Name')).toHaveValue(SEARCH_TERM);
     });
 
     it('should remove the name badge when clicking on remove icon in chip', async () => {
       await act(async () => {
         jest.advanceTimersByTime(500);
       });
-      wrapper.update();
 
-      expect(wrapper.find(Chip)).toHaveLength(1);
+      userEvent.click(screen.getByLabelText('close'));
 
-      const chipButton = wrapper.find(Chip).find(Button);
-
-      await act(async () => chipButton.simulate('click'));
-      wrapper.update();
-
-      expect(wrapper.find(Chip)).toHaveLength(0);
-      expect(filterInput(wrapper).props().value).toEqual(EMPTY_VALUE);
+      expect(() => screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toThrow();
+      expect(screen.getByPlaceholderText('Filter by Name')).toHaveValue('');
     });
 
     it('should not remove the name badge when clicking on chip', async () => {
       await act(async () => {
         jest.advanceTimersByTime(500);
       });
-      wrapper.update();
 
-      expect(wrapper.find(Chip)).toHaveLength(1);
+      userEvent.click(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' }));
 
-      await act(async () => wrapper.find(Chip).simulate('click'));
-      wrapper.update();
-
-      expect(wrapper.find(Chip)).toHaveLength(1);
-      expect(filterInput(wrapper).props().value).toEqual(SEARCH_TERM);
+      expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Filter by Name')).toHaveValue(SEARCH_TERM);
     });
 
     it('should remove the name badge when clicking on Clear filters button', async () => {
-      const clearFillterButtonSelector = '.pf-m-link';
-
       await act(async () => {
         jest.advanceTimersByTime(500);
       });
-      wrapper.update();
 
-      expect(wrapper.find(clearFillterButtonSelector)).toHaveLength(1);
+      userEvent.click(screen.getByText('Clear filters'));
 
-      await act(async () => wrapper.find(clearFillterButtonSelector).simulate('click'));
-      wrapper.update();
-
-      expect(wrapper.find(clearFillterButtonSelector)).toHaveLength(0);
+      expect(() => screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toThrow();
+      expect(screen.getByPlaceholderText('Filter by Name')).toHaveValue('');
+      expect(() => screen.getByText('Clear filters')).toThrow();
     });
 
     it('renders emptyStateTable when no entities found', async () => {
       await act(async () => {
         jest.advanceTimersByTime(500);
       });
-      wrapper.update();
 
       api.doLoadEntities = jest
         .fn()
@@ -928,51 +787,44 @@ describe('SourcesPage', () => {
 
       const totalNonsense = '122#$@#%#^$#@!^$#^$#^546454abcerd';
 
-      await act(async () => {
-        filterInput(wrapper).simulate('change', {
-          target: { value: totalNonsense },
-        });
-      });
+      userEvent.type(screen.getByPlaceholderText('Filter by Name'), `{selectall}{backspace}${totalNonsense}`);
 
       await act(async () => {
         jest.advanceTimersByTime(500);
       });
-      wrapper.update();
+
       expect(store.getState().sources.filterValue).toEqual({
         name: totalNonsense,
       });
       expect(store.getState().sources.numberOfEntities).toEqual(0);
-      expect(wrapper.find(EmptyStateTable)).toHaveLength(1);
-      expect(wrapper.find(Pagination)).toHaveLength(0);
+
+      expect(screen.getByText('No sources found')).toBeInTheDocument();
+      expect(
+        screen.getByText('No sources match the filter criteria. Remove all filters or clear all filters to show sources.')
+      ).toBeInTheDocument();
+      expect(screen.getByText('Clear all filters')).toBeInTheDocument();
+      expect(() => screen.getAllByLabelText('Items per page')).toThrow();
     });
 
     it('show empty state table after clicking on clears all filter in empty table state - RED HAT', async () => {
+      cleanup();
+
       store = getStore([], {
         sources: { activeVendor: REDHAT_VENDOR },
         user: { writePermissions: true },
       });
 
-      await act(async () => {
-        wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-      });
-      wrapper.update();
+      render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
 
       await act(async () => {
         jest.runAllTimers();
       });
-      wrapper.update();
 
-      await act(async () => {
-        filterInput(wrapper).simulate('change', {
-          target: { value: SEARCH_TERM },
-        });
-      });
-      wrapper.update();
+      userEvent.type(screen.getByPlaceholderText('Filter by Name'), `{selectall}{backspace}${SEARCH_TERM}`);
 
       await act(async () => {
         jest.runAllTimers();
       });
-      wrapper.update();
 
       api.doLoadEntities = jest
         .fn()
@@ -980,33 +832,27 @@ describe('SourcesPage', () => {
 
       const totalNonsense = '122#$@#%#^$#@!^$#^$#^546454abcerd';
 
-      await act(async () => {
-        filterInput(wrapper).simulate('change', {
-          target: { value: totalNonsense },
-        });
-      });
-      wrapper.update();
+      userEvent.type(screen.getByPlaceholderText('Filter by Name'), `{selectall}{backspace}${totalNonsense}`);
 
       await act(async () => {
         jest.runAllTimers();
       });
-      wrapper.update();
 
-      expect(filterInput(wrapper).props().value).toEqual(totalNonsense);
+      expect(screen.getByPlaceholderText('Filter by Name')).toHaveValue(totalNonsense);
+
+      userEvent.click(screen.getByText('Clear all filters'));
 
       await act(async () => {
-        wrapper.find(Button).last().simulate('click');
+        jest.runAllTimers();
       });
-      wrapper.update();
 
-      expect(wrapper.find(RedHatEmptyState)).toHaveLength(1);
+      expect(screen.getByText('Get started by connecting to your Red Hat applications')).toBeInTheDocument();
     });
 
     it('clears filter value in the name input when clicking on clears all filter in empty table state and show table', async () => {
       await act(async () => {
         jest.advanceTimersByTime(500);
       });
-      wrapper.update();
 
       api.doLoadEntities = jest
         .fn()
@@ -1014,18 +860,13 @@ describe('SourcesPage', () => {
 
       const totalNonsense = '122#$@#%#^$#@!^$#^$#^546454abcerd';
 
-      await act(async () => {
-        filterInput(wrapper).simulate('change', {
-          target: { value: totalNonsense },
-        });
-      });
+      userEvent.type(screen.getByPlaceholderText('Filter by Name'), `{selectall}{backspace}${totalNonsense}`);
 
       await act(async () => {
         jest.advanceTimersByTime(500);
       });
-      wrapper.update();
 
-      expect(filterInput(wrapper).props().value).toEqual(totalNonsense);
+      expect(screen.getByPlaceholderText('Filter by Name')).toHaveValue(totalNonsense);
 
       api.doLoadEntities.mockImplementation(() =>
         Promise.resolve({
@@ -1034,12 +875,13 @@ describe('SourcesPage', () => {
         })
       );
 
-      await act(async () => {
-        wrapper.find(Button).last().simulate('click');
-      });
-      wrapper.update();
+      userEvent.click(screen.getByText('Clear all filters'));
 
-      expect(filterInput(wrapper).props().value).toEqual(EMPTY_VALUE);
+      await act(async () => {
+        jest.runAllTimers();
+      });
+
+      expect(screen.getByPlaceholderText('Filter by Name')).toHaveValue('');
     });
   });
 
@@ -1052,69 +894,59 @@ describe('SourcesPage', () => {
     });
 
     it('should fetch sources and source types on component mount', async () => {
-      await act(async () => {
-        wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-      });
-      wrapper.update();
+      render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
       expect(api.doLoadEntities).toHaveBeenCalled();
       expect(api.doLoadAppTypes).toHaveBeenCalled();
       expect(typesApi.doLoadSourceTypes).toHaveBeenCalled();
 
-      expect(wrapper.find(PrimaryToolbar)).toHaveLength(2);
-      expect(wrapper.find(SourcesTable)).toHaveLength(1);
-      expect(wrapper.find(Pagination)).toHaveLength(2);
-      expect(wrapper.find(PaginationLoader)).toHaveLength(0);
-      expect(wrapper.find('#addSourceButton').first().props().isDisabled).toEqual(true);
-      expect(wrapper.find(PrimaryToolbar).find(Tooltip)).toHaveLength(1);
-      expect(wrapper.find(RedirectNoWriteAccess)).toHaveLength(0);
+      expect(screen.getByText('Add source')).toBeDisabled();
+
+      await act(async () => {
+        userEvent.click(screen.getByText('Add source'));
+      });
+
+      //TODO: have no idea how to trigger the tooltip
+
+      expect(screen.getByTestId('location-display').textContent).toEqual('/');
     });
 
     it('should use object config on small screen', async () => {
       global.mockWidth = 'sm';
 
+      render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+
+      expect(screen.getAllByLabelText('Actions')[0].closest('.pf-c-dropdown')).toHaveClass('pf-m-align-right');
+
+      userEvent.click(screen.getAllByLabelText('Actions')[0]);
+
       await act(async () => {
-        wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-      });
-      wrapper.update();
-
-      expect(wrapper.find(PrimaryToolbar).first().props().actionsConfig).toEqual({
-        actions: [
-          {
-            label: 'Add source',
-            props: {
-              className: 'src-m-dropdown-item-disabled',
-              component: 'div',
-              tooltip:
-                'To add a source, you must be granted Sources Administrator permissions from your Organization Administrator.',
-              isDisabled: true,
-            },
-          },
-        ],
-        dropdownProps: { position: 'right' },
+        userEvent.click(screen.getByText('Add source', { selector: '.pf-c-dropdown__menu-item' }));
       });
 
-      global.mockWidth = undefined;
+      //TODO: have no idea how to trigger the tooltip
+
+      expect(screen.getByTestId('location-display').textContent).toEqual('/');
     });
   });
 
   describe('routes', () => {
     let initialEntry;
 
-    const wasRedirectedToRoot = (wrapper) =>
-      wrapper.find(MemoryRouter).instance().history.location.pathname === routes.sources.path;
+    const wasRedirectedToRoot = () => screen.getByTestId('location-display').textContent === routes.sources.path;
 
     it('renders remove', async () => {
       SourceRemoveModal.default = () => <h1>remove modal mock</h1>;
       initialEntry = [replaceRouteId(routes.sourcesRemove.path, SOURCE_ALL_APS_ID)];
 
       await act(async () => {
-        wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store, initialEntry));
+        render(componentWrapperIntl(<SourcesPage {...initialProps} />, store, initialEntry));
       });
-      wrapper.update();
 
-      expect(wrapper.find(RedirectNoWriteAccess)).toHaveLength(1);
-      expect(wrapper.find(SourceRemoveModal.default)).toHaveLength(1);
+      expect(wasRedirectedToRoot()).toEqual(false);
+      expect(screen.getByText('remove modal mock')).toBeInTheDocument();
     });
 
     describe('id not found, redirect back to sources', () => {
@@ -1129,13 +961,11 @@ describe('SourcesPage', () => {
         initialEntry = [replaceRouteId(routes.sourcesRemove.path, NONSENSE_ID)];
 
         await act(async () => {
-          wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store, initialEntry));
+          render(componentWrapperIntl(<SourcesPage {...initialProps} />, store, initialEntry));
         });
-        wrapper.update();
 
-        expect(wrapper.find(RedirectNoWriteAccess)).toHaveLength(0);
-        expect(wrapper.find(SourceRemoveModal.default)).toHaveLength(0);
-        expect(wasRedirectedToRoot(wrapper)).toEqual(true);
+        expect(() => screen.getByText('remove modal mock')).toThrow();
+        expect(wasRedirectedToRoot()).toEqual(true);
       });
     });
 
@@ -1151,12 +981,11 @@ describe('SourcesPage', () => {
         initialEntry = [replaceRouteId(routes.sourcesRemove.path, SOURCE_ALL_APS_ID)];
 
         await act(async () => {
-          wrapper = mount(componentWrapperIntl(<SourcesPage {...initialProps} />, store, initialEntry));
+          render(componentWrapperIntl(<SourcesPage {...initialProps} />, store, initialEntry));
         });
-        wrapper.update();
 
-        expect(wrapper.find(SourceRemoveModal.default)).toHaveLength(0);
-        expect(wasRedirectedToRoot(wrapper)).toEqual(true);
+        expect(() => screen.getByText('remove modal mock')).toThrow();
+        expect(wasRedirectedToRoot()).toEqual(true);
       });
     });
   });
