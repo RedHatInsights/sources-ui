@@ -389,6 +389,10 @@ export default (
         container,
         showTitles: true,
         initialState: initialWizardState,
+        closeButtonAriaLabel: intl.formatMessage({
+          id: 'wizard.close',
+          defaultMessage: 'Close wizard',
+        }),
         crossroads: ['application.application_type_id', 'source_type', 'auth_select', 'source.app_creation_workflow'],
         fields: [
           ...(!selectedType
