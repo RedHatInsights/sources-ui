@@ -30,7 +30,15 @@ import {
   PAUSED,
   RHELAZURE,
 } from '../../views/formatters';
-import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX, AMAZON, AZURE } from '../__mocks__/sourceTypesData';
+import {
+  sourceTypesData,
+  OPENSHIFT_ID,
+  AMAZON_ID,
+  OPENSHIFT_INDEX,
+  AMAZON,
+  AZURE,
+  googleType,
+} from '../__mocks__/sourceTypesData';
 import {
   sourcesDataGraphQl,
   SOURCE_CATALOGAPP_INDEX,
@@ -503,7 +511,7 @@ describe('formatters', () => {
 
   describe('availability status', () => {
     const APPTYPES = [...applicationTypesData.data, SUBWATCH_APP];
-    const SOURCETYPES = sourceTypesData.data;
+    const SOURCETYPES = [...sourceTypesData.data, googleType];
 
     describe('getStatusColor', () => {
       it('returns OK color', () => {
@@ -712,7 +720,7 @@ describe('formatters', () => {
         expect(screen.getByText('pause icon')).toBeInTheDocument();
       });
 
-      it('returns text for Azure + RHEL bundle combo', () => {
+      it('returns text for Azure + RHEL bundle combo', async () => {
         const SOURCE = {
           availability_status: undefined,
           source_type_id: AZURE.id,
@@ -722,6 +730,38 @@ describe('formatters', () => {
         render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES, sourceTypes: SOURCETYPES })));
 
         expect(screen.getByText('Unknown', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
+
+        userEvent.click(screen.getByText('Unknown', { exact: false, selector: '.pf-c-label__content' }));
+
+        await waitFor(() =>
+          expect(
+            screen.getByText(
+              'This source cannot currently be monitored in Sources, and does not reflect true status or resources.'
+            )
+          ).toBeInTheDocument()
+        );
+      });
+
+      it('returns text for Google + RHEL bundle combo', async () => {
+        const SOURCE = {
+          availability_status: undefined,
+          source_type_id: googleType.id,
+          applications: [{ application_type_id: SUBWATCH_APP.id }],
+        };
+
+        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES, sourceTypes: SOURCETYPES })));
+
+        expect(screen.getByText('Unknown', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
+
+        userEvent.click(screen.getByText('Unknown', { exact: false, selector: '.pf-c-label__content' }));
+
+        await waitFor(() =>
+          expect(
+            screen.getByText(
+              'This source cannot currently be monitored in Sources, and does not reflect true status or resources.'
+            )
+          ).toBeInTheDocument()
+        );
       });
     });
 

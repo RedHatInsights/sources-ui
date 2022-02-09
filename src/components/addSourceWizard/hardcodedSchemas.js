@@ -12,6 +12,7 @@ import * as AwsArn from './hardcodedComponents/aws/arn';
 
 import * as SWAwsArn from './hardcodedComponents/aws/subscriptionWatch';
 import * as SWAzure from './hardcodedComponents/azure/subscriptionWatch';
+import * as SWGoogle from './hardcodedComponents/gcp/subscriptionWatch';
 
 import * as CMOpenshift from './hardcodedComponents/openshift/costManagement';
 import * as CMAzure from './hardcodedComponents/azure/costManagement';
@@ -903,6 +904,49 @@ const hardcodedSchemas = {
   },
   google: {
     authentication: {
+      [emptyAuthType.type]: {
+        [CLOUD_METER_APP_NAME]: {
+          skipSelection: true,
+          useApplicationAuth: true,
+          customSteps: true,
+          additionalSteps: [
+            {
+              title: <FormattedMessage id="subwatch.azure.tokenTitle" defaultMessage="Obtain offline token" />,
+              nextStep: 'cost-google-playbook',
+              substepOf: {
+                name: 'eaa',
+                title: <FormattedMessage id="subwatch.azure.substepTitle" defaultMessage="Enable account access" />,
+              },
+              fields: [
+                {
+                  name: 'azure-1',
+                  component: 'description',
+                  Content: SWGoogle.OfflineToken,
+                },
+                {
+                  component: componentTypes.TEXT_FIELD,
+                  name: 'authentication.authtype',
+                  hideField: true,
+                  initialValue: emptyAuthType.type,
+                  initializeOnMount: true,
+                },
+              ],
+            },
+            {
+              title: <FormattedMessage id="subwatch.azure.playbookTitle" defaultMessage="Run ansible playbook" />,
+              name: 'cost-google-playbook',
+              substepOf: 'eaa',
+              fields: [
+                {
+                  name: 'azure-2',
+                  component: 'description',
+                  Content: SWGoogle.AnsiblePlaybook,
+                },
+              ],
+            },
+          ],
+        },
+      },
       project_id_service_account_json: {
         [COST_MANAGEMENT_APP_NAME]: {
           useApplicationAuth: true,

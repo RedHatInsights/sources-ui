@@ -260,6 +260,35 @@ describe('SourceWizardSummary component', () => {
       ).toBeInTheDocument();
     });
 
+    it('google rhel management - include error message', () => {
+      formOptions = {
+        getState: () => ({
+          values: {
+            source: { name: 'cosi' },
+            application: { application_type_id: SUB_WATCH_APP.id },
+            source_type: 'google',
+            authentication: { authtype: emptyAuthType.type },
+            auth_select: 'token',
+          },
+        }),
+      };
+
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+
+      const data = getListData(container);
+
+      expect(data).toEqual([
+        ['Name', 'cosi'],
+        ['Source type', 'Google Cloud'],
+        ['Application', 'RHEL management'],
+      ]);
+
+      expect(screen.getByText('This source will not be monitored in Sources')).toBeInTheDocument();
+      expect(
+        screen.getByText('This source will be represented in the Sources list, but will not reflect true status or resources.')
+      ).toBeInTheDocument();
+    });
+
     it('account authorization', () => {
       formOptions = {
         getState: () => ({
