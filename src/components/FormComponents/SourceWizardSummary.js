@@ -43,7 +43,7 @@ const alertMapper = (appName, sourceType, intl) => {
     );
   }
 
-  if (appName === CLOUD_METER_APP_NAME && sourceType === 'azure') {
+  if (appName === CLOUD_METER_APP_NAME && ['azure', 'google'].includes(sourceType)) {
     return (
       <Alert
         variant="info"

@@ -380,7 +380,7 @@ describe('schema builder', () => {
       );
 
       expect(schema).toEqual(expect.arrayContaining([expect.any(Object)]));
-      expect(schema).toHaveLength(43);
+      expect(schema).toHaveLength(46);
 
       expect(schema.map(({ name }) => name)).toEqual([
         'openshift',
@@ -421,11 +421,14 @@ describe('schema builder', () => {
         'cost-azure-playbook',
         'google',
         'google-2',
+        'google-5',
         'google-project_id_service_account_json-/insights/platform/cost-management-additional-step',
         'cost-gcp-iam',
         'cost-gcp-access',
         'cost-gcp-dataset',
         'cost-gcp-billing-export',
+        'google-empty-/insights/platform/cloud-meter-additional-step',
+        'cost-google-playbook',
       ]);
     });
 

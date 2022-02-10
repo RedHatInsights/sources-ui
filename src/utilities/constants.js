@@ -1,6 +1,7 @@
 export const SATELLITE_NAME = 'satellite';
 export const ANSIBLE_TOWER_NAME = 'ansible-tower';
 export const AZURE_NAME = 'azure';
+export const GOOGLE_NAME = 'google';
 export const REDHAT_VENDOR = 'Red Hat';
 export const CLOUD_VENDOR = 'Cloud';
 export const TOPOLOGY_INV_NAME = '/insights/platform/topological-inventory';
