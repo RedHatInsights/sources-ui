@@ -350,8 +350,8 @@ export const schemaBuilder = (sourceTypes, appTypes, disableAuthType) => {
   const schema = [];
 
   sourceTypes.forEach((type) => {
-    const appendEndpoint = type.schema.endpoint.hidden ? type.schema.endpoint.fields : [];
-    const hasEndpointStep = appendEndpoint.length === 0;
+    const appendEndpoint = type.schema.endpoint?.hidden ? type.schema.endpoint.fields : [];
+    const hasEndpointStep = type.schema.endpoint && appendEndpoint.length === 0;
 
     schema.push(createGenericAuthTypeSelection(type, appendEndpoint, disableAuthType));
 

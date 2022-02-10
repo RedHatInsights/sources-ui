@@ -506,4 +506,65 @@ export const googleType = {
   vendor: 'Google',
 };
 
+export const ibmType = {
+  id: '12',
+  created_at: '2021-11-18T13:40:47.793671Z',
+  updated_at: '2021-11-18T13:40:47.793671Z',
+  name: 'ibm',
+  product_name: 'IBM Cloud',
+  vendor: 'IBM',
+  schema: {
+    authentication: [
+      {
+        name: 'API Token and Account ID',
+        type: 'api_token_account_id',
+        fields: [
+          {
+            name: 'authentication.authtype',
+            component: 'text-field',
+            hideField: true,
+            initialValue: 'api_token_account_id',
+            initializeOnMount: true,
+          },
+          {
+            name: 'authentication.username',
+            label: 'Account ID',
+            component: 'text-field',
+            validate: [
+              {
+                type: 'required',
+              },
+            ],
+            isRequired: true,
+          },
+          {
+            name: 'authentication.password',
+            label: 'API Key',
+            validate: [
+              {
+                type: 'required',
+              },
+            ],
+            component: 'text-field',
+            isRequired: true,
+            type: 'password',
+          },
+          {
+            name: 'application.extra.enterprise_id',
+            label: 'Enterprise ID',
+            validate: [
+              {
+                type: 'required',
+              },
+            ],
+            component: 'text-field',
+            isRequired: true,
+          },
+        ],
+      },
+    ],
+  },
+  icon_url: '/apps/frontend-assets/partners-icons/ibm-cloud.svg',
+};
+
 export default sourceTypesData;
