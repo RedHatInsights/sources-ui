@@ -2,16 +2,16 @@ import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../utilities/constants';
 import filterTypes, { filterVendorTypes } from '../../utilities/filterTypes';
 
 describe('filterTypes', () => {
-  it('filters types that does not have any endpoint or authentication', () => {
+  it('filters types that does not have any schema', () => {
     const sourceTypes = [
-      { schema: { endpoint: { title: 'endpoint setup' } } }, // remove
       { schema: { authentication: [{ type: 'password' }], endpoint: { title: 'endpoint setup' } } },
-      { schema: { authentication: [{ type: 'password' }] } }, // remove,
+      { schema: { authentication: [{ type: 'password' }] } },
       {}, // remove
     ];
 
     expect(sourceTypes.filter(filterTypes)).toEqual([
       { schema: { authentication: [{ type: 'password' }], endpoint: { title: 'endpoint setup' } } },
+      { schema: { authentication: [{ type: 'password' }] } },
     ]);
   });
 

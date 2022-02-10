@@ -12,7 +12,7 @@ import './loaders.scss';
 import { useIntl } from 'react-intl';
 
 export const Loader = ({ width = '100%', height = '100%', className = '' }) => (
-  <span className={`src-c-loader ${className}`} style={{ width, height }} />
+  <span className={`src-c-loader ${className}`} style={{ width, height }} role="progressbar" />
 );
 
 Loader.propTypes = {

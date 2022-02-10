@@ -1,3 +1,5 @@
+import { render, screen } from '@testing-library/react';
+
 import ErrorBoundary from '../../components/ErrorBoundary';
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
 import * as sentry from '@sentry/browser';
@@ -9,7 +11,7 @@ describe('Error Boundary', () => {
   it('renders children', () => {
     const ChildrenComponent = () => <h1>Some content</h1>;
 
-    const wrapper = mount(
+    render(
       componentWrapperIntl(
         <ErrorBoundary>
           <ChildrenComponent />
@@ -17,7 +19,7 @@ describe('Error Boundary', () => {
       )
     );
 
-    expect(wrapper.find(ChildrenComponent)).toHaveLength(1);
+    expect(screen.getByText('Some content', { selector: 'h1' })).toBeInTheDocument();
   });
 
   it('dispatch message', () => {
@@ -40,7 +42,7 @@ describe('Error Boundary', () => {
 
     actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'type' }));
 
-    const wrapper = mount(
+    render(
       componentWrapperIntl(
         <ErrorBoundary>
           <ChildrenComponentError />
@@ -49,7 +51,7 @@ describe('Error Boundary', () => {
       )
     );
 
-    expect(wrapper.text()).toEqual('Error occurred');
+    expect(screen.getByText('Error occurred')).toBeInTheDocument();
     expect(actions.addMessage).toHaveBeenCalledWith({ title: ERROR_TO_STRING, variant: 'danger', description: ERROR_STACK });
 
     expect(actions.addMessage.mock.calls[0][0].title.includes(ERROR.toString()));

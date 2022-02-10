@@ -19,6 +19,7 @@ import hardcodedSchemas from '../../../components/addSourceWizard/hardcodedSchem
 import sourceTypes, { AMAZON_TYPE, OPENSHIFT_TYPE, AZURE_TYPE, ANSIBLE_TOWER_TYPE } from '../helpers/sourceTypes';
 import applicationTypes, { COST_MANAGEMENT_APP, TOPOLOGY_INV_APP } from '../helpers/applicationTypes';
 import { validatorTypes } from '@data-driven-forms/react-form-renderer';
+import { ibmType } from '../../__mocks__/sourceTypesData';
 
 describe('schema builder', () => {
   describe('stepKey fields', () => {
@@ -375,12 +376,12 @@ describe('schema builder', () => {
   describe('schemaBuilder', () => {
     it('builds schema', () => {
       const schema = schemaBuilder(
-        sourceTypes.filter(({ schema }) => schema),
+        [...sourceTypes, ibmType].filter(({ schema }) => schema),
         applicationTypes
       );
 
       expect(schema).toEqual(expect.arrayContaining([expect.any(Object)]));
-      expect(schema).toHaveLength(43);
+      expect(schema).toHaveLength(53);
 
       expect(schema.map(({ name }) => name)).toEqual([
         'openshift',
@@ -421,11 +422,21 @@ describe('schema builder', () => {
         'cost-azure-playbook',
         'google',
         'google-2',
+        'google-5',
         'google-project_id_service_account_json-/insights/platform/cost-management-additional-step',
         'cost-gcp-iam',
         'cost-gcp-access',
         'cost-gcp-dataset',
         'cost-gcp-billing-export',
+        'google-empty-/insights/platform/cloud-meter-additional-step',
+        'cost-google-playbook',
+        'ibm',
+        'ibm-2',
+        'ibm-api_token_account_id-/insights/platform/cost-management-additional-step',
+        'ibm-cm-account-id',
+        'ibm-cm-service-id',
+        'ibm-cm-configure-access',
+        'ibm-cm-api-key',
       ]);
     });
 

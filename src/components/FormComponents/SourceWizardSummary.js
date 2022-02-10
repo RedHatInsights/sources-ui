@@ -43,7 +43,7 @@ const alertMapper = (appName, sourceType, intl) => {
     );
   }
 
-  if (appName === CLOUD_METER_APP_NAME && sourceType === 'azure') {
+  if (appName === CLOUD_METER_APP_NAME && ['azure', 'google'].includes(sourceType)) {
     return (
       <Alert
         variant="info"
@@ -165,7 +165,7 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
 
   const skipEndpoint = shouldSkipEndpoint(type.name, hasAuthentication, name);
 
-  let endpointFields = type.schema.endpoint.fields;
+  let endpointFields = type.schema.endpoint?.fields || [];
 
   if (skipEndpoint) {
     endpointFields = [];

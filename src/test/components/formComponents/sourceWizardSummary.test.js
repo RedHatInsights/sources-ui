@@ -1,7 +1,9 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, IntlProvider } from 'react-intl';
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
-import { Label, Alert, DescriptionListDescription, DescriptionListGroup, DescriptionListTerm } from '@patternfly/react-core';
+import { Label } from '@patternfly/react-core';
 
 import applicationTypes, {
   COST_MANAGEMENT_APP,
@@ -11,12 +13,12 @@ import applicationTypes, {
 import sourceTypes from '../../addSourceWizard/helpers/sourceTypes';
 
 import RendererContext from '@data-driven-forms/react-form-renderer/renderer-context';
-import mount from '../../addSourceWizard/__mocks__/mount';
+import render from '../../addSourceWizard/__mocks__/render';
 
 import Summary, { createItem } from '../../../components/FormComponents/SourceWizardSummary';
 import { NO_APPLICATION_VALUE } from '../../../components/addSourceWizard/stringConstants';
-import ValuePopover from '../../../components/FormComponents/ValuePopover';
 import emptyAuthType from '../../../components/addSourceWizard/emptyAuthType';
+import { ibmType } from '../../__mocks__/sourceTypesData';
 
 describe('SourceWizardSummary component', () => {
   describe('should render correctly', () => {
@@ -29,10 +31,10 @@ describe('SourceWizardSummary component', () => {
       </RendererContext.Provider>
     );
 
-    const getListData = (wrapper) =>
-      wrapper
-        .find(DescriptionListGroup)
-        .map((group) => [group.find(DescriptionListTerm).text(), group.find(DescriptionListDescription).text()]);
+    const getListData = (container) =>
+      [...container.getElementsByClassName('pf-c-description-list__group')].map((group) => [
+        ...[...group.getElementsByClassName('pf-c-description-list__text')].map((el) => el.textContent),
+      ]);
 
     beforeEach(() => {
       formOptions = (source_type, authtype, application_type_id, validate = true) => ({
@@ -65,17 +67,17 @@ describe('SourceWizardSummary component', () => {
       });
 
       initialProps = {
-        sourceTypes,
+        sourceTypes: [...sourceTypes, ibmType],
         applicationTypes,
       };
     });
 
     it('openshift', () => {
-      const wrapper = mount(
+      const { container } = render(
         <SourceWizardSummary {...initialProps} formOptions={formOptions('openshift', 'token', NO_APPLICATION_VALUE)} />
       );
 
-      const data = getListData(wrapper);
+      const data = getListData(container);
 
       expect(data).toEqual([
         ['Name', 'openshift'],
@@ -87,14 +89,12 @@ describe('SourceWizardSummary component', () => {
         ['Verify SSL', 'Enabled'],
         ['SSL Certificate', 'authority'],
       ]);
-
-      expect(wrapper.find(Alert)).toHaveLength(0);
     });
 
     it('openshift - NO_APPLICATION_VALUE set, ignore it', () => {
-      const wrapper = mount(<SourceWizardSummary {...initialProps} formOptions={formOptions('openshift', 'token')} />);
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions('openshift', 'token')} />);
 
-      const data = getListData(wrapper);
+      const data = getListData(container);
 
       expect(data).toEqual([
         ['Name', 'openshift'],
@@ -106,16 +106,14 @@ describe('SourceWizardSummary component', () => {
         ['Verify SSL', 'Enabled'],
         ['SSL Certificate', 'authority'],
       ]);
-
-      expect(wrapper.find(Alert)).toHaveLength(0);
     });
 
     it('amazon', () => {
-      const wrapper = mount(
+      const { container } = render(
         <SourceWizardSummary {...initialProps} formOptions={formOptions('amazon', 'access_key_secret_key')} />
       );
 
-      const data = getListData(wrapper);
+      const data = getListData(container);
 
       expect(data).toEqual([
         ['Name', 'openshift'],
@@ -125,20 +123,12 @@ describe('SourceWizardSummary component', () => {
         ['Access key ID', 'user_name'],
         ['Secret access key', '●●●●●●●●●●●●'],
       ]);
-
-      // use labels from hardcoded schemas
-      expect(wrapper.contains('Access Key')).toEqual(false);
-      expect(wrapper.contains('Secret Key')).toEqual(false);
-      expect(wrapper.contains('Access key ID')).toEqual(true);
-      expect(wrapper.contains('Secret access key')).toEqual(true);
-
-      expect(wrapper.find(Alert)).toHaveLength(0);
     });
 
     it('amazon - ARN', () => {
-      const wrapper = mount(<SourceWizardSummary {...initialProps} formOptions={formOptions('amazon', 'arn')} />);
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions('amazon', 'arn')} />);
 
-      const data = getListData(wrapper);
+      const data = getListData(container);
 
       expect(data).toEqual([
         ['Name', 'openshift'],
@@ -147,8 +137,6 @@ describe('SourceWizardSummary component', () => {
         ['Authentication type', 'ARN'],
         ['ARN', 'user_name'],
       ]);
-
-      expect(wrapper.find(Alert)).toHaveLength(0);
     });
 
     it('amazon - ARN cost management - include appended field from DB and rbac alert message', () => {
@@ -165,9 +153,9 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const wrapper = mount(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
 
-      const data = getListData(wrapper);
+      const data = getListData(container);
 
       expect(data).toEqual([
         ['Name', 'cosi'],
@@ -177,10 +165,12 @@ describe('SourceWizardSummary component', () => {
         ['ARN', 'arn:aws:132'],
       ]);
 
-      expect(wrapper.find(Alert).props().title).toEqual('Manage permissions in User Access');
-      expect(wrapper.find(Alert).props().children).toEqual(
-        'Make sure to manage permissions for this source in custom roles that contain permissions for Cost Management.'
-      );
+      expect(screen.getByText('Manage permissions in User Access')).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'Make sure to manage permissions for this source in custom roles that contain permissions for Cost Management.'
+        )
+      ).toBeInTheDocument();
     });
 
     it('google - cost management - include google - cost alert', () => {
@@ -196,10 +186,9 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const wrapper = mount(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
 
-      const headers = wrapper.find('dt').map((item) => item.text());
-      const data = wrapper.find('dd').map((item, index) => [headers[index], item.text()]);
+      const data = getListData(container);
 
       expect(data).toEqual([
         ['Name', 'cosi'],
@@ -208,8 +197,6 @@ describe('SourceWizardSummary component', () => {
         ['Project ID', 'project_id_123'],
         ['Dataset ID', 'dataset_id_123'],
       ]);
-
-      expect(wrapper.find(Alert)).toHaveLength(0);
     });
 
     it('openshift cost management - include appended field from DB and rbac alert message', () => {
@@ -225,9 +212,9 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const wrapper = mount(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
 
-      const data = getListData(wrapper);
+      const data = getListData(container);
 
       expect(data).toEqual([
         ['Name', 'cosi'],
@@ -236,10 +223,53 @@ describe('SourceWizardSummary component', () => {
         ['Cluster Identifier', 'CLUSTER ID123'],
       ]);
 
-      expect(wrapper.find(Alert).props().title).toEqual('Manage permissions in User Access');
-      expect(wrapper.find(Alert).props().children).toEqual(
-        'Make sure to manage permissions for this source in custom roles that contain permissions for Cost Management.'
+      expect(screen.getByText('Manage permissions in User Access')).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'Make sure to manage permissions for this source in custom roles that contain permissions for Cost Management.'
+        )
+      ).toBeInTheDocument();
+    });
+
+    it('IBM cost management - include appended field from DB and rbac alert message', () => {
+      formOptions = {
+        getState: () => ({
+          values: {
+            source: { name: 'cosi' },
+            application: { application_type_id: '2', extra: { enterprise_id: 'enterprise id' } },
+            source_type: 'ibm',
+            authentication: { username: 'account id', authtype: 'api_token_account_id', password: 'token1234' },
+            auth_select: 'api_token_account_id',
+            fixasyncvalidation: '',
+          },
+        }),
+      };
+
+      const { container } = render(
+        <IntlProvider locale="en">
+          <SourceWizardSummary {...initialProps} formOptions={formOptions} />
+        </IntlProvider>
       );
+
+      const data = [...container.getElementsByClassName('pf-c-description-list__group')].map((group) => [
+        ...[...group.getElementsByClassName('pf-c-description-list__text')].map((el) => el.textContent),
+      ]);
+
+      expect(data).toEqual([
+        ['Name', 'cosi'],
+        ['Source type', 'IBM Cloud'],
+        ['Application', 'Cost Management'],
+        ['Enterprise ID', 'enterprise id'],
+        ['Account ID', 'account id'],
+        ['API Key', '●●●●●●●●●●●●'],
+      ]);
+
+      expect(screen.getByText('Manage permissions in User Access')).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'Make sure to manage permissions for this source in custom roles that contain permissions for Cost Management.'
+        )
+      ).toBeInTheDocument();
     });
 
     it('azure rhel management - include error message', () => {
@@ -255,9 +285,9 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const wrapper = mount(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
 
-      const data = getListData(wrapper);
+      const data = getListData(container);
 
       expect(data).toEqual([
         ['Name', 'cosi'],
@@ -265,10 +295,39 @@ describe('SourceWizardSummary component', () => {
         ['Application', 'RHEL management'],
       ]);
 
-      expect(wrapper.find(Alert).props().title).toEqual('This source will not be monitored in Sources');
-      expect(wrapper.find(Alert).props().children).toEqual(
-        'This source will be represented in the Sources list, but will not reflect true status or resources.'
-      );
+      expect(screen.getByText('This source will not be monitored in Sources')).toBeInTheDocument();
+      expect(
+        screen.getByText('This source will be represented in the Sources list, but will not reflect true status or resources.')
+      ).toBeInTheDocument();
+    });
+
+    it('google rhel management - include error message', () => {
+      formOptions = {
+        getState: () => ({
+          values: {
+            source: { name: 'cosi' },
+            application: { application_type_id: SUB_WATCH_APP.id },
+            source_type: 'google',
+            authentication: { authtype: emptyAuthType.type },
+            auth_select: 'token',
+          },
+        }),
+      };
+
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+
+      const data = getListData(container);
+
+      expect(data).toEqual([
+        ['Name', 'cosi'],
+        ['Source type', 'Google Cloud'],
+        ['Application', 'RHEL management'],
+      ]);
+
+      expect(screen.getByText('This source will not be monitored in Sources')).toBeInTheDocument();
+      expect(
+        screen.getByText('This source will be represented in the Sources list, but will not reflect true status or resources.')
+      ).toBeInTheDocument();
     });
 
     it('account authorization', () => {
@@ -285,9 +344,9 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const wrapper = mount(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
 
-      const data = getListData(wrapper);
+      const data = getListData(container);
 
       expect(data).toEqual([
         ['Name', 'cosi'],
@@ -313,9 +372,9 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const wrapper = mount(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
 
-      const data = getListData(wrapper);
+      const data = getListData(container);
 
       expect(data).toEqual([
         ['Name', 'cosi'],
@@ -341,9 +400,9 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const wrapper = mount(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
 
-      const data = getListData(wrapper);
+      const data = getListData(container);
 
       expect(data).toEqual([
         ['Name', 'cosi'],
@@ -369,9 +428,9 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const wrapper = mount(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
 
-      const data = getListData(wrapper);
+      const data = getListData(container);
 
       expect(data).toEqual([
         ['Name', 'cosi'],
@@ -382,10 +441,10 @@ describe('SourceWizardSummary component', () => {
     });
 
     it('ansible-tower', () => {
-      const wrapper = mount(
+      const { container } = render(
         <SourceWizardSummary {...initialProps} formOptions={formOptions('ansible-tower', 'username_password')} />
       );
-      const data = getListData(wrapper);
+      const data = getListData(container);
 
       expect(data).toEqual([
         ['Name', 'openshift'],
@@ -398,15 +457,13 @@ describe('SourceWizardSummary component', () => {
         ['Verify SSL', 'Enabled'],
         ['Certificate authority', 'authority'],
       ]);
-
-      expect(wrapper.find(Alert)).toHaveLength(0);
     });
 
     it('selected Catalog application, is second', () => {
-      const wrapper = mount(
+      const { container } = render(
         <SourceWizardSummary {...initialProps} formOptions={formOptions('ansible-tower', 'username_password', '1')} />
       );
-      const data = getListData(wrapper);
+      const data = getListData(container);
 
       expect(data).toEqual([
         ['Name', 'openshift'],
@@ -421,14 +478,14 @@ describe('SourceWizardSummary component', () => {
     });
 
     it('hide application', () => {
-      const wrapper = mount(
+      const { container } = render(
         <SourceWizardSummary
           {...initialProps}
           formOptions={formOptions('ansible-tower', 'username_password', '1')}
           showApp={false}
         />
       );
-      const data = getListData(wrapper);
+      const data = getListData(container);
 
       expect(data).toEqual([
         ['Name', 'openshift'],
@@ -439,22 +496,13 @@ describe('SourceWizardSummary component', () => {
         ['Username', 'user_name'],
         ['Password', '●●●●●●●●●●●●'],
       ]);
-      expect(wrapper.contains('Catalog')).toEqual(false);
-      expect(wrapper.find(Alert)).toHaveLength(0);
+
+      expect(() => screen.getByText('Catalog')).toThrow();
     });
 
     it('do not contain hidden field', () => {
-      const wrapper = mount(
-        <SourceWizardSummary {...initialProps} formOptions={formOptions('ansible-tower', 'username_password')} />
-      );
-      expect(wrapper.contains('kubernetes')).toEqual(false);
-    });
-
-    it('do not contain hidden field', () => {
-      const wrapper = mount(
-        <SourceWizardSummary {...initialProps} formOptions={formOptions('ansible-tower', 'username_password')} />
-      );
-      expect(wrapper.contains('kubernetes')).toEqual(false);
+      render(<SourceWizardSummary {...initialProps} formOptions={formOptions('ansible-tower', 'username_password')} />);
+      expect(() => screen.getByText('kubernetes')).toThrow();
     });
 
     it('do contain endpoint fields when noEndpoint not set', () => {
@@ -476,8 +524,8 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const wrapper = mount(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
-      expect(wrapper.contains('authority')).toEqual(true);
+      render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      expect(screen.getByText('authority')).toBeInTheDocument();
     });
 
     it('do not contain endpoint fields and authentication when noEndpoint set', () => {
@@ -502,31 +550,29 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const wrapper = mount(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
-      expect(wrapper.contains('authority')).toEqual(false);
-      expect(wrapper.contains('token')).toEqual(false);
+      render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      expect(() => screen.getByText('authority')).toThrow();
+      expect(() => screen.getByText('token')).toThrow();
     });
 
     it('render boolean as Enabled', () => {
-      const wrapper = mount(<SourceWizardSummary {...initialProps} formOptions={formOptions('openshift', 'token')} />);
-      expect(wrapper.contains('Enabled')).toEqual(true);
-      expect(wrapper.contains('Disabled')).toEqual(false);
+      render(<SourceWizardSummary {...initialProps} formOptions={formOptions('openshift', 'token')} />);
+      expect(screen.getByText('Enabled')).toBeInTheDocument();
+      expect(() => screen.getByText('Disabled')).toThrow();
     });
 
     it('render boolean as No', () => {
-      const wrapper = mount(
-        <SourceWizardSummary {...initialProps} formOptions={formOptions('openshift', 'token', '1', false)} />
-      );
-      expect(wrapper.contains('Enabled')).toEqual(false);
-      expect(wrapper.contains('Disabled')).toEqual(true);
+      render(<SourceWizardSummary {...initialProps} formOptions={formOptions('openshift', 'token', '1', false)} />);
+      expect(() => screen.getByText('Enabled')).toThrow();
+      expect(screen.getByText('Disabled')).toBeInTheDocument();
     });
 
     it('render password as dots', () => {
-      const wrapper = mount(
+      render(
         <SourceWizardSummary {...initialProps} formOptions={formOptions('ansible-tower', 'username_password', '1', false)} />
       );
-      expect(wrapper.contains('●●●●●●●●●●●●')).toEqual(true);
-      expect(wrapper.contains('123456')).toEqual(false);
+      expect(screen.getByText('●●●●●●●●●●●●')).toBeInTheDocument();
+      expect(() => screen.getByText('123456')).toThrow();
     });
 
     it('use source.source_type_id as a fallback', () => {
@@ -541,11 +587,11 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const wrapper = mount(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
-      expect(wrapper.contains('OpenShift Container Platform')).toEqual(true);
+      render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      expect(screen.getByText('OpenShift Container Platform')).toBeInTheDocument();
     });
 
-    it('contains too long text', () => {
+    it('contains too long text', async () => {
       const randomLongText = new Array(500)
         .fill(1)
         .map(() => String.fromCharCode(Math.random() * (122 - 97) + 97))
@@ -566,8 +612,14 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const wrapper = mount(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
-      expect(wrapper.find(ValuePopover).props().value).toEqual(randomLongText);
+      render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+
+      expect(() => screen.getByText(randomLongText)).toThrow();
+      expect(screen.getByText('Show more')).toBeInTheDocument();
+
+      userEvent.click(screen.getByText('Show more'));
+
+      await waitFor(() => expect(screen.getByText(randomLongText)).toBeInTheDocument());
     });
   });
 

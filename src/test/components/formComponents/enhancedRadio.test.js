@@ -1,6 +1,6 @@
 import React from 'react';
-import { act } from 'react-dom/test-utils';
-import { mount } from 'enzyme';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { componentTypes } from '@data-driven-forms/react-form-renderer';
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
@@ -42,7 +42,7 @@ describe('EnhancedRadio', () => {
       };
     };
 
-    const wrapper = mount(
+    render(
       <FormRenderer
         {...initialProps}
         schema={{
@@ -50,6 +50,7 @@ describe('EnhancedRadio', () => {
             {
               component: componentTypes.TEXT_FIELD,
               name: 'multiplier',
+              'aria-label': 'multiplier',
             },
             {
               component: 'enhanced-radio',
@@ -62,27 +63,26 @@ describe('EnhancedRadio', () => {
       />
     );
 
-    expect(wrapper.find(componentMapper[componentTypes.RADIO]).props().options).toEqual([
-      { label: 'option1', value: 1 },
-      { label: 'option2', value: 2 },
+    expect(screen.getAllByRole('radio').map((r) => [r.id, r.value])).toEqual([
+      ['radio-1', '1'],
+      ['radio-2', '2'],
     ]);
 
-    await act(async () => {
-      wrapper.find('input').first().instance().value = '2';
-      wrapper.find('input').first().simulate('change');
-    });
-    wrapper.update();
+    expect(screen.getByText('option1')).toBeInTheDocument();
+    expect(screen.getByText('option2')).toBeInTheDocument();
 
-    expect(wrapper.find(componentMapper[componentTypes.RADIO]).props().options).toEqual([
-      { label: 'option1', value: 2 },
-      { label: 'option2', value: 4 },
+    userEvent.type(screen.getByLabelText('multiplier'), '2');
+
+    expect(screen.getAllByRole('radio').map((r) => [r.id, r.value])).toEqual([
+      ['radio-2', '2'],
+      ['radio-4', '4'],
     ]);
   });
 
   it('select first when source_type and the length is one', async () => {
     const mutator = (option) => option;
 
-    const wrapper = mount(
+    render(
       <FormRenderer
         {...initialProps}
         schema={{
@@ -90,6 +90,7 @@ describe('EnhancedRadio', () => {
             {
               component: componentTypes.TEXT_FIELD,
               name: 'source_type',
+              'aria-label': 'source_type',
             },
             {
               component: 'enhanced-radio',
@@ -102,26 +103,16 @@ describe('EnhancedRadio', () => {
       />
     );
 
-    await act(async () => {
-      wrapper.find('form').simulate('submit');
-    });
-    wrapper.update();
+    userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       radio: NO_APPLICATION_VALUE,
     });
     onSubmit.mockReset();
 
-    await act(async () => {
-      wrapper.find('input').first().instance().value = 'some-value';
-      wrapper.find('input').first().simulate('change');
-    });
-    wrapper.update();
+    userEvent.type(screen.getByLabelText('source_type'), 'some-value');
 
-    await act(async () => {
-      wrapper.find('form').simulate('submit');
-    });
-    wrapper.update();
+    userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       radio: 'first-option',
@@ -147,41 +138,34 @@ describe('EnhancedRadio', () => {
       return option;
     };
 
-    let wrapper;
+    render(
+      <FormRenderer
+        {...initialProps}
+        schema={{
+          fields: [
+            {
+              component: componentTypes.TEXT_FIELD,
+              name: 'source_type',
+              'aria-label': 'source_type',
+            },
+            {
+              component: 'enhanced-radio',
+              options: [
+                { label: 'option', value: 'aws-option' },
+                { label: 'option-1', value: 'second-option' },
+              ],
+              mutator,
+              name: 'radio',
+            },
+          ],
+        }}
+        initialValues={{
+          source_type: 'aws',
+        }}
+      />
+    );
 
-    await act(async () => {
-      wrapper = mount(
-        <FormRenderer
-          {...initialProps}
-          schema={{
-            fields: [
-              {
-                component: componentTypes.TEXT_FIELD,
-                name: 'source_type',
-              },
-              {
-                component: 'enhanced-radio',
-                options: [
-                  { label: 'option', value: 'aws-option' },
-                  { label: 'option-1', value: 'second-option' },
-                ],
-                mutator,
-                name: 'radio',
-              },
-            ],
-          }}
-          initialValues={{
-            source_type: 'aws',
-          }}
-        />
-      );
-    });
-    wrapper.update();
-
-    await act(async () => {
-      wrapper.find('form').simulate('submit');
-    });
-    wrapper.update();
+    userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       radio: 'aws-option',
@@ -189,16 +173,8 @@ describe('EnhancedRadio', () => {
     });
     onSubmit.mockReset();
 
-    await act(async () => {
-      wrapper.find('input').first().instance().value = 'some-value';
-      wrapper.find('input').first().simulate('change');
-    });
-    wrapper.update();
-
-    await act(async () => {
-      wrapper.find('form').simulate('submit');
-    });
-    wrapper.update();
+    userEvent.type(screen.getByLabelText('source_type'), '{selectall}{backspace}some-value');
+    userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       radio: '',

@@ -27,8 +27,9 @@ export const applicationTypesData = {
         amazon: ['arn'],
         azure: ['tenant_id_client_id_client_secret'],
         openshift: ['token'],
+        ibm: ['api_token_account_id'],
       },
-      supported_source_types: ['amazon', 'azure', 'openshift'],
+      supported_source_types: ['amazon', 'azure', 'openshift', 'ibm'],
       dependent_applications: [],
     },
     {

@@ -1,4 +1,5 @@
-import { act } from 'react-dom/test-utils';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import {
   afterSuccess,
@@ -18,7 +19,6 @@ import { applicationTypesData } from '../../__mocks__/applicationTypesData';
 import { REDHAT_VENDOR } from '../../../utilities/constants';
 import { AVAILABLE, UNAVAILABLE } from '../../../views/formatters';
 import { replaceRouteId, routes } from '../../../Routes';
-import { mount } from 'enzyme';
 
 describe('Source page helpers', () => {
   describe('afterSuccess', () => {
@@ -269,7 +269,6 @@ describe('Source page helpers', () => {
 
     let messageActionLinks;
     let messageId;
-    let wrapper;
 
     beforeEach(() => {
       tmpLocation = Object.assign({}, window.location);
@@ -333,14 +332,9 @@ describe('Source page helpers', () => {
       expect(push).not.toHaveBeenCalled();
       expect(stateDispatch).not.toHaveBeenCalled();
 
-      wrapper = mount(messageActionLinks);
+      render(messageActionLinks);
 
-      expect(wrapper.find('button').text()).toEqual('Retry');
-
-      await act(async () => {
-        wrapper.find('button').simulate('click');
-      });
-      wrapper.update();
+      userEvent.click(screen.getByText('Retry'));
 
       expect(push).toHaveBeenCalledWith(routes.sourcesNew.path);
       expect(actions.removeMessage).toHaveBeenCalledWith(messageId);
@@ -375,14 +369,9 @@ describe('Source page helpers', () => {
       });
       expect(push).not.toHaveBeenCalled();
 
-      wrapper = mount(messageActionLinks);
+      render(messageActionLinks);
 
-      expect(wrapper.find('button').text()).toEqual('Edit source');
-
-      await act(async () => {
-        wrapper.find('button').simulate('click');
-      });
-      wrapper.update();
+      userEvent.click(screen.getByText('Edit source'));
 
       expect(push).toHaveBeenCalledWith(replaceRouteId(routes.sourcesDetail.path, '1234'));
       expect(actions.removeMessage).toHaveBeenCalledWith(messageId);
@@ -483,14 +472,9 @@ describe('Source page helpers', () => {
       });
       expect(push).not.toHaveBeenCalled();
 
-      wrapper = mount(messageActionLinks);
+      render(messageActionLinks);
 
-      expect(wrapper.find('button').text()).toEqual('View source details');
-
-      await act(async () => {
-        wrapper.find('button').simulate('click');
-      });
-      wrapper.update();
+      userEvent.click(screen.getByText('View source details'));
 
       expect(push).toHaveBeenCalledWith(replaceRouteId(routes.sourcesDetail.path, '1234'));
       expect(actions.removeMessage).toHaveBeenCalledWith(messageId);

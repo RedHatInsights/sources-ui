@@ -1,4 +1,4 @@
-import { configure, mount, render, shallow } from 'enzyme';
+import { configure, mount, shallow } from 'enzyme';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
@@ -8,7 +8,6 @@ import 'whatwg-fetch'; // fetch for Nodejs
 configure({ adapter: new Adapter() });
 
 global.shallow = shallow;
-global.render = render;
 global.mount = mount;
 global.React = React;
 
