@@ -88,10 +88,10 @@ export const ConfigureAccess = () => {
         })}
       </Text>
       <ClipboardCopy isCode variant="expansion">
-        {`ibmcloud iam service-policy-create ${serviceId} --service-name billing  --roles Viewer
-ibmcloud iam service-policy-create ${serviceId} --account-management --roles Viewer
-ibmcloud iam service-policy-create ${serviceId} --service-name enterprise --roles "Usage Report Viewer"
-ibmcloud iam service-policy-create ${serviceId} --service-name globalcatalog  --roles Viewer`}
+        {`ibmcloud iam service-policy-create "${serviceId}" --service-name billing  --roles Viewer
+ibmcloud iam service-policy-create "${serviceId}" --account-management --roles Viewer
+ibmcloud iam service-policy-create "${serviceId}" --service-name enterprise --roles "Usage Report Viewer"
+ibmcloud iam service-policy-create "${serviceId}" --service-name globalcatalog  --roles Viewer`}
       </ClipboardCopy>
     </TextContent>
   );
@@ -114,7 +114,7 @@ export const ApiKey = () => {
         })}
       </Text>
       <ClipboardCopy variant="expansion">
-        {`ibmcloud iam service-api-key-create "Cost Management API Key" ${serviceId} -d "Cost Management Service ID API Key" --output JSON | jq -r .apikey`}
+        {`ibmcloud iam service-api-key-create "Cost Management API Key" "${serviceId}" -d "Cost Management Service ID API Key" --output JSON | jq -r .apikey`}
       </ClipboardCopy>
     </TextContent>
   );

@@ -63,7 +63,7 @@ describe('Cost Management IBM steps', () => {
       )
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveValue(
-      'ibmcloud iam service-policy-create service-id --service-name billing  --roles Vieweribmcloud iam service-policy-create service-id --account-management --roles Vieweribmcloud iam service-policy-create service-id --service-name enterprise --roles "Usage Report Viewer"ibmcloud iam service-policy-create service-id --service-name globalcatalog  --roles Viewer'
+      'ibmcloud iam service-policy-create "service-id" --service-name billing  --roles Vieweribmcloud iam service-policy-create "service-id" --account-management --roles Vieweribmcloud iam service-policy-create "service-id" --service-name enterprise --roles "Usage Report Viewer"ibmcloud iam service-policy-create "service-id" --service-name globalcatalog  --roles Viewer'
     );
   });
 
@@ -84,7 +84,7 @@ describe('Cost Management IBM steps', () => {
       screen.getByText('In the IBM Cloud Shell, run the following command. Paste the output string into the form field below.')
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveValue(
-      'ibmcloud iam service-api-key-create "Cost Management API Key" service-id -d "Cost Management Service ID API Key" --output JSON | jq -r .apikey'
+      'ibmcloud iam service-api-key-create "Cost Management API Key" "service-id" -d "Cost Management Service ID API Key" --output JSON | jq -r .apikey'
     );
   });
 });
