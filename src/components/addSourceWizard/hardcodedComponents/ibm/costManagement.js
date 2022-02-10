@@ -3,7 +3,17 @@ import { useIntl } from 'react-intl';
 
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 
-import { Text, TextVariants, TextContent, ClipboardCopy, Title } from '@patternfly/react-core';
+import {
+  Text,
+  TextVariants,
+  TextContent,
+  ClipboardCopy,
+  Title,
+  InputGroup,
+  TextArea,
+  ClipboardCopyButton,
+  clipboardCopyFunc,
+} from '@patternfly/react-core';
 
 export const EnterpriseId = () => {
   const intl = useIntl();
@@ -78,6 +88,11 @@ export const ConfigureAccess = () => {
   const values = formOptions.getState().values;
   const serviceId = values.cost.service_id;
 
+  const value = `ibmcloud iam service-policy-create "${serviceId}" --service-name billing  --roles Viewer
+ibmcloud iam service-policy-create "${serviceId}" --account-management --roles Viewer
+ibmcloud iam service-policy-create "${serviceId}" --service-name enterprise --roles "Usage Report Viewer"
+ibmcloud iam service-policy-create "${serviceId}" --service-name globalcatalog  --roles Viewer`;
+
   return (
     <TextContent>
       <Text component={TextVariants.p}>
@@ -87,12 +102,24 @@ export const ConfigureAccess = () => {
             'Assign policies to the service ID you just created so that Cost Management will have access to account management, billing and usage service APIs.  In the IBM Cloud Shell, run the following command:',
         })}
       </Text>
-      <ClipboardCopy isCode variant="expansion">
-        {`ibmcloud iam service-policy-create "${serviceId}" --service-name billing  --roles Viewer
-ibmcloud iam service-policy-create "${serviceId}" --account-management --roles Viewer
-ibmcloud iam service-policy-create "${serviceId}" --service-name enterprise --roles "Usage Report Viewer"
-ibmcloud iam service-policy-create "${serviceId}" --service-name globalcatalog  --roles Viewer`}
-      </ClipboardCopy>
+      <InputGroup>
+        <TextArea
+          rows={6}
+          value={value}
+          name="service-id-commands"
+          id="service-id-commands"
+          aria-label={intl.formatMessage({ id: 'ibm.cost.textarea', defaultMessage: 'Commands to create policies.' })}
+          spellCheck="false"
+          autoCorrect="off"
+        />
+        <ClipboardCopyButton
+          onClick={(e) => clipboardCopyFunc(e, value)}
+          id="copy-service-id-commands"
+          aria-label={intl.formatMessage({ id: 'ibm.cost.copy', defaultMessage: 'Copy to clipboard' })}
+        >
+          {intl.formatMessage({ id: 'ibm.cost.copy', defaultMessage: 'Copy to clipboard' })}
+        </ClipboardCopyButton>
+      </InputGroup>
     </TextContent>
   );
 };

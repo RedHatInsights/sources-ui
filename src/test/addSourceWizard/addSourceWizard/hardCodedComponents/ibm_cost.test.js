@@ -1,8 +1,11 @@
 import React from 'react';
 import { render, screen, act } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import * as Cm from '../../../../components/addSourceWizard/hardcodedComponents/ibm/costManagement';
 import componentWrapperIntl from '../../../../utilities/testsHelpers';
+
+import * as Pf from '@patternfly/react-core/dist/js/components/ClipboardCopy/ClipboardCopy';
 
 import RendererContext from '@data-driven-forms/react-form-renderer/renderer-context';
 
@@ -45,6 +48,8 @@ describe('Cost Management IBM steps', () => {
   });
 
   it('Configure service', () => {
+    const copySpy = jest.spyOn(Pf, 'clipboardCopyFunc').mockImplementation(() => null);
+
     render(
       componentWrapperIntl(
         <RendererContext.Provider
@@ -62,9 +67,19 @@ describe('Cost Management IBM steps', () => {
         'Assign policies to the service ID you just created so that Cost Management will have access to account management, billing and usage service APIs. In the IBM Cloud Shell, run the following command:'
       )
     ).toBeInTheDocument();
-    expect(screen.getByLabelText('Copyable input')).toHaveValue(
-      'ibmcloud iam service-policy-create "service-id" --service-name billing  --roles Vieweribmcloud iam service-policy-create "service-id" --account-management --roles Vieweribmcloud iam service-policy-create "service-id" --service-name enterprise --roles "Usage Report Viewer"ibmcloud iam service-policy-create "service-id" --service-name globalcatalog  --roles Viewer'
-    );
+
+    const value = `ibmcloud iam service-policy-create "service-id" --service-name billing  --roles Viewer
+ibmcloud iam service-policy-create "service-id" --account-management --roles Viewer
+ibmcloud iam service-policy-create "service-id" --service-name enterprise --roles "Usage Report Viewer"
+ibmcloud iam service-policy-create "service-id" --service-name globalcatalog  --roles Viewer`;
+
+    expect(screen.getByLabelText('Commands to create policies.')).toHaveValue(value);
+
+    userEvent.click(screen.getByLabelText('Copy to clipboard'));
+
+    expect(copySpy).toHaveBeenCalledWith(expect.any(Object), value);
+
+    copySpy.mockReset();
   });
 
   it('API key', () => {
