@@ -50,4 +50,9 @@
     .pf-c-toolbar__content {
         padding-left: 0px;
     }
+
+    .pf-c-select__menu {
+        max-height: 400px;
+        overflow: auto;
+    }
 }
