@@ -1,9 +1,4 @@
-import thunk from 'redux-thunk';
-import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications';
-import { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/ReducerRegistry';
-import { createStore, combineReducers, applyMiddleware } from 'redux';
-import { act } from 'react-dom/test-utils';
-import { MemoryRouter } from 'react-router-dom';
+import { render, screen, act } from '@testing-library/react';
 
 import SourcesPage from '../../pages/Sources';
 
@@ -13,21 +8,17 @@ import { applicationTypesData } from '../__mocks__/applicationTypesData';
 
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
 
-import ReducersProviders, { defaultSourcesState } from '../../redux/sources/reducer';
 import * as api from '../../api/entities';
 import * as typesApi from '../../api/source_types';
 
 import { routes } from '../../Routes';
-import UserReducer from '../../redux/user/reducer';
 import * as wizard from '../../components/addSourceWizard';
+import { getStore } from '../../utilities/store';
 
 describe('SourcesPage - addSource route', () => {
-  const middlewares = [thunk, notificationsMiddleware()];
   let store;
-  let wrapper;
 
-  const wasRedirectedToRoot = (wrapper) =>
-    wrapper.find(MemoryRouter).instance().history.location.pathname === routes.sources.path;
+  const wasRedirectedToRoot = () => screen.getByTestId('location-display').textContent === routes.sources.path;
 
   beforeEach(() => {
     wizard.AddSourceWizard = () => <h2>AddSource mock</h2>;
@@ -41,24 +32,19 @@ describe('SourcesPage - addSource route', () => {
     api.doLoadAppTypes = jest.fn().mockImplementation(() => Promise.resolve(applicationTypesData));
     typesApi.doLoadSourceTypes = jest.fn().mockImplementation(() => Promise.resolve(sourceTypesData.data));
 
-    store = createStore(
-      combineReducers({
-        sources: applyReducerHash(ReducersProviders, defaultSourcesState),
-        user: applyReducerHash(UserReducer, { writePermissions: false }),
-      }),
-      applyMiddleware(...middlewares)
-    );
+    store = getStore([], {
+      user: { writePermissions: false },
+    });
   });
 
   it('redirect when not org admin', async () => {
     const initialEntry = [routes.sourcesNew.path];
 
     await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesPage />, store, initialEntry));
+      render(componentWrapperIntl(<SourcesPage />, store, initialEntry));
     });
-    wrapper.update();
 
-    expect(wrapper.find(wizard.AddSourceWizard)).toHaveLength(0);
-    expect(wasRedirectedToRoot(wrapper)).toEqual(true);
+    expect(() => screen.getByText('AddSource mock')).toThrow();
+    expect(wasRedirectedToRoot()).toEqual(true);
   });
 });
