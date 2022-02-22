@@ -54,12 +54,12 @@ export const PlaceHolderTable = () => (
 export const RowWrapperLoader = ({ row: { isDeleting, ...row }, ...initialProps }) =>
   isDeleting ? (
     <tr>
-      <td colSpan={COLUMN_COUNT} className="pf-u-p-md">
+      <td colSpan={COLUMN_COUNT} className="pf-u-p-md" data-testid="removing-row">
         <Loader height={100} />
       </td>
     </tr>
   ) : (
-    <RowWrapper {...initialProps} row={row} className="src-c-row-vertical-centered" />
+    <RowWrapper {...initialProps} row={row} className="src-c-row-vertical-centered" data-testid="row" />
   );
 
 RowWrapperLoader.propTypes = {

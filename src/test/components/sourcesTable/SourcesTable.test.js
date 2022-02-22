@@ -1,15 +1,9 @@
 import React from 'react';
-import { Table, TableHeader, TableBody, RowWrapper, sortable, ActionsColumn, wrappable } from '@patternfly/react-table';
-import { MemoryRouter } from 'react-router-dom';
-import { act } from 'react-dom/test-utils';
-import ArrowsAltVIcon from '@patternfly/react-icons/dist/js/icons/arrows-alt-v-icon';
-import LongArrowAltDownIcon from '@patternfly/react-icons/dist/js/icons/long-arrow-alt-down-icon';
-
-import { DropdownItem } from '@patternfly/react-core';
+import { sortable, wrappable } from '@patternfly/react-table';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import SourcesTable, { actionResolver, itemToCells, prepareColumnsCells } from '../../../components/SourcesTable/SourcesTable';
-import { PlaceHolderTable, RowWrapperLoader, Loader } from '../../../components/SourcesTable/loaders';
-import EmptyStateTable from '../../../components/SourcesTable/EmptyStateTable';
 
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
 import { sourceTypesData } from '../../__mocks__/sourceTypesData';
@@ -20,8 +14,8 @@ import * as actions from '../../../redux/sources/actions';
 import * as API from '../../../api/entities';
 import { replaceRouteId, routes } from '../../../Routes';
 import { defaultSourcesState } from '../../../redux/sources/reducer';
-import { sourcesColumns } from '../../../views/sourcesViewDefinition';
 import mockStore from '../../__mocks__/mockStore';
+import { disabledMessage } from '../../../utilities/disabledTooltipProps';
 
 describe('SourcesTable', () => {
   let loadedProps;
@@ -55,11 +49,10 @@ describe('SourcesTable', () => {
 
   it('renders loading state', () => {
     const store = mockStore(initialState);
-    const wrapper = mount(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
+    render(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
 
-    expect(wrapper.find(PlaceHolderTable)).toHaveLength(1);
-    expect(wrapper.find(ArrowsAltVIcon)).toHaveLength(0);
-    expect(wrapper.find(LongArrowAltDownIcon)).toHaveLength(0);
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+    expect(() => screen.getByRole('button')).toThrow();
   });
 
   it('renders removing row', async () => {
@@ -73,18 +66,14 @@ describe('SourcesTable', () => {
     };
 
     const store = mockStore(initialState);
-    let wrapper;
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
-    });
-    wrapper.update();
 
-    expect(wrapper.find(RowWrapperLoader)).toHaveLength(sourcesDataGraphQl.length);
-    expect(wrapper.find(Loader)).toHaveLength(1);
+    render(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
+
+    expect(screen.getAllByTestId('row')).toHaveLength(sourcesDataGraphQl.length - 1);
+    expect(screen.getAllByTestId('removing-row')).toHaveLength(1);
   });
 
   it('renders table when loaded', async () => {
-    const ROW_WRAPPER_CLASSNAME = 'src-c-row-vertical-centered';
     initialState = {
       ...initialState,
       sources: {
@@ -95,29 +84,28 @@ describe('SourcesTable', () => {
 
     const store = mockStore(initialState);
 
-    let wrapper;
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
-    });
-    wrapper.update();
+    const { container } = render(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
 
-    const activeSortingIcon = 1;
-    const expectSortableColumns =
-      sourcesColumns({ formatMessage: () => {} }).filter((x) => x.sortable).length - activeSortingIcon;
-
-    expect(wrapper.find(PlaceHolderTable)).toHaveLength(0);
-    expect(wrapper.find(Table)).toHaveLength(1);
-    expect(wrapper.find(TableHeader)).toHaveLength(1);
-    expect(wrapper.find(TableBody)).toHaveLength(1);
-    expect(wrapper.find(RowWrapper)).toHaveLength(sourcesDataGraphQl.length);
-    expect(wrapper.find(ActionsColumn)).toHaveLength(sourcesDataGraphQl.length);
-    expect(wrapper.find(RowWrapper).first().props().className).toEqual(ROW_WRAPPER_CLASSNAME);
-    expect(wrapper.find(LongArrowAltDownIcon)).toHaveLength(1);
-    expect(wrapper.find(ArrowsAltVIcon)).toHaveLength(expectSortableColumns);
+    expect(screen.getByText(sourcesDataGraphQl[0].name)).toBeInTheDocument();
+    expect(screen.getAllByTestId('row')).toHaveLength(sourcesDataGraphQl.length);
+    expect([...screen.getAllByRole('button')].map((e) => e.textContent).filter(Boolean)).toEqual([
+      'Name',
+      'Type',
+      'Date added',
+      '1 more',
+    ]);
+    expect([...container.getElementsByTagName('th')].map((e) => e.textContent)).toEqual([
+      'Name',
+      'Type',
+      'Connected applications',
+      'Date added',
+      '',
+      'Status',
+    ]);
   });
 
   it('renders table when loaded and its not org admin - no action column', async () => {
-    const ROW_WRAPPER_CLASSNAME = 'src-c-row-vertical-centered';
+    const INTL = { formatMessage: ({ defaultMessage }) => defaultMessage };
     initialState = {
       user: {
         writePermissions: false,
@@ -129,30 +117,16 @@ describe('SourcesTable', () => {
     };
 
     const store = mockStore(initialState);
-    let wrapper;
 
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
-    });
-    wrapper.update();
+    render(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
 
-    expect(wrapper.find(PlaceHolderTable)).toHaveLength(0);
-    expect(wrapper.find(Table)).toHaveLength(1);
-    expect(wrapper.find(TableHeader)).toHaveLength(1);
-    expect(wrapper.find(TableBody)).toHaveLength(1);
-    expect(wrapper.find(RowWrapper)).toHaveLength(sourcesDataGraphQl.length);
-    expect(wrapper.find(ActionsColumn)).toHaveLength(sourcesDataGraphQl.length);
+    userEvent.click(screen.getAllByLabelText('Actions')[0]);
 
-    wrapper
-      .find(ActionsColumn)
-      .forEach((actions) => {
-        actions.find(DropdownItem).forEach((item) => {
-          expect(item.props().isDisabled).toEqual(true);
-          expect(item.props().tooltip).toEqual(expect.any(String));
-        });
-      })
-      .find(DropdownItem);
-    expect(wrapper.find(RowWrapper).first().props().className).toEqual(ROW_WRAPPER_CLASSNAME);
+    expect(screen.getByText('Edit')).toHaveClass('src-m-dropdown-item-disabled');
+
+    userEvent.click(screen.getByText('Edit'));
+
+    await waitFor(() => expect(screen.getByText(disabledMessage(INTL))).toBeInTheDocument());
   });
 
   it('renders empty state table', async () => {
@@ -170,24 +144,18 @@ describe('SourcesTable', () => {
     };
 
     const store = mockStore(initialState);
-    let wrapper;
 
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
-    });
-    wrapper.update();
+    render(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
 
-    expect(wrapper.find(EmptyStateTable)).toHaveLength(1);
-    expect(wrapper.find(Table)).toHaveLength(1);
-    expect(wrapper.find(TableHeader)).toHaveLength(1);
-    expect(wrapper.find(TableBody)).toHaveLength(1);
-    expect(wrapper.find(ActionsColumn)).toHaveLength(0);
-    expect(wrapper.find(ArrowsAltVIcon)).toHaveLength(0);
+    expect(screen.getByTestId('row')).toBeInTheDocument();
+    expect(screen.getByText('No sources found')).toBeInTheDocument();
+    expect(
+      screen.getByText('No sources match the filter criteria. Remove all filters or clear all filters to show sources.')
+    ).toBeInTheDocument();
+    expect(screen.getByText('Clear all filters')).toBeInTheDocument();
   });
 
   it('re-renders when entities changed', async () => {
-    let wrapper;
-
     initialState = {
       ...initialState,
       sources: {
@@ -208,30 +176,18 @@ describe('SourcesTable', () => {
     let mockStoreFn = jest.fn().mockImplementation(() => initialState);
     const store = mockStore(mockStoreFn);
 
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
-    });
-    wrapper.update();
+    const { rerender } = render(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
 
-    expect(wrapper.find(RowWrapper)).toHaveLength(sourcesDataGraphQl.length);
+    expect(screen.getAllByTestId('row')).toHaveLength(sourcesDataGraphQl.length);
 
     mockStoreFn.mockImplementation(() => initialStateUpdated);
 
-    // trigger render
-    await act(async () => {
-      wrapper.find('button').first().simulate('click');
-    });
+    rerender(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
 
-    wrapper.update();
-
-    expect(wrapper.find(RowWrapper)).toHaveLength(1);
+    expect(screen.getAllByTestId('row')).toHaveLength(1);
   });
 
   describe('actions', () => {
-    const PAUSE_SOURCE_INDEX = 0;
-    const DELETE_SOURCE_INDEX = 1;
-    const EDIT_SOURCE_INDEX = 2;
-    let wrapper;
     let store;
 
     beforeEach(async () => {
@@ -245,56 +201,29 @@ describe('SourcesTable', () => {
 
       store = mockStore(initialState);
 
-      await act(async () => {
-        wrapper = mount(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
-      });
-      wrapper.update();
+      render(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
     });
 
     it('redirect to edit', async () => {
-      await act(async () => {
-        wrapper.find('.pf-c-dropdown__toggle').first().simulate('click');
-      });
-      wrapper.update();
-
-      await act(async () => {
-        wrapper.find('.pf-c-dropdown__menu-item').at(EDIT_SOURCE_INDEX).simulate('click');
-      });
-      wrapper.update();
-
+      userEvent.click(screen.getAllByLabelText('Actions')[0]);
+      userEvent.click(screen.getByText('Edit'));
       const expectedPath = replaceRouteId(routes.sourcesDetail.path, sourcesDataGraphQl[0].id);
-      expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(expectedPath);
+      expect(screen.getByTestId('location-display').textContent).toEqual(expectedPath);
     });
 
     it('redirect to delete', async () => {
-      await act(async () => {
-        wrapper.find('.pf-c-dropdown__toggle').first().simulate('click');
-      });
-
-      wrapper.update();
-
-      await act(async () => {
-        wrapper.find('.pf-c-dropdown__menu-item').at(DELETE_SOURCE_INDEX).simulate('click');
-      });
-      wrapper.update();
+      userEvent.click(screen.getAllByLabelText('Actions')[0]);
+      userEvent.click(screen.getByText('Remove'));
 
       const expectedPath = replaceRouteId(routes.sourcesRemove.path, sourcesDataGraphQl[0].id);
-      expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(expectedPath);
+      expect(screen.getByTestId('location-display').textContent).toEqual(expectedPath);
     });
 
     it('pause source', async () => {
-      await act(async () => {
-        wrapper.find('.pf-c-dropdown__toggle').first().simulate('click');
-      });
-
-      wrapper.update();
-
       actions.pauseSource = jest.fn().mockImplementation(() => ({ type: 'undefined-pause' }));
 
-      await act(async () => {
-        wrapper.find('.pf-c-dropdown__menu-item').at(PAUSE_SOURCE_INDEX).simulate('click');
-      });
-      wrapper.update();
+      userEvent.click(screen.getAllByLabelText('Actions')[0]);
+      userEvent.click(screen.getByText('Pause'));
 
       expect(actions.pauseSource).toHaveBeenCalledWith(sourcesDataGraphQl[0].id, sourcesDataGraphQl[0].name, expect.any(Object));
 
@@ -304,9 +233,6 @@ describe('SourcesTable', () => {
   });
 
   it('unpausing', async () => {
-    const UNPAUSE_SOURCE_INDEX = 0;
-    let wrapper;
-
     initialState = {
       ...initialState,
       sources: {
@@ -323,22 +249,12 @@ describe('SourcesTable', () => {
 
     const store = mockStore(initialState);
 
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
-    });
-    wrapper.update();
-
-    await act(async () => {
-      wrapper.find('.pf-c-dropdown__toggle').first().simulate('click');
-    });
-    wrapper.update();
-
     actions.resumeSource = jest.fn().mockImplementation(() => ({ type: 'undefined-resume' }));
 
-    await act(async () => {
-      wrapper.find('.pf-c-dropdown__menu-item').at(UNPAUSE_SOURCE_INDEX).simulate('click');
-    });
-    wrapper.update();
+    render(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
+
+    userEvent.click(screen.getAllByLabelText('Actions')[0]);
+    userEvent.click(screen.getByText('Resume'));
 
     expect(actions.resumeSource).toHaveBeenCalledWith(sourcesDataGraphQl[0].id, sourcesDataGraphQl[0].name, expect.any(Object));
 
@@ -359,21 +275,14 @@ describe('SourcesTable', () => {
 
     const store = mockStore(initialState);
 
-    let wrapper;
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
-    });
-    wrapper.update();
+    render(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
 
-    await act(async () => {
-      wrapper.find('button').first().simulate('click');
-    });
-    wrapper.update();
+    userEvent.click(screen.getByText('Name'));
+
     expect(spy).toHaveBeenCalledWith('name', 'asc');
 
-    await act(async () => {
-      wrapper.find('button').at(1).simulate('click');
-    });
+    userEvent.click(screen.getByText('Type'));
+
     expect(spy).toHaveBeenCalledWith('source_type_id', 'asc');
   });
 
