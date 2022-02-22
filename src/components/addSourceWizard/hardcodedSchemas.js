@@ -361,7 +361,7 @@ const hardcodedSchemas = {
               ],
             },
             {
-              title: <FormattedMessage id="subwatch.azure.playbookTitle" defaultMessage="Run ansible playbook" />,
+              title: <FormattedMessage id="subwatch.azure.playbookTitle" defaultMessage="Run Ansible playbook" />,
               name: 'cost-azure-playbook',
               substepOf: 'eaa',
               fields: [
@@ -1065,7 +1065,7 @@ const hardcodedSchemas = {
               ],
             },
             {
-              title: <FormattedMessage id="subwatch.azure.playbookTitle" defaultMessage="Run ansible playbook" />,
+              title: <FormattedMessage id="subwatch.azure.playbookTitle" defaultMessage="Run Ansible playbook" />,
               name: 'cost-google-playbook',
               substepOf: 'eaa',
               fields: [
