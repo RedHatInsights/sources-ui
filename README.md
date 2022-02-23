@@ -138,14 +138,13 @@ Static assets are deployed to [Insights Frontend Assets](https://github.com/RedH
 
 |Branch|updates|environment|
 |------|:------:|-----------|
-|`master`|=>|**stage/beta**|
-|`stable`|=>|**stage/stable**|
+|`master`|=>|**stage/beta** and **stage/stable**|
 |`prod-beta`|=>|**prod/beta**|
 |`prod-stable`|=>|**prod/stable**|
 
 Example:
 
-- any push to the `master` branch will deploy to a `sources-ui-build` `master` branch **=> Stage/Beta**
+- any push to the `master` branch will deploy to a `sources-ui-build` `master` branch **=> Stage/Beta** and **Stage/Stable**
 
 # License
 
