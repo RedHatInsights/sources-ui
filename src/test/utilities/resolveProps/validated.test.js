@@ -1,7 +1,8 @@
 import React from 'react';
-import mount from '../../addSourceWizard/__mocks__/mount';
 
-import { Spinner, FormHelperText } from '@patternfly/react-core';
+import { screen } from '@testing-library/react';
+
+import render from '../../addSourceWizard/__mocks__/render';
 
 import Form from '@data-driven-forms/react-form-renderer/form';
 
@@ -9,24 +10,21 @@ import validated, { ValidatingSpinner } from '../../../utilities/resolveProps/va
 
 describe('resolveProps - validated', () => {
   it('Spinner is renderer correctly', () => {
-    const wrapper = mount(<ValidatingSpinner validating />);
+    render(<ValidatingSpinner validating />);
 
-    expect(wrapper.find(Spinner)).toHaveLength(1);
-    expect(wrapper.find(FormHelperText).text()).toEqual('Validating');
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+    expect(screen.getByText('Validating')).toBeInTheDocument();
   });
 
   const props = {};
 
   it('returns spinner when validating', () => {
-    expect(validated(props, { meta: { validating: true } })).toEqual({
-      helperText: expect.any(Object),
-    });
+    const result = validated(props, { meta: { validating: true } });
 
-    expect(
-      mount(<Form onSubmit={jest.fn()}>{() => validated(props, { meta: { validating: true } }).helperText}</Form>).find(
-        ValidatingSpinner
-      )
-    ).toHaveLength(1);
+    render(<Form onSubmit={jest.fn()}>{() => result.helperText}</Form>);
+
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+    expect(screen.getByText('Validating')).toBeInTheDocument();
   });
 
   it('returns success state when valid', () => {
