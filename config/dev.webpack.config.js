@@ -19,6 +19,7 @@ plugins.push(
     useFileHash: false,
     exposes: {
       './RootApp': resolve(__dirname, '../src/DevEntry'),
+      './RecommendedServices': resolve(__dirname, '../src/marketplace/RecommendedServices.js'),
     },
   }),
   new ExtensionsPlugin(
