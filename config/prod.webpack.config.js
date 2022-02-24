@@ -11,6 +11,7 @@ plugins.push(
   require('@redhat-cloud-services/frontend-components-config/federated-modules')({
     root: resolve(__dirname, '../'),
     exposes: {
+      './RootApp': resolve(__dirname, '../src/AppEntry'),
       './RecommendedServices': resolve(__dirname, '../src/marketplace/RecommendedServices.js'),
     },
   }),
