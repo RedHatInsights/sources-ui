@@ -1,15 +1,9 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import { RowWrapper } from '@patternfly/react-table';
-import { Spinner, Bullseye, Card, CardBody } from '@patternfly/react-core';
-
-import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
-import { Section } from '@redhat-cloud-services/frontend-components/Section';
+import { render, screen } from '@testing-library/react';
 
 import {
   PlaceHolderTable,
   RowWrapperLoader,
-  Loader,
   AppPlaceholder,
   CardLoader,
   DetailLoader,
@@ -20,10 +14,10 @@ import { IntlProvider } from 'react-intl';
 describe('loaders', () => {
   describe('PlaceholderTable', () => {
     it('renders correctly', () => {
-      const wrapper = mount(<PlaceHolderTable />);
+      render(<PlaceHolderTable />);
 
-      expect(wrapper.find(Spinner)).toHaveLength(1);
-      expect(wrapper.find(Bullseye)).toHaveLength(1);
+      expect(screen.getByRole('progressbar')).toBeInTheDocument();
+      expect(screen.getByTestId('placeholder-table')).toBeInTheDocument();
     });
   });
 
@@ -33,7 +27,7 @@ describe('loaders', () => {
     };
 
     it('renders loader when item is deleting', () => {
-      const wrapper = mount(
+      const { container } = render(
         <table>
           <tbody>
             <RowWrapperLoader row={{ ...row, isDeleting: true }} />
@@ -41,13 +35,13 @@ describe('loaders', () => {
         </table>
       );
 
-      expect(wrapper.find(Loader).length).toEqual(1);
-      expect(wrapper.find(RowWrapper).length).toEqual(0);
-      expect(wrapper.find('td').props().colSpan).toEqual(COLUMN_COUNT);
+      expect(screen.getByRole('progressbar')).toBeInTheDocument();
+      expect(container.getElementsByTagName('td')[0]).toHaveAttribute('colspan', String(COLUMN_COUNT));
+      expect(() => screen.getByTestId('row')).toThrow();
     });
 
     it('renders rowWrapper when item is not deleting', () => {
-      const wrapper = mount(
+      render(
         <table>
           <tbody>
             <RowWrapperLoader row={row} />
@@ -55,40 +49,35 @@ describe('loaders', () => {
         </table>
       );
 
-      expect(wrapper.find(Loader).length).toEqual(0);
-      expect(wrapper.find(RowWrapper).length).toEqual(1);
+      expect(screen.getByTestId('row')).toBeInTheDocument();
+      expect(() => screen.getByRole('progressbar')).toThrow();
     });
   });
 
   describe('AppPlaceholder', () => {
     it('renders correctly', () => {
-      const wrapper = mount(
+      render(
         <IntlProvider locale="en">
           <AppPlaceholder />
         </IntlProvider>
       );
 
-      expect(wrapper.find(PageHeader)).toHaveLength(1);
-      expect(wrapper.find(PageHeaderTitle).text()).toEqual(' Sources ');
-      expect(wrapper.find(Section)).toHaveLength(1);
-      expect(wrapper.find(Loader).length).toEqual(1);
+      expect(screen.getByRole('progressbar')).toBeInTheDocument();
+      expect(screen.getByText('Sources')).toBeInTheDocument();
     });
   });
 
   describe('DetailLoaders', () => {
     it('CardLoader renders correctly', () => {
-      const wrapper = mount(<CardLoader />);
+      render(<CardLoader />);
 
-      expect(wrapper.find(Card)).toHaveLength(1);
-      expect(wrapper.find(CardBody)).toHaveLength(1);
-      expect(wrapper.find(Loader)).toHaveLength(1);
+      expect(screen.getByRole('progressbar').closest('.pf-c-card')).toBeInTheDocument();
     });
 
     it('DetailLoader renders correctly', () => {
-      const wrapper = mount(<DetailLoader />);
+      render(<DetailLoader />);
 
-      expect(wrapper.find(PageHeader)).toHaveLength(1);
-      expect(wrapper.find(CardLoader)).toHaveLength(3);
+      expect(screen.getAllByRole('progressbar')[1].closest('.pf-c-card')).toBeInTheDocument();
     });
   });
 });
