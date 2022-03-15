@@ -55,13 +55,14 @@ export const prepareColumnsCells = (columns) =>
       ...(column.sortable && { transforms: [sortable, wrappable] }),
     }));
 
-const reducer = (state, payload) => ({ ...state, ...payload });
+const reducer = (state, payload) => ({ ...state, ...payload, key: state.key + 1 });
 
 const initialState = (columns) => ({
   rows: [],
   sortBy: {},
   isLoaded: false,
   cells: prepareColumnsCells(columns),
+  key: 0,
 });
 
 export const actionResolver = (intl, push, hasWritePermissions, dispatch) => (rowData) => {
@@ -225,6 +226,7 @@ const SourcesTable = () => {
         index: state.cells.map((cell) => (cell.hidden ? 'hidden' : cell.value)).indexOf(sortBy),
         direction: sortDirection,
       }}
+      key={state.key}
       rows={shownRows}
       cells={state.cells}
       actionResolver={loaded && numberOfEntities > 0 ? actionResolver(intl, push, writePermissions, reduxDispatch) : undefined}
