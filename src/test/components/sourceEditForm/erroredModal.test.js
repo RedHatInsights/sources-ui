@@ -1,6 +1,6 @@
-import { mount } from 'enzyme';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Route } from 'react-router-dom';
-import { act } from 'react-dom/test-utils';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { routes, replaceRouteId } from '../../../Routes';
@@ -8,15 +8,11 @@ import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
 
 import ErroredModal from '../../../components/SourceEditForm/ErroredModal';
 
-import { Button, EmptyState, EmptyStateBody, Title } from '@patternfly/react-core';
-
 import mockStore from '../../__mocks__/mockStore';
-import ErroredStep from '../../../components/steps/ErroredStep';
 
 describe('ErroredModal', () => {
   let store;
   let initialEntry;
-  let wrapper;
   let onRetry;
 
   beforeEach(async () => {
@@ -28,33 +24,28 @@ describe('ErroredModal', () => {
     });
     onRetry = jest.fn();
 
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ErroredModal {...args} onRetry={onRetry} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
-    wrapper.update();
+    render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetail.path} render={(...args) => <ErroredModal {...args} onRetry={onRetry} />} />,
+        store,
+        initialEntry
+      )
+    );
   });
 
   it('renders correctly', async () => {
-    expect(wrapper.find(ErroredStep)).toHaveLength(1);
-
-    expect(wrapper.find(Title).last().text()).toEqual('Something went wrong');
-    expect(wrapper.find(EmptyStateBody).text()).toEqual(
-      'There was a problem while trying to edit your source. Please try again. If the error persists, open a support case.'
-    );
+    expect(screen.getByText('Something went wrong')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'There was a problem while trying to edit your source. Please try again. If the error persists, open a support case.'
+      )
+    ).toBeInTheDocument();
   });
 
   it('calls onRetry', async () => {
     expect(onRetry).not.toHaveBeenCalled();
 
-    await act(async () => {
-      wrapper.find(EmptyState).find(Button).simulate('click');
-    });
+    userEvent.click(screen.getByText('Retry'));
 
     expect(onRetry).toHaveBeenCalled();
   });

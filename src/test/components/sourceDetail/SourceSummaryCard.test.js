@@ -1,37 +1,26 @@
 import React from 'react';
-import { act } from 'react-dom/test-utils';
-
-import {
-  Card,
-  CardBody,
-  CardTitle,
-  DescriptionList,
-  DescriptionListDescription,
-  DescriptionListGroup,
-  DescriptionListTerm,
-  Button,
-} from '@patternfly/react-core';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import sourceTypesData, { AMAZON_ID } from '../../__mocks__/sourceTypesData';
 import SourceSummaryCard from '../../../components/SourceDetail/SourceSummaryCard';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import { replaceRouteId, routes } from '../../../Routes';
 import * as formatters from '../../../views/formatters';
-import AvailabilityChecker from '../../../components/SourceDetail/AvailabilityChecker';
 import mockStore from '../../__mocks__/mockStore';
 
 describe('SourceSummaryCard', () => {
-  let wrapper;
   let store;
 
   const sourceId = '3627987';
   const initialEntry = [replaceRouteId(routes.sourcesDetail.path, sourceId)];
 
-  const getCategories = (wrapper) =>
-    wrapper
-      .find(DescriptionListGroup)
-      .map((group) => [group.find(DescriptionListTerm).text(), group.find(DescriptionListDescription).text()]);
+  const getCategories = (container) =>
+    [...container.getElementsByClassName('pf-c-description-list__group')].map((e) => [
+      e.getElementsByClassName('pf-c-description-list__term')[0].textContent,
+      e.getElementsByClassName('pf-c-description-list__description')[0].textContent,
+    ]);
 
   it('renders correctly', async () => {
     formatters.dateFormatter = jest.fn().mockImplementation(() => 'some date');
@@ -50,7 +39,7 @@ describe('SourceSummaryCard', () => {
       },
     });
 
-    wrapper = mount(
+    const { container } = render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetail.path} render={(...args) => <SourceSummaryCard {...args} />} />,
         store,
@@ -58,17 +47,10 @@ describe('SourceSummaryCard', () => {
       )
     );
 
-    expect(wrapper.find(Card)).toHaveLength(1);
-    expect(wrapper.find(CardTitle).text()).toEqual('Source summary');
-    expect(wrapper.find(CardBody)).toHaveLength(1);
-    expect(wrapper.find(DescriptionList)).toHaveLength(1);
-    expect(wrapper.find(DescriptionListGroup)).toHaveLength(4);
-    expect(wrapper.find(DescriptionListTerm)).toHaveLength(4);
-    expect(wrapper.find(DescriptionListDescription)).toHaveLength(4);
+    expect(screen.getByText('Source summary')).toBeInTheDocument();
+    expect(screen.getByLabelText('Check source availability')).toBeInTheDocument();
 
-    expect(wrapper.find(AvailabilityChecker)).toHaveLength(1);
-
-    const categories = getCategories(wrapper);
+    const categories = getCategories(container);
 
     expect(categories).toEqual([
       ['Source type', 'Amazon Web Services'],
@@ -98,7 +80,7 @@ describe('SourceSummaryCard', () => {
       },
     });
 
-    wrapper = mount(
+    const { container } = render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetail.path} render={(...args) => <SourceSummaryCard {...args} />} />,
         store,
@@ -106,7 +88,7 @@ describe('SourceSummaryCard', () => {
       )
     );
 
-    const categories = getCategories(wrapper);
+    const categories = getCategories(container);
 
     expect(categories).toEqual([
       ['Source type', 'Amazon Web Services'],
@@ -134,7 +116,7 @@ describe('SourceSummaryCard', () => {
       },
     });
 
-    wrapper = mount(
+    const { container } = render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetail.path} render={(...args) => <SourceSummaryCard {...args} />} />,
         store,
@@ -142,12 +124,7 @@ describe('SourceSummaryCard', () => {
       )
     );
 
-    expect(wrapper.find(DescriptionList)).toHaveLength(1);
-    expect(wrapper.find(DescriptionListGroup)).toHaveLength(5);
-    expect(wrapper.find(DescriptionListTerm)).toHaveLength(5);
-    expect(wrapper.find(DescriptionListDescription)).toHaveLength(5);
-
-    const categories = getCategories(wrapper);
+    const categories = getCategories(container);
 
     expect(categories).toEqual([
       ['Source type', 'Amazon Web Services'],
@@ -176,7 +153,7 @@ describe('SourceSummaryCard', () => {
       },
     });
 
-    wrapper = mount(
+    render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetail.path} render={(...args) => <SourceSummaryCard {...args} />} />,
         store,
@@ -184,11 +161,9 @@ describe('SourceSummaryCard', () => {
       )
     );
 
-    await act(async () => {
-      wrapper.find(Button).at(1).simulate('click', { button: 0 });
-    });
+    userEvent.click(screen.getByText('Edit credentials'));
 
-    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
+    expect(screen.getByTestId('location-display').textContent).toEqual(
       replaceRouteId(routes.sourcesDetailEditCredentials.path, sourceId)
     );
   });
@@ -211,7 +186,7 @@ describe('SourceSummaryCard', () => {
       },
     });
 
-    wrapper = mount(
+    const { container } = render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetail.path} render={(...args) => <SourceSummaryCard {...args} />} />,
         store,
@@ -219,12 +194,7 @@ describe('SourceSummaryCard', () => {
       )
     );
 
-    expect(wrapper.find(DescriptionList)).toHaveLength(1);
-    expect(wrapper.find(DescriptionListGroup)).toHaveLength(5);
-    expect(wrapper.find(DescriptionListTerm)).toHaveLength(5);
-    expect(wrapper.find(DescriptionListDescription)).toHaveLength(5);
-
-    const categories = getCategories(wrapper);
+    const categories = getCategories(container);
 
     expect(categories).toEqual([
       ['Source type', 'Amazon Web Services'],
@@ -257,7 +227,7 @@ describe('SourceSummaryCard', () => {
       },
     });
 
-    wrapper = mount(
+    const { container } = render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetail.path} render={(...args) => <SourceSummaryCard {...args} />} />,
         store,
@@ -265,12 +235,7 @@ describe('SourceSummaryCard', () => {
       )
     );
 
-    expect(wrapper.find(DescriptionList)).toHaveLength(1);
-    expect(wrapper.find(DescriptionListGroup)).toHaveLength(6);
-    expect(wrapper.find(DescriptionListTerm)).toHaveLength(6);
-    expect(wrapper.find(DescriptionListDescription)).toHaveLength(6);
-
-    const categories = getCategories(wrapper);
+    const categories = getCategories(container);
 
     expect(categories).toEqual([
       ['Source type', 'Amazon Web Services'],
