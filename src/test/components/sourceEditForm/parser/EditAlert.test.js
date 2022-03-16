@@ -1,11 +1,13 @@
 import SourcesFormRenderer from '../../../../utilities/SourcesFormRenderer';
+
+import { render, screen } from '@testing-library/react';
+
 import EditAlert from '../../../../components/SourceEditForm/parser/EditAlert';
-import { Alert } from '@patternfly/react-core';
 import WrenchIcon from '@patternfly/react-icons/dist/js/icons/wrench-icon';
 
 describe('EditAlert', () => {
   it('renders correctly', () => {
-    const wrapper = mount(
+    render(
       <SourcesFormRenderer
         onSubmit={jest.fn()}
         schema={{
@@ -22,16 +24,14 @@ describe('EditAlert', () => {
             variant: 'danger',
             title: 'Alert title',
             description: 'Alert description',
-            customIcon: <WrenchIcon />,
+            customIcon: <WrenchIcon data-testid="wrench-icon" />,
           },
         }}
       />
     );
 
-    expect(wrapper.find(Alert).props().title).toEqual('Alert title');
-    expect(wrapper.find(Alert).props().variant).toEqual('danger');
-    expect(wrapper.find(Alert).text()).toEqual('Danger alert:Alert titleAlert description');
-    expect(wrapper.find(Alert).props().customIcon).toEqual(<WrenchIcon />);
-    expect(wrapper.find(WrenchIcon)).toHaveLength(1);
+    expect(screen.getByText('Alert title')).toBeInTheDocument();
+    expect(screen.getByText('Alert description')).toBeInTheDocument();
+    expect(screen.getByTestId('wrench-icon')).toBeInTheDocument();
   });
 });

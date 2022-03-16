@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Button, EmptyState, EmptyStateBody, Bullseye } from '@patternfly/react-core';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import EmptyStateTable from '../../../components/SourcesTable/EmptyStateTable';
@@ -8,20 +9,20 @@ import * as actions from '../../../redux/sources/actions';
 
 describe('EmptyStateTable', () => {
   it('render correctly', () => {
-    const wrapper = mount(componentWrapperIntl(<EmptyStateTable />));
+    render(componentWrapperIntl(<EmptyStateTable />));
 
-    expect(wrapper.find(Bullseye)).toHaveLength(1);
-    expect(wrapper.find(Button)).toHaveLength(1);
-    expect(wrapper.find(EmptyState)).toHaveLength(1);
-    expect(wrapper.find(EmptyStateBody)).toHaveLength(1);
+    expect(screen.getByText('No sources found')).toBeInTheDocument();
+    expect(
+      screen.getByText('No sources match the filter criteria. Remove all filters or clear all filters to show sources.')
+    ).toBeInTheDocument();
   });
 
   it('calls clear filters when click on button', () => {
     actions.clearFilters = jest.fn().mockImplementation(() => ({ type: 'cosi' }));
 
-    const wrapper = mount(componentWrapperIntl(<EmptyStateTable />));
+    render(componentWrapperIntl(<EmptyStateTable />));
 
-    wrapper.find(Button).simulate('click');
+    userEvent.click(screen.getByText('Clear all filters'));
 
     expect(actions.clearFilters).toHaveBeenCalled();
   });
