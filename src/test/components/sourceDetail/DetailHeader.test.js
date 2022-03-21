@@ -1,20 +1,16 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-import { Text, Title } from '@patternfly/react-core';
+import { render, screen } from '@testing-library/react';
 
 import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import applicationTypesData from '../../__mocks__/applicationTypesData';
 import DetailHeader from '../../../components/SourceDetail/DetailHeader';
-import Breadcrumbs from '../../../components/SourceDetail/Breadcrumbs';
-import { PageHeader } from '@redhat-cloud-services/frontend-components/PageHeader';
-import SourceKebab from '../../../components/SourceDetail/SourceKebab';
 import * as formatters from '../../../views/formatters';
 import mockStore from '../../__mocks__/mockStore';
 
 describe('DetailHeader', () => {
-  let wrapper;
   let store;
 
   const sourceId = '3627987';
@@ -31,7 +27,7 @@ describe('DetailHeader', () => {
       user: { writePermissions: false },
     });
 
-    wrapper = mount(
+    render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetail.path} render={(...args) => <DetailHeader {...args} />} />,
         store,
@@ -39,11 +35,11 @@ describe('DetailHeader', () => {
       )
     );
 
-    expect(wrapper.find(PageHeader)).toHaveLength(1);
-    expect(wrapper.find(Breadcrumbs)).toHaveLength(1);
-    expect(wrapper.find(Title).text()).toEqual('Name of this source');
-    expect(wrapper.find(SourceKebab)).toHaveLength(1);
-    expect(wrapper.find(Text).text()).toEqual('View details and manage connections for this source.');
+    expect(screen.getByText('Sources')).toBeInTheDocument();
+    expect(screen.getAllByText('Name of this source')).toHaveLength(2);
+    expect(screen.getByText('View details and manage connections for this source.')).toBeInTheDocument();
+    expect(screen.getByLabelText('Actions')).toBeInTheDocument();
+
     expect(formatters.availabilityFormatter).toHaveBeenCalledWith(
       undefined,
       { id: sourceId, name: 'Name of this source' },

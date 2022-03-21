@@ -1,6 +1,6 @@
 import React from 'react';
-import { act } from 'react-dom/test-utils';
-import { mount } from 'enzyme';
+import { render, screen, act } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
@@ -14,65 +14,52 @@ describe('validatorReset', () => {
     jest.useFakeTimers();
 
     const onSubmit = jest.fn();
-    let wrapper;
+
+    render(
+      <FormRenderer
+        componentMapper={{
+          reset: ValidatorReset,
+          [componentTypes.TEXT_FIELD]: TextField,
+        }}
+        schema={{
+          fields: [
+            {
+              name: 'show',
+              component: componentTypes.TEXT_FIELD,
+            },
+            {
+              name: 'reset',
+              component: 'reset',
+              condition: {
+                when: 'show',
+                is: 'true',
+              },
+            },
+          ],
+        }}
+        onSubmit={(values) => onSubmit(values)}
+        FormTemplate={FormTemplate}
+      />
+    );
+
+    userEvent.type(screen.getByRole('textbox'), 'true');
 
     await act(async () => {
-      wrapper = mount(
-        <FormRenderer
-          componentMapper={{
-            reset: ValidatorReset,
-            [componentTypes.TEXT_FIELD]: TextField,
-          }}
-          schema={{
-            fields: [
-              {
-                name: 'show',
-                component: componentTypes.TEXT_FIELD,
-              },
-              {
-                name: 'reset',
-                component: 'reset',
-                condition: {
-                  when: 'show',
-                  is: 'true',
-                },
-              },
-            ],
-          }}
-          onSubmit={(values) => onSubmit(values)}
-          FormTemplate={FormTemplate}
-        />
-      );
-    });
-
-    wrapper.update();
-
-    await act(async () => {
-      wrapper.find('input').instance().value = 'true';
-      wrapper.find('input').simulate('change');
       jest.advanceTimersByTime(1);
     });
-    wrapper.update();
 
-    await act(async () => {
-      wrapper.find('form').simulate('submit');
-    });
-    wrapper.update();
+    userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({ show: 'true', reset: '1' });
     onSubmit.mockClear();
 
-    await act(async () => {
-      wrapper.find('input').instance().value = 'false';
-      wrapper.find('input').simulate('change');
-      jest.advanceTimersByTime(1);
-    });
-    wrapper.update();
+    userEvent.type(screen.getByRole('textbox'), '{selectall}{backspace}false');
 
     await act(async () => {
-      wrapper.find('form').simulate('submit');
+      jest.advanceTimersByTime(1);
     });
-    wrapper.update();
+
+    userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({ show: 'false', reset: '' });
     onSubmit.mockClear();

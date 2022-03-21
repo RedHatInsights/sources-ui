@@ -1,16 +1,13 @@
 import React from 'react';
 
-import { Popover } from '@patternfly/react-core';
-
-import QuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/question-circle-icon';
-
+import { screen } from '@testing-library/react';
 import SSLFormLabel from '../../../components/addSourceWizard/SSLFormLabel';
-import mount from '../__mocks__/mount';
+import render from '../__mocks__/render';
 
 describe('SSLFormLabel', () => {
   it('renders loading step correctly', () => {
-    const wrapper = mount(<SSLFormLabel />);
-    expect(wrapper.find(Popover)).toHaveLength(1);
-    expect(wrapper.find(QuestionCircleIcon)).toHaveLength(1);
+    render(<SSLFormLabel />);
+
+    expect(screen.getByText('SSL Certificate')).toBeInTheDocument();
   });
 });
