@@ -218,7 +218,7 @@ describe('AddSourceWizard', () => {
     const onClose = jest.fn();
 
     await act(async () => {
-      wrapper = mount(<AddSourceWizard {...initialProps} onClose={onClose} />);
+      wrapper = <AddSourceWizard {...initialProps} onClose={onClose} />);
     });
     wrapper.update();
 
