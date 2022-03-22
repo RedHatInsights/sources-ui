@@ -1,9 +1,6 @@
 import * as api from '../../api/entities';
 import { doLoadSourceForEdit } from '../../api/doLoadSourceForEdit';
 
-import { applicationTypesData } from '../__mocks__/applicationTypesData';
-import { sourceTypesData } from '../__mocks__/sourceTypesData';
-
 describe('doLoadSourceForEdit', () => {
   const SOURCE_ID = '2324232321';
   const SOURCE = { id: SOURCE_ID };
@@ -62,11 +59,11 @@ describe('doLoadSourceForEdit', () => {
   });
 
   it('return source without endpoint', async () => {
-    const result = await doLoadSourceForEdit(SOURCE, applicationTypesData.data, sourceTypesData.data);
+    const result = await doLoadSourceForEdit(SOURCE);
 
     expect(mocks.showSource).toHaveBeenCalledWith(SOURCE_ID);
     expect(mocks.listSourceEndpoints).toHaveBeenCalledWith(SOURCE_ID);
-    expect(api.doLoadApplicationsForEdit).toHaveBeenCalledWith(SOURCE_ID, applicationTypesData.data, sourceTypesData.data);
+    expect(api.doLoadApplicationsForEdit).toHaveBeenCalledWith(SOURCE_ID);
     expect(mocks.listEndpointAuthentications).not.toHaveBeenCalled();
 
     expect(result).toEqual({
@@ -95,11 +92,11 @@ describe('doLoadSourceForEdit', () => {
 
     api.getSourcesApi = () => mocks;
 
-    const result = await doLoadSourceForEdit(SOURCE, applicationTypesData.data, sourceTypesData.data);
+    const result = await doLoadSourceForEdit(SOURCE);
 
     expect(mocks.showSource).toHaveBeenCalledWith(SOURCE_ID);
     expect(mocks.listSourceEndpoints).toHaveBeenCalledWith(SOURCE_ID);
-    expect(api.doLoadApplicationsForEdit).toHaveBeenCalledWith(SOURCE_ID, applicationTypesData.data, sourceTypesData.data);
+    expect(api.doLoadApplicationsForEdit).toHaveBeenCalledWith(SOURCE_ID);
     expect(mocks.listEndpointAuthentications).not.toHaveBeenCalled();
     expect(mocks.showAuthentication).not.toHaveBeenCalled();
 
@@ -133,11 +130,11 @@ describe('doLoadSourceForEdit', () => {
 
     api.getSourcesApi = () => mocks;
 
-    const result = await doLoadSourceForEdit(SOURCE, applicationTypesData.data, sourceTypesData.data);
+    const result = await doLoadSourceForEdit(SOURCE);
 
     expect(mocks.showSource).toHaveBeenCalledWith(SOURCE_ID);
     expect(mocks.listSourceEndpoints).toHaveBeenCalledWith(SOURCE_ID);
-    expect(api.doLoadApplicationsForEdit).toHaveBeenCalledWith(SOURCE_ID, applicationTypesData.data, sourceTypesData.data);
+    expect(api.doLoadApplicationsForEdit).toHaveBeenCalledWith(SOURCE_ID);
     expect(mocks.listEndpointAuthentications).not.toHaveBeenCalled();
     expect(mocks.showAuthentication.mock.calls).toEqual([[AUTHENTICATION_DATA_1.id], [AUTHENTICATION_DATA_2.id]]);
 
@@ -188,11 +185,11 @@ describe('doLoadSourceForEdit', () => {
 
     api.getSourcesApi = () => mocks;
 
-    const result = await doLoadSourceForEdit(SOURCE, applicationTypesData.data, sourceTypesData.data);
+    const result = await doLoadSourceForEdit(SOURCE);
 
     expect(mocks.showSource).toHaveBeenCalledWith(SOURCE_ID);
     expect(mocks.listSourceEndpoints).toHaveBeenCalledWith(SOURCE_ID);
-    expect(api.doLoadApplicationsForEdit).toHaveBeenCalledWith(SOURCE_ID, applicationTypesData.data, sourceTypesData.data);
+    expect(api.doLoadApplicationsForEdit).toHaveBeenCalledWith(SOURCE_ID);
     expect(mocks.listEndpointAuthentications).toHaveBeenCalledWith(ENDPOINT_ID);
     expect(mocks.showAuthentication.mock.calls).toEqual([[AUTHENTICATION_DATA_1.id], [AUTHENTICATION_DATA_2.id]]);
 
@@ -216,11 +213,11 @@ describe('doLoadSourceForEdit', () => {
 
     api.getSourcesApi = () => mocks;
 
-    const result = await doLoadSourceForEdit(SOURCE, applicationTypesData.data, sourceTypesData.data);
+    const result = await doLoadSourceForEdit(SOURCE);
 
     expect(mocks.showSource).toHaveBeenCalledWith(SOURCE_ID);
     expect(mocks.listSourceEndpoints).toHaveBeenCalledWith(SOURCE_ID);
-    expect(api.doLoadApplicationsForEdit).toHaveBeenCalledWith(SOURCE_ID, applicationTypesData.data, sourceTypesData.data);
+    expect(api.doLoadApplicationsForEdit).toHaveBeenCalledWith(SOURCE_ID);
     expect(mocks.listEndpointAuthentications).toHaveBeenCalledWith(ENDPOINT_ID);
 
     expect(result).toEqual({
