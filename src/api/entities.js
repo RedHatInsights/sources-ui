@@ -1,14 +1,10 @@
 import axios from 'axios';
-import get from 'lodash/get';
-import set from 'lodash/set';
 
-import { APP_NAMES } from '../components/SourceEditForm/parser/application';
 import * as interceptors from '../frontend-components-copies/interceptors';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../utilities/constants';
 import { AVAILABLE, PARTIALLY_UNAVAILABLE, UNAVAILABLE } from '../views/formatters';
 
 import { SOURCES_API_BASE_V3 } from './constants';
-import { cmConvertTypes, cmValuesMapper, getCmValues } from './getCmValues';
 
 export const graphQlErrorInterceptor = (response) => {
   if (response.errors && response.errors.length > 0) {
@@ -232,10 +228,10 @@ export const doLoadSource = (id) =>
     })
     .then(({ data }) => data);
 
-export const doLoadApplicationsForEdit = async (id, appTypes, sourceTypes) => {
+export const doLoadApplicationsForEdit = async (id) => {
   let graphql = await getSourcesApi().postGraphQL({
     query: `{ sources(filter: { id: { eq: ${id}}})
-          { source_type_id, applications {
+          { applications {
               application_type_id,
               id,
               availability_status_error,
@@ -255,34 +251,12 @@ export const doLoadApplicationsForEdit = async (id, appTypes, sourceTypes) => {
 
   const results = await Promise.all(promises);
 
-  const sourceType = sourceTypes.find(({ id }) => id === graphql.data.sources?.[0]?.source_type_id);
-  const costManagementApp = appTypes.find(({ name }) => name === APP_NAMES.COST_MANAGAMENT);
-
-  if (results.length) {
-    // Doing for as forEach has some issues in jest with nested async functions
-    for (let index = 0; index < results.length; index++) {
-      const { extra, application_type_id } = results[index];
-      const newExtra = { ...extra };
-
-      if (
-        application_type_id === costManagementApp.id &&
-        cmConvertTypes.includes(sourceType.name) &&
-        !Object.keys(extra).length
-      ) {
-        const cmValues = await getCmValues(id);
-        Object.keys(cmValuesMapper).forEach((key) => {
-          const value = get(cmValues, key);
-
-          value && set(newExtra, cmValuesMapper[key], value);
-        });
-      }
-
-      graphql.data.sources[0].applications[index] = {
-        ...graphql.data.sources[0].applications[index],
-        extra: newExtra,
-      };
-    }
-  }
+  results.forEach(({ extra }, index) => {
+    graphql.data.sources[0].applications[index] = {
+      ...graphql.data.sources[0].applications[index],
+      extra,
+    };
+  });
 
   return graphql.data;
 };
