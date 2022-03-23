@@ -12,7 +12,7 @@ describe('<RecommendedServices />', () => {
   const mongoProduct = products[1];
 
   beforeEach(() => {
-    api.getProducts = jest.fn().mockResolvedValue({ data: products });
+    api.getProducts = jest.fn().mockResolvedValue({ data: products, meta: { count: products.length } });
     api.getCategories = jest.fn().mockResolvedValue({ data: categories });
   });
 
@@ -35,6 +35,7 @@ describe('<RecommendedServices />', () => {
   it('renders page and loads data - fallback to the first item', async () => {
     api.getProducts = jest.fn().mockResolvedValue({
       data: [crunchyProduct],
+      meta: { count: 1 },
     });
 
     render(<RecommendedServices />);
@@ -90,6 +91,10 @@ describe('<RecommendedServices />', () => {
 
       userEvent.click(screen.getByText('20 per page'));
 
+      expect(screen.getAllByRole('progressbar')).toHaveLength(6);
+      await waitFor(() => expect(screen.getAllByRole('progressbar')).toHaveLength(4));
+      expect(api.getProducts).toHaveBeenLastCalledWith({ page: 1, perPage: 20 });
+
       userEvent.click(screen.getByLabelText('Items per page'));
 
       expect(screen.getByText('10 per page')).toHaveAttribute('class', 'pf-c-options-menu__menu-item');
@@ -102,6 +107,9 @@ describe('<RecommendedServices />', () => {
           ...crunchyProduct,
           id: index,
         })),
+        meta: {
+          count: 11,
+        },
       });
 
       render(<RecommendedServices />);
@@ -111,6 +119,11 @@ describe('<RecommendedServices />', () => {
 
       expect(screen.getByTestId('pagination')).toHaveTextContent('1 - 10 of 11 1 - 10 of 11');
       userEvent.click(screen.getByLabelText('Go to next page'));
+
+      expect(screen.getAllByRole('progressbar')).toHaveLength(6);
+      await waitFor(() => expect(screen.getAllByRole('progressbar')).toHaveLength(6));
+      expect(api.getProducts).toHaveBeenLastCalledWith({ page: 2, perPage: 10 });
+
       expect(screen.getByTestId('pagination')).toHaveTextContent('11 - 11 of 11 11 - 11 of 11');
     });
   });

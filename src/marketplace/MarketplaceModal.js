@@ -8,7 +8,7 @@ import PrimaryToolbar from '@redhat-cloud-services/frontend-components/PrimaryTo
 
 import MarketplaceCard from './MarketplaceCard';
 import { MARKETPLACE_URL } from './constants';
-import { getCategories } from './api';
+import { getCategories, getProducts } from './api';
 import SkeletonMarketplaceCard from './SkeletonMarketplaceCard';
 
 const init = (data) => ({
@@ -20,9 +20,11 @@ const init = (data) => ({
   },
   categories: null,
   isLoading: true,
+  data,
+  loaded: 0,
 });
 
-const reducer = (state, { type, payload }) => {
+const reducer = (state, { type, payload, meta }) => {
   switch (type) {
     case 'SET_PAGE':
       return { ...state, page: payload };
@@ -30,6 +32,10 @@ const reducer = (state, { type, payload }) => {
       return { ...state, page: 1, perPage: payload };
     case 'LOAD_CATEGORIES':
       return { ...state, categories: payload, isLoading: false };
+    case 'SET_LOADING_DATA':
+      return { ...state, loaded: state.loaded + 1 };
+    case 'LOAD_DATA':
+      return { ...state, loaded: Math.max(state.loaded - 1, 0), data: payload, itemCount: meta.count };
   }
 };
 
@@ -54,9 +60,20 @@ const generateChips = (filters) =>
 const MarketplaceModal = ({ data, isOpen, onClose }) => {
   const [config, dispatch] = useReducer(reducer, data, init);
 
+  const isLoadingData = config.loaded > 0;
+
   useEffect(() => {
     isOpen && getCategories().then(({ data }) => dispatch({ type: 'LOAD_CATEGORIES', payload: data }));
   }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen) {
+      dispatch({ type: 'SET_LOADING_DATA' });
+      getProducts({ perPage: config.perPage, page: config.page }).then(({ data, meta }) =>
+        dispatch({ type: 'LOAD_DATA', payload: data, meta })
+      );
+    }
+  }, [config.page, config.perPage]);
 
   return (
     <Modal
@@ -118,9 +135,13 @@ const MarketplaceModal = ({ data, isOpen, onClose }) => {
             }}
           />
           <div className="pf-u-mb-md marketplace-flex">
-            {data.map((product) => (
-              <MarketplaceCard key={product.id} {...product} />
-            ))}
+            {!isLoadingData && data.map((product) => <MarketplaceCard key={product.id} {...product} />)}
+            {isLoadingData && (
+              <React.Fragment>
+                <SkeletonMarketplaceCard />
+                <SkeletonMarketplaceCard />
+              </React.Fragment>
+            )}
           </div>
         </React.Fragment>
       )}
