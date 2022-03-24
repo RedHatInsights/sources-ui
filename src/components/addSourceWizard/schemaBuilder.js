@@ -102,7 +102,7 @@ export const createAdditionalSteps = (additionalSteps, name, authName, hasEndpoi
     };
   });
 
-export const createGenericAuthTypeSelection = (type, endpointFields, disableAuthType) => {
+export const createGenericAuthTypeSelection = (type, endpointFields, disableAuthType, hasEndpointStep) => {
   const auths = type.schema.authentication;
   const hasMultipleAuthTypes = auths.length > 1;
 
@@ -149,7 +149,7 @@ export const createGenericAuthTypeSelection = (type, endpointFields, disableAuth
       stepMapper[auth.type] =
         getAdditionalSteps(type.name, auth.type).length > 0
           ? `${type.name}-${auth.type}-generic-additional-step`
-          : endpointFields.length === 0 && !skipEndpoint
+          : endpointFields.length === 0 && !skipEndpoint && hasEndpointStep
           ? `${type.name}-endpoint`
           : 'summary';
     });
@@ -172,7 +172,7 @@ export const createGenericAuthTypeSelection = (type, endpointFields, disableAuth
     const nextStep =
       getAdditionalSteps(type.name, auth.type).length > 0
         ? additionalStepName
-        : endpointFields.length === 0 && !skipEndpoint
+        : endpointFields.length === 0 && !skipEndpoint && hasEndpointStep
         ? `${type.name}-endpoint`
         : 'summary';
 
@@ -209,7 +209,7 @@ export const createGenericAuthTypeSelection = (type, endpointFields, disableAuth
   }
 };
 
-export const createSpecificAuthTypeSelection = (type, appType, endpointFields, disableAuthType) => {
+export const createSpecificAuthTypeSelection = (type, appType, endpointFields, disableAuthType, hasEndpointStep) => {
   const auths = type.schema.authentication;
   const supportedAuthTypes = appType.supported_authentication_types[type.name] || [emptyAuthType.type];
 
@@ -232,7 +232,7 @@ export const createSpecificAuthTypeSelection = (type, appType, endpointFields, d
 
         if (getAdditionalSteps(type.name, auth.type, appType.name).length > 0) {
           nextStep = `${type.name}-${auth.type}-${appType.name}-additional-step`;
-        } else if (endpointFields.length === 0 && !skipEndpoint && !customSteps) {
+        } else if (endpointFields.length === 0 && !skipEndpoint && !customSteps && hasEndpointStep) {
           nextStep = `${type.name}-endpoint`;
         } else {
           nextStep = 'summary';
@@ -300,7 +300,7 @@ export const createSpecificAuthTypeSelection = (type, appType, endpointFields, d
 
     if (getAdditionalSteps(type.name, auth.type, appName).length > 0) {
       nextStep = additionalStepName;
-    } else if (endpointFields.length === 0 && !skipEndpoint) {
+    } else if (endpointFields.length === 0 && !skipEndpoint && hasEndpointStep) {
       nextStep = `${type.name}-endpoint`;
     } else {
       nextStep = 'summary';
@@ -317,7 +317,7 @@ export const createSpecificAuthTypeSelection = (type, appType, endpointFields, d
 
       if (firstAdditonalStep.nextStep) {
         nextStep = firstAdditonalStep.nextStep;
-      } else if (endpointFields.length === 0 && !skipEndpoint && !customSteps) {
+      } else if (endpointFields.length === 0 && !skipEndpoint && !customSteps && hasEndpointStep) {
         nextStep = `${type.name}-endpoint`;
       } else {
         nextStep = 'summary';
@@ -353,11 +353,11 @@ export const schemaBuilder = (sourceTypes, appTypes, disableAuthType) => {
     const appendEndpoint = type.schema.endpoint?.hidden ? type.schema.endpoint.fields : [];
     const hasEndpointStep = type.schema.endpoint && appendEndpoint.length === 0;
 
-    schema.push(createGenericAuthTypeSelection(type, appendEndpoint, disableAuthType));
+    schema.push(createGenericAuthTypeSelection(type, appendEndpoint, disableAuthType, hasEndpointStep));
 
     appTypes.forEach((appType) => {
       if (appType.supported_source_types.includes(type.name)) {
-        schema.push(createSpecificAuthTypeSelection(type, appType, appendEndpoint, disableAuthType));
+        schema.push(createSpecificAuthTypeSelection(type, appType, appendEndpoint, disableAuthType, hasEndpointStep));
       }
     });
 

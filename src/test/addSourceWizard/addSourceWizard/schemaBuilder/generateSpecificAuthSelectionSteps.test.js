@@ -27,6 +27,7 @@ jest.mock('../../../../components/addSourceWizard/hardcodedSchemas', () => ({
 
 describe('generate auth specific selection pages', () => {
   let expectedSchema;
+  const HAS_ENDPOINT_STEP = true;
   const APPEND_ENDPOINT_FIELDS = [{ component: 'text-field', name: 'endpoit-field' }];
   const NOT_EDITING = false;
 
@@ -118,7 +119,9 @@ describe('generate auth specific selection pages', () => {
       title: <FormattedMessage defaultMessage="Credentials" id="wizard.credentials" />,
     };
 
-    expect(createSpecificAuthTypeSelection(SINGLE_SELECTION_STEP, APP_TYPE, [], NOT_EDITING)).toEqual(expectedSchema);
+    expect(createSpecificAuthTypeSelection(SINGLE_SELECTION_STEP, APP_TYPE, [], NOT_EDITING, HAS_ENDPOINT_STEP)).toEqual(
+      expectedSchema
+    );
   });
 
   it('do not contain endpoint fields when useApplicationAuth set on multi', () => {
@@ -167,9 +170,9 @@ describe('generate auth specific selection pages', () => {
       title: <FormattedMessage defaultMessage="Choose authentication type" id="wizard.chooseAuthType" />,
     };
 
-    expect(createSpecificAuthTypeSelection(MULTIPLE_SELECTION_TYPE, APP_TYPE, APPEND_ENDPOINT_FIELDS, NOT_EDITING)).toEqual(
-      expectedSchema
-    );
+    expect(
+      createSpecificAuthTypeSelection(MULTIPLE_SELECTION_TYPE, APP_TYPE, APPEND_ENDPOINT_FIELDS, NOT_EDITING, HAS_ENDPOINT_STEP)
+    ).toEqual(expectedSchema);
   });
 
   it('should lead to endpoint', () => {
@@ -215,6 +218,8 @@ describe('generate auth specific selection pages', () => {
       title: <FormattedMessage defaultMessage="Choose authentication type" id="wizard.chooseAuthType" />,
     };
 
-    expect(createSpecificAuthTypeSelection(MULTIPLE_SELECTION_TYPE, APP_TYPE, [], NOT_EDITING)).toEqual(expectedSchema);
+    expect(createSpecificAuthTypeSelection(MULTIPLE_SELECTION_TYPE, APP_TYPE, [], NOT_EDITING, HAS_ENDPOINT_STEP)).toEqual(
+      expectedSchema
+    );
   });
 });

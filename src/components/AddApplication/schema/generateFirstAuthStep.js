@@ -3,6 +3,7 @@ import emptyAuthType from '../../addSourceWizard/emptyAuthType';
 
 const generateFirstAuthStep = (type, appType, endpointFields, authtype, intl, shouldAddEmpty) => {
   let fields = [...endpointFields];
+  const hasEndpoint = type.schema.endpoint && !type.schema.enpoint?.hidden;
 
   if (schemaBuilder.shouldUseAppAuth(type.name, authtype, appType.name)) {
     fields = [];
@@ -19,7 +20,7 @@ const generateFirstAuthStep = (type, appType, endpointFields, authtype, intl, sh
 
   if (schemaBuilder.getAdditionalSteps(type.name, authtype, appType.name).length > 0) {
     nextStep = additionalStepName;
-  } else if (endpointFields.length === 0 && !skipEndpoint) {
+  } else if (endpointFields.length === 0 && !skipEndpoint && hasEndpoint) {
     nextStep = `${type.name}-endpoint`;
   } else {
     nextStep = 'summary';
@@ -36,7 +37,7 @@ const generateFirstAuthStep = (type, appType, endpointFields, authtype, intl, sh
 
     if (firstAdditonalStep.nextStep) {
       nextStep = firstAdditonalStep.nextStep;
-    } else if (endpointFields.length === 0 && !skipEndpoint && !customSteps) {
+    } else if (endpointFields.length === 0 && !skipEndpoint && !customSteps && hasEndpoint) {
       nextStep = `${type.name}-endpoint`;
     } else {
       nextStep = 'summary';

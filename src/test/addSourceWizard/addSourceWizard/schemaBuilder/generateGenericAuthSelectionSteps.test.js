@@ -26,6 +26,7 @@ describe('generate auth selection pages', () => {
   const APPEND_ENDPOINT_FIELDS = [true];
   const EMPTY_APPEND_ENDPOINT = [];
   const NOT_EDITING = false;
+  const HAS_ENDPOINT_STEP = true;
 
   const ONE_SINGLE_SELECTION_TYPE = {
     id: '1',
@@ -116,7 +117,9 @@ describe('generate auth selection pages', () => {
         nextStep: 'summary',
       });
 
-      expect(createGenericAuthTypeSelection(ONE_SINGLE_SELECTION_TYPE, ENDPOINT_FIELDS, NOT_EDITING)).toEqual(expectedSchema);
+      expect(createGenericAuthTypeSelection(ONE_SINGLE_SELECTION_TYPE, ENDPOINT_FIELDS, NOT_EDITING, HAS_ENDPOINT_STEP)).toEqual(
+        expectedSchema
+      );
     });
 
     it('do not containe endpoint fields when useApplicationAuth set', () => {
@@ -136,7 +139,7 @@ describe('generate auth selection pages', () => {
         nextStep: 'summary',
       });
 
-      expect(createGenericAuthTypeSelection(TYPE, ENDPOINT_FIELDS, NOT_EDITING)).toEqual(expectedSchema);
+      expect(createGenericAuthTypeSelection(TYPE, ENDPOINT_FIELDS, NOT_EDITING, HAS_ENDPOINT_STEP)).toEqual(expectedSchema);
     });
 
     it('generate single selection with additional steps', () => {
@@ -156,9 +159,14 @@ describe('generate auth selection pages', () => {
         nextStep: EXPECTED_NEXTSTEP,
       });
 
-      expect(createGenericAuthTypeSelection(ONE_SINGLE_SELECTION_TYPE_ADD_STEPS, APPEND_ENDPOINT_FIELDS, NOT_EDITING)).toEqual(
-        expectedSchema
-      );
+      expect(
+        createGenericAuthTypeSelection(
+          ONE_SINGLE_SELECTION_TYPE_ADD_STEPS,
+          APPEND_ENDPOINT_FIELDS,
+          NOT_EDITING,
+          HAS_ENDPOINT_STEP
+        )
+      ).toEqual(expectedSchema);
     });
 
     it('generate single selection with endpoint', () => {
@@ -169,9 +177,9 @@ describe('generate auth selection pages', () => {
         nextStep: `${ONE_SINGLE_SELECTION_TYPE.name}-endpoint`,
       });
 
-      expect(createGenericAuthTypeSelection(ONE_SINGLE_SELECTION_TYPE, EMPTY_APPEND_ENDPOINT, NOT_EDITING)).toEqual(
-        expectedSchema
-      );
+      expect(
+        createGenericAuthTypeSelection(ONE_SINGLE_SELECTION_TYPE, EMPTY_APPEND_ENDPOINT, NOT_EDITING, HAS_ENDPOINT_STEP)
+      ).toEqual(expectedSchema);
     });
 
     describe('generate multiple selection', () => {
@@ -195,9 +203,9 @@ describe('generate auth selection pages', () => {
           },
         });
 
-        expect(createGenericAuthTypeSelection(MULTIPLE_SELECTION_TYPE, APPEND_ENDPOINT_FIELDS, NOT_EDITING)).toEqual(
-          expectedSchema
-        );
+        expect(
+          createGenericAuthTypeSelection(MULTIPLE_SELECTION_TYPE, APPEND_ENDPOINT_FIELDS, NOT_EDITING, HAS_ENDPOINT_STEP)
+        ).toEqual(expectedSchema);
       });
 
       it('with endpoint', () => {
@@ -216,9 +224,9 @@ describe('generate auth selection pages', () => {
           },
         });
 
-        expect(createGenericAuthTypeSelection(MULTIPLE_SELECTION_TYPE, EMPTY_APPEND_ENDPOINT, NOT_EDITING)).toEqual(
-          expectedSchema
-        );
+        expect(
+          createGenericAuthTypeSelection(MULTIPLE_SELECTION_TYPE, EMPTY_APPEND_ENDPOINT, NOT_EDITING, HAS_ENDPOINT_STEP)
+        ).toEqual(expectedSchema);
       });
 
       it('do not contain endpoint fields when useApplicationAuth set', () => {
@@ -240,9 +248,14 @@ describe('generate auth selection pages', () => {
           },
         });
 
-        expect(createGenericAuthTypeSelection(MULTIPLE_SELECTION_TYPE_USE_AUTH_APP, APPEND_ENDPOINT_FIELDS, NOT_EDITING)).toEqual(
-          expectedSchema
-        );
+        expect(
+          createGenericAuthTypeSelection(
+            MULTIPLE_SELECTION_TYPE_USE_AUTH_APP,
+            APPEND_ENDPOINT_FIELDS,
+            NOT_EDITING,
+            HAS_ENDPOINT_STEP
+          )
+        ).toEqual(expectedSchema);
       });
     });
   });
