@@ -39,7 +39,7 @@ const AvailabilityChecker = () => {
       }}
       isDisabled={loading}
     >
-      {!loading && <RedoIcon />}
+      {!loading && <RedoIcon data-testid="RedoIcon" />}
       {loading && <Spinner size="md" />}
     </Button>
   );

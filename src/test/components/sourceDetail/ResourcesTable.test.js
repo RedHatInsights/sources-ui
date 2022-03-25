@@ -1,19 +1,6 @@
 import React from 'react';
-import { act } from 'react-dom/test-utils';
-
-import {
-  CardBody,
-  CardTitle,
-  EmptyState,
-  EmptyStateBody,
-  Spinner,
-  Title,
-  Tabs,
-  TabTitleText,
-  Alert,
-} from '@patternfly/react-core';
-import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
-import { Table } from '@patternfly/react-table';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import sourceTypesData, { AMAZON_ID } from '../../__mocks__/sourceTypesData';
@@ -23,13 +10,10 @@ import { Route } from 'react-router-dom';
 import { replaceRouteId, routes } from '../../../Routes';
 import mockStore from '../../__mocks__/mockStore';
 import ResourcesTable from '../../../components/SourceDetail/ResourcesTable';
-import NoApplications from '../../../components/SourceDetail/NoApplications';
-import ResourcesEmptyState from '../../../components/SourceDetail/ResourcesEmptyState';
 
 import * as api from '../../../api/doLoadSourceForEdit';
 
 describe('ResourcesTable', () => {
-  let wrapper;
   let store;
   let source;
 
@@ -56,22 +40,16 @@ describe('ResourcesTable', () => {
       },
     });
 
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
-    wrapper.update();
+    render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
+        store,
+        initialEntry
+      )
+    );
 
-    expect(wrapper.find(CardTitle).text()).toEqual('Connected application resources');
-    expect(wrapper.find(CardBody)).toHaveLength(1);
-    expect(wrapper.find(NoApplications)).toHaveLength(1);
-    expect(wrapper.find(Table)).toHaveLength(0);
-    expect(wrapper.find(ResourcesEmptyState)).toHaveLength(0);
+    expect(screen.getByText('Connected application resources')).toBeInTheDocument();
+    expect(screen.getByText('No connected applications')).toBeInTheDocument();
 
     expect(api.doLoadSourceForEdit).not.toHaveBeenCalled();
   });
@@ -120,36 +98,23 @@ describe('ResourcesTable', () => {
       },
     });
 
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
+    render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
+        store,
+        initialEntry
+      )
+    );
 
-    expect(wrapper.find(Spinner)).toHaveLength(1);
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
 
-    wrapper.update();
+    await waitFor(() => expect(screen.getByText('Connected application resources')).toBeInTheDocument());
 
-    expect(wrapper.find(Spinner)).toHaveLength(0);
+    expect(() => screen.getByRole('progressbar')).toThrow();
 
-    expect(wrapper.find(CardTitle).text()).toEqual('Connected application resources');
-    expect(wrapper.find(CardBody)).toHaveLength(1);
-    expect(wrapper.find(NoApplications)).toHaveLength(0);
-    expect(wrapper.find(Table)).toHaveLength(0);
-    expect(wrapper.find(ResourcesEmptyState)).toHaveLength(1);
-    expect(wrapper.find(ResourcesEmptyState).props().applicationName).toEqual('Cost Management');
-
-    expect(wrapper.find(EmptyState)).toHaveLength(1);
-    expect(wrapper.find(Title).text()).toEqual('No application resources');
-    expect(wrapper.find(EmptyStateBody).text()).toEqual('Cost Management resources will appear here when created.');
-
-    expect(wrapper.find(Tabs)).toHaveLength(1);
-    expect(wrapper.find(TabTitleText)).toHaveLength(1);
-    expect(wrapper.find(TabTitleText).text()).toEqual('Cost Management');
+    expect(screen.getByText('No application resources')).toBeInTheDocument();
+    expect(screen.getByText('Cost Management')).toBeInTheDocument();
+    expect(screen.getByText('Cost Management resources will appear here when created.')).toBeInTheDocument();
 
     expect(api.doLoadSourceForEdit).toHaveBeenCalledWith(source, applicationTypesData.data, sourceTypesData.data);
   });
@@ -200,21 +165,20 @@ describe('ResourcesTable', () => {
       },
     });
 
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
-    wrapper.update();
-
-    expect(wrapper.find(Alert).text()).toEqual(
-      'Default alert:Cost Management is pausedTo resume data collection for this application, switch Cost Management on in the Applications section of this page.'
+    render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
+        store,
+        initialEntry
+      )
     );
-    expect(wrapper.find(Alert).find(PauseIcon)).toHaveLength(1);
+
+    await waitFor(() => expect(screen.getByText('Connected application resources')).toBeInTheDocument());
+
+    expect(screen.getByText('Cost Management is paused')).toBeInTheDocument();
+    expect(
+      screen.getByText('To resume data collection for this application, switch Cost Management on in the', { exact: false })
+    ).toBeInTheDocument();
   });
 
   it('renders correctly with multiple apps', async () => {
@@ -296,33 +260,21 @@ describe('ResourcesTable', () => {
       },
     });
 
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
+    const { container } = render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
+        store,
+        initialEntry
+      )
+    );
 
-    expect(wrapper.find(Spinner)).toHaveLength(1);
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
 
-    wrapper.update();
+    await waitFor(() => expect(screen.getByText('Connected application resources')).toBeInTheDocument());
 
-    expect(wrapper.find(Spinner)).toHaveLength(0);
-
-    expect(wrapper.find(CardTitle).text()).toEqual('Connected application resources');
-    expect(wrapper.find(CardBody)).toHaveLength(1);
-    expect(wrapper.find(NoApplications)).toHaveLength(0);
-    expect(wrapper.find(Table)).toHaveLength(2);
-    expect(wrapper.find(ResourcesEmptyState)).toHaveLength(0);
-    expect(wrapper.find(EmptyState)).toHaveLength(0);
-
-    expect(wrapper.find(Tabs)).toHaveLength(1);
-    expect(wrapper.find(TabTitleText)).toHaveLength(2);
-    expect(wrapper.find(TabTitleText).first().text()).toEqual('Cost Management');
-    expect(wrapper.find(TabTitleText).last().text()).toEqual('Subscription Watch');
+    expect(() => screen.getByRole('progressbar')).toThrow();
+    expect(screen.getByText('Cost Management')).toBeInTheDocument();
+    expect(screen.getByText('Subscription Watch')).toBeInTheDocument();
 
     expect(api.doLoadSourceForEdit).toHaveBeenCalledWith(
       source,
@@ -330,7 +282,7 @@ describe('ResourcesTable', () => {
       sourceTypesData.data
     );
 
-    const getData = () => wrapper.find('td').map((td) => [td.props()['data-label'], td.text()]);
+    const getData = () => [...container.getElementsByTagName('td')].map((td) => [td.getAttribute('data-label'), td.textContent]);
 
     expect(getData()).toEqual([
       ['Resource type', 'S3 bucket name'],
@@ -341,14 +293,13 @@ describe('ResourcesTable', () => {
       ['Value', 'arn:aws:1234'],
     ]);
 
-    expect(wrapper.find(Tabs).props().activeKey).toEqual('20198');
+    expect(screen.getByText('Cost Management').closest('.pf-m-current')).toBeInTheDocument();
+    expect(screen.getByText('Subscription Watch').closest('.pf-m-current')).toBeNull();
 
-    await act(async () => {
-      wrapper.find('.pf-c-tabs__link').last().simulate('click');
-    });
-    wrapper.update();
+    userEvent.click(screen.getByText('Subscription Watch'));
 
-    expect(wrapper.find(Tabs).props().activeKey).toEqual('20199');
+    expect(screen.getByText('Cost Management').closest('.pf-m-current')).toBeNull();
+    expect(screen.getByText('Subscription Watch').closest('.pf-m-current')).toBeInTheDocument();
   });
 
   it('renders correctly with paused app', async () => {
@@ -407,21 +358,20 @@ describe('ResourcesTable', () => {
       },
     });
 
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
-    wrapper.update();
-
-    expect(wrapper.find(Alert).text()).toEqual(
-      'Default alert:Cost Management is pausedTo resume data collection for this application, switch Cost Management on in the Applications section of this page.'
+    render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
+        store,
+        initialEntry
+      )
     );
-    expect(wrapper.find(Alert).find(PauseIcon)).toHaveLength(1);
+
+    await waitFor(() => expect(screen.getByText('Connected application resources')).toBeInTheDocument());
+
+    expect(screen.getByText('Cost Management is paused')).toBeInTheDocument();
+    expect(
+      screen.getByText('To resume data collection for this application, switch Cost Management on in the', { exact: false })
+    ).toBeInTheDocument();
   });
 
   it('renders correctly with paused and paused source app', async () => {
@@ -482,17 +432,25 @@ describe('ResourcesTable', () => {
       },
     });
 
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
-    wrapper.update();
+    const { container } = render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
+        store,
+        initialEntry
+      )
+    );
 
-    expect(wrapper.find(Alert)).toHaveLength(0);
+    await waitFor(() => expect(screen.getByText('Connected application resources')).toBeInTheDocument());
+
+    expect(screen.getByText('Cost Management')).toBeInTheDocument();
+
+    const getData = () => [...container.getElementsByTagName('td')].map((td) => [td.getAttribute('data-label'), td.textContent]);
+
+    expect(getData()).toEqual([
+      ['Resource type', 'S3 bucket name'],
+      ['Value', 'adsadsad'],
+      ['Resource type', 'ARN'],
+      ['Value', 'arn:aws:1234'],
+    ]);
   });
 });

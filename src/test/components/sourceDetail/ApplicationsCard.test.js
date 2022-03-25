@@ -1,8 +1,8 @@
 import React from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { act } from 'react-dom/test-utils';
+import { Route } from 'react-router-dom';
+import { render, screen, waitFor, cleanup } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
-import { Card, CardBody, FormGroup, CardTitle, Switch, KebabToggle, DropdownItem } from '@patternfly/react-core';
 import PlayIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
 import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 
@@ -12,14 +12,11 @@ import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import sourceTypesData, { AMAZON_ID } from '../../__mocks__/sourceTypesData';
 import applicationTypesData, { COSTMANAGEMENT_APP, SUBWATCH_APP } from '../../__mocks__/applicationTypesData';
 import mockStore from '../../__mocks__/mockStore';
-import { ApplicationLabel } from '../../../views/formatters';
 
 import * as api from '../../../api/entities';
 import * as actions from '../../../redux/sources/actions';
-import ApplicationKebab from '../../../components/SourceDetail/ApplicationKebab';
 
 describe('ApplicationsCard', () => {
-  let wrapper;
   let store;
 
   const sourceId = '3627987';
@@ -37,7 +34,7 @@ describe('ApplicationsCard', () => {
       user: { writePermissions: false },
     });
 
-    wrapper = mount(
+    render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
         store,
@@ -45,18 +42,20 @@ describe('ApplicationsCard', () => {
       )
     );
 
-    expect(wrapper.find(Card)).toHaveLength(1);
-    expect(wrapper.find(CardTitle).text()).toEqual('Applications');
-    expect(wrapper.find(CardBody)).toHaveLength(1);
-    expect(wrapper.find('#no-permissions-applications').text()).toEqual(
-      'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.'
-    );
-    expect(wrapper.find(FormGroup)).toHaveLength(2);
-    expect(wrapper.find(Switch)).toHaveLength(2);
-    expect(wrapper.find(Switch).first().props().label).toEqual('Cost Management');
-    expect(wrapper.find(Switch).first().props().isDisabled).toEqual(true);
-    expect(wrapper.find(Switch).last().props().label).toEqual('Subscription Watch');
-    expect(wrapper.find(Switch).last().props().isDisabled).toEqual(true);
+    expect(screen.getByText('Applications')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.'
+      )
+    ).toBeInTheDocument();
+
+    expect(screen.getAllByRole('checkbox')).toHaveLength(2);
+
+    expect(screen.getAllByText('Cost Management')).toBeTruthy();
+    expect(screen.getAllByRole('checkbox')[0]).toBeDisabled();
+
+    expect(screen.getAllByText('Subscription Watch')).toBeTruthy();
+    expect(screen.getAllByRole('checkbox')[1]).toBeDisabled();
   });
 
   it('renders paused source', () => {
@@ -76,7 +75,7 @@ describe('ApplicationsCard', () => {
       user: { writePermissions: true },
     });
 
-    wrapper = mount(
+    render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
         store,
@@ -84,9 +83,9 @@ describe('ApplicationsCard', () => {
       )
     );
 
-    expect(wrapper.find(Switch)).toHaveLength(2);
-    expect(wrapper.find(Switch).first().props().isDisabled).toEqual(true);
-    expect(wrapper.find(Switch).last().props().isDisabled).toEqual(true);
+    expect(screen.getAllByRole('checkbox')).toHaveLength(2);
+    expect(screen.getAllByRole('checkbox')[0]).toBeDisabled();
+    expect(screen.getAllByRole('checkbox')[1]).toBeDisabled();
   });
 
   describe('with permissions', () => {
@@ -108,7 +107,7 @@ describe('ApplicationsCard', () => {
 
       actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'undefined' }));
 
-      wrapper = mount(
+      render(
         componentWrapperIntl(
           <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
           store,
@@ -118,84 +117,57 @@ describe('ApplicationsCard', () => {
     });
 
     it('renders correctly', () => {
-      expect(wrapper.find(Card)).toHaveLength(1);
-      expect(wrapper.find(CardTitle).text()).toEqual('Applications');
-      expect(wrapper.find(CardBody)).toHaveLength(1);
-      expect(wrapper.find('#no-permissions-applications')).toHaveLength(0);
-      expect(wrapper.find(FormGroup)).toHaveLength(2);
-      expect(wrapper.find(Switch)).toHaveLength(2);
-      expect(wrapper.find(Switch).first().props().label).toEqual('Cost Management');
-      expect(wrapper.find(Switch).first().props().isDisabled).toEqual(false);
-      expect(wrapper.find(Switch).first().props().isChecked).toEqual(true);
-      expect(wrapper.find(Switch).last().props().label).toEqual('Subscription Watch');
-      expect(wrapper.find(Switch).last().props().isDisabled).toEqual(false);
-      expect(wrapper.find(Switch).last().props().isChecked).toEqual(false);
-      expect(wrapper.find(ApplicationLabel)).toHaveLength(1);
-      expect(wrapper.find(ApplicationKebab)).toHaveLength(1);
+      expect(screen.getByText('Applications')).toBeInTheDocument();
+
+      expect(screen.getAllByText('Cost Management')).toBeTruthy();
+      expect(screen.getAllByText('Subscription Watch')).toBeTruthy();
+
+      expect(screen.getByLabelText('Actions')).toBeInTheDocument();
+
+      expect(screen.getAllByRole('checkbox')).toHaveLength(2);
+      expect(screen.getAllByRole('checkbox')[0]).not.toBeDisabled();
+      expect(screen.getAllByRole('checkbox')[0]).toBeChecked();
+
+      expect(screen.getAllByRole('checkbox')[1]).not.toBeDisabled();
+      expect(screen.getAllByRole('checkbox')[1]).not.toBeChecked();
     });
 
-    it('remove application', async () => {
+    it('pause application', async () => {
       actions.loadEntities = jest.fn().mockImplementation(() => ({ type: 'nonsense' }));
-
-      jest.useFakeTimers();
-
-      const pauseApplication = jest.fn().mockImplementation(() => new Promise((res) => setTimeout(() => res('ok'), 1000)));
+      const pauseApplication = jest.fn().mockResolvedValue('ok');
 
       api.getSourcesApi = () => ({
         pauseApplication,
       });
 
-      expect(wrapper.find(Switch).first().props().isChecked).toEqual(true);
+      expect(screen.getAllByRole('checkbox')[0]).toBeChecked();
 
-      await act(async () => {
-        wrapper
-          .find('input')
-          .first()
-          .simulate('change', { target: { checked: false } });
-      });
-      wrapper.update();
+      userEvent.click(screen.getAllByRole('checkbox')[0]);
 
-      expect(wrapper.find(Switch).first().props().isChecked).toEqual(false);
+      expect(screen.getAllByRole('checkbox')[0]).not.toBeChecked();
 
       expect(pauseApplication).toHaveBeenCalledWith('123');
       pauseApplication.mockClear();
 
-      await act(async () => {
-        wrapper
-          .find('input')
-          .first()
-          .simulate('change', { target: { checked: false } });
-      });
-      wrapper.update();
+      userEvent.click(screen.getAllByRole('checkbox')[0]);
 
       expect(pauseApplication).not.toHaveBeenCalled();
       expect(actions.loadEntities).not.toHaveBeenCalled();
 
-      await act(async () => {
-        jest.runAllTimers();
-      });
-      wrapper.update();
-
-      expect(actions.loadEntities).toHaveBeenCalled();
-
-      jest.useRealTimers();
+      await waitFor(() => expect(actions.loadEntities).toHaveBeenCalled());
     });
 
     it('add application', async () => {
-      await act(async () => {
-        wrapper
-          .find('input')
-          .last()
-          .simulate('change', { target: { checked: true } });
-      });
-      wrapper.update();
+      userEvent.click(screen.getAllByRole('checkbox')[1]);
 
-      expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
+      expect(screen.getByTestId('location-display').textContent).toEqual(
         replaceRouteId(routes.sourcesDetailAddApp.path, sourceId).replace(':app_type_id', SUBWATCH_APP.id)
       );
     });
 
     it('unpause application', async () => {
+      cleanup();
+
       store = mockStore({
         sources: {
           entities: [
@@ -213,15 +185,13 @@ describe('ApplicationsCard', () => {
 
       actions.loadEntities = jest.fn().mockImplementation(() => ({ type: 'nonsense' }));
 
-      jest.useFakeTimers();
-
-      const unpauseApplication = jest.fn().mockImplementation(() => new Promise((res) => setTimeout(() => res('ok'), 1000)));
+      const unpauseApplication = jest.fn().mockResolvedValue('ok');
 
       api.getSourcesApi = () => ({
         unpauseApplication,
       });
 
-      wrapper = mount(
+      render(
         componentWrapperIntl(
           <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
           store,
@@ -229,48 +199,33 @@ describe('ApplicationsCard', () => {
         )
       );
 
-      expect(wrapper.find(Switch).first().props().isChecked).toEqual(false);
+      expect(screen.getAllByRole('checkbox')[0]).not.toBeChecked();
 
-      await act(async () => {
-        wrapper
-          .find('input')
-          .first()
-          .simulate('change', { target: { checked: true } });
-      });
-      wrapper.update();
+      userEvent.click(screen.getAllByRole('checkbox')[0]);
 
-      expect(wrapper.find(Switch).first().props().isChecked).toEqual(true);
+      expect(screen.getAllByRole('checkbox')[0]).toBeChecked();
 
       expect(unpauseApplication).toHaveBeenCalledWith('123');
       unpauseApplication.mockClear();
 
-      await act(async () => {
-        wrapper
-          .find('input')
-          .first()
-          .simulate('change', { target: { checked: true } });
-      });
-      wrapper.update();
+      userEvent.click(screen.getAllByRole('checkbox')[0]);
 
       expect(unpauseApplication).not.toHaveBeenCalled();
       expect(actions.loadEntities).not.toHaveBeenCalled();
 
-      await act(async () => {
-        jest.runAllTimers();
-      });
-      wrapper.update();
-
-      expect(actions.addMessage).toHaveBeenCalledWith({
-        customIcon: <PlayIcon />,
-        title: 'Cost Management connection resumed',
-        variant: 'default',
-      });
+      await waitFor(() =>
+        expect(actions.addMessage).toHaveBeenCalledWith({
+          customIcon: <PlayIcon />,
+          title: 'Cost Management connection resumed',
+          variant: 'default',
+        })
+      );
       expect(actions.loadEntities).toHaveBeenCalled();
-
-      jest.useRealTimers();
     });
 
     it('unpause application and fails', async () => {
+      cleanup();
+
       store = mockStore({
         sources: {
           entities: [
@@ -292,7 +247,7 @@ describe('ApplicationsCard', () => {
         unpauseApplication,
       });
 
-      wrapper = mount(
+      render(
         componentWrapperIntl(
           <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
           store,
@@ -300,32 +255,34 @@ describe('ApplicationsCard', () => {
         )
       );
 
-      await act(async () => {
-        wrapper
-          .find('input')
-          .first()
-          .simulate('change', { target: { checked: true } });
-      });
-      wrapper.update();
+      userEvent.click(screen.getAllByRole('checkbox')[0]);
 
-      expect(actions.addMessage).toHaveBeenCalledWith({
-        description: 'Some backend error. Please try again.',
-        title: 'Application resume failed',
-        variant: 'danger',
-      });
+      await waitFor(() =>
+        expect(actions.addMessage).toHaveBeenCalledWith({
+          description: 'Some backend error. Please try again.',
+          title: 'Application resume failed',
+          variant: 'danger',
+        })
+      );
     });
 
     it('renders correctly descriptions', () => {
-      expect(wrapper.find('.src-c-switch__description')).toHaveLength(2);
-      expect(wrapper.find('.src-c-switch__description').first().text()).toEqual(
-        'Analyze, forecast, and optimize your Red Hat OpenShift cluster costs in hybrid cloud environments.'
-      );
-      expect(wrapper.find('.src-c-switch__description').last().text()).toEqual(
-        'Includes access to Red Hat gold images, high precision subscription watch data, and autoregistration.'
-      );
+      expect(
+        screen.getByText('Analyze, forecast, and optimize your Red Hat OpenShift cluster costs in hybrid cloud environments.', {
+          selector: '.src-c-switch__description',
+        })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'Includes access to Red Hat gold images, high precision subscription watch data, and autoregistration.',
+          { selector: '.src-c-switch__description' }
+        )
+      ).toBeInTheDocument();
     });
 
     it('unpause application via dropdown', async () => {
+      cleanup();
+
       store = mockStore({
         sources: {
           entities: [
@@ -348,7 +305,7 @@ describe('ApplicationsCard', () => {
         unpauseApplication,
       });
 
-      wrapper = mount(
+      render(
         componentWrapperIntl(
           <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
           store,
@@ -356,33 +313,16 @@ describe('ApplicationsCard', () => {
         )
       );
 
-      await act(async () => {
-        wrapper.find(KebabToggle).props().onToggle();
-      });
-      wrapper.update();
+      userEvent.click(screen.getByLabelText('Actions'));
+      userEvent.click(screen.getByText('Resume'));
 
-      await act(async () => {
-        wrapper.find(DropdownItem).first().simulate('click');
-      });
-      wrapper.update();
-
-      expect(unpauseApplication).toHaveBeenCalledWith('123');
+      await waitFor(() => expect(unpauseApplication).toHaveBeenCalledWith('123'));
       expect(actions.addMessage).toHaveBeenCalledWith({
         customIcon: <PlayIcon />,
         title: 'Cost Management connection resumed',
         variant: 'default',
       });
       expect(actions.loadEntities).toHaveBeenCalled();
-    });
-
-    it('renders correctly descriptions', () => {
-      expect(wrapper.find('.src-c-switch__description')).toHaveLength(2);
-      expect(wrapper.find('.src-c-switch__description').first().text()).toEqual(
-        'Analyze, forecast, and optimize your Red Hat OpenShift cluster costs in hybrid cloud environments.'
-      );
-      expect(wrapper.find('.src-c-switch__description').last().text()).toEqual(
-        'Includes access to Red Hat gold images, high precision subscription watch data, and autoregistration.'
-      );
     });
   });
 
@@ -404,7 +344,7 @@ describe('ApplicationsCard', () => {
         user: { writePermissions: true },
       });
 
-      wrapper = mount(
+      render(
         componentWrapperIntl(
           <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
           store,
@@ -416,6 +356,8 @@ describe('ApplicationsCard', () => {
     });
 
     it('unpaused application and blocks clicking again', async () => {
+      cleanup();
+
       store = mockStore({
         sources: {
           entities: [
@@ -432,15 +374,13 @@ describe('ApplicationsCard', () => {
         user: { writePermissions: true },
       });
 
-      jest.useFakeTimers();
-
-      const unpauseApplication = jest.fn().mockImplementation(() => new Promise((res) => setTimeout(() => res('ok'), 1000)));
+      const unpauseApplication = jest.fn().mockResolvedValue('ok');
 
       api.getSourcesApi = () => ({
         unpauseApplication,
       });
 
-      wrapper = mount(
+      render(
         componentWrapperIntl(
           <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
           store,
@@ -448,59 +388,43 @@ describe('ApplicationsCard', () => {
         )
       );
 
-      expect(wrapper.find(Switch).last().props().isChecked).toEqual(false);
+      expect(screen.getAllByRole('checkbox')[0]).not.toBeChecked();
 
-      await act(async () => {
-        wrapper
-          .find('input')
-          .last()
-          .simulate('change', { target: { checked: true } });
-      });
-      wrapper.update();
+      userEvent.click(screen.getAllByRole('checkbox')[0]);
 
-      expect(wrapper.find(Switch).last().props().isChecked).toEqual(true);
+      expect(screen.getAllByRole('checkbox')[0]).toBeChecked();
 
       expect(unpauseApplication).toHaveBeenCalledWith('123');
       unpauseApplication.mockClear();
 
-      await act(async () => {
-        wrapper
-          .find('input')
-          .last()
-          .simulate('change', { target: { checked: true } });
-      });
-      wrapper.update();
+      userEvent.click(screen.getAllByRole('checkbox')[0]);
 
       expect(unpauseApplication).not.toHaveBeenCalled();
       expect(actions.loadEntities).not.toHaveBeenCalled();
 
-      await act(async () => {
-        jest.runAllTimers();
-      });
-      wrapper.update();
-
+      await waitFor(() =>
+        expect(actions.addMessage).toHaveBeenCalledWith({
+          customIcon: <PlayIcon />,
+          title: 'Cost Management connection resumed',
+          variant: 'default',
+        })
+      );
       expect(actions.loadEntities).toHaveBeenCalled();
-
-      jest.useRealTimers();
     });
 
     it('adds application and fail', async () => {
       api.doCreateApplication = jest.fn().mockImplementation(() => Promise.reject('Some backend error'));
       actions.addMessage.mockClear();
 
-      await act(async () => {
-        wrapper
-          .find('input')
-          .last()
-          .simulate('change', { target: { checked: true } });
-      });
-      wrapper.update();
+      userEvent.click(screen.getAllByRole('checkbox')[1]);
 
-      expect(actions.addMessage).toHaveBeenCalledWith({
-        description: 'Some backend error. Please try again.',
-        title: 'Application create failed',
-        variant: 'danger',
-      });
+      await waitFor(() =>
+        expect(actions.addMessage).toHaveBeenCalledWith({
+          description: 'Some backend error. Please try again.',
+          title: 'Application create failed',
+          variant: 'danger',
+        })
+      );
     });
 
     it('pauses application and fail', async () => {
@@ -512,22 +436,20 @@ describe('ApplicationsCard', () => {
         pauseApplication,
       });
 
-      await act(async () => {
-        wrapper
-          .find('input')
-          .first()
-          .simulate('change', { target: { checked: false } });
-      });
-      wrapper.update();
+      userEvent.click(screen.getAllByRole('checkbox')[0]);
 
-      expect(actions.addMessage).toHaveBeenCalledWith({
-        description: 'Some backend error. Please try again.',
-        title: 'Application pause failed',
-        variant: 'danger',
-      });
+      await waitFor(() =>
+        expect(actions.addMessage).toHaveBeenCalledWith({
+          description: 'Some backend error. Please try again.',
+          title: 'Application pause failed',
+          variant: 'danger',
+        })
+      );
     });
 
     it('resumes application and fail', async () => {
+      cleanup();
+
       store = mockStore({
         sources: {
           entities: [
@@ -550,7 +472,7 @@ describe('ApplicationsCard', () => {
         unpauseApplication,
       });
 
-      wrapper = mount(
+      render(
         componentWrapperIntl(
           <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
           store,
@@ -560,116 +482,67 @@ describe('ApplicationsCard', () => {
 
       actions.addMessage.mockClear();
 
-      await act(async () => {
-        wrapper
-          .find('input')
-          .last()
-          .simulate('change', { target: { checked: true } });
-      });
-      wrapper.update();
+      userEvent.click(screen.getAllByRole('checkbox')[0]);
 
-      expect(actions.addMessage).toHaveBeenCalledWith({
-        description: 'Some backend error. Please try again.',
-        title: 'Application resume failed',
-        variant: 'danger',
-      });
+      await waitFor(() =>
+        expect(actions.addMessage).toHaveBeenCalledWith({
+          description: 'Some backend error. Please try again.',
+          title: 'Application resume failed',
+          variant: 'danger',
+        })
+      );
     });
 
-    it('adds application and blocks clicking again', async () => {
-      jest.useFakeTimers();
+    it('adds application', async () => {
+      api.doCreateApplication = jest.fn().mockResolvedValue('ok');
 
-      api.doCreateApplication = jest.fn().mockImplementation(() => new Promise((res) => setTimeout(() => res('ok'), 1000)));
+      expect(screen.getAllByRole('checkbox')[1]).not.toBeChecked();
 
-      expect(wrapper.find(Switch).last().props().isChecked).toEqual(false);
+      userEvent.click(screen.getAllByRole('checkbox')[1]);
 
-      await act(async () => {
-        wrapper
-          .find('input')
-          .last()
-          .simulate('change', { target: { checked: true } });
-      });
-      wrapper.update();
-
-      expect(wrapper.find(Switch).last().props().isChecked).toEqual(true);
+      expect(screen.getAllByRole('checkbox')[1]).toBeChecked();
 
       expect(api.doCreateApplication).toHaveBeenCalledWith({
         application_type_id: SUBWATCH_APP.id,
         source_id: sourceId,
       });
-      api.doCreateApplication.mockClear();
-
-      await act(async () => {
-        wrapper
-          .find('input')
-          .last()
-          .simulate('change', { target: { checked: true } });
-      });
-      wrapper.update();
-
-      expect(api.doCreateApplication).not.toHaveBeenCalled();
       expect(actions.loadEntities).not.toHaveBeenCalled();
 
-      await act(async () => {
-        jest.runAllTimers();
-      });
-      wrapper.update();
-
-      expect(actions.loadEntities).toHaveBeenCalled();
-
-      jest.useRealTimers();
+      await waitFor(() => expect(actions.loadEntities).toHaveBeenCalled());
     });
 
     it('pause application and blocks clicking again', async () => {
-      jest.useFakeTimers();
-
-      const pauseApplication = jest.fn().mockImplementation(() => new Promise((res) => setTimeout(() => res('ok'), 1000)));
+      const pauseApplication = jest.fn().mockResolvedValue('ok');
 
       api.getSourcesApi = () => ({
         pauseApplication,
       });
 
-      expect(wrapper.find(Switch).first().props().isChecked).toEqual(true);
+      expect(screen.getAllByRole('checkbox')[0]).toBeChecked();
 
       actions.addMessage.mockClear();
 
-      await act(async () => {
-        wrapper
-          .find('input')
-          .first()
-          .simulate('change', { target: { checked: false } });
-      });
-      wrapper.update();
+      userEvent.click(screen.getAllByRole('checkbox')[0]);
 
-      expect(wrapper.find(Switch).first().props().isChecked).toEqual(false);
+      expect(screen.getAllByRole('checkbox')[0]).not.toBeChecked();
 
       expect(pauseApplication).toHaveBeenCalledWith('123');
       pauseApplication.mockClear();
 
-      await act(async () => {
-        wrapper
-          .find('input')
-          .first()
-          .simulate('change', { target: { checked: false } });
-      });
-      wrapper.update();
+      userEvent.click(screen.getAllByRole('checkbox')[0]);
 
       expect(pauseApplication).not.toHaveBeenCalled();
       expect(actions.loadEntities).not.toHaveBeenCalled();
 
-      await act(async () => {
-        jest.runAllTimers();
-      });
-      wrapper.update();
-
-      expect(actions.addMessage).toHaveBeenCalledWith({
-        customIcon: <PauseIcon />,
-        description: 'Your application will not reflect the most recent data until Cost Management connection is resumed',
-        title: 'Cost Management connection paused',
-        variant: 'default',
-      });
+      await waitFor(() =>
+        expect(actions.addMessage).toHaveBeenCalledWith({
+          customIcon: <PauseIcon />,
+          description: 'Your application will not reflect the most recent data until Cost Management connection is resumed',
+          title: 'Cost Management connection paused',
+          variant: 'default',
+        })
+      );
       expect(actions.loadEntities).toHaveBeenCalled();
-
-      jest.useRealTimers();
     });
 
     it('pause application via dropdown', async () => {
@@ -679,18 +552,11 @@ describe('ApplicationsCard', () => {
         pauseApplication,
       });
 
-      await act(async () => {
-        wrapper.find(KebabToggle).props().onToggle();
-      });
-      wrapper.update();
-
-      await act(async () => {
-        wrapper.find(DropdownItem).first().simulate('click');
-      });
-      wrapper.update();
+      userEvent.click(screen.getByLabelText('Actions'));
+      userEvent.click(screen.getByText('Pause'));
 
       expect(pauseApplication).toHaveBeenCalled();
-      expect(actions.loadEntities).toHaveBeenCalled();
+      await waitFor(() => expect(actions.loadEntities).toHaveBeenCalled());
       expect(actions.addMessage).toHaveBeenCalledWith({
         customIcon: <PauseIcon />,
         description: 'Your application will not reflect the most recent data until Cost Management connection is resumed',
