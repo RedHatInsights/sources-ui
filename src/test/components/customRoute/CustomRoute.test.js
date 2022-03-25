@@ -1,12 +1,9 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
 
-import { render, screen, act, waitFor, cleanup } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen } from '@testing-library/react';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import CustomRoute from '../../../components/CustomRoute/CustomRoute';
-import RedirectNoWriteAccess from '../../../components/RedirectNoWriteAccess/RedirectNoWriteAccess';
 import * as RedirectNoId from '../../../components/RedirectNoId/RedirectNoId';
 import * as RedirectNoPaused from '../../../components/RedirectNoPaused/RedirectNoPaused';
 import * as useSource from '../../../hooks/useSource';
