@@ -1,28 +1,19 @@
 import React from 'react';
-import { act } from 'react-dom/test-utils';
+import { render, screen, fireEvent } from '@testing-library/react';
 
 import componentWrapperIntl from '../../../utilities/testsHelpers';
-import { Loader } from '../../../components/SourcesTable/loaders';
 import ImageWithPlaceholder from '../../../components/TilesShared/ImageWithPlaceholder';
 
 describe('ImageWithPlaceholder', () => {
-  let wrapper;
-
   it('hides the loader on onLoad', async () => {
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<ImageWithPlaceholder src="/some-picture.jpg" />));
-    });
-    wrapper.update();
+    render(componentWrapperIntl(<ImageWithPlaceholder src="/some-picture.jpg" />));
 
-    expect(wrapper.find(Loader)).toHaveLength(1);
-    expect(wrapper.find('img').props().style.display).toEqual('none');
+    expect(screen.getByTestId('ImageWithPlaceholder')).toHaveStyle({ display: 'none' });
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
 
-    await act(async () => {
-      wrapper.find('img').simulate('load');
-    });
-    wrapper.update();
+    fireEvent(screen.getByTestId('ImageWithPlaceholder'), new Event('load'));
 
-    expect(wrapper.find(Loader)).toHaveLength(0);
-    expect(wrapper.find('img').props().style.display).toEqual('initial');
+    expect(screen.getByTestId('ImageWithPlaceholder')).toHaveStyle({ display: 'initial' });
+    expect(() => screen.getByRole('progressbar')).toThrow();
   });
 });
