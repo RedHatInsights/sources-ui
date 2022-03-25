@@ -1,9 +1,7 @@
 import React from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { render, screen, act, waitFor, cleanup } from '@testing-library/react';
+import { Route } from 'react-router-dom';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-
-import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
 
 import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
