@@ -258,6 +258,8 @@ describe('schema builder', () => {
     let expectedSchema;
     const APPEND_ENDPOINT_FIELDS = [true];
     const EMPTY_APPEND_ENDPOINT = [];
+    const HAS_ENDPOINT_STEP = true;
+    const DISABLE_AUTH_TYPE = undefined;
 
     describe('createGenericAuthTypeSelection', () => {
       it('generate single selection', () => {
@@ -285,7 +287,9 @@ describe('schema builder', () => {
           nextStep: `${OPENSHIFT_TYPE.name}-endpoint`,
         });
 
-        expect(createGenericAuthTypeSelection(OPENSHIFT_TYPE, EMPTY_APPEND_ENDPOINT)).toEqual(expectedSchema);
+        expect(
+          createGenericAuthTypeSelection(OPENSHIFT_TYPE, EMPTY_APPEND_ENDPOINT, DISABLE_AUTH_TYPE, HAS_ENDPOINT_STEP)
+        ).toEqual(expectedSchema);
       });
 
       it('generate multiple selection', () => {
@@ -351,7 +355,15 @@ describe('schema builder', () => {
           nextStep: `${AZURE_TYPE.name}-endpoint`,
         });
 
-        expect(createSpecificAuthTypeSelection(AZURE_TYPE, TOPOLOGY_INV_APP, EMPTY_APPEND_ENDPOINT)).toEqual(expectedSchema);
+        expect(
+          createSpecificAuthTypeSelection(
+            AZURE_TYPE,
+            TOPOLOGY_INV_APP,
+            EMPTY_APPEND_ENDPOINT,
+            DISABLE_AUTH_TYPE,
+            HAS_ENDPOINT_STEP
+          )
+        ).toEqual(expectedSchema);
       });
 
       it('generate with custom steps', () => {

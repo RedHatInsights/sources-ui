@@ -16,6 +16,7 @@ describe('generate auth selection pages', () => {
   let expectedSchema;
   const HAS_ENDPOINT = [];
   const NOT_EDITING = false;
+  const HAS_ENDPOINT_STEP = true;
 
   const ONE_SINGLE_SELECTION_TYPE = {
     id: '1',
@@ -101,7 +102,9 @@ describe('generate auth selection pages', () => {
         nextStep: 'summary',
       });
 
-      expect(createGenericAuthTypeSelection(ONE_SINGLE_SELECTION_TYPE, HAS_ENDPOINT, NOT_EDITING)).toEqual(expectedSchema);
+      expect(createGenericAuthTypeSelection(ONE_SINGLE_SELECTION_TYPE, HAS_ENDPOINT, NOT_EDITING, HAS_ENDPOINT_STEP)).toEqual(
+        expectedSchema
+      );
     });
 
     describe('generate multiple selection', () => {
@@ -127,7 +130,9 @@ describe('generate auth selection pages', () => {
           },
         });
 
-        expect(createGenericAuthTypeSelection(MULTIPLE_SELECTION_TYPE, HAS_ENDPOINT, NOT_EDITING)).toEqual(expectedSchema);
+        expect(createGenericAuthTypeSelection(MULTIPLE_SELECTION_TYPE, HAS_ENDPOINT, NOT_EDITING, HAS_ENDPOINT_STEP)).toEqual(
+          expectedSchema
+        );
       });
     });
   });
