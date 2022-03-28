@@ -1,4 +1,5 @@
-import { act } from 'react-dom/test-utils';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import componentMapper from '@data-driven-forms/pf4-component-mapper/component-mapper';
@@ -8,7 +9,6 @@ import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
 import ModalFormTemplate from '../../../components/CredentialsForm/ModalFormTemplate';
 
 describe('modalFormTemplate', () => {
-  let wrapper;
   let submit;
   let reset;
   let cancel;
@@ -18,7 +18,7 @@ describe('modalFormTemplate', () => {
     reset = jest.fn();
     cancel = jest.fn();
 
-    wrapper = mount(
+    render(
       componentWrapperIntl(
         <SourcesFormRenderer
           schema={{
@@ -51,10 +51,9 @@ describe('modalFormTemplate', () => {
   it('submits', async () => {
     expect(submit).not.toHaveBeenCalled();
 
-    await act(async () => {
-      wrapper.find('form').simulate('submit');
-    });
-    wrapper.update();
+    userEvent.type(screen.getByRole('textbox'), 'something');
+
+    userEvent.click(screen.getByText('Submit'));
 
     expect(submit).toHaveBeenCalled();
   });
@@ -62,10 +61,7 @@ describe('modalFormTemplate', () => {
   it('cancels', async () => {
     expect(cancel).not.toHaveBeenCalled();
 
-    await act(async () => {
-      wrapper.find('button#cancel-modal').simulate('click');
-    });
-    wrapper.update();
+    userEvent.click(screen.getByText('Cancel'));
 
     expect(cancel).toHaveBeenCalled();
   });
