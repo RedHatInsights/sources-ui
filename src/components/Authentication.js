@@ -56,7 +56,7 @@ const Authentication = (rest) => {
   if (rest.isDisabled) {
     return (
       <FormGroup helperText={componentProps.helperText} label={componentProps.label} isRequired>
-        <TextInput aria-label="pre-filled-authentication" value="•••••••••••••" isDisabled />
+        <TextInput aria-label="Filled password" value="•••••••••••••" isDisabled />
       </FormGroup>
     );
   }
@@ -64,7 +64,7 @@ const Authentication = (rest) => {
   if (!edited && isEditing) {
     return (
       <FormGroup helperText={componentProps.helperText} label={componentProps.label} onFocus={() => setEdited(true)} isRequired>
-        <TextInput aria-label="pre-filled-authentication" value="•••••••••••••" />
+        <TextInput aria-label="Filled password" value="•••••••••••••" />
       </FormGroup>
     );
   }

@@ -77,7 +77,7 @@ describe('CredentialsForm', () => {
 
     expect([...screen.getAllByRole('textbox')].map((e) => e.name || e.getAttribute('aria-label'))).toEqual([
       'authentication.username',
-      'pre-filled-authentication',
+      'Filled password',
     ]);
   });
 
