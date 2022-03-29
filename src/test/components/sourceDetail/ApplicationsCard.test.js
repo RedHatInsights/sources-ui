@@ -43,12 +43,6 @@ describe('ApplicationsCard', () => {
     );
 
     expect(screen.getByText('Applications')).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.'
-      )
-    ).toBeInTheDocument();
-
     expect(screen.getAllByRole('checkbox')).toHaveLength(2);
 
     expect(screen.getAllByText('Cost Management')).toBeTruthy();
@@ -56,6 +50,16 @@ describe('ApplicationsCard', () => {
 
     expect(screen.getAllByText('Subscription Watch')).toBeTruthy();
     expect(screen.getAllByRole('checkbox')[1]).toBeDisabled();
+
+    userEvent.hover(screen.getByText('Cost Management', { selector: '.pf-m-off' }));
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(
+          'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.'
+        )
+      ).toBeInTheDocument()
+    );
   });
 
   it('renders paused source', () => {

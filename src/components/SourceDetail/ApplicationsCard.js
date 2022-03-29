@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import { Card, CardBody, CardTitle, Switch, FormGroup } from '@patternfly/react-core';
+import { Card, CardBody, CardTitle, Switch, FormGroup, Tooltip } from '@patternfly/react-core';
 
 import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 import PlayIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
@@ -189,11 +189,6 @@ const ApplicationsCard = () => {
         })}
       </CardTitle>
       <CardBody>
-        {!hasRightAccess && (
-          <div className="pf-u-mb-md" id="no-permissions-applications">
-            {disabledMessage(intl)}
-          </div>
-        )}
         <div className="pf-c-form src-c-applications_form">
           {filteredAppTypes.map((app) => {
             const connectedApp = source.applications.find((connectedApp) => connectedApp.application_type_id === app.id);
@@ -205,17 +200,21 @@ const ApplicationsCard = () => {
 
             const isChecked = typeof selectedApps[app.id] === 'boolean' ? selectedApps[app.id] : pausedApp;
 
+            const Wrapper = hasRightAccess ? React.Fragment : Tooltip;
+
             return (
               <FormGroup key={app.id}>
                 <div className="src-c-application_flex">
-                  <Switch
-                    className="src-c-application_switch"
-                    id={`app-switch-${app.id}`}
-                    label={app.display_name}
-                    isChecked={isChecked}
-                    isDisabled={connectedApp?.isDeleting || !hasRightAccess || Boolean(source.paused_at)}
-                    onChange={(value) => (!value ? removeApp(connectedApp.id, app.id) : addApp(app.id, connectedApp?.id))}
-                  />
+                  <Wrapper {...(!hasRightAccess && { content: disabledMessage(intl) })}>
+                    <Switch
+                      className="src-c-application_switch"
+                      id={`app-switch-${app.id}`}
+                      label={app.display_name}
+                      isChecked={isChecked}
+                      isDisabled={connectedApp?.isDeleting || !hasRightAccess || Boolean(source.paused_at)}
+                      onChange={(value) => (!value ? removeApp(connectedApp.id, app.id) : addApp(app.id, connectedApp?.id))}
+                    />
+                  </Wrapper>
                   {Boolean(connectedApp) && (
                     <ApplicationLabel className="pf-u-ml-sm src-m-clickable" app={connectedApp} showStatusText />
                   )}
