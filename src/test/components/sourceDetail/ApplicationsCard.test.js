@@ -266,20 +266,6 @@ describe('ApplicationsCard', () => {
       );
     });
 
-    it('renders correctly descriptions', () => {
-      expect(
-        screen.getByText('Analyze, forecast, and optimize your Red Hat OpenShift cluster costs in hybrid cloud environments.', {
-          selector: '.src-c-switch__description',
-        })
-      ).toBeInTheDocument();
-      expect(
-        screen.getByText(
-          'Includes access to Red Hat gold images, high precision subscription watch data, and autoregistration.',
-          { selector: '.src-c-switch__description' }
-        )
-      ).toBeInTheDocument();
-    });
-
     it('unpause application via dropdown', async () => {
       cleanup();
 

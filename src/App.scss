@@ -156,20 +156,6 @@
   }
 }
 
-.src-m-hide-me {
-  opacity: 0;
-}
-
-.src-c-switch__description {
-  color:  var(--pf-global--palette--black-600);
-  font-size: var(--pf-global--FontSize--sm);
-  line-height: 24px;
-}
-
-.src-c-application_fake_switch {
-  width: 100%;
-}
-
 .src-c-checkbox-with-icon {
   display: flex;
 
@@ -182,6 +168,7 @@
 
 .src-c-application_flex {
   display: flex;
+  align-items: center;
 }
 
 .src-c-dropdown__application_kebab {
@@ -192,4 +179,12 @@
 .src-c-card-info__header {
   font-weight: 600;
   color: var(--pf-global--palette--blue-600);
+}
+
+.src-c-applications_form {
+  row-gap: var(--pf-global--spacer--sm);
+}
+
+.src-c-application_switch {
+  min-width: 50%;
 }

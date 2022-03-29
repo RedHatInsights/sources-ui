@@ -14,7 +14,6 @@ import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import isSuperKey from '../../utilities/isSuperKey';
 import { getSourcesApi, doCreateApplication } from '../../api/entities';
 import { addMessage, loadEntities } from '../../redux/sources/actions';
-import { APP_NAMES } from '../SourceEditForm/parser/application';
 import filterApps from '../../utilities/filterApps';
 import ApplicationKebab from './ApplicationKebab';
 import { ApplicationLabel } from '../../views/formatters';
@@ -36,18 +35,6 @@ const reducer = (state, { type, id }) => {
       return { ...state, selectedApps: { ...state.selectedApps, [id]: undefined } };
   }
 };
-
-const descriptionMapper = (name, intl) =>
-  ({
-    [APP_NAMES.COST_MANAGAMENT]: intl.formatMessage({
-      id: 'cost.app.description',
-      defaultMessage: 'Analyze, forecast, and optimize your Red Hat OpenShift cluster costs in hybrid cloud environments.',
-    }),
-    [APP_NAMES.CLOUD_METER]: intl.formatMessage({
-      id: 'cost.app.description',
-      defaultMessage: 'Includes access to Red Hat gold images, high precision subscription watch data, and autoregistration.',
-    }),
-  }[name]);
 
 const addResumeNotification = (typeId, dispatch, intl, appTypes) => {
   const appName = appTypes.find((type) => type.id === typeId)?.display_name;
@@ -207,10 +194,9 @@ const ApplicationsCard = () => {
             {disabledMessage(intl)}
           </div>
         )}
-        <div className="pf-c-form">
+        <div className="pf-c-form src-c-applications_form">
           {filteredAppTypes.map((app) => {
             const connectedApp = source.applications.find((connectedApp) => connectedApp.application_type_id === app.id);
-            const description = descriptionMapper(app.name, intl);
 
             const appExist = Boolean(connectedApp);
             const isPaused = Boolean(connectedApp?.paused_at);
@@ -222,24 +208,17 @@ const ApplicationsCard = () => {
             return (
               <FormGroup key={app.id}>
                 <div className="src-c-application_flex">
-                  <div>
-                    <Switch
-                      id={`app-switch-${app.id}`}
-                      label={app.display_name}
-                      isChecked={isChecked}
-                      isDisabled={connectedApp?.isDeleting || !hasRightAccess || Boolean(source.paused_at)}
-                      onChange={(value) => (!value ? removeApp(connectedApp.id, app.id) : addApp(app.id, connectedApp?.id))}
-                    />
-                    {Boolean(connectedApp) && (
-                      <ApplicationLabel className="pf-u-ml-sm src-m-clickable" app={connectedApp} showStatusText />
-                    )}
-                    {description && (
-                      <div className="pf-c-switch pf-u-mt-sm src-c-application_fake_switch">
-                        <span className="pf-c-switch__toggle src-m-hide-me" />
-                        <div className="pf-c-switch__label src-c-switch__description">{description}</div>
-                      </div>
-                    )}
-                  </div>
+                  <Switch
+                    className="src-c-application_switch"
+                    id={`app-switch-${app.id}`}
+                    label={app.display_name}
+                    isChecked={isChecked}
+                    isDisabled={connectedApp?.isDeleting || !hasRightAccess || Boolean(source.paused_at)}
+                    onChange={(value) => (!value ? removeApp(connectedApp.id, app.id) : addApp(app.id, connectedApp?.id))}
+                  />
+                  {Boolean(connectedApp) && (
+                    <ApplicationLabel className="pf-u-ml-sm src-m-clickable" app={connectedApp} showStatusText />
+                  )}
                   {(isPaused || appExist) && (
                     <ApplicationKebab
                       app={connectedApp}
