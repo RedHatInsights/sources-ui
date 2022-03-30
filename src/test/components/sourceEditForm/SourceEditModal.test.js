@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, act, waitFor, cleanup } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { Route } from 'react-router-dom';
@@ -9,23 +9,16 @@ import SourceEditModal from '../../../components/SourceEditForm/SourceEditModal'
 import { routes, replaceRouteId } from '../../../Routes';
 import { applicationTypesData, CATALOG_APP, TOPOLOGICALINVENTORY_APP } from '../../__mocks__/applicationTypesData';
 import { sourceTypesData, ANSIBLE_TOWER_ID } from '../../__mocks__/sourceTypesData';
-import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
-
-import { Spinner, EmptyState, TextInput, Alert, Form } from '@patternfly/react-core';
 
 import * as editApi from '../../../api/doLoadSourceForEdit';
 import * as submit from '../../../components/SourceEditForm/onSubmit';
 import reducer from '../../../components/SourceEditForm/reducer';
 
-import SubmittingModal from '../../../components/SourceEditForm/SubmittingModal';
-import EditAlert from '../../../components/SourceEditForm/parser/EditAlert';
-import ErroredModal from '../../../components/SourceEditForm/ErroredModal';
 import { ACTION_TYPES } from '../../../redux/sources/actionTypes';
 import { useDispatch } from 'react-redux';
 import { UNAVAILABLE } from '../../../views/formatters';
 import mockStore from '../../__mocks__/mockStore';
 import { getStore } from '../../../utilities/store';
-import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 
 describe('SourceEditModal', () => {
   let store;
