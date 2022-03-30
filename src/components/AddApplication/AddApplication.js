@@ -92,7 +92,7 @@ const AddApplication = () => {
     return removeAppSubmit(
       {
         id: state.data?.id,
-        display_name: appTypes.find(({ id }) => id === state.data?.application_type_id)?.display_name,
+        display_name: appTypes.find(({ id }) => id === state.data?.applications?.[0]?.application_type_id)?.display_name,
       },
       intl,
       undefined,
@@ -355,6 +355,8 @@ const AddApplication = () => {
 
   const onStay = () => {
     container.current.style.opacity = 1;
+    container.current.setAttribute('aria-hidden', 'false');
+
     setState({ type: 'toggleCancelling' });
   };
 
@@ -368,6 +370,7 @@ const AddApplication = () => {
 
     if (isChanged) {
       container.current.style.opacity = 0;
+      container.current.setAttribute('aria-hidden', 'true');
       setState({ type: 'toggleCancelling', values });
     } else {
       goToSources();

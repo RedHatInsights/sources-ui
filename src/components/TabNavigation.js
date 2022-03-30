@@ -21,7 +21,7 @@ const TabNavigation = () => {
         title={
           <React.Fragment>
             <TabTitleIcon>
-              <CloudIcon />
+              <CloudIcon aria-label="Cloud Icon" />
             </TabTitleIcon>
             <TabTitleText>{intl.formatMessage({ id: 'sources.cloudSources', defaultMessage: 'Cloud sources' })}</TabTitleText>
           </React.Fragment>
@@ -32,7 +32,7 @@ const TabNavigation = () => {
         title={
           <React.Fragment>
             <TabTitleIcon>
-              <RedhatIcon />
+              <RedhatIcon aria-label="Red Hat Icon" />
             </TabTitleIcon>
             <TabTitleText>{intl.formatMessage({ id: 'sources.redhatSources', defaultMessage: 'Red Hat sources' })}</TabTitleText>
           </React.Fragment>

@@ -1,14 +1,7 @@
-import { configure, mount, shallow } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import React from 'react';
+import 'whatwg-fetch'; // fetch for Nodejs
 import '@testing-library/jest-dom/extend-expect';
 
-import 'whatwg-fetch'; // fetch for Nodejs
-
-configure({ adapter: new Adapter() });
-
-global.shallow = shallow;
-global.mount = mount;
 global.React = React;
 
 process.env.BASE_PATH = '/api';

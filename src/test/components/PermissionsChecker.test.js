@@ -1,4 +1,4 @@
-import { act } from 'react-dom/test-utils';
+import { render, screen } from '@testing-library/react';
 
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
 import PermissionsChecker from '../../components/PermissionsChecker';
@@ -9,18 +9,15 @@ describe('PermissionChecker', () => {
     const Children = () => <h1>App</h1>;
     actions.loadWritePermissions = jest.fn().mockImplementation(() => ({ type: 'type' }));
 
-    let wrapper;
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <PermissionsChecker>
-            <Children />
-          </PermissionsChecker>
-        )
-      );
-    });
+    render(
+      componentWrapperIntl(
+        <PermissionsChecker>
+          <Children />
+        </PermissionsChecker>
+      )
+    );
 
-    expect(wrapper.find(Children)).toHaveLength(1);
+    expect(screen.getByText('App')).toBeInTheDocument();
     expect(actions.loadWritePermissions).toHaveBeenCalled();
   });
 });

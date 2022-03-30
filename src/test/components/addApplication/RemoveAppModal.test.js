@@ -1,10 +1,8 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
-import { Text, Button, Modal } from '@patternfly/react-core';
-
-import { MemoryRouter, Route } from 'react-router-dom';
-import { act } from 'react-dom/test-utils';
+import { Route } from 'react-router-dom';
 
 import RemoveAppModal from '../../../components/AddApplication/RemoveAppModal';
 import * as actions from '../../../redux/sources/actions';
@@ -42,6 +40,7 @@ describe('RemoveAppModal', () => {
       dependent_applications: [APP1],
     },
   ];
+
   beforeEach(() => {
     initialStore = {
       sources: {
@@ -54,7 +53,7 @@ describe('RemoveAppModal', () => {
   });
 
   it('renders correctly', () => {
-    const wrapper = mount(
+    render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetailRemoveApp.path} render={(...args) => <RemoveAppModal {...args} />} />,
         store,
@@ -62,15 +61,14 @@ describe('RemoveAppModal', () => {
       )
     );
 
-    expect(wrapper.find(Modal).length).toEqual(1);
-    expect(wrapper.find(Button).length).toEqual(3); // modal cancel, remove, cancel
-    expect(wrapper.find(Button).at(1).text()).toEqual('Remove');
-    expect(wrapper.find(Button).last().text()).toEqual('Cancel');
+    expect(screen.getByText('Remove application?')).toBeInTheDocument();
+    expect(screen.getByText('Remove')).toBeInTheDocument();
+    expect(screen.getByText('Cancel')).toBeInTheDocument();
+    expect(screen.getByText(APP1_DISPLAY_NAME, { selector: 'b' })).toBeInTheDocument();
+    expect(screen.getByText('will be disconnected from this source.', { exact: false })).toBeInTheDocument();
   });
 
   it('redirect when app does not exist', async () => {
-    let wrapper;
-
     initialStore = {
       sources: {
         appTypes: APP_TYPES,
@@ -79,19 +77,16 @@ describe('RemoveAppModal', () => {
     };
     store = mockStore(initialStore);
 
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesDetailRemoveApp.path} render={(...args) => <RemoveAppModal {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
-    wrapper.update();
+    render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetailRemoveApp.path} render={(...args) => <RemoveAppModal {...args} />} />,
+        store,
+        initialEntry
+      )
+    );
 
-    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
-      replaceRouteId(routes.sourcesDetail.path, SOURCE_ID)
+    await waitFor(() =>
+      expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, SOURCE_ID))
     );
   });
 
@@ -112,7 +107,7 @@ describe('RemoveAppModal', () => {
       },
     });
 
-    const wrapper = mount(
+    render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetailRemoveApp.path} render={(...args) => <RemoveAppModal {...args} />} />,
         store,
@@ -120,8 +115,9 @@ describe('RemoveAppModal', () => {
       )
     );
 
-    expect(wrapper.find(Text)).toHaveLength(2);
-    expect(wrapper.find(Text).last().html().includes(APP1_DISPLAY_NAME)).toEqual(true);
+    expect(screen.getByText('This change will affect these applications: ', { exact: false })).toBeInTheDocument();
+    expect(screen.getByText(APP1_DISPLAY_NAME, { exact: false })).toBeInTheDocument();
+    expect(screen.getByText(APP2_DISPLAY_NAME, { selector: 'b' })).toBeInTheDocument();
   });
 
   it('renders correctly with unattached dependent applications', () => {
@@ -138,7 +134,7 @@ describe('RemoveAppModal', () => {
       },
     });
 
-    const wrapper = mount(
+    render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetailRemoveApp.path} render={(...args) => <RemoveAppModal {...args} />} />,
         store,
@@ -146,12 +142,12 @@ describe('RemoveAppModal', () => {
       )
     );
 
-    expect(wrapper.find(Text)).toHaveLength(1);
-    expect(wrapper.find(Text).last().html().includes(APP2_DISPLAY_NAME)).toEqual(true);
+    expect(() => screen.getByText(APP1_DISPLAY_NAME, { exact: false })).toThrow();
+    expect(screen.getByText(APP2_DISPLAY_NAME, { selector: 'b' })).toBeInTheDocument();
   });
 
   it('calls cancel', async () => {
-    const wrapper = mount(
+    render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetailRemoveApp.path} render={(...args) => <RemoveAppModal {...args} />} />,
         store,
@@ -159,20 +155,15 @@ describe('RemoveAppModal', () => {
       )
     );
 
-    await act(async () => {
-      wrapper.find(Button).last().simulate('click');
-    });
-    wrapper.update();
+    userEvent.click(screen.getByText('Cancel'));
 
-    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
-      replaceRouteId(routes.sourcesDetail.path, SOURCE_ID)
-    );
+    expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, SOURCE_ID));
   });
 
   it('calls a submit', async () => {
     actions.removeApplication = jest.fn().mockImplementation(() => ({ type: 'REMOVE_APP' }));
 
-    const wrapper = mount(
+    render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetailRemoveApp.path} render={(...args) => <RemoveAppModal {...args} />} />,
         store,
@@ -180,11 +171,8 @@ describe('RemoveAppModal', () => {
       )
     );
 
-    await act(async () => {
-      wrapper.find(Button).at(1).simulate('click');
-    });
-    wrapper.update();
+    userEvent.click(screen.getByText('Remove'));
 
-    expect(actions.removeApplication).toHaveBeenCalledWith(APP_ID, SOURCE_ID, SUCCESS_MSG, ERROR_MSG);
+    await waitFor(() => expect(actions.removeApplication).toHaveBeenCalledWith(APP_ID, SOURCE_ID, SUCCESS_MSG, ERROR_MSG));
   });
 });

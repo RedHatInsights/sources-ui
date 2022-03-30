@@ -1,26 +1,28 @@
 import React from 'react';
-import mount from '../../__mocks__/mount';
+import { screen } from '@testing-library/react';
 
-import { Text, TextContent, TextList, TextListItem, ClipboardCopy } from '@patternfly/react-core';
+import render from '../../__mocks__/render';
 
 import * as SubAzure from '../../../../components/addSourceWizard/hardcodedComponents/azure/subscriptionWatch';
 
 describe('Azure-Subwatch hardcoded schemas', () => {
   it('OfflineToken is rendered correctly', () => {
-    const wrapper = mount(<SubAzure.OfflineToken />);
+    render(<SubAzure.OfflineToken />);
 
-    expect(wrapper.find(TextContent)).toHaveLength(1);
-    expect(wrapper.find(Text)).toHaveLength(2);
-    expect(wrapper.find(TextList)).toHaveLength(1);
-    expect(wrapper.find(TextListItem)).toHaveLength(1);
-    expect(wrapper.find('a')).toHaveLength(1);
+    expect(screen.getByText('Generate a token to authenticate the calls to APIs for Red Hat services.')).toBeInTheDocument();
+    expect(screen.getByText('To obtain an offline token, follow the steps at', { exact: false })).toBeInTheDocument();
+    expect(screen.getByText('https://access.redhat.com/management/api', { selector: 'a' })).toBeInTheDocument();
   });
 
   it('AnsiblePlaybook is rendered correctly', () => {
-    const wrapper = mount(<SubAzure.AnsiblePlaybook />);
+    render(<SubAzure.AnsiblePlaybook />);
 
-    expect(wrapper.find(TextContent)).toHaveLength(1);
-    expect(wrapper.find(Text)).toHaveLength(1);
-    expect(wrapper.find(ClipboardCopy)).toHaveLength(2);
+    expect(screen.getByText('Download and run the following commands against a running Azure VM.')).toBeInTheDocument();
+    expect(screen.getAllByLabelText('Copyable input')[0]).toHaveValue(
+      'ansible-galaxy collection install redhatinsights.subscriptions'
+    );
+    expect(screen.getAllByLabelText('Copyable input')[1]).toHaveValue(
+      'ansible-playbook -i <AZURE_VM_HOSTNAME>, -b ~/.ansible/collections/ansible_collections/redhatinsights/subscriptions/playbooks/verify_account.yml -e rh_api_refresh_token=<OFFLINE_AUTH_TOKEN>'
+    );
   });
 });

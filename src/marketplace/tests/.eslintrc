@@ -9,9 +9,7 @@
     "beforeAll": true,
     "describe": true,
     "expect": true,
-    "it": true,
-    "mount": true,
-    "shallow": true
+    "it": true
   },
   "rules": {
     "react/prop-types": "off",

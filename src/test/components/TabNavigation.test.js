@@ -1,9 +1,6 @@
 import React from 'react';
-import { act } from 'react-dom/test-utils';
-
-import { Tabs, TabTitleIcon, TabTitleText } from '@patternfly/react-core';
-import RedhatIcon from '@patternfly/react-icons/dist/esm/icons/redhat-icon';
-import CloudIcon from '@patternfly/react-icons/dist/esm/icons/cloud-icon';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../utilities/constants';
@@ -14,7 +11,6 @@ import mockStore from '../__mocks__/mockStore';
 
 describe('TabNavigation', () => {
   let store;
-  let wrapper;
 
   it('renders correctly on Cloud vendor', () => {
     store = mockStore({
@@ -23,15 +19,13 @@ describe('TabNavigation', () => {
       },
     });
 
-    wrapper = mount(componentWrapperIntl(<TabNavigation />, store));
+    render(componentWrapperIntl(<TabNavigation />, store));
 
-    expect(wrapper.find(Tabs)).toHaveLength(1);
-    expect(wrapper.find(TabTitleIcon)).toHaveLength(2);
-    expect(wrapper.find(TabTitleText)).toHaveLength(2);
-    expect(wrapper.find(RedhatIcon)).toHaveLength(1);
-    expect(wrapper.find(CloudIcon)).toHaveLength(1);
+    expect(screen.getByLabelText('Red Hat Icon')).toBeInTheDocument();
+    expect(screen.getByLabelText('Cloud Icon')).toBeInTheDocument();
 
-    expect(wrapper.find(Tabs).props().activeKey).toEqual(CLOUD_VENDOR);
+    expect(screen.getByText('Cloud sources').closest('.pf-m-current')).toBeInTheDocument();
+    expect(screen.getByText('Red Hat sources')).toBeInTheDocument();
   });
 
   it('renders correctly on Red Hat vendor', () => {
@@ -41,35 +35,29 @@ describe('TabNavigation', () => {
       },
     });
 
-    wrapper = mount(componentWrapperIntl(<TabNavigation />, store));
+    render(componentWrapperIntl(<TabNavigation />, store));
 
-    expect(wrapper.find(Tabs)).toHaveLength(1);
-    expect(wrapper.find(TabTitleIcon)).toHaveLength(2);
-    expect(wrapper.find(TabTitleText)).toHaveLength(2);
-    expect(wrapper.find(RedhatIcon)).toHaveLength(1);
-    expect(wrapper.find(CloudIcon)).toHaveLength(1);
+    expect(screen.getByLabelText('Red Hat Icon')).toBeInTheDocument();
+    expect(screen.getByLabelText('Cloud Icon')).toBeInTheDocument();
 
-    expect(wrapper.find(Tabs).props().activeKey).toEqual(REDHAT_VENDOR);
+    expect(screen.getByText('Cloud sources')).toBeInTheDocument();
+    expect(screen.getByText('Red Hat sources').closest('.pf-m-current')).toBeInTheDocument();
   });
 
   it('triggers redux changed', async () => {
     actions.setActiveVendor = jest.fn().mockImplementation(() => ({ type: 'something' }));
 
+    render(componentWrapperIntl(<TabNavigation />, store));
+
     expect(actions.setActiveVendor).not.toHaveBeenCalled();
 
-    await act(async () => {
-      wrapper.find('TabButton').first().simulate('click');
-    });
-    wrapper.update();
+    userEvent.click(screen.getByText('Cloud sources'));
 
     expect(actions.setActiveVendor).toHaveBeenCalledWith(CLOUD_VENDOR);
 
     actions.setActiveVendor.mockClear();
 
-    await act(async () => {
-      wrapper.find('TabButton').last().simulate('click');
-    });
-    wrapper.update();
+    userEvent.click(screen.getByText('Red Hat sources'));
 
     expect(actions.setActiveVendor).toHaveBeenCalledWith(REDHAT_VENDOR);
   });

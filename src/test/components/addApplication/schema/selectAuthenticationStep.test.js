@@ -1,3 +1,5 @@
+import { render, screen } from '@testing-library/react';
+
 import selectAuthenticationStep, {
   SelectAuthenticationDescription,
 } from '../../../../components/AddApplication/schema/selectAuthenticationStep';
@@ -129,15 +131,17 @@ describe('selectAuthenticationStep', () => {
 
   describe('SelectAuthenticationDescription', () => {
     it('renders correctly', () => {
-      const wrapper = mount(
+      render(
         <IntlProvider locale="en">
           <SelectAuthenticationDescription applicationTypeName="Catalog" authenticationTypeName="ARN" />
         </IntlProvider>
       );
 
-      expect(wrapper.text()).toEqual(
-        'Selected application Catalog supports ARN authentication type. You can use already defined authentication values or define new.'
-      );
+      expect(
+        screen.getByText(
+          'Selected application Catalog supports ARN authentication type. You can use already defined authentication values or define new.'
+        )
+      ).toBeInTheDocument();
     });
   });
 });

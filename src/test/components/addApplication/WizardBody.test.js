@@ -1,4 +1,4 @@
-import { Wizard } from '@patternfly/react-core';
+import { render, screen } from '@testing-library/react';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import WizardBodyAttach from '../../../components/AddApplication/WizardBody';
@@ -19,9 +19,9 @@ describe('AddApplication wizard - ErroredStep', () => {
   });
 
   it('renders correctly', () => {
-    const wrapper = mount(componentWrapperIntl(<WizardBodyAttach {...initialProps} />));
+    render(componentWrapperIntl(<WizardBodyAttach {...initialProps} />));
 
-    expect(wrapper.find(Wizard)).toHaveLength(1);
-    expect(wrapper.find(Step)).toHaveLength(1);
+    expect(screen.getByText('Ahoooj')).toBeInTheDocument();
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 });
