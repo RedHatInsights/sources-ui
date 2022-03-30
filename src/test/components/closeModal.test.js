@@ -1,10 +1,9 @@
 import React from 'react';
 
-import { Button, Modal, Title } from '@patternfly/react-core';
+import { screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
-import ExclamationTriangleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-triangle-icon';
-
-import mount from '../addSourceWizard/__mocks__/mount';
+import render from '../addSourceWizard/__mocks__/render';
 import CloseModal from '../../components/CloseModal';
 
 describe('CloseModal', () => {
@@ -26,12 +25,14 @@ describe('CloseModal', () => {
   });
 
   it('renders correctly', () => {
-    const wrapper = mount(<CloseModal {...initialProps} />);
+    render(<CloseModal {...initialProps} />);
 
-    expect(wrapper.find(Modal)).toHaveLength(1);
-    expect(wrapper.find(Button)).toHaveLength(3);
-    expect(wrapper.find(ExclamationTriangleIcon)).toHaveLength(1);
-    expect(wrapper.find(Title)).toHaveLength(1);
+    expect(screen.getByText('Exit source creation?')).toBeInTheDocument();
+    expect(screen.getByText('All inputs will be discarded.')).toBeInTheDocument();
+    expect(screen.getByText('Exit')).toBeInTheDocument();
+    expect(screen.getByText('Stay')).toBeInTheDocument();
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByLabelText('Exclamation icon')).toBeInTheDocument();
   });
 
   it('renders correctly with custom title', () => {
@@ -40,44 +41,56 @@ describe('CloseModal', () => {
       title: 'CUSTOM TITLE',
     };
 
-    const wrapper = mount(<CloseModal {...initialProps} />);
+    render(<CloseModal {...initialProps} />);
 
-    expect(wrapper.find(Modal)).toHaveLength(1);
-    expect(wrapper.find(Button)).toHaveLength(3);
-    expect(wrapper.find(ExclamationTriangleIcon)).toHaveLength(1);
-    expect(wrapper.find(Title).text()).toEqual(initialProps.title);
+    expect(screen.getByText(initialProps.title)).toBeInTheDocument();
+    expect(screen.getByText('All inputs will be discarded.')).toBeInTheDocument();
+    expect(screen.getByText('Exit')).toBeInTheDocument();
+    expect(screen.getByText('Stay')).toBeInTheDocument();
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByLabelText('Exclamation icon')).toBeInTheDocument();
   });
 
   it('calls onExit', () => {
-    const wrapper = mount(<CloseModal {...initialProps} />);
+    render(<CloseModal {...initialProps} />);
 
-    wrapper.find(Button).at(1).simulate('click');
+    userEvent.click(screen.getByText('Exit'));
 
     expect(onExit).toHaveBeenCalled();
   });
 
   it('calls onStay', () => {
-    const wrapper = mount(<CloseModal {...initialProps} />);
+    render(<CloseModal {...initialProps} />);
 
-    wrapper.find(Button).at(0).simulate('click');
+    userEvent.click(screen.getByLabelText('Close'));
 
     expect(onStay).toHaveBeenCalled();
     onStay.mockClear();
 
-    wrapper.find(Button).at(2).simulate('click');
+    userEvent.click(screen.getByText('Stay'));
 
     expect(onStay).toHaveBeenCalled();
     onStay.mockClear();
   });
 
   it('calls onStay when pressed escape second time', () => {
-    const wrapper = mount(<CloseModal {...initialProps} />);
+    render(<CloseModal {...initialProps} />);
 
-    wrapper.find(Modal).at(0).props().onEscapePress();
+    fireEvent.keyDown(screen.getByRole('dialog'), {
+      key: 'Escape',
+      code: 'Escape',
+      keyCode: 27,
+      charCode: 27,
+    });
 
     expect(onStay).not.toHaveBeenCalled();
 
-    wrapper.find(Modal).at(0).props().onEscapePress();
+    fireEvent.keyDown(screen.getByRole('dialog'), {
+      key: 'Escape',
+      code: 'Escape',
+      keyCode: 27,
+      charCode: 27,
+    });
 
     expect(onStay).toHaveBeenCalled();
   });
