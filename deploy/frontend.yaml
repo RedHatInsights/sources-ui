@@ -25,7 +25,6 @@ objects:
         - appId: "sources"
           title: "Sources"
           href: "/settings/sources"
-          product: "Red Hat Insights"
       module:
         manifestLocation: "/apps/sources/fed-mods.json"
         modules:
