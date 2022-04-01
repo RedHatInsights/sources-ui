@@ -86,52 +86,58 @@ export const sorting = (sortBy, sortDirection) => {
   }
 
   if (sortBy === 'source_type_id') {
-    return `sort_by:{source_type:{product_name:"${sortDirection}"}}`;
+    return `sort_by: { name: "source_type.product_name", direction: "${sortDirection}" }`;
   }
 
   if (sortBy === 'applications') {
-    return `sort_by:{applications:{__count:"${sortDirection}"}}`;
+    return `sort_by: { name: "applications", direction: "${sortDirection}" }`;
   }
 
-  return `sort_by:{${sortBy}:"${sortDirection}"}`;
+  return `sort_by: { name: "${sortBy}", direction: "${sortDirection}" }`;
 };
 
 export const filtering = (filterValue = {}, activeVendor) => {
   let filterQueries = [];
 
   if (filterValue.name) {
-    filterQueries.push(`name: { contains_i: "${filterValue.name}" }`);
+    filterQueries.push(`{ name: "name", operation: 'contains_i', value: "${filterValue.name}" }`);
   }
 
   if (filterValue.source_type_id?.length > 0) {
-    filterQueries.push(`source_type_id: { eq: [${filterValue.source_type_id.map((x) => `"${x}"`).join(', ')}] }`);
+    filterQueries.push(
+      `{ name: "source_type_id", operation: 'eq', value: [${filterValue.source_type_id.map((x) => `"${x}"`).join(', ')}] }`
+    );
   }
 
   if (filterValue.applications?.length > 0) {
     filterQueries.push(
-      `applications: { application_type_id: { eq: [${filterValue.applications.map((x) => `"${x}"`).join(', ')}] }}`
+      `{ name: "applications.application_type_id", operation: 'eq', value: "[${filterValue.applications
+        .map((x) => `"${x}"`)
+        .join(', ')}]" }`
     );
   }
 
   if (activeVendor === CLOUD_VENDOR) {
-    filterQueries.push(`source_type: { vendor: { not_eq: "Red Hat"} }`);
+    filterQueries.push(`{ name: "source_type.vendor", operation: 'not_eq', value: "Red Hat" }`);
   }
 
   if (activeVendor === REDHAT_VENDOR) {
-    filterQueries.push('source_type: { vendor: "Red Hat" }');
+    filterQueries.push(`{ name: "source_type.vendor", operation: 'eq', value: "Red Hat" }`);
   }
 
   const status = filterValue.availability_status?.[0];
   if (status) {
     if (status === AVAILABLE) {
-      filterQueries.push(`availability_status: { eq: "${AVAILABLE}" }`);
+      filterQueries.push(`{ name: "availability_status", operation: 'eq', value: "${AVAILABLE}" }`);
     } else if (status === UNAVAILABLE) {
-      filterQueries.push(`availability_status: { eq: ["${PARTIALLY_UNAVAILABLE}", "${UNAVAILABLE}"] }`);
+      filterQueries.push(
+        `{ name: "availability_status", operation: 'eq', value: ["${PARTIALLY_UNAVAILABLE}", "${UNAVAILABLE}"] }`
+      );
     }
   }
 
   if (filterQueries.length > 0) {
-    return `filter: { ${filterQueries.join(', ')} }`;
+    return `filter: [ ${filterQueries.join(', ')} ]`;
   }
 
   return '';
@@ -164,7 +170,7 @@ export const doLoadEntities = ({ pageSize, pageNumber, sortBy, sortDirection, fi
     .postGraphQL({
       query: `{ sources(${filterSection})
       { ${graphQlAttributes} },
-     sources_aggregate(${filter}){aggregate{total_count}}
+     meta{count}
     }`,
     })
     .then(({ data }) => data);
@@ -222,7 +228,7 @@ export const restFilterGenerator = (filterValue = {}, activeVendor) => {
 export const doLoadSource = (id) =>
   getSourcesApi()
     .postGraphQL({
-      query: `{ sources(filter: { id: { eq: ${id}}})
+      query: `{ sources(filter: { name: "id", operation: "eq", value: ${id} })
             { ${graphQlAttributes} }
         }`,
     })
@@ -230,7 +236,7 @@ export const doLoadSource = (id) =>
 
 export const doLoadApplicationsForEdit = async (id) => {
   let graphql = await getSourcesApi().postGraphQL({
-    query: `{ sources(filter: { id: { eq: ${id}}})
+    query: `{ sources(filter: { name: "id", operation: "eq", value: ${id} })
           { applications {
               application_type_id,
               id,
