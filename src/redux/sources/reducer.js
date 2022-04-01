@@ -35,11 +35,11 @@ export const entitiesPending = (state, { options }) => ({
   ...options,
 });
 
-export const entitiesLoaded = (state, { payload: { sources, sources_aggregate }, options }) => ({
+export const entitiesLoaded = (state, { payload: { sources, meta }, options }) => ({
   ...state,
   loaded: Math.max(state.loaded - 1, 0),
   entities: sources,
-  numberOfEntities: sources_aggregate?.aggregate?.total_count,
+  numberOfEntities: meta?.count,
   ...options,
 });
 

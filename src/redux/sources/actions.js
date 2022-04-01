@@ -36,10 +36,10 @@ export const loadEntities = (options) => (dispatch, getState) => {
     filterValue,
     activeVendor,
   })
-    .then(({ sources, sources_aggregate }) =>
+    .then(({ sources, meta }) =>
       dispatch({
         type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
-        payload: { sources, sources_aggregate },
+        payload: { sources, meta },
       })
     )
     .catch((error) =>
