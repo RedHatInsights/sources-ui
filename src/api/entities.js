@@ -86,52 +86,52 @@ export const sorting = (sortBy, sortDirection) => {
   }
 
   if (sortBy === 'source_type_id') {
-    return `sort_by: { name: "source_type.product_name", direction: "${sortDirection}" }`;
+    return `sort_by: { name: "source_type.product_name", direction: ${sortDirection} }`;
   }
 
   if (sortBy === 'applications') {
-    return `sort_by: { name: "applications", direction: "${sortDirection}" }`;
+    return `sort_by: { name: "applications", direction: ${sortDirection} }`;
   }
 
-  return `sort_by: { name: "${sortBy}", direction: "${sortDirection}" }`;
+  return `sort_by: { name: "${sortBy}", direction: ${sortDirection} }`;
 };
 
 export const filtering = (filterValue = {}, activeVendor) => {
   let filterQueries = [];
 
   if (filterValue.name) {
-    filterQueries.push(`{ name: "name", operation: 'contains_i', value: "${filterValue.name}" }`);
+    filterQueries.push(`{ name: "name", operation: "contains_i", value: "${filterValue.name}" }`);
   }
 
   if (filterValue.source_type_id?.length > 0) {
     filterQueries.push(
-      `{ name: "source_type_id", operation: 'eq', value: [${filterValue.source_type_id.map((x) => `"${x}"`).join(', ')}] }`
+      `{ name: "source_type_id", operation: "eg", value: [${filterValue.source_type_id.map((x) => `"${x}"`).join(', ')}] }`
     );
   }
 
   if (filterValue.applications?.length > 0) {
     filterQueries.push(
-      `{ name: "applications.application_type_id", operation: 'eq', value: "[${filterValue.applications
+      `{ name: "applications.application_type_id", operation: "eg", value: "[${filterValue.applications
         .map((x) => `"${x}"`)
         .join(', ')}]" }`
     );
   }
 
   if (activeVendor === CLOUD_VENDOR) {
-    filterQueries.push(`{ name: "source_type.vendor", operation: 'not_eq', value: "Red Hat" }`);
+    filterQueries.push(`{ name: "source_type.vendor", operation: "not_eq", value: "Red Hat" }`);
   }
 
   if (activeVendor === REDHAT_VENDOR) {
-    filterQueries.push(`{ name: "source_type.vendor", operation: 'eq', value: "Red Hat" }`);
+    filterQueries.push(`{ name: "source_type.vendor", operation: "eg", value: "Red Hat" }`);
   }
 
   const status = filterValue.availability_status?.[0];
   if (status) {
     if (status === AVAILABLE) {
-      filterQueries.push(`{ name: "availability_status", operation: 'eq', value: "${AVAILABLE}" }`);
+      filterQueries.push(`{ name: "availability_status", operation: "eg", value: "${AVAILABLE}" }`);
     } else if (status === UNAVAILABLE) {
       filterQueries.push(
-        `{ name: "availability_status", operation: 'eq', value: ["${PARTIALLY_UNAVAILABLE}", "${UNAVAILABLE}"] }`
+        `{ name: "availability_status", operation: "eg", value: ["${PARTIALLY_UNAVAILABLE}", "${UNAVAILABLE}"] }`
       );
     }
   }
