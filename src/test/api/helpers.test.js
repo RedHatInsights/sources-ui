@@ -30,8 +30,8 @@ describe('api helpers', () => {
     const NAME = 'jonas';
     const SOURCE_TYPE_ID = ['1', '09090'];
 
-    const EXPECTED_NAME_QUERY = `name: { contains_i: "${NAME}" }`;
-    const EXPECTED_TYPE_QUERY = 'source_type_id: { eq: ["1", "09090"] }';
+    const EXPECTED_NAME_QUERY = `{ name: "name", operation: "contains_i", value: "${NAME}" }`;
+    const EXPECTED_TYPE_QUERY = '{ name: "source_type_id", operation: "eq", value: ["1", "09090"] }';
 
     const EXPECTED_NAME_QUERY_REST = `filter[name][contains_i]=${NAME}`;
     const EXPECTED_TYPE_QUERY_REST = `filter[source_type_id][]=1&filter[source_type_id][]=09090`;
@@ -39,25 +39,27 @@ describe('api helpers', () => {
     it('creates filtering query name param [GRAPHQL]', () => {
       const filterValue = { name: NAME };
 
-      expect(filtering(filterValue)).toEqual(`filter: { ${EXPECTED_NAME_QUERY} }`);
+      expect(filtering(filterValue)).toEqual(`filter: [ ${EXPECTED_NAME_QUERY} ]`);
     });
 
     it('creates filtering query source_type_id param [GRAPHQL]', () => {
       const filterValue = { source_type_id: SOURCE_TYPE_ID };
 
-      expect(filtering(filterValue)).toEqual(`filter: { ${EXPECTED_TYPE_QUERY} }`);
+      expect(filtering(filterValue)).toEqual(`filter: [ ${EXPECTED_TYPE_QUERY} ]`);
     });
 
     it('creates filtering query applications param [GRAPHQL]', () => {
       const filterValue = { applications: ['2', '898'] };
 
-      expect(filtering(filterValue)).toEqual(`filter: { applications: { application_type_id: { eq: ["2", "898"] }} }`);
+      expect(filtering(filterValue)).toEqual(
+        `filter: [ { name: "applications.application_type_id", operation: "eq", value: "["2", "898"]" } ]`
+      );
     });
 
     it('creates filtering query combined param [GRAPHQL]', () => {
       const filterValue = { source_type_id: SOURCE_TYPE_ID, name: NAME };
 
-      expect(filtering(filterValue)).toEqual(`filter: { ${EXPECTED_NAME_QUERY}, ${EXPECTED_TYPE_QUERY} }`);
+      expect(filtering(filterValue)).toEqual(`filter: [ ${EXPECTED_NAME_QUERY}, ${EXPECTED_TYPE_QUERY} ]`);
     });
 
     it('creates empty filtering query when empty array [GRAPHQL]', () => {
@@ -70,27 +72,33 @@ describe('api helpers', () => {
       const filterValue = {};
       const activeVendor = CLOUD_VENDOR;
 
-      expect(filtering(filterValue, activeVendor)).toEqual('filter: { source_type: { vendor: { not_eq: "Red Hat"} } }');
+      expect(filtering(filterValue, activeVendor)).toEqual(
+        'filter: [ { name: "source_type.vendor", operation: "not_eq", value: "Red Hat" } ]'
+      );
     });
 
     it('creates red hat vendor [GRAPHQL]', () => {
       const filterValue = {};
       const activeVendor = REDHAT_VENDOR;
 
-      expect(filtering(filterValue, activeVendor)).toEqual('filter: { source_type: { vendor: "Red Hat" } }');
+      expect(filtering(filterValue, activeVendor)).toEqual(
+        'filter: [ { name: "source_type.vendor", operation: "eq", value: "Red Hat" } ]'
+      );
     });
 
     it('creates available filter [GRAPHQL]', () => {
       const filterValue = { availability_status: [AVAILABLE] };
 
-      expect(filtering(filterValue)).toEqual(`filter: { availability_status: { eq: "${AVAILABLE}" } }`);
+      expect(filtering(filterValue)).toEqual(
+        `filter: [ { name: "availability_status", operation: "eq", value: "${AVAILABLE}" } ]`
+      );
     });
 
     it('creates unavailable filter [GRAPHQL]', () => {
       const filterValue = { availability_status: [UNAVAILABLE] };
 
       expect(filtering(filterValue)).toEqual(
-        `filter: { availability_status: { eq: ["${PARTIALLY_UNAVAILABLE}", "${UNAVAILABLE}"] } }`
+        `filter: [ { name: "availability_status", operation: "eq", value: ["${PARTIALLY_UNAVAILABLE}", "${UNAVAILABLE}"] } ]`
       );
     });
 
@@ -175,21 +183,21 @@ describe('api helpers', () => {
       const SORT_BY = 'name';
       const SORT_DIRECTION = 'desc';
 
-      expect(sorting(SORT_BY, SORT_DIRECTION)).toEqual('sort_by:{name:"desc"}');
+      expect(sorting(SORT_BY, SORT_DIRECTION)).toEqual('sort_by: { name: "name", direction: desc }');
     });
 
     it('creates sorting query param for source_type_id', () => {
       const SORT_BY = 'source_type_id';
       const SORT_DIRECTION = 'desc';
 
-      expect(sorting(SORT_BY, SORT_DIRECTION)).toEqual('sort_by:{source_type:{product_name:"desc"}}');
+      expect(sorting(SORT_BY, SORT_DIRECTION)).toEqual('sort_by: { name: "source_type.product_name", direction: desc }');
     });
 
     it('creates sorting query param for applications', () => {
       const SORT_BY = 'applications';
       const SORT_DIRECTION = 'desc';
 
-      expect(sorting(SORT_BY, SORT_DIRECTION)).toEqual('sort_by:{applications:{__count:"desc"}}');
+      expect(sorting(SORT_BY, SORT_DIRECTION)).toEqual('sort_by: { name: "applications", direction: desc }');
     });
 
     it('creates empty sorting query param', () => {

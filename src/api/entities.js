@@ -105,13 +105,13 @@ export const filtering = (filterValue = {}, activeVendor) => {
 
   if (filterValue.source_type_id?.length > 0) {
     filterQueries.push(
-      `{ name: "source_type_id", operation: "eg", value: [${filterValue.source_type_id.map((x) => `"${x}"`).join(', ')}] }`
+      `{ name: "source_type_id", operation: "eq", value: [${filterValue.source_type_id.map((x) => `"${x}"`).join(', ')}] }`
     );
   }
 
   if (filterValue.applications?.length > 0) {
     filterQueries.push(
-      `{ name: "applications.application_type_id", operation: "eg", value: "[${filterValue.applications
+      `{ name: "applications.application_type_id", operation: "eq", value: "[${filterValue.applications
         .map((x) => `"${x}"`)
         .join(', ')}]" }`
     );
@@ -122,16 +122,16 @@ export const filtering = (filterValue = {}, activeVendor) => {
   }
 
   if (activeVendor === REDHAT_VENDOR) {
-    filterQueries.push(`{ name: "source_type.vendor", operation: "eg", value: "Red Hat" }`);
+    filterQueries.push(`{ name: "source_type.vendor", operation: "eq", value: "Red Hat" }`);
   }
 
   const status = filterValue.availability_status?.[0];
   if (status) {
     if (status === AVAILABLE) {
-      filterQueries.push(`{ name: "availability_status", operation: "eg", value: "${AVAILABLE}" }`);
+      filterQueries.push(`{ name: "availability_status", operation: "eq", value: "${AVAILABLE}" }`);
     } else if (status === UNAVAILABLE) {
       filterQueries.push(
-        `{ name: "availability_status", operation: "eg", value: ["${PARTIALLY_UNAVAILABLE}", "${UNAVAILABLE}"] }`
+        `{ name: "availability_status", operation: "eq", value: ["${PARTIALLY_UNAVAILABLE}", "${UNAVAILABLE}"] }`
       );
     }
   }

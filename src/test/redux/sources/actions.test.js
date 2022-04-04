@@ -124,10 +124,10 @@ describe('redux actions', () => {
       },
     });
 
-    const sources_aggregate = { aggregate: { total_count: count } };
+    const meta = { count };
 
     beforeEach(() => {
-      api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources, sources_aggregate }));
+      api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources, meta }));
     });
 
     it('loads entities', async () => {
@@ -141,7 +141,7 @@ describe('redux actions', () => {
       });
       expect(dispatch.mock.calls[1][0]).toEqual({
         type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
-        payload: { sources, sources_aggregate },
+        payload: { sources, meta },
       });
     });
 
@@ -158,7 +158,7 @@ describe('redux actions', () => {
       });
       expect(dispatch.mock.calls[1][0]).toEqual({
         type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
-        payload: { sources, sources_aggregate },
+        payload: { sources, meta },
       });
     });
 
@@ -396,9 +396,7 @@ describe('redux actions', () => {
       innerDispatch = jest.fn();
       dispatch = jest.fn().mockImplementation((x) => x(innerDispatch, () => ({ sources: {} })));
 
-      api.doLoadEntities = jest
-        .fn()
-        .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
+      api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [], meta: { count: 0 } }));
     });
 
     it('pauseSource', async () => {

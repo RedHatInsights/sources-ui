@@ -483,7 +483,7 @@ describe('SourceEditModal', () => {
                     applications: [],
                   },
                 ],
-                sources_aggregate: { aggregate: { total_count: 1 } },
+                meta: { count: 1 },
               },
             })
           }
