@@ -228,7 +228,7 @@ export const restFilterGenerator = (filterValue = {}, activeVendor) => {
 export const doLoadSource = (id) =>
   getSourcesApi()
     .postGraphQL({
-      query: `{ sources(filter: { name: "id", operation: "eq", value: ${id} })
+      query: `{ sources(filter: { name: "id", operation: "eq", value: "${id}" })
             { ${graphQlAttributes} }
         }`,
     })
@@ -236,7 +236,7 @@ export const doLoadSource = (id) =>
 
 export const doLoadApplicationsForEdit = async (id) => {
   let graphql = await getSourcesApi().postGraphQL({
-    query: `{ sources(filter: { name: "id", operation: "eq", value: ${id} })
+    query: `{ sources(filter: { name: "id", operation: "eq", value: "${id}" })
           { applications {
               application_type_id,
               id,
