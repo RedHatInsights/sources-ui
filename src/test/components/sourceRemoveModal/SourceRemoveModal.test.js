@@ -46,7 +46,7 @@ describe('SourceRemoveModal', () => {
       expect(screen.getByText('Remove source and its data')).toBeDisabled();
     });
 
-    it('enables submit button', () => {
+    it('enables submit button', async () => {
       render(
         componentWrapperIntl(
           <Route path={routes.sourcesRemove.path} render={(...args) => <SourceRemoveModal {...args} />} />,
@@ -57,12 +57,12 @@ describe('SourceRemoveModal', () => {
 
       expect(screen.getByText('Remove source and its data')).toBeDisabled();
 
-      userEvent.click(screen.getByRole('checkbox'));
+      await userEvent.click(screen.getByRole('checkbox'));
 
       expect(screen.getByText('Remove source and its data')).not.toBeDisabled();
     });
 
-    it('calls submit action', () => {
+    it('calls submit action', async () => {
       actions.removeSource = jest.fn().mockImplementation(() => ({ type: 'REMOVE' }));
 
       render(
@@ -73,8 +73,8 @@ describe('SourceRemoveModal', () => {
         )
       );
 
-      userEvent.click(screen.getByRole('checkbox'));
-      userEvent.click(screen.getByText('Remove source and its data'));
+      await userEvent.click(screen.getByRole('checkbox'));
+      await userEvent.click(screen.getByText('Remove source and its data'));
 
       const source = sourcesDataGraphQl.find((s) => s.id === '14');
 

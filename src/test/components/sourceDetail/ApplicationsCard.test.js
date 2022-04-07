@@ -51,7 +51,7 @@ describe('ApplicationsCard', () => {
     expect(screen.getAllByText('Subscription Watch')).toBeTruthy();
     expect(screen.getAllByRole('checkbox')[1]).toBeDisabled();
 
-    userEvent.hover(screen.getByText('Cost Management', { selector: '.pf-m-off' }));
+    await userEvent.hover(screen.getByText('Cost Management', { selector: '.pf-m-off' }));
 
     await waitFor(() =>
       expect(
@@ -146,14 +146,14 @@ describe('ApplicationsCard', () => {
 
       expect(screen.getAllByRole('checkbox')[0]).toBeChecked();
 
-      userEvent.click(screen.getAllByRole('checkbox')[0]);
+      await userEvent.click(screen.getAllByRole('checkbox')[0]);
 
       expect(screen.getAllByRole('checkbox')[0]).not.toBeChecked();
 
       expect(pauseApplication).toHaveBeenCalledWith('123');
       pauseApplication.mockClear();
 
-      userEvent.click(screen.getAllByRole('checkbox')[0]);
+      await userEvent.click(screen.getAllByRole('checkbox')[0]);
 
       expect(pauseApplication).not.toHaveBeenCalled();
       expect(actions.loadEntities).not.toHaveBeenCalled();
@@ -162,7 +162,7 @@ describe('ApplicationsCard', () => {
     });
 
     it('add application', async () => {
-      userEvent.click(screen.getAllByRole('checkbox')[1]);
+      await userEvent.click(screen.getAllByRole('checkbox')[1]);
 
       expect(screen.getByTestId('location-display').textContent).toEqual(
         replaceRouteId(routes.sourcesDetailAddApp.path, sourceId).replace(':app_type_id', SUBWATCH_APP.id)
@@ -205,14 +205,14 @@ describe('ApplicationsCard', () => {
 
       expect(screen.getAllByRole('checkbox')[0]).not.toBeChecked();
 
-      userEvent.click(screen.getAllByRole('checkbox')[0]);
+      await userEvent.click(screen.getAllByRole('checkbox')[0]);
 
       expect(screen.getAllByRole('checkbox')[0]).toBeChecked();
 
       expect(unpauseApplication).toHaveBeenCalledWith('123');
       unpauseApplication.mockClear();
 
-      userEvent.click(screen.getAllByRole('checkbox')[0]);
+      await userEvent.click(screen.getAllByRole('checkbox')[0]);
 
       expect(unpauseApplication).not.toHaveBeenCalled();
       expect(actions.loadEntities).not.toHaveBeenCalled();
@@ -259,7 +259,7 @@ describe('ApplicationsCard', () => {
         )
       );
 
-      userEvent.click(screen.getAllByRole('checkbox')[0]);
+      await userEvent.click(screen.getAllByRole('checkbox')[0]);
 
       await waitFor(() =>
         expect(actions.addMessage).toHaveBeenCalledWith({
@@ -303,8 +303,8 @@ describe('ApplicationsCard', () => {
         )
       );
 
-      userEvent.click(screen.getByLabelText('Actions'));
-      userEvent.click(screen.getByText('Resume'));
+      await userEvent.click(screen.getByLabelText('Actions'));
+      await userEvent.click(screen.getByText('Resume'));
 
       await waitFor(() => expect(unpauseApplication).toHaveBeenCalledWith('123'));
       expect(actions.addMessage).toHaveBeenCalledWith({
@@ -380,14 +380,14 @@ describe('ApplicationsCard', () => {
 
       expect(screen.getAllByRole('checkbox')[0]).not.toBeChecked();
 
-      userEvent.click(screen.getAllByRole('checkbox')[0]);
+      await userEvent.click(screen.getAllByRole('checkbox')[0]);
 
       expect(screen.getAllByRole('checkbox')[0]).toBeChecked();
 
       expect(unpauseApplication).toHaveBeenCalledWith('123');
       unpauseApplication.mockClear();
 
-      userEvent.click(screen.getAllByRole('checkbox')[0]);
+      await userEvent.click(screen.getAllByRole('checkbox')[0]);
 
       expect(unpauseApplication).not.toHaveBeenCalled();
       expect(actions.loadEntities).not.toHaveBeenCalled();
@@ -406,7 +406,7 @@ describe('ApplicationsCard', () => {
       api.doCreateApplication = jest.fn().mockImplementation(() => Promise.reject('Some backend error'));
       actions.addMessage.mockClear();
 
-      userEvent.click(screen.getAllByRole('checkbox')[1]);
+      await userEvent.click(screen.getAllByRole('checkbox')[1]);
 
       await waitFor(() =>
         expect(actions.addMessage).toHaveBeenCalledWith({
@@ -426,7 +426,7 @@ describe('ApplicationsCard', () => {
         pauseApplication,
       });
 
-      userEvent.click(screen.getAllByRole('checkbox')[0]);
+      await userEvent.click(screen.getAllByRole('checkbox')[0]);
 
       await waitFor(() =>
         expect(actions.addMessage).toHaveBeenCalledWith({
@@ -472,7 +472,7 @@ describe('ApplicationsCard', () => {
 
       actions.addMessage.mockClear();
 
-      userEvent.click(screen.getAllByRole('checkbox')[0]);
+      await userEvent.click(screen.getAllByRole('checkbox')[0]);
 
       await waitFor(() =>
         expect(actions.addMessage).toHaveBeenCalledWith({
@@ -488,7 +488,7 @@ describe('ApplicationsCard', () => {
 
       expect(screen.getAllByRole('checkbox')[1]).not.toBeChecked();
 
-      userEvent.click(screen.getAllByRole('checkbox')[1]);
+      await userEvent.click(screen.getAllByRole('checkbox')[1]);
 
       expect(screen.getAllByRole('checkbox')[1]).toBeChecked();
 
@@ -512,14 +512,14 @@ describe('ApplicationsCard', () => {
 
       actions.addMessage.mockClear();
 
-      userEvent.click(screen.getAllByRole('checkbox')[0]);
+      await userEvent.click(screen.getAllByRole('checkbox')[0]);
 
       expect(screen.getAllByRole('checkbox')[0]).not.toBeChecked();
 
       expect(pauseApplication).toHaveBeenCalledWith('123');
       pauseApplication.mockClear();
 
-      userEvent.click(screen.getAllByRole('checkbox')[0]);
+      await userEvent.click(screen.getAllByRole('checkbox')[0]);
 
       expect(pauseApplication).not.toHaveBeenCalled();
       expect(actions.loadEntities).not.toHaveBeenCalled();
@@ -542,8 +542,8 @@ describe('ApplicationsCard', () => {
         pauseApplication,
       });
 
-      userEvent.click(screen.getByLabelText('Actions'));
-      userEvent.click(screen.getByText('Pause'));
+      await userEvent.click(screen.getByLabelText('Actions'));
+      await userEvent.click(screen.getByText('Pause'));
 
       expect(pauseApplication).toHaveBeenCalled();
       await waitFor(() => expect(actions.loadEntities).toHaveBeenCalled());

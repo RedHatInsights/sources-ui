@@ -15,7 +15,7 @@ describe('ValuePopover', () => {
 
     expect(screen.getByText('Show more')).toBeInTheDocument();
 
-    userEvent.click(screen.getByText('Show more'));
+    await userEvent.click(screen.getByText('Show more'));
 
     await waitFor(() => expect(screen.getByText('Some value')).toBeInTheDocument());
     expect(screen.getByText('Some label')).toBeInTheDocument();

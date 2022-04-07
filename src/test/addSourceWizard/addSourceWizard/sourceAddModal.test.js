@@ -82,7 +82,7 @@ describe('sourceAddModal', () => {
 
     expect(onCancel).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getAllByText('Cancel')[0]);
+    await userEvent.click(screen.getAllByText('Cancel')[0]);
 
     expect(onCancel).toHaveBeenCalledWith();
 

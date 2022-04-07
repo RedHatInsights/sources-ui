@@ -42,7 +42,7 @@ describe('RedhatTiles', () => {
     expect(screen.getByText('OpenShift Container Platform')).toBeInTheDocument();
     expect(screen.getByAltText('red hat logo')).toBeInTheDocument();
 
-    userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await userEvent.click(screen.getByText('OpenShift Container Platform'));
 
     await waitFor(() =>
       expect(
@@ -56,7 +56,7 @@ describe('RedhatTiles', () => {
   it('sets openshift', async () => {
     render(componentWrapperIntl(<RedHatTiles {...initialProps} />, store));
 
-    userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await userEvent.click(screen.getByText('OpenShift Container Platform'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path);
     expect(setSelectedType).toHaveBeenCalledWith('openshift');

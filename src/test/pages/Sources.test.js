@@ -190,7 +190,7 @@ describe('SourcesPage', () => {
     render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-    userEvent.click(screen.getByText('Amazon Web Services'));
+    await userEvent.click(screen.getByText('Amazon Web Services'));
 
     await waitFor(() => expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path));
 
@@ -233,7 +233,7 @@ describe('SourcesPage', () => {
     render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-    userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await userEvent.click(screen.getByText('OpenShift Container Platform'));
 
     await waitFor(() => expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path));
 
@@ -281,7 +281,7 @@ describe('SourcesPage', () => {
     render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-    userEvent.click(screen.getAllByLabelText('Go to next page')[0]);
+    await userEvent.click(screen.getAllByLabelText('Go to next page')[0]);
 
     expect(screen.getAllByRole('progressbar')[0].closest('.top-pagination')).not.toBeInTheDocument();
 
@@ -321,9 +321,9 @@ describe('SourcesPage', () => {
       const { container } = render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
       await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-      userEvent.click(screen.getByText('Name', { selector: '.ins-c-conditional-filter__value-selector' }));
-      userEvent.click(screen.getByText('Type', { selector: 'button' }));
-      userEvent.click(screen.getByText('Filter by Type'));
+      await userEvent.click(screen.getByText('Name', { selector: '.ins-c-conditional-filter__value-selector' }));
+      await userEvent.click(screen.getByText('Type', { selector: 'button' }));
+      await userEvent.click(screen.getByText('Filter by Type'));
 
       expect([...container.getElementsByClassName('pf-c-select__menu-item')].map((e) => e.textContent)).toEqual([
         'Ansible Tower',
@@ -351,9 +351,9 @@ describe('SourcesPage', () => {
       const { container } = render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
       await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-      userEvent.click(screen.getByText('Name', { selector: '.ins-c-conditional-filter__value-selector' }));
-      userEvent.click(screen.getByText('Type', { selector: 'button' }));
-      userEvent.click(screen.getByText('Filter by Type'));
+      await userEvent.click(screen.getByText('Name', { selector: '.ins-c-conditional-filter__value-selector' }));
+      await userEvent.click(screen.getByText('Type', { selector: 'button' }));
+      await userEvent.click(screen.getByText('Filter by Type'));
 
       expect([...container.getElementsByClassName('pf-c-select__menu-item')].map((e) => e.textContent)).toEqual([
         'Amazon Web Services',
@@ -387,7 +387,7 @@ describe('SourcesPage', () => {
     render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-    userEvent.click(screen.getByText('Add source'));
+    await userEvent.click(screen.getByText('Add source'));
 
     await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument());
 
@@ -415,13 +415,13 @@ describe('SourcesPage', () => {
     render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-    userEvent.click(screen.getByText('Add source'));
+    await userEvent.click(screen.getByText('Add source'));
 
     await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument());
 
     expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path);
 
-    userEvent.click(screen.getByLabelText('Close wizard'));
+    await userEvent.click(screen.getByLabelText('Close wizard'));
 
     await waitFor(() => expect(() => screen.getByRole('dialog')).toThrow());
 
@@ -441,14 +441,14 @@ describe('SourcesPage', () => {
     expect(urlQuery.parseQuery.mock.calls).toHaveLength(1);
     expect(urlQuery.updateQuery.mock.calls).toHaveLength(1);
 
-    userEvent.click(screen.getByText('Add source'));
+    await userEvent.click(screen.getByText('Add source'));
 
     await waitFor(() => expect(screen.getByText('after success')).toBeInTheDocument());
 
     expect(urlQuery.parseQuery.mock.calls).toHaveLength(1);
     expect(urlQuery.updateQuery.mock.calls).toHaveLength(2);
 
-    userEvent.click(screen.getByText('after success'));
+    await userEvent.click(screen.getByText('after success'));
 
     expect(helpers.afterSuccess).toHaveBeenCalledWith(expect.any(Function), source);
   });
@@ -482,11 +482,11 @@ describe('SourcesPage', () => {
     );
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-    userEvent.click(screen.getByText('Add source'));
+    await userEvent.click(screen.getByText('Add source'));
 
     await waitFor(() => expect(screen.getByText('submit callback')).toBeInTheDocument());
 
-    userEvent.click(screen.getByText('submit callback'));
+    await userEvent.click(screen.getByText('submit callback'));
 
     expect(checkSubmitSpy).toHaveBeenCalledWith(
       source,
@@ -501,7 +501,7 @@ describe('SourcesPage', () => {
     expect(screen.getByText('name of created source', { selector: 'b' })).toBeInTheDocument();
     expect(screen.getByText('was successfully added', { exact: false })).toBeInTheDocument();
 
-    userEvent.click(screen.getByText('View source details'));
+    await userEvent.click(screen.getByText('View source details'));
 
     await waitFor(() => expect(() => screen.getByText('Success alert:')).toThrow());
     expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, '544615'));
@@ -550,11 +550,11 @@ describe('SourcesPage', () => {
     );
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-    userEvent.click(screen.getByText('Add source'));
+    await userEvent.click(screen.getByText('Add source'));
 
     await waitFor(() => expect(screen.getByText('submit callback')).toBeInTheDocument());
 
-    userEvent.click(screen.getByText('submit callback'));
+    await userEvent.click(screen.getByText('submit callback'));
 
     expect(checkSubmitSpy).toHaveBeenCalledWith(
       source,
@@ -573,7 +573,7 @@ describe('SourcesPage', () => {
       screen.getByText('Please try again. If the error persists, open a support case.', { exact: false })
     ).toBeInTheDocument();
 
-    userEvent.click(screen.getByText('Retry'));
+    await userEvent.click(screen.getByText('Retry'));
 
     await waitFor(() => expect(() => screen.getByText('Danger alert:')).toThrow());
 
@@ -581,11 +581,11 @@ describe('SourcesPage', () => {
     expect(props.initialValues).toEqual({ source: { name: 'some-name' } });
     expect(props.initialWizardState).toEqual(wizardState);
 
-    userEvent.click(screen.getByText('Close wizard'));
+    await userEvent.click(screen.getByText('Close wizard'));
 
     await waitFor(() => expect(screen.getByTestId('location-display').textContent).toEqual(routes.sources.path));
 
-    userEvent.click(screen.getByText('Add source'));
+    await userEvent.click(screen.getByText('Add source'));
 
     await waitFor(() => expect(screen.getByText('submit callback')).toBeInTheDocument());
 
@@ -616,14 +616,14 @@ describe('SourcesPage', () => {
 
     const exportButton = screen.getAllByRole('button').find((e) => e.getAttribute('data-ouia-component-id') === 'Export');
 
-    userEvent.click(exportButton);
-    userEvent.click(screen.getByText('Export to CSV'));
+    await userEvent.click(exportButton);
+    await userEvent.click(screen.getByText('Export to CSV'));
 
     expect(utilsHelpers.downloadFile).toHaveBeenCalledWith(CSV_FILE, expect.any(String), 'csv');
     utilsHelpers.downloadFile.mockClear();
 
-    userEvent.click(exportButton);
-    userEvent.click(screen.getByText('Export to JSON'));
+    await userEvent.click(exportButton);
+    await userEvent.click(screen.getByText('Export to JSON'));
 
     expect(utilsHelpers.downloadFile).toHaveBeenCalledWith(JSON_FILE_STRING, expect.any(String), 'json');
   });
@@ -637,7 +637,7 @@ describe('SourcesPage', () => {
       render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
       await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-      userEvent.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
+      await userEvent.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
 
       await act(async () => {
         jest.runAllTimers();
@@ -668,10 +668,10 @@ describe('SourcesPage', () => {
 
       expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument();
 
-      userEvent.click(screen.getByText('Name', { selector: '.ins-c-conditional-filter__value-selector' }));
-      userEvent.click(screen.getByText('Type', { selector: 'button' }));
-      userEvent.click(screen.getByText('Filter by Type'));
-      userEvent.click(screen.getByText('Amazon Web Services', { selector: '.pf-c-check__label' }));
+      await userEvent.click(screen.getByText('Name', { selector: '.ins-c-conditional-filter__value-selector' }));
+      await userEvent.click(screen.getByText('Type', { selector: 'button' }));
+      await userEvent.click(screen.getByText('Filter by Type'));
+      await userEvent.click(screen.getByText('Amazon Web Services', { selector: '.pf-c-check__label' }));
 
       expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument();
       expect(screen.getByText('Amazon Web Services', { selector: '.pf-c-chip__text' })).toBeInTheDocument();
@@ -687,10 +687,10 @@ describe('SourcesPage', () => {
         jest.advanceTimersByTime(500);
       });
 
-      userEvent.click(screen.getByText('Name', { selector: '.ins-c-conditional-filter__value-selector' }));
-      userEvent.click(screen.getByText('Application', { selector: 'button' }));
-      userEvent.click(screen.getByText('Filter by Application'));
-      userEvent.click(screen.getByText('Cost Management', { selector: '.pf-c-check__label' }));
+      await userEvent.click(screen.getByText('Name', { selector: '.ins-c-conditional-filter__value-selector' }));
+      await userEvent.click(screen.getByText('Application', { selector: 'button' }));
+      await userEvent.click(screen.getByText('Filter by Application'));
+      await userEvent.click(screen.getByText('Cost Management', { selector: '.pf-c-check__label' }));
 
       expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument();
       expect(screen.getByText('Cost Management', { selector: '.pf-c-chip__text' })).toBeInTheDocument();
@@ -705,10 +705,10 @@ describe('SourcesPage', () => {
       await act(async () => {
         jest.advanceTimersByTime(500);
       });
-      userEvent.click(screen.getByText('Name', { selector: '.ins-c-conditional-filter__value-selector' }));
-      userEvent.click(screen.getByText('Status', { selector: 'button' }));
-      userEvent.click(screen.getByText('Filter by Status'));
-      userEvent.click(screen.getByText('Available', { selector: '.pf-c-check__label' }));
+      await userEvent.click(screen.getByText('Name', { selector: '.ins-c-conditional-filter__value-selector' }));
+      await userEvent.click(screen.getByText('Status', { selector: 'button' }));
+      await userEvent.click(screen.getByText('Filter by Status'));
+      await userEvent.click(screen.getByText('Available', { selector: '.pf-c-check__label' }));
 
       expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument();
       expect(screen.getByText('Available', { selector: '.pf-c-chip__text' })).toBeInTheDocument();
@@ -718,7 +718,7 @@ describe('SourcesPage', () => {
         availability_status: [AVAILABLE],
       });
 
-      userEvent.click(screen.getByText('Unavailable', { selector: '.pf-c-check__label' }));
+      await userEvent.click(screen.getByText('Unavailable', { selector: '.pf-c-check__label' }));
 
       expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument();
       expect(screen.getByText('Unavailable', { selector: '.pf-c-chip__text' })).toBeInTheDocument();
@@ -728,7 +728,7 @@ describe('SourcesPage', () => {
         availability_status: [UNAVAILABLE],
       });
 
-      userEvent.click(screen.getByText('Unavailable', { selector: '.pf-c-check__label' }));
+      await userEvent.click(screen.getByText('Unavailable', { selector: '.pf-c-check__label' }));
 
       expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument();
 
@@ -747,7 +747,7 @@ describe('SourcesPage', () => {
         jest.advanceTimersByTime(500);
       });
 
-      userEvent.click(screen.getByLabelText('close'));
+      await userEvent.click(screen.getByLabelText('close'));
 
       expect(() => screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toThrow();
       expect(screen.getByPlaceholderText('Filter by Name')).toHaveValue('');
@@ -758,7 +758,7 @@ describe('SourcesPage', () => {
         jest.advanceTimersByTime(500);
       });
 
-      userEvent.click(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' }));
+      await userEvent.click(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' }));
 
       expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument();
       expect(screen.getByPlaceholderText('Filter by Name')).toHaveValue(SEARCH_TERM);
@@ -769,7 +769,7 @@ describe('SourcesPage', () => {
         jest.advanceTimersByTime(500);
       });
 
-      userEvent.click(screen.getByText('Clear filters'));
+      await userEvent.click(screen.getByText('Clear filters'));
 
       expect(() => screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toThrow();
       expect(screen.getByPlaceholderText('Filter by Name')).toHaveValue('');
@@ -787,7 +787,8 @@ describe('SourcesPage', () => {
 
       const totalNonsense = '122#$@#%#^$#@!^$#^$#^546454abcerd';
 
-      userEvent.type(screen.getByPlaceholderText('Filter by Name'), `{selectall}{backspace}${totalNonsense}`);
+      await userEvent.clear(screen.getByPlaceholderText('Filter by Name'));
+      await userEvent.type(screen.getByPlaceholderText('Filter by Name'), `${totalNonsense}`);
 
       await act(async () => {
         jest.advanceTimersByTime(500);
@@ -820,7 +821,8 @@ describe('SourcesPage', () => {
         jest.runAllTimers();
       });
 
-      userEvent.type(screen.getByPlaceholderText('Filter by Name'), `{selectall}{backspace}${SEARCH_TERM}`);
+      await userEvent.clear(screen.getByPlaceholderText('Filter by Name'));
+      await userEvent.type(screen.getByPlaceholderText('Filter by Name'), `${SEARCH_TERM}`);
 
       await act(async () => {
         jest.runAllTimers();
@@ -832,7 +834,8 @@ describe('SourcesPage', () => {
 
       const totalNonsense = '122#$@#%#^$#@!^$#^$#^546454abcerd';
 
-      userEvent.type(screen.getByPlaceholderText('Filter by Name'), `{selectall}{backspace}${totalNonsense}`);
+      await userEvent.clear(screen.getByPlaceholderText('Filter by Name'));
+      await userEvent.type(screen.getByPlaceholderText('Filter by Name'), `${totalNonsense}`);
 
       await act(async () => {
         jest.runAllTimers();
@@ -840,7 +843,7 @@ describe('SourcesPage', () => {
 
       expect(screen.getByPlaceholderText('Filter by Name')).toHaveValue(totalNonsense);
 
-      userEvent.click(screen.getByText('Clear all filters'));
+      await userEvent.click(screen.getByText('Clear all filters'));
 
       await act(async () => {
         jest.runAllTimers();
@@ -860,7 +863,8 @@ describe('SourcesPage', () => {
 
       const totalNonsense = '122#$@#%#^$#@!^$#^$#^546454abcerd';
 
-      userEvent.type(screen.getByPlaceholderText('Filter by Name'), `{selectall}{backspace}${totalNonsense}`);
+      await userEvent.clear(screen.getByPlaceholderText('Filter by Name'));
+      await userEvent.type(screen.getByPlaceholderText('Filter by Name'), `${totalNonsense}`);
 
       await act(async () => {
         jest.advanceTimersByTime(500);
@@ -875,7 +879,7 @@ describe('SourcesPage', () => {
         })
       );
 
-      userEvent.click(screen.getByText('Clear all filters'));
+      await userEvent.click(screen.getByText('Clear all filters'));
 
       await act(async () => {
         jest.runAllTimers();
@@ -904,7 +908,7 @@ describe('SourcesPage', () => {
       expect(screen.getByText('Add source')).toBeDisabled();
 
       await act(async () => {
-        userEvent.click(screen.getByText('Add source'));
+        await userEvent.click(screen.getByText('Add source'));
       });
 
       //TODO: have no idea how to trigger the tooltip
@@ -920,10 +924,10 @@ describe('SourcesPage', () => {
 
       expect(screen.getAllByLabelText('Actions')[0].closest('.pf-c-dropdown')).toHaveClass('pf-m-align-right');
 
-      userEvent.click(screen.getAllByLabelText('Actions')[0]);
+      await userEvent.click(screen.getAllByLabelText('Actions')[0]);
 
       await act(async () => {
-        userEvent.click(screen.getByText('Add source', { selector: '.pf-c-dropdown__menu-item' }));
+        await userEvent.click(screen.getByText('Add source', { selector: '.pf-c-dropdown__menu-item' }));
       });
 
       //TODO: have no idea how to trigger the tooltip

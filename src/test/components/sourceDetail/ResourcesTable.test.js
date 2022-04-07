@@ -296,7 +296,7 @@ describe('ResourcesTable', () => {
     expect(screen.getByText('Cost Management').closest('.pf-m-current')).toBeInTheDocument();
     expect(screen.getByText('Subscription Watch').closest('.pf-m-current')).toBeNull();
 
-    userEvent.click(screen.getByText('Subscription Watch'));
+    await userEvent.click(screen.getByText('Subscription Watch'));
 
     expect(screen.getByText('Cost Management').closest('.pf-m-current')).toBeNull();
     expect(screen.getByText('Subscription Watch').closest('.pf-m-current')).toBeInTheDocument();

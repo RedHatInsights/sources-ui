@@ -120,11 +120,11 @@ describe('SourcesTable', () => {
 
     render(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
 
-    userEvent.click(screen.getAllByLabelText('Actions')[0]);
+    await userEvent.click(screen.getAllByLabelText('Actions')[0]);
 
     expect(screen.getByText('Edit')).toHaveClass('src-m-dropdown-item-disabled');
 
-    userEvent.click(screen.getByText('Edit'));
+    await userEvent.click(screen.getByText('Edit'));
 
     await waitFor(() => expect(screen.getByText(disabledMessage(INTL))).toBeInTheDocument());
   });
@@ -205,15 +205,15 @@ describe('SourcesTable', () => {
     });
 
     it('redirect to edit', async () => {
-      userEvent.click(screen.getAllByLabelText('Actions')[0]);
-      userEvent.click(screen.getByText('Edit'));
+      await userEvent.click(screen.getAllByLabelText('Actions')[0]);
+      await userEvent.click(screen.getByText('Edit'));
       const expectedPath = replaceRouteId(routes.sourcesDetail.path, sourcesDataGraphQl[0].id);
       expect(screen.getByTestId('location-display').textContent).toEqual(expectedPath);
     });
 
     it('redirect to delete', async () => {
-      userEvent.click(screen.getAllByLabelText('Actions')[0]);
-      userEvent.click(screen.getByText('Remove'));
+      await userEvent.click(screen.getAllByLabelText('Actions')[0]);
+      await userEvent.click(screen.getByText('Remove'));
 
       const expectedPath = replaceRouteId(routes.sourcesRemove.path, sourcesDataGraphQl[0].id);
       expect(screen.getByTestId('location-display').textContent).toEqual(expectedPath);
@@ -222,8 +222,8 @@ describe('SourcesTable', () => {
     it('pause source', async () => {
       actions.pauseSource = jest.fn().mockImplementation(() => ({ type: 'undefined-pause' }));
 
-      userEvent.click(screen.getAllByLabelText('Actions')[0]);
-      userEvent.click(screen.getByText('Pause'));
+      await userEvent.click(screen.getAllByLabelText('Actions')[0]);
+      await userEvent.click(screen.getByText('Pause'));
 
       expect(actions.pauseSource).toHaveBeenCalledWith(sourcesDataGraphQl[0].id, sourcesDataGraphQl[0].name, expect.any(Object));
 
@@ -253,8 +253,8 @@ describe('SourcesTable', () => {
 
     render(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
 
-    userEvent.click(screen.getAllByLabelText('Actions')[0]);
-    userEvent.click(screen.getByText('Resume'));
+    await userEvent.click(screen.getAllByLabelText('Actions')[0]);
+    await userEvent.click(screen.getByText('Resume'));
 
     expect(actions.resumeSource).toHaveBeenCalledWith(sourcesDataGraphQl[0].id, sourcesDataGraphQl[0].name, expect.any(Object));
 
@@ -277,11 +277,11 @@ describe('SourcesTable', () => {
 
     render(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
 
-    userEvent.click(screen.getByText('Name'));
+    await userEvent.click(screen.getByText('Name'));
 
     expect(spy).toHaveBeenCalledWith('name', 'asc');
 
-    userEvent.click(screen.getByText('Type'));
+    await userEvent.click(screen.getByText('Type'));
 
     expect(spy).toHaveBeenCalledWith('source_type_id', 'asc');
   });

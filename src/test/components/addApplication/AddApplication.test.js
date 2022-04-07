@@ -285,7 +285,7 @@ describe('AddApplication', () => {
     });
 
     it('closes immedietaly when no value is filled', async () => {
-      userEvent.click(screen.getByLabelText('Close wizard'));
+      await userEvent.click(screen.getByLabelText('Close wizard'));
 
       await waitFor(() =>
         expect(screen.getByTestId('location-display').textContent).toEqual(
@@ -297,9 +297,10 @@ describe('AddApplication', () => {
     it('opens a modal on cancel and closes the wizard', async () => {
       const value = 'SOURCE_REF_CHANGED';
 
-      userEvent.type(screen.getByRole('textbox', { name: 'Receptor ID' }), `{selectall}{backspace}${value}`);
-      userEvent.click(screen.getByLabelText('Close wizard'));
-      userEvent.click(screen.getByText('Exit'));
+      await userEvent.clear(screen.getByRole('textbox', { name: 'Receptor ID' }));
+      await userEvent.type(screen.getByRole('textbox', { name: 'Receptor ID' }), value);
+      await userEvent.click(screen.getByLabelText('Close wizard'));
+      await userEvent.click(screen.getByText('Exit'));
 
       await waitFor(() =>
         expect(screen.getByTestId('location-display').textContent).toEqual(
@@ -311,9 +312,10 @@ describe('AddApplication', () => {
     it('opens a modal on cancel and stay on the wizard', async () => {
       const value = 'SOURCE_REF_CHANGED';
 
-      userEvent.type(screen.getByRole('textbox', { name: 'Receptor ID' }), `{selectall}{backspace}${value}`);
-      userEvent.click(screen.getByLabelText('Close wizard'));
-      userEvent.click(screen.getByText('Stay'));
+      await userEvent.clear(screen.getByRole('textbox', { name: 'Receptor ID' }));
+      await userEvent.type(screen.getByRole('textbox', { name: 'Receptor ID' }), value);
+      await userEvent.click(screen.getByLabelText('Close wizard'));
+      await userEvent.click(screen.getByText('Stay'));
 
       expect(() => screen.getByText('Stay')).toThrow();
       expect(screen.getByRole('textbox', { name: 'Receptor ID' })).toHaveValue(value);
@@ -385,13 +387,14 @@ describe('AddApplication', () => {
 
       expect(screen.getAllByRole('radio')).toHaveLength(2);
 
-      userEvent.click(screen.getAllByRole('radio')[1]);
-      userEvent.click(screen.getByText('Next'));
+      await userEvent.click(screen.getAllByRole('radio')[1]);
+      await userEvent.click(screen.getByText('Next'));
 
       const value = 'SOURCE_REF_CHANGED';
 
-      userEvent.type(screen.getByRole('textbox', { name: 'Receptor ID' }), `{selectall}{backspace}${value}`);
-      userEvent.click(screen.getByText('Next'));
+      await userEvent.clear(screen.getByRole('textbox', { name: 'Receptor ID' }));
+      await userEvent.type(screen.getByRole('textbox', { name: 'Receptor ID' }), value);
+      await userEvent.click(screen.getByText('Next'));
 
       entities.doLoadEntities = jest
         .fn()
@@ -402,7 +405,7 @@ describe('AddApplication', () => {
         })
       );
 
-      userEvent.click(screen.getByText('Add'));
+      await userEvent.click(screen.getByText('Add'));
 
       expect(screen.getByText('Validating credentials')).toBeInTheDocument();
 
@@ -480,7 +483,7 @@ describe('AddApplication', () => {
         )
       );
 
-      userEvent.click(screen.getByText('Add'));
+      await userEvent.click(screen.getByText('Add'));
 
       const formValues = {
         application: {
@@ -536,7 +539,7 @@ describe('AddApplication', () => {
         )
       );
 
-      userEvent.click(screen.getByText('Add'));
+      await userEvent.click(screen.getByText('Add'));
 
       const formValues = {
         application: {
@@ -586,7 +589,7 @@ describe('AddApplication', () => {
         )
       );
 
-      userEvent.click(screen.getByText('Add'));
+      await userEvent.click(screen.getByText('Add'));
 
       await waitFor(() => expect(screen.getByText('Configuration in progress')).toBeInTheDocument());
       expect(
@@ -620,7 +623,7 @@ describe('AddApplication', () => {
         )
       );
 
-      userEvent.click(screen.getByText('Add'));
+      await userEvent.click(screen.getByText('Add'));
 
       await waitFor(() => expect(screen.getByText('Configuration in progress')).toBeInTheDocument());
       expect(
@@ -657,7 +660,7 @@ describe('AddApplication', () => {
         )
       );
 
-      userEvent.click(screen.getByText('Add'));
+      await userEvent.click(screen.getByText('Add'));
 
       await waitFor(() => expect(attachSource.doAttachApp).toHaveBeenCalled());
 
@@ -665,7 +668,7 @@ describe('AddApplication', () => {
       expect(screen.getByText('Edit source')).toBeInTheDocument();
       expect(screen.getByText('Remove application')).toBeInTheDocument();
 
-      userEvent.click(screen.getByText('Edit source'));
+      await userEvent.click(screen.getByText('Edit source'));
 
       await waitFor(() =>
         expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, source.id))
@@ -702,7 +705,7 @@ describe('AddApplication', () => {
         )
       );
 
-      userEvent.click(screen.getByText('Add'));
+      await userEvent.click(screen.getByText('Add'));
 
       await waitFor(() => expect(attachSource.doAttachApp).toHaveBeenCalled());
 
@@ -714,7 +717,7 @@ describe('AddApplication', () => {
 
       expect(removeAppSubmit.default).not.toHaveBeenCalled();
 
-      userEvent.click(screen.getByText('Remove application'));
+      await userEvent.click(screen.getByText('Remove application'));
 
       await waitFor(() =>
         expect(removeAppSubmit.default).toHaveBeenCalledWith(
@@ -740,7 +743,7 @@ describe('AddApplication', () => {
         )
       );
 
-      userEvent.click(screen.getByText('Add'));
+      await userEvent.click(screen.getByText('Add'));
 
       const formValues = {
         application: {
@@ -778,7 +781,7 @@ describe('AddApplication', () => {
         )
       );
 
-      userEvent.click(screen.getByText('Add'));
+      await userEvent.click(screen.getByText('Add'));
 
       const formValues = {
         application: {
@@ -803,7 +806,7 @@ describe('AddApplication', () => {
         })
       );
 
-      userEvent.click(screen.getByText('Retry'));
+      await userEvent.click(screen.getByText('Retry'));
 
       await waitFor(() => expect(screen.getByText('Configuration successful')).toBeInTheDocument());
     });

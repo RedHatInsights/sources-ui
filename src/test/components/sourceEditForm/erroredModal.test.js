@@ -45,7 +45,7 @@ describe('ErroredModal', () => {
   it('calls onRetry', async () => {
     expect(onRetry).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getByText('Retry'));
+    await userEvent.click(screen.getByText('Retry'));
 
     expect(onRetry).toHaveBeenCalled();
   });

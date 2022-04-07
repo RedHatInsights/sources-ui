@@ -60,7 +60,7 @@ describe('Switch group', () => {
     expect(screen.getByLabelText('App 1')).toBeChecked();
     expect(screen.getByLabelText('App 2')).toBeChecked();
 
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({ 'switch-group': ['1', '2'] });
   });
@@ -68,7 +68,7 @@ describe('Switch group', () => {
   it('do not set initial when values exist', async () => {
     render(<FormRenderer {...initialProps} initialValues={{ 'switch-group': '123' }} />);
 
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({ 'switch-group': '123' });
   });
@@ -76,26 +76,26 @@ describe('Switch group', () => {
   it('handle onChange', async () => {
     render(<FormRenderer {...initialProps} />);
 
-    userEvent.click(screen.getAllByText('App 1')[0]);
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getAllByText('App 1')[0]);
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({ 'switch-group': ['2'] });
     onSubmit.mockClear();
 
-    userEvent.click(screen.getAllByText('App 2')[0]);
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getAllByText('App 2')[0]);
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({ 'switch-group': [] });
     onSubmit.mockClear();
 
-    userEvent.click(screen.getAllByText('App 2')[0]);
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getAllByText('App 2')[0]);
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({ 'switch-group': ['2'] });
     onSubmit.mockClear();
 
-    userEvent.click(screen.getAllByText('App 1')[0]);
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getAllByText('App 1')[0]);
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({ 'switch-group': ['2', '1'] });
     onSubmit.mockClear();

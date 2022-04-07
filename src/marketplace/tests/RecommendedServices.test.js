@@ -50,7 +50,7 @@ describe('<RecommendedServices />', () => {
       render(<RecommendedServices />);
       await waitFor(() => expect(screen.getByText('See more databases')).toBeInTheDocument());
 
-      userEvent.click(screen.getByText('See more databases'));
+      await userEvent.click(screen.getByText('See more databases'));
 
       expect(screen.getAllByRole('progressbar')).toHaveLength(6);
 
@@ -66,13 +66,13 @@ describe('<RecommendedServices />', () => {
 
       expect(within(screen.getByRole('dialog')).getAllByText('Add')).toHaveLength(4);
 
-      userEvent.click(screen.getByText('Filter by product type'));
+      await userEvent.click(screen.getByText('Filter by product type'));
 
       categories.map((category) => {
         expect(within(screen.getByRole('listbox')).getAllByText(category.display_name)).toBeTruthy();
       });
 
-      userEvent.click(screen.getByLabelText('Close'));
+      await userEvent.click(screen.getByLabelText('Close'));
 
       expect(() => screen.getByRole('dialog')).toThrow();
     });
@@ -80,22 +80,22 @@ describe('<RecommendedServices />', () => {
     it('change perPage', async () => {
       render(<RecommendedServices />);
       await waitFor(() => expect(screen.getByText('See more databases')).toBeInTheDocument());
-      userEvent.click(screen.getByText('See more databases'));
+      await userEvent.click(screen.getByText('See more databases'));
 
       await waitFor(() => expect(screen.getByText('Filter by product type')).toBeInTheDocument());
 
-      userEvent.click(screen.getByLabelText('Items per page'));
+      await userEvent.click(screen.getByLabelText('Items per page'));
 
       expect(screen.getByText('10 per page')).toHaveAttribute('class', 'pf-m-selected pf-c-options-menu__menu-item');
       expect(screen.getByText('20 per page')).toHaveAttribute('class', 'pf-c-options-menu__menu-item');
 
-      userEvent.click(screen.getByText('20 per page'));
+      await userEvent.click(screen.getByText('20 per page'));
 
       expect(screen.getAllByRole('progressbar')).toHaveLength(6);
       await waitFor(() => expect(screen.getAllByRole('progressbar')).toHaveLength(4));
       expect(api.getProducts).toHaveBeenLastCalledWith({ page: 1, perPage: 20 });
 
-      userEvent.click(screen.getByLabelText('Items per page'));
+      await userEvent.click(screen.getByLabelText('Items per page'));
 
       expect(screen.getByText('10 per page')).toHaveAttribute('class', 'pf-c-options-menu__menu-item');
       expect(screen.getByText('20 per page')).toHaveAttribute('class', 'pf-m-selected pf-c-options-menu__menu-item');
@@ -114,11 +114,11 @@ describe('<RecommendedServices />', () => {
 
       render(<RecommendedServices />);
       await waitFor(() => expect(screen.getByText('See more databases')).toBeInTheDocument());
-      userEvent.click(screen.getByText('See more databases'));
+      await userEvent.click(screen.getByText('See more databases'));
       await waitFor(() => expect(screen.getByText('Filter by product type')).toBeInTheDocument());
 
       expect(screen.getByTestId('pagination')).toHaveTextContent('1 - 10 of 11 1 - 10 of 11');
-      userEvent.click(screen.getByLabelText('Go to next page'));
+      await userEvent.click(screen.getByLabelText('Go to next page'));
 
       expect(screen.getAllByRole('progressbar')).toHaveLength(6);
       await waitFor(() => expect(screen.getAllByRole('progressbar')).toHaveLength(6));

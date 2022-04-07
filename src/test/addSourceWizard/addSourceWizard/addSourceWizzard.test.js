@@ -56,7 +56,7 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await userEvent.click(screen.getByText('OpenShift Container Platform'));
     container.getElementsByTagName('form')[0].submit();
 
     expect(screen.getByText('Validating credentials')).toBeInTheDocument();
@@ -74,7 +74,7 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await userEvent.click(screen.getByText('OpenShift Container Platform'));
     container.getElementsByTagName('form')[0].submit();
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
 
@@ -89,7 +89,7 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await userEvent.click(screen.getByText('OpenShift Container Platform'));
     container.getElementsByTagName('form')[0].submit();
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
@@ -109,7 +109,7 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await userEvent.click(screen.getByText('OpenShift Container Platform'));
     container.getElementsByTagName('form')[0].submit();
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
@@ -131,11 +131,11 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    userEvent.click(screen.getByText('OpenShift Container Platform'));
-    userEvent.click(screen.getByLabelText('Close wizard'));
+    await userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await userEvent.click(screen.getByLabelText('Close wizard'));
 
     expect(screen.getByText('Exit source creation?')).toBeInTheDocument();
-    userEvent.click(screen.getByText('Exit'));
+    await userEvent.click(screen.getByText('Exit'));
     expect(onClose).toHaveBeenCalledWith({ source_type: OPENSHIFT_NAME });
   });
 
@@ -146,9 +146,9 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    userEvent.click(screen.getByText('OpenShift Container Platform'));
-    userEvent.click(screen.getByLabelText('Close wizard'));
-    userEvent.click(screen.getByText('Stay'));
+    await userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await userEvent.click(screen.getByLabelText('Close wizard'));
+    await userEvent.click(screen.getByText('Stay'));
 
     expect(onClose).not.toHaveBeenCalled();
     expect(screen.getByText('OpenShift Container Platform').closest('.pf-m-selected')).toBeInTheDocument();
@@ -162,7 +162,7 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await userEvent.click(screen.getByText('OpenShift Container Platform'));
     container.getElementsByTagName('form')[0].submit();
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
@@ -184,14 +184,14 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await userEvent.click(screen.getByText('OpenShift Container Platform'));
     container.getElementsByTagName('form')[0].submit();
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
 
     expect(closeCallback).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getByLabelText('Close'));
+    await userEvent.click(screen.getByLabelText('Close'));
 
     expect(closeCallback).toHaveBeenCalledWith({});
   });
@@ -205,14 +205,14 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await userEvent.click(screen.getByText('OpenShift Container Platform'));
     container.getElementsByTagName('form')[0].submit();
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
 
     expect(closeCallback).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getByLabelText('Close'));
+    await userEvent.click(screen.getByLabelText('Close'));
 
     await waitFor(() => expect(closeCallback).toHaveBeenCalledWith(undefined, SOURCE_DATA_OUT));
   });
@@ -224,12 +224,12 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await userEvent.click(screen.getByText('OpenShift Container Platform'));
     container.getElementsByTagName('form')[0].submit();
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
 
-    userEvent.click(screen.getByText('Add another source'));
+    await userEvent.click(screen.getByText('Add another source'));
 
     await waitFor(() => expect(() => screen.getByText('OpenShift Container Platform').closest('.pf-m-selected')).toThrow());
   });
@@ -241,14 +241,14 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await userEvent.click(screen.getByText('OpenShift Container Platform'));
     container.getElementsByTagName('form')[0].submit();
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
     createSource.doCreateSource.mockClear();
     expect(createSource.doCreateSource).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getByText('Retry'));
+    await userEvent.click(screen.getByText('Retry'));
 
     await waitFor(() =>
       expect(createSource.doCreateSource).toHaveBeenCalledWith(

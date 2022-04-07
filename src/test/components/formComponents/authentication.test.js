@@ -99,25 +99,25 @@ describe('Authentication test', () => {
     expect(screen.getByRole('textbox')).toHaveAttribute('name', 'authentication.password');
   });
 
-  it('renders not editing', () => {
+  it('renders not editing', async () => {
     render(<SourcesFormRenderer {...initialProps} />);
 
     expect(screen.getByRole('textbox')).toHaveAttribute('name', 'authentication.password');
     expect(screen.getByText('*')).toBeInTheDocument();
     expect(() => screen.getByText('Changing this resets your current API key.')).toThrow();
 
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    userEvent.type(screen.getByRole('textbox'), 's'); // too short
+    await userEvent.type(screen.getByRole('textbox'), 's'); // too short
 
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    userEvent.type(screen.getByRole('textbox'), 'ome-value'); // too short
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.type(screen.getByRole('textbox'), 'ome-value'); // too short
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       authentication: {
@@ -126,7 +126,7 @@ describe('Authentication test', () => {
     });
   });
 
-  it('renders editing and removes required validator (min length still works)', () => {
+  it('renders editing and removes required validator (min length still works)', async () => {
     render(
       <SourcesFormRenderer
         {...initialProps}
@@ -142,7 +142,7 @@ describe('Authentication test', () => {
     expect(() => screen.getByText('*')).toThrow();
     expect(screen.getByText('Changing this resets your current API key.')).toBeInTheDocument();
 
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       authentication: {
@@ -151,8 +151,9 @@ describe('Authentication test', () => {
     });
     onSubmit.mockClear();
 
-    userEvent.type(screen.getByRole('textbox'), '{selectall}{backspace}s'); // too short
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.clear(screen.getByRole('textbox'));
+    await userEvent.type(screen.getByRole('textbox'), 's'); // too short
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).not.toHaveBeenCalled();
   });

@@ -49,13 +49,13 @@ describe('SourceRenameModal', () => {
   });
 
   it('close on close icon', async () => {
-    userEvent.click(screen.getByLabelText('Close'));
+    await userEvent.click(screen.getByLabelText('Close'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
   });
 
   it('close on cancel', async () => {
-    userEvent.click(screen.getByText('Cancel'));
+    await userEvent.click(screen.getByText('Cancel'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
   });
@@ -63,8 +63,9 @@ describe('SourceRenameModal', () => {
   it('submits', async () => {
     actions.renameSource = jest.fn().mockImplementation(() => ({ type: 'something' }));
 
-    userEvent.type(screen.getByRole('textbox'), '{selectall}{backspace}new-name');
-    userEvent.click(screen.getByText('Save'));
+    await userEvent.clear(screen.getByRole('textbox'));
+    await userEvent.type(screen.getByRole('textbox'), 'new-name');
+    await userEvent.click(screen.getByText('Save'));
 
     expect(actions.renameSource).toHaveBeenCalledWith(sourceId, 'new-name', 'Renaming was unsuccessful');
     expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));

@@ -42,24 +42,25 @@ describe('validatorReset', () => {
       />
     );
 
-    userEvent.type(screen.getByRole('textbox'), 'true');
+    await userEvent.type(screen.getByRole('textbox'), 'true');
 
     await act(async () => {
       jest.advanceTimersByTime(1);
     });
 
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({ show: 'true', reset: '1' });
     onSubmit.mockClear();
 
-    userEvent.type(screen.getByRole('textbox'), '{selectall}{backspace}false');
+    await userEvent.clear(screen.getByRole('textbox'));
+    await userEvent.type(screen.getByRole('textbox'), 'false');
 
     await act(async () => {
       jest.advanceTimersByTime(1);
     });
 
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({ show: 'false', reset: '' });
     onSubmit.mockClear();

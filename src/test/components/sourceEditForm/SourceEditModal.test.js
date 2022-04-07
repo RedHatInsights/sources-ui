@@ -161,7 +161,8 @@ describe('SourceEditModal', () => {
 
     expect(screen.getByText('This application is unavailable')).toBeInTheDocument();
 
-    userEvent.type(screen.getAllByRole('textbox')[1], '{selectall}{backspace}different-value');
+    await userEvent.clear(screen.getAllByRole('textbox')[1]);
+    await userEvent.type(screen.getAllByRole('textbox')[1], 'different-value');
 
     submit.onSubmit = jest.fn().mockImplementation((values, editing, _dispatch, source, _intl, setState) => {
       setState({
@@ -176,7 +177,7 @@ describe('SourceEditModal', () => {
       setState({ type: 'sourceChanged' });
     });
 
-    userEvent.click(screen.getByText('Save changes'));
+    await userEvent.click(screen.getByText('Save changes'));
 
     await waitFor(() => expect(screen.getByText('success title')).toBeInTheDocument());
   });
@@ -537,7 +538,7 @@ describe('SourceEditModal', () => {
 
     expect(editApi.doLoadSourceForEdit.mock.calls).toHaveLength(1);
 
-    userEvent.click(screen.getByText('Change redux source'));
+    await userEvent.click(screen.getByText('Change redux source'));
 
     await waitFor(() => expect(editApi.doLoadSourceForEdit.mock.calls).toHaveLength(2));
   });
@@ -571,7 +572,8 @@ describe('SourceEditModal', () => {
 
       await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
 
-      userEvent.type(screen.getAllByRole('textbox')[1], `{selectall}{backspace}${NEW_CA}`);
+      await userEvent.clear(screen.getAllByRole('textbox')[1]);
+      await userEvent.type(screen.getAllByRole('textbox')[1], NEW_CA);
     });
 
     it('calls onSubmit with values and editing object', async () => {
@@ -593,7 +595,7 @@ describe('SourceEditModal', () => {
         }, 1000);
       });
 
-      userEvent.click(screen.getByText('Save changes'));
+      await userEvent.click(screen.getByText('Save changes'));
 
       expect(screen.getByText('Validating edited source credentials')).toBeInTheDocument();
 
@@ -624,7 +626,7 @@ describe('SourceEditModal', () => {
         }, 1000);
       });
 
-      userEvent.click(screen.getByText('Save changes'));
+      await userEvent.click(screen.getByText('Save changes'));
 
       expect(screen.getByText('Validating edited source credentials')).toBeInTheDocument();
 
@@ -644,7 +646,7 @@ describe('SourceEditModal', () => {
         }, 1000);
       });
 
-      userEvent.click(screen.getByText('Save changes'));
+      await userEvent.click(screen.getByText('Save changes'));
 
       expect(screen.getByText('Validating edited source credentials')).toBeInTheDocument();
 
@@ -660,7 +662,7 @@ describe('SourceEditModal', () => {
 
       submit.onSubmit.mockReset();
 
-      userEvent.click(screen.getByText('Retry'));
+      await userEvent.click(screen.getByText('Retry'));
 
       await waitFor(() => expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE));
     });

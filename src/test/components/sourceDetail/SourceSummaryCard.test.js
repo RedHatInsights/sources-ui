@@ -161,7 +161,7 @@ describe('SourceSummaryCard', () => {
       )
     );
 
-    userEvent.click(screen.getByText('Edit credentials'));
+    await userEvent.click(screen.getByText('Edit credentials'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
       replaceRouteId(routes.sourcesDetailEditCredentials.path, sourceId)

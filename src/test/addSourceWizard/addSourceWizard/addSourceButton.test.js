@@ -13,11 +13,11 @@ describe('AddSourceButton', () => {
   it('opens wizard and close wizard', async () => {
     render(<AddSourceButton sourceTypes={sourceTypes} applicationTypes={applicationTypes} activeVendor={CLOUD_VENDOR} />);
 
-    userEvent.click(screen.getByText('Add Red Hat source'));
+    await userEvent.click(screen.getByText('Add Red Hat source'));
 
     await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument());
 
-    userEvent.click(screen.getAllByRole('button')[0]);
+    await userEvent.click(screen.getAllByRole('button')[0]);
 
     expect(() => screen.getByRole('dialog')).toThrow();
   });

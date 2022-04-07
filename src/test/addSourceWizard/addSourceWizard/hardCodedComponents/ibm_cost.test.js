@@ -47,7 +47,7 @@ describe('Cost Management IBM steps', () => {
     );
   });
 
-  it('Configure service', () => {
+  it('Configure service', async () => {
     const copySpy = jest.spyOn(Pf, 'clipboardCopyFunc').mockImplementation(() => null);
 
     render(
@@ -75,7 +75,7 @@ ibmcloud iam service-policy-create "service-id" --service-name globalcatalog  --
 
     expect(screen.getByLabelText('Commands to create policies.')).toHaveValue(value);
 
-    userEvent.click(screen.getByLabelText('Copy to clipboard'));
+    await userEvent.click(screen.getByLabelText('Copy to clipboard'));
 
     expect(copySpy).toHaveBeenCalledWith(expect.any(Object), value);
 

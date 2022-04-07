@@ -51,13 +51,13 @@ describe('TabNavigation', () => {
 
     expect(actions.setActiveVendor).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getByText('Cloud sources'));
+    await userEvent.click(screen.getByText('Cloud sources'));
 
     expect(actions.setActiveVendor).toHaveBeenCalledWith(CLOUD_VENDOR);
 
     actions.setActiveVendor.mockClear();
 
-    userEvent.click(screen.getByText('Red Hat sources'));
+    await userEvent.click(screen.getByText('Red Hat sources'));
 
     expect(actions.setActiveVendor).toHaveBeenCalledWith(REDHAT_VENDOR);
   });

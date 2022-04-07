@@ -159,20 +159,20 @@ describe('CardSelect component', () => {
     expect(screen.getByLabelText('openshift-icon')).toBeInTheDocument();
   });
 
-  it('should set default value', () => {
+  it('should set default value', async () => {
     render(<FormRenderer {...initialProps} initialValues={{ 'card-select': 'ops' }} />);
 
-    userEvent.click(screen.getByText('openshift'));
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('openshift'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({});
   });
 
-  it('should clicked single select', () => {
+  it('should clicked single select', async () => {
     render(<FormRenderer {...initialProps} />);
 
-    userEvent.click(screen.getByText('openshift'));
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('openshift'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       pre: 'filled',
@@ -180,13 +180,13 @@ describe('CardSelect component', () => {
     });
   });
 
-  it('should change by pressing enter single select', () => {
+  it('should change by pressing enter single select', async () => {
     render(<FormRenderer {...initialProps} />);
 
     const preventDefaultMock = jest.fn();
 
-    userEvent.tab();
-    userEvent.tab();
+    await userEvent.tab();
+    await userEvent.tab();
 
     expect(screen.getByText('aws').closest('.pf-c-tile')).toHaveFocus();
 
@@ -201,7 +201,7 @@ describe('CardSelect component', () => {
 
     expect(preventDefaultMock).toHaveBeenCalled();
 
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       pre: 'filled',
@@ -210,27 +210,27 @@ describe('CardSelect component', () => {
 
     // unselect
     fireEvent(screen.getByText('aws').closest('.pf-c-tile'), myEvent);
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       pre: 'filled',
     });
   });
 
-  it('should not change by pressing shift single select', () => {
+  it('should not change by pressing shift single select', async () => {
     render(<FormRenderer {...initialProps} />);
 
-    userEvent.tab();
-    userEvent.tab();
-    userEvent.keyboard('{Shift}');
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.tab();
+    await userEvent.tab();
+    await userEvent.keyboard('{Shift}');
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       pre: 'filled',
     });
   });
 
-  it('should not clicked disabled', () => {
+  it('should not clicked disabled', async () => {
     initialProps = {
       ...initialProps,
       schema: {
@@ -245,16 +245,16 @@ describe('CardSelect component', () => {
 
     render(<FormRenderer {...initialProps} />);
 
-    userEvent.click(screen.getByText('openshift'));
+    await userEvent.click(screen.getByText('openshift'));
 
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       pre: 'filled',
     });
   });
 
-  it('should clicked multiSelect select', () => {
+  it('should clicked multiSelect select', async () => {
     initialProps = {
       ...initialProps,
       schema: {
@@ -269,17 +269,17 @@ describe('CardSelect component', () => {
 
     render(<FormRenderer {...initialProps} />);
 
-    userEvent.click(screen.getByText('openshift'));
-    userEvent.click(screen.getByText('aws'));
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('openshift'));
+    await userEvent.click(screen.getByText('aws'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       pre: 'filled',
       'card-select': ['ops', 'aws'],
     });
 
-    userEvent.click(screen.getByText('openshift'));
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('openshift'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       pre: 'filled',
