@@ -141,7 +141,7 @@ describe('CredentialsForm', () => {
   });
 
   it('submit - success', async () => {
-    const updateAuthentication = jest.fn().mockImplementation(() => new Promise((resolve) => setTimeout(() => resolve(), 100)));
+    const updateAuthentication = mockApi();
 
     api.getSourcesApi = () => ({
       listSourceAuthentications,
@@ -182,7 +182,7 @@ describe('CredentialsForm', () => {
   });
 
   it('submit - fail', async () => {
-    const updateAuthentication = jest.fn().mockRejectedValue();
+    const updateAuthentication = mockApiError();
 
     api.getSourcesApi = () => ({
       listSourceAuthentications,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, act, waitFor, cleanup } from '@testing-library/react';
+import { render, screen, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/NotificationPortal';
@@ -279,7 +279,13 @@ describe('SourcesPage', () => {
     });
 
     render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+
+    api.doLoadEntities = mockApi({
+      sources: sourcesDataGraphQl,
+      sources_aggregate: { aggregate: { total_count: sourcesDataGraphQl.length } },
+    });
 
     await userEvent.click(screen.getAllByLabelText('Go to next page')[0]);
 
@@ -389,7 +395,7 @@ describe('SourcesPage', () => {
 
     await userEvent.click(screen.getByText('Add source'));
 
-    await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument());
+    expect(screen.getAllByRole('dialog')).toBeTruthy();
 
     expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path);
     expect(
@@ -417,8 +423,7 @@ describe('SourcesPage', () => {
 
     await userEvent.click(screen.getByText('Add source'));
 
-    await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument());
-
+    expect(screen.getAllByRole('dialog')).toBeTruthy();
     expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path);
 
     await userEvent.click(screen.getByLabelText('Close wizard'));
@@ -631,49 +636,35 @@ describe('SourcesPage', () => {
   describe('filtering', () => {
     const SEARCH_TERM = 'Pepa';
 
-    beforeEach(async () => {
-      jest.useFakeTimers();
-
+    it('should call onFilterSelect', async () => {
       render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+
       await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
       await userEvent.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
 
-      await act(async () => {
-        jest.runAllTimers();
-      });
-    });
-
-    afterEach(async () => {
-      await act(async () => {
-        jest.runAllTimers();
-      });
-      jest.useRealTimers();
-    });
-
-    it('should call onFilterSelect', async () => {
-      await act(async () => {
-        jest.advanceTimersByTime(500);
-      });
-
-      expect(store.getState().sources.filterValue).toEqual({
-        name: SEARCH_TERM,
-      });
+      await waitFor(() =>
+        expect(store.getState().sources.filterValue).toEqual({
+          name: SEARCH_TERM,
+        })
+      );
     });
 
     it('should call onFilterSelect with type', async () => {
-      await act(async () => {
-        jest.advanceTimersByTime(500);
-      });
+      render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
 
-      expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument();
+      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+
+      await userEvent.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
+
+      await waitFor(() => expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument());
 
       await userEvent.click(screen.getByText('Name', { selector: '.ins-c-conditional-filter__value-selector' }));
       await userEvent.click(screen.getByText('Type', { selector: 'button' }));
       await userEvent.click(screen.getByText('Filter by Type'));
       await userEvent.click(screen.getByText('Amazon Web Services', { selector: '.pf-c-check__label' }));
 
-      expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument();
+      await waitFor(() => expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument());
       expect(screen.getByText('Amazon Web Services', { selector: '.pf-c-chip__text' })).toBeInTheDocument();
 
       expect(store.getState().sources.filterValue).toEqual({
@@ -683,16 +674,17 @@ describe('SourcesPage', () => {
     });
 
     it('should call onFilterSelect with applications', async () => {
-      await act(async () => {
-        jest.advanceTimersByTime(500);
-      });
+      render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
 
+      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+
+      await userEvent.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
       await userEvent.click(screen.getByText('Name', { selector: '.ins-c-conditional-filter__value-selector' }));
       await userEvent.click(screen.getByText('Application', { selector: 'button' }));
       await userEvent.click(screen.getByText('Filter by Application'));
       await userEvent.click(screen.getByText('Cost Management', { selector: '.pf-c-check__label' }));
 
-      expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument();
+      await waitFor(() => expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument());
       expect(screen.getByText('Cost Management', { selector: '.pf-c-chip__text' })).toBeInTheDocument();
 
       expect(store.getState().sources.filterValue).toEqual({
@@ -702,15 +694,17 @@ describe('SourcesPage', () => {
     });
 
     it('should call onFilterSelect with available status', async () => {
-      await act(async () => {
-        jest.advanceTimersByTime(500);
-      });
+      render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+
+      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+
+      await userEvent.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
       await userEvent.click(screen.getByText('Name', { selector: '.ins-c-conditional-filter__value-selector' }));
       await userEvent.click(screen.getByText('Status', { selector: 'button' }));
       await userEvent.click(screen.getByText('Filter by Status'));
       await userEvent.click(screen.getByText('Available', { selector: '.pf-c-check__label' }));
 
-      expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument();
+      await waitFor(() => expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument());
       expect(screen.getByText('Available', { selector: '.pf-c-chip__text' })).toBeInTheDocument();
 
       expect(store.getState().sources.filterValue).toEqual({
@@ -720,7 +714,7 @@ describe('SourcesPage', () => {
 
       await userEvent.click(screen.getByText('Unavailable', { selector: '.pf-c-check__label' }));
 
-      expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument();
+      await waitFor(() => expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument());
       expect(screen.getByText('Unavailable', { selector: '.pf-c-chip__text' })).toBeInTheDocument();
 
       expect(store.getState().sources.filterValue).toEqual({
@@ -730,7 +724,7 @@ describe('SourcesPage', () => {
 
       await userEvent.click(screen.getByText('Unavailable', { selector: '.pf-c-check__label' }));
 
-      expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument();
+      await waitFor(() => expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument());
 
       expect(store.getState().sources.filterValue).toEqual({
         name: SEARCH_TERM,
@@ -738,48 +732,70 @@ describe('SourcesPage', () => {
       });
     });
 
-    it('filtered value is shown in the input', () => {
-      expect(screen.getByPlaceholderText('Filter by Name')).toHaveValue(SEARCH_TERM);
+    it('filtered value is shown in the input', async () => {
+      render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+
+      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+
+      await userEvent.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
+
+      await waitFor(() => expect(screen.getByPlaceholderText('Filter by Name')).toHaveValue(SEARCH_TERM));
     });
 
     it('should remove the name badge when clicking on remove icon in chip', async () => {
-      await act(async () => {
-        jest.advanceTimersByTime(500);
-      });
+      render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+
+      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+
+      await userEvent.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
+
+      await waitFor(() => expect(screen.getByLabelText('close')).toBeInTheDocument());
 
       await userEvent.click(screen.getByLabelText('close'));
 
-      expect(() => screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toThrow();
+      await waitFor(() => expect(() => screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toThrow());
       expect(screen.getByPlaceholderText('Filter by Name')).toHaveValue('');
     });
 
     it('should not remove the name badge when clicking on chip', async () => {
-      await act(async () => {
-        jest.advanceTimersByTime(500);
-      });
+      render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+
+      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+
+      await userEvent.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
+
+      await waitFor(() => expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument());
 
       await userEvent.click(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' }));
 
-      expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument();
+      await waitFor(() => expect(screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toBeInTheDocument());
+
       expect(screen.getByPlaceholderText('Filter by Name')).toHaveValue(SEARCH_TERM);
     });
 
     it('should remove the name badge when clicking on Clear filters button', async () => {
-      await act(async () => {
-        jest.advanceTimersByTime(500);
-      });
+      render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+
+      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+
+      await userEvent.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
+
+      await waitFor(() => expect(screen.getByText('Clear filters')).toBeInTheDocument());
 
       await userEvent.click(screen.getByText('Clear filters'));
 
-      expect(() => screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toThrow();
+      await waitFor(() => expect(() => screen.getByText(SEARCH_TERM, { selector: '.pf-c-chip__text' })).toThrow());
+
       expect(screen.getByPlaceholderText('Filter by Name')).toHaveValue('');
       expect(() => screen.getByText('Clear filters')).toThrow();
     });
 
     it('renders emptyStateTable when no entities found', async () => {
-      await act(async () => {
-        jest.advanceTimersByTime(500);
-      });
+      render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+
+      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+
+      await userEvent.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
 
       api.doLoadEntities = jest
         .fn()
@@ -790,13 +806,11 @@ describe('SourcesPage', () => {
       await userEvent.clear(screen.getByPlaceholderText('Filter by Name'));
       await userEvent.type(screen.getByPlaceholderText('Filter by Name'), `${totalNonsense}`);
 
-      await act(async () => {
-        jest.advanceTimersByTime(500);
-      });
-
-      expect(store.getState().sources.filterValue).toEqual({
-        name: totalNonsense,
-      });
+      await waitFor(() =>
+        expect(store.getState().sources.filterValue).toEqual({
+          name: totalNonsense,
+        })
+      );
       expect(store.getState().sources.numberOfEntities).toEqual(0);
 
       expect(screen.getByText('No sources found')).toBeInTheDocument();
@@ -808,8 +822,6 @@ describe('SourcesPage', () => {
     });
 
     it('show empty state table after clicking on clears all filter in empty table state - RED HAT', async () => {
-      cleanup();
-
       store = getStore([], {
         sources: { activeVendor: REDHAT_VENDOR },
         user: { writePermissions: true },
@@ -817,17 +829,9 @@ describe('SourcesPage', () => {
 
       render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
 
-      await act(async () => {
-        jest.runAllTimers();
-      });
-
       await userEvent.clear(screen.getByPlaceholderText('Filter by Name'));
       await userEvent.type(screen.getByPlaceholderText('Filter by Name'), `${SEARCH_TERM}`);
 
-      await act(async () => {
-        jest.runAllTimers();
-      });
-
       api.doLoadEntities = jest
         .fn()
         .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
@@ -837,25 +841,19 @@ describe('SourcesPage', () => {
       await userEvent.clear(screen.getByPlaceholderText('Filter by Name'));
       await userEvent.type(screen.getByPlaceholderText('Filter by Name'), `${totalNonsense}`);
 
-      await act(async () => {
-        jest.runAllTimers();
-      });
-
-      expect(screen.getByPlaceholderText('Filter by Name')).toHaveValue(totalNonsense);
+      await waitFor(() => expect(screen.getByText('Clear filters')).toBeInTheDocument());
 
       await userEvent.click(screen.getByText('Clear all filters'));
 
-      await act(async () => {
-        jest.runAllTimers();
-      });
-
-      expect(screen.getByText('Get started by connecting to your Red Hat applications')).toBeInTheDocument();
+      await waitFor(() => expect(screen.getByText('Get started by connecting to your Red Hat applications')).toBeInTheDocument());
     });
 
     it('clears filter value in the name input when clicking on clears all filter in empty table state and show table', async () => {
-      await act(async () => {
-        jest.advanceTimersByTime(500);
-      });
+      render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+
+      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+
+      await userEvent.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
 
       api.doLoadEntities = jest
         .fn()
@@ -866,11 +864,9 @@ describe('SourcesPage', () => {
       await userEvent.clear(screen.getByPlaceholderText('Filter by Name'));
       await userEvent.type(screen.getByPlaceholderText('Filter by Name'), `${totalNonsense}`);
 
-      await act(async () => {
-        jest.advanceTimersByTime(500);
-      });
+      await waitFor(() => expect(screen.getByPlaceholderText('Filter by Name')).toHaveValue(totalNonsense));
 
-      expect(screen.getByPlaceholderText('Filter by Name')).toHaveValue(totalNonsense);
+      await waitFor(() => expect(screen.getByText('Clear all filters')).toBeInTheDocument());
 
       api.doLoadEntities.mockImplementation(() =>
         Promise.resolve({
@@ -881,11 +877,7 @@ describe('SourcesPage', () => {
 
       await userEvent.click(screen.getByText('Clear all filters'));
 
-      await act(async () => {
-        jest.runAllTimers();
-      });
-
-      expect(screen.getByPlaceholderText('Filter by Name')).toHaveValue('');
+      await waitFor(() => expect(screen.getByPlaceholderText('Filter by Name')).toHaveValue(''));
     });
   });
 

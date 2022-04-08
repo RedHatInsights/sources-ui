@@ -399,11 +399,9 @@ describe('AddApplication', () => {
       entities.doLoadEntities = jest
         .fn()
         .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
-      attachSource.doAttachApp = jest.fn().mockImplementation(() =>
-        Promise.resolve({
-          availability_status: 'available',
-        })
-      );
+      attachSource.doAttachApp = mockApi({
+        availability_status: 'available',
+      });
 
       await userEvent.click(screen.getByText('Add'));
 

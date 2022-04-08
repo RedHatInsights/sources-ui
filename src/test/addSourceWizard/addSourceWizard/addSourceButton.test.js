@@ -1,5 +1,5 @@
 import React from 'react';
-import { screen, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { AddSourceButton } from '../../../components/addSourceWizard/';
@@ -15,7 +15,7 @@ describe('AddSourceButton', () => {
 
     await userEvent.click(screen.getByText('Add Red Hat source'));
 
-    await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument());
+    expect(screen.getAllByRole('dialog')).toBeTruthy();
 
     await userEvent.click(screen.getAllByRole('button')[0]);
 

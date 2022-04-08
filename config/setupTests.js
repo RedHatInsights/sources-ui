@@ -32,6 +32,6 @@ global.innerWidth = 1080;
 
 Element.prototype.scrollTo = () => {};
 
-global.mockApi = (data, timeout = 60) =>
+global.mockApi = (data, timeout = 200) =>
   jest.fn().mockImplementation(() => new Promise((resolve) => setTimeout(() => resolve(data), timeout)));
-global.mockApiError = (data, timeout = 60) => jest.fn(() => new Promise((_, reject) => setTimeout(() => reject(data), timeout)));
+global.mockApiError = (data, timeout = 200) => jest.fn(() => new Promise((_, reject) => setTimeout(() => reject(data), timeout)));

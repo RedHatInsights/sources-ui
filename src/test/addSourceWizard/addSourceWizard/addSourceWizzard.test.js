@@ -231,7 +231,7 @@ describe('AddSourceWizard', () => {
 
     await userEvent.click(screen.getByText('Add another source'));
 
-    await waitFor(() => expect(() => screen.getByText('OpenShift Container Platform').closest('.pf-m-selected')).toThrow());
+    expect(screen.getByText('OpenShift Container Platform').closest('.pf-m-selected')).toBeNull();
   });
 
   it('tryAgain retries the request', async () => {

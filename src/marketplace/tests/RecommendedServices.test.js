@@ -12,8 +12,8 @@ describe('<RecommendedServices />', () => {
   const mongoProduct = products[1];
 
   beforeEach(() => {
-    api.getProducts = jest.fn().mockResolvedValue({ data: products, meta: { count: products.length } });
-    api.getCategories = jest.fn().mockResolvedValue({ data: categories });
+    api.getProducts = mockApi({ data: products, meta: { count: products.length } });
+    api.getCategories = mockApi({ data: categories });
   });
 
   it('renders page and loads data', async () => {
@@ -102,7 +102,7 @@ describe('<RecommendedServices />', () => {
     });
 
     it('change page', async () => {
-      api.getProducts = jest.fn().mockResolvedValue({
+      api.getProducts = mockApi({
         data: [...Array(11)].map((_, index) => ({
           ...crunchyProduct,
           id: index,
