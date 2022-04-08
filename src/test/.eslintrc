@@ -9,7 +9,9 @@
     "beforeAll": true,
     "describe": true,
     "expect": true,
-    "it": true
+    "it": true,
+    "mockApi": true,
+    "mockApiError": true
   },
   "rules": {
     "react/prop-types": "off",
