@@ -11,8 +11,6 @@ import ValidatorReset from '../../../components/addSourceWizard/ValidatorReset';
 
 describe('validatorReset', () => {
   it('sets value on timeout after mount and remove value after unmnout', async () => {
-    jest.useFakeTimers();
-
     const onSubmit = jest.fn();
 
     render(
@@ -43,11 +41,6 @@ describe('validatorReset', () => {
     );
 
     await userEvent.type(screen.getByRole('textbox'), 'true');
-
-    await act(async () => {
-      jest.advanceTimersByTime(1);
-    });
-
     await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({ show: 'true', reset: '1' });
@@ -56,15 +49,8 @@ describe('validatorReset', () => {
     await userEvent.clear(screen.getByRole('textbox'));
     await userEvent.type(screen.getByRole('textbox'), 'false');
 
-    await act(async () => {
-      jest.advanceTimersByTime(1);
-    });
-
     await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({ show: 'false', reset: '' });
-    onSubmit.mockClear();
-
-    jest.useRealTimers();
   });
 });
