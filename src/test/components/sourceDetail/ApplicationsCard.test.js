@@ -110,7 +110,9 @@ describe('ApplicationsCard', () => {
       });
 
       actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'undefined' }));
+    });
 
+    it('renders correctly', () => {
       render(
         componentWrapperIntl(
           <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
@@ -118,9 +120,7 @@ describe('ApplicationsCard', () => {
           initialEntry
         )
       );
-    });
 
-    it('renders correctly', () => {
       expect(screen.getByText('Applications')).toBeInTheDocument();
 
       expect(screen.getAllByText('Cost Management')).toBeTruthy();
@@ -137,8 +137,16 @@ describe('ApplicationsCard', () => {
     });
 
     it('pause application', async () => {
+      render(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+
       actions.loadEntities = jest.fn().mockImplementation(() => ({ type: 'nonsense' }));
-      const pauseApplication = jest.fn().mockResolvedValue('ok');
+      const pauseApplication = mockApi('ok');
 
       api.getSourcesApi = () => ({
         pauseApplication,
@@ -162,6 +170,14 @@ describe('ApplicationsCard', () => {
     });
 
     it('add application', async () => {
+      render(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+
       await userEvent.click(screen.getAllByRole('checkbox')[1]);
 
       expect(screen.getByTestId('location-display').textContent).toEqual(
@@ -170,8 +186,6 @@ describe('ApplicationsCard', () => {
     });
 
     it('unpause application', async () => {
-      cleanup();
-
       store = mockStore({
         sources: {
           entities: [
@@ -189,7 +203,7 @@ describe('ApplicationsCard', () => {
 
       actions.loadEntities = jest.fn().mockImplementation(() => ({ type: 'nonsense' }));
 
-      const unpauseApplication = jest.fn().mockResolvedValue('ok');
+      const unpauseApplication = mockApi('ok');
 
       api.getSourcesApi = () => ({
         unpauseApplication,
@@ -228,8 +242,6 @@ describe('ApplicationsCard', () => {
     });
 
     it('unpause application and fails', async () => {
-      cleanup();
-
       store = mockStore({
         sources: {
           entities: [
@@ -271,8 +283,6 @@ describe('ApplicationsCard', () => {
     });
 
     it('unpause application via dropdown', async () => {
-      cleanup();
-
       store = mockStore({
         sources: {
           entities: [
@@ -334,20 +344,10 @@ describe('ApplicationsCard', () => {
         user: { writePermissions: true },
       });
 
-      render(
-        componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-
       actions.loadEntities = jest.fn().mockImplementation(() => ({ type: 'nonsense' }));
     });
 
     it('unpaused application and blocks clicking again', async () => {
-      cleanup();
-
       store = mockStore({
         sources: {
           entities: [
@@ -364,7 +364,7 @@ describe('ApplicationsCard', () => {
         user: { writePermissions: true },
       });
 
-      const unpauseApplication = jest.fn().mockResolvedValue('ok');
+      const unpauseApplication = mockApi('ok');
 
       api.getSourcesApi = () => ({
         unpauseApplication,
@@ -399,10 +399,18 @@ describe('ApplicationsCard', () => {
           variant: 'default',
         })
       );
-      expect(actions.loadEntities).toHaveBeenCalled();
+      await waitFor(() => expect(actions.loadEntities).toHaveBeenCalled());
     });
 
     it('adds application and fail', async () => {
+      render(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+
       api.doCreateApplication = jest.fn().mockImplementation(() => Promise.reject('Some backend error'));
       actions.addMessage.mockClear();
 
@@ -418,6 +426,14 @@ describe('ApplicationsCard', () => {
     });
 
     it('pauses application and fail', async () => {
+      render(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+
       const pauseApplication = jest.fn().mockImplementation(() => Promise.reject('Some backend error'));
 
       actions.addMessage.mockClear();
@@ -438,8 +454,6 @@ describe('ApplicationsCard', () => {
     });
 
     it('resumes application and fail', async () => {
-      cleanup();
-
       store = mockStore({
         sources: {
           entities: [
@@ -484,7 +498,15 @@ describe('ApplicationsCard', () => {
     });
 
     it('adds application', async () => {
-      api.doCreateApplication = jest.fn().mockResolvedValue('ok');
+      render(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+
+      api.doCreateApplication = mockApi('ok');
 
       expect(screen.getAllByRole('checkbox')[1]).not.toBeChecked();
 
@@ -502,7 +524,15 @@ describe('ApplicationsCard', () => {
     });
 
     it('pause application and blocks clicking again', async () => {
-      const pauseApplication = jest.fn().mockResolvedValue('ok');
+      render(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+
+      const pauseApplication = mockApi('ok');
 
       api.getSourcesApi = () => ({
         pauseApplication,
@@ -536,6 +566,14 @@ describe('ApplicationsCard', () => {
     });
 
     it('pause application via dropdown', async () => {
+      render(
+        componentWrapperIntl(
+          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          store,
+          initialEntry
+        )
+      );
+
       const pauseApplication = jest.fn().mockImplementation(() => Promise.resolve('ok'));
 
       api.getSourcesApi = () => ({
