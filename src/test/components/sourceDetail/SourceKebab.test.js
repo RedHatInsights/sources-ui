@@ -9,6 +9,16 @@ import SourceKebab from '../../../components/SourceDetail/SourceKebab';
 import mockStore from '../../__mocks__/mockStore';
 import * as actions from '../../../redux/sources/actions';
 
+jest.mock('@patternfly/react-core/dist/js/components/Tooltip', () => {
+  const lib = jest.requireActual('@patternfly/react-core/dist/js/components/Tooltip');
+  const { Tooltip } = jest.requireActual('../../__mocks__/@patternfly/react-core');
+
+  return {
+    ...lib,
+    Tooltip,
+  };
+});
+
 describe('SourceKebab', () => {
   let store;
 

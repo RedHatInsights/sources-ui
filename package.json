@@ -55,7 +55,8 @@
       "<rootDir>/config/setupTests.js"
     ],
     "roots": [
-      "<rootDir>/src/"
+      "<rootDir>/src/",
+      "<rootDir>/src/test"
     ],
     "moduleNameMapper": {
       "\\.(css|scss)$": "identity-obj-proxy"

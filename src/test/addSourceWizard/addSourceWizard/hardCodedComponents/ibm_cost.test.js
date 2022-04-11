@@ -9,6 +9,9 @@ import * as Pf from '@patternfly/react-core/dist/js/components/ClipboardCopy/Cli
 
 import RendererContext from '@data-driven-forms/react-form-renderer/renderer-context';
 
+// Custom Mock Module have issues with ClipBoard
+jest.mock('@patternfly/react-core', () => jest.requireActual('@patternfly/react-core'));
+
 describe('Cost Management IBM steps', () => {
   it('Enteprise ID', async () => {
     await act(async () => {
