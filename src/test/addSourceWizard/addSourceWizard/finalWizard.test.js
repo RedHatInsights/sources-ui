@@ -89,10 +89,10 @@ describe('Final wizard', () => {
     expect(screen.getByText('Configuration successful')).toBeInTheDocument();
   });
 
-  it('calls reset', () => {
+  it('calls reset', async () => {
     render(<FinalWizard {...initialProps} isFinished={true} hideSourcesButton={true} />);
 
-    userEvent.click(screen.getByText('Add another source'));
+    await userEvent.click(screen.getByText('Add another source'));
 
     expect(initialProps.reset).toHaveBeenCalled();
   });
@@ -114,7 +114,7 @@ describe('Final wizard', () => {
 
     expect(tryAgain).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getByText('Retry'));
+    await userEvent.click(screen.getByText('Retry'));
 
     expect(tryAgain).toHaveBeenCalled();
   });
@@ -146,7 +146,7 @@ describe('Final wizard', () => {
     expect(screen.getByText('Configuration unsuccessful')).toBeInTheDocument();
     expect(screen.getByText(ERROR_MSG)).toBeInTheDocument();
 
-    userEvent.click(screen.getByText('Remove source'));
+    await userEvent.click(screen.getByText('Remove source'));
     await waitFor(() => expect(deleteSource).toHaveBeenCalledWith(id));
 
     expect(screen.getByText('Removing successful')).toBeInTheDocument();
@@ -181,7 +181,7 @@ describe('Final wizard', () => {
     expect(screen.getByText('Configuration unsuccessful')).toBeInTheDocument();
     expect(screen.getByText(ERROR_MSG)).toBeInTheDocument();
 
-    userEvent.click(screen.getByText('Remove source'));
+    await userEvent.click(screen.getByText('Remove source'));
 
     await waitFor(() => expect(deleteSource).toHaveBeenCalledWith(id));
     expect(afterSuccess).toHaveBeenCalled();
@@ -214,7 +214,7 @@ describe('Final wizard', () => {
     expect(screen.getByText('Configuration unsuccessful')).toBeInTheDocument();
     expect(screen.getByText(ERROR_MSG)).toBeInTheDocument();
 
-    userEvent.click(screen.getByText('Remove source'));
+    await userEvent.click(screen.getByText('Remove source'));
 
     await waitFor(() => expect(deleteSource).toHaveBeenCalledWith(id));
 
@@ -244,7 +244,7 @@ describe('Final wizard', () => {
     expect(screen.getByText('Configuration unsuccessful')).toBeInTheDocument();
     expect(screen.getByText(ERROR_MSG)).toBeInTheDocument();
 
-    userEvent.click(screen.getByText('Edit source'));
+    await userEvent.click(screen.getByText('Edit source'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, id));
   });

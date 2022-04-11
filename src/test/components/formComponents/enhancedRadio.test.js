@@ -71,7 +71,7 @@ describe('EnhancedRadio', () => {
     expect(screen.getByText('option1')).toBeInTheDocument();
     expect(screen.getByText('option2')).toBeInTheDocument();
 
-    userEvent.type(screen.getByLabelText('multiplier'), '2');
+    await userEvent.type(screen.getByLabelText('multiplier'), '2');
 
     expect(screen.getAllByRole('radio').map((r) => [r.id, r.value])).toEqual([
       ['radio-2', '2'],
@@ -103,16 +103,16 @@ describe('EnhancedRadio', () => {
       />
     );
 
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       radio: NO_APPLICATION_VALUE,
     });
     onSubmit.mockReset();
 
-    userEvent.type(screen.getByLabelText('source_type'), 'some-value');
+    await userEvent.type(screen.getByLabelText('source_type'), 'some-value');
 
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       radio: 'first-option',
@@ -165,7 +165,7 @@ describe('EnhancedRadio', () => {
       />
     );
 
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       radio: 'aws-option',
@@ -173,8 +173,9 @@ describe('EnhancedRadio', () => {
     });
     onSubmit.mockReset();
 
-    userEvent.type(screen.getByLabelText('source_type'), '{selectall}{backspace}some-value');
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.clear(screen.getByLabelText('source_type'));
+    await userEvent.type(screen.getByLabelText('source_type'), 'some-value');
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       radio: '',

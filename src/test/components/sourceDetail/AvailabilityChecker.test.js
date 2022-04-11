@@ -18,7 +18,9 @@ describe('AvailabilityChecker', () => {
 
   beforeEach(() => {
     store = mockStore({ sources: { entities: [{ id: sourceId }] } });
+  });
 
+  it('renders correctly', () => {
     render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetail.path} render={(...args) => <AvailabilityChecker {...args} />} />,
@@ -26,21 +28,27 @@ describe('AvailabilityChecker', () => {
         initialEntry
       )
     );
-  });
 
-  it('renders correctly', () => {
     expect(screen.getByLabelText('Check source availability')).not.toBeDisabled();
     expect(() => screen.getByRole('progressbar')).toThrow();
     expect(screen.getByTestId('RedoIcon')).toBeInTheDocument();
   });
 
   it('checks status (click > loading > message)', async () => {
-    api.default = jest.fn().mockResolvedValue('ok');
+    render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetail.path} render={(...args) => <AvailabilityChecker {...args} />} />,
+        store,
+        initialEntry
+      )
+    );
+
+    api.default = mockApi('ok');
     actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'something' }));
 
     expect(screen.getByLabelText('Check source availability')).not.toBeDisabled();
 
-    userEvent.click(screen.getByLabelText('Check source availability'));
+    await userEvent.click(screen.getByLabelText('Check source availability'));
 
     expect(api.default).toHaveBeenCalledWith(sourceId);
     expect(screen.getByLabelText('Check source availability')).toBeDisabled();

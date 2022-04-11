@@ -73,7 +73,7 @@ describe('CloudCards', () => {
 
     expect(screen.getByText('Use gold images')).toBeInTheDocument();
 
-    userEvent.click(screen.getByRole('button'));
+    await userEvent.click(screen.getByRole('button'));
 
     expect(() => screen.getByText('Use gold images')).toThrow();
 
@@ -81,7 +81,7 @@ describe('CloudCards', () => {
       [CLOUD_CARDS_KEY]: 'false',
     });
 
-    userEvent.click(screen.getByRole('button'));
+    await userEvent.click(screen.getByRole('button'));
 
     expect(screen.getByText('Use gold images')).toBeInTheDocument();
     expect(localStorage).toEqual({

@@ -51,23 +51,23 @@ describe('CloseModal', () => {
     expect(screen.getByLabelText('Exclamation icon')).toBeInTheDocument();
   });
 
-  it('calls onExit', () => {
+  it('calls onExit', async () => {
     render(<CloseModal {...initialProps} />);
 
-    userEvent.click(screen.getByText('Exit'));
+    await userEvent.click(screen.getByText('Exit'));
 
     expect(onExit).toHaveBeenCalled();
   });
 
-  it('calls onStay', () => {
+  it('calls onStay', async () => {
     render(<CloseModal {...initialProps} />);
 
-    userEvent.click(screen.getByLabelText('Close'));
+    await userEvent.click(screen.getByLabelText('Close'));
 
     expect(onStay).toHaveBeenCalled();
     onStay.mockClear();
 
-    userEvent.click(screen.getByText('Stay'));
+    await userEvent.click(screen.getByText('Stay'));
 
     expect(onStay).toHaveBeenCalled();
     onStay.mockClear();

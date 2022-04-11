@@ -85,7 +85,7 @@ describe('DetailHeader', () => {
 
     actions.resumeSource = jest.fn().mockImplementation(() => ({ type: 'mock-resume-source' }));
 
-    userEvent.click(screen.getByText('Resume connection'));
+    await userEvent.click(screen.getByText('Resume connection'));
 
     await waitFor(() => expect(actions.resumeSource).toHaveBeenCalledWith(sourceId, 'Name of this source', expect.any(Object)));
 

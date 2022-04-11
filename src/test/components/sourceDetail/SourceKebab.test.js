@@ -9,6 +9,16 @@ import SourceKebab from '../../../components/SourceDetail/SourceKebab';
 import mockStore from '../../__mocks__/mockStore';
 import * as actions from '../../../redux/sources/actions';
 
+jest.mock('@patternfly/react-core/dist/js/components/Tooltip', () => {
+  const lib = jest.requireActual('@patternfly/react-core/dist/js/components/Tooltip');
+  const { Tooltip } = jest.requireActual('../../__mocks__/@patternfly/react-core');
+
+  return {
+    ...lib,
+    Tooltip,
+  };
+});
+
 describe('SourceKebab', () => {
   let store;
 
@@ -32,7 +42,7 @@ describe('SourceKebab', () => {
       )
     );
 
-    userEvent.click(screen.getByLabelText('Actions'));
+    await userEvent.click(screen.getByLabelText('Actions'));
 
     expect(screen.getByText('Pause')).toBeInTheDocument();
     expect(screen.getByText('Temporarily disable data collection').closest('.src-m-dropdown-item-disabled')).toBeInTheDocument();
@@ -44,7 +54,7 @@ describe('SourceKebab', () => {
 
     expect(screen.getByText('Rename').closest('.src-m-dropdown-item-disabled')).toBeInTheDocument();
 
-    userEvent.hover(screen.getByText('Pause'));
+    await userEvent.hover(screen.getByText('Pause'));
 
     const tooltipText =
       'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.';
@@ -68,7 +78,7 @@ describe('SourceKebab', () => {
       )
     );
 
-    userEvent.click(screen.getByLabelText('Actions'));
+    await userEvent.click(screen.getByLabelText('Actions'));
 
     expect(screen.getByText('Resume')).toBeInTheDocument();
     expect(screen.getByText('Unpause data collection for this source')).toBeInTheDocument();
@@ -78,7 +88,7 @@ describe('SourceKebab', () => {
 
     expect(screen.getByText('Rename')).toBeInTheDocument();
 
-    userEvent.hover(screen.getByText('Rename'));
+    await userEvent.hover(screen.getByText('Rename'));
 
     const tooltipText = 'You cannot perform this action on a paused source.';
 
@@ -101,11 +111,11 @@ describe('SourceKebab', () => {
       )
     );
 
-    userEvent.click(screen.getByLabelText('Actions'));
+    await userEvent.click(screen.getByLabelText('Actions'));
 
     actions.resumeSource = jest.fn().mockImplementation(() => ({ type: 'undefined' }));
 
-    userEvent.click(screen.getByText('Resume'));
+    await userEvent.click(screen.getByText('Resume'));
 
     expect(actions.resumeSource).toHaveBeenCalledWith(sourceId, sourceName, expect.any(Object));
   });
@@ -129,7 +139,7 @@ describe('SourceKebab', () => {
     });
 
     it('renders correctly', async () => {
-      userEvent.click(screen.getByLabelText('Actions'));
+      await userEvent.click(screen.getByLabelText('Actions'));
 
       expect(screen.getByText('Pause')).toBeInTheDocument();
       expect(screen.getByText('Temporarily disable data collection')).toBeInTheDocument();
@@ -144,8 +154,8 @@ describe('SourceKebab', () => {
     });
 
     it('remove source', async () => {
-      userEvent.click(screen.getByLabelText('Actions'));
-      userEvent.click(screen.getByText('Remove'));
+      await userEvent.click(screen.getByLabelText('Actions'));
+      await userEvent.click(screen.getByText('Remove'));
 
       expect(screen.getByTestId('location-display').textContent).toEqual(
         replaceRouteId(routes.sourcesDetailRemove.path, sourceId)
@@ -153,18 +163,18 @@ describe('SourceKebab', () => {
     });
 
     it('pause source', async () => {
-      userEvent.click(screen.getByLabelText('Actions'));
+      await userEvent.click(screen.getByLabelText('Actions'));
 
       actions.pauseSource = jest.fn().mockImplementation(() => ({ type: 'undefined' }));
 
-      userEvent.click(screen.getByText('Pause'));
+      await userEvent.click(screen.getByText('Pause'));
 
       expect(actions.pauseSource).toHaveBeenCalledWith(sourceId, sourceName, expect.any(Object));
     });
 
     it('rename source', async () => {
-      userEvent.click(screen.getByLabelText('Actions'));
-      userEvent.click(screen.getByText('Rename'));
+      await userEvent.click(screen.getByLabelText('Actions'));
+      await userEvent.click(screen.getByText('Rename'));
 
       expect(screen.getByTestId('location-display').textContent).toEqual(
         replaceRouteId(routes.sourcesDetailRename.path, sourceId)

@@ -51,9 +51,9 @@ describe('modalFormTemplate', () => {
   it('submits', async () => {
     expect(submit).not.toHaveBeenCalled();
 
-    userEvent.type(screen.getByRole('textbox'), 'something');
+    await userEvent.type(screen.getByRole('textbox'), 'something');
 
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(submit).toHaveBeenCalled();
   });
@@ -61,7 +61,7 @@ describe('modalFormTemplate', () => {
   it('cancels', async () => {
     expect(cancel).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getByText('Cancel'));
+    await userEvent.click(screen.getByText('Cancel'));
 
     expect(cancel).toHaveBeenCalled();
   });

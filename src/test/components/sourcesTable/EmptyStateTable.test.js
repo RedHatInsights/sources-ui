@@ -17,12 +17,12 @@ describe('EmptyStateTable', () => {
     ).toBeInTheDocument();
   });
 
-  it('calls clear filters when click on button', () => {
+  it('calls clear filters when click on button', async () => {
     actions.clearFilters = jest.fn().mockImplementation(() => ({ type: 'cosi' }));
 
     render(componentWrapperIntl(<EmptyStateTable />));
 
-    userEvent.click(screen.getByText('Clear all filters'));
+    await userEvent.click(screen.getByText('Clear all filters'));
 
     expect(actions.clearFilters).toHaveBeenCalled();
   });

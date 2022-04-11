@@ -119,7 +119,7 @@ describe('CredentialsForm', () => {
 
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
 
-    userEvent.click(screen.getByLabelText('Close'));
+    await userEvent.click(screen.getByLabelText('Close'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
   });
@@ -135,13 +135,13 @@ describe('CredentialsForm', () => {
 
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
 
-    userEvent.click(screen.getByText('Cancel'));
+    await userEvent.click(screen.getByText('Cancel'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
   });
 
   it('submit - success', async () => {
-    const updateAuthentication = jest.fn().mockImplementation(() => new Promise((resolve) => setTimeout(() => resolve(), 100)));
+    const updateAuthentication = mockApi();
 
     api.getSourcesApi = () => ({
       listSourceAuthentications,
@@ -160,12 +160,13 @@ describe('CredentialsForm', () => {
 
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
 
-    userEvent.type(screen.getAllByRole('textbox')[0], '{selectall}{backspace}newname');
+    await userEvent.clear(screen.getAllByRole('textbox')[0]);
+    await userEvent.type(screen.getAllByRole('textbox')[0], 'newname');
 
     expect(updateAuthentication).not.toHaveBeenCalled();
     expect(actions.addMessage).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
     expect(updateAuthentication).toHaveBeenCalledWith('auth-id', { username: 'newname' });
@@ -181,7 +182,7 @@ describe('CredentialsForm', () => {
   });
 
   it('submit - fail', async () => {
-    const updateAuthentication = jest.fn().mockRejectedValue();
+    const updateAuthentication = mockApiError();
 
     api.getSourcesApi = () => ({
       listSourceAuthentications,
@@ -199,12 +200,13 @@ describe('CredentialsForm', () => {
     );
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
 
-    userEvent.type(screen.getAllByRole('textbox')[0], '{selectall}{backspace}newname');
+    await userEvent.clear(screen.getAllByRole('textbox')[0]);
+    await userEvent.type(screen.getAllByRole('textbox')[0], 'newname');
 
     expect(updateAuthentication).not.toHaveBeenCalled();
     expect(actions.addMessage).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
     expect(updateAuthentication).toHaveBeenCalledWith('auth-id', { username: 'newname' });

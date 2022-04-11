@@ -56,7 +56,7 @@ describe('CloudTiles', () => {
     ]);
     expect(container.getElementsByTagName('img')).toHaveLength(4);
 
-    userEvent.click(screen.getByText('Google Cloud'));
+    await userEvent.click(screen.getByText('Google Cloud'));
 
     await waitFor(() =>
       expect(
@@ -70,7 +70,7 @@ describe('CloudTiles', () => {
   it('sets amazon', async () => {
     render(componentWrapperIntl(<CloudTiles {...initialProps} />, store));
 
-    userEvent.click(screen.getByText('Amazon Web Services'));
+    await userEvent.click(screen.getByText('Amazon Web Services'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path);
     expect(setSelectedType).toHaveBeenCalledWith('amazon');
@@ -79,7 +79,7 @@ describe('CloudTiles', () => {
   it('sets gcp', async () => {
     render(componentWrapperIntl(<CloudTiles {...initialProps} />, store));
 
-    userEvent.click(screen.getByText('Google Cloud'));
+    await userEvent.click(screen.getByText('Google Cloud'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path);
     expect(setSelectedType).toHaveBeenCalledWith('google');
@@ -88,7 +88,7 @@ describe('CloudTiles', () => {
   it('sets azure', async () => {
     render(componentWrapperIntl(<CloudTiles {...initialProps} />, store));
 
-    userEvent.click(screen.getByText('Microsoft Azure'));
+    await userEvent.click(screen.getByText('Microsoft Azure'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path);
     expect(setSelectedType).toHaveBeenCalledWith('azure');
@@ -97,7 +97,7 @@ describe('CloudTiles', () => {
   it('sets ibm', async () => {
     render(componentWrapperIntl(<CloudTiles {...initialProps} />, store));
 
-    userEvent.click(screen.getByText('IBM Cloud'));
+    await userEvent.click(screen.getByText('IBM Cloud'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path);
     expect(setSelectedType).toHaveBeenCalledWith('ibm');

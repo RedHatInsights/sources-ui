@@ -9,6 +9,9 @@ import * as Pf from '@patternfly/react-core/dist/js/components/ClipboardCopy/Cli
 
 import RendererContext from '@data-driven-forms/react-form-renderer/renderer-context';
 
+// Custom Mock Module have issues with ClipBoard
+jest.mock('@patternfly/react-core', () => jest.requireActual('@patternfly/react-core'));
+
 describe('Cost Management IBM steps', () => {
   it('Enteprise ID', async () => {
     await act(async () => {
@@ -47,7 +50,7 @@ describe('Cost Management IBM steps', () => {
     );
   });
 
-  it('Configure service', () => {
+  it('Configure service', async () => {
     const copySpy = jest.spyOn(Pf, 'clipboardCopyFunc').mockImplementation(() => null);
 
     render(
@@ -75,7 +78,7 @@ ibmcloud iam service-policy-create "service-id" --service-name globalcatalog  --
 
     expect(screen.getByLabelText('Commands to create policies.')).toHaveValue(value);
 
-    userEvent.click(screen.getByLabelText('Copy to clipboard'));
+    await userEvent.click(screen.getByLabelText('Copy to clipboard'));
 
     expect(copySpy).toHaveBeenCalledWith(expect.any(Object), value);
 

@@ -334,7 +334,7 @@ describe('Source page helpers', () => {
 
       render(messageActionLinks);
 
-      userEvent.click(screen.getByText('Retry'));
+      await userEvent.click(screen.getByText('Retry'));
 
       expect(push).toHaveBeenCalledWith(routes.sourcesNew.path);
       expect(actions.removeMessage).toHaveBeenCalledWith(messageId);
@@ -371,7 +371,7 @@ describe('Source page helpers', () => {
 
       render(messageActionLinks);
 
-      userEvent.click(screen.getByText('Edit source'));
+      await userEvent.click(screen.getByText('Edit source'));
 
       expect(push).toHaveBeenCalledWith(replaceRouteId(routes.sourcesDetail.path, '1234'));
       expect(actions.removeMessage).toHaveBeenCalledWith(messageId);
@@ -474,7 +474,7 @@ describe('Source page helpers', () => {
 
       render(messageActionLinks);
 
-      userEvent.click(screen.getByText('View source details'));
+      await userEvent.click(screen.getByText('View source details'));
 
       expect(push).toHaveBeenCalledWith(replaceRouteId(routes.sourcesDetail.path, '1234'));
       expect(actions.removeMessage).toHaveBeenCalledWith(messageId);

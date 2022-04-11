@@ -101,23 +101,23 @@ describe('Authentication test', () => {
     expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
   });
 
-  it('renders not editing', () => {
+  it('renders not editing', async () => {
     render(componentWrapperIntl(<SourcesFormRenderer {...initialProps} />));
 
     expect(screen.getByRole('textbox')).toBeRequired();
 
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    userEvent.type(screen.getByRole('textbox'), 's');
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.type(screen.getByRole('textbox'), 's');
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    userEvent.type(screen.getByRole('textbox'), 'ome-value');
+    await userEvent.type(screen.getByRole('textbox'), 'ome-value');
 
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       authentication: {
@@ -142,11 +142,11 @@ describe('Authentication test', () => {
 
     expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
 
-    userEvent.click(screen.getByRole('textbox'));
+    await userEvent.click(screen.getByRole('textbox'));
 
     expect(screen.getByRole('textbox')).toHaveValue('');
 
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       authentication: {
@@ -155,8 +155,8 @@ describe('Authentication test', () => {
     });
     onSubmit.mockClear();
 
-    userEvent.type(screen.getByRole('textbox'), 's');
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.type(screen.getByRole('textbox'), 's');
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).not.toHaveBeenCalled();
   });
@@ -178,12 +178,12 @@ describe('Authentication test', () => {
 
     expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
 
-    userEvent.click(screen.getByRole('textbox'));
+    await userEvent.click(screen.getByRole('textbox'));
 
     expect(screen.getByRole('textbox')).toHaveValue('');
 
-    userEvent.type(screen.getByRole('textbox'), 's');
-    userEvent.click(screen.getByText('Reset'));
+    await userEvent.type(screen.getByRole('textbox'), 's');
+    await userEvent.click(screen.getByText('Reset'));
 
     expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
   });
@@ -214,7 +214,7 @@ describe('Authentication test', () => {
     expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
     expect(screen.getByRole('textbox')).toBeDisabled();
 
-    userEvent.click(screen.getByRole('textbox'));
+    await userEvent.click(screen.getByRole('textbox'));
 
     expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
     expect(screen.getByRole('textbox')).toBeDisabled();

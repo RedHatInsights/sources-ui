@@ -46,10 +46,10 @@ describe('Steps components', () => {
       expect(() => screen.getByRole('link')).toThrow();
     });
 
-    it('calls onClose function', () => {
+    it('calls onClose function', async () => {
       render(<FinishedStep {...initialProps} />);
 
-      userEvent.click(screen.getByText('Go back to my application'));
+      await userEvent.click(screen.getByText('Go back to my application'));
 
       expect(spyFunction).toHaveBeenCalled();
     });
@@ -72,10 +72,10 @@ describe('Steps components', () => {
       expect(screen.getAllByRole('button')).toHaveLength(1);
     });
 
-    it('calls onClose function', () => {
+    it('calls onClose function', async () => {
       render(<LoadingStep {...initialProps} />);
 
-      userEvent.click(screen.getByText('Cancel'));
+      await userEvent.click(screen.getByText('Cancel'));
 
       expect(spyFunction).toHaveBeenCalled();
     });
@@ -109,18 +109,18 @@ describe('Steps components', () => {
       expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
     });
 
-    it('calls onClose function', () => {
+    it('calls onClose function', async () => {
       render(<ErroredStep {...initialProps} />);
 
-      userEvent.click(screen.getByText('Go back to my application'));
+      await userEvent.click(screen.getByText('Go back to my application'));
 
       expect(spyFunction).toHaveBeenCalled();
     });
 
-    it('calls primaryAction function', () => {
+    it('calls primaryAction function', async () => {
       render(<ErroredStep {...initialProps} primaryAction={spyFunctionSecond} />);
 
-      userEvent.click(screen.getByText('Go back to my application'));
+      await userEvent.click(screen.getByText('Go back to my application'));
 
       expect(spyFunctionSecond).toHaveBeenCalled();
     });
@@ -155,10 +155,10 @@ describe('Steps components', () => {
       expect(screen.getAllByRole('button')).toHaveLength(2);
     });
 
-    it('calls onClose function', () => {
+    it('calls onClose function', async () => {
       render(<TimeoutStep {...initialProps} />);
 
-      userEvent.click(screen.getByText('go back'));
+      await userEvent.click(screen.getByText('go back'));
 
       expect(spyFunction).toHaveBeenCalled();
     });
@@ -187,10 +187,10 @@ describe('Steps components', () => {
       ]);
     });
 
-    it('calls onClose function', () => {
+    it('calls onClose function', async () => {
       render(<AmazonFinishedStep {...initialProps} />);
 
-      userEvent.click(screen.getByText('Exit'));
+      await userEvent.click(screen.getByText('Exit'));
 
       expect(spyFunction).toHaveBeenCalled();
     });

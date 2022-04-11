@@ -42,7 +42,7 @@ describe('AuthSelect component', () => {
     expect(screen.getByText('Test').closest('.pf-c-radio')).toBeInTheDocument();
   });
 
-  it('renders correctly when disableAuthType', () => {
+  it('renders correctly when disableAuthType', async () => {
     initialProps = {
       ...initialProps,
       schema: {
@@ -60,20 +60,20 @@ describe('AuthSelect component', () => {
     expect(screen.getByRole('radio')).toBeDisabled();
   });
 
-  it('calls onChange correctly', () => {
+  it('calls onChange correctly', async () => {
     render(<FormRenderer {...initialProps} />);
 
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({});
 
-    userEvent.click(screen.getByRole('radio'));
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByRole('radio'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({});
   });
 
-  it('reset the value when unsupported auth type for application is selected', () => {
+  it('reset the value when unsupported auth type for application is selected', async () => {
     initialProps = {
       ...initialProps,
       schema: {
@@ -88,7 +88,7 @@ describe('AuthSelect component', () => {
 
     render(<FormRenderer {...initialProps} initialValues={{ 'auth-select': 'access_key_secret_key' }} />);
 
-    userEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({});
   });
