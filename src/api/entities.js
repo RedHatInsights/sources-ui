@@ -111,9 +111,9 @@ export const filtering = (filterValue = {}, activeVendor) => {
 
   if (filterValue.applications?.length > 0) {
     filterQueries.push(
-      `{ name: "applications.application_type_id", operation: "eq", value: "[${filterValue.applications
+      `{ name: "applications.application_type_id", operation: "eq", value: [${filterValue.applications
         .map((x) => `"${x}"`)
-        .join(', ')}]" }`
+        .join(', ')}] }`
     );
   }
 

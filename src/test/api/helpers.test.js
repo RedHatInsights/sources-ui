@@ -52,7 +52,7 @@ describe('api helpers', () => {
       const filterValue = { applications: ['2', '898'] };
 
       expect(filtering(filterValue)).toEqual(
-        `filter: [ { name: "applications.application_type_id", operation: "eq", value: "["2", "898"]" } ]`
+        `filter: [ { name: "applications.application_type_id", operation: "eq", value: ["2", "898"] } ]`
       );
     });
 
