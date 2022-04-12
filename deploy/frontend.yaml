@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: sources-ui
+objects:
+  - apiVersion: cloud.redhat.com/v1alpha1
+    kind: Frontend
+    metadata:
+      name: sources
+    spec:
+      envName: ${ENV_NAME}
+      title: Sources
+      deploymentRepo: https://github.com/RedHatInsights/sources-ui
+      API:
+        versions:
+          - v1.0
+          - v2.0
+          - v3.0
+          - v3.1
+      frontend:
+        paths:
+          - /apps/sources
+      image: ${IMAGE}:${IMAGE_TAG}
+      navItems:
+        - appId: "sources"
+          title: "Sources"
+          href: "/settings/sources"
+      module:
+        manifestLocation: "/apps/sources/fed-mods.json"
+        modules:
+          - id: "sources"
+            module: "./RootApp"
+            routes:
+              - pathname: /settings/sources
+
+parameters:
+  - name: ENV_NAME
+    required: true
+  - name: IMAGE_TAG
+    required: true
+  - name: IMAGE
+    value: quay.io/cloudservices/sources-ui
