@@ -25,7 +25,7 @@ describe('AWS-ARN hardcoded schemas', () => {
 
     expect(screen.getByLabelText('Copyable input')).toHaveValue(`Loading configuration...`);
 
-    await waitFor(() => expect(screen.getByLabelText('Copyable input')).toHaveValue(`{  "version": "1234"}`));
+    await waitFor(() => expect(screen.getByLabelText('Copyable input')).toHaveValue(`{   "version": "1234" }`));
 
     expect(
       screen.getByText(
