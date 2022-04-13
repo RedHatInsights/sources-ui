@@ -43,7 +43,7 @@ describe('AvailabilityChecker', () => {
       )
     );
 
-    api.default = mockApi('ok');
+    api.default = mockApi();
     actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'something' }));
 
     expect(screen.getByLabelText('Check source availability')).not.toBeDisabled();
@@ -53,6 +53,8 @@ describe('AvailabilityChecker', () => {
     expect(api.default).toHaveBeenCalledWith(sourceId);
     expect(screen.getByLabelText('Check source availability')).toBeDisabled();
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
+
+    api.default.resolve();
 
     await waitFor(() => expect(screen.getByLabelText('Check source availability')).not.toBeDisabled());
     expect(() => screen.getByRole('progressbar')).toThrow();
