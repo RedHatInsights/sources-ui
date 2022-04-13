@@ -146,7 +146,7 @@ describe('ApplicationsCard', () => {
       );
 
       actions.loadEntities = jest.fn().mockImplementation(() => ({ type: 'nonsense' }));
-      const pauseApplication = mockApi('ok');
+      const pauseApplication = mockApi();
 
       api.getSourcesApi = () => ({
         pauseApplication,
@@ -165,6 +165,8 @@ describe('ApplicationsCard', () => {
 
       expect(pauseApplication).not.toHaveBeenCalled();
       expect(actions.loadEntities).not.toHaveBeenCalled();
+
+      pauseApplication.resolve();
 
       await waitFor(() => expect(actions.loadEntities).toHaveBeenCalled());
     });
@@ -203,7 +205,7 @@ describe('ApplicationsCard', () => {
 
       actions.loadEntities = jest.fn().mockImplementation(() => ({ type: 'nonsense' }));
 
-      const unpauseApplication = mockApi('ok');
+      const unpauseApplication = mockApi();
 
       api.getSourcesApi = () => ({
         unpauseApplication,
@@ -230,6 +232,8 @@ describe('ApplicationsCard', () => {
 
       expect(unpauseApplication).not.toHaveBeenCalled();
       expect(actions.loadEntities).not.toHaveBeenCalled();
+
+      unpauseApplication.resolve();
 
       await waitFor(() =>
         expect(actions.addMessage).toHaveBeenCalledWith({
@@ -364,7 +368,7 @@ describe('ApplicationsCard', () => {
         user: { writePermissions: true },
       });
 
-      const unpauseApplication = mockApi('ok');
+      const unpauseApplication = mockApi();
 
       api.getSourcesApi = () => ({
         unpauseApplication,
@@ -391,6 +395,8 @@ describe('ApplicationsCard', () => {
 
       expect(unpauseApplication).not.toHaveBeenCalled();
       expect(actions.loadEntities).not.toHaveBeenCalled();
+
+      unpauseApplication.resolve();
 
       await waitFor(() =>
         expect(actions.addMessage).toHaveBeenCalledWith({
@@ -506,7 +512,7 @@ describe('ApplicationsCard', () => {
         )
       );
 
-      api.doCreateApplication = mockApi('ok');
+      api.doCreateApplication = mockApi();
 
       expect(screen.getAllByRole('checkbox')[1]).not.toBeChecked();
 
@@ -520,6 +526,8 @@ describe('ApplicationsCard', () => {
       });
       expect(actions.loadEntities).not.toHaveBeenCalled();
 
+      api.doCreateApplication.resolve();
+
       await waitFor(() => expect(actions.loadEntities).toHaveBeenCalled());
     });
 
@@ -532,7 +540,7 @@ describe('ApplicationsCard', () => {
         )
       );
 
-      const pauseApplication = mockApi('ok');
+      const pauseApplication = mockApi();
 
       api.getSourcesApi = () => ({
         pauseApplication,
@@ -553,6 +561,8 @@ describe('ApplicationsCard', () => {
 
       expect(pauseApplication).not.toHaveBeenCalled();
       expect(actions.loadEntities).not.toHaveBeenCalled();
+
+      pauseApplication.resolve();
 
       await waitFor(() =>
         expect(actions.addMessage).toHaveBeenCalledWith({

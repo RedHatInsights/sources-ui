@@ -172,6 +172,8 @@ describe('CredentialsForm', () => {
     expect(updateAuthentication).toHaveBeenCalledWith('auth-id', { username: 'newname' });
     expect(actions.addMessage).not.toHaveBeenCalled();
 
+    updateAuthentication.resolve();
+
     await waitFor(() =>
       expect(actions.addMessage).toHaveBeenCalledWith({
         description: 'It may take some time to validate your new credentials. Check this page for status updates.',
@@ -182,7 +184,7 @@ describe('CredentialsForm', () => {
   });
 
   it('submit - fail', async () => {
-    const updateAuthentication = mockApiError();
+    const updateAuthentication = mockApi();
 
     api.getSourcesApi = () => ({
       listSourceAuthentications,
@@ -211,6 +213,8 @@ describe('CredentialsForm', () => {
     expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
     expect(updateAuthentication).toHaveBeenCalledWith('auth-id', { username: 'newname' });
     expect(actions.addMessage).not.toHaveBeenCalled();
+
+    updateAuthentication.reject();
 
     await waitFor(() =>
       expect(actions.addMessage).toHaveBeenCalledWith({

@@ -399,13 +399,15 @@ describe('AddApplication', () => {
       entities.doLoadEntities = jest
         .fn()
         .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
-      attachSource.doAttachApp = mockApi({
-        availability_status: 'available',
-      });
+      attachSource.doAttachApp = mockApi();
 
       await userEvent.click(screen.getByText('Add'));
 
       expect(screen.getByText('Validating credentials')).toBeInTheDocument();
+
+      attachSource.doAttachApp.resolve({
+        availability_status: 'available',
+      });
 
       await waitFor(() => expect(screen.getByText('Configuration successful')).toBeInTheDocument());
 

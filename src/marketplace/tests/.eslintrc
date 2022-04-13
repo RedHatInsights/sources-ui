@@ -10,8 +10,7 @@
     "describe": true,
     "expect": true,
     "it": true,
-    "mockApi": true,
-    "mockApiError": true
+    "mockApi": true
   },
   "rules": {
     "react/prop-types": "off",

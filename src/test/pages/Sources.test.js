@@ -282,14 +282,16 @@ describe('SourcesPage', () => {
 
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
-    api.doLoadEntities = mockApi({
-      sources: sourcesDataGraphQl,
-      sources_aggregate: { aggregate: { total_count: sourcesDataGraphQl.length } },
-    });
+    api.doLoadEntities = mockApi();
 
     await userEvent.click(screen.getAllByLabelText('Go to next page')[0]);
 
     expect(screen.getAllByRole('progressbar')[0].closest('.top-pagination')).not.toBeInTheDocument();
+
+    api.doLoadEntities.resolve({
+      sources: sourcesDataGraphQl,
+      sources_aggregate: { aggregate: { total_count: sourcesDataGraphQl.length } },
+    });
 
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
   });

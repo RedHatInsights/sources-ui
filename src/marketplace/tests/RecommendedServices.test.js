@@ -11,15 +11,27 @@ describe('<RecommendedServices />', () => {
   const crunchyProduct = products[0];
   const mongoProduct = products[1];
 
+  const getProductsResponse = { data: products, meta: { count: products.length } };
+  const getCategoriesResponse = { data: categories };
+
   beforeEach(() => {
-    api.getProducts = mockApi({ data: products, meta: { count: products.length } });
-    api.getCategories = mockApi({ data: categories });
+    api.getProducts = jest.fn().mockResolvedValue({
+      data: products,
+      meta: { count: products.length },
+    });
+    api.getCategories = jest.fn().mockResolvedValue({
+      data: categories,
+    });
   });
 
   it('renders page and loads data', async () => {
+    api.getProducts = mockApi();
+
     render(<RecommendedServices />);
 
     expect(screen.getAllByRole('progressbar')).toHaveLength(6);
+
+    api.getProducts.resolve(getProductsResponse);
 
     await waitFor(() => expect(screen.getByText(mongoProduct.title)).toBeInTheDocument());
     expect(screen.getByText('Database')).toBeInTheDocument();
@@ -47,12 +59,20 @@ describe('<RecommendedServices />', () => {
 
   describe('<SeeMoreCard />', () => {
     it('opens modal', async () => {
+      api.getProducts = mockApi();
+      api.getCategories = mockApi();
+
       render(<RecommendedServices />);
+
+      api.getProducts.resolve(getProductsResponse);
+
       await waitFor(() => expect(screen.getByText('See more databases')).toBeInTheDocument());
 
       await userEvent.click(screen.getByText('See more databases'));
 
       expect(screen.getAllByRole('progressbar')).toHaveLength(6);
+
+      api.getCategories.resolve(getCategoriesResponse);
 
       await waitFor(() => expect(screen.getByText('Filter by product type')).toBeInTheDocument());
 
@@ -78,7 +98,12 @@ describe('<RecommendedServices />', () => {
     });
 
     it('change perPage', async () => {
+      api.getProducts = mockApi();
+
       render(<RecommendedServices />);
+
+      api.getProducts.resolve(getProductsResponse);
+
       await waitFor(() => expect(screen.getByText('See more databases')).toBeInTheDocument());
       await userEvent.click(screen.getByText('See more databases'));
 
@@ -92,6 +117,9 @@ describe('<RecommendedServices />', () => {
       await userEvent.click(screen.getByText('20 per page'));
 
       expect(screen.getAllByRole('progressbar')).toHaveLength(6);
+
+      api.getProducts.resolve(getProductsResponse);
+
       await waitFor(() => expect(screen.getAllByRole('progressbar')).toHaveLength(4));
       expect(api.getProducts).toHaveBeenLastCalledWith({ page: 1, perPage: 20 });
 
@@ -102,7 +130,9 @@ describe('<RecommendedServices />', () => {
     });
 
     it('change page', async () => {
-      api.getProducts = mockApi({
+      api.getProducts = mockApi();
+
+      const response = {
         data: [...Array(11)].map((_, index) => ({
           ...crunchyProduct,
           id: index,
@@ -110,9 +140,12 @@ describe('<RecommendedServices />', () => {
         meta: {
           count: 11,
         },
-      });
+      };
 
       render(<RecommendedServices />);
+
+      api.getProducts.resolve(response);
+
       await waitFor(() => expect(screen.getByText('See more databases')).toBeInTheDocument());
       await userEvent.click(screen.getByText('See more databases'));
       await waitFor(() => expect(screen.getByText('Filter by product type')).toBeInTheDocument());
@@ -121,6 +154,9 @@ describe('<RecommendedServices />', () => {
       await userEvent.click(screen.getByLabelText('Go to next page'));
 
       expect(screen.getAllByRole('progressbar')).toHaveLength(6);
+
+      api.getProducts.resolve(response);
+
       await waitFor(() => expect(screen.getAllByRole('progressbar')).toHaveLength(6));
       expect(api.getProducts).toHaveBeenLastCalledWith({ page: 2, perPage: 10 });
 
