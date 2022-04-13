@@ -4,7 +4,9 @@ import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-i
 import ResourcesEmptyState from '../../../../components/SourceDetail/ResourcesEmptyState';
 import { applicationsFields } from '../../../../components/SourceEditForm/parser/application';
 import EditAlert from '../../../../components/SourceEditForm/parser/EditAlert';
+import { COST_MANAGEMENT_APP } from '../../../addSourceWizard/helpers/applicationTypes';
 import { applicationTypesData, COSTMANAGEMENT_APP, CATALOG_APP } from '../../../__mocks__/applicationTypesData';
+import { googleType } from '../../../__mocks__/sourceTypesData';
 
 jest.mock('../../../../components/addSourceWizard/hardcodedSchemas', () => ({
   __esModule: true,
@@ -341,5 +343,68 @@ describe('application edit form parser', () => {
     const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, APP_TYPES);
 
     expect(result).toEqual(EXPECTED_RESULT);
+  });
+
+  it('returns endpoint fields for google', () => {
+    APPLICATIONS = [
+      {
+        application_type_id: COST_MANAGEMENT_APP.id,
+        id: '130550',
+        authentications: [
+          {
+            id: '131851',
+          },
+          {
+            authtype: 'project_id_service_account_json',
+            id: '131851',
+            resource_id: '24003',
+            resource_type: 'Endpoint',
+            source_id: '141615',
+            username: 'USERNAME',
+            tenant: '6089719',
+          },
+        ],
+        extra: {
+          dataset: 'DATASET',
+        },
+      },
+    ];
+
+    const EXPECTED_RESULT_GOOGLE = [
+      {
+        component: 'tabs',
+        fields: [
+          {
+            fields: [
+              {
+                Content: EditAlert,
+                component: 'description',
+                condition: { isNotEmpty: true, when: expect.any(Function) },
+                name: 'messages.130550',
+              },
+              [
+                {
+                  component: 'text-field',
+                  hideField: true,
+                  initialValue: 'project_id_service_account_json',
+                  initializeOnMount: true,
+                  name: 'authentications.a131851.authtype',
+                },
+                { component: 'text-field', label: 'Project ID', name: 'authentications.a131851.username' },
+                { component: 'authentication', label: 'Service Account JSON', name: 'authentications.a131851.password' },
+              ],
+            ],
+            name: '2',
+            title: 'Cost Management',
+          },
+        ],
+        isBox: true,
+        name: 'app-tabs',
+      },
+    ];
+
+    const result = applicationsFields(APPLICATIONS, googleType, [COST_MANAGEMENT_APP]);
+
+    expect(result).toEqual(EXPECTED_RESULT_GOOGLE);
   });
 });

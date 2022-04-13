@@ -43,7 +43,8 @@ export const applicationsFields = (applications, sourceType, appTypes) => [
         const hasEndpoint = app.authentications.find(({ resource_type }) => resource_type === 'Endpoint');
 
         if (hasEndpoint) {
-          fields = [fields[0], [...(fields[1] || []), endpointFields(sourceType)]];
+          const additionalFields = endpointFields(sourceType);
+          fields = [fields[0], [...(fields[1] || []), ...(additionalFields ? [additionalFields] : [])]];
         }
 
         if (fields.length === 1) {
