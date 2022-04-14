@@ -9,6 +9,7 @@ const { config: webpackConfig, plugins } = config({
   useProxy: true,
   appUrl: process.env.BETA ? '/beta/settings/sources' : '/settings/sources',
   env: process.env.BETA ? 'stage-beta' : 'stage-stable',
+  useChromeTemplate: true,
   //localChrome: process.env.INSIGHTS_CHROME,
   //proxyVerbose: true,
 });
