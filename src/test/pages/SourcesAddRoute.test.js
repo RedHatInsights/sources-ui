@@ -26,7 +26,7 @@ describe('SourcesPage - addSource route', () => {
     api.doLoadEntities = jest.fn().mockImplementation(() =>
       Promise.resolve({
         sources: sourcesDataGraphQl,
-        sources_aggregate: { aggregate: { total_count: sourcesDataGraphQl.length } },
+        meta: { count: sourcesDataGraphQl.length },
       })
     );
     api.doLoadAppTypes = jest.fn().mockImplementation(() => Promise.resolve(applicationTypesData));

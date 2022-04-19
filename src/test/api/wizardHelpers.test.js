@@ -44,7 +44,7 @@ describe('wizardHelpers', () => {
 
     expect(result).toEqual('ok');
     expect(postGraphQL).toHaveBeenCalledWith({
-      query: `{ sources(filter: {name: "id123"})
+      query: `{ sources(filter: {name: "name", value: "id123"})
         { id, name }
     }`,
     });

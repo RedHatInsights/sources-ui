@@ -12,7 +12,7 @@ export const doLoadApplicationTypes = () =>
 
 export const findSource = (name) =>
   getSourcesApi().postGraphQL({
-    query: `{ sources(filter: {name: "${name}"})
+    query: `{ sources(filter: {name: "name", value: "${name}"})
         { id, name }
     }`,
   });

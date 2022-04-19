@@ -42,7 +42,7 @@ describe('SourcesTable', () => {
     API.doLoadEntities = jest.fn().mockImplementation(() =>
       Promise.resolve({
         sources: sourcesDataGraphQl,
-        sources_aggregate: { aggregate: { total_count: sourcesDataGraphQl.length } },
+        meta: { count: sourcesDataGraphQl.length },
       })
     );
   });

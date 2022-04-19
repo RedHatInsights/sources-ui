@@ -86,7 +86,7 @@ describe('SourcesPage', () => {
     api.doLoadEntities = jest.fn().mockImplementation(() =>
       Promise.resolve({
         sources: sourcesDataGraphQl,
-        sources_aggregate: { aggregate: { total_count: sourcesDataGraphQl.length } },
+        meta: { count: sourcesDataGraphQl.length },
       })
     );
     api.doLoadAppTypes = jest.fn().mockImplementation(() => Promise.resolve(applicationTypesData));
@@ -154,9 +154,7 @@ describe('SourcesPage', () => {
       user: { writePermissions: true },
     });
 
-    api.doLoadEntities = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
+    api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [], meta: { count: 0 } }));
 
     render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
@@ -183,9 +181,7 @@ describe('SourcesPage', () => {
       user: { writePermissions: true },
     });
 
-    api.doLoadEntities = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
+    api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [], meta: { count: 0 } }));
 
     render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
@@ -205,9 +201,7 @@ describe('SourcesPage', () => {
       user: { writePermissions: true },
     });
 
-    api.doLoadEntities = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
+    api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [], meta: { count: 0 } }));
 
     render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
@@ -226,9 +220,7 @@ describe('SourcesPage', () => {
       user: { writePermissions: true },
     });
 
-    api.doLoadEntities = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
+    api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [], meta: { count: 0 } }));
 
     render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
@@ -799,9 +791,7 @@ describe('SourcesPage', () => {
 
       await userEvent.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
 
-      api.doLoadEntities = jest
-        .fn()
-        .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
+      api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [], meta: { count: 0 } }));
 
       const totalNonsense = '122#$@#%#^$#@!^$#^$#^546454abcerd';
 
@@ -834,9 +824,7 @@ describe('SourcesPage', () => {
       await userEvent.clear(screen.getByPlaceholderText('Filter by Name'));
       await userEvent.type(screen.getByPlaceholderText('Filter by Name'), `${SEARCH_TERM}`);
 
-      api.doLoadEntities = jest
-        .fn()
-        .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
+      api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [], meta: { count: 0 } }));
 
       const totalNonsense = '122#$@#%#^$#@!^$#^$#^546454abcerd';
 
@@ -857,9 +845,7 @@ describe('SourcesPage', () => {
 
       await userEvent.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
 
-      api.doLoadEntities = jest
-        .fn()
-        .mockImplementation(() => Promise.resolve({ sources: [], sources_aggregate: { aggregate: { total_count: 0 } } }));
+      api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [], meta: { count: 0 } }));
 
       const totalNonsense = '122#$@#%#^$#@!^$#^$#^546454abcerd';
 
@@ -873,7 +859,7 @@ describe('SourcesPage', () => {
       api.doLoadEntities.mockImplementation(() =>
         Promise.resolve({
           sources: sourcesDataGraphQl,
-          sources_aggregate: { aggregate: { total_count: sourcesDataGraphQl.length } },
+          meta: { count: sourcesDataGraphQl.length },
         })
       );
 
