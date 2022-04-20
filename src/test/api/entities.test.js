@@ -378,14 +378,15 @@ describe('entities spec', () => {
       const ENTITIES = {
         sources: [
           {
-            applications: [{ id: '123' }, { id: '456' }],
+            applications: [
+              { id: '123', extra: { dataset: '134' } },
+              { id: '456', extra: { username: 'jsmith' } },
+            ],
           },
         ],
       };
 
       mock.onPost(`/api/sources/v3.1/graphql`).reply(200, { data: ENTITIES });
-      mock.onGet(`/api/sources/v3.1/applications/123`).reply(200, { extra: { dataset: '134' } });
-      mock.onGet(`/api/sources/v3.1/applications/456`).reply(200, { extra: { username: 'jsmith' } });
 
       const result = await api.doLoadApplicationsForEdit(SOURCE_ID);
 

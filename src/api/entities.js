@@ -234,37 +234,23 @@ export const doLoadSource = (id) =>
     })
     .then(({ data }) => data);
 
-export const doLoadApplicationsForEdit = async (id) => {
-  let graphql = await getSourcesApi().postGraphQL({
-    query: `{ sources(filter: { name: "id", operation: "eq", value: "${id}" })
+export const doLoadApplicationsForEdit = (id) =>
+  getSourcesApi()
+    .postGraphQL({
+      query: `{ sources(filter: { name: "id", operation: "eq", value: "${id}" })
           { applications {
               application_type_id,
               id,
               availability_status_error,
               availability_status,
               paused_at,
+              extra,
               authentications {
                   id
               }
           } }
       }`,
-  });
-
-  const promises = [];
-  graphql.data.sources?.[0]?.applications?.forEach((app) => {
-    promises.push(getSourcesApi().showApplication(app.id));
-  });
-
-  const results = await Promise.all(promises);
-
-  results.forEach(({ extra }, index) => {
-    graphql.data.sources[0].applications[index] = {
-      ...graphql.data.sources[0].applications[index],
-      extra,
-    };
-  });
-
-  return graphql.data;
-};
+    })
+    .then(({ data }) => data);
 
 export const doDeleteAuthentication = (id) => getSourcesApi().deleteAuthentication(id);
