@@ -333,8 +333,8 @@ describe('urlQuery helpers', () => {
       });
     });
 
-    describe('active vendor', () => {
-      it('red hat vendor', () => {
+    describe('active category', () => {
+      it('red hat category', () => {
         window.location.search = `?category=${REDHAT_VENDOR}`;
 
         const result = parseQuery();
@@ -344,13 +344,35 @@ describe('urlQuery helpers', () => {
         });
       });
 
-      it('cloud vendors', () => {
+      it('cloud category', () => {
         window.location.search = `?category=${CLOUD_VENDOR}`;
 
         const result = parseQuery();
 
         expect(result).toEqual({
           activeCategory: CLOUD_VENDOR,
+        });
+      });
+
+      describe('activeVendor [DEPRECATED]', () => {
+        it('red hat category', () => {
+          window.location.search = `?activeVendor=${REDHAT_VENDOR}`;
+
+          const result = parseQuery();
+
+          expect(result).toEqual({
+            activeCategory: REDHAT_VENDOR,
+          });
+        });
+
+        it('cloud category', () => {
+          window.location.search = `?activeVendor=${CLOUD_VENDOR}`;
+
+          const result = parseQuery();
+
+          expect(result).toEqual({
+            activeCategory: CLOUD_VENDOR,
+          });
         });
       });
     });

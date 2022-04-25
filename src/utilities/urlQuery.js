@@ -148,7 +148,7 @@ export const parseQuery = (getState) => {
     };
   }
 
-  const activeCategory = urlParams.get('category');
+  const activeCategory = urlParams.get('category') || urlParams.get('activeVendor');
 
   if (activeCategory === CLOUD_VENDOR || activeCategory === REDHAT_VENDOR) {
     fetchOptions = {
