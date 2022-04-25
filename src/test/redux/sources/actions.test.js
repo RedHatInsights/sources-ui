@@ -15,7 +15,7 @@ import {
   removeApplication,
   loadSourceTypes,
   renameSource,
-  setActiveVendor,
+  setActiveCategory,
   pauseSource,
   resumeSource,
 } from '../../../redux/sources/actions';
@@ -26,7 +26,7 @@ import {
   SORT_ENTITIES,
   FILTER_SOURCES,
   CLEAR_FILTERS,
-  SET_VENDOR,
+  SET_CATEGORY,
 } from '../../../redux/sources/actionTypes';
 import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications';
 import * as api from '../../../api/entities';
@@ -377,11 +377,11 @@ describe('redux actions', () => {
     });
   });
 
-  it('setActiveVendor creates an object', async () => {
-    await setActiveVendor(CLOUD_VENDOR)(dispatch);
+  it('setActiveCategory creates an object', async () => {
+    await setActiveCategory(CLOUD_VENDOR)(dispatch);
 
     expect(dispatch.mock.calls).toHaveLength(2);
-    expect(dispatch.mock.calls[0][0]).toEqual({ type: SET_VENDOR, payload: { vendor: CLOUD_VENDOR } });
+    expect(dispatch.mock.calls[0][0]).toEqual({ type: SET_CATEGORY, payload: { category: CLOUD_VENDOR } });
     expect(dispatch.mock.calls[1][0]).toEqual(expect.any(Function));
   });
 

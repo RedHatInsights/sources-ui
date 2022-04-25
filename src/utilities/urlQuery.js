@@ -3,10 +3,10 @@ import { AVAILABLE, UNAVAILABLE } from '../views/formatters';
 import { sourcesColumns } from '../views/sourcesViewDefinition';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from './constants';
 
-export const updateQuery = ({ sortBy, sortDirection, pageNumber, pageSize, filterValue, activeVendor }) => {
+export const updateQuery = ({ sortBy, sortDirection, pageNumber, pageSize, filterValue, activeCategory }) => {
   const sortQuery = `sort_by[]=${sortBy}:${sortDirection}`;
 
-  const paginationQuery = `limit=${pageSize}&offset=${(pageNumber - 1) * pageSize}&activeVendor=${activeVendor || CLOUD_VENDOR}`;
+  const paginationQuery = `limit=${pageSize}&offset=${(pageNumber - 1) * pageSize}&category=${activeCategory || CLOUD_VENDOR}`;
 
   const filterQuery = restFilterGenerator(filterValue);
 
@@ -148,12 +148,12 @@ export const parseQuery = (getState) => {
     };
   }
 
-  const activeVendor = urlParams.get('activeVendor');
+  const activeCategory = urlParams.get('category');
 
-  if (activeVendor === CLOUD_VENDOR || activeVendor === REDHAT_VENDOR) {
+  if (activeCategory === CLOUD_VENDOR || activeCategory === REDHAT_VENDOR) {
     fetchOptions = {
       ...fetchOptions,
-      activeVendor,
+      activeCategory,
     };
   }
 

@@ -24,7 +24,7 @@ describe('CloudTiles', () => {
 
     store = mockStore({
       user: { writePermissions: true },
-      sources: { sourceTypes: [...sourceTypes.data, googleType, ibmType], activeVendor: CLOUD_VENDOR },
+      sources: { sourceTypes: [...sourceTypes.data, googleType, ibmType], activeCategory: CLOUD_VENDOR },
     });
   });
 
@@ -43,7 +43,7 @@ describe('CloudTiles', () => {
   it('renders correctly when no permissions', async () => {
     store = mockStore({
       user: { writePermissions: false },
-      sources: { sourceTypes: [...sourceTypes.data, googleType, ibmType], activeVendor: CLOUD_VENDOR },
+      sources: { sourceTypes: [...sourceTypes.data, googleType, ibmType], activeCategory: CLOUD_VENDOR },
     });
 
     const { container } = render(componentWrapperIntl(<CloudTiles {...initialProps} />, store));

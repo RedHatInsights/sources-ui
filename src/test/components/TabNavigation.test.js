@@ -12,10 +12,10 @@ import mockStore from '../__mocks__/mockStore';
 describe('TabNavigation', () => {
   let store;
 
-  it('renders correctly on Cloud vendor', () => {
+  it('renders correctly on Cloud Category', () => {
     store = mockStore({
       sources: {
-        activeVendor: CLOUD_VENDOR,
+        activeCategory: CLOUD_VENDOR,
       },
     });
 
@@ -28,10 +28,10 @@ describe('TabNavigation', () => {
     expect(screen.getByText('Red Hat sources')).toBeInTheDocument();
   });
 
-  it('renders correctly on Red Hat vendor', () => {
+  it('renders correctly on Red Hat Category', () => {
     store = mockStore({
       sources: {
-        activeVendor: REDHAT_VENDOR,
+        activeCategory: REDHAT_VENDOR,
       },
     });
 
@@ -45,20 +45,20 @@ describe('TabNavigation', () => {
   });
 
   it('triggers redux changed', async () => {
-    actions.setActiveVendor = jest.fn().mockImplementation(() => ({ type: 'something' }));
+    actions.setActiveCategory = jest.fn().mockImplementation(() => ({ type: 'something' }));
 
     render(componentWrapperIntl(<TabNavigation />, store));
 
-    expect(actions.setActiveVendor).not.toHaveBeenCalled();
+    expect(actions.setActiveCategory).not.toHaveBeenCalled();
 
     await userEvent.click(screen.getByText('Cloud sources'));
 
-    expect(actions.setActiveVendor).toHaveBeenCalledWith(CLOUD_VENDOR);
+    expect(actions.setActiveCategory).toHaveBeenCalledWith(CLOUD_VENDOR);
 
-    actions.setActiveVendor.mockClear();
+    actions.setActiveCategory.mockClear();
 
     await userEvent.click(screen.getByText('Red Hat sources'));
 
-    expect(actions.setActiveVendor).toHaveBeenCalledWith(REDHAT_VENDOR);
+    expect(actions.setActiveCategory).toHaveBeenCalledWith(REDHAT_VENDOR);
   });
 });

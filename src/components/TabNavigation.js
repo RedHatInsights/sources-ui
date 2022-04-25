@@ -6,16 +6,16 @@ import { Tabs, Tab, TabTitleIcon, TabTitleText } from '@patternfly/react-core';
 import RedhatIcon from '@patternfly/react-icons/dist/esm/icons/redhat-icon';
 import CloudIcon from '@patternfly/react-icons/dist/esm/icons/cloud-icon';
 
-import { setActiveVendor } from '../redux/sources/actions';
+import { setActiveCategory } from '../redux/sources/actions';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../utilities/constants';
 
 const TabNavigation = () => {
   const intl = useIntl();
   const dispatch = useDispatch();
-  const activeVendor = useSelector(({ sources }) => sources.activeVendor);
+  const activeCategory = useSelector(({ sources }) => sources.activeCategory);
 
   return (
-    <Tabs activeKey={activeVendor} onSelect={(_e, key) => dispatch(setActiveVendor(key))} className="pf-u-mt-md">
+    <Tabs activeKey={activeCategory} onSelect={(_e, key) => dispatch(setActiveCategory(key))} className="pf-u-mt-md">
       <Tab
         eventKey={CLOUD_VENDOR}
         title={

@@ -11,7 +11,7 @@ import { CLOUD_VENDOR } from '../../../utilities/constants';
 
 describe('AddSourceButton', () => {
   it('opens wizard and close wizard', async () => {
-    render(<AddSourceButton sourceTypes={sourceTypes} applicationTypes={applicationTypes} activeVendor={CLOUD_VENDOR} />);
+    render(<AddSourceButton sourceTypes={sourceTypes} applicationTypes={applicationTypes} activeCategory={CLOUD_VENDOR} />);
 
     await userEvent.click(screen.getByText('Add Red Hat source'));
 

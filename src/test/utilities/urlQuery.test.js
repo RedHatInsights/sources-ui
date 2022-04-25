@@ -51,7 +51,7 @@ describe('urlQuery helpers', () => {
       };
 
       expectedQuery =
-        'sources?sort_by[]=name:asc&limit=50&offset=550&activeVendor=Cloud&filter[name][contains_i]=pepa&filter[source_type_id][]=125&filter[source_type_id][]=542&filter[source_type_id][]=1';
+        'sources?sort_by[]=name:asc&limit=50&offset=550&category=Cloud&filter[name][contains_i]=pepa&filter[source_type_id][]=125&filter[source_type_id][]=542&filter[source_type_id][]=1';
     });
 
     afterEach(() => {
@@ -78,7 +78,7 @@ describe('urlQuery helpers', () => {
         filterValue: {},
       };
 
-      expectedQuery = 'sources?sort_by[]=name:asc&limit=50&offset=550&activeVendor=Cloud';
+      expectedQuery = 'sources?sort_by[]=name:asc&limit=50&offset=550&category=Cloud';
 
       updateQuery(params);
 
@@ -335,22 +335,22 @@ describe('urlQuery helpers', () => {
 
     describe('active vendor', () => {
       it('red hat vendor', () => {
-        window.location.search = `?activeVendor=${REDHAT_VENDOR}`;
+        window.location.search = `?category=${REDHAT_VENDOR}`;
 
         const result = parseQuery();
 
         expect(result).toEqual({
-          activeVendor: REDHAT_VENDOR,
+          activeCategory: REDHAT_VENDOR,
         });
       });
 
       it('cloud vendors', () => {
-        window.location.search = `?activeVendor=${CLOUD_VENDOR}`;
+        window.location.search = `?category=${CLOUD_VENDOR}`;
 
         const result = parseQuery();
 
         expect(result).toEqual({
-          activeVendor: CLOUD_VENDOR,
+          activeCategory: CLOUD_VENDOR,
         });
       });
     });

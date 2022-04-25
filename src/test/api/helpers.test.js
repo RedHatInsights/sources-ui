@@ -70,19 +70,19 @@ describe('api helpers', () => {
 
     it('creates cloud vendor [GRAPHQL]', () => {
       const filterValue = {};
-      const activeVendor = CLOUD_VENDOR;
+      const activeCategory = CLOUD_VENDOR;
 
-      expect(filtering(filterValue, activeVendor)).toEqual(
-        'filter: [ { name: "source_type.vendor", operation: "not_eq", value: "Red Hat" } ]'
+      expect(filtering(filterValue, activeCategory)).toEqual(
+        'filter: [ { name: "source_type.category", operation: "eq", value: "Cloud" } ]'
       );
     });
 
     it('creates red hat vendor [GRAPHQL]', () => {
       const filterValue = {};
-      const activeVendor = REDHAT_VENDOR;
+      const activeCategory = REDHAT_VENDOR;
 
-      expect(filtering(filterValue, activeVendor)).toEqual(
-        'filter: [ { name: "source_type.vendor", operation: "eq", value: "Red Hat" } ]'
+      expect(filtering(filterValue, activeCategory)).toEqual(
+        'filter: [ { name: "source_type.category", operation: "eq", value: "Red Hat" } ]'
       );
     });
 
@@ -140,16 +140,16 @@ describe('api helpers', () => {
 
     it('creates cloud vendor [REST]', () => {
       const filterValue = {};
-      const activeVendor = CLOUD_VENDOR;
+      const activeCategory = CLOUD_VENDOR;
 
-      expect(restFilterGenerator(filterValue, activeVendor)).toEqual('filter[source_type][vendor][not_eq]=Red Hat');
+      expect(restFilterGenerator(filterValue, activeCategory)).toEqual('filter[source_type][category]=Cloud');
     });
 
     it('creates red hat vendor [REST]', () => {
       const filterValue = {};
-      const activeVendor = REDHAT_VENDOR;
+      const activeCategory = REDHAT_VENDOR;
 
-      expect(restFilterGenerator(filterValue, activeVendor)).toEqual('filter[source_type][vendor]=Red Hat');
+      expect(restFilterGenerator(filterValue, activeCategory)).toEqual('filter[source_type][category]=Red Hat');
     });
 
     it('creates available filter [REST]', () => {
