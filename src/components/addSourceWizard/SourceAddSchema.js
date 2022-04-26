@@ -59,7 +59,7 @@ export const compileAllSourcesComboOptions = (sourceTypes) => [
   ...sourceTypes
     .map((type) => ({
       ...type,
-      product_name: type.vendor === 'Red Hat' ? type.product_name.replace('Red Hat ', '') : type.product_name,
+      product_name: type.category === 'Red Hat' ? type.product_name.replace('Red Hat ', '') : type.product_name,
     }))
     .sort((a, b) => a.product_name.localeCompare(b.product_name))
     .map((t) => ({
@@ -100,7 +100,7 @@ export const iconMapper = (sourceTypes) => (name) => {
     <img
       src={shortIcons[name] || sourceType.icon_url}
       alt={sourceType.product_name}
-      className={`src-c-wizard__icon ${sourceType.vendor === 'Red Hat' ? 'redhat-icon' : 'pf-u-mb-sm'}`}
+      className={`src-c-wizard__icon ${sourceType.category === 'Red Hat' ? 'redhat-icon' : 'pf-u-mb-sm'}`}
     />
   );
 
@@ -165,7 +165,7 @@ const redhatTypes = ({ intl, sourceTypes, applicationTypes, disableAppSelection 
   },
 ];
 
-export const applicationStep = (applicationTypes, intl, activeVendor) => ({
+export const applicationStep = (applicationTypes, intl, activeCategory) => ({
   name: 'application_step',
   title: intl.formatMessage({
     id: 'wizard.selectApplication',
@@ -185,7 +185,7 @@ export const applicationStep = (applicationTypes, intl, activeVendor) => ({
     {
       component: 'enhanced-radio',
       name: 'application.application_type_id',
-      options: compileAllApplicationComboOptions(applicationTypes, intl, activeVendor),
+      options: compileAllApplicationComboOptions(applicationTypes, intl, activeCategory),
       mutator: appMutatorRedHat(applicationTypes),
       menuIsPortal: true,
     },
@@ -270,13 +270,13 @@ NameDescription.propTypes = {
   sourceTypes: PropTypes.array,
 };
 
-const nameStep = (intl, selectedType, sourceTypes, activeVendor) => ({
+const nameStep = (intl, selectedType, sourceTypes, activeCategory) => ({
   title: intl.formatMessage({
     id: 'wizard.nameSource',
     defaultMessage: 'Name source',
   }),
   name: 'name_step',
-  nextStep: activeVendor === REDHAT_VENDOR ? nextStep(selectedType) : nextStepCloud(sourceTypes),
+  nextStep: activeCategory === REDHAT_VENDOR ? nextStep(selectedType) : nextStepCloud(sourceTypes),
   fields: [
     {
       component: 'description',
@@ -355,7 +355,7 @@ export default (
   intl,
   selectedType,
   initialWizardState,
-  activeVendor
+  activeCategory
 ) => {
   setFirstValidated(true);
 
@@ -365,9 +365,9 @@ export default (
         component: componentTypes.WIZARD,
         name: 'wizard',
         className: 'sources',
-        title: wizardTitle(activeVendor),
+        title: wizardTitle(activeCategory),
         inModal: true,
-        description: wizardDescription(activeVendor),
+        description: wizardDescription(activeCategory),
         buttonLabels: {
           submit: intl.formatMessage({
             id: 'sources.add',
@@ -396,14 +396,14 @@ export default (
         crossroads: ['application.application_type_id', 'source_type', 'auth_select', 'source.app_creation_workflow'],
         fields: [
           ...(!selectedType
-            ? activeVendor === REDHAT_VENDOR
+            ? activeCategory === REDHAT_VENDOR
               ? [typesStep(sourceTypes, applicationTypes, disableAppSelection, intl)]
               : [cloudTypesStep(sourceTypes, applicationTypes, intl)]
             : []),
-          nameStep(intl, selectedType, sourceTypes, activeVendor),
+          nameStep(intl, selectedType, sourceTypes, activeCategory),
           configurationStep(intl, sourceTypes),
           applicationsStep(applicationTypes, intl),
-          applicationStep(applicationTypes, intl, activeVendor),
+          applicationStep(applicationTypes, intl, activeCategory),
           ...schemaBuilder(sourceTypes, applicationTypes),
           summaryStep(sourceTypes, applicationTypes, intl),
         ],

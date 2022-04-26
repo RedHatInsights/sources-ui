@@ -77,6 +77,7 @@ const sourceTypes = [
     },
     updated_at: '2019-09-16T14:03:35Z',
     vendor: 'Red Hat',
+    category: 'Red Hat',
   },
   {
     created_at: '2019-03-26T14:05:45Z',
@@ -181,6 +182,7 @@ const sourceTypes = [
     },
     updated_at: '2019-09-11T14:03:04Z',
     vendor: 'Amazon',
+    category: 'Cloud',
   },
   {
     created_at: '2019-04-05T17:54:38Z',
@@ -294,6 +296,7 @@ const sourceTypes = [
     },
     updated_at: '2019-09-16T14:03:35Z',
     vendor: 'Red Hat',
+    category: 'Red Hat',
   },
   {
     created_at: '2019-07-16T13:52:12Z',
@@ -303,6 +306,7 @@ const sourceTypes = [
     product_name: 'VMware vSphere',
     updated_at: '2019-08-30T13:52:33Z',
     vendor: 'VMware',
+    category: 'Cloud',
   },
   {
     created_at: '2019-07-16T13:52:12Z',
@@ -311,6 +315,7 @@ const sourceTypes = [
     product_name: 'Red Hat Virtualization',
     updated_at: '2019-07-16T13:52:12Z',
     vendor: 'Red Hat',
+    category: 'Red Hat',
   },
   {
     created_at: '2019-07-16T13:52:12Z',
@@ -319,6 +324,7 @@ const sourceTypes = [
     product_name: 'Red Hat OpenStack',
     updated_at: '2019-07-16T13:52:12Z',
     vendor: 'Red Hat',
+    category: 'Red Hat',
   },
   {
     created_at: '2019-07-16T13:52:12Z',
@@ -327,6 +333,7 @@ const sourceTypes = [
     product_name: 'Red Hat CloudForms',
     updated_at: '2019-07-16T13:52:12Z',
     vendor: 'Red Hat',
+    category: 'Red Hat',
   },
   {
     created_at: '2019-08-19T14:53:02Z',
@@ -379,6 +386,7 @@ const sourceTypes = [
     },
     updated_at: '2019-09-11T14:03:04Z',
     vendor: 'Azure',
+    category: 'Cloud',
   },
   {
     created_at: '2019-08-19T14:53:02Z',
@@ -438,6 +446,7 @@ const sourceTypes = [
     },
     updated_at: '2019-09-11T14:03:04Z',
     vendor: 'Google',
+    category: 'Cloud',
     icon_url: '/apps/frontend-assets/partners-icons/google-cloud.svg',
   },
 ];

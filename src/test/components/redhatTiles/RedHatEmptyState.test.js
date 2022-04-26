@@ -21,8 +21,7 @@ describe('RedhatEmptyState', () => {
 
     store = mockStore({
       user: { writePermissions: true },
-      sources: { sourceTypes: sourceTypes.data },
-      activeVendor: REDHAT_VENDOR,
+      sources: { sourceTypes: sourceTypes.data, activeCategory: REDHAT_VENDOR },
     });
   });
 

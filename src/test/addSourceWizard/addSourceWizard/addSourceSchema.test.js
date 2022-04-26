@@ -223,8 +223,8 @@ describe('Add source schema', () => {
 
     it('red hat type selection - remove red hat', () => {
       const mockSourceTypes = [
-        { name: 'ops', product_name: 'Red Hat Openshift', vendor: 'Red Hat', id: '1' },
-        { name: 'sat', product_name: 'Red Hat Satellite', vendor: 'Red Hat', id: '2' },
+        { name: 'ops', product_name: 'Red Hat Openshift', vendor: 'Red Hat', category: 'Red Hat', id: '1' },
+        { name: 'sat', product_name: 'Red Hat Satellite', vendor: 'Red Hat', category: 'Red Hat', id: '2' },
       ];
 
       expect(compileAllSourcesComboOptions(mockSourceTypes)).toEqual([

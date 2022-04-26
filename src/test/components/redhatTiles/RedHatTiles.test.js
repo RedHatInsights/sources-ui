@@ -23,7 +23,7 @@ describe('RedhatTiles', () => {
 
     store = mockStore({
       user: { writePermissions: true },
-      sources: { sourceTypes: sourceTypes.data, activeVendor: REDHAT_VENDOR },
+      sources: { sourceTypes: sourceTypes.data, activeCategory: REDHAT_VENDOR },
     });
   });
 
@@ -35,7 +35,10 @@ describe('RedhatTiles', () => {
   });
 
   it('renders correctly when no permissions', async () => {
-    store = mockStore({ user: { writePermissions: false }, sources: { sourceTypes: sourceTypes.data } });
+    store = mockStore({
+      user: { writePermissions: false },
+      sources: { sourceTypes: sourceTypes.data, activeCategory: REDHAT_VENDOR },
+    });
 
     render(componentWrapperIntl(<RedHatTiles {...initialProps} />, store));
 

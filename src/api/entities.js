@@ -96,7 +96,7 @@ export const sorting = (sortBy, sortDirection) => {
   return `sort_by: { name: "${sortBy}", direction: ${sortDirection} }`;
 };
 
-export const filtering = (filterValue = {}, activeVendor) => {
+export const filtering = (filterValue = {}, category) => {
   let filterQueries = [];
 
   if (filterValue.name) {
@@ -117,12 +117,12 @@ export const filtering = (filterValue = {}, activeVendor) => {
     );
   }
 
-  if (activeVendor === CLOUD_VENDOR) {
-    filterQueries.push(`{ name: "source_type.vendor", operation: "not_eq", value: "Red Hat" }`);
+  if (category === CLOUD_VENDOR) {
+    filterQueries.push(`{ name: "source_type.category", operation: "eq", value: "Cloud" }`);
   }
 
-  if (activeVendor === REDHAT_VENDOR) {
-    filterQueries.push(`{ name: "source_type.vendor", operation: "eq", value: "Red Hat" }`);
+  if (category === REDHAT_VENDOR) {
+    filterQueries.push(`{ name: "source_type.category", operation: "eq", value: "Red Hat" }`);
   }
 
   const status = filterValue.availability_status?.[0];
@@ -161,8 +161,8 @@ export const graphQlAttributes = `
     endpoints { id, scheme, host, port, path, receptor_node, role, certificate_authority, verify_ssl, availability_status_error, availability_status, authentications { authtype, availability_status, availability_status_error } }
 `;
 
-export const doLoadEntities = ({ pageSize, pageNumber, sortBy, sortDirection, filterValue, activeVendor }) => {
-  const filter = filtering(filterValue, activeVendor);
+export const doLoadEntities = ({ pageSize, pageNumber, sortBy, sortDirection, filterValue, activeCategory }) => {
+  const filter = filtering(filterValue, activeCategory);
 
   const filterSection = [pagination(pageSize, pageNumber), sorting(sortBy, sortDirection), filter].join(',');
 
@@ -185,7 +185,7 @@ export const doDeleteApplication = (appId, errorMessage) =>
       throw { error: { title: errorMessage, detail } };
     });
 
-export const restFilterGenerator = (filterValue = {}, activeVendor) => {
+export const restFilterGenerator = (filterValue = {}, category) => {
   let filterQueries = [];
 
   if (filterValue.name) {
@@ -200,12 +200,12 @@ export const restFilterGenerator = (filterValue = {}, activeVendor) => {
     filterValue.applications.map((id) => filterQueries.push(`filter[applications][application_type_id][eq][]=${id}`));
   }
 
-  if (activeVendor === CLOUD_VENDOR) {
-    filterQueries.push(`filter[source_type][vendor][not_eq]=Red Hat`);
+  if (category === CLOUD_VENDOR) {
+    filterQueries.push(`filter[source_type][category]=Cloud`);
   }
 
-  if (activeVendor === REDHAT_VENDOR) {
-    filterQueries.push('filter[source_type][vendor]=Red Hat');
+  if (category === REDHAT_VENDOR) {
+    filterQueries.push('filter[source_type][category]=Red Hat');
   }
 
   const status = filterValue.availability_status?.[0];

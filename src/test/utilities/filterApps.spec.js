@@ -13,10 +13,10 @@ describe('filterApps', () => {
 
   describe('vendor filter', () => {
     const sourceTypesVendors = [
-      { id: '1', name: 'azure', vendor: 'Microsoft' },
-      { id: '2', name: 'aws', vendor: 'amazon' },
-      { id: '3', name: 'openshift', vendor: 'Red Hat' },
-      { id: '4', name: 'vmware', vendor: 'vmware' },
+      { id: '1', name: 'azure', vendor: 'Microsoft', category: 'Cloud' },
+      { id: '2', name: 'aws', vendor: 'amazon', category: 'Cloud' },
+      { id: '3', name: 'openshift', vendor: 'Red Hat', category: 'Red Hat' },
+      { id: '4', name: 'vmware', vendor: 'vmware', category: 'Cloud' },
     ];
 
     const appTypes = [
@@ -36,9 +36,9 @@ describe('filterApps', () => {
 
     it('filters CLOUD source types when only cloud source types - when type is not, filter the app', () => {
       const onlyCloudTypes = [
-        { id: '1', name: 'azure', vendor: 'Microsoft' },
-        { id: '2', name: 'aws', vendor: 'amazon' },
-        { id: '4', name: 'vmware', vendor: 'vmware' },
+        { id: '1', name: 'azure', vendor: 'Microsoft', category: 'Cloud' },
+        { id: '2', name: 'aws', vendor: 'amazon', category: 'Cloud' },
+        { id: '4', name: 'vmware', vendor: 'vmware', category: 'Cloud' },
       ];
 
       expect(appTypes.filter(filterVendorAppTypes(onlyCloudTypes, CLOUD_VENDOR))).toEqual([

@@ -21,7 +21,7 @@ describe('CloudEmptyState', () => {
 
     store = mockStore({
       user: { writePermissions: true },
-      sources: { sourceTypes: [...sourceTypes.data, googleType, ibmType], activeVendor: CLOUD_VENDOR },
+      sources: { sourceTypes: [...sourceTypes.data, googleType, ibmType], activeCategory: CLOUD_VENDOR },
     });
   });
 

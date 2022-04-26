@@ -10,7 +10,8 @@
     - [filter[availability_status]](#filteravailability_status)
   - [Custom attributes](#custom-attributes)
     - [sort_by[]](#sort_by)
-    - [activeVendor](#activevendor)
+    - [category](#category)
+    - [activeVendor [DEPRECATED]](#activevendor-deprecated)
     - [type](#type)
     - [application](#application)
 
@@ -86,13 +87,21 @@ Following attributes are using similar but modified API structure.
 sort_by[]=created_at:desc
 ```
 
-### activeVendor
+### category
 
 Two options: `Cloud` | `Red Hat`
 
 `Cloud` shows table for cloud providers (Amazon, Google, Azure, ...).
 
 `Red Hat` shows all Red Hat types (Openshift, Satellite, ...).
+
+```
+category=Red%20Hat
+```
+
+### activeVendor [DEPRECATED]
+
+See [Category](#activevendor-deprecated) above. This option is **deprecated** and it stays to keep backwards compatibility.
 
 ```
 activeVendor=Red%20Hat

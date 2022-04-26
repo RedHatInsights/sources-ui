@@ -138,7 +138,7 @@ describe('SourcesPage', () => {
 
   it('do not show CloudCards on Red Hat page', async () => {
     store = getStore([], {
-      sources: { activeVendor: REDHAT_VENDOR },
+      sources: { activeCategory: REDHAT_VENDOR },
       user: { writePermissions: true },
     });
 
@@ -150,7 +150,7 @@ describe('SourcesPage', () => {
 
   it('renders empty state when there are no Sources - CLOUD', async () => {
     store = getStore([], {
-      sources: { activeVendor: CLOUD_VENDOR },
+      sources: { activeCategory: CLOUD_VENDOR },
       user: { writePermissions: true },
     });
 
@@ -174,10 +174,10 @@ describe('SourcesPage', () => {
     delete window.location;
     window.location = {};
     window.location.pathname = routes.sources.path;
-    window.location.search = `?activeVendor=${CLOUD_VENDOR}`;
+    window.location.search = `?category=${CLOUD_VENDOR}`;
 
     store = getStore([], {
-      sources: { activeVendor: CLOUD_VENDOR },
+      sources: { activeCategory: CLOUD_VENDOR },
       user: { writePermissions: true },
     });
 
@@ -197,7 +197,7 @@ describe('SourcesPage', () => {
 
   it('renders empty state when there are no Sources - RED HAT', async () => {
     store = getStore([], {
-      sources: { activeVendor: REDHAT_VENDOR },
+      sources: { activeCategory: REDHAT_VENDOR },
       user: { writePermissions: true },
     });
 
@@ -216,7 +216,7 @@ describe('SourcesPage', () => {
 
   it('renders empty state when there are no Sources and open openshift selection', async () => {
     store = getStore([], {
-      sources: { activeVendor: REDHAT_VENDOR },
+      sources: { activeCategory: REDHAT_VENDOR },
       user: { writePermissions: true },
     });
 
@@ -306,14 +306,14 @@ describe('SourcesPage', () => {
     });
 
     it('shows only Red Hat sources in the selection (do not filter hidden types)', async () => {
-      window.location.search = `?activeVendor=${REDHAT_VENDOR}`;
+      window.location.search = `?category=${REDHAT_VENDOR}`;
 
       store = getStore([], {
         sources: {
           loaded: 1,
           numberOfEntities: 5,
           sourceTypes: sourceTypesData.data,
-          activeVendor: REDHAT_VENDOR,
+          activeCategory: REDHAT_VENDOR,
         },
         user: { writePermissions: true },
       });
@@ -336,14 +336,14 @@ describe('SourcesPage', () => {
     });
 
     it('shows only Cloud sources in the selection', async () => {
-      window.location.search = `?activeVendor=${CLOUD_VENDOR}`;
+      window.location.search = `?category=${CLOUD_VENDOR}`;
 
       store = getStore([], {
         sources: {
           loaded: 1,
           numberOfEntities: 5,
           sourceTypes: sourceTypesData.data,
-          activeVendor: CLOUD_VENDOR,
+          activeCategory: CLOUD_VENDOR,
         },
         user: { writePermissions: true },
       });
@@ -370,7 +370,7 @@ describe('SourcesPage', () => {
           loaded: 1,
           numberOfEntities: 5,
           sourceTypes: sourceTypesData.data,
-          activeVendor: CLOUD_VENDOR,
+          activeCategory: CLOUD_VENDOR,
         },
         user: { writePermissions: true },
       });
@@ -815,7 +815,7 @@ describe('SourcesPage', () => {
 
     it('show empty state table after clicking on clears all filter in empty table state - RED HAT', async () => {
       store = getStore([], {
-        sources: { activeVendor: REDHAT_VENDOR },
+        sources: { activeCategory: REDHAT_VENDOR },
         user: { writePermissions: true },
       });
 

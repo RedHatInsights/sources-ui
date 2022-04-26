@@ -10,7 +10,7 @@ import * as dependency from '../../../api/wizardHelpers';
 import * as createSource from '../../../api/createSource';
 
 import render from '../__mocks__/render';
-import { OPENSHIFT_NAME, CLOUD_VENDOR, REDHAT_VENDOR } from '../../../utilities/constants';
+import { CLOUD_VENDOR, REDHAT_VENDOR, GOOGLE_NAME } from '../../../utilities/constants';
 
 describe('AddSourceWizard', () => {
   let initialProps;
@@ -22,6 +22,7 @@ describe('AddSourceWizard', () => {
       sourceTypes,
       applicationTypes,
       onClose: jest.fn(),
+      activeCategory: CLOUD_VENDOR,
     };
 
     SOURCE_DATA_OUT = {
@@ -56,7 +57,7 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await userEvent.click(screen.getByText('Google Cloud'));
     container.getElementsByTagName('form')[0].submit();
 
     expect(screen.getByText('Validating credentials')).toBeInTheDocument();
@@ -74,7 +75,7 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await userEvent.click(screen.getByText('Google Cloud'));
     container.getElementsByTagName('form')[0].submit();
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
 
@@ -89,7 +90,7 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await userEvent.click(screen.getByText('Google Cloud'));
     container.getElementsByTagName('form')[0].submit();
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
@@ -109,12 +110,12 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await userEvent.click(screen.getByText('Google Cloud'));
     container.getElementsByTagName('form')[0].submit();
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
     expect(submitCallback).toHaveBeenCalledWith({
-      values: { source_type: OPENSHIFT_NAME },
+      values: { source_type: GOOGLE_NAME },
       isErrored: true,
       sourceTypes,
       error: 'Error - wrong name',
@@ -131,12 +132,12 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await userEvent.click(screen.getByText('Google Cloud'));
     await userEvent.click(screen.getByLabelText('Close wizard'));
 
     expect(screen.getByText('Exit source creation?')).toBeInTheDocument();
     await userEvent.click(screen.getByText('Exit'));
-    expect(onClose).toHaveBeenCalledWith({ source_type: OPENSHIFT_NAME });
+    expect(onClose).toHaveBeenCalledWith({ source_type: GOOGLE_NAME });
   });
 
   it('stay on the wizard', async () => {
@@ -146,12 +147,12 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await userEvent.click(screen.getByText('Google Cloud'));
     await userEvent.click(screen.getByLabelText('Close wizard'));
     await userEvent.click(screen.getByText('Stay'));
 
     expect(onClose).not.toHaveBeenCalled();
-    expect(screen.getByText('OpenShift Container Platform').closest('.pf-m-selected')).toBeInTheDocument();
+    expect(screen.getByText('Google Cloud').closest('.pf-m-selected')).toBeInTheDocument();
   });
 
   it('show error step after failing the form', async () => {
@@ -162,7 +163,7 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await userEvent.click(screen.getByText('Google Cloud'));
     container.getElementsByTagName('form')[0].submit();
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
@@ -184,7 +185,7 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await userEvent.click(screen.getByText('Google Cloud'));
     container.getElementsByTagName('form')[0].submit();
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
@@ -205,7 +206,7 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await userEvent.click(screen.getByText('Google Cloud'));
     container.getElementsByTagName('form')[0].submit();
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
@@ -224,14 +225,14 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await userEvent.click(screen.getByText('Google Cloud'));
     container.getElementsByTagName('form')[0].submit();
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
 
     await userEvent.click(screen.getByText('Add another source'));
 
-    expect(screen.getByText('OpenShift Container Platform').closest('.pf-m-selected')).toBeNull();
+    expect(screen.getByText('Google Cloud').closest('.pf-m-selected')).toBeNull();
   });
 
   it('tryAgain retries the request', async () => {
@@ -241,7 +242,7 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await userEvent.click(screen.getByText('Google Cloud'));
     container.getElementsByTagName('form')[0].submit();
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
@@ -251,11 +252,7 @@ describe('AddSourceWizard', () => {
     await userEvent.click(screen.getByText('Retry'));
 
     await waitFor(() =>
-      expect(createSource.doCreateSource).toHaveBeenCalledWith(
-        { source_type: OPENSHIFT_NAME },
-        expect.any(Array),
-        applicationTypes
-      )
+      expect(createSource.doCreateSource).toHaveBeenCalledWith({ source_type: GOOGLE_NAME }, expect.any(Array), applicationTypes)
     );
   });
 
@@ -264,7 +261,7 @@ describe('AddSourceWizard', () => {
       [...container.parentElement.getElementsByClassName('pf-c-wizard__nav-item')].map((item) => item.textContent);
 
     it('show configuration step when selectedType is set - CLOUD', async () => {
-      const { container } = render(<AddSourceWizard {...initialProps} selectedType="amazon" activeVendor={CLOUD_VENDOR} />);
+      const { container } = render(<AddSourceWizard {...initialProps} selectedType="amazon" activeCategory={CLOUD_VENDOR} />);
 
       await waitFor(() => expect(screen.getByText('Name source', { selector: 'button' })).toBeInTheDocument());
 
@@ -273,7 +270,7 @@ describe('AddSourceWizard', () => {
 
     it('show source type selection when CLOUD', async () => {
       const { container } = render(
-        <AddSourceWizard {...initialProps} initialValues={{ source_type: 'amazon' }} activeVendor={CLOUD_VENDOR} />
+        <AddSourceWizard {...initialProps} initialValues={{ source_type: 'amazon' }} activeCategory={CLOUD_VENDOR} />
       );
 
       await waitFor(() => expect(screen.getByText('Name source', { selector: 'button' })).toBeInTheDocument());
@@ -287,7 +284,7 @@ describe('AddSourceWizard', () => {
           {...initialProps}
           selectedType="amazon"
           initialValues={{ source: { app_creation_workflow: 'account_authorization' } }}
-          activeVendor={CLOUD_VENDOR}
+          activeCategory={CLOUD_VENDOR}
         />
       );
 
@@ -302,7 +299,7 @@ describe('AddSourceWizard', () => {
           {...initialProps}
           selectedType="amazon"
           initialValues={{ source: { app_creation_workflow: 'manual_configuration' } }}
-          activeVendor={CLOUD_VENDOR}
+          activeCategory={CLOUD_VENDOR}
         />
       );
 
@@ -312,7 +309,7 @@ describe('AddSourceWizard', () => {
     });
 
     it('show application step when selectedType is set - RED HAT', async () => {
-      const { container } = render(<AddSourceWizard {...initialProps} selectedType="openshift" activeVendor={REDHAT_VENDOR} />);
+      const { container } = render(<AddSourceWizard {...initialProps} selectedType="openshift" activeCategory={REDHAT_VENDOR} />);
 
       await waitFor(() => expect(screen.getByText('Name source', { selector: 'button' })).toBeInTheDocument());
 
@@ -326,7 +323,7 @@ describe('AddSourceWizard', () => {
     });
 
     it('show source type selection when REDHAT', async () => {
-      const { container } = render(<AddSourceWizard {...initialProps} activeVendor={REDHAT_VENDOR} />);
+      const { container } = render(<AddSourceWizard {...initialProps} activeCategory={REDHAT_VENDOR} />);
 
       await waitFor(() => expect(screen.getByText('Name source', { selector: 'button' })).toBeInTheDocument());
 

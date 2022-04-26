@@ -78,6 +78,7 @@ export const sourceTypesData = {
       },
       updated_at: '2019-12-03T13:56:50Z',
       vendor: 'Red Hat',
+      category: 'Red Hat',
     },
     {
       created_at: '2019-03-26T14:05:45Z',
@@ -201,6 +202,7 @@ export const sourceTypesData = {
       },
       updated_at: '2019-12-16T14:47:40Z',
       vendor: 'Amazon',
+      category: 'Cloud',
     },
     {
       created_at: '2019-04-05T17:54:38Z',
@@ -284,6 +286,7 @@ export const sourceTypesData = {
       },
       updated_at: '2019-11-22T15:26:18Z',
       vendor: 'Red Hat',
+      category: 'Red Hat',
     },
     {
       created_at: '2019-07-16T13:52:12Z',
@@ -293,6 +296,7 @@ export const sourceTypesData = {
       product_name: 'VMware vSphere',
       updated_at: '2019-08-30T13:52:33Z',
       vendor: 'VMware',
+      category: 'Cloud',
     },
     {
       created_at: '2019-07-16T13:52:12Z',
@@ -302,6 +306,7 @@ export const sourceTypesData = {
       product_name: 'Red Hat Virtualization',
       updated_at: '2019-07-16T13:52:12Z',
       vendor: 'Red Hat',
+      category: 'Red Hat',
     },
     {
       created_at: '2019-07-16T13:52:12Z',
@@ -310,6 +315,7 @@ export const sourceTypesData = {
       product_name: 'Red Hat OpenStack',
       updated_at: '2019-07-16T13:52:12Z',
       vendor: 'Red Hat',
+      category: 'Red Hat',
     },
     {
       created_at: '2019-07-16T13:52:12Z',
@@ -318,6 +324,7 @@ export const sourceTypesData = {
       product_name: 'Red Hat CloudForms',
       updated_at: '2019-07-16T13:52:12Z',
       vendor: 'Red Hat',
+      category: 'Red Hat',
     },
     {
       created_at: '2019-08-19T14:53:02Z',
@@ -389,6 +396,7 @@ export const sourceTypesData = {
       },
       updated_at: '2019-12-11T12:57:43Z',
       vendor: 'Azure',
+      category: 'Cloud',
     },
     {
       created_at: '2019-11-08T14:43:11Z',
@@ -443,6 +451,7 @@ export const sourceTypesData = {
       },
       updated_at: '2019-12-12T20:01:44Z',
       vendor: 'Red Hat',
+      category: 'Red Hat',
     },
   ],
 };
@@ -504,6 +513,7 @@ export const googleType = {
   },
   updated_at: '2021-01-22T16:53:04Z',
   vendor: 'Google',
+  category: 'Cloud',
 };
 
 export const ibmType = {
@@ -513,6 +523,7 @@ export const ibmType = {
   name: 'ibm',
   product_name: 'IBM Cloud',
   vendor: 'IBM',
+  category: 'Cloud',
   schema: {
     authentication: [
       {
