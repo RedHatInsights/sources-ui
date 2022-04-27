@@ -91,7 +91,7 @@ const CredentialsForm = () => {
         ),
       }}
       // eslint-disable-next-line no-unused-vars
-      onSubmit={async ({ authentication: { tenant, source_id, id, authtype, resource_id, ...values } }) => {
+      onSubmit={async ({ authentication: { tenant, source_id, id, authtype, resource_id, resource_type, ...values } }) => {
         goBackToDetail();
 
         try {
