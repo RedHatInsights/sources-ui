@@ -103,8 +103,9 @@ describe('SourceEditModal', () => {
       'endpoint.certificate_authority',
       'endpoint.receptor_node',
     ]);
-    expect([...screen.getAllByRole('button')].map((e) => e.textContent)).toEqual(['Catalog', 'Save changes', 'Reset']);
+    expect([...screen.getAllByRole('button')].map((e) => e.textContent)).toEqual(['Save changes', 'Reset']);
     expect(screen.getAllByRole('checkbox')).toHaveLength(2);
+    expect(screen.getByRole('tab')).toHaveTextContent('Catalog');
   });
 
   it('renders correctly with initial message', async () => {
@@ -316,7 +317,7 @@ describe('SourceEditModal', () => {
 
     expect(screen.getByText('Catalog is paused')).toBeInTheDocument();
     expect(screen.getByText('To resume data collection for this application, switch', { exact: false })).toBeInTheDocument();
-    expect(screen.getAllByRole('button')).toHaveLength(1);
+    expect(() => screen.getAllByRole('button')).toThrow();
   });
 
   it('renders correctly with paused applications', async () => {
@@ -370,7 +371,7 @@ describe('SourceEditModal', () => {
 
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
 
-    expect(screen.getAllByRole('button')).toHaveLength(2);
+    expect(() => screen.getAllByRole('button')).toThrow();
   });
 
   it('renders correctly with paused application and unpaused application', async () => {
@@ -422,7 +423,8 @@ describe('SourceEditModal', () => {
 
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
 
-    expect(screen.getAllByRole('button')).toHaveLength(4);
+    expect(screen.getAllByRole('button')).toHaveLength(2);
+    expect(screen.getAllByRole('tab')).toHaveLength(2);
   });
 
   it('renders correctly with paused source', async () => {
@@ -463,7 +465,7 @@ describe('SourceEditModal', () => {
 
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
 
-    expect(screen.getAllByRole('button')).toHaveLength(1);
+    expect(() => screen.getAllByRole('button')).toThrow();
   });
 
   it('reload data when source from redux is changed', async () => {
