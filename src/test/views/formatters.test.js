@@ -40,9 +40,7 @@ import {
 } from '../__mocks__/sourcesData';
 import {
   applicationTypesData,
-  CATALOG_INDEX,
-  TOPOLOGICALINVENTORY_INDEX,
-  COSTMANAGEMENET_INDEX,
+  TOPOLOGICALINVENTORY_APP,
   COSTMANAGEMENT_APP,
   CATALOG_APP,
   SUBWATCH_APP,
@@ -168,17 +166,13 @@ describe('formatters', () => {
         )
       );
 
-      expect(screen.getByText(applicationTypesData.data[CATALOG_INDEX].display_name, { exact: false })).toBeInTheDocument();
-      expect(
-        screen.getByText(applicationTypesData.data[COSTMANAGEMENET_INDEX].display_name, { exact: false })
-      ).toBeInTheDocument();
+      expect(screen.getByText(CATALOG_APP.display_name, { exact: false })).toBeInTheDocument();
+      expect(screen.getByText(COSTMANAGEMENT_APP.display_name, { exact: false })).toBeInTheDocument();
       expect(screen.getByText('1 more', { exact: false })).toBeInTheDocument();
 
       await userEvent.click(screen.getByText('1 more'));
 
-      expect(
-        screen.getByText(applicationTypesData.data[TOPOLOGICALINVENTORY_INDEX].display_name, { exact: false })
-      ).toBeInTheDocument();
+      expect(screen.getByText(TOPOLOGICALINVENTORY_APP.display_name, { exact: false })).toBeInTheDocument();
     });
 
     it('returns empty application list', () => {
@@ -208,7 +202,7 @@ describe('formatters', () => {
         )
       );
 
-      expect(screen.getByText(applicationTypesData.data[CATALOG_INDEX].display_name, { exact: false })).toBeInTheDocument();
+      expect(screen.getByText(CATALOG_APP.display_name, { exact: false })).toBeInTheDocument();
     });
 
     it('show available popover', async () => {
