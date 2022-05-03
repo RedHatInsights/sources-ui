@@ -30,15 +30,7 @@ import {
   PAUSED,
   RHELAZURE,
 } from '../../views/formatters';
-import {
-  sourceTypesData,
-  OPENSHIFT_ID,
-  AMAZON_ID,
-  OPENSHIFT_INDEX,
-  AMAZON,
-  AZURE,
-  googleType,
-} from '../__mocks__/sourceTypesData';
+import { sourceTypesData, OPENSHIFT, AMAZON, AZURE, googleType } from '../__mocks__/sourceTypesData';
 import {
   sourcesDataGraphQl,
   SOURCE_CATALOGAPP_INDEX,
@@ -79,34 +71,34 @@ describe('formatters', () => {
 
   describe('sourceIsOpenShift', () => {
     it('returns true when is openshift', () => {
-      expect(sourceIsOpenShift({ source_type_id: OPENSHIFT_ID }, sourceTypesData.data)).toEqual(true);
+      expect(sourceIsOpenShift({ source_type_id: OPENSHIFT.id }, sourceTypesData.data)).toEqual(true);
     });
 
     it('returns false when is not openshift', () => {
-      expect(sourceIsOpenShift({ source_type_id: AMAZON_ID }, sourceTypesData.data)).toEqual(false);
+      expect(sourceIsOpenShift({ source_type_id: AMAZON.id }, sourceTypesData.data)).toEqual(false);
     });
   });
 
   describe('sourceTypeFormatter', () => {
     it('returns product_name (OpenShift)', () => {
       expect(
-        sourceTypeFormatter(OPENSHIFT_ID, undefined, {
+        sourceTypeFormatter(OPENSHIFT.id, undefined, {
           sourceTypes: sourceTypesData.data,
         })
-      ).toEqual(sourceTypesData.data.find((x) => x.id === OPENSHIFT_ID).product_name);
+      ).toEqual(sourceTypesData.data.find((x) => x.id === OPENSHIFT.id).product_name);
     });
 
     it('returns type when there is no product_name', () => {
       expect(
-        sourceTypeFormatter(OPENSHIFT_ID, undefined, {
+        sourceTypeFormatter(OPENSHIFT.id, undefined, {
           sourceTypes: [
             {
-              ...sourceTypesData.data[OPENSHIFT_INDEX],
+              ...OPENSHIFT,
               product_name: undefined,
             },
           ],
         })
-      ).toEqual(OPENSHIFT_ID);
+      ).toEqual(OPENSHIFT.id);
     });
 
     it('returns empty string when no sourceType', () => {

@@ -14,8 +14,8 @@ import {
 } from '../../../pages/Sources/helpers';
 
 import * as actions from '../../../redux/sources/actions';
-import { AMAZON, AMAZON_ID, sourceTypesData } from '../../__mocks__/sourceTypesData';
-import { applicationTypesData } from '../../__mocks__/applicationTypesData';
+import { AMAZON, ANSIBLE_TOWER, OPENSHIFT, sourceTypesData } from '../../__mocks__/sourceTypesData';
+import { applicationTypesData, CATALOG_APP } from '../../__mocks__/applicationTypesData';
 import { REDHAT_VENDOR } from '../../../utilities/constants';
 import { AVAILABLE, UNAVAILABLE } from '../../../views/formatters';
 import { replaceRouteId, routes } from '../../../Routes';
@@ -51,7 +51,7 @@ describe('Source page helpers', () => {
     const NAME = 'some name';
     const filterValue = {
       name: NAME,
-      source_type_id: ['3', '5', '333'],
+      source_type_id: ['3', '1', '333'],
       applications: ['1', '667'],
     };
 
@@ -72,12 +72,12 @@ describe('Source page helpers', () => {
         key,
         chips: [
           {
-            name: sourceTypesData.data.find(({ id }) => id === '3').product_name,
+            name: ANSIBLE_TOWER.product_name,
             value: '3',
           },
           {
-            name: sourceTypesData.data.find(({ id }) => id === '5').product_name,
-            value: '5',
+            name: OPENSHIFT.product_name,
+            value: '1',
           },
           {
             name: '333',
@@ -95,7 +95,7 @@ describe('Source page helpers', () => {
         key,
         chips: [
           {
-            name: applicationTypesData.data.find(({ id }) => id === '1').display_name,
+            name: CATALOG_APP.display_name,
             value: '1',
           },
           {
@@ -349,7 +349,7 @@ describe('Source page helpers', () => {
       state = {
         isSubmitted: true,
         createdSource: {
-          source_type_id: AMAZON_ID,
+          source_type_id: AMAZON.id,
           id: '1234',
           name: 'some-name',
           applications: [{ availability_status: UNAVAILABLE, availability_status_error: 'Some app error' }],
@@ -381,7 +381,7 @@ describe('Source page helpers', () => {
       state = {
         isSubmitted: true,
         createdSource: {
-          source_type_id: AMAZON_ID,
+          source_type_id: AMAZON.id,
           id: '1234',
           name: 'some-name',
           applications: [],
@@ -405,7 +405,7 @@ describe('Source page helpers', () => {
       state = {
         isSubmitted: true,
         createdSource: {
-          source_type_id: AMAZON_ID,
+          source_type_id: AMAZON.id,
           id: '1234',
           name: 'some-name',
           applications: [],
@@ -429,7 +429,7 @@ describe('Source page helpers', () => {
       state = {
         isSubmitted: true,
         createdSource: {
-          source_type_id: AMAZON_ID,
+          source_type_id: AMAZON.id,
           name: 'some-name',
           applications: [{ availability_status: null }],
         },
@@ -452,7 +452,7 @@ describe('Source page helpers', () => {
       state = {
         isSubmitted: true,
         createdSource: {
-          source_type_id: AMAZON_ID,
+          source_type_id: AMAZON.id,
           id: '1234',
           name: 'some-name',
           applications: [{ availability_status: AVAILABLE }],

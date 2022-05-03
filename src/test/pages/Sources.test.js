@@ -9,7 +9,7 @@ import * as utilsHelpers from '@redhat-cloud-services/frontend-components-utilit
 import SourcesPageOriginal from '../../pages/Sources';
 
 import { sourcesDataGraphQl, SOURCE_ALL_APS_ID } from '../__mocks__/sourcesData';
-import { sourceTypesData, AMAZON_ID } from '../__mocks__/sourceTypesData';
+import { sourceTypesData, AMAZON } from '../__mocks__/sourceTypesData';
 import { applicationTypesData, COSTMANAGEMENT_APP } from '../__mocks__/applicationTypesData';
 
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
@@ -328,10 +328,7 @@ describe('SourcesPage', () => {
       expect([...container.getElementsByClassName('pf-c-select__menu-item')].map((e) => e.textContent)).toEqual([
         'Ansible Tower',
         'OpenShift Container Platform',
-        'Red Hat CloudForms',
-        'Red Hat OpenStack',
         'Red Hat Satellite',
-        'Red Hat Virtualization',
       ]);
     });
 
@@ -358,7 +355,6 @@ describe('SourcesPage', () => {
       expect([...container.getElementsByClassName('pf-c-select__menu-item')].map((e) => e.textContent)).toEqual([
         'Amazon Web Services',
         'Microsoft Azure',
-        'VMware vSphere',
       ]);
     });
 
@@ -460,7 +456,7 @@ describe('SourcesPage', () => {
       sourceTypes: sourceTypesData.data,
       createdSource: {
         id: '544615',
-        source_type_id: AMAZON_ID,
+        source_type_id: AMAZON.id,
         name: 'name of created source',
         applications: [{ availability_status: AVAILABLE }],
       },
@@ -663,7 +659,7 @@ describe('SourcesPage', () => {
 
       expect(store.getState().sources.filterValue).toEqual({
         name: SEARCH_TERM,
-        source_type_id: [AMAZON_ID],
+        source_type_id: [AMAZON.id],
       });
     });
 

@@ -5,7 +5,7 @@ import { Route } from 'react-router-dom';
 import rendererContext from '@data-driven-forms/react-form-renderer/renderer-context';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import { sourceTypesData, OPENSHIFT_ID } from '../../__mocks__/sourceTypesData';
+import { sourceTypesData, OPENSHIFT } from '../../__mocks__/sourceTypesData';
 import { AuthTypeSetter } from '../../../components/AddApplication/AuthTypeSetter';
 import { routes, replaceRouteId } from '../../../Routes';
 import mockStore from '../../__mocks__/mockStore';
@@ -54,7 +54,7 @@ describe('AuthTypeSetter', () => {
 
   const SOURCE = {
     id: SOURCE_ID,
-    source_type_id: OPENSHIFT_ID,
+    source_type_id: OPENSHIFT.id,
     applications: [],
   };
 

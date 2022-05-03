@@ -9,7 +9,7 @@ import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 import ApplicationsCard from '../../../components/SourceDetail/ApplicationsCard';
 import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import sourceTypesData, { AMAZON_ID } from '../../__mocks__/sourceTypesData';
+import sourceTypesData, { AMAZON } from '../../__mocks__/sourceTypesData';
 import applicationTypesData, { COSTMANAGEMENT_APP, SUBWATCH_APP } from '../../__mocks__/applicationTypesData';
 import mockStore from '../../__mocks__/mockStore';
 
@@ -27,7 +27,7 @@ describe('ApplicationsCard', () => {
   it('renders with no permissions', async () => {
     store = mockStore({
       sources: {
-        entities: [{ id: sourceId, source_type_id: AMAZON_ID, applications: [] }],
+        entities: [{ id: sourceId, source_type_id: AMAZON.id, applications: [] }],
         sourceTypes: sourceTypesData.data,
         appTypes: updateAppData,
       },
@@ -68,7 +68,7 @@ describe('ApplicationsCard', () => {
         entities: [
           {
             id: sourceId,
-            source_type_id: AMAZON_ID,
+            source_type_id: AMAZON.id,
             applications: [{ id: '123', application_type_id: COSTMANAGEMENT_APP.id }],
             paused_at: 'today',
           },
@@ -99,7 +99,7 @@ describe('ApplicationsCard', () => {
           entities: [
             {
               id: sourceId,
-              source_type_id: AMAZON_ID,
+              source_type_id: AMAZON.id,
               applications: [{ id: '123', application_type_id: COSTMANAGEMENT_APP.id }],
             },
           ],
@@ -193,7 +193,7 @@ describe('ApplicationsCard', () => {
           entities: [
             {
               id: sourceId,
-              source_type_id: AMAZON_ID,
+              source_type_id: AMAZON.id,
               applications: [{ id: '123', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
             },
           ],
@@ -251,7 +251,7 @@ describe('ApplicationsCard', () => {
           entities: [
             {
               id: sourceId,
-              source_type_id: AMAZON_ID,
+              source_type_id: AMAZON.id,
               applications: [{ id: '123', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
             },
           ],
@@ -292,7 +292,7 @@ describe('ApplicationsCard', () => {
           entities: [
             {
               id: sourceId,
-              source_type_id: AMAZON_ID,
+              source_type_id: AMAZON.id,
               applications: [{ id: '123', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
             },
           ],
@@ -337,7 +337,7 @@ describe('ApplicationsCard', () => {
           entities: [
             {
               id: sourceId,
-              source_type_id: AMAZON_ID,
+              source_type_id: AMAZON.id,
               applications: [{ id: '123', application_type_id: COSTMANAGEMENT_APP.id }],
               app_creation_workflow: 'account_authorization',
             },
@@ -357,7 +357,7 @@ describe('ApplicationsCard', () => {
           entities: [
             {
               id: sourceId,
-              source_type_id: AMAZON_ID,
+              source_type_id: AMAZON.id,
               applications: [{ id: '123', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
               app_creation_workflow: 'account_authorization',
             },
@@ -465,7 +465,7 @@ describe('ApplicationsCard', () => {
           entities: [
             {
               id: sourceId,
-              source_type_id: AMAZON_ID,
+              source_type_id: AMAZON.id,
               applications: [{ id: '123', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
               app_creation_workflow: 'account_authorization',
             },

@@ -1,5 +1,5 @@
 import addApplicationSchema, { hasAlreadySupportedAuthType } from '../../../components/AddApplication/AddApplicationSchema';
-import { OPENSHIFT_ID, OPENSHIFT, AZURE_ID, AZURE } from '../../__mocks__/sourceTypesData';
+import { OPENSHIFT, AZURE } from '../../__mocks__/sourceTypesData';
 import { COSTMANAGEMENT_APP, SUBWATCH_APP } from '../../__mocks__/applicationTypesData';
 
 describe('AddApplicationSchema', () => {
@@ -10,7 +10,7 @@ describe('AddApplicationSchema', () => {
 
   it('openshift schema', () => {
     const source = {
-      source_type_id: OPENSHIFT_ID,
+      source_type_id: OPENSHIFT.id,
     };
 
     const result = addApplicationSchema(intl, OPENSHIFT, COSTMANAGEMENT_APP, authenticationValues, source, TITLE, DESCRIPTION);
@@ -25,7 +25,7 @@ describe('AddApplicationSchema', () => {
 
   it('azure+rhel management schema (empty auth type)', () => {
     const source = {
-      source_type_id: AZURE_ID,
+      source_type_id: AZURE.id,
     };
 
     const result = addApplicationSchema(intl, AZURE, SUBWATCH_APP, authenticationValues, source, TITLE, DESCRIPTION);

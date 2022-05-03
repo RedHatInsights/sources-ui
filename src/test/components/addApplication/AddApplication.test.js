@@ -9,7 +9,7 @@ import * as attachSource from '../../../api/doAttachApp';
 
 import AddApplication from '../../../components/AddApplication/AddApplication';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID } from '../../__mocks__/sourceTypesData';
+import { sourceTypesData, OPENSHIFT, AMAZON } from '../../__mocks__/sourceTypesData';
 import { SOURCE_NO_APS_ID } from '../../__mocks__/sourcesData';
 import { applicationTypesData, COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
 import { routes, replaceRouteId } from '../../../Routes';
@@ -33,7 +33,7 @@ describe('AddApplication', () => {
         entities: [
           {
             id: SOURCE_NO_APS_ID,
-            source_type_id: OPENSHIFT_ID,
+            source_type_id: OPENSHIFT.id,
             applications: [],
           },
         ],
@@ -64,7 +64,7 @@ describe('AddApplication', () => {
         entities: [
           {
             id: SOURCE_NO_APS_ID,
-            source_type_id: OPENSHIFT_ID,
+            source_type_id: OPENSHIFT.id,
             applications: [],
             endpoints: [{ id: ENDPOINT_ID }],
           },
@@ -126,7 +126,7 @@ describe('AddApplication', () => {
     it('when type does exist', async () => {
       store = mockStore({
         sources: {
-          entities: [{ id: SOURCE_NO_APS_ID, source_type_id: AMAZON_ID, applications: [] }],
+          entities: [{ id: SOURCE_NO_APS_ID, source_type_id: AMAZON.id, applications: [] }],
           appTypes: [],
           sourceTypes: sourceTypesData.data,
           appTypesLoaded: true,
@@ -153,7 +153,7 @@ describe('AddApplication', () => {
     it('when type does is not supported', async () => {
       store = mockStore({
         sources: {
-          entities: [{ id: SOURCE_NO_APS_ID, source_type_id: AMAZON_ID, applications: [] }],
+          entities: [{ id: SOURCE_NO_APS_ID, source_type_id: AMAZON.id, applications: [] }],
           appTypes: [APP],
           sourceTypes: sourceTypesData.data,
           appTypesLoaded: true,
@@ -181,7 +181,7 @@ describe('AddApplication', () => {
       store = mockStore({
         sources: {
           entities: [
-            { id: SOURCE_NO_APS_ID, source_type_id: AMAZON_ID, applications: [{ id: '234', application_type_id: APP.id }] },
+            { id: SOURCE_NO_APS_ID, source_type_id: AMAZON.id, applications: [{ id: '234', application_type_id: APP.id }] },
           ],
           appTypes: [{ ...APP, supported_source_types: ['amazon'] }],
           sourceTypes: sourceTypesData.data,
@@ -431,7 +431,7 @@ describe('AddApplication', () => {
     beforeEach(() => {
       source = {
         id: SOURCE_NO_APS_ID,
-        source_type_id: OPENSHIFT_ID,
+        source_type_id: OPENSHIFT.id,
         applications: [],
         imported: 'cfme',
       };
@@ -502,7 +502,7 @@ describe('AddApplication', () => {
     it('shows aws specific step', async () => {
       source = {
         ...source,
-        source_type_id: AMAZON_ID,
+        source_type_id: AMAZON.id,
       };
 
       store = mockStore({

@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import sourceTypesData, { AMAZON_ID } from '../../__mocks__/sourceTypesData';
+import sourceTypesData, { AMAZON } from '../../__mocks__/sourceTypesData';
 import applicationTypesData, { COSTMANAGEMENT_APP, SUBWATCH_APP } from '../../__mocks__/applicationTypesData';
 
 import { Route } from 'react-router-dom';
@@ -28,7 +28,7 @@ describe('ResourcesTable', () => {
         entities: [
           {
             id: sourceId,
-            source_type_id: AMAZON_ID,
+            source_type_id: AMAZON.id,
             applications: [],
           },
         ],
@@ -59,7 +59,7 @@ describe('ResourcesTable', () => {
       Promise.resolve({
         source: {
           id: sourceId,
-          source_type_id: AMAZON_ID,
+          source_type_id: AMAZON.id,
           applications: [
             {
               id: '123',
@@ -83,7 +83,7 @@ describe('ResourcesTable', () => {
 
     source = {
       id: sourceId,
-      source_type_id: AMAZON_ID,
+      source_type_id: AMAZON.id,
       applications: [{ id: '12344', application_type_id: COSTMANAGEMENT_APP.id }],
     };
 
@@ -124,7 +124,7 @@ describe('ResourcesTable', () => {
       Promise.resolve({
         source: {
           id: sourceId,
-          source_type_id: AMAZON_ID,
+          source_type_id: AMAZON.id,
           applications: [
             {
               id: '123',
@@ -150,7 +150,7 @@ describe('ResourcesTable', () => {
 
     source = {
       id: sourceId,
-      source_type_id: AMAZON_ID,
+      source_type_id: AMAZON.id,
       applications: [{ id: '12344', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
     };
 
@@ -186,7 +186,7 @@ describe('ResourcesTable', () => {
       Promise.resolve({
         source: {
           id: sourceId,
-          source_type_id: AMAZON_ID,
+          source_type_id: AMAZON.id,
           applications: [
             {
               application_type_id: COSTMANAGEMENT_APP.id,
@@ -242,7 +242,7 @@ describe('ResourcesTable', () => {
 
     source = {
       id: sourceId,
-      source_type_id: AMAZON_ID,
+      source_type_id: AMAZON.id,
       applications: [
         { id: '20198', application_type_id: COSTMANAGEMENT_APP.id },
         { id: '20199', application_type_id: SUBWATCH_APP.id },
@@ -307,7 +307,7 @@ describe('ResourcesTable', () => {
       Promise.resolve({
         source: {
           id: sourceId,
-          source_type_id: AMAZON_ID,
+          source_type_id: AMAZON.id,
           applications: [
             {
               application_type_id: COSTMANAGEMENT_APP.id,
@@ -343,7 +343,7 @@ describe('ResourcesTable', () => {
 
     source = {
       id: sourceId,
-      source_type_id: AMAZON_ID,
+      source_type_id: AMAZON.id,
       applications: [{ id: '20198', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
     };
 
@@ -380,7 +380,7 @@ describe('ResourcesTable', () => {
         source: {
           id: sourceId,
           paused_at: 'now',
-          source_type_id: AMAZON_ID,
+          source_type_id: AMAZON.id,
           applications: [
             {
               application_type_id: COSTMANAGEMENT_APP.id,
@@ -416,7 +416,7 @@ describe('ResourcesTable', () => {
 
     source = {
       id: sourceId,
-      source_type_id: AMAZON_ID,
+      source_type_id: AMAZON.id,
       applications: [{ id: '20198', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
       paused_at: 'today',
     };
