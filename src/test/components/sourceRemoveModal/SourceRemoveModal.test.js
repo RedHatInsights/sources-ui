@@ -203,7 +203,9 @@ describe('SourceRemoveModal', () => {
       );
 
       expect(
-        screen.getByText('permanently deletes all collected data and detaches the following connected application:', { exact: false })
+        screen.getByText('permanently deletes all collected data and detaches the following connected application:', {
+          exact: false,
+        })
       ).toBeInTheDocument();
     });
 
