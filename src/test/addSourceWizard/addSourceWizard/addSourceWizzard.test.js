@@ -4,8 +4,8 @@ import userEvent from '@testing-library/user-event';
 
 import { AddSourceWizard } from '../../../components/addSourceWizard/index';
 
-import sourceTypes from '../helpers/sourceTypes';
-import applicationTypes from '../helpers/applicationTypes';
+import sourceTypes from '../../__mocks__/sourceTypes';
+import applicationTypes from '../../__mocks__/applicationTypes';
 import * as dependency from '../../../api/wizardHelpers';
 import * as createSource from '../../../api/createSource';
 

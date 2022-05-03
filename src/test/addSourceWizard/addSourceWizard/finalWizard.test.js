@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import FinalWizard from '../../../components/addSourceWizard/FinalWizard';
 
 import render from '../__mocks__/render';
-import sourceTypes, { AMAZON_TYPE } from '../helpers/sourceTypes';
+import sourceTypes, { AMAZON_TYPE } from '../../__mocks__/sourceTypes';
 
 import * as api from '../../../api/entities';
 import { replaceRouteId, routes } from '../../../Routes';

@@ -13,8 +13,8 @@ import {
   applicationStep,
   cloudTypesStep,
 } from '../../../components/addSourceWizard/SourceAddSchema';
-import sourceTypes, { OPENSHIFT_TYPE } from '../helpers/sourceTypes';
-import applicationTypes from '../helpers/applicationTypes';
+import sourceTypes, { OPENSHIFT_TYPE } from '../../__mocks__/sourceTypes';
+import applicationTypes from '../../__mocks__/applicationTypes';
 
 import render from '../__mocks__/render';
 import { NO_APPLICATION_VALUE } from '../../../components/addSourceWizard/stringConstants';

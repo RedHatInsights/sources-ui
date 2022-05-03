@@ -4,7 +4,7 @@ import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-i
 import ResourcesEmptyState from '../../../../components/SourceDetail/ResourcesEmptyState';
 import { applicationsFields } from '../../../../components/SourceEditForm/parser/application';
 import EditAlert from '../../../../components/SourceEditForm/parser/EditAlert';
-import { COST_MANAGEMENT_APP } from '../../../addSourceWizard/helpers/applicationTypes';
+import { COST_MANAGEMENT_APP } from '../../../addSourceWizard/../__mocks__/applicationTypes';
 import { applicationTypesData, COSTMANAGEMENT_APP, CATALOG_APP } from '../../../__mocks__/applicationTypesData';
 import { googleType } from '../../../__mocks__/sourceTypesData';
 

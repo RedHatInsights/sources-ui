@@ -9,8 +9,8 @@ import applicationTypes, {
   COST_MANAGEMENT_APP,
   SUB_WATCH_APP,
   TOPOLOGY_INV_APP,
-} from '../../addSourceWizard/helpers/applicationTypes';
-import sourceTypes from '../../addSourceWizard/helpers/sourceTypes';
+} from '../../addSourceWizard/../__mocks__/applicationTypes';
+import sourceTypes from '../../addSourceWizard/../__mocks__/sourceTypes';
 
 import RendererContext from '@data-driven-forms/react-form-renderer/renderer-context';
 import render from '../../addSourceWizard/__mocks__/render';
