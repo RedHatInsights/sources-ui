@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import sourceTypesData, { AMAZON } from '../../__mocks__/sourceTypesData';
+import sourceTypes, { AMAZON_TYPE } from '../../__mocks__/sourceTypes';
 import applicationTypesData, { COSTMANAGEMENT_APP, SUBWATCH_APP } from '../../__mocks__/applicationTypesData';
 
 import { Route } from 'react-router-dom';
@@ -28,11 +28,11 @@ describe('ResourcesTable', () => {
         entities: [
           {
             id: sourceId,
-            source_type_id: AMAZON.id,
+            source_type_id: AMAZON_TYPE.id,
             applications: [],
           },
         ],
-        sourceTypes: sourceTypesData.data,
+        sourceTypes,
         appTypes: applicationTypesData.data,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
@@ -59,7 +59,7 @@ describe('ResourcesTable', () => {
       Promise.resolve({
         source: {
           id: sourceId,
-          source_type_id: AMAZON.id,
+          source_type_id: AMAZON_TYPE.id,
           applications: [
             {
               id: '123',
@@ -83,14 +83,14 @@ describe('ResourcesTable', () => {
 
     source = {
       id: sourceId,
-      source_type_id: AMAZON.id,
+      source_type_id: AMAZON_TYPE.id,
       applications: [{ id: '12344', application_type_id: COSTMANAGEMENT_APP.id }],
     };
 
     store = mockStore({
       sources: {
         entities: [source],
-        sourceTypes: sourceTypesData.data,
+        sourceTypes,
         appTypes: applicationTypesData.data,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
@@ -116,7 +116,7 @@ describe('ResourcesTable', () => {
     expect(screen.getByText('Cost Management')).toBeInTheDocument();
     expect(screen.getByText('Cost Management resources will appear here when created.')).toBeInTheDocument();
 
-    expect(api.doLoadSourceForEdit).toHaveBeenCalledWith(source, applicationTypesData.data, sourceTypesData.data);
+    expect(api.doLoadSourceForEdit).toHaveBeenCalledWith(source, applicationTypesData.data, sourceTypes);
   });
 
   it('renders empty state when no resources for paused app', async () => {
@@ -124,7 +124,7 @@ describe('ResourcesTable', () => {
       Promise.resolve({
         source: {
           id: sourceId,
-          source_type_id: AMAZON.id,
+          source_type_id: AMAZON_TYPE.id,
           applications: [
             {
               id: '123',
@@ -150,14 +150,14 @@ describe('ResourcesTable', () => {
 
     source = {
       id: sourceId,
-      source_type_id: AMAZON.id,
+      source_type_id: AMAZON_TYPE.id,
       applications: [{ id: '12344', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
     };
 
     store = mockStore({
       sources: {
         entities: [source],
-        sourceTypes: sourceTypesData.data,
+        sourceTypes,
         appTypes: applicationTypesData.data,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
@@ -186,7 +186,7 @@ describe('ResourcesTable', () => {
       Promise.resolve({
         source: {
           id: sourceId,
-          source_type_id: AMAZON.id,
+          source_type_id: AMAZON_TYPE.id,
           applications: [
             {
               application_type_id: COSTMANAGEMENT_APP.id,
@@ -242,7 +242,7 @@ describe('ResourcesTable', () => {
 
     source = {
       id: sourceId,
-      source_type_id: AMAZON.id,
+      source_type_id: AMAZON_TYPE.id,
       applications: [
         { id: '20198', application_type_id: COSTMANAGEMENT_APP.id },
         { id: '20199', application_type_id: SUBWATCH_APP.id },
@@ -252,7 +252,7 @@ describe('ResourcesTable', () => {
     store = mockStore({
       sources: {
         entities: [source],
-        sourceTypes: sourceTypesData.data,
+        sourceTypes,
         appTypes: [...applicationTypesData.data, SUBWATCH_APP],
         appTypesLoaded: true,
         sourceTypesLoaded: true,
@@ -276,11 +276,7 @@ describe('ResourcesTable', () => {
     expect(screen.getByText('Cost Management')).toBeInTheDocument();
     expect(screen.getByText('Subscription Watch')).toBeInTheDocument();
 
-    expect(api.doLoadSourceForEdit).toHaveBeenCalledWith(
-      source,
-      [...applicationTypesData.data, SUBWATCH_APP],
-      sourceTypesData.data
-    );
+    expect(api.doLoadSourceForEdit).toHaveBeenCalledWith(source, [...applicationTypesData.data, SUBWATCH_APP], sourceTypes);
 
     const getData = () => [...container.getElementsByTagName('td')].map((td) => [td.getAttribute('data-label'), td.textContent]);
 
@@ -307,7 +303,7 @@ describe('ResourcesTable', () => {
       Promise.resolve({
         source: {
           id: sourceId,
-          source_type_id: AMAZON.id,
+          source_type_id: AMAZON_TYPE.id,
           applications: [
             {
               application_type_id: COSTMANAGEMENT_APP.id,
@@ -343,14 +339,14 @@ describe('ResourcesTable', () => {
 
     source = {
       id: sourceId,
-      source_type_id: AMAZON.id,
+      source_type_id: AMAZON_TYPE.id,
       applications: [{ id: '20198', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
     };
 
     store = mockStore({
       sources: {
         entities: [source],
-        sourceTypes: sourceTypesData.data,
+        sourceTypes,
         appTypes: applicationTypesData.data,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
@@ -380,7 +376,7 @@ describe('ResourcesTable', () => {
         source: {
           id: sourceId,
           paused_at: 'now',
-          source_type_id: AMAZON.id,
+          source_type_id: AMAZON_TYPE.id,
           applications: [
             {
               application_type_id: COSTMANAGEMENT_APP.id,
@@ -416,7 +412,7 @@ describe('ResourcesTable', () => {
 
     source = {
       id: sourceId,
-      source_type_id: AMAZON.id,
+      source_type_id: AMAZON_TYPE.id,
       applications: [{ id: '20198', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
       paused_at: 'today',
     };
@@ -424,7 +420,7 @@ describe('ResourcesTable', () => {
     store = mockStore({
       sources: {
         entities: [source],
-        sourceTypes: sourceTypesData.data,
+        sourceTypes,
         appTypes: applicationTypesData.data,
         appTypesLoaded: true,
         sourceTypesLoaded: true,

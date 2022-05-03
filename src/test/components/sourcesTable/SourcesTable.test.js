@@ -6,7 +6,7 @@ import userEvent from '@testing-library/user-event';
 import SourcesTable, { actionResolver, itemToCells, prepareColumnsCells } from '../../../components/SourcesTable/SourcesTable';
 
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
-import { sourceTypesData } from '../../__mocks__/sourceTypesData';
+import sourceTypes from '../../__mocks__/sourceTypes';
 import { applicationTypesData } from '../../__mocks__/applicationTypesData';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
@@ -37,7 +37,7 @@ describe('SourcesTable', () => {
       entities: sourcesDataGraphQl,
       numberOfEntities: sourcesDataGraphQl.length,
       appTypes: applicationTypesData.data,
-      sourceTypes: sourceTypesData.data,
+      sourceTypes,
     };
     API.doLoadEntities = jest.fn().mockImplementation(() =>
       Promise.resolve({

@@ -30,7 +30,7 @@ import {
   PAUSED,
   RHELAZURE,
 } from '../../views/formatters';
-import { sourceTypesData, OPENSHIFT, AMAZON, AZURE, googleType } from '../__mocks__/sourceTypesData';
+import sourceTypes, { OPENSHIFT_TYPE, AMAZON_TYPE, AZURE_TYPE, GOOGLE_TYPE } from '../__mocks__/sourceTypes';
 import {
   sourcesDataGraphQl,
   SOURCE_CATALOGAPP_INDEX,
@@ -69,40 +69,40 @@ describe('formatters', () => {
 
   describe('sourceIsOpenShift', () => {
     it('returns true when is openshift', () => {
-      expect(sourceIsOpenShift({ source_type_id: OPENSHIFT.id }, sourceTypesData.data)).toEqual(true);
+      expect(sourceIsOpenShift({ source_type_id: OPENSHIFT_TYPE.id }, sourceTypes)).toEqual(true);
     });
 
     it('returns false when is not openshift', () => {
-      expect(sourceIsOpenShift({ source_type_id: AMAZON.id }, sourceTypesData.data)).toEqual(false);
+      expect(sourceIsOpenShift({ source_type_id: AMAZON_TYPE.id }, sourceTypes)).toEqual(false);
     });
   });
 
   describe('sourceTypeFormatter', () => {
     it('returns product_name (OpenShift)', () => {
       expect(
-        sourceTypeFormatter(OPENSHIFT.id, undefined, {
-          sourceTypes: sourceTypesData.data,
+        sourceTypeFormatter(OPENSHIFT_TYPE.id, undefined, {
+          sourceTypes,
         })
-      ).toEqual(sourceTypesData.data.find((x) => x.id === OPENSHIFT.id).product_name);
+      ).toEqual(sourceTypes.find((x) => x.id === OPENSHIFT_TYPE.id).product_name);
     });
 
     it('returns type when there is no product_name', () => {
       expect(
-        sourceTypeFormatter(OPENSHIFT.id, undefined, {
+        sourceTypeFormatter(OPENSHIFT_TYPE.id, undefined, {
           sourceTypes: [
             {
-              ...OPENSHIFT,
+              ...OPENSHIFT_TYPE,
               product_name: undefined,
             },
           ],
         })
-      ).toEqual(OPENSHIFT.id);
+      ).toEqual(OPENSHIFT_TYPE.id);
     });
 
     it('returns empty string when no sourceType', () => {
       expect(
         sourceTypeFormatter(undefined, undefined, {
-          sourceTypes: sourceTypesData.data,
+          sourceTypes,
         })
       ).toEqual('');
     });
@@ -123,7 +123,7 @@ describe('formatters', () => {
       expect(
         JSON.stringify(
           nameFormatter(sourcesDataGraphQl[0].name, sourcesDataGraphQl[0], {
-            sourceTypes: sourceTypesData.data,
+            sourceTypes,
           })
         ).includes(sourcesDataGraphQl[0].name)
       ).toEqual(true);
@@ -497,7 +497,7 @@ describe('formatters', () => {
 
   describe('availability status', () => {
     const APPTYPES = [...applicationTypesData.data, SUBWATCH_APP];
-    const SOURCETYPES = [...sourceTypesData.data, googleType];
+    const SOURCETYPES = [...sourceTypes, GOOGLE_TYPE];
 
     describe('getStatusColor', () => {
       it('returns OK color', () => {
@@ -634,7 +634,7 @@ describe('formatters', () => {
         ).toBeInTheDocument();
       });
 
-      it('returns RHEL AZURE text', () => {
+      it('returns RHEL AZURE_TYPE text', () => {
         render(wrapperWithIntl(getStatusTooltipText(RHELAZURE, APPTYPES)));
 
         expect(
@@ -709,7 +709,7 @@ describe('formatters', () => {
       it('returns text for Azure + RHEL bundle combo', async () => {
         const SOURCE = {
           availability_status: undefined,
-          source_type_id: AZURE.id,
+          source_type_id: AZURE_TYPE.id,
           applications: [{ application_type_id: SUBWATCH_APP.id }],
         };
 
@@ -731,7 +731,7 @@ describe('formatters', () => {
       it('returns text for Google + RHEL bundle combo', async () => {
         const SOURCE = {
           availability_status: undefined,
-          source_type_id: googleType.id,
+          source_type_id: GOOGLE_TYPE.id,
           applications: [{ application_type_id: SUBWATCH_APP.id }],
         };
 
@@ -1241,7 +1241,7 @@ describe('formatters', () => {
                   },
                 ],
               },
-              { intl: INTL, sourceType: AMAZON }
+              { intl: INTL, sourceType: AMAZON_TYPE }
             )
           )}
         </MemoryRouter>
@@ -1273,7 +1273,7 @@ describe('formatters', () => {
                   },
                 ],
               },
-              { intl: INTL, sourceType: AMAZON }
+              { intl: INTL, sourceType: AMAZON_TYPE }
             )
           )}
         </MemoryRouter>

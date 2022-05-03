@@ -1,4 +1,4 @@
-import { AMAZON, ANSIBLE_TOWER, OPENSHIFT } from './sourceTypesData';
+import { AMAZON_TYPE, ANSIBLE_TOWER_TYPE, OPENSHIFT_TYPE } from './sourceTypes';
 
 export const sourcesData = {
   meta: { count: 1, limit: 100, offset: 0 },
@@ -23,7 +23,7 @@ export const sourcesDataGraphQl = [
   {
     id: '14',
     created_at: '2019-04-23T18:21:07.081Z',
-    source_type_id: OPENSHIFT.id,
+    source_type_id: OPENSHIFT_TYPE.id,
     name: 'MPTEST3214411',
     tenant: '1234567',
     uid: '00273be5-9fb9-43ea-b4d2-db6002b3a3e9',
@@ -43,7 +43,7 @@ export const sourcesDataGraphQl = [
   {
     id: '23',
     created_at: '2019-05-03T15:01:42.732Z',
-    source_type_id: AMAZON.id,
+    source_type_id: AMAZON_TYPE.id,
     name: 'AWStest2x',
     tenant: '1234567',
     uid: '60aab23f-5456-4338-a802-a49ac5143fd4',
@@ -62,7 +62,7 @@ export const sourcesDataGraphQl = [
   {
     id: '44',
     created_at: '2019-05-27T14:13:45.773Z',
-    source_type_id: AMAZON.id,
+    source_type_id: AMAZON_TYPE.id,
     name: 'adf',
     tenant: '1234567',
     uid: '1a6eec2e-0f97-4c67-94a5-20d97e0f6f81',
@@ -82,7 +82,7 @@ export const sourcesDataGraphQl = [
   {
     id: '406',
     created_at: '2019-08-06T12:18:25.410Z',
-    source_type_id: ANSIBLE_TOWER.id,
+    source_type_id: ANSIBLE_TOWER_TYPE.id,
     name: 'Test123456',
     tenant: '1234567',
     uid: '9d6677e9-dd0b-4dbe-a663-4dc8c34c647c',
@@ -107,7 +107,7 @@ export const sourcesDataGraphQl = [
   {
     id: '407',
     created_at: '2019-08-06T12:47:11.917Z',
-    source_type_id: ANSIBLE_TOWER.id,
+    source_type_id: ANSIBLE_TOWER_TYPE.id,
     name: 'TestWithoutApp',
     tenant: '1234567',
     uid: '36ff09fa-9f0a-4994-abe5-d9865e891195',
@@ -126,7 +126,7 @@ export const sourcesDataGraphQl = [
   {
     id: '408',
     created_at: '2019-08-06T12:54:07.119Z',
-    source_type_id: OPENSHIFT.id,
+    source_type_id: OPENSHIFT_TYPE.id,
     name: 'Test178794546',
     tenant: '1234567',
     uid: 'a19aeba7-81af-42e3-9729-a57a5012303f',

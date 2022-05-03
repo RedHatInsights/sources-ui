@@ -6,7 +6,7 @@ import { applicationsFields } from '../../../../components/SourceEditForm/parser
 import EditAlert from '../../../../components/SourceEditForm/parser/EditAlert';
 import { COST_MANAGEMENT_APP } from '../../../addSourceWizard/../__mocks__/applicationTypes';
 import { applicationTypesData, COSTMANAGEMENT_APP, CATALOG_APP } from '../../../__mocks__/applicationTypesData';
-import { googleType } from '../../../__mocks__/sourceTypesData';
+import { GOOGLE_TYPE } from '../../../__mocks__/sourceTypes';
 
 jest.mock('../../../../components/addSourceWizard/hardcodedSchemas', () => ({
   __esModule: true,
@@ -403,7 +403,7 @@ describe('application edit form parser', () => {
       },
     ];
 
-    const result = applicationsFields(APPLICATIONS, googleType, [COST_MANAGEMENT_APP]);
+    const result = applicationsFields(APPLICATIONS, GOOGLE_TYPE, [COST_MANAGEMENT_APP]);
 
     expect(result).toEqual(EXPECTED_RESULT_GOOGLE);
   });

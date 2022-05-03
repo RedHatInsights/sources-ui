@@ -6,7 +6,7 @@ import componentWrapperIntl from '../../../utilities/testsHelpers';
 import { routes } from '../../../Routes';
 import mockStore from '../../__mocks__/mockStore';
 import RedHatTiles from '../../../components/RedHatTiles/RedHatTiles';
-import sourceTypes from '../../__mocks__/sourceTypesData';
+import sourceTypes from '../../__mocks__/sourceTypes';
 import { REDHAT_VENDOR } from '../../../utilities/constants';
 
 describe('RedhatTiles', () => {
@@ -23,7 +23,7 @@ describe('RedhatTiles', () => {
 
     store = mockStore({
       user: { writePermissions: true },
-      sources: { sourceTypes: sourceTypes.data, activeCategory: REDHAT_VENDOR },
+      sources: { sourceTypes, activeCategory: REDHAT_VENDOR },
     });
   });
 
@@ -37,7 +37,7 @@ describe('RedhatTiles', () => {
   it('renders correctly when no permissions', async () => {
     store = mockStore({
       user: { writePermissions: false },
-      sources: { sourceTypes: sourceTypes.data, activeCategory: REDHAT_VENDOR },
+      sources: { sourceTypes, activeCategory: REDHAT_VENDOR },
     });
 
     render(componentWrapperIntl(<RedHatTiles {...initialProps} />, store));

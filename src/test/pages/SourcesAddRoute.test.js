@@ -3,7 +3,7 @@ import { render, screen, act } from '@testing-library/react';
 import SourcesPage from '../../pages/Sources';
 
 import { sourcesDataGraphQl } from '../__mocks__/sourcesData';
-import { sourceTypesData } from '../__mocks__/sourceTypesData';
+import sourceTypes from '../__mocks__/sourceTypes';
 import { applicationTypesData } from '../__mocks__/applicationTypesData';
 
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
@@ -30,7 +30,7 @@ describe('SourcesPage - addSource route', () => {
       })
     );
     api.doLoadAppTypes = jest.fn().mockImplementation(() => Promise.resolve(applicationTypesData));
-    typesApi.doLoadSourceTypes = jest.fn().mockImplementation(() => Promise.resolve(sourceTypesData.data));
+    typesApi.doLoadSourceTypes = jest.fn().mockImplementation(() => Promise.resolve(sourceTypes));
 
     store = getStore([], {
       user: { writePermissions: false },

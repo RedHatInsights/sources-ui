@@ -8,7 +8,7 @@ import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import SourceEditModal from '../../../components/SourceEditForm/SourceEditModal';
 import { routes, replaceRouteId } from '../../../Routes';
 import { applicationTypesData, CATALOG_APP, TOPOLOGICALINVENTORY_APP } from '../../__mocks__/applicationTypesData';
-import { sourceTypesData, ANSIBLE_TOWER } from '../../__mocks__/sourceTypesData';
+import sourceTypes, { ANSIBLE_TOWER_TYPE } from '../../__mocks__/sourceTypes';
 
 import * as editApi from '../../../api/doLoadSourceForEdit';
 import * as submit from '../../../components/SourceEditForm/onSubmit';
@@ -31,7 +31,7 @@ describe('SourceEditModal', () => {
         entities: [
           {
             id: '14',
-            source_type_id: ANSIBLE_TOWER.id,
+            source_type_id: ANSIBLE_TOWER_TYPE.id,
             applications: [
               {
                 id: '123',
@@ -41,7 +41,7 @@ describe('SourceEditModal', () => {
           },
         ],
         appTypes: applicationTypesData.data,
-        sourceTypes: sourceTypesData.data,
+        sourceTypes,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
       },
@@ -51,7 +51,7 @@ describe('SourceEditModal', () => {
       Promise.resolve({
         source: {
           name: 'Name',
-          source_type_id: ANSIBLE_TOWER.id,
+          source_type_id: ANSIBLE_TOWER_TYPE.id,
           applications: [
             {
               id: '123',
@@ -113,7 +113,7 @@ describe('SourceEditModal', () => {
       Promise.resolve({
         source: {
           name: 'Name',
-          source_type_id: ANSIBLE_TOWER.id,
+          source_type_id: ANSIBLE_TOWER_TYPE.id,
           applications: [
             {
               id: '123',
@@ -189,7 +189,7 @@ describe('SourceEditModal', () => {
         entities: [
           {
             id: '14',
-            source_type_id: ANSIBLE_TOWER.id,
+            source_type_id: ANSIBLE_TOWER_TYPE.id,
             paused_at: 'today',
             applications: [
               {
@@ -200,7 +200,7 @@ describe('SourceEditModal', () => {
           },
         ],
         appTypes: applicationTypesData.data,
-        sourceTypes: sourceTypesData.data,
+        sourceTypes,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
       },
@@ -211,7 +211,7 @@ describe('SourceEditModal', () => {
         source: {
           name: 'Name',
           paused_at: 'today',
-          source_type_id: ANSIBLE_TOWER.id,
+          source_type_id: ANSIBLE_TOWER_TYPE.id,
           applications: [
             {
               id: '123',
@@ -266,7 +266,7 @@ describe('SourceEditModal', () => {
       Promise.resolve({
         source: {
           name: 'Name',
-          source_type_id: ANSIBLE_TOWER.id,
+          source_type_id: ANSIBLE_TOWER_TYPE.id,
           applications: [
             {
               id: '123',
@@ -325,7 +325,7 @@ describe('SourceEditModal', () => {
       Promise.resolve({
         source: {
           name: 'Name',
-          source_type_id: ANSIBLE_TOWER.id,
+          source_type_id: ANSIBLE_TOWER_TYPE.id,
           applications: [
             {
               id: '123',
@@ -379,7 +379,7 @@ describe('SourceEditModal', () => {
       Promise.resolve({
         source: {
           name: 'Name',
-          source_type_id: ANSIBLE_TOWER.id,
+          source_type_id: ANSIBLE_TOWER_TYPE.id,
           applications: [
             {
               id: '123',
@@ -433,7 +433,7 @@ describe('SourceEditModal', () => {
         source: {
           name: 'Name',
           paused_at: 'today',
-          source_type_id: ANSIBLE_TOWER.id,
+          source_type_id: ANSIBLE_TOWER_TYPE.id,
           applications: [
             {
               id: '123',
@@ -481,7 +481,7 @@ describe('SourceEditModal', () => {
                 sources: [
                   {
                     id: '14',
-                    source_type_id: ANSIBLE_TOWER.id,
+                    source_type_id: ANSIBLE_TOWER_TYPE.id,
                     applications: [],
                   },
                 ],
@@ -502,7 +502,7 @@ describe('SourceEditModal', () => {
         entities: [
           {
             id: '14',
-            source_type_id: ANSIBLE_TOWER.id,
+            source_type_id: ANSIBLE_TOWER_TYPE.id,
             applications: [
               {
                 id: '123',
@@ -512,7 +512,7 @@ describe('SourceEditModal', () => {
           },
         ],
         appTypes: applicationTypesData.data,
-        sourceTypes: sourceTypesData.data,
+        sourceTypes,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
         loaded: 0,

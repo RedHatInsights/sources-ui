@@ -1,5 +1,5 @@
 import addApplicationSchema, { hasAlreadySupportedAuthType } from '../../../components/AddApplication/AddApplicationSchema';
-import { OPENSHIFT, AZURE } from '../../__mocks__/sourceTypesData';
+import { OPENSHIFT_TYPE, AZURE_TYPE } from '../../__mocks__/sourceTypes';
 import { COSTMANAGEMENT_APP, SUBWATCH_APP } from '../../__mocks__/applicationTypesData';
 
 describe('AddApplicationSchema', () => {
@@ -10,10 +10,18 @@ describe('AddApplicationSchema', () => {
 
   it('openshift schema', () => {
     const source = {
-      source_type_id: OPENSHIFT.id,
+      source_type_id: OPENSHIFT_TYPE.id,
     };
 
-    const result = addApplicationSchema(intl, OPENSHIFT, COSTMANAGEMENT_APP, authenticationValues, source, TITLE, DESCRIPTION);
+    const result = addApplicationSchema(
+      intl,
+      OPENSHIFT_TYPE,
+      COSTMANAGEMENT_APP,
+      authenticationValues,
+      source,
+      TITLE,
+      DESCRIPTION
+    );
 
     expect(result.fields[0].fields.map(({ name }) => name)).toEqual([
       'openshift-2-token',
@@ -25,10 +33,10 @@ describe('AddApplicationSchema', () => {
 
   it('azure+rhel management schema (empty auth type)', () => {
     const source = {
-      source_type_id: AZURE.id,
+      source_type_id: AZURE_TYPE.id,
     };
 
-    const result = addApplicationSchema(intl, AZURE, SUBWATCH_APP, authenticationValues, source, TITLE, DESCRIPTION);
+    const result = addApplicationSchema(intl, AZURE_TYPE, SUBWATCH_APP, authenticationValues, source, TITLE, DESCRIPTION);
 
     expect(result.fields[0].fields.map(({ name }) => name)).toEqual([
       'azure-5-empty',

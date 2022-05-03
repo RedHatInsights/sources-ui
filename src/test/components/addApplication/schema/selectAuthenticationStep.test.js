@@ -5,7 +5,7 @@ import selectAuthenticationStep, {
 } from '../../../../components/AddApplication/schema/selectAuthenticationStep';
 
 import { TOPOLOGICALINVENTORY_APP, COSTMANAGEMENT_APP, applicationTypesData } from '../../../__mocks__/applicationTypesData';
-import { AMAZON } from '../../../__mocks__/sourceTypesData';
+import { AMAZON_TYPE } from '../../../__mocks__/sourceTypes';
 import { AuthTypeSetter } from '../../../../components/AddApplication/AuthTypeSetter';
 import { IntlProvider } from 'react-intl';
 
@@ -23,7 +23,7 @@ describe('selectAuthenticationStep', () => {
         },
       ],
     };
-    const sourceType = AMAZON;
+    const sourceType = AMAZON_TYPE;
 
     const authenticationValues = [
       { id: '1', username: 'user-123', authtype: 'arn' },
@@ -100,7 +100,7 @@ describe('selectAuthenticationStep', () => {
 
   it('selectAuthenticationStep generates selection step - when no auth available', () => {
     const source = {};
-    const sourceType = AMAZON;
+    const sourceType = AMAZON_TYPE;
     const authenticationValues = [];
 
     const authSelection = selectAuthenticationStep({

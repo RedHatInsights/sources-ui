@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 
 import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import sourceTypesData, { AMAZON } from '../../__mocks__/sourceTypesData';
+import sourceTypes, { AMAZON_TYPE } from '../../__mocks__/sourceTypes';
 import mockStore from '../../__mocks__/mockStore';
 import CredentialsForm from '../../../components/CredentialsForm/CredentialsForm';
 
@@ -43,8 +43,8 @@ describe('CredentialsForm', () => {
 
     store = mockStore({
       sources: {
-        entities: [{ id: sourceId, source_type_id: AMAZON.id }],
-        sourceTypes: sourceTypesData.data,
+        entities: [{ id: sourceId, source_type_id: AMAZON_TYPE.id }],
+        sourceTypes,
       },
     });
   });
@@ -90,8 +90,8 @@ describe('CredentialsForm', () => {
 
     store = mockStore({
       sources: {
-        entities: [{ id: sourceId, source_type_id: AMAZON.id, paused_at: 'today' }],
-        sourceTypes: sourceTypesData.data,
+        entities: [{ id: sourceId, source_type_id: AMAZON_TYPE.id, paused_at: 'today' }],
+        sourceTypes,
       },
     });
 

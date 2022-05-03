@@ -259,34 +259,45 @@ export const ANSIBLE_TOWER_TYPE = {
       title: 'Configure Ansible Tower endpoint',
       fields: [
         {
-          component: 'text-field',
           name: 'endpoint.role',
+          component: 'text-field',
           hideField: true,
           initialValue: 'ansible',
+          initializeOnMount: true,
         },
         {
-          component: 'text-field',
           name: 'url',
           label: 'URL',
           validate: [
             {
-              type: 'url-validator',
+              type: 'url',
             },
           ],
+          component: 'text-field',
         },
         {
-          component: 'checkbox',
           name: 'endpoint.verify_ssl',
           label: 'Verify SSL',
+          component: 'switch',
         },
         {
-          component: 'text-field',
           name: 'endpoint.certificate_authority',
           label: 'Certificate Authority',
+          component: 'text-field',
           condition: {
-            when: 'endpoint.verify_ssl',
             is: true,
+            when: 'endpoint.verify_ssl',
           },
+        },
+        {
+          name: 'platform_receptor',
+          label: 'Use Platform Receptor and PKI (?)',
+          component: 'switch',
+        },
+        {
+          name: 'endpoint.receptor_node',
+          label: 'Receptor ID',
+          component: 'text-field',
         },
       ],
     },
@@ -412,6 +423,124 @@ export const GOOGLE_TYPE = {
   icon_url: '/apps/frontend-assets/partners-icons/google-cloud.svg',
 };
 
-const sourceTypes = [OPENSHIFT_TYPE, AMAZON_TYPE, ANSIBLE_TOWER_TYPE, AZURE_TYPE, GOOGLE_TYPE];
+export const IBM_TYPE = {
+  id: '12',
+  created_at: '2021-11-18T13:40:47.793671Z',
+  updated_at: '2021-11-18T13:40:47.793671Z',
+  name: 'ibm',
+  product_name: 'IBM Cloud',
+  vendor: 'IBM',
+  category: 'Cloud',
+  schema: {
+    authentication: [
+      {
+        name: 'API Token and Account ID',
+        type: 'api_token_account_id',
+        fields: [
+          {
+            name: 'authentication.authtype',
+            component: 'text-field',
+            hideField: true,
+            initialValue: 'api_token_account_id',
+            initializeOnMount: true,
+          },
+          {
+            name: 'authentication.username',
+            label: 'Account ID',
+            component: 'text-field',
+            validate: [
+              {
+                type: 'required',
+              },
+            ],
+            isRequired: true,
+          },
+          {
+            name: 'authentication.password',
+            label: 'API Key',
+            validate: [
+              {
+                type: 'required',
+              },
+            ],
+            component: 'text-field',
+            isRequired: true,
+            type: 'password',
+          },
+          {
+            name: 'application.extra.enterprise_id',
+            label: 'Enterprise ID',
+            validate: [
+              {
+                type: 'required',
+              },
+            ],
+            component: 'text-field',
+            isRequired: true,
+          },
+        ],
+      },
+    ],
+  },
+  icon_url: '/apps/frontend-assets/partners-icons/ibm-cloud.svg',
+};
+
+export const SATELLITE_TYPE = {
+  created_at: '2019-11-08T14:43:11Z',
+  id: '9',
+  name: 'satellite',
+  icon_url: 'satellite.jpg',
+  product_name: 'Red Hat Satellite',
+  schema: {
+    endpoint: {
+      title: 'Configure Red Hat Satellite endpoint',
+      fields: [
+        {
+          name: 'endpoint.receptor_node',
+          label: 'Receptor ID',
+          component: 'text-field',
+        },
+        {
+          name: 'endpoint.role',
+          component: 'text-field',
+          hideField: true,
+          initialValue: 'sattelite',
+          initializeOnMount: true,
+        },
+      ],
+    },
+    authentication: [
+      {
+        name: 'Receptore node',
+        type: 'receptor_node',
+        fields: [
+          {
+            name: 'authentication.authtype',
+            component: 'text-field',
+            hideField: true,
+            initialValue: 'receptor_node',
+            initializeOnMount: true,
+          },
+          {
+            name: 'source.source_ref',
+            label: 'Satellite ID',
+            validate: [
+              {
+                type: 'required',
+              },
+            ],
+            component: 'text-field',
+            isRequired: true,
+          },
+        ],
+      },
+    ],
+  },
+  updated_at: '2019-12-12T20:01:44Z',
+  vendor: 'Red Hat',
+  category: 'Red Hat',
+};
+
+const sourceTypes = [OPENSHIFT_TYPE, AMAZON_TYPE, ANSIBLE_TOWER_TYPE, AZURE_TYPE, GOOGLE_TYPE, IBM_TYPE, SATELLITE_TYPE];
 
 export default sourceTypes;

@@ -2,7 +2,7 @@ import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../utilities/constants';
 import { parseQuery, updateQuery } from '../../utilities/urlQuery';
 import { AVAILABLE, PARTIALLY_UNAVAILABLE, UNAVAILABLE } from '../../views/formatters';
 import applicationTypesData, { COSTMANAGEMENT_APP, TOPOLOGICALINVENTORY_APP } from '../__mocks__/applicationTypesData';
-import sourceTypesData, { AMAZON, OPENSHIFT } from '../__mocks__/sourceTypesData';
+import sourceTypes, { AMAZON_TYPE, OPENSHIFT_TYPE } from '../__mocks__/sourceTypes';
 
 describe('urlQuery helpers', () => {
   let tmpLocation;
@@ -272,7 +272,7 @@ describe('urlQuery helpers', () => {
         const getState = () => ({
           sources: {
             appTypes: applicationTypesData.data,
-            sourceTypes: sourceTypesData.data,
+            sourceTypes,
           },
         });
 
@@ -283,7 +283,7 @@ describe('urlQuery helpers', () => {
 
           expect(result).toEqual({
             filterValue: {
-              source_type_id: [AMAZON.id],
+              source_type_id: [AMAZON_TYPE.id],
             },
           });
         });
@@ -308,7 +308,7 @@ describe('urlQuery helpers', () => {
           expect(result).toEqual({
             filterValue: {
               applications: [COSTMANAGEMENT_APP.id, TOPOLOGICALINVENTORY_APP.id],
-              source_type_id: [OPENSHIFT.id, AMAZON.id],
+              source_type_id: [OPENSHIFT_TYPE.id, AMAZON_TYPE.id],
             },
           });
         });
