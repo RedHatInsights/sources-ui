@@ -7,7 +7,7 @@ import SourcesTable, { actionResolver, itemToCells, prepareColumnsCells } from '
 
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
 import sourceTypes from '../../__mocks__/sourceTypes';
-import { applicationTypesData } from '../../__mocks__/applicationTypesData';
+import appTypes from '../../__mocks__/applicationTypes';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import * as actions from '../../../redux/sources/actions';
@@ -36,7 +36,7 @@ describe('SourcesTable', () => {
       sourceTypesLoaded: true,
       entities: sourcesDataGraphQl,
       numberOfEntities: sourcesDataGraphQl.length,
-      appTypes: applicationTypesData.data,
+      appTypes,
       sourceTypes,
     };
     API.doLoadEntities = jest.fn().mockImplementation(() =>

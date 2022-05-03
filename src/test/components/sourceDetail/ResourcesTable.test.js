@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import sourceTypes, { AMAZON_TYPE } from '../../__mocks__/sourceTypes';
-import applicationTypesData, { COSTMANAGEMENT_APP, SUBWATCH_APP } from '../../__mocks__/applicationTypesData';
+import appTypes, { COST_MANAGEMENT_APP, SUB_WATCH_APP } from '../../__mocks__/applicationTypes';
 
 import { Route } from 'react-router-dom';
 import { replaceRouteId, routes } from '../../../Routes';
@@ -33,7 +33,7 @@ describe('ResourcesTable', () => {
           },
         ],
         sourceTypes,
-        appTypes: applicationTypesData.data,
+        appTypes,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
         loaded: 0,
@@ -63,7 +63,7 @@ describe('ResourcesTable', () => {
           applications: [
             {
               id: '123',
-              application_type_id: COSTMANAGEMENT_APP.id,
+              application_type_id: COST_MANAGEMENT_APP.id,
               authentications: [],
             },
           ],
@@ -71,7 +71,7 @@ describe('ResourcesTable', () => {
         },
         applications: [
           {
-            application_type_id: COSTMANAGEMENT_APP.id,
+            application_type_id: COST_MANAGEMENT_APP.id,
             id: '123',
             authentications: [],
           },
@@ -84,14 +84,14 @@ describe('ResourcesTable', () => {
     source = {
       id: sourceId,
       source_type_id: AMAZON_TYPE.id,
-      applications: [{ id: '12344', application_type_id: COSTMANAGEMENT_APP.id }],
+      applications: [{ id: '12344', application_type_id: COST_MANAGEMENT_APP.id }],
     };
 
     store = mockStore({
       sources: {
         entities: [source],
         sourceTypes,
-        appTypes: applicationTypesData.data,
+        appTypes,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
         loaded: 0,
@@ -116,7 +116,7 @@ describe('ResourcesTable', () => {
     expect(screen.getByText('Cost Management')).toBeInTheDocument();
     expect(screen.getByText('Cost Management resources will appear here when created.')).toBeInTheDocument();
 
-    expect(api.doLoadSourceForEdit).toHaveBeenCalledWith(source, applicationTypesData.data, sourceTypes);
+    expect(api.doLoadSourceForEdit).toHaveBeenCalledWith(source, appTypes, sourceTypes);
   });
 
   it('renders empty state when no resources for paused app', async () => {
@@ -128,7 +128,7 @@ describe('ResourcesTable', () => {
           applications: [
             {
               id: '123',
-              application_type_id: COSTMANAGEMENT_APP.id,
+              application_type_id: COST_MANAGEMENT_APP.id,
               authentications: [],
               paused_at: 'today',
             },
@@ -137,7 +137,7 @@ describe('ResourcesTable', () => {
         },
         applications: [
           {
-            application_type_id: COSTMANAGEMENT_APP.id,
+            application_type_id: COST_MANAGEMENT_APP.id,
             id: '123',
             authentications: [],
             paused_at: 'today',
@@ -151,14 +151,14 @@ describe('ResourcesTable', () => {
     source = {
       id: sourceId,
       source_type_id: AMAZON_TYPE.id,
-      applications: [{ id: '12344', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
+      applications: [{ id: '12344', application_type_id: COST_MANAGEMENT_APP.id, paused_at: 'today' }],
     };
 
     store = mockStore({
       sources: {
         entities: [source],
         sourceTypes,
-        appTypes: applicationTypesData.data,
+        appTypes,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
         loaded: 0,
@@ -189,12 +189,12 @@ describe('ResourcesTable', () => {
           source_type_id: AMAZON_TYPE.id,
           applications: [
             {
-              application_type_id: COSTMANAGEMENT_APP.id,
+              application_type_id: COST_MANAGEMENT_APP.id,
               id: '20198',
               authentications: [{ id: '19896', resource_type: 'Application' }],
             },
             {
-              application_type_id: SUBWATCH_APP.id,
+              application_type_id: SUB_WATCH_APP.id,
               id: '20199',
               authentications: [{ id: '19897', resource_type: 'Application' }],
             },
@@ -203,7 +203,7 @@ describe('ResourcesTable', () => {
         },
         applications: [
           {
-            application_type_id: COSTMANAGEMENT_APP.id,
+            application_type_id: COST_MANAGEMENT_APP.id,
             id: '20198',
             authentications: [
               { id: '19896' },
@@ -220,7 +220,7 @@ describe('ResourcesTable', () => {
             extra: { bucket: 'adsadsad' },
           },
           {
-            application_type_id: SUBWATCH_APP.id,
+            application_type_id: SUB_WATCH_APP.id,
             id: '20199',
             authentications: [
               { id: '19897' },
@@ -244,8 +244,8 @@ describe('ResourcesTable', () => {
       id: sourceId,
       source_type_id: AMAZON_TYPE.id,
       applications: [
-        { id: '20198', application_type_id: COSTMANAGEMENT_APP.id },
-        { id: '20199', application_type_id: SUBWATCH_APP.id },
+        { id: '20198', application_type_id: COST_MANAGEMENT_APP.id },
+        { id: '20199', application_type_id: SUB_WATCH_APP.id },
       ],
     };
 
@@ -253,7 +253,7 @@ describe('ResourcesTable', () => {
       sources: {
         entities: [source],
         sourceTypes,
-        appTypes: [...applicationTypesData.data, SUBWATCH_APP],
+        appTypes,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
         loaded: 0,
@@ -274,9 +274,9 @@ describe('ResourcesTable', () => {
 
     expect(() => screen.getByRole('progressbar')).toThrow();
     expect(screen.getByText('Cost Management')).toBeInTheDocument();
-    expect(screen.getByText('Subscription Watch')).toBeInTheDocument();
+    expect(screen.getByText('RHEL management')).toBeInTheDocument();
 
-    expect(api.doLoadSourceForEdit).toHaveBeenCalledWith(source, [...applicationTypesData.data, SUBWATCH_APP], sourceTypes);
+    expect(api.doLoadSourceForEdit).toHaveBeenCalledWith(source, appTypes, sourceTypes);
 
     const getData = () => [...container.getElementsByTagName('td')].map((td) => [td.getAttribute('data-label'), td.textContent]);
 
@@ -290,12 +290,12 @@ describe('ResourcesTable', () => {
     ]);
 
     expect(screen.getByText('Cost Management').closest('.pf-m-current')).toBeInTheDocument();
-    expect(screen.getByText('Subscription Watch').closest('.pf-m-current')).toBeNull();
+    expect(screen.getByText('RHEL management').closest('.pf-m-current')).toBeNull();
 
-    await userEvent.click(screen.getByText('Subscription Watch'));
+    await userEvent.click(screen.getByText('RHEL management'));
 
     expect(screen.getByText('Cost Management').closest('.pf-m-current')).toBeNull();
-    expect(screen.getByText('Subscription Watch').closest('.pf-m-current')).toBeInTheDocument();
+    expect(screen.getByText('RHEL management').closest('.pf-m-current')).toBeInTheDocument();
   });
 
   it('renders correctly with paused app', async () => {
@@ -306,7 +306,7 @@ describe('ResourcesTable', () => {
           source_type_id: AMAZON_TYPE.id,
           applications: [
             {
-              application_type_id: COSTMANAGEMENT_APP.id,
+              application_type_id: COST_MANAGEMENT_APP.id,
               id: '20198',
               authentications: [{ id: '19896', resource_type: 'Application' }],
               paused_at: 'today',
@@ -316,7 +316,7 @@ describe('ResourcesTable', () => {
         },
         applications: [
           {
-            application_type_id: COSTMANAGEMENT_APP.id,
+            application_type_id: COST_MANAGEMENT_APP.id,
             id: '20198',
             authentications: [
               { id: '19896' },
@@ -340,14 +340,14 @@ describe('ResourcesTable', () => {
     source = {
       id: sourceId,
       source_type_id: AMAZON_TYPE.id,
-      applications: [{ id: '20198', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
+      applications: [{ id: '20198', application_type_id: COST_MANAGEMENT_APP.id, paused_at: 'today' }],
     };
 
     store = mockStore({
       sources: {
         entities: [source],
         sourceTypes,
-        appTypes: applicationTypesData.data,
+        appTypes,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
         loaded: 0,
@@ -379,7 +379,7 @@ describe('ResourcesTable', () => {
           source_type_id: AMAZON_TYPE.id,
           applications: [
             {
-              application_type_id: COSTMANAGEMENT_APP.id,
+              application_type_id: COST_MANAGEMENT_APP.id,
               id: '20198',
               authentications: [{ id: '19896', resource_type: 'Application' }],
               paused_at: 'today',
@@ -389,7 +389,7 @@ describe('ResourcesTable', () => {
         },
         applications: [
           {
-            application_type_id: COSTMANAGEMENT_APP.id,
+            application_type_id: COST_MANAGEMENT_APP.id,
             id: '20198',
             authentications: [
               { id: '19896' },
@@ -413,7 +413,7 @@ describe('ResourcesTable', () => {
     source = {
       id: sourceId,
       source_type_id: AMAZON_TYPE.id,
-      applications: [{ id: '20198', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
+      applications: [{ id: '20198', application_type_id: COST_MANAGEMENT_APP.id, paused_at: 'today' }],
       paused_at: 'today',
     };
 
@@ -421,7 +421,7 @@ describe('ResourcesTable', () => {
       sources: {
         entities: [source],
         sourceTypes,
-        appTypes: applicationTypesData.data,
+        appTypes,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
         loaded: 0,

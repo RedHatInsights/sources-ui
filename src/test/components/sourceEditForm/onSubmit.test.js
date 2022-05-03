@@ -5,7 +5,7 @@ import * as doUpdateSource from '../../../api/doUpdateSource';
 
 import * as getAppStatus from '../../..//api/getApplicationStatus';
 import { UNAVAILABLE, AVAILABLE, IN_PROGRESS } from '../../../views/formatters';
-import applicationTypesData from '../../__mocks__/applicationTypesData';
+import applicationTypes from '../../__mocks__/applicationTypes';
 
 describe('editSourceModal - on submit', () => {
   let VALUES;
@@ -14,7 +14,6 @@ describe('editSourceModal - on submit', () => {
   let SOURCE;
   let INTL;
   let SET_STATE;
-  const APP_TYPES = applicationTypesData.data;
 
   let formatMessageMock;
 
@@ -77,7 +76,7 @@ describe('editSourceModal - on submit', () => {
       url: true,
     };
 
-    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, APP_TYPES);
+    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, applicationTypes);
 
     expect(doUpdateSource.doUpdateSource).toHaveBeenCalledWith(SOURCE, FILTERED_VALUES, VALUES);
     expect(SET_STATE.mock.calls[0][0]).toEqual({
@@ -108,7 +107,7 @@ describe('editSourceModal - on submit', () => {
   it('submit values unsuccessfuly when submit error', async () => {
     doUpdateSource.doUpdateSource = jest.fn().mockImplementation(() => Promise.reject('FAILS'));
 
-    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, APP_TYPES);
+    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, applicationTypes);
 
     expect(actions.loadEntities).toHaveBeenCalled();
     expect(checkSourceStatus.checkSourceStatus).not.toHaveBeenCalled();
@@ -146,7 +145,7 @@ describe('editSourceModal - on submit', () => {
       },
     };
 
-    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, APP_TYPES);
+    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, applicationTypes);
 
     expect(doUpdateSource.doUpdateSource).toHaveBeenCalledWith(SOURCE, FILTERED_VALUES, VALUES);
     expect(SET_STATE.mock.calls[0][0]).toEqual({
@@ -200,7 +199,7 @@ describe('editSourceModal - on submit', () => {
       },
     };
 
-    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, APP_TYPES);
+    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, applicationTypes);
 
     expect(doUpdateSource.doUpdateSource).toHaveBeenCalledWith(SOURCE, FILTERED_VALUES, VALUES);
     expect(SET_STATE.mock.calls[0][0]).toEqual({
@@ -274,7 +273,7 @@ describe('editSourceModal - on submit', () => {
       },
     };
 
-    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, APP_TYPES);
+    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, applicationTypes);
 
     expect(doUpdateSource.doUpdateSource).toHaveBeenCalledWith(SOURCE, FILTERED_VALUES, VALUES);
     expect(SET_STATE.mock.calls[0][0]).toEqual({
@@ -335,7 +334,7 @@ describe('editSourceModal - on submit', () => {
       },
     };
 
-    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, APP_TYPES);
+    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, applicationTypes);
 
     expect(doUpdateSource.doUpdateSource).toHaveBeenCalledWith(SOURCE, FILTERED_VALUES, VALUES);
     expect(SET_STATE.mock.calls[0][0]).toEqual({
@@ -393,7 +392,7 @@ describe('editSourceModal - on submit', () => {
       },
     };
 
-    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, APP_TYPES);
+    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, applicationTypes);
 
     expect(doUpdateSource.doUpdateSource).toHaveBeenCalledWith(SOURCE, FILTERED_VALUES, VALUES);
     expect(SET_STATE.mock.calls[0][0]).toEqual({
@@ -452,7 +451,7 @@ describe('editSourceModal - on submit', () => {
       },
     };
 
-    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, APP_TYPES);
+    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, applicationTypes);
 
     expect(doUpdateSource.doUpdateSource).toHaveBeenCalledWith(SOURCE, FILTERED_VALUES, VALUES);
     expect(SET_STATE.mock.calls[0][0]).toEqual({
@@ -511,7 +510,7 @@ describe('editSourceModal - on submit', () => {
       },
     };
 
-    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, APP_TYPES);
+    await onSubmit(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE, applicationTypes);
 
     expect(doUpdateSource.doUpdateSource).toHaveBeenCalledWith(SOURCE, FILTERED_VALUES, VALUES);
     expect(SET_STATE.mock.calls[0][0]).toEqual({

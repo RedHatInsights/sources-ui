@@ -10,7 +10,7 @@ import SourcesPageOriginal from '../../pages/Sources';
 
 import { sourcesDataGraphQl, SOURCE_ALL_APS_ID } from '../__mocks__/sourcesData';
 import sourceTypes, { AMAZON_TYPE } from '../__mocks__/sourceTypes';
-import { applicationTypesData, COSTMANAGEMENT_APP } from '../__mocks__/applicationTypesData';
+import applicationTypes, { COST_MANAGEMENT_APP } from '../__mocks__/applicationTypes';
 
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
 
@@ -89,7 +89,7 @@ describe('SourcesPage', () => {
         meta: { count: sourcesDataGraphQl.length },
       })
     );
-    api.doLoadAppTypes = jest.fn().mockImplementation(() => Promise.resolve(applicationTypesData));
+    api.doLoadAppTypes = jest.fn().mockImplementation(() => Promise.resolve({ data: applicationTypes }));
     typesApi.doLoadSourceTypes = jest.fn().mockImplementation(() => Promise.resolve(sourceTypes));
 
     store = getStore([], {
@@ -681,7 +681,7 @@ describe('SourcesPage', () => {
 
       expect(store.getState().sources.filterValue).toEqual({
         name: SEARCH_TERM,
-        applications: [COSTMANAGEMENT_APP.id],
+        applications: [COST_MANAGEMENT_APP.id],
       });
     });
 

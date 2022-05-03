@@ -7,7 +7,7 @@ import { Route } from 'react-router-dom';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import SourceEditModal from '../../../components/SourceEditForm/SourceEditModal';
 import { routes, replaceRouteId } from '../../../Routes';
-import { applicationTypesData, CATALOG_APP, TOPOLOGICALINVENTORY_APP } from '../../__mocks__/applicationTypesData';
+import appTypes, { CATALOG_APP, TOPOLOGY_INV_APP } from '../../__mocks__/applicationTypes';
 import sourceTypes, { ANSIBLE_TOWER_TYPE } from '../../__mocks__/sourceTypes';
 
 import * as editApi from '../../../api/doLoadSourceForEdit';
@@ -40,7 +40,7 @@ describe('SourceEditModal', () => {
             ],
           },
         ],
-        appTypes: applicationTypesData.data,
+        appTypes,
         sourceTypes,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
@@ -199,7 +199,7 @@ describe('SourceEditModal', () => {
             ],
           },
         ],
-        appTypes: applicationTypesData.data,
+        appTypes,
         sourceTypes,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
@@ -335,7 +335,7 @@ describe('SourceEditModal', () => {
             },
             {
               id: '124',
-              application_type_id: TOPOLOGICALINVENTORY_APP.id,
+              application_type_id: TOPOLOGY_INV_APP.id,
               authentications: [{ id: '3434' }],
               paused_at: 'today',
             },
@@ -351,7 +351,7 @@ describe('SourceEditModal', () => {
           },
           {
             id: '124',
-            application_type_id: TOPOLOGICALINVENTORY_APP.id,
+            application_type_id: TOPOLOGY_INV_APP.id,
             authentications: [{ id: '3434', type: 'arn' }],
             paused_at: 'today',
           },
@@ -389,7 +389,7 @@ describe('SourceEditModal', () => {
             },
             {
               id: '124',
-              application_type_id: TOPOLOGICALINVENTORY_APP.id,
+              application_type_id: TOPOLOGY_INV_APP.id,
               authentications: [{ id: '3434' }],
             },
           ],
@@ -404,7 +404,7 @@ describe('SourceEditModal', () => {
           },
           {
             id: '124',
-            application_type_id: TOPOLOGICALINVENTORY_APP.id,
+            application_type_id: TOPOLOGY_INV_APP.id,
             authentications: [{ id: '3434', type: 'arn' }],
           },
         ],
@@ -511,7 +511,7 @@ describe('SourceEditModal', () => {
             ],
           },
         ],
-        appTypes: applicationTypesData.data,
+        appTypes,
         sourceTypes,
         appTypesLoaded: true,
         sourceTypesLoaded: true,

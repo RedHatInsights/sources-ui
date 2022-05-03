@@ -1,7 +1,7 @@
 import * as api from '../../api/entities';
 import { doLoadApplicationTypes, doLoadSourceTypes, findSource } from '../../api/wizardHelpers';
 
-import applicationTypesData from '../__mocks__/applicationTypesData';
+import applicationTypes from '../__mocks__/applicationTypes';
 import sourceTypes from '../__mocks__/sourceTypes';
 
 describe('wizardHelpers', () => {
@@ -13,7 +13,7 @@ describe('wizardHelpers', () => {
 
   beforeEach(() => {
     listSourceTypes = jest.fn().mockImplementation(() => Promise.resolve({ data: sourceTypes }));
-    doLoadAppTypes = jest.fn().mockImplementation(() => Promise.resolve({ data: applicationTypesData.data }));
+    doLoadAppTypes = jest.fn().mockImplementation(() => Promise.resolve({ data: applicationTypes }));
     postGraphQL = jest.fn().mockImplementation(() => Promise.resolve('ok'));
 
     api.getSourcesApi = () => ({
@@ -35,7 +35,7 @@ describe('wizardHelpers', () => {
     result = await doLoadApplicationTypes();
 
     expect(result).toEqual({
-      applicationTypes: applicationTypesData.data,
+      applicationTypes,
     });
   });
 

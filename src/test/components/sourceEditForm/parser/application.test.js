@@ -4,8 +4,7 @@ import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-i
 import ResourcesEmptyState from '../../../../components/SourceDetail/ResourcesEmptyState';
 import { applicationsFields } from '../../../../components/SourceEditForm/parser/application';
 import EditAlert from '../../../../components/SourceEditForm/parser/EditAlert';
-import { COST_MANAGEMENT_APP } from '../../../addSourceWizard/../__mocks__/applicationTypes';
-import { applicationTypesData, COSTMANAGEMENT_APP, CATALOG_APP } from '../../../__mocks__/applicationTypesData';
+import applicationTypes, { COST_MANAGEMENT_APP, CATALOG_APP } from '../../../__mocks__/applicationTypes';
 import { GOOGLE_TYPE } from '../../../__mocks__/sourceTypes';
 
 jest.mock('../../../../components/addSourceWizard/hardcodedSchemas', () => ({
@@ -33,7 +32,6 @@ jest.mock('../../../../components/addSourceWizard/hardcodedSchemas', () => ({
 }));
 
 describe('application edit form parser', () => {
-  const APP_TYPES = applicationTypesData.data;
   const BILLING_SOURCE_FIELDS = [{ name: 'billing_source.field1' }];
   const FIELDS = [...BILLING_SOURCE_FIELDS, { name: 'field2' }];
 
@@ -44,7 +42,7 @@ describe('application edit form parser', () => {
     APPLICATIONS = [
       {
         id: 'app-id',
-        application_type_id: COSTMANAGEMENT_APP.id,
+        application_type_id: COST_MANAGEMENT_APP.id,
         authentications: [{ id: '1234', authtype: 'arn' }],
       },
     ];
@@ -76,8 +74,8 @@ describe('application edit form parser', () => {
         isBox: true,
         fields: [
           {
-            name: COSTMANAGEMENT_APP.id,
-            title: COSTMANAGEMENT_APP.display_name,
+            name: COST_MANAGEMENT_APP.id,
+            title: COST_MANAGEMENT_APP.display_name,
             fields: [
               {
                 name: 'messages.app-id',
@@ -95,7 +93,7 @@ describe('application edit form parser', () => {
       },
     ];
 
-    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, APP_TYPES);
+    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, applicationTypes);
 
     expect(result).toEqual(EXPECTED_RESULT);
   });
@@ -115,8 +113,8 @@ describe('application edit form parser', () => {
         isBox: true,
         fields: [
           {
-            name: COSTMANAGEMENT_APP.id,
-            title: COSTMANAGEMENT_APP.display_name,
+            name: COST_MANAGEMENT_APP.id,
+            title: COST_MANAGEMENT_APP.display_name,
             fields: [
               {
                 name: 'messages.app-id',
@@ -137,7 +135,7 @@ describe('application edit form parser', () => {
       },
     ];
 
-    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, APP_TYPES);
+    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, applicationTypes);
 
     expect(result).toEqual(EXPECTED_RESULT);
   });
@@ -146,7 +144,7 @@ describe('application edit form parser', () => {
     APPLICATIONS = [
       {
         id: 'app-id',
-        application_type_id: COSTMANAGEMENT_APP.id,
+        application_type_id: COST_MANAGEMENT_APP.id,
         authentications: [],
       },
     ];
@@ -158,8 +156,8 @@ describe('application edit form parser', () => {
         isBox: true,
         fields: [
           {
-            name: COSTMANAGEMENT_APP.id,
-            title: COSTMANAGEMENT_APP.display_name,
+            name: COST_MANAGEMENT_APP.id,
+            title: COST_MANAGEMENT_APP.display_name,
             fields: [
               {
                 name: 'messages.app-id',
@@ -178,7 +176,7 @@ describe('application edit form parser', () => {
                   id: 'resourceTable.emptyStateDescription',
                   defaultMessage: '{applicationName} resources will be added here when created.',
                 },
-                applicationName: COSTMANAGEMENT_APP.display_name,
+                applicationName: COST_MANAGEMENT_APP.display_name,
                 Icon: PlusCircleIcon,
               },
             ],
@@ -187,7 +185,7 @@ describe('application edit form parser', () => {
       },
     ];
 
-    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, APP_TYPES);
+    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, applicationTypes);
 
     expect(result).toEqual(EXPECTED_RESULT);
   });
@@ -209,8 +207,8 @@ describe('application edit form parser', () => {
         isBox: true,
         fields: [
           {
-            name: COSTMANAGEMENT_APP.id,
-            title: COSTMANAGEMENT_APP.display_name,
+            name: COST_MANAGEMENT_APP.id,
+            title: COST_MANAGEMENT_APP.display_name,
             fields: [
               {
                 name: 'messages.app-id',
@@ -244,7 +242,7 @@ describe('application edit form parser', () => {
       },
     ];
 
-    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, APP_TYPES);
+    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, applicationTypes);
 
     expect(result).toEqual(EXPECTED_RESULT);
   });
@@ -253,7 +251,7 @@ describe('application edit form parser', () => {
     APPLICATIONS = [
       {
         id: 'app-id',
-        application_type_id: COSTMANAGEMENT_APP.id,
+        application_type_id: COST_MANAGEMENT_APP.id,
         authentications: [{ id: '1234', authtype: 'arn', resource_type: 'Endpoint' }],
       },
     ];
@@ -340,7 +338,7 @@ describe('application edit form parser', () => {
       },
     ];
 
-    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, APP_TYPES);
+    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, applicationTypes);
 
     expect(result).toEqual(EXPECTED_RESULT);
   });

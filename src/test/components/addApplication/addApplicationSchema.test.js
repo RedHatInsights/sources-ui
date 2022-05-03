@@ -1,6 +1,6 @@
 import addApplicationSchema, { hasAlreadySupportedAuthType } from '../../../components/AddApplication/AddApplicationSchema';
 import { OPENSHIFT_TYPE, AZURE_TYPE } from '../../__mocks__/sourceTypes';
-import { COSTMANAGEMENT_APP, SUBWATCH_APP } from '../../__mocks__/applicationTypesData';
+import { COST_MANAGEMENT_APP, SUB_WATCH_APP } from '../../__mocks__/applicationTypes';
 
 describe('AddApplicationSchema', () => {
   const intl = { formatMessage: ({ defaultMessage }) => defaultMessage };
@@ -16,7 +16,7 @@ describe('AddApplicationSchema', () => {
     const result = addApplicationSchema(
       intl,
       OPENSHIFT_TYPE,
-      COSTMANAGEMENT_APP,
+      COST_MANAGEMENT_APP,
       authenticationValues,
       source,
       TITLE,
@@ -36,7 +36,7 @@ describe('AddApplicationSchema', () => {
       source_type_id: AZURE_TYPE.id,
     };
 
-    const result = addApplicationSchema(intl, AZURE_TYPE, SUBWATCH_APP, authenticationValues, source, TITLE, DESCRIPTION);
+    const result = addApplicationSchema(intl, AZURE_TYPE, SUB_WATCH_APP, authenticationValues, source, TITLE, DESCRIPTION);
 
     expect(result.fields[0].fields.map(({ name }) => name)).toEqual([
       'azure-5-empty',

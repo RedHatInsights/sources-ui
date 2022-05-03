@@ -8,7 +8,7 @@ import * as actions from '../../../redux/sources/actions';
 import SourceRemoveModal from '../../../components/SourceRemoveModal/SourceRemoveModal';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
-import { applicationTypesData, CATALOG_APP } from '../../__mocks__/applicationTypesData';
+import appTypes, { CATALOG_APP } from '../../__mocks__/applicationTypes';
 import sourceTypes, { ANSIBLE_TOWER_TYPE, SATELLITE_TYPE, OPENSHIFT_TYPE } from '../../__mocks__/sourceTypes';
 
 import { routes, replaceRouteId } from '../../../Routes';
@@ -21,7 +21,7 @@ describe('SourceRemoveModal', () => {
     store = mockStore({
       sources: {
         entities: sourcesDataGraphQl,
-        appTypes: applicationTypesData.data,
+        appTypes,
         sourceTypes,
       },
     });
@@ -94,7 +94,7 @@ describe('SourceRemoveModal', () => {
       );
 
       const source = sourcesDataGraphQl.find((s) => s.id === '406');
-      const application = applicationTypesData.data.find((app) => app.id === source.applications[0].application_type_id);
+      const application = appTypes.find((app) => app.id === source.applications[0].application_type_id);
 
       expect(screen.getByRole('checkbox')).toBeInTheDocument();
       expect([...screen.getAllByRole('button')].map((e) => e.textContent || e.getAttribute('aria-label'))).toEqual([
@@ -120,7 +120,7 @@ describe('SourceRemoveModal', () => {
               ],
             },
           ],
-          appTypes: applicationTypesData.data,
+          appTypes,
           sourceTypes,
         },
       });
@@ -134,7 +134,7 @@ describe('SourceRemoveModal', () => {
       );
 
       const source = sourcesDataGraphQl.find((s) => s.id === '406');
-      const application = applicationTypesData.data.find((app) => app.id === source.applications[0].application_type_id);
+      const application = appTypes.find((app) => app.id === source.applications[0].application_type_id);
 
       expect(() => screen.getByText(application.display_name)).toThrow();
     });
@@ -155,7 +155,7 @@ describe('SourceRemoveModal', () => {
               ],
             },
           ],
-          appTypes: applicationTypesData.data,
+          appTypes,
           sourceTypes,
         },
       });
@@ -189,7 +189,7 @@ describe('SourceRemoveModal', () => {
               ],
             },
           ],
-          appTypes: applicationTypesData.data,
+          appTypes,
           sourceTypes,
         },
       });
@@ -223,7 +223,7 @@ describe('SourceRemoveModal', () => {
               ],
             },
           ],
-          appTypes: applicationTypesData.data,
+          appTypes,
           sourceTypes,
         },
       });

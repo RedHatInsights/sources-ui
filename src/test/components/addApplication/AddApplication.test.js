@@ -11,7 +11,7 @@ import AddApplication from '../../../components/AddApplication/AddApplication';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import sourceTypes, { OPENSHIFT_TYPE, AMAZON_TYPE } from '../../__mocks__/sourceTypes';
 import { SOURCE_NO_APS_ID } from '../../__mocks__/sourcesData';
-import { applicationTypesData, COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
+import appTypes, { COST_MANAGEMENT_APP } from '../../__mocks__/applicationTypes';
 import { routes, replaceRouteId } from '../../../Routes';
 import reducer from '../../../components/AddApplication/reducer';
 import * as removeAppSubmit from '../../../components/AddApplication/removeAppSubmit';
@@ -26,7 +26,7 @@ describe('AddApplication', () => {
   beforeEach(() => {
     checkAvailabilitySource = jest.fn().mockImplementation(() => Promise.resolve());
     initialEntry = [
-      replaceRouteId(routes.sourcesDetailAddApp.path, SOURCE_NO_APS_ID).replace(':app_type_id', COSTMANAGEMENT_APP.id),
+      replaceRouteId(routes.sourcesDetailAddApp.path, SOURCE_NO_APS_ID).replace(':app_type_id', COST_MANAGEMENT_APP.id),
     ];
     store = mockStore({
       sources: {
@@ -37,7 +37,7 @@ describe('AddApplication', () => {
             applications: [],
           },
         ],
-        appTypes: applicationTypesData.data,
+        appTypes,
         sourceTypes,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
@@ -69,7 +69,7 @@ describe('AddApplication', () => {
             endpoints: [{ id: ENDPOINT_ID }],
           },
         ],
-        appTypes: applicationTypesData.data,
+        appTypes,
         sourceTypes,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
@@ -95,7 +95,7 @@ describe('AddApplication', () => {
     store = mockStore({
       sources: {
         entities: [],
-        appTypes: applicationTypesData.data,
+        appTypes,
         sourceTypes,
         appTypesLoaded: false,
         sourceTypesLoaded: true,
@@ -439,7 +439,7 @@ describe('AddApplication', () => {
       store = mockStore({
         sources: {
           entities: [source],
-          appTypes: applicationTypesData.data,
+          appTypes,
           sourceTypes,
           appTypesLoaded: true,
           sourceTypesLoaded: true,
@@ -488,7 +488,6 @@ describe('AddApplication', () => {
       };
       const formApi = expect.any(Object);
       const authenticationValues = expect.any(Array);
-      const appTypes = expect.any(Array);
 
       await waitFor(() => expect(checkAvailabilitySource).toHaveBeenCalledWith(source.id));
 
@@ -508,7 +507,7 @@ describe('AddApplication', () => {
       store = mockStore({
         sources: {
           entities: [source],
-          appTypes: applicationTypesData.data,
+          appTypes,
           sourceTypes,
           appTypesLoaded: true,
           sourceTypesLoaded: true,
@@ -542,7 +541,6 @@ describe('AddApplication', () => {
       };
       const formApi = expect.any(Object);
       const authenticationValues = expect.any(Array);
-      const appTypes = expect.any(Array);
 
       await waitFor(() => expect(checkAvailabilitySource).toHaveBeenCalledWith(source.id));
 
@@ -738,7 +736,6 @@ describe('AddApplication', () => {
       };
       const formApi = expect.any(Object);
       const authenticationValues = expect.any(Array);
-      const appTypes = expect.any(Array);
 
       await waitFor(() =>
         expect(attachSource.doAttachApp).toHaveBeenCalledWith(formValues, formApi, authenticationValues, initialValues, appTypes)
@@ -776,7 +773,6 @@ describe('AddApplication', () => {
       };
       const formApi = expect.any(Object);
       const authenticationValues = expect.any(Array);
-      const appTypes = expect.any(Array);
 
       await waitFor(() =>
         expect(attachSource.doAttachApp).toHaveBeenCalledWith(formValues, formApi, authenticationValues, initialValues, appTypes)

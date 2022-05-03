@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react';
 
 import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import applicationTypesData from '../../__mocks__/applicationTypesData';
+import appTypes from '../../__mocks__/applicationTypes';
 import DetailHeader from '../../../components/SourceDetail/DetailHeader';
 import * as formatters from '../../../views/formatters';
 import mockStore from '../../__mocks__/mockStore';
@@ -22,7 +22,7 @@ describe('DetailHeader', () => {
     store = mockStore({
       sources: {
         entities: [{ id: sourceId, name: 'Name of this source' }],
-        appTypes: applicationTypesData.data,
+        appTypes,
       },
       user: { writePermissions: false },
     });
@@ -43,7 +43,7 @@ describe('DetailHeader', () => {
     expect(formatters.availabilityFormatter).toHaveBeenCalledWith(
       undefined,
       { id: sourceId, name: 'Name of this source' },
-      { appTypes: applicationTypesData.data }
+      { appTypes }
     );
   });
 });

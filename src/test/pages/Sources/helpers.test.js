@@ -15,7 +15,7 @@ import {
 
 import * as actions from '../../../redux/sources/actions';
 import sourceTypes, { AMAZON_TYPE, ANSIBLE_TOWER_TYPE, OPENSHIFT_TYPE } from '../../__mocks__/sourceTypes';
-import { applicationTypesData, CATALOG_APP } from '../../__mocks__/applicationTypesData';
+import applicationTypes, { CATALOG_APP } from '../../__mocks__/applicationTypes';
 import { REDHAT_VENDOR } from '../../../utilities/constants';
 import { AVAILABLE, UNAVAILABLE } from '../../../views/formatters';
 import { replaceRouteId, routes } from '../../../Routes';
@@ -90,7 +90,7 @@ describe('Source page helpers', () => {
     it('returns chips for applications', () => {
       const key = 'applications';
 
-      expect(chipsFormatters(key, filterValue, sourceTypes, applicationTypesData.data)()).toEqual({
+      expect(chipsFormatters(key, filterValue, sourceTypes, applicationTypes)()).toEqual({
         category: 'Application',
         key,
         chips: [
@@ -114,7 +114,7 @@ describe('Source page helpers', () => {
         availability_status: [UNAVAILABLE],
       };
 
-      expect(chipsFormatters(key, filterValue, sourceTypes, applicationTypesData.data, intl)()).toEqual({
+      expect(chipsFormatters(key, filterValue, sourceTypes, applicationTypes, intl)()).toEqual({
         category: 'Status',
         chips: [{ name: 'Unavailable', value: 'unavailable' }],
         key: 'availability_status',
@@ -129,7 +129,7 @@ describe('Source page helpers', () => {
         availability_status: [AVAILABLE],
       };
 
-      expect(chipsFormatters(key, filterValue, sourceTypes, applicationTypesData.data, intl)()).toEqual({
+      expect(chipsFormatters(key, filterValue, sourceTypes, applicationTypes, intl)()).toEqual({
         category: 'Status',
         chips: [{ name: 'Available', value: 'available' }],
         key: 'availability_status',
@@ -225,10 +225,10 @@ describe('Source page helpers', () => {
     };
 
     it('prepares chips', () => {
-      expect(prepareChips(filterValue, sourceTypes, applicationTypesData.data)).toEqual([
+      expect(prepareChips(filterValue, sourceTypes, applicationTypes)).toEqual([
         chipsFormatters('name', filterValue, sourceTypes)(),
         chipsFormatters('source_type_id', filterValue, sourceTypes)(),
-        chipsFormatters('applications', filterValue, sourceTypes, applicationTypesData.data)(),
+        chipsFormatters('applications', filterValue, sourceTypes, applicationTypes)(),
       ]);
     });
   });
