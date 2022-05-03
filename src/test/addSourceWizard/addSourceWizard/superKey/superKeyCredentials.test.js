@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react';
 
 import render from '../../__mocks__/render';
 
-import sourceTypes from '../../helpers/sourceTypes';
+import sourceTypes from '../../../__mocks__/sourceTypes';
 import SuperKeyCredentials from '../../../../components/addSourceWizard/superKey/SuperKeyCredentials';
 import SourcesFormRenderer from '../../../../utilities/SourcesFormRenderer';
 

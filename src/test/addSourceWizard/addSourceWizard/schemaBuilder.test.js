@@ -16,10 +16,9 @@ import {
   shouldUseAppAuth,
 } from '../../../components/addSourceWizard/schemaBuilder';
 import hardcodedSchemas from '../../../components/addSourceWizard/hardcodedSchemas';
-import sourceTypes, { AMAZON_TYPE, OPENSHIFT_TYPE, AZURE_TYPE, ANSIBLE_TOWER_TYPE } from '../helpers/sourceTypes';
-import applicationTypes, { COST_MANAGEMENT_APP, TOPOLOGY_INV_APP } from '../helpers/applicationTypes';
+import sourceTypes, { AMAZON_TYPE, OPENSHIFT_TYPE, AZURE_TYPE, ANSIBLE_TOWER_TYPE } from '../../__mocks__/sourceTypes';
+import applicationTypes, { COST_MANAGEMENT_APP, TOPOLOGY_INV_APP } from '../../__mocks__/applicationTypes';
 import { validatorTypes } from '@data-driven-forms/react-form-renderer';
-import { ibmType } from '../../__mocks__/sourceTypesData';
 
 describe('schema builder', () => {
   describe('stepKey fields', () => {
@@ -388,12 +387,12 @@ describe('schema builder', () => {
   describe('schemaBuilder', () => {
     it('builds schema', () => {
       const schema = schemaBuilder(
-        [...sourceTypes, ibmType].filter(({ schema }) => schema),
+        sourceTypes.filter(({ schema }) => schema),
         applicationTypes
       );
 
       expect(schema).toEqual(expect.arrayContaining([expect.any(Object)]));
-      expect(schema).toHaveLength(53);
+      expect(schema).toHaveLength(56);
 
       expect(schema.map(({ name }) => name)).toEqual([
         'openshift',
@@ -449,6 +448,9 @@ describe('schema builder', () => {
         'ibm-cm-service-id',
         'ibm-cm-configure-access',
         'ibm-cm-api-key',
+        'satellite',
+        'satellite-receptor_node-generic-additional-step',
+        'satellite-endpoint',
       ]);
     });
 

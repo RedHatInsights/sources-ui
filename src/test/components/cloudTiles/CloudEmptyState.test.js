@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import componentWrapperIntl from '../../../utilities/testsHelpers';
 import CloudEmptyState from '../../../components/CloudTiles/CloudEmptyState';
 import mockStore from '../../__mocks__/mockStore';
-import sourceTypes, { googleType, ibmType } from '../../__mocks__/sourceTypesData';
+import sourceTypes from '../../__mocks__/sourceTypes';
 import { CLOUD_VENDOR } from '../../../utilities/constants';
 
 describe('CloudEmptyState', () => {
@@ -21,7 +21,7 @@ describe('CloudEmptyState', () => {
 
     store = mockStore({
       user: { writePermissions: true },
-      sources: { sourceTypes: [...sourceTypes.data, googleType, ibmType], activeCategory: CLOUD_VENDOR },
+      sources: { sourceTypes, activeCategory: CLOUD_VENDOR },
     });
   });
 

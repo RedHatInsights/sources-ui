@@ -6,8 +6,8 @@ import userEvent from '@testing-library/user-event';
 import SourcesTable, { actionResolver, itemToCells, prepareColumnsCells } from '../../../components/SourcesTable/SourcesTable';
 
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
-import { sourceTypesData } from '../../__mocks__/sourceTypesData';
-import { applicationTypesData } from '../../__mocks__/applicationTypesData';
+import sourceTypes from '../../__mocks__/sourceTypes';
+import appTypes from '../../__mocks__/applicationTypes';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import * as actions from '../../../redux/sources/actions';
@@ -36,8 +36,8 @@ describe('SourcesTable', () => {
       sourceTypesLoaded: true,
       entities: sourcesDataGraphQl,
       numberOfEntities: sourcesDataGraphQl.length,
-      appTypes: applicationTypesData.data,
-      sourceTypes: sourceTypesData.data,
+      appTypes,
+      sourceTypes,
     };
     API.doLoadEntities = jest.fn().mockImplementation(() =>
       Promise.resolve({

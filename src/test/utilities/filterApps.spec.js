@@ -1,6 +1,6 @@
 import { CLOUD_VENDOR, REDHAT_VENDOR, TOPOLOGY_INV_NAME } from '../../utilities/constants';
 import filterApps, { filterVendorAppTypes } from '../../utilities/filterApps';
-import applicationTypes from '../addSourceWizard/helpers/applicationTypes';
+import applicationTypes from '../addSourceWizard/../__mocks__/applicationTypes';
 
 describe('filterApps', () => {
   it('filters topology invetory app from app types', () => {

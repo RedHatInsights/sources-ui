@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react';
 import AppListInRemoval from '../../../components/SourceRemoveModal/AppListInRemoval';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { replaceRouteId, routes } from '../../../Routes';
-import { applicationTypesData, CATALOG_APP, COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
+import appTypes, { CATALOG_APP, COST_MANAGEMENT_APP } from '../../__mocks__/applicationTypes';
 
 import mockStore from '../../__mocks__/mockStore';
 
@@ -16,7 +16,7 @@ describe('AppListInRemoval', () => {
 
   beforeEach(() => {
     store = mockStore({
-      sources: { appTypes: applicationTypesData.data },
+      sources: { appTypes },
     });
   });
 
@@ -56,7 +56,7 @@ describe('AppListInRemoval', () => {
     initialProps = {
       applications: [
         { application_type_id: CATALOG_APP.id, id: 1 },
-        { application_type_id: COSTMANAGEMENT_APP.id, id: 2 },
+        { application_type_id: COST_MANAGEMENT_APP.id, id: 2 },
       ],
     };
 
@@ -69,6 +69,6 @@ describe('AppListInRemoval', () => {
     );
 
     expect(screen.getByText(CATALOG_APP.display_name, { selector: 'li' })).toBeInTheDocument();
-    expect(screen.getByText(COSTMANAGEMENT_APP.display_name, { selector: 'li' })).toBeInTheDocument();
+    expect(screen.getByText(COST_MANAGEMENT_APP.display_name, { selector: 'li' })).toBeInTheDocument();
   });
 });

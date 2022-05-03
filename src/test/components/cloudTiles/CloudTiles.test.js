@@ -7,7 +7,7 @@ import componentWrapperIntl from '../../../utilities/testsHelpers';
 import { routes } from '../../../Routes';
 import CloudTiles from '../../../components/CloudTiles/CloudTiles';
 import mockStore from '../../__mocks__/mockStore';
-import sourceTypes, { googleType, ibmType } from '../../__mocks__/sourceTypesData';
+import sourceTypes from '../../__mocks__/sourceTypes';
 import { CLOUD_VENDOR } from '../../../utilities/constants';
 
 describe('CloudTiles', () => {
@@ -24,7 +24,7 @@ describe('CloudTiles', () => {
 
     store = mockStore({
       user: { writePermissions: true },
-      sources: { sourceTypes: [...sourceTypes.data, googleType, ibmType], activeCategory: CLOUD_VENDOR },
+      sources: { sourceTypes, activeCategory: CLOUD_VENDOR },
     });
   });
 
@@ -43,7 +43,7 @@ describe('CloudTiles', () => {
   it('renders correctly when no permissions', async () => {
     store = mockStore({
       user: { writePermissions: false },
-      sources: { sourceTypes: [...sourceTypes.data, googleType, ibmType], activeCategory: CLOUD_VENDOR },
+      sources: { sourceTypes, activeCategory: CLOUD_VENDOR },
     });
 
     const { container } = render(componentWrapperIntl(<CloudTiles {...initialProps} />, store));

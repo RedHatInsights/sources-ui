@@ -1,7 +1,7 @@
 import { applicationsFields } from '../../../../components/SourceEditForm/parser/application';
 import EditAlert from '../../../../components/SourceEditForm/parser/EditAlert';
-import applicationTypes, { COST_MANAGEMENT_APP } from '../../../addSourceWizard/helpers/applicationTypes';
-import { OPENSHIFT_TYPE } from '../../../addSourceWizard/helpers/sourceTypes';
+import applicationTypes, { COST_MANAGEMENT_APP } from '../../../addSourceWizard/../__mocks__/applicationTypes';
+import { OPENSHIFT_TYPE } from '../../../addSourceWizard/../__mocks__/sourceTypes';
 
 describe('application parser - true data', () => {
   it('google + OCP', () => {

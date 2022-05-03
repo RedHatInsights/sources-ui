@@ -9,8 +9,8 @@ import * as utilsHelpers from '@redhat-cloud-services/frontend-components-utilit
 import SourcesPageOriginal from '../../pages/Sources';
 
 import { sourcesDataGraphQl, SOURCE_ALL_APS_ID } from '../__mocks__/sourcesData';
-import { sourceTypesData, AMAZON_ID } from '../__mocks__/sourceTypesData';
-import { applicationTypesData, COSTMANAGEMENT_APP } from '../__mocks__/applicationTypesData';
+import sourceTypes, { AMAZON_TYPE } from '../__mocks__/sourceTypes';
+import applicationTypes, { COST_MANAGEMENT_APP } from '../__mocks__/applicationTypes';
 
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
 
@@ -89,8 +89,8 @@ describe('SourcesPage', () => {
         meta: { count: sourcesDataGraphQl.length },
       })
     );
-    api.doLoadAppTypes = jest.fn().mockImplementation(() => Promise.resolve(applicationTypesData));
-    typesApi.doLoadSourceTypes = jest.fn().mockImplementation(() => Promise.resolve(sourceTypesData.data));
+    api.doLoadAppTypes = jest.fn().mockImplementation(() => Promise.resolve({ data: applicationTypes }));
+    typesApi.doLoadSourceTypes = jest.fn().mockImplementation(() => Promise.resolve(sourceTypes));
 
     store = getStore([], {
       user: { writePermissions: true },
@@ -312,7 +312,7 @@ describe('SourcesPage', () => {
         sources: {
           loaded: 1,
           numberOfEntities: 5,
-          sourceTypes: sourceTypesData.data,
+          sourceTypes,
           activeCategory: REDHAT_VENDOR,
         },
         user: { writePermissions: true },
@@ -328,10 +328,7 @@ describe('SourcesPage', () => {
       expect([...container.getElementsByClassName('pf-c-select__menu-item')].map((e) => e.textContent)).toEqual([
         'Ansible Tower',
         'OpenShift Container Platform',
-        'Red Hat CloudForms',
-        'Red Hat OpenStack',
         'Red Hat Satellite',
-        'Red Hat Virtualization',
       ]);
     });
 
@@ -342,7 +339,7 @@ describe('SourcesPage', () => {
         sources: {
           loaded: 1,
           numberOfEntities: 5,
-          sourceTypes: sourceTypesData.data,
+          sourceTypes,
           activeCategory: CLOUD_VENDOR,
         },
         user: { writePermissions: true },
@@ -357,8 +354,9 @@ describe('SourcesPage', () => {
 
       expect([...container.getElementsByClassName('pf-c-select__menu-item')].map((e) => e.textContent)).toEqual([
         'Amazon Web Services',
+        'Google Cloud',
+        'IBM Cloud',
         'Microsoft Azure',
-        'VMware vSphere',
       ]);
     });
 
@@ -369,7 +367,7 @@ describe('SourcesPage', () => {
         sources: {
           loaded: 1,
           numberOfEntities: 5,
-          sourceTypes: sourceTypesData.data,
+          sourceTypes,
           activeCategory: CLOUD_VENDOR,
         },
         user: { writePermissions: true },
@@ -457,10 +455,10 @@ describe('SourcesPage', () => {
 
     const source = {
       isSubmitted: true,
-      sourceTypes: sourceTypesData.data,
+      sourceTypes,
       createdSource: {
         id: '544615',
-        source_type_id: AMAZON_ID,
+        source_type_id: AMAZON_TYPE.id,
         name: 'name of created source',
         applications: [{ availability_status: AVAILABLE }],
       },
@@ -521,7 +519,7 @@ describe('SourcesPage', () => {
 
     const source = {
       isErrored: true,
-      sourceTypes: sourceTypesData.data,
+      sourceTypes,
       values: { source: { name: 'some-name' } },
       wizardState,
     };
@@ -663,7 +661,7 @@ describe('SourcesPage', () => {
 
       expect(store.getState().sources.filterValue).toEqual({
         name: SEARCH_TERM,
-        source_type_id: [AMAZON_ID],
+        source_type_id: [AMAZON_TYPE.id],
       });
     });
 
@@ -683,7 +681,7 @@ describe('SourcesPage', () => {
 
       expect(store.getState().sources.filterValue).toEqual({
         name: SEARCH_TERM,
-        applications: [COSTMANAGEMENT_APP.id],
+        applications: [COST_MANAGEMENT_APP.id],
       });
     });
 

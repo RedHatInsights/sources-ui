@@ -9,9 +9,9 @@ import * as attachSource from '../../../api/doAttachApp';
 
 import AddApplication from '../../../components/AddApplication/AddApplication';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID } from '../../__mocks__/sourceTypesData';
+import sourceTypes, { OPENSHIFT_TYPE, AMAZON_TYPE } from '../../__mocks__/sourceTypes';
 import { SOURCE_NO_APS_ID } from '../../__mocks__/sourcesData';
-import { applicationTypesData, COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
+import appTypes, { COST_MANAGEMENT_APP } from '../../__mocks__/applicationTypes';
 import { routes, replaceRouteId } from '../../../Routes';
 import reducer from '../../../components/AddApplication/reducer';
 import * as removeAppSubmit from '../../../components/AddApplication/removeAppSubmit';
@@ -26,19 +26,19 @@ describe('AddApplication', () => {
   beforeEach(() => {
     checkAvailabilitySource = jest.fn().mockImplementation(() => Promise.resolve());
     initialEntry = [
-      replaceRouteId(routes.sourcesDetailAddApp.path, SOURCE_NO_APS_ID).replace(':app_type_id', COSTMANAGEMENT_APP.id),
+      replaceRouteId(routes.sourcesDetailAddApp.path, SOURCE_NO_APS_ID).replace(':app_type_id', COST_MANAGEMENT_APP.id),
     ];
     store = mockStore({
       sources: {
         entities: [
           {
             id: SOURCE_NO_APS_ID,
-            source_type_id: OPENSHIFT_ID,
+            source_type_id: OPENSHIFT_TYPE.id,
             applications: [],
           },
         ],
-        appTypes: applicationTypesData.data,
-        sourceTypes: sourceTypesData.data,
+        appTypes,
+        sourceTypes,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
         loaded: 0,
@@ -64,13 +64,13 @@ describe('AddApplication', () => {
         entities: [
           {
             id: SOURCE_NO_APS_ID,
-            source_type_id: OPENSHIFT_ID,
+            source_type_id: OPENSHIFT_TYPE.id,
             applications: [],
             endpoints: [{ id: ENDPOINT_ID }],
           },
         ],
-        appTypes: applicationTypesData.data,
-        sourceTypes: sourceTypesData.data,
+        appTypes,
+        sourceTypes,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
         loaded: 0,
@@ -95,8 +95,8 @@ describe('AddApplication', () => {
     store = mockStore({
       sources: {
         entities: [],
-        appTypes: applicationTypesData.data,
-        sourceTypes: sourceTypesData.data,
+        appTypes,
+        sourceTypes,
         appTypesLoaded: false,
         sourceTypesLoaded: true,
       },
@@ -126,9 +126,9 @@ describe('AddApplication', () => {
     it('when type does exist', async () => {
       store = mockStore({
         sources: {
-          entities: [{ id: SOURCE_NO_APS_ID, source_type_id: AMAZON_ID, applications: [] }],
+          entities: [{ id: SOURCE_NO_APS_ID, source_type_id: AMAZON_TYPE.id, applications: [] }],
           appTypes: [],
-          sourceTypes: sourceTypesData.data,
+          sourceTypes,
           appTypesLoaded: true,
           sourceTypesLoaded: true,
           loaded: 0,
@@ -153,9 +153,9 @@ describe('AddApplication', () => {
     it('when type does is not supported', async () => {
       store = mockStore({
         sources: {
-          entities: [{ id: SOURCE_NO_APS_ID, source_type_id: AMAZON_ID, applications: [] }],
+          entities: [{ id: SOURCE_NO_APS_ID, source_type_id: AMAZON_TYPE.id, applications: [] }],
           appTypes: [APP],
-          sourceTypes: sourceTypesData.data,
+          sourceTypes,
           appTypesLoaded: true,
           sourceTypesLoaded: true,
           loaded: 0,
@@ -181,10 +181,10 @@ describe('AddApplication', () => {
       store = mockStore({
         sources: {
           entities: [
-            { id: SOURCE_NO_APS_ID, source_type_id: AMAZON_ID, applications: [{ id: '234', application_type_id: APP.id }] },
+            { id: SOURCE_NO_APS_ID, source_type_id: AMAZON_TYPE.id, applications: [{ id: '234', application_type_id: APP.id }] },
           ],
           appTypes: [{ ...APP, supported_source_types: ['amazon'] }],
-          sourceTypes: sourceTypesData.data,
+          sourceTypes,
           appTypesLoaded: true,
           sourceTypesLoaded: true,
           loaded: 0,
@@ -431,7 +431,7 @@ describe('AddApplication', () => {
     beforeEach(() => {
       source = {
         id: SOURCE_NO_APS_ID,
-        source_type_id: OPENSHIFT_ID,
+        source_type_id: OPENSHIFT_TYPE.id,
         applications: [],
         imported: 'cfme',
       };
@@ -439,8 +439,8 @@ describe('AddApplication', () => {
       store = mockStore({
         sources: {
           entities: [source],
-          appTypes: applicationTypesData.data,
-          sourceTypes: sourceTypesData.data,
+          appTypes,
+          sourceTypes,
           appTypesLoaded: true,
           sourceTypesLoaded: true,
           loaded: 0,
@@ -488,7 +488,6 @@ describe('AddApplication', () => {
       };
       const formApi = expect.any(Object);
       const authenticationValues = expect.any(Array);
-      const appTypes = expect.any(Array);
 
       await waitFor(() => expect(checkAvailabilitySource).toHaveBeenCalledWith(source.id));
 
@@ -502,14 +501,14 @@ describe('AddApplication', () => {
     it('shows aws specific step', async () => {
       source = {
         ...source,
-        source_type_id: AMAZON_ID,
+        source_type_id: AMAZON_TYPE.id,
       };
 
       store = mockStore({
         sources: {
           entities: [source],
-          appTypes: applicationTypesData.data,
-          sourceTypes: sourceTypesData.data,
+          appTypes,
+          sourceTypes,
           appTypesLoaded: true,
           sourceTypesLoaded: true,
           loaded: 0,
@@ -542,7 +541,6 @@ describe('AddApplication', () => {
       };
       const formApi = expect.any(Object);
       const authenticationValues = expect.any(Array);
-      const appTypes = expect.any(Array);
 
       await waitFor(() => expect(checkAvailabilitySource).toHaveBeenCalledWith(source.id));
 
@@ -738,7 +736,6 @@ describe('AddApplication', () => {
       };
       const formApi = expect.any(Object);
       const authenticationValues = expect.any(Array);
-      const appTypes = expect.any(Array);
 
       await waitFor(() =>
         expect(attachSource.doAttachApp).toHaveBeenCalledWith(formValues, formApi, authenticationValues, initialValues, appTypes)
@@ -776,7 +773,6 @@ describe('AddApplication', () => {
       };
       const formApi = expect.any(Object);
       const authenticationValues = expect.any(Array);
-      const appTypes = expect.any(Array);
 
       await waitFor(() =>
         expect(attachSource.doAttachApp).toHaveBeenCalledWith(formValues, formApi, authenticationValues, initialValues, appTypes)

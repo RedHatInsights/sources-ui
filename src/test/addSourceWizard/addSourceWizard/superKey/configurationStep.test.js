@@ -2,7 +2,7 @@ import React from 'react';
 import { Label } from '@patternfly/react-core';
 
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
-import sourceTypes, { AMAZON_TYPE, AZURE_TYPE, OPENSHIFT_TYPE } from '../../helpers/sourceTypes';
+import sourceTypes, { AMAZON_TYPE, AZURE_TYPE, OPENSHIFT_TYPE } from '../../../__mocks__/sourceTypes';
 import configurationStep from '../../../../components/addSourceWizard/superKey/configurationStep';
 import SuperKeyCredentials from '../../../../components/addSourceWizard/superKey/SuperKeyCredentials';
 

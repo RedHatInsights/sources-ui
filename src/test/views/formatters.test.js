@@ -30,15 +30,7 @@ import {
   PAUSED,
   RHELAZURE,
 } from '../../views/formatters';
-import {
-  sourceTypesData,
-  OPENSHIFT_ID,
-  AMAZON_ID,
-  OPENSHIFT_INDEX,
-  AMAZON,
-  AZURE,
-  googleType,
-} from '../__mocks__/sourceTypesData';
+import sourceTypes, { OPENSHIFT_TYPE, AMAZON_TYPE, AZURE_TYPE, GOOGLE_TYPE } from '../__mocks__/sourceTypes';
 import {
   sourcesDataGraphQl,
   SOURCE_CATALOGAPP_INDEX,
@@ -46,15 +38,7 @@ import {
   SOURCE_NO_APS_INDEX,
   SOURCE_ENDPOINT_URL_INDEX,
 } from '../__mocks__/sourcesData';
-import {
-  applicationTypesData,
-  CATALOG_INDEX,
-  TOPOLOGICALINVENTORY_INDEX,
-  COSTMANAGEMENET_INDEX,
-  COSTMANAGEMENT_APP,
-  CATALOG_APP,
-  SUBWATCH_APP,
-} from '../__mocks__/applicationTypesData';
+import appTypes, { TOPOLOGY_INV_APP, COST_MANAGEMENT_APP, CATALOG_APP, SUB_WATCH_APP } from '../__mocks__/applicationTypes';
 
 import { IntlProvider } from 'react-intl';
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
@@ -79,40 +63,40 @@ describe('formatters', () => {
 
   describe('sourceIsOpenShift', () => {
     it('returns true when is openshift', () => {
-      expect(sourceIsOpenShift({ source_type_id: OPENSHIFT_ID }, sourceTypesData.data)).toEqual(true);
+      expect(sourceIsOpenShift({ source_type_id: OPENSHIFT_TYPE.id }, sourceTypes)).toEqual(true);
     });
 
     it('returns false when is not openshift', () => {
-      expect(sourceIsOpenShift({ source_type_id: AMAZON_ID }, sourceTypesData.data)).toEqual(false);
+      expect(sourceIsOpenShift({ source_type_id: AMAZON_TYPE.id }, sourceTypes)).toEqual(false);
     });
   });
 
   describe('sourceTypeFormatter', () => {
     it('returns product_name (OpenShift)', () => {
       expect(
-        sourceTypeFormatter(OPENSHIFT_ID, undefined, {
-          sourceTypes: sourceTypesData.data,
+        sourceTypeFormatter(OPENSHIFT_TYPE.id, undefined, {
+          sourceTypes,
         })
-      ).toEqual(sourceTypesData.data.find((x) => x.id === OPENSHIFT_ID).product_name);
+      ).toEqual(sourceTypes.find((x) => x.id === OPENSHIFT_TYPE.id).product_name);
     });
 
     it('returns type when there is no product_name', () => {
       expect(
-        sourceTypeFormatter(OPENSHIFT_ID, undefined, {
+        sourceTypeFormatter(OPENSHIFT_TYPE.id, undefined, {
           sourceTypes: [
             {
-              ...sourceTypesData.data[OPENSHIFT_INDEX],
+              ...OPENSHIFT_TYPE,
               product_name: undefined,
             },
           ],
         })
-      ).toEqual(OPENSHIFT_ID);
+      ).toEqual(OPENSHIFT_TYPE.id);
     });
 
     it('returns empty string when no sourceType', () => {
       expect(
         sourceTypeFormatter(undefined, undefined, {
-          sourceTypes: sourceTypesData.data,
+          sourceTypes,
         })
       ).toEqual('');
     });
@@ -133,7 +117,7 @@ describe('formatters', () => {
       expect(
         JSON.stringify(
           nameFormatter(sourcesDataGraphQl[0].name, sourcesDataGraphQl[0], {
-            sourceTypes: sourceTypesData.data,
+            sourceTypes,
           })
         ).includes(sourcesDataGraphQl[0].name)
       ).toEqual(true);
@@ -170,23 +154,19 @@ describe('formatters', () => {
         componentWrapperIntl(
           <React.Fragment>
             {applicationFormatter(sourcesDataGraphQl[SOURCE_ALL_APS_INDEX].applications, undefined, {
-              appTypes: applicationTypesData.data,
+              appTypes,
             })}
           </React.Fragment>
         )
       );
 
-      expect(screen.getByText(applicationTypesData.data[CATALOG_INDEX].display_name, { exact: false })).toBeInTheDocument();
-      expect(
-        screen.getByText(applicationTypesData.data[COSTMANAGEMENET_INDEX].display_name, { exact: false })
-      ).toBeInTheDocument();
+      expect(screen.getByText(CATALOG_APP.display_name, { exact: false })).toBeInTheDocument();
+      expect(screen.getByText(COST_MANAGEMENT_APP.display_name, { exact: false })).toBeInTheDocument();
       expect(screen.getByText('1 more', { exact: false })).toBeInTheDocument();
 
       await userEvent.click(screen.getByText('1 more'));
 
-      expect(
-        screen.getByText(applicationTypesData.data[TOPOLOGICALINVENTORY_INDEX].display_name, { exact: false })
-      ).toBeInTheDocument();
+      expect(screen.getByText(TOPOLOGY_INV_APP.display_name, { exact: false })).toBeInTheDocument();
     });
 
     it('returns empty application list', () => {
@@ -196,7 +176,7 @@ describe('formatters', () => {
         componentWrapperIntl(
           <React.Fragment>
             {applicationFormatter(sourcesDataGraphQl[SOURCE_NO_APS_INDEX].applications, undefined, {
-              appTypes: applicationTypesData.data,
+              appTypes,
             })}
           </React.Fragment>
         )
@@ -210,13 +190,13 @@ describe('formatters', () => {
         componentWrapperIntl(
           <React.Fragment>
             {applicationFormatter(sourcesDataGraphQl[SOURCE_CATALOGAPP_INDEX].applications, undefined, {
-              appTypes: applicationTypesData.data,
+              appTypes,
             })}
           </React.Fragment>
         )
       );
 
-      expect(screen.getByText(applicationTypesData.data[CATALOG_INDEX].display_name, { exact: false })).toBeInTheDocument();
+      expect(screen.getByText(CATALOG_APP.display_name, { exact: false })).toBeInTheDocument();
     });
 
     it('show available popover', async () => {
@@ -226,13 +206,13 @@ describe('formatters', () => {
             {applicationFormatter(
               [
                 {
-                  application_type_id: COSTMANAGEMENT_APP.id,
+                  application_type_id: COST_MANAGEMENT_APP.id,
                   availability_status: AVAILABLE,
                 },
               ],
               undefined,
               {
-                appTypes: applicationTypesData.data,
+                appTypes,
               }
             )}
           </React.Fragment>
@@ -252,14 +232,14 @@ describe('formatters', () => {
             {applicationFormatter(
               [
                 {
-                  application_type_id: COSTMANAGEMENT_APP.id,
+                  application_type_id: COST_MANAGEMENT_APP.id,
                   availability_status: UNAVAILABLE,
                   availability_status_error: ERROR,
                 },
               ],
               undefined,
               {
-                appTypes: applicationTypesData.data,
+                appTypes,
               }
             )}
           </React.Fragment>
@@ -279,14 +259,14 @@ describe('formatters', () => {
             {applicationFormatter(
               [
                 {
-                  application_type_id: COSTMANAGEMENT_APP.id,
+                  application_type_id: COST_MANAGEMENT_APP.id,
                   availability_status: null,
                   authentications: [{ resource_type: 'Endpoint' }],
                 },
               ],
               { endpoints: [{ availability_status: UNAVAILABLE, availability_status_error: ERROR }] },
               {
-                appTypes: applicationTypesData.data,
+                appTypes,
               }
             )}
           </React.Fragment>
@@ -305,14 +285,14 @@ describe('formatters', () => {
             {applicationFormatter(
               [
                 {
-                  application_type_id: COSTMANAGEMENT_APP.id,
+                  application_type_id: COST_MANAGEMENT_APP.id,
                   availability_status: IN_PROGRESS,
                   availability_status_error: null,
                 },
               ],
               undefined,
               {
-                appTypes: applicationTypesData.data,
+                appTypes,
               }
             )}
           </React.Fragment>
@@ -336,7 +316,7 @@ describe('formatters', () => {
             {applicationFormatter(
               [
                 {
-                  application_type_id: COSTMANAGEMENT_APP.id,
+                  application_type_id: COST_MANAGEMENT_APP.id,
                   availability_status: IN_PROGRESS,
                   availability_status_error: null,
                   paused_at: 'today',
@@ -344,7 +324,7 @@ describe('formatters', () => {
               ],
               undefined,
               {
-                appTypes: applicationTypesData.data,
+                appTypes,
               }
             )}
           </React.Fragment>
@@ -366,14 +346,14 @@ describe('formatters', () => {
             {applicationFormatter(
               [
                 {
-                  application_type_id: COSTMANAGEMENT_APP.id,
+                  application_type_id: COST_MANAGEMENT_APP.id,
                   availability_status: UNAVAILABLE,
                   availability_status_error: null,
                 },
               ],
               undefined,
               {
-                appTypes: applicationTypesData.data,
+                appTypes,
               }
             )}
           </React.Fragment>
@@ -392,14 +372,14 @@ describe('formatters', () => {
             {applicationFormatter(
               [
                 {
-                  application_type_id: COSTMANAGEMENT_APP.id,
+                  application_type_id: COST_MANAGEMENT_APP.id,
                   availability_status: null,
                   availability_status_error: null,
                 },
               ],
               undefined,
               {
-                appTypes: applicationTypesData.data,
+                appTypes,
               }
             )}
           </React.Fragment>
@@ -510,9 +490,6 @@ describe('formatters', () => {
   });
 
   describe('availability status', () => {
-    const APPTYPES = [...applicationTypesData.data, SUBWATCH_APP];
-    const SOURCETYPES = [...sourceTypesData.data, googleType];
-
     describe('getStatusColor', () => {
       it('returns OK color', () => {
         expect(getStatusColor(AVAILABLE)).toEqual('green');
@@ -582,13 +559,13 @@ describe('formatters', () => {
       const ERRORMESSAGE2 = 'different type of error';
 
       it('returns OK text', () => {
-        render(wrapperWithIntl(getStatusTooltipText(AVAILABLE, APPTYPES)));
+        render(wrapperWithIntl(getStatusTooltipText(AVAILABLE, appTypes)));
 
         expect(screen.getByText('Everything works fine.')).toBeInTheDocument();
       });
 
       it('returns IN PROGRESS text', () => {
-        render(wrapperWithIntl(getStatusTooltipText(IN_PROGRESS, APPTYPES)));
+        render(wrapperWithIntl(getStatusTooltipText(IN_PROGRESS, appTypes)));
 
         expect(
           screen.getByText('We are still working to validate credentials. Check back for status updates.')
@@ -599,23 +576,23 @@ describe('formatters', () => {
         const SOURCE_WITH_ERROR = {
           applications: [
             {
-              id: COSTMANAGEMENT_APP.id,
+              id: COST_MANAGEMENT_APP.id,
               error: ERRORMESSAGE,
             },
           ],
         };
 
-        render(wrapperWithIntl(getStatusTooltipText(PARTIALLY_UNAVAILABLE, APPTYPES, SOURCE_WITH_ERROR)));
+        render(wrapperWithIntl(getStatusTooltipText(PARTIALLY_UNAVAILABLE, appTypes, SOURCE_WITH_ERROR)));
 
         expect(screen.getByText(ERRORMESSAGE, { exact: false })).toBeInTheDocument();
-        expect(screen.getByText(COSTMANAGEMENT_APP.display_name, { exact: false })).toBeInTheDocument();
+        expect(screen.getByText(COST_MANAGEMENT_APP.display_name, { exact: false })).toBeInTheDocument();
       });
 
       it('returns DANGER text', () => {
         const SOURCE_WITH_ERRORS = {
           applications: [
             {
-              id: COSTMANAGEMENT_APP.id,
+              id: COST_MANAGEMENT_APP.id,
               error: ERRORMESSAGE,
             },
             {
@@ -625,31 +602,31 @@ describe('formatters', () => {
           ],
         };
 
-        render(wrapperWithIntl(getStatusTooltipText(UNAVAILABLE, APPTYPES, SOURCE_WITH_ERRORS)));
+        render(wrapperWithIntl(getStatusTooltipText(UNAVAILABLE, appTypes, SOURCE_WITH_ERRORS)));
 
         expect(screen.getByText(ERRORMESSAGE, { exact: false })).toBeInTheDocument();
-        expect(screen.getByText(COSTMANAGEMENT_APP.display_name, { exact: false })).toBeInTheDocument();
+        expect(screen.getByText(COST_MANAGEMENT_APP.display_name, { exact: false })).toBeInTheDocument();
 
         expect(screen.getByText(ERRORMESSAGE2, { exact: false })).toBeInTheDocument();
         expect(screen.getByText(CATALOG_APP.display_name, { exact: false })).toBeInTheDocument();
       });
 
       it('returns unknown by default', () => {
-        render(wrapperWithIntl(getStatusTooltipText('some nonsense', APPTYPES)));
+        render(wrapperWithIntl(getStatusTooltipText('some nonsense', appTypes)));
 
         expect(screen.getByText('Status has not been verified.')).toBeInTheDocument();
       });
 
       it('returns paused text', () => {
-        render(wrapperWithIntl(getStatusTooltipText(PAUSED, APPTYPES)));
+        render(wrapperWithIntl(getStatusTooltipText(PAUSED, appTypes)));
 
         expect(
           screen.getByText('Data collection is temporarily disabled. Resume source to reestablish connection.')
         ).toBeInTheDocument();
       });
 
-      it('returns RHEL AZURE text', () => {
-        render(wrapperWithIntl(getStatusTooltipText(RHELAZURE, APPTYPES)));
+      it('returns RHEL AZURE_TYPE text', () => {
+        render(wrapperWithIntl(getStatusTooltipText(RHELAZURE, appTypes)));
 
         expect(
           screen.getByText('This source cannot currently be monitored in Sources, and does not reflect true status or resources.')
@@ -663,7 +640,7 @@ describe('formatters', () => {
           applications: [{ availability_status: AVAILABLE }],
         };
 
-        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES, sourceTypes: SOURCETYPES })));
+        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
         expect(screen.getByText('Available', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
       });
@@ -674,7 +651,7 @@ describe('formatters', () => {
           applications: [{ availability_status: AVAILABLE }],
         };
 
-        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES, sourceTypes: SOURCETYPES })));
+        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
         expect(screen.getByText('Partially available', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
       });
@@ -684,7 +661,7 @@ describe('formatters', () => {
           applications: [{ availability_status: UNAVAILABLE }],
         };
 
-        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES, sourceTypes: SOURCETYPES })));
+        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
         expect(screen.getByText('Unavailable', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
       });
@@ -694,7 +671,7 @@ describe('formatters', () => {
           availability_status: IN_PROGRESS,
         };
 
-        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES, sourceTypes: SOURCETYPES })));
+        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
         expect(screen.getByText('In progress', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
         expect(screen.getByText('wrench icon')).toBeInTheDocument();
@@ -703,7 +680,7 @@ describe('formatters', () => {
       it('returns unknown by default', () => {
         const SOURCE = {};
 
-        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES, sourceTypes: SOURCETYPES })));
+        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
         expect(screen.getByText('Unknown', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
       });
@@ -714,7 +691,7 @@ describe('formatters', () => {
           paused_at: 'today',
         };
 
-        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES, sourceTypes: SOURCETYPES })));
+        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
         expect(screen.getByText('Paused', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
         expect(screen.getByText('pause icon')).toBeInTheDocument();
@@ -723,11 +700,11 @@ describe('formatters', () => {
       it('returns text for Azure + RHEL bundle combo', async () => {
         const SOURCE = {
           availability_status: undefined,
-          source_type_id: AZURE.id,
-          applications: [{ application_type_id: SUBWATCH_APP.id }],
+          source_type_id: AZURE_TYPE.id,
+          applications: [{ application_type_id: SUB_WATCH_APP.id }],
         };
 
-        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES, sourceTypes: SOURCETYPES })));
+        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
         expect(screen.getByText('Unknown', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
 
@@ -745,11 +722,11 @@ describe('formatters', () => {
       it('returns text for Google + RHEL bundle combo', async () => {
         const SOURCE = {
           availability_status: undefined,
-          source_type_id: googleType.id,
-          applications: [{ application_type_id: SUBWATCH_APP.id }],
+          source_type_id: GOOGLE_TYPE.id,
+          applications: [{ application_type_id: SUB_WATCH_APP.id }],
         };
 
-        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES, sourceTypes: SOURCETYPES })));
+        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
         expect(screen.getByText('Unknown', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
 
@@ -771,17 +748,17 @@ describe('formatters', () => {
       const SOURCE_WITH_ERROR = {
         applications: [
           {
-            id: COSTMANAGEMENT_APP.id,
+            id: COST_MANAGEMENT_APP.id,
             error: ERRORMESSAGE,
           },
         ],
       };
 
       it('returns application error', () => {
-        render(wrapperWithIntl(formatAvailibilityErrors(APPTYPES, SOURCE_WITH_ERROR)));
+        render(wrapperWithIntl(formatAvailibilityErrors(appTypes, SOURCE_WITH_ERROR)));
 
         expect(screen.getByText(ERRORMESSAGE, { exact: false })).toBeInTheDocument();
-        expect(screen.getByText(COSTMANAGEMENT_APP.display_name, { exact: false })).toBeInTheDocument();
+        expect(screen.getByText(COST_MANAGEMENT_APP.display_name, { exact: false })).toBeInTheDocument();
       });
 
       it('returns application error with unfound appnam', () => {
@@ -790,7 +767,7 @@ describe('formatters', () => {
         render(wrapperWithIntl(formatAvailibilityErrors(EMPTY_APP_TYPES, SOURCE_WITH_ERROR)));
 
         expect(screen.getByText(ERRORMESSAGE, { exact: false })).toBeInTheDocument();
-        expect(screen.getByText(COSTMANAGEMENT_APP.id, { exact: false })).toBeInTheDocument();
+        expect(screen.getByText(COST_MANAGEMENT_APP.id, { exact: false })).toBeInTheDocument();
       });
 
       it('returns authentication errors', () => {
@@ -803,7 +780,7 @@ describe('formatters', () => {
           ],
         };
 
-        render(wrapperWithIntl(formatAvailibilityErrors(APPTYPES, SOURCE_WITHAUTH_ERROR)));
+        render(wrapperWithIntl(formatAvailibilityErrors(appTypes, SOURCE_WITHAUTH_ERROR)));
 
         expect(screen.getByText(ERRORMESSAGE, { exact: false })).toBeInTheDocument();
         expect(screen.getByText('token', { exact: false })).toBeInTheDocument();
@@ -814,7 +791,7 @@ describe('formatters', () => {
           endpoint: ERRORMESSAGE,
         };
 
-        render(wrapperWithIntl(formatAvailibilityErrors(APPTYPES, SOURCE_WITH_ENDPOINT_ERROR)));
+        render(wrapperWithIntl(formatAvailibilityErrors(appTypes, SOURCE_WITH_ENDPOINT_ERROR)));
 
         expect(screen.getByText(ERRORMESSAGE, { exact: false })).toBeInTheDocument();
       });
@@ -824,7 +801,7 @@ describe('formatters', () => {
           source: ERRORMESSAGE,
         };
 
-        render(wrapperWithIntl(formatAvailibilityErrors(APPTYPES, SOURCE_WITH_SOURCE_ERROR)));
+        render(wrapperWithIntl(formatAvailibilityErrors(appTypes, SOURCE_WITH_SOURCE_ERROR)));
 
         expect(screen.getByText(ERRORMESSAGE, { exact: false })).toBeInTheDocument();
       });
@@ -1255,7 +1232,7 @@ describe('formatters', () => {
                   },
                 ],
               },
-              { intl: INTL, sourceType: AMAZON }
+              { intl: INTL, sourceType: AMAZON_TYPE }
             )
           )}
         </MemoryRouter>
@@ -1287,7 +1264,7 @@ describe('formatters', () => {
                   },
                 ],
               },
-              { intl: INTL, sourceType: AMAZON }
+              { intl: INTL, sourceType: AMAZON_TYPE }
             )
           )}
         </MemoryRouter>

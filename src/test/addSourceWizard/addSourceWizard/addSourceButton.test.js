@@ -3,8 +3,8 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { AddSourceButton } from '../../../components/addSourceWizard/';
-import sourceTypes from '../helpers/sourceTypes';
-import applicationTypes from '../helpers/applicationTypes';
+import sourceTypes from '../../__mocks__/sourceTypes';
+import applicationTypes from '../../__mocks__/applicationTypes';
 
 import render from '../__mocks__/render';
 import { CLOUD_VENDOR } from '../../../utilities/constants';

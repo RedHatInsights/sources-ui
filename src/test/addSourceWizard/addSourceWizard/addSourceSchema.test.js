@@ -13,8 +13,8 @@ import {
   applicationStep,
   cloudTypesStep,
 } from '../../../components/addSourceWizard/SourceAddSchema';
-import sourceTypes, { OPENSHIFT_TYPE } from '../helpers/sourceTypes';
-import applicationTypes from '../helpers/applicationTypes';
+import sourceTypes, { OPENSHIFT_TYPE } from '../../__mocks__/sourceTypes';
+import applicationTypes from '../../__mocks__/applicationTypes';
 
 import render from '../__mocks__/render';
 import { NO_APPLICATION_VALUE } from '../../../components/addSourceWizard/stringConstants';
@@ -26,16 +26,16 @@ describe('Add source schema', () => {
   const INTL = { formatMessage: ({ defaultMessage }) => defaultMessage };
 
   describe('nextStep', () => {
-    const OPENSHIFT = 'openshift';
+    const OPENSHIFT_TYPE = 'openshift';
     const APP_ID = '666';
     let formState = {
       values: {
-        source_type: OPENSHIFT,
+        source_type: OPENSHIFT_TYPE,
       },
     };
 
     it('returns nextstep without selected app', () => {
-      expect(nextStep()(formState)).toEqual(OPENSHIFT);
+      expect(nextStep()(formState)).toEqual(OPENSHIFT_TYPE);
     });
 
     it('returns nextstep with selected app', () => {
@@ -48,7 +48,7 @@ describe('Add source schema', () => {
         },
       };
 
-      expect(nextStep()(formState)).toEqual(`${OPENSHIFT}-${APP_ID}`);
+      expect(nextStep()(formState)).toEqual(`${OPENSHIFT_TYPE}-${APP_ID}`);
     });
 
     it('returns nextstep with empty application', () => {
@@ -59,7 +59,7 @@ describe('Add source schema', () => {
         },
       };
 
-      expect(nextStep()(formState)).toEqual(OPENSHIFT);
+      expect(nextStep()(formState)).toEqual(OPENSHIFT_TYPE);
     });
   });
 

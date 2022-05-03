@@ -9,8 +9,8 @@ import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 import ApplicationsCard from '../../../components/SourceDetail/ApplicationsCard';
 import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import sourceTypesData, { AMAZON_ID } from '../../__mocks__/sourceTypesData';
-import applicationTypesData, { COSTMANAGEMENT_APP, SUBWATCH_APP } from '../../__mocks__/applicationTypesData';
+import sourceTypes, { AMAZON_TYPE } from '../../__mocks__/sourceTypes';
+import appTypes, { COST_MANAGEMENT_APP, SUB_WATCH_APP } from '../../__mocks__/applicationTypes';
 import mockStore from '../../__mocks__/mockStore';
 
 import * as api from '../../../api/entities';
@@ -22,14 +22,12 @@ describe('ApplicationsCard', () => {
   const sourceId = '3627987';
   const initialEntry = [replaceRouteId(routes.sourcesDetail.path, sourceId)];
 
-  const updateAppData = [...applicationTypesData.data, SUBWATCH_APP];
-
   it('renders with no permissions', async () => {
     store = mockStore({
       sources: {
-        entities: [{ id: sourceId, source_type_id: AMAZON_ID, applications: [] }],
-        sourceTypes: sourceTypesData.data,
-        appTypes: updateAppData,
+        entities: [{ id: sourceId, source_type_id: AMAZON_TYPE.id, applications: [] }],
+        sourceTypes,
+        appTypes,
       },
       user: { writePermissions: false },
     });
@@ -48,7 +46,7 @@ describe('ApplicationsCard', () => {
     expect(screen.getAllByText('Cost Management')).toBeTruthy();
     expect(screen.getAllByRole('checkbox')[0]).toBeDisabled();
 
-    expect(screen.getAllByText('Subscription Watch')).toBeTruthy();
+    expect(screen.getAllByText('RHEL management')).toBeTruthy();
     expect(screen.getAllByRole('checkbox')[1]).toBeDisabled();
 
     await userEvent.hover(screen.getByText('Cost Management', { selector: '.pf-m-off' }));
@@ -68,13 +66,13 @@ describe('ApplicationsCard', () => {
         entities: [
           {
             id: sourceId,
-            source_type_id: AMAZON_ID,
-            applications: [{ id: '123', application_type_id: COSTMANAGEMENT_APP.id }],
+            source_type_id: AMAZON_TYPE.id,
+            applications: [{ id: '123', application_type_id: COST_MANAGEMENT_APP.id }],
             paused_at: 'today',
           },
         ],
-        sourceTypes: sourceTypesData.data,
-        appTypes: updateAppData,
+        sourceTypes,
+        appTypes,
       },
       user: { writePermissions: true },
     });
@@ -99,12 +97,12 @@ describe('ApplicationsCard', () => {
           entities: [
             {
               id: sourceId,
-              source_type_id: AMAZON_ID,
-              applications: [{ id: '123', application_type_id: COSTMANAGEMENT_APP.id }],
+              source_type_id: AMAZON_TYPE.id,
+              applications: [{ id: '123', application_type_id: COST_MANAGEMENT_APP.id }],
             },
           ],
-          sourceTypes: sourceTypesData.data,
-          appTypes: updateAppData,
+          sourceTypes,
+          appTypes,
         },
         user: { writePermissions: true },
       });
@@ -124,7 +122,7 @@ describe('ApplicationsCard', () => {
       expect(screen.getByText('Applications')).toBeInTheDocument();
 
       expect(screen.getAllByText('Cost Management')).toBeTruthy();
-      expect(screen.getAllByText('Subscription Watch')).toBeTruthy();
+      expect(screen.getAllByText('RHEL management')).toBeTruthy();
 
       expect(screen.getByLabelText('Actions')).toBeInTheDocument();
 
@@ -183,7 +181,7 @@ describe('ApplicationsCard', () => {
       await userEvent.click(screen.getAllByRole('checkbox')[1]);
 
       expect(screen.getByTestId('location-display').textContent).toEqual(
-        replaceRouteId(routes.sourcesDetailAddApp.path, sourceId).replace(':app_type_id', SUBWATCH_APP.id)
+        replaceRouteId(routes.sourcesDetailAddApp.path, sourceId).replace(':app_type_id', SUB_WATCH_APP.id)
       );
     });
 
@@ -193,12 +191,12 @@ describe('ApplicationsCard', () => {
           entities: [
             {
               id: sourceId,
-              source_type_id: AMAZON_ID,
-              applications: [{ id: '123', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
+              source_type_id: AMAZON_TYPE.id,
+              applications: [{ id: '123', application_type_id: COST_MANAGEMENT_APP.id, paused_at: 'today' }],
             },
           ],
-          sourceTypes: sourceTypesData.data,
-          appTypes: [COSTMANAGEMENT_APP],
+          sourceTypes,
+          appTypes: [COST_MANAGEMENT_APP],
         },
         user: { writePermissions: true },
       });
@@ -251,12 +249,12 @@ describe('ApplicationsCard', () => {
           entities: [
             {
               id: sourceId,
-              source_type_id: AMAZON_ID,
-              applications: [{ id: '123', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
+              source_type_id: AMAZON_TYPE.id,
+              applications: [{ id: '123', application_type_id: COST_MANAGEMENT_APP.id, paused_at: 'today' }],
             },
           ],
-          sourceTypes: sourceTypesData.data,
-          appTypes: [COSTMANAGEMENT_APP],
+          sourceTypes,
+          appTypes: [COST_MANAGEMENT_APP],
         },
         user: { writePermissions: true },
       });
@@ -292,12 +290,12 @@ describe('ApplicationsCard', () => {
           entities: [
             {
               id: sourceId,
-              source_type_id: AMAZON_ID,
-              applications: [{ id: '123', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
+              source_type_id: AMAZON_TYPE.id,
+              applications: [{ id: '123', application_type_id: COST_MANAGEMENT_APP.id, paused_at: 'today' }],
             },
           ],
-          sourceTypes: sourceTypesData.data,
-          appTypes: [COSTMANAGEMENT_APP],
+          sourceTypes,
+          appTypes: [COST_MANAGEMENT_APP],
         },
         user: { writePermissions: true },
       });
@@ -337,13 +335,13 @@ describe('ApplicationsCard', () => {
           entities: [
             {
               id: sourceId,
-              source_type_id: AMAZON_ID,
-              applications: [{ id: '123', application_type_id: COSTMANAGEMENT_APP.id }],
+              source_type_id: AMAZON_TYPE.id,
+              applications: [{ id: '123', application_type_id: COST_MANAGEMENT_APP.id }],
               app_creation_workflow: 'account_authorization',
             },
           ],
-          sourceTypes: sourceTypesData.data,
-          appTypes: updateAppData,
+          sourceTypes,
+          appTypes,
         },
         user: { writePermissions: true },
       });
@@ -357,13 +355,13 @@ describe('ApplicationsCard', () => {
           entities: [
             {
               id: sourceId,
-              source_type_id: AMAZON_ID,
-              applications: [{ id: '123', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
+              source_type_id: AMAZON_TYPE.id,
+              applications: [{ id: '123', application_type_id: COST_MANAGEMENT_APP.id, paused_at: 'today' }],
               app_creation_workflow: 'account_authorization',
             },
           ],
-          sourceTypes: sourceTypesData.data,
-          appTypes: [COSTMANAGEMENT_APP],
+          sourceTypes,
+          appTypes: [COST_MANAGEMENT_APP],
         },
         user: { writePermissions: true },
       });
@@ -465,13 +463,13 @@ describe('ApplicationsCard', () => {
           entities: [
             {
               id: sourceId,
-              source_type_id: AMAZON_ID,
-              applications: [{ id: '123', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
+              source_type_id: AMAZON_TYPE.id,
+              applications: [{ id: '123', application_type_id: COST_MANAGEMENT_APP.id, paused_at: 'today' }],
               app_creation_workflow: 'account_authorization',
             },
           ],
-          sourceTypes: sourceTypesData.data,
-          appTypes: [COSTMANAGEMENT_APP],
+          sourceTypes,
+          appTypes: [COST_MANAGEMENT_APP],
         },
         user: { writePermissions: true },
       });
@@ -521,7 +519,7 @@ describe('ApplicationsCard', () => {
       expect(screen.getAllByRole('checkbox')[1]).toBeChecked();
 
       expect(api.doCreateApplication).toHaveBeenCalledWith({
-        application_type_id: SUBWATCH_APP.id,
+        application_type_id: SUB_WATCH_APP.id,
         source_id: sourceId,
       });
       expect(actions.loadEntities).not.toHaveBeenCalled();

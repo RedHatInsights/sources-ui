@@ -3,8 +3,8 @@ import { render, screen, act } from '@testing-library/react';
 import SourcesPage from '../../pages/Sources';
 
 import { sourcesDataGraphQl } from '../__mocks__/sourcesData';
-import { sourceTypesData } from '../__mocks__/sourceTypesData';
-import { applicationTypesData } from '../__mocks__/applicationTypesData';
+import sourceTypes from '../__mocks__/sourceTypes';
+import applicationTypes from '../__mocks__/applicationTypes';
 
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
 
@@ -29,8 +29,8 @@ describe('SourcesPage - addSource route', () => {
         meta: { count: sourcesDataGraphQl.length },
       })
     );
-    api.doLoadAppTypes = jest.fn().mockImplementation(() => Promise.resolve(applicationTypesData));
-    typesApi.doLoadSourceTypes = jest.fn().mockImplementation(() => Promise.resolve(sourceTypesData.data));
+    api.doLoadAppTypes = jest.fn().mockImplementation(() => Promise.resolve(applicationTypes));
+    typesApi.doLoadSourceTypes = jest.fn().mockImplementation(() => Promise.resolve(sourceTypes));
 
     store = getStore([], {
       user: { writePermissions: false },

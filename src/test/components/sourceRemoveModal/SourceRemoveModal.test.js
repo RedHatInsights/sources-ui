@@ -8,8 +8,8 @@ import * as actions from '../../../redux/sources/actions';
 import SourceRemoveModal from '../../../components/SourceRemoveModal/SourceRemoveModal';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
-import { applicationTypesData, CATALOG_APP } from '../../__mocks__/applicationTypesData';
-import { sourceTypesData, ANSIBLE_TOWER, SATELLITE, OPENSHIFT } from '../../__mocks__/sourceTypesData';
+import appTypes, { CATALOG_APP } from '../../__mocks__/applicationTypes';
+import sourceTypes, { ANSIBLE_TOWER_TYPE, SATELLITE_TYPE, OPENSHIFT_TYPE } from '../../__mocks__/sourceTypes';
 
 import { routes, replaceRouteId } from '../../../Routes';
 import mockStore from '../../__mocks__/mockStore';
@@ -21,8 +21,8 @@ describe('SourceRemoveModal', () => {
     store = mockStore({
       sources: {
         entities: sourcesDataGraphQl,
-        appTypes: applicationTypesData.data,
-        sourceTypes: sourceTypesData.data,
+        appTypes,
+        sourceTypes,
       },
     });
   });
@@ -94,7 +94,7 @@ describe('SourceRemoveModal', () => {
       );
 
       const source = sourcesDataGraphQl.find((s) => s.id === '406');
-      const application = applicationTypesData.data.find((app) => app.id === source.applications[0].application_type_id);
+      const application = appTypes.find((app) => app.id === source.applications[0].application_type_id);
 
       expect(screen.getByRole('checkbox')).toBeInTheDocument();
       expect([...screen.getAllByRole('button')].map((e) => e.textContent || e.getAttribute('aria-label'))).toEqual([
@@ -120,8 +120,8 @@ describe('SourceRemoveModal', () => {
               ],
             },
           ],
-          appTypes: applicationTypesData.data,
-          sourceTypes: sourceTypesData.data,
+          appTypes,
+          sourceTypes,
         },
       });
 
@@ -134,7 +134,7 @@ describe('SourceRemoveModal', () => {
       );
 
       const source = sourcesDataGraphQl.find((s) => s.id === '406');
-      const application = applicationTypesData.data.find((app) => app.id === source.applications[0].application_type_id);
+      const application = appTypes.find((app) => app.id === source.applications[0].application_type_id);
 
       expect(() => screen.getByText(application.display_name)).toThrow();
     });
@@ -146,7 +146,7 @@ describe('SourceRemoveModal', () => {
             {
               id: '406',
               name: 'Source pokus',
-              source_type_id: ANSIBLE_TOWER.id,
+              source_type_id: ANSIBLE_TOWER_TYPE.id,
               applications: [
                 {
                   id: 'someid',
@@ -155,8 +155,8 @@ describe('SourceRemoveModal', () => {
               ],
             },
           ],
-          appTypes: applicationTypesData.data,
-          sourceTypes: sourceTypesData.data,
+          appTypes,
+          sourceTypes,
         },
       });
 
@@ -180,7 +180,7 @@ describe('SourceRemoveModal', () => {
             {
               id: '406',
               name: 'Source pokus',
-              source_type_id: SATELLITE.id,
+              source_type_id: SATELLITE_TYPE.id,
               applications: [
                 {
                   id: 'someid',
@@ -189,8 +189,8 @@ describe('SourceRemoveModal', () => {
               ],
             },
           ],
-          appTypes: applicationTypesData.data,
-          sourceTypes: sourceTypesData.data,
+          appTypes,
+          sourceTypes,
         },
       });
 
@@ -203,7 +203,9 @@ describe('SourceRemoveModal', () => {
       );
 
       expect(
-        screen.getByText('detaches the following connected application from this source:', { exact: false })
+        screen.getByText('permanently deletes all collected data and detaches the following connected application:', {
+          exact: false,
+        })
       ).toBeInTheDocument();
     });
 
@@ -214,7 +216,7 @@ describe('SourceRemoveModal', () => {
             {
               id: '406',
               name: 'Source pokus',
-              source_type_id: OPENSHIFT.id,
+              source_type_id: OPENSHIFT_TYPE.id,
               applications: [
                 {
                   id: 'someid',
@@ -223,8 +225,8 @@ describe('SourceRemoveModal', () => {
               ],
             },
           ],
-          appTypes: applicationTypesData.data,
-          sourceTypes: sourceTypesData.data,
+          appTypes,
+          sourceTypes,
         },
       });
 

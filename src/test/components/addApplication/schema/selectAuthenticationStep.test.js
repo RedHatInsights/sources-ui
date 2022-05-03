@@ -4,26 +4,25 @@ import selectAuthenticationStep, {
   SelectAuthenticationDescription,
 } from '../../../../components/AddApplication/schema/selectAuthenticationStep';
 
-import { TOPOLOGICALINVENTORY_APP, COSTMANAGEMENT_APP, applicationTypesData } from '../../../__mocks__/applicationTypesData';
-import { AMAZON } from '../../../__mocks__/sourceTypesData';
+import applicationTypes, { TOPOLOGY_INV_APP, COST_MANAGEMENT_APP } from '../../../__mocks__/applicationTypes';
+import { AMAZON_TYPE } from '../../../__mocks__/sourceTypes';
 import { AuthTypeSetter } from '../../../../components/AddApplication/AuthTypeSetter';
 import { IntlProvider } from 'react-intl';
 
 describe('selectAuthenticationStep', () => {
   const intl = { formatMessage: ({ defaultMessage }) => defaultMessage };
-  const app = COSTMANAGEMENT_APP;
-  const applicationTypes = applicationTypesData.data;
+  const app = COST_MANAGEMENT_APP;
 
   it('selectAuthenticationStep generates selection step', () => {
     const source = {
       applications: [
         {
-          application_type_id: TOPOLOGICALINVENTORY_APP.id,
+          application_type_id: TOPOLOGY_INV_APP.id,
           authentications: [{ id: '1' }],
         },
       ],
     };
-    const sourceType = AMAZON;
+    const sourceType = AMAZON_TYPE;
 
     const authenticationValues = [
       { id: '1', username: 'user-123', authtype: 'arn' },
@@ -52,10 +51,10 @@ describe('selectAuthenticationStep', () => {
             hideField: true,
           }),
           expect.objectContaining({
-            name: `${COSTMANAGEMENT_APP.name}-subform`,
+            name: `${COST_MANAGEMENT_APP.name}-subform`,
             fields: [
               expect.objectContaining({
-                name: `${COSTMANAGEMENT_APP.name}-select-authentication-summary`,
+                name: `${COST_MANAGEMENT_APP.name}-select-authentication-summary`,
               }),
               expect.objectContaining({
                 name: 'selectedAuthentication',
@@ -64,7 +63,7 @@ describe('selectAuthenticationStep', () => {
                 options: [
                   expect.objectContaining({ value: 'new-arn' }),
                   {
-                    label: `ARN-${authenticationValues[0].username}-${TOPOLOGICALINVENTORY_APP.display_name}`,
+                    label: `ARN-${authenticationValues[0].username}-${TOPOLOGY_INV_APP.display_name}`,
                     value: authenticationValues[0].id,
                   },
                   {
@@ -83,7 +82,7 @@ describe('selectAuthenticationStep', () => {
     expect(
       authSelection.nextStep({
         values: {
-          application: { application_type_id: COSTMANAGEMENT_APP.id },
+          application: { application_type_id: COST_MANAGEMENT_APP.id },
           authtype: 'arn',
         },
       })
@@ -91,7 +90,7 @@ describe('selectAuthenticationStep', () => {
     expect(
       authSelection.nextStep({
         values: {
-          application: { application_type_id: COSTMANAGEMENT_APP.id },
+          application: { application_type_id: COST_MANAGEMENT_APP.id },
           authentication: { authtype: 'arn' },
         },
       })
@@ -100,7 +99,7 @@ describe('selectAuthenticationStep', () => {
 
   it('selectAuthenticationStep generates selection step - when no auth available', () => {
     const source = {};
-    const sourceType = AMAZON;
+    const sourceType = AMAZON_TYPE;
     const authenticationValues = [];
 
     const authSelection = selectAuthenticationStep({

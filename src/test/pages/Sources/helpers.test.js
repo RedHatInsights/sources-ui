@@ -14,8 +14,8 @@ import {
 } from '../../../pages/Sources/helpers';
 
 import * as actions from '../../../redux/sources/actions';
-import { AMAZON, AMAZON_ID, sourceTypesData } from '../../__mocks__/sourceTypesData';
-import { applicationTypesData } from '../../__mocks__/applicationTypesData';
+import sourceTypes, { AMAZON_TYPE, ANSIBLE_TOWER_TYPE, OPENSHIFT_TYPE } from '../../__mocks__/sourceTypes';
+import applicationTypes, { CATALOG_APP } from '../../__mocks__/applicationTypes';
 import { REDHAT_VENDOR } from '../../../utilities/constants';
 import { AVAILABLE, UNAVAILABLE } from '../../../views/formatters';
 import { replaceRouteId, routes } from '../../../Routes';
@@ -51,14 +51,14 @@ describe('Source page helpers', () => {
     const NAME = 'some name';
     const filterValue = {
       name: NAME,
-      source_type_id: ['3', '5', '333'],
+      source_type_id: ['3', '1', '333'],
       applications: ['1', '667'],
     };
 
     it('returns chip for name', () => {
       const key = 'name';
 
-      expect(chipsFormatters('name', filterValue, sourceTypesData.data)()).toEqual({
+      expect(chipsFormatters('name', filterValue, sourceTypes)()).toEqual({
         key,
         name: NAME,
       });
@@ -67,17 +67,17 @@ describe('Source page helpers', () => {
     it('returns chips for source_types', () => {
       const key = 'source_type_id';
 
-      expect(chipsFormatters(key, filterValue, sourceTypesData.data)()).toEqual({
+      expect(chipsFormatters(key, filterValue, sourceTypes)()).toEqual({
         category: 'Source Type',
         key,
         chips: [
           {
-            name: sourceTypesData.data.find(({ id }) => id === '3').product_name,
+            name: ANSIBLE_TOWER_TYPE.product_name,
             value: '3',
           },
           {
-            name: sourceTypesData.data.find(({ id }) => id === '5').product_name,
-            value: '5',
+            name: OPENSHIFT_TYPE.product_name,
+            value: '1',
           },
           {
             name: '333',
@@ -90,12 +90,12 @@ describe('Source page helpers', () => {
     it('returns chips for applications', () => {
       const key = 'applications';
 
-      expect(chipsFormatters(key, filterValue, sourceTypesData.data, applicationTypesData.data)()).toEqual({
+      expect(chipsFormatters(key, filterValue, sourceTypes, applicationTypes)()).toEqual({
         category: 'Application',
         key,
         chips: [
           {
-            name: applicationTypesData.data.find(({ id }) => id === '1').display_name,
+            name: CATALOG_APP.display_name,
             value: '1',
           },
           {
@@ -114,7 +114,7 @@ describe('Source page helpers', () => {
         availability_status: [UNAVAILABLE],
       };
 
-      expect(chipsFormatters(key, filterValue, sourceTypesData.data, applicationTypesData.data, intl)()).toEqual({
+      expect(chipsFormatters(key, filterValue, sourceTypes, applicationTypes, intl)()).toEqual({
         category: 'Status',
         chips: [{ name: 'Unavailable', value: 'unavailable' }],
         key: 'availability_status',
@@ -129,7 +129,7 @@ describe('Source page helpers', () => {
         availability_status: [AVAILABLE],
       };
 
-      expect(chipsFormatters(key, filterValue, sourceTypesData.data, applicationTypesData.data, intl)()).toEqual({
+      expect(chipsFormatters(key, filterValue, sourceTypes, applicationTypes, intl)()).toEqual({
         category: 'Status',
         chips: [{ name: 'Available', value: 'available' }],
         key: 'availability_status',
@@ -139,7 +139,7 @@ describe('Source page helpers', () => {
     it('returns chips for unknown', () => {
       const key = 'unknown';
 
-      expect(chipsFormatters(key, filterValue, sourceTypesData.data)()).toEqual({
+      expect(chipsFormatters(key, filterValue, sourceTypes)()).toEqual({
         name: key,
       });
     });
@@ -225,10 +225,10 @@ describe('Source page helpers', () => {
     };
 
     it('prepares chips', () => {
-      expect(prepareChips(filterValue, sourceTypesData.data, applicationTypesData.data)).toEqual([
-        chipsFormatters('name', filterValue, sourceTypesData.data)(),
-        chipsFormatters('source_type_id', filterValue, sourceTypesData.data)(),
-        chipsFormatters('applications', filterValue, sourceTypesData.data, applicationTypesData.data)(),
+      expect(prepareChips(filterValue, sourceTypes, applicationTypes)).toEqual([
+        chipsFormatters('name', filterValue, sourceTypes)(),
+        chipsFormatters('source_type_id', filterValue, sourceTypes)(),
+        chipsFormatters('applications', filterValue, sourceTypes, applicationTypes)(),
       ]);
     });
   });
@@ -349,12 +349,12 @@ describe('Source page helpers', () => {
       state = {
         isSubmitted: true,
         createdSource: {
-          source_type_id: AMAZON_ID,
+          source_type_id: AMAZON_TYPE.id,
           id: '1234',
           name: 'some-name',
           applications: [{ availability_status: UNAVAILABLE, availability_status_error: 'Some app error' }],
         },
-        sourceTypes: [AMAZON],
+        sourceTypes: [AMAZON_TYPE],
       };
 
       checkSubmit(state, dispatch, push, intl);
@@ -381,13 +381,13 @@ describe('Source page helpers', () => {
       state = {
         isSubmitted: true,
         createdSource: {
-          source_type_id: AMAZON_ID,
+          source_type_id: AMAZON_TYPE.id,
           id: '1234',
           name: 'some-name',
           applications: [],
           endpoint: [{ availability_status: UNAVAILABLE, availability_status_error: 'Some endpoint error' }],
         },
-        sourceTypes: [AMAZON],
+        sourceTypes: [AMAZON_TYPE],
       };
 
       checkSubmit(state, dispatch, push, intl);
@@ -405,13 +405,13 @@ describe('Source page helpers', () => {
       state = {
         isSubmitted: true,
         createdSource: {
-          source_type_id: AMAZON_ID,
+          source_type_id: AMAZON_TYPE.id,
           id: '1234',
           name: 'some-name',
           applications: [],
           endpoint: [{ availability_status: UNAVAILABLE }],
         },
-        sourceTypes: [AMAZON],
+        sourceTypes: [AMAZON_TYPE],
       };
 
       checkSubmit(state, dispatch, push, intl);
@@ -429,11 +429,11 @@ describe('Source page helpers', () => {
       state = {
         isSubmitted: true,
         createdSource: {
-          source_type_id: AMAZON_ID,
+          source_type_id: AMAZON_TYPE.id,
           name: 'some-name',
           applications: [{ availability_status: null }],
         },
-        sourceTypes: [AMAZON],
+        sourceTypes: [AMAZON_TYPE],
       };
 
       checkSubmit(state, dispatch, push, intl);
@@ -452,12 +452,12 @@ describe('Source page helpers', () => {
       state = {
         isSubmitted: true,
         createdSource: {
-          source_type_id: AMAZON_ID,
+          source_type_id: AMAZON_TYPE.id,
           id: '1234',
           name: 'some-name',
           applications: [{ availability_status: AVAILABLE }],
         },
-        sourceTypes: [AMAZON],
+        sourceTypes: [AMAZON_TYPE],
       };
 
       checkSubmit(state, dispatch, push, intl);

@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import componentWrapperIntl from '../../../utilities/testsHelpers';
 import mockStore from '../../__mocks__/mockStore';
 import RedHatEmptyState from '../../../components/RedHatTiles/RedHatEmptyState';
-import sourceTypes from '../../__mocks__/sourceTypesData';
+import sourceTypes from '../../__mocks__/sourceTypes';
 import { REDHAT_VENDOR } from '../../../utilities/constants';
 
 describe('RedhatEmptyState', () => {
@@ -21,7 +21,7 @@ describe('RedhatEmptyState', () => {
 
     store = mockStore({
       user: { writePermissions: true },
-      sources: { sourceTypes: sourceTypes.data, activeCategory: REDHAT_VENDOR },
+      sources: { sourceTypes, activeCategory: REDHAT_VENDOR },
     });
   });
 

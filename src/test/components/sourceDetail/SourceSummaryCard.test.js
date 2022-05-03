@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import sourceTypesData, { AMAZON_ID } from '../../__mocks__/sourceTypesData';
+import sourceTypes, { AMAZON_TYPE } from '../../__mocks__/sourceTypes';
 import SourceSummaryCard from '../../../components/SourceDetail/SourceSummaryCard';
 import { Route } from 'react-router-dom';
 import { replaceRouteId, routes } from '../../../Routes';
@@ -30,12 +30,12 @@ describe('SourceSummaryCard', () => {
         entities: [
           {
             id: sourceId,
-            source_type_id: AMAZON_ID,
+            source_type_id: AMAZON_TYPE.id,
             created_at: '2020-11-27T15:49:59.640Z',
             updated_at: '2020-11-27T15:49:59.640Z',
           },
         ],
-        sourceTypes: sourceTypesData.data,
+        sourceTypes,
       },
     });
 
@@ -70,13 +70,13 @@ describe('SourceSummaryCard', () => {
         entities: [
           {
             id: sourceId,
-            source_type_id: AMAZON_ID,
+            source_type_id: AMAZON_TYPE.id,
             created_at: '2020-11-27T15:49:59.640Z',
             updated_at: '2020-11-27T15:49:59.640Z',
             last_checked_at: '2020-11-27T15:49:59.640Z',
           },
         ],
-        sourceTypes: sourceTypesData.data,
+        sourceTypes,
       },
     });
 
@@ -106,13 +106,13 @@ describe('SourceSummaryCard', () => {
         entities: [
           {
             id: sourceId,
-            source_type_id: AMAZON_ID,
+            source_type_id: AMAZON_TYPE.id,
             created_at: '2020-11-27T15:49:59.640Z',
             updated_at: '2020-11-27T15:49:59.640Z',
             app_creation_workflow: 'account_authorization',
           },
         ],
-        sourceTypes: sourceTypesData.data,
+        sourceTypes,
       },
     });
 
@@ -143,13 +143,13 @@ describe('SourceSummaryCard', () => {
         entities: [
           {
             id: sourceId,
-            source_type_id: AMAZON_ID,
+            source_type_id: AMAZON_TYPE.id,
             created_at: '2020-11-27T15:49:59.640Z',
             updated_at: '2020-11-27T15:49:59.640Z',
             app_creation_workflow: 'account_authorization',
           },
         ],
-        sourceTypes: sourceTypesData.data,
+        sourceTypes,
       },
     });
 
@@ -176,13 +176,13 @@ describe('SourceSummaryCard', () => {
         entities: [
           {
             id: sourceId,
-            source_type_id: AMAZON_ID,
+            source_type_id: AMAZON_TYPE.id,
             created_at: '2020-11-27T15:49:59.640Z',
             updated_at: '2020-11-27T15:49:59.640Z',
             app_creation_workflow: 'account-authorization',
           },
         ],
-        sourceTypes: sourceTypesData.data,
+        sourceTypes,
       },
     });
 
@@ -213,7 +213,7 @@ describe('SourceSummaryCard', () => {
         entities: [
           {
             id: sourceId,
-            source_type_id: AMAZON_ID,
+            source_type_id: AMAZON_TYPE.id,
             created_at: '2020-11-27T15:49:59.640Z',
             updated_at: '2020-11-27T15:49:59.640Z',
             app_creation_workflow: 'account-authorization',
@@ -223,7 +223,7 @@ describe('SourceSummaryCard', () => {
             ],
           },
         ],
-        sourceTypes: sourceTypesData.data,
+        sourceTypes,
       },
     });
 

@@ -9,8 +9,8 @@ import applicationTypes, {
   COST_MANAGEMENT_APP,
   SUB_WATCH_APP,
   TOPOLOGY_INV_APP,
-} from '../../addSourceWizard/helpers/applicationTypes';
-import sourceTypes from '../../addSourceWizard/helpers/sourceTypes';
+} from '../../addSourceWizard/../__mocks__/applicationTypes';
+import sourceTypes from '../../addSourceWizard/../__mocks__/sourceTypes';
 
 import RendererContext from '@data-driven-forms/react-form-renderer/renderer-context';
 import render from '../../addSourceWizard/__mocks__/render';
@@ -18,7 +18,6 @@ import render from '../../addSourceWizard/__mocks__/render';
 import Summary, { createItem } from '../../../components/FormComponents/SourceWizardSummary';
 import { NO_APPLICATION_VALUE } from '../../../components/addSourceWizard/stringConstants';
 import emptyAuthType from '../../../components/addSourceWizard/emptyAuthType';
-import { ibmType } from '../../__mocks__/sourceTypesData';
 
 describe('SourceWizardSummary component', () => {
   describe('should render correctly', () => {
@@ -67,7 +66,7 @@ describe('SourceWizardSummary component', () => {
       });
 
       initialProps = {
-        sourceTypes: [...sourceTypes, ibmType],
+        sourceTypes,
         applicationTypes,
       };
     });
@@ -456,6 +455,8 @@ describe('SourceWizardSummary component', () => {
         ['Hostname', 'neznam.cz'],
         ['Verify SSL', 'Enabled'],
         ['Certificate authority', 'authority'],
+        ['Use Platform Receptor and PKI (?)', '-'],
+        ['Receptor ID', '-'],
       ]);
     });
 
