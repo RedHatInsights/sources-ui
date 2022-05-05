@@ -12,7 +12,6 @@ import {
   shouldSkipSelection,
   getAdditionalStepKeys,
   createAuthTypeSelection,
-  createSpecificAuthTypeSelection,
   shouldUseAppAuth,
 } from '../../../components/addSourceWizard/schemaBuilder';
 import hardcodedSchemas from '../../../components/addSourceWizard/hardcodedSchemas';
@@ -315,7 +314,7 @@ describe('schema builder', () => {
       });
     });
 
-    describe('createSpecificAuthTypeSelection', () => {
+    describe('createAuthTypeSelection', () => {
       it('generate single selection', () => {
         const fields = AZURE_TYPE.schema.authentication[0].fields.filter(({ stepKey }) => !stepKey);
         const expectedName = `${AZURE_TYPE.name}-${TOPOLOGY_INV_APP.id}`;
@@ -327,15 +326,13 @@ describe('schema builder', () => {
           nextStep: 'summary',
         });
 
-        expect(createSpecificAuthTypeSelection(AZURE_TYPE, TOPOLOGY_INV_APP, APPEND_ENDPOINT_FIELDS)).toEqual(expectedSchema);
+        expect(createAuthTypeSelection(AZURE_TYPE, TOPOLOGY_INV_APP, APPEND_ENDPOINT_FIELDS)).toEqual(expectedSchema);
       });
 
       it('generate single selection - do not append endpoint fields for azure/cost', () => {
         const ENDPOINT_FIELDS = [{ name: 'endpoint' }];
 
-        expect(
-          createSpecificAuthTypeSelection(AZURE_TYPE, COST_MANAGEMENT_APP, ENDPOINT_FIELDS).fields.map(({ name }) => name)
-        ).toEqual([
+        expect(createAuthTypeSelection(AZURE_TYPE, COST_MANAGEMENT_APP, ENDPOINT_FIELDS).fields.map(({ name }) => name)).toEqual([
           'authentication.authtype',
           'azure-storage-account-description',
           'all-required',
@@ -356,13 +353,7 @@ describe('schema builder', () => {
         });
 
         expect(
-          createSpecificAuthTypeSelection(
-            AZURE_TYPE,
-            TOPOLOGY_INV_APP,
-            EMPTY_APPEND_ENDPOINT,
-            DISABLE_AUTH_TYPE,
-            HAS_ENDPOINT_STEP
-          )
+          createAuthTypeSelection(AZURE_TYPE, TOPOLOGY_INV_APP, EMPTY_APPEND_ENDPOINT, DISABLE_AUTH_TYPE, HAS_ENDPOINT_STEP)
         ).toEqual(expectedSchema);
       });
 
@@ -380,7 +371,7 @@ describe('schema builder', () => {
           nextStep: firstAdditionalStep.nextStep,
         });
 
-        expect(createSpecificAuthTypeSelection(AMAZON_TYPE, COST_MANAGEMENT_APP, APPEND_ENDPOINT_FIELDS)).toEqual(expectedSchema);
+        expect(createAuthTypeSelection(AMAZON_TYPE, COST_MANAGEMENT_APP, APPEND_ENDPOINT_FIELDS)).toEqual(expectedSchema);
       });
     });
   });
