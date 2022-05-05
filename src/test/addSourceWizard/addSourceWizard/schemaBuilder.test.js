@@ -11,7 +11,7 @@ import {
   getAdditionalSteps,
   shouldSkipSelection,
   getAdditionalStepKeys,
-  createGenericAuthTypeSelection,
+  createAuthTypeSelection,
   createSpecificAuthTypeSelection,
   shouldUseAppAuth,
 } from '../../../components/addSourceWizard/schemaBuilder';
@@ -259,8 +259,9 @@ describe('schema builder', () => {
     const EMPTY_APPEND_ENDPOINT = [];
     const HAS_ENDPOINT_STEP = true;
     const DISABLE_AUTH_TYPE = undefined;
+    const NO_APP = undefined;
 
-    describe('createGenericAuthTypeSelection', () => {
+    describe('createAuthTypeSelection - generic', () => {
       it('generate single selection', () => {
         const fields = OPENSHIFT_TYPE.schema.authentication[0].fields
           .filter(({ stepKey }) => !stepKey)
@@ -271,23 +272,23 @@ describe('schema builder', () => {
         expectedSchema = expect.objectContaining({
           fields: expect.arrayContaining(fields),
           title: expect.any(Object),
-          name: OPENSHIFT_TYPE.name,
+          name: OPENSHIFT_TYPE.name + '-generic',
           nextStep: 'summary',
         });
 
-        expect(createGenericAuthTypeSelection(OPENSHIFT_TYPE, APPEND_ENDPOINT_FIELDS)).toEqual(expectedSchema);
+        expect(createAuthTypeSelection(OPENSHIFT_TYPE, NO_APP, APPEND_ENDPOINT_FIELDS)).toEqual(expectedSchema);
       });
 
       it('generate single selection with endpoint', () => {
         expectedSchema = expect.objectContaining({
           fields: expect.any(Array),
           title: expect.any(Object),
-          name: OPENSHIFT_TYPE.name,
+          name: OPENSHIFT_TYPE.name + '-generic',
           nextStep: `${OPENSHIFT_TYPE.name}-endpoint`,
         });
 
         expect(
-          createGenericAuthTypeSelection(OPENSHIFT_TYPE, EMPTY_APPEND_ENDPOINT, DISABLE_AUTH_TYPE, HAS_ENDPOINT_STEP)
+          createAuthTypeSelection(OPENSHIFT_TYPE, NO_APP, EMPTY_APPEND_ENDPOINT, DISABLE_AUTH_TYPE, HAS_ENDPOINT_STEP)
         ).toEqual(expectedSchema);
       });
 
@@ -299,7 +300,7 @@ describe('schema builder', () => {
         expectedSchema = expect.objectContaining({
           fields: expect.arrayContaining([arnSelect, secretKey, arnCloudMeter]),
           title: expect.any(Object),
-          name: AMAZON_TYPE.name,
+          name: AMAZON_TYPE.name + '-generic',
           nextStep: {
             when: expect.any(String),
             stepMapper: {
@@ -310,7 +311,7 @@ describe('schema builder', () => {
           },
         });
 
-        expect(createGenericAuthTypeSelection(AMAZON_TYPE, APPEND_ENDPOINT_FIELDS)).toEqual(expectedSchema);
+        expect(createAuthTypeSelection(AMAZON_TYPE, NO_APP, APPEND_ENDPOINT_FIELDS)).toEqual(expectedSchema);
       });
     });
 
