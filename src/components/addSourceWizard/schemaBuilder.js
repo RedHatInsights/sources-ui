@@ -209,6 +209,166 @@ export const createGenericAuthTypeSelection = (type, endpointFields, disableAuth
   }
 };
 
+export const createAuthTypeSelection = (
+  type,
+  appType = { name: 'generic', id: 'generic' },
+  endpointFields,
+  disableAuthType,
+  hasEndpointStep
+) => {
+  const isGeneric = appType.name === 'generic';
+
+  const auths = type.schema.authentication;
+  const supportedAuthTypes = isGeneric
+    ? auths.map(({ type }) => type)
+    : appType.supported_authentication_types[type.name] || [emptyAuthType.type];
+
+  const hasMultipleAuthTypes = supportedAuthTypes.length > 1;
+
+  const stepMapper = {};
+
+  let fields = [...endpointFields];
+
+  if (hasMultipleAuthTypes) {
+    fields = [];
+    auths
+      .filter(({ type }) => supportedAuthTypes.includes(type))
+      .forEach((auth) => {
+        const hasHardcodedSchema = hardcodedSchema(type.name, auth.type, appType.name);
+        const hardcodedAppName = hasHardcodedSchema ? appType.name : 'generic';
+
+        const skipEndpoint = shouldSkipEndpoint(type.name, auth.type, hardcodedAppName);
+        const customSteps = hasCustomSteps(type.name, auth.type, hardcodedAppName);
+        const onlyHiddenFields = getOnlyHiddenFields(type.name, auth.type, hardcodedAppName);
+        const additionalIncludesStepKeys = getAdditionalStepKeys(type.name, auth.type, hardcodedAppName);
+        const authFields = onlyHiddenFields ? auth.fields.filter(({ hideField }) => hideField) : auth.fields;
+
+        let nextStep;
+
+        if (getAdditionalSteps(type.name, auth.type, hardcodedAppName).length > 0) {
+          nextStep = `${type.name}-${auth.type}-${hardcodedAppName}-additional-step`;
+        } else if (endpointFields.length === 0 && !skipEndpoint && !customSteps && hasEndpointStep) {
+          nextStep = `${type.name}-endpoint`;
+        } else {
+          nextStep = 'summary';
+        }
+
+        fields.push({
+          component: 'auth-select',
+          name: 'auth_select',
+          label: auth.name,
+          authName: auth.type,
+          validate: [
+            {
+              type: validatorTypes.REQUIRED,
+            },
+          ],
+          supportedAuthTypes,
+          disableAuthType,
+        });
+        fields.push({
+          component: componentTypes.SUB_FORM,
+          name: `${auth.type}-subform`,
+          className: 'pf-u-pl-md',
+          fields: [
+            ...(!shouldUseAppAuth(type.name, auth.type, hardcodedAppName) ? endpointFields : []),
+            ...getAdditionalAuthFields(type.name, auth.type, hardcodedAppName),
+            ...injectAuthFieldsInfo(
+              getNoStepsFields(authFields, additionalIncludesStepKeys),
+              type.name,
+              auth.type,
+              hardcodedAppName
+            ),
+          ],
+          condition: {
+            when: 'auth_select',
+            is: auth.type,
+          },
+          hideField: onlyHiddenFields,
+        });
+        stepMapper[auth.type] = nextStep;
+      });
+
+    return {
+      name: `${type.name}-${appType.id}`,
+      title: <FormattedMessage id="wizard.credentials" defaultMessage="Credentials" />,
+      fields,
+      nextStep: {
+        when: 'auth_select',
+        stepMapper,
+      },
+    };
+  } else {
+    const auth = isGeneric
+      ? auths[0]
+      : [emptyAuthType, ...auths].find(({ type: authType }) => supportedAuthTypes.includes(authType));
+
+    const hasHardcodedSchema = hardcodedSchema(type.name, auth.type, appType.name);
+    const hardcodedAppName = hasHardcodedSchema ? appType.name : 'generic';
+
+    const additionalStepName = `${type.name}-${auth.type}-${hardcodedAppName}-additional-step`;
+
+    const skipEndpoint = shouldSkipEndpoint(type.name, auth.type, hardcodedAppName);
+    const customSteps = hasCustomSteps(type.name, auth.type, hardcodedAppName);
+    const hasCustomStep = shouldSkipSelection(type.name, auth.type, hardcodedAppName);
+    const additionalIncludesStepKeys = getAdditionalStepKeys(type.name, auth.type, hardcodedAppName);
+
+    if (shouldUseAppAuth(type.name, auth.type, hardcodedAppName)) {
+      fields = [];
+    }
+
+    let nextStep;
+
+    if (getAdditionalSteps(type.name, auth.type, hardcodedAppName).length > 0) {
+      nextStep = additionalStepName;
+    } else if (endpointFields.length === 0 && !skipEndpoint && hasEndpointStep) {
+      nextStep = `${type.name}-endpoint`;
+    } else {
+      nextStep = 'summary';
+    }
+
+    let stepProps = {};
+
+    if (hasCustomStep) {
+      const firstAdditonalStep = getAdditionalSteps(type.name, auth.type, hardcodedAppName).find(({ name }) => !name);
+      const additionalFields = getAdditionalStepFields(auth.fields, additionalStepName);
+
+      if (firstAdditonalStep.nextStep) {
+        nextStep = firstAdditonalStep.nextStep;
+      } else if (endpointFields.length === 0 && !skipEndpoint && !customSteps && hasEndpointStep) {
+        nextStep = `${type.name}-endpoint`;
+      } else {
+        nextStep = 'summary';
+      }
+
+      stepProps = {
+        ...firstAdditonalStep,
+        fields: [
+          ...fields,
+          ...injectAuthFieldsInfo([...firstAdditonalStep.fields, ...additionalFields], type.name, auth.type, hardcodedAppName),
+        ],
+      };
+    }
+
+    return {
+      name: `${type.name}-${appType.id}`,
+      title: <FormattedMessage id="wizard.credentials" defaultMessage="Credentials" />,
+      fields: [
+        ...fields,
+        ...getAdditionalAuthFields(type.name, auth.type, hardcodedAppName),
+        ...injectAuthFieldsInfo(
+          getNoStepsFields(auth.fields, additionalIncludesStepKeys),
+          type.name,
+          auth.type,
+          hardcodedAppName
+        ),
+      ],
+      nextStep,
+      ...stepProps,
+    };
+  }
+};
+
 export const createSpecificAuthTypeSelection = (type, appType, endpointFields, disableAuthType, hasEndpointStep) => {
   const auths = type.schema.authentication;
   const supportedAuthTypes = appType.supported_authentication_types[type.name] || [emptyAuthType.type];
@@ -353,11 +513,11 @@ export const schemaBuilder = (sourceTypes, appTypes, disableAuthType) => {
     const appendEndpoint = type.schema.endpoint?.hidden ? type.schema.endpoint.fields : [];
     const hasEndpointStep = type.schema.endpoint && appendEndpoint.length === 0;
 
-    schema.push(createGenericAuthTypeSelection(type, appendEndpoint, disableAuthType, hasEndpointStep));
+    schema.push(createAuthTypeSelection(type, undefined, appendEndpoint, disableAuthType, hasEndpointStep));
 
     appTypes.forEach((appType) => {
       if (appType.supported_source_types.includes(type.name)) {
-        schema.push(createSpecificAuthTypeSelection(type, appType, appendEndpoint, disableAuthType, hasEndpointStep));
+        schema.push(createAuthTypeSelection(type, appType, appendEndpoint, disableAuthType, hasEndpointStep));
       }
     });
 

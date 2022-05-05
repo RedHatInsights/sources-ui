@@ -395,12 +395,12 @@ describe('schema builder', () => {
       expect(schema).toHaveLength(56);
 
       expect(schema.map(({ name }) => name)).toEqual([
-        'openshift',
+        'openshift-generic',
         'openshift-2',
         'openshift-3',
         'openshift-token-/insights/platform/cost-management-additional-step',
         'openshift-endpoint',
-        'amazon',
+        'amazon-generic',
         'amazon-2',
         'amazon-3',
         'amazon-5',
@@ -413,7 +413,7 @@ describe('schema builder', () => {
         'amazon-cloud-meter-arn-/insights/platform/cloud-meter-additional-step',
         'subs-iam-role',
         'subs-arn',
-        'ansible-tower',
+        'ansible-tower-generic',
         'ansible-tower-1',
         'ansible-tower-3',
         'ansible-tower-username_password-generic-additional-step',
@@ -421,7 +421,7 @@ describe('schema builder', () => {
         'ansible-tower-username_password-/insights/platform/catalog-additional-step',
         'catalog-ansible-tower',
         'ansible-tower-endpoint',
-        'azure',
+        'azure-generic',
         'azure-2',
         'azure-3',
         'azure-5',
@@ -431,7 +431,7 @@ describe('schema builder', () => {
         'export-schedule',
         'azure-empty-/insights/platform/cloud-meter-additional-step',
         'cost-azure-playbook',
-        'google',
+        'google-generic',
         'google-2',
         'google-5',
         'google-project_id_service_account_json-/insights/platform/cost-management-additional-step',
@@ -441,14 +441,14 @@ describe('schema builder', () => {
         'cost-gcp-billing-export',
         'google-empty-/insights/platform/cloud-meter-additional-step',
         'cost-google-playbook',
-        'ibm',
+        'ibm-generic',
         'ibm-2',
         'ibm-api_token_account_id-/insights/platform/cost-management-additional-step',
         'ibm-cm-account-id',
         'ibm-cm-service-id',
         'ibm-cm-configure-access',
         'ibm-cm-api-key',
-        'satellite',
+        'satellite-generic',
         'satellite-receptor_node-generic-additional-step',
         'satellite-endpoint',
       ]);
@@ -468,7 +468,7 @@ describe('schema builder', () => {
       const schema = schemaBuilder(sourceType, applicationTypes);
 
       expect(schema.map(({ name }) => name)).toEqual([
-        'ansible-tower',
+        'ansible-tower-generic',
         'ansible-tower-1',
         'ansible-tower-3',
         'ansible-tower-username_password-generic-additional-step',
