@@ -115,7 +115,7 @@ export const nextStep =
     }
 
     const appId = application && application.application_type_id !== NO_APPLICATION_VALUE && application.application_type_id;
-    const resultedStep = appId ? `${source_type}-${appId}` : source_type;
+    const resultedStep = appId ? `${source_type}-${appId}` : `${source_type}-generic`;
 
     return resultedStep;
   };

@@ -35,7 +35,7 @@ describe('Add source schema', () => {
     };
 
     it('returns nextstep without selected app', () => {
-      expect(nextStep()(formState)).toEqual(OPENSHIFT_TYPE);
+      expect(nextStep()(formState)).toEqual(`${OPENSHIFT_TYPE}-generic`);
     });
 
     it('returns nextstep with selected app', () => {
@@ -59,7 +59,7 @@ describe('Add source schema', () => {
         },
       };
 
-      expect(nextStep()(formState)).toEqual(OPENSHIFT_TYPE);
+      expect(nextStep()(formState)).toEqual(`${OPENSHIFT_TYPE}-generic`);
     });
   });
 

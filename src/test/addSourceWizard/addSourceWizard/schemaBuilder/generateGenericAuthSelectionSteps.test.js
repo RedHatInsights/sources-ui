@@ -1,4 +1,4 @@
-import { createGenericAuthTypeSelection } from '../../../../components/addSourceWizard/schemaBuilder';
+import { createAuthTypeSelection } from '../../../../components/addSourceWizard/schemaBuilder';
 
 jest.mock('../../../../components/addSourceWizard/hardcodedSchemas', () => ({
   openshiftAdditionalStep: {
@@ -27,6 +27,7 @@ describe('generate auth selection pages', () => {
   const EMPTY_APPEND_ENDPOINT = [];
   const NOT_EDITING = false;
   const HAS_ENDPOINT_STEP = true;
+  const NO_APP = undefined;
 
   const ONE_SINGLE_SELECTION_TYPE = {
     id: '1',
@@ -101,7 +102,7 @@ describe('generate auth selection pages', () => {
     },
   };
 
-  describe('createGenericAuthTypeSelection', () => {
+  describe('createAuthTypeSelection - generic', () => {
     it('generate single selection', () => {
       const ENDPOINT_FIELDS = [{ name: 'endpoint' }];
 
@@ -113,11 +114,11 @@ describe('generate auth selection pages', () => {
       expectedSchema = expect.objectContaining({
         fields: expect.arrayContaining(fields),
         title: expect.any(Object),
-        name: ONE_SINGLE_SELECTION_TYPE.name,
+        name: ONE_SINGLE_SELECTION_TYPE.name + '-generic',
         nextStep: 'summary',
       });
 
-      expect(createGenericAuthTypeSelection(ONE_SINGLE_SELECTION_TYPE, ENDPOINT_FIELDS, NOT_EDITING, HAS_ENDPOINT_STEP)).toEqual(
+      expect(createAuthTypeSelection(ONE_SINGLE_SELECTION_TYPE, NO_APP, ENDPOINT_FIELDS, NOT_EDITING, HAS_ENDPOINT_STEP)).toEqual(
         expectedSchema
       );
     });
@@ -135,11 +136,11 @@ describe('generate auth selection pages', () => {
       expectedSchema = expect.objectContaining({
         fields: expect.arrayContaining(fields),
         title: expect.any(Object),
-        name: TYPE.name,
+        name: TYPE.name + '-generic',
         nextStep: 'summary',
       });
 
-      expect(createGenericAuthTypeSelection(TYPE, ENDPOINT_FIELDS, NOT_EDITING, HAS_ENDPOINT_STEP)).toEqual(expectedSchema);
+      expect(createAuthTypeSelection(TYPE, NO_APP, ENDPOINT_FIELDS, NOT_EDITING, HAS_ENDPOINT_STEP)).toEqual(expectedSchema);
     });
 
     it('generate single selection with additional steps', () => {
@@ -155,13 +156,14 @@ describe('generate auth selection pages', () => {
       expectedSchema = expect.objectContaining({
         fields: expect.arrayContaining(fields),
         title: expect.any(Object),
-        name: ONE_SINGLE_SELECTION_TYPE_ADD_STEPS.name,
+        name: ONE_SINGLE_SELECTION_TYPE_ADD_STEPS.name + '-generic',
         nextStep: EXPECTED_NEXTSTEP,
       });
 
       expect(
-        createGenericAuthTypeSelection(
+        createAuthTypeSelection(
           ONE_SINGLE_SELECTION_TYPE_ADD_STEPS,
+          NO_APP,
           APPEND_ENDPOINT_FIELDS,
           NOT_EDITING,
           HAS_ENDPOINT_STEP
@@ -173,12 +175,12 @@ describe('generate auth selection pages', () => {
       expectedSchema = expect.objectContaining({
         fields: expect.any(Array),
         title: expect.any(Object),
-        name: ONE_SINGLE_SELECTION_TYPE.name,
+        name: ONE_SINGLE_SELECTION_TYPE.name + '-generic',
         nextStep: `${ONE_SINGLE_SELECTION_TYPE.name}-endpoint`,
       });
 
       expect(
-        createGenericAuthTypeSelection(ONE_SINGLE_SELECTION_TYPE, EMPTY_APPEND_ENDPOINT, NOT_EDITING, HAS_ENDPOINT_STEP)
+        createAuthTypeSelection(ONE_SINGLE_SELECTION_TYPE, NO_APP, EMPTY_APPEND_ENDPOINT, NOT_EDITING, HAS_ENDPOINT_STEP)
       ).toEqual(expectedSchema);
     });
 
@@ -193,7 +195,7 @@ describe('generate auth selection pages', () => {
         expectedSchema = expect.objectContaining({
           fields: expect.arrayContaining([firstAuth, secondAuth]),
           title: expect.any(Object),
-          name: MULTIPLE_SELECTION_TYPE.name,
+          name: MULTIPLE_SELECTION_TYPE.name + '-generic',
           nextStep: {
             when: expect.any(String),
             stepMapper: {
@@ -204,7 +206,7 @@ describe('generate auth selection pages', () => {
         });
 
         expect(
-          createGenericAuthTypeSelection(MULTIPLE_SELECTION_TYPE, APPEND_ENDPOINT_FIELDS, NOT_EDITING, HAS_ENDPOINT_STEP)
+          createAuthTypeSelection(MULTIPLE_SELECTION_TYPE, NO_APP, APPEND_ENDPOINT_FIELDS, NOT_EDITING, HAS_ENDPOINT_STEP)
         ).toEqual(expectedSchema);
       });
 
@@ -214,7 +216,7 @@ describe('generate auth selection pages', () => {
         expectedSchema = expect.objectContaining({
           fields: expect.arrayContaining([firstAuth, secondAuth]),
           title: expect.any(Object),
-          name: MULTIPLE_SELECTION_TYPE.name,
+          name: MULTIPLE_SELECTION_TYPE.name + '-generic',
           nextStep: {
             when: expect.any(String),
             stepMapper: {
@@ -225,7 +227,7 @@ describe('generate auth selection pages', () => {
         });
 
         expect(
-          createGenericAuthTypeSelection(MULTIPLE_SELECTION_TYPE, EMPTY_APPEND_ENDPOINT, NOT_EDITING, HAS_ENDPOINT_STEP)
+          createAuthTypeSelection(MULTIPLE_SELECTION_TYPE, NO_APP, EMPTY_APPEND_ENDPOINT, NOT_EDITING, HAS_ENDPOINT_STEP)
         ).toEqual(expectedSchema);
       });
 
@@ -238,7 +240,7 @@ describe('generate auth selection pages', () => {
         expectedSchema = expect.objectContaining({
           fields: expect.arrayContaining([firstAuth, secondAuth]),
           title: expect.any(Object),
-          name: MULTIPLE_SELECTION_TYPE_USE_AUTH_APP.name,
+          name: MULTIPLE_SELECTION_TYPE_USE_AUTH_APP.name + '-generic',
           nextStep: {
             when: expect.any(String),
             stepMapper: {
@@ -249,8 +251,9 @@ describe('generate auth selection pages', () => {
         });
 
         expect(
-          createGenericAuthTypeSelection(
+          createAuthTypeSelection(
             MULTIPLE_SELECTION_TYPE_USE_AUTH_APP,
+            NO_APP,
             APPEND_ENDPOINT_FIELDS,
             NOT_EDITING,
             HAS_ENDPOINT_STEP
