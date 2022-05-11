@@ -1,16 +1,24 @@
 import React from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { act } from 'react-dom/test-utils';
-
-import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
+import { Route } from 'react-router-dom';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import mockStore from '../../__mocks__/mockStore';
 import ApplicationKebab from '../../../components/SourceDetail/ApplicationKebab';
 
+jest.mock('@patternfly/react-core/dist/js/components/Tooltip', () => {
+  const lib = jest.requireActual('@patternfly/react-core/dist/js/components/Tooltip');
+  const { Tooltip } = jest.requireActual('../../__mocks__/@patternfly/react-core');
+
+  return {
+    ...lib,
+    Tooltip,
+  };
+});
+
 describe('ApplicationKebab', () => {
-  let wrapper;
   let store;
 
   let removeApp;
@@ -40,7 +48,7 @@ describe('ApplicationKebab', () => {
       user: { writePermissions: false },
     });
 
-    wrapper = mount(
+    render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationKebab {...args} {...initialProps} />} />,
         store,
@@ -48,35 +56,22 @@ describe('ApplicationKebab', () => {
       )
     );
 
-    expect(wrapper.find(Dropdown)).toHaveLength(1);
+    await userEvent.click(screen.getByLabelText('Actions'));
 
-    await act(async () => {
-      wrapper.find(KebabToggle).props().onToggle();
-    });
-    wrapper.update();
+    expect(screen.getByText('Pause')).toBeInTheDocument();
+    expect(screen.getByText('Temporarily stop this application from collecting data.')).toBeInTheDocument();
+    expect(screen.getByText('Pause').closest('.src-m-dropdown-item-disabled')).toBeInTheDocument();
 
-    expect(wrapper.find(DropdownItem)).toHaveLength(2);
-    expect(wrapper.find(DropdownItem).first().props().isDisabled).toEqual(true);
-    expect(wrapper.find(DropdownItem).first().props().tooltip).toEqual(
-      'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.'
-    );
-    expect(wrapper.find('InternalDropdownItem').first().text()).toEqual(
-      'PauseTemporarily stop this application from collecting data.'
-    );
-    expect(wrapper.find(DropdownItem).first().props().description).toEqual(
-      'Temporarily stop this application from collecting data.'
-    );
+    expect(screen.getByText('Remove')).toBeInTheDocument();
+    expect(screen.getByText('Permanently stop data collection for this application.')).toBeInTheDocument();
+    expect(screen.getByText('Remove').closest('.src-m-dropdown-item-disabled')).toBeInTheDocument();
 
-    expect(wrapper.find(DropdownItem).last().props().isDisabled).toEqual(true);
-    expect(wrapper.find(DropdownItem).last().props().tooltip).toEqual(
-      'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.'
-    );
-    expect(wrapper.find('InternalDropdownItem').last().text()).toEqual(
-      'RemovePermanently stop data collection for this application.'
-    );
-    expect(wrapper.find(DropdownItem).last().props().description).toEqual(
-      'Permanently stop data collection for this application.'
-    );
+    await userEvent.hover(screen.getByText('Remove'));
+
+    const tooltipText =
+      'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.';
+
+    await waitFor(() => expect(screen.getByText(tooltipText)).toBeInTheDocument());
   });
 
   it('renders with no permissions and paused', async () => {
@@ -94,7 +89,7 @@ describe('ApplicationKebab', () => {
 
     initialProps = { ...initialProps, app };
 
-    wrapper = mount(
+    render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationKebab {...args} {...initialProps} />} />,
         store,
@@ -102,31 +97,22 @@ describe('ApplicationKebab', () => {
       )
     );
 
-    expect(wrapper.find(Dropdown)).toHaveLength(1);
+    await userEvent.click(screen.getByLabelText('Actions'));
 
-    await act(async () => {
-      wrapper.find(KebabToggle).props().onToggle();
-    });
-    wrapper.update();
+    expect(screen.getByText('Resume')).toBeInTheDocument();
+    expect(screen.getByText('Resume data collection for this application.')).toBeInTheDocument();
+    expect(screen.getByText('Resume').closest('.src-m-dropdown-item-disabled')).toBeInTheDocument();
 
-    expect(wrapper.find(DropdownItem)).toHaveLength(2);
-    expect(wrapper.find(DropdownItem).first().props().isDisabled).toEqual(true);
-    expect(wrapper.find(DropdownItem).first().props().tooltip).toEqual(
-      'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.'
-    );
-    expect(wrapper.find('InternalDropdownItem').first().text()).toEqual('ResumeResume data collection for this application.');
-    expect(wrapper.find(DropdownItem).first().props().description).toEqual('Resume data collection for this application.');
+    expect(screen.getByText('Remove')).toBeInTheDocument();
+    expect(screen.getByText('Permanently stop data collection for this application.')).toBeInTheDocument();
+    expect(screen.getByText('Remove').closest('.src-m-dropdown-item-disabled')).toBeInTheDocument();
 
-    expect(wrapper.find(DropdownItem).last().props().isDisabled).toEqual(true);
-    expect(wrapper.find(DropdownItem).last().props().tooltip).toEqual(
-      'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.'
-    );
-    expect(wrapper.find('InternalDropdownItem').last().text()).toEqual(
-      'RemovePermanently stop data collection for this application.'
-    );
-    expect(wrapper.find(DropdownItem).last().props().description).toEqual(
-      'Permanently stop data collection for this application.'
-    );
+    await userEvent.hover(screen.getByText('Remove'));
+
+    const tooltipText =
+      'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.';
+
+    await waitFor(() => expect(screen.getByText(tooltipText)).toBeInTheDocument());
   });
 
   describe('with permissions and unpaused', () => {
@@ -138,7 +124,7 @@ describe('ApplicationKebab', () => {
         user: { writePermissions: true },
       });
 
-      wrapper = mount(
+      render(
         componentWrapperIntl(
           <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationKebab {...args} {...initialProps} />} />,
           store,
@@ -148,59 +134,29 @@ describe('ApplicationKebab', () => {
     });
 
     it('renders correctly', async () => {
-      expect(wrapper.find(Dropdown)).toHaveLength(1);
+      await userEvent.click(screen.getByLabelText('Actions'));
 
-      await act(async () => {
-        wrapper.find(KebabToggle).props().onToggle();
-      });
-      wrapper.update();
+      expect(screen.getByText('Pause')).toBeInTheDocument();
+      expect(screen.getByText('Temporarily stop this application from collecting data.')).toBeInTheDocument();
+      expect(screen.getByText('Pause').closest('.src-m-dropdown-item-disabled')).toBeNull();
 
-      expect(wrapper.find(DropdownItem)).toHaveLength(2);
-      expect(wrapper.find(DropdownItem).first().props().isDisabled).toEqual(undefined);
-      expect(wrapper.find(DropdownItem).first().props().tooltip).toEqual(undefined);
-      expect(wrapper.find(DropdownItem).first().props().description).toEqual(
-        'Temporarily stop this application from collecting data.'
-      );
-      expect(wrapper.find('InternalDropdownItem').first().text()).toEqual(
-        'PauseTemporarily stop this application from collecting data.'
-      );
-
-      expect(wrapper.find(DropdownItem).last().props().isDisabled).toEqual(undefined);
-      expect(wrapper.find(DropdownItem).last().props().tooltip).toEqual(undefined);
-      expect(wrapper.find(DropdownItem).last().props().description).toEqual(
-        'Permanently stop data collection for this application.'
-      );
-      expect(wrapper.find('InternalDropdownItem').last().text()).toEqual(
-        'RemovePermanently stop data collection for this application.'
-      );
+      expect(screen.getByText('Remove')).toBeInTheDocument();
+      expect(screen.getByText('Permanently stop data collection for this application.')).toBeInTheDocument();
+      expect(screen.getByText('Remove').closest('.src-m-dropdown-item-disabled')).toBeNull();
     });
 
     it('remove application', async () => {
-      await act(async () => {
-        wrapper.find(KebabToggle).props().onToggle();
-      });
-      wrapper.update();
+      await userEvent.click(screen.getByLabelText('Actions'));
+      await userEvent.click(screen.getByText('Remove'));
 
-      await act(async () => {
-        wrapper.find(DropdownItem).last().simulate('click');
-      });
-      wrapper.update();
-
-      expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
+      expect(screen.getByTestId('location-display').textContent).toEqual(
         replaceRouteId(routes.sourcesDetailRemoveApp.path, sourceId).replace(':app_id', app.id)
       );
     });
 
     it('pause application', async () => {
-      await act(async () => {
-        wrapper.find(KebabToggle).props().onToggle();
-      });
-      wrapper.update();
-
-      await act(async () => {
-        wrapper.find(DropdownItem).first().simulate('click');
-      });
-      wrapper.update();
+      await userEvent.click(screen.getByLabelText('Actions'));
+      await userEvent.click(screen.getByText('Pause'));
 
       expect(removeApp).toHaveBeenCalled();
     });
@@ -222,7 +178,7 @@ describe('ApplicationKebab', () => {
 
       initialProps = { ...initialProps, app };
 
-      wrapper = mount(
+      render(
         componentWrapperIntl(
           <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationKebab {...args} {...initialProps} />} />,
           store,
@@ -230,27 +186,21 @@ describe('ApplicationKebab', () => {
         )
       );
 
-      expect(wrapper.find(Dropdown)).toHaveLength(1);
+      await userEvent.click(screen.getByLabelText('Actions'));
 
-      await act(async () => {
-        wrapper.find(KebabToggle).props().onToggle();
-      });
-      wrapper.update();
+      expect(screen.getByText('Resume')).toBeInTheDocument();
+      expect(screen.getByText('Resume data collection for this application.')).toBeInTheDocument();
+      expect(screen.getByText('Resume').closest('.src-m-dropdown-item-disabled')).toBeInTheDocument();
 
-      expect(wrapper.find(DropdownItem)).toHaveLength(2);
-      expect(wrapper.find(DropdownItem).first().props().isDisabled).toEqual(true);
-      expect(wrapper.find(DropdownItem).first().props().tooltip).toEqual('You cannot perform this action on a paused source.');
-      expect(wrapper.find('InternalDropdownItem').first().text()).toEqual('ResumeResume data collection for this application.');
-      expect(wrapper.find(DropdownItem).first().props().description).toEqual('Resume data collection for this application.');
+      expect(screen.getByText('Remove')).toBeInTheDocument();
+      expect(screen.getByText('Permanently stop data collection for this application.')).toBeInTheDocument();
+      expect(screen.getByText('Remove').closest('.src-m-dropdown-item-disabled')).toBeInTheDocument();
 
-      expect(wrapper.find(DropdownItem).last().props().isDisabled).toEqual(true);
-      expect(wrapper.find(DropdownItem).last().props().tooltip).toEqual('You cannot perform this action on a paused source.');
-      expect(wrapper.find(DropdownItem).last().props().description).toEqual(
-        'Permanently stop data collection for this application.'
-      );
-      expect(wrapper.find('InternalDropdownItem').last().text()).toEqual(
-        'RemovePermanently stop data collection for this application.'
-      );
+      await userEvent.hover(screen.getByText('Resume'));
+
+      const tooltipText = 'You cannot perform this action on a paused source.';
+
+      await waitFor(() => expect(screen.getByText(tooltipText)).toBeInTheDocument());
     });
   });
 
@@ -270,7 +220,7 @@ describe('ApplicationKebab', () => {
 
       initialProps = { ...initialProps, app };
 
-      wrapper = mount(
+      render(
         componentWrapperIntl(
           <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationKebab {...args} {...initialProps} />} />,
           store,
@@ -280,55 +230,29 @@ describe('ApplicationKebab', () => {
     });
 
     it('renders correctly', async () => {
-      expect(wrapper.find(Dropdown)).toHaveLength(1);
+      await userEvent.click(screen.getByLabelText('Actions'));
 
-      await act(async () => {
-        wrapper.find(KebabToggle).props().onToggle();
-      });
-      wrapper.update();
+      expect(screen.getByText('Resume')).toBeInTheDocument();
+      expect(screen.getByText('Resume data collection for this application.')).toBeInTheDocument();
+      expect(screen.getByText('Resume').closest('.src-m-dropdown-item-disabled')).toBeNull();
 
-      expect(wrapper.find(DropdownItem)).toHaveLength(2);
-      expect(wrapper.find(DropdownItem).first().props().isDisabled).toEqual(undefined);
-      expect(wrapper.find(DropdownItem).first().props().tooltip).toEqual(undefined);
-      expect(wrapper.find('InternalDropdownItem').first().text()).toEqual('ResumeResume data collection for this application.');
-      expect(wrapper.find(DropdownItem).first().props().description).toEqual('Resume data collection for this application.');
-
-      expect(wrapper.find(DropdownItem).last().props().isDisabled).toEqual(undefined);
-      expect(wrapper.find(DropdownItem).last().props().tooltip).toEqual(undefined);
-      expect(wrapper.find(DropdownItem).last().props().description).toEqual(
-        'Permanently stop data collection for this application.'
-      );
-      expect(wrapper.find('InternalDropdownItem').last().text()).toEqual(
-        'RemovePermanently stop data collection for this application.'
-      );
+      expect(screen.getByText('Remove')).toBeInTheDocument();
+      expect(screen.getByText('Permanently stop data collection for this application.')).toBeInTheDocument();
+      expect(screen.getByText('Remove').closest('.src-m-dropdown-item-disabled')).toBeNull();
     });
 
     it('remove application', async () => {
-      await act(async () => {
-        wrapper.find(KebabToggle).props().onToggle();
-      });
-      wrapper.update();
+      await userEvent.click(screen.getByLabelText('Actions'));
+      await userEvent.click(screen.getByText('Remove'));
 
-      await act(async () => {
-        wrapper.find(DropdownItem).last().simulate('click');
-      });
-      wrapper.update();
-
-      expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
+      expect(screen.getByTestId('location-display').textContent).toEqual(
         replaceRouteId(routes.sourcesDetailRemoveApp.path, sourceId).replace(':app_id', app.id)
       );
     });
 
     it('resume application', async () => {
-      await act(async () => {
-        wrapper.find(KebabToggle).props().onToggle();
-      });
-      wrapper.update();
-
-      await act(async () => {
-        wrapper.find(DropdownItem).first().simulate('click');
-      });
-      wrapper.update();
+      await userEvent.click(screen.getByLabelText('Actions'));
+      await userEvent.click(screen.getByText('Resume'));
 
       expect(addApp).toHaveBeenCalled();
     });

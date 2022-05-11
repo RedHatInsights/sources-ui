@@ -1,35 +1,19 @@
 import React from 'react';
-import { act } from 'react-dom/test-utils';
-
-import {
-  CardBody,
-  CardTitle,
-  EmptyState,
-  EmptyStateBody,
-  Spinner,
-  Title,
-  Tabs,
-  TabTitleText,
-  Alert,
-} from '@patternfly/react-core';
-import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
-import { Table } from '@patternfly/react-table';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import sourceTypesData, { AMAZON_ID } from '../../__mocks__/sourceTypesData';
-import applicationTypesData, { COSTMANAGEMENT_APP, SUBWATCH_APP } from '../../__mocks__/applicationTypesData';
+import sourceTypes, { AMAZON_TYPE } from '../../__mocks__/sourceTypes';
+import appTypes, { COST_MANAGEMENT_APP, SUB_WATCH_APP } from '../../__mocks__/applicationTypes';
 
 import { Route } from 'react-router-dom';
 import { replaceRouteId, routes } from '../../../Routes';
 import mockStore from '../../__mocks__/mockStore';
 import ResourcesTable from '../../../components/SourceDetail/ResourcesTable';
-import NoApplications from '../../../components/SourceDetail/NoApplications';
-import ResourcesEmptyState from '../../../components/SourceDetail/ResourcesEmptyState';
 
 import * as api from '../../../api/doLoadSourceForEdit';
 
 describe('ResourcesTable', () => {
-  let wrapper;
   let store;
   let source;
 
@@ -44,34 +28,28 @@ describe('ResourcesTable', () => {
         entities: [
           {
             id: sourceId,
-            source_type_id: AMAZON_ID,
+            source_type_id: AMAZON_TYPE.id,
             applications: [],
           },
         ],
-        sourceTypes: sourceTypesData.data,
-        appTypes: applicationTypesData.data,
+        sourceTypes,
+        appTypes,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
         loaded: 0,
       },
     });
 
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
-    wrapper.update();
+    render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
+        store,
+        initialEntry
+      )
+    );
 
-    expect(wrapper.find(CardTitle).text()).toEqual('Connected application resources');
-    expect(wrapper.find(CardBody)).toHaveLength(1);
-    expect(wrapper.find(NoApplications)).toHaveLength(1);
-    expect(wrapper.find(Table)).toHaveLength(0);
-    expect(wrapper.find(ResourcesEmptyState)).toHaveLength(0);
+    expect(screen.getByText('Connected application resources')).toBeInTheDocument();
+    expect(screen.getByText('No connected applications')).toBeInTheDocument();
 
     expect(api.doLoadSourceForEdit).not.toHaveBeenCalled();
   });
@@ -81,11 +59,11 @@ describe('ResourcesTable', () => {
       Promise.resolve({
         source: {
           id: sourceId,
-          source_type_id: AMAZON_ID,
+          source_type_id: AMAZON_TYPE.id,
           applications: [
             {
               id: '123',
-              application_type_id: COSTMANAGEMENT_APP.id,
+              application_type_id: COST_MANAGEMENT_APP.id,
               authentications: [],
             },
           ],
@@ -93,7 +71,7 @@ describe('ResourcesTable', () => {
         },
         applications: [
           {
-            application_type_id: COSTMANAGEMENT_APP.id,
+            application_type_id: COST_MANAGEMENT_APP.id,
             id: '123',
             authentications: [],
           },
@@ -105,53 +83,40 @@ describe('ResourcesTable', () => {
 
     source = {
       id: sourceId,
-      source_type_id: AMAZON_ID,
-      applications: [{ id: '12344', application_type_id: COSTMANAGEMENT_APP.id }],
+      source_type_id: AMAZON_TYPE.id,
+      applications: [{ id: '12344', application_type_id: COST_MANAGEMENT_APP.id }],
     };
 
     store = mockStore({
       sources: {
         entities: [source],
-        sourceTypes: sourceTypesData.data,
-        appTypes: applicationTypesData.data,
+        sourceTypes,
+        appTypes,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
         loaded: 0,
       },
     });
 
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
+    render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
+        store,
+        initialEntry
+      )
+    );
 
-    expect(wrapper.find(Spinner)).toHaveLength(1);
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
 
-    wrapper.update();
+    await waitFor(() => expect(screen.getByText('Connected application resources')).toBeInTheDocument());
 
-    expect(wrapper.find(Spinner)).toHaveLength(0);
+    expect(() => screen.getByRole('progressbar')).toThrow();
 
-    expect(wrapper.find(CardTitle).text()).toEqual('Connected application resources');
-    expect(wrapper.find(CardBody)).toHaveLength(1);
-    expect(wrapper.find(NoApplications)).toHaveLength(0);
-    expect(wrapper.find(Table)).toHaveLength(0);
-    expect(wrapper.find(ResourcesEmptyState)).toHaveLength(1);
-    expect(wrapper.find(ResourcesEmptyState).props().applicationName).toEqual('Cost Management');
+    expect(screen.getByText('No application resources')).toBeInTheDocument();
+    expect(screen.getByText('Cost Management')).toBeInTheDocument();
+    expect(screen.getByText('Cost Management resources will appear here when created.')).toBeInTheDocument();
 
-    expect(wrapper.find(EmptyState)).toHaveLength(1);
-    expect(wrapper.find(Title).text()).toEqual('No application resources');
-    expect(wrapper.find(EmptyStateBody).text()).toEqual('Cost Management resources will appear here when created.');
-
-    expect(wrapper.find(Tabs)).toHaveLength(1);
-    expect(wrapper.find(TabTitleText)).toHaveLength(1);
-    expect(wrapper.find(TabTitleText).text()).toEqual('Cost Management');
-
-    expect(api.doLoadSourceForEdit).toHaveBeenCalledWith(source, applicationTypesData.data, sourceTypesData.data);
+    expect(api.doLoadSourceForEdit).toHaveBeenCalledWith(source, appTypes, sourceTypes);
   });
 
   it('renders empty state when no resources for paused app', async () => {
@@ -159,11 +124,11 @@ describe('ResourcesTable', () => {
       Promise.resolve({
         source: {
           id: sourceId,
-          source_type_id: AMAZON_ID,
+          source_type_id: AMAZON_TYPE.id,
           applications: [
             {
               id: '123',
-              application_type_id: COSTMANAGEMENT_APP.id,
+              application_type_id: COST_MANAGEMENT_APP.id,
               authentications: [],
               paused_at: 'today',
             },
@@ -172,7 +137,7 @@ describe('ResourcesTable', () => {
         },
         applications: [
           {
-            application_type_id: COSTMANAGEMENT_APP.id,
+            application_type_id: COST_MANAGEMENT_APP.id,
             id: '123',
             authentications: [],
             paused_at: 'today',
@@ -185,36 +150,35 @@ describe('ResourcesTable', () => {
 
     source = {
       id: sourceId,
-      source_type_id: AMAZON_ID,
-      applications: [{ id: '12344', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
+      source_type_id: AMAZON_TYPE.id,
+      applications: [{ id: '12344', application_type_id: COST_MANAGEMENT_APP.id, paused_at: 'today' }],
     };
 
     store = mockStore({
       sources: {
         entities: [source],
-        sourceTypes: sourceTypesData.data,
-        appTypes: applicationTypesData.data,
+        sourceTypes,
+        appTypes,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
         loaded: 0,
       },
     });
 
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
-    wrapper.update();
-
-    expect(wrapper.find(Alert).text()).toEqual(
-      'Default alert:Cost Management is pausedTo resume data collection for this application, switch Cost Management on in the Applications section of this page.'
+    render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
+        store,
+        initialEntry
+      )
     );
-    expect(wrapper.find(Alert).find(PauseIcon)).toHaveLength(1);
+
+    await waitFor(() => expect(screen.getByText('Connected application resources')).toBeInTheDocument());
+
+    expect(screen.getByText('Cost Management is paused')).toBeInTheDocument();
+    expect(
+      screen.getByText('To resume data collection for this application, switch Cost Management on in the', { exact: false })
+    ).toBeInTheDocument();
   });
 
   it('renders correctly with multiple apps', async () => {
@@ -222,15 +186,15 @@ describe('ResourcesTable', () => {
       Promise.resolve({
         source: {
           id: sourceId,
-          source_type_id: AMAZON_ID,
+          source_type_id: AMAZON_TYPE.id,
           applications: [
             {
-              application_type_id: COSTMANAGEMENT_APP.id,
+              application_type_id: COST_MANAGEMENT_APP.id,
               id: '20198',
               authentications: [{ id: '19896', resource_type: 'Application' }],
             },
             {
-              application_type_id: SUBWATCH_APP.id,
+              application_type_id: SUB_WATCH_APP.id,
               id: '20199',
               authentications: [{ id: '19897', resource_type: 'Application' }],
             },
@@ -239,7 +203,7 @@ describe('ResourcesTable', () => {
         },
         applications: [
           {
-            application_type_id: COSTMANAGEMENT_APP.id,
+            application_type_id: COST_MANAGEMENT_APP.id,
             id: '20198',
             authentications: [
               { id: '19896' },
@@ -256,7 +220,7 @@ describe('ResourcesTable', () => {
             extra: { bucket: 'adsadsad' },
           },
           {
-            application_type_id: SUBWATCH_APP.id,
+            application_type_id: SUB_WATCH_APP.id,
             id: '20199',
             authentications: [
               { id: '19897' },
@@ -278,59 +242,43 @@ describe('ResourcesTable', () => {
 
     source = {
       id: sourceId,
-      source_type_id: AMAZON_ID,
+      source_type_id: AMAZON_TYPE.id,
       applications: [
-        { id: '20198', application_type_id: COSTMANAGEMENT_APP.id },
-        { id: '20199', application_type_id: SUBWATCH_APP.id },
+        { id: '20198', application_type_id: COST_MANAGEMENT_APP.id },
+        { id: '20199', application_type_id: SUB_WATCH_APP.id },
       ],
     };
 
     store = mockStore({
       sources: {
         entities: [source],
-        sourceTypes: sourceTypesData.data,
-        appTypes: [...applicationTypesData.data, SUBWATCH_APP],
+        sourceTypes,
+        appTypes,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
         loaded: 0,
       },
     });
 
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
-
-    expect(wrapper.find(Spinner)).toHaveLength(1);
-
-    wrapper.update();
-
-    expect(wrapper.find(Spinner)).toHaveLength(0);
-
-    expect(wrapper.find(CardTitle).text()).toEqual('Connected application resources');
-    expect(wrapper.find(CardBody)).toHaveLength(1);
-    expect(wrapper.find(NoApplications)).toHaveLength(0);
-    expect(wrapper.find(Table)).toHaveLength(2);
-    expect(wrapper.find(ResourcesEmptyState)).toHaveLength(0);
-    expect(wrapper.find(EmptyState)).toHaveLength(0);
-
-    expect(wrapper.find(Tabs)).toHaveLength(1);
-    expect(wrapper.find(TabTitleText)).toHaveLength(2);
-    expect(wrapper.find(TabTitleText).first().text()).toEqual('Cost Management');
-    expect(wrapper.find(TabTitleText).last().text()).toEqual('Subscription Watch');
-
-    expect(api.doLoadSourceForEdit).toHaveBeenCalledWith(
-      source,
-      [...applicationTypesData.data, SUBWATCH_APP],
-      sourceTypesData.data
+    const { container } = render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
+        store,
+        initialEntry
+      )
     );
 
-    const getData = () => wrapper.find('td').map((td) => [td.props()['data-label'], td.text()]);
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+
+    await waitFor(() => expect(screen.getByText('Connected application resources')).toBeInTheDocument());
+
+    expect(() => screen.getByRole('progressbar')).toThrow();
+    expect(screen.getByText('Cost Management')).toBeInTheDocument();
+    expect(screen.getByText('RHEL management')).toBeInTheDocument();
+
+    expect(api.doLoadSourceForEdit).toHaveBeenCalledWith(source, appTypes, sourceTypes);
+
+    const getData = () => [...container.getElementsByTagName('td')].map((td) => [td.getAttribute('data-label'), td.textContent]);
 
     expect(getData()).toEqual([
       ['Resource type', 'S3 bucket name'],
@@ -341,14 +289,13 @@ describe('ResourcesTable', () => {
       ['Value', 'arn:aws:1234'],
     ]);
 
-    expect(wrapper.find(Tabs).props().activeKey).toEqual('20198');
+    expect(screen.getByText('Cost Management').closest('.pf-m-current')).toBeInTheDocument();
+    expect(screen.getByText('RHEL management').closest('.pf-m-current')).toBeNull();
 
-    await act(async () => {
-      wrapper.find('.pf-c-tabs__link').last().simulate('click');
-    });
-    wrapper.update();
+    await userEvent.click(screen.getByText('RHEL management'));
 
-    expect(wrapper.find(Tabs).props().activeKey).toEqual('20199');
+    expect(screen.getByText('Cost Management').closest('.pf-m-current')).toBeNull();
+    expect(screen.getByText('RHEL management').closest('.pf-m-current')).toBeInTheDocument();
   });
 
   it('renders correctly with paused app', async () => {
@@ -356,10 +303,10 @@ describe('ResourcesTable', () => {
       Promise.resolve({
         source: {
           id: sourceId,
-          source_type_id: AMAZON_ID,
+          source_type_id: AMAZON_TYPE.id,
           applications: [
             {
-              application_type_id: COSTMANAGEMENT_APP.id,
+              application_type_id: COST_MANAGEMENT_APP.id,
               id: '20198',
               authentications: [{ id: '19896', resource_type: 'Application' }],
               paused_at: 'today',
@@ -369,7 +316,7 @@ describe('ResourcesTable', () => {
         },
         applications: [
           {
-            application_type_id: COSTMANAGEMENT_APP.id,
+            application_type_id: COST_MANAGEMENT_APP.id,
             id: '20198',
             authentications: [
               { id: '19896' },
@@ -392,36 +339,35 @@ describe('ResourcesTable', () => {
 
     source = {
       id: sourceId,
-      source_type_id: AMAZON_ID,
-      applications: [{ id: '20198', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
+      source_type_id: AMAZON_TYPE.id,
+      applications: [{ id: '20198', application_type_id: COST_MANAGEMENT_APP.id, paused_at: 'today' }],
     };
 
     store = mockStore({
       sources: {
         entities: [source],
-        sourceTypes: sourceTypesData.data,
-        appTypes: applicationTypesData.data,
+        sourceTypes,
+        appTypes,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
         loaded: 0,
       },
     });
 
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
-    wrapper.update();
-
-    expect(wrapper.find(Alert).text()).toEqual(
-      'Default alert:Cost Management is pausedTo resume data collection for this application, switch Cost Management on in the Applications section of this page.'
+    render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
+        store,
+        initialEntry
+      )
     );
-    expect(wrapper.find(Alert).find(PauseIcon)).toHaveLength(1);
+
+    await waitFor(() => expect(screen.getByText('Connected application resources')).toBeInTheDocument());
+
+    expect(screen.getByText('Cost Management is paused')).toBeInTheDocument();
+    expect(
+      screen.getByText('To resume data collection for this application, switch Cost Management on in the', { exact: false })
+    ).toBeInTheDocument();
   });
 
   it('renders correctly with paused and paused source app', async () => {
@@ -430,10 +376,10 @@ describe('ResourcesTable', () => {
         source: {
           id: sourceId,
           paused_at: 'now',
-          source_type_id: AMAZON_ID,
+          source_type_id: AMAZON_TYPE.id,
           applications: [
             {
-              application_type_id: COSTMANAGEMENT_APP.id,
+              application_type_id: COST_MANAGEMENT_APP.id,
               id: '20198',
               authentications: [{ id: '19896', resource_type: 'Application' }],
               paused_at: 'today',
@@ -443,7 +389,7 @@ describe('ResourcesTable', () => {
         },
         applications: [
           {
-            application_type_id: COSTMANAGEMENT_APP.id,
+            application_type_id: COST_MANAGEMENT_APP.id,
             id: '20198',
             authentications: [
               { id: '19896' },
@@ -466,33 +412,41 @@ describe('ResourcesTable', () => {
 
     source = {
       id: sourceId,
-      source_type_id: AMAZON_ID,
-      applications: [{ id: '20198', application_type_id: COSTMANAGEMENT_APP.id, paused_at: 'today' }],
+      source_type_id: AMAZON_TYPE.id,
+      applications: [{ id: '20198', application_type_id: COST_MANAGEMENT_APP.id, paused_at: 'today' }],
       paused_at: 'today',
     };
 
     store = mockStore({
       sources: {
         entities: [source],
-        sourceTypes: sourceTypesData.data,
-        appTypes: applicationTypesData.data,
+        sourceTypes,
+        appTypes,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
         loaded: 0,
       },
     });
 
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
-    wrapper.update();
+    const { container } = render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
+        store,
+        initialEntry
+      )
+    );
 
-    expect(wrapper.find(Alert)).toHaveLength(0);
+    await waitFor(() => expect(screen.getByText('Connected application resources')).toBeInTheDocument());
+
+    expect(screen.getByText('Cost Management')).toBeInTheDocument();
+
+    const getData = () => [...container.getElementsByTagName('td')].map((td) => [td.getAttribute('data-label'), td.textContent]);
+
+    expect(getData()).toEqual([
+      ['Resource type', 'S3 bucket name'],
+      ['Value', 'adsadsad'],
+      ['Resource type', 'ARN'],
+      ['Value', 'arn:aws:1234'],
+    ]);
   });
 });

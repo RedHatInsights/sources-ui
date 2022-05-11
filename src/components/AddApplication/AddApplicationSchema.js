@@ -117,6 +117,10 @@ const fields = (intl, sourceType, appType, authenticationValues, source, contain
         showTitles: true,
         crossroads: ['selectedAuthentication', 'authtype'],
         description,
+        closeButtonAriaLabel: intl.formatMessage({
+          id: 'wizard.close',
+          defaultMessage: 'Close wizard',
+        }),
         buttonLabels: {
           submit: intl.formatMessage({
             id: 'sources.add',

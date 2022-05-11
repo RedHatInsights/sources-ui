@@ -1,23 +1,22 @@
 import { Route } from 'react-router-dom';
 
+import { render, screen } from '@testing-library/react';
+
 import AppListInRemoval from '../../../components/SourceRemoveModal/AppListInRemoval';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { replaceRouteId, routes } from '../../../Routes';
-import { applicationTypesData, CATALOG_APP, COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
-
-import { Text, TextList, TextListItem } from '@patternfly/react-core';
+import appTypes, { CATALOG_APP, COST_MANAGEMENT_APP } from '../../__mocks__/applicationTypes';
 
 import mockStore from '../../__mocks__/mockStore';
 
 describe('AppListInRemoval', () => {
-  let wrapper;
   let initialProps;
 
   let store;
 
   beforeEach(() => {
     store = mockStore({
-      sources: { appTypes: applicationTypesData.data },
+      sources: { appTypes },
     });
   });
 
@@ -26,7 +25,7 @@ describe('AppListInRemoval', () => {
       applications: [{ application_type_id: undefined, id: 1 }],
     };
 
-    wrapper = mount(
+    render(
       componentWrapperIntl(
         <Route path={routes.sourcesRemove.path} render={(...args) => <AppListInRemoval {...initialProps} {...args} />} />,
         store,
@@ -34,7 +33,7 @@ describe('AppListInRemoval', () => {
       )
     );
 
-    expect(wrapper.find(Text).text()).toEqual('Unknown');
+    expect(screen.getByText('Unknown')).toBeInTheDocument();
   });
 
   it('renders with 1 app', () => {
@@ -42,7 +41,7 @@ describe('AppListInRemoval', () => {
       applications: [{ application_type_id: CATALOG_APP.id, id: 1 }],
     };
 
-    wrapper = mount(
+    render(
       componentWrapperIntl(
         <Route path={routes.sourcesRemove.path} render={(...args) => <AppListInRemoval {...initialProps} {...args} />} />,
         store,
@@ -50,19 +49,18 @@ describe('AppListInRemoval', () => {
       )
     );
 
-    expect(wrapper.find(Text).text()).toEqual(CATALOG_APP.display_name);
-    expect(wrapper.find(TextList)).toHaveLength(0);
+    expect(screen.getByText(CATALOG_APP.display_name, { selector: 'p' })).toBeInTheDocument();
   });
 
   it('renders with more apps', () => {
     initialProps = {
       applications: [
         { application_type_id: CATALOG_APP.id, id: 1 },
-        { application_type_id: COSTMANAGEMENT_APP.id, id: 2 },
+        { application_type_id: COST_MANAGEMENT_APP.id, id: 2 },
       ],
     };
 
-    wrapper = mount(
+    render(
       componentWrapperIntl(
         <Route path={routes.sourcesRemove.path} render={(...args) => <AppListInRemoval {...initialProps} {...args} />} />,
         store,
@@ -70,8 +68,7 @@ describe('AppListInRemoval', () => {
       )
     );
 
-    expect(wrapper.find(TextListItem).first().text()).toEqual(CATALOG_APP.display_name);
-    expect(wrapper.find(TextListItem).last().text()).toEqual(COSTMANAGEMENT_APP.display_name);
-    expect(wrapper.find(Text)).toHaveLength(0);
+    expect(screen.getByText(CATALOG_APP.display_name, { selector: 'li' })).toBeInTheDocument();
+    expect(screen.getByText(COST_MANAGEMENT_APP.display_name, { selector: 'li' })).toBeInTheDocument();
   });
 });

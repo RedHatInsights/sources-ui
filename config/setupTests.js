@@ -1,15 +1,8 @@
-import { configure, mount, render, shallow } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+/* eslint-disable no-undef */
 import React from 'react';
+import 'whatwg-fetch'; // fetch for Nodejs
 import '@testing-library/jest-dom/extend-expect';
 
-import 'whatwg-fetch'; // fetch for Nodejs
-
-configure({ adapter: new Adapter() });
-
-global.shallow = shallow;
-global.render = render;
-global.mount = mount;
 global.React = React;
 
 process.env.BASE_PATH = '/api';
@@ -38,3 +31,15 @@ global.insights = {
 global.innerWidth = 1080;
 
 Element.prototype.scrollTo = () => {};
+
+global.mockApi = () => {
+  const mockFn = jest.fn().mockImplementation(
+    () =>
+      new Promise((res, rej) => {
+        mockFn.resolve = res;
+        mockFn.reject = rej;
+      })
+  );
+
+  return mockFn;
+};

@@ -1,14 +1,10 @@
 import axios from 'axios';
-import get from 'lodash/get';
-import set from 'lodash/set';
 
-import { APP_NAMES } from '../components/SourceEditForm/parser/application';
 import * as interceptors from '../frontend-components-copies/interceptors';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../utilities/constants';
 import { AVAILABLE, PARTIALLY_UNAVAILABLE, UNAVAILABLE } from '../views/formatters';
 
 import { SOURCES_API_BASE_V3 } from './constants';
-import { cmConvertTypes, cmValuesMapper, getCmValues } from './getCmValues';
 
 export const graphQlErrorInterceptor = (response) => {
   if (response.errors && response.errors.length > 0) {
@@ -90,52 +86,58 @@ export const sorting = (sortBy, sortDirection) => {
   }
 
   if (sortBy === 'source_type_id') {
-    return `sort_by:{source_type:{product_name:"${sortDirection}"}}`;
+    return `sort_by: { name: "source_type.product_name", direction: ${sortDirection} }`;
   }
 
   if (sortBy === 'applications') {
-    return `sort_by:{applications:{__count:"${sortDirection}"}}`;
+    return `sort_by: { name: "applications", direction: ${sortDirection} }`;
   }
 
-  return `sort_by:{${sortBy}:"${sortDirection}"}`;
+  return `sort_by: { name: "${sortBy}", direction: ${sortDirection} }`;
 };
 
-export const filtering = (filterValue = {}, activeVendor) => {
+export const filtering = (filterValue = {}, category) => {
   let filterQueries = [];
 
   if (filterValue.name) {
-    filterQueries.push(`name: { contains_i: "${filterValue.name}" }`);
+    filterQueries.push(`{ name: "name", operation: "contains_i", value: "${filterValue.name}" }`);
   }
 
   if (filterValue.source_type_id?.length > 0) {
-    filterQueries.push(`source_type_id: { eq: [${filterValue.source_type_id.map((x) => `"${x}"`).join(', ')}] }`);
+    filterQueries.push(
+      `{ name: "source_type_id", operation: "eq", value: [${filterValue.source_type_id.map((x) => `"${x}"`).join(', ')}] }`
+    );
   }
 
   if (filterValue.applications?.length > 0) {
     filterQueries.push(
-      `applications: { application_type_id: { eq: [${filterValue.applications.map((x) => `"${x}"`).join(', ')}] }}`
+      `{ name: "applications.application_type_id", operation: "eq", value: [${filterValue.applications
+        .map((x) => `"${x}"`)
+        .join(', ')}] }`
     );
   }
 
-  if (activeVendor === CLOUD_VENDOR) {
-    filterQueries.push(`source_type: { vendor: { not_eq: "Red Hat"} }`);
+  if (category === CLOUD_VENDOR) {
+    filterQueries.push(`{ name: "source_type.category", operation: "eq", value: "Cloud" }`);
   }
 
-  if (activeVendor === REDHAT_VENDOR) {
-    filterQueries.push('source_type: { vendor: "Red Hat" }');
+  if (category === REDHAT_VENDOR) {
+    filterQueries.push(`{ name: "source_type.category", operation: "eq", value: "Red Hat" }`);
   }
 
   const status = filterValue.availability_status?.[0];
   if (status) {
     if (status === AVAILABLE) {
-      filterQueries.push(`availability_status: { eq: "${AVAILABLE}" }`);
+      filterQueries.push(`{ name: "availability_status", operation: "eq", value: "${AVAILABLE}" }`);
     } else if (status === UNAVAILABLE) {
-      filterQueries.push(`availability_status: { eq: ["${PARTIALLY_UNAVAILABLE}", "${UNAVAILABLE}"] }`);
+      filterQueries.push(
+        `{ name: "availability_status", operation: "eq", value: ["${PARTIALLY_UNAVAILABLE}", "${UNAVAILABLE}"] }`
+      );
     }
   }
 
   if (filterQueries.length > 0) {
-    return `filter: { ${filterQueries.join(', ')} }`;
+    return `filter: [ ${filterQueries.join(', ')} ]`;
   }
 
   return '';
@@ -159,8 +161,8 @@ export const graphQlAttributes = `
     endpoints { id, scheme, host, port, path, receptor_node, role, certificate_authority, verify_ssl, availability_status_error, availability_status, authentications { authtype, availability_status, availability_status_error } }
 `;
 
-export const doLoadEntities = ({ pageSize, pageNumber, sortBy, sortDirection, filterValue, activeVendor }) => {
-  const filter = filtering(filterValue, activeVendor);
+export const doLoadEntities = ({ pageSize, pageNumber, sortBy, sortDirection, filterValue, activeCategory }) => {
+  const filter = filtering(filterValue, activeCategory);
 
   const filterSection = [pagination(pageSize, pageNumber), sorting(sortBy, sortDirection), filter].join(',');
 
@@ -168,7 +170,7 @@ export const doLoadEntities = ({ pageSize, pageNumber, sortBy, sortDirection, fi
     .postGraphQL({
       query: `{ sources(${filterSection})
       { ${graphQlAttributes} },
-     sources_aggregate(${filter}){aggregate{total_count}}
+     meta{count}
     }`,
     })
     .then(({ data }) => data);
@@ -183,7 +185,7 @@ export const doDeleteApplication = (appId, errorMessage) =>
       throw { error: { title: errorMessage, detail } };
     });
 
-export const restFilterGenerator = (filterValue = {}, activeVendor) => {
+export const restFilterGenerator = (filterValue = {}, category) => {
   let filterQueries = [];
 
   if (filterValue.name) {
@@ -198,12 +200,12 @@ export const restFilterGenerator = (filterValue = {}, activeVendor) => {
     filterValue.applications.map((id) => filterQueries.push(`filter[applications][application_type_id][eq][]=${id}`));
   }
 
-  if (activeVendor === CLOUD_VENDOR) {
-    filterQueries.push(`filter[source_type][vendor][not_eq]=Red Hat`);
+  if (category === CLOUD_VENDOR) {
+    filterQueries.push(`filter[source_type][category]=Cloud`);
   }
 
-  if (activeVendor === REDHAT_VENDOR) {
-    filterQueries.push('filter[source_type][vendor]=Red Hat');
+  if (category === REDHAT_VENDOR) {
+    filterQueries.push('filter[source_type][category]=Red Hat');
   }
 
   const status = filterValue.availability_status?.[0];
@@ -226,65 +228,29 @@ export const restFilterGenerator = (filterValue = {}, activeVendor) => {
 export const doLoadSource = (id) =>
   getSourcesApi()
     .postGraphQL({
-      query: `{ sources(filter: { id: { eq: ${id}}})
+      query: `{ sources(filter: { name: "id", operation: "eq", value: "${id}" })
             { ${graphQlAttributes} }
         }`,
     })
     .then(({ data }) => data);
 
-export const doLoadApplicationsForEdit = async (id, appTypes, sourceTypes) => {
-  let graphql = await getSourcesApi().postGraphQL({
-    query: `{ sources(filter: { id: { eq: ${id}}})
-          { source_type_id, applications {
+export const doLoadApplicationsForEdit = (id) =>
+  getSourcesApi()
+    .postGraphQL({
+      query: `{ sources(filter: { name: "id", operation: "eq", value: "${id}" })
+          { applications {
               application_type_id,
               id,
               availability_status_error,
               availability_status,
               paused_at,
+              extra,
               authentications {
                   id
               }
           } }
       }`,
-  });
-
-  const promises = [];
-  graphql.data.sources?.[0]?.applications?.forEach((app) => {
-    promises.push(getSourcesApi().showApplication(app.id));
-  });
-
-  const results = await Promise.all(promises);
-
-  const sourceType = sourceTypes.find(({ id }) => id === graphql.data.sources?.[0]?.source_type_id);
-  const costManagementApp = appTypes.find(({ name }) => name === APP_NAMES.COST_MANAGAMENT);
-
-  if (results.length) {
-    // Doing for as forEach has some issues in jest with nested async functions
-    for (let index = 0; index < results.length; index++) {
-      const { extra, application_type_id } = results[index];
-      const newExtra = { ...extra };
-
-      if (
-        application_type_id === costManagementApp.id &&
-        cmConvertTypes.includes(sourceType.name) &&
-        !Object.keys(extra).length
-      ) {
-        const cmValues = await getCmValues(id);
-        Object.keys(cmValuesMapper).forEach((key) => {
-          const value = get(cmValues, key);
-
-          value && set(newExtra, cmValuesMapper[key], value);
-        });
-      }
-
-      graphql.data.sources[0].applications[index] = {
-        ...graphql.data.sources[0].applications[index],
-        extra: newExtra,
-      };
-    }
-  }
-
-  return graphql.data;
-};
+    })
+    .then(({ data }) => data);
 
 export const doDeleteAuthentication = (id) => getSourcesApi().deleteAuthentication(id);

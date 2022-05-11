@@ -1,17 +1,12 @@
 import React from 'react';
-import { act } from 'react-dom/test-utils';
-
-import { Card, CardHeader, GridItem } from '@patternfly/react-core';
-import BuilderImageIcon from '@patternfly/react-icons/dist/esm/icons/builder-image-icon';
-import TrendUpIcon from '@patternfly/react-icons/dist/esm/icons/trend-up-icon';
-import ListIcon from '@patternfly/react-icons/dist/esm/icons/list-icon';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import CloudCards, { CLOUD_CARDS_KEY } from '../../../components/CloudTiles/CloudCards';
 
 import componentWrapperIntl from '../../../utilities/testsHelpers';
 
 describe('CloudCards', () => {
-  let wrapper;
   let localStorage;
   let protoTmp;
   let initialProps;
@@ -36,20 +31,17 @@ describe('CloudCards', () => {
   });
 
   it('renders correctly and sets local storage', async () => {
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<CloudCards {...initialProps} />));
-    });
-    wrapper.update();
+    render(componentWrapperIntl(<CloudCards {...initialProps} />));
 
-    expect(wrapper.find(Card)).toHaveLength(1);
-    expect(wrapper.find('svg')).toHaveLength(7);
-    expect(wrapper.find(GridItem)).toHaveLength(3);
+    expect(screen.getByLabelText('Trend up icon')).toBeInTheDocument();
+    expect(screen.getByLabelText('List icon')).toBeInTheDocument();
+    expect(screen.getByLabelText('Builder image icon')).toBeInTheDocument();
 
-    expect(wrapper.find(TrendUpIcon)).toHaveLength(1);
-    expect(wrapper.find(ListIcon)).toHaveLength(1);
-    expect(wrapper.find(BuilderImageIcon)).toHaveLength(1);
+    expect(screen.getByText('I connected to cloud. Now what?')).toBeInTheDocument();
 
-    expect(wrapper.find(Card).first().props().isExpanded).toEqual(true);
+    expect(screen.getByText('Use gold images')).toBeInTheDocument();
+    expect(screen.getByText('Explore Red Hat Insights')).toBeInTheDocument();
+    expect(screen.getByText('Track usage with Subscriptions')).toBeInTheDocument();
 
     expect(localStorage).toEqual({
       [CLOUD_CARDS_KEY]: 'true',
@@ -59,15 +51,17 @@ describe('CloudCards', () => {
   it('renders correctly when storage is false', async () => {
     localStorage[CLOUD_CARDS_KEY] = 'false';
 
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<CloudCards {...initialProps} />));
-    });
-    wrapper.update();
+    render(componentWrapperIntl(<CloudCards {...initialProps} />));
 
-    expect(wrapper.find(Card)).toHaveLength(1);
-    expect(wrapper.find('svg')).toHaveLength(1);
+    expect(() => screen.getByLabelText('Trend up icon')).toThrow();
+    expect(() => screen.getByLabelText('List icon')).toThrow();
+    expect(() => screen.getByLabelText('Builder image icon')).toThrow();
 
-    expect(wrapper.find(Card).first().props().isExpanded).toEqual(false);
+    expect(screen.getByText('I connected to cloud. Now what?')).toBeInTheDocument();
+
+    expect(() => screen.getByText('Use gold images')).toThrow();
+    expect(() => screen.getByText('Explore Red Hat Insights')).toThrow();
+    expect(() => screen.getByText('Track usage with Subscriptions')).toThrow();
 
     expect(localStorage).toEqual({
       [CLOUD_CARDS_KEY]: 'false',
@@ -75,29 +69,21 @@ describe('CloudCards', () => {
   });
 
   it('hides card', async () => {
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<CloudCards {...initialProps} />));
-    });
-    wrapper.update();
+    render(componentWrapperIntl(<CloudCards {...initialProps} />));
 
-    expect(wrapper.find(Card).first().props().isExpanded).toEqual(true);
+    expect(screen.getByText('Use gold images')).toBeInTheDocument();
 
-    await act(async () => {
-      wrapper.find(CardHeader).first().find('button').simulate('click');
-    });
-    wrapper.update();
+    await userEvent.click(screen.getByRole('button'));
 
-    expect(wrapper.find(Card).first().props().isExpanded).toEqual(false);
+    expect(() => screen.getByText('Use gold images')).toThrow();
+
     expect(localStorage).toEqual({
       [CLOUD_CARDS_KEY]: 'false',
     });
 
-    await act(async () => {
-      wrapper.find(CardHeader).last().find('button').simulate('click');
-    });
-    wrapper.update();
+    await userEvent.click(screen.getByRole('button'));
 
-    expect(wrapper.find(Card).first().props().isExpanded).toEqual(true);
+    expect(screen.getByText('Use gold images')).toBeInTheDocument();
     expect(localStorage).toEqual({
       [CLOUD_CARDS_KEY]: 'true',
     });

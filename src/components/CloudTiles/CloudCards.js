@@ -61,7 +61,7 @@ const CloudCards = () => {
                 <Stack>
                   <StackItem className="pf-u-mb-sm">
                     <Text className="src-c-card-info__header">
-                      <BuilderImageIcon className="pf-u-mr-sm" color="#0066cc" />
+                      <BuilderImageIcon className="pf-u-mr-sm" color="#0066cc" aria-label="Builder image icon" />
                       {intl.formatMessage({ id: 'cloud.goldImages', defaultMessage: 'Use gold images' })}
                     </Text>
                   </StackItem>
@@ -102,7 +102,7 @@ const CloudCards = () => {
                 <Stack>
                   <StackItem className="pf-u-mb-sm">
                     <Text className="src-c-card-info__header">
-                      <TrendUpIcon className="pf-u-mr-sm" color="#0066cc" />
+                      <TrendUpIcon className="pf-u-mr-sm" color="#0066cc" aria-label="Trend up icon" />
                       {intl.formatMessage({ id: 'cloud.insights', defaultMessage: 'Explore Red Hat Insights' })}
                     </Text>
                   </StackItem>
@@ -136,7 +136,7 @@ const CloudCards = () => {
                 <Stack>
                   <StackItem className="pf-u-mb-sm">
                     <Text className="src-c-card-info__header">
-                      <ListIcon className="pf-u-mr-sm" color="#0066cc" />
+                      <ListIcon className="pf-u-mr-sm" color="#0066cc" aria-label="List icon" />
                       {intl.formatMessage({ id: 'cloud.subwatch', defaultMessage: 'Track usage with Subscriptions' })}
                     </Text>
                   </StackItem>

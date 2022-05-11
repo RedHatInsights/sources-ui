@@ -1,9 +1,6 @@
 import React from 'react';
-import { act } from 'react-dom/test-utils';
-
-import { Button, Spinner } from '@patternfly/react-core';
-
-import RedoIcon from '@patternfly/react-icons/dist/esm/icons/redo-icon';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { Route } from 'react-router-dom';
@@ -14,7 +11,6 @@ import * as actions from '../../../redux/sources/actions';
 import mockStore from '../../__mocks__/mockStore';
 
 describe('AvailabilityChecker', () => {
-  let wrapper;
   let store;
 
   const sourceId = '3627987';
@@ -22,54 +18,51 @@ describe('AvailabilityChecker', () => {
 
   beforeEach(() => {
     store = mockStore({ sources: { entities: [{ id: sourceId }] } });
+  });
 
-    wrapper = mount(
+  it('renders correctly', () => {
+    render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetail.path} render={(...args) => <AvailabilityChecker {...args} />} />,
         store,
         initialEntry
       )
     );
-  });
 
-  it('renders correctly', () => {
-    expect(wrapper.find(Button).props().isDisabled).toEqual(false);
-    expect(wrapper.find(RedoIcon)).toHaveLength(1);
-    expect(wrapper.find(Spinner)).toHaveLength(0);
+    expect(screen.getByLabelText('Check source availability')).not.toBeDisabled();
+    expect(() => screen.getByRole('progressbar')).toThrow();
+    expect(screen.getByTestId('RedoIcon')).toBeInTheDocument();
   });
 
   it('checks status (click > loading > message)', async () => {
-    jest.useFakeTimers();
+    render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetail.path} render={(...args) => <AvailabilityChecker {...args} />} />,
+        store,
+        initialEntry
+      )
+    );
 
-    api.default = jest.fn().mockImplementation(() => new Promise((res) => setTimeout(() => res(), 100)));
+    api.default = mockApi();
     actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'something' }));
 
-    await act(async () => {
-      wrapper.find('button').simulate('click');
-    });
-    wrapper.update();
+    expect(screen.getByLabelText('Check source availability')).not.toBeDisabled();
+
+    await userEvent.click(screen.getByLabelText('Check source availability'));
 
     expect(api.default).toHaveBeenCalledWith(sourceId);
+    expect(screen.getByLabelText('Check source availability')).toBeDisabled();
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
 
-    expect(wrapper.find(Button).props().isDisabled).toEqual(true);
-    expect(wrapper.find(RedoIcon)).toHaveLength(0);
-    expect(wrapper.find(Spinner)).toHaveLength(1);
+    api.default.resolve();
 
-    await act(async () => {
-      jest.runAllTimers();
-    });
-    wrapper.update();
-
-    expect(wrapper.find(Button).props().isDisabled).toEqual(false);
-    expect(wrapper.find(RedoIcon)).toHaveLength(1);
-    expect(wrapper.find(Spinner)).toHaveLength(0);
+    await waitFor(() => expect(screen.getByLabelText('Check source availability')).not.toBeDisabled());
+    expect(() => screen.getByRole('progressbar')).toThrow();
 
     expect(actions.addMessage).toHaveBeenCalledWith({
       title: 'Request to check source status was sent',
       variant: 'info',
       description: 'Check this page later for updates',
     });
-
-    jest.useRealTimers();
   });
 });

@@ -12,7 +12,7 @@ describe('redux > sources reducer', () => {
       { id: '2', name: 'name2' },
     ];
     const COUNT = 1234;
-    const DATA = { payload: { sources: SOURCES, sources_aggregate: { aggregate: { total_count: COUNT } } } };
+    const DATA = { payload: { sources: SOURCES, meta: { count: COUNT } } };
 
     const EXPECTED_STATE = {
       ...defaultSourcesState,

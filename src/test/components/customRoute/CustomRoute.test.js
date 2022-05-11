@@ -1,9 +1,9 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+
+import { render, screen } from '@testing-library/react';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import CustomRoute from '../../../components/CustomRoute/CustomRoute';
-import RedirectNoWriteAccess from '../../../components/RedirectNoWriteAccess/RedirectNoWriteAccess';
 import * as RedirectNoId from '../../../components/RedirectNoId/RedirectNoId';
 import * as RedirectNoPaused from '../../../components/RedirectNoPaused/RedirectNoPaused';
 import * as useSource from '../../../hooks/useSource';
@@ -21,28 +21,14 @@ describe('CustomRoute', () => {
     };
   });
 
-  it('renders route component', () => {
-    const wrapper = mount(componentWrapperIntl(<CustomRoute exact route={route} Component={PokusComponent} />));
-
-    expect(wrapper.find(Route)).toHaveLength(1);
-    expect(wrapper.find(Route).props().exact).toEqual(true);
-    expect(wrapper.find(Route).props().path).toEqual(route.path);
-    expect(wrapper.find(Route).props().component).toEqual(undefined);
-    expect(wrapper.find(PokusComponent)).toHaveLength(0);
-    expect(wrapper.find(RedirectNoWriteAccess)).toHaveLength(0);
-    expect(wrapper.find(RedirectNoId)).toHaveLength(0);
-  });
-
   it('renders custom component', () => {
-    const wrapper = mount(
-      componentWrapperIntl(<CustomRoute exact route={route} Component={PokusComponent} />, undefined, ['/path'])
-    );
+    render(componentWrapperIntl(<CustomRoute exact route={route} Component={PokusComponent} />, undefined, ['/path']));
 
-    expect(wrapper.find(PokusComponent)).toHaveLength(1);
+    expect(screen.getByText('Custom component', { selector: 'h1' })).toBeInTheDocument();
   });
 
   it('renders custom component and passes props', () => {
-    const wrapper = mount(
+    render(
       componentWrapperIntl(
         <CustomRoute
           exact
@@ -55,25 +41,21 @@ describe('CustomRoute', () => {
       )
     );
 
-    expect(wrapper.find(PokusComponent)).toHaveLength(1);
-    expect(wrapper.find(PokusComponent).props().className).toEqual('pepa');
-    expect(wrapper.find(PokusComponent).props().style).toEqual({
-      color: 'red',
-    });
+    expect(screen.getByText('Custom component', { selector: 'h1' })).toHaveClass('pepa');
+    expect(screen.getByText('Custom component', { selector: 'h1' })).toHaveStyle({ color: 'red' });
   });
 
   it('renders RedirectNotAdmin when writeAccess set', () => {
-    store = mockStore({ user: { writePermissions: true } });
+    store = mockStore({ user: { writePermissions: false } });
 
     route = {
       ...route,
       writeAccess: true,
     };
 
-    const wrapper = mount(componentWrapperIntl(<CustomRoute exact route={route} Component={PokusComponent} />, store, ['/path']));
+    render(componentWrapperIntl(<CustomRoute exact route={route} Component={PokusComponent} />, store, ['/path']));
 
-    expect(wrapper.find(PokusComponent)).toHaveLength(1);
-    expect(wrapper.find(RedirectNoWriteAccess)).toHaveLength(1);
+    expect(screen.getByTestId('location-display').textContent).toEqual('/sources');
   });
 
   it('renders RedirectNoId when redirectNoId set', () => {
@@ -85,11 +67,9 @@ describe('CustomRoute', () => {
       redirectNoId: true,
     };
 
-    const wrapper = mount(
-      componentWrapperIntl(<CustomRoute exact route={route} Component={PokusComponent} />, undefined, ['/path/'])
-    );
+    render(componentWrapperIntl(<CustomRoute exact route={route} Component={PokusComponent} />, undefined, ['/path/']));
 
-    expect(wrapper.find(RedirectNoId.default)).toHaveLength(1);
+    expect(screen.getByText('Redirect no ID mock')).toBeInTheDocument();
     expect(useSource.useSource).toHaveBeenCalled();
   });
 
@@ -102,9 +82,9 @@ describe('CustomRoute', () => {
       noPaused: true,
     };
 
-    const wrapper = mount(componentWrapperIntl(<CustomRoute exact route={route} Component={PokusComponent} />, store, ['/path']));
+    render(componentWrapperIntl(<CustomRoute exact route={route} Component={PokusComponent} />, store, ['/path']));
 
-    expect(wrapper.find(PokusComponent)).toHaveLength(1);
-    expect(wrapper.find(RedirectNoPaused.default)).toHaveLength(1);
+    expect(screen.getByText('Custom component', { selector: 'h1' })).toBeInTheDocument();
+    expect(screen.getByText('Redirect no paused mock')).toBeInTheDocument();
   });
 });

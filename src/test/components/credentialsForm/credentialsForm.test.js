@@ -1,23 +1,18 @@
 import React from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { act } from 'react-dom/test-utils';
-
-import { Modal, Spinner, Bullseye, Button } from '@patternfly/react-core';
+import { Route } from 'react-router-dom';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import sourceTypesData, { AMAZON, AMAZON_ID } from '../../__mocks__/sourceTypesData';
+import sourceTypes, { AMAZON_TYPE } from '../../__mocks__/sourceTypes';
 import mockStore from '../../__mocks__/mockStore';
-import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
 import CredentialsForm from '../../../components/CredentialsForm/CredentialsForm';
 
 import * as api from '../../../api/entities';
 import * as actions from '../../../redux/sources/actions';
-import ModalFormTemplate from '../../../components/CredentialsForm/ModalFormTemplate';
-import generateSuperKeyFields from '../../../components/addSourceWizard/superKey/generateSuperKeyFields';
 
 describe('CredentialsForm', () => {
-  let wrapper;
   let store;
 
   const sourceId = '3627987';
@@ -48,58 +43,42 @@ describe('CredentialsForm', () => {
 
     store = mockStore({
       sources: {
-        entities: [{ id: sourceId, source_type_id: AMAZON_ID }],
-        sourceTypes: sourceTypesData.data,
+        entities: [{ id: sourceId, source_type_id: AMAZON_TYPE.id }],
+        sourceTypes,
       },
     });
   });
 
   it('renders', async () => {
-    listSourceAuthentications = jest
-      .fn()
-      .mockImplementation(() => new Promise((resolve) => setTimeout(() => resolve(authentications), 100)));
+    listSourceAuthentications = jest.fn().mockResolvedValue(authentications);
 
     api.getSourcesApi = () => ({
       listSourceAuthentications,
     });
-
-    jest.useFakeTimers();
-
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesDetailEditCredentials.path} render={(...args) => <CredentialsForm {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
-    wrapper.update();
-
-    expect(wrapper.find(Modal).props().title).toEqual('Edit account authorization credentials');
-    expect(wrapper.find(Bullseye)).toHaveLength(1);
-    expect(wrapper.find(Spinner)).toHaveLength(1);
-    expect(wrapper.find(SourcesFormRenderer)).toHaveLength(0);
-
-    await act(async () => {
-      jest.runAllTimers();
-    });
-    wrapper.update();
-
-    expect(wrapper.find(Spinner)).toHaveLength(0);
-    expect(wrapper.find(Bullseye)).toHaveLength(0);
-    expect(wrapper.find(Modal).props().title).toEqual('Edit account authorization credentials');
-    expect(wrapper.find(Modal).props().description).toEqual(
-      'Use the fields below to reset your account authorization credentials. It may take some time to validate new information.'
+    render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetailEditCredentials.path} render={(...args) => <CredentialsForm {...args} />} />,
+        store,
+        initialEntry
+      )
     );
-    expect(wrapper.find(Modal).props().isOpen).toEqual(true);
-    expect(wrapper.find(ModalFormTemplate)).toHaveLength(1);
-    expect(wrapper.find(SourcesFormRenderer).props().initialValues).toEqual({ authentication: authentications.data[1] });
-    expect(wrapper.find(SourcesFormRenderer).props().schema).toEqual({
-      fields: generateSuperKeyFields(sourceTypesData.data, AMAZON.name),
-    });
 
-    jest.useRealTimers();
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+    expect(screen.getByText('Edit account authorization credentials')).toBeInTheDocument();
+
+    await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
+
+    expect(screen.getByText('Edit account authorization credentials')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Use the fields below to reset your account authorization credentials. It may take some time to validate new information.'
+      )
+    ).toBeInTheDocument();
+
+    expect([...screen.getAllByRole('textbox')].map((e) => e.name || e.getAttribute('aria-label'))).toEqual([
+      'authentication.username',
+      'Filled password',
+    ]);
   });
 
   it('renders when paused', async () => {
@@ -111,80 +90,58 @@ describe('CredentialsForm', () => {
 
     store = mockStore({
       sources: {
-        entities: [{ id: sourceId, source_type_id: AMAZON_ID, paused_at: 'today' }],
-        sourceTypes: sourceTypesData.data,
+        entities: [{ id: sourceId, source_type_id: AMAZON_TYPE.id, paused_at: 'today' }],
+        sourceTypes,
       },
     });
 
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesDetailEditCredentials.path} render={(...args) => <CredentialsForm {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
-    wrapper.update();
+    render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetailEditCredentials.path} render={(...args) => <CredentialsForm {...args} />} />,
+        store,
+        initialEntry
+      )
+    );
 
-    expect(wrapper.find(Modal).props().title).toEqual('View account authorization credentials');
-    expect(wrapper.find(Modal).props().description).toEqual(undefined);
-    expect(wrapper.find(Modal).props().footer).toEqual(null);
+    await waitFor(() => expect(screen.getByText('View account authorization credentials')).toBeInTheDocument());
 
-    expect(
-      wrapper
-        .find(SourcesFormRenderer)
-        .props()
-        .schema.fields.every((field) => field.isDisabled)
-    ).toEqual(true);
+    expect([...screen.getAllByRole('textbox')].every((e) => e.disabled)).toEqual(true);
   });
 
   it('closes via cross icon', async () => {
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesDetailEditCredentials.path} render={(...args) => <CredentialsForm {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
-    wrapper.update();
-
-    await act(async () => {
-      wrapper.find(Button).first().simulate('click');
-    });
-    wrapper.update();
-
-    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
-      replaceRouteId(routes.sourcesDetail.path, sourceId)
+    render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetailEditCredentials.path} render={(...args) => <CredentialsForm {...args} />} />,
+        store,
+        initialEntry
+      )
     );
+
+    await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
+
+    await userEvent.click(screen.getByLabelText('Close'));
+
+    expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
   });
 
   it('closes via cancel button', async () => {
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesDetailEditCredentials.path} render={(...args) => <CredentialsForm {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
-    wrapper.update();
-
-    await act(async () => {
-      wrapper.find(Button).last().simulate('click');
-    });
-    wrapper.update();
-
-    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
-      replaceRouteId(routes.sourcesDetail.path, sourceId)
+    render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetailEditCredentials.path} render={(...args) => <CredentialsForm {...args} />} />,
+        store,
+        initialEntry
+      )
     );
+
+    await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
+
+    await userEvent.click(screen.getByText('Cancel'));
+
+    expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
   });
 
   it('submit - success', async () => {
-    const updateAuthentication = jest.fn().mockImplementation(() => new Promise((resolve) => setTimeout(() => resolve(), 100)));
+    const updateAuthentication = mockApi();
 
     api.getSourcesApi = () => ({
       listSourceAuthentications,
@@ -193,57 +150,41 @@ describe('CredentialsForm', () => {
 
     actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'nonsense' }));
 
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesDetailEditCredentials.path} render={(...args) => <CredentialsForm {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
-    wrapper.update();
+    render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetailEditCredentials.path} render={(...args) => <CredentialsForm {...args} />} />,
+        store,
+        initialEntry
+      )
+    );
 
-    await act(async () => {
-      wrapper.find('input[name="authentication.username"]').instance().value = 'newname';
-      wrapper.find('input[name="authentication.username"]').simulate('change');
-    });
-    wrapper.update();
+    await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
+
+    await userEvent.clear(screen.getAllByRole('textbox')[0]);
+    await userEvent.type(screen.getAllByRole('textbox')[0], 'newname');
 
     expect(updateAuthentication).not.toHaveBeenCalled();
     expect(actions.addMessage).not.toHaveBeenCalled();
 
-    jest.useFakeTimers();
+    await userEvent.click(screen.getByText('Submit'));
 
-    await act(async () => {
-      wrapper.find('form').simulate('submit');
-    });
-    wrapper.update();
-
-    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
-      replaceRouteId(routes.sourcesDetail.path, sourceId)
-    );
+    expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
     expect(updateAuthentication).toHaveBeenCalledWith('auth-id', { username: 'newname' });
     expect(actions.addMessage).not.toHaveBeenCalled();
 
-    await act(async () => {
-      jest.runAllTimers();
-    });
-    wrapper.update();
+    updateAuthentication.resolve();
 
-    expect(actions.addMessage).toHaveBeenCalledWith({
-      description: 'It may take some time to validate your new credentials. Check this page for status updates.',
-      title: 'New credentials saved',
-      variant: 'info',
-    });
-
-    jest.useRealTimers();
+    await waitFor(() =>
+      expect(actions.addMessage).toHaveBeenCalledWith({
+        description: 'It may take some time to validate your new credentials. Check this page for status updates.',
+        title: 'New credentials saved',
+        variant: 'info',
+      })
+    );
   });
 
   it('submit - fail', async () => {
-    const updateAuthentication = jest
-      .fn()
-      .mockImplementation(() => new Promise((resolve, reject) => setTimeout(() => reject(), 100)));
+    const updateAuthentication = mockApi();
 
     api.getSourcesApi = () => ({
       listSourceAuthentications,
@@ -252,51 +193,36 @@ describe('CredentialsForm', () => {
 
     actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'nonsense' }));
 
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <Route path={routes.sourcesDetailEditCredentials.path} render={(...args) => <CredentialsForm {...args} />} />,
-          store,
-          initialEntry
-        )
-      );
-    });
-    wrapper.update();
+    render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetailEditCredentials.path} render={(...args) => <CredentialsForm {...args} />} />,
+        store,
+        initialEntry
+      )
+    );
+    await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
 
-    await act(async () => {
-      wrapper.find('input[name="authentication.username"]').instance().value = 'newname';
-      wrapper.find('input[name="authentication.username"]').simulate('change');
-    });
-    wrapper.update();
+    await userEvent.clear(screen.getAllByRole('textbox')[0]);
+    await userEvent.type(screen.getAllByRole('textbox')[0], 'newname');
 
     expect(updateAuthentication).not.toHaveBeenCalled();
     expect(actions.addMessage).not.toHaveBeenCalled();
 
-    jest.useFakeTimers();
+    await userEvent.click(screen.getByText('Submit'));
 
-    await act(async () => {
-      wrapper.find('form').simulate('submit');
-    });
-    wrapper.update();
-
-    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
-      replaceRouteId(routes.sourcesDetail.path, sourceId)
-    );
+    expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
     expect(updateAuthentication).toHaveBeenCalledWith('auth-id', { username: 'newname' });
     expect(actions.addMessage).not.toHaveBeenCalled();
 
-    await act(async () => {
-      jest.runAllTimers();
-    });
-    wrapper.update();
+    updateAuthentication.reject();
 
-    expect(actions.addMessage).toHaveBeenCalledWith({
-      description:
-        'There was a problem while trying to update credentials. Please try again. If the error persists, open a support case.',
-      title: 'Error updating credentials',
-      variant: 'danger',
-    });
-
-    jest.useRealTimers();
+    await waitFor(() =>
+      expect(actions.addMessage).toHaveBeenCalledWith({
+        description:
+          'There was a problem while trying to update credentials. Please try again. If the error persists, open a support case.',
+        title: 'Error updating credentials',
+        variant: 'danger',
+      })
+    );
   });
 });

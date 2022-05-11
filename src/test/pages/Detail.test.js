@@ -1,27 +1,18 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import { act } from 'react-dom/test-utils';
 
-import { GridItem, Grid } from '@patternfly/react-core';
+import { render, screen, act } from '@testing-library/react';
 
 import Detail from '../../pages/Detail';
-import { DetailLoader } from '../../components/SourcesTable/loaders';
 import * as RedirectNoId from '../../components/RedirectNoId/RedirectNoId';
 import * as RedirectNoWriteAccess from '../../components/RedirectNoWriteAccess/RedirectNoWriteAccess';
 import * as RedirectNoPaused from '../../components/RedirectNoPaused/RedirectNoPaused';
-import CustomRoute from '../../components/CustomRoute/CustomRoute';
 import * as ApplicationResourcesCard from '../../components/SourceDetail/ApplicationResourcesCard';
 import * as ApplicationsCard from '../../components/SourceDetail/ApplicationsCard';
 import * as SourceSummaryCard from '../../components/SourceDetail/SourceSummaryCard';
 import * as DetailHeader from '../../components/SourceDetail/DetailHeader';
 import { replaceRouteId, routes } from '../../Routes';
 import componentWrapperIntl from '../../utilities/testsHelpers';
-import * as SourceRemoveModal from '../../components/SourceRemoveModal/SourceRemoveModal';
-import * as AddApplication from '../../components/AddApplication/AddApplication';
-import * as RemoveAppModal from '../../components/AddApplication/RemoveAppModal';
-import * as SourceRenameModal from '../../components/SourceDetail/SourceRenameModal';
-import * as CredentialsForm from '../../components/CredentialsForm/CredentialsForm';
-import PauseAlert from '../../components/SourceDetail/PauseAlert';
 import mockStore from '../__mocks__/mockStore';
 
 jest.mock('../../components/SourceRemoveModal/SourceRemoveModal', () => ({
@@ -75,30 +66,29 @@ jest.mock('react', () => {
 });
 
 describe('SourceDetail', () => {
-  let wrapper;
   let store;
 
   const sourceId = '3627987';
   const initialEntry = [replaceRouteId(routes.sourcesDetail.path, sourceId)];
 
-  DetailHeader.default = () => <span>Header</span>;
-  SourceSummaryCard.default = () => <span>Summary</span>;
-  ApplicationsCard.default = () => <span>AppCard</span>;
-  ApplicationResourcesCard.default = () => <span>ResourcesCard</span>;
-  RedirectNoId.default = () => <span>Mock redirect</span>;
-  RedirectNoWriteAccess.default = () => <span>Mock redirect</span>;
-  RedirectNoPaused.default = () => <span>Mock redirect</span>;
+  beforeEach(() => {
+    DetailHeader.default = () => <span>Header</span>;
+    SourceSummaryCard.default = () => <span>Summary</span>;
+    ApplicationsCard.default = () => <span>AppCard</span>;
+    ApplicationResourcesCard.default = () => <span>ResourcesCard</span>;
+    RedirectNoId.default = () => <span>Mock redirect no id</span>;
+    RedirectNoWriteAccess.default = () => <span>Mock redirect no write access</span>;
+    RedirectNoPaused.default = () => <span>Mock redirect no pause</span>;
+  });
 
   it('renders loading', async () => {
-    RedirectNoId.default = () => <span>Mock redirect</span>;
-
     store = mockStore({
       sources: {
         entities: [],
       },
     });
 
-    wrapper = mount(
+    render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
         store,
@@ -106,8 +96,8 @@ describe('SourceDetail', () => {
       )
     );
 
-    expect(wrapper.find(DetailLoader)).toHaveLength(1);
-    expect(wrapper.find(RedirectNoId.default)).toHaveLength(1);
+    expect(screen.getAllByRole('progressbar')).toHaveLength(4);
+    expect(screen.getByText('Mock redirect no id')).toBeInTheDocument();
   });
 
   it('renders correctly', async () => {
@@ -121,7 +111,7 @@ describe('SourceDetail', () => {
       },
     });
 
-    wrapper = mount(
+    render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
         store,
@@ -129,20 +119,22 @@ describe('SourceDetail', () => {
       )
     );
 
-    expect(wrapper.find(Grid)).toHaveLength(1);
-    expect(wrapper.find(GridItem)).toHaveLength(3);
-    expect(wrapper.find(DetailHeader.default)).toHaveLength(1);
-    expect(wrapper.find(SourceSummaryCard.default)).toHaveLength(1);
-    expect(wrapper.find(ApplicationsCard.default)).toHaveLength(1);
-    expect(wrapper.find(ApplicationResourcesCard.default)).toHaveLength(1);
-    expect(wrapper.find(CustomRoute)).toHaveLength(5);
-    expect(wrapper.find(SourceRemoveModal.default)).toHaveLength(0);
-    expect(wrapper.find(AddApplication.default)).toHaveLength(0);
-    expect(wrapper.find(RemoveAppModal.default)).toHaveLength(0);
-    expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(0);
-    expect(wrapper.find(RedirectNoId.default)).toHaveLength(0);
-    expect(wrapper.find(SourceRenameModal.default)).toHaveLength(0);
-    expect(wrapper.find(PauseAlert)).toHaveLength(0);
+    expect(screen.getByText('Header')).toBeInTheDocument();
+    expect(screen.getByText('Summary')).toBeInTheDocument();
+    expect(screen.getByText('AppCard')).toBeInTheDocument();
+    expect(screen.getByText('ResourcesCard')).toBeInTheDocument();
+
+    expect(() => screen.getByText('Source paused')).toThrow();
+
+    expect(() => screen.getByText('Remove Modal')).toThrow();
+    expect(() => screen.getByText('Add application')).toThrow();
+    expect(() => screen.getByText('Remove app')).toThrow();
+    expect(() => screen.getByText('Rename')).toThrow();
+    expect(() => screen.getByText('Credentials form')).toThrow();
+
+    expect(() => screen.getByText('Mock redirect no id')).toThrow();
+    expect(() => screen.getByText('Mock redirect no write access')).toThrow();
+    expect(() => screen.getByText('Mock redirect no pause')).toThrow();
   });
 
   it('renders paused source', async () => {
@@ -157,7 +149,7 @@ describe('SourceDetail', () => {
       },
     });
 
-    wrapper = mount(
+    render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
         store,
@@ -165,19 +157,22 @@ describe('SourceDetail', () => {
       )
     );
 
-    expect(wrapper.find(Grid)).toHaveLength(1);
-    expect(wrapper.find(GridItem)).toHaveLength(4);
-    expect(wrapper.find(DetailHeader.default)).toHaveLength(1);
-    expect(wrapper.find(SourceSummaryCard.default)).toHaveLength(1);
-    expect(wrapper.find(ApplicationsCard.default)).toHaveLength(1);
-    expect(wrapper.find(ApplicationResourcesCard.default)).toHaveLength(1);
-    expect(wrapper.find(CustomRoute)).toHaveLength(5);
-    expect(wrapper.find(SourceRemoveModal.default)).toHaveLength(0);
-    expect(wrapper.find(AddApplication.default)).toHaveLength(0);
-    expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(0);
-    expect(wrapper.find(RedirectNoId.default)).toHaveLength(0);
-    expect(wrapper.find(SourceRenameModal.default)).toHaveLength(0);
-    expect(wrapper.find(PauseAlert)).toHaveLength(1);
+    expect(screen.getByText('Header')).toBeInTheDocument();
+    expect(screen.getByText('Summary')).toBeInTheDocument();
+    expect(screen.getByText('AppCard')).toBeInTheDocument();
+    expect(screen.getByText('ResourcesCard')).toBeInTheDocument();
+
+    expect(screen.getByText('Source paused')).toBeInTheDocument();
+
+    expect(() => screen.getByText('Remove Modal')).toThrow();
+    expect(() => screen.getByText('Add application')).toThrow();
+    expect(() => screen.getByText('Remove app')).toThrow();
+    expect(() => screen.getByText('Rename')).toThrow();
+    expect(() => screen.getByText('Credentials form')).toThrow();
+
+    expect(() => screen.getByText('Mock redirect no id')).toThrow();
+    expect(() => screen.getByText('Mock redirect no write access')).toThrow();
+    expect(() => screen.getByText('Mock redirect no pause')).toThrow();
   });
 
   describe('routes', () => {
@@ -198,7 +193,7 @@ describe('SourceDetail', () => {
         const initialEntry = [replaceRouteId(routes.sourcesDetailRemove.path, sourceId)];
 
         await act(async () => {
-          wrapper = mount(
+          render(
             componentWrapperIntl(
               <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
               store,
@@ -206,18 +201,17 @@ describe('SourceDetail', () => {
             )
           );
         });
-        wrapper.update();
 
-        expect(wrapper.find(SourceRemoveModal.default)).toHaveLength(1);
-        expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
-        expect(wrapper.find(RedirectNoPaused.default)).toHaveLength(0);
+        expect(screen.getByText('Remove Modal')).toBeInTheDocument();
+        expect(screen.getByText('Mock redirect no write access')).toBeInTheDocument();
+        expect(() => screen.getByText('Mock redirect no pause')).toThrow();
       });
 
       it('routes to rename source', async () => {
         const initialEntry = [replaceRouteId(routes.sourcesDetailRename.path, sourceId)];
 
         await act(async () => {
-          wrapper = mount(
+          render(
             componentWrapperIntl(
               <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
               store,
@@ -225,18 +219,17 @@ describe('SourceDetail', () => {
             )
           );
         });
-        wrapper.update();
 
-        expect(wrapper.find(SourceRenameModal.default)).toHaveLength(1);
-        expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
-        expect(wrapper.find(RedirectNoPaused.default)).toHaveLength(1);
+        expect(screen.getByText('Rename')).toBeInTheDocument();
+        expect(screen.getByText('Mock redirect no write access')).toBeInTheDocument();
+        expect(screen.getByText('Mock redirect no pause')).toBeInTheDocument();
       });
 
       it('routes to add app', async () => {
         const initialEntry = [replaceRouteId(routes.sourcesDetailAddApp.path, sourceId).replace(':app_type_id', '2')];
 
         await act(async () => {
-          wrapper = mount(
+          render(
             componentWrapperIntl(
               <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
               store,
@@ -244,18 +237,17 @@ describe('SourceDetail', () => {
             )
           );
         });
-        wrapper.update();
 
-        expect(wrapper.find(AddApplication.default)).toHaveLength(1);
-        expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
-        expect(wrapper.find(RedirectNoPaused.default)).toHaveLength(1);
+        expect(screen.getByText('Add application')).toBeInTheDocument();
+        expect(screen.getByText('Mock redirect no write access')).toBeInTheDocument();
+        expect(screen.getByText('Mock redirect no pause')).toBeInTheDocument();
       });
 
       it('routes to remove app', async () => {
         const initialEntry = [replaceRouteId(routes.sourcesDetailRemoveApp.path, sourceId).replace(':app_id', '344')];
 
         await act(async () => {
-          wrapper = mount(
+          render(
             componentWrapperIntl(
               <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
               store,
@@ -263,18 +255,17 @@ describe('SourceDetail', () => {
             )
           );
         });
-        wrapper.update();
 
-        expect(wrapper.find(RemoveAppModal.default)).toHaveLength(1);
-        expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
-        expect(wrapper.find(RedirectNoPaused.default)).toHaveLength(1);
+        expect(screen.getByText('Remove app')).toBeInTheDocument();
+        expect(screen.getByText('Mock redirect no write access')).toBeInTheDocument();
+        expect(screen.getByText('Mock redirect no pause')).toBeInTheDocument();
       });
 
       it('routes to credentials form', async () => {
         const initialEntry = [replaceRouteId(routes.sourcesDetailEditCredentials.path, sourceId)];
 
         await act(async () => {
-          wrapper = mount(
+          render(
             componentWrapperIntl(
               <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
               store,
@@ -282,11 +273,10 @@ describe('SourceDetail', () => {
             )
           );
         });
-        wrapper.update();
 
-        expect(wrapper.find(CredentialsForm.default)).toHaveLength(1);
-        expect(wrapper.find(RedirectNoWriteAccess.default)).toHaveLength(1);
-        expect(wrapper.find(RedirectNoPaused.default)).toHaveLength(0);
+        expect(screen.getByText('Credentials form')).toBeInTheDocument();
+        expect(screen.getByText('Mock redirect no write access')).toBeInTheDocument();
+        expect(() => screen.getByText('Mock redirect no pause')).toThrow();
       });
     });
 
@@ -303,7 +293,7 @@ describe('SourceDetail', () => {
         const initialEntry = [replaceRouteId(routes.sourcesDetailRemove.path, sourceId)];
 
         await act(async () => {
-          wrapper = mount(
+          render(
             componentWrapperIntl(
               <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
               store,
@@ -311,16 +301,15 @@ describe('SourceDetail', () => {
             )
           );
         });
-        wrapper.update();
 
-        expect(wrapper.find(RedirectNoId.default)).toHaveLength(1);
+        expect(screen.getByText('Mock redirect no id')).toBeInTheDocument();
       });
 
       it('routes to rename source', async () => {
         const initialEntry = [replaceRouteId(routes.sourcesDetailRename.path, sourceId)];
 
         await act(async () => {
-          wrapper = mount(
+          render(
             componentWrapperIntl(
               <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
               store,
@@ -328,16 +317,15 @@ describe('SourceDetail', () => {
             )
           );
         });
-        wrapper.update();
 
-        expect(wrapper.find(RedirectNoId.default)).toHaveLength(1);
+        expect(screen.getByText('Mock redirect no id')).toBeInTheDocument();
       });
 
       it('routes to add app', async () => {
         const initialEntry = [replaceRouteId(routes.sourcesDetailAddApp.path, sourceId).replace(':app_type_id', '2')];
 
         await act(async () => {
-          wrapper = mount(
+          render(
             componentWrapperIntl(
               <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
               store,
@@ -345,16 +333,15 @@ describe('SourceDetail', () => {
             )
           );
         });
-        wrapper.update();
 
-        expect(wrapper.find(RedirectNoId.default)).toHaveLength(1);
+        expect(screen.getByText('Mock redirect no id')).toBeInTheDocument();
       });
 
       it('routes to remove app', async () => {
         const initialEntry = [replaceRouteId(routes.sourcesDetailRemoveApp.path, sourceId).replace(':app_id', '344')];
 
         await act(async () => {
-          wrapper = mount(
+          render(
             componentWrapperIntl(
               <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
               store,
@@ -362,16 +349,15 @@ describe('SourceDetail', () => {
             )
           );
         });
-        wrapper.update();
 
-        expect(wrapper.find(RedirectNoId.default)).toHaveLength(1);
+        expect(screen.getByText('Mock redirect no id')).toBeInTheDocument();
       });
 
       it('routes to credentials form', async () => {
         const initialEntry = [replaceRouteId(routes.sourcesDetailEditCredentials.path, sourceId)];
 
         await act(async () => {
-          wrapper = mount(
+          render(
             componentWrapperIntl(
               <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
               store,
@@ -379,9 +365,8 @@ describe('SourceDetail', () => {
             )
           );
         });
-        wrapper.update();
 
-        expect(wrapper.find(RedirectNoId.default)).toHaveLength(1);
+        expect(screen.getByText('Mock redirect no id')).toBeInTheDocument();
       });
     });
   });

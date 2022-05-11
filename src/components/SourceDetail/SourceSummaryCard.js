@@ -37,7 +37,7 @@ const SourceSummaryCard = () => {
 
   let awsAccountNumber;
 
-  if (type.name === 'amazon') {
+  if (type?.name === 'amazon') {
     const arnType = source.authentications?.find(({ authtype }) => authtype.includes('arn'));
 
     if (arnType?.username) {

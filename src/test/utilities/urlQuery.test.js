@@ -1,8 +1,8 @@
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../utilities/constants';
 import { parseQuery, updateQuery } from '../../utilities/urlQuery';
 import { AVAILABLE, PARTIALLY_UNAVAILABLE, UNAVAILABLE } from '../../views/formatters';
-import applicationTypesData, { COSTMANAGEMENT_APP, TOPOLOGICALINVENTORY_APP } from '../__mocks__/applicationTypesData';
-import sourceTypesData, { AMAZON_ID, OPENSHIFT_ID } from '../__mocks__/sourceTypesData';
+import appTypes, { COST_MANAGEMENT_APP, TOPOLOGY_INV_APP } from '../__mocks__/applicationTypes';
+import sourceTypes, { AMAZON_TYPE, OPENSHIFT_TYPE } from '../__mocks__/sourceTypes';
 
 describe('urlQuery helpers', () => {
   let tmpLocation;
@@ -51,7 +51,7 @@ describe('urlQuery helpers', () => {
       };
 
       expectedQuery =
-        'sources?sort_by[]=name:asc&limit=50&offset=550&activeVendor=Cloud&filter[name][contains_i]=pepa&filter[source_type_id][]=125&filter[source_type_id][]=542&filter[source_type_id][]=1';
+        'sources?sort_by[]=name:asc&limit=50&offset=550&category=Cloud&filter[name][contains_i]=pepa&filter[source_type_id][]=125&filter[source_type_id][]=542&filter[source_type_id][]=1';
     });
 
     afterEach(() => {
@@ -78,7 +78,7 @@ describe('urlQuery helpers', () => {
         filterValue: {},
       };
 
-      expectedQuery = 'sources?sort_by[]=name:asc&limit=50&offset=550&activeVendor=Cloud';
+      expectedQuery = 'sources?sort_by[]=name:asc&limit=50&offset=550&category=Cloud';
 
       updateQuery(params);
 
@@ -271,8 +271,8 @@ describe('urlQuery helpers', () => {
       describe('enhanced attributes', () => {
         const getState = () => ({
           sources: {
-            appTypes: applicationTypesData.data,
-            sourceTypes: sourceTypesData.data,
+            appTypes,
+            sourceTypes,
           },
         });
 
@@ -283,7 +283,7 @@ describe('urlQuery helpers', () => {
 
           expect(result).toEqual({
             filterValue: {
-              source_type_id: [AMAZON_ID],
+              source_type_id: [AMAZON_TYPE.id],
             },
           });
         });
@@ -295,7 +295,7 @@ describe('urlQuery helpers', () => {
 
           expect(result).toEqual({
             filterValue: {
-              applications: [COSTMANAGEMENT_APP.id],
+              applications: [COST_MANAGEMENT_APP.id],
             },
           });
         });
@@ -307,8 +307,8 @@ describe('urlQuery helpers', () => {
 
           expect(result).toEqual({
             filterValue: {
-              applications: [COSTMANAGEMENT_APP.id, TOPOLOGICALINVENTORY_APP.id],
-              source_type_id: [OPENSHIFT_ID, AMAZON_ID],
+              applications: [COST_MANAGEMENT_APP.id, TOPOLOGY_INV_APP.id],
+              source_type_id: [OPENSHIFT_TYPE.id, AMAZON_TYPE.id],
             },
           });
         });
@@ -333,24 +333,46 @@ describe('urlQuery helpers', () => {
       });
     });
 
-    describe('active vendor', () => {
-      it('red hat vendor', () => {
-        window.location.search = `?activeVendor=${REDHAT_VENDOR}`;
+    describe('active category', () => {
+      it('red hat category', () => {
+        window.location.search = `?category=${REDHAT_VENDOR}`;
 
         const result = parseQuery();
 
         expect(result).toEqual({
-          activeVendor: REDHAT_VENDOR,
+          activeCategory: REDHAT_VENDOR,
         });
       });
 
-      it('cloud vendors', () => {
-        window.location.search = `?activeVendor=${CLOUD_VENDOR}`;
+      it('cloud category', () => {
+        window.location.search = `?category=${CLOUD_VENDOR}`;
 
         const result = parseQuery();
 
         expect(result).toEqual({
-          activeVendor: CLOUD_VENDOR,
+          activeCategory: CLOUD_VENDOR,
+        });
+      });
+
+      describe('activeVendor [DEPRECATED]', () => {
+        it('red hat category', () => {
+          window.location.search = `?activeVendor=${REDHAT_VENDOR}`;
+
+          const result = parseQuery();
+
+          expect(result).toEqual({
+            activeCategory: REDHAT_VENDOR,
+          });
+        });
+
+        it('cloud category', () => {
+          window.location.search = `?activeVendor=${CLOUD_VENDOR}`;
+
+          const result = parseQuery();
+
+          expect(result).toEqual({
+            activeCategory: CLOUD_VENDOR,
+          });
         });
       });
     });

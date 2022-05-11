@@ -52,6 +52,22 @@ const mapper = (type, openWizard, TileComponent) =>
         }
       />
     ),
+    ibm: (
+      <TileComponent
+        isStacked
+        key={type}
+        title="IBM Cloud"
+        onClick={() => openWizard('ibm')}
+        className="tile pf-u-mr-md pf-u-mt-md"
+        icon={
+          <ImageWithPlaceholder
+            className="provider-icon pf-u-mb-sm"
+            src="/apps/frontend-assets/partners-icons/ibm-cloud.svg"
+            alt="azure logo"
+          />
+        }
+      />
+    ),
   }[type]);
 
 const CloudTiles = (props) => <TilesArray {...props} mapper={mapper} />;

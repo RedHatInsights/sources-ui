@@ -1,7 +1,7 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render, screen, fireEvent, createEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
-import { Tile } from '@patternfly/react-core';
 import { AwsIcon, OpenshiftIcon } from '@patternfly/react-icons';
 
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
@@ -43,11 +43,12 @@ describe('CardSelect component', () => {
   });
 
   it('should render correctly', () => {
-    const wrapper = mount(<FormRenderer {...initialProps} />);
+    render(<FormRenderer {...initialProps} />);
 
-    expect(wrapper.find(Tile).length).toEqual(2);
-    expect(wrapper.find(Tile).first().props().title).toEqual('openshift');
-    expect(wrapper.find(Tile).last().props().title).toEqual('aws');
+    expect(screen.getByText('openshift')).toBeInTheDocument();
+    expect(screen.getByText('aws')).toBeInTheDocument();
+
+    expect(() => screen.getByText('Choose one (this should not be displayed)')).toThrow();
   });
 
   it('should render correctly with icon mapper - do not show text for icons', () => {
@@ -70,13 +71,12 @@ describe('CardSelect component', () => {
       },
     };
 
-    const wrapper = mount(<FormRenderer {...initialProps} />);
+    render(<FormRenderer {...initialProps} />);
 
-    expect(wrapper.find(Tile)).toHaveLength(2);
-    expect(wrapper.find(Tile).first().props().title).toEqual('openshift');
+    expect(screen.getByText('openshift')).toBeInTheDocument();
+    expect(screen.getByText('someIcon')).toBeInTheDocument();
 
-    expect(wrapper.find(Icon)).toHaveLength(1);
-    expect(wrapper.find(Icon).text()).toEqual('someIcon');
+    expect(screen.getByText('AWS')).toBeInTheDocument();
   });
 
   it('should render correctly with mutator and it passes formOptions', () => {
@@ -92,12 +92,10 @@ describe('CardSelect component', () => {
       },
     };
 
-    const wrapper = mount(<FormRenderer {...initialProps} />);
+    render(<FormRenderer {...initialProps} />);
 
-    expect(wrapper.find(Tile).length).toEqual(2);
-    expect(wrapper.find(Tile).length).toEqual(2);
-    expect(wrapper.find(Tile).first().props().title).toEqual('AAA-openshift-filled');
-    expect(wrapper.find(Tile).last().props().title).toEqual('AAA-aws-filled');
+    expect(screen.getByText('AAA-openshift-filled')).toBeInTheDocument();
+    expect(screen.getByText('AAA-aws-filled')).toBeInTheDocument();
   });
 
   it('should render correctly with default icon', () => {
@@ -107,15 +105,15 @@ describe('CardSelect component', () => {
         fields: [
           {
             ...initialProps.schema.fields[0],
-            DefaultIcon: AwsIcon,
+            DefaultIcon: () => <AwsIcon aria-label="aws-icon" />,
           },
         ],
       },
     };
 
-    const wrapper = mount(<FormRenderer {...initialProps} />);
+    render(<FormRenderer {...initialProps} />);
 
-    expect(wrapper.find(AwsIcon).length).toEqual(2);
+    expect(screen.getAllByLabelText('aws-icon')).toHaveLength(2);
   });
 
   it('should render correctly one item disabled', () => {
@@ -131,16 +129,16 @@ describe('CardSelect component', () => {
       },
     };
 
-    const wrapper = mount(<FormRenderer {...initialProps} />);
+    render(<FormRenderer {...initialProps} />);
 
-    expect(wrapper.find(Tile).last().props().className.includes('disabled')).toEqual(true);
+    expect(screen.getByText('MS Azure').closest('.pf-c-tile')).toHaveClass('pf-m-disabled');
   });
 
   it('should render correctly with iconMapper', () => {
     const iconMapper = (value, defaultIcon) =>
       ({
-        aws: AwsIcon,
-        ops: OpenshiftIcon,
+        aws: () => <AwsIcon aria-label="aws-icon" />,
+        ops: () => <OpenshiftIcon aria-label="openshift-icon" />,
       }[value] || defaultIcon);
 
     initialProps = {
@@ -155,29 +153,26 @@ describe('CardSelect component', () => {
       },
     };
 
-    const wrapper = mount(<FormRenderer {...initialProps} />);
+    render(<FormRenderer {...initialProps} />);
 
-    expect(wrapper.find(AwsIcon).length).toEqual(1);
-    expect(wrapper.find(OpenshiftIcon).length).toEqual(1);
+    expect(screen.getByLabelText('aws-icon')).toBeInTheDocument();
+    expect(screen.getByLabelText('openshift-icon')).toBeInTheDocument();
   });
 
-  it('should set default value', () => {
-    const wrapper = mount(<FormRenderer {...initialProps} initialValues={{ 'card-select': 'ops' }} />);
+  it('should set default value', async () => {
+    render(<FormRenderer {...initialProps} initialValues={{ 'card-select': 'ops' }} />);
 
-    // value is set, we click on the card and check if clicking on it will unselect it
-    wrapper.find(Tile).first().simulate('click');
-
-    wrapper.find('form').simulate('submit');
+    await userEvent.click(screen.getByText('openshift'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({});
   });
 
-  it('should clicked single select', () => {
-    const wrapper = mount(<FormRenderer {...initialProps} />);
+  it('should clicked single select', async () => {
+    render(<FormRenderer {...initialProps} />);
 
-    wrapper.find(Tile).first().simulate('click');
-
-    wrapper.find('form').simulate('submit');
+    await userEvent.click(screen.getByText('openshift'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       pre: 'filled',
@@ -185,16 +180,28 @@ describe('CardSelect component', () => {
     });
   });
 
-  it('should change by pressing enter single select', () => {
-    const wrapper = mount(<FormRenderer {...initialProps} />);
+  it('should change by pressing enter single select', async () => {
+    render(<FormRenderer {...initialProps} />);
 
     const preventDefaultMock = jest.fn();
-    wrapper.find(Tile).last().simulate('keypress', { charCode: 32, preventDefault: preventDefaultMock });
-    wrapper.update();
+
+    await userEvent.tab();
+    await userEvent.tab();
+
+    expect(screen.getByText('aws').closest('.pf-c-tile')).toHaveFocus();
+
+    const myEvent = createEvent.keyPress(screen.getByText('aws').closest('.pf-c-tile'), {
+      key: 'Space',
+      code: 32,
+      charCode: 32,
+    });
+    myEvent.preventDefault = preventDefaultMock;
+
+    fireEvent(screen.getByText('aws').closest('.pf-c-tile'), myEvent);
 
     expect(preventDefaultMock).toHaveBeenCalled();
 
-    wrapper.find('form').simulate('submit');
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       pre: 'filled',
@@ -202,29 +209,28 @@ describe('CardSelect component', () => {
     });
 
     // unselect
-    wrapper.find(Tile).last().simulate('keypress', { charCode: 32 });
-    wrapper.update();
-
-    wrapper.find('form').simulate('submit');
+    fireEvent(screen.getByText('aws').closest('.pf-c-tile'), myEvent);
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       pre: 'filled',
     });
   });
 
-  it('should not change by pressing shift single select', () => {
-    const wrapper = mount(<FormRenderer {...initialProps} />);
+  it('should not change by pressing shift single select', async () => {
+    render(<FormRenderer {...initialProps} />);
 
-    wrapper.find(Tile).last().simulate('keypress', { key: 'Shift' });
-
-    wrapper.find('form').simulate('submit');
+    await userEvent.tab();
+    await userEvent.tab();
+    await userEvent.keyboard('{Shift}');
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       pre: 'filled',
     });
   });
 
-  it('should not clicked disabled', () => {
+  it('should not clicked disabled', async () => {
     initialProps = {
       ...initialProps,
       schema: {
@@ -237,18 +243,18 @@ describe('CardSelect component', () => {
       },
     };
 
-    const wrapper = mount(<FormRenderer {...initialProps} />);
+    render(<FormRenderer {...initialProps} />);
 
-    wrapper.find(Tile).first().simulate('click');
+    await userEvent.click(screen.getByText('openshift'));
 
-    wrapper.find('form').simulate('submit');
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       pre: 'filled',
     });
   });
 
-  it('should clicked multiSelect select', () => {
+  it('should clicked multiSelect select', async () => {
     initialProps = {
       ...initialProps,
       schema: {
@@ -261,26 +267,19 @@ describe('CardSelect component', () => {
       },
     };
 
-    const wrapper = mount(<FormRenderer {...initialProps} />);
+    render(<FormRenderer {...initialProps} />);
 
-    wrapper.find(Tile).first().simulate('click');
-    wrapper.update();
-
-    wrapper.find(Tile).last().simulate('click');
-    wrapper.update();
-
-    wrapper.find('form').simulate('submit');
+    await userEvent.click(screen.getByText('openshift'));
+    await userEvent.click(screen.getByText('aws'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       pre: 'filled',
       'card-select': ['ops', 'aws'],
     });
 
-    // unselect
-    wrapper.update();
-    wrapper.find(Tile).first().simulate('click');
-
-    wrapper.find('form').simulate('submit');
+    await userEvent.click(screen.getByText('openshift'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       pre: 'filled',

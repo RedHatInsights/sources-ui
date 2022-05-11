@@ -8,7 +8,8 @@ const { config: webpackConfig, plugins } = config({
   deployment: process.env.BETA ? 'beta/apps' : 'apps',
   useProxy: true,
   appUrl: process.env.BETA ? '/beta/settings/sources' : '/settings/sources',
-  useCloud: true,
+  env: process.env.BETA ? 'stage-beta' : 'stage-stable',
+  useChromeTemplate: true,
   //localChrome: process.env.INSIGHTS_CHROME,
   //proxyVerbose: true,
 });
@@ -19,6 +20,7 @@ plugins.push(
     useFileHash: false,
     exposes: {
       './RootApp': resolve(__dirname, '../src/DevEntry'),
+      './RecommendedServices': resolve(__dirname, '../src/marketplace/RecommendedServices.js'),
     },
   }),
   new ExtensionsPlugin(

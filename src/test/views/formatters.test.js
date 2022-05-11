@@ -1,8 +1,6 @@
 import React from 'react';
-import { act } from 'react-dom/test-utils';
-import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
-import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
-import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import {
   nameFormatter,
@@ -32,7 +30,7 @@ import {
   PAUSED,
   RHELAZURE,
 } from '../../views/formatters';
-import { sourceTypesData, OPENSHIFT_ID, AMAZON_ID, OPENSHIFT_INDEX, AMAZON, AZURE } from '../__mocks__/sourceTypesData';
+import sourceTypes, { OPENSHIFT_TYPE, AMAZON_TYPE, AZURE_TYPE, GOOGLE_TYPE } from '../__mocks__/sourceTypes';
 import {
   sourcesDataGraphQl,
   SOURCE_CATALOGAPP_INDEX,
@@ -40,63 +38,65 @@ import {
   SOURCE_NO_APS_INDEX,
   SOURCE_ENDPOINT_URL_INDEX,
 } from '../__mocks__/sourcesData';
-import {
-  applicationTypesData,
-  CATALOG_INDEX,
-  TOPOLOGICALINVENTORY_INDEX,
-  COSTMANAGEMENET_INDEX,
-  COSTMANAGEMENT_APP,
-  CATALOG_APP,
-  SUBWATCH_APP,
-} from '../__mocks__/applicationTypesData';
+import appTypes, { TOPOLOGY_INV_APP, COST_MANAGEMENT_APP, CATALOG_APP, SUB_WATCH_APP } from '../__mocks__/applicationTypes';
 
-import { Badge, Popover, Tooltip, Label, LabelGroup, Button } from '@patternfly/react-core';
-
-import { DateFormat } from '@redhat-cloud-services/frontend-components/DateFormat';
 import { IntlProvider } from 'react-intl';
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
-import { Link, MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { replaceRouteId, routes } from '../../Routes';
+
+jest.mock('@patternfly/react-icons/dist/esm/icons/pause-icon', () => ({
+  __esModule: true,
+  default: () => <span>pause icon</span>,
+}));
+jest.mock('@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon', () => ({
+  __esModule: true,
+  default: () => <span>exclamation icon</span>,
+}));
+jest.mock('@patternfly/react-icons/dist/esm/icons/wrench-icon', () => ({
+  __esModule: true,
+  default: () => <span>wrench icon</span>,
+}));
 
 describe('formatters', () => {
   const wrapperWithIntl = (children) => <IntlProvider locale="en">{children}</IntlProvider>;
 
   describe('sourceIsOpenShift', () => {
     it('returns true when is openshift', () => {
-      expect(sourceIsOpenShift({ source_type_id: OPENSHIFT_ID }, sourceTypesData.data)).toEqual(true);
+      expect(sourceIsOpenShift({ source_type_id: OPENSHIFT_TYPE.id }, sourceTypes)).toEqual(true);
     });
 
     it('returns false when is not openshift', () => {
-      expect(sourceIsOpenShift({ source_type_id: AMAZON_ID }, sourceTypesData.data)).toEqual(false);
+      expect(sourceIsOpenShift({ source_type_id: AMAZON_TYPE.id }, sourceTypes)).toEqual(false);
     });
   });
 
   describe('sourceTypeFormatter', () => {
     it('returns product_name (OpenShift)', () => {
       expect(
-        sourceTypeFormatter(OPENSHIFT_ID, undefined, {
-          sourceTypes: sourceTypesData.data,
+        sourceTypeFormatter(OPENSHIFT_TYPE.id, undefined, {
+          sourceTypes,
         })
-      ).toEqual(sourceTypesData.data.find((x) => x.id === OPENSHIFT_ID).product_name);
+      ).toEqual(sourceTypes.find((x) => x.id === OPENSHIFT_TYPE.id).product_name);
     });
 
     it('returns type when there is no product_name', () => {
       expect(
-        sourceTypeFormatter(OPENSHIFT_ID, undefined, {
+        sourceTypeFormatter(OPENSHIFT_TYPE.id, undefined, {
           sourceTypes: [
             {
-              ...sourceTypesData.data[OPENSHIFT_INDEX],
+              ...OPENSHIFT_TYPE,
               product_name: undefined,
             },
           ],
         })
-      ).toEqual(OPENSHIFT_ID);
+      ).toEqual(OPENSHIFT_TYPE.id);
     });
 
     it('returns empty string when no sourceType', () => {
       expect(
         sourceTypeFormatter(undefined, undefined, {
-          sourceTypes: sourceTypesData.data,
+          sourceTypes,
         })
       ).toEqual('');
     });
@@ -104,9 +104,11 @@ describe('formatters', () => {
 
   describe('dateFormatter', () => {
     it('returns parsed date', () => {
-      const wrapper = mount(dateFormatter(sourcesDataGraphQl[0].created_at));
+      Date.now = jest.fn().mockImplementation(() => '99999999999');
 
-      expect(wrapper.find(DateFormat)).toHaveLength(1);
+      render(dateFormatter(sourcesDataGraphQl[0].created_at));
+
+      expect(screen.getByText('Just now')).toBeInTheDocument();
     });
   });
 
@@ -115,7 +117,7 @@ describe('formatters', () => {
       expect(
         JSON.stringify(
           nameFormatter(sourcesDataGraphQl[0].name, sourcesDataGraphQl[0], {
-            sourceTypes: sourceTypesData.data,
+            sourceTypes,
           })
         ).includes(sourcesDataGraphQl[0].name)
       ).toEqual(true);
@@ -128,198 +130,193 @@ describe('formatters', () => {
     });
 
     it('returns only imported badge', () => {
-      const wrapper = mount(<IntlProvider locale="en">{importedFormatter('value with no text')}</IntlProvider>);
+      render(<IntlProvider locale="en">{importedFormatter('value with no text')}</IntlProvider>);
 
-      expect(wrapper.find(Badge)).toHaveLength(1);
-      expect(wrapper.find(Tooltip)).toHaveLength(0);
+      expect(screen.getByText('imported', { selector: '.pf-c-badge' })).toBeInTheDocument();
     });
 
-    it('returns imported badge with tooltip', () => {
-      const wrapper = mount(<IntlProvider locale="en">{importedFormatter('cfme')}</IntlProvider>);
+    it('returns imported badge with tooltip', async () => {
+      render(<IntlProvider locale="en">{importedFormatter('cfme')}</IntlProvider>);
 
-      expect(wrapper.find(Badge)).toHaveLength(1);
-      expect(wrapper.find(Tooltip)).toHaveLength(1);
+      expect(screen.getByText('imported', { selector: '.pf-c-badge' })).toBeInTheDocument();
+
+      await userEvent.hover(screen.getByText('imported', { selector: '.pf-c-badge' }));
+
+      await waitFor(() =>
+        expect(screen.getByText('This source can be managed from your connected CloudForms application.')).toBeInTheDocument()
+      );
     });
   });
 
   describe('applicationFormatter', () => {
     it('returns full application list', async () => {
-      const wrapper = mount(
+      render(
         componentWrapperIntl(
           <React.Fragment>
             {applicationFormatter(sourcesDataGraphQl[SOURCE_ALL_APS_INDEX].applications, undefined, {
-              appTypes: applicationTypesData.data,
+              appTypes,
             })}
           </React.Fragment>
         )
       );
 
-      expect(wrapper.find(LabelGroup)).toHaveLength(1);
-      expect(wrapper.find(Label)).toHaveLength(3);
-      expect(wrapper.find(Popover)).toHaveLength(2);
+      expect(screen.getByText(CATALOG_APP.display_name, { exact: false })).toBeInTheDocument();
+      expect(screen.getByText(COST_MANAGEMENT_APP.display_name, { exact: false })).toBeInTheDocument();
+      expect(screen.getByText('1 more', { exact: false })).toBeInTheDocument();
 
-      expect(wrapper.find(Label).at(0).props().children).toEqual(applicationTypesData.data[CATALOG_INDEX].display_name);
-      expect(wrapper.find(Label).at(1).props().children).toEqual(applicationTypesData.data[COSTMANAGEMENET_INDEX].display_name);
-      expect(wrapper.find(Label).at(2).props().children).toEqual('1 more');
+      await userEvent.click(screen.getByText('1 more'));
 
-      await act(async () => {
-        wrapper.find(Label).at(2).simulate('click');
-      });
-      wrapper.update();
-
-      expect(wrapper.find(Label).at(2).props().children).toEqual(
-        applicationTypesData.data[TOPOLOGICALINVENTORY_INDEX].display_name
-      );
+      expect(screen.getByText(TOPOLOGY_INV_APP.display_name, { exact: false })).toBeInTheDocument();
     });
 
     it('returns empty application list', () => {
       const EMPTY_LIST_PLACEHOLDER = '--';
 
-      const wrapper = mount(
+      render(
         componentWrapperIntl(
           <React.Fragment>
             {applicationFormatter(sourcesDataGraphQl[SOURCE_NO_APS_INDEX].applications, undefined, {
-              appTypes: applicationTypesData.data,
+              appTypes,
             })}
           </React.Fragment>
         )
       );
 
-      expect(wrapper.text()).toEqual(EMPTY_LIST_PLACEHOLDER);
-      expect(wrapper.find(LabelGroup)).toHaveLength(0);
-      expect(wrapper.find(Label)).toHaveLength(0);
-      expect(wrapper.find(Popover)).toHaveLength(0);
+      expect(screen.getByText(EMPTY_LIST_PLACEHOLDER, { exact: false })).toBeInTheDocument();
     });
 
     it('returns application list with one item (catalog)', () => {
-      const wrapper = mount(
+      render(
         componentWrapperIntl(
           <React.Fragment>
             {applicationFormatter(sourcesDataGraphQl[SOURCE_CATALOGAPP_INDEX].applications, undefined, {
-              appTypes: applicationTypesData.data,
+              appTypes,
             })}
           </React.Fragment>
         )
       );
 
-      expect(wrapper.find(LabelGroup)).toHaveLength(1);
-      expect(wrapper.find(Label)).toHaveLength(1);
-      expect(wrapper.find(Popover)).toHaveLength(1);
-
-      expect(wrapper.find(Label).at(0).props().children).toEqual(applicationTypesData.data[CATALOG_INDEX].display_name);
+      expect(screen.getByText(CATALOG_APP.display_name, { exact: false })).toBeInTheDocument();
     });
 
-    it('show available popover', () => {
-      const wrapper = mount(
+    it('show available popover', async () => {
+      render(
         componentWrapperIntl(
           <React.Fragment>
             {applicationFormatter(
               [
                 {
-                  application_type_id: COSTMANAGEMENT_APP.id,
+                  application_type_id: COST_MANAGEMENT_APP.id,
                   availability_status: AVAILABLE,
                 },
               ],
               undefined,
               {
-                appTypes: applicationTypesData.data,
+                appTypes,
               }
             )}
           </React.Fragment>
         )
       );
 
-      expect(wrapper.find(Popover).props().bodyContent).toEqual('Everything works fine.');
+      await userEvent.click(screen.getByText('Cost Management'));
+
+      await waitFor(() => expect(screen.getByText('Everything works fine.', { exact: false })).toBeInTheDocument());
     });
 
-    it('show unavailable popover', () => {
+    it('show unavailable popover', async () => {
       const ERROR = 'some error';
-      const wrapper = mount(
+      render(
         componentWrapperIntl(
           <React.Fragment>
             {applicationFormatter(
               [
                 {
-                  application_type_id: COSTMANAGEMENT_APP.id,
+                  application_type_id: COST_MANAGEMENT_APP.id,
                   availability_status: UNAVAILABLE,
                   availability_status_error: ERROR,
                 },
               ],
               undefined,
               {
-                appTypes: applicationTypesData.data,
+                appTypes,
               }
             )}
           </React.Fragment>
         )
       );
 
-      expect(wrapper.find(Popover).props().bodyContent).toEqual(ERROR);
+      await userEvent.click(screen.getByText('Cost Management'));
+
+      await waitFor(() => expect(screen.getByText(ERROR, { exact: false })).toBeInTheDocument());
     });
 
-    it('show unavailable popover - endpoint error', () => {
+    it('show unavailable popover - endpoint error', async () => {
       const ERROR = 'some error';
-      const wrapper = mount(
+      render(
         componentWrapperIntl(
           <React.Fragment>
             {applicationFormatter(
               [
                 {
-                  application_type_id: COSTMANAGEMENT_APP.id,
+                  application_type_id: COST_MANAGEMENT_APP.id,
                   availability_status: null,
                   authentications: [{ resource_type: 'Endpoint' }],
                 },
               ],
               { endpoints: [{ availability_status: UNAVAILABLE, availability_status_error: ERROR }] },
               {
-                appTypes: applicationTypesData.data,
+                appTypes,
               }
             )}
           </React.Fragment>
         )
       );
 
-      expect(wrapper.find(Popover).props().bodyContent).toEqual(ERROR);
+      await userEvent.click(screen.getByText('Cost Management'));
+
+      await waitFor(() => expect(screen.getByText(ERROR, { exact: false })).toBeInTheDocument());
     });
 
-    it('show in progress label', () => {
-      const wrapper = mount(
+    it('show in progress label', async () => {
+      render(
         componentWrapperIntl(
           <React.Fragment>
             {applicationFormatter(
               [
                 {
-                  application_type_id: COSTMANAGEMENT_APP.id,
+                  application_type_id: COST_MANAGEMENT_APP.id,
                   availability_status: IN_PROGRESS,
                   availability_status_error: null,
                 },
               ],
               undefined,
               {
-                appTypes: applicationTypesData.data,
+                appTypes,
               }
             )}
           </React.Fragment>
         )
       );
 
-      const PopoverJSX = wrapper.find(Popover).debug();
-      expect(
-        PopoverJSX.match(/<Popover.*>/)[0].includes(
-          'bodyContent="We are still working to validate credentials. Check back for status updates."'
-        )
+      await userEvent.click(screen.getByText('Cost Management'));
+
+      await waitFor(() =>
+        expect(
+          screen.getByText('We are still working to validate credentials. Check back for status updates.')
+        ).toBeInTheDocument()
       );
-      expect(wrapper.find(WrenchIcon)).toHaveLength(1);
+      expect(screen.getByText('wrench icon')).toBeInTheDocument();
     });
 
-    it('show paused icon', () => {
-      const wrapper = mount(
+    it('show paused icon', async () => {
+      render(
         componentWrapperIntl(
           <React.Fragment>
             {applicationFormatter(
               [
                 {
-                  application_type_id: COSTMANAGEMENT_APP.id,
+                  application_type_id: COST_MANAGEMENT_APP.id,
                   availability_status: IN_PROGRESS,
                   availability_status_error: null,
                   paused_at: 'today',
@@ -327,68 +324,71 @@ describe('formatters', () => {
               ],
               undefined,
               {
-                appTypes: applicationTypesData.data,
+                appTypes,
               }
             )}
           </React.Fragment>
         )
       );
 
-      const PopoverJSX = wrapper.find(Popover).debug();
-      expect(
-        PopoverJSX.match(/<Popover.*>/)[0].includes(
-          'bodyContent="We are still working to validate credentials. Check back for status updates."'
-        )
+      await userEvent.click(screen.getByText('Cost Management'));
+
+      await waitFor(() =>
+        expect(screen.getByText('Resume this application to continue data collection.', { exact: false })).toBeInTheDocument()
       );
-      expect(wrapper.find(PauseIcon)).toHaveLength(1);
+      expect(screen.getByText('pause icon')).toBeInTheDocument();
     });
 
-    it('show unavailable popover - unknown error', () => {
-      const wrapper = mount(
+    it('show unavailable popover - unknown error', async () => {
+      render(
         componentWrapperIntl(
           <React.Fragment>
             {applicationFormatter(
               [
                 {
-                  application_type_id: COSTMANAGEMENT_APP.id,
+                  application_type_id: COST_MANAGEMENT_APP.id,
                   availability_status: UNAVAILABLE,
                   availability_status_error: null,
                 },
               ],
               undefined,
               {
-                appTypes: applicationTypesData.data,
+                appTypes,
               }
             )}
           </React.Fragment>
         )
       );
 
-      expect(wrapper.find(Popover).props().bodyContent).toEqual('Unknown error');
+      await userEvent.click(screen.getByText('Cost Management'));
+
+      await waitFor(() => expect(screen.getByText('Unknown error')).toBeInTheDocument());
     });
 
-    it('show unknown popover', () => {
-      const wrapper = mount(
+    it('show unknown popover', async () => {
+      render(
         componentWrapperIntl(
           <React.Fragment>
             {applicationFormatter(
               [
                 {
-                  application_type_id: COSTMANAGEMENT_APP.id,
+                  application_type_id: COST_MANAGEMENT_APP.id,
                   availability_status: null,
                   availability_status_error: null,
                 },
               ],
               undefined,
               {
-                appTypes: applicationTypesData.data,
+                appTypes,
               }
             )}
           </React.Fragment>
         )
       );
 
-      expect(wrapper.find(Popover).props().bodyContent).toEqual('Status has not been verified.');
+      await userEvent.click(screen.getByText('Cost Management'));
+
+      await waitFor(() => expect(screen.getByText('Status has not been verified.')).toBeInTheDocument());
     });
   });
 
@@ -432,27 +432,21 @@ describe('formatters', () => {
 
   describe('importsTexts', () => {
     it('returns object for cfme', () => {
-      expect(
-        mount(wrapperWithIntl(importsTexts('cfme')))
-          .children()
-          .first()
-      ).toEqual(expect.any(Object));
+      render(wrapperWithIntl(importsTexts('cfme')));
+
+      expect(screen.getByText('This source can be managed from your connected CloudForms application.')).toBeInTheDocument();
     });
 
     it('returns object for CFME', () => {
-      expect(
-        mount(wrapperWithIntl(importsTexts('CFME')))
-          .children()
-          .first()
-      ).toEqual(expect.any(Object));
+      render(wrapperWithIntl(importsTexts('CFME')));
+
+      expect(screen.getByText('This source can be managed from your connected CloudForms application.')).toBeInTheDocument();
     });
 
     it('returns default undefined', () => {
-      expect(
-        mount(wrapperWithIntl(importsTexts('nonsense')))
-          .children()
-          .first()
-      ).toEqual({});
+      const { container } = render(wrapperWithIntl(importsTexts('nonsense')));
+
+      expect(container.textContent).toEqual('');
     });
   });
 
@@ -496,9 +490,6 @@ describe('formatters', () => {
   });
 
   describe('availability status', () => {
-    const APPTYPES = [...applicationTypesData.data, SUBWATCH_APP];
-    const SOURCETYPES = sourceTypesData.data;
-
     describe('getStatusColor', () => {
       it('returns OK color', () => {
         expect(getStatusColor(AVAILABLE)).toEqual('green');
@@ -527,39 +518,39 @@ describe('formatters', () => {
 
     describe('getStatusText', () => {
       it('returns OK text', () => {
-        const wrapper = mount(wrapperWithIntl(getStatusText('available')));
+        render(wrapperWithIntl(getStatusText('available')));
 
-        expect(wrapper.text()).toEqual('Available');
+        expect(screen.getByText('Available')).toBeInTheDocument();
       });
 
       it('returns WARNING text', () => {
-        const wrapper = mount(wrapperWithIntl(getStatusText('partially_available')));
+        render(wrapperWithIntl(getStatusText('partially_available')));
 
-        expect(wrapper.text()).toEqual('Partially available');
+        expect(screen.getByText('Partially available')).toBeInTheDocument();
       });
 
       it('returns DANGER text', () => {
-        const wrapper = mount(wrapperWithIntl(getStatusText('unavailable')));
+        render(wrapperWithIntl(getStatusText('unavailable')));
 
-        expect(wrapper.text()).toEqual('Unavailable');
+        expect(screen.getByText('Unavailable')).toBeInTheDocument();
       });
 
       it('returns OK text', () => {
-        const wrapper = mount(wrapperWithIntl(getStatusText('in_progress')));
+        render(wrapperWithIntl(getStatusText('in_progress')));
 
-        expect(wrapper.text()).toEqual('In progress');
+        expect(screen.getByText('In progress')).toBeInTheDocument();
       });
 
       it('returns unknown by default', () => {
-        const wrapper = mount(wrapperWithIntl(getStatusText('some nonsense')));
+        render(wrapperWithIntl(getStatusText('some nonsense')));
 
-        expect(wrapper.text()).toEqual('Unknown');
+        expect(screen.getByText('Unknown')).toBeInTheDocument();
       });
 
       it('returns unknown by default', () => {
-        const wrapper = mount(wrapperWithIntl(getStatusText('paused_at')));
+        render(wrapperWithIntl(getStatusText('paused_at')));
 
-        expect(wrapper.text()).toEqual('Paused');
+        expect(screen.getByText('Paused')).toBeInTheDocument();
       });
     });
 
@@ -568,38 +559,40 @@ describe('formatters', () => {
       const ERRORMESSAGE2 = 'different type of error';
 
       it('returns OK text', () => {
-        const wrapper = mount(wrapperWithIntl(getStatusTooltipText(AVAILABLE, APPTYPES)));
+        render(wrapperWithIntl(getStatusTooltipText(AVAILABLE, appTypes)));
 
-        expect(wrapper.text()).toEqual('Everything works fine.');
+        expect(screen.getByText('Everything works fine.')).toBeInTheDocument();
       });
 
       it('returns IN PROGRESS text', () => {
-        const wrapper = mount(wrapperWithIntl(getStatusTooltipText(IN_PROGRESS, APPTYPES)));
+        render(wrapperWithIntl(getStatusTooltipText(IN_PROGRESS, appTypes)));
 
-        expect(wrapper.text()).toEqual('We are still working to validate credentials. Check back for status updates.');
+        expect(
+          screen.getByText('We are still working to validate credentials. Check back for status updates.')
+        ).toBeInTheDocument();
       });
 
       it('returns WARNING text', () => {
         const SOURCE_WITH_ERROR = {
           applications: [
             {
-              id: COSTMANAGEMENT_APP.id,
+              id: COST_MANAGEMENT_APP.id,
               error: ERRORMESSAGE,
             },
           ],
         };
 
-        const wrapper = mount(wrapperWithIntl(getStatusTooltipText(PARTIALLY_UNAVAILABLE, APPTYPES, SOURCE_WITH_ERROR)));
+        render(wrapperWithIntl(getStatusTooltipText(PARTIALLY_UNAVAILABLE, appTypes, SOURCE_WITH_ERROR)));
 
-        expect(wrapper.text().includes(ERRORMESSAGE)).toEqual(true);
-        expect(wrapper.text().includes(COSTMANAGEMENT_APP.display_name)).toEqual(true);
+        expect(screen.getByText(ERRORMESSAGE, { exact: false })).toBeInTheDocument();
+        expect(screen.getByText(COST_MANAGEMENT_APP.display_name, { exact: false })).toBeInTheDocument();
       });
 
       it('returns DANGER text', () => {
         const SOURCE_WITH_ERRORS = {
           applications: [
             {
-              id: COSTMANAGEMENT_APP.id,
+              id: COST_MANAGEMENT_APP.id,
               error: ERRORMESSAGE,
             },
             {
@@ -609,33 +602,35 @@ describe('formatters', () => {
           ],
         };
 
-        const wrapper = mount(wrapperWithIntl(getStatusTooltipText(UNAVAILABLE, APPTYPES, SOURCE_WITH_ERRORS)));
+        render(wrapperWithIntl(getStatusTooltipText(UNAVAILABLE, appTypes, SOURCE_WITH_ERRORS)));
 
-        expect(wrapper.text().includes(ERRORMESSAGE)).toEqual(true);
-        expect(wrapper.text().includes(COSTMANAGEMENT_APP.display_name)).toEqual(true);
+        expect(screen.getByText(ERRORMESSAGE, { exact: false })).toBeInTheDocument();
+        expect(screen.getByText(COST_MANAGEMENT_APP.display_name, { exact: false })).toBeInTheDocument();
 
-        expect(wrapper.text().includes(ERRORMESSAGE2)).toEqual(true);
-        expect(wrapper.text().includes(CATALOG_APP.display_name)).toEqual(true);
+        expect(screen.getByText(ERRORMESSAGE2, { exact: false })).toBeInTheDocument();
+        expect(screen.getByText(CATALOG_APP.display_name, { exact: false })).toBeInTheDocument();
       });
 
       it('returns unknown by default', () => {
-        const wrapper = mount(wrapperWithIntl(getStatusTooltipText('some nonsense', APPTYPES)));
+        render(wrapperWithIntl(getStatusTooltipText('some nonsense', appTypes)));
 
-        expect(wrapper.text()).toEqual('Status has not been verified.');
+        expect(screen.getByText('Status has not been verified.')).toBeInTheDocument();
       });
 
       it('returns paused text', () => {
-        const wrapper = mount(wrapperWithIntl(getStatusTooltipText(PAUSED, APPTYPES)));
+        render(wrapperWithIntl(getStatusTooltipText(PAUSED, appTypes)));
 
-        expect(wrapper.text()).toEqual('Data collection is temporarily disabled. Resume source to reestablish connection.');
+        expect(
+          screen.getByText('Data collection is temporarily disabled. Resume source to reestablish connection.')
+        ).toBeInTheDocument();
       });
 
-      it('returns RHEL AZURE text', () => {
-        const wrapper = mount(wrapperWithIntl(getStatusTooltipText(RHELAZURE, APPTYPES)));
+      it('returns RHEL AZURE_TYPE text', () => {
+        render(wrapperWithIntl(getStatusTooltipText(RHELAZURE, appTypes)));
 
-        expect(wrapper.text()).toEqual(
-          'This source cannot currently be monitored in Sources, and does not reflect true status or resources.'
-        );
+        expect(
+          screen.getByText('This source cannot currently be monitored in Sources, and does not reflect true status or resources.')
+        ).toBeInTheDocument();
       });
     });
 
@@ -645,12 +640,9 @@ describe('formatters', () => {
           applications: [{ availability_status: AVAILABLE }],
         };
 
-        const wrapper = mount(
-          wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES, sourceTypes: SOURCETYPES }))
-        );
+        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
-        expect(wrapper.find(Label)).toHaveLength(1);
-        expect(wrapper.text().includes('Available')).toEqual(true);
+        expect(screen.getByText('Available', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
       });
 
       it('returns WARNING text', () => {
@@ -659,12 +651,9 @@ describe('formatters', () => {
           applications: [{ availability_status: AVAILABLE }],
         };
 
-        const wrapper = mount(
-          wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES, sourceTypes: SOURCETYPES }))
-        );
+        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
-        expect(wrapper.find(Label)).toHaveLength(1);
-        expect(wrapper.text().includes('Partially available')).toEqual(true);
+        expect(screen.getByText('Partially available', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
       });
 
       it('returns DANGER text', () => {
@@ -672,12 +661,9 @@ describe('formatters', () => {
           applications: [{ availability_status: UNAVAILABLE }],
         };
 
-        const wrapper = mount(
-          wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES, sourceTypes: SOURCETYPES }))
-        );
+        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
-        expect(wrapper.find(Label)).toHaveLength(1);
-        expect(wrapper.text().includes('Unavailable')).toEqual(true);
+        expect(screen.getByText('Unavailable', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
       });
 
       it('returns in progress text', () => {
@@ -685,24 +671,18 @@ describe('formatters', () => {
           availability_status: IN_PROGRESS,
         };
 
-        const wrapper = mount(
-          wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES, sourceTypes: SOURCETYPES }))
-        );
+        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
-        expect(wrapper.find(Label)).toHaveLength(1);
-        expect(wrapper.find('.pf-c-label').text()).toEqual('In progress');
-        expect(wrapper.find(WrenchIcon)).toHaveLength(1);
+        expect(screen.getByText('In progress', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
+        expect(screen.getByText('wrench icon')).toBeInTheDocument();
       });
 
       it('returns unknown by default', () => {
         const SOURCE = {};
 
-        const wrapper = mount(
-          wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES, sourceTypes: SOURCETYPES }))
-        );
+        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
-        expect(wrapper.find(Label)).toHaveLength(1);
-        expect(wrapper.text().includes('Unknown')).toEqual(true);
+        expect(screen.getByText('Unknown', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
       });
 
       it('returns paused text', () => {
@@ -711,28 +691,54 @@ describe('formatters', () => {
           paused_at: 'today',
         };
 
-        const wrapper = mount(
-          wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES, sourceTypes: SOURCETYPES }))
-        );
+        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
-        expect(wrapper.find(Label)).toHaveLength(1);
-        expect(wrapper.find('.pf-c-label').text()).toEqual('Paused');
-        expect(wrapper.find(PauseIcon)).toHaveLength(1);
+        expect(screen.getByText('Paused', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
+        expect(screen.getByText('pause icon')).toBeInTheDocument();
       });
 
-      it('returns text for Azure + RHEL bundle combo', () => {
+      it('returns text for Azure + RHEL bundle combo', async () => {
         const SOURCE = {
           availability_status: undefined,
-          source_type_id: AZURE.id,
-          applications: [{ application_type_id: SUBWATCH_APP.id }],
+          source_type_id: AZURE_TYPE.id,
+          applications: [{ application_type_id: SUB_WATCH_APP.id }],
         };
 
-        const wrapper = mount(
-          wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes: APPTYPES, sourceTypes: SOURCETYPES }))
-        );
+        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
-        expect(wrapper.find(Label)).toHaveLength(1);
-        expect(wrapper.find('.pf-c-label').text()).toEqual('Unknown');
+        expect(screen.getByText('Unknown', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
+
+        await userEvent.click(screen.getByText('Unknown', { exact: false, selector: '.pf-c-label__content' }));
+
+        await waitFor(() =>
+          expect(
+            screen.getByText(
+              'This source cannot currently be monitored in Sources, and does not reflect true status or resources.'
+            )
+          ).toBeInTheDocument()
+        );
+      });
+
+      it('returns text for Google + RHEL bundle combo', async () => {
+        const SOURCE = {
+          availability_status: undefined,
+          source_type_id: GOOGLE_TYPE.id,
+          applications: [{ application_type_id: SUB_WATCH_APP.id }],
+        };
+
+        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
+
+        expect(screen.getByText('Unknown', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
+
+        await userEvent.click(screen.getByText('Unknown', { exact: false, selector: '.pf-c-label__content' }));
+
+        await waitFor(() =>
+          expect(
+            screen.getByText(
+              'This source cannot currently be monitored in Sources, and does not reflect true status or resources.'
+            )
+          ).toBeInTheDocument()
+        );
       });
     });
 
@@ -742,27 +748,26 @@ describe('formatters', () => {
       const SOURCE_WITH_ERROR = {
         applications: [
           {
-            id: COSTMANAGEMENT_APP.id,
+            id: COST_MANAGEMENT_APP.id,
             error: ERRORMESSAGE,
           },
         ],
       };
 
       it('returns application error', () => {
-        const wrapper = mount(wrapperWithIntl(formatAvailibilityErrors(APPTYPES, SOURCE_WITH_ERROR)));
+        render(wrapperWithIntl(formatAvailibilityErrors(appTypes, SOURCE_WITH_ERROR)));
 
-        expect(wrapper.text().includes(ERRORMESSAGE)).toEqual(true);
-        expect(wrapper.text().includes(COSTMANAGEMENT_APP.display_name)).toEqual(true);
+        expect(screen.getByText(ERRORMESSAGE, { exact: false })).toBeInTheDocument();
+        expect(screen.getByText(COST_MANAGEMENT_APP.display_name, { exact: false })).toBeInTheDocument();
       });
 
       it('returns application error with unfound appnam', () => {
         const EMPTY_APP_TYPES = [];
 
-        const wrapper = mount(wrapperWithIntl(formatAvailibilityErrors(EMPTY_APP_TYPES, SOURCE_WITH_ERROR)));
+        render(wrapperWithIntl(formatAvailibilityErrors(EMPTY_APP_TYPES, SOURCE_WITH_ERROR)));
 
-        expect(wrapper.text().includes(ERRORMESSAGE)).toEqual(true);
-        expect(wrapper.text().includes(COSTMANAGEMENT_APP.display_name)).toEqual(false);
-        expect(wrapper.text().includes(COSTMANAGEMENT_APP.id)).toEqual(true);
+        expect(screen.getByText(ERRORMESSAGE, { exact: false })).toBeInTheDocument();
+        expect(screen.getByText(COST_MANAGEMENT_APP.id, { exact: false })).toBeInTheDocument();
       });
 
       it('returns authentication errors', () => {
@@ -775,10 +780,10 @@ describe('formatters', () => {
           ],
         };
 
-        const wrapper = mount(wrapperWithIntl(formatAvailibilityErrors(APPTYPES, SOURCE_WITHAUTH_ERROR)));
+        render(wrapperWithIntl(formatAvailibilityErrors(appTypes, SOURCE_WITHAUTH_ERROR)));
 
-        expect(wrapper.text().includes(ERRORMESSAGE)).toEqual(true);
-        expect(wrapper.text().includes('token')).toEqual(true);
+        expect(screen.getByText(ERRORMESSAGE, { exact: false })).toBeInTheDocument();
+        expect(screen.getByText('token', { exact: false })).toBeInTheDocument();
       });
 
       it('returns endpoint errors', () => {
@@ -786,9 +791,9 @@ describe('formatters', () => {
           endpoint: ERRORMESSAGE,
         };
 
-        const wrapper = mount(wrapperWithIntl(formatAvailibilityErrors(APPTYPES, SOURCE_WITH_ENDPOINT_ERROR)));
+        render(wrapperWithIntl(formatAvailibilityErrors(appTypes, SOURCE_WITH_ENDPOINT_ERROR)));
 
-        expect(wrapper.text().includes(ERRORMESSAGE)).toEqual(true);
+        expect(screen.getByText(ERRORMESSAGE, { exact: false })).toBeInTheDocument();
       });
 
       it('returns source errors', () => {
@@ -796,9 +801,9 @@ describe('formatters', () => {
           source: ERRORMESSAGE,
         };
 
-        const wrapper = mount(wrapperWithIntl(formatAvailibilityErrors(APPTYPES, SOURCE_WITH_SOURCE_ERROR)));
+        render(wrapperWithIntl(formatAvailibilityErrors(appTypes, SOURCE_WITH_SOURCE_ERROR)));
 
-        expect(wrapper.text().includes(ERRORMESSAGE)).toEqual(true);
+        expect(screen.getByText(ERRORMESSAGE, { exact: false })).toBeInTheDocument();
       });
     });
 
@@ -1185,22 +1190,17 @@ describe('formatters', () => {
     const SOURCE_ID = 'some-source-id';
 
     it('account_authorization', () => {
-      const wrapper = mount(
+      render(
         <MemoryRouter>
           {wrapperWithIntl(configurationModeFormatter('account_authorization', { id: SOURCE_ID }, { intl: INTL }))}
         </MemoryRouter>
       );
 
-      expect(wrapper.text()).toEqual('Account authorizationEdit credentials');
-      expect(wrapper.find(Link).props().to).toEqual(replaceRouteId(routes.sourcesDetailEditCredentials.path, SOURCE_ID));
-      expect(wrapper.find(Button)).toHaveLength(1);
-
-      expect(wrapper.find(Tooltip)).toHaveLength(0);
-      expect(wrapper.find(ExclamationCircleIcon)).toHaveLength(0);
+      expect(screen.getByText('Edit credentials')).toBeInTheDocument();
     });
 
     it('account_authorization with paused source', () => {
-      const wrapper = mount(
+      render(
         <MemoryRouter>
           {wrapperWithIntl(
             configurationModeFormatter('account_authorization', { id: SOURCE_ID, paused_at: 'today' }, { intl: INTL })
@@ -1208,11 +1208,11 @@ describe('formatters', () => {
         </MemoryRouter>
       );
 
-      expect(wrapper.text()).toEqual('Account authorizationView credentials');
+      expect(screen.getByText('View credentials')).toBeInTheDocument();
     });
 
-    it('account_authorization with an error', () => {
-      const wrapper = mount(
+    it('account_authorization with an error', async () => {
+      render(
         <MemoryRouter>
           {wrapperWithIntl(
             configurationModeFormatter(
@@ -1232,22 +1232,25 @@ describe('formatters', () => {
                   },
                 ],
               },
-              { intl: INTL, sourceType: AMAZON }
+              { intl: INTL, sourceType: AMAZON_TYPE }
             )
           )}
         </MemoryRouter>
       );
 
-      expect(wrapper.text()).toEqual('Account authorizationEdit credentials');
-      expect(wrapper.find(Link).props().to).toEqual(replaceRouteId(routes.sourcesDetailEditCredentials.path, SOURCE_ID));
-      expect(wrapper.find(Button)).toHaveLength(1);
+      expect(screen.getByText('Edit credentials', { selector: 'button' })).toBeInTheDocument();
+      expect(screen.getByRole('link')).toHaveAttribute(
+        'href',
+        replaceRouteId(routes.sourcesDetailEditCredentials.path, SOURCE_ID)
+      );
 
-      expect(wrapper.find(Tooltip).props().content).toEqual('Your username is wrong');
-      expect(wrapper.find(ExclamationCircleIcon)).toHaveLength(1);
+      await userEvent.hover(screen.getByText('exclamation icon'));
+
+      await waitFor(() => expect(screen.getByText('Your username is wrong')).toBeInTheDocument());
     });
 
-    it('account_authorization with default errror', () => {
-      const wrapper = mount(
+    it('account_authorization with default errror', async () => {
+      render(
         <MemoryRouter>
           {wrapperWithIntl(
             configurationModeFormatter(
@@ -1261,31 +1264,32 @@ describe('formatters', () => {
                   },
                 ],
               },
-              { intl: INTL, sourceType: AMAZON }
+              { intl: INTL, sourceType: AMAZON_TYPE }
             )
           )}
         </MemoryRouter>
       );
 
-      expect(wrapper.find(Tooltip).props().content).toEqual('Edit credentials required.');
-      expect(wrapper.find(ExclamationCircleIcon)).toHaveLength(1);
+      expect(screen.getByText('Edit credentials', { selector: 'button' })).toBeInTheDocument();
+
+      await userEvent.hover(screen.getByText('exclamation icon'));
+
+      await waitFor(() => expect(screen.getByText('Edit credentials required.')).toBeInTheDocument());
     });
 
     it('manual_configuration', () => {
-      const wrapper = mount(
+      render(
         <MemoryRouter>
           {wrapperWithIntl(configurationModeFormatter('manual_configuration', { id: SOURCE_ID }, { intl: INTL }))}
         </MemoryRouter>
       );
 
-      expect(wrapper.text()).toEqual('Manual configuration');
-      expect(wrapper.find(Link)).toHaveLength(0);
-      expect(wrapper.find(Button)).toHaveLength(0);
+      expect(screen.getByText('Manual configuration', { selector: 'div' })).toBeInTheDocument();
     });
   });
 
   describe('ApplicationLabel', () => {
-    it('renders paused', () => {
+    it('renders paused', async () => {
       const app = {
         display_name: 'Cost management',
         availability_status: AVAILABLE,
@@ -1293,16 +1297,14 @@ describe('formatters', () => {
         paused_at: 'today',
       };
 
-      const wrapper = mount(wrapperWithIntl(<ApplicationLabel app={app} />));
+      render(wrapperWithIntl(<ApplicationLabel app={app} />));
 
-      expect(wrapper.find(Popover).props().bodyContent).toEqual(
-        'Everything works fine. Resume this application to continue data collection.'
-      );
-      expect(wrapper.find(Popover).props().headerContent).toEqual('Application paused');
+      expect(screen.getByText('Cost management').closest('.pf-c-label')).toHaveClass('pf-m-green');
+      await userEvent.click(screen.getByText('Cost management'));
+      expect(screen.getByText('pause icon')).toBeInTheDocument();
 
-      expect(wrapper.find(Label).props().color).toEqual('green');
-      expect(wrapper.find(Label).text()).toEqual('Cost management');
-      expect(wrapper.find(PauseIcon)).toHaveLength(1);
+      await waitFor(() => expect(screen.getByText('Application paused')).toBeInTheDocument());
+      expect(screen.getByText('Everything works fine. Resume this application to continue data collection.')).toBeInTheDocument();
     });
 
     it('renders with status', () => {
@@ -1312,8 +1314,8 @@ describe('formatters', () => {
         availability_status_error: null,
       };
 
-      const wrapper = mount(wrapperWithIntl(<ApplicationLabel app={app} showStatusText />));
-      expect(wrapper.find(Label).text()).toEqual('Unavailable');
+      render(wrapperWithIntl(<ApplicationLabel app={app} showStatusText />));
+      expect(screen.getByText('Unavailable')).toBeInTheDocument();
     });
   });
 });

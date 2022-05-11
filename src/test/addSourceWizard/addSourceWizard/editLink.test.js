@@ -1,9 +1,8 @@
 import React from 'react';
-import { Button } from '@patternfly/react-core';
-import { Link } from 'react-router-dom';
+import { screen } from '@testing-library/react';
 
 import EditLink from '../../../components/addSourceWizard/EditLink';
-import mount from '../__mocks__/mount';
+import render from '../__mocks__/render';
 
 describe('EditLink', () => {
   let id;
@@ -27,11 +26,9 @@ describe('EditLink', () => {
       },
     };
 
-    const wrapper = mount(<EditLink id={id} />);
+    render(<EditLink id={id} />);
 
-    expect(wrapper.find(Link)).toHaveLength(1);
-    expect(wrapper.find(Link).props().to).toEqual('/sources/detail/some-id');
-    expect(wrapper.find(Button)).toHaveLength(1);
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/sources/detail/some-id');
   });
 
   it('renders on other app', () => {
@@ -43,10 +40,8 @@ describe('EditLink', () => {
       },
     };
 
-    const wrapper = mount(<EditLink id={id} />);
+    render(<EditLink id={id} />);
 
-    expect(wrapper.find(Link)).toHaveLength(0);
-    expect(wrapper.find(Button).props().href).toEqual('/beta/settings/sources/detail/some-id');
-    expect(wrapper.find(Button).props().component).toEqual('a');
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/beta/settings/sources/detail/some-id');
   });
 });

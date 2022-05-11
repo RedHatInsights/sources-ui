@@ -9,7 +9,13 @@ const ImageWithPlaceholder = ({ src, ...rest }) => {
   return (
     <React.Fragment>
       {!loaded && <Loader height="40px" width="110px" {...rest} />}
-      <img src={src} onLoad={() => setLoaded(true)} style={{ display: loaded ? 'initial' : 'none' }} {...rest} />
+      <img
+        src={src}
+        data-testid="ImageWithPlaceholder"
+        onLoad={() => setLoaded(true)}
+        style={{ display: loaded ? 'initial' : 'none' }}
+        {...rest}
+      />
     </React.Fragment>
   );
 };

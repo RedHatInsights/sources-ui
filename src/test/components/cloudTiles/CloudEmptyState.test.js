@@ -1,17 +1,13 @@
 import React from 'react';
-import { act } from 'react-dom/test-utils';
-
-import { Card, Tooltip, Tile } from '@patternfly/react-core';
+import { render } from '@testing-library/react';
 
 import componentWrapperIntl from '../../../utilities/testsHelpers';
 import CloudEmptyState from '../../../components/CloudTiles/CloudEmptyState';
-import CloudTiles from '../../../components/CloudTiles/CloudTiles';
 import mockStore from '../../__mocks__/mockStore';
-import sourceTypes, { googleType } from '../../__mocks__/sourceTypesData';
+import sourceTypes from '../../__mocks__/sourceTypes';
 import { CLOUD_VENDOR } from '../../../utilities/constants';
 
 describe('CloudEmptyState', () => {
-  let wrapper;
   let setSelectedType;
   let initialProps;
   let store;
@@ -25,23 +21,19 @@ describe('CloudEmptyState', () => {
 
     store = mockStore({
       user: { writePermissions: true },
-      sources: { sourceTypes: [...sourceTypes.data, googleType], activeVendor: CLOUD_VENDOR },
+      sources: { sourceTypes, activeCategory: CLOUD_VENDOR },
     });
   });
 
   it('renders correctly', async () => {
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<CloudEmptyState {...initialProps} />, store));
-    });
-    wrapper.update();
+    const { container } = render(componentWrapperIntl(<CloudEmptyState {...initialProps} />, store));
 
-    expect(wrapper.find(Card)).toHaveLength(1);
-    expect(wrapper.find(CloudTiles)).toHaveLength(1);
-    expect(wrapper.find(Tile)).toHaveLength(3);
-    expect(wrapper.find('img')).toHaveLength(3);
-
-    expect(wrapper.find(Tile).first().props().isDisabled).toEqual(undefined);
-    expect(wrapper.find(Tile).last().props().isDisabled).toEqual(undefined);
-    expect(wrapper.find(Tooltip)).toHaveLength(0);
+    expect([...container.getElementsByClassName('pf-c-tile__title')].map((e) => e.textContent)).toEqual([
+      'Amazon Web Services',
+      'Google Cloud',
+      'IBM Cloud',
+      'Microsoft Azure',
+    ]);
+    expect(container.getElementsByTagName('img')).toHaveLength(4);
   });
 });

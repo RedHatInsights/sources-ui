@@ -1,5 +1,5 @@
 import createSuperSource from '../../api/createSuperSource';
-import { COST_MANAGEMENT_APP, SUB_WATCH_APP } from '../addSourceWizard/helpers/applicationTypes';
+import { COST_MANAGEMENT_APP, SUB_WATCH_APP } from '../addSourceWizard/../__mocks__/applicationTypes';
 
 import * as api from '../../api/entities';
 import * as errorHandling from '../../api/handleError';

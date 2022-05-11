@@ -1,6 +1,6 @@
 import { doCreateSource, parseUrl, urlOrHost } from '../../api/createSource';
-import { OPENSHIFT_TYPE } from '../addSourceWizard/helpers/sourceTypes';
-import applicationTypes, { COST_MANAGEMENT_APP } from '../addSourceWizard/helpers/applicationTypes';
+import { OPENSHIFT_TYPE } from '../addSourceWizard/../__mocks__/sourceTypes';
+import applicationTypes, { COST_MANAGEMENT_APP } from '../addSourceWizard/../__mocks__/applicationTypes';
 
 import * as api from '../../api/entities';
 import * as errorHandling from '../../api/handleError';

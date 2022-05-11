@@ -67,6 +67,36 @@ const SubWatchDescription = ({ id }) => {
     );
   }
 
+  if (values.source_type === 'google') {
+    return (
+      <Stack>
+        <Point
+          title={intl.formatMessage({
+            id: 'rhelbundle.goldImages.title',
+            defaultMessage: 'Red Hat gold images',
+          })}
+          description={intl.formatMessage({
+            id: 'rhelbundle.goldImages.google.description',
+            defaultMessage: 'Unlock cloud images in Google Cloud and bring your own subscription instead of paying hourly.',
+          })}
+          className="pf-u-mb-sm"
+          isEnabled={isEnabled}
+        />
+        <Point
+          title={intl.formatMessage({
+            id: 'rhelbundle.autoregistration.title',
+            defaultMessage: 'Autoregistration',
+          })}
+          description={intl.formatMessage({
+            id: 'rhelbundle.goldImages.description',
+            defaultMessage: 'Cloud instances automatically connect to console.redhat.com when provisioned.',
+          })}
+          isEnabled={isEnabled}
+        />
+      </Stack>
+    );
+  }
+
   return (
     <Stack>
       <Point

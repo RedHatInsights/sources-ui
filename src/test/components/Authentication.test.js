@@ -1,12 +1,10 @@
 import React from 'react';
-import { act } from 'react-dom/test-utils';
-
-import { Button } from '@patternfly/react-core';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { validatorTypes } from '@data-driven-forms/react-form-renderer';
 
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
-import TextField from '@data-driven-forms/pf4-component-mapper/text-field';
 
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
 
@@ -57,7 +55,7 @@ describe('Authentication test', () => {
       ],
     };
 
-    const wrapper = mount(
+    render(
       componentWrapperIntl(
         <SourcesFormRenderer
           {...initialProps}
@@ -71,7 +69,7 @@ describe('Authentication test', () => {
       )
     );
 
-    expect(wrapper.find(Authentication)).toHaveLength(1);
+    expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
   });
 
   it('renders with func validation', () => {
@@ -86,7 +84,7 @@ describe('Authentication test', () => {
       ],
     };
 
-    const wrapper = mount(
+    render(
       componentWrapperIntl(
         <SourcesFormRenderer
           {...initialProps}
@@ -100,36 +98,27 @@ describe('Authentication test', () => {
       )
     );
 
-    expect(wrapper.find(Authentication)).toHaveLength(1);
+    expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
   });
 
-  it('renders not editing', () => {
-    const wrapper = mount(componentWrapperIntl(<SourcesFormRenderer {...initialProps} />));
+  it('renders not editing', async () => {
+    render(componentWrapperIntl(<SourcesFormRenderer {...initialProps} />));
 
-    expect(wrapper.find(Authentication)).toHaveLength(1);
+    expect(screen.getByRole('textbox')).toBeRequired();
 
-    expect(wrapper.find(TextField).props().isRequired).toEqual(true);
-    expect(wrapper.find(TextField).props().helperText).toEqual(undefined);
-
-    wrapper.find('form').simulate('submit');
-    wrapper.update();
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    wrapper.find('input').instance().value = 's'; // too short
-    wrapper.find('input').simulate('change');
-    wrapper.update();
-
-    wrapper.find('form').simulate('submit');
-    wrapper.update();
+    await userEvent.type(screen.getByRole('textbox'), 's');
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    wrapper.find('input').instance().value = 'some-value';
-    wrapper.find('input').simulate('change');
-    wrapper.update();
+    await userEvent.type(screen.getByRole('textbox'), 'ome-value');
 
-    wrapper.find('form').simulate('submit');
+    await userEvent.click(screen.getByText('Submit'));
+
     expect(onSubmit).toHaveBeenCalledWith({
       authentication: {
         password: 'some-value',
@@ -138,7 +127,7 @@ describe('Authentication test', () => {
   });
 
   it('renders editing and removes required validator (min length still works)', async () => {
-    const wrapper = mount(
+    render(
       componentWrapperIntl(
         <SourcesFormRenderer
           {...initialProps}
@@ -151,19 +140,13 @@ describe('Authentication test', () => {
       )
     );
 
-    expect(wrapper.find('FormGroup')).toHaveLength(1);
-    expect(wrapper.find('TextInput')).toHaveLength(1);
-    expect(wrapper.find('TextInput').props().value).toEqual('•••••••••••••');
+    expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
 
-    await act(async () => {
-      wrapper.find('FormGroup').first().simulate('focus');
-    });
-    wrapper.update();
+    await userEvent.click(screen.getByRole('textbox'));
 
-    expect(wrapper.find(Authentication)).toHaveLength(1);
+    expect(screen.getByRole('textbox')).toHaveValue('');
 
-    wrapper.find('form').simulate('submit');
-    wrapper.update();
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       authentication: {
@@ -172,67 +155,41 @@ describe('Authentication test', () => {
     });
     onSubmit.mockClear();
 
-    wrapper.find('input').instance().value = 's';
-    wrapper.find('input').simulate('change');
-    wrapper.update();
+    await userEvent.type(screen.getByRole('textbox'), 's');
+    await userEvent.click(screen.getByText('Submit'));
 
-    wrapper.find('form').simulate('submit');
     expect(onSubmit).not.toHaveBeenCalled();
   });
 
   it('reset when form resets', async () => {
-    let wrapper;
+    render(
+      componentWrapperIntl(
+        <SourcesFormRenderer
+          {...initialProps}
+          FormTemplate={(props) => <FormTemplate {...props} canReset />}
+          initialValues={{
+            authentication: {
+              id: 'someid',
+            },
+          }}
+        />
+      )
+    );
 
-    await act(async () => {
-      wrapper = mount(
-        componentWrapperIntl(
-          <SourcesFormRenderer
-            {...initialProps}
-            FormTemplate={(props) => <FormTemplate {...props} canReset />}
-            initialValues={{
-              authentication: {
-                id: 'someid',
-              },
-            }}
-          />
-        )
-      );
-    });
+    expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
 
-    expect(wrapper.find('FormGroup')).toHaveLength(1);
-    expect(wrapper.find('TextInput')).toHaveLength(1);
-    expect(wrapper.find('TextInput').props().value).toEqual('•••••••••••••');
-    expect(wrapper.find(TextField)).toHaveLength(0);
+    await userEvent.click(screen.getByRole('textbox'));
 
-    await act(async () => {
-      wrapper.find('FormGroup').first().simulate('focus');
-    });
-    wrapper.update();
+    expect(screen.getByRole('textbox')).toHaveValue('');
 
-    expect(wrapper.find(Authentication)).toHaveLength(1);
-    expect(wrapper.find(TextField)).toHaveLength(1);
+    await userEvent.type(screen.getByRole('textbox'), 's');
+    await userEvent.click(screen.getByText('Reset'));
 
-    await act(async () => {
-      wrapper.find('input').instance().value = 's';
-      wrapper.find('input').simulate('change');
-      wrapper.update();
-    });
-    wrapper.update();
-
-    // reset
-    await act(async () => {
-      wrapper.find(Button).at(1).simulate('click');
-    });
-    wrapper.update();
-
-    expect(wrapper.find('FormGroup')).toHaveLength(1);
-    expect(wrapper.find('TextInput')).toHaveLength(1);
-    expect(wrapper.find('TextInput').props().value).toEqual('•••••••••••••');
-    expect(wrapper.find(TextField)).toHaveLength(0);
+    expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
   });
 
   it('renders disabled with no focus event', async () => {
-    const wrapper = mount(
+    render(
       componentWrapperIntl(
         <SourcesFormRenderer
           {...initialProps}
@@ -254,19 +211,12 @@ describe('Authentication test', () => {
       )
     );
 
-    expect(wrapper.find('FormGroup')).toHaveLength(1);
-    expect(wrapper.find('TextInput')).toHaveLength(1);
-    expect(wrapper.find('TextInput').props().value).toEqual('•••••••••••••');
-    expect(wrapper.find('TextInput').props().isDisabled).toEqual(true);
+    expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
+    expect(screen.getByRole('textbox')).toBeDisabled();
 
-    await act(async () => {
-      wrapper.find('FormGroup').first().simulate('focus');
-    });
-    wrapper.update();
+    await userEvent.click(screen.getByRole('textbox'));
 
-    expect(wrapper.find('FormGroup')).toHaveLength(1);
-    expect(wrapper.find('TextInput')).toHaveLength(1);
-    expect(wrapper.find('TextInput').props().value).toEqual('•••••••••••••');
-    expect(wrapper.find('TextInput').props().isDisabled).toEqual(true);
+    expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
+    expect(screen.getByRole('textbox')).toBeDisabled();
   });
 });

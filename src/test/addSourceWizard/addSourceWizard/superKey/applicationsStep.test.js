@@ -4,7 +4,7 @@ import { Label } from '@patternfly/react-core';
 
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import applicationsStep from '../../../../components/addSourceWizard/superKey/applicationsStep';
-import applicationTypes from '../../helpers/applicationTypes';
+import applicationTypes from '../../../__mocks__/applicationTypes';
 import SubWatchDescription from '../../../../components/addSourceWizard/descriptions/SubWatchDescription';
 import { NO_APPLICATION_VALUE } from '../../../../components/addSourceWizard/stringConstants';
 

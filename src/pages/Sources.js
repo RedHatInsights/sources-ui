@@ -97,7 +97,7 @@ const SourcesPage = () => {
     paginationClicked,
     appTypesLoaded,
     sourceTypesLoaded,
-    activeVendor,
+    activeCategory,
     entities,
   } = sources;
 
@@ -142,7 +142,7 @@ const SourcesPage = () => {
 
   const showPaginationLoader = (!loaded || !appTypesLoaded || !sourceTypesLoaded) && !paginationClicked;
 
-  const filteredSourceTypes = sourceTypes.filter(filterVendorTypes(activeVendor, true));
+  const filteredSourceTypes = sourceTypes.filter(filterVendorTypes(activeCategory, true));
 
   const addSourceText = intl.formatMessage({
     id: 'sources.addSource',
@@ -242,7 +242,7 @@ const SourcesPage = () => {
               filterValues: {
                 onChange: (_event, value) => setFilter('applications', value, dispatch),
                 items: prepareApplicationTypeSelection(
-                  appTypes?.filter(filterVendorAppTypes(filteredSourceTypes, activeVendor)) || []
+                  appTypes?.filter(filterVendorAppTypes(filteredSourceTypes, activeCategory)) || []
                 ),
                 value: filterValue.applications,
               },
@@ -297,7 +297,7 @@ const SourcesPage = () => {
       .filter(Boolean).length > 0;
 
   const showEmptyState = loaded && numberOfEntities === 0 && !hasSomeFilter;
-  const showInfoCards = activeVendor === CLOUD_VENDOR && !showEmptyState;
+  const showInfoCards = activeCategory === CLOUD_VENDOR && !showEmptyState;
 
   const setSelectedType = (selectedType) => stateDispatch({ type: 'setSelectedType', selectedType });
 
@@ -323,7 +323,7 @@ const SourcesPage = () => {
             submitCallback: (state) => checkSubmit(state, dispatch, history.push, intl, stateDispatch),
             initialValues: wizardInitialValues,
             initialWizardState: wizardInitialState,
-            activeVendor,
+            activeCategory,
           }}
         />
       </Suspense>
@@ -331,10 +331,10 @@ const SourcesPage = () => {
       <Section type="content">
         {showInfoCards && <CloudCards />}
         {fetchingError && <ErrorState />}
-        {!fetchingError && showEmptyState && activeVendor === CLOUD_VENDOR && (
+        {!fetchingError && showEmptyState && activeCategory === CLOUD_VENDOR && (
           <CloudEmptyState setSelectedType={setSelectedType} />
         )}
-        {!fetchingError && showEmptyState && activeVendor === REDHAT_VENDOR && (
+        {!fetchingError && showEmptyState && activeCategory === REDHAT_VENDOR && (
           <RedHatEmptyState setSelectedType={setSelectedType} />
         )}
         {!fetchingError && !showEmptyState && mainContent()}

@@ -12,7 +12,7 @@ import {
   ADD_APP_TO_SOURCE,
   ADD_HIDDEN_SOURCE,
   CLEAR_FILTERS,
-  SET_VENDOR,
+  SET_CATEGORY,
 } from './actionTypes';
 import { doLoadAppTypes, doRemoveSource, doLoadEntities, doDeleteApplication, getSourcesApi } from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
@@ -26,7 +26,7 @@ export const loadEntities = (options) => (dispatch, getState) => {
     options: typeof options === 'function' ? options(getState) : options,
   });
 
-  const { pageSize, pageNumber, sortBy, sortDirection, filterValue, activeVendor } = getState().sources;
+  const { pageSize, pageNumber, sortBy, sortDirection, filterValue, activeCategory } = getState().sources;
 
   return doLoadEntities({
     pageSize,
@@ -34,12 +34,12 @@ export const loadEntities = (options) => (dispatch, getState) => {
     sortBy,
     sortDirection,
     filterValue,
-    activeVendor,
+    activeCategory,
   })
-    .then(({ sources, sources_aggregate }) =>
+    .then(({ sources, meta }) =>
       dispatch({
         type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
-        payload: { sources, sources_aggregate },
+        payload: { sources, meta },
       })
     )
     .catch((error) =>
@@ -218,10 +218,10 @@ export const renameSource = (id, name, errorTitle) => (dispatch, getState) => {
     );
 };
 
-export const setActiveVendor = (vendor) => (dispatch) => {
+export const setActiveCategory = (category) => (dispatch) => {
   dispatch({
-    type: SET_VENDOR,
-    payload: { vendor },
+    type: SET_CATEGORY,
+    payload: { category },
   });
 
   return dispatch(loadEntities());
