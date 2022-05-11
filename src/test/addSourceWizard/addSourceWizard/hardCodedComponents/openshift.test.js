@@ -1,14 +1,13 @@
 import React from 'react';
-import mount from '../../__mocks__/mount';
-import { Text, TextContent } from '@patternfly/react-core';
+import render from '../../__mocks__/render';
+import { screen } from '@testing-library/react';
 
 import * as OpenShift from '../../../../components/addSourceWizard/hardcodedComponents/openshift/endpoint';
 
 describe('Tower Catalog', () => {
   it('Endpoint description', () => {
-    const wrapper = mount(<OpenShift.EndpointDesc />);
+    render(<OpenShift.EndpointDesc />);
 
-    expect(wrapper.find(TextContent)).toHaveLength(1);
-    expect(wrapper.find(Text)).toHaveLength(1);
+    expect(screen.getByText('Provide the OpenShift Container Platform URL and SSL certificate.')).toBeInTheDocument();
   });
 });

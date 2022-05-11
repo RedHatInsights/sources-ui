@@ -1,39 +1,24 @@
 import React from 'react';
-import { act } from 'react-dom/test-utils';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { AddSourceButton } from '../../../components/addSourceWizard/';
-import sourceTypes from '../helpers/sourceTypes';
-import applicationTypes from '../helpers/applicationTypes';
-import Form from '../../../components/addSourceWizard/SourceAddModal';
+import sourceTypes from '../../__mocks__/sourceTypes';
+import applicationTypes from '../../__mocks__/applicationTypes';
 
-import mount from '../__mocks__/mount';
+import render from '../__mocks__/render';
 import { CLOUD_VENDOR } from '../../../utilities/constants';
 
 describe('AddSourceButton', () => {
   it('opens wizard and close wizard', async () => {
-    let wrapper;
+    render(<AddSourceButton sourceTypes={sourceTypes} applicationTypes={applicationTypes} activeCategory={CLOUD_VENDOR} />);
 
-    await act(async () => {
-      wrapper = mount(
-        <AddSourceButton sourceTypes={sourceTypes} applicationTypes={applicationTypes} activeVendor={CLOUD_VENDOR} />
-      );
-    });
-    wrapper.update();
+    await userEvent.click(screen.getByText('Add Red Hat source'));
 
-    await act(async () => {
-      wrapper.find('button').simulate('click');
-    });
+    expect(screen.getAllByRole('dialog')).toBeTruthy();
 
-    wrapper.update();
+    await userEvent.click(screen.getAllByRole('button')[0]);
 
-    expect(wrapper.find(Form).length).toBe(1);
-
-    await act(async () => {
-      wrapper.find('button.pf-c-wizard__close').simulate('click');
-    });
-
-    wrapper.update();
-
-    expect(wrapper.find(Form).length).toBe(0);
+    expect(() => screen.getByRole('dialog')).toThrow();
   });
 });

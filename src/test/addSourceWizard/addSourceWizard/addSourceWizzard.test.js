@@ -1,28 +1,19 @@
 import React from 'react';
-import { act } from 'react-dom/test-utils';
+import { screen, act, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { AddSourceWizard } from '../../../components/addSourceWizard/index';
-import Form from '../../../components/addSourceWizard/SourceAddModal';
-import Modal from '../../../components/addSourceWizard/SourceAddModal';
-import FinalWizard from '../../../components/addSourceWizard/FinalWizard';
 
-import sourceTypes from '../helpers/sourceTypes';
-import applicationTypes from '../helpers/applicationTypes';
+import sourceTypes from '../../__mocks__/sourceTypes';
+import applicationTypes from '../../__mocks__/applicationTypes';
 import * as dependency from '../../../api/wizardHelpers';
 import * as createSource from '../../../api/createSource';
 
-import mount from '../__mocks__/mount';
-import { OPENSHIFT_NAME, CLOUD_VENDOR, REDHAT_VENDOR } from '../../../utilities/constants';
-import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
-import CloseModal from '../../../components/CloseModal';
-
-import LoadingStep from '../../../components/steps/LoadingStep';
-import ErroredStep from '../../../components/steps/ErroredStep';
-import FinishedStep from '../../../components/steps/FinishedStep';
+import render from '../__mocks__/render';
+import { CLOUD_VENDOR, REDHAT_VENDOR, GOOGLE_NAME } from '../../../utilities/constants';
 
 describe('AddSourceWizard', () => {
   let initialProps;
-  let wrapper;
   let SOURCE_DATA_OUT;
 
   beforeEach(() => {
@@ -31,6 +22,7 @@ describe('AddSourceWizard', () => {
       sourceTypes,
       applicationTypes,
       onClose: jest.fn(),
+      activeCategory: CLOUD_VENDOR,
     };
 
     SOURCE_DATA_OUT = {
@@ -40,88 +32,52 @@ describe('AddSourceWizard', () => {
   });
 
   it('renders correctly with sourceTypes', async () => {
-    await act(async () => {
-      wrapper = mount(<AddSourceWizard {...initialProps} />);
-    });
-    wrapper.update();
+    render(<AddSourceWizard {...initialProps} />);
 
-    expect(wrapper.find(Form)).toHaveLength(1);
-    expect(wrapper.find(Modal)).toHaveLength(1);
-
-    expect(wrapper.find(SourcesFormRenderer).props().schema.fields[0].fields[0].title).toEqual('Select source type');
-    expect(wrapper.find(SourcesFormRenderer).props().schema.fields[0].fields[1].title).toEqual('Name source');
+    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
+    expect(screen.getByText('Name source')).toBeInTheDocument();
+    expect(screen.getAllByRole('dialog')).toBeTruthy();
   });
 
   it('renders correctly without sourceTypes', async () => {
     dependency.doLoadSourceTypes = jest.fn(() => new Promise((resolve) => resolve({ sourceTypes })));
 
-    await act(async () => {
-      wrapper = mount(<AddSourceWizard {...initialProps} sourceTypes={undefined} />);
-    });
-    wrapper.update();
+    render(<AddSourceWizard {...initialProps} sourceTypes={undefined} />);
 
-    expect(wrapper.find(Form)).toHaveLength(1);
-    expect(wrapper.find(Modal)).toHaveLength(1);
+    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
+
+    expect(screen.getAllByRole('dialog')).toBeTruthy();
     expect(dependency.doLoadSourceTypes).toHaveBeenCalled();
   });
 
   it('show finished step after filling the form', async () => {
-    jest.useFakeTimers();
-    expect.assertions(8);
-
     createSource.doCreateSource = jest.fn(() => new Promise((resolve) => setTimeout(() => resolve(SOURCE_DATA_OUT), 100)));
 
-    await act(async () => {
-      wrapper = mount(<AddSourceWizard {...initialProps} />);
-    });
-    wrapper.update();
+    const { container } = render(<AddSourceWizard {...initialProps} />);
 
-    await act(async () => {
-      wrapper.find('Tile').first().simulate('click');
-    });
-    wrapper.update();
+    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await act(async () => {
-      wrapper.find('form').simulate('submit');
-    });
-    wrapper.update();
+    await userEvent.click(screen.getByText('Google Cloud'));
+    container.getElementsByTagName('form')[0].submit();
 
-    expect(wrapper.find(FinalWizard)).toHaveLength(1);
-    expect(wrapper.find(LoadingStep)).toHaveLength(1);
-    expect(wrapper.find(ErroredStep)).toHaveLength(0);
-    expect(wrapper.find(FinishedStep)).toHaveLength(0);
+    expect(screen.getByText('Validating credentials')).toBeInTheDocument();
 
-    await act(async () => {
-      jest.advanceTimersByTime(100);
-    });
-    wrapper.update();
+    await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
 
-    expect(wrapper.find(FinalWizard)).toHaveLength(1);
-    expect(wrapper.find(LoadingStep)).toHaveLength(0);
-    expect(wrapper.find(ErroredStep)).toHaveLength(0);
-    expect(wrapper.find(FinishedStep)).toHaveLength(1);
-
-    jest.useRealTimers();
+    expect(screen.getByText('Configuration successful')).toBeInTheDocument();
   });
 
   it('pass created source to afterSuccess function', async () => {
     const afterSubmitMock = jest.fn();
     createSource.doCreateSource = jest.fn(() => new Promise((resolve) => resolve({ name: 'source', applications: [] })));
 
-    await act(async () => {
-      wrapper = mount(<AddSourceWizard {...initialProps} afterSuccess={afterSubmitMock} />);
-    });
-    wrapper.update();
+    const { container } = render(<AddSourceWizard {...initialProps} afterSuccess={afterSubmitMock} />);
 
-    await act(async () => {
-      wrapper.find('Tile').first().simulate('click');
-    });
-    wrapper.update();
+    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await act(async () => {
-      wrapper.find('form').simulate('submit');
-    });
-    wrapper.update();
+    await userEvent.click(screen.getByText('Google Cloud'));
+    container.getElementsByTagName('form')[0].submit();
+    await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
 
     expect(afterSubmitMock).toHaveBeenCalledWith({ name: 'source', applications: [] });
   });
@@ -130,20 +86,14 @@ describe('AddSourceWizard', () => {
     const submitCallback = jest.fn();
     createSource.doCreateSource = jest.fn(() => new Promise((resolve) => resolve({ name: 'source', applications: [] })));
 
-    await act(async () => {
-      wrapper = mount(<AddSourceWizard {...initialProps} submitCallback={submitCallback} />);
-    });
-    wrapper.update();
+    const { container } = render(<AddSourceWizard {...initialProps} submitCallback={submitCallback} />);
 
-    await act(async () => {
-      wrapper.find('Tile').first().simulate('click');
-    });
-    wrapper.update();
+    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await act(async () => {
-      wrapper.find('form').simulate('submit');
-    });
-    wrapper.update();
+    await userEvent.click(screen.getByText('Google Cloud'));
+    container.getElementsByTagName('form')[0].submit();
+
+    await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
 
     expect(submitCallback).toHaveBeenCalledWith({
       createdSource: { name: 'source', applications: [] },
@@ -156,23 +106,16 @@ describe('AddSourceWizard', () => {
     const submitCallback = jest.fn();
     createSource.doCreateSource = jest.fn(() => new Promise((_, reject) => reject('Error - wrong name')));
 
-    await act(async () => {
-      wrapper = mount(<AddSourceWizard {...initialProps} submitCallback={submitCallback} />);
-    });
-    wrapper.update();
+    const { container } = render(<AddSourceWizard {...initialProps} submitCallback={submitCallback} />);
 
-    await act(async () => {
-      wrapper.find('Tile').first().simulate('click');
-    });
-    wrapper.update();
+    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await act(async () => {
-      wrapper.find('form').simulate('submit');
-    });
-    wrapper.update();
+    await userEvent.click(screen.getByText('Google Cloud'));
+    container.getElementsByTagName('form')[0].submit();
 
+    await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
     expect(submitCallback).toHaveBeenCalledWith({
-      values: { source_type: OPENSHIFT_NAME },
+      values: { source_type: GOOGLE_NAME },
       isErrored: true,
       sourceTypes,
       error: 'Error - wrong name',
@@ -183,118 +126,73 @@ describe('AddSourceWizard', () => {
   });
 
   it('pass values to onClose function', async () => {
-    const CANCEL_BUTTON_INDEX = 3;
     const onClose = jest.fn();
 
-    await act(async () => {
-      wrapper = mount(<AddSourceWizard {...initialProps} onClose={onClose} />);
-    });
-    wrapper.update();
+    render(<AddSourceWizard {...initialProps} onClose={onClose} />);
 
-    await act(async () => {
-      wrapper.find('Tile').first().simulate('click');
-    });
-    wrapper.update();
+    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await act(async () => {
-      wrapper.find('Button').at(CANCEL_BUTTON_INDEX).simulate('click');
-    });
+    await userEvent.click(screen.getByText('Google Cloud'));
+    await userEvent.click(screen.getByLabelText('Close wizard'));
 
-    wrapper.update();
-
-    expect(wrapper.find(CloseModal)).toHaveLength(1);
-
-    await act(async () => {
-      wrapper.find('button#on-exit-button').simulate('click');
-    });
-
-    wrapper.update();
-
-    expect(onClose).toHaveBeenCalledWith({ source_type: OPENSHIFT_NAME });
+    expect(screen.getByText('Exit source creation?')).toBeInTheDocument();
+    await userEvent.click(screen.getByText('Exit'));
+    expect(onClose).toHaveBeenCalledWith({ source_type: GOOGLE_NAME });
   });
 
   it('stay on the wizard', async () => {
-    const CANCEL_BUTTON_INDEX = 3;
     const onClose = jest.fn();
 
-    await act(async () => {
-      wrapper = mount(<AddSourceWizard {...initialProps} onClose={onClose} />);
-    });
-    wrapper.update();
+    render(<AddSourceWizard {...initialProps} onClose={onClose} />);
 
-    await act(async () => {
-      wrapper.find('Tile').first().simulate('click');
-    });
-    wrapper.update();
+    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await act(async () => {
-      wrapper.find('Button').at(CANCEL_BUTTON_INDEX).simulate('click');
-    });
-    wrapper.update();
-
-    expect(wrapper.find(CloseModal)).toHaveLength(1);
-
-    await act(async () => {
-      wrapper.find('button#on-stay-button').simulate('click');
-    });
-    wrapper.update();
-
-    expect(wrapper.find(CloseModal)).toHaveLength(0);
+    await userEvent.click(screen.getByText('Google Cloud'));
+    await userEvent.click(screen.getByLabelText('Close wizard'));
+    await userEvent.click(screen.getByText('Stay'));
 
     expect(onClose).not.toHaveBeenCalled();
-    expect(wrapper.find('Tile').first().props().isSelected).toEqual(true);
+    expect(screen.getByText('Google Cloud').closest('.pf-m-selected')).toBeInTheDocument();
   });
 
   it('show error step after failing the form', async () => {
     const ERROR_MESSAGE = 'fail';
     createSource.doCreateSource = jest.fn(() => new Promise((_resolve, reject) => reject(ERROR_MESSAGE)));
 
-    await act(async () => {
-      wrapper = mount(<AddSourceWizard {...initialProps} />);
-    });
-    wrapper.update();
+    const { container } = render(<AddSourceWizard {...initialProps} />);
 
-    await act(async () => {
-      wrapper.find('Tile').first().simulate('click');
-    });
-    wrapper.update();
+    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await act(async () => {
-      wrapper.find('form').simulate('submit');
-    });
-    wrapper.update();
+    await userEvent.click(screen.getByText('Google Cloud'));
+    container.getElementsByTagName('form')[0].submit();
 
-    expect(wrapper.find(FinalWizard)).toHaveLength(1);
-    expect(wrapper.find(FinishedStep)).toHaveLength(0);
-    expect(wrapper.find(ErroredStep)).toHaveLength(1);
+    await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
+
+    expect(screen.getByText('Something went wrong')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'There was a problem while trying to add your source. Please try again. If the error persists, open a support case.'
+      )
+    ).toBeInTheDocument();
   });
 
   it('afterError closes wizard with no values', async () => {
     const closeCallback = jest.fn();
 
-    createSource.doCreateSource = jest.fn(() => Promise.resolve(SOURCE_DATA_OUT));
+    createSource.doCreateSource = jest.fn(() => Promise.reject('error'));
 
-    await act(async () => {
-      wrapper = mount(<AddSourceWizard {...initialProps} onClose={closeCallback} />);
-    });
-    wrapper.update();
+    const { container } = render(<AddSourceWizard {...initialProps} onClose={closeCallback} />);
 
-    await act(async () => {
-      wrapper.find('Tile').first().simulate('click');
-    });
-    wrapper.update();
+    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await act(async () => {
-      wrapper.find('form').simulate('submit');
-    });
-    wrapper.update();
+    await userEvent.click(screen.getByText('Google Cloud'));
+    container.getElementsByTagName('form')[0].submit();
+
+    await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
 
     expect(closeCallback).not.toHaveBeenCalled();
 
-    await act(async () => {
-      wrapper.find(FinalWizard).props().afterError();
-    });
-    wrapper.update();
+    await userEvent.click(screen.getByLabelText('Close'));
 
     expect(closeCallback).toHaveBeenCalledWith({});
   });
@@ -304,152 +202,118 @@ describe('AddSourceWizard', () => {
 
     createSource.doCreateSource = jest.fn(() => Promise.resolve(SOURCE_DATA_OUT));
 
-    await act(async () => {
-      wrapper = mount(<AddSourceWizard {...initialProps} onClose={closeCallback} />);
-    });
-    wrapper.update();
+    const { container } = render(<AddSourceWizard {...initialProps} onClose={closeCallback} />);
 
-    await act(async () => {
-      wrapper.find('Tile').first().simulate('click');
-    });
-    wrapper.update();
+    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await act(async () => {
-      wrapper.find('form').simulate('submit');
-    });
-    wrapper.update();
+    await userEvent.click(screen.getByText('Google Cloud'));
+    container.getElementsByTagName('form')[0].submit();
+
+    await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
 
     expect(closeCallback).not.toHaveBeenCalled();
 
-    await act(async () => {
-      wrapper.find(FinalWizard).props().afterSubmit();
-    });
-    wrapper.update();
+    await userEvent.click(screen.getByLabelText('Close'));
 
-    expect(closeCallback).toHaveBeenCalledWith(undefined, SOURCE_DATA_OUT);
+    await waitFor(() => expect(closeCallback).toHaveBeenCalledWith(undefined, SOURCE_DATA_OUT));
   });
 
   it('reset - resets initialValues', async () => {
     createSource.doCreateSource = jest.fn(() => Promise.resolve(SOURCE_DATA_OUT));
 
-    await act(async () => {
-      wrapper = mount(<AddSourceWizard {...initialProps} />);
-    });
-    wrapper.update();
+    const { container } = render(<AddSourceWizard {...initialProps} />);
 
-    await act(async () => {
-      wrapper.find('Tile').first().simulate('click');
-    });
-    wrapper.update();
+    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await act(async () => {
-      wrapper.find('form').simulate('submit');
-    });
-    wrapper.update();
+    await userEvent.click(screen.getByText('Google Cloud'));
+    container.getElementsByTagName('form')[0].submit();
 
-    await act(async () => {
-      wrapper.find(FinalWizard).props().reset();
-    });
-    wrapper.update();
+    await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
 
-    expect(wrapper.find('Tile').first().props().isSelected).toEqual(false);
+    await userEvent.click(screen.getByText('Add another source'));
+
+    expect(screen.getByText('Google Cloud').closest('.pf-m-selected')).toBeNull();
   });
 
   it('tryAgain retries the request', async () => {
-    createSource.doCreateSource = jest.fn(() => Promise.resolve(SOURCE_DATA_OUT));
+    createSource.doCreateSource = jest.fn(() => Promise.reject('error'));
 
-    await act(async () => {
-      wrapper = mount(<AddSourceWizard {...initialProps} />);
-    });
-    wrapper.update();
+    const { container } = render(<AddSourceWizard {...initialProps} />);
 
-    await act(async () => {
-      wrapper.find('Tile').first().simulate('click');
-    });
-    wrapper.update();
+    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await act(async () => {
-      wrapper.find('form').simulate('submit');
-    });
-    wrapper.update();
+    await userEvent.click(screen.getByText('Google Cloud'));
+    container.getElementsByTagName('form')[0].submit();
 
+    await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
     createSource.doCreateSource.mockClear();
     expect(createSource.doCreateSource).not.toHaveBeenCalled();
 
-    await act(async () => {
-      wrapper.find(FinalWizard).props().tryAgain();
-    });
-    wrapper.update();
+    await userEvent.click(screen.getByText('Retry'));
 
-    expect(createSource.doCreateSource).toHaveBeenCalledWith(
-      { source_type: OPENSHIFT_NAME },
-      expect.any(Array),
-      applicationTypes
+    await waitFor(() =>
+      expect(createSource.doCreateSource).toHaveBeenCalledWith({ source_type: GOOGLE_NAME }, expect.any(Array), applicationTypes)
     );
   });
 
   describe('different variants', () => {
-    const getNavigation = (wrapper) => wrapper.find('.pf-c-wizard__nav-item').map((item) => item.text());
+    const getNavigation = (container) =>
+      [...container.parentElement.getElementsByClassName('pf-c-wizard__nav-item')].map((item) => item.textContent);
 
     it('show configuration step when selectedType is set - CLOUD', async () => {
-      await act(async () => {
-        wrapper = mount(<AddSourceWizard {...initialProps} selectedType="amazon" activeVendor={CLOUD_VENDOR} />);
-      });
-      wrapper.update();
+      const { container } = render(<AddSourceWizard {...initialProps} selectedType="amazon" activeCategory={CLOUD_VENDOR} />);
 
-      expect(getNavigation(wrapper)).toEqual(['Name source', 'Select configuration']);
+      await waitFor(() => expect(screen.getByText('Name source', { selector: 'button' })).toBeInTheDocument());
+
+      expect(getNavigation(container)).toEqual(['Name source', 'Select configuration']);
     });
 
     it('show source type selection when CLOUD', async () => {
-      await act(async () => {
-        wrapper = mount(
-          <AddSourceWizard {...initialProps} initialValues={{ source_type: 'amazon' }} activeVendor={CLOUD_VENDOR} />
-        );
-      });
-      wrapper.update();
+      const { container } = render(
+        <AddSourceWizard {...initialProps} initialValues={{ source_type: 'amazon' }} activeCategory={CLOUD_VENDOR} />
+      );
 
-      expect(getNavigation(wrapper)).toEqual(['Select source type', 'Name source', 'Select configuration']);
+      await waitFor(() => expect(screen.getByText('Name source', { selector: 'button' })).toBeInTheDocument());
+
+      expect(getNavigation(container)).toEqual(['Select source type', 'Name source', 'Select configuration']);
     });
 
     it('show application step when selectedType is set and configuration is selected to true', async () => {
-      await act(async () => {
-        wrapper = mount(
-          <AddSourceWizard
-            {...initialProps}
-            selectedType="amazon"
-            initialValues={{ source: { app_creation_workflow: 'account_authorization' } }}
-            activeVendor={CLOUD_VENDOR}
-          />
-        );
-      });
-      wrapper.update();
+      const { container } = render(
+        <AddSourceWizard
+          {...initialProps}
+          selectedType="amazon"
+          initialValues={{ source: { app_creation_workflow: 'account_authorization' } }}
+          activeCategory={CLOUD_VENDOR}
+        />
+      );
 
-      expect(getNavigation(wrapper)).toEqual(['Name source', 'Select configuration', 'Select applications', 'Review details']);
+      await waitFor(() => expect(screen.getByText('Name source', { selector: 'button' })).toBeInTheDocument());
+
+      expect(getNavigation(container)).toEqual(['Name source', 'Select configuration', 'Select applications', 'Review details']);
     });
 
     it('show application step when selectedType is set and configuration is selected to false', async () => {
-      await act(async () => {
-        wrapper = mount(
-          <AddSourceWizard
-            {...initialProps}
-            selectedType="amazon"
-            initialValues={{ source: { app_creation_workflow: 'manual_configuration' } }}
-            activeVendor={CLOUD_VENDOR}
-          />
-        );
-      });
-      wrapper.update();
+      const { container } = render(
+        <AddSourceWizard
+          {...initialProps}
+          selectedType="amazon"
+          initialValues={{ source: { app_creation_workflow: 'manual_configuration' } }}
+          activeCategory={CLOUD_VENDOR}
+        />
+      );
 
-      expect(getNavigation(wrapper)).toEqual(['Name source', 'Select configuration', 'Select application', 'Credentials']);
+      await waitFor(() => expect(screen.getByText('Name source', { selector: 'button' })).toBeInTheDocument());
+
+      expect(getNavigation(container)).toEqual(['Name source', 'Select configuration', 'Select application', 'Credentials']);
     });
 
     it('show application step when selectedType is set - RED HAT', async () => {
-      await act(async () => {
-        wrapper = mount(<AddSourceWizard {...initialProps} selectedType="openshift" activeVendor={REDHAT_VENDOR} />);
-      });
-      wrapper.update();
+      const { container } = render(<AddSourceWizard {...initialProps} selectedType="openshift" activeCategory={REDHAT_VENDOR} />);
 
-      expect(getNavigation(wrapper)).toEqual([
+      await waitFor(() => expect(screen.getByText('Name source', { selector: 'button' })).toBeInTheDocument());
+
+      expect(getNavigation(container)).toEqual([
         'Name source',
         'Select application',
         'Credentials',
@@ -459,21 +323,19 @@ describe('AddSourceWizard', () => {
     });
 
     it('show source type selection when REDHAT', async () => {
-      await act(async () => {
-        wrapper = mount(<AddSourceWizard {...initialProps} activeVendor={REDHAT_VENDOR} />);
-      });
-      wrapper.update();
+      const { container } = render(<AddSourceWizard {...initialProps} activeCategory={REDHAT_VENDOR} />);
 
-      expect(getNavigation(wrapper)).toEqual(['Source type and application', 'Name source']);
+      await waitFor(() => expect(screen.getByText('Name source', { selector: 'button' })).toBeInTheDocument());
+
+      expect(getNavigation(container)).toEqual(['Source type and application', 'Name source']);
     });
   });
 
   it('pass initialWizardState to wizard', async () => {
     await act(async () => {
-      wrapper = mount(<AddSourceWizard {...initialProps} initialWizardState={{ some: 'state' }} />);
+      render(<AddSourceWizard {...initialProps} initialWizardState={{ activeStep: 'name_step' }} />);
     });
-    wrapper.update();
 
-    expect(wrapper.find(SourcesFormRenderer).props().schema.fields[0].initialState).toEqual({ some: 'state' });
+    await waitFor(() => expect(screen.getByText('Enter a name for your source.')).toBeInTheDocument());
   });
 });

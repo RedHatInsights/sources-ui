@@ -1,4 +1,7 @@
 import React from 'react';
+
+import { screen } from '@testing-library/react';
+
 import {
   nextStep,
   iconMapper,
@@ -10,12 +13,10 @@ import {
   applicationStep,
   cloudTypesStep,
 } from '../../../components/addSourceWizard/SourceAddSchema';
-import sourceTypes, { OPENSHIFT_TYPE } from '../helpers/sourceTypes';
-import applicationTypes from '../helpers/applicationTypes';
+import sourceTypes, { OPENSHIFT_TYPE } from '../../__mocks__/sourceTypes';
+import applicationTypes from '../../__mocks__/applicationTypes';
 
-import { Text, TextContent } from '@patternfly/react-core';
-
-import mount from '../__mocks__/mount';
+import render from '../__mocks__/render';
 import { NO_APPLICATION_VALUE } from '../../../components/addSourceWizard/stringConstants';
 import SubWatchDescription from '../../../components/addSourceWizard/descriptions/SubWatchDescription';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
@@ -25,16 +26,16 @@ describe('Add source schema', () => {
   const INTL = { formatMessage: ({ defaultMessage }) => defaultMessage };
 
   describe('nextStep', () => {
-    const OPENSHIFT = 'openshift';
+    const OPENSHIFT_TYPE = 'openshift';
     const APP_ID = '666';
     let formState = {
       values: {
-        source_type: OPENSHIFT,
+        source_type: OPENSHIFT_TYPE,
       },
     };
 
     it('returns nextstep without selected app', () => {
-      expect(nextStep()(formState)).toEqual(OPENSHIFT);
+      expect(nextStep()(formState)).toEqual(`${OPENSHIFT_TYPE}-generic`);
     });
 
     it('returns nextstep with selected app', () => {
@@ -47,7 +48,7 @@ describe('Add source schema', () => {
         },
       };
 
-      expect(nextStep()(formState)).toEqual(`${OPENSHIFT}-${APP_ID}`);
+      expect(nextStep()(formState)).toEqual(`${OPENSHIFT_TYPE}-${APP_ID}`);
     });
 
     it('returns nextstep with empty application', () => {
@@ -58,7 +59,7 @@ describe('Add source schema', () => {
         },
       };
 
-      expect(nextStep()(formState)).toEqual(OPENSHIFT);
+      expect(nextStep()(formState)).toEqual(`${OPENSHIFT_TYPE}-generic`);
     });
   });
 
@@ -73,12 +74,10 @@ describe('Add source schema', () => {
     it('returns icon', () => {
       const Icon = iconMapper(sourceTypes)(OPENSHIFT_TYPE.name, DefaultIcon);
 
-      const wrapper = mount(<Icon />);
+      render(<Icon />);
 
-      const imgProps = wrapper.find('img').props();
-
-      expect(imgProps.src).toEqual('/apps/frontend-assets/red-hat-logos/stacked.svg');
-      expect(imgProps.alt).toEqual(OPENSHIFT_TYPE.product_name);
+      expect(screen.getByRole('img')).toHaveAttribute('src', '/apps/frontend-assets/red-hat-logos/stacked.svg');
+      expect(screen.getByRole('img')).toHaveAttribute('alt', OPENSHIFT_TYPE.product_name);
     });
 
     it('returns null when no iconUrl && no short url', () => {
@@ -100,7 +99,7 @@ describe('Add source schema', () => {
 
   describe('descriptions', () => {
     it('renders name description', () => {
-      const wrapper = mount(
+      render(
         <SourcesFormRenderer
           onSubmit={jest.fn()}
           initialValues={{ source_type: 'amazon' }}
@@ -108,16 +107,13 @@ describe('Add source schema', () => {
         />
       );
 
-      expect(wrapper.find(TextContent)).toHaveLength(1);
-      expect(wrapper.find(Text)).toHaveLength(1);
-      expect(wrapper.find(Text).text()).toEqual('Enter a name for your Amazon Web Services source.');
+      expect(screen.getByText('Enter a name for your Amazon Web Services source.')).toBeInTheDocument();
     });
 
     it('renders summary description', () => {
-      const wrapper = mount(<SummaryDescription />);
+      render(<SummaryDescription />);
 
-      expect(wrapper.find(TextContent)).toHaveLength(1);
-      expect(wrapper.find(Text)).toHaveLength(1);
+      expect(screen.getByText('Review the information below and click', { exact: false })).toBeInTheDocument();
     });
   });
 
@@ -227,8 +223,8 @@ describe('Add source schema', () => {
 
     it('red hat type selection - remove red hat', () => {
       const mockSourceTypes = [
-        { name: 'ops', product_name: 'Red Hat Openshift', vendor: 'Red Hat', id: '1' },
-        { name: 'sat', product_name: 'Red Hat Satellite', vendor: 'Red Hat', id: '2' },
+        { name: 'ops', product_name: 'Red Hat Openshift', vendor: 'Red Hat', category: 'Red Hat', id: '1' },
+        { name: 'sat', product_name: 'Red Hat Satellite', vendor: 'Red Hat', category: 'Red Hat', id: '2' },
       ];
 
       expect(compileAllSourcesComboOptions(mockSourceTypes)).toEqual([

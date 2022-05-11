@@ -1,10 +1,13 @@
 import React from 'react';
 
-import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
+import { validatorTypes } from '@data-driven-forms/react-form-renderer';
 import componentMapper from '@data-driven-forms/pf4-component-mapper/component-mapper';
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 
-import mount from '../../addSourceWizard/__mocks__/mount';
+import render from '../../addSourceWizard/__mocks__/render';
 import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
 import Authentication from '../../../components/FormComponents/Authentication';
 
@@ -19,6 +22,7 @@ describe('Authentication test', () => {
         {
           component: 'authentication',
           name: 'authentication.password',
+          label: 'API key',
           validate: [
             { type: validatorTypes.REQUIRED },
             {
@@ -53,7 +57,7 @@ describe('Authentication test', () => {
       ],
     };
 
-    const wrapper = mount(
+    render(
       <SourcesFormRenderer
         {...initialProps}
         schema={schema}
@@ -65,7 +69,7 @@ describe('Authentication test', () => {
       />
     );
 
-    expect(wrapper.find(Authentication)).toHaveLength(1);
+    expect(screen.getByRole('textbox')).toHaveAttribute('name', 'authentication.password');
   });
 
   it('renders with func validation', () => {
@@ -80,7 +84,7 @@ describe('Authentication test', () => {
       ],
     };
 
-    const wrapper = mount(
+    render(
       <SourcesFormRenderer
         {...initialProps}
         schema={schema}
@@ -92,35 +96,29 @@ describe('Authentication test', () => {
       />
     );
 
-    expect(wrapper.find(Authentication)).toHaveLength(1);
+    expect(screen.getByRole('textbox')).toHaveAttribute('name', 'authentication.password');
   });
 
-  it('renders not editing', () => {
-    const wrapper = mount(<SourcesFormRenderer {...initialProps} />);
+  it('renders not editing', async () => {
+    render(<SourcesFormRenderer {...initialProps} />);
 
-    expect(wrapper.find(Authentication)).toHaveLength(1);
-    expect(wrapper.find(componentMapper[componentTypes.TEXT_FIELD]).props().isRequired).toEqual(true);
-    expect(wrapper.find(componentMapper[componentTypes.TEXT_FIELD]).props().helperText).toEqual(undefined);
+    expect(screen.getByRole('textbox')).toHaveAttribute('name', 'authentication.password');
+    expect(screen.getByText('*')).toBeInTheDocument();
+    expect(() => screen.getByText('Changing this resets your current API key.')).toThrow();
 
-    wrapper.find('form').simulate('submit');
-    wrapper.update();
-
-    expect(onSubmit).not.toHaveBeenCalled();
-
-    wrapper.find('input').instance().value = 's'; // too short
-    wrapper.find('input').simulate('change');
-    wrapper.update();
-
-    wrapper.find('form').simulate('submit');
-    wrapper.update();
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    wrapper.find('input').instance().value = 'some-value';
-    wrapper.find('input').simulate('change');
-    wrapper.update();
+    await userEvent.type(screen.getByRole('textbox'), 's'); // too short
 
-    wrapper.find('form').simulate('submit');
+    await userEvent.click(screen.getByText('Submit'));
+
+    expect(onSubmit).not.toHaveBeenCalled();
+
+    await userEvent.type(screen.getByRole('textbox'), 'ome-value'); // too short
+    await userEvent.click(screen.getByText('Submit'));
+
     expect(onSubmit).toHaveBeenCalledWith({
       authentication: {
         password: 'some-value',
@@ -128,8 +126,8 @@ describe('Authentication test', () => {
     });
   });
 
-  it('renders editing and removes required validator (min length still works)', () => {
-    const wrapper = mount(
+  it('renders editing and removes required validator (min length still works)', async () => {
+    render(
       <SourcesFormRenderer
         {...initialProps}
         initialValues={{
@@ -140,14 +138,11 @@ describe('Authentication test', () => {
       />
     );
 
-    expect(wrapper.find(Authentication)).toHaveLength(1);
-    expect(wrapper.find(componentMapper[componentTypes.TEXT_FIELD]).props().isRequired).toEqual(false);
-    expect(wrapper.find(componentMapper[componentTypes.TEXT_FIELD]).props().helperText).toEqual(
-      'Changing this resets your current .'
-    );
+    expect(screen.getByRole('textbox')).toHaveAttribute('name', 'authentication.password');
+    expect(() => screen.getByText('*')).toThrow();
+    expect(screen.getByText('Changing this resets your current API key.')).toBeInTheDocument();
 
-    wrapper.find('form').simulate('submit');
-    wrapper.update();
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       authentication: {
@@ -156,11 +151,10 @@ describe('Authentication test', () => {
     });
     onSubmit.mockClear();
 
-    wrapper.find('input').instance().value = 's';
-    wrapper.find('input').simulate('change');
-    wrapper.update();
+    await userEvent.clear(screen.getByRole('textbox'));
+    await userEvent.type(screen.getByRole('textbox'), 's'); // too short
+    await userEvent.click(screen.getByText('Submit'));
 
-    wrapper.find('form').simulate('submit');
     expect(onSubmit).not.toHaveBeenCalled();
   });
 });

@@ -24,4 +24,4 @@ export const ADD_APP_TO_SOURCE = 'ADD_APP_TO_SOURCE';
 export const SET_COUNT = 'SET_COUNT';
 export const ADD_HIDDEN_SOURCE = 'ADD_HIDDEN_SOURCE';
 export const CLEAR_FILTERS = 'CLEAR_FILTERS';
-export const SET_VENDOR = 'SET_VENDOR';
+export const SET_CATEGORY = 'SET_CATEGORY';

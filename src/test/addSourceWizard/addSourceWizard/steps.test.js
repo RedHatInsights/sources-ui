@@ -1,21 +1,9 @@
 import React from 'react';
 
-import {
-  Button,
-  EmptyState,
-  EmptyStateBody,
-  EmptyStateSecondaryActions,
-  Bullseye,
-  Title,
-  Alert,
-  Spinner,
-} from '@patternfly/react-core';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
-import CheckCircleIcon from '@patternfly/react-icons/dist/esm/icons/check-circle-icon';
-import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
-import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
-
-import mount from '../__mocks__/mount';
+import render from '../__mocks__/render';
 
 import FinishedStep from '../../../components/steps/FinishedStep';
 import LoadingStep from '../../../components/steps/LoadingStep';
@@ -44,26 +32,25 @@ describe('Steps components', () => {
     });
 
     it('renders correctly', () => {
-      const wrapper = mount(<FinishedStep {...initialProps} />);
+      render(<FinishedStep {...initialProps} />);
 
-      expect(wrapper.find(Bullseye)).toHaveLength(1);
-      expect(wrapper.find(CheckCircleIcon)).toHaveLength(1);
-      expect(wrapper.find(EmptyState)).toHaveLength(1);
-      expect(wrapper.find(Button)).toHaveLength(2);
-
-      expect(wrapper.find('a')).toHaveLength(1);
-      expect(wrapper.find('a').props().href).toEqual('/beta/settings/sources');
-      expect(wrapper.find(EmptyStateBody).html().includes('Here I Am')).toBe(true);
+      expect(screen.getByText('Configuration successful')).toBeInTheDocument();
+      expect(screen.getByText('Go back to my application')).toBeInTheDocument();
+      expect(screen.getByText('Here I Am')).toBeInTheDocument();
+      expect(screen.getAllByRole('button')).toHaveLength(1);
+      expect(screen.getByRole('link')).toHaveAttribute('href', '/beta/settings/sources');
     });
 
     it('renders without takemetosources button', () => {
-      const wrapper = mount(<FinishedStep {...initialProps} hideSourcesButton={true} />);
-      expect(wrapper.find('a')).toHaveLength(0);
+      render(<FinishedStep {...initialProps} hideSourcesButton={true} />);
+      expect(() => screen.getByRole('link')).toThrow();
     });
 
-    it('calls onClose function', () => {
-      const wrapper = mount(<FinishedStep {...initialProps} />);
-      wrapper.find(Button).first().simulate('click');
+    it('calls onClose function', async () => {
+      render(<FinishedStep {...initialProps} />);
+
+      await userEvent.click(screen.getByText('Go back to my application'));
+
       expect(spyFunction).toHaveBeenCalled();
     });
   });
@@ -77,19 +64,19 @@ describe('Steps components', () => {
     });
 
     it('renders correctly with custom props', () => {
-      const wrapper = mount(<LoadingStep {...initialProps} />);
+      render(<LoadingStep {...initialProps} />);
 
-      expect(wrapper.find(Bullseye)).toHaveLength(1);
-      expect(wrapper.find(Spinner)).toHaveLength(1);
-      expect(wrapper.find(EmptyState)).toHaveLength(1);
-      expect(wrapper.find(Button)).toHaveLength(1);
-
-      expect(wrapper.find(Title).html().includes('Here I Am')).toBe(true);
+      expect(screen.getByLabelText('Contents')).toBeInTheDocument();
+      expect(screen.getByText('Here I Am')).toBeInTheDocument();
+      expect(screen.getByText('Cancel')).toBeInTheDocument();
+      expect(screen.getAllByRole('button')).toHaveLength(1);
     });
 
-    it('calls onClose function', () => {
-      const wrapper = mount(<LoadingStep {...initialProps} />);
-      wrapper.find(Button).first().simulate('click');
+    it('calls onClose function', async () => {
+      render(<LoadingStep {...initialProps} />);
+
+      await userEvent.click(screen.getByText('Cancel'));
+
       expect(spyFunction).toHaveBeenCalled();
     });
   });
@@ -103,30 +90,38 @@ describe('Steps components', () => {
     });
 
     it('renders correctly', () => {
-      const wrapper = mount(<ErroredStep {...initialProps} />);
+      render(<ErroredStep {...initialProps} />);
 
-      expect(wrapper.find(Bullseye)).toHaveLength(1);
-      expect(wrapper.find(ExclamationCircleIcon)).toHaveLength(1);
-      expect(wrapper.find(EmptyState)).toHaveLength(1);
-      expect(wrapper.find(Button)).toHaveLength(1);
+      expect(screen.getByText('Something went wrong')).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'There was a problem while trying to add your source. Please try again. If the error persists, open a support case.'
+        )
+      ).toBeInTheDocument();
+      expect(screen.getByText('Go back to my application')).toBeInTheDocument();
+      expect(screen.getAllByRole('button')).toHaveLength(1);
     });
 
     it('renders correctly with message', () => {
       const ERROR_MESSAGE = 'I am a little error, nice to meet you';
-      const wrapper = mount(<ErroredStep {...initialProps} message={ERROR_MESSAGE} />);
+      render(<ErroredStep {...initialProps} message={ERROR_MESSAGE} />);
 
-      expect(wrapper.find(EmptyStateBody).text()).toEqual(ERROR_MESSAGE);
+      expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
     });
 
-    it('calls onClose function', () => {
-      const wrapper = mount(<ErroredStep {...initialProps} />);
-      wrapper.find(Button).first().simulate('click');
+    it('calls onClose function', async () => {
+      render(<ErroredStep {...initialProps} />);
+
+      await userEvent.click(screen.getByText('Go back to my application'));
+
       expect(spyFunction).toHaveBeenCalled();
     });
 
-    it('calls primaryAction function', () => {
-      const wrapper = mount(<ErroredStep {...initialProps} primaryAction={spyFunctionSecond} />);
-      wrapper.find(Button).simulate('click');
+    it('calls primaryAction function', async () => {
+      render(<ErroredStep {...initialProps} primaryAction={spyFunctionSecond} />);
+
+      await userEvent.click(screen.getByText('Go back to my application'));
+
       expect(spyFunctionSecond).toHaveBeenCalled();
     });
   });
@@ -140,26 +135,31 @@ describe('Steps components', () => {
     });
 
     it('renders correctly', () => {
-      const wrapper = mount(<TimeoutStep {...initialProps} />);
+      render(<TimeoutStep {...initialProps} />);
 
-      expect(wrapper.find(Bullseye)).toHaveLength(1);
-      expect(wrapper.find(WrenchIcon)).toHaveLength(1);
-      expect(wrapper.find(EmptyState)).toHaveLength(1);
-      expect(wrapper.find(Button)).toHaveLength(1);
+      expect(screen.getByText('Configuration in progress')).toBeInTheDocument();
+      expect(
+        screen.getByText('We are still working to confirm credentials and app settings.', { exact: false })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText('To track progress, check the Status column in the Sources table.', { exact: false })
+      ).toBeInTheDocument();
+      expect(screen.getByText('go back')).toBeInTheDocument();
+      expect(screen.getAllByRole('button')).toHaveLength(1);
     });
 
     it('renders correctly customized', () => {
-      const wrapper = mount(
-        <TimeoutStep {...initialProps} title="pekny nadpis" secondaryActions={<button>some button here</button>} />
-      );
+      render(<TimeoutStep {...initialProps} title="pekny nadpis" secondaryActions={<button>some button here</button>} />);
 
-      expect(wrapper.find(Title).first().text()).toEqual('pekny nadpis');
-      expect(wrapper.find(EmptyStateSecondaryActions).find('button')).toHaveLength(1);
+      expect(screen.getByText('pekny nadpis')).toBeInTheDocument();
+      expect(screen.getAllByRole('button')).toHaveLength(2);
     });
 
-    it('calls onClose function', () => {
-      const wrapper = mount(<TimeoutStep {...initialProps} />);
-      wrapper.find(Button).simulate('click');
+    it('calls onClose function', async () => {
+      render(<TimeoutStep {...initialProps} />);
+
+      await userEvent.click(screen.getByText('go back'));
+
       expect(spyFunction).toHaveBeenCalled();
     });
   });
@@ -172,19 +172,26 @@ describe('Steps components', () => {
     });
 
     it('renders correctly', () => {
-      const wrapper = mount(<AmazonFinishedStep {...initialProps} />);
+      render(<AmazonFinishedStep {...initialProps} />);
 
-      expect(wrapper.find(Bullseye)).toHaveLength(1);
-      expect(wrapper.find(CheckCircleIcon)).toHaveLength(5);
-      expect(wrapper.find(EmptyState)).toHaveLength(1);
-      expect(wrapper.find(Button)).toHaveLength(1);
-      expect(wrapper.find(Alert)).toHaveLength(1);
-      expect(wrapper.find('a')).toHaveLength(5);
+      expect(screen.getByText('Allow 24 hours for full activation')).toBeInTheDocument();
+      expect(screen.getByText('Manage connections for this source at any time in Settings > Sources.')).toBeInTheDocument();
+      expect(screen.getByText('Amazon Web Services connection established')).toBeInTheDocument();
+      expect(screen.getByText('Discover the benefits of your connection or exit to manage your new source.')).toBeInTheDocument();
+      expect([...screen.getAllByRole('link')].map((l) => [l.textContent, l.href])).toEqual([
+        ['View enabled AWS gold images', 'https://access.redhat.com/management/cloud'],
+        ['Subscription Watch usage', 'http://localhost/beta/subscriptions'],
+        ['Get started with Red Hat Insights', 'http://localhost/beta/insights'],
+        ['Cost Management reporting', 'http://localhost/beta/cost-management'],
+        ['Learn more about this Cloud', 'https://access.redhat.com/public-cloud/aws'],
+      ]);
     });
 
-    it('calls onClose function', () => {
-      const wrapper = mount(<AmazonFinishedStep {...initialProps} />);
-      wrapper.find(Button).simulate('click');
+    it('calls onClose function', async () => {
+      render(<AmazonFinishedStep {...initialProps} />);
+
+      await userEvent.click(screen.getByText('Exit'));
+
       expect(spyFunction).toHaveBeenCalled();
     });
   });

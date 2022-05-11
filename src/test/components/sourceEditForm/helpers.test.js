@@ -6,7 +6,7 @@ import {
   selectOnlyEditedValues,
 } from '../../../components/SourceEditForm/helpers';
 import { UNAVAILABLE } from '../../../views/formatters';
-import applicationTypesData, { COSTMANAGEMENT_APP } from '../../__mocks__/applicationTypesData';
+import applicationTypes, { COST_MANAGEMENT_APP } from '../../__mocks__/applicationTypes';
 
 describe('edit form helpers', () => {
   describe('selectOnlyEditedValues', () => {
@@ -210,7 +210,7 @@ describe('edit form helpers', () => {
     let source;
     let edited;
 
-    const appTypes = applicationTypesData.data;
+    const appTypes = applicationTypes;
 
     it('assigns applications to app id', () => {
       edited = {
@@ -282,7 +282,7 @@ describe('edit form helpers', () => {
           { id: 'app2' },
           { id: 'app3', availability_status: UNAVAILABLE, availability_status_error: 'some error 3' },
           {
-            application_type_id: COSTMANAGEMENT_APP.id,
+            application_type_id: COST_MANAGEMENT_APP.id,
             id: 'app4',
             availability_status: UNAVAILABLE,
             availability_status_error: 'some error 3',
@@ -291,7 +291,7 @@ describe('edit form helpers', () => {
         ],
       };
 
-      expect(prepareMessages(source, intl, applicationTypesData.data)).toEqual({
+      expect(prepareMessages(source, intl, applicationTypes)).toEqual({
         app1: {
           description: 'some error',
           title: 'This application is unavailable',
@@ -322,13 +322,13 @@ describe('edit form helpers', () => {
             id: 'app4',
             authentications: [{ resource_type: 'Endpoint' }],
             paused_at: 'today',
-            application_type_id: COSTMANAGEMENT_APP.id,
+            application_type_id: COST_MANAGEMENT_APP.id,
           },
         ],
         endpoints: [{ availability_status_error: 'endpoint error' }],
       };
 
-      expect(prepareMessages(source, intl, applicationTypesData.data)).toEqual({
+      expect(prepareMessages(source, intl, applicationTypes)).toEqual({
         app1: {
           description: 'endpoint error',
           title: 'This application is unavailable',

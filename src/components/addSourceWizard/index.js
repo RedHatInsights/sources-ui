@@ -16,7 +16,7 @@ import createSuperSource from '../../api/createSuperSource';
 import { doCreateSource } from '../../api/createSource';
 import CloseModal from '../CloseModal';
 
-const prepareInitialValues = (initialValues, activeVendor) => ({
+const prepareInitialValues = (initialValues, activeCategory) => ({
   isSubmitted: false,
   isFinished: false,
   isErrored: false,
@@ -24,13 +24,13 @@ const prepareInitialValues = (initialValues, activeVendor) => ({
   values: initialValues,
   createdSource: {},
   error: undefined,
-  activeVendor,
+  activeCategory,
 });
 
 const reducer = (state, { type, values, data, error, initialValues, sourceTypes, applicationTypes }) => {
   switch (type) {
     case 'reset':
-      return prepareInitialValues(initialValues);
+      return prepareInitialValues(initialValues, state.activeCategory);
     case 'prepareSubmitState':
       return {
         ...state,
@@ -67,10 +67,10 @@ const AddSourceWizard = ({
   selectedType,
   initialWizardState,
   submitCallback,
-  activeVendor: propsActiveVendor,
+  activeCategory: propsActiveCategory,
 }) => {
-  const [{ isErrored, isFinished, isSubmitted, values, error, isCancelling, createdSource, activeVendor, ...state }, dispatch] =
-    useReducer(reducer, prepareInitialValues(initialValues, propsActiveVendor));
+  const [{ isErrored, isFinished, isSubmitted, values, error, isCancelling, createdSource, activeCategory, ...state }, dispatch] =
+    useReducer(reducer, prepareInitialValues(initialValues, propsActiveCategory));
 
   const onSubmit = (formValues, sourceTypes, wizardState, applicationTypes) => {
     dispatch({ type: 'prepareSubmitState', values: formValues, sourceTypes, applicationTypes });
@@ -118,7 +118,7 @@ const AddSourceWizard = ({
           disableAppSelection={disableAppSelection}
           selectedType={selectedType}
           initialWizardState={initialWizardState}
-          activeVendor={activeVendor}
+          activeCategory={activeCategory}
         />
       </React.Fragment>
     );
@@ -139,7 +139,7 @@ const AddSourceWizard = ({
       tryAgain={() => onSubmit(values, state.sourceTypes, undefined, state.applicationTypes)}
       afterSuccess={afterSuccess}
       sourceTypes={state.sourceTypes}
-      activeVendor={activeVendor}
+      activeCategory={activeCategory}
     />
   );
 };
@@ -176,7 +176,7 @@ AddSourceWizard.propTypes = {
   selectedType: PropTypes.string,
   initialWizardState: PropTypes.object,
   submitCallback: PropTypes.func,
-  activeVendor: PropTypes.oneOf([REDHAT_VENDOR, CLOUD_VENDOR]),
+  activeCategory: PropTypes.oneOf([REDHAT_VENDOR, CLOUD_VENDOR]),
 };
 
 AddSourceWizard.defaultProps = {

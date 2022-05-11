@@ -1,13 +1,15 @@
 import React from 'react';
 import { IntlProvider } from 'react-intl';
-import { mount as mountEnzyme } from 'enzyme';
+import { render as rtlRender } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import { LocationDisplay } from '../../../utilities/testsHelpers';
 
-const mount = (children) =>
-  mountEnzyme(
+const render = (children) =>
+  rtlRender(
     <MemoryRouter initialEntries={['/']} initialIndex={0} keyLength={0}>
       <IntlProvider locale="en">{children}</IntlProvider>
+      <LocationDisplay />
     </MemoryRouter>
   );
 
-export default mount;
+export default render;

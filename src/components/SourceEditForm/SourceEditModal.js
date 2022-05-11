@@ -38,7 +38,7 @@ const SourceEditModal = () => {
 
   useEffect(() => {
     if (sourceRedux && initialLoad && appTypesLoaded) {
-      doLoadSourceForEdit(sourceRedux, appTypes, sourceTypes).then((source) => {
+      doLoadSourceForEdit(sourceRedux).then((source) => {
         const messages = prepareMessages(source, intl, appTypes);
 
         setState({ type: 'setSource', source, messages });

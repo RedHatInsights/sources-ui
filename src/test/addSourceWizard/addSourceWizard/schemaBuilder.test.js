@@ -11,13 +11,12 @@ import {
   getAdditionalSteps,
   shouldSkipSelection,
   getAdditionalStepKeys,
-  createGenericAuthTypeSelection,
-  createSpecificAuthTypeSelection,
+  createAuthTypeSelection,
   shouldUseAppAuth,
 } from '../../../components/addSourceWizard/schemaBuilder';
 import hardcodedSchemas from '../../../components/addSourceWizard/hardcodedSchemas';
-import sourceTypes, { AMAZON_TYPE, OPENSHIFT_TYPE, AZURE_TYPE, ANSIBLE_TOWER_TYPE } from '../helpers/sourceTypes';
-import applicationTypes, { COST_MANAGEMENT_APP, TOPOLOGY_INV_APP } from '../helpers/applicationTypes';
+import sourceTypes, { AMAZON_TYPE, OPENSHIFT_TYPE, AZURE_TYPE, ANSIBLE_TOWER_TYPE } from '../../__mocks__/sourceTypes';
+import applicationTypes, { COST_MANAGEMENT_APP, TOPOLOGY_INV_APP } from '../../__mocks__/applicationTypes';
 import { validatorTypes } from '@data-driven-forms/react-form-renderer';
 
 describe('schema builder', () => {
@@ -257,8 +256,11 @@ describe('schema builder', () => {
     let expectedSchema;
     const APPEND_ENDPOINT_FIELDS = [true];
     const EMPTY_APPEND_ENDPOINT = [];
+    const HAS_ENDPOINT_STEP = true;
+    const DISABLE_AUTH_TYPE = undefined;
+    const NO_APP = undefined;
 
-    describe('createGenericAuthTypeSelection', () => {
+    describe('createAuthTypeSelection - generic', () => {
       it('generate single selection', () => {
         const fields = OPENSHIFT_TYPE.schema.authentication[0].fields
           .filter(({ stepKey }) => !stepKey)
@@ -269,22 +271,24 @@ describe('schema builder', () => {
         expectedSchema = expect.objectContaining({
           fields: expect.arrayContaining(fields),
           title: expect.any(Object),
-          name: OPENSHIFT_TYPE.name,
+          name: OPENSHIFT_TYPE.name + '-generic',
           nextStep: 'summary',
         });
 
-        expect(createGenericAuthTypeSelection(OPENSHIFT_TYPE, APPEND_ENDPOINT_FIELDS)).toEqual(expectedSchema);
+        expect(createAuthTypeSelection(OPENSHIFT_TYPE, NO_APP, APPEND_ENDPOINT_FIELDS)).toEqual(expectedSchema);
       });
 
       it('generate single selection with endpoint', () => {
         expectedSchema = expect.objectContaining({
           fields: expect.any(Array),
           title: expect.any(Object),
-          name: OPENSHIFT_TYPE.name,
+          name: OPENSHIFT_TYPE.name + '-generic',
           nextStep: `${OPENSHIFT_TYPE.name}-endpoint`,
         });
 
-        expect(createGenericAuthTypeSelection(OPENSHIFT_TYPE, EMPTY_APPEND_ENDPOINT)).toEqual(expectedSchema);
+        expect(
+          createAuthTypeSelection(OPENSHIFT_TYPE, NO_APP, EMPTY_APPEND_ENDPOINT, DISABLE_AUTH_TYPE, HAS_ENDPOINT_STEP)
+        ).toEqual(expectedSchema);
       });
 
       it('generate multiple selection', () => {
@@ -295,7 +299,7 @@ describe('schema builder', () => {
         expectedSchema = expect.objectContaining({
           fields: expect.arrayContaining([arnSelect, secretKey, arnCloudMeter]),
           title: expect.any(Object),
-          name: AMAZON_TYPE.name,
+          name: AMAZON_TYPE.name + '-generic',
           nextStep: {
             when: expect.any(String),
             stepMapper: {
@@ -306,11 +310,11 @@ describe('schema builder', () => {
           },
         });
 
-        expect(createGenericAuthTypeSelection(AMAZON_TYPE, APPEND_ENDPOINT_FIELDS)).toEqual(expectedSchema);
+        expect(createAuthTypeSelection(AMAZON_TYPE, NO_APP, APPEND_ENDPOINT_FIELDS)).toEqual(expectedSchema);
       });
     });
 
-    describe('createSpecificAuthTypeSelection', () => {
+    describe('createAuthTypeSelection', () => {
       it('generate single selection', () => {
         const fields = AZURE_TYPE.schema.authentication[0].fields.filter(({ stepKey }) => !stepKey);
         const expectedName = `${AZURE_TYPE.name}-${TOPOLOGY_INV_APP.id}`;
@@ -322,15 +326,13 @@ describe('schema builder', () => {
           nextStep: 'summary',
         });
 
-        expect(createSpecificAuthTypeSelection(AZURE_TYPE, TOPOLOGY_INV_APP, APPEND_ENDPOINT_FIELDS)).toEqual(expectedSchema);
+        expect(createAuthTypeSelection(AZURE_TYPE, TOPOLOGY_INV_APP, APPEND_ENDPOINT_FIELDS)).toEqual(expectedSchema);
       });
 
       it('generate single selection - do not append endpoint fields for azure/cost', () => {
         const ENDPOINT_FIELDS = [{ name: 'endpoint' }];
 
-        expect(
-          createSpecificAuthTypeSelection(AZURE_TYPE, COST_MANAGEMENT_APP, ENDPOINT_FIELDS).fields.map(({ name }) => name)
-        ).toEqual([
+        expect(createAuthTypeSelection(AZURE_TYPE, COST_MANAGEMENT_APP, ENDPOINT_FIELDS).fields.map(({ name }) => name)).toEqual([
           'authentication.authtype',
           'azure-storage-account-description',
           'all-required',
@@ -350,7 +352,9 @@ describe('schema builder', () => {
           nextStep: `${AZURE_TYPE.name}-endpoint`,
         });
 
-        expect(createSpecificAuthTypeSelection(AZURE_TYPE, TOPOLOGY_INV_APP, EMPTY_APPEND_ENDPOINT)).toEqual(expectedSchema);
+        expect(
+          createAuthTypeSelection(AZURE_TYPE, TOPOLOGY_INV_APP, EMPTY_APPEND_ENDPOINT, DISABLE_AUTH_TYPE, HAS_ENDPOINT_STEP)
+        ).toEqual(expectedSchema);
       });
 
       it('generate with custom steps', () => {
@@ -367,7 +371,7 @@ describe('schema builder', () => {
           nextStep: firstAdditionalStep.nextStep,
         });
 
-        expect(createSpecificAuthTypeSelection(AMAZON_TYPE, COST_MANAGEMENT_APP, APPEND_ENDPOINT_FIELDS)).toEqual(expectedSchema);
+        expect(createAuthTypeSelection(AMAZON_TYPE, COST_MANAGEMENT_APP, APPEND_ENDPOINT_FIELDS)).toEqual(expectedSchema);
       });
     });
   });
@@ -380,15 +384,15 @@ describe('schema builder', () => {
       );
 
       expect(schema).toEqual(expect.arrayContaining([expect.any(Object)]));
-      expect(schema).toHaveLength(43);
+      expect(schema).toHaveLength(56);
 
       expect(schema.map(({ name }) => name)).toEqual([
-        'openshift',
+        'openshift-generic',
         'openshift-2',
         'openshift-3',
         'openshift-token-/insights/platform/cost-management-additional-step',
         'openshift-endpoint',
-        'amazon',
+        'amazon-generic',
         'amazon-2',
         'amazon-3',
         'amazon-5',
@@ -401,7 +405,7 @@ describe('schema builder', () => {
         'amazon-cloud-meter-arn-/insights/platform/cloud-meter-additional-step',
         'subs-iam-role',
         'subs-arn',
-        'ansible-tower',
+        'ansible-tower-generic',
         'ansible-tower-1',
         'ansible-tower-3',
         'ansible-tower-username_password-generic-additional-step',
@@ -409,7 +413,7 @@ describe('schema builder', () => {
         'ansible-tower-username_password-/insights/platform/catalog-additional-step',
         'catalog-ansible-tower',
         'ansible-tower-endpoint',
-        'azure',
+        'azure-generic',
         'azure-2',
         'azure-3',
         'azure-5',
@@ -419,13 +423,26 @@ describe('schema builder', () => {
         'export-schedule',
         'azure-empty-/insights/platform/cloud-meter-additional-step',
         'cost-azure-playbook',
-        'google',
+        'google-generic',
         'google-2',
+        'google-5',
         'google-project_id_service_account_json-/insights/platform/cost-management-additional-step',
         'cost-gcp-iam',
         'cost-gcp-access',
         'cost-gcp-dataset',
         'cost-gcp-billing-export',
+        'google-empty-/insights/platform/cloud-meter-additional-step',
+        'cost-google-playbook',
+        'ibm-generic',
+        'ibm-2',
+        'ibm-api_token_account_id-/insights/platform/cost-management-additional-step',
+        'ibm-cm-account-id',
+        'ibm-cm-service-id',
+        'ibm-cm-configure-access',
+        'ibm-cm-api-key',
+        'satellite-generic',
+        'satellite-receptor_node-generic-additional-step',
+        'satellite-endpoint',
       ]);
     });
 
@@ -443,7 +460,7 @@ describe('schema builder', () => {
       const schema = schemaBuilder(sourceType, applicationTypes);
 
       expect(schema.map(({ name }) => name)).toEqual([
-        'ansible-tower',
+        'ansible-tower-generic',
         'ansible-tower-1',
         'ansible-tower-3',
         'ansible-tower-username_password-generic-additional-step',

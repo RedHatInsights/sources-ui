@@ -1,16 +1,20 @@
 import React from 'react';
 
-import { Text, TextContent, Popover } from '@patternfly/react-core';
+import { screen } from '@testing-library/react';
 
 import * as AwsAccess from '../../../../components/addSourceWizard/hardcodedComponents/aws/access_key';
-import mount from '../../__mocks__/mount';
+import render from '../../__mocks__/render';
 
 describe('AWS-Access key hardcoded schemas', () => {
   it('ARN DESCRIPTION is rendered correctly', () => {
-    const wrapper = mount(<AwsAccess.DescriptionSummary />);
+    render(<AwsAccess.DescriptionSummary />);
 
-    expect(wrapper.find(TextContent)).toHaveLength(1);
-    expect(wrapper.find(Text)).toHaveLength(2);
-    expect(wrapper.find(Popover)).toHaveLength(1);
+    expect(screen.getByText('Create an access key in your AWS user account and enter the details below.')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'For sufficient access and security, Red Hat recommends using the Power user identity and access management (IAM) policy for your AWS user account.'
+      )
+    ).toBeInTheDocument();
+    expect(screen.getByText('Create an access key in your AWS user account and enter the details below.')).toBeInTheDocument();
   });
 });

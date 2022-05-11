@@ -4,20 +4,34 @@ import userEvent from '@testing-library/user-event';
 import * as api from '../api';
 import RecommendedServices from '../RecommendedServices';
 import products from './__mocks__/products';
+import categories from './__mocks__/categories';
 import { chipFormatters } from '../MarketplaceModal';
 
 describe('<RecommendedServices />', () => {
   const crunchyProduct = products[0];
   const mongoProduct = products[1];
 
+  const getProductsResponse = { data: products, meta: { count: products.length } };
+  const getCategoriesResponse = { data: categories };
+
   beforeEach(() => {
-    api.getProducts = jest.fn().mockResolvedValue({ data: products });
+    api.getProducts = jest.fn().mockResolvedValue({
+      data: products,
+      meta: { count: products.length },
+    });
+    api.getCategories = jest.fn().mockResolvedValue({
+      data: categories,
+    });
   });
 
   it('renders page and loads data', async () => {
+    api.getProducts = mockApi();
+
     render(<RecommendedServices />);
 
     expect(screen.getAllByRole('progressbar')).toHaveLength(6);
+
+    api.getProducts.resolve(getProductsResponse);
 
     await waitFor(() => expect(screen.getByText(mongoProduct.title)).toBeInTheDocument());
     expect(screen.getByText('Database')).toBeInTheDocument();
@@ -33,6 +47,7 @@ describe('<RecommendedServices />', () => {
   it('renders page and loads data - fallback to the first item', async () => {
     api.getProducts = jest.fn().mockResolvedValue({
       data: [crunchyProduct],
+      meta: { count: 1 },
     });
 
     render(<RecommendedServices />);
@@ -44,10 +59,22 @@ describe('<RecommendedServices />', () => {
 
   describe('<SeeMoreCard />', () => {
     it('opens modal', async () => {
+      api.getProducts = mockApi();
+      api.getCategories = mockApi();
+
       render(<RecommendedServices />);
+
+      api.getProducts.resolve(getProductsResponse);
+
       await waitFor(() => expect(screen.getByText('See more databases')).toBeInTheDocument());
 
-      userEvent.click(screen.getByText('See more databases'));
+      await userEvent.click(screen.getByText('See more databases'));
+
+      expect(screen.getAllByRole('progressbar')).toHaveLength(6);
+
+      api.getCategories.resolve(getCategoriesResponse);
+
+      await waitFor(() => expect(screen.getByText('Filter by product type')).toBeInTheDocument());
 
       expect(screen.getByText('Browse catalog')).toBeInTheDocument();
       expect(screen.getByText('A curated selection of offerings available for purchase from')).toBeInTheDocument();
@@ -59,43 +86,80 @@ describe('<RecommendedServices />', () => {
 
       expect(within(screen.getByRole('dialog')).getAllByText('Add')).toHaveLength(4);
 
-      userEvent.click(screen.getByLabelText('Close'));
+      await userEvent.click(screen.getByText('Filter by product type'));
+
+      categories.map((category) => {
+        expect(within(screen.getByRole('listbox')).getAllByText(category.display_name)).toBeTruthy();
+      });
+
+      await userEvent.click(screen.getByLabelText('Close'));
 
       expect(() => screen.getByRole('dialog')).toThrow();
     });
 
     it('change perPage', async () => {
-      render(<RecommendedServices />);
-      await waitFor(() => expect(screen.getByText('See more databases')).toBeInTheDocument());
-      userEvent.click(screen.getByText('See more databases'));
+      api.getProducts = mockApi();
 
-      userEvent.click(screen.getByLabelText('Items per page'));
+      render(<RecommendedServices />);
+
+      api.getProducts.resolve(getProductsResponse);
+
+      await waitFor(() => expect(screen.getByText('See more databases')).toBeInTheDocument());
+      await userEvent.click(screen.getByText('See more databases'));
+
+      await waitFor(() => expect(screen.getByText('Filter by product type')).toBeInTheDocument());
+
+      await userEvent.click(screen.getByLabelText('Items per page'));
 
       expect(screen.getByText('10 per page')).toHaveAttribute('class', 'pf-m-selected pf-c-options-menu__menu-item');
       expect(screen.getByText('20 per page')).toHaveAttribute('class', 'pf-c-options-menu__menu-item');
 
-      userEvent.click(screen.getByText('20 per page'));
+      await userEvent.click(screen.getByText('20 per page'));
 
-      userEvent.click(screen.getByLabelText('Items per page'));
+      expect(screen.getAllByRole('progressbar')).toHaveLength(6);
+
+      api.getProducts.resolve(getProductsResponse);
+
+      await waitFor(() => expect(screen.getAllByRole('progressbar')).toHaveLength(4));
+      expect(api.getProducts).toHaveBeenLastCalledWith({ page: 1, perPage: 20 });
+
+      await userEvent.click(screen.getByLabelText('Items per page'));
 
       expect(screen.getByText('10 per page')).toHaveAttribute('class', 'pf-c-options-menu__menu-item');
       expect(screen.getByText('20 per page')).toHaveAttribute('class', 'pf-m-selected pf-c-options-menu__menu-item');
     });
 
     it('change page', async () => {
-      api.getProducts = jest.fn().mockResolvedValue({
+      api.getProducts = mockApi();
+
+      const response = {
         data: [...Array(11)].map((_, index) => ({
           ...crunchyProduct,
           id: index,
         })),
-      });
+        meta: {
+          count: 11,
+        },
+      };
 
       render(<RecommendedServices />);
+
+      api.getProducts.resolve(response);
+
       await waitFor(() => expect(screen.getByText('See more databases')).toBeInTheDocument());
-      userEvent.click(screen.getByText('See more databases'));
+      await userEvent.click(screen.getByText('See more databases'));
+      await waitFor(() => expect(screen.getByText('Filter by product type')).toBeInTheDocument());
 
       expect(screen.getByTestId('pagination')).toHaveTextContent('1 - 10 of 11 1 - 10 of 11');
-      userEvent.click(screen.getByLabelText('Go to next page'));
+      await userEvent.click(screen.getByLabelText('Go to next page'));
+
+      expect(screen.getAllByRole('progressbar')).toHaveLength(6);
+
+      api.getProducts.resolve(response);
+
+      await waitFor(() => expect(screen.getAllByRole('progressbar')).toHaveLength(6));
+      expect(api.getProducts).toHaveBeenLastCalledWith({ page: 2, perPage: 10 });
+
       expect(screen.getByTestId('pagination')).toHaveTextContent('11 - 11 of 11 11 - 11 of 11');
     });
   });

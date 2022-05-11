@@ -45,6 +45,7 @@ describe('generateFirstAuthStep', () => {
       name: 'custom',
       schema: {
         authentication: [{ type: 'arn', fields: [{ component: 'text', name: 'username' }] }],
+        endpoint: { hidden: false, fields: ENDPOINT_FIELDS },
       },
     };
 
@@ -70,6 +71,7 @@ describe('generateFirstAuthStep', () => {
       name: 'custom',
       schema: {
         authentication: [{ type: 'arn', fields: [{ component: 'text', name: 'username' }] }],
+        endpoint: { hidden: true, fields: ENDPOINT_FIELDS_FULL },
       },
     };
 
@@ -96,6 +98,7 @@ describe('generateFirstAuthStep', () => {
       name: 'custom-authapp',
       schema: {
         authentication: [{ type: 'arn', fields: [{ component: 'text', name: 'username' }] }],
+        endpoint: { hidden: true, fields: ENDPOINT_FIELDS_FULL },
       },
     };
 
@@ -164,6 +167,7 @@ describe('generateFirstAuthStep', () => {
       name: 'enhancedtoendpoint',
       schema: {
         authentication: [{ type: 'arn', fields: [{ component: 'text', name: 'username' }] }],
+        endpoint: { hidden: true, fields: ENDPOINT_FIELDS },
       },
     };
 

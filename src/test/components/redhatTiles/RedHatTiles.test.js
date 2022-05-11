@@ -1,18 +1,15 @@
 import React from 'react';
-import { act } from 'react-dom/test-utils';
-
-import { Tooltip, Tile } from '@patternfly/react-core';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import componentWrapperIntl from '../../../utilities/testsHelpers';
-import { MemoryRouter } from 'react-router-dom';
 import { routes } from '../../../Routes';
 import mockStore from '../../__mocks__/mockStore';
 import RedHatTiles from '../../../components/RedHatTiles/RedHatTiles';
-import sourceTypes from '../../__mocks__/sourceTypesData';
+import sourceTypes from '../../__mocks__/sourceTypes';
 import { REDHAT_VENDOR } from '../../../utilities/constants';
 
 describe('RedhatTiles', () => {
-  let wrapper;
   let setSelectedType;
   let initialProps;
   let store;
@@ -26,52 +23,45 @@ describe('RedhatTiles', () => {
 
     store = mockStore({
       user: { writePermissions: true },
-      sources: { sourceTypes: sourceTypes.data, activeVendor: REDHAT_VENDOR },
+      sources: { sourceTypes, activeCategory: REDHAT_VENDOR },
     });
   });
 
   it('renders correctly', async () => {
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<RedHatTiles {...initialProps} />, store));
-    });
-    wrapper.update();
+    render(componentWrapperIntl(<RedHatTiles {...initialProps} />, store));
 
-    expect(wrapper.find(Tile)).toHaveLength(1);
-    expect(wrapper.find('img')).toHaveLength(1);
-
-    expect(wrapper.find(Tile).first().props().isDisabled).toEqual(undefined);
-    expect(wrapper.find(Tooltip)).toHaveLength(0);
+    expect(screen.getByText('OpenShift Container Platform')).toBeInTheDocument();
+    expect(screen.getByAltText('red hat logo')).toBeInTheDocument();
   });
 
   it('renders correctly when no permissions', async () => {
-    store = mockStore({ user: { writePermissions: false }, sources: { sourceTypes: sourceTypes.data } });
-
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<RedHatTiles {...initialProps} />, store));
+    store = mockStore({
+      user: { writePermissions: false },
+      sources: { sourceTypes, activeCategory: REDHAT_VENDOR },
     });
-    wrapper.update();
 
-    expect(wrapper.find(Tile)).toHaveLength(1);
-    expect(wrapper.find('img')).toHaveLength(1);
-    expect(wrapper.find(Tile).first().props().isDisabled).toEqual(true);
-    expect(wrapper.find(Tooltip)).toHaveLength(1);
-    expect(wrapper.find(Tooltip).first().props().content).toEqual(
-      'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.'
+    render(componentWrapperIntl(<RedHatTiles {...initialProps} />, store));
+
+    expect(screen.getByText('OpenShift Container Platform')).toBeInTheDocument();
+    expect(screen.getByAltText('red hat logo')).toBeInTheDocument();
+
+    await userEvent.click(screen.getByText('OpenShift Container Platform'));
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(
+          'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.'
+        )
+      ).toBeInTheDocument()
     );
   });
 
   it('sets openshift', async () => {
-    await act(async () => {
-      wrapper = mount(componentWrapperIntl(<RedHatTiles {...initialProps} />, store));
-    });
-    wrapper.update();
+    render(componentWrapperIntl(<RedHatTiles {...initialProps} />, store));
 
-    await act(async () => {
-      wrapper.find(Tile).at(0).simulate('click');
-    });
-    wrapper.update();
+    await userEvent.click(screen.getByText('OpenShift Container Platform'));
 
-    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(routes.sourcesNew.path);
+    expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path);
     expect(setSelectedType).toHaveBeenCalledWith('openshift');
   });
 });

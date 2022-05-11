@@ -1,4 +1,4 @@
-import { createGenericAuthTypeSelection } from '../../../../components/addSourceWizard/schemaBuilder';
+import { createAuthTypeSelection } from '../../../../components/addSourceWizard/schemaBuilder';
 
 jest.mock('../../../../components/addSourceWizard/hardcodedSchemas', () => ({
   openshift: {
@@ -16,6 +16,8 @@ describe('generate auth selection pages', () => {
   let expectedSchema;
   const HAS_ENDPOINT = [];
   const NOT_EDITING = false;
+  const HAS_ENDPOINT_STEP = true;
+  const NO_APP = undefined;
 
   const ONE_SINGLE_SELECTION_TYPE = {
     id: '1',
@@ -90,18 +92,20 @@ describe('generate auth selection pages', () => {
     },
   };
 
-  describe('createGenericAuthTypeSelection - with skip endpoint', () => {
+  describe('createAuthTypeSelection - generic - with skip endpoint', () => {
     it('generate single selection', () => {
       const fields = ONE_SINGLE_SELECTION_TYPE.schema.authentication[0].fields.filter(({ stepKey }) => !stepKey);
 
       expectedSchema = expect.objectContaining({
         fields: expect.arrayContaining(fields),
         title: expect.any(Object),
-        name: ONE_SINGLE_SELECTION_TYPE.name,
+        name: ONE_SINGLE_SELECTION_TYPE.name + '-generic',
         nextStep: 'summary',
       });
 
-      expect(createGenericAuthTypeSelection(ONE_SINGLE_SELECTION_TYPE, HAS_ENDPOINT, NOT_EDITING)).toEqual(expectedSchema);
+      expect(createAuthTypeSelection(ONE_SINGLE_SELECTION_TYPE, NO_APP, HAS_ENDPOINT, NOT_EDITING, HAS_ENDPOINT_STEP)).toEqual(
+        expectedSchema
+      );
     });
 
     describe('generate multiple selection', () => {
@@ -117,7 +121,7 @@ describe('generate auth selection pages', () => {
         expectedSchema = expect.objectContaining({
           fields: expect.arrayContaining([firstAuth, secondAuth]),
           title: expect.any(Object),
-          name: MULTIPLE_SELECTION_TYPE.name,
+          name: MULTIPLE_SELECTION_TYPE.name + '-generic',
           nextStep: {
             when: expect.any(String),
             stepMapper: {
@@ -127,7 +131,9 @@ describe('generate auth selection pages', () => {
           },
         });
 
-        expect(createGenericAuthTypeSelection(MULTIPLE_SELECTION_TYPE, HAS_ENDPOINT, NOT_EDITING)).toEqual(expectedSchema);
+        expect(createAuthTypeSelection(MULTIPLE_SELECTION_TYPE, NO_APP, HAS_ENDPOINT, NOT_EDITING, HAS_ENDPOINT_STEP)).toEqual(
+          expectedSchema
+        );
       });
     });
   });

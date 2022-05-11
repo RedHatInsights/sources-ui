@@ -1,46 +1,92 @@
 import React from 'react';
 
-import { Text, TextContent, ClipboardCopy } from '@patternfly/react-core';
+import { screen } from '@testing-library/react';
 
 import * as Cm from '.../../../../components/addSourceWizard/hardcodedComponents/azure/costManagement';
 import RenderContext from '@data-driven-forms/react-form-renderer/renderer-context';
-import mount from '../../__mocks__/mount';
+import render from '../../__mocks__/render';
 
 describe('Cost Management Azure steps components', () => {
-  test('Configure Resource Group and Storage Account description', () => {
-    const wrapper = mount(<Cm.ConfigureResourceGroupAndStorageAccount />);
+  it('Configure Resource Group and Storage Account description', () => {
+    render(<Cm.ConfigureResourceGroupAndStorageAccount />);
 
-    expect(wrapper.find(Text)).toHaveLength(3);
+    expect(
+      screen.getByText(
+        'Red Hat recommends creating a dedicated resource group and storage account in Azure to collect cost data and metrics for cost management.',
+        { exact: false }
+      )
+    ).toBeInTheDocument();
+    expect(screen.getByText('Learn more')).toBeInTheDocument();
+    expect(
+      screen.getByText('After configuring a resource group and storage account in the Azure portal, enter the following:')
+    ).toBeInTheDocument();
   });
-  test('Subscription ID description', () => {
-    const wrapper = mount(<Cm.SubscriptionID />);
 
-    expect(wrapper.find(TextContent)).toHaveLength(1);
-    expect(wrapper.find(ClipboardCopy)).toHaveLength(1);
-  });
-  test('Configure Roles description', () => {
-    const wrapper = mount(<Cm.ConfigureRolesDescription />);
+  it('Subscription ID description', () => {
+    render(<Cm.SubscriptionID />);
 
-    expect(wrapper.find(TextContent)).toHaveLength(1);
-    expect(wrapper.find(Text)).toHaveLength(3);
-    expect(wrapper.find(ClipboardCopy)).toHaveLength(1);
+    expect(
+      screen.getByText('Run the following command in Cloud Shell to obtain your Subscription ID and enter it below:')
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText('Copyable input')).toHaveValue('az account show --query "{ subscription_id: id }"');
   });
-  test('Read Role description', () => {
-    const wrapper = mount(
+
+  it('Configure Roles description', () => {
+    render(<Cm.ConfigureRolesDescription />);
+
+    expect(
+      screen.getByText(
+        'Red Hat recommends configuring dedicated credentials to grant Cost Management read-only access to Azure cost data.',
+        { exact: false }
+      )
+    ).toBeInTheDocument();
+    expect(screen.getByText('Learn more')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Run the following command in Cloud Shell to create a Cost Management Storage Account Contributor role. From the output enter the values in the fields below:'
+      )
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText('Copyable input')).toHaveValue(
+      `az ad sp create-for-rbac -n "CostManagement" --role "Storage Account Contributor" --query '{"tenant": tenant, "client_id": appId, "secret": password}'`
+    );
+  });
+
+  it('Read Role description', () => {
+    render(
       <RenderContext.Provider
         value={{ formOptions: { getState: () => ({ values: { application: { extra: { subscription_id: 'my-sub-id-1' } } } }) } }}
       >
         <Cm.ReaderRoleDescription />
       </RenderContext.Provider>
     );
-    expect(wrapper.find(TextContent)).toHaveLength(1);
-    expect(wrapper.find(Text)).toHaveLength(1);
-    expect(wrapper.find(ClipboardCopy).props().children).toMatch(/my-sub-id-1/);
-  });
-  test('Export Schedule description', () => {
-    const wrapper = mount(<Cm.ExportSchedule />);
 
-    expect(wrapper.find('div.list-align-left')).toHaveLength(1);
-    expect(wrapper.find('dl.export-table')).toHaveLength(1);
+    expect(
+      screen.getByText('Run the following command in Cloud Shell to create a Cost Management Reader role:')
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText('Copyable input')).toHaveValue(
+      `az role assignment create --role "Cost Management Reader" --assignee http://CostManagement --subscription my-sub-id-1`
+    );
+  });
+
+  it('Export Schedule description', () => {
+    render(<Cm.ExportSchedule />);
+
+    expect(
+      screen.getByText(
+        'Create a recurring task to export cost data to your Azure storage account, where Cost Management will retrieve the data.',
+        { exact: false }
+      )
+    ).toBeInTheDocument();
+    expect(screen.getByText('Learn more')).toBeInTheDocument();
+    expect(screen.getByText('From the Azure portal, add a new export.')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Provide a name for the container and directory path, and specify the below settings to create the daily export. Leave all other options as the default.'
+      )
+    ).toBeInTheDocument();
+    expect(screen.getByText('Export type')).toBeInTheDocument();
+    expect(screen.getByText('Daily export for billing-period-to-date costs')).toBeInTheDocument();
+    expect(screen.getByText('Storage account name')).toBeInTheDocument();
+    expect(screen.getByText('Storage account name created earlier')).toBeInTheDocument();
   });
 });

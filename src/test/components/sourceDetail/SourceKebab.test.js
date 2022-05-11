@@ -1,8 +1,7 @@
 import React from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { act } from 'react-dom/test-utils';
-
-import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
+import { Route } from 'react-router-dom';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
@@ -10,17 +9,22 @@ import SourceKebab from '../../../components/SourceDetail/SourceKebab';
 import mockStore from '../../__mocks__/mockStore';
 import * as actions from '../../../redux/sources/actions';
 
+jest.mock('@patternfly/react-core/dist/js/components/Tooltip', () => {
+  const lib = jest.requireActual('@patternfly/react-core/dist/js/components/Tooltip');
+  const { Tooltip } = jest.requireActual('../../__mocks__/@patternfly/react-core');
+
+  return {
+    ...lib,
+    Tooltip,
+  };
+});
+
 describe('SourceKebab', () => {
-  let wrapper;
   let store;
 
   const sourceId = '3627987';
   const sourceName = 'source-name-123';
   const initialEntry = [replaceRouteId(routes.sourcesDetail.path, sourceId)];
-
-  const PAUSE_RESUME_INDEX = 0;
-  const REMOVE_INDEX = 1;
-  const RENAME_INDEX = 2;
 
   it('renders with no permissions', async () => {
     store = mockStore({
@@ -30,7 +34,7 @@ describe('SourceKebab', () => {
       user: { writePermissions: false },
     });
 
-    wrapper = mount(
+    render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetail.path} render={(...args) => <SourceKebab {...args} />} />,
         store,
@@ -38,38 +42,24 @@ describe('SourceKebab', () => {
       )
     );
 
-    expect(wrapper.find(Dropdown)).toHaveLength(1);
+    await userEvent.click(screen.getByLabelText('Actions'));
 
-    await act(async () => {
-      wrapper.find(KebabToggle).props().onToggle();
-    });
-    wrapper.update();
+    expect(screen.getByText('Pause')).toBeInTheDocument();
+    expect(screen.getByText('Temporarily disable data collection').closest('.src-m-dropdown-item-disabled')).toBeInTheDocument();
 
-    expect(wrapper.find(DropdownItem)).toHaveLength(3);
+    expect(screen.getByText('Remove')).toBeInTheDocument();
+    expect(
+      screen.getByText('Permanently delete this source and all collected data').closest('.src-m-dropdown-item-disabled')
+    ).toBeInTheDocument();
+
+    expect(screen.getByText('Rename').closest('.src-m-dropdown-item-disabled')).toBeInTheDocument();
+
+    await userEvent.hover(screen.getByText('Pause'));
 
     const tooltipText =
       'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.';
 
-    expect(wrapper.find(DropdownItem).at(PAUSE_RESUME_INDEX).props().description).toEqual('Temporarily disable data collection');
-    expect(wrapper.find(DropdownItem).at(PAUSE_RESUME_INDEX).props().isDisabled).toEqual(true);
-    expect(wrapper.find(DropdownItem).at(PAUSE_RESUME_INDEX).props().tooltip).toEqual(tooltipText);
-    expect(wrapper.find('InternalDropdownItem').at(PAUSE_RESUME_INDEX).text()).toEqual(
-      'PauseTemporarily disable data collection'
-    );
-
-    expect(wrapper.find(DropdownItem).at(REMOVE_INDEX).props().description).toEqual(
-      'Permanently delete this source and all collected data'
-    );
-    expect(wrapper.find(DropdownItem).at(REMOVE_INDEX).props().isDisabled).toEqual(true);
-    expect(wrapper.find(DropdownItem).at(REMOVE_INDEX).props().tooltip).toEqual(tooltipText);
-    expect(wrapper.find('InternalDropdownItem').at(REMOVE_INDEX).text()).toEqual(
-      'RemovePermanently delete this source and all collected data'
-    );
-
-    expect(wrapper.find(DropdownItem).at(RENAME_INDEX).props().description).toEqual(undefined);
-    expect(wrapper.find(DropdownItem).at(RENAME_INDEX).props().isDisabled).toEqual(true);
-    expect(wrapper.find(DropdownItem).at(RENAME_INDEX).props().tooltip).toEqual(tooltipText);
-    expect(wrapper.find('InternalDropdownItem').at(RENAME_INDEX).text()).toEqual('Rename');
+    await waitFor(() => expect(screen.getByText(tooltipText)).toBeInTheDocument());
   });
 
   it('renders correctly with paused source', async () => {
@@ -80,7 +70,7 @@ describe('SourceKebab', () => {
       user: { writePermissions: true },
     });
 
-    wrapper = mount(
+    render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetail.path} render={(...args) => <SourceKebab {...args} />} />,
         store,
@@ -88,39 +78,21 @@ describe('SourceKebab', () => {
       )
     );
 
-    expect(wrapper.find(Dropdown)).toHaveLength(1);
+    await userEvent.click(screen.getByLabelText('Actions'));
 
-    await act(async () => {
-      wrapper.find(KebabToggle).props().onToggle();
-    });
-    wrapper.update();
+    expect(screen.getByText('Resume')).toBeInTheDocument();
+    expect(screen.getByText('Unpause data collection for this source')).toBeInTheDocument();
 
-    expect(wrapper.find(DropdownItem)).toHaveLength(3);
+    expect(screen.getByText('Remove')).toBeInTheDocument();
+    expect(screen.getByText('Permanently delete this source and all collected data')).toBeInTheDocument();
 
-    expect(wrapper.find(DropdownItem).at(PAUSE_RESUME_INDEX).props().description).toEqual(
-      'Unpause data collection for this source'
-    );
-    expect(wrapper.find(DropdownItem).at(PAUSE_RESUME_INDEX).props().isDisabled).toEqual(undefined);
-    expect(wrapper.find(DropdownItem).at(PAUSE_RESUME_INDEX).props().tooltip).toEqual(undefined);
-    expect(wrapper.find('InternalDropdownItem').at(PAUSE_RESUME_INDEX).text()).toEqual(
-      'ResumeUnpause data collection for this source'
-    );
+    expect(screen.getByText('Rename')).toBeInTheDocument();
 
-    expect(wrapper.find(DropdownItem).at(REMOVE_INDEX).props().description).toEqual(
-      'Permanently delete this source and all collected data'
-    );
-    expect(wrapper.find(DropdownItem).at(REMOVE_INDEX).props().isDisabled).toEqual(undefined);
-    expect(wrapper.find(DropdownItem).at(REMOVE_INDEX).props().tooltip).toEqual(undefined);
-    expect(wrapper.find('InternalDropdownItem').at(REMOVE_INDEX).text()).toEqual(
-      'RemovePermanently delete this source and all collected data'
-    );
+    await userEvent.hover(screen.getByText('Rename'));
 
-    expect(wrapper.find(DropdownItem).at(RENAME_INDEX).props().description).toEqual(undefined);
-    expect(wrapper.find(DropdownItem).at(RENAME_INDEX).props().isDisabled).toEqual(true);
-    expect(wrapper.find(DropdownItem).at(RENAME_INDEX).props().tooltip).toEqual(
-      'You cannot perform this action on a paused source.'
-    );
-    expect(wrapper.find('InternalDropdownItem').at(RENAME_INDEX).text()).toEqual('Rename');
+    const tooltipText = 'You cannot perform this action on a paused source.';
+
+    await waitFor(() => expect(screen.getByText(tooltipText)).toBeInTheDocument());
   });
 
   it('unpause source', async () => {
@@ -131,7 +103,7 @@ describe('SourceKebab', () => {
       user: { writePermissions: true },
     });
 
-    wrapper = mount(
+    render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetail.path} render={(...args) => <SourceKebab {...args} />} />,
         store,
@@ -139,17 +111,11 @@ describe('SourceKebab', () => {
       )
     );
 
-    await act(async () => {
-      wrapper.find(KebabToggle).props().onToggle();
-    });
-    wrapper.update();
+    await userEvent.click(screen.getByLabelText('Actions'));
 
     actions.resumeSource = jest.fn().mockImplementation(() => ({ type: 'undefined' }));
 
-    await act(async () => {
-      wrapper.find(DropdownItem).at(PAUSE_RESUME_INDEX).simulate('click');
-    });
-    wrapper.update();
+    await userEvent.click(screen.getByText('Resume'));
 
     expect(actions.resumeSource).toHaveBeenCalledWith(sourceId, sourceName, expect.any(Object));
   });
@@ -163,7 +129,7 @@ describe('SourceKebab', () => {
         user: { writePermissions: true },
       });
 
-      wrapper = mount(
+      render(
         componentWrapperIntl(
           <Route path={routes.sourcesDetail.path} render={(...args) => <SourceKebab {...args} />} />,
           store,
@@ -173,83 +139,44 @@ describe('SourceKebab', () => {
     });
 
     it('renders correctly', async () => {
-      expect(wrapper.find(Dropdown)).toHaveLength(1);
+      await userEvent.click(screen.getByLabelText('Actions'));
 
-      await act(async () => {
-        wrapper.find(KebabToggle).props().onToggle();
-      });
-      wrapper.update();
+      expect(screen.getByText('Pause')).toBeInTheDocument();
+      expect(screen.getByText('Temporarily disable data collection')).toBeInTheDocument();
+      expect(screen.getByText('Pause').closest('.src-m-dropdown-item-disabled')).toBeNull();
 
-      expect(wrapper.find(DropdownItem)).toHaveLength(3);
+      expect(screen.getByText('Remove')).toBeInTheDocument();
+      expect(screen.getByText('Permanently delete this source and all collected data')).toBeInTheDocument();
+      expect(screen.getByText('Remove').closest('.src-m-dropdown-item-disabled')).toBeNull();
 
-      expect(wrapper.find(DropdownItem).at(PAUSE_RESUME_INDEX).props().description).toEqual(
-        'Temporarily disable data collection'
-      );
-      expect(wrapper.find(DropdownItem).at(PAUSE_RESUME_INDEX).props().isDisabled).toEqual(undefined);
-      expect(wrapper.find(DropdownItem).at(PAUSE_RESUME_INDEX).props().tooltip).toEqual(undefined);
-      expect(wrapper.find('InternalDropdownItem').at(PAUSE_RESUME_INDEX).text()).toEqual(
-        'PauseTemporarily disable data collection'
-      );
-
-      expect(wrapper.find(DropdownItem).at(REMOVE_INDEX).props().description).toEqual(
-        'Permanently delete this source and all collected data'
-      );
-      expect(wrapper.find(DropdownItem).at(REMOVE_INDEX).props().isDisabled).toEqual(undefined);
-      expect(wrapper.find(DropdownItem).at(REMOVE_INDEX).props().tooltip).toEqual(undefined);
-      expect(wrapper.find('InternalDropdownItem').at(REMOVE_INDEX).text()).toEqual(
-        'RemovePermanently delete this source and all collected data'
-      );
-
-      expect(wrapper.find(DropdownItem).at(RENAME_INDEX).props().description).toEqual(undefined);
-      expect(wrapper.find(DropdownItem).at(RENAME_INDEX).props().isDisabled).toEqual(undefined);
-      expect(wrapper.find(DropdownItem).at(RENAME_INDEX).props().tooltip).toEqual(undefined);
-      expect(wrapper.find('InternalDropdownItem').at(RENAME_INDEX).text()).toEqual('Rename');
+      expect(screen.getByText('Rename')).toBeInTheDocument();
+      expect(screen.getByText('Rename').closest('.src-m-dropdown-item-disabled')).toBeNull();
     });
 
     it('remove source', async () => {
-      await act(async () => {
-        wrapper.find(KebabToggle).props().onToggle();
-      });
-      wrapper.update();
+      await userEvent.click(screen.getByLabelText('Actions'));
+      await userEvent.click(screen.getByText('Remove'));
 
-      await act(async () => {
-        wrapper.find(DropdownItem).at(REMOVE_INDEX).simulate('click');
-      });
-      wrapper.update();
-
-      expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
+      expect(screen.getByTestId('location-display').textContent).toEqual(
         replaceRouteId(routes.sourcesDetailRemove.path, sourceId)
       );
     });
 
     it('pause source', async () => {
-      await act(async () => {
-        wrapper.find(KebabToggle).props().onToggle();
-      });
-      wrapper.update();
+      await userEvent.click(screen.getByLabelText('Actions'));
 
       actions.pauseSource = jest.fn().mockImplementation(() => ({ type: 'undefined' }));
 
-      await act(async () => {
-        wrapper.find(DropdownItem).at(PAUSE_RESUME_INDEX).simulate('click');
-      });
-      wrapper.update();
+      await userEvent.click(screen.getByText('Pause'));
 
       expect(actions.pauseSource).toHaveBeenCalledWith(sourceId, sourceName, expect.any(Object));
     });
 
     it('rename source', async () => {
-      await act(async () => {
-        wrapper.find(KebabToggle).props().onToggle();
-      });
-      wrapper.update();
+      await userEvent.click(screen.getByLabelText('Actions'));
+      await userEvent.click(screen.getByText('Rename'));
 
-      await act(async () => {
-        wrapper.find(DropdownItem).at(RENAME_INDEX).simulate('click');
-      });
-      wrapper.update();
-
-      expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
+      expect(screen.getByTestId('location-display').textContent).toEqual(
         replaceRouteId(routes.sourcesDetailRename.path, sourceId)
       );
     });

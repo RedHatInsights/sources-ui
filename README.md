@@ -40,12 +40,12 @@ This application allows to
 1. ```npm install```
 
 2.  ```npm run start```
-    - starts webpack bundler and serves the files with webpack dev server on `https://ci.foo.redhat.com:1337/settings/sources/`
+    - starts webpack bundler and serves the files with webpack dev server on `https://stage.foo.redhat.com:1337/settings/sources/`
 
 2.  ```npm run start:beta```
-    - starts webpack bundler and serves the files with webpack dev server on `https://ci.foo.redhat.com:1337/beta/settings/sources/`
+    - starts webpack bundler and serves the files with webpack dev server on `https://stage.foo.redhat.com:1337/beta/settings/sources/`
 
-You have to be connected to Red Hat VPN.
+You have to be connected to Red Hat VPN and use Red Hat squid proxy settings (check source.redhat.com for a guide). Check also, if you have updated `/etc/hosts/` file to route these adresses to localhost. (See [script](https://github.com/RedHatInsights/insights-proxy/blob/master/scripts/patch-etc-hosts.sh))
 
 Check our [proxy documenation](https://github.com/RedHatInsights/frontend-components/tree/master/packages/config#useproxy) for more options.
 
@@ -138,14 +138,13 @@ Static assets are deployed to [Insights Frontend Assets](https://github.com/RedH
 
 |Branch|updates|environment|
 |------|:------:|-----------|
-|`master`|=>|**stage/beta**|
-|`stable`|=>|**stage/stable**|
+|`master`|=>|**stage/beta** and **stage/stable**|
 |`prod-beta`|=>|**prod/beta**|
 |`prod-stable`|=>|**prod/stable**|
 
 Example:
 
-- any push to the `master` branch will deploy to a `sources-ui-build` `master` branch **=> Stage/Beta**
+- any push to the `master` branch will deploy to a `sources-ui-build` `master` branch **=> Stage/Beta** and **Stage/Stable**
 
 # License
 

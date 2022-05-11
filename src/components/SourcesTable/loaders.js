@@ -12,7 +12,7 @@ import './loaders.scss';
 import { useIntl } from 'react-intl';
 
 export const Loader = ({ width = '100%', height = '100%', className = '' }) => (
-  <span className={`src-c-loader ${className}`} style={{ width, height }} />
+  <span className={`src-c-loader ${className}`} style={{ width, height }} role="progressbar" />
 );
 
 Loader.propTypes = {
@@ -46,7 +46,7 @@ export const AppPlaceholder = () => {
 export const PaginationLoader = () => <Loader className="top-pagination" height={30} width={200} />;
 
 export const PlaceHolderTable = () => (
-  <Bullseye className="src-c-bullseye__placeholder-loader">
+  <Bullseye className="src-c-bullseye__placeholder-loader" data-testid="placeholder-table">
     <Spinner size="xl" />
   </Bullseye>
 );
@@ -54,12 +54,12 @@ export const PlaceHolderTable = () => (
 export const RowWrapperLoader = ({ row: { isDeleting, ...row }, ...initialProps }) =>
   isDeleting ? (
     <tr>
-      <td colSpan={COLUMN_COUNT} className="pf-u-p-md">
+      <td colSpan={COLUMN_COUNT} className="pf-u-p-md" data-testid="removing-row">
         <Loader height={100} />
       </td>
     </tr>
   ) : (
-    <RowWrapper {...initialProps} row={row} className="src-c-row-vertical-centered" />
+    <RowWrapper {...initialProps} row={row} className="src-c-row-vertical-centered" data-testid="row" />
   );
 
 RowWrapperLoader.propTypes = {

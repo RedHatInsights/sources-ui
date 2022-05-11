@@ -1,28 +1,34 @@
 import React from 'react';
-import mount from '../../__mocks__/mount';
+import render from '../../__mocks__/render';
 
-import { Text, TextContent } from '@patternfly/react-core';
+import { screen } from '@testing-library/react';
 
 import * as TowerCatalog from '../../../../components/addSourceWizard/hardcodedComponents/tower/catalog';
 
 describe('Tower Catalog', () => {
   it('Auth description', () => {
-    const wrapper = mount(<TowerCatalog.AuthDescription />);
+    render(<TowerCatalog.AuthDescription />);
 
-    expect(wrapper.find(TextContent)).toHaveLength(1);
-    expect(wrapper.find(Text)).toHaveLength(2);
+    expect(
+      screen.getByText(
+        'Provide Ansible Tower service account user credentials to ensure optimized availability of resources to Catalog Administrators.',
+        { exact: false }
+      )
+    ).toBeInTheDocument();
+    expect(screen.getByText('All fields are required.', { exact: false })).toBeInTheDocument();
   });
 
   it('Endpoint description', () => {
-    const wrapper = mount(<TowerCatalog.EndpointDescription />);
+    render(<TowerCatalog.EndpointDescription />);
 
-    expect(wrapper.find(TextContent)).toHaveLength(1);
-    expect(wrapper.find(Text)).toHaveLength(1);
+    expect(
+      screen.getByText('Enter the hostname of the Ansible Tower instance you want to connect to.', { exact: false })
+    ).toBeInTheDocument();
   });
 
   it('AllFieldsRequired', () => {
-    const wrapper = mount(<TowerCatalog.AllFieldAreRequired />);
+    render(<TowerCatalog.AllFieldAreRequired />);
 
-    expect(wrapper.find(Text)).toHaveLength(1);
+    expect(screen.getByText('All fields are required.', { exact: false })).toBeInTheDocument();
   });
 });

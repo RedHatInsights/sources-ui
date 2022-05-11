@@ -27,7 +27,7 @@ export const labelMapper = (type, intl) =>
     ),
   }[type.name]);
 
-export const compileAllApplicationComboOptions = (applicationTypes, intl, activeVendor) => [
+export const compileAllApplicationComboOptions = (applicationTypes, intl, activeCategory) => [
   ...applicationTypes
     .sort((a, b) => a.display_name.localeCompare(b.display_name))
     .map((t) => ({
@@ -35,7 +35,7 @@ export const compileAllApplicationComboOptions = (applicationTypes, intl, active
       label: labelMapper(t, intl) || t.display_name,
       description: descriptionMapper(t, intl),
     })),
-  ...(activeVendor !== REDHAT_VENDOR
+  ...(activeCategory !== REDHAT_VENDOR
     ? [
         {
           label: intl.formatMessage({

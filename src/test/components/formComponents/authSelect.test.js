@@ -1,10 +1,11 @@
 import React from 'react';
-import { Radio } from '@patternfly/react-core';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 
-import mount from '../../addSourceWizard/__mocks__/mount';
+import render from '../../addSourceWizard/__mocks__/render';
 
 import AuthSelect from '../../../components/FormComponents/AuthSelect';
 
@@ -36,12 +37,12 @@ describe('AuthSelect component', () => {
   });
 
   it('renders correctly', () => {
-    const wrapper = mount(<FormRenderer {...initialProps} />);
+    render(<FormRenderer {...initialProps} />);
 
-    expect(wrapper.find(Radio)).toHaveLength(1);
+    expect(screen.getByText('Test').closest('.pf-c-radio')).toBeInTheDocument();
   });
 
-  it('renders correctly when disableAuthType', () => {
+  it('renders correctly when disableAuthType', async () => {
     initialProps = {
       ...initialProps,
       schema: {
@@ -54,26 +55,25 @@ describe('AuthSelect component', () => {
       },
     };
 
-    const wrapper = mount(<FormRenderer {...initialProps} />);
+    render(<FormRenderer {...initialProps} />);
 
-    expect(wrapper.find(Radio).props().isDisabled).toEqual(true);
+    expect(screen.getByRole('radio')).toBeDisabled();
   });
 
-  it('calls onChange correctly', () => {
-    const wrapper = mount(<FormRenderer {...initialProps} />);
+  it('calls onChange correctly', async () => {
+    render(<FormRenderer {...initialProps} />);
 
-    wrapper.find('form').simulate('submit');
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({});
 
-    wrapper.find('input').simulate('change');
-
-    wrapper.find('form').simulate('submit');
+    await userEvent.click(screen.getByRole('radio'));
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({});
   });
 
-  it('reset the value when unsupported auth type for application is selected', () => {
+  it('reset the value when unsupported auth type for application is selected', async () => {
     initialProps = {
       ...initialProps,
       schema: {
@@ -86,9 +86,9 @@ describe('AuthSelect component', () => {
       },
     };
 
-    const wrapper = mount(<FormRenderer {...initialProps} initialValues={{ 'auth-select': 'access_key_secret_key' }} />);
+    render(<FormRenderer {...initialProps} initialValues={{ 'auth-select': 'access_key_secret_key' }} />);
 
-    wrapper.find('form').simulate('submit');
+    await userEvent.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({});
   });

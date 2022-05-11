@@ -1,15 +1,12 @@
 import React from 'react';
 
-import { Modal } from '@patternfly/react-core';
-
-import { act } from 'react-dom/test-utils';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import { replaceRouteId, routes } from '../../../Routes';
 import SourceRenameModal from '../../../components/SourceDetail/SourceRenameModal';
-import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
-import TextField from '@data-driven-forms/pf4-component-mapper/text-field';
 import * as actions from '../../../redux/sources/actions';
 import mockStore from '../../__mocks__/mockStore';
 
@@ -19,7 +16,6 @@ jest.mock('../../../components/addSourceWizard/SourceAddSchema', () => ({
 }));
 
 describe('SourceRenameModal', () => {
-  let wrapper;
   let store;
 
   const sourceId = '3627987';
@@ -37,7 +33,7 @@ describe('SourceRenameModal', () => {
       },
     });
 
-    wrapper = mount(
+    render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetail.path} render={(...args) => <SourceRenameModal {...args} />} />,
         store,
@@ -47,55 +43,31 @@ describe('SourceRenameModal', () => {
   });
 
   it('renders correctly', () => {
-    expect(wrapper.find(Modal)).toHaveLength(1);
-    expect(wrapper.find(Modal).props().title).toEqual('Rename source');
-    expect(wrapper.find(Modal).props().description).toEqual('Enter a new name for your source.');
-
-    expect(wrapper.find(SourcesFormRenderer)).toHaveLength(1);
-    expect(wrapper.find(TextField)).toHaveLength(1);
+    expect(screen.getByText('Rename source')).toBeInTheDocument();
+    expect(screen.getByText('Enter a new name for your source.')).toBeInTheDocument();
+    expect(screen.getByRole('textbox')).toBeInTheDocument();
   });
 
   it('close on close icon', async () => {
-    await act(async () => {
-      wrapper.find(Modal).find('button').first().simulate('click');
-    });
-    wrapper.update();
+    await userEvent.click(screen.getByLabelText('Close'));
 
-    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
-      replaceRouteId(routes.sourcesDetail.path, sourceId)
-    );
+    expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
   });
 
   it('close on cancel', async () => {
-    await act(async () => {
-      wrapper.find(Modal).find('button').first().simulate('click');
-    });
-    wrapper.update();
+    await userEvent.click(screen.getByText('Cancel'));
 
-    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
-      replaceRouteId(routes.sourcesDetail.path, sourceId)
-    );
+    expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
   });
 
   it('submits', async () => {
     actions.renameSource = jest.fn().mockImplementation(() => ({ type: 'something' }));
 
-    await act(async () => {
-      const sourceRefInput = wrapper.find('input[name="name"]');
-      sourceRefInput.instance().value = 'new-name';
-      sourceRefInput.simulate('change');
-    });
-    wrapper.update();
-
-    await act(async () => {
-      wrapper.find('form').simulate('submit');
-    });
-    wrapper.update();
+    await userEvent.clear(screen.getByRole('textbox'));
+    await userEvent.type(screen.getByRole('textbox'), 'new-name');
+    await userEvent.click(screen.getByText('Save'));
 
     expect(actions.renameSource).toHaveBeenCalledWith(sourceId, 'new-name', 'Renaming was unsuccessful');
-
-    expect(wrapper.find(MemoryRouter).instance().history.location.pathname).toEqual(
-      replaceRouteId(routes.sourcesDetail.path, sourceId)
-    );
+    expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
   });
 });
