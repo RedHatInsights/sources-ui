@@ -69,11 +69,13 @@ describe('CloudCards', () => {
   });
 
   it('hides card', async () => {
+    const user = userEvent.setup();
+
     render(componentWrapperIntl(<CloudCards {...initialProps} />));
 
     expect(screen.getByText('Use gold images')).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole('button'));
+    await user.click(screen.getByRole('button'));
 
     expect(() => screen.getByText('Use gold images')).toThrow();
 
@@ -81,7 +83,7 @@ describe('CloudCards', () => {
       [CLOUD_CARDS_KEY]: 'false',
     });
 
-    await userEvent.click(screen.getByRole('button'));
+    await user.click(screen.getByRole('button'));
 
     expect(screen.getByText('Use gold images')).toBeInTheDocument();
     expect(localStorage).toEqual({

@@ -35,6 +35,8 @@ describe('RedhatTiles', () => {
   });
 
   it('renders correctly when no permissions', async () => {
+    const user = userEvent.setup();
+
     store = mockStore({
       user: { writePermissions: false },
       sources: { sourceTypes, activeCategory: REDHAT_VENDOR },
@@ -45,7 +47,7 @@ describe('RedhatTiles', () => {
     expect(screen.getByText('OpenShift Container Platform')).toBeInTheDocument();
     expect(screen.getByAltText('red hat logo')).toBeInTheDocument();
 
-    await userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await user.click(screen.getByText('OpenShift Container Platform'));
 
     await waitFor(() =>
       expect(
@@ -57,9 +59,11 @@ describe('RedhatTiles', () => {
   });
 
   it('sets openshift', async () => {
+    const user = userEvent.setup();
+
     render(componentWrapperIntl(<RedHatTiles {...initialProps} />, store));
 
-    await userEvent.click(screen.getByText('OpenShift Container Platform'));
+    await user.click(screen.getByText('OpenShift Container Platform'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path);
     expect(setSelectedType).toHaveBeenCalledWith('openshift');

@@ -37,7 +37,9 @@ describe('Breadcrumbs', () => {
   });
 
   it('goes back to sources', async () => {
-    await userEvent.click(screen.getByText('Sources'));
+    const user = userEvent.setup();
+
+    await user.click(screen.getByText('Sources'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(routes.sources.path);
   });

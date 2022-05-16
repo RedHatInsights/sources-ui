@@ -90,9 +90,11 @@ describe('Final wizard', () => {
   });
 
   it('calls reset', async () => {
+    const user = userEvent.setup();
+
     render(<FinalWizard {...initialProps} isFinished={true} hideSourcesButton={true} />);
 
-    await userEvent.click(screen.getByText('Add another source'));
+    await user.click(screen.getByText('Add another source'));
 
     expect(initialProps.reset).toHaveBeenCalled();
   });
@@ -106,6 +108,8 @@ describe('Final wizard', () => {
   });
 
   it('retries to create source on errored', async () => {
+    const user = userEvent.setup();
+
     const tryAgain = jest.fn();
 
     render(<FinalWizard {...initialProps} isErrored={true} tryAgain={tryAgain} />);
@@ -114,12 +118,14 @@ describe('Final wizard', () => {
 
     expect(tryAgain).not.toHaveBeenCalled();
 
-    await userEvent.click(screen.getByText('Retry'));
+    await user.click(screen.getByText('Retry'));
 
     expect(tryAgain).toHaveBeenCalled();
   });
 
   it('removes source on errored step correctly - when unavailable', async () => {
+    const user = userEvent.setup();
+
     const ERROR_MSG = 'Some error message';
     const deleteSource = jest.fn().mockImplementation(() => Promise.resolve());
 
@@ -146,13 +152,15 @@ describe('Final wizard', () => {
     expect(screen.getByText('Configuration unsuccessful')).toBeInTheDocument();
     expect(screen.getByText(ERROR_MSG)).toBeInTheDocument();
 
-    await userEvent.click(screen.getByText('Remove source'));
+    await user.click(screen.getByText('Remove source'));
     await waitFor(() => expect(deleteSource).toHaveBeenCalledWith(id));
 
     expect(screen.getByText('Removing successful')).toBeInTheDocument();
   });
 
   it('removes source on errored step correctly with afterSucces - when unavailable', async () => {
+    const user = userEvent.setup();
+
     const ERROR_MSG = 'Some error message';
     const deleteSource = jest.fn().mockImplementation(() => Promise.resolve());
     const afterSuccess = jest.fn();
@@ -181,13 +189,15 @@ describe('Final wizard', () => {
     expect(screen.getByText('Configuration unsuccessful')).toBeInTheDocument();
     expect(screen.getByText(ERROR_MSG)).toBeInTheDocument();
 
-    await userEvent.click(screen.getByText('Remove source'));
+    await user.click(screen.getByText('Remove source'));
 
     await waitFor(() => expect(deleteSource).toHaveBeenCalledWith(id));
     expect(afterSuccess).toHaveBeenCalled();
   });
 
   it('removes source on errored step correctly, restart when removing failed', async () => {
+    const user = userEvent.setup();
+
     const ERROR_MSG = 'Some error message';
     const deleteSource = jest.fn().mockImplementation(() => Promise.reject());
 
@@ -214,7 +224,7 @@ describe('Final wizard', () => {
     expect(screen.getByText('Configuration unsuccessful')).toBeInTheDocument();
     expect(screen.getByText(ERROR_MSG)).toBeInTheDocument();
 
-    await userEvent.click(screen.getByText('Remove source'));
+    await user.click(screen.getByText('Remove source'));
 
     await waitFor(() => expect(deleteSource).toHaveBeenCalledWith(id));
 
@@ -223,6 +233,8 @@ describe('Final wizard', () => {
   });
 
   it('when configuration failed, go to edit', async () => {
+    const user = userEvent.setup();
+
     const ERROR_MSG = 'Some error message';
 
     render(
@@ -244,7 +256,7 @@ describe('Final wizard', () => {
     expect(screen.getByText('Configuration unsuccessful')).toBeInTheDocument();
     expect(screen.getByText(ERROR_MSG)).toBeInTheDocument();
 
-    await userEvent.click(screen.getByText('Edit source'));
+    await user.click(screen.getByText('Edit source'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, id));
   });

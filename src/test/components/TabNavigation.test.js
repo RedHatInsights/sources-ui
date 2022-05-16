@@ -45,19 +45,21 @@ describe('TabNavigation', () => {
   });
 
   it('triggers redux changed', async () => {
+    const user = userEvent.setup();
+
     actions.setActiveCategory = jest.fn().mockImplementation(() => ({ type: 'something' }));
 
     render(componentWrapperIntl(<TabNavigation />, store));
 
     expect(actions.setActiveCategory).not.toHaveBeenCalled();
 
-    await userEvent.click(screen.getByText('Cloud sources'));
+    await user.click(screen.getByText('Cloud sources'));
 
     expect(actions.setActiveCategory).toHaveBeenCalledWith(CLOUD_VENDOR);
 
     actions.setActiveCategory.mockClear();
 
-    await userEvent.click(screen.getByText('Red Hat sources'));
+    await user.click(screen.getByText('Red Hat sources'));
 
     expect(actions.setActiveCategory).toHaveBeenCalledWith(REDHAT_VENDOR);
   });

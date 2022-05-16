@@ -109,6 +109,8 @@ describe('CredentialsForm', () => {
   });
 
   it('closes via cross icon', async () => {
+    const user = userEvent.setup();
+
     render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetailEditCredentials.path} render={(...args) => <CredentialsForm {...args} />} />,
@@ -119,12 +121,14 @@ describe('CredentialsForm', () => {
 
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
 
-    await userEvent.click(screen.getByLabelText('Close'));
+    await user.click(screen.getByLabelText('Close'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
   });
 
   it('closes via cancel button', async () => {
+    const user = userEvent.setup();
+
     render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetailEditCredentials.path} render={(...args) => <CredentialsForm {...args} />} />,
@@ -135,12 +139,14 @@ describe('CredentialsForm', () => {
 
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
 
-    await userEvent.click(screen.getByText('Cancel'));
+    await user.click(screen.getByText('Cancel'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
   });
 
   it('submit - success', async () => {
+    const user = userEvent.setup();
+
     const updateAuthentication = mockApi();
 
     api.getSourcesApi = () => ({
@@ -160,13 +166,13 @@ describe('CredentialsForm', () => {
 
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
 
-    await userEvent.clear(screen.getAllByRole('textbox')[0]);
-    await userEvent.type(screen.getAllByRole('textbox')[0], 'newname');
+    await user.clear(screen.getAllByRole('textbox')[0]);
+    await user.type(screen.getAllByRole('textbox')[0], 'newname');
 
     expect(updateAuthentication).not.toHaveBeenCalled();
     expect(actions.addMessage).not.toHaveBeenCalled();
 
-    await userEvent.click(screen.getByText('Submit'));
+    await user.click(screen.getByText('Submit'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
     expect(updateAuthentication).toHaveBeenCalledWith('auth-id', { username: 'newname' });
@@ -184,6 +190,8 @@ describe('CredentialsForm', () => {
   });
 
   it('submit - fail', async () => {
+    const user = userEvent.setup();
+
     const updateAuthentication = mockApi();
 
     api.getSourcesApi = () => ({
@@ -202,13 +210,13 @@ describe('CredentialsForm', () => {
     );
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
 
-    await userEvent.clear(screen.getAllByRole('textbox')[0]);
-    await userEvent.type(screen.getAllByRole('textbox')[0], 'newname');
+    await user.clear(screen.getAllByRole('textbox')[0]);
+    await user.type(screen.getAllByRole('textbox')[0], 'newname');
 
     expect(updateAuthentication).not.toHaveBeenCalled();
     expect(actions.addMessage).not.toHaveBeenCalled();
 
-    await userEvent.click(screen.getByText('Submit'));
+    await user.click(screen.getByText('Submit'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
     expect(updateAuthentication).toHaveBeenCalledWith('auth-id', { username: 'newname' });

@@ -35,6 +35,8 @@ describe('AvailabilityChecker', () => {
   });
 
   it('checks status (click > loading > message)', async () => {
+    const user = userEvent.setup();
+
     render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetail.path} render={(...args) => <AvailabilityChecker {...args} />} />,
@@ -48,7 +50,7 @@ describe('AvailabilityChecker', () => {
 
     expect(screen.getByLabelText('Check source availability')).not.toBeDisabled();
 
-    await userEvent.click(screen.getByLabelText('Check source availability'));
+    await user.click(screen.getByLabelText('Check source availability'));
 
     expect(api.default).toHaveBeenCalledWith(sourceId);
     expect(screen.getByLabelText('Check source availability')).toBeDisabled();
