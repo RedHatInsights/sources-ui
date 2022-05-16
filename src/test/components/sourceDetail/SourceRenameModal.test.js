@@ -49,23 +49,29 @@ describe('SourceRenameModal', () => {
   });
 
   it('close on close icon', async () => {
-    await userEvent.click(screen.getByLabelText('Close'));
+    const user = userEvent.setup();
+
+    await user.click(screen.getByLabelText('Close'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
   });
 
   it('close on cancel', async () => {
-    await userEvent.click(screen.getByText('Cancel'));
+    const user = userEvent.setup();
+
+    await user.click(screen.getByText('Cancel'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
   });
 
   it('submits', async () => {
+    const user = userEvent.setup();
+
     actions.renameSource = jest.fn().mockImplementation(() => ({ type: 'something' }));
 
-    await userEvent.clear(screen.getByRole('textbox'));
-    await userEvent.type(screen.getByRole('textbox'), 'new-name');
-    await userEvent.click(screen.getByText('Save'));
+    await user.clear(screen.getByRole('textbox'));
+    await user.type(screen.getByRole('textbox'), 'new-name');
+    await user.click(screen.getByText('Save'));
 
     expect(actions.renameSource).toHaveBeenCalledWith(sourceId, 'new-name', 'Renaming was unsuccessful');
     expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));

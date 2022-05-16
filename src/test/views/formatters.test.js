@@ -136,11 +136,13 @@ describe('formatters', () => {
     });
 
     it('returns imported badge with tooltip', async () => {
+      const user = userEvent.setup();
+
       render(<IntlProvider locale="en">{importedFormatter('cfme')}</IntlProvider>);
 
       expect(screen.getByText('imported', { selector: '.pf-c-badge' })).toBeInTheDocument();
 
-      await userEvent.hover(screen.getByText('imported', { selector: '.pf-c-badge' }));
+      await user.hover(screen.getByText('imported', { selector: '.pf-c-badge' }));
 
       await waitFor(() =>
         expect(screen.getByText('This source can be managed from your connected CloudForms application.')).toBeInTheDocument()
@@ -150,6 +152,8 @@ describe('formatters', () => {
 
   describe('applicationFormatter', () => {
     it('returns full application list', async () => {
+      const user = userEvent.setup();
+
       render(
         componentWrapperIntl(
           <React.Fragment>
@@ -164,7 +168,7 @@ describe('formatters', () => {
       expect(screen.getByText(COST_MANAGEMENT_APP.display_name, { exact: false })).toBeInTheDocument();
       expect(screen.getByText('1 more', { exact: false })).toBeInTheDocument();
 
-      await userEvent.click(screen.getByText('1 more'));
+      await user.click(screen.getByText('1 more'));
 
       expect(screen.getByText(TOPOLOGY_INV_APP.display_name, { exact: false })).toBeInTheDocument();
     });
@@ -200,6 +204,8 @@ describe('formatters', () => {
     });
 
     it('show available popover', async () => {
+      const user = userEvent.setup();
+
       render(
         componentWrapperIntl(
           <React.Fragment>
@@ -219,12 +225,14 @@ describe('formatters', () => {
         )
       );
 
-      await userEvent.click(screen.getByText('Cost Management'));
+      await user.click(screen.getByText('Cost Management'));
 
       await waitFor(() => expect(screen.getByText('Everything works fine.', { exact: false })).toBeInTheDocument());
     });
 
     it('show unavailable popover', async () => {
+      const user = userEvent.setup();
+
       const ERROR = 'some error';
       render(
         componentWrapperIntl(
@@ -246,12 +254,14 @@ describe('formatters', () => {
         )
       );
 
-      await userEvent.click(screen.getByText('Cost Management'));
+      await user.click(screen.getByText('Cost Management'));
 
       await waitFor(() => expect(screen.getByText(ERROR, { exact: false })).toBeInTheDocument());
     });
 
     it('show unavailable popover - endpoint error', async () => {
+      const user = userEvent.setup();
+
       const ERROR = 'some error';
       render(
         componentWrapperIntl(
@@ -273,12 +283,14 @@ describe('formatters', () => {
         )
       );
 
-      await userEvent.click(screen.getByText('Cost Management'));
+      await user.click(screen.getByText('Cost Management'));
 
       await waitFor(() => expect(screen.getByText(ERROR, { exact: false })).toBeInTheDocument());
     });
 
     it('show in progress label', async () => {
+      const user = userEvent.setup();
+
       render(
         componentWrapperIntl(
           <React.Fragment>
@@ -299,7 +311,7 @@ describe('formatters', () => {
         )
       );
 
-      await userEvent.click(screen.getByText('Cost Management'));
+      await user.click(screen.getByText('Cost Management'));
 
       await waitFor(() =>
         expect(
@@ -310,6 +322,8 @@ describe('formatters', () => {
     });
 
     it('show paused icon', async () => {
+      const user = userEvent.setup();
+
       render(
         componentWrapperIntl(
           <React.Fragment>
@@ -331,7 +345,7 @@ describe('formatters', () => {
         )
       );
 
-      await userEvent.click(screen.getByText('Cost Management'));
+      await user.click(screen.getByText('Cost Management'));
 
       await waitFor(() =>
         expect(screen.getByText('Resume this application to continue data collection.', { exact: false })).toBeInTheDocument()
@@ -340,6 +354,8 @@ describe('formatters', () => {
     });
 
     it('show unavailable popover - unknown error', async () => {
+      const user = userEvent.setup();
+
       render(
         componentWrapperIntl(
           <React.Fragment>
@@ -360,12 +376,14 @@ describe('formatters', () => {
         )
       );
 
-      await userEvent.click(screen.getByText('Cost Management'));
+      await user.click(screen.getByText('Cost Management'));
 
       await waitFor(() => expect(screen.getByText('Unknown error')).toBeInTheDocument());
     });
 
     it('show unknown popover', async () => {
+      const user = userEvent.setup();
+
       render(
         componentWrapperIntl(
           <React.Fragment>
@@ -386,7 +404,7 @@ describe('formatters', () => {
         )
       );
 
-      await userEvent.click(screen.getByText('Cost Management'));
+      await user.click(screen.getByText('Cost Management'));
 
       await waitFor(() => expect(screen.getByText('Status has not been verified.')).toBeInTheDocument());
     });
@@ -698,6 +716,8 @@ describe('formatters', () => {
       });
 
       it('returns text for Azure + RHEL bundle combo', async () => {
+        const user = userEvent.setup();
+
         const SOURCE = {
           availability_status: undefined,
           source_type_id: AZURE_TYPE.id,
@@ -708,7 +728,7 @@ describe('formatters', () => {
 
         expect(screen.getByText('Unknown', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
 
-        await userEvent.click(screen.getByText('Unknown', { exact: false, selector: '.pf-c-label__content' }));
+        await user.click(screen.getByText('Unknown', { exact: false, selector: '.pf-c-label__content' }));
 
         await waitFor(() =>
           expect(
@@ -720,6 +740,8 @@ describe('formatters', () => {
       });
 
       it('returns text for Google + RHEL bundle combo', async () => {
+        const user = userEvent.setup();
+
         const SOURCE = {
           availability_status: undefined,
           source_type_id: GOOGLE_TYPE.id,
@@ -730,7 +752,7 @@ describe('formatters', () => {
 
         expect(screen.getByText('Unknown', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
 
-        await userEvent.click(screen.getByText('Unknown', { exact: false, selector: '.pf-c-label__content' }));
+        await user.click(screen.getByText('Unknown', { exact: false, selector: '.pf-c-label__content' }));
 
         await waitFor(() =>
           expect(
@@ -1212,6 +1234,8 @@ describe('formatters', () => {
     });
 
     it('account_authorization with an error', async () => {
+      const user = userEvent.setup();
+
       render(
         <MemoryRouter>
           {wrapperWithIntl(
@@ -1244,12 +1268,14 @@ describe('formatters', () => {
         replaceRouteId(routes.sourcesDetailEditCredentials.path, SOURCE_ID)
       );
 
-      await userEvent.hover(screen.getByText('exclamation icon'));
+      await user.hover(screen.getByText('exclamation icon'));
 
       await waitFor(() => expect(screen.getByText('Your username is wrong')).toBeInTheDocument());
     });
 
     it('account_authorization with default errror', async () => {
+      const user = userEvent.setup();
+
       render(
         <MemoryRouter>
           {wrapperWithIntl(
@@ -1272,7 +1298,7 @@ describe('formatters', () => {
 
       expect(screen.getByText('Edit credentials', { selector: 'button' })).toBeInTheDocument();
 
-      await userEvent.hover(screen.getByText('exclamation icon'));
+      await user.hover(screen.getByText('exclamation icon'));
 
       await waitFor(() => expect(screen.getByText('Edit credentials required.')).toBeInTheDocument());
     });
@@ -1290,6 +1316,8 @@ describe('formatters', () => {
 
   describe('ApplicationLabel', () => {
     it('renders paused', async () => {
+      const user = userEvent.setup();
+
       const app = {
         display_name: 'Cost management',
         availability_status: AVAILABLE,
@@ -1300,7 +1328,7 @@ describe('formatters', () => {
       render(wrapperWithIntl(<ApplicationLabel app={app} />));
 
       expect(screen.getByText('Cost management').closest('.pf-c-label')).toHaveClass('pf-m-green');
-      await userEvent.click(screen.getByText('Cost management'));
+      await user.click(screen.getByText('Cost management'));
       expect(screen.getByText('pause icon')).toBeInTheDocument();
 
       await waitFor(() => expect(screen.getByText('Application paused')).toBeInTheDocument());

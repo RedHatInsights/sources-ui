@@ -11,13 +11,15 @@ import { CLOUD_VENDOR } from '../../../utilities/constants';
 
 describe('AddSourceButton', () => {
   it('opens wizard and close wizard', async () => {
+    const user = userEvent.setup();
+
     render(<AddSourceButton sourceTypes={sourceTypes} applicationTypes={applicationTypes} activeCategory={CLOUD_VENDOR} />);
 
-    await userEvent.click(screen.getByText('Add Red Hat source'));
+    await user.click(screen.getByText('Add Red Hat source'));
 
     expect(screen.getAllByRole('dialog')).toBeTruthy();
 
-    await userEvent.click(screen.getAllByRole('button')[0]);
+    await user.click(screen.getAllByRole('button')[0]);
 
     expect(() => screen.getByRole('dialog')).toThrow();
   });

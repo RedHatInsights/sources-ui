@@ -182,6 +182,8 @@ describe('ResourcesTable', () => {
   });
 
   it('renders correctly with multiple apps', async () => {
+    const user = userEvent.setup();
+
     api.doLoadSourceForEdit = api.doLoadSourceForEdit = jest.fn().mockImplementation(() =>
       Promise.resolve({
         source: {
@@ -292,7 +294,7 @@ describe('ResourcesTable', () => {
     expect(screen.getByText('Cost Management').closest('.pf-m-current')).toBeInTheDocument();
     expect(screen.getByText('RHEL management').closest('.pf-m-current')).toBeNull();
 
-    await userEvent.click(screen.getByText('RHEL management'));
+    await user.click(screen.getByText('RHEL management'));
 
     expect(screen.getByText('Cost Management').closest('.pf-m-current')).toBeNull();
     expect(screen.getByText('RHEL management').closest('.pf-m-current')).toBeInTheDocument();

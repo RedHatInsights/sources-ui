@@ -41,6 +41,8 @@ describe('CloudTiles', () => {
   });
 
   it('renders correctly when no permissions', async () => {
+    const user = userEvent.setup();
+
     store = mockStore({
       user: { writePermissions: false },
       sources: { sourceTypes, activeCategory: CLOUD_VENDOR },
@@ -56,7 +58,7 @@ describe('CloudTiles', () => {
     ]);
     expect(container.getElementsByTagName('img')).toHaveLength(4);
 
-    await userEvent.click(screen.getByText('Google Cloud'));
+    await user.click(screen.getByText('Google Cloud'));
 
     await waitFor(() =>
       expect(
@@ -68,36 +70,44 @@ describe('CloudTiles', () => {
   });
 
   it('sets amazon', async () => {
+    const user = userEvent.setup();
+
     render(componentWrapperIntl(<CloudTiles {...initialProps} />, store));
 
-    await userEvent.click(screen.getByText('Amazon Web Services'));
+    await user.click(screen.getByText('Amazon Web Services'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path);
     expect(setSelectedType).toHaveBeenCalledWith('amazon');
   });
 
   it('sets gcp', async () => {
+    const user = userEvent.setup();
+
     render(componentWrapperIntl(<CloudTiles {...initialProps} />, store));
 
-    await userEvent.click(screen.getByText('Google Cloud'));
+    await user.click(screen.getByText('Google Cloud'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path);
     expect(setSelectedType).toHaveBeenCalledWith('google');
   });
 
   it('sets azure', async () => {
+    const user = userEvent.setup();
+
     render(componentWrapperIntl(<CloudTiles {...initialProps} />, store));
 
-    await userEvent.click(screen.getByText('Microsoft Azure'));
+    await user.click(screen.getByText('Microsoft Azure'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path);
     expect(setSelectedType).toHaveBeenCalledWith('azure');
   });
 
   it('sets ibm', async () => {
+    const user = userEvent.setup();
+
     render(componentWrapperIntl(<CloudTiles {...initialProps} />, store));
 
-    await userEvent.click(screen.getByText('IBM Cloud'));
+    await user.click(screen.getByText('IBM Cloud'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path);
     expect(setSelectedType).toHaveBeenCalledWith('ibm');

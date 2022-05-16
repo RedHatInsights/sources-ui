@@ -147,6 +147,8 @@ describe('RemoveAppModal', () => {
   });
 
   it('calls cancel', async () => {
+    const user = userEvent.setup();
+
     render(
       componentWrapperIntl(
         <Route path={routes.sourcesDetailRemoveApp.path} render={(...args) => <RemoveAppModal {...args} />} />,
@@ -155,12 +157,14 @@ describe('RemoveAppModal', () => {
       )
     );
 
-    await userEvent.click(screen.getByText('Cancel'));
+    await user.click(screen.getByText('Cancel'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, SOURCE_ID));
   });
 
   it('calls a submit', async () => {
+    const user = userEvent.setup();
+
     actions.removeApplication = jest.fn().mockImplementation(() => ({ type: 'REMOVE_APP' }));
 
     render(
@@ -171,7 +175,7 @@ describe('RemoveAppModal', () => {
       )
     );
 
-    await userEvent.click(screen.getByText('Remove'));
+    await user.click(screen.getByText('Remove'));
 
     await waitFor(() => expect(actions.removeApplication).toHaveBeenCalledWith(APP_ID, SOURCE_ID, SUCCESS_MSG, ERROR_MSG));
   });

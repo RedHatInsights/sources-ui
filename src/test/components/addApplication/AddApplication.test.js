@@ -285,7 +285,9 @@ describe('AddApplication', () => {
     });
 
     it('closes immedietaly when no value is filled', async () => {
-      await userEvent.click(screen.getByLabelText('Close wizard'));
+      const user = userEvent.setup();
+
+      await user.click(screen.getByLabelText('Close wizard'));
 
       await waitFor(() =>
         expect(screen.getByTestId('location-display').textContent).toEqual(
@@ -295,12 +297,14 @@ describe('AddApplication', () => {
     });
 
     it('opens a modal on cancel and closes the wizard', async () => {
+      const user = userEvent.setup();
+
       const value = 'SOURCE_REF_CHANGED';
 
-      await userEvent.clear(screen.getByRole('textbox', { name: 'Receptor ID' }));
-      await userEvent.type(screen.getByRole('textbox', { name: 'Receptor ID' }), value);
-      await userEvent.click(screen.getByLabelText('Close wizard'));
-      await userEvent.click(screen.getByText('Exit'));
+      await user.clear(screen.getByRole('textbox', { name: 'Receptor ID' }));
+      await user.type(screen.getByRole('textbox', { name: 'Receptor ID' }), value);
+      await user.click(screen.getByLabelText('Close wizard'));
+      await user.click(screen.getByText('Exit'));
 
       await waitFor(() =>
         expect(screen.getByTestId('location-display').textContent).toEqual(
@@ -310,12 +314,14 @@ describe('AddApplication', () => {
     });
 
     it('opens a modal on cancel and stay on the wizard', async () => {
+      const user = userEvent.setup();
+
       const value = 'SOURCE_REF_CHANGED';
 
-      await userEvent.clear(screen.getByRole('textbox', { name: 'Receptor ID' }));
-      await userEvent.type(screen.getByRole('textbox', { name: 'Receptor ID' }), value);
-      await userEvent.click(screen.getByLabelText('Close wizard'));
-      await userEvent.click(screen.getByText('Stay'));
+      await user.clear(screen.getByRole('textbox', { name: 'Receptor ID' }));
+      await user.type(screen.getByRole('textbox', { name: 'Receptor ID' }), value);
+      await user.click(screen.getByLabelText('Close wizard'));
+      await user.click(screen.getByText('Stay'));
 
       expect(() => screen.getByText('Stay')).toThrow();
       expect(screen.getByRole('textbox', { name: 'Receptor ID' })).toHaveValue(value);
@@ -323,6 +329,8 @@ describe('AddApplication', () => {
 
     it('renders authentication selection', async () => {
       cleanup();
+
+      const user = userEvent.setup();
 
       const authentication = {
         id: 'authid',
@@ -387,19 +395,19 @@ describe('AddApplication', () => {
 
       expect(screen.getAllByRole('radio')).toHaveLength(2);
 
-      await userEvent.click(screen.getAllByRole('radio')[1]);
-      await userEvent.click(screen.getByText('Next'));
+      await user.click(screen.getAllByRole('radio')[1]);
+      await user.click(screen.getByText('Next'));
 
       const value = 'SOURCE_REF_CHANGED';
 
-      await userEvent.clear(screen.getByRole('textbox', { name: 'Receptor ID' }));
-      await userEvent.type(screen.getByRole('textbox', { name: 'Receptor ID' }), value);
-      await userEvent.click(screen.getByText('Next'));
+      await user.clear(screen.getByRole('textbox', { name: 'Receptor ID' }));
+      await user.type(screen.getByRole('textbox', { name: 'Receptor ID' }), value);
+      await user.click(screen.getByText('Next'));
 
       entities.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [], meta: { count: 0 } }));
       attachSource.doAttachApp = mockApi();
 
-      await userEvent.click(screen.getByText('Add'));
+      await user.click(screen.getByText('Add'));
 
       expect(screen.getByText('Validating credentials')).toBeInTheDocument();
 
@@ -463,6 +471,8 @@ describe('AddApplication', () => {
     });
 
     it('calls on submit function', async () => {
+      const user = userEvent.setup();
+
       attachSource.doAttachApp = jest.fn().mockImplementation(() =>
         Promise.resolve({
           availability_status: 'available',
@@ -479,7 +489,7 @@ describe('AddApplication', () => {
         )
       );
 
-      await userEvent.click(screen.getByText('Add'));
+      await user.click(screen.getByText('Add'));
 
       const formValues = {
         application: {
@@ -499,6 +509,8 @@ describe('AddApplication', () => {
     });
 
     it('shows aws specific step', async () => {
+      const user = userEvent.setup();
+
       source = {
         ...source,
         source_type_id: AMAZON_TYPE.id,
@@ -532,7 +544,7 @@ describe('AddApplication', () => {
         )
       );
 
-      await userEvent.click(screen.getByText('Add'));
+      await user.click(screen.getByText('Add'));
 
       const formValues = {
         application: {
@@ -559,6 +571,8 @@ describe('AddApplication', () => {
     });
 
     it('renders timeouted step when endpoint', async () => {
+      const user = userEvent.setup();
+
       attachSource.doAttachApp = jest.fn().mockImplementation(() =>
         Promise.resolve({
           endpoint: [
@@ -579,7 +593,7 @@ describe('AddApplication', () => {
         )
       );
 
-      await userEvent.click(screen.getByText('Add'));
+      await user.click(screen.getByText('Add'));
 
       await waitFor(() => expect(screen.getByText('Configuration in progress')).toBeInTheDocument());
       expect(
@@ -591,6 +605,8 @@ describe('AddApplication', () => {
     });
 
     it('renders timeouted step', async () => {
+      const user = userEvent.setup();
+
       attachSource.doAttachApp = jest.fn().mockImplementation(() =>
         Promise.resolve({
           applications: [
@@ -611,7 +627,7 @@ describe('AddApplication', () => {
         )
       );
 
-      await userEvent.click(screen.getByText('Add'));
+      await user.click(screen.getByText('Add'));
 
       await waitFor(() => expect(screen.getByText('Configuration in progress')).toBeInTheDocument());
       expect(
@@ -623,6 +639,8 @@ describe('AddApplication', () => {
     });
 
     it('redirects to edit when unavailable', async () => {
+      const user = userEvent.setup();
+
       const ERROR = 'ARN is wrong';
 
       attachSource.doAttachApp = jest.fn().mockImplementation(() =>
@@ -646,7 +664,7 @@ describe('AddApplication', () => {
         )
       );
 
-      await userEvent.click(screen.getByText('Add'));
+      await user.click(screen.getByText('Add'));
 
       await waitFor(() => expect(attachSource.doAttachApp).toHaveBeenCalled());
 
@@ -654,7 +672,7 @@ describe('AddApplication', () => {
       expect(screen.getByText('Edit source')).toBeInTheDocument();
       expect(screen.getByText('Remove application')).toBeInTheDocument();
 
-      await userEvent.click(screen.getByText('Edit source'));
+      await user.click(screen.getByText('Edit source'));
 
       await waitFor(() =>
         expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, source.id))
@@ -662,6 +680,8 @@ describe('AddApplication', () => {
     });
 
     it('remove source when unavailable', async () => {
+      const user = userEvent.setup();
+
       const ERROR = 'ARN is wrong';
       const APP_ID = 'some-id';
 
@@ -689,7 +709,7 @@ describe('AddApplication', () => {
         )
       );
 
-      await userEvent.click(screen.getByText('Add'));
+      await user.click(screen.getByText('Add'));
 
       await waitFor(() => expect(attachSource.doAttachApp).toHaveBeenCalled());
 
@@ -701,7 +721,7 @@ describe('AddApplication', () => {
 
       expect(removeAppSubmit.default).not.toHaveBeenCalled();
 
-      await userEvent.click(screen.getByText('Remove application'));
+      await user.click(screen.getByText('Remove application'));
 
       await waitFor(() =>
         expect(removeAppSubmit.default).toHaveBeenCalledWith(
@@ -715,6 +735,8 @@ describe('AddApplication', () => {
     });
 
     it('catch errors after submit', async () => {
+      const user = userEvent.setup();
+
       const ERROR_MESSAGE = 'Something went wrong :(';
 
       attachSource.doAttachApp = jest.fn().mockImplementation(() => new Promise((res, reject) => reject(ERROR_MESSAGE)));
@@ -727,7 +749,7 @@ describe('AddApplication', () => {
         )
       );
 
-      await userEvent.click(screen.getByText('Add'));
+      await user.click(screen.getByText('Add'));
 
       const formValues = {
         application: {
@@ -752,6 +774,8 @@ describe('AddApplication', () => {
     });
 
     it('retry submit after fail', async () => {
+      const user = userEvent.setup();
+
       const ERROR_MESSAGE = 'Something went wrong :(';
 
       attachSource.doAttachApp = jest.fn().mockImplementation(() => new Promise((res, reject) => reject(ERROR_MESSAGE)));
@@ -764,7 +788,7 @@ describe('AddApplication', () => {
         )
       );
 
-      await userEvent.click(screen.getByText('Add'));
+      await user.click(screen.getByText('Add'));
 
       const formValues = {
         application: {
@@ -788,7 +812,7 @@ describe('AddApplication', () => {
         })
       );
 
-      await userEvent.click(screen.getByText('Retry'));
+      await user.click(screen.getByText('Retry'));
 
       await waitFor(() => expect(screen.getByText('Configuration successful')).toBeInTheDocument());
     });

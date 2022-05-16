@@ -102,22 +102,24 @@ describe('Authentication test', () => {
   });
 
   it('renders not editing', async () => {
+    const user = userEvent.setup();
+
     render(componentWrapperIntl(<SourcesFormRenderer {...initialProps} />));
 
     expect(screen.getByRole('textbox')).toBeRequired();
 
-    await userEvent.click(screen.getByText('Submit'));
+    await user.click(screen.getByText('Submit'));
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    await userEvent.type(screen.getByRole('textbox'), 's');
-    await userEvent.click(screen.getByText('Submit'));
+    await user.type(screen.getByRole('textbox'), 's');
+    await user.click(screen.getByText('Submit'));
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    await userEvent.type(screen.getByRole('textbox'), 'ome-value');
+    await user.type(screen.getByRole('textbox'), 'ome-value');
 
-    await userEvent.click(screen.getByText('Submit'));
+    await user.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       authentication: {
@@ -127,6 +129,8 @@ describe('Authentication test', () => {
   });
 
   it('renders editing and removes required validator (min length still works)', async () => {
+    const user = userEvent.setup();
+
     render(
       componentWrapperIntl(
         <SourcesFormRenderer
@@ -142,11 +146,11 @@ describe('Authentication test', () => {
 
     expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
 
-    await userEvent.click(screen.getByRole('textbox'));
+    await user.click(screen.getByRole('textbox'));
 
     expect(screen.getByRole('textbox')).toHaveValue('');
 
-    await userEvent.click(screen.getByText('Submit'));
+    await user.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       authentication: {
@@ -155,13 +159,15 @@ describe('Authentication test', () => {
     });
     onSubmit.mockClear();
 
-    await userEvent.type(screen.getByRole('textbox'), 's');
-    await userEvent.click(screen.getByText('Submit'));
+    await user.type(screen.getByRole('textbox'), 's');
+    await user.click(screen.getByText('Submit'));
 
     expect(onSubmit).not.toHaveBeenCalled();
   });
 
   it('reset when form resets', async () => {
+    const user = userEvent.setup();
+
     render(
       componentWrapperIntl(
         <SourcesFormRenderer
@@ -178,17 +184,19 @@ describe('Authentication test', () => {
 
     expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
 
-    await userEvent.click(screen.getByRole('textbox'));
+    await user.click(screen.getByRole('textbox'));
 
     expect(screen.getByRole('textbox')).toHaveValue('');
 
-    await userEvent.type(screen.getByRole('textbox'), 's');
-    await userEvent.click(screen.getByText('Reset'));
+    await user.type(screen.getByRole('textbox'), 's');
+    await user.click(screen.getByText('Reset'));
 
     expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
   });
 
   it('renders disabled with no focus event', async () => {
+    const user = userEvent.setup();
+
     render(
       componentWrapperIntl(
         <SourcesFormRenderer
@@ -214,7 +222,7 @@ describe('Authentication test', () => {
     expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
     expect(screen.getByRole('textbox')).toBeDisabled();
 
-    await userEvent.click(screen.getByRole('textbox'));
+    await user.click(screen.getByRole('textbox'));
 
     expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
     expect(screen.getByRole('textbox')).toBeDisabled();

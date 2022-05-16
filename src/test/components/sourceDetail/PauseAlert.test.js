@@ -68,6 +68,8 @@ describe('DetailHeader', () => {
   });
 
   it('resume source', async () => {
+    const user = userEvent.setup();
+
     store = mockStore({
       sources: {
         entities: [{ id: sourceId, name: 'Name of this source', paused_at: 'today' }],
@@ -85,7 +87,7 @@ describe('DetailHeader', () => {
 
     actions.resumeSource = jest.fn().mockImplementation(() => ({ type: 'mock-resume-source' }));
 
-    await userEvent.click(screen.getByText('Resume connection'));
+    await user.click(screen.getByText('Resume connection'));
 
     await waitFor(() => expect(actions.resumeSource).toHaveBeenCalledWith(sourceId, 'Name of this source', expect.any(Object)));
 

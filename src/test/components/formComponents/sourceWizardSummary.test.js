@@ -593,6 +593,8 @@ describe('SourceWizardSummary component', () => {
     });
 
     it('contains too long text', async () => {
+      const user = userEvent.setup();
+
       const randomLongText = new Array(500)
         .fill(1)
         .map(() => String.fromCharCode(Math.random() * (122 - 97) + 97))
@@ -618,7 +620,7 @@ describe('SourceWizardSummary component', () => {
       expect(() => screen.getByText(randomLongText)).toThrow();
       expect(screen.getByText('Show more')).toBeInTheDocument();
 
-      await userEvent.click(screen.getByText('Show more'));
+      await user.click(screen.getByText('Show more'));
 
       await waitFor(() => expect(screen.getByText(randomLongText)).toBeInTheDocument());
     });
