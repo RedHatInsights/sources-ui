@@ -67,6 +67,8 @@ describe('sourceAddModal', () => {
   });
 
   it('clicks on onCancel when loading', async () => {
+    const user = userEvent.setup();
+
     const onCancel = jest.fn();
 
     dependency.doLoadSourceTypes = mockApi();
@@ -80,7 +82,7 @@ describe('sourceAddModal', () => {
 
     expect(onCancel).not.toHaveBeenCalled();
 
-    await userEvent.click(screen.getAllByText('Cancel')[0]);
+    await user.click(screen.getAllByText('Cancel')[0]);
 
     expect(onCancel).toHaveBeenCalledWith();
 

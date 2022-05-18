@@ -2,6 +2,11 @@ import * as redux from 'react-redux';
 
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 
+jest.mock('react-redux', () => ({
+  __esModule: true,
+  useSelector: jest.fn(),
+}));
+
 describe('useHasWritePermissions', () => {
   let inputFn;
   let mockStore;

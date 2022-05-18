@@ -100,24 +100,26 @@ describe('Authentication test', () => {
   });
 
   it('renders not editing', async () => {
+    const user = userEvent.setup();
+
     render(<SourcesFormRenderer {...initialProps} />);
 
     expect(screen.getByRole('textbox')).toHaveAttribute('name', 'authentication.password');
     expect(screen.getByText('*')).toBeInTheDocument();
     expect(() => screen.getByText('Changing this resets your current API key.')).toThrow();
 
-    await userEvent.click(screen.getByText('Submit'));
+    await user.click(screen.getByText('Submit'));
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    await userEvent.type(screen.getByRole('textbox'), 's'); // too short
+    await user.type(screen.getByRole('textbox'), 's'); // too short
 
-    await userEvent.click(screen.getByText('Submit'));
+    await user.click(screen.getByText('Submit'));
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    await userEvent.type(screen.getByRole('textbox'), 'ome-value'); // too short
-    await userEvent.click(screen.getByText('Submit'));
+    await user.type(screen.getByRole('textbox'), 'ome-value'); // too short
+    await user.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       authentication: {
@@ -127,6 +129,8 @@ describe('Authentication test', () => {
   });
 
   it('renders editing and removes required validator (min length still works)', async () => {
+    const user = userEvent.setup();
+
     render(
       <SourcesFormRenderer
         {...initialProps}
@@ -142,7 +146,7 @@ describe('Authentication test', () => {
     expect(() => screen.getByText('*')).toThrow();
     expect(screen.getByText('Changing this resets your current API key.')).toBeInTheDocument();
 
-    await userEvent.click(screen.getByText('Submit'));
+    await user.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       authentication: {
@@ -151,9 +155,9 @@ describe('Authentication test', () => {
     });
     onSubmit.mockClear();
 
-    await userEvent.clear(screen.getByRole('textbox'));
-    await userEvent.type(screen.getByRole('textbox'), 's'); // too short
-    await userEvent.click(screen.getByText('Submit'));
+    await user.clear(screen.getByRole('textbox'));
+    await user.type(screen.getByRole('textbox'), 's'); // too short
+    await user.click(screen.getByText('Submit'));
 
     expect(onSubmit).not.toHaveBeenCalled();
   });

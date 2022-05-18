@@ -52,22 +52,26 @@ describe('CloseModal', () => {
   });
 
   it('calls onExit', async () => {
+    const user = userEvent.setup();
+
     render(<CloseModal {...initialProps} />);
 
-    await userEvent.click(screen.getByText('Exit'));
+    await user.click(screen.getByText('Exit'));
 
     expect(onExit).toHaveBeenCalled();
   });
 
   it('calls onStay', async () => {
+    const user = userEvent.setup();
+
     render(<CloseModal {...initialProps} />);
 
-    await userEvent.click(screen.getByLabelText('Close'));
+    await user.click(screen.getByLabelText('Close'));
 
     expect(onStay).toHaveBeenCalled();
     onStay.mockClear();
 
-    await userEvent.click(screen.getByText('Stay'));
+    await user.click(screen.getByText('Stay'));
 
     expect(onStay).toHaveBeenCalled();
     onStay.mockClear();

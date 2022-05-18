@@ -59,6 +59,8 @@ describe('<RecommendedServices />', () => {
 
   describe('<SeeMoreCard />', () => {
     it('opens modal', async () => {
+      const user = userEvent.setup();
+
       api.getProducts = mockApi();
       api.getCategories = mockApi();
 
@@ -68,7 +70,7 @@ describe('<RecommendedServices />', () => {
 
       await waitFor(() => expect(screen.getByText('See more databases')).toBeInTheDocument());
 
-      await userEvent.click(screen.getByText('See more databases'));
+      await user.click(screen.getByText('See more databases'));
 
       expect(screen.getAllByRole('progressbar')).toHaveLength(6);
 
@@ -86,18 +88,20 @@ describe('<RecommendedServices />', () => {
 
       expect(within(screen.getByRole('dialog')).getAllByText('Add')).toHaveLength(4);
 
-      await userEvent.click(screen.getByText('Filter by product type'));
+      await user.click(screen.getByText('Filter by product type'));
 
       categories.map((category) => {
         expect(within(screen.getByRole('listbox')).getAllByText(category.display_name)).toBeTruthy();
       });
 
-      await userEvent.click(screen.getByLabelText('Close'));
+      await user.click(screen.getByLabelText('Close'));
 
       expect(() => screen.getByRole('dialog')).toThrow();
     });
 
     it('change perPage', async () => {
+      const user = userEvent.setup();
+
       api.getProducts = mockApi();
 
       render(<RecommendedServices />);
@@ -105,16 +109,16 @@ describe('<RecommendedServices />', () => {
       api.getProducts.resolve(getProductsResponse);
 
       await waitFor(() => expect(screen.getByText('See more databases')).toBeInTheDocument());
-      await userEvent.click(screen.getByText('See more databases'));
+      await user.click(screen.getByText('See more databases'));
 
       await waitFor(() => expect(screen.getByText('Filter by product type')).toBeInTheDocument());
 
-      await userEvent.click(screen.getByLabelText('Items per page'));
+      await user.click(screen.getByLabelText('Items per page'));
 
       expect(screen.getByText('10 per page')).toHaveAttribute('class', 'pf-m-selected pf-c-options-menu__menu-item');
       expect(screen.getByText('20 per page')).toHaveAttribute('class', 'pf-c-options-menu__menu-item');
 
-      await userEvent.click(screen.getByText('20 per page'));
+      await user.click(screen.getByText('20 per page'));
 
       expect(screen.getAllByRole('progressbar')).toHaveLength(6);
 
@@ -123,13 +127,15 @@ describe('<RecommendedServices />', () => {
       await waitFor(() => expect(screen.getAllByRole('progressbar')).toHaveLength(4));
       expect(api.getProducts).toHaveBeenLastCalledWith({ page: 1, perPage: 20 });
 
-      await userEvent.click(screen.getByLabelText('Items per page'));
+      await user.click(screen.getByLabelText('Items per page'));
 
       expect(screen.getByText('10 per page')).toHaveAttribute('class', 'pf-c-options-menu__menu-item');
       expect(screen.getByText('20 per page')).toHaveAttribute('class', 'pf-m-selected pf-c-options-menu__menu-item');
     });
 
     it('change page', async () => {
+      const user = userEvent.setup();
+
       api.getProducts = mockApi();
 
       const response = {
@@ -147,11 +153,11 @@ describe('<RecommendedServices />', () => {
       api.getProducts.resolve(response);
 
       await waitFor(() => expect(screen.getByText('See more databases')).toBeInTheDocument());
-      await userEvent.click(screen.getByText('See more databases'));
+      await user.click(screen.getByText('See more databases'));
       await waitFor(() => expect(screen.getByText('Filter by product type')).toBeInTheDocument());
 
       expect(screen.getByTestId('pagination')).toHaveTextContent('1 - 10 of 11 1 - 10 of 11');
-      await userEvent.click(screen.getByLabelText('Go to next page'));
+      await user.click(screen.getByLabelText('Go to next page'));
 
       expect(screen.getAllByRole('progressbar')).toHaveLength(6);
 

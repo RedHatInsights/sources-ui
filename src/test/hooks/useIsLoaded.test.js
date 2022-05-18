@@ -2,6 +2,11 @@ import * as redux from 'react-redux';
 
 import { useIsLoaded } from '../../hooks/useIsLoaded';
 
+jest.mock('react-redux', () => ({
+  __esModule: true,
+  useSelector: jest.fn(),
+}));
+
 describe('useIsLoaded', () => {
   let inputFn;
   let mockStore;

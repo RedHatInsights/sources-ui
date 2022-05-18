@@ -29,6 +29,8 @@ describe('EnhancedRadio', () => {
   });
 
   it('change options according to mutator', async () => {
+    const user = userEvent.setup();
+
     const mutator = (option, formOptions) => {
       if (!option.value) {
         return;
@@ -71,7 +73,7 @@ describe('EnhancedRadio', () => {
     expect(screen.getByText('option1')).toBeInTheDocument();
     expect(screen.getByText('option2')).toBeInTheDocument();
 
-    await userEvent.type(screen.getByLabelText('multiplier'), '2');
+    await user.type(screen.getByLabelText('multiplier'), '2');
 
     expect(screen.getAllByRole('radio').map((r) => [r.id, r.value])).toEqual([
       ['radio-2', '2'],
@@ -80,6 +82,8 @@ describe('EnhancedRadio', () => {
   });
 
   it('select first when source_type and the length is one', async () => {
+    const user = userEvent.setup();
+
     const mutator = (option) => option;
 
     render(
@@ -103,16 +107,16 @@ describe('EnhancedRadio', () => {
       />
     );
 
-    await userEvent.click(screen.getByText('Submit'));
+    await user.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       radio: NO_APPLICATION_VALUE,
     });
     onSubmit.mockReset();
 
-    await userEvent.type(screen.getByLabelText('source_type'), 'some-value');
+    await user.type(screen.getByLabelText('source_type'), 'some-value');
 
-    await userEvent.click(screen.getByText('Submit'));
+    await user.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       radio: 'first-option',
@@ -122,6 +126,8 @@ describe('EnhancedRadio', () => {
   });
 
   it('select first app type when source type does not support the current selection', async () => {
+    const user = userEvent.setup();
+
     const mutator = (option, formOptions) => {
       if (formOptions.getState().values.source_type === 'aws') {
         if (option.value === 'second-option') {
@@ -165,7 +171,7 @@ describe('EnhancedRadio', () => {
       />
     );
 
-    await userEvent.click(screen.getByText('Submit'));
+    await user.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       radio: 'aws-option',
@@ -173,9 +179,9 @@ describe('EnhancedRadio', () => {
     });
     onSubmit.mockReset();
 
-    await userEvent.clear(screen.getByLabelText('source_type'));
-    await userEvent.type(screen.getByLabelText('source_type'), 'some-value');
-    await userEvent.click(screen.getByText('Submit'));
+    await user.clear(screen.getByLabelText('source_type'));
+    await user.type(screen.getByLabelText('source_type'), 'some-value');
+    await user.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({
       radio: '',

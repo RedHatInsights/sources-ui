@@ -308,6 +308,8 @@ describe('Source page helpers', () => {
     });
 
     it('error', async () => {
+      const user = userEvent.setup();
+
       stateDispatch = jest.fn();
       const wizardState = {
         activeStep: '123',
@@ -334,7 +336,7 @@ describe('Source page helpers', () => {
 
       render(messageActionLinks);
 
-      await userEvent.click(screen.getByText('Retry'));
+      await user.click(screen.getByText('Retry'));
 
       expect(push).toHaveBeenCalledWith(routes.sourcesNew.path);
       expect(actions.removeMessage).toHaveBeenCalledWith(messageId);
@@ -346,6 +348,8 @@ describe('Source page helpers', () => {
     });
 
     it('unavailable', async () => {
+      const user = userEvent.setup();
+
       state = {
         isSubmitted: true,
         createdSource: {
@@ -371,7 +375,7 @@ describe('Source page helpers', () => {
 
       render(messageActionLinks);
 
-      await userEvent.click(screen.getByText('Edit source'));
+      await user.click(screen.getByText('Edit source'));
 
       expect(push).toHaveBeenCalledWith(replaceRouteId(routes.sourcesDetail.path, '1234'));
       expect(actions.removeMessage).toHaveBeenCalledWith(messageId);
@@ -449,6 +453,8 @@ describe('Source page helpers', () => {
     });
 
     it('available', async () => {
+      const user = userEvent.setup();
+
       state = {
         isSubmitted: true,
         createdSource: {
@@ -474,7 +480,7 @@ describe('Source page helpers', () => {
 
       render(messageActionLinks);
 
-      await userEvent.click(screen.getByText('View source details'));
+      await user.click(screen.getByText('View source details'));
 
       expect(push).toHaveBeenCalledWith(replaceRouteId(routes.sourcesDetail.path, '1234'));
       expect(actions.removeMessage).toHaveBeenCalledWith(messageId);

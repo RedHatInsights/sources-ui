@@ -136,6 +136,8 @@ describe('SourceSummaryCard', () => {
   });
 
   it('routes to credential form', async () => {
+    const user = userEvent.setup();
+
     formatters.dateFormatter = jest.fn().mockImplementation(() => 'some date');
 
     store = mockStore({
@@ -161,7 +163,7 @@ describe('SourceSummaryCard', () => {
       )
     );
 
-    await userEvent.click(screen.getByText('Edit credentials'));
+    await user.click(screen.getByText('Edit credentials'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
       replaceRouteId(routes.sourcesDetailEditCredentials.path, sourceId)

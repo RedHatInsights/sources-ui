@@ -51,13 +51,15 @@ describe('AddSourceWizard', () => {
   });
 
   it('show finished step after filling the form', async () => {
+    const user = userEvent.setup();
+
     createSource.doCreateSource = jest.fn(() => new Promise((resolve) => setTimeout(() => resolve(SOURCE_DATA_OUT), 100)));
 
     const { container } = render(<AddSourceWizard {...initialProps} />);
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await userEvent.click(screen.getByText('Google Cloud'));
+    await user.click(screen.getByText('Google Cloud'));
     container.getElementsByTagName('form')[0].submit();
 
     expect(screen.getByText('Validating credentials')).toBeInTheDocument();
@@ -68,6 +70,8 @@ describe('AddSourceWizard', () => {
   });
 
   it('pass created source to afterSuccess function', async () => {
+    const user = userEvent.setup();
+
     const afterSubmitMock = jest.fn();
     createSource.doCreateSource = jest.fn(() => new Promise((resolve) => resolve({ name: 'source', applications: [] })));
 
@@ -75,7 +79,7 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await userEvent.click(screen.getByText('Google Cloud'));
+    await user.click(screen.getByText('Google Cloud'));
     container.getElementsByTagName('form')[0].submit();
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
 
@@ -83,6 +87,8 @@ describe('AddSourceWizard', () => {
   });
 
   it('pass created source to submitCallback function when success', async () => {
+    const user = userEvent.setup();
+
     const submitCallback = jest.fn();
     createSource.doCreateSource = jest.fn(() => new Promise((resolve) => resolve({ name: 'source', applications: [] })));
 
@@ -90,7 +96,7 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await userEvent.click(screen.getByText('Google Cloud'));
+    await user.click(screen.getByText('Google Cloud'));
     container.getElementsByTagName('form')[0].submit();
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
@@ -103,6 +109,8 @@ describe('AddSourceWizard', () => {
   });
 
   it('pass values to submitCallback function when errors', async () => {
+    const user = userEvent.setup();
+
     const submitCallback = jest.fn();
     createSource.doCreateSource = jest.fn(() => new Promise((_, reject) => reject('Error - wrong name')));
 
@@ -110,7 +118,7 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await userEvent.click(screen.getByText('Google Cloud'));
+    await user.click(screen.getByText('Google Cloud'));
     container.getElementsByTagName('form')[0].submit();
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
@@ -126,36 +134,42 @@ describe('AddSourceWizard', () => {
   });
 
   it('pass values to onClose function', async () => {
+    const user = userEvent.setup();
+
     const onClose = jest.fn();
 
     render(<AddSourceWizard {...initialProps} onClose={onClose} />);
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await userEvent.click(screen.getByText('Google Cloud'));
-    await userEvent.click(screen.getByLabelText('Close wizard'));
+    await user.click(screen.getByText('Google Cloud'));
+    await user.click(screen.getByLabelText('Close wizard'));
 
     expect(screen.getByText('Exit source creation?')).toBeInTheDocument();
-    await userEvent.click(screen.getByText('Exit'));
+    await user.click(screen.getByText('Exit'));
     expect(onClose).toHaveBeenCalledWith({ source_type: GOOGLE_NAME });
   });
 
   it('stay on the wizard', async () => {
+    const user = userEvent.setup();
+
     const onClose = jest.fn();
 
     render(<AddSourceWizard {...initialProps} onClose={onClose} />);
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await userEvent.click(screen.getByText('Google Cloud'));
-    await userEvent.click(screen.getByLabelText('Close wizard'));
-    await userEvent.click(screen.getByText('Stay'));
+    await user.click(screen.getByText('Google Cloud'));
+    await user.click(screen.getByLabelText('Close wizard'));
+    await user.click(screen.getByText('Stay'));
 
     expect(onClose).not.toHaveBeenCalled();
     expect(screen.getByText('Google Cloud').closest('.pf-m-selected')).toBeInTheDocument();
   });
 
   it('show error step after failing the form', async () => {
+    const user = userEvent.setup();
+
     const ERROR_MESSAGE = 'fail';
     createSource.doCreateSource = jest.fn(() => new Promise((_resolve, reject) => reject(ERROR_MESSAGE)));
 
@@ -163,7 +177,7 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await userEvent.click(screen.getByText('Google Cloud'));
+    await user.click(screen.getByText('Google Cloud'));
     container.getElementsByTagName('form')[0].submit();
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
@@ -177,6 +191,8 @@ describe('AddSourceWizard', () => {
   });
 
   it('afterError closes wizard with no values', async () => {
+    const user = userEvent.setup();
+
     const closeCallback = jest.fn();
 
     createSource.doCreateSource = jest.fn(() => Promise.reject('error'));
@@ -185,19 +201,21 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await userEvent.click(screen.getByText('Google Cloud'));
+    await user.click(screen.getByText('Google Cloud'));
     container.getElementsByTagName('form')[0].submit();
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
 
     expect(closeCallback).not.toHaveBeenCalled();
 
-    await userEvent.click(screen.getByLabelText('Close'));
+    await user.click(screen.getByLabelText('Close'));
 
     expect(closeCallback).toHaveBeenCalledWith({});
   });
 
   it('afterSubmit closes wizard with values', async () => {
+    const user = userEvent.setup();
+
     const closeCallback = jest.fn();
 
     createSource.doCreateSource = jest.fn(() => Promise.resolve(SOURCE_DATA_OUT));
@@ -206,50 +224,54 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await userEvent.click(screen.getByText('Google Cloud'));
+    await user.click(screen.getByText('Google Cloud'));
     container.getElementsByTagName('form')[0].submit();
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
 
     expect(closeCallback).not.toHaveBeenCalled();
 
-    await userEvent.click(screen.getByLabelText('Close'));
+    await user.click(screen.getByLabelText('Close'));
 
     await waitFor(() => expect(closeCallback).toHaveBeenCalledWith(undefined, SOURCE_DATA_OUT));
   });
 
   it('reset - resets initialValues', async () => {
+    const user = userEvent.setup();
+
     createSource.doCreateSource = jest.fn(() => Promise.resolve(SOURCE_DATA_OUT));
 
     const { container } = render(<AddSourceWizard {...initialProps} />);
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await userEvent.click(screen.getByText('Google Cloud'));
+    await user.click(screen.getByText('Google Cloud'));
     container.getElementsByTagName('form')[0].submit();
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
 
-    await userEvent.click(screen.getByText('Add another source'));
+    await user.click(screen.getByText('Add another source'));
 
     expect(screen.getByText('Google Cloud').closest('.pf-m-selected')).toBeNull();
   });
 
   it('tryAgain retries the request', async () => {
+    const user = userEvent.setup();
+
     createSource.doCreateSource = jest.fn(() => Promise.reject('error'));
 
     const { container } = render(<AddSourceWizard {...initialProps} />);
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await userEvent.click(screen.getByText('Google Cloud'));
+    await user.click(screen.getByText('Google Cloud'));
     container.getElementsByTagName('form')[0].submit();
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
     createSource.doCreateSource.mockClear();
     expect(createSource.doCreateSource).not.toHaveBeenCalled();
 
-    await userEvent.click(screen.getByText('Retry'));
+    await user.click(screen.getByText('Retry'));
 
     await waitFor(() =>
       expect(createSource.doCreateSource).toHaveBeenCalledWith({ source_type: GOOGLE_NAME }, expect.any(Array), applicationTypes)
