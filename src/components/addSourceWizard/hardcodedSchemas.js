@@ -625,11 +625,12 @@ const hardcodedSchemas = {
               },
               {
                 type: validatorTypes.PATTERN,
-                pattern: /^[A-Za-z0-9]+[A-Za-z0-9_-]*$/,
+                pattern:
+                  /(?!(^((2(5[0-5]|[0-4][0-9])|[01]?[0-9]{1,2})\.){3}(2(5[0-5]|[0-4][0-9])|[01]?[0-9]{1,2})$|^xn--|-s3alias$))^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$/,
                 message: (
                   <FormattedMessage
                     id="cost.arn.s3BucketPattern"
-                    defaultMessage="S3 bucket name must start with alphanumeric character and can contain underscore and hyphen"
+                    defaultMessage="S3 bucket name must start with alphanumeric character and can contain lowercase letters, numbers, dots, and hyphens"
                   />
                 ),
               },

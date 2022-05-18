@@ -105,6 +105,8 @@ describe('SourcesTable', () => {
   });
 
   it('renders table when loaded and its not org admin - no action column', async () => {
+    const user = userEvent.setup();
+
     const INTL = { formatMessage: ({ defaultMessage }) => defaultMessage };
     initialState = {
       user: {
@@ -120,11 +122,11 @@ describe('SourcesTable', () => {
 
     render(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
 
-    await userEvent.click(screen.getAllByLabelText('Actions')[0]);
+    await user.click(screen.getAllByLabelText('Actions')[0]);
 
     expect(screen.getByText('Edit')).toHaveClass('src-m-dropdown-item-disabled');
 
-    await userEvent.click(screen.getByText('Edit'));
+    await user.click(screen.getByText('Edit'));
 
     await waitFor(() => expect(screen.getByText(disabledMessage(INTL))).toBeInTheDocument());
   });
@@ -205,25 +207,31 @@ describe('SourcesTable', () => {
     });
 
     it('redirect to edit', async () => {
-      await userEvent.click(screen.getAllByLabelText('Actions')[0]);
-      await userEvent.click(screen.getByText('Edit'));
+      const user = userEvent.setup();
+
+      await user.click(screen.getAllByLabelText('Actions')[0]);
+      await user.click(screen.getByText('Edit'));
       const expectedPath = replaceRouteId(routes.sourcesDetail.path, sourcesDataGraphQl[0].id);
       expect(screen.getByTestId('location-display').textContent).toEqual(expectedPath);
     });
 
     it('redirect to delete', async () => {
-      await userEvent.click(screen.getAllByLabelText('Actions')[0]);
-      await userEvent.click(screen.getByText('Remove'));
+      const user = userEvent.setup();
+
+      await user.click(screen.getAllByLabelText('Actions')[0]);
+      await user.click(screen.getByText('Remove'));
 
       const expectedPath = replaceRouteId(routes.sourcesRemove.path, sourcesDataGraphQl[0].id);
       expect(screen.getByTestId('location-display').textContent).toEqual(expectedPath);
     });
 
     it('pause source', async () => {
+      const user = userEvent.setup();
+
       actions.pauseSource = jest.fn().mockImplementation(() => ({ type: 'undefined-pause' }));
 
-      await userEvent.click(screen.getAllByLabelText('Actions')[0]);
-      await userEvent.click(screen.getByText('Pause'));
+      await user.click(screen.getAllByLabelText('Actions')[0]);
+      await user.click(screen.getByText('Pause'));
 
       expect(actions.pauseSource).toHaveBeenCalledWith(sourcesDataGraphQl[0].id, sourcesDataGraphQl[0].name, expect.any(Object));
 
@@ -233,6 +241,8 @@ describe('SourcesTable', () => {
   });
 
   it('unpausing', async () => {
+    const user = userEvent.setup();
+
     initialState = {
       ...initialState,
       sources: {
@@ -253,8 +263,8 @@ describe('SourcesTable', () => {
 
     render(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
 
-    await userEvent.click(screen.getAllByLabelText('Actions')[0]);
-    await userEvent.click(screen.getByText('Resume'));
+    await user.click(screen.getAllByLabelText('Actions')[0]);
+    await user.click(screen.getByText('Resume'));
 
     expect(actions.resumeSource).toHaveBeenCalledWith(sourcesDataGraphQl[0].id, sourcesDataGraphQl[0].name, expect.any(Object));
 
@@ -263,6 +273,8 @@ describe('SourcesTable', () => {
   });
 
   it('calls sortEntities', async () => {
+    const user = userEvent.setup();
+
     const spy = jest.spyOn(actions, 'sortEntities');
 
     initialState = {
@@ -277,11 +289,11 @@ describe('SourcesTable', () => {
 
     render(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
 
-    await userEvent.click(screen.getByText('Name'));
+    await user.click(screen.getByText('Name'));
 
     expect(spy).toHaveBeenCalledWith('name', 'asc');
 
-    await userEvent.click(screen.getByText('Type'));
+    await user.click(screen.getByText('Type'));
 
     expect(spy).toHaveBeenCalledWith('source_type_id', 'asc');
   });

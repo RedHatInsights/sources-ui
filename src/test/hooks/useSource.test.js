@@ -7,6 +7,11 @@ jest.mock('react-router-dom', () => ({
   useParams: jest.fn().mockImplementation(() => ({ id: '121311231' })),
 }));
 
+jest.mock('react-redux', () => ({
+  __esModule: true,
+  useSelector: jest.fn(),
+}));
+
 describe('useSource', () => {
   let INPUT_FN = expect.any(Function);
 

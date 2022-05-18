@@ -49,19 +49,23 @@ describe('modalFormTemplate', () => {
   });
 
   it('submits', async () => {
+    const user = userEvent.setup();
+
     expect(submit).not.toHaveBeenCalled();
 
-    await userEvent.type(screen.getByRole('textbox'), 'something');
+    await user.type(screen.getByRole('textbox'), 'something');
 
-    await userEvent.click(screen.getByText('Submit'));
+    await user.click(screen.getByText('Submit'));
 
     expect(submit).toHaveBeenCalled();
   });
 
   it('cancels', async () => {
+    const user = userEvent.setup();
+
     expect(cancel).not.toHaveBeenCalled();
 
-    await userEvent.click(screen.getByText('Cancel'));
+    await user.click(screen.getByText('Cancel'));
 
     expect(cancel).toHaveBeenCalled();
   });

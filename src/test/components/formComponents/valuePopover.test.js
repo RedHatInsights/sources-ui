@@ -8,6 +8,8 @@ import ValuePopover from '../../../components/FormComponents/ValuePopover';
 
 describe('ValuePopover', () => {
   it('renders correctly', async () => {
+    const user = userEvent.setup();
+
     render(<ValuePopover label="Some label" value="Some value" />);
 
     expect(() => screen.getByText('Some value')).toThrow();
@@ -15,7 +17,7 @@ describe('ValuePopover', () => {
 
     expect(screen.getByText('Show more')).toBeInTheDocument();
 
-    await userEvent.click(screen.getByText('Show more'));
+    await user.click(screen.getByText('Show more'));
 
     await waitFor(() => expect(screen.getByText('Some value')).toBeInTheDocument());
     expect(screen.getByText('Some label')).toBeInTheDocument();

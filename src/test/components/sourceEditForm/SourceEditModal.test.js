@@ -109,6 +109,8 @@ describe('SourceEditModal', () => {
   });
 
   it('renders correctly with initial message', async () => {
+    const user = userEvent.setup();
+
     editApi.doLoadSourceForEdit = jest.fn().mockImplementation(() =>
       Promise.resolve({
         source: {
@@ -162,8 +164,8 @@ describe('SourceEditModal', () => {
 
     expect(screen.getByText('This application is unavailable')).toBeInTheDocument();
 
-    await userEvent.clear(screen.getAllByRole('textbox')[1]);
-    await userEvent.type(screen.getAllByRole('textbox')[1], 'different-value');
+    await user.clear(screen.getAllByRole('textbox')[1]);
+    await user.type(screen.getAllByRole('textbox')[1], 'different-value');
 
     submit.onSubmit = jest.fn().mockImplementation((values, editing, _dispatch, source, _intl, setState) => {
       setState({
@@ -178,7 +180,7 @@ describe('SourceEditModal', () => {
       setState({ type: 'sourceChanged' });
     });
 
-    await userEvent.click(screen.getByText('Save changes'));
+    await user.click(screen.getByText('Save changes'));
 
     await waitFor(() => expect(screen.getByText('success title')).toBeInTheDocument());
   });
@@ -469,6 +471,8 @@ describe('SourceEditModal', () => {
   });
 
   it('reload data when source from redux is changed', async () => {
+    const user = userEvent.setup();
+
     const ChangeSourceComponent = () => {
       const dispatch = useDispatch();
 
@@ -540,7 +544,7 @@ describe('SourceEditModal', () => {
 
     expect(editApi.doLoadSourceForEdit.mock.calls).toHaveLength(1);
 
-    await userEvent.click(screen.getByText('Change redux source'));
+    await user.click(screen.getByText('Change redux source'));
 
     await waitFor(() => expect(editApi.doLoadSourceForEdit.mock.calls).toHaveLength(2));
   });
@@ -564,6 +568,8 @@ describe('SourceEditModal', () => {
     });
 
     beforeEach(async () => {
+      const user = userEvent.setup();
+
       render(
         componentWrapperIntl(
           <Route path={routes.sourcesDetail.path} render={(...args) => <SourceEditModal {...args} />} />,
@@ -574,11 +580,13 @@ describe('SourceEditModal', () => {
 
       await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
 
-      await userEvent.clear(screen.getAllByRole('textbox')[1]);
-      await userEvent.type(screen.getAllByRole('textbox')[1], NEW_CA);
+      await user.clear(screen.getAllByRole('textbox')[1]);
+      await user.type(screen.getAllByRole('textbox')[1], NEW_CA);
     });
 
     it('calls onSubmit with values and editing object', async () => {
+      const user = userEvent.setup();
+
       const message = {
         title: 'some title',
         variant: 'danger',
@@ -597,7 +605,7 @@ describe('SourceEditModal', () => {
         }, 1000);
       });
 
-      await userEvent.click(screen.getByText('Save changes'));
+      await user.click(screen.getByText('Save changes'));
 
       expect(screen.getByText('Validating edited source credentials')).toBeInTheDocument();
 
@@ -611,6 +619,8 @@ describe('SourceEditModal', () => {
     });
 
     it('calls onSubmit - timeout - return to edit', async () => {
+      const user = userEvent.setup();
+
       const variant = 'warning';
       const title = 'some title';
       const description = 'description of timeout';
@@ -628,7 +638,7 @@ describe('SourceEditModal', () => {
         }, 1000);
       });
 
-      await userEvent.click(screen.getByText('Save changes'));
+      await user.click(screen.getByText('Save changes'));
 
       expect(screen.getByText('Validating edited source credentials')).toBeInTheDocument();
 
@@ -640,6 +650,8 @@ describe('SourceEditModal', () => {
     });
 
     it('calls onSubmit - server error', async () => {
+      const user = userEvent.setup();
+
       submit.onSubmit = jest.fn().mockImplementation((values, editing, _dispatch, source, _intl, setState) => {
         setState({ type: 'submit', values, editing });
 
@@ -648,7 +660,7 @@ describe('SourceEditModal', () => {
         }, 1000);
       });
 
-      await userEvent.click(screen.getByText('Save changes'));
+      await user.click(screen.getByText('Save changes'));
 
       expect(screen.getByText('Validating edited source credentials')).toBeInTheDocument();
 
@@ -664,7 +676,7 @@ describe('SourceEditModal', () => {
 
       submit.onSubmit.mockReset();
 
-      await userEvent.click(screen.getByText('Retry'));
+      await user.click(screen.getByText('Retry'));
 
       await waitFor(() => expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE));
     });

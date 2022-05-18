@@ -118,7 +118,7 @@ Documentation is [here](doc/wizard.md).
 
 # API
 
-- [Sources API](https://github.com/RedHatInsights/sources-api)
+- [Sources API](https://github.com/RedHatInsights/sources-api) **NOT IN USE ANYMORE**
 - [Sources API GO](https://github.com/RedHatInsights/sources-api-go) - a new GO version of the API
 ## Sources Javascript API client
 

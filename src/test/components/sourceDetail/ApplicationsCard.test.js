@@ -23,6 +23,8 @@ describe('ApplicationsCard', () => {
   const initialEntry = [replaceRouteId(routes.sourcesDetail.path, sourceId)];
 
   it('renders with no permissions', async () => {
+    const user = userEvent.setup();
+
     store = mockStore({
       sources: {
         entities: [{ id: sourceId, source_type_id: AMAZON_TYPE.id, applications: [] }],
@@ -49,7 +51,7 @@ describe('ApplicationsCard', () => {
     expect(screen.getAllByText('RHEL management')).toBeTruthy();
     expect(screen.getAllByRole('checkbox')[1]).toBeDisabled();
 
-    await userEvent.hover(screen.getByText('Cost Management', { selector: '.pf-m-off' }));
+    await user.hover(screen.getByText('Cost Management', { selector: '.pf-m-off' }));
 
     await waitFor(() =>
       expect(
@@ -135,6 +137,8 @@ describe('ApplicationsCard', () => {
     });
 
     it('pause application', async () => {
+      const user = userEvent.setup();
+
       render(
         componentWrapperIntl(
           <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
@@ -152,14 +156,14 @@ describe('ApplicationsCard', () => {
 
       expect(screen.getAllByRole('checkbox')[0]).toBeChecked();
 
-      await userEvent.click(screen.getAllByRole('checkbox')[0]);
+      await user.click(screen.getAllByRole('checkbox')[0]);
 
       expect(screen.getAllByRole('checkbox')[0]).not.toBeChecked();
 
       expect(pauseApplication).toHaveBeenCalledWith('123');
       pauseApplication.mockClear();
 
-      await userEvent.click(screen.getAllByRole('checkbox')[0]);
+      await user.click(screen.getAllByRole('checkbox')[0]);
 
       expect(pauseApplication).not.toHaveBeenCalled();
       expect(actions.loadEntities).not.toHaveBeenCalled();
@@ -170,6 +174,8 @@ describe('ApplicationsCard', () => {
     });
 
     it('add application', async () => {
+      const user = userEvent.setup();
+
       render(
         componentWrapperIntl(
           <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
@@ -178,7 +184,7 @@ describe('ApplicationsCard', () => {
         )
       );
 
-      await userEvent.click(screen.getAllByRole('checkbox')[1]);
+      await user.click(screen.getAllByRole('checkbox')[1]);
 
       expect(screen.getByTestId('location-display').textContent).toEqual(
         replaceRouteId(routes.sourcesDetailAddApp.path, sourceId).replace(':app_type_id', SUB_WATCH_APP.id)
@@ -186,6 +192,8 @@ describe('ApplicationsCard', () => {
     });
 
     it('unpause application', async () => {
+      const user = userEvent.setup();
+
       store = mockStore({
         sources: {
           entities: [
@@ -219,14 +227,14 @@ describe('ApplicationsCard', () => {
 
       expect(screen.getAllByRole('checkbox')[0]).not.toBeChecked();
 
-      await userEvent.click(screen.getAllByRole('checkbox')[0]);
+      await user.click(screen.getAllByRole('checkbox')[0]);
 
       expect(screen.getAllByRole('checkbox')[0]).toBeChecked();
 
       expect(unpauseApplication).toHaveBeenCalledWith('123');
       unpauseApplication.mockClear();
 
-      await userEvent.click(screen.getAllByRole('checkbox')[0]);
+      await user.click(screen.getAllByRole('checkbox')[0]);
 
       expect(unpauseApplication).not.toHaveBeenCalled();
       expect(actions.loadEntities).not.toHaveBeenCalled();
@@ -244,6 +252,8 @@ describe('ApplicationsCard', () => {
     });
 
     it('unpause application and fails', async () => {
+      const user = userEvent.setup();
+
       store = mockStore({
         sources: {
           entities: [
@@ -273,7 +283,7 @@ describe('ApplicationsCard', () => {
         )
       );
 
-      await userEvent.click(screen.getAllByRole('checkbox')[0]);
+      await user.click(screen.getAllByRole('checkbox')[0]);
 
       await waitFor(() =>
         expect(actions.addMessage).toHaveBeenCalledWith({
@@ -285,6 +295,8 @@ describe('ApplicationsCard', () => {
     });
 
     it('unpause application via dropdown', async () => {
+      const user = userEvent.setup();
+
       store = mockStore({
         sources: {
           entities: [
@@ -315,8 +327,8 @@ describe('ApplicationsCard', () => {
         )
       );
 
-      await userEvent.click(screen.getByLabelText('Actions'));
-      await userEvent.click(screen.getByText('Resume'));
+      await user.click(screen.getByLabelText('Actions'));
+      await user.click(screen.getByText('Resume'));
 
       await waitFor(() => expect(unpauseApplication).toHaveBeenCalledWith('123'));
       expect(actions.addMessage).toHaveBeenCalledWith({
@@ -350,6 +362,8 @@ describe('ApplicationsCard', () => {
     });
 
     it('unpaused application and blocks clicking again', async () => {
+      const user = userEvent.setup();
+
       store = mockStore({
         sources: {
           entities: [
@@ -382,14 +396,14 @@ describe('ApplicationsCard', () => {
 
       expect(screen.getAllByRole('checkbox')[0]).not.toBeChecked();
 
-      await userEvent.click(screen.getAllByRole('checkbox')[0]);
+      await user.click(screen.getAllByRole('checkbox')[0]);
 
       expect(screen.getAllByRole('checkbox')[0]).toBeChecked();
 
       expect(unpauseApplication).toHaveBeenCalledWith('123');
       unpauseApplication.mockClear();
 
-      await userEvent.click(screen.getAllByRole('checkbox')[0]);
+      await user.click(screen.getAllByRole('checkbox')[0]);
 
       expect(unpauseApplication).not.toHaveBeenCalled();
       expect(actions.loadEntities).not.toHaveBeenCalled();
@@ -407,6 +421,8 @@ describe('ApplicationsCard', () => {
     });
 
     it('adds application and fail', async () => {
+      const user = userEvent.setup();
+
       render(
         componentWrapperIntl(
           <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
@@ -418,7 +434,7 @@ describe('ApplicationsCard', () => {
       api.doCreateApplication = jest.fn().mockImplementation(() => Promise.reject('Some backend error'));
       actions.addMessage.mockClear();
 
-      await userEvent.click(screen.getAllByRole('checkbox')[1]);
+      await user.click(screen.getAllByRole('checkbox')[1]);
 
       await waitFor(() =>
         expect(actions.addMessage).toHaveBeenCalledWith({
@@ -430,6 +446,8 @@ describe('ApplicationsCard', () => {
     });
 
     it('pauses application and fail', async () => {
+      const user = userEvent.setup();
+
       render(
         componentWrapperIntl(
           <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
@@ -446,7 +464,7 @@ describe('ApplicationsCard', () => {
         pauseApplication,
       });
 
-      await userEvent.click(screen.getAllByRole('checkbox')[0]);
+      await user.click(screen.getAllByRole('checkbox')[0]);
 
       await waitFor(() =>
         expect(actions.addMessage).toHaveBeenCalledWith({
@@ -458,6 +476,8 @@ describe('ApplicationsCard', () => {
     });
 
     it('resumes application and fail', async () => {
+      const user = userEvent.setup();
+
       store = mockStore({
         sources: {
           entities: [
@@ -490,7 +510,7 @@ describe('ApplicationsCard', () => {
 
       actions.addMessage.mockClear();
 
-      await userEvent.click(screen.getAllByRole('checkbox')[0]);
+      await user.click(screen.getAllByRole('checkbox')[0]);
 
       await waitFor(() =>
         expect(actions.addMessage).toHaveBeenCalledWith({
@@ -502,6 +522,8 @@ describe('ApplicationsCard', () => {
     });
 
     it('adds application', async () => {
+      const user = userEvent.setup();
+
       render(
         componentWrapperIntl(
           <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
@@ -514,7 +536,7 @@ describe('ApplicationsCard', () => {
 
       expect(screen.getAllByRole('checkbox')[1]).not.toBeChecked();
 
-      await userEvent.click(screen.getAllByRole('checkbox')[1]);
+      await user.click(screen.getAllByRole('checkbox')[1]);
 
       expect(screen.getAllByRole('checkbox')[1]).toBeChecked();
 
@@ -530,6 +552,8 @@ describe('ApplicationsCard', () => {
     });
 
     it('pause application and blocks clicking again', async () => {
+      const user = userEvent.setup();
+
       render(
         componentWrapperIntl(
           <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
@@ -548,14 +572,14 @@ describe('ApplicationsCard', () => {
 
       actions.addMessage.mockClear();
 
-      await userEvent.click(screen.getAllByRole('checkbox')[0]);
+      await user.click(screen.getAllByRole('checkbox')[0]);
 
       expect(screen.getAllByRole('checkbox')[0]).not.toBeChecked();
 
       expect(pauseApplication).toHaveBeenCalledWith('123');
       pauseApplication.mockClear();
 
-      await userEvent.click(screen.getAllByRole('checkbox')[0]);
+      await user.click(screen.getAllByRole('checkbox')[0]);
 
       expect(pauseApplication).not.toHaveBeenCalled();
       expect(actions.loadEntities).not.toHaveBeenCalled();
@@ -574,6 +598,8 @@ describe('ApplicationsCard', () => {
     });
 
     it('pause application via dropdown', async () => {
+      const user = userEvent.setup();
+
       render(
         componentWrapperIntl(
           <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
@@ -588,8 +614,8 @@ describe('ApplicationsCard', () => {
         pauseApplication,
       });
 
-      await userEvent.click(screen.getByLabelText('Actions'));
-      await userEvent.click(screen.getByText('Pause'));
+      await user.click(screen.getByLabelText('Actions'));
+      await user.click(screen.getByText('Pause'));
 
       expect(pauseApplication).toHaveBeenCalled();
       await waitFor(() => expect(actions.loadEntities).toHaveBeenCalled());
