@@ -561,7 +561,6 @@ describe('doAttachApp', () => {
       ...VALUES.authentication,
       resource_id: undefined, // no endpoint values
       resource_type: 'Application',
-      source_id: SOURCE_ID,
     });
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).not.toHaveBeenCalled();
@@ -644,7 +643,6 @@ describe('doAttachApp', () => {
       ...VALUES.authentication,
       resource_id: RETURNED_ENDPOINT.id,
       resource_type: 'Endpoint',
-      source_id: SOURCE_ID,
     });
     expect(endpointCreate).toHaveBeenCalledWith({
       port: 8989,
@@ -676,7 +674,6 @@ describe('doAttachApp', () => {
       ...VALUES.authentication,
       resource_id: undefined, // empty endpoint values
       resource_type: 'Application',
-      source_id: SOURCE_ID,
     });
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).not.toHaveBeenCalled();
@@ -704,7 +701,6 @@ describe('doAttachApp', () => {
       ...VALUES.authentication,
       resource_id: RETURNED_APP.id,
       resource_type: 'Application',
-      source_id: SOURCE_ID,
     });
     expect(endpointCreate).not.toHaveBeenCalled();
     expect(appCreate).toHaveBeenCalledWith({ source_id: SOURCE_ID, application_type_id: APP_ID });

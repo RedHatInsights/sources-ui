@@ -114,6 +114,8 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
     // eslint-disable-next-line no-unused-vars
     const [_sourceDataOut, endpointDataOut, applicationDataOut] = await Promise.all(promises);
 
+    appId = applicationDataOut?.id;
+
     let authenticationDataOut;
 
     if (
@@ -128,14 +130,11 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
           ...filteredValues.authentication,
           resource_id: endpointDataOut?.id || applicationDataOut?.id,
           resource_type: endpointDataOut?.id ? 'Endpoint' : 'Application',
-          source_id: sourceId,
         };
 
         authenticationDataOut = await getSourcesApi().createAuthentication(authenticationData);
       }
     }
-
-    appId = applicationDataOut?.id;
 
     const authenticationId = selectedAuthId || authenticationDataOut?.id;
 
