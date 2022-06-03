@@ -10,7 +10,6 @@ export const getDevStore = () => {
 
   const removePermissions = () => {
     store.dispatch({ type: ACTION_TYPES.SET_WRITE_PERMISSIONS_FULFILLED, payload: false });
-    store.dispatch({ type: ACTION_TYPES.SET_WRITE_PERMISSIONS_FULFILLED, payload: false });
   };
 
   const setPermissions = () => {
