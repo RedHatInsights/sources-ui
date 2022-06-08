@@ -89,6 +89,7 @@ const shortIcons = {
   google: '/apps/frontend-assets/partners-icons/google-cloud-short.svg',
 };
 
+// eslint-disable-next-line react/display-name
 export const iconMapper = (sourceTypes) => (name) => {
   const sourceType = sourceTypes.find((type) => type.name === name);
 
