@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import { KebabToggle, Dropdown, DropdownItem } from '@patternfly/react-core';
 
@@ -16,13 +17,14 @@ const ApplicationKebab = ({ app, removeApp, addApp }) => {
   const source = useSource();
   const { push } = useHistory();
   const hasRightAccess = useHasWritePermissions();
+  const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
 
   const wrappedFunction = (func) => () => {
     setOpen(false);
     func();
   };
 
-  const disabledProps = disabledTooltipProps(intl);
+  const disabledProps = disabledTooltipProps(intl, isOrgAdmin);
 
   const pausedTooltip = intl.formatMessage({
     id: 'sources.pausedSourceAction',

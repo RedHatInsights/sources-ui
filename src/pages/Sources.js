@@ -78,6 +78,7 @@ const SourcesPage = () => {
 
   const entitiesLoaded = useIsLoaded();
   const hasWritePermissions = useHasWritePermissions();
+  const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
 
   const history = useHistory();
   const intl = useIntl();
@@ -148,11 +149,15 @@ const SourcesPage = () => {
     id: 'sources.addSource',
     defaultMessage: 'Add source',
   });
-  const noPermissionsText = intl.formatMessage({
-    id: 'sources.notAdminAddButton',
-    defaultMessage:
-      'To add a source, you must be granted Sources Administrator permissions from your Organization Administrator.',
-  });
+  const noPermissionsText = isOrgAdmin
+    ? intl.formatMessage({
+        id: 'sources.notAdminAddButton',
+        defaultMessage: 'To add a source, you must add Sources Administrator permissions to your user.',
+      })
+    : intl.formatMessage({
+        id: 'sources.notPermissionsAddButton',
+        defaultMessage: 'To add a source, your Organization Administrator must grant you Sources Administrator permissions.',
+      });
 
   let actionsConfig;
 

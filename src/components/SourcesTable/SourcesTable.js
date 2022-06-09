@@ -65,8 +65,8 @@ const initialState = (columns) => ({
   key: 0,
 });
 
-export const actionResolver = (intl, push, hasWritePermissions, dispatch) => (rowData) => {
-  const disabledProps = disabledTooltipProps(intl);
+export const actionResolver = (intl, push, hasWritePermissions, dispatch, isOrgAdmin) => (rowData) => {
+  const disabledProps = disabledTooltipProps(intl, isOrgAdmin);
   const actions = [];
 
   if (rowData.paused_at) {
@@ -133,6 +133,7 @@ const SourcesTable = () => {
 
   const loaded = useIsLoaded();
   const writePermissions = useHasWritePermissions();
+  const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
 
   const {
     appTypes,
@@ -229,7 +230,9 @@ const SourcesTable = () => {
       key={state.key}
       rows={shownRows}
       cells={state.cells}
-      actionResolver={loaded && numberOfEntities > 0 ? actionResolver(intl, push, writePermissions, reduxDispatch) : undefined}
+      actionResolver={
+        loaded && numberOfEntities > 0 ? actionResolver(intl, push, writePermissions, reduxDispatch, isOrgAdmin) : undefined
+      }
       rowWrapper={RowWrapperLoader}
       className={numberOfEntities === 0 && state.isLoaded ? 'ins-c-table-empty-state' : ''}
     >

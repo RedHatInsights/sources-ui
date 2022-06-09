@@ -26,3 +26,33 @@ export const loadWritePermissions = () => (dispatch) => {
       })
     );
 };
+
+export const loadOrgAdmin = () => (dispatch) => {
+  dispatch({ type: ACTION_TYPES.SET_ORG_ADMIN_PENDING });
+
+  return insights.chrome.auth
+    .getUser()
+    .then(
+      ({
+        identity: {
+          user: { is_org_admin },
+        },
+      }) => {
+        dispatch({
+          type: ACTION_TYPES.SET_ORG_ADMIN_FULFILLED,
+          payload: is_org_admin,
+        });
+      }
+    )
+    .catch((error) =>
+      dispatch({
+        type: ACTION_TYPES.SET_ORG_ADMIN_REJECTED,
+        payload: {
+          error: {
+            detail: error.detail || error.data,
+            title: "Cannot get user's credentials",
+          },
+        },
+      })
+    );
+};

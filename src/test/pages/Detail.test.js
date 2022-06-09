@@ -147,6 +147,7 @@ describe('SourceDetail', () => {
           },
         ],
       },
+      user: {},
     });
 
     render(

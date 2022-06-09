@@ -110,6 +110,7 @@ const ApplicationsCard = () => {
   const { push } = useHistory();
   const sourceTypes = useSelector(({ sources }) => sources.sourceTypes, shallowEqual);
   const appTypes = useSelector(({ sources }) => sources.appTypes, shallowEqual);
+  const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
   const hasRightAccess = useHasWritePermissions();
   const dispatch = useDispatch();
   const [{ selectedApps }, stateDispatch] = useReducer(reducer, initialState);
@@ -205,7 +206,7 @@ const ApplicationsCard = () => {
             return (
               <FormGroup key={app.id}>
                 <div className="src-c-application_flex">
-                  <Wrapper {...(!hasRightAccess && { content: disabledMessage(intl) })}>
+                  <Wrapper {...(!hasRightAccess && { content: disabledMessage(intl, isOrgAdmin) })}>
                     <Switch
                       className="src-c-application_switch"
                       id={`app-switch-${app.id}`}

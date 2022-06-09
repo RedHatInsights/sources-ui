@@ -16,7 +16,7 @@ export const Tooltip = ({ children, content }) => {
   const trigger = () => setVisible(true);
 
   return (
-    <div onMouseOver={trigger} onClick={trigger}>
+    <div onMouseOver={trigger} onClick={trigger} className="mocked-tooltip">
       {children}
     </div>
   );
