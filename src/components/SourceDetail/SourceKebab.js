@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
 
@@ -18,6 +18,7 @@ const SourceKebab = () => {
   const source = useSource();
   const hasRightAccess = useHasWritePermissions();
   const dispatch = useDispatch();
+  const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
 
   const wrappedFunction = (func) => () => {
     setOpen(false);
@@ -29,7 +30,7 @@ const SourceKebab = () => {
     defaultMessage: 'You cannot perform this action on a paused source.',
   });
 
-  const disabledProps = disabledTooltipProps(intl);
+  const disabledProps = disabledTooltipProps(intl, isOrgAdmin);
 
   const pausedProps = {
     ...disabledProps,

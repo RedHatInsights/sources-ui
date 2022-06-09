@@ -71,7 +71,7 @@ describe('ApplicationKebab', () => {
     await user.hover(screen.getByText('Remove'));
 
     const tooltipText =
-      'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.';
+      'To perform this action, your Organization Administrator must grant you Sources Administrator permissions.';
 
     await waitFor(() => expect(screen.getByText(tooltipText)).toBeInTheDocument());
   });
@@ -114,7 +114,7 @@ describe('ApplicationKebab', () => {
     await user.hover(screen.getByText('Remove'));
 
     const tooltipText =
-      'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.';
+      'To perform this action, your Organization Administrator must grant you Sources Administrator permissions.';
 
     await waitFor(() => expect(screen.getByText(tooltipText)).toBeInTheDocument());
   });
