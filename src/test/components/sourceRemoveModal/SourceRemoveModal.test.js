@@ -9,9 +9,9 @@ import SourceRemoveModal from '../../../components/SourceRemoveModal/SourceRemov
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
 import appTypes, { CATALOG_APP } from '../../__mocks__/applicationTypes';
-import sourceTypes, { ANSIBLE_TOWER_TYPE, SATELLITE_TYPE, OPENSHIFT_TYPE } from '../../__mocks__/sourceTypes';
+import sourceTypes, { ANSIBLE_TOWER_TYPE, OPENSHIFT_TYPE, SATELLITE_TYPE } from '../../__mocks__/sourceTypes';
 
-import { routes, replaceRouteId } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routes';
 import mockStore from '../../__mocks__/mockStore';
 
 describe('SourceRemoveModal', () => {

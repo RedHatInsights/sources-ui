@@ -3,7 +3,7 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 
-import { Card, CardBody, CardTitle, CardFooter, Text } from '@patternfly/react-core';
+import { Card, CardBody, CardFooter, CardTitle, Text } from '@patternfly/react-core';
 
 import CloudTiles from './CloudTiles';
 

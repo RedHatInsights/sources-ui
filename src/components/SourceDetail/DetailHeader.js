@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { shallowEqual, useSelector } from 'react-redux';
 
 import { PageHeader } from '@redhat-cloud-services/frontend-components/PageHeader';
-import { Title, TextContent, Text, Flex, FlexItem } from '@patternfly/react-core';
+import { Flex, FlexItem, Text, TextContent, Title } from '@patternfly/react-core';
 
 import Breadcrumbs from './Breadcrumbs';
 import { useSource } from '../../hooks/useSource';

@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 
 import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
 
-import { Bullseye, EmptyState, EmptyStateVariant, EmptyStateIcon, EmptyStateBody, Title } from '@patternfly/react-core';
+import { Bullseye, EmptyState, EmptyStateBody, EmptyStateIcon, EmptyStateVariant, Title } from '@patternfly/react-core';
 
 export const ResourcesEmptyState = ({ applicationName, message, Icon }) => {
   const intl = useIntl();

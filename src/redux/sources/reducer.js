@@ -1,13 +1,13 @@
 import {
   ACTION_TYPES,
-  SORT_ENTITIES,
-  PAGE_AND_SIZE,
-  FILTER_SOURCES,
   ADD_APP_TO_SOURCE,
-  SET_COUNT,
   ADD_HIDDEN_SOURCE,
   CLEAR_FILTERS,
+  FILTER_SOURCES,
+  PAGE_AND_SIZE,
   SET_CATEGORY,
+  SET_COUNT,
+  SORT_ENTITIES,
 } from './actionTypes';
 import { CLOUD_VENDOR } from '../../utilities/constants';
 

@@ -1,5 +1,5 @@
-import React, { useEffect, lazy, Suspense, useReducer } from 'react';
-import { useSelector, useDispatch, shallowEqual } from 'react-redux';
+import React, { Suspense, lazy, useEffect, useReducer } from 'react';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { Button, Tooltip } from '@patternfly/react-core';
 import { useIntl } from 'react-intl';
@@ -7,7 +7,7 @@ import { useIntl } from 'react-intl';
 import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/PrimaryToolbar';
 import { Section } from '@redhat-cloud-services/frontend-components/Section';
 import { ErrorState } from '@redhat-cloud-services/frontend-components/ErrorState';
-import { useScreenSize, isSmallScreen } from '@redhat-cloud-services/frontend-components/useScreenSize';
+import { isSmallScreen, useScreenSize } from '@redhat-cloud-services/frontend-components/useScreenSize';
 
 import { downloadFile } from '@redhat-cloud-services/frontend-components-utilities/helpers';
 
@@ -28,15 +28,15 @@ const AddSourceWizard = lazy(() =>
 );
 
 import {
-  prepareChips,
-  removeChips,
-  setFilter,
-  debouncedFiltering,
-  prepareSourceTypeSelection,
   afterSuccess,
+  checkSubmit,
+  debouncedFiltering,
   loadedTypes,
   prepareApplicationTypeSelection,
-  checkSubmit,
+  prepareChips,
+  prepareSourceTypeSelection,
+  removeChips,
+  setFilter,
 } from './Sources/helpers';
 import { useIsLoaded } from '../hooks/useIsLoaded';
 import { useHasWritePermissions } from '../hooks/useHasWritePermissions';

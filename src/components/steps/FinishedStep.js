@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 
 import {
+  Bullseye,
   Button,
   EmptyState,
-  EmptyStateVariant,
-  EmptyStateIcon,
   EmptyStateBody,
+  EmptyStateIcon,
   EmptyStateSecondaryActions,
-  Bullseye,
+  EmptyStateVariant,
   Title,
 } from '@patternfly/react-core';
 

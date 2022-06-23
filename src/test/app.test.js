@@ -1,8 +1,8 @@
 import React from 'react';
-import { render, screen, cleanup } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 
 import App from '../App';
-import { componentWrapperIntl, LocationDisplay } from '../utilities/testsHelpers';
+import { LocationDisplay, componentWrapperIntl } from '../utilities/testsHelpers';
 import { routes } from '../Routes';
 import * as PermissionsChecker from '../components/PermissionsChecker';
 import * as DataLoader from '../components/DataLoader';

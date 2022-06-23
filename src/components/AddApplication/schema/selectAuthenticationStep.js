@@ -6,7 +6,7 @@ import { useIntl } from 'react-intl';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
 
-import { Text, TextVariants, TextContent } from '@patternfly/react-core';
+import { Text, TextContent, TextVariants } from '@patternfly/react-core';
 import { AuthTypeSetter } from '../AuthTypeSetter';
 
 export const SelectAuthenticationDescription = ({ applicationTypeName, authenticationTypeName }) => {

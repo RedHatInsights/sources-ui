@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, act, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/NotificationPortal';
@@ -8,7 +8,7 @@ import * as utilsHelpers from '@redhat-cloud-services/frontend-components-utilit
 
 import SourcesPageOriginal from '../../pages/Sources';
 
-import { sourcesDataGraphQl, SOURCE_ALL_APS_ID } from '../__mocks__/sourcesData';
+import { SOURCE_ALL_APS_ID, sourcesDataGraphQl } from '../__mocks__/sourcesData';
 import sourceTypes, { AMAZON_TYPE } from '../__mocks__/sourceTypes';
 import applicationTypes, { COST_MANAGEMENT_APP } from '../__mocks__/applicationTypes';
 
@@ -17,7 +17,7 @@ import { componentWrapperIntl } from '../../utilities/testsHelpers';
 import { defaultSourcesState } from '../../redux/sources/reducer';
 import * as api from '../../api/entities';
 import * as typesApi from '../../api/source_types';
-import { routes, replaceRouteId } from '../../Routes';
+import { replaceRouteId, routes } from '../../Routes';
 import * as helpers from '../../pages/Sources/helpers';
 import * as SourceRemoveModal from '../../components/SourceRemoveModal/SourceRemoveModal';
 import * as urlQuery from '../../utilities/urlQuery';

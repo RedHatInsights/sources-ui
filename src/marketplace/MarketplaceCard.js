@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardTitle, CardBody, CardFooter, Label, Button } from '@patternfly/react-core';
+import { Button, Card, CardBody, CardFooter, CardTitle, Label } from '@patternfly/react-core';
 import { DatabaseIcon, ExternalLinkAltIcon } from '@patternfly/react-icons';
 import ImageWithPlaceholder from '../components/TilesShared/ImageWithPlaceholder';
 

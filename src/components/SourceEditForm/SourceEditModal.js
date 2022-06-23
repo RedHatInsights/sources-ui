@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer } from 'react';
-import { useSelector, useDispatch, shallowEqual } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { Spinner, Bullseye } from '@patternfly/react-core';
+import { Bullseye, Spinner } from '@patternfly/react-core';
 
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 

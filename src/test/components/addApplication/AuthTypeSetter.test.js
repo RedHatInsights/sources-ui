@@ -7,7 +7,7 @@ import rendererContext from '@data-driven-forms/react-form-renderer/renderer-con
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import sourceTypes, { OPENSHIFT_TYPE } from '../../__mocks__/sourceTypes';
 import { AuthTypeSetter } from '../../../components/AddApplication/AuthTypeSetter';
-import { routes, replaceRouteId } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routes';
 import mockStore from '../../__mocks__/mockStore';
 
 describe('AuthTypeSetter', () => {

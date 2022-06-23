@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor, cleanup } from '@testing-library/react';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { Route } from 'react-router-dom';
@@ -9,10 +9,10 @@ import * as attachSource from '../../../api/doAttachApp';
 
 import AddApplication from '../../../components/AddApplication/AddApplication';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import sourceTypes, { OPENSHIFT_TYPE, AMAZON_TYPE } from '../../__mocks__/sourceTypes';
+import sourceTypes, { AMAZON_TYPE, OPENSHIFT_TYPE } from '../../__mocks__/sourceTypes';
 import { SOURCE_NO_APS_ID } from '../../__mocks__/sourcesData';
 import appTypes, { COST_MANAGEMENT_APP } from '../../__mocks__/applicationTypes';
-import { routes, replaceRouteId } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routes';
 import reducer from '../../../components/AddApplication/reducer';
 import * as removeAppSubmit from '../../../components/AddApplication/removeAppSubmit';
 

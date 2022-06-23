@@ -1,7 +1,7 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 
-import { Text, TextVariants, TextContent } from '@patternfly/react-core';
+import { Text, TextContent, TextVariants } from '@patternfly/react-core';
 
 export const EndpointDesc = () => {
   const intl = useIntl();

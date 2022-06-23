@@ -2,11 +2,11 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 
 import {
-  PlaceHolderTable,
-  RowWrapperLoader,
   AppPlaceholder,
   CardLoader,
   DetailLoader,
+  PlaceHolderTable,
+  RowWrapperLoader,
 } from '../../../components/SourcesTable/loaders';
 import { COLUMN_COUNT } from '../../../views/sourcesViewDefinition';
 import { IntlProvider } from 'react-intl';

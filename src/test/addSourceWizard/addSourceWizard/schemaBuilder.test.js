@@ -1,21 +1,21 @@
 import {
-  injectAuthFieldsInfo,
-  injectEndpointFieldsInfo,
+  createAdditionalSteps,
+  createAuthTypeSelection,
+  createEndpointStep,
   getAdditionalAuthFields,
   getAdditionalEndpointFields,
-  createEndpointStep,
-  createAdditionalSteps,
-  schemaBuilder,
   getAdditionalStepFields,
-  getNoStepsFields,
-  getAdditionalSteps,
-  shouldSkipSelection,
   getAdditionalStepKeys,
-  createAuthTypeSelection,
+  getAdditionalSteps,
+  getNoStepsFields,
+  injectAuthFieldsInfo,
+  injectEndpointFieldsInfo,
+  schemaBuilder,
+  shouldSkipSelection,
   shouldUseAppAuth,
 } from '../../../components/addSourceWizard/schemaBuilder';
 import hardcodedSchemas from '../../../components/addSourceWizard/hardcodedSchemas';
-import sourceTypes, { AMAZON_TYPE, OPENSHIFT_TYPE, AZURE_TYPE, ANSIBLE_TOWER_TYPE } from '../../__mocks__/sourceTypes';
+import sourceTypes, { AMAZON_TYPE, ANSIBLE_TOWER_TYPE, AZURE_TYPE, OPENSHIFT_TYPE } from '../../__mocks__/sourceTypes';
 import applicationTypes, { COST_MANAGEMENT_APP, TOPOLOGY_INV_APP } from '../../__mocks__/applicationTypes';
 import { validatorTypes } from '@data-driven-forms/react-form-renderer';
 
