@@ -122,6 +122,9 @@
       "error",
       "never"
     ],
-    "react/jsx-wrap-multilines": 2
+    "react/jsx-wrap-multilines": 2,
+    "sort-imports": [2, {
+      "ignoreDeclarationSort": true
+    }]
   }
 }
