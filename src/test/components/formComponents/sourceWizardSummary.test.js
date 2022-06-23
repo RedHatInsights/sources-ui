@@ -278,8 +278,8 @@ describe('SourceWizardSummary component', () => {
             source: { name: 'cosi' },
             application: { application_type_id: SUB_WATCH_APP.id },
             source_type: 'azure',
-            authentication: { authtype: emptyAuthType.type },
-            auth_select: 'token',
+            authentication: { authtype: 'lighthouse_subscription_id', username: 'some-subscription-id' },
+            auth_select: 'lighthouse_subscription_id',
           },
         }),
       };
@@ -292,6 +292,7 @@ describe('SourceWizardSummary component', () => {
         ['Name', 'cosi'],
         ['Source type', 'Microsoft Azure'],
         ['Application', 'RHEL management'],
+        ['Subscription ID', 'some-subscription-id'],
       ]);
     });
 
