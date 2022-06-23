@@ -4,6 +4,7 @@ import { screen } from '@testing-library/react';
 
 import * as Cm from '.../../../../components/addSourceWizard/hardcodedComponents/azure/costManagement';
 import RenderContext from '@data-driven-forms/react-form-renderer/renderer-context';
+import Form from '@data-driven-forms/react-form-renderer/form';
 import render from '../../__mocks__/render';
 
 describe('Cost Management Azure steps components', () => {
@@ -32,7 +33,19 @@ describe('Cost Management Azure steps components', () => {
   });
 
   it('Configure Roles description', () => {
-    render(<Cm.ConfigureRolesDescription />);
+    render(
+      <RenderContext.Provider
+        value={{
+          formOptions: {
+            getState: () => ({
+              values: { application: { extra: { subscription_id: 'my-sub-id-1', resource_group: 'my-resource-group-1' } } },
+            }),
+          },
+        }}
+      >
+        <Cm.ConfigureRolesDescription />
+      </RenderContext.Provider>
+    );
 
     expect(
       screen.getByText(
@@ -47,24 +60,30 @@ describe('Cost Management Azure steps components', () => {
       )
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveValue(
-      `az ad sp create-for-rbac -n "CostManagement" --role "Storage Account Contributor" --query '{"tenant": tenant, "client_id": appId, "secret": password}'`
+      `az ad sp create-for-rbac -n "CostManagement" --role "Storage Account Contributor"  --scope /subscriptions/my-sub-id-1/resourceGroups/my-resource-group-1 --query '{"tenant": tenant, "client_id": appId, "secret": password}'`
     );
   });
 
   it('Read Role description', () => {
     render(
-      <RenderContext.Provider
-        value={{ formOptions: { getState: () => ({ values: { application: { extra: { subscription_id: 'my-sub-id-1' } } } }) } }}
-      >
-        <Cm.ReaderRoleDescription />
-      </RenderContext.Provider>
+      <Form onSubmit={jest.fn()}>
+        {() => (
+          <RenderContext.Provider
+            value={{
+              formOptions: { getState: () => ({ values: { authentication: { username: 'some-user-name' } } }) },
+            }}
+          >
+            <Cm.ReaderRoleDescription />
+          </RenderContext.Provider>
+        )}
+      </Form>
     );
 
     expect(
       screen.getByText('Run the following command in Cloud Shell to create a Cost Management Reader role:')
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveValue(
-      `az role assignment create --role "Cost Management Reader" --assignee http://CostManagement --subscription my-sub-id-1`
+      `az role assignment create --assignee "some-user-name" --role "Cost Management Reader"`
     );
   });
 
