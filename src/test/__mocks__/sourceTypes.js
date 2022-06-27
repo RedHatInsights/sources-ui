@@ -316,6 +316,26 @@ export const AZURE_TYPE = {
   schema: {
     authentication: [
       {
+        type: 'lighthouse_subscription_id',
+        name: 'Subscription ID',
+        fields: [
+          {
+            component: 'text-field',
+            name: 'authentication.authtype',
+            hideField: true,
+            initializeOnMount: true,
+            initialValue: 'lighthouse_subscription_id',
+          },
+          {
+            component: 'text-field',
+            name: 'authentication.username',
+            label: 'Subscription ID',
+            isRequired: true,
+            validate: [{ type: 'required' }],
+          },
+        ],
+      },
+      {
         type: 'tenant_id_client_id_client_secret',
         name: 'Tenant ID, Client ID, Client Secret',
         fields: [
