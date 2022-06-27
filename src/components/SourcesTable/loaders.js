@@ -4,7 +4,7 @@ import { RowWrapper } from '@patternfly/react-table';
 import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
 import { Section } from '@redhat-cloud-services/frontend-components/Section';
 
-import { Spinner, Bullseye, Grid, GridItem, Card, CardBody } from '@patternfly/react-core';
+import { Bullseye, Card, CardBody, Grid, GridItem, Spinner } from '@patternfly/react-core';
 
 import { COLUMN_COUNT } from '../../views/sourcesViewDefinition';
 

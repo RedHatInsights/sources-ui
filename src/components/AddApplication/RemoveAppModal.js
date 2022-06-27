@@ -1,9 +1,9 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
 
-import { Text, TextVariants, TextContent, Button, Modal, Title } from '@patternfly/react-core';
+import { Button, Modal, Text, TextContent, TextVariants, Title } from '@patternfly/react-core';
 import ExclamationTriangleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-triangle-icon';
 
 import { useSource } from '../../hooks/useSource';

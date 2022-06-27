@@ -3,18 +3,18 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
 import {
-  Text,
+  Alert,
+  Bullseye,
   Button,
   EmptyState,
-  EmptyStateVariant,
-  EmptyStateIcon,
   EmptyStateBody,
+  EmptyStateIcon,
   EmptyStateSecondaryActions,
-  Bullseye,
-  Title,
-  GridItem,
-  Alert,
+  EmptyStateVariant,
   Grid,
+  GridItem,
+  Text,
+  Title,
 } from '@patternfly/react-core';
 
 import CheckCircleIcon from '@patternfly/react-icons/dist/esm/icons/check-circle-icon';

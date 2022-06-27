@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import {
-  Text,
-  TextVariants,
-  TextContent,
-  TextList,
-  TextListVariants,
-  TextListItem,
   ClipboardCopy,
   Hint,
-  HintTitle,
   HintBody,
+  HintTitle,
+  Text,
+  TextContent,
+  TextList,
+  TextListItem,
+  TextListVariants,
+  TextVariants,
 } from '@patternfly/react-core';
 
 import { HCCM_DOCS_PREFIX } from '../../stringConstants';

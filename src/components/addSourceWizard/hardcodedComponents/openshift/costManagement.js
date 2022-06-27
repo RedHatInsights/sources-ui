@@ -2,7 +2,7 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 import { HCCM_DOCS_PREFIX } from '../../stringConstants';
 
-import { Text, TextVariants, TextContent } from '@patternfly/react-core';
+import { Text, TextContent, TextVariants } from '@patternfly/react-core';
 
 import { bold } from '../../../../utilities/intlShared';
 

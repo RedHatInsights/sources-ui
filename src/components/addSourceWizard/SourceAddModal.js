@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
@@ -7,7 +7,7 @@ import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template'
 import { Wizard } from '@patternfly/react-core';
 
 import createSchema from './SourceAddSchema';
-import { doLoadSourceTypes, doLoadApplicationTypes } from '../../api/wizardHelpers';
+import { doLoadApplicationTypes, doLoadSourceTypes } from '../../api/wizardHelpers';
 import { wizardDescription, wizardTitle } from './stringConstants';
 import filterApps, { filterVendorAppTypes } from '../../utilities/filterApps';
 import filterTypes, { filterVendorTypes } from '../../utilities/filterTypes';

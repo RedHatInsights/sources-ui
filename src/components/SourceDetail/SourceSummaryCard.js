@@ -8,9 +8,9 @@ import {
   CardBody,
   CardTitle,
   DescriptionList,
+  DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
-  DescriptionListDescription,
 } from '@patternfly/react-core';
 
 import { useSource } from '../../hooks/useSource';

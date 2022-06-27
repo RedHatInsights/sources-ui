@@ -4,7 +4,7 @@ import isEmpty from 'lodash/isEmpty';
 import merge from 'lodash/merge';
 import cloneDeep from 'lodash/cloneDeep';
 
-import { getSourcesApi, doCreateApplication } from './entities';
+import { doCreateApplication, getSourcesApi } from './entities';
 import { urlOrHost } from './doUpdateSource';
 import { checkAppAvailability } from '../api/getApplicationStatus';
 import handleError from '../api/handleError';

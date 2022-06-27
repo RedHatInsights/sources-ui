@@ -3,9 +3,9 @@ import { useIntl } from 'react-intl';
 import { shallowEqual, useSelector } from 'react-redux';
 import get from 'lodash/get';
 
-import { Table, TableHeader, TableBody } from '@patternfly/react-table';
+import { Table, TableBody, TableHeader } from '@patternfly/react-table';
 
-import { Card, CardBody, CardTitle, Text, Spinner, Bullseye, Tabs, Tab, TabTitleText, Alert } from '@patternfly/react-core';
+import { Alert, Bullseye, Card, CardBody, CardTitle, Spinner, Tab, TabTitleText, Tabs, Text } from '@patternfly/react-core';
 
 import NoApplications from './NoApplications';
 import { useSource } from '../../hooks/useSource';

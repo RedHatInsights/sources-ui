@@ -3,15 +3,15 @@ import React from 'react';
 import { screen } from '@testing-library/react';
 
 import {
-  nextStep,
-  iconMapper,
   NameDescription,
   SummaryDescription,
-  typesStep,
-  compileAllSourcesComboOptions,
   appMutatorRedHat,
   applicationStep,
   cloudTypesStep,
+  compileAllSourcesComboOptions,
+  iconMapper,
+  nextStep,
+  typesStep,
 } from '../../../components/addSourceWizard/SourceAddSchema';
 import sourceTypes, { OPENSHIFT_TYPE } from '../../__mocks__/sourceTypes';
 import applicationTypes from '../../__mocks__/applicationTypes';

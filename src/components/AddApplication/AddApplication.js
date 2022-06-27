@@ -1,6 +1,6 @@
-import React, { useReducer, useEffect, useRef } from 'react';
-import { useHistory, Link, useParams, Redirect } from 'react-router-dom';
-import { useSelector, useDispatch, shallowEqual } from 'react-redux';
+import React, { useEffect, useReducer, useRef } from 'react';
+import { Link, Redirect, useHistory, useParams } from 'react-router-dom';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import isEmpty from 'lodash/isEmpty';
 
@@ -16,7 +16,7 @@ import { getSourcesApi } from '../../api/entities';
 import { useSource } from '../../hooks/useSource';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
 import { endpointToUrl } from '../../views/formatters';
-import { routes, replaceRouteId } from '../../Routes';
+import { replaceRouteId, routes } from '../../Routes';
 
 import { doAttachApp } from '../../api/doAttachApp';
 import { checkSourceStatus } from '../../api/checkSourceStatus';

@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 
 import {
+  Bullseye,
   Button,
   EmptyState,
-  EmptyStateVariant,
-  EmptyStateIcon,
   EmptyStateBody,
+  EmptyStateIcon,
   EmptyStateSecondaryActions,
-  Bullseye,
-  Title,
+  EmptyStateVariant,
   Spinner,
+  Title,
 } from '@patternfly/react-core';
 
 const LoadingStep = ({ onClose, customText, cancelTitle, description }) => (

@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useSelector, shallowEqual } from 'react-redux';
+import { shallowEqual, useSelector } from 'react-redux';
 
-import { TextList, TextListItem, Text, TextVariants } from '@patternfly/react-core';
+import { Text, TextList, TextListItem, TextVariants } from '@patternfly/react-core';
 
 import { idToName } from './helpers';
 

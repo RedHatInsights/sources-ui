@@ -2,7 +2,7 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 
-import { EmptyState, EmptyStateIcon, EmptyStateBody, Title } from '@patternfly/react-core';
+import { EmptyState, EmptyStateBody, EmptyStateIcon, Title } from '@patternfly/react-core';
 import PrivateIcon from '@patternfly/react-icons/dist/esm/icons/private-icon';
 import { disabledMessage } from '../../utilities/disabledTooltipProps';
 

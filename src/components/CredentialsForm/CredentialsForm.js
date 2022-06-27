@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import { Modal, Spinner, Bullseye } from '@patternfly/react-core';
+import { Bullseye, Modal, Spinner } from '@patternfly/react-core';
 
 import { useSource } from '../../hooks/useSource';
 

@@ -3,7 +3,7 @@ import awesomeDebounce from 'awesome-debounce-promise';
 
 import { AlertActionLink } from '@patternfly/react-core';
 
-import { loadEntities, filterSources, addMessage, removeMessage } from '../../redux/sources/actions';
+import { addMessage, filterSources, loadEntities, removeMessage } from '../../redux/sources/actions';
 import { replaceRouteId, routes } from '../../Routes';
 import { AVAILABLE } from '../../views/formatters';
 import computeSourceStatus from '../../utilities/computeSourceStatus';

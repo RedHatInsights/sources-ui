@@ -4,7 +4,7 @@ import * as checkSourceStatus from '../../../api/checkSourceStatus';
 import * as doUpdateSource from '../../../api/doUpdateSource';
 
 import * as getAppStatus from '../../..//api/getApplicationStatus';
-import { UNAVAILABLE, AVAILABLE, IN_PROGRESS } from '../../../views/formatters';
+import { AVAILABLE, IN_PROGRESS, UNAVAILABLE } from '../../../views/formatters';
 import applicationTypes from '../../__mocks__/applicationTypes';
 
 describe('editSourceModal - on submit', () => {

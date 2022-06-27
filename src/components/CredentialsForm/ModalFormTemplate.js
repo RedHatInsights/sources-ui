@@ -6,7 +6,7 @@ import FormSpy from '@data-driven-forms/react-form-renderer/form-spy';
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 
-import { Modal, ActionGroup, Button, Form } from '@patternfly/react-core';
+import { ActionGroup, Button, Form, Modal } from '@patternfly/react-core';
 
 const CustomFormWrapper = (props) => <Form {...props} id="modal-form" />;
 

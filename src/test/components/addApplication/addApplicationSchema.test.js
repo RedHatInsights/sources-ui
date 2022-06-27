@@ -1,5 +1,5 @@
 import addApplicationSchema, { hasAlreadySupportedAuthType } from '../../../components/AddApplication/AddApplicationSchema';
-import { OPENSHIFT_TYPE, AZURE_TYPE, GOOGLE_TYPE } from '../../__mocks__/sourceTypes';
+import { AZURE_TYPE, GOOGLE_TYPE, OPENSHIFT_TYPE } from '../../__mocks__/sourceTypes';
 import { COST_MANAGEMENT_APP, SUB_WATCH_APP } from '../../__mocks__/applicationTypes';
 
 describe('AddApplicationSchema', () => {
