@@ -20,7 +20,7 @@
     "@patternfly/react-core": "^4.221.3",
     "@patternfly/react-icons": "^4.72.3",
     "@patternfly/react-table": "^4.90.3",
-    "@redhat-cloud-services/frontend-components": "3.9.5",
+    "@redhat-cloud-services/frontend-components": "3.9.6",
     "@redhat-cloud-services/frontend-components-notifications": "3.2.8",
     "@redhat-cloud-services/frontend-components-utilities": "3.2.21",
     "@sentry/minimal": "6.19.7",
