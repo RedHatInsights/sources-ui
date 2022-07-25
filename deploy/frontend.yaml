@@ -13,9 +13,6 @@ objects:
       deploymentRepo: https://github.com/RedHatInsights/sources-ui
       API:
         versions:
-          - v1.0
-          - v2.0
-          - v3.0
           - v3.1
       frontend:
         paths:
