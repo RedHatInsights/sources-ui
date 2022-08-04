@@ -9,7 +9,7 @@ updates:
     timezone: EST
   open-pull-requests-limit: 10
   reviewers:
-  - rvsia
+  - hyperkid123
   allow:
   - dependency-name: "@redhat-cloud-services/frontend*"
   - dependency-name: "@patternfly/*"
