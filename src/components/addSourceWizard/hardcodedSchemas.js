@@ -339,45 +339,36 @@ const hardcodedSchemas = {
           customSteps: true,
           additionalSteps: [
             {
-              title: <FormattedMessage id="subwatch.lighthouse.title" defaultMessage="Configure Azure Lighthouse" />,
-              nextStep: 'subwatch-lighthouse-sub-id',
+              title: <FormattedMessage id="subwatch.azure.tokenTitle" defaultMessage="Obtain offline token" />,
+              nextStep: 'cost-azure-playbook',
+              substepOf: {
+                name: 'eaa',
+                title: <FormattedMessage id="subwatch.azure.substepTitle" defaultMessage="Enable account access" />,
+              },
               fields: [
                 {
                   name: 'azure-1',
                   component: 'description',
-                  Content: SWAzure.LightHouseDescription,
+                  Content: SWAzure.OfflineToken,
                 },
                 {
                   component: componentTypes.TEXT_FIELD,
                   name: 'authentication.authtype',
                   hideField: true,
-                  initialValue: 'lighthouse_subscription_id',
+                  initialValue: emptyAuthType.type,
                   initializeOnMount: true,
-                },
-                {
-                  component: componentTypes.TEXT_FIELD,
-                  name: 'lighthouse-clicked',
-                  hideField: true,
-                  validate: [{ type: 'required' }],
                 },
               ],
             },
             {
-              title: <FormattedMessage id="subwatch.lighthouse.subscriptionId" defaultMessage="Set subscription ID" />,
-              name: 'subwatch-lighthouse-sub-id',
+              title: <FormattedMessage id="subwatch.azure.playbookTitle" defaultMessage="Run Ansible playbook" />,
+              name: 'cost-azure-playbook',
+              substepOf: 'eaa',
               fields: [
                 {
                   name: 'azure-2',
                   component: 'description',
-                  Content: SWAzure.SubscriptionID,
-                },
-                {
-                  component: 'text-field',
-                  name: 'authentication.username',
-                  label: 'Subscription ID',
-                  isRequired: true,
-                  placeholder: '291bba3f-e0a5-47bc-a099-3bdcb2a50a05',
-                  validate: [{ type: 'required' }],
+                  Content: SWAzure.AnsiblePlaybook,
                 },
               ],
             },

@@ -418,7 +418,7 @@ describe('schema builder', () => {
         'azure-3',
         'azure-5',
         'azure-lighthouse_subscription_id-/insights/platform/cloud-meter-additional-step',
-        'subwatch-lighthouse-sub-id',
+        'cost-azure-playbook',
         'azure-tenant_id_client_id_client_secret-/insights/platform/cost-management-additional-step',
         'azure-sub-id',
         'configure-roles',
