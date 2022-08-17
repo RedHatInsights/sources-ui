@@ -42,7 +42,7 @@ describe('AddApplicationSchema', () => {
       'azure-5-lighthouse_subscription_id',
       'summary',
       'azure-lighthouse_subscription_id-/insights/platform/cloud-meter-additional-step',
-      'subwatch-lighthouse-sub-id',
+      'cost-azure-playbook',
     ]);
   });
 

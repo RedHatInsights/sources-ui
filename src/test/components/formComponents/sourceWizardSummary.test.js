@@ -292,7 +292,6 @@ describe('SourceWizardSummary component', () => {
         ['Name', 'cosi'],
         ['Source type', 'Microsoft Azure'],
         ['Application', 'RHEL management'],
-        ['Subscription ID', 'some-subscription-id'],
       ]);
     });
 
