@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react';
+import React, { Suspense, lazy } from 'react';
 
 import { Grid, GridItem } from '@patternfly/react-core';
 

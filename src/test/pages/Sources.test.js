@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, act, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/NotificationPortal';
@@ -8,7 +8,7 @@ import * as utilsHelpers from '@redhat-cloud-services/frontend-components-utilit
 
 import SourcesPageOriginal from '../../pages/Sources';
 
-import { sourcesDataGraphQl, SOURCE_ALL_APS_ID } from '../__mocks__/sourcesData';
+import { SOURCE_ALL_APS_ID, sourcesDataGraphQl } from '../__mocks__/sourcesData';
 import sourceTypes, { AMAZON_TYPE } from '../__mocks__/sourceTypes';
 import applicationTypes, { COST_MANAGEMENT_APP } from '../__mocks__/applicationTypes';
 
@@ -17,7 +17,7 @@ import { componentWrapperIntl } from '../../utilities/testsHelpers';
 import { defaultSourcesState } from '../../redux/sources/reducer';
 import * as api from '../../api/entities';
 import * as typesApi from '../../api/source_types';
-import { routes, replaceRouteId } from '../../Routes';
+import { replaceRouteId, routes } from '../../Routes';
 import * as helpers from '../../pages/Sources/helpers';
 import * as SourceRemoveModal from '../../components/SourceRemoveModal/SourceRemoveModal';
 import * as urlQuery from '../../utilities/urlQuery';
@@ -911,12 +911,44 @@ describe('SourcesPage', () => {
     });
   });
 
-  describe('not org admin', () => {
+  describe('not write permissions', () => {
     beforeEach(() => {
       store = getStore([], {
         sources: {},
         user: { writePermissions: false },
       });
+    });
+
+    it('show different text when org admin', async () => {
+      const user = userEvent.setup({ pointerEventsCheck: false });
+
+      store = getStore([], {
+        sources: {},
+        user: { writePermissions: false, isOrgAdmin: true },
+      });
+
+      render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+
+      expect(api.doLoadEntities).toHaveBeenCalled();
+      expect(api.doLoadAppTypes).toHaveBeenCalled();
+      expect(typesApi.doLoadSourceTypes).toHaveBeenCalled();
+
+      expect(screen.getByText('Add source')).toBeDisabled();
+
+      await act(async () => {
+        await user.click(screen.getByText('Add source'));
+      });
+
+      await user.click(screen.getByText('Add source').closest('.mocked-tooltip'));
+
+      await waitFor(() =>
+        expect(
+          screen.getByText('To add a source, you must add Sources Administrator permissions to your user.')
+        ).toBeInTheDocument()
+      );
+
+      expect(screen.getByTestId('location-display').textContent).toEqual('/');
     });
 
     it('should fetch sources and source types on component mount', async () => {
@@ -935,7 +967,13 @@ describe('SourcesPage', () => {
         await user.click(screen.getByText('Add source'));
       });
 
-      //TODO: have no idea how to trigger the tooltip
+      await user.click(screen.getByText('Add source').closest('.mocked-tooltip'));
+
+      await waitFor(() =>
+        expect(
+          screen.getByText('To add a source, your Organization Administrator must grant you Sources Administrator permissions.')
+        ).toBeInTheDocument()
+      );
 
       expect(screen.getByTestId('location-display').textContent).toEqual('/');
     });
@@ -956,7 +994,13 @@ describe('SourcesPage', () => {
         await user.click(screen.getByText('Add source', { selector: '.pf-c-dropdown__menu-item' }));
       });
 
-      //TODO: have no idea how to trigger the tooltip
+      await user.click(screen.getByText('Add source', { selector: '.pf-c-dropdown__menu-item' }).closest('.mocked-tooltip'));
+
+      await waitFor(() =>
+        expect(
+          screen.getByText('To add a source, your Organization Administrator must grant you Sources Administrator permissions.')
+        ).toBeInTheDocument()
+      );
 
       expect(screen.getByTestId('location-display').textContent).toEqual('/');
     });

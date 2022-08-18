@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Text, TextVariants, TextContent, Badge, Popover, Tooltip, Label, LabelGroup, Button } from '@patternfly/react-core';
+import { Badge, Button, Label, LabelGroup, Popover, Text, TextContent, TextVariants, Tooltip } from '@patternfly/react-core';
 
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';

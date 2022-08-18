@@ -1,4 +1,4 @@
-import { pagination, filtering, sorting, restFilterGenerator } from '../../api/entities';
+import { filtering, pagination, restFilterGenerator, sorting } from '../../api/entities';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../utilities/constants';
 import { AVAILABLE, PARTIALLY_UNAVAILABLE, UNAVAILABLE } from '../../views/formatters';
 

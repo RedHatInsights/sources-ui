@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import { Card, CardBody, CardTitle, Switch, FormGroup, Tooltip } from '@patternfly/react-core';
+import { Card, CardBody, CardTitle, FormGroup, Switch, Tooltip } from '@patternfly/react-core';
 
 import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 import PlayIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
@@ -12,7 +12,7 @@ import { useSource } from '../../hooks/useSource';
 import { replaceRouteId, routes } from '../../Routes';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import isSuperKey from '../../utilities/isSuperKey';
-import { getSourcesApi, doCreateApplication } from '../../api/entities';
+import { doCreateApplication, getSourcesApi } from '../../api/entities';
 import { addMessage, loadEntities } from '../../redux/sources/actions';
 import filterApps from '../../utilities/filterApps';
 import ApplicationKebab from './ApplicationKebab';
@@ -110,6 +110,7 @@ const ApplicationsCard = () => {
   const { push } = useHistory();
   const sourceTypes = useSelector(({ sources }) => sources.sourceTypes, shallowEqual);
   const appTypes = useSelector(({ sources }) => sources.appTypes, shallowEqual);
+  const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
   const hasRightAccess = useHasWritePermissions();
   const dispatch = useDispatch();
   const [{ selectedApps }, stateDispatch] = useReducer(reducer, initialState);
@@ -205,7 +206,7 @@ const ApplicationsCard = () => {
             return (
               <FormGroup key={app.id}>
                 <div className="src-c-application_flex">
-                  <Wrapper {...(!hasRightAccess && { content: disabledMessage(intl) })}>
+                  <Wrapper {...(!hasRightAccess && { content: disabledMessage(intl, isOrgAdmin) })}>
                     <Switch
                       className="src-c-application_switch"
                       id={`app-switch-${app.id}`}

@@ -22,7 +22,7 @@
 
 .src-c-wizard__radio {
   .pf-c-radio:not(:last-child) {
-    margin-bottom: 24px;
+    margin-bottom: var(--pf-global--spacer--lg);
   }
 }
 
@@ -46,6 +46,6 @@
 }
 
 .src-c-wizard--switch-description {
-  font-size: 14px;
-  color:	#6a6e73;
+  color:  #6a6e73;
+  font-size: var(--pf-global--FontSize--sm);
 }

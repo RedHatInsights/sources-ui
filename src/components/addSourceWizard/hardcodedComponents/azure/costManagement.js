@@ -2,14 +2,14 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 
 import {
+  ClipboardCopy,
   Text,
-  TextVariants,
   TextContent,
   TextList,
-  TextListVariants,
   TextListItem,
   TextListItemVariants,
-  ClipboardCopy,
+  TextListVariants,
+  TextVariants,
 } from '@patternfly/react-core';
 
 import { HCCM_DOCS_PREFIX } from '../../stringConstants';

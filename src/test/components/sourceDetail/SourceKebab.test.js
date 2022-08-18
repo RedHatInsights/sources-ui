@@ -59,7 +59,33 @@ describe('SourceKebab', () => {
     await user.hover(screen.getByText('Pause'));
 
     const tooltipText =
-      'To perform this action, you must be granted Sources Administrator permissions from your Organization Administrator.';
+      'To perform this action, your Organization Administrator must grant you Sources Administrator permissions.';
+
+    await waitFor(() => expect(screen.getByText(tooltipText)).toBeInTheDocument());
+  });
+
+  it('renders with no permissions as org admin', async () => {
+    const user = userEvent.setup();
+
+    store = mockStore({
+      sources: {
+        entities: [{ id: sourceId }],
+      },
+      user: { writePermissions: false, isOrgAdmin: true },
+    });
+
+    render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetail.path} render={(...args) => <SourceKebab {...args} />} />,
+        store,
+        initialEntry
+      )
+    );
+
+    await user.click(screen.getByLabelText('Actions'));
+    await user.hover(screen.getByText('Pause'));
+
+    const tooltipText = 'To perform this action, you must add Sources Administrator permissions to your user.';
 
     await waitFor(() => expect(screen.getByText(tooltipText)).toBeInTheDocument());
   });

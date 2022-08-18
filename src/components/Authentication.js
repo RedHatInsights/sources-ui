@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import get from 'lodash/get';
 
 import { FormGroup, TextInput } from '@patternfly/react-core';

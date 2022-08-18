@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import { useParams, Redirect } from 'react-router-dom';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { Redirect, useParams } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 
-import { addMessage, addHiddenSource } from '../../redux/sources/actions';
+import { addHiddenSource, addMessage } from '../../redux/sources/actions';
 import { doLoadSource } from '../../api/entities';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
 import { routes } from '../../Routes';

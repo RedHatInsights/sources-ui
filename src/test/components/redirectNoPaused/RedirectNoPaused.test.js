@@ -4,7 +4,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import RedirectNoPaused from '../../../components/RedirectNoPaused/RedirectNoPaused';
 import * as actions from '../../../redux/sources/actions';
-import { routes, replaceRouteId } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routes';
 import mockStore from '../../__mocks__/mockStore';
 
 describe('RedirectNoPaused', () => {

@@ -4,13 +4,13 @@ import userEvent from '@testing-library/user-event';
 import {
   afterSuccess,
   afterSuccessLoadParameters,
+  checkSubmit,
   chipsFormatters,
-  prepareSourceTypeSelection,
-  removeChips,
-  prepareChips,
   loadedTypes,
   prepareApplicationTypeSelection,
-  checkSubmit,
+  prepareChips,
+  prepareSourceTypeSelection,
+  removeChips,
 } from '../../../pages/Sources/helpers';
 
 import * as actions from '../../../redux/sources/actions';

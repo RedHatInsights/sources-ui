@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-import { render, screen, act } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 
 import Detail from '../../pages/Detail';
 import * as RedirectNoId from '../../components/RedirectNoId/RedirectNoId';
@@ -147,6 +147,7 @@ describe('SourceDetail', () => {
           },
         ],
       },
+      user: {},
     });
 
     render(

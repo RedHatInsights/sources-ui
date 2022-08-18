@@ -1,6 +1,6 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useSource } from '../../hooks/useSource';
 
 import { Alert, AlertActionLink, GridItem, Tooltip } from '@patternfly/react-core';
@@ -15,6 +15,7 @@ const PauseAlert = () => {
   const writePermissions = useHasWritePermissions();
   const dispatch = useDispatch();
   const source = useSource();
+  const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
 
   return (
     <GridItem md={12} className="pf-u-m-lg pf-u-mb-0">
@@ -35,7 +36,7 @@ const PauseAlert = () => {
               })}
             </AlertActionLink>
           ) : (
-            <Tooltip content={disabledMessage(intl)}>
+            <Tooltip content={disabledMessage(intl, isOrgAdmin)}>
               <AlertActionLink isDisabled>
                 {intl.formatMessage({
                   id: 'source.detail.resumeConnection',

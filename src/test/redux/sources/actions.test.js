@@ -4,29 +4,29 @@ import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 import PlayIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
 
 import {
-  removeMessage,
   addHiddenSource,
-  pageAndSize,
-  loadEntities,
-  sortEntities,
-  removeSource,
-  filterSources,
   clearFilters,
-  removeApplication,
+  filterSources,
+  loadEntities,
   loadSourceTypes,
-  renameSource,
-  setActiveCategory,
+  pageAndSize,
   pauseSource,
+  removeApplication,
+  removeMessage,
+  removeSource,
+  renameSource,
   resumeSource,
+  setActiveCategory,
+  sortEntities,
 } from '../../../redux/sources/actions';
 import {
-  ADD_HIDDEN_SOURCE,
-  PAGE_AND_SIZE,
   ACTION_TYPES,
-  SORT_ENTITIES,
-  FILTER_SOURCES,
+  ADD_HIDDEN_SOURCE,
   CLEAR_FILTERS,
+  FILTER_SOURCES,
+  PAGE_AND_SIZE,
   SET_CATEGORY,
+  SORT_ENTITIES,
 } from '../../../redux/sources/actionTypes';
 import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications';
 import * as api from '../../../api/entities';

@@ -6,7 +6,7 @@ import { Route } from 'react-router-dom';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import SourceEditModal from '../../../components/SourceEditForm/SourceEditModal';
-import { routes, replaceRouteId } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routes';
 import appTypes, { CATALOG_APP, TOPOLOGY_INV_APP } from '../../__mocks__/applicationTypes';
 import sourceTypes, { ANSIBLE_TOWER_TYPE } from '../../__mocks__/sourceTypes';
 

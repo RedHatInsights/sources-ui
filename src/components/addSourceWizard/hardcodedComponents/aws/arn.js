@@ -3,18 +3,18 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
 import {
-  Text,
-  TextVariants,
-  TextContent,
   Button,
   ButtonVariant,
-  Popover,
-  TextList,
-  TextListVariants,
-  TextListItem,
-  TextListItemVariants,
   ClipboardCopy,
   ClipboardCopyVariant,
+  Popover,
+  Text,
+  TextContent,
+  TextList,
+  TextListItem,
+  TextListItemVariants,
+  TextListVariants,
+  TextVariants,
 } from '@patternfly/react-core';
 
 import QuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/question-circle-icon';

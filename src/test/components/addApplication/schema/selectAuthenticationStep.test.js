@@ -4,7 +4,7 @@ import selectAuthenticationStep, {
   SelectAuthenticationDescription,
 } from '../../../../components/AddApplication/schema/selectAuthenticationStep';
 
-import applicationTypes, { TOPOLOGY_INV_APP, COST_MANAGEMENT_APP } from '../../../__mocks__/applicationTypes';
+import applicationTypes, { COST_MANAGEMENT_APP, TOPOLOGY_INV_APP } from '../../../__mocks__/applicationTypes';
 import { AMAZON_TYPE } from '../../../__mocks__/sourceTypes';
 import { AuthTypeSetter } from '../../../../components/AddApplication/AuthTypeSetter';
 import { IntlProvider } from 'react-intl';

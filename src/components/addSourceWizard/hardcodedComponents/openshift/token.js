@@ -1,7 +1,7 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 
-import { Text, TextVariants, TextContent, TextList, TextListItem, ClipboardCopy } from '@patternfly/react-core';
+import { ClipboardCopy, Text, TextContent, TextList, TextListItem, TextVariants } from '@patternfly/react-core';
 
 export const DescriptionSummary = () => {
   const intl = useIntl();

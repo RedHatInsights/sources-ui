@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, createEvent } from '@testing-library/react';
+import { createEvent, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { AwsIcon, OpenshiftIcon } from '@patternfly/react-icons';

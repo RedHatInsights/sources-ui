@@ -12,9 +12,9 @@
 
 # Updating Add Source Wizard
 
-The Add Source Wizard is using several repositories as sources for information. Firstly, all source and application types are strictly defined in [Sources API repository](https://github.com/RedHatInsights/sources-api/tree/master/db/seeds).
+The Add Source Wizard is using several repositories as sources for information. Firstly, all source and application types are strictly defined in [Sources API repository](https://github.com/RedHatInsights/sources-api-go/tree/main/dao/seeds).
 
-## [Source types](https://github.com/RedHatInsights/sources-api/blob/master/db/seeds/source_types.yml)
+## [Source types](https://github.com/RedHatInsights/sources-api-go/blob/main/dao/seeds/source_types.yml)
 
 This YAML file defines source types for both backend and frontend.
 
@@ -22,7 +22,9 @@ Each type is identified by name (`amazon`), this name has to be unique. (Please,
 
 `product_name` defines the name for the UI.
 
-There is also `vendor` key for the identification of the type's vendor. This value is not shown in the UI, but is used to split the UI to two sections: **Cloud sources** and **Red Hat sources**. Red Hat sources are sources of type with vendor = `Red Hat`. Cloud sources are all other types. The wizard determines what Sources to show depending on a URL query: `?activeVendor=Red Hat|Cloud`.
+There is also `vendor` key for the identification of the type's vendor. This value is not shown in the UI.
+
+`category` is currently used to split the UI to two sections: **Cloud sources** and **Red Hat sources**. The wizard determines what Sources to show depending on a URL query: `?category=Red Hat|Cloud`.
 
 `icon_url` is a URL leading to images in [Insights Frontend Assets](https://github.com/RedHatInsights/frontend-assets) repository. If you need to add/change/remove some icon, please do it there. The UI has no hardcoded images.
 
@@ -74,9 +76,7 @@ How to setup predefined values? Each authentication type needs at least one pre-
 
 Each time this 'hidden' field is used in the UI, the value 'authtype' is set to 'token'. Users cannot see this value, they cannot edit it.
 
-*Notes: Topological Inventory is now **hidden** in the UI.*
-
-## [Application types](https://github.com/RedHatInsights/sources-api/blob/master/db/seeds/application_types.yml)
+## [Application types](https://github.com/RedHatInsights/sources-api-go/blob/main/dao/seeds/application_types.yml)
 
 An application type is defined by several basic attributes:
 
@@ -217,7 +217,7 @@ If you want to add an additional API endpoint for application-specific values, p
 
 # Quick check-list
 
-- [ ] Check API definition - [Sources API](https://github.com/RedHatInsights/sources-api/tree/master/db/seeds)
+- [ ] Check API definition - [Sources API](https://github.com/RedHatInsights/sources-api-go/tree/main/dao/seeds)
 - [ ] Update [hardcoded schemas](https://github.com/RedHatInsights/sources-ui/blob/master/src/components/addSourceWizard/hardcodedSchemas.js)
   - [ ] Authtype is always selected
   - [ ] Users can switch between source/app types and the wizard should always work

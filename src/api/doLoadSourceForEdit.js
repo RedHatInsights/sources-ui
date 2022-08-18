@@ -1,4 +1,4 @@
-import { getSourcesApi, doLoadApplicationsForEdit } from './entities';
+import { doLoadApplicationsForEdit, getSourcesApi } from './entities';
 
 export const doLoadSourceForEdit = (source) =>
   Promise.all([

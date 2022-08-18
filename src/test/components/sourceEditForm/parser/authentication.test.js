@@ -1,15 +1,15 @@
-import { validatorTypes, componentTypes } from '@data-driven-forms/react-form-renderer';
+import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
 
 import {
-  createAuthFieldName,
-  getLastPartOfName,
-  getEnhancedAuthField,
-  getAdditionalAuthStepsKeys,
   authenticationFields,
+  createAuthAppFieldName,
+  createAuthFieldName,
+  getAdditionalAuthSteps,
+  getAdditionalAuthStepsKeys,
+  getEnhancedAuthField,
+  getLastPartOfName,
   modifyAuthSchemas,
   removeRequiredValidator,
-  getAdditionalAuthSteps,
-  createAuthAppFieldName,
 } from '../../../../components/SourceEditForm/parser/authentication';
 
 jest.mock('../../../../components/addSourceWizard/hardcodedSchemas', () => ({

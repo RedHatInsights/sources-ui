@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import { SATELLITE_NAME, ANSIBLE_TOWER_NAME } from '../../utilities/constants';
+import { ANSIBLE_TOWER_NAME, SATELLITE_NAME } from '../../utilities/constants';
 
 export const idToName = (id, appTypes) => appTypes.find((app) => app.id === id)?.display_name || 'Unknown';
 

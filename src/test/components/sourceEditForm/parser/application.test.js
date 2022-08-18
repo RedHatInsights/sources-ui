@@ -4,7 +4,7 @@ import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-i
 import ResourcesEmptyState from '../../../../components/SourceDetail/ResourcesEmptyState';
 import { applicationsFields } from '../../../../components/SourceEditForm/parser/application';
 import EditAlert from '../../../../components/SourceEditForm/parser/EditAlert';
-import applicationTypes, { COST_MANAGEMENT_APP, CATALOG_APP } from '../../../__mocks__/applicationTypes';
+import applicationTypes, { CATALOG_APP, COST_MANAGEMENT_APP } from '../../../__mocks__/applicationTypes';
 import { GOOGLE_TYPE } from '../../../__mocks__/sourceTypes';
 
 jest.mock('../../../../components/addSourceWizard/hardcodedSchemas', () => ({

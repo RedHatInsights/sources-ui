@@ -6,7 +6,7 @@ import { Route } from 'react-router-dom';
 
 import RemoveAppModal from '../../../components/AddApplication/RemoveAppModal';
 import * as actions from '../../../redux/sources/actions';
-import { routes, replaceRouteId } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import mockStore from '../../__mocks__/mockStore';
 

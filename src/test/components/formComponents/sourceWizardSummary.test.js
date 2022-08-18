@@ -271,15 +271,15 @@ describe('SourceWizardSummary component', () => {
       ).toBeInTheDocument();
     });
 
-    it('azure rhel management - include error message', () => {
+    it('azure rhel management', () => {
       formOptions = {
         getState: () => ({
           values: {
             source: { name: 'cosi' },
             application: { application_type_id: SUB_WATCH_APP.id },
             source_type: 'azure',
-            authentication: { authtype: emptyAuthType.type },
-            auth_select: 'token',
+            authentication: { authtype: 'lighthouse_subscription_id', username: 'some-subscription-id' },
+            auth_select: 'lighthouse_subscription_id',
           },
         }),
       };
@@ -293,11 +293,6 @@ describe('SourceWizardSummary component', () => {
         ['Source type', 'Microsoft Azure'],
         ['Application', 'RHEL management'],
       ]);
-
-      expect(screen.getByText('This source will not be monitored in Sources')).toBeInTheDocument();
-      expect(
-        screen.getByText('This source will be represented in the Sources list, but will not reflect true status or resources.')
-      ).toBeInTheDocument();
     });
 
     it('google rhel management - include error message', () => {

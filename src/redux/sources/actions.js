@@ -6,15 +6,15 @@ import PlayIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
 import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications/redux';
 import {
   ACTION_TYPES,
-  SORT_ENTITIES,
-  PAGE_AND_SIZE,
-  FILTER_SOURCES,
   ADD_APP_TO_SOURCE,
   ADD_HIDDEN_SOURCE,
   CLEAR_FILTERS,
+  FILTER_SOURCES,
+  PAGE_AND_SIZE,
   SET_CATEGORY,
+  SORT_ENTITIES,
 } from './actionTypes';
-import { doLoadAppTypes, doRemoveSource, doLoadEntities, doDeleteApplication, getSourcesApi } from '../../api/entities';
+import { doDeleteApplication, doLoadAppTypes, doLoadEntities, doRemoveSource, getSourcesApi } from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
 import { bold } from '../../utilities/intlShared';
 import handleError from '../../api/handleError';
