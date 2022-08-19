@@ -6,7 +6,7 @@ import { Text, TextContent, TextVariants } from '@patternfly/react-core';
 
 import { bold } from '../../../../utilities/intlShared';
 
-const INSTALL_PREREQUISITE = `${HCCM_DOCS_PREFIX}/html-single/adding_an_openshift_container_platform_source_to_cost_management`;
+const INSTALL_PREREQUISITE = `${HCCM_DOCS_PREFIX}/html/adding_an_openshift_container_platform_source_to_cost_management/assembly-adding-openshift-container-platform-source#installing-cost-operator_adding-an-ocp-source`;
 
 export const ConfigureCostOperator = () => {
   const intl = useIntl();
