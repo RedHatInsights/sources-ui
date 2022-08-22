@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, CardBody, CardFooter, Button } from '@patternfly/react-core';
+import { Button, Card, CardBody, CardFooter } from '@patternfly/react-core';
 
 import MarketplaceModal from './MarketplaceModal';
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
-import { Text, TextContent, Button, Wizard } from '@patternfly/react-core';
+import { Button, Text, TextContent, Wizard } from '@patternfly/react-core';
 
 import { wizardDescription, wizardTitle } from './stringConstants';
 import { getSourcesApi } from '../../api/entities';

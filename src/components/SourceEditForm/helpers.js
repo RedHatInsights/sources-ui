@@ -1,7 +1,7 @@
 import get from 'lodash/get';
 import set from 'lodash/set';
 
-import { endpointToUrl, UNAVAILABLE } from '../../views/formatters';
+import { UNAVAILABLE, endpointToUrl } from '../../views/formatters';
 import { pausedAppAlert } from '../../utilities/alerts';
 
 export const CHECK_ENDPOINT_COMMAND = 'check-endpoint';

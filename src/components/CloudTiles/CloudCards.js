@@ -3,15 +3,15 @@ import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import {
+  Card,
+  CardBody,
+  CardExpandableContent,
+  CardHeader,
+  CardTitle,
   Grid,
   GridItem,
   Stack,
   StackItem,
-  Card,
-  CardBody,
-  CardTitle,
-  CardHeader,
-  CardExpandableContent,
   Text,
   TextContent,
 } from '@patternfly/react-core';

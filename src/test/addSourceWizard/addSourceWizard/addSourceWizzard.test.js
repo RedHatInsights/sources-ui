@@ -1,5 +1,5 @@
 import React from 'react';
-import { screen, act, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { AddSourceWizard } from '../../../components/addSourceWizard/index';
@@ -10,7 +10,7 @@ import * as dependency from '../../../api/wizardHelpers';
 import * as createSource from '../../../api/createSource';
 
 import render from '../__mocks__/render';
-import { CLOUD_VENDOR, REDHAT_VENDOR, GOOGLE_NAME } from '../../../utilities/constants';
+import { CLOUD_VENDOR, GOOGLE_NAME, REDHAT_VENDOR } from '../../../utilities/constants';
 
 describe('AddSourceWizard', () => {
   let initialProps;

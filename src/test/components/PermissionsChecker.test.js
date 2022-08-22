@@ -8,6 +8,7 @@ describe('PermissionChecker', () => {
   it('load write permission on mount', async () => {
     const Children = () => <h1>App</h1>;
     actions.loadWritePermissions = jest.fn().mockImplementation(() => ({ type: 'type' }));
+    actions.loadOrgAdmin = jest.fn().mockImplementation(() => ({ type: 'type' }));
 
     render(
       componentWrapperIntl(
@@ -19,5 +20,6 @@ describe('PermissionChecker', () => {
 
     expect(screen.getByText('App')).toBeInTheDocument();
     expect(actions.loadWritePermissions).toHaveBeenCalled();
+    expect(actions.loadOrgAdmin).toHaveBeenCalled();
   });
 });

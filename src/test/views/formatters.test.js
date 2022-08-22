@@ -3,42 +3,42 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import {
-  nameFormatter,
-  dateFormatter,
-  sourceTypeFormatter,
-  applicationFormatter,
-  importedFormatter,
-  formatURL,
-  sourceIsOpenShift,
-  defaultPort,
-  schemaToPort,
-  endpointToUrl,
-  importsTexts,
-  availabilityFormatter,
-  getStatusText,
-  getStatusTooltipText,
-  formatAvailibilityErrors,
-  getAllErrors,
   AVAILABLE,
-  PARTIALLY_UNAVAILABLE,
-  UNAVAILABLE,
-  UnknownError,
-  getStatusColor,
-  configurationModeFormatter,
-  IN_PROGRESS,
   ApplicationLabel,
+  IN_PROGRESS,
+  PARTIALLY_UNAVAILABLE,
   PAUSED,
   RHELAZURE,
+  UNAVAILABLE,
+  UnknownError,
+  applicationFormatter,
+  availabilityFormatter,
+  configurationModeFormatter,
+  dateFormatter,
+  defaultPort,
+  endpointToUrl,
+  formatAvailibilityErrors,
+  formatURL,
+  getAllErrors,
+  getStatusColor,
+  getStatusText,
+  getStatusTooltipText,
+  importedFormatter,
+  importsTexts,
+  nameFormatter,
+  schemaToPort,
+  sourceIsOpenShift,
+  sourceTypeFormatter,
 } from '../../views/formatters';
-import sourceTypes, { OPENSHIFT_TYPE, AMAZON_TYPE, AZURE_TYPE, GOOGLE_TYPE } from '../__mocks__/sourceTypes';
+import sourceTypes, { AMAZON_TYPE, AZURE_TYPE, GOOGLE_TYPE, OPENSHIFT_TYPE } from '../__mocks__/sourceTypes';
 import {
-  sourcesDataGraphQl,
-  SOURCE_CATALOGAPP_INDEX,
   SOURCE_ALL_APS_INDEX,
-  SOURCE_NO_APS_INDEX,
+  SOURCE_CATALOGAPP_INDEX,
   SOURCE_ENDPOINT_URL_INDEX,
+  SOURCE_NO_APS_INDEX,
+  sourcesDataGraphQl,
 } from '../__mocks__/sourcesData';
-import appTypes, { TOPOLOGY_INV_APP, COST_MANAGEMENT_APP, CATALOG_APP, SUB_WATCH_APP } from '../__mocks__/applicationTypes';
+import appTypes, { CATALOG_APP, COST_MANAGEMENT_APP, SUB_WATCH_APP, TOPOLOGY_INV_APP } from '../__mocks__/applicationTypes';
 
 import { IntlProvider } from 'react-intl';
 import { componentWrapperIntl } from '../../utilities/testsHelpers';

@@ -5,7 +5,7 @@ import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
 
-import { Text, TextVariants, TextContent } from '@patternfly/react-core';
+import { Text, TextContent, TextVariants } from '@patternfly/react-core';
 
 import debouncePromise from '../../utilities/debouncePromise';
 import { findSource } from '../../api/wizardHelpers';

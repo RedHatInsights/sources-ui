@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import {
-  Label,
   Alert,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
+  Label,
 } from '@patternfly/react-core';
 
 import get from 'lodash/get';
@@ -17,7 +17,7 @@ import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 
 import ValuePopover from './ValuePopover';
 import hardcodedSchemas from '../../components/addSourceWizard/hardcodedSchemas';
-import { COST_MANAGEMENT_APP_NAME, CLOUD_METER_APP_NAME } from '../../utilities/constants';
+import { CLOUD_METER_APP_NAME, COST_MANAGEMENT_APP_NAME } from '../../utilities/constants';
 import { NO_APPLICATION_VALUE } from '../../components/addSourceWizard/stringConstants';
 import {
   getAdditionalSteps,
@@ -43,7 +43,7 @@ const alertMapper = (appName, sourceType, intl) => {
     );
   }
 
-  if (appName === CLOUD_METER_APP_NAME && ['azure', 'google'].includes(sourceType)) {
+  if (appName === CLOUD_METER_APP_NAME && ['google'].includes(sourceType)) {
     return (
       <Alert
         variant="info"

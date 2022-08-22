@@ -1,21 +1,21 @@
 import {
-  injectAuthFieldsInfo,
-  injectEndpointFieldsInfo,
+  createAdditionalSteps,
+  createAuthTypeSelection,
+  createEndpointStep,
   getAdditionalAuthFields,
   getAdditionalEndpointFields,
-  createEndpointStep,
-  createAdditionalSteps,
-  schemaBuilder,
   getAdditionalStepFields,
-  getNoStepsFields,
-  getAdditionalSteps,
-  shouldSkipSelection,
   getAdditionalStepKeys,
-  createAuthTypeSelection,
+  getAdditionalSteps,
+  getNoStepsFields,
+  injectAuthFieldsInfo,
+  injectEndpointFieldsInfo,
+  schemaBuilder,
+  shouldSkipSelection,
   shouldUseAppAuth,
 } from '../../../components/addSourceWizard/schemaBuilder';
 import hardcodedSchemas from '../../../components/addSourceWizard/hardcodedSchemas';
-import sourceTypes, { AMAZON_TYPE, OPENSHIFT_TYPE, AZURE_TYPE, ANSIBLE_TOWER_TYPE } from '../../__mocks__/sourceTypes';
+import sourceTypes, { AMAZON_TYPE, ANSIBLE_TOWER_TYPE, AZURE_TYPE, OPENSHIFT_TYPE } from '../../__mocks__/sourceTypes';
 import applicationTypes, { COST_MANAGEMENT_APP, TOPOLOGY_INV_APP } from '../../__mocks__/applicationTypes';
 import { validatorTypes } from '@data-driven-forms/react-form-renderer';
 
@@ -316,7 +316,7 @@ describe('schema builder', () => {
 
     describe('createAuthTypeSelection', () => {
       it('generate single selection', () => {
-        const fields = AZURE_TYPE.schema.authentication[0].fields.filter(({ stepKey }) => !stepKey);
+        const fields = AZURE_TYPE.schema.authentication[1].fields.filter(({ stepKey }) => !stepKey);
         const expectedName = `${AZURE_TYPE.name}-${TOPOLOGY_INV_APP.id}`;
 
         expectedSchema = expect.objectContaining({
@@ -342,7 +342,7 @@ describe('schema builder', () => {
       });
 
       it('generate single selection with endpoints', () => {
-        const fields = AZURE_TYPE.schema.authentication[0].fields.filter(({ stepKey }) => !stepKey);
+        const fields = AZURE_TYPE.schema.authentication[1].fields.filter(({ stepKey }) => !stepKey);
         const expectedName = `${AZURE_TYPE.name}-${TOPOLOGY_INV_APP.id}`;
 
         expectedSchema = expect.objectContaining({
@@ -417,12 +417,12 @@ describe('schema builder', () => {
         'azure-2',
         'azure-3',
         'azure-5',
+        'azure-lighthouse_subscription_id-/insights/platform/cloud-meter-additional-step',
+        'cost-azure-playbook',
         'azure-tenant_id_client_id_client_secret-/insights/platform/cost-management-additional-step',
         'azure-sub-id',
         'configure-roles',
         'export-schedule',
-        'azure-empty-/insights/platform/cloud-meter-additional-step',
-        'cost-azure-playbook',
         'google-generic',
         'google-2',
         'google-5',

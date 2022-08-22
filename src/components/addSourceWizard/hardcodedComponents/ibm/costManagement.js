@@ -4,14 +4,14 @@ import { useIntl } from 'react-intl';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 
 import {
-  Text,
-  TextVariants,
-  TextContent,
   ClipboardCopy,
-  Title,
-  InputGroup,
-  TextArea,
   ClipboardCopyButton,
+  InputGroup,
+  Text,
+  TextArea,
+  TextContent,
+  TextVariants,
+  Title,
   clipboardCopyFunc,
 } from '@patternfly/react-core';
 

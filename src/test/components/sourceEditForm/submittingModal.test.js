@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { Route } from 'react-router-dom';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import { routes, replaceRouteId } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routes';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
 
 import SubmittingModal from '../../../components/SourceEditForm/SubmittingModal';

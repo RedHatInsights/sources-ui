@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
-import { Spinner, FormHelperText } from '@patternfly/react-core';
+import { FormHelperText, Spinner } from '@patternfly/react-core';
 
 import FormSpy from '@data-driven-forms/react-form-renderer/form-spy';
 

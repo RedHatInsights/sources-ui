@@ -1,12 +1,12 @@
 import React, { useEffect, useReducer } from 'react';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { Table, TableHeader, TableBody, sortable, wrappable } from '@patternfly/react-table';
+import { Table, TableBody, TableHeader, sortable, wrappable } from '@patternfly/react-table';
 import { useIntl } from 'react-intl';
 
 import { pauseSource, resumeSource, sortEntities } from '../../redux/sources/actions';
 import { PlaceHolderTable, RowWrapperLoader } from './loaders';
-import { sourcesColumns, COLUMN_COUNT } from '../../views/sourcesViewDefinition';
+import { COLUMN_COUNT, sourcesColumns } from '../../views/sourcesViewDefinition';
 import EmptyStateTable from './EmptyStateTable';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
@@ -65,8 +65,8 @@ const initialState = (columns) => ({
   key: 0,
 });
 
-export const actionResolver = (intl, push, hasWritePermissions, dispatch) => (rowData) => {
-  const disabledProps = disabledTooltipProps(intl);
+export const actionResolver = (intl, push, hasWritePermissions, dispatch, isOrgAdmin) => (rowData) => {
+  const disabledProps = disabledTooltipProps(intl, isOrgAdmin);
   const actions = [];
 
   if (rowData.paused_at) {
@@ -133,6 +133,7 @@ const SourcesTable = () => {
 
   const loaded = useIsLoaded();
   const writePermissions = useHasWritePermissions();
+  const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
 
   const {
     appTypes,
@@ -229,7 +230,9 @@ const SourcesTable = () => {
       key={state.key}
       rows={shownRows}
       cells={state.cells}
-      actionResolver={loaded && numberOfEntities > 0 ? actionResolver(intl, push, writePermissions, reduxDispatch) : undefined}
+      actionResolver={
+        loaded && numberOfEntities > 0 ? actionResolver(intl, push, writePermissions, reduxDispatch, isOrgAdmin) : undefined
+      }
       rowWrapper={RowWrapperLoader}
       className={numberOfEntities === 0 && state.isLoaded ? 'ins-c-table-empty-state' : ''}
     >

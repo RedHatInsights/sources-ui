@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { FormGroup, GridItem, Tile, Grid } from '@patternfly/react-core';
+import { FormGroup, Grid, GridItem, Tile } from '@patternfly/react-core';
 
 import useFieldApi from '@data-driven-forms/react-form-renderer/use-field-api';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';

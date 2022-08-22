@@ -1,7 +1,7 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 
-import { Text, TextVariants, TextContent, TextList, TextListVariants, TextListItem, ClipboardCopy } from '@patternfly/react-core';
+import { ClipboardCopy, Text, TextContent, TextList, TextListItem, TextListVariants, TextVariants } from '@patternfly/react-core';
 
 const API_LINK = 'https://access.redhat.com/management/api';
 

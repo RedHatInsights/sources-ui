@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { configureScope, captureException } from '@sentry/minimal';
+import { captureException, configureScope } from '@sentry/minimal';
 
 export async function authInterceptor(config) {
   await window.insights.chrome.auth.getUser();

@@ -332,7 +332,7 @@ const hardcodedSchemas = {
           },
         },
       },
-      [emptyAuthType.type]: {
+      lighthouse_subscription_id: {
         [CLOUD_METER_APP_NAME]: {
           skipSelection: true,
           useApplicationAuth: true,

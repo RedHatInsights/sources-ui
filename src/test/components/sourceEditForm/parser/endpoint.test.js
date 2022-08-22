@@ -1,4 +1,4 @@
-import { getEnhancedEndpointField, endpointFields } from '../../../../components/SourceEditForm/parser/endpoint';
+import { endpointFields, getEnhancedEndpointField } from '../../../../components/SourceEditForm/parser/endpoint';
 import { componentTypes } from '@data-driven-forms/react-form-renderer';
 
 jest.mock('../../../../components/addSourceWizard/hardcodedSchemas', () => ({

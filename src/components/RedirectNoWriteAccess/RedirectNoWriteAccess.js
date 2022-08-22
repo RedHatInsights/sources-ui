@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 
@@ -12,6 +12,7 @@ const RedirectNoWriteAccess = () => {
   const intl = useIntl();
 
   const writePermissions = useHasWritePermissions();
+  const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
 
   const dispatch = useDispatch();
 
@@ -21,7 +22,7 @@ const RedirectNoWriteAccess = () => {
         id: 'sources.insufficietnPerms',
         defaultMessage: 'Insufficient permissions',
       });
-      const description = disabledMessage(intl);
+      const description = disabledMessage(intl, isOrgAdmin);
 
       dispatch(addMessage({ title, variant: 'danger', description }));
     }

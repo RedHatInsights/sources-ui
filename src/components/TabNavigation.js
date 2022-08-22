@@ -2,7 +2,7 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Tabs, Tab, TabTitleIcon, TabTitleText } from '@patternfly/react-core';
+import { Tab, TabTitleIcon, TabTitleText, Tabs } from '@patternfly/react-core';
 import RedhatIcon from '@patternfly/react-icons/dist/esm/icons/redhat-icon';
 import CloudIcon from '@patternfly/react-icons/dist/esm/icons/cloud-icon';
 

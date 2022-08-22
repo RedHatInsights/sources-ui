@@ -1,5 +1,5 @@
 import addApplicationSchema, { hasAlreadySupportedAuthType } from '../../../components/AddApplication/AddApplicationSchema';
-import { OPENSHIFT_TYPE, AZURE_TYPE } from '../../__mocks__/sourceTypes';
+import { AZURE_TYPE, GOOGLE_TYPE, OPENSHIFT_TYPE } from '../../__mocks__/sourceTypes';
 import { COST_MANAGEMENT_APP, SUB_WATCH_APP } from '../../__mocks__/applicationTypes';
 
 describe('AddApplicationSchema', () => {
@@ -31,7 +31,7 @@ describe('AddApplicationSchema', () => {
     ]);
   });
 
-  it('azure+rhel management schema (empty auth type)', () => {
+  it('azure+rhel management schema', () => {
     const source = {
       source_type_id: AZURE_TYPE.id,
     };
@@ -39,10 +39,25 @@ describe('AddApplicationSchema', () => {
     const result = addApplicationSchema(intl, AZURE_TYPE, SUB_WATCH_APP, authenticationValues, source, TITLE, DESCRIPTION);
 
     expect(result.fields[0].fields.map(({ name }) => name)).toEqual([
-      'azure-5-empty',
+      'azure-5-lighthouse_subscription_id',
       'summary',
-      'azure-empty-/insights/platform/cloud-meter-additional-step',
+      'azure-lighthouse_subscription_id-/insights/platform/cloud-meter-additional-step',
       'cost-azure-playbook',
+    ]);
+  });
+
+  it('google+rhel management schema (empty auth type)', () => {
+    const source = {
+      source_type_id: GOOGLE_TYPE.id,
+    };
+
+    const result = addApplicationSchema(intl, GOOGLE_TYPE, SUB_WATCH_APP, authenticationValues, source, TITLE, DESCRIPTION);
+
+    expect(result.fields[0].fields.map(({ name }) => name)).toEqual([
+      'google-5-empty',
+      'summary',
+      'google-empty-/insights/platform/cloud-meter-additional-step',
+      'cost-google-playbook',
     ]);
   });
 

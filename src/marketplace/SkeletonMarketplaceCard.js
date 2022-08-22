@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardTitle, CardBody, CardFooter, Skeleton } from '@patternfly/react-core';
+import { Card, CardBody, CardFooter, CardTitle, Skeleton } from '@patternfly/react-core';
 
 const SkeletonMarketplaceCard = () => (
   <Card isFlat className="marketplace-card">

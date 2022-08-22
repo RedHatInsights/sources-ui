@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import {
-  Text,
-  TextVariants,
-  TextContent,
-  TextList,
-  TextListVariants,
-  TextListItem,
   ClipboardCopy,
   ClipboardCopyVariant,
+  Text,
+  TextContent,
+  TextList,
+  TextListItem,
+  TextListVariants,
+  TextVariants,
 } from '@patternfly/react-core';
 
 import { getSubWatchConfig } from '../../../../api/subscriptionWatch';

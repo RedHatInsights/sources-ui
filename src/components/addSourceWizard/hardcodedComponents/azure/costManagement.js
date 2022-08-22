@@ -2,23 +2,23 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 
 import {
+  ClipboardCopy,
   Text,
-  TextVariants,
   TextContent,
   TextList,
-  TextListVariants,
   TextListItem,
   TextListItemVariants,
-  ClipboardCopy,
+  TextListVariants,
+  TextVariants,
 } from '@patternfly/react-core';
 
 import { HCCM_DOCS_PREFIX } from '../../stringConstants';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 import FormSpy from '@data-driven-forms/react-form-renderer/form-spy';
 
-const CREATE_AZURE_STORAGE = `${HCCM_DOCS_PREFIX}/html-single/adding_a_microsoft_azure_source_to_cost_management/index#creating-an-azure-storage-account_adding-an-azure-source`;
-const AZURE_CREDS_URL = `${HCCM_DOCS_PREFIX}/html-single/adding_a_microsoft_azure_source_to_cost_management/index#configuring-azure-roles_adding-an-azure-source`;
-const RECURRING_TASK_URL = `${HCCM_DOCS_PREFIX}/html-single/adding_a_microsoft_azure_source_to_cost_management/index#configuring-an-azure-daily-export-schedule_adding-an-azure-source`;
+const CREATE_AZURE_STORAGE = `${HCCM_DOCS_PREFIX}/html/adding_a_microsoft_azure_source_to_cost_management/assembly-adding-azure-sources#creating-an-azure-storage-account_adding-an-azure-source`;
+const AZURE_CREDS_URL = `${HCCM_DOCS_PREFIX}/html/adding_a_microsoft_azure_source_to_cost_management/assembly-adding-azure-sources#configuring-azure-roles_adding-an-azure-source`;
+const RECURRING_TASK_URL = `${HCCM_DOCS_PREFIX}/html/adding_a_microsoft_azure_source_to_cost_management/assembly-adding-azure-sources#configuring-an-azure-daily-export-schedule_adding-an-azure-source`;
 
 export const ConfigureResourceGroupAndStorageAccount = () => {
   const intl = useIntl();

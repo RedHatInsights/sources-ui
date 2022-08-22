@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 
-import { Text, TextVariants, TextContent, Button, Modal, Checkbox, Title } from '@patternfly/react-core';
+import { Button, Checkbox, Modal, Text, TextContent, TextVariants, Title } from '@patternfly/react-core';
 
 import ExclamationTriangleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-triangle-icon';
 

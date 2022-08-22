@@ -50,7 +50,7 @@ export const SUB_WATCH_APP = {
   display_name: 'RHEL management',
   id: '5',
   name: '/insights/platform/cloud-meter',
-  supported_authentication_types: { amazon: ['cloud-meter-arn'] },
+  supported_authentication_types: { amazon: ['cloud-meter-arn'], azure: ['lighthouse_subscription_id'] },
   supported_source_types: ['amazon', 'azure', 'google'],
   updated_at: '2020-02-18T19:38:52Z',
 };

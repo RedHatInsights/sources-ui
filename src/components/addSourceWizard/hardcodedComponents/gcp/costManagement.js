@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import {
-  Text,
-  TextVariants,
-  TextContent,
-  TextList,
-  TextListVariants,
-  TextListItem,
   ClipboardCopy,
   Hint,
-  HintTitle,
   HintBody,
+  HintTitle,
+  Text,
+  TextContent,
+  TextList,
+  TextListItem,
+  TextListVariants,
+  TextVariants,
 } from '@patternfly/react-core';
 
 import { HCCM_DOCS_PREFIX } from '../../stringConstants';
@@ -21,7 +21,7 @@ import { getSourcesApi } from '../../../../api/entities';
 
 const b = (chunks) => <b key={`b-${chunks.length}-${Math.floor(Math.random() * 1000)}`}>{chunks}</b>;
 
-const PROJECT_LINK = `${HCCM_DOCS_PREFIX}/html-single/adding_a_google_cloud_source_to_cost_management`;
+const PROJECT_LINK = `${HCCM_DOCS_PREFIX}/html/adding_a_google_cloud_source_to_cost_management`;
 
 export const Project = () => {
   const intl = useIntl();
