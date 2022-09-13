@@ -21,7 +21,7 @@ import { getSourcesApi } from '../../../../api/entities';
 
 const b = (chunks) => <b key={`b-${chunks.length}-${Math.floor(Math.random() * 1000)}`}>{chunks}</b>;
 
-const PROJECT_LINK = `${HCCM_DOCS_PREFIX}/html-single/adding_a_google_cloud_source_to_cost_management`;
+const PROJECT_LINK = `${HCCM_DOCS_PREFIX}/html/adding_a_google_cloud_source_to_cost_management`;
 
 export const Project = () => {
   const intl = useIntl();
@@ -292,7 +292,7 @@ export const BillingExport = () => {
           {intl.formatMessage(
             {
               id: 'cost.gcp.billingExport.secondStep',
-              defaultMessage: 'In the <b>Daily cost detail</b> section, click <b>Edit settings.</b>',
+              defaultMessage: 'In the <b>Detailed usage cost</b> section, click <b>Edit settings.</b>',
             },
             { b }
           )}
