@@ -37,8 +37,8 @@ const fields = (intl, sourceType, appType, authenticationValues, source, contain
   let hasAlreadyType;
 
   if (!source.imported) {
-    const appendEndpoint = sourceType.schema.endpoint.hidden ? sourceType.schema.endpoint.fields : [];
-    const hasEndpointStep = appendEndpoint.length === 0;
+    const appendEndpoint = sourceType.schema.endpoint?.hidden ? sourceType.schema.endpoint?.fields : [];
+    const hasEndpointStep = typeof sourceType.schema.endpoint === 'undefined' ? false : appendEndpoint.length === 0;
 
     const shouldAddEmpty =
       !appType.supported_authentication_types[sourceType.name] ||

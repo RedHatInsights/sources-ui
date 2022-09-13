@@ -292,7 +292,7 @@ export const BillingExport = () => {
           {intl.formatMessage(
             {
               id: 'cost.gcp.billingExport.secondStep',
-              defaultMessage: 'In the <b>Daily cost detail</b> section, click <b>Edit settings.</b>',
+              defaultMessage: 'In the <b>Detailed usage cost</b> section, click <b>Edit settings.</b>',
             },
             { b }
           )}
