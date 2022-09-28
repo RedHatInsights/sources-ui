@@ -8,7 +8,6 @@ import {
   IN_PROGRESS,
   PARTIALLY_UNAVAILABLE,
   PAUSED,
-  RHELAZURE,
   UNAVAILABLE,
   UnknownError,
   applicationFormatter,
@@ -30,7 +29,7 @@ import {
   sourceIsOpenShift,
   sourceTypeFormatter,
 } from '../../views/formatters';
-import sourceTypes, { AMAZON_TYPE, AZURE_TYPE, GOOGLE_TYPE, OPENSHIFT_TYPE } from '../__mocks__/sourceTypes';
+import sourceTypes, { AMAZON_TYPE, OPENSHIFT_TYPE } from '../__mocks__/sourceTypes';
 import {
   SOURCE_ALL_APS_INDEX,
   SOURCE_CATALOGAPP_INDEX,
@@ -38,7 +37,7 @@ import {
   SOURCE_NO_APS_INDEX,
   sourcesDataGraphQl,
 } from '../__mocks__/sourcesData';
-import appTypes, { CATALOG_APP, COST_MANAGEMENT_APP, SUB_WATCH_APP, TOPOLOGY_INV_APP } from '../__mocks__/applicationTypes';
+import appTypes, { CATALOG_APP, COST_MANAGEMENT_APP, TOPOLOGY_INV_APP } from '../__mocks__/applicationTypes';
 
 import { IntlProvider } from 'react-intl';
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
@@ -642,14 +641,6 @@ describe('formatters', () => {
           screen.getByText('Data collection is temporarily disabled. Resume source to reestablish connection.')
         ).toBeInTheDocument();
       });
-
-      it('returns RHEL AZURE_TYPE text', () => {
-        render(wrapperWithIntl(getStatusTooltipText(RHELAZURE, appTypes)));
-
-        expect(
-          screen.getByText('This source cannot currently be monitored in Sources, and does not reflect true status or resources.')
-        ).toBeInTheDocument();
-      });
     });
 
     describe('availabilityFormatter', () => {
@@ -713,54 +704,6 @@ describe('formatters', () => {
 
         expect(screen.getByText('Paused', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
         expect(screen.getByText('pause icon')).toBeInTheDocument();
-      });
-
-      it('returns text for Azure + RHEL bundle combo', async () => {
-        const user = userEvent.setup();
-
-        const SOURCE = {
-          availability_status: undefined,
-          source_type_id: AZURE_TYPE.id,
-          applications: [{ application_type_id: SUB_WATCH_APP.id }],
-        };
-
-        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
-
-        expect(screen.getByText('Unknown', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
-
-        await user.click(screen.getByText('Unknown', { exact: false, selector: '.pf-c-label__content' }));
-
-        await waitFor(() =>
-          expect(
-            screen.getByText(
-              'This source cannot currently be monitored in Sources, and does not reflect true status or resources.'
-            )
-          ).toBeInTheDocument()
-        );
-      });
-
-      it('returns text for Google + RHEL bundle combo', async () => {
-        const user = userEvent.setup();
-
-        const SOURCE = {
-          availability_status: undefined,
-          source_type_id: GOOGLE_TYPE.id,
-          applications: [{ application_type_id: SUB_WATCH_APP.id }],
-        };
-
-        render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
-
-        expect(screen.getByText('Unknown', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
-
-        await user.click(screen.getByText('Unknown', { exact: false, selector: '.pf-c-label__content' }));
-
-        await waitFor(() =>
-          expect(
-            screen.getByText(
-              'This source cannot currently be monitored in Sources, and does not reflect true status or resources.'
-            )
-          ).toBeInTheDocument()
-        );
       });
     });
 
