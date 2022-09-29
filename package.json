@@ -24,6 +24,7 @@
     "@redhat-cloud-services/frontend-components-notifications": "3.2.10",
     "@redhat-cloud-services/frontend-components-utilities": "3.2.23",
     "@sentry/minimal": "6.19.7",
+    "@unleash/proxy-client-react": "^3.3.0",
     "awesome-debounce-promise": "^2.1.0",
     "axios": "0.27.2",
     "classnames": "^2.3.1",

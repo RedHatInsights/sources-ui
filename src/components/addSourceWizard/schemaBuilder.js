@@ -21,9 +21,18 @@ export const acronymMapper = (value) =>
 export const hardcodedSchema = (typeName, authName, appName) =>
   get(hardcodedSchemas, [typeName, 'authentication', authName, appName], undefined);
 
-export const getAdditionalSteps = (typeName, authName, appName = 'generic') =>
-  get(hardcodedSchemas, [typeName, 'authentication', authName, appName, 'additionalSteps'], []);
-
+export const getAdditionalSteps = (typeName, authName, appName = 'generic', enableLighthouse) =>
+  get(
+    hardcodedSchemas,
+    [
+      typeName,
+      'authentication',
+      authName === 'lighthouse_subscription_id' && !enableLighthouse ? 'lighthouse_subscription_id_legacy' : authName,
+      appName,
+      'additionalSteps',
+    ],
+    []
+  );
 export const shouldSkipSelection = (typeName, authName, appName = 'generic') =>
   get(hardcodedSchemas, [typeName, 'authentication', authName, appName, 'skipSelection'], false);
 

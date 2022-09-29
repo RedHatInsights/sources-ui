@@ -19,6 +19,11 @@ import Summary, { createItem } from '../../../components/FormComponents/SourceWi
 import { NO_APPLICATION_VALUE } from '../../../components/addSourceWizard/stringConstants';
 import emptyAuthType from '../../../components/addSourceWizard/emptyAuthType';
 
+jest.mock('@unleash/proxy-client-react', () => ({
+  useUnleashContext: () => jest.fn(),
+  useFlag: jest.fn(() => true),
+}));
+
 describe('SourceWizardSummary component', () => {
   describe('should render correctly', () => {
     let formOptions;
@@ -292,6 +297,7 @@ describe('SourceWizardSummary component', () => {
         ['Name', 'cosi'],
         ['Source type', 'Microsoft Azure'],
         ['Application', 'RHEL management'],
+        ['Subscription ID', 'some-subscription-id'],
       ]);
     });
 

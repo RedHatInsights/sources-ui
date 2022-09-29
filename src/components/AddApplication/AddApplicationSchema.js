@@ -10,6 +10,7 @@ import authenticationSelectionStep from './schema/authenticationSelectionStep';
 import generateFirstAuthStep from './schema/generateFirstAuthStep';
 import selectAuthenticationStep from './schema/selectAuthenticationStep';
 import emptyAuthType from '../addSourceWizard/emptyAuthType';
+import { useFlag } from '@unleash/proxy-client-react';
 
 export const ApplicationSummary = () => {
   const intl = useIntl();
@@ -35,6 +36,7 @@ const fields = (intl, sourceType, appType, authenticationValues, source, contain
   let firstStep;
   let hasMultipleAuthTypes;
   let hasAlreadyType;
+  const enableLighthouse = useFlag('sources.wizard.lighthouse');
 
   if (!source.imported) {
     const appendEndpoint = sourceType.schema.endpoint?.hidden ? sourceType.schema.endpoint?.fields : [];
@@ -55,7 +57,7 @@ const fields = (intl, sourceType, appType, authenticationValues, source, contain
 
     authentications.forEach((auth) => {
       if (appType.supported_source_types.includes(sourceType.name)) {
-        const appAdditionalSteps = schemaBuilder.getAdditionalSteps(sourceType.name, auth.type, appType.name);
+        const appAdditionalSteps = schemaBuilder.getAdditionalSteps(sourceType.name, auth.type, appType.name, enableLighthouse);
 
         if (appAdditionalSteps.length > 0) {
           authenticationFields.push(

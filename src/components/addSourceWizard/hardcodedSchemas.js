@@ -332,7 +332,7 @@ const hardcodedSchemas = {
           },
         },
       },
-      lighthouse_subscription_id: {
+      lighthouse_subscription_id_legacy: {
         [CLOUD_METER_APP_NAME]: {
           skipSelection: true,
           useApplicationAuth: true,
@@ -369,6 +369,58 @@ const hardcodedSchemas = {
                   name: 'azure-2',
                   component: 'description',
                   Content: SWAzure.AnsiblePlaybook,
+                },
+              ],
+            },
+          ],
+        },
+      },
+      lighthouse_subscription_id: {
+        [CLOUD_METER_APP_NAME]: {
+          skipSelection: true,
+          useApplicationAuth: true,
+          customSteps: true,
+          additionalSteps: [
+            {
+              title: <FormattedMessage id="subwatch.lighthouse.title" defaultMessage="Configure Azure Lighthouse" />,
+              nextStep: 'subwatch-lighthouse-sub-id',
+              fields: [
+                {
+                  name: 'azure-1',
+                  component: 'description',
+                  Content: SWAzure.LightHouseDescription,
+                },
+                {
+                  component: componentTypes.TEXT_FIELD,
+                  name: 'authentication.authtype',
+                  hideField: true,
+                  initialValue: 'lighthouse_subscription_id',
+                  initializeOnMount: true,
+                },
+                {
+                  component: componentTypes.TEXT_FIELD,
+                  name: 'lighthouse-clicked',
+                  hideField: true,
+                  validate: [{ type: 'required' }],
+                },
+              ],
+            },
+            {
+              title: <FormattedMessage id="subwatch.lighthouse.subscriptionId" defaultMessage="Set subscription ID" />,
+              name: 'subwatch-lighthouse-sub-id',
+              fields: [
+                {
+                  name: 'azure-2',
+                  component: 'description',
+                  Content: SWAzure.SubscriptionID,
+                },
+                {
+                  component: 'text-field',
+                  name: 'authentication.username',
+                  label: 'Subscription ID',
+                  isRequired: true,
+                  placeholder: '291bba3f-e0a5-47bc-a099-3bdcb2a50a05',
+                  validate: [{ type: 'required' }],
                 },
               ],
             },

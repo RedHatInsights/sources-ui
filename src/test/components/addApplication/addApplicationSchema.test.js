@@ -2,6 +2,11 @@ import addApplicationSchema, { hasAlreadySupportedAuthType } from '../../../comp
 import { AZURE_TYPE, GOOGLE_TYPE, OPENSHIFT_TYPE } from '../../__mocks__/sourceTypes';
 import { COST_MANAGEMENT_APP, SUB_WATCH_APP } from '../../__mocks__/applicationTypes';
 
+jest.mock('@unleash/proxy-client-react', () => ({
+  useUnleashContext: () => jest.fn(),
+  useFlag: jest.fn(() => true),
+}));
+
 describe('AddApplicationSchema', () => {
   const intl = { formatMessage: ({ defaultMessage }) => defaultMessage };
   const authenticationValues = [];
@@ -42,7 +47,22 @@ describe('AddApplicationSchema', () => {
       'azure-5-lighthouse_subscription_id',
       'summary',
       'azure-lighthouse_subscription_id-/insights/platform/cloud-meter-additional-step',
-      'cost-azure-playbook',
+      'subwatch-lighthouse-sub-id',
+    ]);
+  });
+
+  it('google+rhel management schema (empty auth type)', () => {
+    const source = {
+      source_type_id: GOOGLE_TYPE.id,
+    };
+
+    const result = addApplicationSchema(intl, GOOGLE_TYPE, SUB_WATCH_APP, authenticationValues, source, TITLE, DESCRIPTION);
+
+    expect(result.fields[0].fields.map(({ name }) => name)).toEqual([
+      'google-5-empty',
+      'summary',
+      'google-empty-/insights/platform/cloud-meter-additional-step',
+      'cost-google-playbook',
     ]);
   });
 
