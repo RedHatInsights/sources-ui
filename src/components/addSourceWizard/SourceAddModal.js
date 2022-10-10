@@ -14,36 +14,12 @@ import filterTypes, { filterVendorTypes } from '../../utilities/filterTypes';
 import Authentication from '../FormComponents/Authentication';
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
 import LoadingStep from '../steps/LoadingStep';
+import { useFlag } from '@unleash/proxy-client-react';
 
 const initialValues = {
   schema: {},
   sourceTypes: [],
   isLoading: true,
-};
-
-const reducer = (
-  state,
-  { type, sourceTypes, applicationTypes, container, disableAppSelection, intl, selectedType, initialWizardState, activeCategory }
-) => {
-  switch (type) {
-    case 'loaded':
-      return {
-        ...state,
-        schema: createSchema(
-          sourceTypes.filter(filterTypes).filter(filterVendorTypes(activeCategory)),
-          applicationTypes.filter(filterApps).filter(filterVendorAppTypes(sourceTypes, activeCategory)),
-          disableAppSelection,
-          container,
-          intl,
-          selectedType,
-          initialWizardState,
-          activeCategory
-        ),
-        isLoading: false,
-        sourceTypes,
-        applicationTypes,
-      };
-  }
 };
 
 const FormTemplateWrapper = (props) => <FormTemplate {...props} showFormControls={false} />;
@@ -60,6 +36,44 @@ const SourceAddModal = ({
   initialWizardState,
   activeCategory,
 }) => {
+  const enableLighthouse = useFlag('sources.wizard.lighthouse');
+
+  const reducer = (
+    state,
+    {
+      type,
+      sourceTypes,
+      applicationTypes,
+      container,
+      disableAppSelection,
+      intl,
+      selectedType,
+      initialWizardState,
+      activeCategory,
+    }
+  ) => {
+    switch (type) {
+      case 'loaded':
+        return {
+          ...state,
+          schema: createSchema(
+            sourceTypes.filter(filterTypes).filter(filterVendorTypes(activeCategory)),
+            applicationTypes.filter(filterApps).filter(filterVendorAppTypes(sourceTypes, activeCategory)),
+            disableAppSelection,
+            container,
+            intl,
+            selectedType,
+            initialWizardState,
+            activeCategory,
+            enableLighthouse
+          ),
+          isLoading: false,
+          sourceTypes,
+          applicationTypes,
+        };
+    }
+  };
+
   const [{ schema, sourceTypes: stateSourceTypes, applicationTypes: stateApplicationTypes, isLoading }, dispatch] = useReducer(
     reducer,
     initialValues

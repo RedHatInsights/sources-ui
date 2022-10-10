@@ -18,6 +18,7 @@ import render from '../../addSourceWizard/__mocks__/render';
 import Summary, { createItem } from '../../../components/FormComponents/SourceWizardSummary';
 import { NO_APPLICATION_VALUE } from '../../../components/addSourceWizard/stringConstants';
 import emptyAuthType from '../../../components/addSourceWizard/emptyAuthType';
+import * as UnleashClient from '@unleash/proxy-client-react';
 
 jest.mock('@unleash/proxy-client-react', () => ({
   useUnleashContext: () => jest.fn(),
@@ -276,7 +277,8 @@ describe('SourceWizardSummary component', () => {
       ).toBeInTheDocument();
     });
 
-    it('azure rhel management', () => {
+    it('azure rhel management - lighthouse', () => {
+      jest.spyOn(UnleashClient, 'useFlag').mockReturnValueOnce(true);
       formOptions = {
         getState: () => ({
           values: {
@@ -298,6 +300,30 @@ describe('SourceWizardSummary component', () => {
         ['Source type', 'Microsoft Azure'],
         ['Application', 'RHEL management'],
         ['Subscription ID', 'some-subscription-id'],
+      ]);
+    });
+
+    it('azure rhel management - no lighthouse', () => {
+      formOptions = {
+        getState: () => ({
+          values: {
+            source: { name: 'cosi' },
+            application: { application_type_id: SUB_WATCH_APP.id },
+            source_type: 'azure',
+            authentication: { authtype: emptyAuthType.type },
+            auth_select: 'token',
+          },
+        }),
+      };
+
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+
+      const data = getListData(container);
+
+      expect(data).toEqual([
+        ['Name', 'cosi'],
+        ['Source type', 'Microsoft Azure'],
+        ['Application', 'RHEL management'],
       ]);
     });
 

@@ -133,7 +133,7 @@ DesctiptionListItem.propTypes = {
 const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthType }) => {
   const formOptions = useFormApi();
   const intl = useIntl();
-  const enableLighthouse = !useFlag('sources.wizard.lighthouse');
+  const enableLighthouse = useFlag('sources.wizard.lighthouse');
 
   const values = formOptions.getState().values;
   const type = sourceTypes.find((type) => type.name === values.source_type || type.id === values.source.source_type_id);

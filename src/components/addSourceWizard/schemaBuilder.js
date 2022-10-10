@@ -116,7 +116,8 @@ export const createAuthTypeSelection = (
   appType = { name: 'generic', id: 'generic' },
   endpointFields,
   disableAuthType,
-  hasEndpointStep
+  hasEndpointStep,
+  enableLighthouse
 ) => {
   const isGeneric = appType.name === 'generic';
 
@@ -232,7 +233,9 @@ export const createAuthTypeSelection = (
     let stepProps = {};
 
     if (hasCustomStep) {
-      const firstAdditonalStep = getAdditionalSteps(type.name, auth.type, hardcodedAppName).find(({ name }) => !name);
+      const firstAdditonalStep = getAdditionalSteps(type.name, auth.type, hardcodedAppName, enableLighthouse).find(
+        ({ name }) => !name
+      );
       const additionalFields = getAdditionalStepFields(auth.fields, additionalStepName);
 
       if (firstAdditonalStep.nextStep) {
@@ -271,7 +274,7 @@ export const createAuthTypeSelection = (
   }
 };
 
-export const schemaBuilder = (sourceTypes, appTypes, disableAuthType) => {
+export const schemaBuilder = (sourceTypes, appTypes, disableAuthType, enableLighthouse) => {
   const schema = [];
 
   sourceTypes.forEach((type) => {
@@ -282,7 +285,7 @@ export const schemaBuilder = (sourceTypes, appTypes, disableAuthType) => {
 
     appTypes.forEach((appType) => {
       if (appType.supported_source_types.includes(type.name)) {
-        schema.push(createAuthTypeSelection(type, appType, appendEndpoint, disableAuthType, hasEndpointStep));
+        schema.push(createAuthTypeSelection(type, appType, appendEndpoint, disableAuthType, hasEndpointStep, enableLighthouse));
       }
     });
 
