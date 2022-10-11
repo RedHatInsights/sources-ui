@@ -25,6 +25,7 @@ import {
   injectEndpointFieldsInfo,
   shouldSkipEndpoint,
 } from '../../components/addSourceWizard/schemaBuilder';
+import { useFlag } from '@unleash/proxy-client-react';
 
 const alertMapper = (appName, sourceType, intl) => {
   if (appName === COST_MANAGEMENT_APP_NAME && sourceType !== 'google') {
@@ -132,6 +133,7 @@ DesctiptionListItem.propTypes = {
 const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthType }) => {
   const formOptions = useFormApi();
   const intl = useIntl();
+  const enableLighthouse = useFlag('sources.wizard.lighthouse');
 
   const values = formOptions.getState().values;
   const type = sourceTypes.find((type) => type.name === values.source_type || type.id === values.source.source_type_id);
@@ -174,7 +176,7 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
 
   const availableStepKeys = getStepKeys(type.name, hasAuthentication, name, id);
 
-  const authSteps = getAdditionalSteps(type.name, hasAuthentication, name);
+  const authSteps = getAdditionalSteps(type.name, hasAuthentication, name, enableLighthouse);
   const hasCustomSteps = get(hardcodedSchemas, [type.name, 'authentication', hasAuthentication, name, 'customSteps'], false);
 
   if (authSteps.length > 0) {

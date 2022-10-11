@@ -264,6 +264,15 @@ describe('entities spec', () => {
 
         expect(result).toEqual(OK_RESPONSE);
       });
+
+      it('getLighthouseLink', async () => {
+        const method = 'Get';
+        mock[`on${method}`](`/api/sources/v3.1/app_meta_data?filter[name]=azure_lighthouse_template`).reply(200, OK_RESPONSE);
+
+        const result = await api.getSourcesApi().getLighthouseLink();
+
+        expect(result).toEqual(OK_RESPONSE);
+      });
     });
 
     it('doRemoveSource fails', async () => {

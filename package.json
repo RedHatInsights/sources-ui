@@ -17,13 +17,14 @@
   "dependencies": {
     "@data-driven-forms/pf4-component-mapper": "^3.18.6",
     "@data-driven-forms/react-form-renderer": "^3.18.6",
-    "@patternfly/react-core": "^4.235.7",
-    "@patternfly/react-icons": "^4.75.1",
-    "@patternfly/react-table": "^4.104.7",
-    "@redhat-cloud-services/frontend-components": "3.9.8",
-    "@redhat-cloud-services/frontend-components-notifications": "3.2.10",
-    "@redhat-cloud-services/frontend-components-utilities": "3.2.23",
+    "@patternfly/react-core": "^4.239.0",
+    "@patternfly/react-icons": "^4.90.0",
+    "@patternfly/react-table": "^4.108.0",
+    "@redhat-cloud-services/frontend-components": "3.9.16",
+    "@redhat-cloud-services/frontend-components-notifications": "3.2.12",
+    "@redhat-cloud-services/frontend-components-utilities": "3.3.1",
     "@sentry/minimal": "6.19.7",
+    "@unleash/proxy-client-react": "^3.3.0",
     "awesome-debounce-promise": "^2.1.0",
     "axios": "0.27.2",
     "classnames": "^2.3.1",
@@ -39,32 +40,6 @@
     "redux-promise-middleware": "^6.1.2",
     "redux-thunk": "^2.4.1"
   },
-  "jest": {
-    "testEnvironment": "jsdom",
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx}",
-      "!src/**/stories/*",
-      "!src/entry.js",
-      "!src/entry-dev.js",
-      "!src/frontend-components-copies/*",
-      "!src/bootstrap.js",
-      "!src/bootstrap-dev.js"
-    ],
-    "setupFilesAfterEnv": [
-      "<rootDir>/config/setupTests.js"
-    ],
-    "roots": [
-      "<rootDir>/src/",
-      "<rootDir>/src/test"
-    ],
-    "moduleNameMapper": {
-      "\\.(css|scss)$": "identity-obj-proxy"
-    },
-    "transformIgnorePatterns": [
-      "<rootDir>/node_modules/(?!(@patternfly/react-icons)).*$"
-    ]
-  },
   "devDependencies": {
     "@babel/cli": "^7.18.9",
     "@babel/core": "^7.18.9",
@@ -72,7 +47,7 @@
     "@babel/plugin-transform-runtime": "^7.18.9",
     "@babel/preset-env": "^7.18.9",
     "@babel/preset-react": "^7.18.6",
-    "@redhat-cloud-services/frontend-components-config": "^4.6.18",
+    "@redhat-cloud-services/frontend-components-config": "^4.6.21",
     "@testing-library/dom": "^8.16.0",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.4",
