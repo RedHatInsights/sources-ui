@@ -356,10 +356,10 @@ export default (
   intl,
   selectedType,
   initialWizardState,
-  activeCategory
+  activeCategory,
+  enableLighthouse
 ) => {
   setFirstValidated(true);
-
   return {
     fields: [
       {
@@ -405,7 +405,7 @@ export default (
           configurationStep(intl, sourceTypes),
           applicationsStep(applicationTypes, intl),
           applicationStep(applicationTypes, intl, activeCategory),
-          ...schemaBuilder(sourceTypes, applicationTypes),
+          ...schemaBuilder(sourceTypes, applicationTypes, undefined, enableLighthouse),
           summaryStep(sourceTypes, applicationTypes, intl),
         ],
       },

@@ -24,6 +24,7 @@
     "@redhat-cloud-services/frontend-components-notifications": "3.2.10",
     "@redhat-cloud-services/frontend-components-utilities": "3.2.23",
     "@sentry/minimal": "6.19.7",
+    "@unleash/proxy-client-react": "^3.3.0",
     "awesome-debounce-promise": "^2.1.0",
     "axios": "0.27.2",
     "classnames": "^2.3.1",
@@ -38,32 +39,6 @@
     "redux": "^4.2.0",
     "redux-promise-middleware": "^6.1.2",
     "redux-thunk": "^2.4.1"
-  },
-  "jest": {
-    "testEnvironment": "jsdom",
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx}",
-      "!src/**/stories/*",
-      "!src/entry.js",
-      "!src/entry-dev.js",
-      "!src/frontend-components-copies/*",
-      "!src/bootstrap.js",
-      "!src/bootstrap-dev.js"
-    ],
-    "setupFilesAfterEnv": [
-      "<rootDir>/config/setupTests.js"
-    ],
-    "roots": [
-      "<rootDir>/src/",
-      "<rootDir>/src/test"
-    ],
-    "moduleNameMapper": {
-      "\\.(css|scss)$": "identity-obj-proxy"
-    },
-    "transformIgnorePatterns": [
-      "<rootDir>/node_modules/(?!(@patternfly/react-icons)).*$"
-    ]
   },
   "devDependencies": {
     "@babel/cli": "^7.18.9",

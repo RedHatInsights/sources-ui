@@ -67,6 +67,8 @@ export const getSourcesApi = () => ({
   unpauseApplication: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/applications/${id}/unpause`),
   pauseSource: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/sources/${id}/pause`),
   unpauseSource: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/sources/${id}/unpause`),
+  getLighthouseLink: () =>
+    axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/app_meta_data?filter[name]=azure_lighthouse_template`),
 });
 
 export const doLoadAppTypes = () => getSourcesApi().doLoadAppTypes();

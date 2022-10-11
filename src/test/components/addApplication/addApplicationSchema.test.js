@@ -1,6 +1,12 @@
 import addApplicationSchema, { hasAlreadySupportedAuthType } from '../../../components/AddApplication/AddApplicationSchema';
 import { AZURE_TYPE, GOOGLE_TYPE, OPENSHIFT_TYPE } from '../../__mocks__/sourceTypes';
 import { COST_MANAGEMENT_APP, SUB_WATCH_APP } from '../../__mocks__/applicationTypes';
+import * as UnleashClient from '@unleash/proxy-client-react';
+
+jest.mock('@unleash/proxy-client-react', () => ({
+  useUnleashContext: () => jest.fn(),
+  useFlag: jest.fn(() => true),
+}));
 
 describe('AddApplicationSchema', () => {
   const intl = { formatMessage: ({ defaultMessage }) => defaultMessage };
@@ -31,7 +37,8 @@ describe('AddApplicationSchema', () => {
     ]);
   });
 
-  it('azure+rhel management schema', () => {
+  it('azure+rhel management schema - lighthouse', () => {
+    jest.spyOn(UnleashClient, 'useFlag').mockReturnValueOnce(true);
     const source = {
       source_type_id: AZURE_TYPE.id,
     };
@@ -42,7 +49,52 @@ describe('AddApplicationSchema', () => {
       'azure-5-lighthouse_subscription_id',
       'summary',
       'azure-lighthouse_subscription_id-/insights/platform/cloud-meter-additional-step',
-      'cost-azure-playbook',
+      'subwatch-lighthouse-sub-id',
+    ]);
+  });
+
+  it('azure+rhel management schema - no lighthouse', () => {
+    const source = {
+      source_type_id: AZURE_TYPE.id,
+    };
+
+    const result = addApplicationSchema(intl, AZURE_TYPE, SUB_WATCH_APP, authenticationValues, source, TITLE, DESCRIPTION);
+
+    expect(result.fields[0].fields.map(({ name }) => name)).toEqual([
+      'azure-5-lighthouse_subscription_id',
+      'summary',
+      'azure-lighthouse_subscription_id-/insights/platform/cloud-meter-additional-step',
+      'subwatch-lighthouse-sub-id',
+    ]);
+  });
+
+  it('google+rhel management schema (empty auth type)', () => {
+    const source = {
+      source_type_id: GOOGLE_TYPE.id,
+    };
+
+    const result = addApplicationSchema(intl, GOOGLE_TYPE, SUB_WATCH_APP, authenticationValues, source, TITLE, DESCRIPTION);
+
+    expect(result.fields[0].fields.map(({ name }) => name)).toEqual([
+      'google-5-empty',
+      'summary',
+      'google-empty-/insights/platform/cloud-meter-additional-step',
+      'cost-google-playbook',
+    ]);
+  });
+
+  it('google+rhel management schema (empty auth type)', () => {
+    const source = {
+      source_type_id: GOOGLE_TYPE.id,
+    };
+
+    const result = addApplicationSchema(intl, GOOGLE_TYPE, SUB_WATCH_APP, authenticationValues, source, TITLE, DESCRIPTION);
+
+    expect(result.fields[0].fields.map(({ name }) => name)).toEqual([
+      'google-5-empty',
+      'summary',
+      'google-empty-/insights/platform/cloud-meter-additional-step',
+      'cost-google-playbook',
     ]);
   });
 
