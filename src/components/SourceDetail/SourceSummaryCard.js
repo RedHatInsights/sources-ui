@@ -76,8 +76,8 @@ const SourceSummaryCard = () => {
                 {source.last_checked_at || source.last_available_at
                   ? dateFormatter(source.last_checked_at || source.last_available_at)
                   : intl.formatMessage({
-                      id: 'detail.summary.notChecked',
-                      defaultMessage: 'Not checked yet',
+                      id: 'detail.summary.waitingForUpdate',
+                      defaultMessage: 'Waiting for update',
                     })}
                 <AvailabilityChecker />
               </React.Fragment>

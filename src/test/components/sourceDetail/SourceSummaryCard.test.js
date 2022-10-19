@@ -55,7 +55,7 @@ describe('SourceSummaryCard', () => {
 
     expect(categories).toEqual([
       ['Source type', 'Amazon Web Services'],
-      ['Last availability check', 'Not checked yet'],
+      ['Last availability check', 'Waiting for update'],
       ['Date added', 'some date'],
       ['Last modified', 'some date'],
     ]);
@@ -129,7 +129,7 @@ describe('SourceSummaryCard', () => {
 
     expect(categories).toEqual([
       ['Source type', 'Amazon Web Services'],
-      ['Last availability check', 'Not checked yet'],
+      ['Last availability check', 'Waiting for update'],
       ['Date added', 'some date'],
       ['Last modified', 'some date'],
       ['Configuration mode', 'Account authorizationEdit credentials'],
@@ -201,7 +201,7 @@ describe('SourceSummaryCard', () => {
 
     expect(categories).toEqual([
       ['Source type', 'Amazon Web Services'],
-      ['Last availability check', 'Not checked yet'],
+      ['Last availability check', 'Waiting for update'],
       ['Date added', 'some date'],
       ['Last modified', 'some date'],
       ['Configuration mode', 'Manual configuration'],
@@ -242,7 +242,7 @@ describe('SourceSummaryCard', () => {
 
     expect(categories).toEqual([
       ['Source type', 'Amazon Web Services'],
-      ['Last availability check', 'Not checked yet'],
+      ['Last availability check', 'Waiting for update'],
       ['Date added', 'some date'],
       ['Last modified', 'some date'],
       ['Configuration mode', 'Manual configuration'],
