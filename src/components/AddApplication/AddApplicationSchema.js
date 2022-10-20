@@ -51,7 +51,9 @@ const fields = (intl, sourceType, appType, authenticationValues, source, contain
 
     if (appType.supported_source_types.includes(sourceType.name)) {
       authTypes.forEach((authtype) => {
-        authenticationFields.push(generateFirstAuthStep(sourceType, appType, appendEndpoint, authtype, intl, shouldAddEmpty));
+        authenticationFields.push(
+          generateFirstAuthStep(sourceType, appType, appendEndpoint, authtype, intl, shouldAddEmpty, enableLighthouse)
+        );
       });
     }
 
