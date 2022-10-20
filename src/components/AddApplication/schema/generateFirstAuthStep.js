@@ -1,7 +1,7 @@
 import * as schemaBuilder from '../../../components/addSourceWizard/schemaBuilder';
 import emptyAuthType from '../../addSourceWizard/emptyAuthType';
 
-const generateFirstAuthStep = (type, appType, endpointFields, authtype, intl, shouldAddEmpty) => {
+const generateFirstAuthStep = (type, appType, endpointFields, authtype, intl, shouldAddEmpty, enableLighthouse) => {
   let fields = [...endpointFields];
   const hasEndpoint = type.schema.endpoint && !type.schema.enpoint?.hidden;
 
@@ -18,7 +18,7 @@ const generateFirstAuthStep = (type, appType, endpointFields, authtype, intl, sh
 
   let nextStep;
 
-  if (schemaBuilder.getAdditionalSteps(type.name, authtype, appType.name).length > 0) {
+  if (schemaBuilder.getAdditionalSteps(type.name, authtype, appType.name, enableLighthouse).length > 0) {
     nextStep = additionalStepName;
   } else if (endpointFields.length === 0 && !skipEndpoint && hasEndpoint) {
     nextStep = `${type.name}-endpoint`;
@@ -32,7 +32,9 @@ const generateFirstAuthStep = (type, appType, endpointFields, authtype, intl, sh
   let stepProps = {};
 
   if (hasCustomStep) {
-    const firstAdditonalStep = schemaBuilder.getAdditionalSteps(type.name, authtype, appType.name).find(({ name }) => !name);
+    const firstAdditonalStep = schemaBuilder
+      .getAdditionalSteps(type.name, authtype, appType.name, enableLighthouse)
+      .find(({ name }) => !name);
     const additionalFields = schemaBuilder.getAdditionalStepFields(auth.fields, additionalStepName);
 
     if (firstAdditonalStep.nextStep) {
