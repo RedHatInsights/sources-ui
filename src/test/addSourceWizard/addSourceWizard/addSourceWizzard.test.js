@@ -10,6 +10,7 @@ import * as dependency from '../../../api/wizardHelpers';
 import * as createSource from '../../../api/createSource';
 
 import render from '../__mocks__/render';
+import { ACCOUNT_AUTHORIZATION, MANUAL_CONFIGURATION } from '../../../components/constants';
 import { CLOUD_VENDOR, GOOGLE_NAME, REDHAT_VENDOR } from '../../../utilities/constants';
 
 describe('AddSourceWizard', () => {
@@ -305,7 +306,7 @@ describe('AddSourceWizard', () => {
         <AddSourceWizard
           {...initialProps}
           selectedType="amazon"
-          initialValues={{ source: { app_creation_workflow: 'account_authorization' } }}
+          initialValues={{ source: { app_creation_workflow: ACCOUNT_AUTHORIZATION } }}
           activeCategory={CLOUD_VENDOR}
         />
       );
@@ -320,7 +321,7 @@ describe('AddSourceWizard', () => {
         <AddSourceWizard
           {...initialProps}
           selectedType="amazon"
-          initialValues={{ source: { app_creation_workflow: 'manual_configuration' } }}
+          initialValues={{ source: { app_creation_workflow: MANUAL_CONFIGURATION } }}
           activeCategory={CLOUD_VENDOR}
         />
       );

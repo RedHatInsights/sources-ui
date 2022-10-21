@@ -6,6 +6,7 @@ import userEvent from '@testing-library/user-event';
 import PlayIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
 import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 
+import { ACCOUNT_AUTHORIZATION } from '../../../components/constants';
 import ApplicationsCard from '../../../components/SourceDetail/ApplicationsCard';
 import { replaceRouteId, routes } from '../../../Routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
@@ -349,7 +350,7 @@ describe('ApplicationsCard', () => {
               id: sourceId,
               source_type_id: AMAZON_TYPE.id,
               applications: [{ id: '123', application_type_id: COST_MANAGEMENT_APP.id }],
-              app_creation_workflow: 'account_authorization',
+              app_creation_workflow: ACCOUNT_AUTHORIZATION,
             },
           ],
           sourceTypes,
@@ -371,7 +372,7 @@ describe('ApplicationsCard', () => {
               id: sourceId,
               source_type_id: AMAZON_TYPE.id,
               applications: [{ id: '123', application_type_id: COST_MANAGEMENT_APP.id, paused_at: 'today' }],
-              app_creation_workflow: 'account_authorization',
+              app_creation_workflow: ACCOUNT_AUTHORIZATION,
             },
           ],
           sourceTypes,
@@ -485,7 +486,7 @@ describe('ApplicationsCard', () => {
               id: sourceId,
               source_type_id: AMAZON_TYPE.id,
               applications: [{ id: '123', application_type_id: COST_MANAGEMENT_APP.id, paused_at: 'today' }],
-              app_creation_workflow: 'account_authorization',
+              app_creation_workflow: ACCOUNT_AUTHORIZATION,
             },
           ],
           sourceTypes,
