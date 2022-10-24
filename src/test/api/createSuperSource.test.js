@@ -65,10 +65,8 @@ describe('createSuperSource', () => {
       ],
       sources: [{ app_creation_workflow: ACCOUNT_AUTHORIZATION, name: 'my_source', source_type_name: 'amazon' }],
     });
-    expect(checkSourceStatus.default).toHaveBeenCalledWith(SOURCE_ID);
+    expect(checkSourceStatus.default).not.toHaveBeenCalled();
     expect(checkAppMock.mock.calls[0][0]).toEqual(AUTH_ID);
-    expect(checkAppMock.mock.calls[1][0]).toEqual(APP_ID1);
-    expect(checkAppMock.mock.calls[2][0]).toEqual(APP_ID2);
   });
 
   it('handles error', async () => {
