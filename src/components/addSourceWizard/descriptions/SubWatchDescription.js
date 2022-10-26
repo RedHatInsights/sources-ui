@@ -2,6 +2,7 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 
+import { ACCOUNT_AUTHORIZATION } from '../../constants';
 import { Flex, FlexItem, Stack, StackItem, Text } from '@patternfly/react-core';
 import CheckCircleIcon from '@patternfly/react-icons/dist/esm/icons/check-circle-icon';
 
@@ -34,8 +35,8 @@ const SubWatchDescription = ({ id }) => {
   const values = getState().values;
 
   const isEnabled =
-    (values.source.app_creation_workflow === 'account_authorization' && values.applications?.includes(id)) ||
-    (values.source.app_creation_workflow !== 'account_authorization' && values.application?.application_type_id === id);
+    (values.source.app_creation_workflow === ACCOUNT_AUTHORIZATION && values.applications?.includes(id)) ||
+    (values.source.app_creation_workflow !== ACCOUNT_AUTHORIZATION && values.application?.application_type_id === id);
 
   if (values.source_type === 'azure') {
     return (

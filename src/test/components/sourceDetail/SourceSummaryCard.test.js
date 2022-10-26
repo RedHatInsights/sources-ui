@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { ACCOUNT_AUTHORIZATION } from '../../../components/constants';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import sourceTypes, { AMAZON_TYPE } from '../../__mocks__/sourceTypes';
 import SourceSummaryCard from '../../../components/SourceDetail/SourceSummaryCard';
@@ -109,7 +110,7 @@ describe('SourceSummaryCard', () => {
             source_type_id: AMAZON_TYPE.id,
             created_at: '2020-11-27T15:49:59.640Z',
             updated_at: '2020-11-27T15:49:59.640Z',
-            app_creation_workflow: 'account_authorization',
+            app_creation_workflow: ACCOUNT_AUTHORIZATION,
           },
         ],
         sourceTypes,
@@ -148,7 +149,7 @@ describe('SourceSummaryCard', () => {
             source_type_id: AMAZON_TYPE.id,
             created_at: '2020-11-27T15:49:59.640Z',
             updated_at: '2020-11-27T15:49:59.640Z',
-            app_creation_workflow: 'account_authorization',
+            app_creation_workflow: ACCOUNT_AUTHORIZATION,
           },
         ],
         sourceTypes,

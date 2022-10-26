@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 
 import { Label } from '@patternfly/react-core';
 
+import { ACCOUNT_AUTHORIZATION, MANUAL_CONFIGURATION } from '../../../components/constants';
 import applicationTypes, {
   COST_MANAGEMENT_APP,
   SUB_WATCH_APP,
@@ -360,7 +361,7 @@ describe('SourceWizardSummary component', () => {
       formOptions = {
         getState: () => ({
           values: {
-            source: { name: 'cosi', app_creation_workflow: 'account_authorization' },
+            source: { name: 'cosi', app_creation_workflow: ACCOUNT_AUTHORIZATION },
             applications: [COST_MANAGEMENT_APP.id, TOPOLOGY_INV_APP.id],
             source_type: 'amazon',
             authentication: { username: 'arn:aws:132', authtype: 'access_key_secret_key', password: 'secret_key' },
@@ -388,7 +389,7 @@ describe('SourceWizardSummary component', () => {
       formOptions = {
         getState: () => ({
           values: {
-            source: { name: 'cosi', app_creation_workflow: 'account_authorization' },
+            source: { name: 'cosi', app_creation_workflow: ACCOUNT_AUTHORIZATION },
             applications: [],
             source_type: 'amazon',
             authentication: { username: 'arn:aws:132', authtype: 'access_key_secret_key', password: 'secret_key' },
@@ -416,7 +417,7 @@ describe('SourceWizardSummary component', () => {
       formOptions = {
         getState: () => ({
           values: {
-            source: { name: 'cosi', app_creation_workflow: 'manual_configuration' },
+            source: { name: 'cosi', app_creation_workflow: MANUAL_CONFIGURATION },
             applications: [],
             source_type: 'amazon',
             authentication: { username: 'arn:aws:132', authtype: 'access_key_secret_key', password: 'secret_key' },

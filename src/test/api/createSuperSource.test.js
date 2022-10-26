@@ -1,4 +1,5 @@
 import createSuperSource from '../../api/createSuperSource';
+import { ACCOUNT_AUTHORIZATION } from '../../components/constants';
 import { COST_MANAGEMENT_APP, SUB_WATCH_APP } from '../addSourceWizard/../__mocks__/applicationTypes';
 
 import * as api from '../../api/entities';
@@ -37,7 +38,7 @@ describe('createSuperSource', () => {
     };
 
     FORM_DATA = {
-      source: { name: 'my_source', app_creation_workflow: 'account_authorization' },
+      source: { name: 'my_source', app_creation_workflow: ACCOUNT_AUTHORIZATION },
       source_type: 'amazon',
       applications: [COST_MANAGEMENT_APP.id, SUB_WATCH_APP.id],
       authentication: {
@@ -62,12 +63,10 @@ describe('createSuperSource', () => {
       authentications: [
         { password: 'my_password', username: 'my_username', resource_name: 'my_source', resource_type: 'source' },
       ],
-      sources: [{ app_creation_workflow: 'account_authorization', name: 'my_source', source_type_name: 'amazon' }],
+      sources: [{ app_creation_workflow: ACCOUNT_AUTHORIZATION, name: 'my_source', source_type_name: 'amazon' }],
     });
-    expect(checkSourceStatus.default).toHaveBeenCalledWith(SOURCE_ID);
+    expect(checkSourceStatus.default).not.toHaveBeenCalled();
     expect(checkAppMock.mock.calls[0][0]).toEqual(AUTH_ID);
-    expect(checkAppMock.mock.calls[1][0]).toEqual(APP_ID1);
-    expect(checkAppMock.mock.calls[2][0]).toEqual(APP_ID2);
   });
 
   it('handles error', async () => {
@@ -92,7 +91,7 @@ describe('createSuperSource', () => {
         authentications: [
           { password: 'my_password', username: 'my_username', resource_name: 'my_source', resource_type: 'source' },
         ],
-        sources: [{ app_creation_workflow: 'account_authorization', name: 'my_source', source_type_name: 'amazon' }],
+        sources: [{ app_creation_workflow: ACCOUNT_AUTHORIZATION, name: 'my_source', source_type_name: 'amazon' }],
       });
       expect(checkSourceStatus.default).not.toHaveBeenCalled();
       expect(checkAppMock).not.toHaveBeenCalled();

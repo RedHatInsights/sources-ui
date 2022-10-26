@@ -1,5 +1,4 @@
 import { getSourcesApi } from './entities';
-import checkSourceStatus from './checkSourceStatus';
 import { checkAppAvailability } from './getApplicationStatus';
 import handleError from './handleError';
 
@@ -16,25 +15,18 @@ const createSuperSource = async (formData) => {
       })),
     });
 
-    await checkSourceStatus(sourceData.sources[0].id);
-
-    const checkStatusPromises = [];
-
-    checkStatusPromises.push(
-      checkAppAvailability(sourceData.authentications[0].id, undefined, undefined, 'showAuthentication', startDate)
+    const authenticationDataOut = await checkAppAvailability(
+      sourceData.authentications[0].id,
+      undefined,
+      undefined,
+      'showAuthentication',
+      startDate
     );
-
-    sourceData.applications.forEach(({ id }) =>
-      checkStatusPromises.push(checkAppAvailability(id, undefined, undefined, 'showApplication', startDate))
-    );
-
-    const [authenticationDataOut, ...applications] = await Promise.all(checkStatusPromises);
 
     return {
       ...sourceData,
       ...sourceData.sources[0],
       authentications: [authenticationDataOut],
-      applications,
     };
   } catch (error) {
     const errorMessage = await handleError(error);

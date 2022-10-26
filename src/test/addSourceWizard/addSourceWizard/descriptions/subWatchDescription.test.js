@@ -5,6 +5,7 @@ import { screen } from '@testing-library/react';
 
 import render from '../../__mocks__/render';
 
+import { ACCOUNT_AUTHORIZATION, MANUAL_CONFIGURATION } from '../../../../components/constants';
 import SubWatchDescription from '../../../../components/addSourceWizard/descriptions/SubWatchDescription';
 import SourcesFormRenderer from '../../../../utilities/SourcesFormRenderer';
 
@@ -13,7 +14,7 @@ describe('SubWatchDescription', () => {
     const { container } = render(
       <SourcesFormRenderer
         schema={{ fields: [{ name: 'desc', component: 'description', Content: () => <SubWatchDescription id="1" /> }] }}
-        initialValues={{ application: { application_type_id: '1' }, source: { app_creation_workflow: 'manual_configuration' } }}
+        initialValues={{ application: { application_type_id: '1' }, source: { app_creation_workflow: MANUAL_CONFIGURATION } }}
         onSubmit={jest.fn()}
       />
     );
@@ -36,7 +37,7 @@ describe('SubWatchDescription', () => {
         schema={{ fields: [{ name: 'desc', component: 'description', Content: () => <SubWatchDescription id="1" /> }] }}
         initialValues={{
           application: { application_type_id: '1' },
-          source: { app_creation_workflow: 'manual_configuration' },
+          source: { app_creation_workflow: MANUAL_CONFIGURATION },
           source_type: 'azure',
         }}
         onSubmit={jest.fn()}
@@ -80,7 +81,7 @@ describe('SubWatchDescription', () => {
     const { container } = render(
       <SourcesFormRenderer
         schema={{ fields: [{ name: 'desc', component: 'description', Content: () => <SubWatchDescription id="1" /> }] }}
-        initialValues={{ applications: ['1'], source: { app_creation_workflow: 'account_authorization' } }}
+        initialValues={{ applications: ['1'], source: { app_creation_workflow: ACCOUNT_AUTHORIZATION } }}
         onSubmit={jest.fn()}
       />
     );
@@ -92,7 +93,7 @@ describe('SubWatchDescription', () => {
     const { container } = render(
       <SourcesFormRenderer
         schema={{ fields: [{ name: 'desc', component: 'description', Content: () => <SubWatchDescription id="1" /> }] }}
-        initialValues={{ application: { application_type_id: '2' }, source: { app_creation_workflow: 'manual_configuration' } }}
+        initialValues={{ application: { application_type_id: '2' }, source: { app_creation_workflow: MANUAL_CONFIGURATION } }}
         onSubmit={jest.fn()}
       />
     );
@@ -104,7 +105,7 @@ describe('SubWatchDescription', () => {
     const { container } = render(
       <SourcesFormRenderer
         schema={{ fields: [{ name: 'desc', component: 'description', Content: () => <SubWatchDescription id="1" /> }] }}
-        initialValues={{ applications: [], source: { app_creation_workflow: 'account_authorization' } }}
+        initialValues={{ applications: [], source: { app_creation_workflow: ACCOUNT_AUTHORIZATION } }}
         onSubmit={jest.fn()}
       />
     );

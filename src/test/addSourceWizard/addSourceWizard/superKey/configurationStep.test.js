@@ -1,6 +1,7 @@
 import React from 'react';
 import { Label } from '@patternfly/react-core';
 
+import { ACCOUNT_AUTHORIZATION, MANUAL_CONFIGURATION } from '../../../../components/constants';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import sourceTypes, { AMAZON_TYPE, AZURE_TYPE, OPENSHIFT_TYPE } from '../../../__mocks__/sourceTypes';
 import configurationStep from '../../../../components/addSourceWizard/superKey/configurationStep';
@@ -16,12 +17,10 @@ describe('configurationSteps', () => {
     expect(result.title).toEqual('Select configuration');
 
     expect(result.nextStep({ values: {} })).toEqual(undefined);
-    expect(result.nextStep({ values: { source: { app_creation_workflow: 'account_authorization' } } })).toEqual(
+    expect(result.nextStep({ values: { source: { app_creation_workflow: ACCOUNT_AUTHORIZATION } } })).toEqual(
       'select_applications'
     );
-    expect(result.nextStep({ values: { source: { app_creation_workflow: 'manual_configuration' } } })).toEqual(
-      'application_step'
-    );
+    expect(result.nextStep({ values: { source: { app_creation_workflow: MANUAL_CONFIGURATION } } })).toEqual('application_step');
 
     expect(result.fields).toHaveLength(4);
 
@@ -48,7 +47,7 @@ describe('configurationSteps', () => {
               </Label>
             </span>
           ),
-          value: 'account_authorization',
+          value: ACCOUNT_AUTHORIZATION,
         },
       ],
     });
@@ -67,7 +66,7 @@ describe('configurationSteps', () => {
               </Label>
             </span>
           ),
-          value: 'account_authorization',
+          value: ACCOUNT_AUTHORIZATION,
         },
       ],
     });
@@ -86,13 +85,13 @@ describe('configurationSteps', () => {
               </Label>
             </span>
           ),
-          value: 'account_authorization',
+          value: ACCOUNT_AUTHORIZATION,
         },
       ],
     });
 
     expect(result.fields[2].component).toEqual(componentTypes.SUB_FORM);
-    expect(result.fields[2].condition).toEqual({ is: 'account_authorization', when: 'source.app_creation_workflow' });
+    expect(result.fields[2].condition).toEqual({ is: ACCOUNT_AUTHORIZATION, when: 'source.app_creation_workflow' });
 
     expect(result.fields[2].fields[0].Content).toEqual(SuperKeyCredentials);
     expect(result.fields[2].fields[0].component).toEqual('description');
@@ -105,7 +104,7 @@ describe('configurationSteps', () => {
         description:
           'Configure and manage your source manually if you do not wish to provide account authorization credentials. You will set up sources the same way you do today.',
         label: 'Manual configuration',
-        value: 'manual_configuration',
+        value: MANUAL_CONFIGURATION,
       },
     ]);
   });

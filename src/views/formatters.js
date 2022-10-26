@@ -7,6 +7,7 @@ import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclam
 import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
 import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 
+import { ACCOUNT_AUTHORIZATION } from '../components/constants';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { DateFormat } from '@redhat-cloud-services/frontend-components/DateFormat';
 import { Link } from 'react-router-dom';
@@ -468,7 +469,7 @@ export const applicationFormatter = (apps, item, { appTypes }) => {
 };
 
 export const configurationModeFormatter = (mode, item, { intl, sourceType }) => {
-  if (mode === 'account_authorization') {
+  if (mode === ACCOUNT_AUTHORIZATION) {
     const superKeyType = sourceType?.schema.authentication.find(({ is_superkey }) => is_superkey);
     const superKeyAuth = item?.authentications?.find(({ authtype }) => authtype && authtype === superKeyType.type);
 
