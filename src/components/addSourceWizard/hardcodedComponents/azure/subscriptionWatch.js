@@ -102,7 +102,6 @@ export const LightHouseDescription = () => {
       </Text>
       <Button
         component="a"
-        className="src-c-azure_lighthouse_btn"
         target="_blank"
         rel="noopener noreferrer"
         href={link}
@@ -111,6 +110,7 @@ export const LightHouseDescription = () => {
         onClick={() => {
           formOptions.change('lighthouse-clicked', true);
         }}
+        isBlock
       >
         {intl.formatMessage({
           id: 'subwatch.lighthouse.button',
