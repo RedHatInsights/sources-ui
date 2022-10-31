@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import propTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 
@@ -9,7 +10,7 @@ import { useSource } from '../../hooks/useSource';
 import checkSourceStatus from '../../api/checkSourceStatus';
 import { addMessage } from '../../redux/sources/actions';
 
-const AvailabilityChecker = () => {
+const AvailabilityChecker = ({ setCheckPending }) => {
   const source = useSource();
   const intl = useIntl();
   const dispatch = useDispatch();
@@ -20,6 +21,7 @@ const AvailabilityChecker = () => {
       variant="plain"
       aria-label={intl.formatMessage({ id: 'sources.checkavailability', defaultMessage: 'Check source availability' })}
       onClick={async () => {
+        setCheckPending && setCheckPending();
         setLoading(true);
         await checkSourceStatus(source.id);
         setLoading(false);
@@ -43,6 +45,10 @@ const AvailabilityChecker = () => {
       {loading && <Spinner size="md" />}
     </Button>
   );
+};
+
+AvailabilityChecker.propTypes = {
+  setCheckPending: propTypes.func,
 };
 
 export default AvailabilityChecker;
