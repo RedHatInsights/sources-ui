@@ -1,6 +1,6 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
-import { shallowEqual, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {
@@ -16,6 +16,7 @@ import {
 import { useSource } from '../../hooks/useSource';
 import { configurationModeFormatter, dateFormatter, sourceTypeFormatter } from '../../views/formatters';
 import AvailabilityChecker from './AvailabilityChecker';
+import { setCheckPenging } from '../../redux/sources/actions';
 
 const DescriptionListItem = ({ term, description }) => (
   <DescriptionListGroup>
@@ -30,6 +31,7 @@ DescriptionListItem.propTypes = {
 };
 
 const SourceSummaryCard = () => {
+  const dispatch = useDispatch();
   const intl = useIntl();
   const source = useSource();
   const sourceTypes = useSelector(({ sources }) => sources.sourceTypes, shallowEqual);
@@ -73,13 +75,13 @@ const SourceSummaryCard = () => {
             })}
             description={
               <React.Fragment>
-                {source.last_checked_at || source.last_available_at
-                  ? dateFormatter(source.last_checked_at || source.last_available_at)
-                  : intl.formatMessage({
+                {source.isCheckPending || !(source.last_checked_at || source.last_available_at)
+                  ? intl.formatMessage({
                       id: 'detail.summary.waitingForUpdate',
                       defaultMessage: 'Waiting for update',
-                    })}
-                <AvailabilityChecker />
+                    })
+                  : dateFormatter(source.last_checked_at || source.last_available_at)}
+                <AvailabilityChecker setCheckPending={() => dispatch(setCheckPenging(source.id))} />
               </React.Fragment>
             }
           />
