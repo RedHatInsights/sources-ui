@@ -379,4 +379,24 @@ describe('redux > sources reducer', () => {
       ],
     });
   });
+
+  it('sourceStatusCheckPending adds isCheckPending flag', () => {
+    const payload = { payload: { sourceId: SOURCE_ID } };
+
+    const defaultState = {
+      ...defaultSourcesState,
+      entities: [
+        { id: '1235', name: 'no apps' },
+        { id: SOURCE_ID, name: 'test' },
+      ],
+    };
+
+    expect(sourcesReducer.sourceStatusCheckPending(defaultState, payload)).toEqual({
+      ...defaultSourcesState,
+      entities: [
+        { id: '1235', name: 'no apps' },
+        { id: SOURCE_ID, name: 'test', isCheckPending: true },
+      ],
+    });
+  });
 });
