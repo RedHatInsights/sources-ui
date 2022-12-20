@@ -42,8 +42,20 @@ describe('AddApplicationSchema', () => {
     const source = {
       source_type_id: AZURE_TYPE.id,
     };
+    const enableLighthouse = true;
 
-    const result = addApplicationSchema(intl, AZURE_TYPE, SUB_WATCH_APP, authenticationValues, source, TITLE, DESCRIPTION);
+    const result = addApplicationSchema(
+      intl,
+      AZURE_TYPE,
+      SUB_WATCH_APP,
+      authenticationValues,
+      source,
+      undefined,
+      TITLE,
+      DESCRIPTION,
+      undefined,
+      enableLighthouse
+    );
 
     expect(result.fields[0].fields.map(({ name }) => name)).toEqual([
       'azure-5-lighthouse_subscription_id',
@@ -57,14 +69,26 @@ describe('AddApplicationSchema', () => {
     const source = {
       source_type_id: AZURE_TYPE.id,
     };
+    const enableLighthouse = false;
 
-    const result = addApplicationSchema(intl, AZURE_TYPE, SUB_WATCH_APP, authenticationValues, source, TITLE, DESCRIPTION);
+    const result = addApplicationSchema(
+      intl,
+      AZURE_TYPE,
+      SUB_WATCH_APP,
+      authenticationValues,
+      source,
+      undefined,
+      TITLE,
+      DESCRIPTION,
+      undefined,
+      enableLighthouse
+    );
 
     expect(result.fields[0].fields.map(({ name }) => name)).toEqual([
       'azure-5-lighthouse_subscription_id',
       'summary',
       'azure-lighthouse_subscription_id-/insights/platform/cloud-meter-additional-step',
-      'subwatch-lighthouse-sub-id',
+      'cost-azure-playbook',
     ]);
   });
 
