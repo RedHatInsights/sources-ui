@@ -4,6 +4,9 @@
 # ide config
 .idea/
 
+# cache
+.cache
+
 # dependencies
 node_modules
 
