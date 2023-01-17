@@ -189,4 +189,69 @@ describe('EnhancedRadio', () => {
     });
     onSubmit.mockReset();
   });
+
+  it('no application option is disabled for oracle source type', async () => {
+    const user = userEvent.setup();
+
+    const mutator = (option, formOptions) => {
+      if (formOptions.getState().values.source_type === 'oracle-cloud-infrastructure') {
+        if (option.value === 'second-option') {
+          return;
+        }
+
+        return option;
+      }
+
+      if (option.value === 'oracle-option') {
+        return { label: 'No application', value: '' };
+      }
+
+      return option;
+    };
+
+    render(
+      <FormRenderer
+        {...initialProps}
+        schema={{
+          fields: [
+            {
+              component: componentTypes.TEXT_FIELD,
+              name: 'source_type',
+              'aria-label': 'source_type',
+            },
+            {
+              component: 'enhanced-radio',
+              options: [
+                { label: 'option', value: 'oracle-option' },
+                { label: 'option-1', value: 'second-option' },
+              ],
+              mutator,
+              name: 'radio',
+            },
+          ],
+        }}
+        initialValues={{
+          source_type: 'oracle-cloud-infrastructure',
+        }}
+      />
+    );
+
+    await user.click(screen.getByText('Submit'));
+
+    expect(onSubmit).toHaveBeenCalledWith({
+      radio: 'oracle-option',
+      source_type: 'oracle-cloud-infrastructure',
+    });
+    onSubmit.mockReset();
+
+    await user.clear(screen.getByLabelText('source_type'));
+    await user.type(screen.getByLabelText('source_type'), 'some-value');
+    await user.click(screen.getByText('Submit'));
+
+    expect(onSubmit).toHaveBeenCalledWith({
+      radio: '',
+      source_type: 'some-value',
+    });
+    onSubmit.mockReset();
+  });
 });

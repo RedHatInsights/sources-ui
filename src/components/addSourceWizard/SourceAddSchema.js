@@ -291,9 +291,9 @@ const nameStep = (intl, selectedType, sourceTypes, activeCategory) => ({
       type: 'text',
       label: intl.formatMessage({
         id: 'wizard.name',
-        defaultMessage: 'Name',
+        defaultMessage: 'Source name',
       }),
-      placeholder: 'Source_1',
+      placeholder: 'source_name',
       isRequired: true,
       validate: [(value) => asyncValidatorDebouncedWrapper(intl)(value, undefined, intl), { type: validatorTypes.REQUIRED }],
       resolveProps: validated,

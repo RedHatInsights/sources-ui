@@ -18,6 +18,7 @@ import * as CMOpenshift from './hardcodedComponents/openshift/costManagement';
 import * as CMAzure from './hardcodedComponents/azure/costManagement';
 import * as CMGoogle from './hardcodedComponents/gcp/costManagement';
 import * as CMIbm from './hardcodedComponents/ibm/costManagement';
+import * as CMOci from './hardcodedComponents/oci/costManagement';
 
 import * as TowerCatalog from './hardcodedComponents/tower/catalog';
 import * as Openshift from './hardcodedComponents/openshift/endpoint';
@@ -1235,6 +1236,151 @@ const hardcodedSchemas = {
               name: 'cost-gcp-billing-export',
             },
           ],
+        },
+      },
+    },
+  },
+  'oracle-cloud-infrastructure': {
+    authentication: {
+      ocid: {
+        generic: {
+          skipEndpoint: true,
+        },
+        [COST_MANAGEMENT_APP_NAME]: {
+          skipSelection: true,
+          additionalSteps: [
+            {
+              title: <FormattedMessage id="wizard.globalCompartmentId" defaultMessage="Global compartment-id" />,
+              showTitle: false,
+              fields: [
+                {
+                  name: 'authentication.authtype',
+                  component: 'text-field',
+                  hideField: true,
+                  initialValue: 'ocid',
+                  initializeOnMount: true,
+                },
+                {
+                  name: 'authentication.username',
+                  component: 'text-field',
+                  hideField: true,
+                  initialValue: 'ocid.uuid',
+                  initializeOnMount: true,
+                },
+                {
+                  component: 'description',
+                  name: 'description-summary',
+                  Content: CMOci.CompartmentId,
+                  fields: [
+                    {
+                      name: 'application.extra.compartment_id',
+                      label: 'Global compartment-id (tenant-id)',
+                      validate: [
+                        {
+                          type: 'required',
+                        },
+                      ],
+                      component: 'text-field',
+                      placeholder: 'compartment-id',
+                      isRequired: true,
+                    },
+                  ],
+                },
+              ],
+              nextStep: 'oci-cm-policy-compartment',
+            },
+            {
+              title: <FormattedMessage id="wizard.policyCompartment" defaultMessage="New policy and compartment" />,
+              showTitle: false,
+              fields: [
+                {
+                  component: 'description',
+                  name: 'description-summary',
+                  Content: CMOci.PolicyCompartment,
+                  fields: [
+                    {
+                      name: 'application.extra.policy_compartment',
+                      label: 'New compartment-id',
+                      validate: [
+                        {
+                          type: 'required',
+                        },
+                      ],
+                      component: 'text-field',
+                      placeholder: 'New compartment-id',
+                      isRequired: true,
+                    },
+                  ],
+                },
+              ],
+              name: 'oci-cm-policy-compartment',
+              nextStep: 'oci-cm-create-bucket',
+            },
+            {
+              title: <FormattedMessage id="wizard.createBucket" defaultMessage="Create bucket" />,
+              showTitle: false,
+              fields: [
+                {
+                  component: 'description',
+                  name: 'description-summary',
+                  Content: CMOci.CreateBucket,
+                  fields: [
+                    {
+                      name: 'application.extra.bucket',
+                      label: 'New data bucket name',
+                      validate: [
+                        {
+                          type: 'required',
+                        },
+                      ],
+                      component: 'text-field',
+                      placeholder: 'cost-management',
+                      isRequired: true,
+                    },
+                    {
+                      name: 'application.extra.bucket_namespace',
+                      label: 'New data bucket namespace',
+                      validate: [
+                        {
+                          type: 'required',
+                        },
+                      ],
+                      component: 'text-field',
+                      placeholder: 'yyhddfgeeu',
+                      isRequired: true,
+                    },
+                    {
+                      name: 'application.extra.bucket_region',
+                      label: 'New bucket region',
+                      validate: [
+                        {
+                          type: 'required',
+                        },
+                      ],
+                      component: 'text-field',
+                      placeholder: 'uk-london-1',
+                      isRequired: true,
+                    },
+                  ],
+                },
+              ],
+              name: 'oci-cm-create-bucket',
+              nextStep: 'oci-cm-populate-bucket',
+            },
+            {
+              title: <FormattedMessage id="wizard.reviewDetails" defaultMessage="Populate bucket" />,
+              showTitle: false,
+              fields: [
+                {
+                  component: 'description',
+                  name: 'description-summary',
+                  Content: CMOci.PopulateBucket,
+                },
+              ],
+              name: 'oci-cm-populate-bucket',
+            },
+          ],
+          customSteps: true,
         },
       },
     },
