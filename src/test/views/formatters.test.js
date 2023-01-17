@@ -30,6 +30,7 @@ import {
   sourceTypeFormatter,
 } from '../../views/formatters';
 import sourceTypes, { AMAZON_TYPE, OPENSHIFT_TYPE } from '../__mocks__/sourceTypes';
+import { ACCOUNT_AUTHORIZATION, MANUAL_CONFIGURATION } from '../../components/constants';
 import {
   SOURCE_ALL_APS_INDEX,
   SOURCE_CATALOGAPP_INDEX,
@@ -1157,7 +1158,7 @@ describe('formatters', () => {
     it('account_authorization', () => {
       render(
         <MemoryRouter>
-          {wrapperWithIntl(configurationModeFormatter('account_authorization', { id: SOURCE_ID }, { intl: INTL }))}
+          {wrapperWithIntl(configurationModeFormatter(ACCOUNT_AUTHORIZATION, { id: SOURCE_ID }, { intl: INTL }))}
         </MemoryRouter>
       );
 
@@ -1168,7 +1169,7 @@ describe('formatters', () => {
       render(
         <MemoryRouter>
           {wrapperWithIntl(
-            configurationModeFormatter('account_authorization', { id: SOURCE_ID, paused_at: 'today' }, { intl: INTL })
+            configurationModeFormatter(ACCOUNT_AUTHORIZATION, { id: SOURCE_ID, paused_at: 'today' }, { intl: INTL })
           )}
         </MemoryRouter>
       );
@@ -1183,7 +1184,7 @@ describe('formatters', () => {
         <MemoryRouter>
           {wrapperWithIntl(
             configurationModeFormatter(
-              'account_authorization',
+              ACCOUNT_AUTHORIZATION,
               {
                 id: SOURCE_ID,
                 authentications: [
@@ -1223,7 +1224,7 @@ describe('formatters', () => {
         <MemoryRouter>
           {wrapperWithIntl(
             configurationModeFormatter(
-              'account_authorization',
+              ACCOUNT_AUTHORIZATION,
               {
                 id: SOURCE_ID,
                 authentications: [
@@ -1249,7 +1250,7 @@ describe('formatters', () => {
     it('manual_configuration', () => {
       render(
         <MemoryRouter>
-          {wrapperWithIntl(configurationModeFormatter('manual_configuration', { id: SOURCE_ID }, { intl: INTL }))}
+          {wrapperWithIntl(configurationModeFormatter(MANUAL_CONFIGURATION, { id: SOURCE_ID }, { intl: INTL }))}
         </MemoryRouter>
       );
 

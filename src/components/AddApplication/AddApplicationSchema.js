@@ -10,8 +10,6 @@ import authenticationSelectionStep from './schema/authenticationSelectionStep';
 import generateFirstAuthStep from './schema/generateFirstAuthStep';
 import selectAuthenticationStep from './schema/selectAuthenticationStep';
 import emptyAuthType from '../addSourceWizard/emptyAuthType';
-import { useFlag } from '@unleash/proxy-client-react';
-
 export const ApplicationSummary = () => {
   const intl = useIntl();
 
@@ -31,12 +29,22 @@ export const ApplicationSummary = () => {
 export const hasAlreadySupportedAuthType = (authValues = [], appType, sourceTypeName) =>
   authValues.find(({ authtype }) => authtype === get(appType, `supported_authentication_types.${sourceTypeName}[0]`));
 
-const fields = (intl, sourceType, appType, authenticationValues, source, container, title, description, applicationTypes) => {
+const fields = (
+  intl,
+  sourceType,
+  appType,
+  authenticationValues,
+  source,
+  container,
+  title,
+  description,
+  applicationTypes,
+  enableLighthouse
+) => {
   let authenticationFields = [];
   let firstStep;
   let hasMultipleAuthTypes;
   let hasAlreadyType;
-  const enableLighthouse = useFlag('sources.wizard.lighthouse');
 
   if (!source.imported) {
     const appendEndpoint = sourceType.schema.endpoint?.hidden ? sourceType.schema.endpoint?.fields : [];
@@ -51,7 +59,9 @@ const fields = (intl, sourceType, appType, authenticationValues, source, contain
 
     if (appType.supported_source_types.includes(sourceType.name)) {
       authTypes.forEach((authtype) => {
-        authenticationFields.push(generateFirstAuthStep(sourceType, appType, appendEndpoint, authtype, intl, shouldAddEmpty));
+        authenticationFields.push(
+          generateFirstAuthStep(sourceType, appType, appendEndpoint, authtype, intl, shouldAddEmpty, enableLighthouse)
+        );
       });
     }
 

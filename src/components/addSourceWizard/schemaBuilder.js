@@ -148,7 +148,7 @@ export const createAuthTypeSelection = (
 
         let nextStep;
 
-        if (getAdditionalSteps(type.name, auth.type, hardcodedAppName).length > 0) {
+        if (getAdditionalSteps(type.name, auth.type, hardcodedAppName, enableLighthouse).length > 0) {
           nextStep = `${type.name}-${auth.type}-${hardcodedAppName}-additional-step`;
         } else if (endpointFields.length === 0 && !skipEndpoint && !customSteps && hasEndpointStep) {
           nextStep = `${type.name}-endpoint`;
@@ -222,7 +222,7 @@ export const createAuthTypeSelection = (
 
     let nextStep;
 
-    if (getAdditionalSteps(type.name, auth.type, hardcodedAppName).length > 0) {
+    if (getAdditionalSteps(type.name, auth.type, hardcodedAppName, enableLighthouse).length > 0) {
       nextStep = additionalStepName;
     } else if (endpointFields.length === 0 && !skipEndpoint && hasEndpointStep) {
       nextStep = `${type.name}-endpoint`;
@@ -296,14 +296,14 @@ export const schemaBuilder = (sourceTypes, appTypes, disableAuthType, enableLigh
     }
 
     auhtentications.forEach((auth) => {
-      const additionalSteps = getAdditionalSteps(type.name, auth.type);
+      const additionalSteps = getAdditionalSteps(type.name, auth.type, undefined, enableLighthouse);
 
       if (additionalSteps.length > 0) {
         schema.push(...createAdditionalSteps(additionalSteps, type.name, auth.type, hasEndpointStep, auth.fields));
       }
 
       appTypes.forEach((appType) => {
-        const appAdditionalSteps = getAdditionalSteps(type.name, auth.type, appType.name);
+        const appAdditionalSteps = getAdditionalSteps(type.name, auth.type, appType.name, enableLighthouse);
 
         if (appAdditionalSteps.length > 0) {
           schema.push(

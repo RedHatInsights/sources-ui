@@ -8,6 +8,7 @@ import {
   SET_CATEGORY,
   SET_COUNT,
   SORT_ENTITIES,
+  STATUS_CHECK_PENDING,
 } from './actionTypes';
 import { CLOUD_VENDOR } from '../../utilities/constants';
 
@@ -209,6 +210,18 @@ export const sourceRenamePending = (state, { payload: { id, name } }) => ({
   ),
 });
 
+export const sourceStatusCheckPending = (state, { payload: { sourceId } }) => ({
+  ...state,
+  entities: state.entities.map((entity) =>
+    entity.id === sourceId
+      ? {
+          ...entity,
+          isCheckPending: true,
+        }
+      : entity
+  ),
+});
+
 const setCategory = (state, { payload: { category } }) => ({
   ...state,
   filterValue: {
@@ -245,6 +258,7 @@ export default {
   [ADD_APP_TO_SOURCE]: addAppToSource,
   [SET_COUNT]: setCount,
   [ADD_HIDDEN_SOURCE]: addHiddenSource,
+  [STATUS_CHECK_PENDING]: sourceStatusCheckPending,
   [CLEAR_FILTERS]: clearFilters,
   [SET_CATEGORY]: setCategory,
 };

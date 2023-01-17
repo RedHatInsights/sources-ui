@@ -17,6 +17,7 @@ import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 
 import ValuePopover from './ValuePopover';
 import hardcodedSchemas from '../../components/addSourceWizard/hardcodedSchemas';
+import { ACCOUNT_AUTHORIZATION } from '../constants';
 import { CLOUD_METER_APP_NAME, COST_MANAGEMENT_APP_NAME } from '../../utilities/constants';
 import { NO_APPLICATION_VALUE } from '../../components/addSourceWizard/stringConstants';
 import {
@@ -151,7 +152,7 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
 
   let applicatioNames;
 
-  if (values.source.app_creation_workflow === 'account_authorization') {
+  if (values.source.app_creation_workflow === ACCOUNT_AUTHORIZATION) {
     applicatioNames = values.applications.map((app) => applicationTypes.find((type) => type.id === app)?.display_name);
   }
 
@@ -234,7 +235,7 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
               defaultMessage: 'Configuration mode',
             })}
             description={
-              values.source.app_creation_workflow === 'account_authorization'
+              values.source.app_creation_workflow === ACCOUNT_AUTHORIZATION
                 ? intl.formatMessage({
                     id: 'wizard.accountAuth',
                     defaultMessage: 'Account authorization',
@@ -246,7 +247,7 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
             }
           />
         )}
-        {showApp && values.source.app_creation_workflow === 'account_authorization' && (
+        {showApp && values.source.app_creation_workflow === ACCOUNT_AUTHORIZATION && (
           <DesctiptionListItem
             term={intl.formatMessage({
               id: 'wizard.applications',
@@ -259,7 +260,7 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
             }
           />
         )}
-        {showApp && values.source.app_creation_workflow !== 'account_authorization' && (
+        {showApp && values.source.app_creation_workflow !== ACCOUNT_AUTHORIZATION && (
           <DesctiptionListItem
             term={intl.formatMessage({
               id: 'wizard.application',
@@ -271,7 +272,7 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
         {!skipEndpoint &&
           authType &&
           showAuthType &&
-          values.source.app_creation_workflow !== 'account_authorization' &&
+          values.source.app_creation_workflow !== ACCOUNT_AUTHORIZATION &&
           (!values.application?.application_type_id || values.application?.application_type_id === NO_APPLICATION_VALUE) && (
             <DesctiptionListItem
               term={intl.formatMessage({

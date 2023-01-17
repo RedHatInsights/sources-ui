@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { ACCOUNT_AUTHORIZATION } from '../../../components/constants';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import sourceTypes, { AMAZON_TYPE } from '../../__mocks__/sourceTypes';
 import SourceSummaryCard from '../../../components/SourceDetail/SourceSummaryCard';
@@ -54,7 +55,7 @@ describe('SourceSummaryCard', () => {
 
     expect(categories).toEqual([
       ['Source type', 'Amazon Web Services'],
-      ['Last availability check', 'Not checked yet'],
+      ['Last availability check', 'Waiting for update'],
       ['Date added', 'some date'],
       ['Last modified', 'some date'],
     ]);
@@ -98,7 +99,7 @@ describe('SourceSummaryCard', () => {
     ]);
   });
 
-  it('renders correctly with super key source - account authorization', async () => {
+  it('renders correctly with last_checked_at and isCheckPending flag', async () => {
     formatters.dateFormatter = jest.fn().mockImplementation(() => 'some date');
 
     store = mockStore({
@@ -109,7 +110,8 @@ describe('SourceSummaryCard', () => {
             source_type_id: AMAZON_TYPE.id,
             created_at: '2020-11-27T15:49:59.640Z',
             updated_at: '2020-11-27T15:49:59.640Z',
-            app_creation_workflow: 'account_authorization',
+            last_checked_at: '2020-11-27T15:49:59.640Z',
+            isCheckPending: true,
           },
         ],
         sourceTypes,
@@ -128,7 +130,43 @@ describe('SourceSummaryCard', () => {
 
     expect(categories).toEqual([
       ['Source type', 'Amazon Web Services'],
-      ['Last availability check', 'Not checked yet'],
+      ['Last availability check', 'Waiting for update'],
+      ['Date added', 'some date'],
+      ['Last modified', 'some date'],
+    ]);
+  });
+
+  it('renders correctly with super key source - account authorization', async () => {
+    formatters.dateFormatter = jest.fn().mockImplementation(() => 'some date');
+
+    store = mockStore({
+      sources: {
+        entities: [
+          {
+            id: sourceId,
+            source_type_id: AMAZON_TYPE.id,
+            created_at: '2020-11-27T15:49:59.640Z',
+            updated_at: '2020-11-27T15:49:59.640Z',
+            app_creation_workflow: ACCOUNT_AUTHORIZATION,
+          },
+        ],
+        sourceTypes,
+      },
+    });
+
+    const { container } = render(
+      componentWrapperIntl(
+        <Route path={routes.sourcesDetail.path} render={(...args) => <SourceSummaryCard {...args} />} />,
+        store,
+        initialEntry
+      )
+    );
+
+    const categories = getCategories(container);
+
+    expect(categories).toEqual([
+      ['Source type', 'Amazon Web Services'],
+      ['Last availability check', 'Waiting for update'],
       ['Date added', 'some date'],
       ['Last modified', 'some date'],
       ['Configuration mode', 'Account authorizationEdit credentials'],
@@ -148,7 +186,7 @@ describe('SourceSummaryCard', () => {
             source_type_id: AMAZON_TYPE.id,
             created_at: '2020-11-27T15:49:59.640Z',
             updated_at: '2020-11-27T15:49:59.640Z',
-            app_creation_workflow: 'account_authorization',
+            app_creation_workflow: ACCOUNT_AUTHORIZATION,
           },
         ],
         sourceTypes,
@@ -200,7 +238,7 @@ describe('SourceSummaryCard', () => {
 
     expect(categories).toEqual([
       ['Source type', 'Amazon Web Services'],
-      ['Last availability check', 'Not checked yet'],
+      ['Last availability check', 'Waiting for update'],
       ['Date added', 'some date'],
       ['Last modified', 'some date'],
       ['Configuration mode', 'Manual configuration'],
@@ -241,7 +279,7 @@ describe('SourceSummaryCard', () => {
 
     expect(categories).toEqual([
       ['Source type', 'Amazon Web Services'],
-      ['Last availability check', 'Not checked yet'],
+      ['Last availability check', 'Waiting for update'],
       ['Date added', 'some date'],
       ['Last modified', 'some date'],
       ['Configuration mode', 'Manual configuration'],

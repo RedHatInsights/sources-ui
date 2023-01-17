@@ -24,11 +24,11 @@ import ListIcon from '@patternfly/react-icons/dist/esm/icons/list-icon';
 const PREFIX = insights.chrome.isBeta() ? 'beta/' : '';
 
 const GOLD_IMAGES_AWS =
-  'https://access.redhat.com/documentation/en-us/red_hat_subscription_management/1/html/red_hat_cloud_access_reference_guide/understanding-gold-images_cloud-access#using-gold-images-on-aws_cloud-access';
+  'https://access.redhat.com/documentation/en-us/red_hat_subscription_management/2022/html/red_hat_cloud_access_reference_guide/understanding-gold-images_cloud-access#using-gold-images-on-aws_cloud-access';
 const GOLD_IMAGES_AZURE =
-  'https://access.redhat.com/documentation/en-us/red_hat_subscription_management/1/html/red_hat_cloud_access_reference_guide/understanding-gold-images_cloud-access#using-gold-images-on-azure_cloud-access';
+  'https://access.redhat.com/documentation/en-us/red_hat_subscription_management/2022/html/red_hat_cloud_access_reference_guide/understanding-gold-images_cloud-access#using-gold-images-on-azure_cloud-access';
 const GOLD_IMAGES_MORE =
-  'https://access.redhat.com/documentation/en-us/red_hat_subscription_management/1/html/red_hat_cloud_access_reference_guide/understanding-gold-images_cloud-access';
+  'https://access.redhat.com/documentation/en-us/red_hat_subscription_management/2022/html/red_hat_cloud_access_reference_guide/understanding-gold-images_cloud-access';
 const INSIGHTS_REF = 'https://www.redhat.com/en/technologies/management/insights';
 const INSIGHTS_SERVICES = `/${PREFIX}settings/connector`;
 const SUBWATCH_HREF = `/${PREFIX}insights/subscriptions/rhel`;

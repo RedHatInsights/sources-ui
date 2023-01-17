@@ -3,6 +3,7 @@ import componentTypes from '@data-driven-forms/react-form-renderer/component-typ
 import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
 import { Label } from '@patternfly/react-core';
 
+import { ACCOUNT_AUTHORIZATION, MANUAL_CONFIGURATION } from '../../constants';
 import SuperKeyCredentials from './SuperKeyCredentials';
 import { bold } from '../../../utilities/intlShared';
 
@@ -17,7 +18,7 @@ const configurationStep = (intl, sourceTypes) => ({
       return;
     }
 
-    return values.source?.app_creation_workflow === 'account_authorization' ? 'select_applications' : 'application_step';
+    return values.source?.app_creation_workflow === ACCOUNT_AUTHORIZATION ? 'select_applications' : 'application_step';
   },
   fields: [
     {
@@ -68,7 +69,7 @@ const configurationStep = (intl, sourceTypes) => ({
                   formOptions.getState().values.source_type,
               }
             ),
-            value: 'account_authorization',
+            value: ACCOUNT_AUTHORIZATION,
           },
         ],
       }),
@@ -85,7 +86,7 @@ const configurationStep = (intl, sourceTypes) => ({
           sourceTypes,
         },
       ],
-      condition: { when: 'source.app_creation_workflow', is: 'account_authorization' },
+      condition: { when: 'source.app_creation_workflow', is: ACCOUNT_AUTHORIZATION },
       className: 'pf-u-ml-md',
     },
     {
@@ -102,7 +103,7 @@ const configurationStep = (intl, sourceTypes) => ({
             defaultMessage:
               'Configure and manage your source manually if you do not wish to provide account authorization credentials. You will set up sources the same way you do today.',
           }),
-          value: 'manual_configuration',
+          value: MANUAL_CONFIGURATION,
         },
       ],
     },

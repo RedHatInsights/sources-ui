@@ -3,6 +3,7 @@ import { Link, Redirect, useHistory, useParams } from 'react-router-dom';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import isEmpty from 'lodash/isEmpty';
+import { useFlag } from '@unleash/proxy-client-react';
 
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 
@@ -69,6 +70,7 @@ const AddApplication = () => {
   const intl = useIntl();
   const history = useHistory();
   const selectedApp = useRef();
+  const enableLighthouse = useFlag('sources.wizard.lighthouse');
   const saveSelectedApp = ({ values: { application } }) => (selectedApp.current = application);
   const { app_type_id } = useParams();
 
@@ -347,7 +349,8 @@ const AddApplication = () => {
     container.current,
     title,
     description,
-    appTypes
+    appTypes,
+    enableLighthouse
   );
 
   const hasAvailableApps = filteredAppTypes.length > 0;

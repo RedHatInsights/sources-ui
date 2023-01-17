@@ -13,6 +13,7 @@ import {
   PAGE_AND_SIZE,
   SET_CATEGORY,
   SORT_ENTITIES,
+  STATUS_CHECK_PENDING,
 } from './actionTypes';
 import { doDeleteApplication, doLoadAppTypes, doLoadEntities, doRemoveSource, getSourcesApi } from '../../api/entities';
 import { doLoadSourceTypes } from '../../api/source_types';
@@ -192,6 +193,13 @@ export const addHiddenSource = (source) => ({
   type: ADD_HIDDEN_SOURCE,
   payload: {
     source,
+  },
+});
+
+export const setCheckPenging = (sourceId) => ({
+  type: STATUS_CHECK_PENDING,
+  payload: {
+    sourceId,
   },
 });
 
