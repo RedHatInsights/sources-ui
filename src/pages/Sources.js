@@ -191,7 +191,13 @@ const SourcesPage = () => {
             actions: hasWritePermissions
               ? [
                   <Link to={routes.sourcesNew.path} key="addSourceButton">
-                    <Button variant="primary" id="addSourceButton">
+                    <Button
+                      data-hcc-index="true"
+                      data-hcc-title={addSourceText}
+                      data-hcc-alt="create source;add cloud provider"
+                      variant="primary"
+                      id="addSourceButton"
+                    >
                       {addSourceText}
                     </Button>
                   </Link>,
