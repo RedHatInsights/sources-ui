@@ -46,7 +46,7 @@ export const CompartmentId = ({ fields }) => {
         <TextListItem>
           {intl.formatMessage({
             id: 'cost.oci.compartmentId.subtitle2',
-            defaultMessage: 'Enter the name of the your global compartment-id (tenant-id)',
+            defaultMessage: 'Enter the name of your global compartment-id (tenant-id)',
           })}
           {fields.map((field) => (
             <div className="pf-u-mt-sm" key={field.name}>

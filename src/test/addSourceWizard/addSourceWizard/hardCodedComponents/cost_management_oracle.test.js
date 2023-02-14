@@ -20,7 +20,7 @@ describe('Cost Management Oracle steps components', () => {
       screen.getByText('In the Oracle Cloud shell, copy and paste this command into the terminal to list your compartments')
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveValue('oci iam compartment list');
-    expect(screen.getByText('Enter the name of the your global compartment-id (tenant-id)')).toBeInTheDocument();
+    expect(screen.getByText('Enter the name of your global compartment-id (tenant-id)')).toBeInTheDocument();
   });
 
   it('Configure Policy Compartment', () => {
