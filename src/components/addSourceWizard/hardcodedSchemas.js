@@ -509,6 +509,36 @@ const hardcodedSchemas = {
               },
             ],
           },
+          'application.extra.scope': {
+            placeholder: '',
+            validate: [
+              {
+                type: validatorTypes.PATTERN,
+                pattern: /^[\/A-Za-z0-9]+[\.\/A-Za-z0-9_-]*$/, // eslint-disable-line no-useless-escape
+                message: (
+                  <FormattedMessage
+                    id="cost.scopePattern"
+                    defaultMessage="Cost export scope must start with alphanumeric character and can contain underscore, hyphen, and foward slash"
+                  />
+                ),
+              },
+            ],
+          },
+          'application.extra.export_name': {
+            placeholder: '',
+            validate: [
+              {
+                type: validatorTypes.PATTERN,
+                pattern: /^[A-Za-z0-9]+[A-Za-z0-9_-]*$/,
+                message: (
+                  <FormattedMessage
+                    id="cost.exportNamePattern"
+                    defaultMessage="Cost export name must start with alphanumeric character and can contain underscore and hyphen"
+                  />
+                ),
+              },
+            ],
+          },
           'authentication.password': {
             type: 'password',
             validate: [
@@ -536,8 +566,42 @@ const hardcodedSchemas = {
           },
           additionalSteps: [
             {
-              title: <FormattedMessage id="cost.azureSubStepId" defaultMessage="Resource group and storage account" />,
+              title: <FormattedMessage id="cost.createDailyExport" defaultMessage="Specify cost export scope" />,
+              nextStep: 'azure-rg-and-sa',
+              fields: [
+                {
+                  name: 'cost-export-scope-description',
+                  component: 'description',
+                  Content: CMAzure.ExportScope,
+                },
+                {
+                  name: 'application.extra.scope',
+                  component: componentTypes.TEXT_FIELD,
+                  label: <FormattedMessage id="wizard.costExportScope" defaultMessage="Cost export scope" />,
+                },
+              ],
+            },
+            {
+              title: <FormattedMessage id="cost.createDailyExport" defaultMessage="Daily export" />,
+              name: 'daily-export',
               nextStep: 'azure-sub-id',
+              fields: [
+                {
+                  name: 'export-schedule-description',
+                  component: 'description',
+                  Content: CMAzure.ExportSchedule,
+                },
+                {
+                  name: 'application.extra.export_name',
+                  component: componentTypes.TEXT_FIELD,
+                  label: <FormattedMessage id="wizard.costExportName" defaultMessage="Cost export name" />,
+                },
+              ],
+            },
+            {
+              title: <FormattedMessage id="cost.azureSubStepId" defaultMessage="Resource group and storage account" />,
+              name: 'azure-rg-and-sa',
+              nextStep: 'daily-export',
               fields: [
                 {
                   component: componentTypes.TEXT_FIELD,
@@ -588,7 +652,6 @@ const hardcodedSchemas = {
             {
               title: <FormattedMessage id="wizard.configureRoles" defaultMessage="Roles" />,
               name: 'configure-roles',
-              nextStep: 'export-schedule',
               fields: [
                 {
                   name: 'configure-service-principal',
@@ -616,17 +679,6 @@ const hardcodedSchemas = {
                   name: 'reader-role',
                   component: 'description',
                   Content: CMAzure.ReaderRoleDescription,
-                },
-              ],
-            },
-            {
-              title: <FormattedMessage id="cost.createDailyExport" defaultMessage="Daily export" />,
-              name: 'export-schedule',
-              fields: [
-                {
-                  name: 'export-schedule-description',
-                  component: 'description',
-                  Content: CMAzure.ExportSchedule,
                 },
               ],
             },
