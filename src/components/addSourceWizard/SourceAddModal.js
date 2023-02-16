@@ -1,4 +1,5 @@
-import React, { useEffect, useReducer, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { useQuery } from 'react-query';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
@@ -7,6 +8,7 @@ import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template'
 import { Wizard } from '@patternfly/react-core';
 
 import createSchema from './SourceAddSchema';
+import { APPLICATION_TYPES_KEY, SOURCE_TYPES_KEY } from '../../api/queryKeys';
 import { doLoadApplicationTypes, doLoadSourceTypes } from '../../api/wizardHelpers';
 import { wizardDescription, wizardTitle } from './stringConstants';
 import filterApps, { filterVendorAppTypes } from '../../utilities/filterApps';
@@ -15,12 +17,6 @@ import Authentication from '../FormComponents/Authentication';
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
 import LoadingStep from '../steps/LoadingStep';
 import { useFlag } from '@unleash/proxy-client-react';
-
-const initialValues = {
-  schema: {},
-  sourceTypes: [],
-  isLoading: true,
-};
 
 const FormTemplateWrapper = (props) => <FormTemplate {...props} showFormControls={false} />;
 
@@ -38,91 +34,33 @@ const SourceAddModal = ({
 }) => {
   const enableLighthouse = useFlag('sources.wizard.lighthouse');
 
-  const reducer = (
-    state,
-    {
-      type,
-      sourceTypes,
-      applicationTypes,
-      container,
-      disableAppSelection,
-      intl,
-      selectedType,
-      initialWizardState,
-      activeCategory,
-    }
-  ) => {
-    switch (type) {
-      case 'loaded':
-        return {
-          ...state,
-          schema: createSchema(
-            sourceTypes.filter(filterTypes).filter(filterVendorTypes(activeCategory)),
-            applicationTypes.filter(filterApps).filter(filterVendorAppTypes(sourceTypes, activeCategory)),
-            disableAppSelection,
-            container,
-            intl,
-            selectedType,
-            initialWizardState,
-            activeCategory,
-            enableLighthouse
-          ),
-          isLoading: false,
-          sourceTypes,
-          applicationTypes,
-        };
-    }
-  };
+  let isSourceTypesLoading = false;
+  let isAppTypesLoading = false;
 
-  const [{ schema, sourceTypes: stateSourceTypes, applicationTypes: stateApplicationTypes, isLoading }, dispatch] = useReducer(
-    reducer,
-    initialValues
-  );
-  const isMounted = useRef(false);
+  if (!sourceTypes) {
+    ({
+      data: sourceTypes,
+      isLoading: isSourceTypesLoading,
+      // isError: isSourceTypesError,
+    } = useQuery(SOURCE_TYPES_KEY, doLoadSourceTypes));
+  }
+
+  if (!applicationTypes) {
+    ({
+      data: applicationTypes,
+      isLoading: isAppTypesLoading,
+      // isError: isAppTypesError,
+    } = useQuery(APPLICATION_TYPES_KEY, doLoadApplicationTypes));
+  }
+
   const container = useRef(document.createElement('div'));
   const intl = useIntl();
-
-  useEffect(() => {
-    isMounted.current = true;
-
-    const promises = [];
-    if (!sourceTypes) {
-      promises.push(doLoadSourceTypes());
-    }
-
-    if (!applicationTypes) {
-      promises.push(doLoadApplicationTypes());
-    }
-
-    Promise.all(promises).then((data) => {
-      const sourceTypesOut = data.find((types) => Object.prototype.hasOwnProperty.call(types, 'sourceTypes'));
-      const applicationTypesOut = data.find((types) => Object.prototype.hasOwnProperty.call(types, 'applicationTypes'));
-
-      if (isMounted.current) {
-        dispatch({
-          type: 'loaded',
-          sourceTypes: sourceTypes || sourceTypesOut.sourceTypes,
-          applicationTypes: applicationTypes || applicationTypesOut.applicationTypes,
-          disableAppSelection,
-          container: container.current,
-          intl,
-          selectedType,
-          initialWizardState,
-          activeCategory,
-        });
-      }
-    });
-
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
 
   useEffect(() => {
     container.current.style.opacity = isCancelling ? 0 : 1;
   }, [isCancelling]);
 
-  if (isLoading) {
+  if (isAppTypesLoading || isSourceTypesLoading) {
     return (
       <Wizard
         className="sources"
@@ -141,14 +79,26 @@ const SourceAddModal = ({
     );
   }
 
+  // TODO: handle network errors
+
   return (
     <SourcesFormRenderer
       initialValues={{
         ...values,
         ...(selectedType && { source_type: selectedType }),
       }}
-      schema={schema}
-      onSubmit={(values, _formApi, wizardState) => onSubmit(values, stateSourceTypes, wizardState, stateApplicationTypes)}
+      schema={createSchema(
+        sourceTypes.filter(filterTypes).filter(filterVendorTypes(activeCategory)),
+        applicationTypes.filter(filterApps).filter(filterVendorAppTypes(sourceTypes, activeCategory)),
+        disableAppSelection,
+        container.current,
+        intl,
+        selectedType,
+        initialWizardState,
+        activeCategory,
+        enableLighthouse
+      )}
+      onSubmit={(values, _formApi, wizardState) => onSubmit(values, sourceTypes, wizardState, applicationTypes)}
       onCancel={onCancel}
       FormTemplate={FormTemplateWrapper}
       subscription={{ values: true }}
