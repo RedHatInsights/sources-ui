@@ -4,7 +4,7 @@ import { NO_APPLICATION_VALUE } from './stringConstants';
 
 import { Label } from '@patternfly/react-core';
 import SubWatchDescription from './descriptions/SubWatchDescription';
-import { CLOUD_METER_APP_NAME, COST_MANAGEMENT_APP_NAME, REDHAT_VENDOR } from '../../utilities/constants';
+import { CLOUD_METER_APP_NAME, COST_MANAGEMENT_APP_NAME, PROVISIONING_APP_NAME, REDHAT_VENDOR } from '../../utilities/constants';
 
 export const descriptionMapper = (type, intl) =>
   ({
@@ -13,6 +13,10 @@ export const descriptionMapper = (type, intl) =>
       defaultMessage: 'Analyze, forecast, and optimize your Red Hat OpenShift cluster costs in hybrid cloud environments.',
     }),
     [CLOUD_METER_APP_NAME]: <SubWatchDescription id={type.id} />,
+    [PROVISIONING_APP_NAME]: intl.formatMessage({
+      id: 'provisioning.sources.description',
+      defaultMessage: 'Build and launch images with custom content as Virtual Machines in hybrid cloud environments.',
+    }),
   }[type.name]);
 
 export const labelMapper = (type, intl) =>
@@ -25,6 +29,10 @@ export const labelMapper = (type, intl) =>
         </Label>
       </span>
     ),
+    [PROVISIONING_APP_NAME]: intl.formatMessage({
+      id: 'provisioning.sources.label',
+      defaultMessage: 'Launch images',
+    }),
   }[type.name]);
 
 export const compileAllApplicationComboOptions = (applicationTypes, intl, activeCategory) => [
