@@ -23,8 +23,9 @@ export const COST_MANAGEMENT_APP = {
     openshift: ['token'],
     google: ['project_id_service_account_json'],
     ibm: ['api_token_account_id'],
+    'oracle-cloud-infrastructure': ['ocid'],
   },
-  supported_source_types: ['amazon', 'azure', 'openshift', 'google', 'ibm'],
+  supported_source_types: ['amazon', 'azure', 'openshift', 'google', 'ibm', 'oracle-cloud-infrastructure'],
   updated_at: '2019-09-16T19:56:12Z',
 };
 

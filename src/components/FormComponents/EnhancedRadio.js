@@ -14,7 +14,11 @@ const EnhancedRadio = ({ options, mutator, ...props }) => {
   const selectedType = values.source_type;
   const selectedApp = get(values, props.name);
 
-  const newOptions = options.map((option) => mutator(option, formOptions)).filter(Boolean);
+  let newOptions = options.map((option) => mutator(option, formOptions)).filter(Boolean);
+
+  if (selectedType === 'oracle-cloud-infrastructure') {
+    newOptions = newOptions.filter((option) => option.value && option.value !== NO_APPLICATION_VALUE);
+  }
 
   useEffect(() => {
     if (
@@ -25,6 +29,13 @@ const EnhancedRadio = ({ options, mutator, ...props }) => {
       formOptions.change(props.name, newOptions[0].value);
     } else if (!newOptions.map(({ value }) => value).includes(selectedApp)) {
       formOptions.change(props.name, NO_APPLICATION_VALUE);
+    }
+
+    if (
+      selectedType === 'oracle-cloud-infrastructure' &&
+      newOptions.filter((option) => option.value && option.value !== NO_APPLICATION_VALUE)
+    ) {
+      formOptions.change(props.name, newOptions[0].value);
     }
   }, [selectedType]);
 

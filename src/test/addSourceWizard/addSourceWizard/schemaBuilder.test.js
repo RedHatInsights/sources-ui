@@ -384,7 +384,7 @@ describe('schema builder', () => {
       );
 
       expect(schema).toEqual(expect.arrayContaining([expect.any(Object)]));
-      expect(schema).toHaveLength(56);
+      expect(schema).toHaveLength(62);
 
       expect(schema.map(({ name }) => name)).toEqual([
         'openshift-generic',
@@ -443,6 +443,12 @@ describe('schema builder', () => {
         'satellite-generic',
         'satellite-receptor_node-generic-additional-step',
         'satellite-endpoint',
+        'oracle-cloud-infrastructure-generic',
+        'oracle-cloud-infrastructure-2',
+        'oracle-cloud-infrastructure-ocid-/insights/platform/cost-management-additional-step',
+        'oci-cm-policy-compartment',
+        'oci-cm-create-bucket',
+        'oci-cm-populate-bucket',
       ]);
     });
 
