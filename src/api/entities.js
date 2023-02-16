@@ -69,6 +69,12 @@ export const getSourcesApi = () => ({
   unpauseSource: (id) => axiosInstanceInsights.post(`${SOURCES_API_BASE_V3}/sources/${id}/unpause`),
   getLighthouseLink: () =>
     axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/app_meta_data?filter[name]=azure_lighthouse_template`),
+  getProvAppType: () =>
+    axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/application_types?filter[name]=/insights/platform/provisioning`),
+  getProvMetadata: (provAppTypeId) =>
+    axiosInstanceInsights.get(
+      `${SOURCES_API_BASE_V3}/app_meta_data?filter[name]=aws_wizard_account_number&application_type_id=${provAppTypeId}`
+    ),
 });
 
 export const doLoadAppTypes = () => getSourcesApi().doLoadAppTypes();
