@@ -20,6 +20,7 @@ import { ApplicationLabel } from '../../views/formatters';
 import handleError from '../../api/handleError';
 import tryAgainMessage from '../../utilities/tryAgainMessage';
 import { disabledMessage } from '../../utilities/disabledTooltipProps';
+import { labelMapper } from '../../utilities/labels';
 
 const initialState = {
   selectedApps: {},
@@ -210,7 +211,7 @@ const ApplicationsCard = () => {
                     <Switch
                       className="src-c-application_switch"
                       id={`app-switch-${app.id}`}
-                      label={app.display_name}
+                      label={labelMapper(app, intl) || app.display_name}
                       isChecked={isChecked}
                       isDisabled={connectedApp?.isDeleting || !hasRightAccess || Boolean(source.paused_at)}
                       onChange={(value) => (!value ? removeApp(connectedApp.id, app.id) : addApp(app.id, connectedApp?.id))}

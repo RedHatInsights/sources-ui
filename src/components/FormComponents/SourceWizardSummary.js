@@ -27,6 +27,7 @@ import {
   shouldSkipEndpoint,
 } from '../../components/addSourceWizard/schemaBuilder';
 import { useFlag } from '@unleash/proxy-client-react';
+import { labelMapper } from '../../utilities/labels';
 
 const alertMapper = (appName, sourceType, intl) => {
   if (appName === COST_MANAGEMENT_APP_NAME && sourceType !== 'google') {
@@ -153,18 +154,21 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
   let applicatioNames;
 
   if (values.source.app_creation_workflow === ACCOUNT_AUTHORIZATION) {
-    applicatioNames = values.applications.map((app) => applicationTypes.find((type) => type.id === app)?.display_name);
+    applicatioNames = values.applications.map((app) =>
+      labelMapper(
+        applicationTypes.find((type) => type.id === app),
+        intl
+      )
+    );
   }
 
   const application = values.application
     ? applicationTypes.find((type) => type.id === values.application.application_type_id)
     : undefined;
 
-  const {
-    display_name = intl.formatMessage({ id: 'wizard.notSelected', defaultMessage: 'Not selected' }),
-    name,
-    id,
-  } = application ? application : {};
+  const display_name =
+    labelMapper(application, intl) || intl.formatMessage({ id: 'wizard.notSelected', defaultMessage: 'Not selected' });
+  const { name, id } = application ? application : {};
 
   const skipEndpoint = shouldSkipEndpoint(type.name, hasAuthentication, name);
 

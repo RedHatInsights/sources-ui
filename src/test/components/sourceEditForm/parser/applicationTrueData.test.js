@@ -5,10 +5,12 @@ import { OPENSHIFT_TYPE } from '../../../addSourceWizard/../__mocks__/sourceType
 
 describe('application parser - true data', () => {
   it('google + OCP', () => {
+    const intl = { formatMessage: jest.fn() };
     const schema = applicationsFields(
       [{ id: '3789', application_type_id: COST_MANAGEMENT_APP.id, authentications: [{ id: '123', authtype: 'token' }] }],
       OPENSHIFT_TYPE,
-      applicationTypes
+      applicationTypes,
+      intl
     );
 
     expect(schema).toEqual([

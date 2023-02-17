@@ -40,6 +40,6 @@ describe('parseSourceToSchema', () => {
   it('calls all subsections', () => {
     parseSourceToSchema(SOURCE, SOURCE_TYPE, APP_TYPES, INTL);
 
-    expect(app.applicationsFields).toHaveBeenCalledWith(SOURCE.applications, SOURCE_TYPE, APP_TYPES);
+    expect(app.applicationsFields).toHaveBeenCalledWith(SOURCE.applications, SOURCE_TYPE, APP_TYPES, INTL);
   });
 });

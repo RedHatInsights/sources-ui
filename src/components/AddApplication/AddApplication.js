@@ -36,6 +36,7 @@ import computeSourceStatus from '../../utilities/computeSourceStatus';
 import filterApps from '../../utilities/filterApps';
 import computeSourceError from '../../utilities/computeSourceError';
 import CloseModal from '../CloseModal';
+import { labelMapper } from '../../utilities/labels';
 
 export const onSubmit = (
   values,
@@ -94,7 +95,10 @@ const AddApplication = () => {
     return removeAppSubmit(
       {
         id: state.data?.id,
-        display_name: appTypes.find(({ id }) => id === state.data?.applications?.[0]?.application_type_id)?.display_name,
+        display_name: labelMapper(
+          appTypes.find(({ id }) => id === state.data?.applications?.[0]?.application_type_id),
+          intl
+        ),
       },
       intl,
       undefined,
@@ -149,7 +153,7 @@ const AddApplication = () => {
       defaultMessage: 'Connect {appName}',
     },
     {
-      appName: applicationType?.display_name || 'application',
+      appName: labelMapper(applicationType, intl) || 'application',
     }
   );
   const description = intl.formatMessage(
@@ -158,7 +162,7 @@ const AddApplication = () => {
       defaultMessage: 'Configure {appName} for this source.',
     },
     {
-      appName: applicationType?.display_name || 'application',
+      appName: labelMapper(applicationType, intl) || 'application',
     }
   );
 
@@ -329,7 +333,7 @@ const AddApplication = () => {
     .filter(filterApps)
     .map((type) => ({
       value: type.id,
-      label: type.display_name,
+      label: labelMapper(type, intl),
     }));
 
   if (

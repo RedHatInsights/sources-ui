@@ -13,7 +13,7 @@ import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import { replaceRouteId, routes } from '../../Routes';
 import disabledTooltipProps from '../../utilities/disabledTooltipProps';
 
-export const itemToCells = (item, columns, sourceTypes, appTypes) =>
+export const itemToCells = (item, columns, sourceTypes, appTypes, intl) =>
   columns
     .filter((column) => column.title || column.hidden)
     .map((col) => ({
@@ -21,11 +21,12 @@ export const itemToCells = (item, columns, sourceTypes, appTypes) =>
         ? col.formatter(item[col.value], item, {
             sourceTypes,
             appTypes,
+            intl,
           })
         : item[col.value] || '',
     }));
 
-const renderSources = (entities, columns, sourceTypes, appTypes, removingSources) =>
+const renderSources = (entities, columns, sourceTypes, appTypes, removingSources, intl) =>
   entities
     .filter(({ hidden }) => !hidden)
     .reduce((acc, item) => {
@@ -37,7 +38,7 @@ const renderSources = (entities, columns, sourceTypes, appTypes, removingSources
           ...item,
           originalName: item.name,
           isOpen: !!item.expanded,
-          cells: itemToCells(item, columns, sourceTypes, appTypes),
+          cells: itemToCells(item, columns, sourceTypes, appTypes, intl),
           disableActions: isDeleting,
           isDeleting,
         },
@@ -164,7 +165,7 @@ const SourcesTable = () => {
     const columns = sourcesColumns(intl, notSortable);
 
     return dispatch({
-      rows: renderSources(entities, columns, sourceTypes, appTypes, removingSources),
+      rows: renderSources(entities, columns, sourceTypes, appTypes, removingSources, intl),
       cells: prepareColumnsCells(columns),
     });
   };

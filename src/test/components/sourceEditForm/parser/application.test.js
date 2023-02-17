@@ -37,6 +37,7 @@ describe('application edit form parser', () => {
 
   let APPLICATIONS;
   let SOURCE_TYPE;
+  let INTL;
 
   beforeEach(() => {
     APPLICATIONS = [
@@ -64,6 +65,7 @@ describe('application edit form parser', () => {
         ],
       },
     };
+    INTL = { formatMessage: jest.fn() };
   });
 
   it('return cost management form group', () => {
@@ -93,7 +95,7 @@ describe('application edit form parser', () => {
       },
     ];
 
-    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, applicationTypes);
+    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, applicationTypes, INTL);
 
     expect(result).toEqual(EXPECTED_RESULT);
   });
@@ -135,7 +137,7 @@ describe('application edit form parser', () => {
       },
     ];
 
-    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, applicationTypes);
+    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, applicationTypes, INTL);
 
     expect(result).toEqual(EXPECTED_RESULT);
   });
@@ -185,7 +187,7 @@ describe('application edit form parser', () => {
       },
     ];
 
-    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, applicationTypes);
+    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, applicationTypes, INTL);
 
     expect(result).toEqual(EXPECTED_RESULT);
   });
@@ -242,7 +244,7 @@ describe('application edit form parser', () => {
       },
     ];
 
-    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, applicationTypes);
+    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, applicationTypes, INTL);
 
     expect(result).toEqual(EXPECTED_RESULT);
   });
@@ -338,7 +340,7 @@ describe('application edit form parser', () => {
       },
     ];
 
-    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, applicationTypes);
+    const result = applicationsFields(APPLICATIONS, SOURCE_TYPE, applicationTypes, INTL);
 
     expect(result).toEqual(EXPECTED_RESULT);
   });
@@ -401,7 +403,7 @@ describe('application edit form parser', () => {
       },
     ];
 
-    const result = applicationsFields(APPLICATIONS, GOOGLE_TYPE, [COST_MANAGEMENT_APP]);
+    const result = applicationsFields(APPLICATIONS, GOOGLE_TYPE, [COST_MANAGEMENT_APP], INTL);
 
     expect(result).toEqual(EXPECTED_RESULT_GOOGLE);
   });

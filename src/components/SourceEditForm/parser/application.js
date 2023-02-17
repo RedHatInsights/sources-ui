@@ -5,11 +5,7 @@ import { authenticationFields } from './authentication';
 import { endpointFields } from './endpoint';
 import EditAlert from './EditAlert';
 import ResourcesEmptyState from '../../SourceDetail/ResourcesEmptyState';
-
-export const APP_NAMES = {
-  COST_MANAGAMENT: '/insights/platform/cost-management',
-  CLOUD_METER: '/insights/platform/cloud-meter',
-};
+import { labelMapper } from '../../../utilities/labels';
 
 const createOneAppFields = (appType, sourceType, app) => [
   {
@@ -29,7 +25,7 @@ const createOneAppFields = (appType, sourceType, app) => [
   ),
 ];
 
-export const applicationsFields = (applications, sourceType, appTypes) => [
+export const applicationsFields = (applications, sourceType, appTypes, intl) => [
   {
     component: componentTypes.TABS,
     name: 'app-tabs',
@@ -56,7 +52,7 @@ export const applicationsFields = (applications, sourceType, appTypes) => [
               id: 'resourceTable.emptyStateDescription',
               defaultMessage: '{applicationName} resources will be added here when created.',
             },
-            applicationName: appType?.display_name,
+            applicationName: labelMapper(appType, intl),
             Icon: PlusCircleIcon,
           });
         } else if (app.paused_at) {
@@ -65,7 +61,7 @@ export const applicationsFields = (applications, sourceType, appTypes) => [
 
         return {
           name: appType?.id,
-          title: appType?.display_name,
+          title: labelMapper(appType, intl),
           fields,
         };
       }),

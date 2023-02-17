@@ -10,6 +10,7 @@ import { useSource } from '../../hooks/useSource';
 
 import removeAppSubmit from './removeAppSubmit';
 import { replaceRouteId, routes } from '../../Routes';
+import { labelMapper } from '../../utilities/labels';
 
 const RemoveAppModal = () => {
   const intl = useIntl();
@@ -30,10 +31,13 @@ const RemoveAppModal = () => {
 
   const app = {
     id: app_id,
-    display_name: appType?.display_name,
+    display_name: labelMapper(appType, intl),
     dependent_applications: appType?.dependent_applications,
-    sourceAppsNames: source.applications.map(
-      ({ application_type_id }) => appTypes.find(({ id }) => id === application_type_id)?.display_name
+    sourceAppsNames: source.applications.map(({ application_type_id }) =>
+      labelMapper(
+        appTypes.find(({ id }) => id === application_type_id),
+        intl
+      )
     ),
   };
 
@@ -44,7 +48,9 @@ const RemoveAppModal = () => {
     .map((appName) => {
       const appType = appTypes.find(({ name }) => name === appName);
 
-      return source?.applications?.find(({ application_type_id }) => application_type_id === appType.id) && appType?.display_name;
+      return (
+        source?.applications?.find(({ application_type_id }) => application_type_id === appType.id) && labelMapper(appType, intl)
+      );
     })
     .filter(Boolean);
 

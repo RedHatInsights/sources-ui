@@ -5,5 +5,5 @@ export const parseSourceToSchema = (source, sourceType, appTypes, intl) => ({
     id: 'sources.editFormDescripiton',
     defaultMessage: 'Use the form fields to edit application credentials.',
   }),
-  fields: applicationsFields(source.applications, sourceType, appTypes),
+  fields: applicationsFields(source.applications, sourceType, appTypes, intl),
 });

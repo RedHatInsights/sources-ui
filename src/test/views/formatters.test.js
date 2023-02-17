@@ -151,6 +151,12 @@ describe('formatters', () => {
   });
 
   describe('applicationFormatter', () => {
+    let INTL;
+
+    beforeEach(() => {
+      INTL = { formatMessage: jest.fn() };
+    });
+
     it('returns full application list', async () => {
       const user = userEvent.setup();
 
@@ -159,6 +165,7 @@ describe('formatters', () => {
           <React.Fragment>
             {applicationFormatter(sourcesDataGraphQl[SOURCE_ALL_APS_INDEX].applications, undefined, {
               appTypes,
+              intl: INTL,
             })}
           </React.Fragment>
         )
@@ -181,6 +188,7 @@ describe('formatters', () => {
           <React.Fragment>
             {applicationFormatter(sourcesDataGraphQl[SOURCE_NO_APS_INDEX].applications, undefined, {
               appTypes,
+              intl: INTL,
             })}
           </React.Fragment>
         )
@@ -195,6 +203,7 @@ describe('formatters', () => {
           <React.Fragment>
             {applicationFormatter(sourcesDataGraphQl[SOURCE_CATALOGAPP_INDEX].applications, undefined, {
               appTypes,
+              intl: INTL,
             })}
           </React.Fragment>
         )
@@ -219,6 +228,7 @@ describe('formatters', () => {
               undefined,
               {
                 appTypes,
+                intl: INTL,
               }
             )}
           </React.Fragment>
@@ -248,6 +258,7 @@ describe('formatters', () => {
               undefined,
               {
                 appTypes,
+                intl: INTL,
               }
             )}
           </React.Fragment>
@@ -277,6 +288,7 @@ describe('formatters', () => {
               { endpoints: [{ availability_status: UNAVAILABLE, availability_status_error: ERROR }] },
               {
                 appTypes,
+                intl: INTL,
               }
             )}
           </React.Fragment>
@@ -305,6 +317,7 @@ describe('formatters', () => {
               undefined,
               {
                 appTypes,
+                intl: INTL,
               }
             )}
           </React.Fragment>
@@ -339,6 +352,7 @@ describe('formatters', () => {
               undefined,
               {
                 appTypes,
+                intl: INTL,
               }
             )}
           </React.Fragment>
@@ -370,6 +384,7 @@ describe('formatters', () => {
               undefined,
               {
                 appTypes,
+                intl: INTL,
               }
             )}
           </React.Fragment>
@@ -398,6 +413,7 @@ describe('formatters', () => {
               undefined,
               {
                 appTypes,
+                intl: INTL,
               }
             )}
           </React.Fragment>

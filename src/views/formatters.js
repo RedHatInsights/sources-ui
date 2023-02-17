@@ -12,6 +12,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { DateFormat } from '@redhat-cloud-services/frontend-components/DateFormat';
 import { Link } from 'react-router-dom';
 import { replaceRouteId, routes } from '../Routes';
+import { labelMapper } from '../utilities/labels';
 
 export const defaultPort = (scheme) =>
   ({
@@ -434,7 +435,7 @@ EnhancedLabelGroup.propTypes = {
   ).isRequired,
 };
 
-export const getAppStatus = (app, source, appTypes) => {
+export const getAppStatus = (app, source, appTypes, intl) => {
   const application = appTypes.find((type) => type.id === app.application_type_id);
 
   if (application) {
@@ -447,7 +448,7 @@ export const getAppStatus = (app, source, appTypes) => {
     }
 
     return {
-      display_name: application.display_name,
+      display_name: labelMapper(application, intl),
       paused_at: app.paused_at,
       availability_status,
       availability_status_error,
@@ -455,9 +456,9 @@ export const getAppStatus = (app, source, appTypes) => {
   }
 };
 
-export const applicationFormatter = (apps, item, { appTypes }) => {
+export const applicationFormatter = (apps, item, { appTypes, intl }) => {
   const applications = apps
-    .map((app) => getAppStatus(app, item, appTypes))
+    .map((app) => getAppStatus(app, item, appTypes, intl))
     .filter(Boolean)
     .sort((a, b) => a.display_name.localeCompare(b.display_name));
 

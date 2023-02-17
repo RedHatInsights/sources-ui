@@ -334,7 +334,7 @@ describe('SourceWizardSummary component', () => {
       expect(data).toEqual([
         ['Name', 'cosi'],
         ['Source type', 'Microsoft Azure'],
-        ['Application', 'RHEL management'],
+        ['Application', 'RHEL management Bundle'],
         ['Subscription ID', 'some-subscription-id'],
       ]);
     });
@@ -359,7 +359,7 @@ describe('SourceWizardSummary component', () => {
       expect(data).toEqual([
         ['Name', 'cosi'],
         ['Source type', 'Microsoft Azure'],
-        ['Application', 'RHEL management'],
+        ['Application', 'RHEL management Bundle'],
       ]);
     });
 
@@ -383,7 +383,7 @@ describe('SourceWizardSummary component', () => {
       expect(data).toEqual([
         ['Name', 'cosi'],
         ['Source type', 'Google Cloud'],
-        ['Application', 'RHEL management'],
+        ['Application', 'RHEL management Bundle'],
       ]);
 
       expect(screen.getByText('This source will not be monitored in Sources')).toBeInTheDocument();
@@ -497,7 +497,7 @@ describe('SourceWizardSummary component', () => {
       expect(data).toEqual([
         ['Name', 'cosi'],
         ['Source type', 'Amazon Web Services'],
-        ['Application', 'RHEL management'],
+        ['Application', 'RHEL management Bundle'],
         ['ARN', 'arn:aws:132'],
       ]);
     });
