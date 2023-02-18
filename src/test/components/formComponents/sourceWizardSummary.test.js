@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage, IntlProvider } from 'react-intl';
-import { screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { Label } from '@patternfly/react-core';
@@ -14,7 +14,6 @@ import applicationTypes, {
 import sourceTypes from '../../addSourceWizard/../__mocks__/sourceTypes';
 
 import RendererContext from '@data-driven-forms/react-form-renderer/renderer-context';
-import render from '../../addSourceWizard/__mocks__/render';
 
 import Summary, { createItem } from '../../../components/FormComponents/SourceWizardSummary';
 import { NO_APPLICATION_VALUE } from '../../../components/addSourceWizard/stringConstants';

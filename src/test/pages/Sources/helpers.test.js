@@ -18,7 +18,7 @@ import sourceTypes, { AMAZON_TYPE, ANSIBLE_TOWER_TYPE, OPENSHIFT_TYPE } from '..
 import applicationTypes, { CATALOG_APP } from '../../__mocks__/applicationTypes';
 import { REDHAT_VENDOR } from '../../../utilities/constants';
 import { AVAILABLE, UNAVAILABLE } from '../../../views/formatters';
-import { replaceRouteId, routes } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routing';
 
 describe('Source page helpers', () => {
   describe('afterSuccess', () => {

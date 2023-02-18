@@ -9,7 +9,7 @@ import RedirectNoId from '../components/RedirectNoId/RedirectNoId';
 import { useSource } from '../hooks/useSource';
 import { DetailLoader } from '../components/SourcesTable/loaders';
 import CustomRoute from '../components/CustomRoute/CustomRoute';
-import { replaceRouteId, routes } from '../Routes';
+import { replaceRouteId, routes } from '../Routing';
 import DetailHeader from '../components/SourceDetail/DetailHeader';
 import isSuperKey from '../utilities/isSuperKey';
 import ResourcesTable from '../components/SourceDetail/ResourcesTable';
@@ -52,7 +52,6 @@ const EditCredentials = lazy(() =>
 
 const Detail = () => {
   const source = useSource();
-
   if (!source) {
     return (
       <React.Fragment>
@@ -68,15 +67,31 @@ const Detail = () => {
     <div className="src-c-detail-page">
       <Suspense fallback={null}>
         <CustomRoute
-          exact
-          route={routes.sourcesDetailRemove}
+          route={{
+            ...routes.sourcesDetail,
+            path: 'remove',
+          }}
           Component={SourceRemoveModal}
           componentProps={{ backPath: replaceRouteId(routes.sourcesDetail.path, source.id) }}
         />
-        <CustomRoute exact route={routes.sourcesDetailAddApp} Component={AddApplication} />
-        <CustomRoute exact route={routes.sourcesDetailRemoveApp} Component={RemoveAppModal} />
-        <CustomRoute exact route={routes.sourcesDetailRename} Component={SourceRenameModal} />
-        <CustomRoute exact route={routes.sourcesDetailEditCredentials} Component={EditCredentials} />
+        <CustomRoute route={{ ...routes.sourcesDetailAddApp, path: 'add_app/:app_type_id' }} Component={AddApplication} />
+        <CustomRoute route={{ ...routes.sourcesDetailRemoveApp, path: 'remove_app/:app_id' }} Component={RemoveAppModal} />
+        <CustomRoute
+          route={{
+            ...routes.sourcesDetail,
+            path: 'rename',
+          }}
+          Component={SourceRenameModal}
+          componentProps={{ backPath: replaceRouteId(routes.sourcesDetail.path, source.id) }}
+        />
+        <CustomRoute
+          route={{
+            ...routes.sourcesDetail,
+            path: 'edit_credentials',
+          }}
+          Component={EditCredentials}
+          componentProps={{ backPath: replaceRouteId(routes.sourcesDetail.path, source.id) }}
+        />
       </Suspense>
       <DetailHeader />
       {source.paused_at && <PauseAlert />}

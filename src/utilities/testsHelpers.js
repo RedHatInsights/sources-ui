@@ -15,7 +15,7 @@ LocationDisplay.propTypes = {
   id: PropTypes.string,
 };
 
-export const componentWrapperIntl = (children, store, initialEntries, initialIndex = 0) => {
+export const componentWrapperIntl = (children, store, initialEntries = [], initialIndex = 0) => {
   if (!store) {
     store = mockStore({});
   }
@@ -23,7 +23,12 @@ export const componentWrapperIntl = (children, store, initialEntries, initialInd
   return (
     <IntlProvider locale="en">
       <Provider store={store}>
-        <MemoryRouter initialEntries={initialEntries} initialIndex={initialIndex}>
+        <MemoryRouter
+          initialEntries={
+            initialEntries.length > 0 ? initialEntries.map((entry) => (entry.match(/^\/.+/) ? entry : `/${entry}`)) : undefined
+          }
+          initialIndex={initialIndex}
+        >
           {children}
           <LocationDisplay />
         </MemoryRouter>

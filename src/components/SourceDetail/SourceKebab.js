@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
-import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
 
-import { replaceRouteId, routes } from '../../Routes';
+import { replaceRouteId, routes } from '../../Routing';
 import { useSource } from '../../hooks/useSource';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import { pauseSource, resumeSource } from '../../redux/sources/actions';
 import disabledTooltipProps from '../../utilities/disabledTooltipProps';
+import AppLink from '../AppLink';
 
 const SourceKebab = () => {
   const [isOpen, setOpen] = useState(false);
   const intl = useIntl();
-  const { push } = useHistory();
   const source = useSource();
   const hasRightAccess = useHasWritePermissions();
   const dispatch = useDispatch();
@@ -78,7 +77,8 @@ const SourceKebab = () => {
         <DropdownItem
           {...(!hasRightAccess && disabledProps)}
           key="remove"
-          onClick={() => push(replaceRouteId(routes.sourcesDetailRemove.path, source.id))}
+          to={replaceRouteId(routes.sourcesDetailRemove.path, source.id)}
+          component={AppLink}
           description={intl.formatMessage({
             id: 'detail.remove.description',
             defaultMessage: 'Permanently delete this source and all collected data',
@@ -93,7 +93,8 @@ const SourceKebab = () => {
           {...(!hasRightAccess && disabledProps)}
           {...(source.paused_at && pausedProps)}
           key="rename"
-          onClick={() => push(replaceRouteId(routes.sourcesDetailRename.path, source.id))}
+          to={replaceRouteId(routes.sourcesDetailRename.path, source.id)}
+          component={AppLink}
         >
           {intl.formatMessage({
             id: 'detail.rename.button',

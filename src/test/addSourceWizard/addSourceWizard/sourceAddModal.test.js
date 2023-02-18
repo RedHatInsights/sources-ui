@@ -1,5 +1,5 @@
 import React from 'react';
-import { screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import AddSourceWizard from '../../../components/addSourceWizard/SourceAddModal';
@@ -7,12 +7,14 @@ import sourceTypes from '../../__mocks__/sourceTypes';
 import applicationTypes from '../../__mocks__/applicationTypes';
 
 import * as dependency from '../../../api/wizardHelpers';
-import render from '../__mocks__/render';
+import mockStore from '../../__mocks__/mockStore';
+import componentWrapperIntl from '../../../utilities/testsHelpers';
 
 describe('sourceAddModal', () => {
   let initialProps;
+  let initialState;
   let spyFunction;
-
+  let store;
   beforeEach(() => {
     spyFunction = jest.fn();
 
@@ -22,10 +24,21 @@ describe('sourceAddModal', () => {
       onCancel: jest.fn(),
       onSubmit: jest.fn(),
     };
+
+    initialState = {
+      sources: {},
+    };
+
+    store = mockStore(initialState);
   });
 
   it('renders correctly with sourceTypes and applicationTypes', async () => {
-    render(<AddSourceWizard {...initialProps} sourceTypes={sourceTypes} applicationTypes={applicationTypes} />);
+    render(
+      componentWrapperIntl(
+        <AddSourceWizard {...initialProps} sourceTypes={sourceTypes} applicationTypes={applicationTypes} />,
+        store
+      )
+    );
 
     await waitFor(() => expect(screen.getByText('Select a cloud provider')).toBeInTheDocument());
   });
@@ -34,7 +47,7 @@ describe('sourceAddModal', () => {
     dependency.doLoadApplicationTypes = jest.fn(() => new Promise((resolve) => resolve({ applicationTypes })));
     dependency.doLoadSourceTypes = jest.fn(() => new Promise((resolve) => resolve({ sourceTypes })));
 
-    render(<AddSourceWizard {...initialProps} applicationTypes={applicationTypes} />);
+    render(componentWrapperIntl(<AddSourceWizard {...initialProps} applicationTypes={applicationTypes} />, store));
 
     await waitFor(() => expect(screen.getByText('Select a cloud provider')).toBeInTheDocument());
 
@@ -46,7 +59,7 @@ describe('sourceAddModal', () => {
     dependency.doLoadSourceTypes = jest.fn(() => new Promise((resolve) => resolve({ sourceTypes })));
     dependency.doLoadApplicationTypes = jest.fn(() => new Promise((resolve) => resolve({ applicationTypes })));
 
-    render(<AddSourceWizard {...initialProps} sourceTypes={sourceTypes} />);
+    render(componentWrapperIntl(<AddSourceWizard {...initialProps} sourceTypes={sourceTypes} />, store));
 
     await waitFor(() => expect(screen.getByText('Select a cloud provider')).toBeInTheDocument());
 
@@ -58,7 +71,7 @@ describe('sourceAddModal', () => {
     dependency.doLoadSourceTypes = jest.fn(() => new Promise((resolve) => resolve({ sourceTypes })));
     dependency.doLoadApplicationTypes = jest.fn(() => new Promise((resolve) => resolve({ applicationTypes })));
 
-    render(<AddSourceWizard {...initialProps} />);
+    render(componentWrapperIntl(<AddSourceWizard {...initialProps} />, store));
 
     await waitFor(() => expect(screen.getByText('Select a cloud provider')).toBeInTheDocument());
 
@@ -76,7 +89,7 @@ describe('sourceAddModal', () => {
       .fn()
       .mockImplementation(() => new Promise((resolve) => resolve({ applicationTypes })));
 
-    render(<AddSourceWizard {...initialProps} onCancel={onCancel} />);
+    render(componentWrapperIntl(<AddSourceWizard {...initialProps} onCancel={onCancel} />, store));
 
     expect(screen.getByText('Loading')).toBeInTheDocument(1);
 

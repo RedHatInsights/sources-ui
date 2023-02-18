@@ -1,9 +1,9 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { replaceRouteId, routes } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routing';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import mockStore from '../../__mocks__/mockStore';
 import ApplicationKebab from '../../../components/SourceDetail/ApplicationKebab';
@@ -52,7 +52,9 @@ describe('ApplicationKebab', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationKebab {...args} {...initialProps} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<ApplicationKebab {...initialProps} />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -95,7 +97,9 @@ describe('ApplicationKebab', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationKebab {...args} {...initialProps} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<ApplicationKebab {...initialProps} />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -130,7 +134,9 @@ describe('ApplicationKebab', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationKebab {...args} {...initialProps} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetail.path} element={<ApplicationKebab {...initialProps} />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -158,7 +164,7 @@ describe('ApplicationKebab', () => {
       await user.click(screen.getByText('Remove'));
 
       expect(screen.getByTestId('location-display').textContent).toEqual(
-        replaceRouteId(routes.sourcesDetailRemoveApp.path, sourceId).replace(':app_id', app.id)
+        replaceRouteId(`/settings/sources/${routes.sourcesDetailRemoveApp.path}`, sourceId).replace(':app_id', app.id)
       );
     });
 
@@ -192,7 +198,9 @@ describe('ApplicationKebab', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationKebab {...args} {...initialProps} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetail.path} element={<ApplicationKebab {...initialProps} />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -234,7 +242,9 @@ describe('ApplicationKebab', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationKebab {...args} {...initialProps} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetail.path} element={<ApplicationKebab {...initialProps} />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -262,7 +272,7 @@ describe('ApplicationKebab', () => {
       await user.click(screen.getByText('Remove'));
 
       expect(screen.getByTestId('location-display').textContent).toEqual(
-        replaceRouteId(routes.sourcesDetailRemoveApp.path, sourceId).replace(':app_id', app.id)
+        replaceRouteId(`/settings/sources/${routes.sourcesDetailRemoveApp.path}`, sourceId).replace(':app_id', app.id)
       );
     });
 
