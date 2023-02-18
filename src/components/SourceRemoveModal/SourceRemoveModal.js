@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 
@@ -10,13 +9,14 @@ import ExclamationTriangleIcon from '@patternfly/react-icons/dist/esm/icons/excl
 
 import { removeSource } from '../../redux/sources/actions';
 import { useSource } from '../../hooks/useSource';
-import { routes } from '../../Routes';
+import { useAppNavigate } from '../../hooks/useAppNavigate';
+import { routes } from '../../Routing';
 
 import { bodyVariants, typesWithExtendedText } from './helpers';
 import AppListInRemoval from './AppListInRemoval';
 
 const SourceRemoveModal = ({ backPath }) => {
-  const { push } = useHistory();
+  const appNavigate = useAppNavigate();
 
   const [acknowledge, setAcknowledge] = useState(false);
 
@@ -27,10 +27,10 @@ const SourceRemoveModal = ({ backPath }) => {
 
   const { sourceTypes } = useSelector(({ sources }) => sources, shallowEqual);
 
-  const returnToSources = () => push(backPath);
+  const returnToSources = () => appNavigate(backPath);
 
   const onSubmit = () => {
-    push(routes.sources.path);
+    appNavigate(routes.sources.path);
     dispatch(
       removeSource(
         source.id,

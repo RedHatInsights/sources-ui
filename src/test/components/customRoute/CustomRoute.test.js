@@ -30,12 +30,7 @@ describe('CustomRoute', () => {
   it('renders custom component and passes props', () => {
     render(
       componentWrapperIntl(
-        <CustomRoute
-          exact
-          route={route}
-          Component={PokusComponent}
-          componentProps={{ className: 'pepa', style: { color: 'red' } }}
-        />,
+        <CustomRoute route={route} Component={PokusComponent} componentProps={{ className: 'pepa', style: { color: 'red' } }} />,
         undefined,
         ['/path']
       )
@@ -53,9 +48,9 @@ describe('CustomRoute', () => {
       writeAccess: true,
     };
 
-    render(componentWrapperIntl(<CustomRoute exact route={route} Component={PokusComponent} />, store, ['/path']));
+    render(componentWrapperIntl(<CustomRoute route={route} Component={PokusComponent} />, store, ['/path']));
 
-    expect(screen.getByTestId('location-display').textContent).toEqual('/sources');
+    expect(screen.getByTestId('location-display').textContent).toEqual('/settings/sources/');
   });
 
   it('renders RedirectNoId when redirectNoId set', () => {
@@ -67,7 +62,7 @@ describe('CustomRoute', () => {
       redirectNoId: true,
     };
 
-    render(componentWrapperIntl(<CustomRoute exact route={route} Component={PokusComponent} />, undefined, ['/path/']));
+    render(componentWrapperIntl(<CustomRoute route={route} Component={PokusComponent} />, undefined, ['/path/']));
 
     expect(screen.getByText('Redirect no ID mock')).toBeInTheDocument();
     expect(useSource.useSource).toHaveBeenCalled();
@@ -82,7 +77,7 @@ describe('CustomRoute', () => {
       noPaused: true,
     };
 
-    render(componentWrapperIntl(<CustomRoute exact route={route} Component={PokusComponent} />, store, ['/path']));
+    render(componentWrapperIntl(<CustomRoute route={route} Component={PokusComponent} />, store, ['/path']));
 
     expect(screen.getByText('Custom component', { selector: 'h1' })).toBeInTheDocument();
     expect(screen.getByText('Redirect no paused mock')).toBeInTheDocument();

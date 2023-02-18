@@ -4,7 +4,7 @@ import awesomeDebounce from 'awesome-debounce-promise';
 import { AlertActionLink } from '@patternfly/react-core';
 
 import { addMessage, filterSources, loadEntities, removeMessage } from '../../redux/sources/actions';
-import { replaceRouteId, routes } from '../../Routes';
+import { replaceRouteId, routes } from '../../Routing';
 import { AVAILABLE } from '../../views/formatters';
 import computeSourceStatus from '../../utilities/computeSourceStatus';
 import { bold } from '../../utilities/intlShared';

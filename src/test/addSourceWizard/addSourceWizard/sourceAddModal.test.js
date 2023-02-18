@@ -1,5 +1,5 @@
 import React from 'react';
-import { screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import AddSourceWizard from '../../../components/addSourceWizard/SourceAddModal';
@@ -7,7 +7,9 @@ import sourceTypes from '../../__mocks__/sourceTypes';
 import applicationTypes from '../../__mocks__/applicationTypes';
 
 import * as dependency from '../../../api/wizardHelpers';
-import render from '../__mocks__/render';
+import hcsEnrollment from '../../__mocks__/hcs';
+import mockStore from '../../__mocks__/mockStore';
+import componentWrapperIntl from '../../../utilities/testsHelpers';
 
 describe('sourceAddModal', () => {
   let initialProps;

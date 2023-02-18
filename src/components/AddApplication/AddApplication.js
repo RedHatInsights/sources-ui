@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useRef } from 'react';
-import { Link, Redirect, useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import isEmpty from 'lodash/isEmpty';
@@ -17,7 +17,7 @@ import { getSourcesApi } from '../../api/entities';
 import { useSource } from '../../hooks/useSource';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
 import { endpointToUrl } from '../../views/formatters';
-import { replaceRouteId, routes } from '../../Routes';
+import { replaceRouteId, routes } from '../../Routing';
 
 import { doAttachApp } from '../../api/doAttachApp';
 import { checkSourceStatus } from '../../api/checkSourceStatus';
@@ -36,6 +36,9 @@ import computeSourceStatus from '../../utilities/computeSourceStatus';
 import filterApps from '../../utilities/filterApps';
 import computeSourceError from '../../utilities/computeSourceError';
 import CloseModal from '../CloseModal';
+import { useAppNavigate } from '../../hooks/useAppNavigate';
+import AppLink from '../AppLink';
+import AppNavigate from '../AppNavigate';
 
 export const onSubmit = (
   values,
@@ -68,7 +71,7 @@ const FormTemplateWrapper = (props) => <FormTemplate {...props} showFormControls
 
 const AddApplication = () => {
   const intl = useIntl();
-  const history = useHistory();
+  const navigate = useAppNavigate();
   const selectedApp = useRef();
   const enableLighthouse = useFlag('sources.wizard.lighthouse');
   const saveSelectedApp = ({ values: { application } }) => (selectedApp.current = application);
@@ -141,7 +144,7 @@ const AddApplication = () => {
     }
   }, [source]);
 
-  const goToSources = () => history.push(replaceRouteId(routes.sourcesDetail.path, source.id));
+  const goToSources = () => navigate(replaceRouteId(routes.sourcesDetail.path, source.id));
 
   const title = intl.formatMessage(
     {
@@ -294,14 +297,14 @@ const AddApplication = () => {
                 </Button>
               }
               Component={() => (
-                <Link to={replaceRouteId(routes.sourcesDetail.path, source.id)}>
+                <AppLink to={replaceRouteId(routes.sourcesDetail.path, source.id)}>
                   <Button variant="primary" className="pf-u-mt-xl">
                     {intl.formatMessage({
                       id: 'wizard.editSource',
                       defaultMessage: 'Edit source',
                     })}
                   </Button>
-                </Link>
+                </AppLink>
               )}
             />
           );
@@ -337,7 +340,7 @@ const AddApplication = () => {
     source.applications.find(({ application_type_id }) => application_type_id === app_type_id) ||
     !applicationType.supported_source_types.includes(sourceType.name)
   ) {
-    return <Redirect to={replaceRouteId(routes.sourcesDetail.path, source.id)} />;
+    return <AppNavigate to={'/' + replaceRouteId(routes.sourcesDetail.path, source.id)} />;
   }
 
   const schema = createSchema(

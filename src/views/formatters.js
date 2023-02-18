@@ -11,7 +11,8 @@ import { ACCOUNT_AUTHORIZATION } from '../components/constants';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { DateFormat } from '@redhat-cloud-services/frontend-components/DateFormat';
 import { Link } from 'react-router-dom';
-import { replaceRouteId, routes } from '../Routes';
+import { replaceRouteId, routes } from '../Routing';
+import AppLink from '../components/AppLink';
 
 export const defaultPort = (scheme) =>
   ({
@@ -471,7 +472,7 @@ export const applicationFormatter = (apps, item, { appTypes }) => {
 export const configurationModeFormatter = (mode, item, { intl, sourceType }) => {
   if (mode === ACCOUNT_AUTHORIZATION) {
     const superKeyType = sourceType?.schema.authentication.find(({ is_superkey }) => is_superkey);
-    const superKeyAuth = item?.authentications?.find(({ authtype }) => authtype && authtype === superKeyType.type);
+    const superKeyAuth = item?.authentications?.find(({ authtype }) => authtype && authtype === superKeyType?.type);
 
     return (
       <React.Fragment>
@@ -496,7 +497,7 @@ export const configurationModeFormatter = (mode, item, { intl, sourceType }) => 
           </Tooltip>
         )}
         <div className="pf-u-mt-sm">
-          <Link to={replaceRouteId(routes.sourcesDetailEditCredentials.path, item.id)}>
+          <AppLink to={replaceRouteId(routes.sourcesDetailEditCredentials.path, item.id)}>
             <Button variant="link" id="edit-super-credentials" isInline>
               {item.paused_at
                 ? intl.formatMessage({
@@ -508,7 +509,7 @@ export const configurationModeFormatter = (mode, item, { intl, sourceType }) => 
                     defaultMessage: 'Edit credentials',
                   })}
             </Button>
-          </Link>
+          </AppLink>
         </div>
       </React.Fragment>
     );

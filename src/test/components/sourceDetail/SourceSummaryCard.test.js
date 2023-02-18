@@ -6,8 +6,8 @@ import { ACCOUNT_AUTHORIZATION } from '../../../components/constants';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import sourceTypes, { AMAZON_TYPE } from '../../__mocks__/sourceTypes';
 import SourceSummaryCard from '../../../components/SourceDetail/SourceSummaryCard';
-import { Route } from 'react-router-dom';
-import { replaceRouteId, routes } from '../../../Routes';
+import { Route, Routes } from 'react-router-dom';
+import { replaceRouteId, routes } from '../../../Routing';
 import * as formatters from '../../../views/formatters';
 import mockStore from '../../__mocks__/mockStore';
 
@@ -42,7 +42,9 @@ describe('SourceSummaryCard', () => {
 
     const { container } = render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <SourceSummaryCard {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<SourceSummaryCard />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -83,7 +85,9 @@ describe('SourceSummaryCard', () => {
 
     const { container } = render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <SourceSummaryCard {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<SourceSummaryCard />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -120,7 +124,9 @@ describe('SourceSummaryCard', () => {
 
     const { container } = render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <SourceSummaryCard {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<SourceSummaryCard />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -156,7 +162,9 @@ describe('SourceSummaryCard', () => {
 
     const { container } = render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <SourceSummaryCard {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<SourceSummaryCard />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -195,7 +203,9 @@ describe('SourceSummaryCard', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <SourceSummaryCard {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<SourceSummaryCard />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -204,7 +214,7 @@ describe('SourceSummaryCard', () => {
     await user.click(screen.getByText('Edit credentials'));
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
-      replaceRouteId(routes.sourcesDetailEditCredentials.path, sourceId)
+      replaceRouteId(`/settings/sources/${routes.sourcesDetailEditCredentials.path}`, sourceId)
     );
   });
 
@@ -228,7 +238,9 @@ describe('SourceSummaryCard', () => {
 
     const { container } = render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <SourceSummaryCard {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<SourceSummaryCard />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -269,7 +281,9 @@ describe('SourceSummaryCard', () => {
 
     const { container } = render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <SourceSummaryCard {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<SourceSummaryCard />} />
+        </Routes>,
         store,
         initialEntry
       )
