@@ -11,14 +11,15 @@ import { componentWrapperIntl } from '../../utilities/testsHelpers';
 import * as api from '../../api/entities';
 import * as typesApi from '../../api/source_types';
 
-import { routes } from '../../Routes';
+import { routes } from '../../Routing';
 import * as wizard from '../../components/addSourceWizard';
 import { getStore } from '../../utilities/store';
 
 describe('SourcesPage - addSource route', () => {
   let store;
 
-  const wasRedirectedToRoot = () => screen.getByTestId('location-display').textContent === routes.sources.path;
+  const wasRedirectedToRoot = () =>
+    screen.getByTestId('location-display').textContent === '/settings/sources' + routes.sources.path;
 
   beforeEach(() => {
     wizard.AddSourceWizard = () => <h2>AddSource mock</h2>;

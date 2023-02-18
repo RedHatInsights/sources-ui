@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import RenderContext from '@data-driven-forms/react-form-renderer/renderer-context';
 import Form from '@data-driven-forms/react-form-renderer/form';
 
 import * as Cm from '.../../../../components/addSourceWizard/hardcodedComponents/azure/costManagement';
 import { defaultSourcesState } from '../../../../redux/sources/reducer';
-import render from '../../__mocks__/render';
+import mockedRender from '../../__mocks__/render';
 import sourceTypes from '../../../__mocks__/sourceTypes';
 import mockStore from '../../../__mocks__/mockStore';
 import componentWrapperIntl from '../../../../utilities/testsHelpers';
@@ -78,7 +78,7 @@ describe('Cost Management Azure steps components', () => {
   });
 
   it('Subscription ID description', () => {
-    render(<Cm.SubscriptionID />);
+    mockedRender(<Cm.SubscriptionID />);
 
     expect(
       screen.getByText(
@@ -161,7 +161,7 @@ describe('Cost Management Azure steps components', () => {
   });
 
   it('Read Role description', () => {
-    render(
+    mockedRender(
       <Form onSubmit={jest.fn()}>
         {() => (
           <RenderContext.Provider
@@ -191,7 +191,7 @@ describe('Cost Management Azure steps components', () => {
   });
 
   it('Read Role description - storage only', () => {
-    render(
+    mockedRender(
       <Form onSubmit={jest.fn()}>
         {() => (
           <RenderContext.Provider
@@ -219,7 +219,7 @@ describe('Cost Management Azure steps components', () => {
   });
 
   it('EA Read Role description', () => {
-    render(
+    mockedRender(
       <Form onSubmit={jest.fn()}>
         {() => (
           <RenderContext.Provider
@@ -254,7 +254,7 @@ describe('Cost Management Azure steps components', () => {
   });
 
   it('Billing Account Read Role description', () => {
-    render(
+    mockedRender(
       <Form onSubmit={jest.fn()}>
         {() => (
           <RenderContext.Provider
@@ -287,7 +287,7 @@ describe('Cost Management Azure steps components', () => {
   });
 
   it('Billing Profile Read Role description', () => {
-    render(
+    mockedRender(
       <Form onSubmit={jest.fn()}>
         {() => (
           <RenderContext.Provider
@@ -320,7 +320,7 @@ describe('Cost Management Azure steps components', () => {
   });
 
   it('Invoice Section Read Role description', () => {
-    render(
+    mockedRender(
       <Form onSubmit={jest.fn()}>
         {() => (
           <RenderContext.Provider
@@ -353,7 +353,7 @@ describe('Cost Management Azure steps components', () => {
   });
 
   it('Read Role with scope description', () => {
-    render(
+    mockedRender(
       <Form onSubmit={jest.fn()}>
         {() => (
           <RenderContext.Provider
@@ -449,7 +449,7 @@ describe('Cost Management Azure steps components', () => {
   });
 
   it('Export Scope description', () => {
-    render(
+    mockedRender(
       <RenderContext.Provider value={{ formOptions: FORM_OPTIONS }}>
         <Cm.ExportScopeDescription />
       </RenderContext.Provider>
@@ -465,7 +465,7 @@ describe('Cost Management Azure steps components', () => {
   });
 
   it('Export Scope', () => {
-    render(
+    mockedRender(
       <RenderContext.Provider value={{ formOptions: FORM_OPTIONS }}>
         <Cm.ExportScope />
       </RenderContext.Provider>
@@ -486,7 +486,7 @@ describe('Cost Management Azure steps components', () => {
   });
 
   it('Export Scope - storage only', () => {
-    render(
+    mockedRender(
       <RenderContext.Provider value={{ formOptions: FORM_OPTIONS_STORAGE_ONLY }}>
         <Cm.ExportScope />
       </RenderContext.Provider>

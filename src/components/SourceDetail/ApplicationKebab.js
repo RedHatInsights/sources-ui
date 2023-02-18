@@ -1,21 +1,20 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
-import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
 
-import { replaceRouteId, routes } from '../../Routes';
+import { replaceRouteId, routes } from '../../Routing';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import { useSource } from '../../hooks/useSource';
 import disabledTooltipProps from '../../utilities/disabledTooltipProps';
+import AppLink from '../AppLink';
 
 const ApplicationKebab = ({ app, removeApp, addApp }) => {
   const [isOpen, setOpen] = useState(false);
   const intl = useIntl();
   const source = useSource();
-  const { push } = useHistory();
   const hasRightAccess = useHasWritePermissions();
   const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
 
@@ -78,9 +77,8 @@ const ApplicationKebab = ({ app, removeApp, addApp }) => {
         id: 'app.kebab.remove.title',
         defaultMessage: 'Permanently stop data collection for this application.',
       })}
-      onClick={wrappedFunction(() =>
-        push(replaceRouteId(routes.sourcesDetailRemoveApp.path, source.id).replace(':app_id', app.id))
-      )}
+      to={replaceRouteId(routes.sourcesDetailRemoveApp.path, source.id).replace(':app_id', app.id)}
+      component={AppLink}
     >
       {intl.formatMessage({
         id: 'app.kebab.pause.button',

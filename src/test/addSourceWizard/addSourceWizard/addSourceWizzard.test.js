@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { AddSourceWizard } from '../../../components/addSourceWizard/index';
@@ -9,7 +9,6 @@ import applicationTypes from '../../__mocks__/applicationTypes';
 import * as dependency from '../../../api/wizardHelpers';
 import * as createSource from '../../../api/createSource';
 
-import render from '../__mocks__/render';
 import { ACCOUNT_AUTHORIZATION, MANUAL_CONFIGURATION } from '../../../components/constants';
 import { CLOUD_VENDOR, GOOGLE_NAME, REDHAT_VENDOR } from '../../../utilities/constants';
 import { defaultSourcesState } from '../../../redux/sources/reducer';

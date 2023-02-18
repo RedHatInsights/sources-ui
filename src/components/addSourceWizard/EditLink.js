@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
-import { Link } from 'react-router-dom';
 
 import { Button } from '@patternfly/react-core';
 import computeSourcesUrl from '../../utilities/computeSourcesUrl';
+import AppLink from '../AppLink';
 
 const EditLink = ({ id }) => {
   const intl = useIntl();
@@ -12,11 +12,11 @@ const EditLink = ({ id }) => {
 
   if (insights.chrome.getApp() === 'sources') {
     return (
-      <Link to={`/sources/detail/${id}`}>
+      <AppLink to={`/detail/${id}`}>
         <Button variant="primary" className="pf-u-mt-xl">
           {message}
         </Button>
-      </Link>
+      </AppLink>
     );
   }
 

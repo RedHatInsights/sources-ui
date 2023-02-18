@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { Redirect, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 
 import { addHiddenSource, addMessage } from '../../redux/sources/actions';
 import { doLoadSource } from '../../api/entities';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
-import { routes } from '../../Routes';
+import { routes } from '../../Routing';
 import { useSource } from '../../hooks/useSource';
+import AppNavigate from '../AppNavigate';
 
 const RedirectNoId = () => {
   const { id } = useParams();
@@ -54,7 +55,7 @@ const RedirectNoId = () => {
   }, [loaded, appTypesLoaded, sourceTypesLoaded]);
 
   if (applicationIsLoaded && !source) {
-    return <Redirect to={routes.sources.path} />;
+    return <AppNavigate to={routes.sources.path} />;
   }
 
   return null;

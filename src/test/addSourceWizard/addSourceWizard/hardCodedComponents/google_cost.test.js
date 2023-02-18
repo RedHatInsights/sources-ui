@@ -1,10 +1,10 @@
 import React from 'react';
-import { screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 
 import * as api from '../../../../api/entities';
 
 import * as Cm from '../../../../components/addSourceWizard/hardcodedComponents/gcp/costManagement';
-import render from '../../__mocks__/render';
+import mockedRender from '../../__mocks__/render';
 import SourcesFormRenderer from '../../../../utilities/SourcesFormRenderer';
 import mockStore from '../../../__mocks__/mockStore';
 import componentWrapperIntl from '../../../../utilities/testsHelpers';
@@ -56,7 +56,7 @@ describe('Cost Management Google steps components', () => {
           }),
       });
 
-      render(<Cm.AssignAccess />);
+      mockedRender(<Cm.AssignAccess />);
 
       expect(screen.getByLabelText('Copyable input')).toHaveValue(`Loading account address...`);
 
@@ -78,7 +78,7 @@ describe('Cost Management Google steps components', () => {
         getGoogleAccount: () => Promise.reject(error),
       });
 
-      render(<Cm.AssignAccess />);
+      mockedRender(<Cm.AssignAccess />);
 
       expect(screen.getByLabelText('Copyable input')).toHaveValue(`Loading account address...`);
 
@@ -167,7 +167,7 @@ describe('Cost Management Google steps components', () => {
   });
 
   it('Billing export', () => {
-    render(<Cm.BillingExport />);
+    mockedRender(<Cm.BillingExport />);
 
     expect(
       screen.getByText('To enable detailed billing data exports to BigQuery, set up daily cost export.', { exact: false })

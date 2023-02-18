@@ -1,13 +1,13 @@
 import { render } from '@testing-library/react';
 
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import rendererContext from '@data-driven-forms/react-form-renderer/renderer-context';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import sourceTypes, { OPENSHIFT_TYPE } from '../../__mocks__/sourceTypes';
 import { AuthTypeSetter } from '../../../components/AddApplication/AuthTypeSetter';
-import { replaceRouteId, routes } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routing';
 import mockStore from '../../__mocks__/mockStore';
 
 describe('AuthTypeSetter', () => {
@@ -66,7 +66,9 @@ describe('AuthTypeSetter', () => {
 
       return componentWrapperIntl(
         <rendererContext.Provider value={{ formOptions }}>
-          <Route path={routes.sourcesDetail.path} render={(...args) => <AuthTypeSetter {...args} {...props} />} />
+          <Routes>
+            <Route path={routes.sourcesDetail.path} element={<AuthTypeSetter {...props} />} />
+          </Routes>
         </rendererContext.Provider>,
         store,
         initialEntry

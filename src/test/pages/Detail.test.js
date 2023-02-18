@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import { act, render, screen } from '@testing-library/react';
 
@@ -11,9 +11,10 @@ import * as ApplicationResourcesCard from '../../components/SourceDetail/Applica
 import * as ApplicationsCard from '../../components/SourceDetail/ApplicationsCard';
 import * as SourceSummaryCard from '../../components/SourceDetail/SourceSummaryCard';
 import * as DetailHeader from '../../components/SourceDetail/DetailHeader';
-import { replaceRouteId, routes } from '../../Routes';
+import { replaceRouteId, routes } from '../../Routing';
 import componentWrapperIntl from '../../utilities/testsHelpers';
 import mockStore from '../__mocks__/mockStore';
+import CustomRoute from '../../components/CustomRoute/CustomRoute';
 
 jest.mock('../../components/SourceRemoveModal/SourceRemoveModal', () => ({
   __esModule: true,
@@ -90,7 +91,9 @@ describe('SourceDetail', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
+        <Routes>
+          <Route path={`${routes.sourcesDetail.path}/*`} element={<Detail />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -113,7 +116,9 @@ describe('SourceDetail', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
+        <Routes>
+          <Route path={`${routes.sourcesDetail.path}/*`} element={<Detail />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -152,7 +157,9 @@ describe('SourceDetail', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
+        <Routes>
+          <Route path={`${routes.sourcesDetail.path}/*`} element={<Detail />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -191,12 +198,15 @@ describe('SourceDetail', () => {
       });
 
       it('routes to remove source', async () => {
-        const initialEntry = [replaceRouteId(routes.sourcesDetailRemove.path, sourceId)];
+        const initialEntry = ['/' + replaceRouteId(routes.sourcesDetailRemove.path, sourceId)];
 
         await act(async () => {
           render(
             componentWrapperIntl(
-              <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
+              <CustomRoute
+                route={{ ...routes.sourcesDetail, writeAccess: true, path: routes.sourcesDetail.path + '/*' }}
+                Component={Detail}
+              />,
               store,
               initialEntry
             )
@@ -209,12 +219,21 @@ describe('SourceDetail', () => {
       });
 
       it('routes to rename source', async () => {
-        const initialEntry = [replaceRouteId(routes.sourcesDetailRename.path, sourceId)];
+        const initialEntry = ['/' + replaceRouteId(routes.sourcesDetailRename.path, sourceId)];
 
         await act(async () => {
           render(
             componentWrapperIntl(
-              <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
+              <CustomRoute
+                route={{
+                  ...routes.sourcesDetail,
+                  writeAccess: true,
+                  noPaused: true,
+                  redirectNoId: true,
+                  path: routes.sourcesDetail.path + '/*',
+                }}
+                Component={Detail}
+              />,
               store,
               initialEntry
             )
@@ -232,7 +251,9 @@ describe('SourceDetail', () => {
         await act(async () => {
           render(
             componentWrapperIntl(
-              <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
+              <Routes>
+                <Route path={`${routes.sourcesDetail.path}/*`} element={<Detail />} />
+              </Routes>,
               store,
               initialEntry
             )
@@ -250,7 +271,9 @@ describe('SourceDetail', () => {
         await act(async () => {
           render(
             componentWrapperIntl(
-              <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
+              <Routes>
+                <Route path={`${routes.sourcesDetail.path}/*`} element={<Detail />} />
+              </Routes>,
               store,
               initialEntry
             )
@@ -268,7 +291,15 @@ describe('SourceDetail', () => {
         await act(async () => {
           render(
             componentWrapperIntl(
-              <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
+              <CustomRoute
+                route={{
+                  ...routes.sourcesDetail,
+                  writeAccess: true,
+                  redirectNoId: true,
+                  path: routes.sourcesDetail.path + '/*',
+                }}
+                Component={Detail}
+              />,
               store,
               initialEntry
             )
@@ -291,12 +322,14 @@ describe('SourceDetail', () => {
       });
 
       it('routes to remove source', async () => {
-        const initialEntry = [replaceRouteId(routes.sourcesDetailRemove.path, sourceId)];
+        const initialEntry = ['/' + replaceRouteId(routes.sourcesDetailRemove.path, sourceId)];
 
         await act(async () => {
           render(
             componentWrapperIntl(
-              <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
+              <Routes>
+                <Route path={`${routes.sourcesDetail.path}/*`} element={<Detail />} />
+              </Routes>,
               store,
               initialEntry
             )
@@ -312,7 +345,9 @@ describe('SourceDetail', () => {
         await act(async () => {
           render(
             componentWrapperIntl(
-              <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
+              <Routes>
+                <Route path={`${routes.sourcesDetail.path}/*`} element={<Detail />} />
+              </Routes>,
               store,
               initialEntry
             )
@@ -328,7 +363,9 @@ describe('SourceDetail', () => {
         await act(async () => {
           render(
             componentWrapperIntl(
-              <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
+              <Routes>
+                <Route path={`${routes.sourcesDetail.path}/*`} element={<Detail />} />
+              </Routes>,
               store,
               initialEntry
             )
@@ -344,7 +381,9 @@ describe('SourceDetail', () => {
         await act(async () => {
           render(
             componentWrapperIntl(
-              <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
+              <Routes>
+                <Route path={`${routes.sourcesDetail.path}/*`} element={<Detail />} />
+              </Routes>,
               store,
               initialEntry
             )
@@ -360,7 +399,9 @@ describe('SourceDetail', () => {
         await act(async () => {
           render(
             componentWrapperIntl(
-              <Route path={routes.sourcesDetail.path} render={(...args) => <Detail {...args} />} />,
+              <Routes>
+                <Route path={`${routes.sourcesDetail.path}/*`} element={<Detail />} />
+              </Routes>,
               store,
               initialEntry
             )
