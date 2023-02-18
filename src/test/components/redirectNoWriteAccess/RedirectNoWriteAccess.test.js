@@ -1,17 +1,18 @@
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import * as actions from '../../../redux/sources/actions';
 import RedirectNoWriteAccess from '../../../components/RedirectNoWriteAccess/RedirectNoWriteAccess';
-import { replaceRouteId, routes } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routing';
 import mockStore from '../../__mocks__/mockStore';
 
 describe('RedirectNoWriteAccess', () => {
   let initialStore;
   let initialEntry;
 
-  const wasRedirectedToRoot = () => screen.getByTestId('location-display').textContent === routes.sources.path;
+  const wasRedirectedToRoot = () =>
+    screen.getByTestId('location-display').textContent === '/settings/sources' + routes.sources.path;
 
   beforeEach(() => {
     initialEntry = [replaceRouteId(routes.sourcesRemove.path, '1')];
@@ -24,7 +25,9 @@ describe('RedirectNoWriteAccess', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesRemove.path} render={(...args) => <RedirectNoWriteAccess {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesRemove.path} element={<RedirectNoWriteAccess />} />
+        </Routes>,
         initialStore,
         initialEntry
       )
@@ -39,7 +42,9 @@ describe('RedirectNoWriteAccess', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesRemove.path} render={(...args) => <RedirectNoWriteAccess {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesRemove.path} element={<RedirectNoWriteAccess />} />
+        </Routes>,
         initialStore,
         initialEntry
       )
@@ -54,7 +59,9 @@ describe('RedirectNoWriteAccess', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesRemove.path} render={(...args) => <RedirectNoWriteAccess {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesRemove.path} element={<RedirectNoWriteAccess />} />
+        </Routes>,
         initialStore,
         initialEntry
       )
@@ -69,7 +76,9 @@ describe('RedirectNoWriteAccess', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesRemove.path} render={(...args) => <RedirectNoWriteAccess {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesRemove.path} element={<RedirectNoWriteAccess />} />
+        </Routes>,
         initialStore,
         initialEntry
       )

@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { AppPlaceholder } from './components/SourcesTable/loaders';
 
 const SourcesPage = lazy(() => import(/* webpackChunkName: "sourcesPage" */ './pages/Sources'));
@@ -7,46 +7,46 @@ const SourceDetail = lazy(() => import(/* webpackChunkName: "sourceDetail" */ '.
 
 export const routes = {
   sources: {
-    path: '/sources',
+    path: '/',
   },
   sourcesNew: {
-    path: '/sources/new',
+    path: 'new',
     writeAccess: true,
   },
   sourcesRemove: {
-    path: '/sources/remove/:id',
+    path: 'remove/:id',
     redirectNoId: true,
     writeAccess: true,
   },
   sourcesDetail: {
-    path: '/sources/detail/:id',
+    path: 'detail/:id',
     redirectNoId: true,
   },
   sourcesDetailRename: {
-    path: '/sources/detail/:id/rename',
+    path: 'detail/:id/rename',
     redirectNoId: true,
     writeAccess: true,
     noPaused: true,
   },
   sourcesDetailRemove: {
-    path: '/sources/detail/:id/remove',
+    path: 'detail/:id/remove',
     redirectNoId: true,
     writeAccess: true,
   },
   sourcesDetailAddApp: {
-    path: '/sources/detail/:id/add_app/:app_type_id',
+    path: 'detail/:id/add_app/:app_type_id',
     redirectNoId: true,
     writeAccess: true,
     noPaused: true,
   },
   sourcesDetailRemoveApp: {
-    path: '/sources/detail/:id/remove_app/:app_id',
+    path: 'detail/:id/remove_app/:app_id',
     redirectNoId: true,
     writeAccess: true,
     noPaused: true,
   },
   sourcesDetailEditCredentials: {
-    path: '/sources/detail/:id/edit_credentials',
+    path: 'detail/:id/edit_credentials',
     redirectNoId: true,
     writeAccess: true,
   },
@@ -54,13 +54,13 @@ export const routes = {
 
 export const replaceRouteId = (path, id) => path.replace(':id', id);
 
-const Routes = () => (
+const Routing = () => (
   <Suspense fallback={<AppPlaceholder />}>
-    <Switch>
-      <Route path={routes.sourcesDetail.path} component={SourceDetail} />
-      <Route component={SourcesPage} />
-    </Switch>
+    <Routes>
+      <Route path={`${routes.sourcesDetail.path}/*`} element={<SourceDetail />} />
+      <Route path="/*" element={<SourcesPage />} />
+    </Routes>
   </Suspense>
 );
 
-export default Routes;
+export default Routing;

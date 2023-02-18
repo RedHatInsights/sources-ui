@@ -43,7 +43,7 @@ import appTypes, { CATALOG_APP, COST_MANAGEMENT_APP, TOPOLOGY_INV_APP } from '..
 import { IntlProvider } from 'react-intl';
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
 import { MemoryRouter } from 'react-router-dom';
-import { replaceRouteId, routes } from '../../Routes';
+import { replaceRouteId, routes } from '../../Routing';
 
 jest.mock('@patternfly/react-icons/dist/esm/icons/pause-icon', () => ({
   __esModule: true,
@@ -1209,7 +1209,7 @@ describe('formatters', () => {
       expect(screen.getByText('Edit credentials', { selector: 'button' })).toBeInTheDocument();
       expect(screen.getByRole('link')).toHaveAttribute(
         'href',
-        replaceRouteId(routes.sourcesDetailEditCredentials.path, SOURCE_ID)
+        replaceRouteId(`/settings/sources/${routes.sourcesDetailEditCredentials.path}`, SOURCE_ID)
       );
 
       await user.hover(screen.getByText('exclamation icon'));
@@ -1217,7 +1217,7 @@ describe('formatters', () => {
       await waitFor(() => expect(screen.getByText('Your username is wrong')).toBeInTheDocument());
     });
 
-    it('account_authorization with default errror', async () => {
+    it('account_authorization with default error', async () => {
       const user = userEvent.setup();
 
       render(

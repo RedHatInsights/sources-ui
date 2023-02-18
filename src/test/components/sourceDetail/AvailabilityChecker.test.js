@@ -3,8 +3,8 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import { Route } from 'react-router-dom';
-import { replaceRouteId, routes } from '../../../Routes';
+import { Route, Routes } from 'react-router-dom';
+import { replaceRouteId, routes } from '../../../Routing';
 import AvailabilityChecker from '../../../components/SourceDetail/AvailabilityChecker';
 import * as api from '../../../api/checkSourceStatus';
 import * as actions from '../../../redux/sources/actions';
@@ -23,7 +23,9 @@ describe('AvailabilityChecker', () => {
   it('renders correctly', () => {
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <AvailabilityChecker {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<AvailabilityChecker />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -39,7 +41,9 @@ describe('AvailabilityChecker', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <AvailabilityChecker {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<AvailabilityChecker />} />
+        </Routes>,
         store,
         initialEntry
       )

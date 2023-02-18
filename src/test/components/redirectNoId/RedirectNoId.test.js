@@ -1,18 +1,19 @@
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import RedirectNoId from '../../../components/RedirectNoId/RedirectNoId';
 import * as actions from '../../../redux/sources/actions';
 import * as api from '../../../api/entities';
-import { replaceRouteId, routes } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routing';
 import mockStore from '../../__mocks__/mockStore';
 
 describe('RedirectNoId', () => {
   let initialStore;
   let initialEntry;
 
-  const wasRedirectedToRoot = () => screen.getByTestId('location-display').textContent === routes.sources.path;
+  const wasRedirectedToRoot = () =>
+    screen.getByTestId('location-display').textContent === '/settings/sources' + routes.sources.path;
 
   beforeEach(() => {
     initialEntry = [replaceRouteId(routes.sourcesRemove.path, '1')];
@@ -28,7 +29,9 @@ describe('RedirectNoId', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesRemove.path} render={(...args) => <RedirectNoId {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesRemove.path} element={<RedirectNoId />} />
+        </Routes>,
         initialStore,
         initialEntry
       )
@@ -48,7 +51,9 @@ describe('RedirectNoId', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesRemove.path} render={(...args) => <RedirectNoId {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesRemove.path} element={<RedirectNoId />} />
+        </Routes>,
         initialStore,
         initialEntry
       )
@@ -71,7 +76,9 @@ describe('RedirectNoId', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesRemove.path} render={(...args) => <RedirectNoId {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesRemove.path} element={<RedirectNoId />} />
+        </Routes>,
         initialStore,
         initialEntry
       )
