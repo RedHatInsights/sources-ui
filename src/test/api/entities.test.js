@@ -273,6 +273,30 @@ describe('entities spec', () => {
 
         expect(result).toEqual(OK_RESPONSE);
       });
+
+      it('getProvAppType', async () => {
+        const method = 'Get';
+        mock[`on${method}`](`/api/sources/v3.1/application_types?filter[name]=/insights/platform/provisioning`).reply(
+          200,
+          OK_RESPONSE
+        );
+
+        const result = await api.getSourcesApi().getProvAppType();
+
+        expect(result).toEqual(OK_RESPONSE);
+      });
+
+      it('getProvMetadata', async () => {
+        const id = 1;
+        const method = 'Get';
+        mock[`on${method}`](
+          `/api/sources/v3.1/app_meta_data?filter[name]=aws_wizard_account_number&application_type_id=${id}`
+        ).reply(200, OK_RESPONSE);
+
+        const result = await api.getSourcesApi().getProvMetadata(id);
+
+        expect(result).toEqual(OK_RESPONSE);
+      });
     });
 
     it('doRemoveSource fails', async () => {

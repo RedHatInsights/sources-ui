@@ -7,6 +7,7 @@ export const CLOUD_VENDOR = 'Cloud';
 export const TOPOLOGY_INV_NAME = '/insights/platform/topological-inventory';
 export const COST_MANAGEMENT_APP_NAME = '/insights/platform/cost-management';
 export const CLOUD_METER_APP_NAME = '/insights/platform/cloud-meter';
+export const PROVISIONING_APP_NAME = '/insights/platform/provisioning';
 export const CATALOG_APP = '/insights/platform/catalog';
 export const OPENSHIFT_NAME = 'openshift';
 
