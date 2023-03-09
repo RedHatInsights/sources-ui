@@ -8,6 +8,7 @@ import applicationTypes from '../../__mocks__/applicationTypes';
 
 import * as dependency from '../../../api/wizardHelpers';
 import render from '../__mocks__/render';
+import hcsEnrollment from '../../__mocks__/hcs';
 
 describe('sourceAddModal', () => {
   let initialProps;
@@ -25,6 +26,7 @@ describe('sourceAddModal', () => {
   });
 
   it('renders correctly with sourceTypes and applicationTypes', async () => {
+    dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
     render(<AddSourceWizard {...initialProps} sourceTypes={sourceTypes} applicationTypes={applicationTypes} />);
 
     await waitFor(() => expect(screen.getByText('Select a cloud provider')).toBeInTheDocument());
@@ -33,6 +35,7 @@ describe('sourceAddModal', () => {
   it('renders correctly without sourceTypes', async () => {
     dependency.doLoadApplicationTypes = jest.fn(() => new Promise((resolve) => resolve({ applicationTypes })));
     dependency.doLoadSourceTypes = jest.fn(() => new Promise((resolve) => resolve({ sourceTypes })));
+    dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
 
     render(<AddSourceWizard {...initialProps} applicationTypes={applicationTypes} />);
 
@@ -45,6 +48,7 @@ describe('sourceAddModal', () => {
   it('renders correctly without applicationTypes', async () => {
     dependency.doLoadSourceTypes = jest.fn(() => new Promise((resolve) => resolve({ sourceTypes })));
     dependency.doLoadApplicationTypes = jest.fn(() => new Promise((resolve) => resolve({ applicationTypes })));
+    dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
 
     render(<AddSourceWizard {...initialProps} sourceTypes={sourceTypes} />);
 
@@ -57,6 +61,7 @@ describe('sourceAddModal', () => {
   it('renders correctly without sourceTypes and application types', async () => {
     dependency.doLoadSourceTypes = jest.fn(() => new Promise((resolve) => resolve({ sourceTypes })));
     dependency.doLoadApplicationTypes = jest.fn(() => new Promise((resolve) => resolve({ applicationTypes })));
+    dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
 
     render(<AddSourceWizard {...initialProps} />);
 
@@ -75,6 +80,7 @@ describe('sourceAddModal', () => {
     dependency.doLoadApplicationTypes = jest
       .fn()
       .mockImplementation(() => new Promise((resolve) => resolve({ applicationTypes })));
+    dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
 
     render(<AddSourceWizard {...initialProps} onCancel={onCancel} />);
 

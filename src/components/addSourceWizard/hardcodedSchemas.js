@@ -25,7 +25,13 @@ import * as CMOci from './hardcodedComponents/oci/costManagement';
 import * as TowerCatalog from './hardcodedComponents/tower/catalog';
 import * as Openshift from './hardcodedComponents/openshift/endpoint';
 
-import { CATALOG_APP, CLOUD_METER_APP_NAME, COST_MANAGEMENT_APP_NAME, PROVISIONING_APP_NAME } from '../../utilities/constants';
+import {
+  CATALOG_APP,
+  CLOUD_METER_APP_NAME,
+  COST_MANAGEMENT_APP_NAME,
+  HCS_NAME,
+  PROVISIONING_APP_NAME,
+} from '../../utilities/constants';
 import emptyAuthType from './emptyAuthType';
 
 const arnMessagePattern = <FormattedMessage id="wizard.arnPattern" defaultMessage="ARN must start with arn:aws:" />;
@@ -70,6 +76,127 @@ const provArnField = {
     },
   ],
 };
+
+const hcsArnField = {
+  ...arnField,
+  placeholder: 'arn:aws:iam:123456789:role/HybridCommittedSpend',
+};
+
+const getArn = (authUsername, showHCS) => ({
+  useApplicationAuth: true,
+  skipSelection: true,
+  'authentication.username': authUsername,
+  'application.extra.bucket': {
+    placeholder: 'cost-usage-bucket',
+    validate: [
+      {
+        type: validatorTypes.REQUIRED,
+      },
+      {
+        type: validatorTypes.PATTERN,
+        pattern:
+          /(?!(^((2(5[0-5]|[0-4][0-9])|[01]?[0-9]{1,2})\.){3}(2(5[0-5]|[0-4][0-9])|[01]?[0-9]{1,2})$|^xn--|-s3alias$))^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$/,
+        message: (
+          <FormattedMessage
+            id="cost.arn.s3BucketPattern"
+            defaultMessage="S3 bucket name must start with alphanumeric character and can contain lowercase letters, numbers, dots, and hyphens"
+          />
+        ),
+      },
+    ],
+    isRequired: true,
+  },
+  additionalSteps: [
+    {
+      title: <FormattedMessage id="cost.arn.usageDescriptionTitle" defaultMessage="Configure cost and usage reporting" />,
+      nextStep: 'tags',
+      fields: [
+        {
+          name: 'usage-description',
+          component: 'description',
+          Content: () => <AwsArn.UsageDescription showHCS={showHCS} />,
+        },
+        {
+          name: 'application.extra.bucket',
+          component: componentTypes.TEXT_FIELD,
+          label: <FormattedMessage id="cost.arn.s3Label" defaultMessage="S3 bucket name" />,
+        },
+        {
+          component: componentTypes.TEXT_FIELD,
+          name: 'authentication.authtype',
+          hideField: true,
+          initialValue: 'arn',
+          initializeOnMount: true,
+        },
+      ],
+    },
+    {
+      title: <FormattedMessage id="cost.arn.tagsStepTitle" defaultMessage="Tags, aliases and organizational units" />,
+      name: 'tags',
+      nextStep: 'iam-policy',
+      fields: [
+        {
+          name: 'tags-description',
+          component: 'description',
+          Content: () => <AwsArn.TagsDescription showHCS={showHCS} />,
+        },
+        {
+          name: 'aws.aliases.enabled',
+          component: 'checkbox-with-icon',
+          label: <FormattedMessage id="cost.arn.includesAliases" defaultMessage="Include AWS account aliases" />,
+          Icon: AwsArn.IncludeAliasesLabel,
+        },
+        {
+          name: 'aws.org_units.enabled',
+          component: 'checkbox-with-icon',
+          label: <FormattedMessage id="cost.arn.includeOrgUnits" defaultMessage="Include AWS organizational units" />,
+          Icon: AwsArn.IncludeOrgUnitsLabel,
+        },
+      ],
+    },
+    {
+      title: <FormattedMessage id="cost.arn.iamPolicyTitle" defaultMessage="Create IAM policy" />,
+      name: 'iam-policy',
+      nextStep: 'iam-role',
+      substepOf: {
+        name: 'eaa',
+        title: <FormattedMessage id="cost.arn.enableAccountAccess" defaultMessage="Enable account access" />,
+      },
+      fields: [
+        {
+          name: 'iam-policy-description',
+          component: 'description',
+          Content: () => <AwsArn.IAMPolicyDescription showHCS={showHCS} />,
+        },
+      ],
+    },
+    {
+      title: <FormattedMessage id="cost.arn.iamRoleStepTitle" defaultMessage="Create IAM role" />,
+      name: 'iam-role',
+      nextStep: 'arn',
+      substepOf: 'eaa',
+      fields: [
+        {
+          name: 'iam-role-description',
+          component: 'description',
+          Content: AwsArn.IAMRoleDescription,
+        },
+      ],
+    },
+    {
+      title: <FormattedMessage id="cost.arn.enterArn" defaultMessage="Enter ARN" />,
+      name: 'arn',
+      substepOf: 'eaa',
+      fields: [
+        {
+          name: 'arn-description',
+          component: 'description',
+          Content: AwsArn.ArnDescription,
+        },
+      ],
+    },
+  ],
+});
 
 const subsWatchArnField = {
   placeholder: 'arn:aws:iam:123456789:role/SubscriptionWatch',
@@ -740,121 +867,10 @@ const hardcodedSchemas = {
           includeStepKeyFields: ['arn'],
           'authentication.username': arnField,
         },
-        [COST_MANAGEMENT_APP_NAME]: {
-          useApplicationAuth: true,
-          skipSelection: true,
-          'authentication.username': arnField,
-          'application.extra.bucket': {
-            placeholder: 'cost-usage-bucket',
-            validate: [
-              {
-                type: validatorTypes.REQUIRED,
-              },
-              {
-                type: validatorTypes.PATTERN,
-                pattern:
-                  /(?!(^((2(5[0-5]|[0-4][0-9])|[01]?[0-9]{1,2})\.){3}(2(5[0-5]|[0-4][0-9])|[01]?[0-9]{1,2})$|^xn--|-s3alias$))^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$/,
-                message: (
-                  <FormattedMessage
-                    id="cost.arn.s3BucketPattern"
-                    defaultMessage="S3 bucket name must start with alphanumeric character and can contain lowercase letters, numbers, dots, and hyphens"
-                  />
-                ),
-              },
-            ],
-            isRequired: true,
-          },
-          additionalSteps: [
-            {
-              title: <FormattedMessage id="cost.arn.usageDescriptionTitle" defaultMessage="Configure cost and usage reporting" />,
-              nextStep: 'tags',
-              fields: [
-                {
-                  name: 'usage-description',
-                  component: 'description',
-                  Content: AwsArn.UsageDescription,
-                },
-                {
-                  name: 'application.extra.bucket',
-                  component: componentTypes.TEXT_FIELD,
-                  label: <FormattedMessage id="cost.arn.s3Label" defaultMessage="S3 bucket name" />,
-                },
-                {
-                  component: componentTypes.TEXT_FIELD,
-                  name: 'authentication.authtype',
-                  hideField: true,
-                  initialValue: 'arn',
-                  initializeOnMount: true,
-                },
-              ],
-            },
-            {
-              title: <FormattedMessage id="cost.arn.tagsStepTitle" defaultMessage="Tags, aliases and organizational units" />,
-              name: 'tags',
-              nextStep: 'iam-policy',
-              fields: [
-                {
-                  name: 'tags-description',
-                  component: 'description',
-                  Content: AwsArn.TagsDescription,
-                },
-                {
-                  name: 'aws.aliases.enabled',
-                  component: 'checkbox-with-icon',
-                  label: <FormattedMessage id="cost.arn.includesAliases" defaultMessage="Include AWS account aliases" />,
-                  Icon: AwsArn.IncludeAliasesLabel,
-                },
-                {
-                  name: 'aws.org_units.enabled',
-                  component: 'checkbox-with-icon',
-                  label: <FormattedMessage id="cost.arn.includeOrgUnits" defaultMessage="Include AWS organizational units" />,
-                  Icon: AwsArn.IncludeOrgUnitsLabel,
-                },
-              ],
-            },
-            {
-              title: <FormattedMessage id="cost.arn.iamPolicyTitle" defaultMessage="Create IAM policy" />,
-              name: 'iam-policy',
-              nextStep: 'iam-role',
-              substepOf: {
-                name: 'eaa',
-                title: <FormattedMessage id="cost.arn.enableAccountAccess" defaultMessage="Enable account access" />,
-              },
-              fields: [
-                {
-                  name: 'iam-policy-description',
-                  component: 'description',
-                  Content: AwsArn.IAMPolicyDescription,
-                },
-              ],
-            },
-            {
-              title: <FormattedMessage id="cost.arn.iamRoleStepTitle" defaultMessage="Create IAM role" />,
-              name: 'iam-role',
-              nextStep: 'arn',
-              substepOf: 'eaa',
-              fields: [
-                {
-                  name: 'iam-role-description',
-                  component: 'description',
-                  Content: AwsArn.IAMRoleDescription,
-                },
-              ],
-            },
-            {
-              title: <FormattedMessage id="cost.arn.enterArn" defaultMessage="Enter ARN" />,
-              name: 'arn',
-              substepOf: 'eaa',
-              fields: [
-                {
-                  name: 'arn-description',
-                  component: 'description',
-                  Content: AwsArn.ArnDescription,
-                },
-              ],
-            },
-          ],
-        },
+        [COST_MANAGEMENT_APP_NAME]: (() => {
+          return getArn(arnField, false);
+        })(),
+        [HCS_NAME]: getArn(hcsArnField, true),
       },
       'cloud-meter-arn': {
         generic: {

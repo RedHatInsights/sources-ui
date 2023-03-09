@@ -3,30 +3,9 @@ import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 
 import { ACCOUNT_AUTHORIZATION } from '../../constants';
-import { Flex, FlexItem, Stack, StackItem, Text } from '@patternfly/react-core';
-import CheckCircleIcon from '@patternfly/react-icons/dist/esm/icons/check-circle-icon';
-
+import { Stack } from '@patternfly/react-core';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
-
-const Point = ({ title, description, isEnabled, ...props }) => (
-  <StackItem {...props}>
-    <Flex>
-      <FlexItem spacer={{ default: 'spacerSm' }}>
-        <CheckCircleIcon fill={isEnabled ? '#3E8635' : '#6A6E73'} />
-      </FlexItem>
-      <FlexItem>
-        <Text className="pf-u-mb-xs src-c-wizard__rhel-desc-title">{title}</Text>
-        <Text>{description}</Text>
-      </FlexItem>
-    </Flex>
-  </StackItem>
-);
-
-Point.propTypes = {
-  title: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  isEnabled: PropTypes.bool,
-};
+import Point from './Point';
 
 const SubWatchDescription = ({ id }) => {
   const intl = useIntl();

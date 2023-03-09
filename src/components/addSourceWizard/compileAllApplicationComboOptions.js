@@ -1,17 +1,26 @@
 import React from 'react';
-
-import { NO_APPLICATION_VALUE } from './stringConstants';
-
 import { Label } from '@patternfly/react-core';
 import SubWatchDescription from './descriptions/SubWatchDescription';
-import { CLOUD_METER_APP_NAME, COST_MANAGEMENT_APP_NAME, PROVISIONING_APP_NAME, REDHAT_VENDOR } from '../../utilities/constants';
+import HybridCommittedSpendDescription from './descriptions/HybridCommittedSpendDescription';
+import { NO_APPLICATION_VALUE } from './stringConstants';
+import {
+  CLOUD_METER_APP_NAME,
+  COST_MANAGEMENT_APP_NAME,
+  HCS_APP_NAME,
+  PROVISIONING_APP_NAME,
+  REDHAT_VENDOR,
+} from '../../utilities/constants';
 
-export const descriptionMapper = (type, intl) =>
+export const descriptionMapper = (type, intl, hcsEnrolled) =>
   ({
-    [COST_MANAGEMENT_APP_NAME]: intl.formatMessage({
-      id: 'cost.app.description',
-      defaultMessage: 'Analyze, forecast, and optimize your Red Hat OpenShift cluster costs in hybrid cloud environments.',
-    }),
+    [COST_MANAGEMENT_APP_NAME]: hcsEnrolled ? (
+      <HybridCommittedSpendDescription id={type.id} />
+    ) : (
+      intl.formatMessage({
+        id: 'cost.app.description',
+        defaultMessage: 'Analyze, forecast, and optimize your Red Hat OpenShift cluster costs in hybrid cloud environments.',
+      })
+    ),
     [CLOUD_METER_APP_NAME]: <SubWatchDescription id={type.id} />,
     [PROVISIONING_APP_NAME]: intl.formatMessage({
       id: 'provisioning.sources.description',
@@ -19,7 +28,7 @@ export const descriptionMapper = (type, intl) =>
     }),
   }[type.name]);
 
-export const labelMapper = (type, intl) =>
+export const labelMapper = (type, intl, hcsEnrolled) =>
   ({
     [CLOUD_METER_APP_NAME]: (
       <span className="src-c-wizard__rhel-mag-label">
@@ -33,15 +42,25 @@ export const labelMapper = (type, intl) =>
       id: 'provisioning.sources.label',
       defaultMessage: 'Launch images',
     }),
+    [COST_MANAGEMENT_APP_NAME]: hcsEnrolled ? (
+      <span className="src-c-wizard__rhel-mag-label">
+        {`${HCS_APP_NAME} `}
+        <Label className="pf-u-ml-sm" color="purple">
+          {intl.formatMessage({ id: 'sub.bundle', defaultMessage: 'Bundle' })}
+        </Label>
+      </span>
+    ) : (
+      type.display_name
+    ),
   }[type.name]);
 
-export const compileAllApplicationComboOptions = (applicationTypes, intl, activeCategory) => [
+export const compileAllApplicationComboOptions = (applicationTypes, intl, activeCategory, hcsEnrolled) => [
   ...applicationTypes
     .sort((a, b) => a.display_name.localeCompare(b.display_name))
     .map((t) => ({
       value: t.id,
-      label: labelMapper(t, intl) || t.display_name,
-      description: descriptionMapper(t, intl),
+      label: labelMapper(t, intl, hcsEnrolled) || t.display_name,
+      description: descriptionMapper(t, intl, hcsEnrolled),
     })),
   ...(activeCategory !== REDHAT_VENDOR
     ? [

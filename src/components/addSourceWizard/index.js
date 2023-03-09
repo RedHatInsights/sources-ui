@@ -72,12 +72,19 @@ const AddSourceWizard = ({
   const [{ isErrored, isFinished, isSubmitted, values, error, isCancelling, createdSource, activeCategory, ...state }, dispatch] =
     useReducer(reducer, prepareInitialValues(initialValues, propsActiveCategory));
 
-  const onSubmit = (formValues, sourceTypes, wizardState, applicationTypes) => {
+  const onSubmit = (formValues, sourceTypes, wizardState, applicationTypes, hcsEnrolled) => {
     dispatch({ type: 'prepareSubmitState', values: formValues, sourceTypes, applicationTypes });
 
     const fn = isSuperKey(formValues.source) ? createSuperSource : doCreateSource;
+    const submitValues =
+      formValues.source_type === 'amazon'
+        ? {
+            ...formValues,
+            application: { ...formValues.application, extra: { ...(formValues.application?.extra || {}), hcs: hcsEnrolled } },
+          }
+        : formValues;
 
-    return fn(formValues, timeoutedApps(applicationTypes), applicationTypes)
+    return fn(submitValues, timeoutedApps(applicationTypes), applicationTypes)
       .then((data) => {
         afterSuccess && afterSuccess(data);
         submitCallback && submitCallback({ isSubmitted: true, createdSource: data, sourceTypes });

@@ -21,6 +21,9 @@ import { NO_APPLICATION_VALUE } from '../../../components/addSourceWizard/string
 import SubWatchDescription from '../../../components/addSourceWizard/descriptions/SubWatchDescription';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';
+import HybridCommittedSpendDescription from '../../../components/addSourceWizard/descriptions/HybridCommittedSpendDescription';
+import { Label } from '@patternfly/react-core';
+import { HCS_APP_NAME } from '../../../utilities/constants';
 
 describe('Add source schema', () => {
   const INTL = { formatMessage: ({ defaultMessage }) => defaultMessage };
@@ -200,6 +203,37 @@ describe('Add source schema', () => {
           label: 'Cost Management',
           value: '2',
           description: 'Analyze, forecast, and optimize your Red Hat OpenShift cluster costs in hybrid cloud environments.',
+        },
+        { label: expect.any(Object), value: '5', description: <SubWatchDescription id="5" /> },
+        { label: 'Topological Inventory', value: '3', description: undefined },
+        { value: NO_APPLICATION_VALUE, label: 'No application' },
+      ]);
+    });
+  });
+
+  describe('application step - HCS', () => {
+    it('generate steps', () => {
+      const result = applicationStep(applicationTypes, INTL, undefined, true);
+
+      expect(result.title).toEqual('Select application');
+      expect(result.fields.map(({ name }) => name)).toEqual([
+        'app-description',
+        'application.application_type_id',
+        'source_type',
+      ]);
+      expect(result.fields[1].options).toEqual([
+        { label: 'Catalog', value: '1', description: undefined },
+        {
+          label: (
+            <span className="src-c-wizard__rhel-mag-label">
+              {`${HCS_APP_NAME} `}
+              <Label className="pf-u-ml-sm" color="purple">
+                Bundle
+              </Label>
+            </span>
+          ),
+          value: '2',
+          description: <HybridCommittedSpendDescription id="2" />,
         },
         { label: expect.any(Object), value: '5', description: <SubWatchDescription id="5" /> },
         { label: 'Topological Inventory', value: '3', description: undefined },

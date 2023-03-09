@@ -7,7 +7,7 @@ import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template'
 import { Wizard } from '@patternfly/react-core';
 
 import createSchema from './SourceAddSchema';
-import { doLoadApplicationTypes, doLoadSourceTypes } from '../../api/wizardHelpers';
+import { checkAccountHCS, doLoadApplicationTypes, doLoadSourceTypes } from '../../api/wizardHelpers';
 import { wizardDescription, wizardTitle } from './stringConstants';
 import filterApps, { filterVendorAppTypes } from '../../utilities/filterApps';
 import filterTypes, { filterVendorTypes } from '../../utilities/filterTypes';
@@ -50,6 +50,7 @@ const SourceAddModal = ({
       selectedType,
       initialWizardState,
       activeCategory,
+      hcsEnrolled,
     }
   ) => {
     switch (type) {
@@ -65,19 +66,19 @@ const SourceAddModal = ({
             selectedType,
             initialWizardState,
             activeCategory,
-            enableLighthouse
+            enableLighthouse,
+            hcsEnrolled
           ),
           isLoading: false,
           sourceTypes,
           applicationTypes,
+          hcsEnrolled,
         };
     }
   };
 
-  const [{ schema, sourceTypes: stateSourceTypes, applicationTypes: stateApplicationTypes, isLoading }, dispatch] = useReducer(
-    reducer,
-    initialValues
-  );
+  const [{ schema, sourceTypes: stateSourceTypes, applicationTypes: stateApplicationTypes, isLoading, hcsEnrolled }, dispatch] =
+    useReducer(reducer, initialValues);
   const isMounted = useRef(false);
   const container = useRef(document.createElement('div'));
   const intl = useIntl();
@@ -94,7 +95,10 @@ const SourceAddModal = ({
       promises.push(doLoadApplicationTypes());
     }
 
+    promises.push(checkAccountHCS());
+
     Promise.all(promises).then((data) => {
+      const hcsEnrolled = !data.find((data) => Object.prototype.hasOwnProperty.call(data, 'hcsDeal'))?.hcsDeal;
       const sourceTypesOut = data.find((types) => Object.prototype.hasOwnProperty.call(types, 'sourceTypes'));
       const applicationTypesOut = data.find((types) => Object.prototype.hasOwnProperty.call(types, 'applicationTypes'));
 
@@ -103,6 +107,7 @@ const SourceAddModal = ({
           type: 'loaded',
           sourceTypes: sourceTypes || sourceTypesOut.sourceTypes,
           applicationTypes: applicationTypes || applicationTypesOut.applicationTypes,
+          hcsEnrolled,
           disableAppSelection,
           container: container.current,
           intl,
@@ -148,7 +153,9 @@ const SourceAddModal = ({
         ...(selectedType && { source_type: selectedType }),
       }}
       schema={schema}
-      onSubmit={(values, _formApi, wizardState) => onSubmit(values, stateSourceTypes, wizardState, stateApplicationTypes)}
+      onSubmit={(values, _formApi, wizardState) =>
+        onSubmit(values, stateSourceTypes, wizardState, stateApplicationTypes, hcsEnrolled)
+      }
       onCancel={onCancel}
       FormTemplate={FormTemplateWrapper}
       subscription={{ values: true }}
