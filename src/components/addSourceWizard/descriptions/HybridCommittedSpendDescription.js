@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
+import { shallowEqual, useSelector } from 'react-redux';
 import { Stack } from '@patternfly/react-core';
 import { useIntl } from 'react-intl';
 
@@ -11,23 +12,32 @@ const HybridCommittedSpendDescription = ({ id }) => {
   const intl = useIntl();
   const { getState } = useFormApi();
 
+  const sourceTypes = useSelector(({ sources }) => sources.sourceTypes, shallowEqual);
   const values = getState().values;
 
-  const isEnabled =
-    (values.source.app_creation_workflow === ACCOUNT_AUTHORIZATION && values.applications?.includes(id)) ||
-    (values.source.app_creation_workflow !== ACCOUNT_AUTHORIZATION && values.application?.application_type_id === id);
+  const isEnabled = useMemo(
+    () =>
+      (values.source.app_creation_workflow === ACCOUNT_AUTHORIZATION && values.applications?.includes(id)) ||
+      (values.source.app_creation_workflow !== ACCOUNT_AUTHORIZATION && values.application?.application_type_id === id),
+    []
+  );
 
   return (
     <Stack>
       <Point
         title={intl.formatMessage({
           id: 'hcsbundle.track.title',
-          defaultMessage: 'Track Red Hat spend regardless of point of purchase',
+          defaultMessage: 'Track Red Hat committed spend',
         })}
-        description={intl.formatMessage({
-          id: 'hcsbundle.track.description',
-          defaultMessage: 'Unlock cloud images in Microsoft Azure and bring your own subscription instead of paying hourly.',
-        })}
+        description={intl.formatMessage(
+          {
+            id: 'hcsbundle.track.description',
+            defaultMessage: 'Track spend through {application} and apply them to your Red Hat committed spend.',
+          },
+          {
+            application: sourceTypes.find((type) => type.name === values.source_type)?.product_name,
+          }
+        )}
         className="pf-u-mb-sm"
         isEnabled={isEnabled}
       />

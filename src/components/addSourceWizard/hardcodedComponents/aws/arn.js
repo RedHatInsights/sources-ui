@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes, { bool } from 'prop-types';
+import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
 import {
@@ -123,7 +123,7 @@ export const UsageDescription = ({ showHCS }) => {
 };
 
 UsageDescription.propTypes = {
-  showHCS: bool,
+  showHCS: PropTypes.bool,
 };
 
 export const IAMRoleDescription = () => {
@@ -289,7 +289,7 @@ export const IAMPolicyDescription = ({ showHCS }) => {
 };
 
 IAMPolicyDescription.propTypes = {
-  showHCS: bool,
+  showHCS: PropTypes.bool,
 };
 
 export const TagsDescription = ({ showHCS }) => {

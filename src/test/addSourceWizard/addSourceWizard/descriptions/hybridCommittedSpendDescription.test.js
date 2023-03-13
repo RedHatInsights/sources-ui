@@ -1,29 +1,49 @@
 /* eslint-disable react/display-name */
 import React from 'react';
-
 import { screen } from '@testing-library/react';
-
-import render from '../../__mocks__/render';
-
+import { defaultSourcesState } from '../../../../redux/sources/reducer';
 import { MANUAL_CONFIGURATION } from '../../../../components/constants';
 import SourcesFormRenderer from '../../../../utilities/SourcesFormRenderer';
 import HybridCommittedSpendDescription from '../../../../components/addSourceWizard/descriptions/HybridCommittedSpendDescription';
+import mockStore from '../../../__mocks__/mockStore';
+import render from '../../__mocks__/render';
+import sourceTypes from '../../../__mocks__/sourceTypes';
+import componentWrapperIntl from '../../../../utilities/testsHelpers';
 
 describe('HybridCommittedSpendDescription', () => {
+  let initialState;
+
+  beforeEach(() => {
+    initialState = {
+      sources: { ...defaultSourcesState, sourceTypes },
+      user: {
+        writePermissions: true,
+      },
+    };
+  });
+
   it('Renders correctly when enabled - not super key mode ', () => {
+    const store = mockStore(initialState);
     const { container } = render(
-      <SourcesFormRenderer
-        schema={{
-          fields: [{ name: 'desc', component: 'description', Content: () => <HybridCommittedSpendDescription id="2" /> }],
-        }}
-        initialValues={{ application: { application_type_id: '2' }, source: { app_creation_workflow: MANUAL_CONFIGURATION } }}
-        onSubmit={jest.fn()}
-      />
+      componentWrapperIntl(
+        <SourcesFormRenderer
+          schema={{
+            fields: [{ name: 'desc', component: 'description', Content: () => <HybridCommittedSpendDescription id="2" /> }],
+          }}
+          initialValues={{
+            application: { application_type_id: '2' },
+            source: { app_creation_workflow: MANUAL_CONFIGURATION },
+            source_type: 'amazon',
+          }}
+          onSubmit={jest.fn()}
+        />,
+        store
+      )
     );
 
-    expect(screen.getByText('Track Red Hat spend regardless of point of purchase')).toBeInTheDocument();
+    expect(screen.getByText('Track Red Hat committed spend')).toBeInTheDocument();
     expect(
-      screen.getByText('Unlock cloud images in Microsoft Azure and bring your own subscription instead of paying hourly.')
+      screen.getByText('Track spend through Amazon Web Services and apply them to your Red Hat committed spend.')
     ).toBeInTheDocument();
     expect(screen.getByText('Cost management')).toBeInTheDocument();
     expect(
@@ -35,19 +55,27 @@ describe('HybridCommittedSpendDescription', () => {
   });
 
   it('Renders correctly when not enabled - not super key mode ', () => {
+    const store = mockStore(initialState);
     const { container } = render(
-      <SourcesFormRenderer
-        schema={{
-          fields: [{ name: 'desc', component: 'description', Content: () => <HybridCommittedSpendDescription id="1" /> }],
-        }}
-        initialValues={{ application: { application_type_id: '2' }, source: { app_creation_workflow: MANUAL_CONFIGURATION } }}
-        onSubmit={jest.fn()}
-      />
+      componentWrapperIntl(
+        <SourcesFormRenderer
+          schema={{
+            fields: [{ name: 'desc', component: 'description', Content: () => <HybridCommittedSpendDescription id="1" /> }],
+          }}
+          initialValues={{
+            application: { application_type_id: '2' },
+            source: { app_creation_workflow: MANUAL_CONFIGURATION },
+            source_type: 'amazon',
+          }}
+          onSubmit={jest.fn()}
+        />,
+        store
+      )
     );
 
-    expect(screen.getByText('Track Red Hat spend regardless of point of purchase')).toBeInTheDocument();
+    expect(screen.getByText('Track Red Hat committed spend')).toBeInTheDocument();
     expect(
-      screen.getByText('Unlock cloud images in Microsoft Azure and bring your own subscription instead of paying hourly.')
+      screen.getByText('Track spend through Amazon Web Services and apply them to your Red Hat committed spend.')
     ).toBeInTheDocument();
     expect(screen.getByText('Cost management')).toBeInTheDocument();
     expect(

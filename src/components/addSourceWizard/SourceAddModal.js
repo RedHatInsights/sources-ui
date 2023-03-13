@@ -98,7 +98,7 @@ const SourceAddModal = ({
     promises.push(checkAccountHCS());
 
     Promise.all(promises).then((data) => {
-      const hcsEnrolled = !data.find((data) => Object.prototype.hasOwnProperty.call(data, 'hcsDeal'))?.hcsDeal;
+      const hcsEnrolled = data.find((data) => Object.prototype.hasOwnProperty.call(data, 'hcsDeal'))?.hcsDeal;
       const sourceTypesOut = data.find((types) => Object.prototype.hasOwnProperty.call(types, 'sourceTypes'));
       const applicationTypesOut = data.find((types) => Object.prototype.hasOwnProperty.call(types, 'applicationTypes'));
 

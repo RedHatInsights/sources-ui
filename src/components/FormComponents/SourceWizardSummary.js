@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import get from 'lodash/get';
+import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 import { FormattedMessage, useIntl } from 'react-intl';
-
 import {
   Alert,
   DescriptionList,
@@ -10,10 +11,7 @@ import {
   DescriptionListTerm,
   Label,
 } from '@patternfly/react-core';
-
-import get from 'lodash/get';
-
-import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
+import { useFlag } from '@unleash/proxy-client-react';
 
 import ValuePopover from './ValuePopover';
 import hardcodedSchemas from '../../components/addSourceWizard/hardcodedSchemas';
@@ -26,9 +24,10 @@ import {
   injectEndpointFieldsInfo,
   shouldSkipEndpoint,
 } from '../../components/addSourceWizard/schemaBuilder';
-import { useFlag } from '@unleash/proxy-client-react';
 
-const alertMapper = (appName, sourceType, intl, hcsEnrolled) => {
+const SummaryAlert = ({ appName, sourceType, hcsEnrolled }) => {
+  const intl = useIntl();
+
   if (appName === COST_MANAGEMENT_APP_NAME && sourceType !== 'google' && !hcsEnrolled) {
     return (
       <Alert
@@ -64,6 +63,12 @@ const alertMapper = (appName, sourceType, intl, hcsEnrolled) => {
   }
 
   return null;
+};
+
+SummaryAlert.propTypes = {
+  appName: PropTypes.string,
+  sourceType: PropTypes.string,
+  hcsEnrolled: PropTypes.bool,
 };
 
 export const createItem = (formField, values, stepKeys) => {
@@ -320,7 +325,7 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
           )}
         {valuesList}
       </DescriptionList>
-      {alertMapper(name, type.name, intl, hcsEnrolled)}
+      <SummaryAlert appName={name} sourceType={type.name} hcsEnrolled={hcsEnrolled} />
     </React.Fragment>
   );
 };
