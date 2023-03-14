@@ -22,14 +22,17 @@ import QuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/question-
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 
 import { HCCM_DOCS_PREFIX } from '../../stringConstants';
+import { HCS_APP_NAME } from '../../../../utilities/constants';
 
+const CREATE_HCS_S3_BUCKET = ''; // specify when HCS docs links are available
 const CREATE_S3_BUCKET = `${HCCM_DOCS_PREFIX}/html/adding_an_amazon_web_services_aws_source_to_cost_management/assembly-adding-aws-sources#creating-an-aws-s3-bucket_adding-aws-sources`;
 const ENABLE_AWS_ACCOUNT = `${HCCM_DOCS_PREFIX}/html/adding_an_amazon_web_services_aws_source_to_cost_management/assembly-adding-aws-sources#enabling-aws-account-access_adding-aws-sources`;
+const ENABLE_HCS_AWS_ACCOUNT = ''; // specify when HCS docs links are available
 const CONFIG_AWS_TAGS = `${HCCM_DOCS_PREFIX}/html/adding_an_amazon_web_services_aws_source_to_cost_management/assembly-cost-management-next-steps-aws#configure-cost-models-next-step_next-steps-aws`;
+const CONFIG_HCS_AWS_TAGS = ''; // specify when HCS docs links are available
 
-export const UsageDescription = () => {
+export const UsageDescription = ({ showHCS }) => {
   const intl = useIntl();
-
   return (
     <TextContent>
       <Text>
@@ -40,8 +43,14 @@ export const UsageDescription = () => {
               'To collect and store the information needed for cost management, you need to set up an Amazon S3 bucket for cost and usage reports. {link}',
           },
           {
-            link: (
-              <Text key="link" component={TextVariants.a} href={CREATE_S3_BUCKET} rel="noopener noreferrer" target="_blank">
+            link: showHCS ? null : ( // remove when HCS docs links are available
+              <Text
+                key="link"
+                component={TextVariants.a}
+                href={showHCS ? CREATE_HCS_S3_BUCKET : CREATE_S3_BUCKET}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
                 {intl.formatMessage({
                   id: 'cost.learnMore',
                   defaultMessage: 'Learn more',
@@ -113,6 +122,10 @@ export const UsageDescription = () => {
   );
 };
 
+UsageDescription.propTypes = {
+  showHCS: PropTypes.bool,
+};
+
 export const IAMRoleDescription = () => {
   const intl = useIntl();
 
@@ -158,7 +171,7 @@ export const IAMRoleDescription = () => {
   );
 };
 
-export const IAMPolicyDescription = () => {
+export const IAMPolicyDescription = ({ showHCS }) => {
   const formOptions = useFormApi();
   const intl = useIntl();
 
@@ -188,8 +201,14 @@ export const IAMPolicyDescription = () => {
               'To grant permissions to the cost management report you just configured, create an AWS Identity and Access Management (IAM) policy. {link}',
           },
           {
-            link: (
-              <Text key="link" component={TextVariants.a} href={ENABLE_AWS_ACCOUNT} rel="noopener noreferrer" target="_blank">
+            link: showHCS ? null : ( // remove when HCS docs links are available
+              <Text
+                key="link"
+                component={TextVariants.a}
+                href={showHCS ? ENABLE_HCS_AWS_ACCOUNT : ENABLE_AWS_ACCOUNT}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
                 {intl.formatMessage({
                   id: 'wizard.learnMore',
                   defaultMessage: 'Learn more',
@@ -269,25 +288,40 @@ export const IAMPolicyDescription = () => {
   );
 };
 
-export const TagsDescription = () => {
+IAMPolicyDescription.propTypes = {
+  showHCS: PropTypes.bool,
+};
+
+export const TagsDescription = ({ showHCS }) => {
   const intl = useIntl();
+  const application = showHCS ? HCS_APP_NAME : 'Cost Management';
 
   return (
     <TextContent>
-      <Text>
-        <Text component={TextVariants.a} rel="noopener noreferrer" target="_blank" href={CONFIG_AWS_TAGS}>
-          {intl.formatMessage({
-            id: 'cost.tags.readMeLink',
-            defaultMessage: 'Learn more',
-          })}
+      {showHCS ? null : ( // remove when HCS docs links are available
+        <Text>
+          <Text
+            component={TextVariants.a}
+            rel="noopener noreferrer"
+            target="_blank"
+            href={showHCS ? CONFIG_HCS_AWS_TAGS : CONFIG_AWS_TAGS}
+          >
+            {intl.formatMessage({
+              id: 'cost.tags.readMeLink',
+              defaultMessage: 'Learn more',
+            })}
+          </Text>
         </Text>
-      </Text>
+      )}
       <Text>
-        {intl.formatMessage({
-          id: 'cost.tags.desciption',
-          defaultMessage:
-            'To use tags to organize your AWS resources in the Cost Management application, activate your tags in AWS to allow them to be imported automatically.',
-        })}
+        {intl.formatMessage(
+          {
+            id: 'cost.tags.desciption',
+            defaultMessage:
+              'To use tags to organize your AWS resources in the {application} application, activate your tags in AWS to allow them to be imported automatically.',
+          },
+          { application }
+        )}
       </Text>
       <TextList component={TextListVariants.ol}>
         <TextListItem>
@@ -297,10 +331,13 @@ export const TagsDescription = () => {
           })}
         </TextListItem>
         <TextListItem>
-          {intl.formatMessage({
-            id: 'cost.tags.selectTags',
-            defaultMessage: 'Select the tags you want to use in the Cost Management application, and click Activate.',
-          })}
+          {intl.formatMessage(
+            {
+              id: 'cost.tags.selectTags',
+              defaultMessage: 'Select the tags you want to use in the {application} application, and click Activate.',
+            },
+            { application }
+          )}
         </TextListItem>
       </TextList>
       <Text>
@@ -312,6 +349,10 @@ export const TagsDescription = () => {
       </Text>
     </TextContent>
   );
+};
+
+TagsDescription.propTypes = {
+  showHCS: PropTypes.bool,
 };
 
 export const ArnDescription = () => {

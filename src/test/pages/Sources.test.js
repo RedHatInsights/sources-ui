@@ -19,6 +19,7 @@ import * as api from '../../api/entities';
 import * as typesApi from '../../api/source_types';
 import { replaceRouteId, routes } from '../../Routes';
 import * as helpers from '../../pages/Sources/helpers';
+import * as dependency from '../../api/wizardHelpers';
 import * as SourceRemoveModal from '../../components/SourceRemoveModal/SourceRemoveModal';
 import * as urlQuery from '../../utilities/urlQuery';
 
@@ -28,6 +29,7 @@ import { getStore } from '../../utilities/store';
 import { AVAILABLE, UNAVAILABLE } from '../../views/formatters';
 import * as AddSourceWizard from '../../components/addSourceWizard';
 import { CSV_FILE, JSON_FILE_STRING } from '../__mocks__/fileMocks';
+import hcsEnrollment from '../__mocks__/hcs';
 
 jest.mock('@redhat-cloud-services/frontend-components/useScreenSize', () => ({
   __esModule: true,
@@ -169,6 +171,7 @@ describe('SourcesPage', () => {
 
   it('renders empty state when there are no Sources and open AWS selection', async () => {
     const user = userEvent.setup();
+    dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
 
     let tmpLocation;
 
@@ -218,6 +221,7 @@ describe('SourcesPage', () => {
 
   it('renders empty state when there are no Sources and open openshift selection', async () => {
     const user = userEvent.setup();
+    dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
 
     store = getStore([], {
       sources: { activeCategory: REDHAT_VENDOR },
@@ -394,6 +398,7 @@ describe('SourcesPage', () => {
 
   it('renders addSourceWizard', async () => {
     const user = userEvent.setup();
+    dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
 
     render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
@@ -424,6 +429,7 @@ describe('SourcesPage', () => {
 
   it('closes addSourceWizard', async () => {
     const user = userEvent.setup();
+    dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
 
     render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());

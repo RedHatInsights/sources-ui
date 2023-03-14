@@ -12,6 +12,7 @@ import * as createSource from '../../../api/createSource';
 import render from '../__mocks__/render';
 import { ACCOUNT_AUTHORIZATION, MANUAL_CONFIGURATION } from '../../../components/constants';
 import { CLOUD_VENDOR, GOOGLE_NAME, REDHAT_VENDOR } from '../../../utilities/constants';
+import hcsEnrollment from '../../__mocks__/hcs';
 
 describe('AddSourceWizard', () => {
   let initialProps;
@@ -33,6 +34,7 @@ describe('AddSourceWizard', () => {
   });
 
   it('renders correctly with sourceTypes', async () => {
+    dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
     render(<AddSourceWizard {...initialProps} />);
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
@@ -41,6 +43,7 @@ describe('AddSourceWizard', () => {
   });
 
   it('renders correctly without sourceTypes', async () => {
+    dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
     dependency.doLoadSourceTypes = jest.fn(() => new Promise((resolve) => resolve({ sourceTypes })));
 
     render(<AddSourceWizard {...initialProps} sourceTypes={undefined} />);
@@ -54,6 +57,7 @@ describe('AddSourceWizard', () => {
   it('show finished step after filling the form', async () => {
     const user = userEvent.setup();
 
+    dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
     createSource.doCreateSource = jest.fn(() => new Promise((resolve) => setTimeout(() => resolve(SOURCE_DATA_OUT), 100)));
 
     const { container } = render(<AddSourceWizard {...initialProps} />);
@@ -74,6 +78,7 @@ describe('AddSourceWizard', () => {
     const user = userEvent.setup();
 
     const afterSubmitMock = jest.fn();
+    dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
     createSource.doCreateSource = jest.fn(() => new Promise((resolve) => resolve({ name: 'source', applications: [] })));
 
     const { container } = render(<AddSourceWizard {...initialProps} afterSuccess={afterSubmitMock} />);
@@ -91,6 +96,7 @@ describe('AddSourceWizard', () => {
     const user = userEvent.setup();
 
     const submitCallback = jest.fn();
+    dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
     createSource.doCreateSource = jest.fn(() => new Promise((resolve) => resolve({ name: 'source', applications: [] })));
 
     const { container } = render(<AddSourceWizard {...initialProps} submitCallback={submitCallback} />);
@@ -113,6 +119,7 @@ describe('AddSourceWizard', () => {
     const user = userEvent.setup();
 
     const submitCallback = jest.fn();
+    dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
     createSource.doCreateSource = jest.fn(() => new Promise((_, reject) => reject('Error - wrong name')));
 
     const { container } = render(<AddSourceWizard {...initialProps} submitCallback={submitCallback} />);
@@ -137,6 +144,7 @@ describe('AddSourceWizard', () => {
   it('pass values to onClose function', async () => {
     const user = userEvent.setup();
 
+    dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
     const onClose = jest.fn();
 
     render(<AddSourceWizard {...initialProps} onClose={onClose} />);
@@ -154,6 +162,7 @@ describe('AddSourceWizard', () => {
   it('stay on the wizard', async () => {
     const user = userEvent.setup();
 
+    dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
     const onClose = jest.fn();
 
     render(<AddSourceWizard {...initialProps} onClose={onClose} />);
@@ -172,6 +181,7 @@ describe('AddSourceWizard', () => {
     const user = userEvent.setup();
 
     const ERROR_MESSAGE = 'fail';
+    dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
     createSource.doCreateSource = jest.fn(() => new Promise((_resolve, reject) => reject(ERROR_MESSAGE)));
 
     const { container } = render(<AddSourceWizard {...initialProps} />);
@@ -196,6 +206,7 @@ describe('AddSourceWizard', () => {
 
     const closeCallback = jest.fn();
 
+    dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
     createSource.doCreateSource = jest.fn(() => Promise.reject('error'));
 
     const { container } = render(<AddSourceWizard {...initialProps} onClose={closeCallback} />);
@@ -219,6 +230,7 @@ describe('AddSourceWizard', () => {
 
     const closeCallback = jest.fn();
 
+    dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
     createSource.doCreateSource = jest.fn(() => Promise.resolve(SOURCE_DATA_OUT));
 
     const { container } = render(<AddSourceWizard {...initialProps} onClose={closeCallback} />);
@@ -240,6 +252,7 @@ describe('AddSourceWizard', () => {
   it('reset - resets initialValues', async () => {
     const user = userEvent.setup();
 
+    dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
     createSource.doCreateSource = jest.fn(() => Promise.resolve(SOURCE_DATA_OUT));
 
     const { container } = render(<AddSourceWizard {...initialProps} />);
@@ -257,6 +270,7 @@ describe('AddSourceWizard', () => {
   });
 
   it('tryAgain retries the request', async () => {
+    dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
     const user = userEvent.setup();
 
     createSource.doCreateSource = jest.fn(() => Promise.reject('error'));
@@ -284,6 +298,7 @@ describe('AddSourceWizard', () => {
       [...container.parentElement.getElementsByClassName('pf-c-wizard__nav-item')].map((item) => item.textContent);
 
     it('show configuration step when selectedType is set - CLOUD', async () => {
+      dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
       const { container } = render(<AddSourceWizard {...initialProps} selectedType="amazon" activeCategory={CLOUD_VENDOR} />);
 
       await waitFor(() => expect(screen.getByText('Name source', { selector: 'button' })).toBeInTheDocument());
@@ -292,6 +307,7 @@ describe('AddSourceWizard', () => {
     });
 
     it('show source type selection when CLOUD', async () => {
+      dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
       const { container } = render(
         <AddSourceWizard {...initialProps} initialValues={{ source_type: 'amazon' }} activeCategory={CLOUD_VENDOR} />
       );
@@ -302,6 +318,7 @@ describe('AddSourceWizard', () => {
     });
 
     it('show application step when selectedType is set and configuration is selected to true', async () => {
+      dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
       const { container } = render(
         <AddSourceWizard
           {...initialProps}
@@ -317,6 +334,7 @@ describe('AddSourceWizard', () => {
     });
 
     it('show application step when selectedType is set and configuration is selected to false', async () => {
+      dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
       const { container } = render(
         <AddSourceWizard
           {...initialProps}
@@ -332,6 +350,7 @@ describe('AddSourceWizard', () => {
     });
 
     it('show application step when selectedType is set - RED HAT', async () => {
+      dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
       const { container } = render(<AddSourceWizard {...initialProps} selectedType="openshift" activeCategory={REDHAT_VENDOR} />);
 
       await waitFor(() => expect(screen.getByText('Name source', { selector: 'button' })).toBeInTheDocument());
@@ -346,6 +365,7 @@ describe('AddSourceWizard', () => {
     });
 
     it('show source type selection when REDHAT', async () => {
+      dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
       const { container } = render(<AddSourceWizard {...initialProps} activeCategory={REDHAT_VENDOR} />);
 
       await waitFor(() => expect(screen.getByText('Name source', { selector: 'button' })).toBeInTheDocument());
@@ -355,6 +375,7 @@ describe('AddSourceWizard', () => {
   });
 
   it('pass initialWizardState to wizard', async () => {
+    dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
     await act(async () => {
       render(<AddSourceWizard {...initialProps} initialWizardState={{ activeStep: 'name_step' }} />);
     });

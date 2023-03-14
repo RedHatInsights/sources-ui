@@ -450,6 +450,87 @@ describe('schema builder', () => {
       ]);
     });
 
+    it('builds schema - HCS and lighthouse', () => {
+      const schema = schemaBuilder(
+        sourceTypes.filter(({ schema }) => schema),
+        applicationTypes,
+        undefined,
+        true,
+        true
+      );
+
+      expect(schema).toEqual(expect.arrayContaining([expect.any(Object)]));
+      expect(schema).toHaveLength(65);
+
+      expect(schema.map(({ name }) => name)).toEqual([
+        'openshift-generic',
+        'openshift-2',
+        'openshift-3',
+        'openshift-token-/insights/platform/cost-management-additional-step',
+        'openshift-endpoint',
+        'amazon-generic',
+        'amazon-2',
+        'amazon-3',
+        'amazon-5',
+        'amazon-access_key_secret_key-generic-additional-step',
+        'amazon-arn-/insights/platform/cost-management-additional-step',
+        'tags',
+        'iam-policy',
+        'iam-role',
+        'arn',
+        'amazon-cloud-meter-arn-/insights/platform/cloud-meter-additional-step',
+        'subs-iam-role',
+        'subs-arn',
+        'ansible-tower-generic',
+        'ansible-tower-1',
+        'ansible-tower-3',
+        'ansible-tower-username_password-generic-additional-step',
+        'ansible-tower-credentials-no-app',
+        'ansible-tower-username_password-/insights/platform/catalog-additional-step',
+        'catalog-ansible-tower',
+        'ansible-tower-endpoint',
+        'azure-generic',
+        'azure-2',
+        'azure-3',
+        'azure-5',
+        'azure-lighthouse_subscription_id-/insights/platform/cloud-meter-additional-step',
+        'subwatch-lighthouse-sub-id',
+        'azure-tenant_id_client_id_client_secret-/insights/platform/cost-management-additional-step',
+        'daily-export',
+        'azure-rg-and-sa',
+        'azure-sub-id',
+        'configure-roles',
+        'google-generic',
+        'google-2',
+        'google-5',
+        'google-project_id_service_account_json-/insights/platform/cost-management-additional-step',
+        'cost-gcp-iam',
+        'cost-gcp-access',
+        'cost-gcp-dataset',
+        'cost-gcp-billing-export',
+        'google-empty-/insights/platform/cloud-meter-additional-step',
+        'cost-google-playbook',
+        'google-empty-/insights/platform/cloud-meter-additional-step',
+        'cost-google-playbook',
+        'ibm-generic',
+        'ibm-2',
+        'ibm-api_token_account_id-/insights/platform/cost-management-additional-step',
+        'ibm-cm-account-id',
+        'ibm-cm-service-id',
+        'ibm-cm-configure-access',
+        'ibm-cm-api-key',
+        'satellite-generic',
+        'satellite-receptor_node-generic-additional-step',
+        'satellite-endpoint',
+        'oracle-cloud-infrastructure-generic',
+        'oracle-cloud-infrastructure-2',
+        'oracle-cloud-infrastructure-ocid-/insights/platform/cost-management-additional-step',
+        'oci-cm-policy-compartment',
+        'oci-cm-create-bucket',
+        'oci-cm-populate-bucket',
+      ]);
+    });
+
     it('builds ansible schema without recepotr', () => {
       const sourceType = [
         {

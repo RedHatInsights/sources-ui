@@ -166,7 +166,7 @@ const redhatTypes = ({ intl, sourceTypes, applicationTypes, disableAppSelection 
   },
 ];
 
-export const applicationStep = (applicationTypes, intl, activeCategory) => ({
+export const applicationStep = (applicationTypes, intl, activeCategory, hcsEnrolled) => ({
   name: 'application_step',
   title: intl.formatMessage({
     id: 'wizard.selectApplication',
@@ -186,7 +186,7 @@ export const applicationStep = (applicationTypes, intl, activeCategory) => ({
     {
       component: 'enhanced-radio',
       name: 'application.application_type_id',
-      options: compileAllApplicationComboOptions(applicationTypes, intl, activeCategory),
+      options: compileAllApplicationComboOptions(applicationTypes, intl, activeCategory, hcsEnrolled),
       mutator: appMutatorRedHat(applicationTypes),
       menuIsPortal: true,
     },
@@ -322,7 +322,7 @@ export const SummaryDescription = () => {
   );
 };
 
-const summaryStep = (sourceTypes, applicationTypes, intl) => ({
+const summaryStep = (sourceTypes, applicationTypes, intl, hcsEnrolled) => ({
   fields: [
     {
       component: 'description',
@@ -334,6 +334,7 @@ const summaryStep = (sourceTypes, applicationTypes, intl) => ({
       component: 'summary',
       sourceTypes,
       applicationTypes,
+      hcsEnrolled,
     },
     {
       name: 'source_type',
@@ -357,7 +358,8 @@ export default (
   selectedType,
   initialWizardState,
   activeCategory,
-  enableLighthouse
+  enableLighthouse,
+  hcsEnrolled
 ) => {
   setFirstValidated(true);
   return {
@@ -403,10 +405,10 @@ export default (
             : []),
           nameStep(intl, selectedType, sourceTypes, activeCategory),
           configurationStep(intl, sourceTypes),
-          applicationsStep(applicationTypes, intl),
-          applicationStep(applicationTypes, intl, activeCategory),
-          ...schemaBuilder(sourceTypes, applicationTypes, undefined, enableLighthouse),
-          summaryStep(sourceTypes, applicationTypes, intl),
+          applicationsStep(applicationTypes, intl, hcsEnrolled),
+          applicationStep(applicationTypes, intl, activeCategory, hcsEnrolled),
+          ...schemaBuilder(sourceTypes, applicationTypes, undefined, enableLighthouse, hcsEnrolled),
+          summaryStep(sourceTypes, applicationTypes, intl, hcsEnrolled),
         ],
       },
     ],

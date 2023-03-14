@@ -1,5 +1,5 @@
 import * as api from '../../api/entities';
-import { doLoadApplicationTypes, doLoadSourceTypes, findSource } from '../../api/wizardHelpers';
+import { checkAccountHCS, doLoadApplicationTypes, doLoadSourceTypes, findSource } from '../../api/wizardHelpers';
 
 import applicationTypes from '../__mocks__/applicationTypes';
 import sourceTypes from '../__mocks__/sourceTypes';
@@ -23,6 +23,10 @@ describe('wizardHelpers', () => {
     });
   });
 
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   it('doLoadSourceTypes', async () => {
     result = await doLoadSourceTypes();
 
@@ -37,6 +41,33 @@ describe('wizardHelpers', () => {
     expect(result).toEqual({
       applicationTypes,
     });
+  });
+
+  it('checkAccountHCS - success', async () => {
+    jest.spyOn(global, 'fetch').mockResolvedValue({
+      status: 200,
+      json: () => ({
+        hcsDeal: true,
+      }),
+    });
+    result = await checkAccountHCS();
+
+    expect(result).toEqual({
+      hcsDeal: true,
+    });
+  });
+
+  it('checkAccountHCS - error', async () => {
+    jest.spyOn(global, 'fetch').mockResolvedValue({
+      status: 500,
+      statusText: 'test',
+    });
+
+    try {
+      result = await checkAccountHCS();
+    } catch (e) {
+      expect(e).toEqual(new Error('Failed to verify HCS enrollment: test'));
+    }
   });
 
   it('findSource', async () => {

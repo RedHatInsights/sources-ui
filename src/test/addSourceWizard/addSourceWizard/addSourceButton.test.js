@@ -8,9 +8,12 @@ import applicationTypes from '../../__mocks__/applicationTypes';
 
 import render from '../__mocks__/render';
 import { CLOUD_VENDOR } from '../../../utilities/constants';
+import * as dependency from '../../../api/wizardHelpers';
+import hcsEnrollment from '../../__mocks__/hcs';
 
 describe('AddSourceButton', () => {
   it('opens wizard and close wizard', async () => {
+    dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
     const user = userEvent.setup();
 
     render(<AddSourceButton sourceTypes={sourceTypes} applicationTypes={applicationTypes} activeCategory={CLOUD_VENDOR} />);

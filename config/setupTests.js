@@ -24,7 +24,9 @@ global.insights = {
             },
           })
         ),
+      getToken: () => new Promise((resolve) => resolve('token')),
     },
+    isProd: () => false,
   },
 };
 

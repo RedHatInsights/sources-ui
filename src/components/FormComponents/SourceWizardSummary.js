@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import get from 'lodash/get';
+import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 import { FormattedMessage, useIntl } from 'react-intl';
-
 import {
   Alert,
   DescriptionList,
@@ -10,15 +11,12 @@ import {
   DescriptionListTerm,
   Label,
 } from '@patternfly/react-core';
-
-import get from 'lodash/get';
-
-import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
+import { useFlag } from '@unleash/proxy-client-react';
 
 import ValuePopover from './ValuePopover';
 import hardcodedSchemas from '../../components/addSourceWizard/hardcodedSchemas';
 import { ACCOUNT_AUTHORIZATION } from '../constants';
-import { CLOUD_METER_APP_NAME, COST_MANAGEMENT_APP_NAME } from '../../utilities/constants';
+import { CLOUD_METER_APP_NAME, COST_MANAGEMENT_APP_ID, COST_MANAGEMENT_APP_NAME, HCS_APP_NAME } from '../../utilities/constants';
 import { NO_APPLICATION_VALUE } from '../../components/addSourceWizard/stringConstants';
 import {
   getAdditionalSteps,
@@ -26,10 +24,11 @@ import {
   injectEndpointFieldsInfo,
   shouldSkipEndpoint,
 } from '../../components/addSourceWizard/schemaBuilder';
-import { useFlag } from '@unleash/proxy-client-react';
 
-const alertMapper = (appName, sourceType, intl) => {
-  if (appName === COST_MANAGEMENT_APP_NAME && sourceType !== 'google') {
+const SummaryAlert = ({ appName, sourceType, hcsEnrolled }) => {
+  const intl = useIntl();
+
+  if (appName === COST_MANAGEMENT_APP_NAME && sourceType !== 'google' && !hcsEnrolled) {
     return (
       <Alert
         variant="info"
@@ -64,6 +63,12 @@ const alertMapper = (appName, sourceType, intl) => {
   }
 
   return null;
+};
+
+SummaryAlert.propTypes = {
+  appName: PropTypes.string,
+  sourceType: PropTypes.string,
+  hcsEnrolled: PropTypes.bool,
 };
 
 export const createItem = (formField, values, stepKeys) => {
@@ -131,7 +136,7 @@ DesctiptionListItem.propTypes = {
   description: PropTypes.node,
 };
 
-const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthType }) => {
+const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthType, hcsEnrolled }) => {
   const formOptions = useFormApi();
   const intl = useIntl();
   const enableLighthouse = useFlag('sources.wizard.lighthouse');
@@ -153,7 +158,12 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
   let applicatioNames;
 
   if (values.source.app_creation_workflow === ACCOUNT_AUTHORIZATION) {
-    applicatioNames = values.applications.map((app) => applicationTypes.find((type) => type.id === app)?.display_name);
+    applicatioNames = values.applications.map(
+      (app) =>
+        app === COST_MANAGEMENT_APP_ID && hcsEnrolled
+          ? HCS_APP_NAME
+          : applicationTypes.find((type) => type.id === app)?.display_name // overwrite Cost management for AWS with HCS for account auth.
+    );
   }
 
   const application = values.application
@@ -177,7 +187,7 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
 
   const availableStepKeys = getStepKeys(type.name, hasAuthentication, name, id);
 
-  const authSteps = getAdditionalSteps(type.name, hasAuthentication, name, enableLighthouse);
+  const authSteps = getAdditionalSteps(type.name, hasAuthentication, name, enableLighthouse, hcsEnrolled);
   const hasCustomSteps = get(hardcodedSchemas, [type.name, 'authentication', hasAuthentication, name, 'customSteps'], false);
 
   if (authSteps.length > 0) {
@@ -196,7 +206,7 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
     endpointFields = [];
   }
 
-  authTypeFields = injectAuthFieldsInfo(authTypeFields, type.name, hasAuthentication, name || 'generic');
+  authTypeFields = injectAuthFieldsInfo(authTypeFields, type.name, hasAuthentication, name || 'generic', hcsEnrolled);
   endpointFields = injectEndpointFieldsInfo(endpointFields, type.name);
 
   const fields = [...authTypeFields, ...endpointFields];
@@ -265,7 +275,12 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
               id: 'wizard.application',
               defaultMessage: 'Application',
             })}
-            description={display_name}
+            description={
+              // overwrite Cost management for AWS with HCS
+              values.application?.application_type_id === COST_MANAGEMENT_APP_ID && values.source_type === 'amazon' && hcsEnrolled
+                ? HCS_APP_NAME
+                : display_name
+            }
           />
         )}
         {showApp && values.source_type === 'oracle-cloud-infrastructure' && values.application?.extra?.bucket && (
@@ -310,7 +325,7 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
           )}
         {valuesList}
       </DescriptionList>
-      {alertMapper(name, type.name, intl)}
+      <SummaryAlert appName={name} sourceType={type.name} hcsEnrolled={hcsEnrolled} />
     </React.Fragment>
   );
 };
@@ -336,6 +351,7 @@ SourceWizardSummary.propTypes = {
   ).isRequired,
   showApp: PropTypes.bool,
   showAuthType: PropTypes.bool,
+  hcsEnrolled: PropTypes.bool,
 };
 
 SourceWizardSummary.defaultProps = {

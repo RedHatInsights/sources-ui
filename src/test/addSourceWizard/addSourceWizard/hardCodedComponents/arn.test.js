@@ -103,7 +103,24 @@ describe('AWS-ARN hardcoded schemas', () => {
     expect(screen.getByRole('textbox', { name: 'Copyable input' })).toHaveValue('589173575009');
   });
 
-  it('TAGS DESCRIPTION is rendered correctly', () => {
+  it('IAM ROLE is rendered correctly for HCS', () => {
+    render(<AwsArn.IAMRoleDescription showHCS />);
+
+    expect(
+      screen.getByText('To delegate account access, create an IAM role to associate with your IAM policy.')
+    ).toBeInTheDocument();
+    expect(screen.getByText('From the AWS Identity Access Management console, create a new role.')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Select another AWS account from the list of trusted entities and paste the following value into the Account ID field:'
+      )
+    ).toBeInTheDocument();
+    expect(screen.getByText('Attach the permissions policy that you just created.')).toBeInTheDocument();
+    expect(screen.getByText('Complete the process to create your new role.')).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: 'Copyable input' })).toHaveValue('589173575009');
+  });
+
+  it('TAGS DESCRIPTION is rendered correctly for Cost Management', () => {
     render(<AwsArn.TagsDescription />);
 
     expect(screen.getByText('Learn more')).toBeInTheDocument();
@@ -125,6 +142,28 @@ describe('AWS-ARN hardcoded schemas', () => {
     ).toBeInTheDocument();
   });
 
+  it('TAGS DESCRIPTION is rendered correctly for HCS', () => {
+    render(<AwsArn.TagsDescription showHCS />);
+
+    expect(screen.queryByText('Learn more')).not.toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'To use tags to organize your AWS resources in the Hybrid Committed Spend application, activate your tags in AWS to allow them to be imported automatically.'
+      )
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('In the AWS Billing and Cost Management console, open the Cost Allocation Tags section.')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Select the tags you want to use in the Hybrid Committed Spend application, and click Activate.')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'To use account aliases and organizational units in the display and filter of AWS resources, select the following'
+      )
+    ).toBeInTheDocument();
+  });
+
   it('USAGE description is rendered correctly', () => {
     render(<AwsArn.UsageDescription />);
 
@@ -134,6 +173,25 @@ describe('AWS-ARN hardcoded schemas', () => {
       )
     ).toBeInTheDocument();
     expect(screen.getByText('Learn more')).toBeInTheDocument();
+    expect(screen.getByText('Create a cost and usage report using the following values:')).toBeInTheDocument();
+    expect(screen.getByText('Report name: koku')).toBeInTheDocument();
+    expect(screen.getByText('Time unit: hourly')).toBeInTheDocument();
+    expect(screen.getByText('Include: Resource IDs')).toBeInTheDocument();
+    expect(screen.getByText('Enable support for: RedShift, QuickSight and disable support for Athena')).toBeInTheDocument();
+    expect(screen.getByText('Report path prefix: cost')).toBeInTheDocument();
+    expect(screen.getByText('Compression type: GZIP')).toBeInTheDocument();
+    expect(screen.getByText('Enter the name of the Amazon S3 bucket you just created below:')).toBeInTheDocument();
+  });
+
+  it('USAGE description is rendered correctly for HCS', () => {
+    render(<AwsArn.UsageDescription showHCS />);
+
+    expect(
+      screen.getByText(
+        'To collect and store the information needed for cost management, you need to set up an Amazon S3 bucket for cost and usage reports.'
+      )
+    ).toBeInTheDocument();
+    expect(screen.queryByText('Learn more')).not.toBeInTheDocument();
     expect(screen.getByText('Create a cost and usage report using the following values:')).toBeInTheDocument();
     expect(screen.getByText('Report name: koku')).toBeInTheDocument();
     expect(screen.getByText('Time unit: hourly')).toBeInTheDocument();
