@@ -641,7 +641,7 @@ const hardcodedSchemas = {
             validate: [
               {
                 type: validatorTypes.PATTERN,
-                pattern: /^[\/A-Za-z0-9]+[\.\/A-Za-z0-9_-]*$/, // eslint-disable-line no-useless-escape
+                pattern: /^[\/A-Za-z0-9]+[\.\/\:A-Za-z0-9_-]*$/, // eslint-disable-line no-useless-escape
                 message: (
                   <FormattedMessage
                     id="cost.scopePattern"
