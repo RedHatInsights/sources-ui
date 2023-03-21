@@ -24,6 +24,7 @@ import FormSpy from '@data-driven-forms/react-form-renderer/form-spy';
 const CREATE_AZURE_STORAGE = `${HCCM_DOCS_PREFIX}/html/adding_a_microsoft_azure_source_to_cost_management/assembly-adding-azure-sources#creating-an-azure-storage-account_adding-an-azure-source`;
 const AZURE_CREDS_URL = `${HCCM_DOCS_PREFIX}/html/adding_a_microsoft_azure_source_to_cost_management/assembly-adding-azure-sources#configuring-azure-roles_adding-an-azure-source`;
 const RECURRING_TASK_URL = `${HCCM_DOCS_PREFIX}/html/adding_a_microsoft_azure_source_to_cost_management/assembly-adding-azure-sources#configuring-an-azure-daily-export-schedule_adding-an-azure-source`;
+const AZURE_ROLES_URL = `${HCCM_DOCS_PREFIX}/html/adding_a_microsoft_azure_source_to_cost_management/assembly-adding-azure-sources#configuring-azure-roles_adding-an-azure-source`;
 
 export const ConfigureResourceGroupAndStorageAccount = () => {
   const intl = useIntl();
@@ -107,7 +108,7 @@ export const ConfigureRolesDescription = () => {
         {intl.formatMessage({
           id: 'cost.azure.createContributorRole',
           defaultMessage:
-            'Run the following command in Cloud Shell to create a Cost Management Storage Account Contributor role. From the output enter the values in the fields below:',
+            'Run the following command in Cloud Shell to create a service principal with Cost Management Storage Account Contributor role. From the output enter the values in the fields below:',
         })}
       </Text>
       <ClipboardCopy>{`az ad sp create-for-rbac -n "CostManagement" --role "Storage Account Contributor"  --scope /subscriptions/${values?.application?.extra?.subscription_id}/resourceGroups/${values?.application?.extra?.resource_group} --query '{"tenant": tenant, "client_id": appId, "secret": password}'`}</ClipboardCopy>
@@ -124,6 +125,61 @@ const InternalReaderRoleDescription = () => {
 
   let scope = application?.extra?.scope || `/subscriptions/${application?.extra?.subscription_id}`;
 
+  if (scope.includes('billingAccounts')) {
+    if (scope.includes('enrollmentAccounts')) {
+      return (
+        <TextContent>
+          <Text component={TextVariants.p}>
+            {intl.formatMessage(
+              {
+                id: 'cost.azure.setupEAReaderRole',
+                defaultMessage:
+                  'Launch the Azure Enterprise Portal and give the service principal created above Administrator role on the associated account.  {link}',
+              },
+              {
+                link: (
+                  <Text key="link" rel="noopener noreferrer" target="_blank" component={TextVariants.a} href={AZURE_ROLES_URL}>
+                    {intl.formatMessage({
+                      id: 'wizard.learnMore defaultMessage=Learn more',
+                      defaultMessage: 'Learn more',
+                    })}
+                  </Text>
+                ),
+              }
+            )}
+          </Text>
+        </TextContent>
+      );
+    } else {
+      const mcaRole = scope.includes('invoiceSections')
+        ? 'Invoice section reader'
+        : `Billing ${scope.includes('billingProfiles') ? 'profile' : 'account'} reader`;
+
+      return (
+        <TextContent>
+          <Text component={TextVariants.p}>
+            {intl.formatMessage(
+              {
+                id: 'cost.azure.setupMCAReaderRole',
+                defaultMessage: `Launch the Azure Portal and give the service principal created above ${mcaRole} role.  {link}`,
+              },
+              {
+                link: (
+                  <Text key="link" rel="noopener noreferrer" target="_blank" component={TextVariants.a} href={AZURE_ROLES_URL}>
+                    {intl.formatMessage({
+                      id: 'wizard.learnMore defaultMessage=Learn more',
+                      defaultMessage: 'Learn more',
+                    })}
+                  </Text>
+                ),
+              }
+            )}
+          </Text>
+        </TextContent>
+      );
+    }
+  }
+
   return (
     <TextContent>
       <Text component={TextVariants.p}>
@@ -133,7 +189,8 @@ const InternalReaderRoleDescription = () => {
         })}
       </Text>
       <ClipboardCopy>
-        {`az role assignment create --assignee "${authentication?.username}" --role "Cost Management Reader" --scope "${scope}"`}
+        az role assignment create --assignee &quot;{authentication?.username}&quot; --role &quot;Cost Management Reader&quot;
+        --scope &quot;{scope}&quot;
       </ClipboardCopy>
     </TextContent>
   );
@@ -270,11 +327,11 @@ const CostExportSelect = ({ handleSelect }) => {
     >
       <SelectOption key="subscription" value="Subscription" />
       <SelectOption key="resourceGroup" value="Resource Group" />
-      <SelectOption key="billingAccount" value="Billing Account" />
-      <SelectOption key="enrollment" value="Enrollment Account" />
       <SelectOption key="management" value="Management Group" />
+      <SelectOption key="billingAccount" value="Billing Account" />
       <SelectOption key="billingProfile" value="Billing Profile" />
       <SelectOption key="invoiceSection" value="Invoice Section" />
+      <SelectOption key="enrollment" value="Enrollment Account" />
     </Select>
   );
 };

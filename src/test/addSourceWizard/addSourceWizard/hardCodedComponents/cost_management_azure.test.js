@@ -58,7 +58,7 @@ describe('Cost Management Azure steps components', () => {
     expect(screen.getByText('Learn more')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'Run the following command in Cloud Shell to create a Cost Management Storage Account Contributor role. From the output enter the values in the fields below:'
+        'Run the following command in Cloud Shell to create a service principal with Cost Management Storage Account Contributor role. From the output enter the values in the fields below:'
       )
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveValue(
@@ -94,6 +94,140 @@ describe('Cost Management Azure steps components', () => {
     expect(screen.getByLabelText('Copyable input')).toHaveValue(
       `az role assignment create --assignee "some-user-name" --role "Cost Management Reader" --scope "/subscriptions/my-sub-id-1"`
     );
+  });
+
+  it('EA Read Role description', () => {
+    render(
+      <Form onSubmit={jest.fn()}>
+        {() => (
+          <RenderContext.Provider
+            value={{
+              formOptions: {
+                getState: () => ({
+                  values: {
+                    authentication: { username: 'some-user-name' },
+                    application: {
+                      extra: {
+                        subscription_id: 'my-sub-id-1',
+                        resource_group: 'my-resource-group-1',
+                        scope: '/providers/Microsoft.Billing/billingAccounts/1234/enrollmentAccounts/5678',
+                      },
+                    },
+                  },
+                }),
+              },
+            }}
+          >
+            <Cm.ReaderRoleDescription />
+          </RenderContext.Provider>
+        )}
+      </Form>
+    );
+
+    expect(
+      screen.getByText(
+        'Launch the Azure Enterprise Portal and give the service principal created above Administrator role on the associated account.'
+      )
+    ).toBeInTheDocument();
+  });
+
+  it('Billing Account Read Role description', () => {
+    render(
+      <Form onSubmit={jest.fn()}>
+        {() => (
+          <RenderContext.Provider
+            value={{
+              formOptions: {
+                getState: () => ({
+                  values: {
+                    authentication: { username: 'some-user-name' },
+                    application: {
+                      extra: {
+                        subscription_id: 'my-sub-id-1',
+                        resource_group: 'my-resource-group-1',
+                        scope: '/providers/Microsoft.Billing/billingAccounts/1234',
+                      },
+                    },
+                  },
+                }),
+              },
+            }}
+          >
+            <Cm.ReaderRoleDescription />
+          </RenderContext.Provider>
+        )}
+      </Form>
+    );
+
+    expect(
+      screen.getByText('Launch the Azure Portal and give the service principal created above Billing account reader role.')
+    ).toBeInTheDocument();
+  });
+
+  it('Billing Profile Read Role description', () => {
+    render(
+      <Form onSubmit={jest.fn()}>
+        {() => (
+          <RenderContext.Provider
+            value={{
+              formOptions: {
+                getState: () => ({
+                  values: {
+                    authentication: { username: 'some-user-name' },
+                    application: {
+                      extra: {
+                        subscription_id: 'my-sub-id-1',
+                        resource_group: 'my-resource-group-1',
+                        scope: '/providers/Microsoft.Billing/billingAccounts/1234/billingProfiles/5678',
+                      },
+                    },
+                  },
+                }),
+              },
+            }}
+          >
+            <Cm.ReaderRoleDescription />
+          </RenderContext.Provider>
+        )}
+      </Form>
+    );
+
+    expect(
+      screen.getByText('Launch the Azure Portal and give the service principal created above Billing profile reader role.')
+    ).toBeInTheDocument();
+  });
+
+  it('Invoice Section Read Role description', () => {
+    render(
+      <Form onSubmit={jest.fn()}>
+        {() => (
+          <RenderContext.Provider
+            value={{
+              formOptions: {
+                getState: () => ({
+                  values: {
+                    authentication: { username: 'some-user-name' },
+                    application: {
+                      extra: {
+                        subscription_id: 'my-sub-id-1',
+                        resource_group: 'my-resource-group-1',
+                        scope: '/providers/Microsoft.Billing/billingAccounts/1234/invoiceSections/5678',
+                      },
+                    },
+                  },
+                }),
+              },
+            }}
+          >
+            <Cm.ReaderRoleDescription />
+          </RenderContext.Provider>
+        )}
+      </Form>
+    );
+
+    expect(
+      screen.getByText('Launch the Azure Portal and give the service principal created above Invoice section reader role.')
+    ).toBeInTheDocument();
   });
 
   it('Read Role with scope description', () => {
