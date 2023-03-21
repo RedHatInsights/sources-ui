@@ -64,7 +64,7 @@ ROLE_ARN=$(aws iam create-role --role-name ${ROLE_NAME} --assume-role-policy-doc
     },
     "Action": "sts:AssumeRole"
   }
-}' | jq '.Role.Arn')`;
+}' | jq -r '.Role.Arn')`;
 
 const ATTACH_COMMAND_STRING = `aws iam attach-role-policy --role-name ${ROLE_NAME} --policy-arn $POLICY_ARN`;
 
