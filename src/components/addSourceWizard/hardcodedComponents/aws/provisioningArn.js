@@ -52,7 +52,7 @@ POLICY_ARN=$(aws iam create-policy --policy-name RH-HCC-provisioning-policy --po
     "Resource": "*"
   }
 ]
-}' | jq '.Policy.Arn')`;
+}' | jq -r '.Policy.Arn')`;
 
 const ROLE_COMMAND_STRING = `
 ROLE_ARN=$(aws iam create-role --role-name ${ROLE_NAME} --assume-role-policy-document '{
