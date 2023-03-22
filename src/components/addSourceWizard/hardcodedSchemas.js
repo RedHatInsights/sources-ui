@@ -10,6 +10,8 @@ import * as OpenshiftToken from './hardcodedComponents/openshift/token';
 import * as AwsSecret from './hardcodedComponents/aws/access_key';
 import * as AwsArn from './hardcodedComponents/aws/arn';
 
+import * as ProvAwsArn from './hardcodedComponents/aws/provisioningArn';
+
 import * as SWAwsArn from './hardcodedComponents/aws/subscriptionWatch';
 import * as SWAzure from './hardcodedComponents/azure/subscriptionWatch';
 import * as SWGoogle from './hardcodedComponents/gcp/subscriptionWatch';
@@ -23,7 +25,7 @@ import * as CMOci from './hardcodedComponents/oci/costManagement';
 import * as TowerCatalog from './hardcodedComponents/tower/catalog';
 import * as Openshift from './hardcodedComponents/openshift/endpoint';
 
-import { CATALOG_APP, CLOUD_METER_APP_NAME, COST_MANAGEMENT_APP_NAME } from '../../utilities/constants';
+import { CATALOG_APP, CLOUD_METER_APP_NAME, COST_MANAGEMENT_APP_NAME, PROVISIONING_APP_NAME } from '../../utilities/constants';
 import emptyAuthType from './emptyAuthType';
 
 const arnMessagePattern = <FormattedMessage id="wizard.arnPattern" defaultMessage="ARN must start with arn:aws:" />;
@@ -31,6 +33,26 @@ const arnMessageLength = <FormattedMessage id="wizard.arnLength" defaultMessage=
 
 const arnField = {
   placeholder: 'arn:aws:iam:123456789:role/CostManagement',
+  isRequired: true,
+  validate: [
+    {
+      type: validatorTypes.REQUIRED,
+    },
+    {
+      type: validatorTypes.PATTERN,
+      pattern: /^arn:aws:.*/,
+      message: arnMessagePattern,
+    },
+    {
+      type: validatorTypes.MIN_LENGTH,
+      threshold: 10,
+      message: arnMessageLength,
+    },
+  ],
+};
+
+const provArnField = {
+  placeholder: 'arn:aws:iam:123456789:role/Provisioning',
   isRequired: true,
   validate: [
     {
@@ -836,6 +858,70 @@ const hardcodedSchemas = {
                   name: 'arn-description',
                   component: 'description',
                   Content: SWAwsArn.ArnDescription,
+                },
+                {
+                  component: componentTypes.TEXT_FIELD,
+                  name: 'authentication.username',
+                },
+              ],
+            },
+          ],
+        },
+      },
+      'provisioning-arn': {
+        generic: {
+          includeStepKeyFields: ['provisioning-arn'],
+          'authentication.username': provArnField,
+        },
+        [PROVISIONING_APP_NAME]: {
+          useApplicationAuth: true,
+          skipSelection: true,
+          'authentication.username': provArnField,
+          additionalSteps: [
+            {
+              title: <FormattedMessage id="provisioning.createIamPolicy" defaultMessage="Create IAM policy" />,
+              nextStep: 'prov-iam-role',
+              substepOf: {
+                name: 'eaa',
+                title: <FormattedMessage id="provisioning.enableAccountAccess" defaultMessage="Enable account access" />,
+              },
+              fields: [
+                {
+                  name: 'iam-policy-description',
+                  component: 'description',
+                  Content: ProvAwsArn.IAMPolicyDescription,
+                },
+                {
+                  component: componentTypes.TEXT_FIELD,
+                  name: 'authentication.authtype',
+                  hideField: true,
+                  initialValue: 'provisioning-arn',
+                  initializeOnMount: true,
+                },
+              ],
+            },
+            {
+              title: <FormattedMessage id="provisioning.createIamRole" defaultMessage="Create IAM role" />,
+              name: 'prov-iam-role',
+              nextStep: 'prov-arn',
+              substepOf: 'eaa',
+              fields: [
+                {
+                  name: 'iam-role-description',
+                  component: 'description',
+                  Content: ProvAwsArn.IAMRoleDescription,
+                },
+              ],
+            },
+            {
+              title: <FormattedMessage id="provisioning.enterArn" defaultMessage="Enter ARN" />,
+              name: 'prov-arn',
+              substepOf: 'eaa',
+              fields: [
+                {
+                  name: 'arn-description',
+                  component: 'description',
+                  Content: ProvAwsArn.ArnDescription,
                 },
                 {
                   component: componentTypes.TEXT_FIELD,
