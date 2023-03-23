@@ -126,58 +126,38 @@ const InternalReaderRoleDescription = () => {
   let scope = application?.extra?.scope || `/subscriptions/${application?.extra?.subscription_id}`;
 
   if (scope.includes('billingAccounts')) {
-    if (scope.includes('enrollmentAccounts')) {
-      return (
-        <TextContent>
-          <Text component={TextVariants.p}>
-            {intl.formatMessage(
-              {
-                id: 'cost.azure.setupEAReaderRole',
-                defaultMessage:
-                  'Launch the Azure Enterprise Portal and give the service principal created above Administrator role on the associated account.  {link}',
-              },
-              {
-                link: (
-                  <Text key="link" rel="noopener noreferrer" target="_blank" component={TextVariants.a} href={AZURE_ROLES_URL}>
-                    {intl.formatMessage({
-                      id: 'wizard.learnMore defaultMessage=Learn more',
-                      defaultMessage: 'Learn more',
-                    })}
-                  </Text>
-                ),
-              }
-            )}
-          </Text>
-        </TextContent>
-      );
-    } else {
-      const mcaRole = scope.includes('invoiceSections')
-        ? 'Invoice section reader'
-        : `Billing ${scope.includes('billingProfiles') ? 'profile' : 'account'} reader`;
-
-      return (
-        <TextContent>
-          <Text component={TextVariants.p}>
-            {intl.formatMessage(
-              {
-                id: 'cost.azure.setupMCAReaderRole',
-                defaultMessage: `Launch the Azure Portal and give the service principal created above ${mcaRole} role.  {link}`,
-              },
-              {
-                link: (
-                  <Text key="link" rel="noopener noreferrer" target="_blank" component={TextVariants.a} href={AZURE_ROLES_URL}>
-                    {intl.formatMessage({
-                      id: 'wizard.learnMore defaultMessage=Learn more',
-                      defaultMessage: 'Learn more',
-                    })}
-                  </Text>
-                ),
-              }
-            )}
-          </Text>
-        </TextContent>
-      );
-    }
+    return (
+      <TextContent>
+        <Text component={TextVariants.p}>
+          {intl.formatMessage(
+            scope.includes('enrollmentAccounts')
+              ? {
+                  id: 'cost.azure.setupEAReaderRole',
+                  defaultMessage:
+                    'Launch the Azure Enterprise Portal and give the service principal created above Administrator role on the associated account.  {link}',
+                }
+              : {
+                  id: 'cost.azure.setupMCAReaderRole',
+                  defaultMessage: `Launch the Azure Portal and give the service principal created above ${
+                    scope.includes('invoiceSections')
+                      ? 'Invoice section reader'
+                      : `Billing ${scope.includes('billingProfiles') ? 'profile' : 'account'} reader`
+                  } role.  {link}`,
+                },
+            {
+              link: (
+                <Text key="link" rel="noopener noreferrer" target="_blank" component={TextVariants.a} href={AZURE_ROLES_URL}>
+                  {intl.formatMessage({
+                    id: 'wizard.learnMore defaultMessage=Learn more',
+                    defaultMessage: 'Learn more',
+                  })}
+                </Text>
+              ),
+            }
+          )}
+        </Text>
+      </TextContent>
+    );
   }
 
   return (
