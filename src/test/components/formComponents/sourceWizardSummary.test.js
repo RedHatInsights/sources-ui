@@ -20,6 +20,9 @@ import Summary, { createItem } from '../../../components/FormComponents/SourceWi
 import { NO_APPLICATION_VALUE } from '../../../components/addSourceWizard/stringConstants';
 import emptyAuthType from '../../../components/addSourceWizard/emptyAuthType';
 import * as UnleashClient from '@unleash/proxy-client-react';
+import componentWrapperIntl from '../../../utilities/testsHelpers';
+import mockStore from '../../__mocks__/mockStore';
+import { COST_MANAGEMENT_APP_ID } from '../../../utilities/constants';
 
 jest.mock('@unleash/proxy-client-react', () => ({
   useUnleashContext: () => jest.fn(),
@@ -30,12 +33,16 @@ describe('SourceWizardSummary component', () => {
   describe('should render correctly', () => {
     let formOptions;
     let initialProps;
+    let initialState;
+    let store;
 
-    const SourceWizardSummary = ({ formOptions, ...props }) => (
-      <RendererContext.Provider value={{ formOptions }}>
-        <Summary {...props} />
-      </RendererContext.Provider>
-    );
+    const SourceWizardSummary = ({ formOptions, store, ...props }) =>
+      componentWrapperIntl(
+        <RendererContext.Provider value={{ formOptions }}>
+          <Summary {...props} />
+        </RendererContext.Provider>,
+        store
+      );
 
     const getListData = (container) =>
       [...container.getElementsByClassName('pf-c-description-list__group')].map((group) => [
@@ -76,11 +83,21 @@ describe('SourceWizardSummary component', () => {
         sourceTypes,
         applicationTypes,
       };
+
+      initialState = {
+        sources: { hcsEnrolled: false, hcsEnrolledLoaded: true },
+      };
+
+      store = mockStore(initialState);
     });
 
     it('openshift', () => {
       const { container } = render(
-        <SourceWizardSummary {...initialProps} formOptions={formOptions('openshift', 'token', NO_APPLICATION_VALUE)} />
+        <SourceWizardSummary
+          {...initialProps}
+          formOptions={formOptions('openshift', 'token', NO_APPLICATION_VALUE)}
+          store={store}
+        />
       );
 
       const data = getListData(container);
@@ -98,7 +115,9 @@ describe('SourceWizardSummary component', () => {
     });
 
     it('openshift - NO_APPLICATION_VALUE set, ignore it', () => {
-      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions('openshift', 'token')} />);
+      const { container } = render(
+        <SourceWizardSummary {...initialProps} formOptions={formOptions('openshift', 'token')} store={store} />
+      );
 
       const data = getListData(container);
 
@@ -116,7 +135,7 @@ describe('SourceWizardSummary component', () => {
 
     it('amazon', () => {
       const { container } = render(
-        <SourceWizardSummary {...initialProps} formOptions={formOptions('amazon', 'access_key_secret_key')} />
+        <SourceWizardSummary {...initialProps} formOptions={formOptions('amazon', 'access_key_secret_key')} store={store} />
       );
 
       const data = getListData(container);
@@ -132,7 +151,9 @@ describe('SourceWizardSummary component', () => {
     });
 
     it('amazon - ARN', () => {
-      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions('amazon', 'arn')} />);
+      const { container } = render(
+        <SourceWizardSummary {...initialProps} formOptions={formOptions('amazon', 'arn')} store={store} />
+      );
 
       const data = getListData(container);
 
@@ -159,7 +180,7 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} store={store} />);
 
       const data = getListData(container);
 
@@ -200,7 +221,7 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} store={store} />);
 
       const data = getListData(container);
 
@@ -215,11 +236,12 @@ describe('SourceWizardSummary component', () => {
     });
 
     it('amazon - ARN HCS - should not include rbac alert message', () => {
+      store = mockStore({ sources: { ...initialState.sources, hcsEnrolled: true } });
       formOptions = {
         getState: () => ({
           values: {
             source: { name: 'cosi' },
-            application: { application_type_id: '2', extra: { bucket: 'gfghf' } },
+            application: { application_type_id: COST_MANAGEMENT_APP_ID, extra: { bucket: 'gfghf' } },
             source_type: 'amazon',
             authentication: { username: 'arn:aws:132', authtype: 'arn' },
             fixasyncvalidation: '',
@@ -228,7 +250,7 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} hcsEnrolled />);
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} store={store} />);
 
       const data = getListData(container);
 
@@ -256,7 +278,7 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} store={store} />);
 
       const data = getListData(container);
 
@@ -282,7 +304,7 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} store={store} />);
 
       const data = getListData(container);
 
@@ -317,7 +339,7 @@ describe('SourceWizardSummary component', () => {
 
       const { container } = render(
         <IntlProvider locale="en">
-          <SourceWizardSummary {...initialProps} formOptions={formOptions} />
+          <SourceWizardSummary {...initialProps} formOptions={formOptions} store={store} />
         </IntlProvider>
       );
 
@@ -342,6 +364,34 @@ describe('SourceWizardSummary component', () => {
       ).toBeInTheDocument();
     });
 
+    it('azure cost management - HCS', () => {
+      store = mockStore({ sources: { ...initialState.sources, hcsEnrolled: true } });
+      formOptions = {
+        getState: () => ({
+          values: {
+            source: { name: 'cosi' },
+            application: { application_type_id: COST_MANAGEMENT_APP_ID, extra: { bucket: 'gfghf' } },
+            source_type: 'azure',
+            authentication: { authtype: 'lighthouse_subscription_id', username: 'some-subscription-id' },
+            auth_select: 'lighthouse_subscription_id',
+          },
+        }),
+      };
+
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} store={store} />);
+
+      const data = getListData(container);
+
+      expect(data).toEqual([
+        ['Name', 'cosi'],
+        ['Source type', 'Microsoft Azure'],
+        ['Application', 'Hybrid Committed Spend'],
+        ['Subscription ID', 'some-subscription-id'],
+      ]);
+
+      expect(screen.queryByText('Manage permissions in User Access')).not.toBeInTheDocument();
+    });
+
     it('azure rhel management - lighthouse', () => {
       jest.spyOn(UnleashClient, 'useFlag').mockReturnValueOnce(true);
       formOptions = {
@@ -356,7 +406,7 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} store={store} />);
 
       const data = getListData(container);
 
@@ -381,7 +431,7 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} store={store} />);
 
       const data = getListData(container);
 
@@ -405,7 +455,7 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} store={store} />);
 
       const data = getListData(container);
 
@@ -435,7 +485,7 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} store={store} />);
 
       const data = getListData(container);
 
@@ -463,7 +513,7 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} store={store} />);
 
       const data = getListData(container);
 
@@ -491,7 +541,7 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} store={store} />);
 
       const data = getListData(container);
 
@@ -519,7 +569,7 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} store={store} />);
 
       const data = getListData(container);
 
@@ -533,7 +583,7 @@ describe('SourceWizardSummary component', () => {
 
     it('ansible-tower', () => {
       const { container } = render(
-        <SourceWizardSummary {...initialProps} formOptions={formOptions('ansible-tower', 'username_password')} />
+        <SourceWizardSummary {...initialProps} formOptions={formOptions('ansible-tower', 'username_password')} store={store} />
       );
       const data = getListData(container);
 
@@ -554,7 +604,11 @@ describe('SourceWizardSummary component', () => {
 
     it('selected Catalog application, is second', () => {
       const { container } = render(
-        <SourceWizardSummary {...initialProps} formOptions={formOptions('ansible-tower', 'username_password', '1')} />
+        <SourceWizardSummary
+          {...initialProps}
+          formOptions={formOptions('ansible-tower', 'username_password', '1')}
+          store={store}
+        />
       );
       const data = getListData(container);
 
@@ -576,6 +630,7 @@ describe('SourceWizardSummary component', () => {
           {...initialProps}
           formOptions={formOptions('ansible-tower', 'username_password', '1')}
           showApp={false}
+          store={store}
         />
       );
       const data = getListData(container);
@@ -594,7 +649,9 @@ describe('SourceWizardSummary component', () => {
     });
 
     it('do not contain hidden field', () => {
-      render(<SourceWizardSummary {...initialProps} formOptions={formOptions('ansible-tower', 'username_password')} />);
+      render(
+        <SourceWizardSummary {...initialProps} formOptions={formOptions('ansible-tower', 'username_password')} store={store} />
+      );
       expect(() => screen.getByText('kubernetes')).toThrow();
     });
 
@@ -617,7 +674,7 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      render(<SourceWizardSummary {...initialProps} formOptions={formOptions} store={store} />);
       expect(screen.getByText('authority')).toBeInTheDocument();
     });
 
@@ -643,26 +700,30 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      render(<SourceWizardSummary {...initialProps} formOptions={formOptions} store={store} />);
       expect(() => screen.getByText('authority')).toThrow();
       expect(() => screen.getByText('token')).toThrow();
     });
 
     it('render boolean as Enabled', () => {
-      render(<SourceWizardSummary {...initialProps} formOptions={formOptions('openshift', 'token')} />);
+      render(<SourceWizardSummary {...initialProps} formOptions={formOptions('openshift', 'token')} store={store} />);
       expect(screen.getByText('Enabled')).toBeInTheDocument();
       expect(() => screen.getByText('Disabled')).toThrow();
     });
 
     it('render boolean as No', () => {
-      render(<SourceWizardSummary {...initialProps} formOptions={formOptions('openshift', 'token', '1', false)} />);
+      render(<SourceWizardSummary {...initialProps} formOptions={formOptions('openshift', 'token', '1', false)} store={store} />);
       expect(() => screen.getByText('Enabled')).toThrow();
       expect(screen.getByText('Disabled')).toBeInTheDocument();
     });
 
     it('render password as dots', () => {
       render(
-        <SourceWizardSummary {...initialProps} formOptions={formOptions('ansible-tower', 'username_password', '1', false)} />
+        <SourceWizardSummary
+          {...initialProps}
+          formOptions={formOptions('ansible-tower', 'username_password', '1', false)}
+          store={store}
+        />
       );
       expect(screen.getByText('●●●●●●●●●●●●')).toBeInTheDocument();
       expect(() => screen.getByText('123456')).toThrow();
@@ -680,7 +741,7 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      render(<SourceWizardSummary {...initialProps} formOptions={formOptions} store={store} />);
       expect(screen.getByText('OpenShift Container Platform')).toBeInTheDocument();
     });
 
@@ -707,7 +768,7 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      render(<SourceWizardSummary {...initialProps} formOptions={formOptions} />);
+      render(<SourceWizardSummary {...initialProps} formOptions={formOptions} store={store} />);
 
       expect(() => screen.getByText(randomLongText)).toThrow();
       expect(screen.getByText('Show more')).toBeInTheDocument();

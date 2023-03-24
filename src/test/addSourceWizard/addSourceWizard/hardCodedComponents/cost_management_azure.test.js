@@ -1,15 +1,29 @@
 import React from 'react';
 
 import { screen } from '@testing-library/react';
-
-import * as Cm from '.../../../../components/addSourceWizard/hardcodedComponents/azure/costManagement';
 import RenderContext from '@data-driven-forms/react-form-renderer/renderer-context';
 import Form from '@data-driven-forms/react-form-renderer/form';
+
+import * as Cm from '.../../../../components/addSourceWizard/hardcodedComponents/azure/costManagement';
+import { defaultSourcesState } from '../../../../redux/sources/reducer';
 import render from '../../__mocks__/render';
+import sourceTypes from '../../../__mocks__/sourceTypes';
+import mockStore from '../../../__mocks__/mockStore';
+import componentWrapperIntl from '../../../../utilities/testsHelpers';
 
 describe('Cost Management Azure steps components', () => {
+  let initialState;
+  let store;
+
+  beforeEach(() => {
+    initialState = {
+      sources: { ...defaultSourcesState, sourceTypes, hcsEnrolled: false, hcsEnrolledLoaded: true },
+    };
+  });
+
   it('Configure Resource Group and Storage Account description', () => {
-    render(<Cm.ConfigureResourceGroupAndStorageAccount />);
+    store = mockStore(initialState);
+    render(componentWrapperIntl(<Cm.ConfigureResourceGroupAndStorageAccount />, store));
 
     expect(
       screen.getByText(
@@ -18,6 +32,22 @@ describe('Cost Management Azure steps components', () => {
       )
     ).toBeInTheDocument();
     expect(screen.getByText('Learn more')).toBeInTheDocument();
+    expect(
+      screen.getByText('After configuring a resource group and storage account in the Azure portal, enter the following:')
+    ).toBeInTheDocument();
+  });
+
+  it('Configure Resource Group and Storage Account description - HCS', () => {
+    store = mockStore({ sources: { ...initialState.sources, hcsEnrolled: true } });
+    render(componentWrapperIntl(<Cm.ConfigureResourceGroupAndStorageAccount />, store));
+
+    expect(
+      screen.getByText(
+        'Red Hat recommends creating a dedicated resource group and storage account in Azure to collect cost data and metrics for cost management.',
+        { exact: false }
+      )
+    ).toBeInTheDocument();
+    expect(screen.queryByText('Learn more')).not.toBeInTheDocument();
     expect(
       screen.getByText('After configuring a resource group and storage account in the Azure portal, enter the following:')
     ).toBeInTheDocument();
@@ -35,18 +65,22 @@ describe('Cost Management Azure steps components', () => {
   });
 
   it('Configure Roles description', () => {
+    store = mockStore(initialState);
     render(
-      <RenderContext.Provider
-        value={{
-          formOptions: {
-            getState: () => ({
-              values: { application: { extra: { subscription_id: 'my-sub-id-1', resource_group: 'my-resource-group-1' } } },
-            }),
-          },
-        }}
-      >
-        <Cm.ConfigureRolesDescription />
-      </RenderContext.Provider>
+      componentWrapperIntl(
+        <RenderContext.Provider
+          value={{
+            formOptions: {
+              getState: () => ({
+                values: { application: { extra: { subscription_id: 'my-sub-id-1', resource_group: 'my-resource-group-1' } } },
+              }),
+            },
+          }}
+        >
+          <Cm.ConfigureRolesDescription />
+        </RenderContext.Provider>,
+        store
+      )
     );
 
     expect(
@@ -56,6 +90,42 @@ describe('Cost Management Azure steps components', () => {
       )
     ).toBeInTheDocument();
     expect(screen.getByText('Learn more')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Run the following command in Cloud Shell to create a service principal with Cost Management Storage Account Contributor role. From the output enter the values in the fields below:'
+      )
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText('Copyable input')).toHaveValue(
+      `az ad sp create-for-rbac -n "CostManagement" --role "Storage Account Contributor"  --scope /subscriptions/my-sub-id-1/resourceGroups/my-resource-group-1 --query '{"tenant": tenant, "client_id": appId, "secret": password}'`
+    );
+  });
+
+  it('Configure Roles description - HCS', () => {
+    store = mockStore({ sources: { ...initialState.sources, hcsEnrolled: true } });
+    render(
+      componentWrapperIntl(
+        <RenderContext.Provider
+          value={{
+            formOptions: {
+              getState: () => ({
+                values: { application: { extra: { subscription_id: 'my-sub-id-1', resource_group: 'my-resource-group-1' } } },
+              }),
+            },
+          }}
+        >
+          <Cm.ConfigureRolesDescription />
+        </RenderContext.Provider>,
+        store
+      )
+    );
+
+    expect(
+      screen.getByText(
+        'Red Hat recommends configuring dedicated credentials to grant Hybrid Committed Spend read-only access to Azure cost data.',
+        { exact: false }
+      )
+    ).toBeInTheDocument();
+    expect(screen.queryByText('Learn more')).not.toBeInTheDocument();
     expect(
       screen.getByText(
         'Run the following command in Cloud Shell to create a service principal with Cost Management Storage Account Contributor role. From the output enter the values in the fields below:'
@@ -267,7 +337,8 @@ describe('Cost Management Azure steps components', () => {
   });
 
   it('Export Schedule description', () => {
-    render(<Cm.ExportSchedule />);
+    store = mockStore(initialState);
+    render(componentWrapperIntl(<Cm.ExportSchedule />, store));
 
     expect(
       screen.getByText(
@@ -276,6 +347,29 @@ describe('Cost Management Azure steps components', () => {
       )
     ).toBeInTheDocument();
     expect(screen.getByText('Learn more')).toBeInTheDocument();
+    expect(screen.getByText('From the Azure portal, add a new cost export.')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Provide a name for the container and directory path, and specify the below settings to create the daily export. Leave all other options as the default.'
+      )
+    ).toBeInTheDocument();
+    expect(screen.getByText('Export type')).toBeInTheDocument();
+    expect(screen.getByText('Daily export of month-to-date costs')).toBeInTheDocument();
+    expect(screen.getByText('Storage account name')).toBeInTheDocument();
+    expect(screen.getByText('Created storage account name or existing storage account name')).toBeInTheDocument();
+  });
+
+  it('Export Schedule description - HCS', () => {
+    store = mockStore({ sources: { ...initialState.sources, hcsEnrolled: true } });
+    render(componentWrapperIntl(<Cm.ExportSchedule />, store));
+
+    expect(
+      screen.getByText(
+        'Create a recurring task to export cost data to your Azure storage account, where Cost Management will retrieve the data.',
+        { exact: false }
+      )
+    ).toBeInTheDocument();
+    expect(screen.queryByText('Learn more')).not.toBeInTheDocument();
     expect(screen.getByText('From the Azure portal, add a new cost export.')).toBeInTheDocument();
     expect(
       screen.getByText(

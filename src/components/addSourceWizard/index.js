@@ -78,7 +78,7 @@ const AddSourceWizard = ({
     const fn = isSuperKey(formValues.source) ? createSuperSource : doCreateSource;
     const submitValues = {
       ...formValues,
-      application: { ...formValues.application, extra: { ...(formValues.application?.extra || {}), hcs: hcsEnrolled } },
+      application: { ...formValues.application, extra: { ...(formValues.application?.extra || {}), hcs: !!hcsEnrolled } },
     };
 
     return fn(submitValues, timeoutedApps(applicationTypes), applicationTypes)
