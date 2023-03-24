@@ -147,6 +147,29 @@ describe('redux > sources reducer', () => {
     });
   });
 
+  it('hcsEnrolledPending sets correct state', () => {
+    expect(sourcesReducer.hcsEnrolledPending(defaultSourcesState)).toEqual({
+      ...defaultSourcesState,
+      hcsEnrolled: false,
+      hcsEnrolledLoaded: false,
+    });
+  });
+
+  it('hcsEnrolledRejected sets correct state', () => {
+    expect(sourcesReducer.hcsEnrolledRejected(defaultSourcesState, { payload: { error: 'foo' } })).toEqual({
+      ...defaultSourcesState,
+      fetchingError: 'foo',
+    });
+  });
+
+  it('hcsEnrolledLoaded sets correct state', () => {
+    expect(sourcesReducer.hcsEnrolledLoaded(defaultSourcesState, { payload: { hcsDeal: true } })).toEqual({
+      ...defaultSourcesState,
+      hcsEnrolled: true,
+      hcsEnrolledLoaded: true,
+    });
+  });
+
   it('sourceTypesPending sets sourceTypes', () => {
     const SOURCE_TYPES = ['aaa', 'bbb'];
     const payload = { payload: SOURCE_TYPES };
