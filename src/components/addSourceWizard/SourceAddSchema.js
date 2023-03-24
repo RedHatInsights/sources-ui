@@ -322,7 +322,7 @@ export const SummaryDescription = () => {
   );
 };
 
-const summaryStep = (sourceTypes, applicationTypes, intl, hcsEnrolled) => ({
+const summaryStep = (sourceTypes, applicationTypes, intl) => ({
   fields: [
     {
       component: 'description',
@@ -334,7 +334,6 @@ const summaryStep = (sourceTypes, applicationTypes, intl, hcsEnrolled) => ({
       component: 'summary',
       sourceTypes,
       applicationTypes,
-      hcsEnrolled,
     },
     {
       name: 'source_type',
@@ -408,7 +407,7 @@ export default (
           applicationsStep(applicationTypes, intl, hcsEnrolled),
           applicationStep(applicationTypes, intl, activeCategory, hcsEnrolled),
           ...schemaBuilder(sourceTypes, applicationTypes, undefined, enableLighthouse, hcsEnrolled),
-          summaryStep(sourceTypes, applicationTypes, intl, hcsEnrolled),
+          summaryStep(sourceTypes, applicationTypes, intl),
         ],
       },
     ],

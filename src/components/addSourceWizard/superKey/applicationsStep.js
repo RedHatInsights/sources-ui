@@ -1,7 +1,7 @@
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import { compileAllApplicationComboOptions } from '../compileAllApplicationComboOptions';
 
-const applicationsStep = (applicationTypes, intl, hcsEnrolled) => ({
+const applicationsStep = (applicationTypes, intl) => ({
   name: 'select_applications',
   title: intl.formatMessage({
     id: 'applications.select',
@@ -26,7 +26,7 @@ const applicationsStep = (applicationTypes, intl, hcsEnrolled) => ({
         id: 'applications.availableApplications',
         defaultMessage: 'Available applications',
       }),
-      options: compileAllApplicationComboOptions(applicationTypes, intl, undefined, hcsEnrolled),
+      options: compileAllApplicationComboOptions(applicationTypes, intl, undefined),
       applicationTypes,
     },
   ],

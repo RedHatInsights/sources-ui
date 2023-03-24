@@ -76,13 +76,10 @@ const AddSourceWizard = ({
     dispatch({ type: 'prepareSubmitState', values: formValues, sourceTypes, applicationTypes });
 
     const fn = isSuperKey(formValues.source) ? createSuperSource : doCreateSource;
-    const submitValues =
-      formValues.source_type === 'amazon'
-        ? {
-            ...formValues,
-            application: { ...formValues.application, extra: { ...(formValues.application?.extra || {}), hcs: hcsEnrolled } },
-          }
-        : formValues;
+    const submitValues = {
+      ...formValues,
+      application: { ...formValues.application, extra: { ...(formValues.application?.extra || {}), hcs: hcsEnrolled } },
+    };
 
     return fn(submitValues, timeoutedApps(applicationTypes), applicationTypes)
       .then((data) => {

@@ -1,4 +1,5 @@
 import React, { useEffect, useReducer, useRef } from 'react';
+import { shallowEqual, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
@@ -7,7 +8,7 @@ import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template'
 import { Wizard } from '@patternfly/react-core';
 
 import createSchema from './SourceAddSchema';
-import { checkAccountHCS, doLoadApplicationTypes, doLoadSourceTypes } from '../../api/wizardHelpers';
+import { doLoadApplicationTypes, doLoadSourceTypes } from '../../api/wizardHelpers';
 import { wizardDescription, wizardTitle } from './stringConstants';
 import filterApps, { filterVendorAppTypes } from '../../utilities/filterApps';
 import filterTypes, { filterVendorTypes } from '../../utilities/filterTypes';
@@ -77,8 +78,11 @@ const SourceAddModal = ({
     }
   };
 
-  const [{ schema, sourceTypes: stateSourceTypes, applicationTypes: stateApplicationTypes, isLoading, hcsEnrolled }, dispatch] =
-    useReducer(reducer, initialValues);
+  const [{ schema, sourceTypes: stateSourceTypes, applicationTypes: stateApplicationTypes, isLoading }, dispatch] = useReducer(
+    reducer,
+    initialValues
+  );
+  const hcsEnrolled = useSelector(({ sources }) => sources.hcsEnrolled, shallowEqual);
   const isMounted = useRef(false);
   const container = useRef(document.createElement('div'));
   const intl = useIntl();
@@ -95,10 +99,7 @@ const SourceAddModal = ({
       promises.push(doLoadApplicationTypes());
     }
 
-    promises.push(checkAccountHCS());
-
     Promise.all(promises).then((data) => {
-      const hcsEnrolled = data.find((data) => Object.prototype.hasOwnProperty.call(data, 'hcsDeal'))?.hcsDeal;
       const sourceTypesOut = data.find((types) => Object.prototype.hasOwnProperty.call(types, 'sourceTypes'));
       const applicationTypesOut = data.find((types) => Object.prototype.hasOwnProperty.call(types, 'applicationTypes'));
 
