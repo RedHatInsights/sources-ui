@@ -22,7 +22,7 @@ import emptyAuthType from '../../../components/addSourceWizard/emptyAuthType';
 import * as UnleashClient from '@unleash/proxy-client-react';
 import componentWrapperIntl from '../../../utilities/testsHelpers';
 import mockStore from '../../__mocks__/mockStore';
-import { COST_MANAGEMENT_APP_ID } from '../../../utilities/constants';
+import { COST_MANAGEMENT_APP_ID, HCS_APP_NAME } from '../../../utilities/constants';
 
 jest.mock('@unleash/proxy-client-react', () => ({
   useUnleashContext: () => jest.fn(),
@@ -286,6 +286,33 @@ describe('SourceWizardSummary component', () => {
         ['Name', 'cosi'],
         ['Source type', 'Google Cloud'],
         ['Application', 'Cost Management'],
+        ['Project ID', 'project_id_123'],
+        ['Dataset ID', 'dataset_id_123'],
+      ]);
+    });
+
+    it('google - cost management - HCS', () => {
+      store = mockStore({ sources: { ...initialState.sources, hcsEnrolled: true } });
+      formOptions = {
+        getState: () => ({
+          values: {
+            source: { name: 'cosi' },
+            application: { application_type_id: '2', extra: { dataset: 'dataset_id_123' } },
+            source_type: 'google',
+            authentication: { authtype: 'project_id_service_account_json', username: 'project_id_123' },
+            fixasyncvalidation: '',
+          },
+        }),
+      };
+
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} store={store} />);
+
+      const data = getListData(container);
+
+      expect(data).toEqual([
+        ['Name', 'cosi'],
+        ['Source type', 'Google Cloud'],
+        ['Application', HCS_APP_NAME],
         ['Project ID', 'project_id_123'],
         ['Dataset ID', 'dataset_id_123'],
       ]);

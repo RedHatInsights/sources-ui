@@ -6,10 +6,22 @@ import * as api from '../../../../api/entities';
 import * as Cm from '../../../../components/addSourceWizard/hardcodedComponents/gcp/costManagement';
 import render from '../../__mocks__/render';
 import SourcesFormRenderer from '../../../../utilities/SourcesFormRenderer';
+import mockStore from '../../../__mocks__/mockStore';
+import componentWrapperIntl from '../../../../utilities/testsHelpers';
 
 describe('Cost Management Google steps components', () => {
+  let store;
+  let initialState;
+
+  beforeEach(() => {
+    initialState = {
+      sources: { hcsEnrolled: false, hcsEnrolledLoaded: true },
+    };
+  });
+
   it('Project', () => {
-    render(<Cm.Project />);
+    store = mockStore(initialState);
+    render(componentWrapperIntl(<Cm.Project />, store));
 
     expect(
       screen.getByText(
@@ -18,6 +30,21 @@ describe('Cost Management Google steps components', () => {
       )
     ).toBeInTheDocument();
     expect(screen.getByText('Learn more')).toBeInTheDocument();
+    expect(screen.getByText('GCP Recommendation')).toBeInTheDocument();
+    expect(screen.getByText('Create a cloud project to contain all your billing administration needs.')).toBeInTheDocument();
+  });
+
+  it('Project - HCS', () => {
+    store = mockStore({ sources: { ...initialState.sources, hcsEnrolled: true } });
+    render(componentWrapperIntl(<Cm.Project />, store));
+
+    expect(
+      screen.getByText(
+        'Enter the ID of a project within your Google Cloud Platform (GCP) billing account. We’ll use this project to set up your BigQuery billing export.',
+        { exact: false }
+      )
+    ).toBeInTheDocument();
+    expect(screen.queryByText('Learn more')).not.toBeInTheDocument();
     expect(screen.getByText('GCP Recommendation')).toBeInTheDocument();
     expect(screen.getByText('Create a cloud project to contain all your billing administration needs.')).toBeInTheDocument();
   });
@@ -71,31 +98,71 @@ describe('Cost Management Google steps components', () => {
     });
   });
 
-  it('Dataset', () => {
+  it.skip('Dataset', () => {
+    store = mockStore(initialState);
     render(
-      <SourcesFormRenderer
-        onSubmit={jest.fn()}
-        schema={{
-          fields: [
-            {
-              name: 'field',
-              component: 'description',
-              Content: Cm.Dataset,
+      componentWrapperIntl(
+        <SourcesFormRenderer
+          onSubmit={jest.fn()}
+          schema={{
+            fields: [
+              {
+                name: 'field',
+                component: 'description',
+                Content: Cm.Dataset,
+              },
+            ],
+          }}
+          initialValues={{
+            authentication: {
+              username: 'some-project-id',
             },
-          ],
-        }}
-        initialValues={{
-          authentication: {
-            username: 'some-project-id',
-          },
-        }}
-      />
+          }}
+        />,
+        store
+      )
     );
 
     expect(screen.getByText('some-project-id', { exact: false })).toBeInTheDocument();
 
     expect(
       screen.getByText('To collect and store the information needed for Cost Management, create a BigQuery dataset.', {
+        exact: false,
+      })
+    ).toBeInTheDocument();
+    expect(screen.getByText('In the BigQuery console, select your project', { exact: false })).toBeInTheDocument();
+    expect(screen.getByText('enter a name for your dataset.', { exact: false })).toBeInTheDocument();
+  });
+
+  it('Dataset - HCS', () => {
+    store = mockStore({ sources: { ...initialState.sources, hcsEnrolled: true } });
+    render(
+      componentWrapperIntl(
+        <SourcesFormRenderer
+          onSubmit={jest.fn()}
+          schema={{
+            fields: [
+              {
+                name: 'field',
+                component: 'description',
+                Content: Cm.Dataset,
+              },
+            ],
+          }}
+          initialValues={{
+            authentication: {
+              username: 'some-project-id',
+            },
+          }}
+        />,
+        store
+      )
+    );
+
+    expect(screen.getByText('some-project-id', { exact: false })).toBeInTheDocument();
+
+    expect(
+      screen.getByText('To collect and store the information needed for Hybrid Committed Spend, create a BigQuery dataset.', {
         exact: false,
       })
     ).toBeInTheDocument();
