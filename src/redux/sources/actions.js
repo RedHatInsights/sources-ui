@@ -20,6 +20,7 @@ import { doLoadSourceTypes } from '../../api/source_types';
 import { bold } from '../../utilities/intlShared';
 import handleError from '../../api/handleError';
 import tryAgainMessage from '../../utilities/tryAgainMessage';
+import { checkAccountHCS } from '../../api/checkAccountHCS';
 
 export const loadEntities = (options) => (dispatch, getState) => {
   dispatch({
@@ -70,6 +71,25 @@ export const loadSourceTypes = () => (dispatch) => {
     .catch((error) =>
       dispatch({
         type: ACTION_TYPES.LOAD_SOURCE_TYPES_REJECTED,
+        payload: { error },
+        meta: { noError: true },
+      })
+    );
+};
+
+export const loadHcsEnrollment = () => (dispatch) => {
+  dispatch({ type: ACTION_TYPES.LOAD_HCS_ENROLLMENT_PENDING });
+
+  return checkAccountHCS()
+    .then(({ hcsDeal }) =>
+      dispatch({
+        type: ACTION_TYPES.LOAD_HCS_ENROLLMENT_FULFILLED,
+        payload: hcsDeal,
+      })
+    )
+    .catch((error) =>
+      dispatch({
+        type: ACTION_TYPES.LOAD_HCS_ENROLLMENT_REJECTED,
         payload: { error },
         meta: { noError: true },
       })

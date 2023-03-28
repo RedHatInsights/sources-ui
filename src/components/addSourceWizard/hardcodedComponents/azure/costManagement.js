@@ -20,14 +20,20 @@ import {
 import { HCCM_DOCS_PREFIX } from '../../stringConstants';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 import FormSpy from '@data-driven-forms/react-form-renderer/form-spy';
+import { shallowEqual, useSelector } from 'react-redux';
+import { HCS_APP_NAME } from '../../../../utilities/constants';
 
 const CREATE_AZURE_STORAGE = `${HCCM_DOCS_PREFIX}/html/adding_a_microsoft_azure_source_to_cost_management/assembly-adding-azure-sources#creating-an-azure-storage-account_adding-an-azure-source`;
+const CREATE_HCS_AZURE_STORAGE = ''; // specify when HCS docs links are available
 const AZURE_CREDS_URL = `${HCCM_DOCS_PREFIX}/html/adding_a_microsoft_azure_source_to_cost_management/assembly-adding-azure-sources#configuring-azure-roles_adding-an-azure-source`;
-const RECURRING_TASK_URL = `${HCCM_DOCS_PREFIX}/html/adding_a_microsoft_azure_source_to_cost_management/assembly-adding-azure-sources#configuring-an-azure-daily-export-schedule_adding-an-azure-source`;
+const AZURE_HCS_CREDS_URL = ''; // specify when HCS docs links are available
 const AZURE_ROLES_URL = `${HCCM_DOCS_PREFIX}/html/adding_a_microsoft_azure_source_to_cost_management/assembly-adding-azure-sources#configuring-azure-roles_adding-an-azure-source`;
+const RECURRING_TASK_URL = `${HCCM_DOCS_PREFIX}/html/adding_a_microsoft_azure_source_to_cost_management/assembly-adding-azure-sources#configuring-an-azure-daily-export-schedule_adding-an-azure-source`;
+const RECURRING_HCS_TASK_URL = ''; // specify when HCS docs links are available
 
 export const ConfigureResourceGroupAndStorageAccount = () => {
   const intl = useIntl();
+  const showHCS = useSelector(({ sources }) => sources.hcsEnrolled, shallowEqual);
 
   return (
     <TextContent>
@@ -39,8 +45,14 @@ export const ConfigureResourceGroupAndStorageAccount = () => {
               'Red Hat recommends creating a dedicated resource group and storage account in Azure to collect cost data and metrics for cost management. {link}',
           },
           {
-            link: (
-              <Text key="link" rel="noopener noreferrer" target="_blank" component={TextVariants.a} href={CREATE_AZURE_STORAGE}>
+            link: showHCS ? null : ( // remove when HCS docs links are available
+              <Text
+                key="link"
+                rel="noopener noreferrer"
+                target="_blank"
+                component={TextVariants.a}
+                href={showHCS ? CREATE_HCS_AZURE_STORAGE : CREATE_AZURE_STORAGE}
+              >
                 {intl.formatMessage({
                   id: 'wizard.learnMore defaultMessage=Learn more',
                   defaultMessage: 'Learn more',
@@ -79,6 +91,8 @@ export const SubscriptionID = () => {
 
 export const ConfigureRolesDescription = () => {
   const intl = useIntl();
+  const showHCS = useSelector(({ sources }) => sources.hcsEnrolled, shallowEqual);
+  const application = showHCS ? HCS_APP_NAME : 'Cost Management';
 
   const { getState } = useFormApi();
   const values = getState().values;
@@ -90,17 +104,24 @@ export const ConfigureRolesDescription = () => {
           {
             id: 'cost.azure.dedicatedCredentials',
             defaultMessage:
-              'Red Hat recommends configuring dedicated credentials to grant Cost Management read-only access to Azure cost data.  {link}',
+              'Red Hat recommends configuring dedicated credentials to grant {application} read-only access to Azure cost data.  {link}',
           },
           {
-            link: (
-              <Text key="link" rel="noopener noreferrer" target="_blank" component={TextVariants.a} href={AZURE_CREDS_URL}>
+            link: showHCS ? null : ( // remove when HCS docs links are available
+              <Text
+                key="link"
+                rel="noopener noreferrer"
+                target="_blank"
+                component={TextVariants.a}
+                href={showHCS ? AZURE_HCS_CREDS_URL : AZURE_CREDS_URL}
+              >
                 {intl.formatMessage({
                   id: 'wizard.learnMore defaultMessage=Learn more',
                   defaultMessage: 'Learn more',
                 })}
               </Text>
             ),
+            application,
           }
         )}
       </Text>
@@ -182,6 +203,7 @@ export const ReaderRoleDescription = () => (
 
 export const ExportSchedule = () => {
   const intl = useIntl();
+  const showHCS = useSelector(({ sources }) => sources.hcsEnrolled, shallowEqual);
 
   return (
     <TextContent>
@@ -193,8 +215,14 @@ export const ExportSchedule = () => {
               'Create a recurring task to export cost data to your Azure storage account, where Cost Management will retrieve the data.  {link}',
           },
           {
-            link: (
-              <Text key="link" rel="noopener noreferrer" target="_blank" component={TextVariants.a} href={RECURRING_TASK_URL}>
+            link: showHCS ? null : ( // remove when HCS docs links are available
+              <Text
+                key="link"
+                rel="noopener noreferrer"
+                target="_blank"
+                component={TextVariants.a}
+                href={showHCS ? RECURRING_HCS_TASK_URL : RECURRING_TASK_URL}
+              >
                 {intl.formatMessage({
                   id: 'wizard.learnMore defaultMessage=Learn more',
                   defaultMessage: 'Learn more',

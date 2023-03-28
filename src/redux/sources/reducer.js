@@ -27,6 +27,8 @@ export const defaultSourcesState = {
   activeCategory: CLOUD_VENDOR,
   appTypes: [],
   sourceTypes: [],
+  hcsEnrolled: false,
+  hcsEnrolledLoaded: false,
 };
 
 export const entitiesPending = (state, { options }) => ({
@@ -64,6 +66,23 @@ export const sourceTypesLoaded = (state, { payload: sourceTypes }) => ({
   ...state,
   sourceTypes,
   sourceTypesLoaded: true,
+});
+
+export const hcsEnrolledPending = (state) => ({
+  ...state,
+  hcsEnrolled: false,
+  hcsEnrolledLoaded: false,
+});
+
+export const hcsEnrolledRejected = (state, { payload: { error } }) => ({
+  ...state,
+  fetchingError: error,
+});
+
+export const hcsEnrolledLoaded = (state, { payload: hcsDeal }) => ({
+  ...state,
+  hcsEnrolled: hcsDeal,
+  hcsEnrolledLoaded: true,
 });
 
 export const appTypesPending = (state) => ({
@@ -239,6 +258,9 @@ export default {
   [ACTION_TYPES.LOAD_SOURCE_TYPES_PENDING]: sourceTypesPending,
   [ACTION_TYPES.LOAD_SOURCE_TYPES_FULFILLED]: sourceTypesLoaded,
   [ACTION_TYPES.LOAD_SOURCE_TYPES_REJECTED]: sourceTypesRejected,
+  [ACTION_TYPES.LOAD_HCS_ENROLLMENT_PENDING]: hcsEnrolledPending,
+  [ACTION_TYPES.LOAD_HCS_ENROLLMENT_FULFILLED]: hcsEnrolledLoaded,
+  [ACTION_TYPES.LOAD_HCS_ENROLLMENT_REJECTED]: hcsEnrolledRejected,
   [ACTION_TYPES.LOAD_APP_TYPES_PENDING]: appTypesPending,
   [ACTION_TYPES.LOAD_APP_TYPES_FULFILLED]: appTypesLoaded,
   [ACTION_TYPES.LOAD_APP_TYPES_REJECTED]: appTypesRejected,

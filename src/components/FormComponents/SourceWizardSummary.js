@@ -24,11 +24,13 @@ import {
   injectEndpointFieldsInfo,
   shouldSkipEndpoint,
 } from '../../components/addSourceWizard/schemaBuilder';
+import { shallowEqual } from 'react-intl/src/utils';
+import { useSelector } from 'react-redux';
 
 const SummaryAlert = ({ appName, sourceType, hcsEnrolled }) => {
   const intl = useIntl();
 
-  if (appName === COST_MANAGEMENT_APP_NAME && sourceType !== 'google' && !hcsEnrolled) {
+  if (appName === COST_MANAGEMENT_APP_NAME && !hcsEnrolled) {
     return (
       <Alert
         variant="info"
@@ -136,13 +138,14 @@ DesctiptionListItem.propTypes = {
   description: PropTypes.node,
 };
 
-const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthType, hcsEnrolled }) => {
+const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthType }) => {
   const formOptions = useFormApi();
   const intl = useIntl();
   const enableLighthouse = useFlag('sources.wizard.lighthouse');
 
   const values = formOptions.getState().values;
   const type = sourceTypes.find((type) => type.name === values.source_type || type.id === values.source.source_type_id);
+  const hcsEnrolled = useSelector(({ sources }) => sources.hcsEnrolled, shallowEqual);
 
   const hasAuthentication =
     values.authentication && values.authentication.authtype ? values.authentication.authtype : values.auth_select;
@@ -276,10 +279,8 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
               defaultMessage: 'Application',
             })}
             description={
-              // overwrite Cost management for AWS with HCS
-              values.application?.application_type_id === COST_MANAGEMENT_APP_ID && values.source_type === 'amazon' && hcsEnrolled
-                ? HCS_APP_NAME
-                : display_name
+              // overwrite Cost management with HCS
+              values.application?.application_type_id === COST_MANAGEMENT_APP_ID && hcsEnrolled ? HCS_APP_NAME : display_name
             }
           />
         )}
@@ -351,7 +352,6 @@ SourceWizardSummary.propTypes = {
   ).isRequired,
   showApp: PropTypes.bool,
   showAuthType: PropTypes.bool,
-  hcsEnrolled: PropTypes.bool,
 };
 
 SourceWizardSummary.defaultProps = {

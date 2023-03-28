@@ -16,6 +16,7 @@ import { componentWrapperIntl } from '../../utilities/testsHelpers';
 
 import { defaultSourcesState } from '../../redux/sources/reducer';
 import * as api from '../../api/entities';
+import * as hcsApi from '../../api/checkAccountHCS';
 import * as typesApi from '../../api/source_types';
 import { replaceRouteId, routes } from '../../Routes';
 import * as helpers from '../../pages/Sources/helpers';
@@ -93,6 +94,7 @@ describe('SourcesPage', () => {
     );
     api.doLoadAppTypes = jest.fn().mockImplementation(() => Promise.resolve({ data: applicationTypes }));
     typesApi.doLoadSourceTypes = jest.fn().mockImplementation(() => Promise.resolve(sourceTypes));
+    hcsApi.checkAccountHCS = jest.fn().mockImplementation(() => Promise.resolve({ hcsDeal: false, hcsDataVisibility: false }));
 
     store = getStore([], {
       user: { writePermissions: true },
@@ -108,6 +110,7 @@ describe('SourcesPage', () => {
     expect(api.doLoadEntities).toHaveBeenCalled();
     expect(api.doLoadAppTypes).toHaveBeenCalled();
     expect(typesApi.doLoadSourceTypes).toHaveBeenCalled();
+    expect(hcsApi.checkAccountHCS).toHaveBeenCalled();
 
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
     expect(screen.getByText('Cloud sources')).toBeInTheDocument();

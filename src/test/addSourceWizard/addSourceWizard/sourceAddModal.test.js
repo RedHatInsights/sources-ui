@@ -9,10 +9,14 @@ import applicationTypes from '../../__mocks__/applicationTypes';
 import * as dependency from '../../../api/wizardHelpers';
 import render from '../__mocks__/render';
 import hcsEnrollment from '../../__mocks__/hcs';
+import mockStore from '../../__mocks__/mockStore';
+import componentWrapperIntl from '../../../utilities/testsHelpers';
 
 describe('sourceAddModal', () => {
   let initialProps;
+  let initialState;
   let spyFunction;
+  let store;
 
   beforeEach(() => {
     spyFunction = jest.fn();
@@ -23,11 +27,22 @@ describe('sourceAddModal', () => {
       onCancel: jest.fn(),
       onSubmit: jest.fn(),
     };
+
+    initialState = {
+      sources: { hcsEnrolled: false, hcsEnrolledLoaded: true },
+    };
+
+    store = mockStore(initialState);
   });
 
   it('renders correctly with sourceTypes and applicationTypes', async () => {
     dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
-    render(<AddSourceWizard {...initialProps} sourceTypes={sourceTypes} applicationTypes={applicationTypes} />);
+    render(
+      componentWrapperIntl(
+        <AddSourceWizard {...initialProps} sourceTypes={sourceTypes} applicationTypes={applicationTypes} />,
+        store
+      )
+    );
 
     await waitFor(() => expect(screen.getByText('Select a cloud provider')).toBeInTheDocument());
   });
@@ -37,7 +52,7 @@ describe('sourceAddModal', () => {
     dependency.doLoadSourceTypes = jest.fn(() => new Promise((resolve) => resolve({ sourceTypes })));
     dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
 
-    render(<AddSourceWizard {...initialProps} applicationTypes={applicationTypes} />);
+    render(componentWrapperIntl(<AddSourceWizard {...initialProps} applicationTypes={applicationTypes} />, store));
 
     await waitFor(() => expect(screen.getByText('Select a cloud provider')).toBeInTheDocument());
 
@@ -50,7 +65,7 @@ describe('sourceAddModal', () => {
     dependency.doLoadApplicationTypes = jest.fn(() => new Promise((resolve) => resolve({ applicationTypes })));
     dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
 
-    render(<AddSourceWizard {...initialProps} sourceTypes={sourceTypes} />);
+    render(componentWrapperIntl(<AddSourceWizard {...initialProps} sourceTypes={sourceTypes} />, store));
 
     await waitFor(() => expect(screen.getByText('Select a cloud provider')).toBeInTheDocument());
 
@@ -63,7 +78,7 @@ describe('sourceAddModal', () => {
     dependency.doLoadApplicationTypes = jest.fn(() => new Promise((resolve) => resolve({ applicationTypes })));
     dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
 
-    render(<AddSourceWizard {...initialProps} />);
+    render(componentWrapperIntl(<AddSourceWizard {...initialProps} />, store));
 
     await waitFor(() => expect(screen.getByText('Select a cloud provider')).toBeInTheDocument());
 
@@ -82,7 +97,7 @@ describe('sourceAddModal', () => {
       .mockImplementation(() => new Promise((resolve) => resolve({ applicationTypes })));
     dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
 
-    render(<AddSourceWizard {...initialProps} onCancel={onCancel} />);
+    render(componentWrapperIntl(<AddSourceWizard {...initialProps} onCancel={onCancel} />, store));
 
     expect(screen.getByText('Loading')).toBeInTheDocument(1);
 
