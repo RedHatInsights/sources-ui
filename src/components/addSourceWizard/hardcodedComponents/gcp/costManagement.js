@@ -18,13 +18,17 @@ import { HCCM_DOCS_PREFIX } from '../../stringConstants';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 
 import { getSourcesApi } from '../../../../api/entities';
+import { shallowEqual, useSelector } from 'react-redux';
+import { HCS_APP_NAME } from '../../../../utilities/constants';
 
 const b = (chunks) => <b key={`b-${chunks.length}-${Math.floor(Math.random() * 1000)}`}>{chunks}</b>;
 
 const PROJECT_LINK = `${HCCM_DOCS_PREFIX}/html/adding_a_google_cloud_source_to_cost_management`;
+const PROJECT_HCS_LINK = ''; // specify when HCS docs links are available
 
 export const Project = () => {
   const intl = useIntl();
+  const showHCS = useSelector(({ sources }) => sources.hcsEnrolled, shallowEqual);
 
   return (
     <TextContent>
@@ -36,8 +40,14 @@ export const Project = () => {
               'Enter the ID of a project within your Google Cloud Platform (GCP) billing account. We’ll use this project to set up your BigQuery billing export. {link}',
           },
           {
-            link: (
-              <Text key="link" component={TextVariants.a} href={PROJECT_LINK} rel="noopener noreferrer" target="_blank">
+            link: showHCS ? null : ( // remove when HCS docs links are available
+              <Text
+                key="link"
+                component={TextVariants.a}
+                href={showHCS ? PROJECT_HCS_LINK : PROJECT_LINK}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
                 {intl.formatMessage({
                   id: 'wizard.learnMore',
                   defaultMessage: 'Learn more',
@@ -133,15 +143,19 @@ export const Dataset = () => {
   const intl = useIntl();
   const { getState } = useFormApi();
 
+  const showHCS = useSelector(({ sources }) => sources.hcsEnrolled, shallowEqual);
   const projectId = getState().values.authentication?.username;
 
   return (
     <TextContent>
       <Text component={TextVariants.p}>
-        {intl.formatMessage({
-          id: 'cost.gcp.dataset.description',
-          defaultMessage: 'To collect and store the information needed for Cost Management, create a BigQuery dataset.',
-        })}
+        {intl.formatMessage(
+          {
+            id: 'cost.gcp.dataset.description',
+            defaultMessage: 'To collect and store the information needed for {application}, create a BigQuery dataset.',
+          },
+          { application: showHCS ? HCS_APP_NAME : 'Cost Management' }
+        )}
       </Text>
       <TextList component={TextListVariants.ol}>
         <TextListItem>
