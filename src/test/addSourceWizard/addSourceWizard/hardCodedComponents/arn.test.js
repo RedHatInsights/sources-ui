@@ -6,6 +6,7 @@ import RendererContext from '@data-driven-forms/react-form-renderer/renderer-con
 
 import * as AwsArn from '../../../../components/addSourceWizard/hardcodedComponents/aws/arn';
 import render from '../../__mocks__/render';
+import { HCS_APP_NAME } from '../../../../utilities/constants';
 
 describe('AWS-ARN hardcoded schemas', () => {
   it('ARN DESCRIPTION is rendered correctly', () => {
@@ -169,18 +170,10 @@ describe('AWS-ARN hardcoded schemas', () => {
 
     expect(
       screen.getByText(
-        'To collect and store the information needed for cost management, you need to set up an Amazon S3 bucket for cost and usage reports.'
+        "The information Cost Management would need is your AWS account's cost and usage report (CUR). If there is a need to further customize the CUR you want to send to Cost Management, select the manually customize option and follow the special instructions on how to."
       )
     ).toBeInTheDocument();
     expect(screen.getByText('Learn more')).toBeInTheDocument();
-    expect(screen.getByText('Create a cost and usage report using the following values:')).toBeInTheDocument();
-    expect(screen.getByText('Report name: koku')).toBeInTheDocument();
-    expect(screen.getByText('Time unit: hourly')).toBeInTheDocument();
-    expect(screen.getByText('Include: Resource IDs')).toBeInTheDocument();
-    expect(screen.getByText('Enable support for: RedShift, QuickSight and disable support for Athena')).toBeInTheDocument();
-    expect(screen.getByText('Report path prefix: cost')).toBeInTheDocument();
-    expect(screen.getByText('Compression type: GZIP')).toBeInTheDocument();
-    expect(screen.getByText('Enter the name of the Amazon S3 bucket you just created below:')).toBeInTheDocument();
   });
 
   it('USAGE description is rendered correctly for HCS', () => {
@@ -188,10 +181,31 @@ describe('AWS-ARN hardcoded schemas', () => {
 
     expect(
       screen.getByText(
-        'To collect and store the information needed for cost management, you need to set up an Amazon S3 bucket for cost and usage reports.'
+        `The information ${HCS_APP_NAME} would need is your AWS account's cost and usage report (CUR). If there is a need to further customize the CUR you want to send to ${HCS_APP_NAME}, select the manually customize option and follow the special instructions on how to.`
       )
     ).toBeInTheDocument();
-    expect(screen.queryByText('Learn more')).not.toBeInTheDocument();
+  });
+
+  it('USAGE steps are rendered correctly', () => {
+    const FORM_OPTIONS = {
+      getState: () => ({
+        values: {
+          application: {
+            extra: {
+              bucket: undefined,
+              storage_only: false,
+            },
+          },
+        },
+      }),
+    };
+
+    render(
+      <RendererContext.Provider value={{ formOptions: FORM_OPTIONS }}>
+        <AwsArn.UsageSteps />
+      </RendererContext.Provider>
+    );
+
     expect(screen.getByText('Create a cost and usage report using the following values:')).toBeInTheDocument();
     expect(screen.getByText('Report name: koku')).toBeInTheDocument();
     expect(screen.getByText('Time unit: hourly')).toBeInTheDocument();
@@ -199,7 +213,46 @@ describe('AWS-ARN hardcoded schemas', () => {
     expect(screen.getByText('Enable support for: RedShift, QuickSight and disable support for Athena')).toBeInTheDocument();
     expect(screen.getByText('Report path prefix: cost')).toBeInTheDocument();
     expect(screen.getByText('Compression type: GZIP')).toBeInTheDocument();
-    expect(screen.getByText('Enter the name of the Amazon S3 bucket you just created below:')).toBeInTheDocument();
+  });
+
+  it('USAGE steps are rendered with empty state for manual CUR', () => {
+    const FORM_OPTIONS = {
+      getState: () => ({
+        values: {
+          application: {
+            extra: {
+              bucket: undefined,
+              storage_only: true,
+            },
+          },
+        },
+      }),
+    };
+
+    render(
+      <RendererContext.Provider value={{ formOptions: FORM_OPTIONS }}>
+        <AwsArn.UsageSteps />
+      </RendererContext.Provider>
+    );
+
+    expect(screen.getByText('Skip this step and proceed to next step')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Since you have chosen to manually customize the CUR you want to send to Cost Management, you do not need to create at this point and time.'
+      )
+    ).toBeInTheDocument();
+    expect(screen.queryByText('Additional configuration steps')).toBeNull();
+  });
+
+  it('IncludeAliasesLabel description is rendered correctly', () => {
+    render(<AwsArn.StorageDescription />);
+
+    expect(
+      screen.getByText('To store the cost and usage reports needed for cost management, you need to create an Amazon S3 bucket')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("On AWS, specify or create an Amazon S3 bucket for your account and enter it's name below.")
+    ).toBeInTheDocument();
   });
 
   it('IncludeAliasesLabel description is rendered correctly', () => {
