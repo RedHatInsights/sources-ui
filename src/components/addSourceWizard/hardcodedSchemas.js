@@ -1294,6 +1294,7 @@ const hardcodedSchemas = {
           'authentication.username': {
             component: 'text-field',
             label: 'Project ID',
+            placeholder: '0123456789',
             isRequired: true,
             validate: [
               {
