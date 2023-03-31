@@ -27,9 +27,11 @@ describe('Cost Management Azure steps components', () => {
     render(<Cm.SubscriptionID />);
 
     expect(
-      screen.getByText('Run the following command in Cloud Shell to obtain your Subscription ID and enter it below:')
+      screen.getByText(
+        'Run the following command in Cloud Shell to obtain the Subscription ID where the cost export is being stored and enter it below:'
+      )
     ).toBeInTheDocument();
-    expect(screen.getByLabelText('Copyable input')).toHaveValue('az account show --query "{ subscription_id: id }"');
+    expect(screen.getByLabelText('Copyable input')).toHaveValue(`az account show --query "{ id: id }" | jq '.id' | tr -d '"'`);
   });
 
   it('Configure Roles description', () => {
@@ -56,7 +58,7 @@ describe('Cost Management Azure steps components', () => {
     expect(screen.getByText('Learn more')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'Run the following command in Cloud Shell to create a Cost Management Storage Account Contributor role. From the output enter the values in the fields below:'
+        'Run the following command in Cloud Shell to create a service principal with Cost Management Storage Account Contributor role. From the output enter the values in the fields below:'
       )
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveValue(
@@ -70,7 +72,14 @@ describe('Cost Management Azure steps components', () => {
         {() => (
           <RenderContext.Provider
             value={{
-              formOptions: { getState: () => ({ values: { authentication: { username: 'some-user-name' } } }) },
+              formOptions: {
+                getState: () => ({
+                  values: {
+                    authentication: { username: 'some-user-name' },
+                    application: { extra: { subscription_id: 'my-sub-id-1', resource_group: 'my-resource-group-1' } },
+                  },
+                }),
+              },
             }}
           >
             <Cm.ReaderRoleDescription />
@@ -83,7 +92,177 @@ describe('Cost Management Azure steps components', () => {
       screen.getByText('Run the following command in Cloud Shell to create a Cost Management Reader role:')
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveValue(
-      `az role assignment create --assignee "some-user-name" --role "Cost Management Reader"`
+      `az role assignment create --assignee "some-user-name" --role "Cost Management Reader" --scope "/subscriptions/my-sub-id-1"`
+    );
+  });
+
+  it('EA Read Role description', () => {
+    render(
+      <Form onSubmit={jest.fn()}>
+        {() => (
+          <RenderContext.Provider
+            value={{
+              formOptions: {
+                getState: () => ({
+                  values: {
+                    authentication: { username: 'some-user-name' },
+                    application: {
+                      extra: {
+                        subscription_id: 'my-sub-id-1',
+                        resource_group: 'my-resource-group-1',
+                        scope: '/providers/Microsoft.Billing/billingAccounts/1234/enrollmentAccounts/5678',
+                      },
+                    },
+                  },
+                }),
+              },
+            }}
+          >
+            <Cm.ReaderRoleDescription />
+          </RenderContext.Provider>
+        )}
+      </Form>
+    );
+
+    expect(
+      screen.getByText(
+        'Launch the Azure Enterprise Portal and give the service principal created above Administrator role on the associated account.'
+      )
+    ).toBeInTheDocument();
+  });
+
+  it('Billing Account Read Role description', () => {
+    render(
+      <Form onSubmit={jest.fn()}>
+        {() => (
+          <RenderContext.Provider
+            value={{
+              formOptions: {
+                getState: () => ({
+                  values: {
+                    authentication: { username: 'some-user-name' },
+                    application: {
+                      extra: {
+                        subscription_id: 'my-sub-id-1',
+                        resource_group: 'my-resource-group-1',
+                        scope: '/providers/Microsoft.Billing/billingAccounts/1234',
+                      },
+                    },
+                  },
+                }),
+              },
+            }}
+          >
+            <Cm.ReaderRoleDescription />
+          </RenderContext.Provider>
+        )}
+      </Form>
+    );
+
+    expect(
+      screen.getByText('Launch the Azure Portal and give the service principal created above Billing account reader role.')
+    ).toBeInTheDocument();
+  });
+
+  it('Billing Profile Read Role description', () => {
+    render(
+      <Form onSubmit={jest.fn()}>
+        {() => (
+          <RenderContext.Provider
+            value={{
+              formOptions: {
+                getState: () => ({
+                  values: {
+                    authentication: { username: 'some-user-name' },
+                    application: {
+                      extra: {
+                        subscription_id: 'my-sub-id-1',
+                        resource_group: 'my-resource-group-1',
+                        scope: '/providers/Microsoft.Billing/billingAccounts/1234/billingProfiles/5678',
+                      },
+                    },
+                  },
+                }),
+              },
+            }}
+          >
+            <Cm.ReaderRoleDescription />
+          </RenderContext.Provider>
+        )}
+      </Form>
+    );
+
+    expect(
+      screen.getByText('Launch the Azure Portal and give the service principal created above Billing profile reader role.')
+    ).toBeInTheDocument();
+  });
+
+  it('Invoice Section Read Role description', () => {
+    render(
+      <Form onSubmit={jest.fn()}>
+        {() => (
+          <RenderContext.Provider
+            value={{
+              formOptions: {
+                getState: () => ({
+                  values: {
+                    authentication: { username: 'some-user-name' },
+                    application: {
+                      extra: {
+                        subscription_id: 'my-sub-id-1',
+                        resource_group: 'my-resource-group-1',
+                        scope: '/providers/Microsoft.Billing/billingAccounts/1234/invoiceSections/5678',
+                      },
+                    },
+                  },
+                }),
+              },
+            }}
+          >
+            <Cm.ReaderRoleDescription />
+          </RenderContext.Provider>
+        )}
+      </Form>
+    );
+
+    expect(
+      screen.getByText('Launch the Azure Portal and give the service principal created above Invoice section reader role.')
+    ).toBeInTheDocument();
+  });
+
+  it('Read Role with scope description', () => {
+    render(
+      <Form onSubmit={jest.fn()}>
+        {() => (
+          <RenderContext.Provider
+            value={{
+              formOptions: {
+                getState: () => ({
+                  values: {
+                    authentication: { username: 'some-user-name' },
+                    application: {
+                      extra: {
+                        subscription_id: 'my-sub-id-1',
+                        resource_group: 'my-resource-group-1',
+                        scope: '/subscriptions/my-sub-id-1',
+                      },
+                    },
+                  },
+                }),
+              },
+            }}
+          >
+            <Cm.ReaderRoleDescription />
+          </RenderContext.Provider>
+        )}
+      </Form>
+    );
+
+    expect(
+      screen.getByText('Run the following command in Cloud Shell to create a Cost Management Reader role:')
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText('Copyable input')).toHaveValue(
+      `az role assignment create --assignee "some-user-name" --role "Cost Management Reader" --scope "/subscriptions/my-sub-id-1"`
     );
   });
 
@@ -97,15 +276,28 @@ describe('Cost Management Azure steps components', () => {
       )
     ).toBeInTheDocument();
     expect(screen.getByText('Learn more')).toBeInTheDocument();
-    expect(screen.getByText('From the Azure portal, add a new export.')).toBeInTheDocument();
+    expect(screen.getByText('From the Azure portal, add a new cost export.')).toBeInTheDocument();
     expect(
       screen.getByText(
         'Provide a name for the container and directory path, and specify the below settings to create the daily export. Leave all other options as the default.'
       )
     ).toBeInTheDocument();
     expect(screen.getByText('Export type')).toBeInTheDocument();
-    expect(screen.getByText('Daily export for billing-period-to-date costs')).toBeInTheDocument();
+    expect(screen.getByText('Daily export of month-to-date costs')).toBeInTheDocument();
     expect(screen.getByText('Storage account name')).toBeInTheDocument();
-    expect(screen.getByText('Storage account name created earlier')).toBeInTheDocument();
+    expect(screen.getByText('Created storage account name or existing storage account name')).toBeInTheDocument();
+  });
+
+  it('Export Scope description', () => {
+    render(<Cm.ExportScope />);
+
+    expect(
+      screen.getByText('From the Azure portal, select the scope for the new cost export.', { exact: false })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Run the following command from the Cloud Shell to obtain the Subscription ID associated with the generated cost export.'
+      )
+    ).toBeInTheDocument();
   });
 });

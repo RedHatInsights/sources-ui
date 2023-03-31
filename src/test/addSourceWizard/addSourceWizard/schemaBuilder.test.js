@@ -333,11 +333,8 @@ describe('schema builder', () => {
         const ENDPOINT_FIELDS = [{ name: 'endpoint' }];
 
         expect(createAuthTypeSelection(AZURE_TYPE, COST_MANAGEMENT_APP, ENDPOINT_FIELDS).fields.map(({ name }) => name)).toEqual([
-          'authentication.authtype',
-          'azure-storage-account-description',
-          'all-required',
-          'application.extra.resource_group',
-          'application.extra.storage_account',
+          'cost-export-scope-description',
+          'application.extra.scope',
         ]);
       });
 
@@ -384,7 +381,7 @@ describe('schema builder', () => {
       );
 
       expect(schema).toEqual(expect.arrayContaining([expect.any(Object)]));
-      expect(schema).toHaveLength(62);
+      expect(schema).toHaveLength(63);
 
       expect(schema.map(({ name }) => name)).toEqual([
         'openshift-generic',
@@ -420,9 +417,10 @@ describe('schema builder', () => {
         'azure-lighthouse_subscription_id-/insights/platform/cloud-meter-additional-step',
         'cost-azure-playbook',
         'azure-tenant_id_client_id_client_secret-/insights/platform/cost-management-additional-step',
+        'daily-export',
+        'azure-rg-and-sa',
         'azure-sub-id',
         'configure-roles',
-        'export-schedule',
         'google-generic',
         'google-2',
         'google-5',
