@@ -1,18 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
-import {
-  ClipboardCopy,
-  Hint,
-  HintBody,
-  HintTitle,
-  Text,
-  TextContent,
-  TextList,
-  TextListItem,
-  TextListVariants,
-  TextVariants,
-} from '@patternfly/react-core';
+import { ClipboardCopy, Text, TextContent, TextList, TextListItem, TextListVariants, TextVariants } from '@patternfly/react-core';
 
 import { HCCM_DOCS_PREFIX } from '../../stringConstants';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
@@ -37,7 +26,7 @@ export const Project = () => {
           {
             id: 'cost.gcp.projectDescription',
             defaultMessage:
-              'Enter the ID of a project within your Google Cloud Platform (GCP) billing account. We’ll use this project to set up your BigQuery billing export. {link}',
+              'Google Cloud Platform (GCP) recommends that you create a cloud project to contain all your billing administration needs. We’ll use this project to set up your BigQuery billing export. {link}',
           },
           {
             link: showHCS ? null : ( // remove when HCS docs links are available
@@ -57,20 +46,12 @@ export const Project = () => {
           }
         )}
       </Text>
-      <Hint>
-        <HintTitle>
-          {intl.formatMessage({
-            id: 'cost.gcp.project.hintTitle',
-            defaultMessage: 'GCP Recommendation',
-          })}
-        </HintTitle>
-        <HintBody>
-          {intl.formatMessage({
-            id: 'cost.gcp.project.hintDescription',
-            defaultMessage: 'Create a cloud project to contain all your billing administration needs.',
-          })}
-        </HintBody>
-      </Hint>
+      <Text component={TextVariants.p}>
+        {intl.formatMessage({
+          id: 'cost.gcp.projectDescription2',
+          defaultMessage: 'Enter the ID of a project within your GCP billing account.',
+        })}
+      </Text>
     </TextContent>
   );
 };
