@@ -6,7 +6,7 @@ import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 import Radio from '@data-driven-forms/pf4-component-mapper/radio';
 import { NO_APPLICATION_VALUE } from '../../components/addSourceWizard/stringConstants';
 
-const EnhancedRadio = ({ options, mutator, ...props }) => {
+const EnhancedRadio = ({ options, mutator, className, ...props }) => {
   const formOptions = useFormApi();
 
   const values = formOptions.getState().values;
@@ -39,13 +39,14 @@ const EnhancedRadio = ({ options, mutator, ...props }) => {
     }
   }, [selectedType]);
 
-  return <Radio {...props} options={newOptions} FormGroupProps={{ className: 'src-c-wizard__radio' }} />;
+  return <Radio {...props} options={newOptions} FormGroupProps={{ className: className ?? 'src-c-wizard__radio' }} />;
 };
 
 EnhancedRadio.propTypes = {
   mutator: PropTypes.func.isRequired,
   options: PropTypes.array,
   name: PropTypes.string,
+  className: PropTypes.string,
 };
 
 export default EnhancedRadio;

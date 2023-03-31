@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import get from 'lodash/get';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 import { FormattedMessage, useIntl } from 'react-intl';
 import {
   Alert,
+  AlertActionLink,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
@@ -27,22 +28,44 @@ import {
 import { shallowEqual } from 'react-intl/src/utils';
 import { useSelector } from 'react-redux';
 
+const CUSTOMIZING_CUR_LINK = undefined; // specify when docs link is available
+
 const SummaryAlert = ({ appName, sourceType, hcsEnrolled }) => {
   const intl = useIntl();
 
   if (appName === COST_MANAGEMENT_APP_NAME && !hcsEnrolled) {
     return (
-      <Alert
-        variant="info"
-        isInline
-        title={intl.formatMessage({ id: 'cost.rbacWarningTitle', defaultMessage: 'Manage permissions in User Access' })}
-      >
-        {intl.formatMessage({
-          id: 'cost.rbacWarningDescription',
-          defaultMessage:
-            'Make sure to manage permissions for this source in custom roles that contain permissions for Cost Management.',
-        })}
-      </Alert>
+      <Fragment>
+        <Alert
+          variant="info"
+          isInline
+          title={intl.formatMessage({
+            id: 'cost.warningTitleCUR',
+            defaultMessage: "Don't forget additional configuration steps!",
+          })}
+          actionLinks={
+            CUSTOMIZING_CUR_LINK ? <AlertActionLink>Customizing your AWS cost and usage report</AlertActionLink> : null
+          }
+        >
+          {intl.formatMessage({
+            id: 'cost.warningDescriptionCUR',
+            defaultMessage: `You will need to perform more configuration steps after creating the source.${
+              CUSTOMIZING_CUR_LINK ? ' To find more information, click on the link below' : ''
+            }`,
+          })}
+        </Alert>
+        <Alert
+          variant="default"
+          isInline
+          title={intl.formatMessage({ id: 'cost.rbacWarningTitle', defaultMessage: 'Manage permissions in User Access' })}
+        >
+          {intl.formatMessage({
+            id: 'cost.rbacWarningDescription',
+            defaultMessage:
+              'Make sure to manage permissions for this source in custom roles that contain permissions for Cost Management.',
+          })}
+        </Alert>
+      </Fragment>
     );
   }
 
@@ -86,6 +109,11 @@ export const createItem = (formField, values, stepKeys) => {
 
   // do not show hidden fields
   if (formField.hideField) {
+    return undefined;
+  }
+
+  // do not show fields hidden just for review step
+  if (formField.hideInReview) {
     return undefined;
   }
 

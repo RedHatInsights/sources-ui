@@ -26,6 +26,15 @@
   }
 }
 
+.src-c-wizard__conditional-radio {
+  .pf-c-radio:not(:last-child) {
+    margin-bottom: var(--pf-global--spacer--sm);
+  }
+  .pf-c-radio__input {
+    margin-top: 3px;
+  }
+}
+
 .src-c-wizard__rhel-mag-label {
   position: relative;
   top: -3px;

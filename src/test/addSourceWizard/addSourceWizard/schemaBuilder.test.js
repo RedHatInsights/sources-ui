@@ -381,7 +381,7 @@ describe('schema builder', () => {
       );
 
       expect(schema).toEqual(expect.arrayContaining([expect.any(Object)]));
-      expect(schema).toHaveLength(63);
+      expect(schema).toHaveLength(64);
 
       expect(schema.map(({ name }) => name)).toEqual([
         'openshift-generic',
@@ -395,6 +395,7 @@ describe('schema builder', () => {
         'amazon-5',
         'amazon-access_key_secret_key-generic-additional-step',
         'amazon-arn-/insights/platform/cost-management-additional-step',
+        'usage',
         'tags',
         'iam-policy',
         'iam-role',
@@ -460,7 +461,7 @@ describe('schema builder', () => {
       );
 
       expect(schema).toEqual(expect.arrayContaining([expect.any(Object)]));
-      expect(schema).toHaveLength(65);
+      expect(schema).toHaveLength(66);
 
       expect(schema.map(({ name }) => name)).toEqual([
         'openshift-generic',
@@ -474,6 +475,7 @@ describe('schema builder', () => {
         'amazon-5',
         'amazon-access_key_secret_key-generic-additional-step',
         'amazon-arn-/insights/platform/cost-management-additional-step',
+        'usage',
         'tags',
         'iam-policy',
         'iam-role',
