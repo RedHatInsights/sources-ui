@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { FormHelperText } from '@patternfly/react-core';
+import { Button, ButtonVariant, FormHelperText, Popover } from '@patternfly/react-core';
+import QuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/question-circle-icon';
 
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
@@ -108,7 +109,24 @@ const getArn = (authUsername, showHCS) => ({
   },
   additionalSteps: [
     {
-      title: <FormattedMessage id="cost.arn.usageDescriptionTitle" defaultMessage="Configure cost and usage reporting" />,
+      title: <FormattedMessage id="cost.arn.storageTitle" defaultMessage="Create storage" />,
+      nextStep: 'usage',
+      fields: [
+        {
+          name: 'usage-description',
+          component: 'description',
+          Content: () => <AwsArn.StorageDescription showHCS={showHCS} />,
+        },
+        {
+          name: 'application.extra.bucket',
+          component: componentTypes.TEXT_FIELD,
+          label: <FormattedMessage id="cost.arn.s3Label" defaultMessage="S3 bucket name" />,
+        },
+      ],
+    },
+    {
+      title: <FormattedMessage id="cost.arn.usageDescriptionTitle" defaultMessage="Create cost and usage report" />,
+      name: 'usage',
       nextStep: 'tags',
       fields: [
         {
@@ -117,9 +135,55 @@ const getArn = (authUsername, showHCS) => ({
           Content: () => <AwsArn.UsageDescription showHCS={showHCS} />,
         },
         {
-          name: 'application.extra.bucket',
-          component: componentTypes.TEXT_FIELD,
-          label: <FormattedMessage id="cost.arn.s3Label" defaultMessage="S3 bucket name" />,
+          name: 'application.extra.storage_only',
+          component: 'enhanced-radio',
+          className: 'src-c-wizard__conditional-radio',
+          options: [
+            {
+              label: (
+                <FormattedMessage
+                  id="cost.arn.sendDefaultCUR"
+                  defaultMessage="I am OK with sending the default CUR to Cost Management"
+                />
+              ),
+              value: false,
+            },
+            {
+              label: (
+                <span>
+                  <FormattedMessage
+                    id="cost.arn.customizeCUR"
+                    defaultMessage="I wish to manually customize the CUR sent to Cost Management"
+                  />{' '}
+                  <Popover
+                    aria-label="Help text"
+                    position="right"
+                    maxWidth="5%"
+                    bodyContent={
+                      <FormattedMessage
+                        id="cost.arn.helpCustomizeCUR"
+                        defaultMessage="There will be a set of instructions at the end of this wizard that will guide you on how to complete the customize configuration that will be completed in the AWS console."
+                      />
+                    }
+                  >
+                    <Button className="pf-u-p-0 pf-u-m-0" variant={ButtonVariant.plain}>
+                      <QuestionCircleIcon className="pf-u-ml-sm" />
+                    </Button>
+                  </Popover>
+                </span>
+              ),
+              value: true,
+            },
+          ],
+          mutator: (option) => option,
+          initialValue: false,
+          initializeOnMount: true,
+          hideInReview: true,
+        },
+        {
+          name: 'usage-description',
+          component: 'description',
+          Content: () => <AwsArn.UsageSteps />,
         },
         {
           component: componentTypes.TEXT_FIELD,

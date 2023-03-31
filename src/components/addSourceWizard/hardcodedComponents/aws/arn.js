@@ -7,6 +7,11 @@ import {
   ButtonVariant,
   ClipboardCopy,
   ClipboardCopyVariant,
+  EmptyState,
+  EmptyStateBody,
+  EmptyStateIcon,
+  EmptyStatePrimary,
+  EmptyStateVariant,
   Popover,
   Text,
   TextContent,
@@ -15,8 +20,10 @@ import {
   TextListItemVariants,
   TextListVariants,
   TextVariants,
+  Title,
 } from '@patternfly/react-core';
 
+import InfoCircleIcon from '@patternfly/react-icons/dist/esm/icons/info-circle-icon';
 import QuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/question-circle-icon';
 
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
@@ -30,9 +37,35 @@ const ENABLE_AWS_ACCOUNT = `${HCCM_DOCS_PREFIX}/html/adding_an_amazon_web_servic
 const ENABLE_HCS_AWS_ACCOUNT = ''; // specify when HCS docs links are available
 const CONFIG_AWS_TAGS = `${HCCM_DOCS_PREFIX}/html/adding_an_amazon_web_services_aws_source_to_cost_management/assembly-cost-management-next-steps-aws#configure-cost-models-next-step_next-steps-aws`;
 const CONFIG_HCS_AWS_TAGS = ''; // specify when HCS docs links are available
+const MANUAL_CUR_ADDITIONAL_STEPS = ''; // specify when docs links are available
+
+export const StorageDescription = () => {
+  const intl = useIntl();
+  return (
+    <TextContent>
+      <Text>
+        {intl.formatMessage({
+          id: 'cost.storageDescription.storageDescription',
+          defaultMessage:
+            'To store the cost and usage reports needed for cost management, you need to create an Amazon S3 bucket',
+        })}
+      </Text>
+      <TextList className="pf-u-ml-0" component={TextListVariants.ol}>
+        <TextListItem>
+          {intl.formatMessage({
+            id: 'cost.storageDescription.specifyBucker',
+            defaultMessage: "On AWS, specify or create an Amazon S3 bucket for your account and enter it's name below.",
+          })}
+        </TextListItem>
+      </TextList>
+    </TextContent>
+  );
+};
 
 export const UsageDescription = ({ showHCS }) => {
   const intl = useIntl();
+  const application = showHCS ? HCS_APP_NAME : 'Cost Management';
+
   return (
     <TextContent>
       <Text>
@@ -40,7 +73,7 @@ export const UsageDescription = ({ showHCS }) => {
           {
             id: 'cost.usageDescription.usageDescription',
             defaultMessage:
-              'To collect and store the information needed for cost management, you need to set up an Amazon S3 bucket for cost and usage reports. {link}',
+              "The information {application} would need is your AWS account's cost and usage report (CUR). If there is a need to further customize the CUR you want to send to {application}, select the manually customize option and follow the special instructions on how to. {link}",
           },
           {
             link: showHCS ? null : ( // remove when HCS docs links are available
@@ -57,16 +90,54 @@ export const UsageDescription = ({ showHCS }) => {
                 })}
               </Text>
             ),
+            application,
           }
         )}
       </Text>
-      <TextList component={TextListVariants.ol}>
-        <TextListItem>
-          {intl.formatMessage({
-            id: 'cost.usageDescription.specifyBucker',
-            defaultMessage: 'Specify or create an Amazon S3 bucket for your account.',
-          })}
-        </TextListItem>
+    </TextContent>
+  );
+};
+
+UsageDescription.propTypes = {
+  showHCS: PropTypes.bool,
+};
+
+export const UsageSteps = () => {
+  const intl = useIntl();
+  const formOptions = useFormApi();
+
+  const application = formOptions.getState().values.application;
+
+  return application.extra.storage_only ? (
+    <EmptyState variant={EmptyStateVariant.small}>
+      <EmptyStateIcon style={{ color: 'var(--pf-global--info-color--100)' }} icon={InfoCircleIcon} />
+      <Title size="lg" headingLevel="h4">
+        {intl.formatMessage({
+          id: 'cost.usageDescription.manualTitleCUR',
+          defaultMessage: 'Skip this step and proceed to next step',
+        })}
+      </Title>
+      <EmptyStateBody>
+        {intl.formatMessage({
+          id: 'cost.usageDescription.manualDescriptionCUR',
+          defaultMessage:
+            'Since you have chosen to manually customize the CUR you want to send to Cost Management, you do not need to create at this point and time.',
+        })}
+      </EmptyStateBody>
+      {MANUAL_CUR_ADDITIONAL_STEPS.length > 0 ? (
+        <EmptyStatePrimary>
+          <Button variant="link">
+            {intl.formatMessage({
+              id: 'cost.usageDescription.additionalStepsCUR',
+              defaultMessage: 'Additional configuration steps',
+            })}
+          </Button>
+        </EmptyStatePrimary>
+      ) : null}
+    </EmptyState>
+  ) : (
+    <TextContent>
+      <TextList className="pf-u-ml-0" component={TextListVariants.ol}>
         <TextListItem>
           {intl.formatMessage({
             id: 'cost.usageDescription.addFollowingValues',
@@ -111,19 +182,9 @@ export const UsageDescription = ({ showHCS }) => {
             </TextListItem>
           </TextList>
         </TextListItem>
-        <TextListItem>
-          {intl.formatMessage({
-            id: 'cost.usageDescription.enterNameOfCreatedBucker',
-            defaultMessage: 'Enter the name of the Amazon S3 bucket you just created below:',
-          })}
-        </TextListItem>
       </TextList>
     </TextContent>
   );
-};
-
-UsageDescription.propTypes = {
-  showHCS: PropTypes.bool,
 };
 
 export const IAMRoleDescription = () => {
