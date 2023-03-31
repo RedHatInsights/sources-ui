@@ -44,6 +44,7 @@ describe('SourceEditModal', () => {
         sourceTypes,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
+        hcsEnrolledLoaded: true,
       },
     });
 
@@ -205,6 +206,7 @@ describe('SourceEditModal', () => {
         sourceTypes,
         appTypesLoaded: true,
         sourceTypesLoaded: true,
+        hcsEnrolledLoaded: true,
       },
     });
 
@@ -520,6 +522,7 @@ describe('SourceEditModal', () => {
         appTypesLoaded: true,
         sourceTypesLoaded: true,
         loaded: 0,
+        hcsEnrolledLoaded: true,
       },
       user: { writePermissions: true },
     });

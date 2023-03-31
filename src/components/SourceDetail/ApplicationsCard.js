@@ -1,9 +1,9 @@
-import React, { useReducer } from 'react';
+import React, { Fragment, useReducer } from 'react';
 import { useIntl } from 'react-intl';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import { Card, CardBody, CardTitle, FormGroup, Switch, Tooltip } from '@patternfly/react-core';
+import { Card, CardBody, CardTitle, FormGroup, Skeleton, Switch, Tooltip } from '@patternfly/react-core';
 
 import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 import PlayIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
@@ -20,6 +20,7 @@ import { ApplicationLabel } from '../../views/formatters';
 import handleError from '../../api/handleError';
 import tryAgainMessage from '../../utilities/tryAgainMessage';
 import { disabledMessage } from '../../utilities/disabledTooltipProps';
+import { COST_MANAGEMENT_APP_ID, HCS_APP_NAME } from '../../utilities/constants';
 
 const initialState = {
   selectedApps: {},
@@ -110,6 +111,8 @@ const ApplicationsCard = () => {
   const { push } = useHistory();
   const sourceTypes = useSelector(({ sources }) => sources.sourceTypes, shallowEqual);
   const appTypes = useSelector(({ sources }) => sources.appTypes, shallowEqual);
+  const hcsEnrolled = useSelector(({ sources }) => sources.hcsEnrolled, shallowEqual);
+  const hcsEnrolledLoaded = useSelector(({ sources }) => sources.hcsEnrolledLoaded, shallowEqual);
   const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
   const hasRightAccess = useHasWritePermissions();
   const dispatch = useDispatch();
@@ -206,25 +209,31 @@ const ApplicationsCard = () => {
             return (
               <FormGroup key={app.id}>
                 <div className="src-c-application_flex">
-                  <Wrapper {...(!hasRightAccess && { content: disabledMessage(intl, isOrgAdmin) })}>
-                    <Switch
-                      className="src-c-application_switch"
-                      id={`app-switch-${app.id}`}
-                      label={app.display_name}
-                      isChecked={isChecked}
-                      isDisabled={connectedApp?.isDeleting || !hasRightAccess || Boolean(source.paused_at)}
-                      onChange={(value) => (!value ? removeApp(connectedApp.id, app.id) : addApp(app.id, connectedApp?.id))}
-                    />
-                  </Wrapper>
-                  {Boolean(connectedApp) && (
-                    <ApplicationLabel className="pf-u-ml-sm src-m-clickable" app={connectedApp} showStatusText />
-                  )}
-                  {(isPaused || appExist) && (
-                    <ApplicationKebab
-                      app={connectedApp}
-                      removeApp={() => removeApp(connectedApp.id, app.id)}
-                      addApp={() => addApp(app.id, connectedApp.id)}
-                    />
+                  {hcsEnrolledLoaded ? (
+                    <Fragment>
+                      <Wrapper {...(!hasRightAccess && { content: disabledMessage(intl, isOrgAdmin) })}>
+                        <Switch
+                          className="src-c-application_switch"
+                          id={`app-switch-${app.id}`}
+                          label={app.id === COST_MANAGEMENT_APP_ID && hcsEnrolled ? HCS_APP_NAME : app.display_name}
+                          isChecked={isChecked}
+                          isDisabled={connectedApp?.isDeleting || !hasRightAccess || Boolean(source.paused_at)}
+                          onChange={(value) => (!value ? removeApp(connectedApp.id, app.id) : addApp(app.id, connectedApp?.id))}
+                        />
+                      </Wrapper>
+                      {Boolean(connectedApp) && (
+                        <ApplicationLabel className="pf-u-ml-sm src-m-clickable" app={connectedApp} showStatusText />
+                      )}
+                      {(isPaused || appExist) && (
+                        <ApplicationKebab
+                          app={connectedApp}
+                          removeApp={() => removeApp(connectedApp.id, app.id)}
+                          addApp={() => addApp(app.id, connectedApp.id)}
+                        />
+                      )}
+                    </Fragment>
+                  ) : (
+                    <Skeleton width="75%" />
                   )}
                 </div>
               </FormGroup>

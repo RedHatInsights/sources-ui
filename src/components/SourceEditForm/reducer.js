@@ -13,14 +13,14 @@ export const initialState = {
   submitMessages: undefined,
 };
 
-const reducer = (state, { type, source, sourceType, appTypes, intl, values, editing, messages }) => {
+const reducer = (state, { type, source, sourceType, appTypes, intl, values, editing, messages, hcsEnrolled }) => {
   switch (type) {
     case 'createForm':
       return {
         ...state,
         sourceType,
         initialValues: prepareInitialValues(state.source, sourceType.product_name),
-        schema: parseSourceToSchema(state.source, sourceType, appTypes, intl),
+        schema: parseSourceToSchema(state.source, sourceType, appTypes, intl, hcsEnrolled),
         loading: false,
       };
     case 'setSource':

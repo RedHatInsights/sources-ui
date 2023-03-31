@@ -31,6 +31,7 @@ describe('ApplicationsCard', () => {
         entities: [{ id: sourceId, source_type_id: AMAZON_TYPE.id, applications: [] }],
         sourceTypes,
         appTypes,
+        hcsEnrolledLoaded: true,
       },
       user: { writePermissions: false },
     });
@@ -76,6 +77,7 @@ describe('ApplicationsCard', () => {
         ],
         sourceTypes,
         appTypes,
+        hcsEnrolledLoaded: true,
       },
       user: { writePermissions: true },
     });
@@ -106,6 +108,7 @@ describe('ApplicationsCard', () => {
           ],
           sourceTypes,
           appTypes,
+          hcsEnrolledLoaded: true,
         },
         user: { writePermissions: true },
       });
@@ -206,6 +209,7 @@ describe('ApplicationsCard', () => {
           ],
           sourceTypes,
           appTypes: [COST_MANAGEMENT_APP],
+          hcsEnrolledLoaded: true,
         },
         user: { writePermissions: true },
       });
@@ -266,6 +270,7 @@ describe('ApplicationsCard', () => {
           ],
           sourceTypes,
           appTypes: [COST_MANAGEMENT_APP],
+          hcsEnrolledLoaded: true,
         },
         user: { writePermissions: true },
       });
@@ -309,6 +314,7 @@ describe('ApplicationsCard', () => {
           ],
           sourceTypes,
           appTypes: [COST_MANAGEMENT_APP],
+          hcsEnrolledLoaded: true,
         },
         user: { writePermissions: true },
       });
@@ -355,6 +361,7 @@ describe('ApplicationsCard', () => {
           ],
           sourceTypes,
           appTypes,
+          hcsEnrolledLoaded: true,
         },
         user: { writePermissions: true },
       });
@@ -377,6 +384,7 @@ describe('ApplicationsCard', () => {
           ],
           sourceTypes,
           appTypes: [COST_MANAGEMENT_APP],
+          hcsEnrolledLoaded: true,
         },
         user: { writePermissions: true },
       });
@@ -491,6 +499,7 @@ describe('ApplicationsCard', () => {
           ],
           sourceTypes,
           appTypes: [COST_MANAGEMENT_APP],
+          hcsEnrolledLoaded: true,
         },
         user: { writePermissions: true },
       });
