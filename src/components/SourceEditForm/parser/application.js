@@ -6,6 +6,8 @@ import { endpointFields } from './endpoint';
 import EditAlert from './EditAlert';
 import ResourcesEmptyState from '../../SourceDetail/ResourcesEmptyState';
 
+import { COST_MANAGEMENT_APP_ID, HCS_APP_NAME } from '../../../utilities/constants';
+
 export const APP_NAMES = {
   COST_MANAGAMENT: '/insights/platform/cost-management',
   CLOUD_METER: '/insights/platform/cloud-meter',
@@ -29,7 +31,7 @@ const createOneAppFields = (appType, sourceType, app) => [
   ),
 ];
 
-export const applicationsFields = (applications, sourceType, appTypes) => [
+export const applicationsFields = (applications, sourceType, appTypes, hcsEnrolled) => [
   {
     component: componentTypes.TABS,
     name: 'app-tabs',
@@ -65,7 +67,7 @@ export const applicationsFields = (applications, sourceType, appTypes) => [
 
         return {
           name: appType?.id,
-          title: appType?.display_name,
+          title: appType?.id === COST_MANAGEMENT_APP_ID && hcsEnrolled ? HCS_APP_NAME : appType?.display_name,
           fields,
         };
       }),

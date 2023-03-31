@@ -27,6 +27,8 @@ const SourceEditModal = () => {
   const intl = useIntl();
 
   const { sourceTypes, appTypes, sourceTypesLoaded, appTypesLoaded } = useSelector(({ sources }) => sources, shallowEqual);
+  const hcsEnrolled = useSelector(({ sources }) => sources.hcsEnrolled, shallowEqual);
+  const hcsEnrolledLoaded = useSelector(({ sources }) => sources.hcsEnrolledLoaded, shallowEqual);
 
   const dispatch = useDispatch();
 
@@ -50,11 +52,11 @@ const SourceEditModal = () => {
     if (source && appTypesLoaded && sourceTypesLoaded) {
       const sourceType = sourceTypes.find(({ id }) => id === source.source.source_type_id);
 
-      setState({ type: 'createForm', sourceType, source, appTypes, intl });
+      setState({ type: 'createForm', sourceType, source, appTypes, hcsEnrolled, intl });
     }
-  }, [appTypesLoaded, source, sourceTypesLoaded]);
+  }, [appTypesLoaded, source, sourceTypesLoaded, hcsEnrolledLoaded]);
 
-  const isLoading = !appTypesLoaded || !sourceTypesLoaded || loading;
+  const isLoading = !hcsEnrolledLoaded || !appTypesLoaded || !sourceTypesLoaded || loading;
 
   if (submitError) {
     return <ErroredModal onRetry={() => onSubmit(values, editing, dispatch, source, intl, setState)} />;
