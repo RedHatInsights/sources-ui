@@ -1411,7 +1411,7 @@ const hardcodedSchemas = {
                       label: (
                         <FormattedMessage
                           id="cost.gcp.sendDefaultCUR"
-                          defaultMessage="I am OK with sending the default CUR to Cost Management"
+                          defaultMessage="I am OK with sending the default dataset to Cost Management"
                         />
                       ),
                       value: false,
@@ -1421,23 +1421,8 @@ const hardcodedSchemas = {
                         <span>
                           <FormattedMessage
                             id="cost.gcp.customizeCUR"
-                            defaultMessage="I wish to manually customize the CUR sent to Cost Management"
-                          />{' '}
-                          <Popover
-                            aria-label="Help text"
-                            position="right"
-                            maxWidth="5%"
-                            bodyContent={
-                              <FormattedMessage
-                                id="cost.gcp.helpCustomizeCUR"
-                                defaultMessage="There will be a set of instructions at the end of this wizard that will guide you on how to complete the customize configuration that will be completed in the GCP console."
-                              />
-                            }
-                          >
-                            <Button className="pf-u-p-0 pf-u-m-0" variant={ButtonVariant.plain}>
-                              <QuestionCircleIcon className="pf-u-ml-sm" />
-                            </Button>
-                          </Popover>
+                            defaultMessage="I wish to manually customize the dataset sent to Cost Management"
+                          />
                         </span>
                       ),
                       value: true,
@@ -1448,6 +1433,31 @@ const hardcodedSchemas = {
                   initializeOnMount: true,
                 },
               ],
+              nextStep: ({
+                values: {
+                  application: { extra },
+                },
+              }) => {
+                return extra?.storage_only ? 'cost-gcp-cs' : 'cost-gcp-iam';
+              },
+            },
+            {
+              title: <FormattedMessage id="cost.gcp.cloudStorage" defaultMessage="Create cloud storage bucket" />,
+              fields: [
+                {
+                  component: 'description',
+                  name: 'description-google',
+                  Content: CMGoogle.CloudStorageBucket,
+                },
+                {
+                  component: componentTypes.TEXT_FIELD,
+                  name: 'application.extra.bucket_name',
+                  label: 'Cloud storage bucket name',
+                  validate: [(value) => (!value || value.lenght === 0 ? 'Required' : undefined)],
+                  isRequired: true,
+                },
+              ],
+              name: 'cost-gcp-cs',
               nextStep: 'cost-gcp-iam',
             },
             {
@@ -1489,6 +1499,10 @@ const hardcodedSchemas = {
                 },
                 {
                   name: 'application.extra.dataset',
+                  condition: {
+                    when: 'application.extra.storage_only',
+                    is: false,
+                  },
                 },
               ],
               name: 'cost-gcp-dataset',

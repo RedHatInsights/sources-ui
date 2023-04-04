@@ -57,8 +57,45 @@ export const Project = () => {
   );
 };
 
+export const CloudStorageBucket = () => {
+  const intl = useIntl();
+
+  return (
+    <TextContent>
+      <Text component={TextVariants.p}>
+        {intl.formatMessage(
+          {
+            id: 'cost.gcp.cloudStorageBucket',
+            defaultMessage:
+              'You will need to create a cloud storage bucket that will contain the customized billing reports. {link}',
+          },
+          {
+            link: (
+              <Fragment>
+                <Text key="link" component={TextVariants.a} href={MANUAL_CUR_STEPS} rel="noopener noreferrer" target="_blank">
+                  {intl.formatMessage({
+                    id: 'cost.learnMore',
+                    defaultMessage: 'Learn more',
+                  })}
+                </Text>
+              </Fragment>
+            ),
+          }
+        )}
+      </Text>
+      <Text component={TextVariants.p}>
+        {intl.formatMessage({
+          id: 'cost.gcp.csb.name',
+          defaultMessage: 'After creating the cloud storage bucket, enter its name in the following:',
+        })}
+      </Text>
+    </TextContent>
+  );
+};
+
 export const IAMRole = () => {
   const intl = useIntl();
+  const { getState } = useFormApi();
 
   return (
     <TextContent>
@@ -95,17 +132,19 @@ export const IAMRole = () => {
         </TextListItem>
         <TextList>
           <TextListItem>
-            <b>bigquery.jobs.create</b>
+            <b>{getState().values?.application?.extra?.storage_only ? 'storage.buckets.get' : 'bigquery.jobs.create'}</b>
           </TextListItem>
           <TextListItem>
-            <b>bigquery.tables.getData</b>
+            <b>{getState().values?.application?.extra?.storage_only ? 'storage.objects.get' : 'bigquery.tables.getData'}</b>
           </TextListItem>
           <TextListItem>
-            <b>bigquery.tables.get</b>
+            <b>{getState().values?.application?.extra?.storage_only ? 'storage.objects.list' : 'bigquery.tables.get'}</b>
           </TextListItem>
-          <TextListItem>
-            <b>bigquery.tables.list</b>
-          </TextListItem>
+          {!getState().values?.application?.extra?.storage_only && (
+            <TextListItem>
+              <b>bigquery.tables.list</b>
+            </TextListItem>
+          )}
         </TextList>
         <TextListItem>
           {intl.formatMessage(
