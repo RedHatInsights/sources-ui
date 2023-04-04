@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import { ClipboardCopy, Text, TextContent, TextList, TextListItem, TextListVariants, TextVariants } from '@patternfly/react-core';
@@ -13,6 +13,7 @@ import { HCS_APP_NAME } from '../../../../utilities/constants';
 const b = (chunks) => <b key={`b-${chunks.length}-${Math.floor(Math.random() * 1000)}`}>{chunks}</b>;
 
 const PROJECT_LINK = `${HCCM_DOCS_PREFIX}/html/adding_a_google_cloud_source_to_cost_management`;
+const MANUAL_CUR_STEPS = 'https://github.com/project-koku/koku-data-selector/blob/main/docs/gcp/gcp.rst';
 const PROJECT_HCS_LINK = ''; // specify when HCS docs links are available
 
 export const Project = () => {
@@ -249,6 +250,36 @@ export const AssignAccess = () => {
           )}
         </TextListItem>
       </TextList>
+    </TextContent>
+  );
+};
+
+export const ProjectDescription = () => {
+  const intl = useIntl();
+
+  return (
+    <TextContent>
+      <Text component={TextVariants.p}>
+        {intl.formatMessage(
+          {
+            id: 'cost.gcp.costProjectDescrption',
+            defaultMessage:
+              'If there is a need to further customize the data you want to send to Cost Management, select the manually customize option to follow the special instructions on how to. {link}',
+          },
+          {
+            link: (
+              <Fragment>
+                <Text key="link" component={TextVariants.a} href={MANUAL_CUR_STEPS} rel="noopener noreferrer" target="_blank">
+                  {intl.formatMessage({
+                    id: 'cost.learnMore',
+                    defaultMessage: 'Learn more',
+                  })}
+                </Text>
+              </Fragment>
+            ),
+          }
+        )}
+      </Text>
     </TextContent>
   );
 };

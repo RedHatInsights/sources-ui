@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Button, ButtonVariant, FormHelperText, Popover } from '@patternfly/react-core';
+
 import QuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/question-circle-icon';
 
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
@@ -1395,6 +1396,56 @@ const hardcodedSchemas = {
                 },
                 {
                   name: 'authentication.authtype',
+                },
+                {
+                  component: 'description',
+                  name: 'description-google',
+                  Content: CMGoogle.ProjectDescription,
+                },
+                {
+                  name: 'application.extra.storage_only',
+                  component: 'enhanced-radio',
+                  className: 'src-c-wizard__conditional-radio',
+                  options: [
+                    {
+                      label: (
+                        <FormattedMessage
+                          id="cost.gcp.sendDefaultCUR"
+                          defaultMessage="I am OK with sending the default CUR to Cost Management"
+                        />
+                      ),
+                      value: false,
+                    },
+                    {
+                      label: (
+                        <span>
+                          <FormattedMessage
+                            id="cost.gcp.customizeCUR"
+                            defaultMessage="I wish to manually customize the CUR sent to Cost Management"
+                          />{' '}
+                          <Popover
+                            aria-label="Help text"
+                            position="right"
+                            maxWidth="5%"
+                            bodyContent={
+                              <FormattedMessage
+                                id="cost.gcp.helpCustomizeCUR"
+                                defaultMessage="There will be a set of instructions at the end of this wizard that will guide you on how to complete the customize configuration that will be completed in the GCP console."
+                              />
+                            }
+                          >
+                            <Button className="pf-u-p-0 pf-u-m-0" variant={ButtonVariant.plain}>
+                              <QuestionCircleIcon className="pf-u-ml-sm" />
+                            </Button>
+                          </Popover>
+                        </span>
+                      ),
+                      value: true,
+                    },
+                  ],
+                  mutator: (option) => option,
+                  initialValue: false,
+                  initializeOnMount: true,
                 },
               ],
               nextStep: 'cost-gcp-iam',
