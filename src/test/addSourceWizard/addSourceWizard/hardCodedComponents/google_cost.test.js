@@ -23,30 +23,26 @@ describe('Cost Management Google steps components', () => {
     store = mockStore(initialState);
     render(componentWrapperIntl(<Cm.Project />, store));
 
+    expect(screen.getByText('Enter the ID of a project within your GCP billing account.', { exact: false })).toBeInTheDocument();
+    expect(screen.getByText('Learn more')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'Enter the ID of a project within your Google Cloud Platform (GCP) billing account. We’ll use this project to set up your BigQuery billing export.',
-        { exact: false }
+        'Google Cloud Platform (GCP) recommends that you create a cloud project to contain all your billing administration needs. We’ll use this project to set up your BigQuery billing export.'
       )
     ).toBeInTheDocument();
-    expect(screen.getByText('Learn more')).toBeInTheDocument();
-    expect(screen.getByText('GCP Recommendation')).toBeInTheDocument();
-    expect(screen.getByText('Create a cloud project to contain all your billing administration needs.')).toBeInTheDocument();
   });
 
   it('Project - HCS', () => {
     store = mockStore({ sources: { ...initialState.sources, hcsEnrolled: true } });
     render(componentWrapperIntl(<Cm.Project />, store));
 
+    expect(screen.getByText('Enter the ID of a project within your GCP billing account.', { exact: false })).toBeInTheDocument();
+    expect(screen.queryByText('Learn more')).not.toBeInTheDocument();
     expect(
       screen.getByText(
-        'Enter the ID of a project within your Google Cloud Platform (GCP) billing account. We’ll use this project to set up your BigQuery billing export.',
-        { exact: false }
+        'Google Cloud Platform (GCP) recommends that you create a cloud project to contain all your billing administration needs. We’ll use this project to set up your BigQuery billing export.'
       )
     ).toBeInTheDocument();
-    expect(screen.queryByText('Learn more')).not.toBeInTheDocument();
-    expect(screen.getByText('GCP Recommendation')).toBeInTheDocument();
-    expect(screen.getByText('Create a cloud project to contain all your billing administration needs.')).toBeInTheDocument();
   });
 
   describe('Assign access', () => {
@@ -183,7 +179,28 @@ describe('Cost Management Google steps components', () => {
   });
 
   it('IAM Role', () => {
-    render(<Cm.IAMRole />);
+    render(
+      componentWrapperIntl(
+        <SourcesFormRenderer
+          onSubmit={jest.fn()}
+          schema={{
+            fields: [
+              {
+                name: 'field',
+                component: 'description',
+                Content: Cm.IAMRole,
+              },
+            ],
+          }}
+          initialValues={{
+            authentication: {
+              username: 'some-project-id',
+            },
+          }}
+        />,
+        store
+      )
+    );
 
     expect(
       screen.getByText('To specify GCP access permissions for Red Hat, create an Identity and Access Management (IAM) role.', {

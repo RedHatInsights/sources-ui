@@ -381,7 +381,7 @@ describe('schema builder', () => {
       );
 
       expect(schema).toEqual(expect.arrayContaining([expect.any(Object)]));
-      expect(schema).toHaveLength(64);
+      expect(schema).toHaveLength(65);
 
       expect(schema.map(({ name }) => name)).toEqual([
         'openshift-generic',
@@ -426,6 +426,7 @@ describe('schema builder', () => {
         'google-2',
         'google-5',
         'google-project_id_service_account_json-/insights/platform/cost-management-additional-step',
+        'cost-gcp-cs',
         'cost-gcp-iam',
         'cost-gcp-access',
         'cost-gcp-dataset',
@@ -461,7 +462,7 @@ describe('schema builder', () => {
       );
 
       expect(schema).toEqual(expect.arrayContaining([expect.any(Object)]));
-      expect(schema).toHaveLength(66);
+      expect(schema).toHaveLength(67);
 
       expect(schema.map(({ name }) => name)).toEqual([
         'openshift-generic',
@@ -506,6 +507,7 @@ describe('schema builder', () => {
         'google-2',
         'google-5',
         'google-project_id_service_account_json-/insights/platform/cost-management-additional-step',
+        'cost-gcp-cs',
         'cost-gcp-iam',
         'cost-gcp-access',
         'cost-gcp-dataset',
