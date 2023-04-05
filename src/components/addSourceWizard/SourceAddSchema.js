@@ -395,7 +395,13 @@ export default (
           id: 'wizard.close',
           defaultMessage: 'Close wizard',
         }),
-        crossroads: ['application.application_type_id', 'source_type', 'auth_select', 'source.app_creation_workflow'],
+        crossroads: [
+          'application.application_type_id',
+          'source_type',
+          'auth_select',
+          'source.app_creation_workflow',
+          'application.extra.storage_only',
+        ],
         fields: [
           ...(!selectedType
             ? activeCategory === REDHAT_VENDOR
