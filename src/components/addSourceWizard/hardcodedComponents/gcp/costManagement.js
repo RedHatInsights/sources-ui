@@ -1,18 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
-import {
-  ClipboardCopy,
-  Hint,
-  HintBody,
-  HintTitle,
-  Text,
-  TextContent,
-  TextList,
-  TextListItem,
-  TextListVariants,
-  TextVariants,
-} from '@patternfly/react-core';
+import { ClipboardCopy, Text, TextContent, TextList, TextListItem, TextListVariants, TextVariants } from '@patternfly/react-core';
 
 import { HCCM_DOCS_PREFIX } from '../../stringConstants';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
@@ -24,6 +13,7 @@ import { HCS_APP_NAME } from '../../../../utilities/constants';
 const b = (chunks) => <b key={`b-${chunks.length}-${Math.floor(Math.random() * 1000)}`}>{chunks}</b>;
 
 const PROJECT_LINK = `${HCCM_DOCS_PREFIX}/html/adding_a_google_cloud_source_to_cost_management`;
+const MANUAL_CUR_STEPS = 'https://github.com/project-koku/koku-data-selector/blob/main/docs/gcp/gcp.rst';
 const PROJECT_HCS_LINK = ''; // specify when HCS docs links are available
 
 export const Project = () => {
@@ -37,7 +27,7 @@ export const Project = () => {
           {
             id: 'cost.gcp.projectDescription',
             defaultMessage:
-              'Enter the ID of a project within your Google Cloud Platform (GCP) billing account. We’ll use this project to set up your BigQuery billing export. {link}',
+              'Google Cloud Platform (GCP) recommends that you create a cloud project to contain all your billing administration needs. We’ll use this project to set up your BigQuery billing export. {link}',
           },
           {
             link: showHCS ? null : ( // remove when HCS docs links are available
@@ -57,26 +47,55 @@ export const Project = () => {
           }
         )}
       </Text>
-      <Hint>
-        <HintTitle>
-          {intl.formatMessage({
-            id: 'cost.gcp.project.hintTitle',
-            defaultMessage: 'GCP Recommendation',
-          })}
-        </HintTitle>
-        <HintBody>
-          {intl.formatMessage({
-            id: 'cost.gcp.project.hintDescription',
-            defaultMessage: 'Create a cloud project to contain all your billing administration needs.',
-          })}
-        </HintBody>
-      </Hint>
+      <Text component={TextVariants.p}>
+        {intl.formatMessage({
+          id: 'cost.gcp.projectDescription2',
+          defaultMessage: 'Enter the ID of a project within your GCP billing account.',
+        })}
+      </Text>
+    </TextContent>
+  );
+};
+
+export const CloudStorageBucket = () => {
+  const intl = useIntl();
+
+  return (
+    <TextContent>
+      <Text component={TextVariants.p}>
+        {intl.formatMessage(
+          {
+            id: 'cost.gcp.cloudStorageBucket',
+            defaultMessage:
+              'You will need to create a cloud storage bucket that will contain the customized billing reports. {link}',
+          },
+          {
+            link: (
+              <Fragment>
+                <Text key="link" component={TextVariants.a} href={MANUAL_CUR_STEPS} rel="noopener noreferrer" target="_blank">
+                  {intl.formatMessage({
+                    id: 'cost.learnMore',
+                    defaultMessage: 'Learn more',
+                  })}
+                </Text>
+              </Fragment>
+            ),
+          }
+        )}
+      </Text>
+      <Text component={TextVariants.p}>
+        {intl.formatMessage({
+          id: 'cost.gcp.csb.name',
+          defaultMessage: 'After creating the cloud storage bucket, enter its name in the following:',
+        })}
+      </Text>
     </TextContent>
   );
 };
 
 export const IAMRole = () => {
   const intl = useIntl();
+  const { getState } = useFormApi();
 
   return (
     <TextContent>
@@ -113,17 +132,19 @@ export const IAMRole = () => {
         </TextListItem>
         <TextList>
           <TextListItem>
-            <b>bigquery.jobs.create</b>
+            <b>{getState().values?.application?.extra?.storage_only ? 'storage.buckets.get' : 'bigquery.jobs.create'}</b>
           </TextListItem>
           <TextListItem>
-            <b>bigquery.tables.getData</b>
+            <b>{getState().values?.application?.extra?.storage_only ? 'storage.objects.get' : 'bigquery.tables.getData'}</b>
           </TextListItem>
           <TextListItem>
-            <b>bigquery.tables.get</b>
+            <b>{getState().values?.application?.extra?.storage_only ? 'storage.objects.list' : 'bigquery.tables.get'}</b>
           </TextListItem>
-          <TextListItem>
-            <b>bigquery.tables.list</b>
-          </TextListItem>
+          {!getState().values?.application?.extra?.storage_only && (
+            <TextListItem>
+              <b>bigquery.tables.list</b>
+            </TextListItem>
+          )}
         </TextList>
         <TextListItem>
           {intl.formatMessage(
@@ -268,6 +289,36 @@ export const AssignAccess = () => {
           )}
         </TextListItem>
       </TextList>
+    </TextContent>
+  );
+};
+
+export const ProjectDescription = () => {
+  const intl = useIntl();
+
+  return (
+    <TextContent>
+      <Text component={TextVariants.p}>
+        {intl.formatMessage(
+          {
+            id: 'cost.gcp.costProjectDescrption',
+            defaultMessage:
+              'If there is a need to further customize the data you want to send to Cost Management, select the manually customize option to follow the special instructions on how to. {link}',
+          },
+          {
+            link: (
+              <Fragment>
+                <Text key="link" component={TextVariants.a} href={MANUAL_CUR_STEPS} rel="noopener noreferrer" target="_blank">
+                  {intl.formatMessage({
+                    id: 'cost.learnMore',
+                    defaultMessage: 'Learn more',
+                  })}
+                </Text>
+              </Fragment>
+            ),
+          }
+        )}
+      </Text>
     </TextContent>
   );
 };

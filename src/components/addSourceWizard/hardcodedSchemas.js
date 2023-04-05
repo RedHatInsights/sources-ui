@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Button, ButtonVariant, FormHelperText, Popover } from '@patternfly/react-core';
+
 import QuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/question-circle-icon';
 
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
@@ -1358,6 +1359,7 @@ const hardcodedSchemas = {
           'authentication.username': {
             component: 'text-field',
             label: 'Project ID',
+            placeholder: '0123456789',
             isRequired: true,
             validate: [
               {
@@ -1395,7 +1397,71 @@ const hardcodedSchemas = {
                 {
                   name: 'authentication.authtype',
                 },
+                {
+                  component: 'description',
+                  name: 'description-google',
+                  Content: CMGoogle.ProjectDescription,
+                },
+                {
+                  name: 'application.extra.storage_only',
+                  component: 'enhanced-radio',
+                  className: 'src-c-wizard__conditional-radio',
+                  options: [
+                    {
+                      label: (
+                        <FormattedMessage
+                          id="cost.gcp.sendDefaultCUR"
+                          defaultMessage="I am OK with sending the default dataset to Cost Management"
+                        />
+                      ),
+                      value: false,
+                    },
+                    {
+                      label: (
+                        <span>
+                          <FormattedMessage
+                            id="cost.gcp.customizeCUR"
+                            defaultMessage="I wish to manually customize the dataset sent to Cost Management"
+                          />
+                        </span>
+                      ),
+                      value: true,
+                    },
+                  ],
+                  mutator: (option) => option,
+                  initialValue: false,
+                  initializeOnMount: true,
+                },
               ],
+              nextStep: ({
+                values: {
+                  application: { extra },
+                },
+              }) => {
+                return extra?.storage_only ? 'cost-gcp-cs' : 'cost-gcp-iam';
+              },
+            },
+            {
+              title: <FormattedMessage id="cost.gcp.cloudStorage" defaultMessage="Create cloud storage bucket" />,
+              fields: [
+                {
+                  component: 'description',
+                  name: 'description-google',
+                  Content: CMGoogle.CloudStorageBucket,
+                },
+                {
+                  component: componentTypes.TEXT_FIELD,
+                  name: 'application.extra.bucket_name',
+                  label: 'Cloud storage bucket name',
+                  validate: [
+                    {
+                      type: validatorTypes.REQUIRED,
+                    },
+                  ],
+                  isRequired: true,
+                },
+              ],
+              name: 'cost-gcp-cs',
               nextStep: 'cost-gcp-iam',
             },
             {
@@ -1437,6 +1503,10 @@ const hardcodedSchemas = {
                 },
                 {
                   name: 'application.extra.dataset',
+                  condition: {
+                    when: 'application.extra.storage_only',
+                    is: false,
+                  },
                 },
               ],
               name: 'cost-gcp-dataset',

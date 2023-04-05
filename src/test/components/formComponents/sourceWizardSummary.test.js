@@ -287,7 +287,8 @@ describe('SourceWizardSummary component', () => {
         ['Source type', 'Google Cloud'],
         ['Application', 'Cost Management'],
         ['Project ID', 'project_id_123'],
-        ['Dataset ID', 'dataset_id_123'],
+        ['', '-'],
+        ['Cloud storage bucket name', '-'],
       ]);
     });
 
@@ -314,7 +315,8 @@ describe('SourceWizardSummary component', () => {
         ['Source type', 'Google Cloud'],
         ['Application', HCS_APP_NAME],
         ['Project ID', 'project_id_123'],
-        ['Dataset ID', 'dataset_id_123'],
+        ['', '-'],
+        ['Cloud storage bucket name', '-'],
       ]);
     });
 
