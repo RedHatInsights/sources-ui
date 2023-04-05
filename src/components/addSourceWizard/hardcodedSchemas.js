@@ -1453,7 +1453,11 @@ const hardcodedSchemas = {
                   component: componentTypes.TEXT_FIELD,
                   name: 'application.extra.bucket_name',
                   label: 'Cloud storage bucket name',
-                  validate: [(value) => (!value || value.lenght === 0 ? 'Required' : undefined)],
+                  validate: [
+                    {
+                      type: validatorTypes.REQUIRED,
+                    },
+                  ],
                   isRequired: true,
                 },
               ],
