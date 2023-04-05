@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
@@ -37,18 +37,39 @@ const ENABLE_AWS_ACCOUNT = `${HCCM_DOCS_PREFIX}/html/adding_an_amazon_web_servic
 const ENABLE_HCS_AWS_ACCOUNT = ''; // specify when HCS docs links are available
 const CONFIG_AWS_TAGS = `${HCCM_DOCS_PREFIX}/html/adding_an_amazon_web_services_aws_source_to_cost_management/assembly-cost-management-next-steps-aws#configure-cost-models-next-step_next-steps-aws`;
 const CONFIG_HCS_AWS_TAGS = ''; // specify when HCS docs links are available
-const MANUAL_CUR_ADDITIONAL_STEPS = ''; // specify when docs links are available
+export const MANUAL_CUR_ADDITIONAL_STEPS = 'https://github.com/project-koku/koku-data-selector/blob/main/docs/aws/aws.rst'; // replace with public link when available
 
-export const StorageDescription = () => {
+export const StorageDescription = ({ showHCS }) => {
   const intl = useIntl();
   return (
     <TextContent>
       <Text>
-        {intl.formatMessage({
-          id: 'cost.storageDescription.storageDescription',
-          defaultMessage:
-            'To store the cost and usage reports needed for cost management, you need to create an Amazon S3 bucket',
-        })}
+        {intl.formatMessage(
+          {
+            id: 'cost.storageDescription.storageDescription',
+            defaultMessage:
+              'To store the cost and usage reports needed for cost management, you need to create an Amazon S3 bucket. {link}',
+          },
+          {
+            link: showHCS ? null : ( // remove when HCS docs links are available
+              <Fragment>
+                <br />
+                <Text
+                  key="link"
+                  component={TextVariants.a}
+                  href={showHCS ? CREATE_HCS_S3_BUCKET : CREATE_S3_BUCKET}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  {intl.formatMessage({
+                    id: 'cost.learnMore',
+                    defaultMessage: 'Learn more',
+                  })}
+                </Text>
+              </Fragment>
+            ),
+          }
+        )}
       </Text>
       <TextList className="pf-u-ml-0" component={TextListVariants.ol}>
         <TextListItem>
@@ -62,6 +83,10 @@ export const StorageDescription = () => {
   );
 };
 
+StorageDescription.propTypes = {
+  showHCS: PropTypes.bool,
+};
+
 export const UsageDescription = ({ showHCS }) => {
   const intl = useIntl();
   const application = showHCS ? HCS_APP_NAME : 'Cost Management';
@@ -73,23 +98,9 @@ export const UsageDescription = ({ showHCS }) => {
           {
             id: 'cost.usageDescription.usageDescription',
             defaultMessage:
-              "The information {application} would need is your AWS account's cost and usage report (CUR). If there is a need to further customize the CUR you want to send to {application}, select the manually customize option and follow the special instructions on how to. {link}",
+              "The information {application} would need is your AWS account's cost and usage report (CUR). If there is a need to further customize the CUR you want to send to {application}, select the manually customize option and follow the special instructions on how to.",
           },
           {
-            link: showHCS ? null : ( // remove when HCS docs links are available
-              <Text
-                key="link"
-                component={TextVariants.a}
-                href={showHCS ? CREATE_HCS_S3_BUCKET : CREATE_S3_BUCKET}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                {intl.formatMessage({
-                  id: 'cost.learnMore',
-                  defaultMessage: 'Learn more',
-                })}
-              </Text>
-            ),
             application,
           }
         )}
@@ -124,16 +135,14 @@ export const UsageSteps = () => {
             'Since you have chosen to manually customize the CUR you want to send to Cost Management, you do not need to create at this point and time.',
         })}
       </EmptyStateBody>
-      {MANUAL_CUR_ADDITIONAL_STEPS.length > 0 ? (
-        <EmptyStatePrimary>
-          <Button variant="link">
-            {intl.formatMessage({
-              id: 'cost.usageDescription.additionalStepsCUR',
-              defaultMessage: 'Additional configuration steps',
-            })}
-          </Button>
-        </EmptyStatePrimary>
-      ) : null}
+      <EmptyStatePrimary>
+        <Text variant="link" component={TextVariants.a} href={MANUAL_CUR_ADDITIONAL_STEPS}>
+          {intl.formatMessage({
+            id: 'cost.usageDescription.additionalStepsCUR',
+            defaultMessage: 'Additional configuration steps',
+          })}
+        </Text>
+      </EmptyStatePrimary>
     </EmptyState>
   ) : (
     <TextContent>

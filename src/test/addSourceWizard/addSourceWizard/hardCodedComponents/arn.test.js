@@ -173,7 +173,6 @@ describe('AWS-ARN hardcoded schemas', () => {
         "The information Cost Management would need is your AWS account's cost and usage report (CUR). If there is a need to further customize the CUR you want to send to Cost Management, select the manually customize option and follow the special instructions on how to."
       )
     ).toBeInTheDocument();
-    expect(screen.getByText('Learn more')).toBeInTheDocument();
   });
 
   it('USAGE description is rendered correctly for HCS', () => {
@@ -241,18 +240,31 @@ describe('AWS-ARN hardcoded schemas', () => {
         'Since you have chosen to manually customize the CUR you want to send to Cost Management, you do not need to create at this point and time.'
       )
     ).toBeInTheDocument();
-    expect(screen.queryByText('Additional configuration steps')).toBeNull();
+    expect(screen.queryByText('Additional configuration steps')).toBeInTheDocument();
   });
 
-  it('IncludeAliasesLabel description is rendered correctly', () => {
+  it('StorageDescription is rendered correctly', () => {
     render(<AwsArn.StorageDescription />);
 
     expect(
-      screen.getByText('To store the cost and usage reports needed for cost management, you need to create an Amazon S3 bucket')
+      screen.getByText('To store the cost and usage reports needed for cost management, you need to create an Amazon S3 bucket.')
     ).toBeInTheDocument();
     expect(
       screen.getByText("On AWS, specify or create an Amazon S3 bucket for your account and enter it's name below.")
     ).toBeInTheDocument();
+    expect(screen.getByText('Learn more')).toBeInTheDocument();
+  });
+
+  it('StorageDescription is rendered correctly - HCS', () => {
+    render(<AwsArn.StorageDescription showHCS />);
+
+    expect(
+      screen.getByText('To store the cost and usage reports needed for cost management, you need to create an Amazon S3 bucket.')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("On AWS, specify or create an Amazon S3 bucket for your account and enter it's name below.")
+    ).toBeInTheDocument();
+    expect(screen.queryByText('Learn more')).toBeNull();
   });
 
   it('IncludeAliasesLabel description is rendered correctly', () => {

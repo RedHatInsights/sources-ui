@@ -1,16 +1,18 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { shallowEqual, useSelector } from 'react-redux';
 import get from 'lodash/get';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 import { FormattedMessage, useIntl } from 'react-intl';
 import {
   Alert,
-  AlertActionLink,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
   Label,
+  Text,
+  TextVariants,
 } from '@patternfly/react-core';
 import { useFlag } from '@unleash/proxy-client-react';
 
@@ -25,15 +27,12 @@ import {
   injectEndpointFieldsInfo,
   shouldSkipEndpoint,
 } from '../../components/addSourceWizard/schemaBuilder';
-import { shallowEqual } from 'react-intl/src/utils';
-import { useSelector } from 'react-redux';
-
-const CUSTOMIZING_CUR_LINK = undefined; // specify when docs link is available
+import { MANUAL_CUR_ADDITIONAL_STEPS } from '../addSourceWizard/hardcodedComponents/aws/arn';
 
 const SummaryAlert = ({ appName, sourceType, hcsEnrolled }) => {
   const intl = useIntl();
 
-  if (appName === COST_MANAGEMENT_APP_NAME && !hcsEnrolled) {
+  if (appName === COST_MANAGEMENT_APP_NAME) {
     return (
       <Fragment>
         <Alert
@@ -44,27 +43,30 @@ const SummaryAlert = ({ appName, sourceType, hcsEnrolled }) => {
             defaultMessage: "Don't forget additional configuration steps!",
           })}
           actionLinks={
-            CUSTOMIZING_CUR_LINK ? <AlertActionLink>Customizing your AWS cost and usage report</AlertActionLink> : null
+            <Text component={TextVariants.a} href={MANUAL_CUR_ADDITIONAL_STEPS}>
+              Customizing your AWS cost and usage report
+            </Text>
           }
         >
           {intl.formatMessage({
             id: 'cost.warningDescriptionCUR',
-            defaultMessage: `You will need to perform more configuration steps after creating the source.${
-              CUSTOMIZING_CUR_LINK ? ' To find more information, click on the link below' : ''
-            }`,
-          })}
-        </Alert>
-        <Alert
-          variant="default"
-          isInline
-          title={intl.formatMessage({ id: 'cost.rbacWarningTitle', defaultMessage: 'Manage permissions in User Access' })}
-        >
-          {intl.formatMessage({
-            id: 'cost.rbacWarningDescription',
             defaultMessage:
-              'Make sure to manage permissions for this source in custom roles that contain permissions for Cost Management.',
+              'You will need to perform more configuration steps after creating the source. To find more information, click on the link below.',
           })}
         </Alert>
+        {hcsEnrolled ? null : (
+          <Alert
+            variant="default"
+            isInline
+            title={intl.formatMessage({ id: 'cost.rbacWarningTitle', defaultMessage: 'Manage permissions in User Access' })}
+          >
+            {intl.formatMessage({
+              id: 'cost.rbacWarningDescription',
+              defaultMessage:
+                'Make sure to manage permissions for this source in custom roles that contain permissions for Cost Management.',
+            })}
+          </Alert>
+        )}
       </Fragment>
     );
   }
