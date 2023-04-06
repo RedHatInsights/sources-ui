@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import { ClipboardCopy } from '@patternfly/react-core';
@@ -11,6 +11,9 @@ import {
   EmptyStateIcon,
   EmptyStateSecondaryActions,
   EmptyStateVariant,
+  Text,
+  TextContent,
+  TextVariants,
   Title,
 } from '@patternfly/react-core';
 
@@ -33,12 +36,19 @@ const FinishedStep = ({
       <Title headingLevel="h2" size="xl" className="pf-u-mt-xl">
         {title}
       </Title>
-      {uuid ?? (
-        <ClipboardCopy isReadOnly hoverTip="Source UUID" clickTip="Copied" className="pf-u-mt-md">
-          {uuid}
-        </ClipboardCopy>
-      )}
       <EmptyStateBody className="src-c-wizard--step-text">{successfulMessage}</EmptyStateBody>
+      {uuid && (
+        <Fragment>
+          <TextContent>
+            <Text component={TextVariants.h3}>
+              <FormattedMessage id="wizard.sourcesUid" defaultMessage="Source UUID" />
+            </Text>
+          </TextContent>
+          <ClipboardCopy isReadOnly hoverTip="Source UUID" clickTip="Copied" className="pf-u-mt-md">
+            {uuid}
+          </ClipboardCopy>
+        </Fragment>
+      )}
       <Button variant="primary" onClick={onClose} className="pf-u-mt-xl">
         {returnButtonTitle}
       </Button>

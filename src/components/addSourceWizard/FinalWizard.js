@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { Button, Text, TextContent, Wizard } from '@patternfly/react-core';
 
@@ -15,6 +15,7 @@ import LoadingStep from '../steps/LoadingStep';
 import ErroredStep from '../steps/ErroredStep';
 import TimeoutStep from '../steps/TimeoutStep';
 import AmazonFinishedStep from '../steps/AmazonFinishedStep';
+import { COST_MANAGEMENT_APP_ID, HCS_APP_NAME } from '../../utilities/constants';
 
 const FinalWizard = ({
   afterSubmit,
@@ -30,10 +31,12 @@ const FinalWizard = ({
   afterSuccess,
   sourceTypes,
   activeCategory,
-  sourceUuid,
 }) => {
   const [isDeletingSource, setIsDeleting] = useState();
   const [isAfterDeletion, setDeleted] = useState();
+  const isStorageOnly = createdSource.applications?.some((app) => app?.extra?.storage_only);
+  const isCostManagement = createdSource.applications?.some((app) => app?.application_type_id === COST_MANAGEMENT_APP_ID);
+  const isHcs = createdSource.applications?.some((app) => app?.extra?.hcs);
 
   const intl = useIntl();
 
@@ -105,7 +108,10 @@ const FinalWizard = ({
             onClose={afterSubmit}
             returnButtonTitle={returnButtonTitle}
             secondaryActions={addAnotherSourceButton}
-            uuid={sourceUuid}
+            {...(isCostManagement &&
+              isStorageOnly && {
+                uuid: createdSource?.uid,
+              })}
           />
         );
         break;
@@ -116,11 +122,21 @@ const FinalWizard = ({
           step = (
             <FinishedStep
               onClose={afterSubmit}
-              successfulMessage={successfulMessage}
+              successfulMessage={
+                isCostManagement && isStorageOnly
+                  ? `You have chosen to manually customize the cost data set sent to ${
+                      isHcs ? HCS_APP_NAME : 'Cost Management'
+                    }, you will still need to perform additional steps to complete the process.`
+                  : successfulMessage
+              }
+              {...(isCostManagement &&
+                isStorageOnly && {
+                  title: <FormattedMessage id="wizard.waitTheresMore" defaultMessage="Success, but wait there's more!" />,
+                  uuid: createdSource?.uid,
+                })}
               hideSourcesButton={hideSourcesButton}
               returnButtonTitle={returnButtonTitle}
               secondaryActions={addAnotherSourceButton}
-              uuid={sourceUuid}
             />
           );
         }
@@ -217,7 +233,6 @@ FinalWizard.propTypes = {
     })
   ),
   activeCategory: PropTypes.string,
-  sourceUuid: PropTypes.string,
 };
 
 export default FinalWizard;
