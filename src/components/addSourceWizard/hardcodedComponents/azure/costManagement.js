@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 
 import {
   ClipboardCopy,
+  EmptyState,
+  EmptyStateBody,
+  EmptyStateIcon,
+  EmptyStateVariant,
   Select,
   SelectOption,
   SelectVariant,
@@ -22,6 +26,7 @@ import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 import FormSpy from '@data-driven-forms/react-form-renderer/form-spy';
 import { shallowEqual, useSelector } from 'react-redux';
 import { HCS_APP_NAME } from '../../../../utilities/constants';
+import { InfoCircleIcon } from '@patternfly/react-icons';
 
 const CREATE_AZURE_STORAGE = `${HCCM_DOCS_PREFIX}/html/adding_a_microsoft_azure_source_to_cost_management/assembly-adding-azure-sources#creating-an-azure-storage-account_adding-an-azure-source`;
 const CREATE_HCS_AZURE_STORAGE = ''; // specify when HCS docs links are available
@@ -30,6 +35,7 @@ const AZURE_HCS_CREDS_URL = ''; // specify when HCS docs links are available
 const AZURE_ROLES_URL = `${HCCM_DOCS_PREFIX}/html/adding_a_microsoft_azure_source_to_cost_management/assembly-adding-azure-sources#configuring-azure-roles_adding-an-azure-source`;
 const RECURRING_TASK_URL = `${HCCM_DOCS_PREFIX}/html/adding_a_microsoft_azure_source_to_cost_management/assembly-adding-azure-sources#configuring-an-azure-daily-export-schedule_adding-an-azure-source`;
 const RECURRING_HCS_TASK_URL = ''; // specify when HCS docs links are available
+export const MANUAL_CUR_STEPS = 'https://github.com/project-koku/koku-data-selector/blob/main/docs/azure/azure.rst';
 
 export const ConfigureResourceGroupAndStorageAccount = () => {
   const intl = useIntl();
@@ -181,7 +187,7 @@ const InternalReaderRoleDescription = () => {
     );
   }
 
-  return (
+  return application.extra.storage_only ? null : (
     <TextContent>
       <Text component={TextVariants.p}>
         {intl.formatMessage({
@@ -203,7 +209,9 @@ export const ReaderRoleDescription = () => (
 
 export const ExportSchedule = () => {
   const intl = useIntl();
+  const formOptions = useFormApi();
   const showHCS = useSelector(({ sources }) => sources.hcsEnrolled, shallowEqual);
+  const application = formOptions.getState().values.application;
 
   return (
     <TextContent>
@@ -293,13 +301,17 @@ export const ExportSchedule = () => {
           })}
         </TextListItem>
       </TextList>
-      <br />
-      <Text component={TextVariants.p}>
-        {intl.formatMessage({
-          id: 'cost.azure.exportNameFollowup',
-          defaultMessage: 'After configuring the daily export, enter the following:',
-        })}
-      </Text>
+      {application.extra.storage_only ? null : (
+        <Fragment>
+          <br />
+          <Text component={TextVariants.p}>
+            {intl.formatMessage({
+              id: 'cost.azure.exportNameFollowup',
+              defaultMessage: 'After configuring the daily export, enter the following:',
+            })}
+          </Text>
+        </Fragment>
+      )}
     </TextContent>
   );
 };
@@ -495,24 +507,63 @@ const CostExportDescription = ({ selection }) => {
   return selection ? selectionText[selection] : selectionText.Subscription;
 };
 
+export const ExportScopeDescription = () => {
+  const intl = useIntl();
+
+  return (
+    <TextContent>
+      <Text component={TextVariants.p}>
+        {intl.formatMessage(
+          {
+            id: 'cost.azure.costExportScopeDescrption',
+            defaultMessage:
+              'From the Azure portal, select the scope for the new cost export. If there is a need to further customize the data you want to send to Red Hat, select the manually customize option to follow the special instructions on how to. {link}',
+          },
+          {
+            link: (
+              <Fragment>
+                <br />
+                <Text key="link" component={TextVariants.a} href={MANUAL_CUR_STEPS} rel="noopener noreferrer" target="_blank">
+                  {intl.formatMessage({
+                    id: 'cost.learnMore',
+                    defaultMessage: 'Learn more',
+                  })}
+                </Text>
+              </Fragment>
+            ),
+          }
+        )}
+      </Text>
+    </TextContent>
+  );
+};
+
 export const ExportScope = () => {
   const intl = useIntl();
+  const formOptions = useFormApi();
+  const application = formOptions.getState().values.application;
   const [selection, setSelection] = useState('');
   const handleSelect = (selection = 'Subscription') => setSelection(selection);
 
-  return (
+  return application.extra.storage_only ? (
+    <EmptyState variant={EmptyStateVariant.small}>
+      <EmptyStateIcon style={{ color: 'var(--pf-global--info-color--100)' }} icon={InfoCircleIcon} />
+      <Title size="lg" headingLevel="h4">
+        {intl.formatMessage({
+          id: 'cost.manualTitleCUR',
+          defaultMessage: 'Skip this step and proceed to next step',
+        })}
+      </Title>
+      <EmptyStateBody>
+        {intl.formatMessage({
+          id: 'cost.manualDescriptionCUR',
+          defaultMessage:
+            'Since you have chosen to manually customize the data set you want to send to Cost Management, you do not need to specify an export scope at this point and time.',
+        })}
+      </EmptyStateBody>
+    </EmptyState>
+  ) : (
     <div>
-      <div>
-        <TextContent>
-          <Text component={TextVariants.p}>
-            {intl.formatMessage({
-              id: 'cost.azure.costExportScopeDescrption',
-              defaultMessage: 'From the Azure portal, select the scope for the new cost export.',
-            })}
-          </Text>
-        </TextContent>
-      </div>
-      <br />
       <div>
         <Title headingLevel="h6">Scope</Title>
         <CostExportSelect handleSelect={handleSelect} />

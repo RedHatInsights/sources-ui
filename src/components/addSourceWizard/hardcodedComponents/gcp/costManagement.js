@@ -13,8 +13,8 @@ import { HCS_APP_NAME } from '../../../../utilities/constants';
 const b = (chunks) => <b key={`b-${chunks.length}-${Math.floor(Math.random() * 1000)}`}>{chunks}</b>;
 
 const PROJECT_LINK = `${HCCM_DOCS_PREFIX}/html/adding_a_google_cloud_source_to_cost_management`;
-const MANUAL_CUR_STEPS = 'https://github.com/project-koku/koku-data-selector/blob/main/docs/gcp/gcp.rst';
 const PROJECT_HCS_LINK = ''; // specify when HCS docs links are available
+export const MANUAL_CUR_STEPS = 'https://github.com/project-koku/koku-data-selector/blob/main/docs/gcp/gcp.rst';
 
 export const Project = () => {
   const intl = useIntl();
