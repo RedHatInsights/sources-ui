@@ -110,7 +110,6 @@ export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
   if (location.pathname.split('/').filter(Boolean).pop() !== routes.sourcesNew.path.split('/').pop()) {
     if (state.isErrored) {
       const { activeStep, activeStepIndex, maxStepIndex, prevSteps, registeredFieldsHistory } = state.wizardState;
-
       dispatch(
         addMessage({
           title: intl.formatMessage({

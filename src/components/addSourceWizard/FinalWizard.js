@@ -30,6 +30,7 @@ const FinalWizard = ({
   afterSuccess,
   sourceTypes,
   activeCategory,
+  sourceUuid,
 }) => {
   const [isDeletingSource, setIsDeleting] = useState();
   const [isAfterDeletion, setDeleted] = useState();
@@ -100,7 +101,12 @@ const FinalWizard = ({
         break;
       case 'timeout':
         step = (
-          <TimeoutStep onClose={afterSubmit} returnButtonTitle={returnButtonTitle} secondaryActions={addAnotherSourceButton} />
+          <TimeoutStep
+            onClose={afterSubmit}
+            returnButtonTitle={returnButtonTitle}
+            secondaryActions={addAnotherSourceButton}
+            uuid={sourceUuid}
+          />
         );
         break;
       default:
@@ -114,6 +120,7 @@ const FinalWizard = ({
               hideSourcesButton={hideSourcesButton}
               returnButtonTitle={returnButtonTitle}
               secondaryActions={addAnotherSourceButton}
+              uuid={sourceUuid}
             />
           );
         }
@@ -210,6 +217,7 @@ FinalWizard.propTypes = {
     })
   ),
   activeCategory: PropTypes.string,
+  sourceUuid: PropTypes.string,
 };
 
 export default FinalWizard;
