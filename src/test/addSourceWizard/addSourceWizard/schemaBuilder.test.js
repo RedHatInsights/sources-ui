@@ -334,6 +334,8 @@ describe('schema builder', () => {
 
         expect(createAuthTypeSelection(AZURE_TYPE, COST_MANAGEMENT_APP, ENDPOINT_FIELDS).fields.map(({ name }) => name)).toEqual([
           'cost-export-scope-description',
+          'application.extra.storage_only',
+          'cost-export-scope',
           'application.extra.scope',
         ]);
       });

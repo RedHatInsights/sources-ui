@@ -85,7 +85,11 @@ describe('SourceWizardSummary component', () => {
       };
 
       initialState = {
-        sources: { hcsEnrolled: false, hcsEnrolledLoaded: true },
+        sources: {
+          sourceTypes: [{ name: 'amazon', product_name: 'Amazon Web Services' }],
+          hcsEnrolled: false,
+          hcsEnrolledLoaded: true,
+        },
       };
 
       store = mockStore(initialState);
@@ -166,12 +170,12 @@ describe('SourceWizardSummary component', () => {
       ]);
     });
 
-    it('amazon - ARN cost management - include appended field from DB and rbac alert message', () => {
+    it('amazon - ARN cost management - include appended field from DB, CUR and rbac alert message', () => {
       formOptions = {
         getState: () => ({
           values: {
             source: { name: 'cosi' },
-            application: { application_type_id: '2', extra: { bucket: 'gfghf' } },
+            application: { application_type_id: '2', extra: { bucket: 'gfghf', storage_only: true } },
             source_type: 'amazon',
             authentication: { username: 'arn:aws:132', authtype: 'arn' },
             fixasyncvalidation: '',
@@ -196,6 +200,13 @@ describe('SourceWizardSummary component', () => {
       expect(
         screen.getByText(
           'Make sure to manage permissions for this source in custom roles that contain permissions for Cost Management.'
+        )
+      ).toBeInTheDocument();
+      expect(screen.getByText("Don't forget additional configuration steps!")).toBeInTheDocument();
+      expect(screen.getByText('Customizing your Amazon Web Services cost and usage report')).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'You will need to perform more configuration steps after creating the source. To find more information, click on the link below.'
         )
       ).toBeInTheDocument();
     });
@@ -403,7 +414,7 @@ describe('SourceWizardSummary component', () => {
       ).toBeInTheDocument();
     });
 
-    it('azure cost management - HCS', () => {
+    it('azure cost management - HCS and default CUR', () => {
       store = mockStore({ sources: { ...initialState.sources, hcsEnrolled: true } });
       formOptions = {
         getState: () => ({
@@ -428,12 +439,14 @@ describe('SourceWizardSummary component', () => {
         ['Subscription ID', 'some-subscription-id'],
       ]);
 
-      expect(screen.queryByText('Manage permissions in User Access')).not.toBeInTheDocument();
+      expect(screen.queryByText('Manage permissions in User Access')).toBeNull();
+      expect(screen.queryByText("Don't forget additional configuration steps!")).toBeNull();
+      expect(screen.queryByText('Customizing your Amazon Web Services cost and usage report')).toBeNull();
       expect(
-        screen.getByText(
+        screen.queryByText(
           'You will need to perform more configuration steps after creating the source. To find more information, click on the link below.'
         )
-      ).toBeInTheDocument();
+      ).toBeNull();
     });
 
     it('azure rhel management - lighthouse', () => {

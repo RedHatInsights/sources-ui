@@ -11,6 +11,30 @@ import sourceTypes from '../../../__mocks__/sourceTypes';
 import mockStore from '../../../__mocks__/mockStore';
 import componentWrapperIntl from '../../../../utilities/testsHelpers';
 
+const FORM_OPTIONS = {
+  getState: () => ({
+    values: {
+      application: {
+        extra: {
+          storage_only: false,
+        },
+      },
+    },
+  }),
+};
+
+const FORM_OPTIONS_STORAGE_ONLY = {
+  getState: () => ({
+    values: {
+      application: {
+        extra: {
+          storage_only: true,
+        },
+      },
+    },
+  }),
+};
+
 describe('Cost Management Azure steps components', () => {
   let initialState;
   let store;
@@ -164,6 +188,34 @@ describe('Cost Management Azure steps components', () => {
     expect(screen.getByLabelText('Copyable input')).toHaveValue(
       `az role assignment create --assignee "some-user-name" --role "Cost Management Reader" --scope "/subscriptions/my-sub-id-1"`
     );
+  });
+
+  it('Read Role description - storage only', () => {
+    render(
+      <Form onSubmit={jest.fn()}>
+        {() => (
+          <RenderContext.Provider
+            value={{
+              formOptions: {
+                getState: () => ({
+                  values: {
+                    authentication: { username: 'some-user-name' },
+                    application: {
+                      extra: { subscription_id: 'my-sub-id-1', resource_group: 'my-resource-group-1', storage_only: true },
+                    },
+                  },
+                }),
+              },
+            }}
+          >
+            <Cm.ReaderRoleDescription />
+          </RenderContext.Provider>
+        )}
+      </Form>
+    );
+
+    expect(screen.queryByText('Run the following command in Cloud Shell to create a Cost Management Reader role:')).toEqual(null);
+    expect(screen.queryByText('Copyable input')).toEqual(null);
   });
 
   it('EA Read Role description', () => {
@@ -338,7 +390,14 @@ describe('Cost Management Azure steps components', () => {
 
   it('Export Schedule description', () => {
     store = mockStore(initialState);
-    render(componentWrapperIntl(<Cm.ExportSchedule />, store));
+    render(
+      componentWrapperIntl(
+        <RenderContext.Provider value={{ formOptions: FORM_OPTIONS }}>
+          <Cm.ExportSchedule />
+        </RenderContext.Provider>,
+        store
+      )
+    );
 
     expect(
       screen.getByText(
@@ -359,9 +418,16 @@ describe('Cost Management Azure steps components', () => {
     expect(screen.getByText('Created storage account name or existing storage account name')).toBeInTheDocument();
   });
 
-  it('Export Schedule description - HCS', () => {
+  it('Export Schedule description - HCS, storageOnly', () => {
     store = mockStore({ sources: { ...initialState.sources, hcsEnrolled: true } });
-    render(componentWrapperIntl(<Cm.ExportSchedule />, store));
+    render(
+      componentWrapperIntl(
+        <RenderContext.Provider value={{ formOptions: FORM_OPTIONS }}>
+          <Cm.ExportSchedule />
+        </RenderContext.Provider>,
+        store
+      )
+    );
 
     expect(
       screen.getByText(
@@ -383,14 +449,59 @@ describe('Cost Management Azure steps components', () => {
   });
 
   it('Export Scope description', () => {
-    render(<Cm.ExportScope />);
+    render(
+      <RenderContext.Provider value={{ formOptions: FORM_OPTIONS }}>
+        <Cm.ExportScopeDescription />
+      </RenderContext.Provider>
+    );
 
     expect(
-      screen.getByText('From the Azure portal, select the scope for the new cost export.', { exact: false })
+      screen.getByText(
+        'From the Azure portal, select the scope for the new cost export. If there is a need to further customize the data you want to send to Red Hat, select the manually customize option to follow the special instructions on how to.',
+        { exact: false }
+      )
     ).toBeInTheDocument();
+    expect(screen.getByText('Learn more')).toBeInTheDocument();
+  });
+
+  it('Export Scope', () => {
+    render(
+      <RenderContext.Provider value={{ formOptions: FORM_OPTIONS }}>
+        <Cm.ExportScope />
+      </RenderContext.Provider>
+    );
+
     expect(
       screen.getByText(
         'Run the following command from the Cloud Shell to obtain the Subscription ID associated with the generated cost export.'
+      )
+    ).toBeInTheDocument();
+    expect(screen.getByText('After running the command, enter the output in the following field:')).toBeInTheDocument();
+    expect(screen.queryByText('Skip this step and proceed to next step')).toBeNull();
+    expect(
+      screen.queryByText(
+        'Since you have chosen to manually customize the data set you want to send to Cost Management, you do not need to specify an export scope at this point and time.'
+      )
+    ).toBeNull();
+  });
+
+  it('Export Scope - storage only', () => {
+    render(
+      <RenderContext.Provider value={{ formOptions: FORM_OPTIONS_STORAGE_ONLY }}>
+        <Cm.ExportScope />
+      </RenderContext.Provider>
+    );
+
+    expect(
+      screen.queryByText(
+        'Run the following command from the Cloud Shell to obtain the Subscription ID associated with the generated cost export.'
+      )
+    ).toBeNull();
+    expect(screen.queryByText('After running the command, enter the output in the following field:')).toBeNull();
+    expect(screen.getByText('Skip this step and proceed to next step')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Since you have chosen to manually customize the data set you want to send to Cost Management, you do not need to specify an export scope at this point and time.'
       )
     ).toBeInTheDocument();
   });
