@@ -20,6 +20,9 @@ import ValuePopover from './ValuePopover';
 import hardcodedSchemas from '../../components/addSourceWizard/hardcodedSchemas';
 import { ACCOUNT_AUTHORIZATION } from '../constants';
 import { CLOUD_METER_APP_NAME, COST_MANAGEMENT_APP_ID, COST_MANAGEMENT_APP_NAME, HCS_APP_NAME } from '../../utilities/constants';
+import { MANUAL_CUR_STEPS as CUR_AWS } from '../addSourceWizard/hardcodedComponents/aws/arn';
+import { MANUAL_CUR_STEPS as CUR_AZURE } from '../addSourceWizard/hardcodedComponents/azure/costManagement';
+import { MANUAL_CUR_STEPS as CUR_GCP } from '../addSourceWizard/hardcodedComponents/gcp/costManagement';
 import { NO_APPLICATION_VALUE } from '../../components/addSourceWizard/stringConstants';
 import {
   getAdditionalSteps,
@@ -27,33 +30,47 @@ import {
   injectEndpointFieldsInfo,
   shouldSkipEndpoint,
 } from '../../components/addSourceWizard/schemaBuilder';
-import { MANUAL_CUR_ADDITIONAL_STEPS } from '../addSourceWizard/hardcodedComponents/aws/arn';
+
+const linkMapper = (sourceType) => ({ amazon: CUR_AWS, azure: CUR_AZURE, google: CUR_GCP }?.[sourceType]);
 
 const SummaryAlert = ({ appName, sourceType, hcsEnrolled }) => {
   const intl = useIntl();
+  const formOptions = useFormApi();
+  const sourceTypes = useSelector(({ sources }) => sources.sourceTypes, shallowEqual);
+
+  const storageOnly = formOptions.getState().values.application?.extra?.storage_only;
+  const application = sourceTypes.find((type) => type.name === sourceType)?.product_name;
 
   if (appName === COST_MANAGEMENT_APP_NAME) {
     return (
       <Fragment>
-        <Alert
-          variant="info"
-          isInline
-          title={intl.formatMessage({
-            id: 'cost.warningTitleCUR',
-            defaultMessage: "Don't forget additional configuration steps!",
-          })}
-          actionLinks={
-            <Text component={TextVariants.a} href={MANUAL_CUR_ADDITIONAL_STEPS}>
-              Customizing your AWS cost and usage report
-            </Text>
-          }
-        >
-          {intl.formatMessage({
-            id: 'cost.warningDescriptionCUR',
-            defaultMessage:
-              'You will need to perform more configuration steps after creating the source. To find more information, click on the link below.',
-          })}
-        </Alert>
+        {['azure', 'amazon', 'google'].includes(sourceType) && storageOnly ? (
+          <Alert
+            variant="info"
+            isInline
+            title={intl.formatMessage({
+              id: 'cost.warningTitleCUR',
+              defaultMessage: "Don't forget additional configuration steps!",
+            })}
+            actionLinks={
+              <Text component={TextVariants.a} href={linkMapper(sourceType)}>
+                {intl.formatMessage(
+                  {
+                    id: 'cost.customizingReportCUR',
+                    defaultMessage: 'Customizing your {application} cost and usage report',
+                  },
+                  { application }
+                )}
+              </Text>
+            }
+          >
+            {intl.formatMessage({
+              id: 'cost.warningDescriptionCUR',
+              defaultMessage:
+                'You will need to perform more configuration steps after creating the source. To find more information, click on the link below.',
+            })}
+          </Alert>
+        ) : null}
         {hcsEnrolled ? null : (
           <Alert
             variant="default"

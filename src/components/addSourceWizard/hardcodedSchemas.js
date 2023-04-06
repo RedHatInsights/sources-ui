@@ -764,12 +764,46 @@ const hardcodedSchemas = {
                 {
                   name: 'cost-export-scope-description',
                   component: 'description',
+                  Content: CMAzure.ExportScopeDescription,
+                },
+                {
+                  name: 'application.extra.storage_only',
+                  component: 'enhanced-radio',
+                  className: 'src-c-wizard__conditional-radio',
+                  options: [
+                    {
+                      label: (
+                        <FormattedMessage
+                          id="cost.sendDefaultCUR"
+                          defaultMessage="I am OK with sending the default CUR to Cost Management"
+                        />
+                      ),
+                      value: false,
+                    },
+                    {
+                      label: (
+                        <FormattedMessage
+                          id="cost.customizeCUR"
+                          defaultMessage="I wish to manually customize the CUR sent to Cost Management"
+                        />
+                      ),
+                      value: true,
+                    },
+                  ],
+                  mutator: (option) => option,
+                  initialValue: false,
+                  hideInReview: true,
+                },
+                {
+                  name: 'cost-export-scope',
+                  component: 'description',
                   Content: CMAzure.ExportScope,
                 },
                 {
                   name: 'application.extra.scope',
                   component: componentTypes.TEXT_FIELD,
                   label: <FormattedMessage id="wizard.costExportScope" defaultMessage="Cost export scope" />,
+                  condition: { when: 'application.extra.storage_only', is: false },
                 },
               ],
             },
@@ -787,6 +821,7 @@ const hardcodedSchemas = {
                   name: 'application.extra.export_name',
                   component: componentTypes.TEXT_FIELD,
                   label: <FormattedMessage id="wizard.costExportName" defaultMessage="Cost export name" />,
+                  condition: { when: 'application.extra.storage_only', is: false },
                 },
               ],
             },
