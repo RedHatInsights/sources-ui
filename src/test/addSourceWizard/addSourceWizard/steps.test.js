@@ -37,7 +37,7 @@ describe('Steps components', () => {
       expect(screen.getByText('Configuration successful')).toBeInTheDocument();
       expect(screen.getByText('Go back to my application')).toBeInTheDocument();
       expect(screen.getByText('Here I Am')).toBeInTheDocument();
-      expect(screen.getAllByRole('button')).toHaveLength(2);
+      expect(screen.getAllByRole('button')).toHaveLength(1);
       expect(screen.getByRole('link')).toHaveAttribute('href', '/beta/settings/sources');
     });
 
