@@ -37,7 +37,7 @@ describe('Steps components', () => {
       expect(screen.getByText('Configuration successful')).toBeInTheDocument();
       expect(screen.getByText('Go back to my application')).toBeInTheDocument();
       expect(screen.getByText('Here I Am')).toBeInTheDocument();
-      expect(screen.getAllByRole('button')).toHaveLength(1);
+      expect(screen.getAllByRole('button')).toHaveLength(2);
       expect(screen.getByRole('link')).toHaveAttribute('href', '/beta/settings/sources');
     });
 
@@ -153,14 +153,14 @@ describe('Steps components', () => {
         screen.getByText('To track progress, check the Status column in the Sources table.', { exact: false })
       ).toBeInTheDocument();
       expect(screen.getByText('go back')).toBeInTheDocument();
-      expect(screen.getAllByRole('button')).toHaveLength(1);
+      expect(screen.getAllByRole('button')).toHaveLength(2);
     });
 
     it('renders correctly customized', () => {
       render(<TimeoutStep {...initialProps} title="pekny nadpis" secondaryActions={<button>some button here</button>} />);
 
       expect(screen.getByText('pekny nadpis')).toBeInTheDocument();
-      expect(screen.getAllByRole('button')).toHaveLength(2);
+      expect(screen.getAllByRole('button')).toHaveLength(3);
     });
 
     it('calls onClose function', async () => {

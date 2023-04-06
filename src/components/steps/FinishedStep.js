@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
+import { ClipboardCopy } from '@patternfly/react-core';
 
 import {
   Bullseye,
@@ -24,6 +25,7 @@ const FinishedStep = ({
   title,
   linkText,
   secondaryActions,
+  uuid,
 }) => (
   <Bullseye>
     <EmptyState variant={EmptyStateVariant.full} className="pf-u-mt-4xl">
@@ -31,6 +33,11 @@ const FinishedStep = ({
       <Title headingLevel="h2" size="xl" className="pf-u-mt-xl">
         {title}
       </Title>
+      {uuid ?? (
+        <ClipboardCopy isReadOnly hoverTip="Source UUID" clickTip="Copied" className="pf-u-mt-md">
+          {uuid}
+        </ClipboardCopy>
+      )}
       <EmptyStateBody className="src-c-wizard--step-text">{successfulMessage}</EmptyStateBody>
       <Button variant="primary" onClick={onClose} className="pf-u-mt-xl">
         {returnButtonTitle}
@@ -55,6 +62,7 @@ FinishedStep.propTypes = {
   title: PropTypes.node,
   linkText: PropTypes.node,
   secondaryActions: PropTypes.node,
+  uuid: PropTypes.string,
 };
 
 FinishedStep.defaultProps = {

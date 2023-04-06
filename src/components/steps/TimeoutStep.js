@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { ClipboardCopy } from '@patternfly/react-core';
 
 import {
   Bullseye,
@@ -15,7 +16,7 @@ import {
 
 import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
 
-const TimeoutStep = ({ onClose, returnButtonTitle, title, secondaryActions }) => {
+const TimeoutStep = ({ onClose, returnButtonTitle, title, secondaryActions, uuid }) => {
   const intl = useIntl();
 
   return (
@@ -34,6 +35,11 @@ const TimeoutStep = ({ onClose, returnButtonTitle, title, secondaryActions }) =>
             },
             { newLine: <br key="br" /> }
           )}
+          {uuid ?? (
+            <ClipboardCopy isReadOnly hoverTip="Source UUID" clickTip="Copied" className="pf-u-mt-md">
+              {uuid}
+            </ClipboardCopy>
+          )}
         </EmptyStateBody>
         <Button variant="primary" onClick={onClose} className="pf-u-mt-xl">
           {returnButtonTitle}
@@ -49,6 +55,7 @@ TimeoutStep.propTypes = {
   returnButtonTitle: PropTypes.node.isRequired,
   title: PropTypes.node,
   secondaryActions: PropTypes.node,
+  uuid: PropTypes.string,
 };
 
 TimeoutStep.defaultProps = {

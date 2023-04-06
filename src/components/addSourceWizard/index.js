@@ -144,6 +144,7 @@ const AddSourceWizard = ({
       afterSuccess={afterSuccess}
       sourceTypes={state.sourceTypes}
       activeCategory={activeCategory}
+      sourceUuid={createdSource?.uid}
     />
   );
 };
