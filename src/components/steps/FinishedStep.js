@@ -33,9 +33,11 @@ const FinishedStep = ({
       <Title headingLevel="h2" size="xl" className="pf-u-mt-xl">
         {title}
       </Title>
-      <ClipboardCopy isReadOnly hoverTip="Source UUID" clickTip="Copied" className="pf-u-mt-md">
-        {uuid}
-      </ClipboardCopy>
+      {uuid ?? (
+        <ClipboardCopy isReadOnly hoverTip="Source UUID" clickTip="Copied" className="pf-u-mt-md">
+          {uuid}
+        </ClipboardCopy>
+      )}
       <EmptyStateBody className="src-c-wizard--step-text">{successfulMessage}</EmptyStateBody>
       <Button variant="primary" onClick={onClose} className="pf-u-mt-xl">
         {returnButtonTitle}

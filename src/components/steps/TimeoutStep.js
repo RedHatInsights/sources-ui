@@ -35,9 +35,11 @@ const TimeoutStep = ({ onClose, returnButtonTitle, title, secondaryActions, uuid
             },
             { newLine: <br key="br" /> }
           )}
-          <ClipboardCopy isReadOnly hoverTip="Source UUID" clickTip="Copied" className="pf-u-mt-xl">
-            {uuid}
-          </ClipboardCopy>
+          {uuid ?? (
+            <ClipboardCopy isReadOnly hoverTip="Source UUID" clickTip="Copied" className="pf-u-mt-md">
+              {uuid}
+            </ClipboardCopy>
+          )}
         </EmptyStateBody>
         <Button variant="primary" onClick={onClose} className="pf-u-mt-xl">
           {returnButtonTitle}
