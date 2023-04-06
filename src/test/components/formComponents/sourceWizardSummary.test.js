@@ -252,7 +252,7 @@ describe('SourceWizardSummary component', () => {
         getState: () => ({
           values: {
             source: { name: 'cosi' },
-            application: { application_type_id: COST_MANAGEMENT_APP_ID, extra: { bucket: 'gfghf' } },
+            application: { application_type_id: COST_MANAGEMENT_APP_ID, extra: { bucket: 'gfghf', storage_only: true } },
             source_type: 'amazon',
             authentication: { username: 'arn:aws:132', authtype: 'arn' },
             fixasyncvalidation: '',
@@ -303,7 +303,6 @@ describe('SourceWizardSummary component', () => {
         ['Source type', 'Google Cloud'],
         ['Application', 'Cost Management'],
         ['Project ID', 'project_id_123'],
-        ['', '-'],
         ['Cloud storage bucket name', '-'],
       ]);
     });
@@ -314,7 +313,7 @@ describe('SourceWizardSummary component', () => {
         getState: () => ({
           values: {
             source: { name: 'cosi' },
-            application: { application_type_id: '2', extra: { dataset: 'dataset_id_123' } },
+            application: { application_type_id: '2', extra: { dataset: 'dataset_id_123', storage_only: true } },
             source_type: 'google',
             authentication: { authtype: 'project_id_service_account_json', username: 'project_id_123' },
             fixasyncvalidation: '',
@@ -331,7 +330,6 @@ describe('SourceWizardSummary component', () => {
         ['Source type', 'Google Cloud'],
         ['Application', HCS_APP_NAME],
         ['Project ID', 'project_id_123'],
-        ['', '-'],
         ['Cloud storage bucket name', '-'],
       ]);
       expect(

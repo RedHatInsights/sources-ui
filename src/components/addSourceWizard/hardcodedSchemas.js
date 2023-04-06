@@ -1466,6 +1466,7 @@ const hardcodedSchemas = {
                   mutator: (option) => option,
                   initialValue: false,
                   initializeOnMount: true,
+                  hideInReview: true,
                 },
               ],
               nextStep: ({
