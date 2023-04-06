@@ -263,6 +263,11 @@ describe('SourceWizardSummary component', () => {
       ]);
 
       expect(screen.queryByText('Manage permissions in User Access')).not.toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'You will need to perform more configuration steps after creating the source. To find more information, click on the link below.'
+        )
+      ).toBeInTheDocument();
     });
 
     it('google - cost management - include google - cost alert', () => {
@@ -318,6 +323,11 @@ describe('SourceWizardSummary component', () => {
         ['', '-'],
         ['Cloud storage bucket name', '-'],
       ]);
+      expect(
+        screen.getByText(
+          'You will need to perform more configuration steps after creating the source. To find more information, click on the link below.'
+        )
+      ).toBeInTheDocument();
     });
 
     it('openshift cost management - include appended field from DB and rbac alert message', () => {
@@ -419,6 +429,11 @@ describe('SourceWizardSummary component', () => {
       ]);
 
       expect(screen.queryByText('Manage permissions in User Access')).not.toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'You will need to perform more configuration steps after creating the source. To find more information, click on the link below.'
+        )
+      ).toBeInTheDocument();
     });
 
     it('azure rhel management - lighthouse', () => {
