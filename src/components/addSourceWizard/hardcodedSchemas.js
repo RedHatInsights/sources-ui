@@ -1487,7 +1487,7 @@ const hardcodedSchemas = {
                 },
                 {
                   component: componentTypes.TEXT_FIELD,
-                  name: 'application.extra.bucket_name',
+                  name: 'application.extra.bucket',
                   label: 'Cloud storage bucket name',
                   validate: [
                     {
