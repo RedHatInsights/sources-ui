@@ -111,6 +111,13 @@
   }
 }
 
+form.src-c-uuid {
+  text-align: left;
+  .pf-c-form__group-label {
+    padding: 0;
+  }
+}
+
 .src-c-card-info {
   .text {
     font-size: var(--pf-global--FontSize--sm);
