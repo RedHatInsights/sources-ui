@@ -16,5 +16,7 @@ module.exports = {
     '\\.(css|scss)$': 'identity-obj-proxy',
     '^uuid$': require.resolve('uuid'),
   },
-  transformIgnorePatterns: ['<rootDir>/node_modules/(?!(@patternfly/react-icons)).*$'],
+  transformIgnorePatterns: [
+    '<rootDir>/node_modules/(?!@openshift|lodash-es|@patternfly/react-icons).+(js|jsx)$',
+  ],
 };
