@@ -195,7 +195,7 @@ const FinalWizard = ({
     );
   }
 
-  const appendTo = React.useMemo(() => document.querySelector('.pf-c-page.chr-c-page'));
+  const appendTo = React.useMemo(() => document.querySelector('.pf-c-page.chr-c-page'), []);
 
   return (
     <Modal isOpen modalVariant={ModalVariant.large} hasNoBodyWrapper appendTo={appendTo} showClose={false}>
