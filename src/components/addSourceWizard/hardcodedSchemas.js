@@ -13,6 +13,7 @@ import * as AwsSecret from './hardcodedComponents/aws/access_key';
 import * as AwsArn from './hardcodedComponents/aws/arn';
 
 import * as ProvAwsArn from './hardcodedComponents/aws/provisioningArn';
+import * as ProvAzure from './hardcodedComponents/azure/provisioning';
 
 import * as SWAwsArn from './hardcodedComponents/aws/subscriptionWatch';
 import * as SWAzure from './hardcodedComponents/azure/subscriptionWatch';
@@ -906,6 +907,58 @@ const hardcodedSchemas = {
                   name: 'reader-role',
                   component: 'description',
                   Content: CMAzure.ReaderRoleDescription,
+                },
+              ],
+            },
+          ],
+        },
+      },
+      provisioning_lighthouse_subscription_id: {
+        [PROVISIONING_APP_NAME]: {
+          skipSelection: true,
+          useApplicationAuth: true,
+          customSteps: true,
+          additionalSteps: [
+            {
+              title: <FormattedMessage id="provisioning.lighthouse.title" defaultMessage="Configure Azure Lighthouse" />,
+              nextStep: 'provisioning-lighthouse-sub-id',
+              fields: [
+                {
+                  name: 'azure-1',
+                  component: 'description',
+                  Content: ProvAzure.LighthouseDescription,
+                },
+                {
+                  component: componentTypes.TEXT_FIELD,
+                  name: 'authentication.authtype',
+                  hideField: true,
+                  initialValue: 'provisioning_lighthouse_subscription_id',
+                  initializeOnMount: true,
+                },
+                {
+                  component: componentTypes.TEXT_FIELD,
+                  name: 'lighthouse-clicked',
+                  hideField: true,
+                  validate: [{ type: 'required' }],
+                },
+              ],
+            },
+            {
+              title: <FormattedMessage id="provisioning.lighthouse.subscriptionId" defaultMessage="Set subscription ID" />,
+              name: 'provisioning-lighthouse-sub-id',
+              fields: [
+                {
+                  name: 'azure-2',
+                  component: 'description',
+                  Content: ProvAzure.SubscriptionID,
+                },
+                {
+                  component: 'text-field',
+                  name: 'authentication.username',
+                  label: 'Subscription ID',
+                  isRequired: true,
+                  placeholder: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+                  validate: [{ type: 'required' }],
                 },
               ],
             },
