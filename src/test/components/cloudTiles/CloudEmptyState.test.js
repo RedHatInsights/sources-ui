@@ -33,7 +33,8 @@ describe('CloudEmptyState', () => {
       'Google Cloud',
       'IBM Cloud',
       'Microsoft Azure',
+      'Oracle Cloud Infrastructure',
     ]);
-    expect(container.getElementsByTagName('img')).toHaveLength(4);
+    expect(container.getElementsByTagName('img')).toHaveLength(5);
   });
 });
