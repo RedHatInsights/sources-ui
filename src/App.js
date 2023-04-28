@@ -3,6 +3,7 @@ import NotificationsPortal from '@redhat-cloud-services/frontend-components-noti
 import { getBaseName } from '@redhat-cloud-services/frontend-components-utilities/helpers';
 import { IntlProvider } from 'react-intl';
 import { BrowserRouter as Router } from 'react-router-dom';
+import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 
 import Routes from './Routes';
 
@@ -18,6 +19,10 @@ import { CLOUD_CARDS_KEY } from './components/CloudTiles/CloudCards';
 import NavigationListener from './components/NavigationListener';
 
 const App = () => {
+  const chrome = useChrome();
+
+  chrome?.updateDocumentTitle?.('Sources');
+
   useEffect(() => {
     return () => {
       sessionStorage.removeItem(CLOUD_CARDS_KEY);
