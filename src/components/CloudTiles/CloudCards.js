@@ -21,7 +21,7 @@ import BuilderImageIcon from '@patternfly/react-icons/dist/esm/icons/builder-ima
 import TrendUpIcon from '@patternfly/react-icons/dist/esm/icons/trend-up-icon';
 import ListIcon from '@patternfly/react-icons/dist/esm/icons/list-icon';
 
-const PREFIX = insights.chrome.isBeta() ? 'beta/' : '';
+const PREFIX = insights.chrome.isBeta() ? 'preview/' : '';
 
 const GOLD_IMAGES_AWS =
   'https://access.redhat.com/documentation/en-us/red_hat_subscription_management/2022/html/red_hat_cloud_access_reference_guide/understanding-gold-images_cloud-access#using-gold-images-on-aws_cloud-access';

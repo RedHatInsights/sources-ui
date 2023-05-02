@@ -42,6 +42,6 @@ describe('EditLink', () => {
 
     render(<EditLink id={id} />);
 
-    expect(screen.getByRole('link')).toHaveAttribute('href', '/beta/settings/sources/detail/some-id');
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/preview/settings/sources/detail/some-id');
   });
 });
