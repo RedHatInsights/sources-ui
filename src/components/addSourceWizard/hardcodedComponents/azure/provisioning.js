@@ -10,7 +10,7 @@ export const LighthouseDescription = () => {
   const intl = useIntl();
   const formOptions = useFormApi();
   const { isProd } = useChrome();
-  const templatePath = `${PROVISIONING_API_BASE_V1}/azure_lighthouse_template`;
+  const templatePath = `${PROVISIONING_API_BASE_V1}/azure_offering_template`;
   const portalLink = isProd()
     ? `https://console.redhat.com${templatePath}`
     : 'https://gist.githubusercontent.com/ezr-ondrej/eda9ef57c42083cdaaf43e58ae225ed0/raw/e31412c8d31339c14e34e0e73c87f8999336d015/stageTemplate';
