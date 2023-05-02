@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/NotificationPortal';
-import { Main } from '@redhat-cloud-services/frontend-components/Main';
+import { getBaseName } from '@redhat-cloud-services/frontend-components-utilities/helpers';
 import { IntlProvider } from 'react-intl';
 import { BrowserRouter as Router } from 'react-router-dom';
 
@@ -17,8 +17,6 @@ import DataLoader from './components/DataLoader';
 import { CLOUD_CARDS_KEY } from './components/CloudTiles/CloudCards';
 import NavigationListener from './components/NavigationListener';
 
-import { getBaseName } from './frontend-components-copies/getBaseName';
-
 const App = () => {
   useEffect(() => {
     return () => {
@@ -33,11 +31,11 @@ const App = () => {
           <NotificationsPortal />
           <ErrorBoundary>
             <PermissionsChecker>
-              <Main style={{ padding: 0 }}>
+              <section style={{ padding: 0 }}>
                 <DataLoader />
                 <NavigationListener />
                 <Routes />
-              </Main>
+              </section>
             </PermissionsChecker>
           </ErrorBoundary>
         </React.Fragment>
