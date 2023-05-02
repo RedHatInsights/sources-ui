@@ -562,9 +562,9 @@ describe('AddApplication', () => {
       expect(screen.getByText('Discover the benefits of your connection or exit to manage your new source.')).toBeInTheDocument();
       expect([...screen.getAllByRole('link')].map((l) => [l.textContent, l.href])).toEqual([
         ['View enabled AWS gold images', 'https://access.redhat.com/management/cloud'],
-        ['Subscription Watch usage', 'http://localhost/beta/subscriptions'],
-        ['Get started with Red Hat Insights', 'http://localhost/beta/insights'],
-        ['Cost Management reporting', 'http://localhost/beta/cost-management'],
+        ['Subscription Watch usage', 'http://localhost/preview/subscriptions'],
+        ['Get started with Red Hat Insights', 'http://localhost/preview/insights'],
+        ['Cost Management reporting', 'http://localhost/preview/cost-management'],
         ['Learn more about this Cloud', 'https://access.redhat.com/public-cloud/aws'],
       ]);
       expect(screen.getByText('Exit')).toBeInTheDocument();
