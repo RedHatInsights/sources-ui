@@ -90,7 +90,7 @@ describe('App spec js', () => {
     it('goes to sources on chrome nav event when source', async () => {
       DataLoader.default = () => <LocationDisplay id="testurl" />;
 
-      const event = { navId: '/', domEvent: { href: '/beta/settings/sources' } };
+      const event = { navId: '/', domEvent: { href: '/preview/settings/sources' } };
       render(componentWrapperIntl(<App />));
 
       expect(screen.getByTestId('testurl').textContent).toEqual('/');
@@ -103,7 +103,7 @@ describe('App spec js', () => {
     it('goes to sources on chrome nav event when source [olderEnv]', async () => {
       DataLoader.default = () => <LocationDisplay id="testurl" />;
 
-      const event = { navId: 'sources', domEvent: { href: '/beta/settings/catalog' } };
+      const event = { navId: 'sources', domEvent: { href: '/preview/settings/catalog' } };
       render(componentWrapperIntl(<App />));
 
       expect(screen.getByTestId('testurl').textContent).toEqual('/');
@@ -116,7 +116,7 @@ describe('App spec js', () => {
     it('stays same when chrom nav event is not sources', async () => {
       DataLoader.default = () => <LocationDisplay id="testurl" />;
 
-      const event = { navId: '/', domEvent: { href: '/beta/settings/catalog' } };
+      const event = { navId: '/', domEvent: { href: '/preview/settings/catalog' } };
       render(componentWrapperIntl(<App />));
 
       expect(screen.getByTestId('testurl').textContent).toEqual('/');
