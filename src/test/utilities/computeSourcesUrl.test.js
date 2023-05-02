@@ -11,7 +11,7 @@ describe('computeSourcesUrl', () => {
     insights = tmpInsights;
   });
 
-  it('on beta', () => {
+  it('on preview', () => {
     insights = {
       ...insights,
       chrome: {
@@ -20,10 +20,10 @@ describe('computeSourcesUrl', () => {
       },
     };
 
-    expect(computeSourcesUrl()).toEqual('/beta/settings/sources');
+    expect(computeSourcesUrl()).toEqual('/preview/settings/sources');
   });
 
-  it('on non-beta', () => {
+  it('on stable', () => {
     insights = {
       ...insights,
       chrome: {

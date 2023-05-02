@@ -33,7 +33,7 @@ AwsLink.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-const PREFIX = insights.chrome.isBeta() ? 'beta/' : '';
+const PREFIX = insights.chrome.isBeta() ? 'preview/' : '';
 
 const GOLDIMAGES_HREF = 'https://access.redhat.com/management/cloud';
 const SUBWATCH_HREF = `/${PREFIX}subscriptions`;
