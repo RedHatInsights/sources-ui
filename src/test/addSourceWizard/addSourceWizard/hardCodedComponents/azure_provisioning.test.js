@@ -31,7 +31,7 @@ describe('Azure-Provisioning hardcoded schemas', () => {
       expect(screen.getByText('Take me to Lighthouse')).not.toHaveAttribute('aria-disabled', 'true');
       expect(screen.getByText('Take me to Lighthouse')).toHaveAttribute(
         'href',
-        expect.stringMatching(/console.redhat.com%2Fapi%2Fprovisioning%2Fv1%2Fazure_lighthouse_template/)
+        expect.stringMatching(/console.redhat.com%2Fapi%2Fprovisioning%2Fv1%2Fazure_offering_template/)
       );
     });
 
