@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { Button, Text, TextContent, Wizard } from '@patternfly/react-core';
+import { Button, Modal, Text, TextContent, Wizard } from '@patternfly/react-core';
 
 import { wizardDescription, wizardTitle } from './stringConstants';
 import { getSourcesApi } from '../../api/entities';
@@ -195,21 +195,24 @@ const FinalWizard = ({
     );
   }
 
+  const appendTo = React.useMemo(() => document.querySelector('.pf-c-page.chr-c-page'), []);
+
   return (
-    <Wizard
-      className="sources"
-      isOpen={true}
-      onClose={isFinished ? afterSubmit : afterError}
-      title={wizardTitle(activeCategory)}
-      description={wizardDescription(activeCategory)}
-      steps={[
-        {
-          name: 'Finish',
-          component: step,
-          isFinishedStep: true,
-        },
-      ]}
-    />
+    <Modal isOpen width="58%" hasNoBodyWrapper appendTo={appendTo} showClose={false}>
+      <Wizard
+        className="sources"
+        onClose={isFinished ? afterSubmit : afterError}
+        title={wizardTitle(activeCategory)}
+        description={wizardDescription(activeCategory)}
+        steps={[
+          {
+            name: 'Finish',
+            component: step,
+            isFinishedStep: true,
+          },
+        ]}
+      />
+    </Modal>
   );
 };
 
