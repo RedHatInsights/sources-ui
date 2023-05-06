@@ -31,7 +31,9 @@ describe('Azure-Provisioning hardcoded schemas', () => {
       expect(screen.getByText('Take me to Lighthouse')).not.toHaveAttribute('aria-disabled', 'true');
       expect(screen.getByText('Take me to Lighthouse')).toHaveAttribute(
         'href',
-        expect.stringMatching(/console.redhat.com%2Fapi%2Fprovisioning%2Fv1%2Fazure_offering_template/)
+        expect.stringMatching(
+          /https%3A%2F%2Fprovisioning-public-assets.s3.amazonaws.com%2FAzureLighthouse%2Foffering_template.json$/
+        )
       );
     });
 
@@ -49,7 +51,9 @@ describe('Azure-Provisioning hardcoded schemas', () => {
       expect(screen.getByText('Take me to Lighthouse')).not.toHaveAttribute('aria-disabled', 'true');
       expect(screen.getByText('Take me to Lighthouse')).toHaveAttribute(
         'href',
-        expect.stringMatching(/gist.githubusercontent.com%2Fezr-ondrej%2Feda9ef57c42083cdaaf43e58ae225ed0%2Fraw/)
+        expect.stringMatching(
+          /https%3A%2F%2Fprovisioning-public-assets.s3.amazonaws.com%2FAzureLighthouse%2Foffering_template.json$/
+        )
       );
     });
 

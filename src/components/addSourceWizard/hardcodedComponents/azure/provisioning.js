@@ -2,19 +2,12 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 import { Button, Text, TextContent } from '@patternfly/react-core';
-import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
-
-const PROVISIONING_API_BASE_V1 = `${process.env.BASE_PATH || '/api'}/provisioning/v1`;
 
 export const LighthouseDescription = () => {
   const intl = useIntl();
   const formOptions = useFormApi();
-  const { isProd } = useChrome();
-  const templatePath = `${PROVISIONING_API_BASE_V1}/azure_offering_template`;
-  const portalLink = isProd()
-    ? `https://console.redhat.com${templatePath}`
-    : 'https://gist.githubusercontent.com/ezr-ondrej/eda9ef57c42083cdaaf43e58ae225ed0/raw/e31412c8d31339c14e34e0e73c87f8999336d015/stageTemplate';
-  const link = `https://portal.azure.com/#create/Microsoft.Template/uri/${encodeURIComponent(portalLink)}`;
+  const templateLink = 'https://provisioning-public-assets.s3.amazonaws.com/AzureLighthouse/offering_template.json';
+  const link = `https://portal.azure.com/#create/Microsoft.Template/uri/${encodeURIComponent(templateLink)}`;
 
   return (
     <TextContent>
