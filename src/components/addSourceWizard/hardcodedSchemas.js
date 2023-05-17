@@ -131,7 +131,6 @@ const getArn = (authUsername, showHCS) => ({
           loadOptions: () => doLoadRegions().then((data) => data.map((item) => ({ value: item, label: item }))),
           label: <FormattedMessage id="cost.arn.awsRegion" defaultMessage="AWS region" />,
           placeholder: 'Select a region',
-          simpleValue: true,
           validate: [
             {
               type: validatorTypes.REQUIRED,
