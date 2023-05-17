@@ -94,7 +94,7 @@ describe('Cost Management Google steps components', () => {
     });
   });
 
-  it.skip('Dataset', () => {
+  it('Dataset', () => {
     store = mockStore(initialState);
     render(
       componentWrapperIntl(
