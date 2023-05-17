@@ -36,6 +36,7 @@ import {
   PROVISIONING_APP_NAME,
 } from '../../utilities/constants';
 import emptyAuthType from './emptyAuthType';
+import { doLoadRegions } from '../../api/doLoadRegions';
 
 const arnMessagePattern = <FormattedMessage id="wizard.arnPattern" defaultMessage="ARN must start with arn:aws:" />;
 const arnMessageLength = <FormattedMessage id="wizard.arnLength" defaultMessage="ARN should have at least 10 characters" />;
@@ -123,6 +124,20 @@ const getArn = (authUsername, showHCS) => ({
           name: 'application.extra.bucket',
           component: componentTypes.TEXT_FIELD,
           label: <FormattedMessage id="cost.arn.s3Label" defaultMessage="S3 bucket name" />,
+        },
+        {
+          name: 'application.extra.bucket_region',
+          component: componentTypes.SELECT,
+          loadOptions: () => doLoadRegions().then((data) => data.map((item) => ({ value: item, label: item }))),
+          label: <FormattedMessage id="cost.arn.awsRegion" defaultMessage="AWS region" />,
+          placeholder: 'Select a region',
+          simpleValue: true,
+          validate: [
+            {
+              type: validatorTypes.REQUIRED,
+            },
+          ],
+          isRequired: true,
         },
       ],
     },
