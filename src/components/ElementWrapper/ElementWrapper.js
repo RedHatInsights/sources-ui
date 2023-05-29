@@ -1,5 +1,5 @@
-import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import React, { cloneElement } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { useSource } from '../../hooks/useSource';
@@ -7,7 +7,7 @@ import RedirectNoWriteAccess from '../RedirectNoWriteAccess/RedirectNoWriteAcces
 import RedirectNoId from '../RedirectNoId/RedirectNoId';
 import RedirectNoPaused from '../RedirectNoPaused/RedirectNoPaused';
 
-const CustomRouteInternal = ({ route, children }) => {
+const ElementWrapperInternal = ({ route, children }) => {
   const source = route.redirectNoId && useSource();
 
   if (!source && route.redirectNoId) {
@@ -23,7 +23,7 @@ const CustomRouteInternal = ({ route, children }) => {
   );
 };
 
-CustomRouteInternal.propTypes = {
+ElementWrapperInternal.propTypes = {
   route: PropTypes.shape({
     path: PropTypes.string.isRequired,
     redirectNoId: PropTypes.bool,
@@ -33,21 +33,12 @@ CustomRouteInternal.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-const CustomRoute = ({ route, componentProps, Component, ...props }) => (
-  <Routes>
-    <Route
-      {...props}
-      path={route.path}
-      element={
-        <CustomRouteInternal route={route}>
-          <Component {...componentProps} />
-        </CustomRouteInternal>
-      }
-    />
-  </Routes>
-);
+const ElementWrapper = ({ route, children }) => {
+  const componentProps = useOutletContext();
+  return <ElementWrapperInternal route={route}>{cloneElement(children, componentProps)}</ElementWrapperInternal>;
+};
 
-CustomRoute.propTypes = {
+ElementWrapper.propTypes = {
   route: PropTypes.shape({
     path: PropTypes.string.isRequired,
     redirectNoId: PropTypes.bool,
@@ -55,7 +46,7 @@ CustomRoute.propTypes = {
     noPaused: PropTypes.bool,
   }).isRequired,
   componentProps: PropTypes.any,
-  Component: PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired,
+  children: PropTypes.node.isRequired,
 };
 
-export default CustomRoute;
+export default ElementWrapper;

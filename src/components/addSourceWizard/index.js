@@ -189,7 +189,7 @@ AddSourceWizard.defaultProps = {
   returnButtonTitle: <FormattedMessage id="wizard.goBackToSources" defaultMessage="Go back to Sources" />,
 };
 
-const AddSourceButton = (props) => {
+export const AddSourceButton = (props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -202,4 +202,4 @@ const AddSourceButton = (props) => {
   );
 };
 
-export { AddSourceButton, AddSourceWizard };
+export default AddSourceWizard;
