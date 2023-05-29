@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useEffect, useReducer } from 'react';
+import React, { Suspense, useEffect, useReducer } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import AppLink from '../components/AppLink';
 import { Button, Tooltip } from '@patternfly/react-core';
@@ -16,18 +16,6 @@ import { filterSources, pageAndSize } from '../redux/sources/actions';
 import SourcesTable from '../components/SourcesTable/SourcesTable';
 import { routes } from '../Routing';
 
-const SourceRemoveModal = lazy(() =>
-  import(
-    /* webpackChunkName: "remove" */
-    '../components/SourceRemoveModal/SourceRemoveModal'
-  )
-);
-const AddSourceWizard = lazy(() =>
-  import(/* webpackChunkName: "addSource" */ '../components/addSourceWizard/index').then((module) => ({
-    default: module.AddSourceWizard,
-  }))
-);
-
 import {
   afterSuccess,
   checkSubmit,
@@ -41,7 +29,6 @@ import {
 } from './Sources/helpers';
 import { useIsLoaded } from '../hooks/useIsLoaded';
 import { useHasWritePermissions } from '../hooks/useHasWritePermissions';
-import CustomRoute from '../components/CustomRoute/CustomRoute';
 import { PaginationLoader } from '../components/SourcesTable/loaders';
 import CloudCards from '../components/CloudTiles/CloudCards';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../utilities/constants';
@@ -53,6 +40,7 @@ import { filterVendorAppTypes } from '../utilities/filterApps';
 import SourcesHeader from '../components/SourcesHeader';
 import generateCSV from '../utilities/generateCSV';
 import generateJSON from '../utilities/generateJSON';
+import { Outlet } from 'react-router-dom';
 
 const initialState = {
   filter: undefined,
@@ -316,11 +304,8 @@ const SourcesPage = () => {
   return (
     <React.Fragment>
       <Suspense fallback={null}>
-        <CustomRoute route={routes.sourcesRemove} Component={SourceRemoveModal} />
-        <CustomRoute
-          route={routes.sourcesNew}
-          Component={AddSourceWizard}
-          componentProps={{
+        <Outlet
+          context={{
             sourceTypes: loadedTypes(sourceTypes, sourceTypesLoaded),
             applicationTypes: loadedTypes(appTypes, appTypesLoaded),
             isOpen: true,
