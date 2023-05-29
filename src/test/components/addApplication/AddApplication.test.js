@@ -2,7 +2,7 @@ import React from 'react';
 import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import * as entities from '../../../api/entities';
 import * as attachSource from '../../../api/doAttachApp';
@@ -12,7 +12,7 @@ import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import sourceTypes, { AMAZON_TYPE, OPENSHIFT_TYPE } from '../../__mocks__/sourceTypes';
 import { SOURCE_NO_APS_ID } from '../../__mocks__/sourcesData';
 import appTypes, { COST_MANAGEMENT_APP } from '../../__mocks__/applicationTypes';
-import { replaceRouteId, routes } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routing';
 import reducer from '../../../components/AddApplication/reducer';
 import * as removeAppSubmit from '../../../components/AddApplication/removeAppSubmit';
 
@@ -79,7 +79,9 @@ describe('AddApplication', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -104,7 +106,9 @@ describe('AddApplication', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -137,7 +141,9 @@ describe('AddApplication', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -145,7 +151,7 @@ describe('AddApplication', () => {
 
       await waitFor(() =>
         expect(screen.getByTestId('location-display').textContent).toEqual(
-          replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID)
+          '/settings/sources/' + replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID)
         )
       );
     });
@@ -164,7 +170,9 @@ describe('AddApplication', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -172,7 +180,7 @@ describe('AddApplication', () => {
 
       await waitFor(() =>
         expect(screen.getByTestId('location-display').textContent).toEqual(
-          replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID)
+          '/settings/sources/' + replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID)
         )
       );
     });
@@ -193,7 +201,9 @@ describe('AddApplication', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -201,7 +211,7 @@ describe('AddApplication', () => {
 
       await waitFor(() =>
         expect(screen.getByTestId('location-display').textContent).toEqual(
-          replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID)
+          '/settings/sources/' + replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID)
         )
       );
     });
@@ -275,7 +285,9 @@ describe('AddApplication', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -291,7 +303,7 @@ describe('AddApplication', () => {
 
       await waitFor(() =>
         expect(screen.getByTestId('location-display').textContent).toEqual(
-          replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID)
+          replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, SOURCE_NO_APS_ID)
         )
       );
     });
@@ -308,7 +320,7 @@ describe('AddApplication', () => {
 
       await waitFor(() =>
         expect(screen.getByTestId('location-display').textContent).toEqual(
-          replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID)
+          replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, SOURCE_NO_APS_ID)
         )
       );
     });
@@ -385,7 +397,9 @@ describe('AddApplication', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -460,7 +474,9 @@ describe('AddApplication', () => {
     it('renders review', async () => {
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -483,7 +499,9 @@ describe('AddApplication', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -538,7 +556,9 @@ describe('AddApplication', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -587,7 +607,9 @@ describe('AddApplication', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -621,7 +643,9 @@ describe('AddApplication', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -658,7 +682,9 @@ describe('AddApplication', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -675,7 +701,9 @@ describe('AddApplication', () => {
       await user.click(screen.getByText('Edit source'));
 
       await waitFor(() =>
-        expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, source.id))
+        expect(screen.getByTestId('location-display').textContent).toEqual(
+          replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, source.id)
+        )
       );
     });
 
@@ -703,7 +731,9 @@ describe('AddApplication', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -743,7 +773,9 @@ describe('AddApplication', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -782,7 +814,9 @@ describe('AddApplication', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetailAddApp.path} render={(...args) => <AddApplication {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
+          </Routes>,
           store,
           initialEntry
         )

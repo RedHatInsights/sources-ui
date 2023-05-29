@@ -1,9 +1,9 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import { render, screen } from '@testing-library/react';
 
-import { replaceRouteId, routes } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routing';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import appTypes from '../../__mocks__/applicationTypes';
 import DetailHeader from '../../../components/SourceDetail/DetailHeader';
@@ -29,7 +29,9 @@ describe('DetailHeader', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <DetailHeader {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<DetailHeader />} />
+        </Routes>,
         store,
         initialEntry
       )

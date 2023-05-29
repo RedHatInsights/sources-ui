@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { useSource } from '../../hooks/useSource';
@@ -34,11 +34,17 @@ CustomRouteInternal.propTypes = {
 };
 
 const CustomRoute = ({ route, componentProps, Component, ...props }) => (
-  <Route {...props} path={route.path}>
-    <CustomRouteInternal route={route}>
-      <Component {...componentProps} />
-    </CustomRouteInternal>
-  </Route>
+  <Routes>
+    <Route
+      {...props}
+      path={route.path}
+      element={
+        <CustomRouteInternal route={route}>
+          <Component {...componentProps} />
+        </CustomRouteInternal>
+      }
+    />
+  </Routes>
 );
 
 CustomRoute.propTypes = {
