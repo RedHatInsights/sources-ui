@@ -15,7 +15,7 @@ import { routes } from '../../Routing';
 import { bodyVariants, typesWithExtendedText } from './helpers';
 import AppListInRemoval from './AppListInRemoval';
 
-const SourceRemoveModal = ({ backPath }) => {
+const SourceRemoveModal = ({ backPath = '/' }) => {
   const appNavigate = useAppNavigate();
 
   const [acknowledge, setAcknowledge] = useState(false);
@@ -127,10 +127,6 @@ const SourceRemoveModal = ({ backPath }) => {
 
 SourceRemoveModal.propTypes = {
   backPath: PropTypes.string,
-};
-
-SourceRemoveModal.defaultProps = {
-  backPath: routes.sources.path,
 };
 
 export default SourceRemoveModal;

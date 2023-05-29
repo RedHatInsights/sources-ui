@@ -3,13 +3,14 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import CustomRoute from '../../../components/CustomRoute/CustomRoute';
 import * as RedirectNoId from '../../../components/RedirectNoId/RedirectNoId';
 import * as RedirectNoPaused from '../../../components/RedirectNoPaused/RedirectNoPaused';
 import * as useSource from '../../../hooks/useSource';
 import mockStore from '../../__mocks__/mockStore';
+import ElementWrapper from '../../../components/ElementWrapper/ElementWrapper';
+import { Outlet, Route, Routes } from 'react-router-dom';
 
-describe('CustomRoute', () => {
+describe('ElementWrapper', () => {
   const PokusComponent = (props) => <h1 {...props}>Custom component</h1>;
 
   let route;
@@ -22,7 +23,13 @@ describe('CustomRoute', () => {
   });
 
   it('renders custom component', () => {
-    render(componentWrapperIntl(<CustomRoute exact route={route} Component={PokusComponent} />, undefined, ['/path']));
+    render(
+      componentWrapperIntl(
+        <ElementWrapper route={route}>
+          <PokusComponent />
+        </ElementWrapper>
+      )
+    );
 
     expect(screen.getByText('Custom component', { selector: 'h1' })).toBeInTheDocument();
   });
@@ -30,7 +37,25 @@ describe('CustomRoute', () => {
   it('renders custom component and passes props', () => {
     render(
       componentWrapperIntl(
-        <CustomRoute route={route} Component={PokusComponent} componentProps={{ className: 'pepa', style: { color: 'red' } }} />,
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <Outlet context={{ className: 'pepa', style: { color: 'red' } }} />
+              </>
+            }
+          >
+            <Route
+              path="path"
+              element={
+                <ElementWrapper route={route}>
+                  <PokusComponent />
+                </ElementWrapper>
+              }
+            />
+          </Route>
+        </Routes>,
         undefined,
         ['/path']
       )
@@ -48,7 +73,22 @@ describe('CustomRoute', () => {
       writeAccess: true,
     };
 
-    render(componentWrapperIntl(<CustomRoute route={route} Component={PokusComponent} />, store, ['/path']));
+    render(
+      componentWrapperIntl(
+        <Routes>
+          <Route
+            path="/path"
+            element={
+              <ElementWrapper route={route}>
+                <PokusComponent />
+              </ElementWrapper>
+            }
+          />
+        </Routes>,
+        store,
+        ['/path']
+      )
+    );
 
     expect(screen.getByTestId('location-display').textContent).toEqual('/settings/sources/');
   });
@@ -62,7 +102,22 @@ describe('CustomRoute', () => {
       redirectNoId: true,
     };
 
-    render(componentWrapperIntl(<CustomRoute route={route} Component={PokusComponent} />, undefined, ['/path/']));
+    render(
+      componentWrapperIntl(
+        <Routes>
+          <Route
+            path="/path/"
+            element={
+              <ElementWrapper route={route}>
+                <PokusComponent />
+              </ElementWrapper>
+            }
+          />
+        </Routes>,
+        undefined,
+        ['/path/']
+      )
+    );
 
     expect(screen.getByText('Redirect no ID mock')).toBeInTheDocument();
     expect(useSource.useSource).toHaveBeenCalled();
@@ -77,7 +132,22 @@ describe('CustomRoute', () => {
       noPaused: true,
     };
 
-    render(componentWrapperIntl(<CustomRoute route={route} Component={PokusComponent} />, store, ['/path']));
+    render(
+      componentWrapperIntl(
+        <Routes>
+          <Route
+            path="/path"
+            element={
+              <ElementWrapper route={route}>
+                <PokusComponent />
+              </ElementWrapper>
+            }
+          />
+        </Routes>,
+        store,
+        ['/path']
+      )
+    );
 
     expect(screen.getByText('Custom component', { selector: 'h1' })).toBeInTheDocument();
     expect(screen.getByText('Redirect no paused mock')).toBeInTheDocument();
