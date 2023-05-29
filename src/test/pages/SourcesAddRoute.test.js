@@ -14,6 +14,8 @@ import * as typesApi from '../../api/source_types';
 import { routes } from '../../Routing';
 import * as wizard from '../../components/addSourceWizard';
 import { getStore } from '../../utilities/store';
+import ElementWrapper from '../../components/ElementWrapper/ElementWrapper';
+import { Route, Routes } from 'react-router-dom';
 
 describe('SourcesPage - addSource route', () => {
   let store;
@@ -42,7 +44,24 @@ describe('SourcesPage - addSource route', () => {
     const initialEntry = [routes.sourcesNew.path];
 
     await act(async () => {
-      render(componentWrapperIntl(<SourcesPage />, store, initialEntry));
+      render(
+        componentWrapperIntl(
+          <Routes>
+            <Route path="/" element={<SourcesPage />}>
+              <Route
+                path={routes.sourcesNew.path}
+                element={
+                  <ElementWrapper route={routes.sourcesNew}>
+                    <wizard.AddSourceWizard />
+                  </ElementWrapper>
+                }
+              />
+            </Route>
+          </Routes>,
+          store,
+          initialEntry
+        )
+      );
     });
 
     expect(() => screen.getByText('AddSource mock')).toThrow();
