@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useMemo } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { AppPlaceholder } from './components/SourcesTable/loaders';
 import ElementWrapper from './components/ElementWrapper/ElementWrapper';
@@ -66,71 +66,81 @@ export const routes = {
 
 export const replaceRouteId = (path, id) => path.replace(':id', id);
 
-const Routing = () => (
-  <Suspense fallback={<AppPlaceholder />}>
-    <Routes>
-      <Route path="/" element={<SourcesPage />}>
-        <Route
-          path={routes.sourcesRemove.path}
-          element={
-            <ElementWrapper route={routes.sourcesRemove}>
-              <SourceRemoveModal backPath={routes.sources.path} />
-            </ElementWrapper>
-          }
-        />
-        <Route
-          path={routes.sourcesNew.path}
-          element={
-            <ElementWrapper route={routes.sourcesNew}>
-              <AddSourceWizard />
-            </ElementWrapper>
-          }
-        />
-      </Route>
-      <Route path={routes.sourcesDetail.path} element={<SourceDetail />}>
-        <Route
-          path="remove"
-          element={
-            <ElementWrapper route={routes.sourcesDetail}>
-              <SourceRemoveModal />
-            </ElementWrapper>
-          }
-        />
-        <Route
-          path="add_app/:app_type_id"
-          element={
-            <ElementWrapper route={routes.sourcesDetailAddApp}>
-              <AddApplication />
-            </ElementWrapper>
-          }
-        />
-        <Route
-          path="remove_app/:app_id"
-          element={
-            <ElementWrapper route={routes.sourcesDetailRemoveApp}>
-              <RemoveAppModal />
-            </ElementWrapper>
-          }
-        />
-        <Route
-          path="rename"
-          element={
-            <ElementWrapper route={routes.sourcesDetail}>
-              <SourceRenameModal />
-            </ElementWrapper>
-          }
-        />
-        <Route
-          path="edit_credentials"
-          element={
-            <ElementWrapper route={routes.sourcesDetail}>
-              <CredentialsForm />
-            </ElementWrapper>
-          }
-        />
-      </Route>
-    </Routes>
-  </Suspense>
-);
+const routeMap = [
+  {
+    route: {
+      path: '/',
+    },
+    element: SourcesPage,
+    childRoutes: [
+      {
+        route: routes.sourcesRemove,
+        element: SourceRemoveModal,
+        elementProps: {
+          backPath: routes.sources.path,
+        },
+      },
+      {
+        route: routes.sourcesNew,
+        element: AddSourceWizard,
+      },
+    ],
+  },
+  {
+    route: routes.sourcesDetail,
+    element: SourceDetail,
+    childRoutes: [
+      {
+        route: routes.sourcesDetail,
+        path: 'remove',
+        element: SourceRemoveModal,
+      },
+      {
+        route: routes.sourcesDetailAddApp,
+        path: 'add_app/:app_type_id',
+        element: AddApplication,
+      },
+      {
+        route: routes.sourcesDetailRemoveApp,
+        path: 'remove_app/:app_id',
+        element: RemoveAppModal,
+      },
+      {
+        route: routes.sourcesDetail,
+        path: 'rename',
+        element: SourceRenameModal,
+      },
+      {
+        route: routes.sourcesDetail,
+        path: 'edit_credentials',
+        element: CredentialsForm,
+      },
+    ],
+  },
+];
+
+const renderRoutes = (routes = []) =>
+  routes.map(({ route, path, element: Element, childRoutes, elementProps }) => (
+    <Route
+      key={path || route.path}
+      path={path || route.path}
+      element={
+        <ElementWrapper route={route}>
+          <Element {...elementProps} />
+        </ElementWrapper>
+      }
+    >
+      {renderRoutes(childRoutes)}
+    </Route>
+  ));
+
+const Routing = () => {
+  const routes = useMemo(() => renderRoutes(routeMap), [routeMap]);
+  return (
+    <Suspense fallback={<AppPlaceholder />}>
+      <Routes>{routes}</Routes>
+    </Suspense>
+  );
+};
 
 export default Routing;
