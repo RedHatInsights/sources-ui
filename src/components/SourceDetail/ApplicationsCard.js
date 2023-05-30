@@ -19,7 +19,6 @@ import { ApplicationLabel } from '../../views/formatters';
 import handleError from '../../api/handleError';
 import tryAgainMessage from '../../utilities/tryAgainMessage';
 import { disabledMessage } from '../../utilities/disabledTooltipProps';
-import { COST_MANAGEMENT_APP_ID, HCS_APP_NAME } from '../../utilities/constants';
 import { useAppNavigate } from '../../hooks/useAppNavigate';
 
 const initialState = {

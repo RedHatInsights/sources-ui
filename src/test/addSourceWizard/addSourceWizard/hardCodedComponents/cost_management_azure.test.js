@@ -5,11 +5,7 @@ import RenderContext from '@data-driven-forms/react-form-renderer/renderer-conte
 import Form from '@data-driven-forms/react-form-renderer/form';
 
 import * as Cm from '.../../../../components/addSourceWizard/hardcodedComponents/azure/costManagement';
-import { defaultSourcesState } from '../../../../redux/sources/reducer';
 import mockedRender from '../../__mocks__/render';
-import sourceTypes from '../../../__mocks__/sourceTypes';
-import mockStore from '../../../__mocks__/mockStore';
-import componentWrapperIntl from '../../../../utilities/testsHelpers';
 
 const FORM_OPTIONS = {
   getState: () => ({

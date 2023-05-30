@@ -7,9 +7,6 @@ import sourceTypes from '../../__mocks__/sourceTypes';
 import applicationTypes from '../../__mocks__/applicationTypes';
 
 import * as dependency from '../../../api/wizardHelpers';
-import hcsEnrollment from '../../__mocks__/hcs';
-import mockStore from '../../__mocks__/mockStore';
-import componentWrapperIntl from '../../../utilities/testsHelpers';
 
 describe('sourceAddModal', () => {
   let initialProps;

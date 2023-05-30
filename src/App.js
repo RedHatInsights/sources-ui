@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/NotificationPortal';
 import { IntlProvider } from 'react-intl';
-import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 
 import Routing from './Routing';
 
