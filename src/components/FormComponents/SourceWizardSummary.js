@@ -349,7 +349,7 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
             description={values.application?.extra?.bucket_namespace}
           />
         )}
-        {showApp && values.application?.extra?.bucket_region && (
+        {showApp && values.source_type === 'oracle-cloud-infrastructure' && values.application?.extra?.bucket_region && (
           <DesctiptionListItem
             term={intl.formatMessage({
               id: 'wizard.bucket',

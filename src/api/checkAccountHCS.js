@@ -4,7 +4,6 @@ export const checkAccountHCS = async () => {
     headers: { Authorization: `Bearer ${jwtToken}` },
   }).then((response) => {
     if (response.status !== 200) {
-      console.error(`Failed to verify HCS enrollment: ${response.statusText}`);
       return { hcsDeal: false };
     }
 

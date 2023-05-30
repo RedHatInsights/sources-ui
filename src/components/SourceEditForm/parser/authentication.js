@@ -1,6 +1,7 @@
 import get from 'lodash/get';
 import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
 import hardcodedSchemas from '../../../components/addSourceWizard/hardcodedSchemas';
+import { doLoadRegions } from '../../../api/doLoadRegions';
 
 export const createAuthFieldName = (fieldName, id) => `authentications.a${id}.${fieldName.replace('authentication.', '')}`;
 
@@ -36,9 +37,14 @@ export const modifyAuthSchemas = (fields, id, appId) =>
     };
 
     const isPassword = getLastPartOfName(finalField.name) === 'password';
+    const isAwsRegion = getLastPartOfName(finalField.name) === 'bucket_region' && finalField.label.includes('AWS');
 
     if (isPassword) {
       finalField.component = 'authentication';
+    }
+
+    if (isAwsRegion) {
+      finalField.loadOptions = () => doLoadRegions().then((data) => data.map((item) => ({ value: item, label: item })));
     }
 
     return finalField;
