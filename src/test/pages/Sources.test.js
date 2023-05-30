@@ -1,6 +1,7 @@
 import React from 'react';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { Route, Routes } from 'react-router-dom';
 
 import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/NotificationPortal';
 
@@ -25,6 +26,7 @@ import * as SourceRemoveModal from '../../components/SourceRemoveModal/SourceRem
 import * as urlQuery from '../../utilities/urlQuery';
 
 import DataLoader from '../../components/DataLoader';
+import ElementWrapper from '../../components/ElementWrapper/ElementWrapper';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../utilities/constants';
 import { getStore } from '../../utilities/store';
 import { AVAILABLE, UNAVAILABLE } from '../../views/formatters';
@@ -89,6 +91,14 @@ describe('SourcesPage', () => {
       <DataLoader />
       <SourcesPageOriginal {...props} />
     </React.Fragment>
+  );
+
+  const RouterSetup = ({ route, MockElement, SourcesPage }) => (
+    <Routes>
+      <Route path="/" element={SourcesPage}>
+        <Route path={route.path} element={<ElementWrapper route={route}>{MockElement}</ElementWrapper>} />
+      </Route>
+    </Routes>
   );
 
   beforeEach(() => {
@@ -199,7 +209,16 @@ describe('SourcesPage', () => {
 
     api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [], meta: { count: 0 } }));
 
-    render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    render(
+      componentWrapperIntl(
+        <RouterSetup
+          SourcesPage={<SourcesPage {...initialProps} />}
+          MockElement={<AddSourceWizard.default />}
+          route={routes.sourcesNew}
+        />,
+        store
+      )
+    );
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
     await user.click(screen.getByText('Amazon Web Services'));
@@ -241,7 +260,16 @@ describe('SourcesPage', () => {
 
     api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [], meta: { count: 0 } }));
 
-    render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    render(
+      componentWrapperIntl(
+        <RouterSetup
+          SourcesPage={<SourcesPage {...initialProps} />}
+          MockElement={<AddSourceWizard.default />}
+          route={routes.sourcesNew}
+        />,
+        store
+      )
+    );
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
     await user.click(screen.getByText('OpenShift Container Platform'));
@@ -411,7 +439,16 @@ describe('SourcesPage', () => {
     const user = userEvent.setup();
     dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
 
-    render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    render(
+      componentWrapperIntl(
+        <RouterSetup
+          SourcesPage={<SourcesPage {...initialProps} />}
+          MockElement={<AddSourceWizard.default />}
+          route={routes.sourcesNew}
+        />,
+        store
+      )
+    );
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
     await user.click(screen.getByText('Add source'));
@@ -442,7 +479,16 @@ describe('SourcesPage', () => {
     const user = userEvent.setup();
     dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
 
-    render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    render(
+      componentWrapperIntl(
+        <RouterSetup
+          SourcesPage={<SourcesPage {...initialProps} />}
+          MockElement={<AddSourceWizard.default />}
+          route={routes.sourcesNew}
+        />,
+        store
+      )
+    );
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
     await user.click(screen.getByText('Add source'));
@@ -466,7 +512,16 @@ describe('SourcesPage', () => {
 
     AddSourceWizard.AddSourceWizard = ({ afterSuccess }) => <button onClick={() => afterSuccess(source)}>after success</button>;
 
-    render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
+    render(
+      componentWrapperIntl(
+        <RouterSetup
+          SourcesPage={<SourcesPage {...initialProps} />}
+          MockElement={<AddSourceWizard.AddSourceWizard />}
+          route={routes.sourcesNew}
+        />,
+        store
+      )
+    );
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
     expect(urlQuery.parseQuery.mock.calls).toHaveLength(1);
@@ -508,7 +563,11 @@ describe('SourcesPage', () => {
       componentWrapperIntl(
         <React.Fragment>
           <NotificationsPortal />
-          <SourcesPage {...initialProps} />
+          <RouterSetup
+            SourcesPage={<SourcesPage {...initialProps} />}
+            MockElement={<AddSourceWizard.AddSourceWizard />}
+            route={routes.sourcesNew}
+          />
         </React.Fragment>,
         store
       )
@@ -578,7 +637,11 @@ describe('SourcesPage', () => {
       componentWrapperIntl(
         <React.Fragment>
           <NotificationsPortal />
-          <SourcesPage {...initialProps} />
+          <RouterSetup
+            route={routes.sourcesNew}
+            MockElement={<AddSourceWizard.AddSourceWizard />}
+            SourcesPage={<SourcesPage {...initialProps} />}
+          />
         </React.Fragment>,
         store
       )
@@ -1042,7 +1105,17 @@ describe('SourcesPage', () => {
       initialEntry = [replaceRouteId('/' + routes.sourcesRemove.path, SOURCE_ALL_APS_ID)];
 
       await act(async () => {
-        render(componentWrapperIntl(<SourcesPage {...initialProps} />, store, initialEntry));
+        render(
+          componentWrapperIntl(
+            <RouterSetup
+              route={routes.sourcesRemove}
+              MockElement={<SourceRemoveModal.default />}
+              SourcesPage={<SourcesPage {...initialProps} />}
+            />,
+            store,
+            initialEntry
+          )
+        );
       });
 
       expect(wasRedirectedToRoot()).toEqual(false);
@@ -1061,7 +1134,17 @@ describe('SourcesPage', () => {
         initialEntry = [replaceRouteId('/' + routes.sourcesRemove.path, NONSENSE_ID)];
 
         await act(async () => {
-          render(componentWrapperIntl(<SourcesPage {...initialProps} />, store, initialEntry));
+          render(
+            componentWrapperIntl(
+              <RouterSetup
+                route={routes.sourcesRemove}
+                MockElement={<SourceRemoveModal.default />}
+                SourcesPage={<SourcesPage {...initialProps} />}
+              />,
+              store,
+              initialEntry
+            )
+          );
         });
 
         expect(() => screen.getByText('remove modal mock')).toThrow();
@@ -1081,7 +1164,17 @@ describe('SourcesPage', () => {
         initialEntry = [replaceRouteId(routes.sourcesRemove.path, SOURCE_ALL_APS_ID)];
 
         await act(async () => {
-          render(componentWrapperIntl(<SourcesPage {...initialProps} />, store, initialEntry));
+          render(
+            componentWrapperIntl(
+              <RouterSetup
+                route={routes.sourcesRemove}
+                MockElement={<SourceRemoveModal.default />}
+                SourcesPage={<SourcesPage {...initialProps} />}
+              />,
+              store,
+              initialEntry
+            )
+          );
         });
 
         expect(() => screen.getByText('remove modal mock')).toThrow();

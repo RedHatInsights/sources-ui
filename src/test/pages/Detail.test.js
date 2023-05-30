@@ -14,7 +14,12 @@ import * as DetailHeader from '../../components/SourceDetail/DetailHeader';
 import { replaceRouteId, routes } from '../../Routing';
 import componentWrapperIntl from '../../utilities/testsHelpers';
 import mockStore from '../__mocks__/mockStore';
-import CustomRoute from '../../components/CustomRoute/CustomRoute';
+import ElementWrapper from '../../components/ElementWrapper/ElementWrapper';
+import SourceRemoveModal from '../../components/SourceRemoveModal/SourceRemoveModal';
+import SourceRenameModal from '../../components/SourceDetail/SourceRenameModal';
+import AddApplication from '../../components/AddApplication/AddApplication';
+import RemoveAppModal from '../../components/AddApplication/RemoveAppModal';
+import CredentialsForm from '../../components/CredentialsForm/CredentialsForm';
 
 jest.mock('../../components/SourceRemoveModal/SourceRemoveModal', () => ({
   __esModule: true,
@@ -65,6 +70,16 @@ jest.mock('react', () => {
     Suspense,
   };
 });
+
+const RoutesSetup = ({ route, RootElement, ChildElement }) => {
+  return (
+    <Routes>
+      <Route path="/" element={RootElement}>
+        <Route path={route.path} element={<ElementWrapper route={route}>{ChildElement}</ElementWrapper>} />
+      </Route>
+    </Routes>
+  );
+};
 
 describe('SourceDetail', () => {
   let store;
@@ -203,9 +218,10 @@ describe('SourceDetail', () => {
         await act(async () => {
           render(
             componentWrapperIntl(
-              <CustomRoute
+              <RoutesSetup
                 route={{ ...routes.sourcesDetail, writeAccess: true, path: routes.sourcesDetail.path + '/*' }}
-                Component={Detail}
+                RootElement={<Detail />}
+                ChildElement={<SourceRemoveModal />}
               />,
               store,
               initialEntry
@@ -224,7 +240,7 @@ describe('SourceDetail', () => {
         await act(async () => {
           render(
             componentWrapperIntl(
-              <CustomRoute
+              <RoutesSetup
                 route={{
                   ...routes.sourcesDetail,
                   writeAccess: true,
@@ -232,7 +248,8 @@ describe('SourceDetail', () => {
                   redirectNoId: true,
                   path: routes.sourcesDetail.path + '/*',
                 }}
-                Component={Detail}
+                RootElement={<Detail />}
+                ChildElement={<SourceRenameModal />}
               />,
               store,
               initialEntry
@@ -251,9 +268,7 @@ describe('SourceDetail', () => {
         await act(async () => {
           render(
             componentWrapperIntl(
-              <Routes>
-                <Route path={`${routes.sourcesDetail.path}/*`} element={<Detail />} />
-              </Routes>,
+              <RoutesSetup route={routes.sourcesDetailAddApp} RootElement={<Detail />} ChildElement={<AddApplication />} />,
               store,
               initialEntry
             )
@@ -271,9 +286,7 @@ describe('SourceDetail', () => {
         await act(async () => {
           render(
             componentWrapperIntl(
-              <Routes>
-                <Route path={`${routes.sourcesDetail.path}/*`} element={<Detail />} />
-              </Routes>,
+              <RoutesSetup route={routes.sourcesDetailRemoveApp} RootElement={<Detail />} ChildElement={<RemoveAppModal />} />,
               store,
               initialEntry
             )
@@ -291,14 +304,10 @@ describe('SourceDetail', () => {
         await act(async () => {
           render(
             componentWrapperIntl(
-              <CustomRoute
-                route={{
-                  ...routes.sourcesDetail,
-                  writeAccess: true,
-                  redirectNoId: true,
-                  path: routes.sourcesDetail.path + '/*',
-                }}
-                Component={Detail}
+              <RoutesSetup
+                route={routes.sourcesDetailEditCredentials}
+                RootElement={<Detail />}
+                ChildElement={<CredentialsForm />}
               />,
               store,
               initialEntry
