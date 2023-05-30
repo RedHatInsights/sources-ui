@@ -24,6 +24,6 @@ describe('doLoadRegions', () => {
 
     const result = await doLoadRegions();
 
-    expect(result).toEqual(undefined);
+    expect(result).toEqual([]);
   });
 });
