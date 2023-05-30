@@ -78,7 +78,8 @@ export const getSourcesApi = () => ({
 });
 
 export const getCostApi = () => ({
-  listAwsRegions: () => axiosInstanceInsights.get(`${COST_API_BASE_V3}/sources/aws-s3-regions/`),
+  listAwsRegions: (limit = 10000, offset = 0) =>
+    axiosInstanceInsights.get(`${COST_API_BASE_V3}/sources/aws-s3-regions/?limit=${limit}&offset=${offset}`),
 });
 
 export const doLoadAppTypes = () => getSourcesApi().doLoadAppTypes();
