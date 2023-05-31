@@ -1,3 +1,3 @@
-const computeSourcesUrl = () => (insights.chrome.isBeta() ? `/preview/settings/sources` : `/settings/sources`);
+const computeSourcesUrl = (isBeta = false) => (isBeta ? `/preview/settings/sources` : `/settings/sources`);
 
 export default computeSourcesUrl;

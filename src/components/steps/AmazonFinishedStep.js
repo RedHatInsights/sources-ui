@@ -18,6 +18,7 @@ import {
 } from '@patternfly/react-core';
 
 import CheckCircleIcon from '@patternfly/react-icons/dist/esm/icons/check-circle-icon';
+import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 
 const AwsLink = ({ href, children }) => (
   <React.Fragment>
@@ -33,16 +34,16 @@ AwsLink.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-const PREFIX = insights.chrome.isBeta() ? 'preview/' : '';
-
-const GOLDIMAGES_HREF = 'https://access.redhat.com/management/cloud';
-const SUBWATCH_HREF = `/${PREFIX}subscriptions`;
-const INSIGHTS_HREF = `/${PREFIX}insights`;
-const COST_HREF = `/${PREFIX}cost-management`;
-const LEARNMORE_HREF = 'https://access.redhat.com/public-cloud/aws';
-
 const AmazonFinishedStep = ({ onClose }) => {
   const intl = useIntl();
+  const { isBeta } = useChrome();
+  const PREFIX = isBeta() ? 'preview/' : '';
+
+  const GOLDIMAGES_HREF = 'https://access.redhat.com/management/cloud';
+  const SUBWATCH_HREF = `/${PREFIX}subscriptions`;
+  const INSIGHTS_HREF = `/${PREFIX}insights`;
+  const COST_HREF = `/${PREFIX}cost-management`;
+  const LEARNMORE_HREF = 'https://access.redhat.com/public-cloud/aws';
 
   return (
     <Fragment>

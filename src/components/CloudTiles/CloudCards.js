@@ -20,19 +20,7 @@ import ArrowRightIcon from '@patternfly/react-icons/dist/esm/icons/arrow-right-i
 import BuilderImageIcon from '@patternfly/react-icons/dist/esm/icons/builder-image-icon';
 import TrendUpIcon from '@patternfly/react-icons/dist/esm/icons/trend-up-icon';
 import ListIcon from '@patternfly/react-icons/dist/esm/icons/list-icon';
-
-const PREFIX = insights.chrome.isBeta() ? 'preview/' : '';
-
-const GOLD_IMAGES_AWS =
-  'https://access.redhat.com/documentation/en-us/red_hat_subscription_management/2023/html/red_hat_cloud_access_reference_guide/understanding-gold-images_cloud-access#using-gold-images-on-aws_cloud-access';
-const GOLD_IMAGES_AZURE =
-  'https://access.redhat.com/documentation/en-us/red_hat_subscription_management/2023/html/red_hat_cloud_access_reference_guide/understanding-gold-images_cloud-access#using-gold-images-on-azure_cloud-access';
-const GOLD_IMAGES_MORE =
-  'https://access.redhat.com/documentation/en-us/red_hat_subscription_management/2023/html/red_hat_cloud_access_reference_guide/understanding-gold-images_cloud-access';
-const INSIGHTS_REF = 'https://www.redhat.com/en/technologies/management/insights';
-const INSIGHTS_SERVICES = `/${PREFIX}settings/connector`;
-const SUBWATCH_HREF = `/${PREFIX}insights/subscriptions/rhel`;
-const SUBWATCH_MORE_HREF = 'https://access.redhat.com/products/subscription-central';
+import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 
 export const CLOUD_CARDS_KEY = 'ins-c-sources__cloud_cards_expanded';
 
@@ -43,10 +31,24 @@ const CloudCards = () => {
     return session ? session === 'true' : true;
   });
   const intl = useIntl();
+  const { isBeta } = useChrome();
 
   useEffect(() => {
     sessionStorage.setItem(CLOUD_CARDS_KEY, isExpanded);
   }, [isExpanded]);
+
+  const PREFIX = isBeta() ? 'preview/' : '';
+
+  const GOLD_IMAGES_AWS =
+    'https://access.redhat.com/documentation/en-us/red_hat_subscription_management/2023/html/red_hat_cloud_access_reference_guide/understanding-gold-images_cloud-access#using-gold-images-on-aws_cloud-access';
+  const GOLD_IMAGES_AZURE =
+    'https://access.redhat.com/documentation/en-us/red_hat_subscription_management/2023/html/red_hat_cloud_access_reference_guide/understanding-gold-images_cloud-access#using-gold-images-on-azure_cloud-access';
+  const GOLD_IMAGES_MORE =
+    'https://access.redhat.com/documentation/en-us/red_hat_subscription_management/2023/html/red_hat_cloud_access_reference_guide/understanding-gold-images_cloud-access';
+  const INSIGHTS_REF = 'https://www.redhat.com/en/technologies/management/insights';
+  const INSIGHTS_SERVICES = `/${PREFIX}settings/connector`;
+  const SUBWATCH_HREF = `/${PREFIX}insights/subscriptions/rhel`;
+  const SUBWATCH_MORE_HREF = 'https://access.redhat.com/products/subscription-central';
 
   return (
     <Card isExpanded={isExpanded} className="pf-u-mb-lg pf-u-mt-md pf-u-mt-0-on-md src-c-card-info">

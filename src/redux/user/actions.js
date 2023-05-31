@@ -1,10 +1,9 @@
 import { ACTION_TYPES } from './actionTypes';
 
-export const loadWritePermissions = () => (dispatch) => {
+export const loadWritePermissions = (getUserPermissions) => (dispatch) => {
   dispatch({ type: ACTION_TYPES.SET_WRITE_PERMISSIONS_PENDING });
 
-  return insights.chrome
-    .getUserPermissions('sources', true) // bypassCache = true
+  return getUserPermissions('sources', true) // bypassCache = true
     .then((permissions) => {
       const allPermission = permissions.reduce((acc, curr) => [...acc, curr?.permission], []);
       const writePermissions = allPermission.includes('sources:*:*') || allPermission.includes('sources:*:write');
@@ -27,11 +26,10 @@ export const loadWritePermissions = () => (dispatch) => {
     );
 };
 
-export const loadOrgAdmin = () => (dispatch) => {
+export const loadOrgAdmin = (getUser) => (dispatch) => {
   dispatch({ type: ACTION_TYPES.SET_ORG_ADMIN_PENDING });
 
-  return insights.chrome.auth
-    .getUser()
+  return getUser()
     .then(
       ({
         identity: {

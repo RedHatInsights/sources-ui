@@ -14,6 +14,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import PermissionsChecker from './components/PermissionsChecker';
 import DataLoader from './components/DataLoader';
 import { CLOUD_CARDS_KEY } from './components/CloudTiles/CloudCards';
+import { initAxios } from './api/entities';
 
 const App = () => {
   const chrome = useChrome();
@@ -21,6 +22,7 @@ const App = () => {
   chrome?.updateDocumentTitle?.('Sources');
 
   useEffect(() => {
+    initAxios(chrome.auth.getUser, chrome.auth.logout);
     return () => {
       sessionStorage.removeItem(CLOUD_CARDS_KEY);
     };

@@ -77,10 +77,10 @@ export const loadSourceTypes = () => (dispatch) => {
     );
 };
 
-export const loadHcsEnrollment = () => (dispatch) => {
+export const loadHcsEnrollment = (token, isProd) => (dispatch) => {
   dispatch({ type: ACTION_TYPES.LOAD_HCS_ENROLLMENT_PENDING });
 
-  return checkAccountHCS()
+  return checkAccountHCS(token, isProd)
     .then(({ hcsDeal }) =>
       dispatch({
         type: ACTION_TYPES.LOAD_HCS_ENROLLMENT_FULFILLED,
