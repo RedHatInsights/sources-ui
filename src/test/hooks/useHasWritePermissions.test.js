@@ -1,31 +1,22 @@
-import * as redux from 'react-redux';
+import { renderHook } from '@testing-library/react-hooks';
+import { Provider } from 'react-redux';
 
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
-
-jest.mock('react-redux', () => ({
-  __esModule: true,
-  useSelector: jest.fn(),
-}));
-
+import { createStore } from 'redux';
 describe('useHasWritePermissions', () => {
-  let inputFn;
   let mockStore;
 
-  beforeEach(() => {
-    inputFn = expect.any(Function);
-  });
-
   it('returns undefined when is not loaded', () => {
-    mockStore = {
+    const mockStore = {
       user: { writePermissions: undefined },
     };
+    const store = createStore(() => mockStore);
 
-    redux.useSelector = jest.fn().mockImplementation((fn) => fn(mockStore));
+    const { result } = renderHook(() => useHasWritePermissions(), {
+      wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
+    });
 
-    const result = useHasWritePermissions();
-
-    expect(result).toEqual(undefined);
-    expect(redux.useSelector).toHaveBeenCalledWith(inputFn);
+    expect(result.current).toEqual(undefined);
   });
 
   it('returns true when is loaded - has write permissions', () => {
@@ -33,12 +24,13 @@ describe('useHasWritePermissions', () => {
       user: { writePermissions: true },
     };
 
-    redux.useSelector = jest.fn().mockImplementation((fn) => fn(mockStore));
+    const store = createStore(() => mockStore);
 
-    const result = useHasWritePermissions();
+    const { result } = renderHook(() => useHasWritePermissions(), {
+      wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
+    });
 
-    expect(result).toEqual(true);
-    expect(redux.useSelector).toHaveBeenCalledWith(inputFn);
+    expect(result.current).toEqual(true);
   });
 
   it('returns false when is loaded', () => {
@@ -46,11 +38,11 @@ describe('useHasWritePermissions', () => {
       user: { writePermissions: false },
     };
 
-    redux.useSelector = jest.fn().mockImplementation((fn) => fn(mockStore));
+    const store = createStore(() => mockStore);
+    const { result } = renderHook(() => useHasWritePermissions(), {
+      wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
+    });
 
-    const result = useHasWritePermissions();
-
-    expect(result).toEqual(false);
-    expect(redux.useSelector).toHaveBeenCalledWith(inputFn);
+    expect(result.current).toEqual(false);
   });
 });

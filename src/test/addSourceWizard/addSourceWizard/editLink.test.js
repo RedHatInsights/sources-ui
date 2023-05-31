@@ -4,41 +4,37 @@ import { screen } from '@testing-library/react';
 import EditLink from '../../../components/addSourceWizard/EditLink';
 import render from '../__mocks__/render';
 
+import * as useChrome from '@redhat-cloud-services/frontend-components/useChrome';
+// need this to override the global mock
+jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => {
+  return {
+    __esModule: true,
+    default: () => ({}),
+  };
+});
+
 describe('EditLink', () => {
   let id;
-  let tmpInsights;
 
   beforeEach(() => {
     id = 'some-id';
-    tmpInsights = insights;
-  });
-
-  afterEach(() => {
-    insights = tmpInsights;
   });
 
   it('renders on sources', () => {
-    insights = {
-      ...insights,
-      chrome: {
-        ...insights.chrome,
-        getApp: () => 'sources',
-      },
-    };
-
+    jest.spyOn(useChrome, 'default').mockImplementationOnce(() => ({
+      getApp: () => 'sources',
+      isBeta: () => true,
+    }));
     render(<EditLink id={id} />);
 
     expect(screen.getByRole('link')).toHaveAttribute('href', '/settings/sources/detail/some-id');
   });
 
   it('renders on other app', () => {
-    insights = {
-      ...insights,
-      chrome: {
-        ...insights.chrome,
-        getApp: () => 'cost-management',
-      },
-    };
+    jest.spyOn(useChrome, 'default').mockImplementationOnce(() => ({
+      getApp: () => 'cost-management',
+      isBeta: () => true,
+    }));
 
     render(<EditLink id={id} />);
 

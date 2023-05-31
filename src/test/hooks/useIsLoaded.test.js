@@ -1,31 +1,22 @@
-import * as redux from 'react-redux';
-
+import { renderHook } from '@testing-library/react-hooks';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
-
-jest.mock('react-redux', () => ({
-  __esModule: true,
-  useSelector: jest.fn(),
-}));
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
 
 describe('useIsLoaded', () => {
-  let inputFn;
   let mockStore;
-
-  beforeEach(() => {
-    inputFn = expect.any(Function);
-  });
 
   it('returns true when is loaded', () => {
     mockStore = {
       sources: { loaded: 0 },
     };
+    const store = createStore(() => mockStore);
 
-    redux.useSelector = jest.fn().mockImplementation((fn) => fn(mockStore));
+    const { result } = renderHook(() => useIsLoaded(), {
+      wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
+    });
 
-    const result = useIsLoaded();
-
-    expect(result).toEqual(true);
-    expect(redux.useSelector).toHaveBeenCalledWith(inputFn);
+    expect(result.current).toEqual(true);
   });
 
   it('returns true when is loaded below zero (fallback check)', () => {
@@ -33,12 +24,13 @@ describe('useIsLoaded', () => {
       sources: { loaded: -15 },
     };
 
-    redux.useSelector = jest.fn().mockImplementation((fn) => fn(mockStore));
+    const store = createStore(() => mockStore);
 
-    const result = useIsLoaded();
+    const { result } = renderHook(() => useIsLoaded(), {
+      wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
+    });
 
-    expect(result).toEqual(true);
-    expect(redux.useSelector).toHaveBeenCalledWith(inputFn);
+    expect(result.current).toEqual(true);
   });
 
   it('returns false when is not loaded', () => {
@@ -46,11 +38,12 @@ describe('useIsLoaded', () => {
       sources: { loaded: 1 },
     };
 
-    redux.useSelector = jest.fn().mockImplementation((fn) => fn(mockStore));
+    const store = createStore(() => mockStore);
 
-    const result = useIsLoaded();
+    const { result } = renderHook(() => useIsLoaded(), {
+      wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
+    });
 
-    expect(result).toEqual(false);
-    expect(redux.useSelector).toHaveBeenCalledWith(inputFn);
+    expect(result.current).toEqual(false);
   });
 });

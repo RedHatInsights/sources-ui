@@ -13,7 +13,6 @@ import { replaceRouteId, routes } from '../../../Routing';
 describe('Final wizard', () => {
   let initialProps;
   let id;
-  let tmpInsights;
 
   beforeEach(() => {
     id = 'some-id';
@@ -32,18 +31,6 @@ describe('Final wizard', () => {
       },
       sourceTypes,
     };
-    tmpInsights = insights;
-    insights = {
-      ...insights,
-      chrome: {
-        ...insights.chrome,
-        getApp: () => 'sources',
-      },
-    };
-  });
-
-  afterEach(() => {
-    insights = tmpInsights;
   });
 
   it('contains loading step', () => {

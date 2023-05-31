@@ -123,7 +123,7 @@ describe('SourcesPage', () => {
   });
 
   it('should fetch sources and source types on component mount', async () => {
-    render(componentWrapperIntl(<SourcesPage {...initialProps} />, store, ['/settings/sources']));
+    await render(componentWrapperIntl(<SourcesPage {...initialProps} />, store, ['/settings/sources']));
 
     expect(api.doLoadEntities).toHaveBeenCalled();
     expect(api.doLoadAppTypes).toHaveBeenCalled();
