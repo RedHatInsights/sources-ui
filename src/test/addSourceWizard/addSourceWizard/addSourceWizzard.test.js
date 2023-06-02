@@ -12,9 +12,15 @@ import * as createSource from '../../../api/createSource';
 import { ACCOUNT_AUTHORIZATION, MANUAL_CONFIGURATION } from '../../../components/constants';
 import { CLOUD_VENDOR, GOOGLE_NAME, REDHAT_VENDOR } from '../../../utilities/constants';
 
+import { defaultSourcesState } from '../../../redux/sources/reducer';
+import componentWrapperIntl from '../../../utilities/testsHelpers';
+import mockStore from '../../__mocks__/mockStore';
+
 describe('AddSourceWizard', () => {
   let initialProps;
+  let initialState;
   let SOURCE_DATA_OUT;
+  let store;
 
   beforeEach(() => {
     initialProps = {
@@ -25,14 +31,20 @@ describe('AddSourceWizard', () => {
       activeCategory: CLOUD_VENDOR,
     };
 
+    initialState = {
+      sources: { ...defaultSourcesState, sourceTypes },
+    };
+
     SOURCE_DATA_OUT = {
       id: '1234',
       applications: [],
     };
+
+    store = mockStore(initialState);
   });
 
   it('renders correctly with sourceTypes', async () => {
-    render(<AddSourceWizard {...initialProps} />);
+    render(componentWrapperIntl(<AddSourceWizard {...initialProps} />, store));
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
     expect(screen.getByText('Name source')).toBeInTheDocument();
@@ -42,7 +54,7 @@ describe('AddSourceWizard', () => {
   it('renders correctly without sourceTypes', async () => {
     dependency.doLoadSourceTypes = jest.fn(() => new Promise((resolve) => resolve({ sourceTypes })));
 
-    render(<AddSourceWizard {...initialProps} sourceTypes={undefined} />);
+    render(componentWrapperIntl(<AddSourceWizard {...initialProps} sourceTypes={undefined} />, store));
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
@@ -55,7 +67,7 @@ describe('AddSourceWizard', () => {
 
     createSource.doCreateSource = jest.fn(() => new Promise((resolve) => setTimeout(() => resolve(SOURCE_DATA_OUT), 100)));
 
-    const { container } = render(<AddSourceWizard {...initialProps} />);
+    const { container } = render(componentWrapperIntl(<AddSourceWizard {...initialProps} />, store));
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
@@ -75,7 +87,9 @@ describe('AddSourceWizard', () => {
     const afterSubmitMock = jest.fn();
     createSource.doCreateSource = jest.fn(() => new Promise((resolve) => resolve({ name: 'source', applications: [] })));
 
-    const { container } = render(<AddSourceWizard {...initialProps} afterSuccess={afterSubmitMock} />);
+    const { container } = render(
+      componentWrapperIntl(<AddSourceWizard {...initialProps} afterSuccess={afterSubmitMock} />, store)
+    );
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
@@ -92,7 +106,9 @@ describe('AddSourceWizard', () => {
     const submitCallback = jest.fn();
     createSource.doCreateSource = jest.fn(() => new Promise((resolve) => resolve({ name: 'source', applications: [] })));
 
-    const { container } = render(<AddSourceWizard {...initialProps} submitCallback={submitCallback} />);
+    const { container } = render(
+      componentWrapperIntl(<AddSourceWizard {...initialProps} submitCallback={submitCallback} />, store)
+    );
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
@@ -114,7 +130,9 @@ describe('AddSourceWizard', () => {
     const submitCallback = jest.fn();
     createSource.doCreateSource = jest.fn(() => new Promise((_, reject) => reject('Error - wrong name')));
 
-    const { container } = render(<AddSourceWizard {...initialProps} submitCallback={submitCallback} />);
+    const { container } = render(
+      componentWrapperIntl(<AddSourceWizard {...initialProps} submitCallback={submitCallback} />, store)
+    );
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
@@ -138,7 +156,7 @@ describe('AddSourceWizard', () => {
 
     const onClose = jest.fn();
 
-    render(<AddSourceWizard {...initialProps} onClose={onClose} />);
+    render(componentWrapperIntl(<AddSourceWizard {...initialProps} onClose={onClose} />, store));
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
@@ -155,7 +173,7 @@ describe('AddSourceWizard', () => {
 
     const onClose = jest.fn();
 
-    render(<AddSourceWizard {...initialProps} onClose={onClose} />);
+    render(componentWrapperIntl(<AddSourceWizard {...initialProps} onClose={onClose} />, store));
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
@@ -173,7 +191,7 @@ describe('AddSourceWizard', () => {
     const ERROR_MESSAGE = 'fail';
     createSource.doCreateSource = jest.fn(() => new Promise((_resolve, reject) => reject(ERROR_MESSAGE)));
 
-    const { container } = render(<AddSourceWizard {...initialProps} />);
+    const { container } = render(componentWrapperIntl(<AddSourceWizard {...initialProps} />, store));
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
@@ -197,7 +215,7 @@ describe('AddSourceWizard', () => {
 
     createSource.doCreateSource = jest.fn(() => Promise.reject('error'));
 
-    const { container } = render(<AddSourceWizard {...initialProps} onClose={closeCallback} />);
+    const { container } = render(componentWrapperIntl(<AddSourceWizard {...initialProps} onClose={closeCallback} />, store));
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
@@ -220,7 +238,7 @@ describe('AddSourceWizard', () => {
 
     createSource.doCreateSource = jest.fn(() => Promise.resolve(SOURCE_DATA_OUT));
 
-    const { container } = render(<AddSourceWizard {...initialProps} onClose={closeCallback} />);
+    const { container } = render(componentWrapperIntl(<AddSourceWizard {...initialProps} onClose={closeCallback} />, store));
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
@@ -241,7 +259,7 @@ describe('AddSourceWizard', () => {
 
     createSource.doCreateSource = jest.fn(() => Promise.resolve(SOURCE_DATA_OUT));
 
-    const { container } = render(<AddSourceWizard {...initialProps} />);
+    const { container } = render(componentWrapperIntl(<AddSourceWizard {...initialProps} />, store));
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
@@ -260,7 +278,7 @@ describe('AddSourceWizard', () => {
 
     createSource.doCreateSource = jest.fn(() => Promise.reject('error'));
 
-    const { container } = render(<AddSourceWizard {...initialProps} />);
+    const { container } = render(componentWrapperIntl(<AddSourceWizard {...initialProps} />, store));
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
@@ -283,7 +301,9 @@ describe('AddSourceWizard', () => {
       [...container.parentElement.getElementsByClassName('pf-c-wizard__nav-item')].map((item) => item.textContent);
 
     it('show configuration step when selectedType is set - CLOUD', async () => {
-      const { container } = render(<AddSourceWizard {...initialProps} selectedType="amazon" activeCategory={CLOUD_VENDOR} />);
+      const { container } = render(
+        componentWrapperIntl(<AddSourceWizard {...initialProps} selectedType="amazon" activeCategory={CLOUD_VENDOR} />, store)
+      );
 
       await waitFor(() => expect(screen.getByText('Name source', { selector: 'button' })).toBeInTheDocument());
 
@@ -292,7 +312,10 @@ describe('AddSourceWizard', () => {
 
     it('show source type selection when CLOUD', async () => {
       const { container } = render(
-        <AddSourceWizard {...initialProps} initialValues={{ source_type: 'amazon' }} activeCategory={CLOUD_VENDOR} />
+        componentWrapperIntl(
+          <AddSourceWizard {...initialProps} initialValues={{ source_type: 'amazon' }} activeCategory={CLOUD_VENDOR} />,
+          store
+        )
       );
 
       await waitFor(() => expect(screen.getByText('Name source', { selector: 'button' })).toBeInTheDocument());
@@ -302,12 +325,15 @@ describe('AddSourceWizard', () => {
 
     it('show application step when selectedType is set and configuration is selected to true', async () => {
       const { container } = render(
-        <AddSourceWizard
-          {...initialProps}
-          selectedType="amazon"
-          initialValues={{ source: { app_creation_workflow: ACCOUNT_AUTHORIZATION } }}
-          activeCategory={CLOUD_VENDOR}
-        />
+        componentWrapperIntl(
+          <AddSourceWizard
+            {...initialProps}
+            selectedType="amazon"
+            initialValues={{ source: { app_creation_workflow: ACCOUNT_AUTHORIZATION } }}
+            activeCategory={CLOUD_VENDOR}
+          />,
+          store
+        )
       );
 
       await waitFor(() => expect(screen.getByText('Name source', { selector: 'button' })).toBeInTheDocument());
@@ -317,12 +343,15 @@ describe('AddSourceWizard', () => {
 
     it('show application step when selectedType is set and configuration is selected to false', async () => {
       const { container } = render(
-        <AddSourceWizard
-          {...initialProps}
-          selectedType="amazon"
-          initialValues={{ source: { app_creation_workflow: MANUAL_CONFIGURATION } }}
-          activeCategory={CLOUD_VENDOR}
-        />
+        componentWrapperIntl(
+          <AddSourceWizard
+            {...initialProps}
+            selectedType="amazon"
+            initialValues={{ source: { app_creation_workflow: MANUAL_CONFIGURATION } }}
+            activeCategory={CLOUD_VENDOR}
+          />,
+          store
+        )
       );
 
       await waitFor(() => expect(screen.getByText('Name source', { selector: 'button' })).toBeInTheDocument());
@@ -331,7 +360,9 @@ describe('AddSourceWizard', () => {
     });
 
     it('show application step when selectedType is set - RED HAT', async () => {
-      const { container } = render(<AddSourceWizard {...initialProps} selectedType="openshift" activeCategory={REDHAT_VENDOR} />);
+      const { container } = render(
+        componentWrapperIntl(<AddSourceWizard {...initialProps} selectedType="openshift" activeCategory={REDHAT_VENDOR} />, store)
+      );
 
       await waitFor(() => expect(screen.getByText('Name source', { selector: 'button' })).toBeInTheDocument());
 
@@ -345,7 +376,9 @@ describe('AddSourceWizard', () => {
     });
 
     it('show source type selection when REDHAT', async () => {
-      const { container } = render(<AddSourceWizard {...initialProps} activeCategory={REDHAT_VENDOR} />);
+      const { container } = render(
+        componentWrapperIntl(<AddSourceWizard {...initialProps} activeCategory={REDHAT_VENDOR} />, store)
+      );
 
       await waitFor(() => expect(screen.getByText('Name source', { selector: 'button' })).toBeInTheDocument());
 
@@ -355,7 +388,7 @@ describe('AddSourceWizard', () => {
 
   it('pass initialWizardState to wizard', async () => {
     await act(async () => {
-      render(<AddSourceWizard {...initialProps} initialWizardState={{ activeStep: 'name_step' }} />);
+      render(componentWrapperIntl(<AddSourceWizard {...initialProps} initialWizardState={{ activeStep: 'name_step' }} />, store));
     });
 
     await waitFor(() => expect(screen.getByText('Enter a name for your source.')).toBeInTheDocument());

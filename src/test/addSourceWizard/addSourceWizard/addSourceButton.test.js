@@ -8,11 +8,29 @@ import applicationTypes from '../../__mocks__/applicationTypes';
 
 import { CLOUD_VENDOR } from '../../../utilities/constants';
 
+import mockStore from '../../__mocks__/mockStore';
+import componentWrapperIntl from '../../../utilities/testsHelpers';
+
 describe('AddSourceButton', () => {
+  let initialState;
+  let store;
+
+  beforeEach(() => {
+    initialState = {
+      sources: { hcsEnrolled: false, hcsEnrolledLoaded: true },
+    };
+
+    store = mockStore(initialState);
+  });
   it('opens wizard and close wizard', async () => {
     const user = userEvent.setup();
 
-    render(<AddSourceButton sourceTypes={sourceTypes} applicationTypes={applicationTypes} activeCategory={CLOUD_VENDOR} />);
+    render(
+      componentWrapperIntl(
+        <AddSourceButton sourceTypes={sourceTypes} applicationTypes={applicationTypes} activeCategory={CLOUD_VENDOR} />,
+        store
+      )
+    );
 
     await user.click(screen.getByText('Add Red Hat source'));
 
