@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { Redirect, useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { Button, Modal, Text, TextContent, TextVariants, Title } from '@patternfly/react-core';
 import ExclamationTriangleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-triangle-icon';
@@ -9,11 +9,13 @@ import ExclamationTriangleIcon from '@patternfly/react-icons/dist/esm/icons/excl
 import { useSource } from '../../hooks/useSource';
 
 import removeAppSubmit from './removeAppSubmit';
-import { replaceRouteId, routes } from '../../Routes';
+import { replaceRouteId, routes } from '../../Routing';
+import { useAppNavigate } from '../../hooks/useAppNavigate';
+import AppNavigate from '../AppNavigate';
 
 const RemoveAppModal = () => {
   const intl = useIntl();
-  const { push } = useHistory();
+  const navigate = useAppNavigate();
   const { app_id } = useParams();
   const source = useSource();
 
@@ -23,7 +25,7 @@ const RemoveAppModal = () => {
   const application = source.applications?.find(({ id }) => id === app_id);
 
   if (!application) {
-    return <Redirect to={replaceRouteId(routes.sourcesDetail.path, source.id)} />;
+    return <AppNavigate to={replaceRouteId('/' + routes.sourcesDetail.path, source.id)} />;
   }
 
   const appType = appTypes.find(({ id }) => id === application?.application_type_id);
@@ -37,7 +39,7 @@ const RemoveAppModal = () => {
     ),
   };
 
-  const onCancel = () => push(replaceRouteId(routes.sourcesDetail.path, source.id));
+  const onCancel = () => navigate(replaceRouteId(routes.sourcesDetail.path, source.id));
   const onSubmit = () => removeAppSubmit(app, intl, onCancel, dispatch, source);
 
   const dependentApps = appType?.dependent_applications

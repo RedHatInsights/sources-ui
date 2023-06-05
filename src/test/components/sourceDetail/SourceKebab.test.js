@@ -1,9 +1,9 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { replaceRouteId, routes } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routing';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import SourceKebab from '../../../components/SourceDetail/SourceKebab';
 import mockStore from '../../__mocks__/mockStore';
@@ -38,7 +38,9 @@ describe('SourceKebab', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <SourceKebab {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<SourceKebab />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -76,7 +78,9 @@ describe('SourceKebab', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <SourceKebab {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<SourceKebab />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -102,7 +106,9 @@ describe('SourceKebab', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <SourceKebab {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<SourceKebab />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -137,7 +143,9 @@ describe('SourceKebab', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <SourceKebab {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<SourceKebab />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -163,7 +171,9 @@ describe('SourceKebab', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <SourceKebab {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetail.path} element={<SourceKebab />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -194,7 +204,7 @@ describe('SourceKebab', () => {
       await user.click(screen.getByText('Remove'));
 
       expect(screen.getByTestId('location-display').textContent).toEqual(
-        replaceRouteId(routes.sourcesDetailRemove.path, sourceId)
+        replaceRouteId(`/settings/sources/${routes.sourcesDetailRemove.path}`, sourceId)
       );
     });
 
@@ -217,7 +227,7 @@ describe('SourceKebab', () => {
       await user.click(screen.getByText('Rename'));
 
       expect(screen.getByTestId('location-display').textContent).toEqual(
-        replaceRouteId(routes.sourcesDetailRename.path, sourceId)
+        replaceRouteId(`/settings/sources/${routes.sourcesDetailRename.path}`, sourceId)
       );
     });
   });

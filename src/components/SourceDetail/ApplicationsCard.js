@@ -1,7 +1,6 @@
 import React, { Fragment, useReducer } from 'react';
 import { useIntl } from 'react-intl';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 
 import { Card, CardBody, CardTitle, FormGroup, Skeleton, Switch, Tooltip } from '@patternfly/react-core';
 
@@ -9,7 +8,7 @@ import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 import PlayIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
 
 import { useSource } from '../../hooks/useSource';
-import { replaceRouteId, routes } from '../../Routes';
+import { replaceRouteId, routes } from '../../Routing';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import isSuperKey from '../../utilities/isSuperKey';
 import { doCreateApplication, getSourcesApi } from '../../api/entities';
@@ -21,6 +20,7 @@ import handleError from '../../api/handleError';
 import tryAgainMessage from '../../utilities/tryAgainMessage';
 import { disabledMessage } from '../../utilities/disabledTooltipProps';
 import { COST_MANAGEMENT_APP_ID, HCS_APP_NAME } from '../../utilities/constants';
+import { useAppNavigate } from '../../hooks/useAppNavigate';
 
 const initialState = {
   selectedApps: {},
@@ -108,7 +108,7 @@ const addErrorNotification = (dispatch, intl, action, error) => {
 const ApplicationsCard = () => {
   const intl = useIntl();
   const source = useSource();
-  const { push } = useHistory();
+  const navigate = useAppNavigate();
   const sourceTypes = useSelector(({ sources }) => sources.sourceTypes, shallowEqual);
   const appTypes = useSelector(({ sources }) => sources.appTypes, shallowEqual);
   const hcsEnrolled = useSelector(({ sources }) => sources.hcsEnrolled, shallowEqual);
@@ -124,7 +124,7 @@ const ApplicationsCard = () => {
 
   let addApp = async (id, isPaused) => {
     if (!isPaused) {
-      push(replaceRouteId(routes.sourcesDetailAddApp.path, source.id).replace(':app_type_id', id));
+      navigate(replaceRouteId(routes.sourcesDetailAddApp.path, source.id).replace(':app_type_id', id));
     } else {
       if (typeof selectedApps[id] !== 'boolean') {
         stateDispatch({ type: 'addApp', id });

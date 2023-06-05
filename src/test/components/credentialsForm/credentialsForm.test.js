@@ -1,9 +1,9 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { replaceRouteId, routes } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routing';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import sourceTypes, { AMAZON_TYPE } from '../../__mocks__/sourceTypes';
 import mockStore from '../../__mocks__/mockStore';
@@ -57,7 +57,9 @@ describe('CredentialsForm', () => {
     });
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetailEditCredentials.path} render={(...args) => <CredentialsForm {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetailEditCredentials.path} element={<CredentialsForm />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -97,7 +99,9 @@ describe('CredentialsForm', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetailEditCredentials.path} render={(...args) => <CredentialsForm {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetailEditCredentials.path} element={<CredentialsForm />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -113,7 +117,9 @@ describe('CredentialsForm', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetailEditCredentials.path} render={(...args) => <CredentialsForm {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetailEditCredentials.path} element={<CredentialsForm />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -123,7 +129,9 @@ describe('CredentialsForm', () => {
 
     await user.click(screen.getByLabelText('Close'));
 
-    expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
+    expect(screen.getByTestId('location-display').textContent).toEqual(
+      replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, sourceId)
+    );
   });
 
   it('closes via cancel button', async () => {
@@ -131,7 +139,9 @@ describe('CredentialsForm', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetailEditCredentials.path} render={(...args) => <CredentialsForm {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetailEditCredentials.path} element={<CredentialsForm />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -141,7 +151,9 @@ describe('CredentialsForm', () => {
 
     await user.click(screen.getByText('Cancel'));
 
-    expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
+    expect(screen.getByTestId('location-display').textContent).toEqual(
+      replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, sourceId)
+    );
   });
 
   it('submit - success', async () => {
@@ -158,7 +170,9 @@ describe('CredentialsForm', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetailEditCredentials.path} render={(...args) => <CredentialsForm {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetailEditCredentials.path} element={<CredentialsForm />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -174,7 +188,9 @@ describe('CredentialsForm', () => {
 
     await user.click(screen.getByText('Submit'));
 
-    expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
+    expect(screen.getByTestId('location-display').textContent).toEqual(
+      replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, sourceId)
+    );
     expect(updateAuthentication).toHaveBeenCalledWith('auth-id', { username: 'newname' });
     expect(actions.addMessage).not.toHaveBeenCalled();
 
@@ -203,7 +219,9 @@ describe('CredentialsForm', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetailEditCredentials.path} render={(...args) => <CredentialsForm {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetailEditCredentials.path} element={<CredentialsForm />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -218,7 +236,9 @@ describe('CredentialsForm', () => {
 
     await user.click(screen.getByText('Submit'));
 
-    expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
+    expect(screen.getByTestId('location-display').textContent).toEqual(
+      replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, sourceId)
+    );
     expect(updateAuthentication).toHaveBeenCalledWith('auth-id', { username: 'newname' });
     expect(actions.addMessage).not.toHaveBeenCalled();
 

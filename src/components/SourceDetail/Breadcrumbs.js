@@ -1,9 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { useIntl } from 'react-intl';
+import AppLink from '../AppLink';
 
 import { Breadcrumb, BreadcrumbItem } from '@patternfly/react-core';
-import { routes } from '../../Routes';
+import { routes } from '../../Routing';
 import { useSource } from '../../hooks/useSource';
 
 const Breadcrumbs = () => {
@@ -12,7 +12,7 @@ const Breadcrumbs = () => {
 
   return (
     <Breadcrumb>
-      <BreadcrumbItem component={({ href, ...props }) => <Link to={href} {...props} />} to={routes.sources.path}>
+      <BreadcrumbItem component={({ href, ...props }) => <AppLink to={href} {...props} />} to={routes.sources.path}>
         {intl.formatMessage({
           id: 'sources.sources',
           defaultMessage: 'Sources',

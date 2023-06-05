@@ -1,12 +1,11 @@
 /* eslint-disable react/display-name */
 import React from 'react';
-import { screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { defaultSourcesState } from '../../../../redux/sources/reducer';
 import { MANUAL_CONFIGURATION } from '../../../../components/constants';
 import SourcesFormRenderer from '../../../../utilities/SourcesFormRenderer';
 import HybridCommittedSpendDescription from '../../../../components/addSourceWizard/descriptions/HybridCommittedSpendDescription';
 import mockStore from '../../../__mocks__/mockStore';
-import render from '../../__mocks__/render';
 import sourceTypes from '../../../__mocks__/sourceTypes';
 import componentWrapperIntl from '../../../../utilities/testsHelpers';
 
