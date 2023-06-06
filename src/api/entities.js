@@ -4,7 +4,7 @@ import * as interceptors from '../frontend-components-copies/interceptors';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../utilities/constants';
 import { AVAILABLE, PARTIALLY_UNAVAILABLE, UNAVAILABLE } from '../views/formatters';
 
-import { SOURCES_API_BASE_V3 } from './constants';
+import { COST_API_BASE_V3, SOURCES_API_BASE_V3 } from './constants';
 
 export const graphQlErrorInterceptor = (response) => {
   if (response.errors && response.errors.length > 0) {
@@ -75,6 +75,11 @@ export const getSourcesApi = () => ({
     axiosInstanceInsights.get(
       `${SOURCES_API_BASE_V3}/app_meta_data?filter[name]=aws_wizard_account_number&application_type_id=${provAppTypeId}`
     ),
+});
+
+export const getCostApi = () => ({
+  listAwsRegions: (limit = 10000, offset = 0) =>
+    axiosInstanceInsights.get(`${COST_API_BASE_V3}/sources/aws-s3-regions/?limit=${limit}&offset=${offset}`),
 });
 
 export const doLoadAppTypes = () => getSourcesApi().doLoadAppTypes();
