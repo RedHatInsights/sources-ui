@@ -6,20 +6,10 @@ import render from '../../__mocks__/render';
 
 import * as ProvAzure from '../../../../components/addSourceWizard/hardcodedComponents/azure/provisioning';
 import * as useFormApi from '@data-driven-forms/react-form-renderer/use-form-api/use-form-api';
-import * as useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 
 describe('Azure-Provisioning hardcoded schemas', () => {
-  let isProdVal = true;
-
-  beforeEach(() => {
-    const isProd = jest.fn(() => isProdVal);
-    jest.spyOn(useChrome, 'useChrome').mockImplementation(() => ({ isProd }));
-  });
-
   describe('LighthouseDescription', () => {
     it('is rendered correctly in prod', async () => {
-      isProdVal = true;
-
       render(<ProvAzure.LighthouseDescription />);
 
       expect(
@@ -38,8 +28,6 @@ describe('Azure-Provisioning hardcoded schemas', () => {
     });
 
     it('is rendered correctly in stage', async () => {
-      isProdVal = false;
-
       render(<ProvAzure.LighthouseDescription />);
 
       expect(

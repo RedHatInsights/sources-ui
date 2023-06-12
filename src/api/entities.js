@@ -26,13 +26,17 @@ export const interceptor403 = (error) => {
 };
 
 const axiosInstanceInsights = axios.create();
-axiosInstanceInsights.interceptors.request.use(interceptors.authInterceptor);
+
 axiosInstanceInsights.interceptors.response.use(interceptors.responseDataInterceptor);
-axiosInstanceInsights.interceptors.response.use(null, interceptors.interceptor401);
 axiosInstanceInsights.interceptors.response.use(null, interceptors.interceptor500);
 axiosInstanceInsights.interceptors.response.use(null, interceptors.errorInterceptor);
 axiosInstanceInsights.interceptors.response.use(graphQlErrorInterceptor);
 axiosInstanceInsights.interceptors.response.use(null, interceptor403);
+
+export const initAxios = (getUser, logout) => {
+  axiosInstanceInsights.interceptors.request.use(interceptors.createAuthInterceptor(getUser));
+  axiosInstanceInsights.interceptors.response.use(null, interceptors.createInterceptor401(logout));
+};
 
 export { axiosInstanceInsights as axiosInstance };
 

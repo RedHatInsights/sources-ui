@@ -4,16 +4,8 @@ import { ACTION_TYPES } from '../../../redux/user/actionTypes';
 describe('user reducer actions', () => {
   let dispatch;
 
-  let _insights;
-
   beforeEach(() => {
-    _insights = insights;
-
     dispatch = jest.fn();
-  });
-
-  afterEach(() => {
-    insights = _insights;
   });
 
   describe('loadWritePermissions', () => {
@@ -22,13 +14,7 @@ describe('user reducer actions', () => {
     it('has write permissions - all', async () => {
       getUserPermissions = jest.fn().mockImplementation(() => Promise.resolve([{ permission: 'sources:*:*' }]));
 
-      insights = {
-        chrome: {
-          getUserPermissions,
-        },
-      };
-
-      await loadWritePermissions()(dispatch);
+      await loadWritePermissions(getUserPermissions)(dispatch);
 
       expect(dispatch.mock.calls.length).toEqual(2);
 
@@ -44,13 +30,7 @@ describe('user reducer actions', () => {
     it('has write permissions - just write', async () => {
       getUserPermissions = jest.fn().mockImplementation(() => Promise.resolve([{ permission: 'sources:*:write' }]));
 
-      insights = {
-        chrome: {
-          getUserPermissions,
-        },
-      };
-
-      await loadWritePermissions()(dispatch);
+      await loadWritePermissions(getUserPermissions)(dispatch);
 
       expect(dispatch.mock.calls.length).toEqual(2);
 
@@ -66,13 +46,7 @@ describe('user reducer actions', () => {
     it('does not have write permissions', async () => {
       getUserPermissions = jest.fn().mockImplementation(() => Promise.resolve([]));
 
-      insights = {
-        chrome: {
-          getUserPermissions,
-        },
-      };
-
-      await loadWritePermissions()(dispatch);
+      await loadWritePermissions(getUserPermissions)(dispatch);
 
       expect(dispatch.mock.calls.length).toEqual(2);
 
@@ -92,13 +66,7 @@ describe('user reducer actions', () => {
 
       getUserPermissions = jest.fn().mockImplementation(() => Promise.reject(ERROR));
 
-      insights = {
-        chrome: {
-          getUserPermissions,
-        },
-      };
-
-      await loadWritePermissions()(dispatch);
+      await loadWritePermissions(getUserPermissions)(dispatch);
 
       expect(dispatch.mock.calls.length).toEqual(2);
 
@@ -118,13 +86,7 @@ describe('user reducer actions', () => {
 
       getUserPermissions = jest.fn().mockImplementation(() => Promise.reject(ERROR));
 
-      insights = {
-        chrome: {
-          getUserPermissions,
-        },
-      };
-
-      await loadWritePermissions()(dispatch);
+      await loadWritePermissions(getUserPermissions)(dispatch);
 
       expect(dispatch.mock.calls.length).toEqual(2);
 
@@ -154,15 +116,7 @@ describe('user reducer actions', () => {
         })
       );
 
-      insights = {
-        chrome: {
-          auth: {
-            getUser: getUserSpy,
-          },
-        },
-      };
-
-      await loadOrgAdmin()(dispatch);
+      await loadOrgAdmin(getUserSpy)(dispatch);
 
       expect(dispatch.mock.calls.length).toEqual(2);
 
@@ -188,15 +142,7 @@ describe('user reducer actions', () => {
         })
       );
 
-      insights = {
-        chrome: {
-          auth: {
-            getUser: getUserSpy,
-          },
-        },
-      };
-
-      await loadOrgAdmin()(dispatch);
+      await loadOrgAdmin(getUserSpy)(dispatch);
 
       expect(dispatch.mock.calls.length).toEqual(2);
 
@@ -216,15 +162,7 @@ describe('user reducer actions', () => {
 
       getUserSpy = jest.fn().mockImplementation(() => Promise.reject(ERROR));
 
-      insights = {
-        chrome: {
-          auth: {
-            getUser: getUserSpy,
-          },
-        },
-      };
-
-      await loadOrgAdmin()(dispatch);
+      await loadOrgAdmin(getUserSpy)(dispatch);
 
       expect(dispatch.mock.calls.length).toEqual(2);
 
@@ -244,15 +182,7 @@ describe('user reducer actions', () => {
 
       getUserSpy = jest.fn().mockImplementation(() => Promise.reject(ERROR));
 
-      insights = {
-        chrome: {
-          auth: {
-            getUser: getUserSpy,
-          },
-        },
-      };
-
-      await loadOrgAdmin()(dispatch);
+      await loadOrgAdmin(getUserSpy)(dispatch);
 
       expect(dispatch.mock.calls.length).toEqual(2);
 

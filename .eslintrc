@@ -28,7 +28,7 @@
     "describe": true,
     "expect": true,
     "global": true,
-    "insights": true,
+    "insights": false,
     "it": true,
     "mount": true,
     "process": true,

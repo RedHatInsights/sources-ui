@@ -18,6 +18,7 @@ import {
 
 import CheckCircleIcon from '@patternfly/react-icons/dist/esm/icons/check-circle-icon';
 import computeSourcesUrl from '../../utilities/computeSourcesUrl';
+import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 
 const FinishedStep = ({
   onClose,
@@ -28,37 +29,40 @@ const FinishedStep = ({
   linkText,
   secondaryActions,
   uuid,
-}) => (
-  <Bullseye>
-    <EmptyState variant={EmptyStateVariant.full} className="pf-u-mt-4xl">
-      <EmptyStateIcon icon={CheckCircleIcon} color="var(--pf-global--success-color--100)" className="pf-u-mb-0" />
-      <Title headingLevel="h2" size="xl" className="pf-u-mt-xl">
-        {title}
-      </Title>
-      <EmptyStateBody className="src-c-wizard--step-text">{successfulMessage}</EmptyStateBody>
-      {uuid && (
-        <Form className="src-c-uuid">
-          <FormGroup label={<FormattedMessage id="wizard.sourcesUid" defaultMessage="Source UUID" />} fieldId="source-uuid">
-            <ClipboardCopy id="source-uuid" isReadOnly hoverTip="Source UUID" clickTip="Copied" className="pf-u-mt-md">
-              {uuid}
-            </ClipboardCopy>
-          </FormGroup>
-        </Form>
-      )}
-      <Button variant="primary" onClick={onClose} className="pf-u-mt-xl">
-        {returnButtonTitle}
-      </Button>
-      {!hideSourcesButton && (
-        <EmptyStateSecondaryActions>
-          <Button variant="link" component="a" target="_blank" rel="noopener noreferrer" href={computeSourcesUrl()}>
-            {linkText}
-          </Button>
-        </EmptyStateSecondaryActions>
-      )}
-      {secondaryActions && <EmptyStateSecondaryActions>{secondaryActions}</EmptyStateSecondaryActions>}
-    </EmptyState>
-  </Bullseye>
-);
+}) => {
+  const { isBeta } = useChrome();
+  return (
+    <Bullseye>
+      <EmptyState variant={EmptyStateVariant.full} className="pf-u-mt-4xl">
+        <EmptyStateIcon icon={CheckCircleIcon} color="var(--pf-global--success-color--100)" className="pf-u-mb-0" />
+        <Title headingLevel="h2" size="xl" className="pf-u-mt-xl">
+          {title}
+        </Title>
+        <EmptyStateBody className="src-c-wizard--step-text">{successfulMessage}</EmptyStateBody>
+        {uuid && (
+          <Form className="src-c-uuid">
+            <FormGroup label={<FormattedMessage id="wizard.sourcesUid" defaultMessage="Source UUID" />} fieldId="source-uuid">
+              <ClipboardCopy id="source-uuid" isReadOnly hoverTip="Source UUID" clickTip="Copied" className="pf-u-mt-md">
+                {uuid}
+              </ClipboardCopy>
+            </FormGroup>
+          </Form>
+        )}
+        <Button variant="primary" onClick={onClose} className="pf-u-mt-xl">
+          {returnButtonTitle}
+        </Button>
+        {!hideSourcesButton && (
+          <EmptyStateSecondaryActions>
+            <Button variant="link" component="a" target="_blank" rel="noopener noreferrer" href={computeSourcesUrl(isBeta())}>
+              {linkText}
+            </Button>
+          </EmptyStateSecondaryActions>
+        )}
+        {secondaryActions && <EmptyStateSecondaryActions>{secondaryActions}</EmptyStateSecondaryActions>}
+      </EmptyState>
+    </Bullseye>
+  );
+};
 
 FinishedStep.propTypes = {
   onClose: PropTypes.func.isRequired,

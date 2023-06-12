@@ -1,40 +1,32 @@
-import * as redux from 'react-redux';
-
 import { useSource } from '../../hooks/useSource';
-
-jest.mock('react-router-dom', () => ({
-  __esModule: true,
-  useParams: jest.fn().mockImplementation(() => ({ id: '121311231' })),
-}));
-
-jest.mock('react-redux', () => ({
-  __esModule: true,
-  useSelector: jest.fn(),
-}));
+import { createStore } from 'redux';
+import { renderHook } from '@testing-library/react-hooks';
+import { Provider } from 'react-redux';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 describe('useSource', () => {
-  let INPUT_FN = expect.any(Function);
-
   const ID = '121311231';
   const ENTITY = { id: ID, additionalInfo: 'abcd' };
 
-  const MOCK_STORE = {
-    sources: {
-      entities: [ENTITY],
-    },
-  };
-
-  beforeEach(() => {
-    redux.useSelector = jest.fn().mockImplementation((fn) => fn(MOCK_STORE));
-  });
-
-  it('call useSelector', () => {
-    useSource(ID);
-
-    expect(redux.useSelector).toHaveBeenCalledWith(INPUT_FN);
-  });
-
   it('returns object', () => {
-    expect(useSource()).toEqual(ENTITY);
+    const mockStore = {
+      sources: {
+        entities: [ENTITY],
+      },
+    };
+
+    const store = createStore(() => mockStore);
+
+    const { result } = renderHook(() => useSource(), {
+      wrapper: ({ children }) => (
+        <MemoryRouter initialEntries={['/' + ID]}>
+          <Routes>
+            <Route path="/:id" element={<Provider store={store}>{children}</Provider>} />
+          </Routes>
+        </MemoryRouter>
+      ),
+    });
+
+    expect(result.current).toEqual(ENTITY);
   });
 });
