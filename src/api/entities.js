@@ -79,6 +79,10 @@ export const getSourcesApi = () => ({
     axiosInstanceInsights.get(
       `${SOURCES_API_BASE_V3}/app_meta_data?filter[name]=aws_wizard_account_number&application_type_id=${provAppTypeId}`
     ),
+  getProvisioningServiceAccount: (provAppTypeId) =>
+    axiosInstanceInsights.get(
+      `${SOURCES_API_BASE_V3}/app_meta_data?filter[name]=gcp_service_account&application_type_id=${provAppTypeId}`
+    ),
 });
 
 export const getCostApi = () => ({
