@@ -40,10 +40,7 @@ This application allows to
 1. ```npm install```
 
 2.  ```npm run start```
-    - starts webpack bundler and serves the files with webpack dev server on `https://stage.foo.redhat.com:1337/settings/sources/`
-
-2.  ```npm run start:beta```
-    - starts webpack bundler and serves the files with webpack dev server on `https://stage.foo.redhat.com:1337/beta/settings/sources/`
+    - starts a dev server based on your preferences selected in interactive guide
 
 You have to be connected to Red Hat VPN and use Red Hat squid proxy settings (check source.redhat.com for a guide). Check also, if you have updated `/etc/hosts/` file to route these adresses to localhost. (See [script](https://github.com/RedHatInsights/insights-proxy/blob/master/scripts/patch-etc-hosts.sh))
 
