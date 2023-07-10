@@ -14,6 +14,7 @@ import * as AwsArn from './hardcodedComponents/aws/arn';
 
 import * as ProvAwsArn from './hardcodedComponents/aws/provisioningArn';
 import * as ProvAzure from './hardcodedComponents/azure/provisioning';
+import * as ProvGCP from './hardcodedComponents/gcp/provisioning';
 
 import * as SWAwsArn from './hardcodedComponents/aws/subscriptionWatch';
 import * as SWAzure from './hardcodedComponents/azure/subscriptionWatch';
@@ -1448,6 +1449,60 @@ const hardcodedSchemas = {
                   name: 'azure-2',
                   component: 'description',
                   Content: SWGoogle.AnsiblePlaybook,
+                },
+              ],
+            },
+          ],
+        },
+      },
+      provisioning_project_id: {
+        generic: {
+          includeStepKeyFields: ['provisioning_project_id'],
+        },
+        [PROVISIONING_APP_NAME]: {
+          skipSelection: true,
+          useApplicationAuth: true,
+          customSteps: true,
+          additionalSteps: [
+            {
+              title: <FormattedMessage id="provisioning.enterProjectID" defaultMessage="Enter Project ID" />,
+              nextStep: 'prov-custom-role',
+              substepOf: {
+                name: 'eaa',
+                title: <FormattedMessage id="provisioning.enableAccountAccess" defaultMessage="Enable account access" />,
+              },
+              fields: [
+                {
+                  name: 'add-project-id',
+                  component: 'description',
+                  Content: ProvGCP.ProjectID,
+                },
+                {
+                  component: componentTypes.TEXT_FIELD,
+                  name: 'authentication.username',
+                  isRequired: true,
+                  label: 'Project ID',
+                  placeholder: 'project_id',
+                  validate: [{ type: 'required' }],
+                },
+                {
+                  component: componentTypes.TEXT_FIELD,
+                  name: 'authentication.authtype',
+                  hideField: true,
+                  initialValue: 'provisioning_project_id',
+                  initializeOnMount: true,
+                },
+              ],
+            },
+            {
+              title: <FormattedMessage id="provisioning.createRole" defaultMessage="Create custom role" />,
+              name: 'prov-custom-role',
+              substepOf: 'eaa',
+              fields: [
+                {
+                  name: 'custom-role-description',
+                  component: 'description',
+                  Content: ProvGCP.AddRole,
                 },
               ],
             },
