@@ -3,7 +3,12 @@ import { getSourcesApi } from './entities';
 export const doLoadSourceTypes = () =>
   getSourcesApi()
     .listSourceTypes()
-    .then((data) => ({ sourceTypes: data.data }));
+    // RH marketplace is not supposed to show up and is not supposed to even exist
+    // Until we know why we get in the UI, we filter it out for now
+    // Unable to use != query param
+    .then((data) => ({
+      sourceTypes: data.data.filter(({ name }) => name !== 'rh-marketplace'),
+    }));
 
 export const doLoadApplicationTypes = () =>
   getSourcesApi()
