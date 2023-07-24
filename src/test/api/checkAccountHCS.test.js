@@ -17,11 +17,19 @@ describe('checkAccountHCS', () => {
     });
   });
 
-  it('schould return a correct value on error', async () => {
+  it('should return a correct value on error', async () => {
     jest.spyOn(global, 'fetch').mockResolvedValue({
       status: 500,
       statusText: 'test',
     });
+    result = await checkAccountHCS();
+    expect(result).toEqual({
+      hcsDeal: false,
+    });
+  });
+
+  it('should return a correct value on error', async () => {
+    jest.spyOn(global, 'fetch').mockResolvedValue(Promise.reject('rejected'));
     result = await checkAccountHCS();
     expect(result).toEqual({
       hcsDeal: false,

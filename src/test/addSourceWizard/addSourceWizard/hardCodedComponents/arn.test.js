@@ -8,6 +8,11 @@ import * as AwsArn from '../../../../components/addSourceWizard/hardcodedCompone
 import render from '../../__mocks__/render';
 import { HCS_APP_NAME } from '../../../../utilities/constants';
 
+jest.mock('uuid', () => ({
+  ...jest.requireActual('uuid'),
+  v4: () => 'test-uuid',
+}));
+
 describe('AWS-ARN hardcoded schemas', () => {
   it('ARN DESCRIPTION is rendered correctly', () => {
     render(<AwsArn.ArnDescription />);
@@ -116,7 +121,9 @@ describe('AWS-ARN hardcoded schemas', () => {
     ).toBeInTheDocument();
     expect(screen.getByText('Attach the permissions policy that you just created.')).toBeInTheDocument();
     expect(screen.getByText('Complete the process to create your new role.')).toBeInTheDocument();
+    expect(screen.getAllByRole('textbox', { name: 'Copyable input' })).toHaveLength(2);
     expect(screen.getAllByRole('textbox', { name: 'Copyable input' })[0]).toHaveValue('589173575009');
+    expect(screen.getAllByRole('textbox', { name: 'Copyable input' })[1]).toHaveValue('test-uuid');
     expect(changeSpy).toHaveBeenCalledWith('authentication', {
       extra: expect.objectContaining({ external_id: expect.any(String) }),
     });
@@ -152,7 +159,9 @@ describe('AWS-ARN hardcoded schemas', () => {
     ).toBeInTheDocument();
     expect(screen.getByText('Attach the permissions policy that you just created.')).toBeInTheDocument();
     expect(screen.getByText('Complete the process to create your new role.')).toBeInTheDocument();
+    expect(screen.getAllByRole('textbox', { name: 'Copyable input' })).toHaveLength(2);
     expect(screen.getAllByRole('textbox', { name: 'Copyable input' })[0]).toHaveValue('589173575009');
+    expect(screen.getAllByRole('textbox', { name: 'Copyable input' })[1]).toHaveValue('test-uuid');
     expect(changeSpy).toHaveBeenCalledWith('authentication', {
       extra: expect.objectContaining({ external_id: expect.any(String) }),
     });
