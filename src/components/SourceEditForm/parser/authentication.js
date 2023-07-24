@@ -1,7 +1,9 @@
+import React from 'react';
 import get from 'lodash/get';
 import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
-import hardcodedSchemas from '../../../components/addSourceWizard/hardcodedSchemas';
+import { FormattedMessage } from 'react-intl';
 import { doLoadRegions } from '../../../api/doLoadRegions';
+import hardcodedSchemas from '../../../components/addSourceWizard/hardcodedSchemas';
 
 export const createAuthFieldName = (fieldName, id) => `authentications.a${id}.${fieldName.replace('authentication.', '')}`;
 
@@ -38,6 +40,7 @@ export const modifyAuthSchemas = (fields, id, appId) =>
 
     const isPassword = getLastPartOfName(finalField.name) === 'password';
     const isAwsRegion = getLastPartOfName(finalField.name) === 'bucket_region' && finalField.label.includes('AWS');
+    const isExternalId = getLastPartOfName(finalField.name) === 'external_id';
 
     if (isPassword) {
       finalField.component = 'authentication';
@@ -45,6 +48,13 @@ export const modifyAuthSchemas = (fields, id, appId) =>
 
     if (isAwsRegion) {
       finalField.loadOptions = () => doLoadRegions().then((data) => data.map((item) => ({ value: item, label: item })));
+    }
+
+    if (isExternalId) {
+      finalField.hideField = false;
+      finalField.label = <FormattedMessage id="cost.arn.externalId" defaultMessage="External ID" />;
+      finalField.component = 'clipboard-copy';
+      finalField.isReadOnly = true;
     }
 
     return finalField;
