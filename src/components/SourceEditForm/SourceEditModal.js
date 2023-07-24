@@ -11,10 +11,11 @@ import { onSubmit } from './onSubmit';
 
 import { useSource } from '../../hooks/useSource';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
+import { prepareMessages } from './helpers';
 import reducer, { initialState } from './reducer';
 import SubmittingModal from './SubmittingModal';
 import ErroredModal from './ErroredModal';
-import { prepareMessages } from './helpers';
+import ClipboardCopy from '../FormComponents/ClipboardCopy';
 
 const SourceEditModal = () => {
   const [state, setState] = useReducer(reducer, initialState);
@@ -95,6 +96,7 @@ const SourceEditModal = () => {
         ...(!sourceRedux.paused_at && { message }),
         ...(!sourceRedux.paused_at && { messages }),
       }}
+      componentMapper={{ 'clipboard-copy': ClipboardCopy }}
     />
   );
 };
