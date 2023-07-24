@@ -88,7 +88,22 @@ describe('AWS-ARN hardcoded schemas', () => {
   });
 
   it('IAM ROLE is rendered correctly', () => {
-    render(<AwsArn.IAMRoleDescription />);
+    const changeSpy = jest.fn();
+    const FORM_OPTIONS = {
+      getState: () => ({
+        values: {
+          application: {
+            extra: {},
+          },
+        },
+      }),
+      change: changeSpy,
+    };
+    render(
+      <RendererContext.Provider value={{ formOptions: FORM_OPTIONS }}>
+        <AwsArn.IAMRoleDescription />
+      </RendererContext.Provider>
+    );
 
     expect(
       screen.getByText('To delegate account access, create an IAM role to associate with your IAM policy.')
@@ -101,11 +116,30 @@ describe('AWS-ARN hardcoded schemas', () => {
     ).toBeInTheDocument();
     expect(screen.getByText('Attach the permissions policy that you just created.')).toBeInTheDocument();
     expect(screen.getByText('Complete the process to create your new role.')).toBeInTheDocument();
-    expect(screen.getByRole('textbox', { name: 'Copyable input' })).toHaveValue('589173575009');
+    expect(screen.getAllByRole('textbox', { name: 'Copyable input' })[0]).toHaveValue('589173575009');
+    expect(changeSpy).toHaveBeenCalledWith('authentication', {
+      extra: expect.objectContaining({ external_id: expect.any(String) }),
+    });
   });
 
   it('IAM ROLE is rendered correctly for HCS', () => {
-    render(<AwsArn.IAMRoleDescription showHCS />);
+    const changeSpy = jest.fn();
+    const FORM_OPTIONS = {
+      getState: () => ({
+        values: {
+          application: {
+            extra: {},
+          },
+        },
+      }),
+      change: changeSpy,
+    };
+
+    render(
+      <RendererContext.Provider value={{ formOptions: FORM_OPTIONS }}>
+        <AwsArn.IAMRoleDescription showHCS />
+      </RendererContext.Provider>
+    );
 
     expect(
       screen.getByText('To delegate account access, create an IAM role to associate with your IAM policy.')
@@ -118,7 +152,10 @@ describe('AWS-ARN hardcoded schemas', () => {
     ).toBeInTheDocument();
     expect(screen.getByText('Attach the permissions policy that you just created.')).toBeInTheDocument();
     expect(screen.getByText('Complete the process to create your new role.')).toBeInTheDocument();
-    expect(screen.getByRole('textbox', { name: 'Copyable input' })).toHaveValue('589173575009');
+    expect(screen.getAllByRole('textbox', { name: 'Copyable input' })[0]).toHaveValue('589173575009');
+    expect(changeSpy).toHaveBeenCalledWith('authentication', {
+      extra: expect.objectContaining({ external_id: expect.any(String) }),
+    });
   });
 
   it('TAGS DESCRIPTION is rendered correctly for Cost Management', () => {
