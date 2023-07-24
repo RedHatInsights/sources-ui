@@ -1,6 +1,7 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
+import { v4 as uuidv4 } from 'uuid';
 
 import {
   Button,
@@ -198,6 +199,16 @@ export const UsageSteps = () => {
 
 export const IAMRoleDescription = () => {
   const intl = useIntl();
+  const externalId = useMemo(() => uuidv4(), []);
+  const formOptions = useFormApi();
+  const { authentication = {} } = formOptions.getState().values;
+
+  useEffect(() => {
+    formOptions.change('authentication', {
+      ...authentication,
+      extra: { ...(authentication?.extra || {}), external_id: externalId },
+    });
+  }, [externalId]);
 
   return (
     <TextContent>
@@ -223,6 +234,15 @@ export const IAMRoleDescription = () => {
         </TextListItem>
         <ClipboardCopy className="pf-u-m-sm-on-sm" isReadOnly>
           589173575009
+        </ClipboardCopy>
+        <TextListItem>
+          {intl.formatMessage({
+            id: 'cost.iamrole.enterExternalId',
+            defaultMessage: 'Paste the following value in the External ID field:',
+          })}
+        </TextListItem>
+        <ClipboardCopy className="pf-u-m-sm-on-sm" isReadOnly>
+          {externalId}
         </ClipboardCopy>
         <TextListItem>
           {intl.formatMessage({
