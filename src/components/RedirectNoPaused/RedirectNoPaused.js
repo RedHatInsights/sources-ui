@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 
 import { addMessage } from '../../redux/sources/actions';
-import { replaceRouteId, routes } from '../../Routes';
+import { replaceRouteId, routes } from '../../Routing';
 import { useSource } from '../../hooks/useSource';
+import AppNavigate from '../AppNavigate';
 
 const RedirectNoPaused = () => {
   const intl = useIntl();
@@ -31,7 +31,7 @@ const RedirectNoPaused = () => {
   }, [source.paused_at]);
 
   if (source.paused_at) {
-    return <Redirect to={replaceRouteId(routes.sourcesDetail.path, source.id)} />;
+    return <AppNavigate to={replaceRouteId(routes.sourcesDetail.path, source.id)} />;
   }
 
   return null;

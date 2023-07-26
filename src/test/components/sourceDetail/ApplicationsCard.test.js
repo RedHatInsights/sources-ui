@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -8,7 +8,7 @@ import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 
 import { ACCOUNT_AUTHORIZATION } from '../../../components/constants';
 import ApplicationsCard from '../../../components/SourceDetail/ApplicationsCard';
-import { replaceRouteId, routes } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routing';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import sourceTypes, { AMAZON_TYPE } from '../../__mocks__/sourceTypes';
 import appTypes, { COST_MANAGEMENT_APP, SUB_WATCH_APP } from '../../__mocks__/applicationTypes';
@@ -37,7 +37,9 @@ describe('ApplicationsCard', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -82,7 +84,9 @@ describe('ApplicationsCard', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -116,7 +120,9 @@ describe('ApplicationsCard', () => {
     it('renders correctly', () => {
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -142,7 +148,9 @@ describe('ApplicationsCard', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -179,7 +187,9 @@ describe('ApplicationsCard', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -188,7 +198,7 @@ describe('ApplicationsCard', () => {
       await user.click(screen.getAllByRole('checkbox')[1]);
 
       expect(screen.getByTestId('location-display').textContent).toEqual(
-        replaceRouteId(routes.sourcesDetailAddApp.path, sourceId).replace(':app_type_id', SUB_WATCH_APP.id)
+        replaceRouteId(`/settings/sources/${routes.sourcesDetailAddApp.path}`, sourceId).replace(':app_type_id', SUB_WATCH_APP.id)
       );
     });
 
@@ -220,7 +230,9 @@ describe('ApplicationsCard', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -278,7 +290,9 @@ describe('ApplicationsCard', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -322,7 +336,9 @@ describe('ApplicationsCard', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -389,7 +405,9 @@ describe('ApplicationsCard', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -426,7 +444,9 @@ describe('ApplicationsCard', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -451,7 +471,9 @@ describe('ApplicationsCard', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -503,7 +525,9 @@ describe('ApplicationsCard', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -527,7 +551,9 @@ describe('ApplicationsCard', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -557,7 +583,9 @@ describe('ApplicationsCard', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
+          </Routes>,
           store,
           initialEntry
         )
@@ -603,7 +631,9 @@ describe('ApplicationsCard', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationsCard {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
+          </Routes>,
           store,
           initialEntry
         )

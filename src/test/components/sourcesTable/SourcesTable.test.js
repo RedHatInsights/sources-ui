@@ -12,7 +12,7 @@ import appTypes from '../../__mocks__/applicationTypes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import * as actions from '../../../redux/sources/actions';
 import * as API from '../../../api/entities';
-import { replaceRouteId, routes } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routing';
 import { defaultSourcesState } from '../../../redux/sources/reducer';
 import mockStore from '../../__mocks__/mockStore';
 import { disabledMessage } from '../../../utilities/disabledTooltipProps';
@@ -211,7 +211,7 @@ describe('SourcesTable', () => {
 
       await user.click(screen.getAllByLabelText('Actions')[0]);
       await user.click(screen.getByText('Edit'));
-      const expectedPath = replaceRouteId(routes.sourcesDetail.path, sourcesDataGraphQl[0].id);
+      const expectedPath = replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, sourcesDataGraphQl[0].id);
       expect(screen.getByTestId('location-display').textContent).toEqual(expectedPath);
     });
 
@@ -221,7 +221,7 @@ describe('SourcesTable', () => {
       await user.click(screen.getAllByLabelText('Actions')[0]);
       await user.click(screen.getByText('Remove'));
 
-      const expectedPath = replaceRouteId(routes.sourcesRemove.path, sourcesDataGraphQl[0].id);
+      const expectedPath = replaceRouteId(`/settings/sources/${routes.sourcesRemove.path}`, sourcesDataGraphQl[0].id);
       expect(screen.getByTestId('location-display').textContent).toEqual(expectedPath);
     });
 

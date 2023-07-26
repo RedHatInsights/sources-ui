@@ -4,7 +4,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import componentWrapperIntl from '../../../utilities/testsHelpers';
-import { routes } from '../../../Routes';
+import { routes } from '../../../Routing';
 import CloudTiles from '../../../components/CloudTiles/CloudTiles';
 import mockStore from '../../__mocks__/mockStore';
 import sourceTypes from '../../__mocks__/sourceTypes';
@@ -78,7 +78,7 @@ describe('CloudTiles', () => {
 
     await user.click(screen.getByText('Amazon Web Services'));
 
-    expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path);
+    expect(screen.getByTestId('location-display').textContent).toEqual(`/settings/sources/${routes.sourcesNew.path}`);
     expect(setSelectedType).toHaveBeenCalledWith('amazon');
   });
 
@@ -89,7 +89,7 @@ describe('CloudTiles', () => {
 
     await user.click(screen.getByText('Google Cloud'));
 
-    expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path);
+    expect(screen.getByTestId('location-display').textContent).toEqual(`/settings/sources/${routes.sourcesNew.path}`);
     expect(setSelectedType).toHaveBeenCalledWith('google');
   });
 
@@ -100,7 +100,7 @@ describe('CloudTiles', () => {
 
     await user.click(screen.getByText('Microsoft Azure'));
 
-    expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path);
+    expect(screen.getByTestId('location-display').textContent).toEqual(`/settings/sources/${routes.sourcesNew.path}`);
     expect(setSelectedType).toHaveBeenCalledWith('azure');
   });
 
@@ -111,7 +111,7 @@ describe('CloudTiles', () => {
 
     await user.click(screen.getByText('IBM Cloud'));
 
-    expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path);
+    expect(screen.getByTestId('location-display').textContent).toEqual(`/settings/sources/${routes.sourcesNew.path}`);
     expect(setSelectedType).toHaveBeenCalledWith('ibm');
   });
 
@@ -122,7 +122,7 @@ describe('CloudTiles', () => {
 
     await user.click(screen.getByText('Oracle Cloud Infrastructure'));
 
-    expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path);
+    expect(screen.getByTestId('location-display').textContent).toEqual(`/settings/sources/${routes.sourcesNew.path}`);
     expect(setSelectedType).toHaveBeenCalledWith('oracle-cloud-infrastructure');
   });
 });

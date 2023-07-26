@@ -8,7 +8,7 @@ import render from '../__mocks__/render';
 import sourceTypes, { AMAZON_TYPE } from '../../__mocks__/sourceTypes';
 
 import * as api from '../../../api/entities';
-import { replaceRouteId, routes } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routing';
 
 describe('Final wizard', () => {
   let initialProps;
@@ -258,7 +258,9 @@ describe('Final wizard', () => {
 
     await user.click(screen.getByText('Edit source'));
 
-    expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, id));
+    expect(screen.getByTestId('location-display').textContent).toEqual(
+      replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, id)
+    );
   });
 
   it('when configuration failed, show endpoint error', async () => {

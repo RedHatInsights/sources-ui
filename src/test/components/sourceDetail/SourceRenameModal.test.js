@@ -4,8 +4,8 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import { Route } from 'react-router-dom';
-import { replaceRouteId, routes } from '../../../Routes';
+import { Route, Routes } from 'react-router-dom';
+import { replaceRouteId, routes } from '../../../Routing';
 import SourceRenameModal from '../../../components/SourceDetail/SourceRenameModal';
 import * as actions from '../../../redux/sources/actions';
 import mockStore from '../../__mocks__/mockStore';
@@ -35,7 +35,9 @@ describe('SourceRenameModal', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <SourceRenameModal {...args} />} />,
+        <Routes>
+          <Route path={`${routes.sourcesDetail.path}/*`} element={<SourceRenameModal />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -53,7 +55,9 @@ describe('SourceRenameModal', () => {
 
     await user.click(screen.getByLabelText('Close'));
 
-    expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
+    expect(screen.getByTestId('location-display').textContent).toEqual(
+      replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, sourceId)
+    );
   });
 
   it('close on cancel', async () => {
@@ -61,7 +65,9 @@ describe('SourceRenameModal', () => {
 
     await user.click(screen.getByText('Cancel'));
 
-    expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
+    expect(screen.getByTestId('location-display').textContent).toEqual(
+      replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, sourceId)
+    );
   });
 
   it('submits', async () => {
@@ -74,6 +80,8 @@ describe('SourceRenameModal', () => {
     await user.click(screen.getByText('Save'));
 
     expect(actions.renameSource).toHaveBeenCalledWith(sourceId, 'new-name', 'Renaming was unsuccessful');
-    expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, sourceId));
+    expect(screen.getByTestId('location-display').textContent).toEqual(
+      replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, sourceId)
+    );
   });
 });

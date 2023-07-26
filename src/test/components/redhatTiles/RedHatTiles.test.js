@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import componentWrapperIntl from '../../../utilities/testsHelpers';
-import { routes } from '../../../Routes';
+import { routes } from '../../../Routing';
 import mockStore from '../../__mocks__/mockStore';
 import RedHatTiles from '../../../components/RedHatTiles/RedHatTiles';
 import sourceTypes from '../../__mocks__/sourceTypes';
@@ -65,7 +65,7 @@ describe('RedhatTiles', () => {
 
     await user.click(screen.getByText('OpenShift Container Platform'));
 
-    expect(screen.getByTestId('location-display').textContent).toEqual(routes.sourcesNew.path);
+    expect(screen.getByTestId('location-display').textContent).toEqual(`/settings/sources/${routes.sourcesNew.path}`);
     expect(setSelectedType).toHaveBeenCalledWith('openshift');
   });
 });

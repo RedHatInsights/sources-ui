@@ -1,9 +1,9 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { replaceRouteId, routes } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routing';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import mockStore from '../../__mocks__/mockStore';
 import PauseAlert from '../../../components/SourceDetail/PauseAlert';
@@ -25,7 +25,9 @@ describe('DetailHeader', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <PauseAlert {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<PauseAlert />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -51,7 +53,9 @@ describe('DetailHeader', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <PauseAlert {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<PauseAlert />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -79,7 +83,9 @@ describe('DetailHeader', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <PauseAlert {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<PauseAlert />} />
+        </Routes>,
         store,
         initialEntry
       )

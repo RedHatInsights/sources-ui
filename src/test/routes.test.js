@@ -1,4 +1,4 @@
-import { replaceRouteId, routes } from '../Routes';
+import { replaceRouteId, routes } from '../Routing';
 
 describe('routes', () => {
   describe('replaceRouteId', () => {
@@ -13,27 +13,27 @@ describe('routes', () => {
     });
 
     it('replaces :id in edit path', () => {
-      expect(replaceRouteId(routes.sourcesDetail.path, id)).toEqual(`/sources/detail/${id}`);
+      expect(replaceRouteId(routes.sourcesDetail.path, id)).toEqual(`detail/${id}`);
     });
 
     it('replaces :id in removal path', () => {
-      expect(replaceRouteId(routes.sourcesRemove.path, id)).toEqual(`/sources/remove/${id}`);
+      expect(replaceRouteId(routes.sourcesRemove.path, id)).toEqual(`remove/${id}`);
     });
 
     it('replaces :id in detail/rename path', () => {
-      expect(replaceRouteId(routes.sourcesDetailRename.path, id)).toEqual(`/sources/detail/${id}/rename`);
+      expect(replaceRouteId(routes.sourcesDetailRename.path, id)).toEqual(`detail/${id}/rename`);
     });
 
     it('replaces :id in detail/remove path', () => {
-      expect(replaceRouteId(routes.sourcesDetailRemove.path, id)).toEqual(`/sources/detail/${id}/remove`);
+      expect(replaceRouteId(routes.sourcesDetailRemove.path, id)).toEqual(`detail/${id}/remove`);
     });
 
     it('replaces :id in detail/addApp path', () => {
-      expect(replaceRouteId(routes.sourcesDetailAddApp.path, id)).toEqual(`/sources/detail/${id}/add_app/:app_type_id`);
+      expect(replaceRouteId(routes.sourcesDetailAddApp.path, id)).toEqual(`detail/${id}/add_app/:app_type_id`);
     });
 
     it('replaces :id in detail/removeApp path', () => {
-      expect(replaceRouteId(routes.sourcesDetailRemoveApp.path, id)).toEqual(`/sources/detail/${id}/remove_app/:app_id`);
+      expect(replaceRouteId(routes.sourcesDetailRemoveApp.path, id)).toEqual(`detail/${id}/remove_app/:app_id`);
     });
   });
 });

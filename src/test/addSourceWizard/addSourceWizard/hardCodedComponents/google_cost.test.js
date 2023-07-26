@@ -1,15 +1,26 @@
 import React from 'react';
-import { screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 
 import * as api from '../../../../api/entities';
 
 import * as Cm from '../../../../components/addSourceWizard/hardcodedComponents/gcp/costManagement';
-import render from '../../__mocks__/render';
+import mockedRender from '../../__mocks__/render';
 import SourcesFormRenderer from '../../../../utilities/SourcesFormRenderer';
+import mockStore from '../../../__mocks__/mockStore';
+import componentWrapperIntl from '../../../../utilities/testsHelpers';
 
 describe('Cost Management Google steps components', () => {
+  let store;
+  let initialState;
+
+  beforeEach(() => {
+    initialState = {
+      sources: {},
+    };
+  });
   it('Project', () => {
-    render(<Cm.Project />);
+    store = mockStore(initialState);
+    render(componentWrapperIntl(<Cm.Project />, store));
 
     expect(
       screen.getByText(
@@ -33,7 +44,7 @@ describe('Cost Management Google steps components', () => {
           }),
       });
 
-      render(<Cm.AssignAccess />);
+      mockedRender(<Cm.AssignAccess />);
 
       expect(screen.getByLabelText('Copyable input')).toHaveValue(`Loading account address...`);
 
@@ -55,7 +66,7 @@ describe('Cost Management Google steps components', () => {
         getGoogleAccount: () => Promise.reject(error),
       });
 
-      render(<Cm.AssignAccess />);
+      mockedRender(<Cm.AssignAccess />);
 
       expect(screen.getByLabelText('Copyable input')).toHaveValue(`Loading account address...`);
 
@@ -72,24 +83,28 @@ describe('Cost Management Google steps components', () => {
   });
 
   it('Dataset', () => {
+    store = mockStore(initialState);
     render(
-      <SourcesFormRenderer
-        onSubmit={jest.fn()}
-        schema={{
-          fields: [
-            {
-              name: 'field',
-              component: 'description',
-              Content: Cm.Dataset,
+      componentWrapperIntl(
+        <SourcesFormRenderer
+          onSubmit={jest.fn()}
+          schema={{
+            fields: [
+              {
+                name: 'field',
+                component: 'description',
+                Content: Cm.Dataset,
+              },
+            ],
+          }}
+          initialValues={{
+            authentication: {
+              username: 'some-project-id',
             },
-          ],
-        }}
-        initialValues={{
-          authentication: {
-            username: 'some-project-id',
-          },
-        }}
-      />
+          }}
+        />,
+        store
+      )
     );
 
     expect(screen.getByText('some-project-id', { exact: false })).toBeInTheDocument();
@@ -104,7 +119,7 @@ describe('Cost Management Google steps components', () => {
   });
 
   it('Billing export', () => {
-    render(<Cm.BillingExport />);
+    mockedRender(<Cm.BillingExport />);
 
     expect(
       screen.getByText('To enable detailed billing data exports to BigQuery, set up daily cost export.', { exact: false })
@@ -116,7 +131,8 @@ describe('Cost Management Google steps components', () => {
   });
 
   it('IAM Role', () => {
-    render(<Cm.IAMRole />);
+    store = mockStore(initialState);
+    render(componentWrapperIntl(<Cm.IAMRole />, store));
 
     expect(
       screen.getByText('To specify GCP access permissions for Red Hat, create an Identity and Access Management (IAM) role.', {

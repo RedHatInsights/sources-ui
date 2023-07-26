@@ -1,10 +1,10 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 
 import ApplicationResourcesCard from '../../../components/SourceDetail/ApplicationResourcesCard';
 import * as SourceEditModal from '../../../components/SourceEditForm/SourceEditModal';
-import { replaceRouteId, routes } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routing';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import mockStore from '../../__mocks__/mockStore';
 
@@ -24,7 +24,9 @@ describe('ApplicationResourcesCard', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationResourcesCard {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<ApplicationResourcesCard />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -45,7 +47,9 @@ describe('ApplicationResourcesCard', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationResourcesCard {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<ApplicationResourcesCard />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -68,7 +72,9 @@ describe('ApplicationResourcesCard', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <ApplicationResourcesCard {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<ApplicationResourcesCard />} />
+        </Routes>,
         store,
         initialEntry
       )

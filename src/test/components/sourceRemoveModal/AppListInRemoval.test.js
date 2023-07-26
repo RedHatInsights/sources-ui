@@ -1,10 +1,10 @@
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import { render, screen } from '@testing-library/react';
 
 import AppListInRemoval from '../../../components/SourceRemoveModal/AppListInRemoval';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import { replaceRouteId, routes } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routing';
 import appTypes, { CATALOG_APP, COST_MANAGEMENT_APP } from '../../__mocks__/applicationTypes';
 
 import mockStore from '../../__mocks__/mockStore';
@@ -27,7 +27,9 @@ describe('AppListInRemoval', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesRemove.path} render={(...args) => <AppListInRemoval {...initialProps} {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesRemove.path} element={<AppListInRemoval {...initialProps} />} />
+        </Routes>,
         store,
         [replaceRouteId(routes.sourcesRemove.path, '406')]
       )
@@ -43,7 +45,9 @@ describe('AppListInRemoval', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesRemove.path} render={(...args) => <AppListInRemoval {...initialProps} {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesRemove.path} element={<AppListInRemoval {...initialProps} />} />
+        </Routes>,
         store,
         [replaceRouteId(routes.sourcesRemove.path, '406')]
       )
@@ -62,7 +66,9 @@ describe('AppListInRemoval', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesRemove.path} render={(...args) => <AppListInRemoval {...initialProps} {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesRemove.path} element={<AppListInRemoval {...initialProps} />} />
+        </Routes>,
         store,
         [replaceRouteId(routes.sourcesRemove.path, '406')]
       )

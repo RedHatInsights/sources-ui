@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense } from 'react';
 
 import { Grid, GridItem } from '@patternfly/react-core';
 
@@ -8,51 +8,15 @@ import ApplicationResourcesCard from '../components/SourceDetail/ApplicationReso
 import RedirectNoId from '../components/RedirectNoId/RedirectNoId';
 import { useSource } from '../hooks/useSource';
 import { DetailLoader } from '../components/SourcesTable/loaders';
-import CustomRoute from '../components/CustomRoute/CustomRoute';
-import { replaceRouteId, routes } from '../Routes';
+import { replaceRouteId, routes } from '../Routing';
 import DetailHeader from '../components/SourceDetail/DetailHeader';
 import isSuperKey from '../utilities/isSuperKey';
 import ResourcesTable from '../components/SourceDetail/ResourcesTable';
 import PauseAlert from '../components/SourceDetail/PauseAlert';
-
-const SourceRemoveModal = lazy(() =>
-  import(
-    /* webpackChunkName: "removeSource" */
-    '../components/SourceRemoveModal/SourceRemoveModal'
-  )
-);
-
-const AddApplication = lazy(() =>
-  import(
-    /* webpackChunkName: "addApplication" */
-    '../components/AddApplication/AddApplication'
-  )
-);
-
-const RemoveAppModal = lazy(() =>
-  import(
-    /* webpackChunkName: "removeApplication" */
-    '../components/AddApplication/RemoveAppModal'
-  )
-);
-
-const SourceRenameModal = lazy(() =>
-  import(
-    /* webpackChunkName: "renameSource" */
-    '../components/SourceDetail/SourceRenameModal'
-  )
-);
-
-const EditCredentials = lazy(() =>
-  import(
-    /* webpackChunkName: "credentialsForm" */
-    '../components/CredentialsForm/CredentialsForm'
-  )
-);
+import { Outlet } from 'react-router-dom';
 
 const Detail = () => {
   const source = useSource();
-
   if (!source) {
     return (
       <React.Fragment>
@@ -67,16 +31,7 @@ const Detail = () => {
   return (
     <div className="src-c-detail-page">
       <Suspense fallback={null}>
-        <CustomRoute
-          exact
-          route={routes.sourcesDetailRemove}
-          Component={SourceRemoveModal}
-          componentProps={{ backPath: replaceRouteId(routes.sourcesDetail.path, source.id) }}
-        />
-        <CustomRoute exact route={routes.sourcesDetailAddApp} Component={AddApplication} />
-        <CustomRoute exact route={routes.sourcesDetailRemoveApp} Component={RemoveAppModal} />
-        <CustomRoute exact route={routes.sourcesDetailRename} Component={SourceRenameModal} />
-        <CustomRoute exact route={routes.sourcesDetailEditCredentials} Component={EditCredentials} />
+        <Outlet context={{ backPath: replaceRouteId(routes.sourcesDetail.path, source.id) }} />
       </Suspense>
       <DetailHeader />
       {source.paused_at && <PauseAlert />}

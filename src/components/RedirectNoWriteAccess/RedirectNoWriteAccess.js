@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 
 import { addMessage } from '../../redux/sources/actions';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
-import { routes } from '../../Routes';
+import { routes } from '../../Routing';
 import { disabledMessage } from '../../utilities/disabledTooltipProps';
+import AppNavigate from '../AppNavigate';
 
 const RedirectNoWriteAccess = () => {
   const intl = useIntl();
@@ -29,7 +29,7 @@ const RedirectNoWriteAccess = () => {
   }, [writePermissions]);
 
   if (writePermissions === false) {
-    return <Redirect to={routes.sources.path} />;
+    return <AppNavigate to={routes.sources.path} />;
   }
 
   return null;

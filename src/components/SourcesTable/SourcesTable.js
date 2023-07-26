@@ -1,6 +1,5 @@
 import React, { useEffect, useReducer } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 import { Table, TableBody, TableHeader, sortable, wrappable } from '@patternfly/react-table';
 import { useIntl } from 'react-intl';
 
@@ -10,8 +9,9 @@ import { COLUMN_COUNT, sourcesColumns } from '../../views/sourcesViewDefinition'
 import EmptyStateTable from './EmptyStateTable';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
-import { replaceRouteId, routes } from '../../Routes';
+import { replaceRouteId, routes } from '../../Routing';
 import disabledTooltipProps from '../../utilities/disabledTooltipProps';
+import { useAppNavigate } from '../../hooks/useAppNavigate';
 
 export const itemToCells = (item, columns, sourceTypes, appTypes) =>
   columns
@@ -65,7 +65,7 @@ const initialState = (columns) => ({
   key: 0,
 });
 
-export const actionResolver = (intl, push, hasWritePermissions, dispatch, isOrgAdmin) => (rowData) => {
+export const actionResolver = (intl, navigate, hasWritePermissions, dispatch, isOrgAdmin) => (rowData) => {
   const disabledProps = disabledTooltipProps(intl, isOrgAdmin);
   const actions = [];
 
@@ -106,7 +106,7 @@ export const actionResolver = (intl, push, hasWritePermissions, dispatch, isOrgA
       id: 'sources.remove.description',
       defaultMessage: 'Permanently delete this source and all collected data',
     }),
-    onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesRemove.path, id)),
+    onClick: (_ev, _i, { id }) => navigate(replaceRouteId(routes.sourcesRemove.path, id)),
     ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
   });
 
@@ -120,7 +120,7 @@ export const actionResolver = (intl, push, hasWritePermissions, dispatch, isOrgA
           id: 'sources.viewDetails',
           defaultMessage: 'View details',
         }),
-    onClick: (_ev, _i, { id }) => push(replaceRouteId(routes.sourcesDetail.path, id)),
+    onClick: (_ev, _i, { id }) => navigate(replaceRouteId(routes.sourcesDetail.path, id)),
     ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
   });
 
@@ -128,7 +128,7 @@ export const actionResolver = (intl, push, hasWritePermissions, dispatch, isOrgA
 };
 
 const SourcesTable = () => {
-  const { push } = useHistory();
+  const navigate = useAppNavigate();
   const intl = useIntl();
 
   const loaded = useIsLoaded();
@@ -231,7 +231,7 @@ const SourcesTable = () => {
       rows={shownRows}
       cells={state.cells}
       actionResolver={
-        loaded && numberOfEntities > 0 ? actionResolver(intl, push, writePermissions, reduxDispatch, isOrgAdmin) : undefined
+        loaded && numberOfEntities > 0 ? actionResolver(intl, navigate, writePermissions, reduxDispatch, isOrgAdmin) : undefined
       }
       rowWrapper={RowWrapperLoader}
       className={numberOfEntities === 0 && state.isLoaded ? 'ins-c-table-empty-state' : ''}

@@ -6,8 +6,8 @@ import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import sourceTypes, { AMAZON_TYPE } from '../../__mocks__/sourceTypes';
 import appTypes, { COST_MANAGEMENT_APP, SUB_WATCH_APP } from '../../__mocks__/applicationTypes';
 
-import { Route } from 'react-router-dom';
-import { replaceRouteId, routes } from '../../../Routes';
+import { Route, Routes } from 'react-router-dom';
+import { replaceRouteId, routes } from '../../../Routing';
 import mockStore from '../../__mocks__/mockStore';
 import ResourcesTable from '../../../components/SourceDetail/ResourcesTable';
 
@@ -19,6 +19,7 @@ describe('ResourcesTable', () => {
 
   const sourceId = '3627987';
   const initialEntry = [replaceRouteId(routes.sourcesDetail.path, sourceId)];
+  console.warn(initialEntry);
 
   it('renders empty state ', async () => {
     api.doLoadSourceForEdit = jest.fn();
@@ -42,7 +43,9 @@ describe('ResourcesTable', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<ResourcesTable />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -100,7 +103,9 @@ describe('ResourcesTable', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<ResourcesTable />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -167,7 +172,9 @@ describe('ResourcesTable', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<ResourcesTable />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -264,7 +271,9 @@ describe('ResourcesTable', () => {
 
     const { container } = render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<ResourcesTable />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -358,7 +367,9 @@ describe('ResourcesTable', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<ResourcesTable />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -432,7 +443,9 @@ describe('ResourcesTable', () => {
 
     const { container } = render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <ResourcesTable {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<ResourcesTable />} />
+        </Routes>,
         store,
         initialEntry
       )

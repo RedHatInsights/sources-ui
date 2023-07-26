@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import { replaceRouteId, routes } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routing';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
 
 import ErroredModal from '../../../components/SourceEditForm/ErroredModal';
@@ -26,7 +26,9 @@ describe('ErroredModal', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <ErroredModal {...args} onRetry={onRetry} />} />,
+        <Routes>
+          <Route path={`${routes.sourcesDetail.path}/*`} element={<ErroredModal onRetry={onRetry} />} />
+        </Routes>,
         store,
         initialEntry
       )

@@ -11,14 +11,17 @@ import { componentWrapperIntl } from '../../utilities/testsHelpers';
 import * as api from '../../api/entities';
 import * as typesApi from '../../api/source_types';
 
-import { routes } from '../../Routes';
+import { routes } from '../../Routing';
 import * as wizard from '../../components/addSourceWizard';
 import { getStore } from '../../utilities/store';
+import ElementWrapper from '../../components/ElementWrapper/ElementWrapper';
+import { Route, Routes } from 'react-router-dom';
 
 describe('SourcesPage - addSource route', () => {
   let store;
 
-  const wasRedirectedToRoot = () => screen.getByTestId('location-display').textContent === routes.sources.path;
+  const wasRedirectedToRoot = () =>
+    screen.getByTestId('location-display').textContent === '/settings/sources' + routes.sources.path;
 
   beforeEach(() => {
     wizard.AddSourceWizard = () => <h2>AddSource mock</h2>;
@@ -41,7 +44,24 @@ describe('SourcesPage - addSource route', () => {
     const initialEntry = [routes.sourcesNew.path];
 
     await act(async () => {
-      render(componentWrapperIntl(<SourcesPage />, store, initialEntry));
+      render(
+        componentWrapperIntl(
+          <Routes>
+            <Route path="/" element={<SourcesPage />}>
+              <Route
+                path={routes.sourcesNew.path}
+                element={
+                  <ElementWrapper route={routes.sourcesNew}>
+                    <wizard.AddSourceWizard />
+                  </ElementWrapper>
+                }
+              />
+            </Route>
+          </Routes>,
+          store,
+          initialEntry
+        )
+      );
     });
 
     expect(() => screen.getByText('AddSource mock')).toThrow();

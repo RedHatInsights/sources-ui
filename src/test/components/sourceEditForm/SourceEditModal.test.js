@@ -2,11 +2,11 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import SourceEditModal from '../../../components/SourceEditForm/SourceEditModal';
-import { replaceRouteId, routes } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routing';
 import appTypes, { CATALOG_APP, TOPOLOGY_INV_APP } from '../../__mocks__/applicationTypes';
 import sourceTypes, { ANSIBLE_TOWER_TYPE } from '../../__mocks__/sourceTypes';
 
@@ -88,7 +88,9 @@ describe('SourceEditModal', () => {
   it('renders correctly', async () => {
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <SourceEditModal {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<SourceEditModal />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -154,7 +156,9 @@ describe('SourceEditModal', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <SourceEditModal {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<SourceEditModal />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -252,7 +256,9 @@ describe('SourceEditModal', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <SourceEditModal {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<SourceEditModal />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -309,7 +315,9 @@ describe('SourceEditModal', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <SourceEditModal {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<SourceEditModal />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -365,7 +373,9 @@ describe('SourceEditModal', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <SourceEditModal {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<SourceEditModal />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -417,7 +427,9 @@ describe('SourceEditModal', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <SourceEditModal {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<SourceEditModal />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -459,7 +471,9 @@ describe('SourceEditModal', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <SourceEditModal {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<SourceEditModal />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -526,15 +540,17 @@ describe('SourceEditModal', () => {
 
     render(
       componentWrapperIntl(
-        <Route
-          path={routes.sourcesDetail.path}
-          render={(...args) => (
-            <React.Fragment>
-              <ChangeSourceComponent />
-              <SourceEditModal {...args} />
-            </React.Fragment>
-          )}
-        />,
+        <Routes>
+          <Route
+            path={routes.sourcesDetail.path}
+            element={
+              <React.Fragment>
+                <ChangeSourceComponent />
+                <SourceEditModal />
+              </React.Fragment>
+            }
+          />
+        </Routes>,
         store,
         initialEntry
       )
@@ -572,7 +588,9 @@ describe('SourceEditModal', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesDetail.path} render={(...args) => <SourceEditModal {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesDetail.path} element={<SourceEditModal />} />
+          </Routes>,
           store,
           initialEntry
         )

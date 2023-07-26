@@ -1,9 +1,9 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { replaceRouteId, routes } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routing';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import Breadcrumbs from '../../../components/SourceDetail/Breadcrumbs';
 import mockStore from '../../__mocks__/mockStore';
@@ -24,7 +24,9 @@ describe('Breadcrumbs', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetail.path} render={(...args) => <Breadcrumbs {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetail.path} element={<Breadcrumbs />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -41,6 +43,6 @@ describe('Breadcrumbs', () => {
 
     await user.click(screen.getByText('Sources'));
 
-    expect(screen.getByTestId('location-display').textContent).toEqual(routes.sources.path);
+    expect(screen.getByTestId('location-display').textContent).toEqual(`/settings/sources${routes.sources.path}`);
   });
 });

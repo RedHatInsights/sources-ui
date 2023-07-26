@@ -1,19 +1,19 @@
 import React, { useEffect, useReducer } from 'react';
 import { useIntl } from 'react-intl';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 
 import { Bullseye, Modal, Spinner } from '@patternfly/react-core';
 
 import { useSource } from '../../hooks/useSource';
 
-import { replaceRouteId, routes } from '../../Routes';
+import { replaceRouteId, routes } from '../../Routing';
 
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
 import ModalFormTemplate from './ModalFormTemplate';
 import { getSourcesApi } from '../../api/entities';
 import { addMessage } from '../../redux/sources/actions';
 import generateSuperKeyFields from '../../components/addSourceWizard/superKey/generateSuperKeyFields';
+import { useAppNavigate } from '../../hooks/useAppNavigate';
 
 const initialState = {
   loading: true,
@@ -35,7 +35,7 @@ const reducer = (state, { type, values }) => {
 
 const CredentialsForm = () => {
   const source = useSource();
-  const history = useHistory();
+  const navigate = useAppNavigate();
   const intl = useIntl();
   const reduxDispatch = useDispatch();
   const sourceTypes = useSelector(({ sources }) => sources.sourceTypes, shallowEqual);
@@ -43,7 +43,7 @@ const CredentialsForm = () => {
 
   const [{ loading, initialValues }, dispatch] = useReducer(reducer, initialState);
 
-  const goBackToDetail = () => history.push(replaceRouteId(routes.sourcesDetail.path, source.id));
+  const goBackToDetail = () => navigate(replaceRouteId(routes.sourcesDetail.path, source.id));
 
   const isPaused = source.paused_at;
 

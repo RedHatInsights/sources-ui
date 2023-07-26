@@ -2,11 +2,11 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import RemoveAppModal from '../../../components/AddApplication/RemoveAppModal';
 import * as actions from '../../../redux/sources/actions';
-import { replaceRouteId, routes } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routing';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import mockStore from '../../__mocks__/mockStore';
 
@@ -55,7 +55,9 @@ describe('RemoveAppModal', () => {
   it('renders correctly', () => {
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetailRemoveApp.path} render={(...args) => <RemoveAppModal {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetailRemoveApp.path} element={<RemoveAppModal />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -79,14 +81,18 @@ describe('RemoveAppModal', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetailRemoveApp.path} render={(...args) => <RemoveAppModal {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetailRemoveApp.path} element={<RemoveAppModal />} />
+        </Routes>,
         store,
         initialEntry
       )
     );
 
     await waitFor(() =>
-      expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, SOURCE_ID))
+      expect(screen.getByTestId('location-display').textContent).toEqual(
+        replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, SOURCE_ID)
+      )
     );
   });
 
@@ -109,7 +115,9 @@ describe('RemoveAppModal', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetailRemoveApp.path} render={(...args) => <RemoveAppModal {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetailRemoveApp.path} element={<RemoveAppModal />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -136,7 +144,9 @@ describe('RemoveAppModal', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetailRemoveApp.path} render={(...args) => <RemoveAppModal {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetailRemoveApp.path} element={<RemoveAppModal />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -151,7 +161,9 @@ describe('RemoveAppModal', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetailRemoveApp.path} render={(...args) => <RemoveAppModal {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetailRemoveApp.path} element={<RemoveAppModal />} />
+        </Routes>,
         store,
         initialEntry
       )
@@ -159,7 +171,9 @@ describe('RemoveAppModal', () => {
 
     await user.click(screen.getByText('Cancel'));
 
-    expect(screen.getByTestId('location-display').textContent).toEqual(replaceRouteId(routes.sourcesDetail.path, SOURCE_ID));
+    expect(screen.getByTestId('location-display').textContent).toEqual(
+      replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, SOURCE_ID)
+    );
   });
 
   it('calls a submit', async () => {
@@ -169,7 +183,9 @@ describe('RemoveAppModal', () => {
 
     render(
       componentWrapperIntl(
-        <Route path={routes.sourcesDetailRemoveApp.path} render={(...args) => <RemoveAppModal {...args} />} />,
+        <Routes>
+          <Route path={routes.sourcesDetailRemoveApp.path} element={<RemoveAppModal />} />
+        </Routes>,
         store,
         initialEntry
       )

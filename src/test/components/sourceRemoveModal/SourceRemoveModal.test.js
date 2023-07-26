@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import * as actions from '../../../redux/sources/actions';
 import SourceRemoveModal from '../../../components/SourceRemoveModal/SourceRemoveModal';
@@ -11,7 +11,7 @@ import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
 import appTypes, { CATALOG_APP } from '../../__mocks__/applicationTypes';
 import sourceTypes, { ANSIBLE_TOWER_TYPE, OPENSHIFT_TYPE, SATELLITE_TYPE } from '../../__mocks__/sourceTypes';
 
-import { replaceRouteId, routes } from '../../../Routes';
+import { replaceRouteId, routes } from '../../../Routing';
 import mockStore from '../../__mocks__/mockStore';
 
 describe('SourceRemoveModal', () => {
@@ -31,7 +31,9 @@ describe('SourceRemoveModal', () => {
     it('renders correctly', () => {
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesRemove.path} render={(...args) => <SourceRemoveModal {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesRemove.path} element={<SourceRemoveModal />} />
+          </Routes>,
           store,
           [replaceRouteId(routes.sourcesRemove.path, '14')]
         )
@@ -51,7 +53,9 @@ describe('SourceRemoveModal', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesRemove.path} render={(...args) => <SourceRemoveModal {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesRemove.path} element={<SourceRemoveModal />} />
+          </Routes>,
           store,
           [replaceRouteId(routes.sourcesRemove.path, '14')]
         )
@@ -71,7 +75,9 @@ describe('SourceRemoveModal', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesRemove.path} render={(...args) => <SourceRemoveModal {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesRemove.path} element={<SourceRemoveModal />} />
+          </Routes>,
           store,
           [replaceRouteId(routes.sourcesRemove.path, '14')]
         )
@@ -82,7 +88,7 @@ describe('SourceRemoveModal', () => {
 
       const source = sourcesDataGraphQl.find((s) => s.id === '14');
 
-      expect(screen.getByTestId('location-display').textContent).toEqual(routes.sources.path);
+      expect(screen.getByTestId('location-display').textContent).toEqual(`/settings/sources${routes.sources.path}`);
       expect(actions.removeSource).toHaveBeenCalledWith('14', `${source.name} was deleted successfully.`); // calls removeSource with id of the source and right message
     });
   });
@@ -91,7 +97,9 @@ describe('SourceRemoveModal', () => {
     it('renders correctly', () => {
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesRemove.path} render={(...args) => <SourceRemoveModal {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesRemove.path} element={<SourceRemoveModal />} />
+          </Routes>,
           store,
           [replaceRouteId(routes.sourcesRemove.path, '406')]
         )
@@ -131,7 +139,9 @@ describe('SourceRemoveModal', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesRemove.path} render={(...args) => <SourceRemoveModal {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesRemove.path} element={<SourceRemoveModal />} />
+          </Routes>,
           store,
           [replaceRouteId(routes.sourcesRemove.path, '406')]
         )
@@ -166,7 +176,9 @@ describe('SourceRemoveModal', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesRemove.path} render={(...args) => <SourceRemoveModal {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesRemove.path} element={<SourceRemoveModal />} />
+          </Routes>,
           store,
           [replaceRouteId(routes.sourcesRemove.path, '406')]
         )
@@ -200,7 +212,9 @@ describe('SourceRemoveModal', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesRemove.path} render={(...args) => <SourceRemoveModal {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesRemove.path} element={<SourceRemoveModal />} />
+          </Routes>,
           store,
           [replaceRouteId(routes.sourcesRemove.path, '406')]
         )
@@ -236,7 +250,9 @@ describe('SourceRemoveModal', () => {
 
       render(
         componentWrapperIntl(
-          <Route path={routes.sourcesRemove.path} render={(...args) => <SourceRemoveModal {...args} />} />,
+          <Routes>
+            <Route path={routes.sourcesRemove.path} element={<SourceRemoveModal />} />
+          </Routes>,
           store,
           [replaceRouteId(routes.sourcesRemove.path, '406')]
         )

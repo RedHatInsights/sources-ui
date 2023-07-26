@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
 import { shallowEqual, useSelector } from 'react-redux';
-import { routes } from '../../Routes';
+import { routes } from '../../Routing';
 
 import { Tile } from '@patternfly/react-core';
 
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
+import { useAppNavigate } from '../../hooks/useAppNavigate';
 import DisabledTile from '../TilesShared/DisabledTile';
 import { filterVendorTypes } from '../../utilities/filterTypes';
 
@@ -13,12 +13,12 @@ const TilesArray = ({ setSelectedType, mapper }) => {
   const sourceTypes = useSelector(({ sources }) => sources.sourceTypes, shallowEqual);
   const activeCategory = useSelector(({ sources }) => sources.activeCategory);
 
-  const { push } = useHistory();
+  const appNavigate = useAppNavigate();
   const hasWritePermissions = useHasWritePermissions();
 
   const openWizard = (type) => {
     setSelectedType(type);
-    push(routes.sourcesNew.path);
+    appNavigate(routes.sourcesNew.path);
   };
 
   const TileComponent = hasWritePermissions ? Tile : DisabledTile;

@@ -1,8 +1,9 @@
-import React, { Suspense, lazy, useEffect, useReducer } from 'react';
+import React, { Suspense, useEffect, useReducer } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { Link, useHistory } from 'react-router-dom';
+import AppLink from '../components/AppLink';
 import { Button, Tooltip } from '@patternfly/react-core';
 import { useIntl } from 'react-intl';
+import { useAppNavigate } from '../hooks/useAppNavigate';
 
 import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/PrimaryToolbar';
 import { Section } from '@redhat-cloud-services/frontend-components/Section';
@@ -13,19 +14,7 @@ import { downloadFile } from '@redhat-cloud-services/frontend-components-utiliti
 
 import { filterSources, pageAndSize } from '../redux/sources/actions';
 import SourcesTable from '../components/SourcesTable/SourcesTable';
-import { routes } from '../Routes';
-
-const SourceRemoveModal = lazy(() =>
-  import(
-    /* webpackChunkName: "remove" */
-    '../components/SourceRemoveModal/SourceRemoveModal'
-  )
-);
-const AddSourceWizard = lazy(() =>
-  import(/* webpackChunkName: "addSource" */ '../components/addSourceWizard/index').then((module) => ({
-    default: module.AddSourceWizard,
-  }))
-);
+import { routes } from '../Routing';
 
 import {
   afterSuccess,
@@ -40,7 +29,6 @@ import {
 } from './Sources/helpers';
 import { useIsLoaded } from '../hooks/useIsLoaded';
 import { useHasWritePermissions } from '../hooks/useHasWritePermissions';
-import CustomRoute from '../components/CustomRoute/CustomRoute';
 import { PaginationLoader } from '../components/SourcesTable/loaders';
 import CloudCards from '../components/CloudTiles/CloudCards';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../utilities/constants';
@@ -52,6 +40,7 @@ import { filterVendorAppTypes } from '../utilities/filterApps';
 import SourcesHeader from '../components/SourcesHeader';
 import generateCSV from '../utilities/generateCSV';
 import generateJSON from '../utilities/generateJSON';
+import { Outlet } from 'react-router-dom';
 
 const initialState = {
   filter: undefined,
@@ -80,7 +69,7 @@ const SourcesPage = () => {
   const hasWritePermissions = useHasWritePermissions();
   const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
 
-  const history = useHistory();
+  const appNavigate = useAppNavigate();
   const intl = useIntl();
 
   const screenSize = useScreenSize();
@@ -165,7 +154,7 @@ const SourcesPage = () => {
     actionsConfig = {
       dropdownProps: { position: 'right' },
       actions: hasWritePermissions
-        ? [{ label: addSourceText, props: { to: routes.sourcesNew.path, component: Link } }]
+        ? [{ label: addSourceText, props: { to: routes.sourcesNew.path, component: AppLink } }]
         : [
             {
               label: addSourceText,
@@ -190,7 +179,7 @@ const SourcesPage = () => {
             dropdownProps: { position: 'right' },
             actions: hasWritePermissions
               ? [
-                  <Link to={routes.sourcesNew.path} key="addSourceButton">
+                  <AppLink to={routes.sourcesNew.path} key="addSourceButton">
                     <Button
                       data-hcc-index="true"
                       data-hcc-title={addSourceText}
@@ -200,7 +189,7 @@ const SourcesPage = () => {
                     >
                       {addSourceText}
                     </Button>
-                  </Link>,
+                  </AppLink>,
                 ]
               : [
                   <Tooltip content={noPermissionsText} key="addSourceButton">
@@ -315,23 +304,19 @@ const SourcesPage = () => {
   return (
     <React.Fragment>
       <Suspense fallback={null}>
-        <CustomRoute exact route={routes.sourcesRemove} Component={SourceRemoveModal} />
-        <CustomRoute
-          exact
-          route={routes.sourcesNew}
-          Component={AddSourceWizard}
-          componentProps={{
+        <Outlet
+          context={{
             sourceTypes: loadedTypes(sourceTypes, sourceTypesLoaded),
             applicationTypes: loadedTypes(appTypes, appTypesLoaded),
             isOpen: true,
             onClose: () => {
               stateDispatch({ type: 'closeWizard' });
-              history.push(routes.sources.path);
+              appNavigate(routes.sources.path);
             },
             afterSuccess: (source) => afterSuccess(dispatch, source),
             hideSourcesButton: true,
             selectedType,
-            submitCallback: (state) => checkSubmit(state, dispatch, history.push, intl, stateDispatch),
+            submitCallback: (state) => checkSubmit(state, dispatch, appNavigate, intl, stateDispatch),
             initialValues: wizardInitialValues,
             initialWizardState: wizardInitialState,
             activeCategory,
