@@ -47,7 +47,8 @@ POLICY_ARN=$(aws iam create-policy --policy-name RH-HCC-provisioning-policy --po
       "ec2:DescribeTags",
       "ec2:ImportKeyPair",
       "ec2:RunInstances",
-      "ec2:StartInstances"
+      "ec2:StartInstances",
+      "iam:ListRolePolicies"
     ],
     "Resource": "*"
   }
