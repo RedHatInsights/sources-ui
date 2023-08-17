@@ -12,8 +12,10 @@ module.exports = {
    */
   plugins: [],
   moduleFederation: {
-    exclude: ['react-router-dom'],
-    shared: [{ 'react-router-dom': { singleton: true } }],
+    exclude: ['react-router-dom', "@patternfly/react-core", "@patternfly/react-icons"],
+    shared: [
+      { 'react-router-dom': { singleton: true, version: '^6.8.0' } },
+    ],
   },
-  _unstableHotReload: process.env.HOT === 'true',
+  hotReload: process.env.HOT === 'true',
 };

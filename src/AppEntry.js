@@ -10,10 +10,21 @@ if (!store) {
   store = getProdStore();
 }
 
-const AppEntry = () => (
-  <Provider store={store}>
-    <App />
-  </Provider>
-);
+const link = document.createElement('link')
+link.href = "https://unpkg.com/@patternfly/patternfly@latest/patternfly.css"
+link.rel = 'stylesheet'
+link.type = 'text/css'
+
+document.head.appendChild(link)
+
+window.sc = __webpack_share_scopes__
+
+const AppEntry = () => {
+  return (
+    <Provider store={store}>
+      <App />
+    </Provider>
+  )
+};
 
 export default AppEntry;

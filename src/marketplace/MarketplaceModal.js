@@ -100,7 +100,6 @@ const MarketplaceModal = ({ data, isOpen, onClose }) => {
       {!config.isLoading && (
         <React.Fragment>
           <PrimaryToolbar
-            useMobileLayout
             className="marketplace-modal-toolbar"
             pagination={{
               itemCount: config.itemCount,
