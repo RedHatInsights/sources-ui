@@ -42,6 +42,10 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.22.10",
+    "@babel/preset-env": "^7.22.10",
+    "@babel/preset-react": "^7.22.5",
+    "@babel/preset-typescript": "^7.22.5",
     "@redhat-cloud-services/eslint-config-redhat-cloud-services": "^1.3.0",
     "@redhat-cloud-services/frontend-components-config": "^6.0.0-beta.11",
     "@redhat-cloud-services/tsc-transform-imports": "^1.0.0-beta.1",
@@ -50,6 +54,7 @@
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.3.0",
     "axios-mock-adapter": "^1.21.1",
+    "babel-jest": "^28.0.0",
     "eslint": "^8.20.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
