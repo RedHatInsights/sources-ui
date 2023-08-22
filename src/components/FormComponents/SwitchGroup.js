@@ -36,9 +36,9 @@ const SwitchGroup = (props) => {
               id={option.value}
             />
             {option.description && (
-              <div className="pf-c-switch pf-u-mt-sm">
-                <span className="pf-c-switch__toggle src-m-wizard-hide-me" />
-                <div className="pf-c-switch__label src-c-wizard--switch-description">{option.description}</div>
+              <div className="pf-v5-c-switch pf-v5-u-mt-sm">
+                <span className="pf-v5-c-switch__toggle src-m-wizard-hide-me" />
+                <div className="pf-v5-c-switch__label src-c-wizard--switch-description">{option.description}</div>
               </div>
             )}
           </StackItem>

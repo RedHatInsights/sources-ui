@@ -40,7 +40,7 @@ const SSLFormLabel = () => {
           </TextContent>
         }
       >
-        <QuestionCircleIcon className="pf-u-ml-sm" />
+        <QuestionCircleIcon className="pf-v5-u-ml-sm" />
       </Popover>
     </React.Fragment>
   );

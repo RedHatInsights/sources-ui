@@ -21,7 +21,7 @@ export const AuthDescription = () => {
 
   return (
     <TextContent>
-      <Text component={TextVariants.p} className="pf-u-mb-l">
+      <Text component={TextVariants.p} className="pf-v5-u-mb-l">
         {intl.formatMessage({
           id: 'catalog.auth.provideTowerCredentials',
           defaultMessage:
@@ -38,7 +38,7 @@ export const EndpointDescription = () => {
 
   return (
     <TextContent>
-      <Text component={TextVariants.p} className="pf-u-mb-l">
+      <Text component={TextVariants.p} className="pf-v5-u-mb-l">
         {intl.formatMessage({
           id: 'catalog.endpoint.enterHostname',
           defaultMessage: 'Enter the hostname of the Ansible Tower instance you want to connect to.',

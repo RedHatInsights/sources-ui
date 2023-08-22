@@ -39,7 +39,7 @@ describe('applicationsStep', () => {
         label: (
           <span className="src-c-wizard__rhel-mag-label">
             RHEL management{' '}
-            <Label className="pf-u-ml-sm" color="purple">
+            <Label className="pf-v5-u-ml-sm" color="purple">
               Bundle
             </Label>
           </span>

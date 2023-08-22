@@ -31,7 +31,7 @@ describe('CloudTiles', () => {
   it('renders correctly', async () => {
     const { container } = render(componentWrapperIntl(<CloudTiles {...initialProps} />, store));
 
-    expect([...container.getElementsByClassName('pf-c-tile__title')].map((e) => e.textContent)).toEqual([
+    expect([...container.getElementsByClassName('pf-v5-c-tile__title')].map((e) => e.textContent)).toEqual([
       'Amazon Web Services',
       'Google Cloud',
       'IBM Cloud',
@@ -51,7 +51,7 @@ describe('CloudTiles', () => {
 
     const { container } = render(componentWrapperIntl(<CloudTiles {...initialProps} />, store));
 
-    expect([...container.getElementsByClassName('pf-c-tile__title')].map((e) => e.textContent)).toEqual([
+    expect([...container.getElementsByClassName('pf-v5-c-tile__title')].map((e) => e.textContent)).toEqual([
       'Amazon Web Services',
       'Google Cloud',
       'IBM Cloud',

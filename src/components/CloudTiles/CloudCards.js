@@ -51,7 +51,7 @@ const CloudCards = () => {
   const SUBWATCH_HREF = `/${PREFIX}insights/subscriptions/rhel`;
 
   return (
-    <Card isExpanded={isExpanded} className="pf-u-mb-lg pf-u-mt-md pf-u-mt-0-on-md src-c-card-info">
+    <Card isExpanded={isExpanded} className="pf-v5-u-mb-lg pf-v5-u-mt-md pf-v5-u-mt-0-on-md src-c-card-info">
       <CardHeader onExpand={() => setExpanded(!isExpanded)}>
         <CardTitle>{intl.formatMessage({ id: 'cloud.nowWhat', defaultMessage: 'I connected to cloud. Now what?' })}</CardTitle>
       </CardHeader>
@@ -61,14 +61,14 @@ const CloudCards = () => {
             <Grid hasGutter>
               <GridItem md={4}>
                 <Stack>
-                  <StackItem className="pf-u-mb-sm">
+                  <StackItem className="pf-v5-u-mb-sm">
                     <Text className="src-c-card-info__header">
-                      <BuilderImageIcon className="pf-u-mr-sm" color="#0066cc" aria-label="Builder image icon" />
+                      <BuilderImageIcon className="pf-v5-u-mr-sm" color="#0066cc" aria-label="Builder image icon" />
                       {intl.formatMessage({ id: 'cloud.goldImages', defaultMessage: 'Use gold images' })}
                     </Text>
                   </StackItem>
                   <StackItem isFilled>
-                    <Text className="text pf-u-mb-sm">
+                    <Text className="text pf-v5-u-mb-sm">
                       {intl.formatMessage({
                         id: 'cloud.goldImages.description',
                         defaultMessage:
@@ -89,27 +89,27 @@ const CloudCards = () => {
                       })}
                     </Text>
                   </StackItem>
-                  <StackItem className="pf-u-mt-lg">
+                  <StackItem className="pf-v5-u-mt-lg">
                     <Text className="text" component="a" href={GOLD_IMAGES_MORE} target="_blank" rel="noopener noreferrer">
                       {intl.formatMessage({
                         id: 'cloud.goldImages.moreLink',
                         defaultMessage: 'Learn more about Red Hat gold images',
                       })}
-                      <ArrowRightIcon className="pf-u-ml-sm" />
+                      <ArrowRightIcon className="pf-v5-u-ml-sm" />
                     </Text>
                   </StackItem>
                 </Stack>
               </GridItem>
               <GridItem md={4}>
                 <Stack>
-                  <StackItem className="pf-u-mb-sm">
+                  <StackItem className="pf-v5-u-mb-sm">
                     <Text className="src-c-card-info__header">
-                      <TrendUpIcon className="pf-u-mr-sm" color="#0066cc" aria-label="Trend up icon" />
+                      <TrendUpIcon className="pf-v5-u-mr-sm" color="#0066cc" aria-label="Trend up icon" />
                       {intl.formatMessage({ id: 'cloud.insights', defaultMessage: 'Explore Red Hat Insights' })}
                     </Text>
                   </StackItem>
                   <StackItem isFilled>
-                    <Text className="text pf-u-mb-sm">
+                    <Text className="text pf-v5-u-mb-sm">
                       {intl.formatMessage({
                         id: 'cloud.insights.description',
                         defaultMessage:
@@ -123,27 +123,27 @@ const CloudCards = () => {
                       })}
                     </Text>
                   </StackItem>
-                  <StackItem className="pf-u-mt-lg">
+                  <StackItem className="pf-v5-u-mt-lg">
                     <Text className="text" component="a" href={INSIGHTS_SERVICES} target="_blank" rel="noopener noreferrer">
                       {intl.formatMessage({
                         id: 'cloud.insights.moreLink',
                         defaultMessage: 'Enable additional Insights services',
                       })}
-                      <ArrowRightIcon className="pf-u-ml-sm" />
+                      <ArrowRightIcon className="pf-v5-u-ml-sm" />
                     </Text>
                   </StackItem>
                 </Stack>
               </GridItem>
               <GridItem md={4}>
                 <Stack>
-                  <StackItem className="pf-u-mb-sm">
+                  <StackItem className="pf-v5-u-mb-sm">
                     <Text className="src-c-card-info__header">
-                      <ListIcon className="pf-u-mr-sm" color="#0066cc" aria-label="List icon" />
+                      <ListIcon className="pf-v5-u-mr-sm" color="#0066cc" aria-label="List icon" />
                       {intl.formatMessage({ id: 'cloud.subwatch', defaultMessage: 'Track usage with Subscriptions' })}
                     </Text>
                   </StackItem>
                   <StackItem isFilled>
-                    <Text className="text pf-u-mb-sm">
+                    <Text className="text pf-v5-u-mb-sm">
                       {intl.formatMessage({
                         id: 'cloud.subwatch.description',
                         defaultMessage:
@@ -157,13 +157,13 @@ const CloudCards = () => {
                       })}
                     </Text>
                   </StackItem>
-                  <StackItem className="pf-u-mt-lg">
+                  <StackItem className="pf-v5-u-mt-lg">
                     <Text className="text" component="a" href={SUBWATCH_HREF} target="_blank" rel="noopener noreferrer">
                       {intl.formatMessage({
                         id: 'cloud.subwatch.goTo',
                         defaultMessage: 'Go to Subscriptions',
                       })}
-                      <ArrowRightIcon className="pf-u-ml-sm" />
+                      <ArrowRightIcon className="pf-v5-u-ml-sm" />
                     </Text>
                   </StackItem>
                 </Stack>

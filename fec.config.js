@@ -1,6 +1,6 @@
+/** @type import('@redhat-cloud-services/frontend-components-config/lib/fec.config').FECConfiguration */
 module.exports = {
   appUrl: '/settings/sources',
-  debug: true,
   useProxy: true,
   proxyVerbose: true,
   /**

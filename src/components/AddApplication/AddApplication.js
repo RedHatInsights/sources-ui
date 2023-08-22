@@ -298,7 +298,7 @@ const AddApplication = () => {
               }
               Component={() => (
                 <AppLink to={replaceRouteId(routes.sourcesDetail.path, source.id)}>
-                  <Button variant="primary" className="pf-u-mt-xl">
+                  <Button variant="primary" className="pf-v5-u-mt-xl">
                     {intl.formatMessage({
                       id: 'wizard.editSource',
                       defaultMessage: 'Edit source',

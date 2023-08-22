@@ -491,12 +491,12 @@ export const configurationModeFormatter = (mode, item, { intl, sourceType }) => 
               })
             }
           >
-            <span className="pf-u-ml-sm">
+            <span className="pf-v5-u-ml-sm">
               <ExclamationCircleIcon fill="#C9190B" />
             </span>
           </Tooltip>
         )}
-        <div className="pf-u-mt-sm">
+        <div className="pf-v5-u-mt-sm">
           <AppLink to={replaceRouteId(routes.sourcesDetailEditCredentials.path, item.id)}>
             <Button variant="link" id="edit-super-credentials" isInline>
               {item.paused_at

@@ -24,8 +24,8 @@ const CustomButtons = () => {
       }}
     >
       {({ pristine, invalid, validating, submitting }) => (
-        <div className="pf-c-form">
-          <ActionGroup className="pf-u-mt-0">
+        <div className="pf-v5-c-form">
+          <ActionGroup className="pf-v5-u-mt-0">
             <Button
               variant="primary"
               form="modal-form"

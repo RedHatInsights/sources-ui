@@ -547,7 +547,7 @@ export const ExportScope = () => {
 
   return application.extra.storage_only ? (
     <EmptyState variant={EmptyStateVariant.small}>
-      <EmptyStateIcon style={{ color: 'var(--pf-global--info-color--100)' }} icon={InfoCircleIcon} />
+      <EmptyStateIcon style={{ color: 'var(--pf-v5-global--info-color--100)' }} icon={InfoCircleIcon} />
       <Title size="lg" headingLevel="h4">
         {intl.formatMessage({
           id: 'cost.manualTitleCUR',

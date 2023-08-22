@@ -173,7 +173,7 @@ const FinalWizard = ({
         })}
         description={
           <TextContent>
-            <Text className="pf-u-mb-md">
+            <Text className="pf-v5-u-mb-md">
               {intl.formatMessage({
                 id: 'wizard.loadingDescription-a',
                 defaultMessage:
@@ -195,7 +195,7 @@ const FinalWizard = ({
     );
   }
 
-  const appendTo = React.useMemo(() => document.querySelector('.pf-c-page.chr-c-page'), []);
+  const appendTo = React.useMemo(() => document.querySelector('.pf-v5-c-page.chr-c-page'), []);
 
   return (
     <Modal isOpen width="58%" hasNoBodyWrapper appendTo={appendTo} showClose={false}>

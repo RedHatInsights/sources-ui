@@ -9,7 +9,7 @@
 .marketplace-card-body {
   overflow: auto;
   color: #151515;
-  font-size: var(--pf-global--FontSize--sm);
+  font-size: var(--pf-v5-global--FontSize--sm);
   line-height: 21px;
   text-align: left;
 
@@ -36,20 +36,20 @@
 }
 
 .marketplace-seemore-card {
-  background-color: var(--pf-global--BackgroundColor--100);
+  background-color: var(--pf-v5-global--BackgroundColor--100);
   border: 1px dashed #0066CC;
 
   .card-text {
-    font-size: var(--pf-global--FontSize--sm);
+    font-size: var(--pf-v5-global--FontSize--sm);
     line-height: 21px;
   }
 }
 
 .marketplace-modal-toolbar {
-  .pf-c-toolbar__content {
+  .pf-v5-c-toolbar__content {
     padding-left: 0;
   }
-  .pf-c-select__menu {
+  .pf-v5-c-select__menu {
     max-height: 400px;
     overflow: auto;
   }

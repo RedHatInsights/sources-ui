@@ -18,10 +18,10 @@ const RecommendedServices = () => {
   if (data) {
     return (
       <div className="sources">
-        <Title headingLevel="h4" size="xl" className="pf-u-mb-md">
+        <Title headingLevel="h4" size="xl" className="pf-v5-u-mb-md">
           Recommended services
         </Title>
-        <div className="pf-u-mb-md marketplace-flex">
+        <div className="pf-v5-u-mb-md marketplace-flex">
           <MarketplaceCard
             {...(data.find((product) => product?.product_page_name === 'mongodb-enterprise-advanced') || data[0])}
           />
@@ -32,7 +32,7 @@ const RecommendedServices = () => {
   }
 
   return (
-    <div className="pf-u-mb-md marketplace-flex">
+    <div className="pf-v5-u-mb-md marketplace-flex">
       <SkeletonMarketplaceCard />
       <SkeletonMarketplaceCard />
     </div>

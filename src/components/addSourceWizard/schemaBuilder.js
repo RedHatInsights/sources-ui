@@ -191,7 +191,7 @@ export const createAuthTypeSelection = (
         fields.push({
           component: componentTypes.SUB_FORM,
           name: `${auth.type}-subform`,
-          className: 'pf-u-pl-md',
+          className: 'pf-v5-u-pl-md',
           fields: [
             ...(!shouldUseAppAuth(type.name, auth.type, hardcodedAppName) ? endpointFields : []),
             ...getAdditionalAuthFields(type.name, auth.type, hardcodedAppName),

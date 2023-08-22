@@ -38,7 +38,7 @@ const HybridCommittedSpendDescription = ({ id }) => {
             application: sourceTypes.find((type) => type.name === values.source_type)?.product_name,
           }
         )}
-        className="pf-u-mb-sm"
+        className="pf-v5-u-mb-sm"
         isEnabled={isEnabled}
       />
       <Point

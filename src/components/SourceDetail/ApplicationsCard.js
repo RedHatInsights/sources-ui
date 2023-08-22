@@ -185,7 +185,7 @@ const ApplicationsCard = () => {
   }
 
   return (
-    <Card className="src-c-card-applications pf-u-p-lg pf-u-pl-sm-on-md">
+    <Card className="src-c-card-applications pf-v5-u-p-lg pf-v5-u-pl-sm-on-md">
       <CardTitle>
         {intl.formatMessage({
           id: 'detail.applications.title',
@@ -193,7 +193,7 @@ const ApplicationsCard = () => {
         })}
       </CardTitle>
       <CardBody>
-        <div className="pf-c-form src-c-applications_form">
+        <div className="pf-v5-c-form src-c-applications_form">
           {filteredAppTypes.map((app) => {
             const connectedApp = source.applications.find((connectedApp) => connectedApp.application_type_id === app.id);
 
@@ -222,7 +222,7 @@ const ApplicationsCard = () => {
                         />
                       </Wrapper>
                       {Boolean(connectedApp) && (
-                        <ApplicationLabel className="pf-u-ml-sm src-m-clickable" app={connectedApp} showStatusText />
+                        <ApplicationLabel className="pf-v5-u-ml-sm src-m-clickable" app={connectedApp} showStatusText />
                       )}
                       {(isPaused || appExist) && (
                         <ApplicationKebab

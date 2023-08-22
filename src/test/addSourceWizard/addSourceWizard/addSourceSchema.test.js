@@ -227,7 +227,7 @@ describe('Add source schema', () => {
           label: (
             <span className="src-c-wizard__rhel-mag-label">
               {`${HCS_APP_NAME} `}
-              <Label className="pf-u-ml-sm" color="purple">
+              <Label className="pf-v5-u-ml-sm" color="purple">
                 Bundle
               </Label>
             </span>

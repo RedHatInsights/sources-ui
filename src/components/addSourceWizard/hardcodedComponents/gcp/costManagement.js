@@ -22,7 +22,7 @@ export const Project = () => {
 
   return (
     <TextContent>
-      <Text component={TextVariants.p} className="pf-u-mb-lg">
+      <Text component={TextVariants.p} className="pf-v5-u-mb-lg">
         {intl.formatMessage(
           {
             id: 'cost.gcp.projectDescription',
@@ -267,7 +267,7 @@ export const AssignAccess = () => {
             { b }
           )}
         </TextListItem>
-        <ClipboardCopy className="pf-u-m-sm  pf-u-ml-0" isReadOnly>
+        <ClipboardCopy className="pf-v5-u-m-sm  pf-v5-u-ml-0" isReadOnly>
           {googleAccount || intl.formatMessage({ id: 'cost.gcp.access.loading', defaultMessage: 'Loading account address...' })}
         </ClipboardCopy>
         <TextListItem>

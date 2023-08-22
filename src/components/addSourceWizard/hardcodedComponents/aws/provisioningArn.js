@@ -107,7 +107,7 @@ export const IAMPolicyDescription = () => {
           })}
         </TextListItem>
       </TextList>
-      <ClipboardCopy isCode variant={ClipboardCopyVariant.expansion} className="pf-u-m-sm-on-sm" isReadOnly>
+      <ClipboardCopy isCode variant={ClipboardCopyVariant.expansion} className="pf-v5-u-m-sm-on-sm" isReadOnly>
         {POLICY_COMMAND_STRING}
       </ClipboardCopy>
     </TextContent>
@@ -173,7 +173,7 @@ export const IAMRoleDescription = () => {
               id: 'provisioning.iam.createRole',
               defaultMessage: 'Create a new role and add the Red Hat account as a trusted entity and fetch the role ARN:',
             })}
-            <ClipboardCopy isCode variant={ClipboardCopyVariant.expansion} className="pf-u-m-sm-on-sm" isReadOnly>
+            <ClipboardCopy isCode variant={ClipboardCopyVariant.expansion} className="pf-v5-u-m-sm-on-sm" isReadOnly>
               {ROLE_COMMAND_STRING.replace('<PROVISIONING_AWS_ACCOUNT>', provAwsAccount)}
             </ClipboardCopy>
           </TextListItem>
@@ -183,7 +183,7 @@ export const IAMRoleDescription = () => {
               defaultMessage: 'Attach the permissions policy that you just created.',
             })}
           </TextListItem>
-          <ClipboardCopy isCode variant={ClipboardCopyVariant.expansion} className="pf-u-m-sm-on-sm" isReadOnly>
+          <ClipboardCopy isCode variant={ClipboardCopyVariant.expansion} className="pf-v5-u-m-sm-on-sm" isReadOnly>
             {ATTACH_COMMAND_STRING}
           </ClipboardCopy>
         </TextList>

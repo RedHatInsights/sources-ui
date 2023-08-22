@@ -42,7 +42,7 @@ describe('configurationSteps', () => {
           label: (
             <span className="src-c-wizard__rhel-mag-label">
               Account authorization
-              <Label className="pf-u-ml-sm" color="purple">
+              <Label className="pf-v5-u-ml-sm" color="purple">
                 Recommended
               </Label>
             </span>
@@ -61,7 +61,7 @@ describe('configurationSteps', () => {
           label: (
             <span className="src-c-wizard__rhel-mag-label">
               Account authorization
-              <Label className="pf-u-ml-sm" color="purple">
+              <Label className="pf-v5-u-ml-sm" color="purple">
                 Recommended
               </Label>
             </span>
@@ -80,7 +80,7 @@ describe('configurationSteps', () => {
           label: (
             <span className="src-c-wizard__rhel-mag-label">
               Account authorization
-              <Label className="pf-u-ml-sm" color="purple">
+              <Label className="pf-v5-u-ml-sm" color="purple">
                 Recommended
               </Label>
             </span>

@@ -9,7 +9,7 @@ const SourcesHeader = () => {
   const intl = useIntl();
 
   return (
-    <PageHeader className="pf-u-pb-0">
+    <PageHeader className="pf-v5-u-pb-0">
       <PageHeaderTitle
         title={intl.formatMessage({
           id: 'sources.sources',

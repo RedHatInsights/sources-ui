@@ -75,7 +75,7 @@ const CredentialsForm = () => {
   if (loading) {
     return (
       <Modal title={title} variant="small" isOpen onClose={goBackToDetail}>
-        <Bullseye className="pf-u-m-2xl">
+        <Bullseye className="pf-v5-u-m-2xl">
           <Spinner />
         </Bullseye>
       </Modal>

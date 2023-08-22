@@ -63,7 +63,7 @@ export const IAMRoleDescription = () => {
             }
           )}
         </TextListItem>
-        <ClipboardCopy className="pf-u-m-sm-on-sm" isReadOnly>
+        <ClipboardCopy className="pf-v5-u-m-sm-on-sm" isReadOnly>
           {config || intl.formatMessage({ id: 'subwatch.iampolicy.loading', defaultMessage: 'Loading configuration...' })}
         </ClipboardCopy>
         <TextListItem>
@@ -159,7 +159,7 @@ export const IAMPolicyDescription = () => {
             defaultMessage: 'Create a new policy, pasting the following content into the JSON text box.',
           })}
         </TextListItem>
-        <ClipboardCopy isCode variant={ClipboardCopyVariant.expansion} className="pf-u-m-sm-on-sm" isReadOnly>
+        <ClipboardCopy isCode variant={ClipboardCopyVariant.expansion} className="pf-v5-u-m-sm-on-sm" isReadOnly>
           {config
             ? JSON.stringify(config, null, 2)
             : intl.formatMessage({ id: 'subwatch.iampolicy.loading', defaultMessage: 'Loading configuration...' })}

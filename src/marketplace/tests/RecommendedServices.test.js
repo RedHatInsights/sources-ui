@@ -115,8 +115,8 @@ describe('<RecommendedServices />', () => {
 
       await user.click(screen.getByLabelText('Items per page'));
 
-      expect(screen.getByText('10 per page')).toHaveAttribute('class', 'pf-m-selected pf-c-options-menu__menu-item');
-      expect(screen.getByText('20 per page')).toHaveAttribute('class', 'pf-c-options-menu__menu-item');
+      expect(screen.getByText('10 per page')).toHaveAttribute('class', 'pf-m-selected pf-v5-c-options-menu__menu-item');
+      expect(screen.getByText('20 per page')).toHaveAttribute('class', 'pf-v5-c-options-menu__menu-item');
 
       await user.click(screen.getByText('20 per page'));
 
@@ -129,8 +129,8 @@ describe('<RecommendedServices />', () => {
 
       await user.click(screen.getByLabelText('Items per page'));
 
-      expect(screen.getByText('10 per page')).toHaveAttribute('class', 'pf-c-options-menu__menu-item');
-      expect(screen.getByText('20 per page')).toHaveAttribute('class', 'pf-m-selected pf-c-options-menu__menu-item');
+      expect(screen.getByText('10 per page')).toHaveAttribute('class', 'pf-v5-c-options-menu__menu-item');
+      expect(screen.getByText('20 per page')).toHaveAttribute('class', 'pf-m-selected pf-v5-c-options-menu__menu-item');
     });
 
     it('change page', async () => {

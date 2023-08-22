@@ -92,7 +92,7 @@ const MarketplaceModal = ({ data, isOpen, onClose }) => {
       variant="large"
     >
       {config.isLoading && (
-        <div className="pf-u-mb-md marketplace-flex">
+        <div className="pf-v5-u-mb-md marketplace-flex">
           <SkeletonMarketplaceCard />
           <SkeletonMarketplaceCard />
         </div>
@@ -133,7 +133,7 @@ const MarketplaceModal = ({ data, isOpen, onClose }) => {
               // onDelete: (_event, chips, deleteAll) => console.log(chips, deleteAll),
             }}
           />
-          <div className="pf-u-mb-md marketplace-flex">
+          <div className="pf-v5-u-mb-md marketplace-flex">
             {!isLoadingData && data.map((product) => <MarketplaceCard key={product.id} {...product} />)}
             {isLoadingData && (
               <React.Fragment>

@@ -80,7 +80,7 @@ export const AddRole = () => {
               id: 'provisioning.gcp.createRole',
               defaultMessage: 'Create a new custom role and fetch the role name:',
             })}
-            <ClipboardCopy isCode variant={ClipboardCopyVariant.expansion} className="pf-u-m-sm-on-sm" isReadOnly>
+            <ClipboardCopy isCode variant={ClipboardCopyVariant.expansion} className="pf-v5-u-m-sm-on-sm" isReadOnly>
               {ROLE_COMMAND_STRING.replace('<PROJECT_ID>', ProjectID)}
             </ClipboardCopy>
           </TextListItem>
@@ -90,7 +90,7 @@ export const AddRole = () => {
               defaultMessage: 'Attach the role that you just created to Red Hat service account to grant permissions.',
             })}
           </TextListItem>
-          <ClipboardCopy isCode variant={ClipboardCopyVariant.expansion} className="pf-u-m-sm-on-sm" isReadOnly>
+          <ClipboardCopy isCode variant={ClipboardCopyVariant.expansion} className="pf-v5-u-m-sm-on-sm" isReadOnly>
             {ATTACH_ROLE_COMMAND_STRING.replace('<PROVISIONING_SERVICE_ACCOUNT>', gcpServiceAccount).replace(
               '<PROJECT_ID>',
               ProjectID
