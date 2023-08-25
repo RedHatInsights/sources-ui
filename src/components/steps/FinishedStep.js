@@ -9,7 +9,7 @@ import {
   EmptyState,
   EmptyStateBody,
   EmptyStateIcon,
-  EmptyStateSecondaryActions,
+  EmptyStateActions,
   EmptyStateVariant,
   Form,
   FormGroup,
@@ -52,13 +52,13 @@ const FinishedStep = ({
           {returnButtonTitle}
         </Button>
         {!hideSourcesButton && (
-          <EmptyStateSecondaryActions>
+          <EmptyStateActions>
             <Button variant="link" component="a" target="_blank" rel="noopener noreferrer" href={computeSourcesUrl(isBeta())}>
               {linkText}
             </Button>
-          </EmptyStateSecondaryActions>
+          </EmptyStateActions>
         )}
-        {secondaryActions && <EmptyStateSecondaryActions>{secondaryActions}</EmptyStateSecondaryActions>}
+        {secondaryActions && <EmptyStateActions>{secondaryActions}</EmptyStateActions>}
       </EmptyState>
     </Bullseye>
   );

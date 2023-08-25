@@ -6,9 +6,9 @@ import {
   Bullseye,
   Button,
   EmptyState,
+  EmptyStateActions,
   EmptyStateBody,
   EmptyStateIcon,
-  EmptyStateSecondaryActions,
   EmptyStateVariant,
   Spinner,
   Title,
@@ -23,11 +23,11 @@ const LoadingStep = ({ onClose, customText, cancelTitle, description }) => (
       </Title>
       {description && <EmptyStateBody className="src-c-wizard--step-text">{description}</EmptyStateBody>}
       {onClose && (
-        <EmptyStateSecondaryActions className="pf-u-mt-xl">
+        <EmptyStateActions className="pf-u-mt-xl">
           <Button variant="link" onClick={onClose}>
             {cancelTitle}
           </Button>
-        </EmptyStateSecondaryActions>
+        </EmptyStateActions>
       )}
     </EmptyState>
   </Bullseye>

@@ -172,7 +172,6 @@ const SourcesPage = () => {
   const mainContent = () => (
     <React.Fragment>
       <PrimaryToolbar
-        useMobileLayout
         pagination={showPaginationLoader ? <PaginationLoader /> : numberOfEntities > 0 ? paginationConfig : undefined}
         actionsConfig={
           actionsConfig || {
@@ -205,6 +204,7 @@ const SourcesPage = () => {
         filterConfig={{
           items: [
             {
+              type: 'text',
               label: intl.formatMessage({
                 id: 'sources.name',
                 defaultMessage: 'Name',
