@@ -42,12 +42,12 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.11",
-    "@babel/preset-env": "^7.22.10",
+    "@babel/core": "7.22.9",
+    "@babel/preset-env": "7.22.9",
     "@babel/preset-react": "^7.22.5",
     "@babel/preset-typescript": "^7.22.11",
-    "@redhat-cloud-services/frontend-components-config": "^6.0.2",
-    "@redhat-cloud-services/tsc-transform-imports": "^1.0.1",
+    "@redhat-cloud-services/frontend-components-config": "^6.0.3",
+    "@redhat-cloud-services/tsc-transform-imports": "^1.0.3",
     "@testing-library/dom": "^8.16.0",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^14.0.0",
