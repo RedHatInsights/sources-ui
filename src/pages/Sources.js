@@ -159,137 +159,18 @@ const SourcesPage = () => {
             {
               label: addSourceText,
               props: {
-                component: 'div',
+                component: 'button',
                 isDisabled: true,
                 tooltip: noPermissionsText,
+                tooltipProps: {
+                  content: noPermissionsText,
+                },
                 className: 'src-m-dropdown-item-disabled',
               },
             },
           ],
     };
   }
-
-  const mainContent = () => (
-    <React.Fragment>
-      <PrimaryToolbar
-        pagination={showPaginationLoader ? <PaginationLoader /> : numberOfEntities > 0 ? paginationConfig : undefined}
-        actionsConfig={
-          actionsConfig || {
-            dropdownProps: { position: 'right' },
-            actions: hasWritePermissions
-              ? [
-                  <AppLink to={routes.sourcesNew.path} key="addSourceButton">
-                    <Button
-                      data-hcc-index="true"
-                      data-hcc-title={addSourceText}
-                      data-hcc-alt="create source;add cloud provider"
-                      variant="primary"
-                      id="addSourceButton"
-                    >
-                      {addSourceText}
-                    </Button>
-                  </AppLink>,
-                ]
-              : [
-                  <Tooltip content={noPermissionsText} key="addSourceButton">
-                    <span tabIndex="0">
-                      <Button variant="primary" isDisabled id="addSourceButton">
-                        {addSourceText}
-                      </Button>
-                    </span>
-                  </Tooltip>,
-                ],
-          }
-        }
-        filterConfig={{
-          items: [
-            {
-              type: 'text',
-              label: intl.formatMessage({
-                id: 'sources.name',
-                defaultMessage: 'Name',
-              }),
-              filterValues: {
-                'aria-label': intl.formatMessage({
-                  id: 'sources.filterByName',
-                  defaultMessage: 'Filter by name',
-                }),
-                onChange: (_event, value) => {
-                  stateDispatch({ type: 'setFilterValue', value });
-                  debouncedFiltering(() => setFilter('name', value, dispatch));
-                },
-                value: filter,
-              },
-            },
-            {
-              label: intl.formatMessage({
-                id: 'sources.type',
-                defaultMessage: 'Type',
-              }),
-              type: 'checkbox',
-              filterValues: {
-                onChange: (_event, value) => setFilter('source_type_id', value, dispatch),
-                items: prepareSourceTypeSelection(filteredSourceTypes),
-                value: filterValue.source_type_id,
-              },
-            },
-            {
-              label: intl.formatMessage({
-                id: 'sources.application',
-                defaultMessage: 'Application',
-              }),
-              type: 'checkbox',
-              filterValues: {
-                onChange: (_event, value) => setFilter('applications', value, dispatch),
-                items: prepareApplicationTypeSelection(
-                  appTypes?.filter(filterVendorAppTypes(filteredSourceTypes, activeCategory)) || []
-                ),
-                value: filterValue.applications,
-              },
-            },
-            {
-              label: intl.formatMessage({
-                id: 'sources.availabilityStatus',
-                defaultMessage: 'Status',
-              }),
-              type: 'checkbox',
-              filterValues: {
-                onChange: (event, _value, selectedValue) =>
-                  setFilter('availability_status', event.target.checked ? [selectedValue] : [], dispatch),
-                items: [
-                  { label: intl.formatMessage({ id: 'sources.available', defaultMessage: 'Available' }), value: AVAILABLE },
-                  {
-                    label: intl.formatMessage({ id: 'sources.unavailable', defaultMessage: 'Unavailable' }),
-                    value: UNAVAILABLE,
-                  },
-                ],
-                value: filterValue.availability_status,
-              },
-            },
-          ],
-        }}
-        activeFiltersConfig={{
-          filters: prepareChips(filterValue, sourceTypes, appTypes, intl),
-          onDelete: (_event, chips, deleteAll) => dispatch(filterSources(removeChips(chips, filterValue, deleteAll))),
-        }}
-        exportConfig={{
-          ...(isSmallScreen && { position: 'right' }),
-          isDisabled: !loaded,
-          onSelect: (_e, type) => {
-            const data =
-              type === 'csv'
-                ? generateCSV(entities, intl, appTypes, sourceTypes)
-                : generateJSON(entities, intl, appTypes, sourceTypes);
-            downloadFile(data, `sources-${new Date().toISOString()}`, type);
-          },
-        }}
-      />
-      <SourcesTable />
-      <PrimaryToolbar
-        pagination={showPaginationLoader ? <PaginationLoader /> : numberOfEntities > 0 ? paginationConfigBottom : undefined}
-      />
-    </React.Fragment>
-  );
 
   const hasSomeFilter =
     Object.entries(filterValue)
@@ -300,6 +181,131 @@ const SourcesPage = () => {
   const showInfoCards = activeCategory === CLOUD_VENDOR && !showEmptyState;
 
   const setSelectedType = (selectedType) => stateDispatch({ type: 'setSelectedType', selectedType });
+
+  const mainContent =
+    !fetchingError && !showEmptyState ? (
+      <React.Fragment>
+        <PrimaryToolbar
+          pagination={showPaginationLoader ? <PaginationLoader /> : numberOfEntities > 0 ? paginationConfig : undefined}
+          actionsConfig={
+            actionsConfig || {
+              dropdownProps: { position: 'right' },
+              actions: hasWritePermissions
+                ? [
+                    <AppLink to={routes.sourcesNew.path} key="addSourceButton">
+                      <Button
+                        data-hcc-index="true"
+                        data-hcc-title={addSourceText}
+                        data-hcc-alt="create source;add cloud provider"
+                        variant="primary"
+                        id="addSourceButton"
+                      >
+                        {addSourceText}
+                      </Button>
+                    </AppLink>,
+                  ]
+                : [
+                    <Tooltip content={noPermissionsText} key="addSourceButton">
+                      <span tabIndex="0">
+                        <Button variant="primary" isDisabled id="addSourceButton">
+                          {addSourceText}
+                        </Button>
+                      </span>
+                    </Tooltip>,
+                  ],
+            }
+          }
+          filterConfig={{
+            items: [
+              {
+                type: 'text',
+                label: intl.formatMessage({
+                  id: 'sources.name',
+                  defaultMessage: 'Name',
+                }),
+                filterValues: {
+                  'aria-label': intl.formatMessage({
+                    id: 'sources.filterByName',
+                    defaultMessage: 'Filter by name',
+                  }),
+                  onChange: (_event, value) => {
+                    stateDispatch({ type: 'setFilterValue', value });
+                    debouncedFiltering(() => setFilter('name', value, dispatch));
+                  },
+                  value: filter || '',
+                },
+              },
+              {
+                label: intl.formatMessage({
+                  id: 'sources.type',
+                  defaultMessage: 'Type',
+                }),
+                type: 'checkbox',
+                filterValues: {
+                  onChange: (_event, value) => setFilter('source_type_id', value, dispatch),
+                  items: prepareSourceTypeSelection(filteredSourceTypes),
+                  value: filterValue.source_type_id ?? [],
+                },
+              },
+              {
+                label: intl.formatMessage({
+                  id: 'sources.application',
+                  defaultMessage: 'Application',
+                }),
+                type: 'checkbox',
+                filterValues: {
+                  onChange: (_event, value) => setFilter('applications', value, dispatch),
+                  items: prepareApplicationTypeSelection(
+                    appTypes?.filter(filterVendorAppTypes(filteredSourceTypes, activeCategory)) || []
+                  ),
+                  value: filterValue.applications,
+                },
+              },
+              {
+                label: intl.formatMessage({
+                  id: 'sources.availabilityStatus',
+                  defaultMessage: 'Status',
+                }),
+                type: 'checkbox',
+                filterValues: {
+                  onChange: (event, value, selectedValue) =>
+                    setFilter('availability_status', event.target.checked ? [selectedValue] : [], dispatch),
+                  items: [
+                    { label: intl.formatMessage({ id: 'sources.available', defaultMessage: 'Available' }), value: AVAILABLE },
+                    {
+                      label: intl.formatMessage({ id: 'sources.unavailable', defaultMessage: 'Unavailable' }),
+                      value: UNAVAILABLE,
+                    },
+                  ],
+                  value: filterValue.availability_status,
+                },
+              },
+            ],
+          }}
+          activeFiltersConfig={{
+            filters: prepareChips(filterValue, sourceTypes, appTypes, intl),
+            onDelete: (_event, chips, deleteAll) => {
+              dispatch(filterSources(removeChips(chips, filterValue, deleteAll)));
+            },
+          }}
+          exportConfig={{
+            ...(isSmallScreen && { position: 'right' }),
+            isDisabled: !loaded,
+            onSelect: (_e, type) => {
+              const data =
+                type === 'csv'
+                  ? generateCSV(entities, intl, appTypes, sourceTypes)
+                  : generateJSON(entities, intl, appTypes, sourceTypes);
+              downloadFile(data, `sources-${new Date().toISOString()}`, type);
+            },
+          }}
+        />
+        <SourcesTable />
+        <PrimaryToolbar
+          pagination={showPaginationLoader ? <PaginationLoader /> : numberOfEntities > 0 ? paginationConfigBottom : undefined}
+        />
+      </React.Fragment>
+    ) : null;
 
   return (
     <React.Fragment>
@@ -333,7 +339,7 @@ const SourcesPage = () => {
         {!fetchingError && showEmptyState && activeCategory === REDHAT_VENDOR && (
           <RedHatEmptyState setSelectedType={setSelectedType} />
         )}
-        {!fetchingError && !showEmptyState && mainContent()}
+        {mainContent}
       </Section>
     </React.Fragment>
   );

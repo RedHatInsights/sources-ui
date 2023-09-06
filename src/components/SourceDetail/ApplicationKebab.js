@@ -33,6 +33,10 @@ const ApplicationKebab = ({ app, removeApp, addApp }) => {
   const pausedProps = {
     ...disabledProps,
     tooltip: pausedTooltip,
+    tooltipProps: {
+      ...disabledProps,
+      content: pausedTooltip,
+    },
   };
 
   const pausedButton = app.paused_at ? (

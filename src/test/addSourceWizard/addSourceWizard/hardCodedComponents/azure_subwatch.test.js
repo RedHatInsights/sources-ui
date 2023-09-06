@@ -1,5 +1,5 @@
 import React from 'react';
-import { screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import render from '../../__mocks__/render';
@@ -64,7 +64,9 @@ describe('Azure-Subwatch hardcoded schemas', () => {
 
       render(<SubAzure.LightHouseDescription />);
 
-      getLighthouseLink.reject();
+      await act(async () => {
+        await getLighthouseLink.reject();
+      });
 
       await waitFor(() => expect(screen.getByText('Take me to Lighthouse')).toHaveAttribute('aria-disabled', 'true'));
       expect(

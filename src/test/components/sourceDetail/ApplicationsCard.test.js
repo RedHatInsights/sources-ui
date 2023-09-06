@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import PlayIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
@@ -382,6 +382,7 @@ describe('ApplicationsCard', () => {
         user: { writePermissions: true },
       });
 
+      actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'undefined' }));
       actions.loadEntities = jest.fn().mockImplementation(() => ({ type: 'nonsense' }));
     });
 
@@ -610,7 +611,9 @@ describe('ApplicationsCard', () => {
 
       actions.addMessage.mockClear();
 
-      await user.click(screen.getAllByRole('checkbox')[0]);
+      await act(async () => {
+        await user.click(screen.getAllByRole('checkbox')[0]);
+      });
 
       expect(screen.getAllByRole('checkbox')[0]).not.toBeChecked();
 

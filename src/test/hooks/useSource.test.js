@@ -1,6 +1,6 @@
 import { useSource } from '../../hooks/useSource';
 import { createStore } from 'redux';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 

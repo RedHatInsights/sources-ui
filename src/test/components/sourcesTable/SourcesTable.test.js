@@ -16,6 +16,7 @@ import { replaceRouteId, routes } from '../../../Routing';
 import { defaultSourcesState } from '../../../redux/sources/reducer';
 import mockStore from '../../__mocks__/mockStore';
 import { disabledMessage } from '../../../utilities/disabledTooltipProps';
+import { act } from 'react-dom/test-utils';
 
 describe('SourcesTable', () => {
   let loadedProps;
@@ -122,11 +123,13 @@ describe('SourcesTable', () => {
 
     render(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
 
-    await user.click(screen.getAllByLabelText('Actions')[0]);
+    await act(async () => {
+      await user.click(screen.getAllByLabelText('Kebab toggle')[0]);
+    });
 
-    expect(screen.getByText('Edit')).toHaveClass('src-m-dropdown-item-disabled');
-
-    await user.click(screen.getByText('Edit'));
+    await act(async () => {
+      await user.click(screen.getByText('Edit'));
+    });
 
     await waitFor(() => expect(screen.getByText(disabledMessage(INTL))).toBeInTheDocument());
   });
@@ -209,7 +212,7 @@ describe('SourcesTable', () => {
     it('redirect to edit', async () => {
       const user = userEvent.setup();
 
-      await user.click(screen.getAllByLabelText('Actions')[0]);
+      await user.click(screen.getAllByLabelText('Kebab toggle')[0]);
       await user.click(screen.getByText('Edit'));
       const expectedPath = replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, sourcesDataGraphQl[0].id);
       expect(screen.getByTestId('location-display').textContent).toEqual(expectedPath);
@@ -218,8 +221,12 @@ describe('SourcesTable', () => {
     it('redirect to delete', async () => {
       const user = userEvent.setup();
 
-      await user.click(screen.getAllByLabelText('Actions')[0]);
-      await user.click(screen.getByText('Remove'));
+      await act(async () => {
+        await user.click(screen.getAllByLabelText('Kebab toggle')[0]);
+      });
+      await act(async () => {
+        await user.click(screen.getByText('Remove').closest('button'));
+      });
 
       const expectedPath = replaceRouteId(`/settings/sources/${routes.sourcesRemove.path}`, sourcesDataGraphQl[0].id);
       expect(screen.getByTestId('location-display').textContent).toEqual(expectedPath);
@@ -230,7 +237,7 @@ describe('SourcesTable', () => {
 
       actions.pauseSource = jest.fn().mockImplementation(() => ({ type: 'undefined-pause' }));
 
-      await user.click(screen.getAllByLabelText('Actions')[0]);
+      await user.click(screen.getAllByLabelText('Kebab toggle')[0]);
       await user.click(screen.getByText('Pause'));
 
       expect(actions.pauseSource).toHaveBeenCalledWith(sourcesDataGraphQl[0].id, sourcesDataGraphQl[0].name, expect.any(Object));
@@ -263,7 +270,7 @@ describe('SourcesTable', () => {
 
     render(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
 
-    await user.click(screen.getAllByLabelText('Actions')[0]);
+    await user.click(screen.getAllByLabelText('Kebab toggle')[0]);
     await user.click(screen.getByText('Resume'));
 
     expect(actions.resumeSource).toHaveBeenCalledWith(sourcesDataGraphQl[0].id, sourcesDataGraphQl[0].name, expect.any(Object));

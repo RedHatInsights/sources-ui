@@ -7,9 +7,9 @@ import {
   Bullseye,
   Button,
   EmptyState,
+  EmptyStateActions,
   EmptyStateBody,
   EmptyStateIcon,
-  EmptyStateActions,
   EmptyStateVariant,
   Title,
 } from '@patternfly/react-core';

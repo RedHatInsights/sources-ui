@@ -36,7 +36,7 @@ describe('CardSelect component', () => {
   it('should render correctly', async () => {
     render(<FormRenderer {...initialProps} />);
 
-    expect(screen.getByText('some label', { selector: '.pf-c-check__label' })).toBeInTheDocument();
+    expect(screen.getByText('some label', { selector: '.pf-v5-c-check__label' })).toBeInTheDocument();
     expect(Icon).toHaveBeenCalledWith({ appendTo: undefined }, {});
   });
 });

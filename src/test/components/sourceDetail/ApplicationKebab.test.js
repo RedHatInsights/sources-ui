@@ -7,6 +7,7 @@ import { replaceRouteId, routes } from '../../../Routing';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import mockStore from '../../__mocks__/mockStore';
 import ApplicationKebab from '../../../components/SourceDetail/ApplicationKebab';
+import { act } from 'react-dom/test-utils';
 
 jest.mock('@patternfly/react-core/dist/js/components/Tooltip', () => {
   const lib = jest.requireActual('@patternfly/react-core/dist/js/components/Tooltip');
@@ -60,7 +61,9 @@ describe('ApplicationKebab', () => {
       )
     );
 
-    await user.click(screen.getByLabelText('Actions'));
+    await act(async () => {
+      await user.click(screen.getByLabelText('Actions'));
+    });
 
     expect(screen.getByText('Pause')).toBeInTheDocument();
     expect(screen.getByText('Temporarily stop this application from collecting data.')).toBeInTheDocument();
@@ -70,7 +73,9 @@ describe('ApplicationKebab', () => {
     expect(screen.getByText('Permanently stop data collection for this application.')).toBeInTheDocument();
     expect(screen.getByText('Remove').closest('.src-m-dropdown-item-disabled')).toBeInTheDocument();
 
-    await user.hover(screen.getByText('Remove'));
+    await act(async () => {
+      await user.hover(screen.getByText('Remove').closest('a'));
+    });
 
     const tooltipText =
       'To perform this action, your Organization Administrator must grant you Sources Administrator permissions.';

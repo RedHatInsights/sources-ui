@@ -15,12 +15,12 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@data-driven-forms/pf4-component-mapper": "^3.21.0",
-    "@data-driven-forms/react-form-renderer": "^3.21.0",
+    "@data-driven-forms/pf4-component-mapper": "^3.21.2",
+    "@data-driven-forms/react-form-renderer": "^3.21.2",
     "@patternfly/react-core": "^5.0.0",
     "@patternfly/react-icons": "^5.0.0",
     "@patternfly/react-table": "^5.0.0",
-    "@redhat-cloud-services/frontend-components": "^4.0.1",
+    "@redhat-cloud-services/frontend-components": "^4.0.7",
     "@redhat-cloud-services/frontend-components-notifications": "^4.0.0",
     "@redhat-cloud-services/frontend-components-utilities": "^4.0.0",
     "@sentry/minimal": "6.19.7",
@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.22.9",
+    "@babel/eslint-parser": "^7.22.11",
     "@babel/preset-env": "7.22.9",
     "@babel/preset-react": "^7.22.5",
     "@babel/preset-typescript": "^7.22.11",

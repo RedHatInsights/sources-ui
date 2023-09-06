@@ -131,7 +131,7 @@ describe('CardSelect component', () => {
 
     render(<FormRenderer {...initialProps} />);
 
-    expect(screen.getByText('MS Azure').closest('.pf-c-tile')).toHaveClass('pf-m-disabled');
+    expect(screen.getByText('MS Azure').closest('.pf-v5-c-tile')).toHaveClass('pf-m-disabled');
   });
 
   it('should render correctly with iconMapper', () => {
@@ -194,16 +194,16 @@ describe('CardSelect component', () => {
     await user.tab();
     await user.tab();
 
-    expect(screen.getByText('aws').closest('.pf-c-tile')).toHaveFocus();
+    expect(screen.getByText('aws').closest('.pf-v5-c-tile')).toHaveFocus();
 
-    const myEvent = createEvent.keyPress(screen.getByText('aws').closest('.pf-c-tile'), {
+    const myEvent = createEvent.keyPress(screen.getByText('aws').closest('.pf-v5-c-tile'), {
       key: 'Space',
       code: 32,
       charCode: 32,
     });
     myEvent.preventDefault = preventDefaultMock;
 
-    fireEvent(screen.getByText('aws').closest('.pf-c-tile'), myEvent);
+    fireEvent(screen.getByText('aws').closest('.pf-v5-c-tile'), myEvent);
 
     expect(preventDefaultMock).toHaveBeenCalled();
 
@@ -215,7 +215,7 @@ describe('CardSelect component', () => {
     });
 
     // unselect
-    fireEvent(screen.getByText('aws').closest('.pf-c-tile'), myEvent);
+    fireEvent(screen.getByText('aws').closest('.pf-v5-c-tile'), myEvent);
     await user.click(screen.getByText('Submit'));
 
     expect(onSubmit).toHaveBeenCalledWith({

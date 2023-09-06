@@ -1,6 +1,6 @@
 import React from 'react';
 import MockAdapter from 'axios-mock-adapter';
-import { screen } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import render from '../../__mocks__/render';
 import * as useFormApi from '@data-driven-forms/react-form-renderer/use-form-api/use-form-api';
 import * as ProvGCP from '../../../../components/addSourceWizard/hardcodedComponents/gcp/provisioning';
@@ -31,7 +31,7 @@ describe('Provisioning GCP hardcoded schemas', () => {
       .onGet(`/api/sources/v3.1/app_meta_data?filter[name]=gcp_service_account&application_type_id=${appId}`)
       .reply(200, { data: [{ payload: gcpServiceAccount }] });
 
-    render(<ProvGCP.AddRole />);
+    await render(<ProvGCP.AddRole />);
 
     expect(
       screen.getByText('To delegate account access, create a custom role and grant it to Red Hat service account.', {
@@ -39,7 +39,9 @@ describe('Provisioning GCP hardcoded schemas', () => {
       })
     ).toBeInTheDocument();
 
-    expect(screen.getByText('Loading configuration...')).toBeInTheDocument();
+    await act(async () => {
+      expect(screen.getByText('Loading configuration...')).toBeInTheDocument();
+    });
 
     const copyInputs = await screen.findAllByLabelText('Copyable input');
 

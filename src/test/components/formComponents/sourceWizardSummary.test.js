@@ -44,8 +44,8 @@ describe('SourceWizardSummary component', () => {
       );
 
     const getListData = (container) =>
-      [...container.getElementsByClassName('pf-c-description-list__group')].map((group) => [
-        ...[...group.getElementsByClassName('pf-c-description-list__text')].map((el) => el.textContent),
+      [...container.getElementsByClassName('pf-v5-c-description-list__group')].map((group) => [
+        ...[...group.getElementsByClassName('pf-v5-c-description-list__text')].map((el) => el.textContent),
       ]);
 
     beforeEach(() => {
@@ -395,8 +395,8 @@ describe('SourceWizardSummary component', () => {
         </IntlProvider>
       );
 
-      const data = [...container.getElementsByClassName('pf-c-description-list__group')].map((group) => [
-        ...[...group.getElementsByClassName('pf-c-description-list__text')].map((el) => el.textContent),
+      const data = [...container.getElementsByClassName('pf-v5-c-description-list__group')].map((group) => [
+        ...[...group.getElementsByClassName('pf-v5-c-description-list__text')].map((el) => el.textContent),
       ]);
 
       expect(data).toEqual([

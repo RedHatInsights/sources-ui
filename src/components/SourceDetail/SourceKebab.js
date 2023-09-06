@@ -34,6 +34,10 @@ const SourceKebab = () => {
   const pausedProps = {
     ...disabledProps,
     tooltip: pausedTooltip,
+    tooltipProps: {
+      ...disabledProps.tooltipProps,
+      content: pausedTooltip,
+    },
   };
 
   return (
