@@ -169,7 +169,9 @@ describe('RemoveAppModal', () => {
       )
     );
 
-    await user.click(screen.getByText('Cancel'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Cancel'));
+    });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
       replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, SOURCE_ID)
@@ -191,7 +193,9 @@ describe('RemoveAppModal', () => {
       )
     );
 
-    await user.click(screen.getByText('Remove'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Remove'));
+    });
 
     await waitFor(() => expect(actions.removeApplication).toHaveBeenCalledWith(APP_ID, SOURCE_ID, SUCCESS_MSG, ERROR_MSG));
   });

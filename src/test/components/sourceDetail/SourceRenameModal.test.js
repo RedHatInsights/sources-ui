@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
@@ -53,7 +53,9 @@ describe('SourceRenameModal', () => {
   it('close on close icon', async () => {
     const user = userEvent.setup();
 
-    await user.click(screen.getByLabelText('Close'));
+    await waitFor(async () => {
+      await user.click(screen.getByLabelText('Close'));
+    });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
       replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, sourceId)
@@ -63,7 +65,9 @@ describe('SourceRenameModal', () => {
   it('close on cancel', async () => {
     const user = userEvent.setup();
 
-    await user.click(screen.getByText('Cancel'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Cancel'));
+    });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
       replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, sourceId)
@@ -75,9 +79,15 @@ describe('SourceRenameModal', () => {
 
     actions.renameSource = jest.fn().mockImplementation(() => ({ type: 'something' }));
 
-    await user.clear(screen.getByRole('textbox'));
-    await user.type(screen.getByRole('textbox'), 'new-name');
-    await user.click(screen.getByText('Save'));
+    await waitFor(async () => {
+      await user.clear(screen.getByRole('textbox'));
+    });
+    await waitFor(async () => {
+      await user.type(screen.getByRole('textbox'), 'new-name');
+    });
+    await waitFor(async () => {
+      await user.click(screen.getByText('Save'));
+    });
 
     expect(actions.renameSource).toHaveBeenCalledWith(sourceId, 'new-name', 'Renaming was unsuccessful');
     expect(screen.getByTestId('location-display').textContent).toEqual(

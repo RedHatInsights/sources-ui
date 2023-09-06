@@ -102,8 +102,12 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await user.click(screen.getByText('Google Cloud'));
-    container.getElementsByTagName('form')[0].submit();
+    await waitFor(async () => {
+      await user.click(screen.getByText('Google Cloud'));
+    });
+    await waitFor(async () => {
+      container.getElementsByTagName('form')[0].submit();
+    });
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
 
     expect(afterSubmitMock).toHaveBeenCalledWith({ name: 'source', applications: [] });
@@ -122,8 +126,12 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await user.click(screen.getByText('Google Cloud'));
-    container.getElementsByTagName('form')[0].submit();
+    await waitFor(async () => {
+      await user.click(screen.getByText('Google Cloud'));
+    });
+    await waitFor(async () => {
+      container.getElementsByTagName('form')[0].submit();
+    });
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
 
@@ -147,8 +155,12 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await user.click(screen.getByText('Google Cloud'));
-    container.getElementsByTagName('form')[0].submit();
+    await waitFor(async () => {
+      await user.click(screen.getByText('Google Cloud'));
+    });
+    await waitFor(async () => {
+      container.getElementsByTagName('form')[0].submit();
+    });
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
     expect(submitCallback).toHaveBeenCalledWith({
@@ -172,11 +184,17 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await user.click(screen.getByText('Google Cloud'));
-    await user.click(screen.getByLabelText('Close wizard'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Google Cloud'));
+    });
+    await waitFor(async () => {
+      await user.click(screen.getByLabelText('Close wizard'));
+    });
 
     expect(screen.getByText('Exit source creation?')).toBeInTheDocument();
-    await user.click(screen.getByText('Exit'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Exit'));
+    });
     expect(onClose).toHaveBeenCalledWith({ source_type: GOOGLE_NAME });
   });
 
@@ -190,9 +208,15 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await user.click(screen.getByText('Google Cloud'));
-    await user.click(screen.getByLabelText('Close wizard'));
-    await user.click(screen.getByText('Stay'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Google Cloud'));
+    });
+    await waitFor(async () => {
+      await user.click(screen.getByLabelText('Close wizard'));
+    });
+    await waitFor(async () => {
+      await user.click(screen.getByText('Stay'));
+    });
 
     expect(onClose).not.toHaveBeenCalled();
     expect(screen.getByText('Google Cloud').closest('.pf-m-selected')).toBeInTheDocument();
@@ -209,8 +233,12 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await user.click(screen.getByText('Google Cloud'));
-    container.getElementsByTagName('form')[0].submit();
+    await waitFor(async () => {
+      await user.click(screen.getByText('Google Cloud'));
+    });
+    await waitFor(async () => {
+      container.getElementsByTagName('form')[0].submit();
+    });
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
 
@@ -234,14 +262,20 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await user.click(screen.getByText('Google Cloud'));
-    container.getElementsByTagName('form')[0].submit();
+    await waitFor(async () => {
+      await user.click(screen.getByText('Google Cloud'));
+    });
+    await waitFor(async () => {
+      container.getElementsByTagName('form')[0].submit();
+    });
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
 
     expect(closeCallback).not.toHaveBeenCalled();
 
-    await user.click(screen.getByLabelText('Close'));
+    await waitFor(async () => {
+      await user.click(screen.getByLabelText('Close'));
+    });
 
     expect(closeCallback).toHaveBeenCalledWith({});
   });
@@ -258,14 +292,20 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await user.click(screen.getByText('Google Cloud'));
-    container.getElementsByTagName('form')[0].submit();
+    await waitFor(async () => {
+      await user.click(screen.getByText('Google Cloud'));
+    });
+    await waitFor(async () => {
+      container.getElementsByTagName('form')[0].submit();
+    });
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
 
     expect(closeCallback).not.toHaveBeenCalled();
 
-    await user.click(screen.getByLabelText('Close'));
+    await waitFor(async () => {
+      await user.click(screen.getByLabelText('Close'));
+    });
 
     await waitFor(() => expect(closeCallback).toHaveBeenCalledWith(undefined, SOURCE_DATA_OUT));
   });
@@ -283,7 +323,9 @@ describe('AddSourceWizard', () => {
     await act(async () => {
       await user.click(screen.getByText('Google Cloud'));
     });
-    container.getElementsByTagName('form')[0].submit();
+    await waitFor(async () => {
+      container.getElementsByTagName('form')[0].submit();
+    });
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
 
@@ -304,14 +346,19 @@ describe('AddSourceWizard', () => {
 
     await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
 
-    await user.click(screen.getByText('Google Cloud'));
-    container.getElementsByTagName('form')[0].submit();
+    await waitFor(async () => {
+      await user.click(screen.getByText('Google Cloud'));
+    });
+    await waitFor(async () => {
+      container.getElementsByTagName('form')[0].submit();
+    });
 
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
     createSource.doCreateSource.mockClear();
     expect(createSource.doCreateSource).not.toHaveBeenCalled();
-
-    await user.click(screen.getByText('Retry'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Retry'));
+    });
 
     await waitFor(() =>
       expect(createSource.doCreateSource).toHaveBeenCalledWith(

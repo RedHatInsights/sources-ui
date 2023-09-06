@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { validatorTypes } from '@data-driven-forms/react-form-renderer';
@@ -108,18 +108,28 @@ describe('Authentication test', () => {
 
     expect(screen.getByRole('textbox')).toBeRequired();
 
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    await user.type(screen.getByRole('textbox'), 's');
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.type(screen.getByRole('textbox'), 's');
+    });
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    await user.type(screen.getByRole('textbox'), 'ome-value');
+    await waitFor(async () => {
+      await user.type(screen.getByRole('textbox'), 'ome-value');
+    });
 
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({
       authentication: {
@@ -146,11 +156,15 @@ describe('Authentication test', () => {
 
     expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
 
-    await user.click(screen.getByRole('textbox'));
+    await waitFor(async () => {
+      await user.click(screen.getByRole('textbox'));
+    });
 
     expect(screen.getByRole('textbox')).toHaveValue('');
 
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({
       authentication: {
@@ -159,8 +173,12 @@ describe('Authentication test', () => {
     });
     onSubmit.mockClear();
 
-    await user.type(screen.getByRole('textbox'), 's');
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.type(screen.getByRole('textbox'), 's');
+    });
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).not.toHaveBeenCalled();
   });
@@ -184,12 +202,18 @@ describe('Authentication test', () => {
 
     expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
 
-    await user.click(screen.getByRole('textbox'));
+    await waitFor(async () => {
+      await user.click(screen.getByRole('textbox'));
+    });
 
     expect(screen.getByRole('textbox')).toHaveValue('');
 
-    await user.type(screen.getByRole('textbox'), 's');
-    await user.click(screen.getByText('Reset'));
+    await waitFor(async () => {
+      await user.type(screen.getByRole('textbox'), 's');
+    });
+    await waitFor(async () => {
+      await user.click(screen.getByText('Reset'));
+    });
 
     expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
   });
@@ -222,7 +246,9 @@ describe('Authentication test', () => {
     expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
     expect(screen.getByRole('textbox')).toBeDisabled();
 
-    await user.click(screen.getByRole('textbox'));
+    await waitFor(async () => {
+      await user.click(screen.getByRole('textbox'));
+    });
 
     expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
     expect(screen.getByRole('textbox')).toBeDisabled();

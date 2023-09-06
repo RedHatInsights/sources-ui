@@ -46,7 +46,9 @@ describe('SourceKebab', () => {
       )
     );
 
-    await user.click(screen.getByLabelText('Actions'));
+    await waitFor(async () => {
+      await user.click(screen.getByLabelText('Actions'));
+    });
 
     expect(screen.getByText('Pause')).toBeInTheDocument();
     expect(screen.getByText('Temporarily disable data collection').closest('.src-m-dropdown-item-disabled')).toBeInTheDocument();
@@ -58,7 +60,9 @@ describe('SourceKebab', () => {
 
     expect(screen.getByText('Rename').closest('.src-m-dropdown-item-disabled')).toBeInTheDocument();
 
-    await user.hover(screen.getByText('Pause'));
+    await waitFor(async () => {
+      await user.hover(screen.getByText('Pause'));
+    });
 
     const tooltipText =
       'To perform this action, your Organization Administrator must grant you Sources Administrator permissions.';
@@ -86,8 +90,12 @@ describe('SourceKebab', () => {
       )
     );
 
-    await user.click(screen.getByLabelText('Actions'));
-    await user.hover(screen.getByText('Pause'));
+    await waitFor(async () => {
+      await user.click(screen.getByLabelText('Actions'));
+    });
+    await waitFor(async () => {
+      await user.hover(screen.getByText('Pause'));
+    });
 
     const tooltipText = 'To perform this action, you must add Sources Administrator permissions to your user.';
 
@@ -114,7 +122,9 @@ describe('SourceKebab', () => {
       )
     );
 
-    await user.click(screen.getByLabelText('Actions'));
+    await waitFor(async () => {
+      await user.click(screen.getByLabelText('Actions'));
+    });
 
     expect(screen.getByText('Resume')).toBeInTheDocument();
     expect(screen.getByText('Unpause data collection for this source')).toBeInTheDocument();
@@ -124,7 +134,9 @@ describe('SourceKebab', () => {
 
     expect(screen.getByText('Rename')).toBeInTheDocument();
 
-    await user.hover(screen.getByText('Rename'));
+    await waitFor(async () => {
+      await user.hover(screen.getByText('Rename'));
+    });
 
     const tooltipText = 'You cannot perform this action on a paused source.';
 
@@ -151,11 +163,15 @@ describe('SourceKebab', () => {
       )
     );
 
-    await user.click(screen.getByLabelText('Actions'));
+    await waitFor(async () => {
+      await user.click(screen.getByLabelText('Actions'));
+    });
 
     actions.resumeSource = jest.fn().mockImplementation(() => ({ type: 'undefined' }));
 
-    await user.click(screen.getByText('Resume'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Resume'));
+    });
 
     expect(actions.resumeSource).toHaveBeenCalledWith(sourceId, sourceName, expect.any(Object));
   });
@@ -183,7 +199,9 @@ describe('SourceKebab', () => {
     it('renders correctly', async () => {
       const user = userEvent.setup();
 
-      await user.click(screen.getByLabelText('Actions'));
+      await waitFor(async () => {
+        await user.click(screen.getByLabelText('Actions'));
+      });
 
       expect(screen.getByText('Pause')).toBeInTheDocument();
       expect(screen.getByText('Temporarily disable data collection')).toBeInTheDocument();
@@ -200,8 +218,12 @@ describe('SourceKebab', () => {
     it('remove source', async () => {
       const user = userEvent.setup();
 
-      await user.click(screen.getByLabelText('Actions'));
-      await user.click(screen.getByText('Remove'));
+      await waitFor(async () => {
+        await user.click(screen.getByLabelText('Actions'));
+      });
+      await waitFor(async () => {
+        await user.click(screen.getByText('Remove'));
+      });
 
       expect(screen.getByTestId('location-display').textContent).toEqual(
         replaceRouteId(`/settings/sources/${routes.sourcesDetailRemove.path}`, sourceId)
@@ -211,11 +233,15 @@ describe('SourceKebab', () => {
     it('pause source', async () => {
       const user = userEvent.setup();
 
-      await user.click(screen.getByLabelText('Actions'));
+      await waitFor(async () => {
+        await user.click(screen.getByLabelText('Actions'));
+      });
 
       actions.pauseSource = jest.fn().mockImplementation(() => ({ type: 'undefined' }));
 
-      await user.click(screen.getByText('Pause'));
+      await waitFor(async () => {
+        await user.click(screen.getByText('Pause'));
+      });
 
       expect(actions.pauseSource).toHaveBeenCalledWith(sourceId, sourceName, expect.any(Object));
     });
@@ -223,8 +249,12 @@ describe('SourceKebab', () => {
     it('rename source', async () => {
       const user = userEvent.setup();
 
-      await user.click(screen.getByLabelText('Actions'));
-      await user.click(screen.getByText('Rename'));
+      await waitFor(async () => {
+        await user.click(screen.getByLabelText('Actions'));
+      });
+      await waitFor(async () => {
+        await user.click(screen.getByText('Rename'));
+      });
 
       expect(screen.getByTestId('location-display').textContent).toEqual(
         replaceRouteId(`/settings/sources/${routes.sourcesDetailRename.path}`, sourceId)

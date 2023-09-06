@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { ACCOUNT_AUTHORIZATION } from '../../../components/constants';
@@ -211,7 +211,9 @@ describe('SourceSummaryCard', () => {
       )
     );
 
-    await user.click(screen.getByText('Edit credentials'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Edit credentials'));
+    });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
       replaceRouteId(`/settings/sources/${routes.sourcesDetailEditCredentials.path}`, sourceId)

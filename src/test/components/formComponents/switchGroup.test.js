@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
@@ -62,7 +62,9 @@ describe('Switch group', () => {
     expect(screen.getByLabelText('App 1')).toBeChecked();
     expect(screen.getByLabelText('App 2')).toBeChecked();
 
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({ 'switch-group': ['1', '2'] });
   });
@@ -72,7 +74,9 @@ describe('Switch group', () => {
 
     render(<FormRenderer {...initialProps} initialValues={{ 'switch-group': '123' }} />);
 
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({ 'switch-group': '123' });
   });
@@ -82,26 +86,42 @@ describe('Switch group', () => {
 
     render(<FormRenderer {...initialProps} />);
 
-    await user.click(screen.getAllByText('App 1')[0]);
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getAllByText('App 1')[0]);
+    });
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({ 'switch-group': ['2'] });
     onSubmit.mockClear();
 
-    await user.click(screen.getAllByText('App 2')[0]);
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getAllByText('App 2')[0]);
+    });
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({ 'switch-group': [] });
     onSubmit.mockClear();
 
-    await user.click(screen.getAllByText('App 2')[0]);
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getAllByText('App 2')[0]);
+    });
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({ 'switch-group': ['2'] });
     onSubmit.mockClear();
 
-    await user.click(screen.getAllByText('App 1')[0]);
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getAllByText('App 1')[0]);
+    });
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({ 'switch-group': ['2', '1'] });
     onSubmit.mockClear();

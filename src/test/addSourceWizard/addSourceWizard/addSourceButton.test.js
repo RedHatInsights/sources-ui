@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { AddSourceButton } from '../../../components/addSourceWizard/';
@@ -40,7 +40,9 @@ describe('AddSourceButton', () => {
 
     expect(screen.getAllByRole('dialog')).toBeTruthy();
 
-    await user.click(screen.getAllByRole('button')[0]);
+    await waitFor(async () => {
+      await user.click(screen.getAllByRole('button')[0]);
+    });
 
     expect(() => screen.getByRole('dialog')).toThrow();
   });

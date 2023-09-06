@@ -212,8 +212,12 @@ describe('SourcesTable', () => {
     it('redirect to edit', async () => {
       const user = userEvent.setup();
 
-      await user.click(screen.getAllByLabelText('Kebab toggle')[0]);
-      await user.click(screen.getByText('Edit'));
+      await waitFor(async () => {
+        await user.click(screen.getAllByLabelText('Kebab toggle')[0]);
+      });
+      await waitFor(async () => {
+        await user.click(screen.getByText('Edit'));
+      });
       const expectedPath = replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, sourcesDataGraphQl[0].id);
       expect(screen.getByTestId('location-display').textContent).toEqual(expectedPath);
     });
@@ -237,8 +241,12 @@ describe('SourcesTable', () => {
 
       actions.pauseSource = jest.fn().mockImplementation(() => ({ type: 'undefined-pause' }));
 
-      await user.click(screen.getAllByLabelText('Kebab toggle')[0]);
-      await user.click(screen.getByText('Pause'));
+      await waitFor(async () => {
+        await user.click(screen.getAllByLabelText('Kebab toggle')[0]);
+      });
+      await waitFor(async () => {
+        await user.click(screen.getByText('Pause'));
+      });
 
       expect(actions.pauseSource).toHaveBeenCalledWith(sourcesDataGraphQl[0].id, sourcesDataGraphQl[0].name, expect.any(Object));
 
@@ -270,8 +278,12 @@ describe('SourcesTable', () => {
 
     render(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
 
-    await user.click(screen.getAllByLabelText('Kebab toggle')[0]);
-    await user.click(screen.getByText('Resume'));
+    await waitFor(async () => {
+      await user.click(screen.getAllByLabelText('Kebab toggle')[0]);
+    });
+    await waitFor(async () => {
+      await user.click(screen.getByText('Resume'));
+    });
 
     expect(actions.resumeSource).toHaveBeenCalledWith(sourcesDataGraphQl[0].id, sourcesDataGraphQl[0].name, expect.any(Object));
 
@@ -296,11 +308,15 @@ describe('SourcesTable', () => {
 
     render(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
 
-    await user.click(screen.getByText('Name'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Name'));
+    });
 
     expect(spy).toHaveBeenCalledWith('name', 'asc');
 
-    await user.click(screen.getByText('Type'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Type'));
+    });
 
     expect(spy).toHaveBeenCalledWith('source_type_id', 'asc');
   });

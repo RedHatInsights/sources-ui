@@ -832,7 +832,9 @@ describe('SourceWizardSummary component', () => {
       expect(() => screen.getByText(randomLongText)).toThrow();
       expect(screen.getByText('Show more')).toBeInTheDocument();
 
-      await user.click(screen.getByText('Show more'));
+      await waitFor(async () => {
+        await user.click(screen.getByText('Show more'));
+      });
 
       await waitFor(() => expect(screen.getByText(randomLongText)).toBeInTheDocument());
     });

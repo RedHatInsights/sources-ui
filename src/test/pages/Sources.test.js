@@ -341,7 +341,9 @@ describe('SourcesPage', () => {
 
     api.doLoadEntities = mockApi();
 
-    await user.click(screen.getAllByLabelText('Go to next page')[0]);
+    await waitFor(async () => {
+      await user.click(screen.getAllByLabelText('Go to next page')[0]);
+    });
 
     expect(screen.getAllByRole('progressbar')[0].closest('.top-pagination')).not.toBeInTheDocument();
 
@@ -585,7 +587,9 @@ describe('SourcesPage', () => {
     expect(urlQuery.parseQuery.mock.calls).toHaveLength(1);
     expect(urlQuery.updateQuery.mock.calls).toHaveLength(2);
 
-    await user.click(screen.getByText('after success'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('after success'));
+    });
 
     expect(helpers.afterSuccess).toHaveBeenCalledWith(expect.any(Function), source);
   });
@@ -896,7 +900,9 @@ describe('SourcesPage', () => {
       await act(async () => {
         await user.click(screen.getByText('Filter by Application'));
       });
-      await user.click(screen.getByText('Cost Management', { selector: '.pf-v5-c-menu__item-text' }));
+      await waitFor(async () => {
+        await user.click(screen.getByText('Cost Management', { selector: '.pf-v5-c-menu__item-text' }));
+      });
 
       await waitFor(() => expect(screen.getByText(SEARCH_TERM, { selector: '.pf-v5-c-chip__text' })).toBeInTheDocument());
       expect(screen.getByText('Cost Management', { selector: '.pf-v5-c-chip__text' })).toBeInTheDocument();
@@ -1194,7 +1200,9 @@ describe('SourcesPage', () => {
         await user.click(screen.getByText('Add source'));
       });
 
-      await user.click(screen.getByText('Add source').closest('.mocked-tooltip'));
+      await waitFor(async () => {
+        await user.click(screen.getByText('Add source').closest('.mocked-tooltip'));
+      });
 
       await waitFor(() =>
         expect(
@@ -1223,7 +1231,9 @@ describe('SourcesPage', () => {
         await user.click(screen.getByText('Add source'));
       });
 
-      await user.click(screen.getByText('Add source').closest('.mocked-tooltip'));
+      await waitFor(async () => {
+        await user.click(screen.getByText('Add source').closest('.mocked-tooltip'));
+      });
 
       await waitFor(() =>
         expect(

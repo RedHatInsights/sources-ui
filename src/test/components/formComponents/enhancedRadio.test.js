@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { componentTypes } from '@data-driven-forms/react-form-renderer';
@@ -73,7 +73,9 @@ describe('EnhancedRadio', () => {
     expect(screen.getByText('option1')).toBeInTheDocument();
     expect(screen.getByText('option2')).toBeInTheDocument();
 
-    await user.type(screen.getByLabelText('multiplier'), '2');
+    await waitFor(async () => {
+      await user.type(screen.getByLabelText('multiplier'), '2');
+    });
 
     expect(screen.getAllByRole('radio').map((r) => [r.id, r.value])).toEqual([
       ['radio-2', '2'],
@@ -107,16 +109,22 @@ describe('EnhancedRadio', () => {
       />
     );
 
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({
       radio: NO_APPLICATION_VALUE,
     });
     onSubmit.mockReset();
 
-    await user.type(screen.getByLabelText('source_type'), 'some-value');
+    await waitFor(async () => {
+      await user.type(screen.getByLabelText('source_type'), 'some-value');
+    });
 
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({
       radio: 'first-option',
@@ -171,7 +179,9 @@ describe('EnhancedRadio', () => {
       />
     );
 
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({
       radio: 'aws-option',
@@ -179,9 +189,15 @@ describe('EnhancedRadio', () => {
     });
     onSubmit.mockReset();
 
-    await user.clear(screen.getByLabelText('source_type'));
-    await user.type(screen.getByLabelText('source_type'), 'some-value');
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.clear(screen.getByLabelText('source_type'));
+    });
+    await waitFor(async () => {
+      await user.type(screen.getByLabelText('source_type'), 'some-value');
+    });
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({
       radio: '',
@@ -236,7 +252,9 @@ describe('EnhancedRadio', () => {
       />
     );
 
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({
       radio: 'oracle-option',
@@ -244,9 +262,15 @@ describe('EnhancedRadio', () => {
     });
     onSubmit.mockReset();
 
-    await user.clear(screen.getByLabelText('source_type'));
-    await user.type(screen.getByLabelText('source_type'), 'some-value');
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.clear(screen.getByLabelText('source_type'));
+    });
+    await waitFor(async () => {
+      await user.type(screen.getByLabelText('source_type'), 'some-value');
+    });
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({
       radio: '',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { createEvent, fireEvent, render, screen } from '@testing-library/react';
+import { createEvent, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { AwsIcon, OpenshiftIcon } from '@patternfly/react-icons';
@@ -164,8 +164,12 @@ describe('CardSelect component', () => {
 
     render(<FormRenderer {...initialProps} initialValues={{ 'card-select': 'ops' }} />);
 
-    await user.click(screen.getByText('openshift'));
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('openshift'));
+    });
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({});
   });
@@ -174,9 +178,12 @@ describe('CardSelect component', () => {
     const user = userEvent.setup();
 
     render(<FormRenderer {...initialProps} />);
-
-    await user.click(screen.getByText('openshift'));
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('openshift'));
+    });
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({
       pre: 'filled',
@@ -191,8 +198,12 @@ describe('CardSelect component', () => {
 
     const preventDefaultMock = jest.fn();
 
-    await user.tab();
-    await user.tab();
+    await waitFor(async () => {
+      await user.tab();
+    });
+    await waitFor(async () => {
+      await user.tab();
+    });
 
     expect(screen.getByText('aws').closest('.pf-v5-c-tile')).toHaveFocus();
 
@@ -207,7 +218,9 @@ describe('CardSelect component', () => {
 
     expect(preventDefaultMock).toHaveBeenCalled();
 
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({
       pre: 'filled',
@@ -216,7 +229,9 @@ describe('CardSelect component', () => {
 
     // unselect
     fireEvent(screen.getByText('aws').closest('.pf-v5-c-tile'), myEvent);
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({
       pre: 'filled',
@@ -228,10 +243,18 @@ describe('CardSelect component', () => {
 
     render(<FormRenderer {...initialProps} />);
 
-    await user.tab();
-    await user.tab();
-    await user.keyboard('{Shift}');
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.tab();
+    });
+    await waitFor(async () => {
+      await user.tab();
+    });
+    await waitFor(async () => {
+      await user.keyboard('{Shift}');
+    });
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({
       pre: 'filled',
@@ -255,9 +278,13 @@ describe('CardSelect component', () => {
 
     render(<FormRenderer {...initialProps} />);
 
-    await user.click(screen.getByText('openshift'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('openshift'));
+    });
 
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({
       pre: 'filled',
@@ -281,17 +308,27 @@ describe('CardSelect component', () => {
 
     render(<FormRenderer {...initialProps} />);
 
-    await user.click(screen.getByText('openshift'));
-    await user.click(screen.getByText('aws'));
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('openshift'));
+    });
+    await waitFor(async () => {
+      await user.click(screen.getByText('aws'));
+    });
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({
       pre: 'filled',
       'card-select': ['ops', 'aws'],
     });
 
-    await user.click(screen.getByText('openshift'));
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('openshift'));
+    });
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({
       pre: 'filled',

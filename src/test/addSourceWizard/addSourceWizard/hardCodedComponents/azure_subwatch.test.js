@@ -89,7 +89,9 @@ describe('Azure-Subwatch hardcoded schemas', () => {
 
       const user = userEvent.setup();
 
-      await user.click(screen.getByText('Take me to Lighthouse'));
+      await waitFor(async () => {
+        await user.click(screen.getByText('Take me to Lighthouse'));
+      });
 
       expect(change).toHaveBeenCalledWith('lighthouse-clicked', true);
 

@@ -19,7 +19,6 @@ describe('ResourcesTable', () => {
 
   const sourceId = '3627987';
   const initialEntry = [replaceRouteId(routes.sourcesDetail.path, sourceId)];
-  console.warn(initialEntry);
 
   it('renders empty state ', async () => {
     api.doLoadSourceForEdit = jest.fn();
@@ -303,7 +302,9 @@ describe('ResourcesTable', () => {
     expect(screen.getByText('Cost Management').closest('.pf-m-current')).toBeInTheDocument();
     expect(screen.getByText('RHEL management').closest('.pf-m-current')).toBeNull();
 
-    await user.click(screen.getByText('RHEL management'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('RHEL management'));
+    });
 
     expect(screen.getByText('Cost Management').closest('.pf-m-current')).toBeNull();
     expect(screen.getByText('RHEL management').closest('.pf-m-current')).toBeInTheDocument();

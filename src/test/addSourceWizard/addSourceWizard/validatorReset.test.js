@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
@@ -42,16 +42,26 @@ describe('validatorReset', () => {
       />
     );
 
-    await user.type(screen.getByRole('textbox'), 'true');
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.type(screen.getByRole('textbox'), 'true');
+    });
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({ show: 'true', reset: '1' });
     onSubmit.mockClear();
 
-    await user.clear(screen.getByRole('textbox'));
-    await user.type(screen.getByRole('textbox'), 'false');
+    await waitFor(async () => {
+      await user.clear(screen.getByRole('textbox'));
+    });
+    await waitFor(async () => {
+      await user.type(screen.getByRole('textbox'), 'false');
+    });
 
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({ show: 'false', reset: '' });
   });

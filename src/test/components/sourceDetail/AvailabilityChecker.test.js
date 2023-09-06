@@ -54,7 +54,9 @@ describe('AvailabilityChecker', () => {
 
     expect(screen.getByLabelText('Check source availability')).not.toBeDisabled();
 
-    await user.click(screen.getByLabelText('Check source availability'));
+    await waitFor(async () => {
+      await user.click(screen.getByLabelText('Check source availability'));
+    });
 
     expect(api.default).toHaveBeenCalledWith(sourceId);
     expect(screen.getByLabelText('Check source availability')).toBeDisabled();
