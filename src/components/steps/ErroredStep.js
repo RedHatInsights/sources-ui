@@ -6,9 +6,9 @@ import {
   Bullseye,
   Button,
   EmptyState,
+  EmptyStateActions,
   EmptyStateBody,
   EmptyStateIcon,
-  EmptyStateSecondaryActions,
   EmptyStateVariant,
   Title,
 } from '@patternfly/react-core';
@@ -26,7 +26,7 @@ const ErroredStep = ({ onClose, returnButtonTitle, message, title, customText, p
       <Component variant="primary" onClick={primaryAction || onClose}>
         {returnButtonTitle}
       </Component>
-      {secondaryActions && <EmptyStateSecondaryActions className="pf-u-mt-sm">{secondaryActions}</EmptyStateSecondaryActions>}
+      {secondaryActions && <EmptyStateActions className="pf-u-mt-sm">{secondaryActions}</EmptyStateActions>}
     </EmptyState>
   </Bullseye>
 );

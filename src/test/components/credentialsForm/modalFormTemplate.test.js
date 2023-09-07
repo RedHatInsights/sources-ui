@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
@@ -53,9 +53,13 @@ describe('modalFormTemplate', () => {
 
     expect(submit).not.toHaveBeenCalled();
 
-    await user.type(screen.getByRole('textbox'), 'something');
+    await waitFor(async () => {
+      await user.type(screen.getByRole('textbox'), 'something');
+    });
 
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(submit).toHaveBeenCalled();
   });
@@ -65,7 +69,9 @@ describe('modalFormTemplate', () => {
 
     expect(cancel).not.toHaveBeenCalled();
 
-    await user.click(screen.getByText('Cancel'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Cancel'));
+    });
 
     expect(cancel).toHaveBeenCalled();
   });

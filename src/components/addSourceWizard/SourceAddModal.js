@@ -5,7 +5,7 @@ import { useIntl } from 'react-intl';
 
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 
-import { Wizard } from '@patternfly/react-core';
+import { Wizard } from '@patternfly/react-core/deprecated';
 
 import createSchema from './SourceAddSchema';
 import { doLoadApplicationTypes, doLoadSourceTypes } from '../../api/wizardHelpers';

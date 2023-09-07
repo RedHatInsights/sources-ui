@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import * as api from '../api';
@@ -64,13 +64,17 @@ describe('<RecommendedServices />', () => {
       api.getProducts = mockApi();
       api.getCategories = mockApi();
 
-      render(<RecommendedServices />);
+      await act(async () => {
+        await render(<RecommendedServices />);
+      });
 
       api.getProducts.resolve(getProductsResponse);
 
       await waitFor(() => expect(screen.getByText('See more databases')).toBeInTheDocument());
 
-      await user.click(screen.getByText('See more databases'));
+      await act(async () => {
+        await user.click(screen.getByText('See more databases'));
+      });
 
       expect(screen.getAllByRole('progressbar')).toHaveLength(6);
 
@@ -88,13 +92,17 @@ describe('<RecommendedServices />', () => {
 
       expect(within(screen.getByRole('dialog')).getAllByText('Add')).toHaveLength(4);
 
-      await user.click(screen.getByText('Filter by product type'));
-
-      categories.map((category) => {
-        expect(within(screen.getByRole('listbox')).getAllByText(category.display_name)).toBeTruthy();
+      await act(async () => {
+        await user.click(screen.getByText('Filter by product type'));
       });
 
-      await user.click(screen.getByLabelText('Close'));
+      categories.map((category) => {
+        expect(within(screen.getByRole('menu')).getAllByText(category.display_name)).toBeTruthy();
+      });
+
+      await act(async () => {
+        await user.click(screen.getByLabelText('Close'));
+      });
 
       expect(() => screen.getByRole('dialog')).toThrow();
     });
@@ -103,22 +111,29 @@ describe('<RecommendedServices />', () => {
       const user = userEvent.setup();
 
       api.getProducts = mockApi();
-
-      render(<RecommendedServices />);
+      await act(async () => {
+        render(<RecommendedServices />);
+      });
 
       api.getProducts.resolve(getProductsResponse);
 
       await waitFor(() => expect(screen.getByText('See more databases')).toBeInTheDocument());
-      await user.click(screen.getByText('See more databases'));
+      await act(async () => {
+        await user.click(screen.getByText('See more databases'));
+      });
 
       await waitFor(() => expect(screen.getByText('Filter by product type')).toBeInTheDocument());
 
-      await user.click(screen.getByLabelText('Items per page'));
+      await act(async () => {
+        await user.click(screen.getByTestId('pagination').querySelector('#options-menu-top-toggle'));
+      });
 
-      expect(screen.getByText('10 per page')).toHaveAttribute('class', 'pf-m-selected pf-c-options-menu__menu-item');
-      expect(screen.getByText('20 per page')).toHaveAttribute('class', 'pf-c-options-menu__menu-item');
+      expect(screen.getByText('10 per page').closest('button')).toHaveAttribute('class', 'pf-v5-c-menu__item pf-m-selected');
+      expect(screen.getByText('20 per page').closest('button')).toHaveAttribute('class', 'pf-v5-c-menu__item');
 
-      await user.click(screen.getByText('20 per page'));
+      await act(async () => {
+        await user.click(screen.getByText('20 per page'));
+      });
 
       expect(screen.getAllByRole('progressbar')).toHaveLength(6);
 
@@ -127,10 +142,12 @@ describe('<RecommendedServices />', () => {
       await waitFor(() => expect(screen.getAllByRole('progressbar')).toHaveLength(4));
       expect(api.getProducts).toHaveBeenLastCalledWith({ page: 1, perPage: 20 });
 
-      await user.click(screen.getByLabelText('Items per page'));
+      await act(async () => {
+        await user.click(screen.getByTestId('pagination').querySelector('#options-menu-top-toggle'));
+      });
 
-      expect(screen.getByText('10 per page')).toHaveAttribute('class', 'pf-c-options-menu__menu-item');
-      expect(screen.getByText('20 per page')).toHaveAttribute('class', 'pf-m-selected pf-c-options-menu__menu-item');
+      expect(screen.getByText('10 per page').closest('button')).toHaveAttribute('class', 'pf-v5-c-menu__item');
+      expect(screen.getByText('20 per page').closest('button')).toHaveAttribute('class', 'pf-v5-c-menu__item pf-m-selected');
     });
 
     it('change page', async () => {
@@ -148,16 +165,22 @@ describe('<RecommendedServices />', () => {
         },
       };
 
-      render(<RecommendedServices />);
+      await act(async () => {
+        await render(<RecommendedServices />);
+      });
 
       api.getProducts.resolve(response);
 
       await waitFor(() => expect(screen.getByText('See more databases')).toBeInTheDocument());
-      await user.click(screen.getByText('See more databases'));
+      await act(async () => {
+        await user.click(screen.getByText('See more databases'));
+      });
       await waitFor(() => expect(screen.getByText('Filter by product type')).toBeInTheDocument());
 
       expect(screen.getByTestId('pagination')).toHaveTextContent('1 - 10 of 11 1 - 10 of 11');
-      await user.click(screen.getByLabelText('Go to next page'));
+      await act(async () => {
+        await user.click(screen.getByLabelText('Go to next page'));
+      });
 
       expect(screen.getAllByRole('progressbar')).toHaveLength(6);
 

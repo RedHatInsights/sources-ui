@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { Route, Routes } from 'react-router-dom';
@@ -63,7 +63,9 @@ describe('SourceRemoveModal', () => {
 
       expect(screen.getByText('Remove source and its data')).toBeDisabled();
 
-      await user.click(screen.getByRole('checkbox'));
+      await waitFor(async () => {
+        await user.click(screen.getByRole('checkbox'));
+      });
 
       expect(screen.getByText('Remove source and its data')).not.toBeDisabled();
     });
@@ -83,8 +85,12 @@ describe('SourceRemoveModal', () => {
         )
       );
 
-      await user.click(screen.getByRole('checkbox'));
-      await user.click(screen.getByText('Remove source and its data'));
+      await waitFor(async () => {
+        await user.click(screen.getByRole('checkbox'));
+      });
+      await waitFor(async () => {
+        await user.click(screen.getByText('Remove source and its data'));
+      });
 
       const source = sourcesDataGraphQl.find((s) => s.id === '14');
 

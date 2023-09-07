@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { Button, Modal, Text, TextContent, Wizard } from '@patternfly/react-core';
+import { Button, Modal, Text, TextContent } from '@patternfly/react-core';
+import { Wizard } from '@patternfly/react-core/deprecated';
 
 import { wizardDescription, wizardTitle } from './stringConstants';
 import { getSourcesApi } from '../../api/entities';
@@ -195,7 +196,7 @@ const FinalWizard = ({
     );
   }
 
-  const appendTo = React.useMemo(() => document.querySelector('.pf-c-page.chr-c-page'), []);
+  const appendTo = React.useMemo(() => document.querySelector('.pf-v5-c-page.chr-c-page'), []);
 
   return (
     <Modal isOpen width="58%" hasNoBodyWrapper appendTo={appendTo} showClose={false}>

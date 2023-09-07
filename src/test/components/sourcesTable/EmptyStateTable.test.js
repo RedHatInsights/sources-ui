@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
@@ -24,7 +24,9 @@ describe('EmptyStateTable', () => {
 
     render(componentWrapperIntl(<EmptyStateTable />));
 
-    await user.click(screen.getByText('Clear all filters'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Clear all filters'));
+    });
 
     expect(actions.clearFilters).toHaveBeenCalled();
   });

@@ -193,7 +193,7 @@ const ApplicationsCard = () => {
         })}
       </CardTitle>
       <CardBody>
-        <div className="pf-c-form src-c-applications_form">
+        <div className="pf-v5-c-form src-c-applications_form">
           {filteredAppTypes.map((app) => {
             const connectedApp = source.applications.find((connectedApp) => connectedApp.application_type_id === app.id);
 
@@ -218,7 +218,9 @@ const ApplicationsCard = () => {
                           label={app.id === COST_MANAGEMENT_APP_ID && hcsEnrolled ? HCS_APP_NAME : app.display_name}
                           isChecked={isChecked}
                           isDisabled={connectedApp?.isDeleting || !hasRightAccess || Boolean(source.paused_at)}
-                          onChange={(value) => (!value ? removeApp(connectedApp.id, app.id) : addApp(app.id, connectedApp?.id))}
+                          onChange={(_e, value) =>
+                            !value ? removeApp(connectedApp.id, app.id) : addApp(app.id, connectedApp?.id)
+                          }
                         />
                       </Wrapper>
                       {Boolean(connectedApp) && (

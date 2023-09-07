@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { FormGroup, Grid, GridItem, Tile } from '@patternfly/react-core';
+import { FormGroup, FormHelperText, Grid, GridItem, HelperText, HelperTextItem, Tile } from '@patternfly/react-core';
 
 import useFieldApi from '@data-driven-forms/react-form-renderer/use-field-api';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
@@ -92,6 +92,11 @@ const CardSelect = (originalProps) => {
       <Grid hasGutter className="pf-u-mb-md">
         {prepareCards()}
       </Grid>
+      <FormHelperText>
+        <HelperText>
+          <HelperTextItem variant={showError ? 'error' : 'default'}>{showError ? error : helperText}</HelperTextItem>
+        </HelperText>
+      </FormHelperText>
     </FormGroup>
   );
 };

@@ -44,8 +44,8 @@ describe('SourceWizardSummary component', () => {
       );
 
     const getListData = (container) =>
-      [...container.getElementsByClassName('pf-c-description-list__group')].map((group) => [
-        ...[...group.getElementsByClassName('pf-c-description-list__text')].map((el) => el.textContent),
+      [...container.getElementsByClassName('pf-v5-c-description-list__group')].map((group) => [
+        ...[...group.getElementsByClassName('pf-v5-c-description-list__text')].map((el) => el.textContent),
       ]);
 
     beforeEach(() => {
@@ -395,8 +395,8 @@ describe('SourceWizardSummary component', () => {
         </IntlProvider>
       );
 
-      const data = [...container.getElementsByClassName('pf-c-description-list__group')].map((group) => [
-        ...[...group.getElementsByClassName('pf-c-description-list__text')].map((el) => el.textContent),
+      const data = [...container.getElementsByClassName('pf-v5-c-description-list__group')].map((group) => [
+        ...[...group.getElementsByClassName('pf-v5-c-description-list__text')].map((el) => el.textContent),
       ]);
 
       expect(data).toEqual([
@@ -832,7 +832,9 @@ describe('SourceWizardSummary component', () => {
       expect(() => screen.getByText(randomLongText)).toThrow();
       expect(screen.getByText('Show more')).toBeInTheDocument();
 
-      await user.click(screen.getByText('Show more'));
+      await waitFor(async () => {
+        await user.click(screen.getByText('Show more'));
+      });
 
       await waitFor(() => expect(screen.getByText(randomLongText)).toBeInTheDocument());
     });

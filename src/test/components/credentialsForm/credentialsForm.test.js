@@ -127,7 +127,9 @@ describe('CredentialsForm', () => {
 
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
 
-    await user.click(screen.getByLabelText('Close'));
+    await waitFor(async () => {
+      await user.click(screen.getByLabelText('Close'));
+    });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
       replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, sourceId)
@@ -149,7 +151,9 @@ describe('CredentialsForm', () => {
 
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
 
-    await user.click(screen.getByText('Cancel'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Cancel'));
+    });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
       replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, sourceId)
@@ -180,13 +184,19 @@ describe('CredentialsForm', () => {
 
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
 
-    await user.clear(screen.getAllByRole('textbox')[0]);
-    await user.type(screen.getAllByRole('textbox')[0], 'newname');
+    await waitFor(async () => {
+      await user.clear(screen.getAllByRole('textbox')[0]);
+    });
+    await waitFor(async () => {
+      await user.type(screen.getAllByRole('textbox')[0], 'newname');
+    });
 
     expect(updateAuthentication).not.toHaveBeenCalled();
     expect(actions.addMessage).not.toHaveBeenCalled();
 
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
       replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, sourceId)
@@ -228,13 +238,19 @@ describe('CredentialsForm', () => {
     );
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
 
-    await user.clear(screen.getAllByRole('textbox')[0]);
-    await user.type(screen.getAllByRole('textbox')[0], 'newname');
+    await waitFor(async () => {
+      await user.clear(screen.getAllByRole('textbox')[0]);
+    });
+    await waitFor(async () => {
+      await user.type(screen.getAllByRole('textbox')[0], 'newname');
+    });
 
     expect(updateAuthentication).not.toHaveBeenCalled();
     expect(actions.addMessage).not.toHaveBeenCalled();
 
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
       replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, sourceId)

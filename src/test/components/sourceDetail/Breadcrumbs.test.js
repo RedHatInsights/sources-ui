@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { replaceRouteId, routes } from '../../../Routing';
@@ -41,7 +41,9 @@ describe('Breadcrumbs', () => {
   it('goes back to sources', async () => {
     const user = userEvent.setup();
 
-    await user.click(screen.getByText('Sources'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Sources'));
+    });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(`/settings/sources${routes.sources.path}`);
   });

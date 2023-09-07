@@ -1,6 +1,7 @@
 import React, { useEffect, useReducer } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { Table, TableBody, TableHeader, sortable, wrappable } from '@patternfly/react-table';
+import { sortable, wrappable } from '@patternfly/react-table';
+import { Table, TableBody, TableHeader } from '@patternfly/react-table/deprecated';
 import { useIntl } from 'react-intl';
 
 import { pauseSource, resumeSource, sortEntities } from '../../redux/sources/actions';

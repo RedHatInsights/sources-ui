@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { validatorTypes } from '@data-driven-forms/react-form-renderer';
@@ -108,18 +108,29 @@ describe('Authentication test', () => {
     expect(screen.getByText('*')).toBeInTheDocument();
     expect(() => screen.getByText('Changing this resets your current API key.')).toThrow();
 
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    await user.type(screen.getByRole('textbox'), 's'); // too short
+    await waitFor(async () => {
+      await user.type(screen.getByRole('textbox'), 's'); // too short
+    });
 
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).not.toHaveBeenCalled();
 
-    await user.type(screen.getByRole('textbox'), 'ome-value'); // too short
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.type(screen.getByRole('textbox'), 'ome-value'); // too short
+    });
+
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({
       authentication: {
@@ -146,7 +157,9 @@ describe('Authentication test', () => {
     expect(() => screen.getByText('*')).toThrow();
     expect(screen.getByText('Changing this resets your current API key.')).toBeInTheDocument();
 
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).toHaveBeenCalledWith({
       authentication: {
@@ -155,9 +168,15 @@ describe('Authentication test', () => {
     });
     onSubmit.mockClear();
 
-    await user.clear(screen.getByRole('textbox'));
-    await user.type(screen.getByRole('textbox'), 's'); // too short
-    await user.click(screen.getByText('Submit'));
+    await waitFor(async () => {
+      await user.clear(screen.getByRole('textbox'));
+    });
+    await waitFor(async () => {
+      await user.type(screen.getByRole('textbox'), 's'); // too short
+    });
+    await waitFor(async () => {
+      await user.click(screen.getByText('Submit'));
+    });
 
     expect(onSubmit).not.toHaveBeenCalled();
   });

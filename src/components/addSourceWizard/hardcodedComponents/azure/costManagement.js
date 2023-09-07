@@ -8,9 +8,6 @@ import {
   EmptyStateBody,
   EmptyStateIcon,
   EmptyStateVariant,
-  Select,
-  SelectOption,
-  SelectVariant,
   Text,
   TextContent,
   TextList,
@@ -20,6 +17,8 @@ import {
   TextVariants,
   Title,
 } from '@patternfly/react-core';
+
+import { Select, SelectOption, SelectVariant } from '@patternfly/react-core/deprecated';
 
 import { HCCM_DOCS_PREFIX } from '../../stringConstants';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';

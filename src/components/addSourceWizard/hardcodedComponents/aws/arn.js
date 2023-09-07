@@ -9,9 +9,9 @@ import {
   ClipboardCopy,
   ClipboardCopyVariant,
   EmptyState,
+  EmptyStateActions,
   EmptyStateBody,
   EmptyStateIcon,
-  EmptyStatePrimary,
   EmptyStateVariant,
   Popover,
   Text,
@@ -136,14 +136,14 @@ export const UsageSteps = () => {
             'Since you have chosen to manually customize the CUR you want to send to Cost Management, you do not need to create at this point and time.',
         })}
       </EmptyStateBody>
-      <EmptyStatePrimary>
+      <EmptyStateActions>
         <Text variant="link" component={TextVariants.a} href={MANUAL_CUR_STEPS}>
           {intl.formatMessage({
             id: 'cost.usageDescription.additionalStepsCUR',
             defaultMessage: 'Additional configuration steps',
           })}
         </Text>
-      </EmptyStatePrimary>
+      </EmptyStateActions>
     </EmptyState>
   ) : (
     <TextContent>

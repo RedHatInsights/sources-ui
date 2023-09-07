@@ -132,7 +132,7 @@ describe('formatters', () => {
     it('returns only imported badge', () => {
       render(<IntlProvider locale="en">{importedFormatter('value with no text')}</IntlProvider>);
 
-      expect(screen.getByText('imported', { selector: '.pf-c-badge' })).toBeInTheDocument();
+      expect(screen.getByText('imported', { selector: '.pf-v5-c-badge' })).toBeInTheDocument();
     });
 
     it('returns imported badge with tooltip', async () => {
@@ -140,9 +140,11 @@ describe('formatters', () => {
 
       render(<IntlProvider locale="en">{importedFormatter('cfme')}</IntlProvider>);
 
-      expect(screen.getByText('imported', { selector: '.pf-c-badge' })).toBeInTheDocument();
+      expect(screen.getByText('imported', { selector: '.pf-v5-c-badge' })).toBeInTheDocument();
 
-      await user.hover(screen.getByText('imported', { selector: '.pf-c-badge' }));
+      await waitFor(async () => {
+        await user.hover(screen.getByText('imported', { selector: '.pf-v5-c-badge' }));
+      });
 
       await waitFor(() =>
         expect(screen.getByText('This source can be managed from your connected CloudForms application.')).toBeInTheDocument()
@@ -168,7 +170,9 @@ describe('formatters', () => {
       expect(screen.getByText(COST_MANAGEMENT_APP.display_name, { exact: false })).toBeInTheDocument();
       expect(screen.getByText('1 more', { exact: false })).toBeInTheDocument();
 
-      await user.click(screen.getByText('1 more'));
+      await waitFor(async () => {
+        await user.click(screen.getByText('1 more'));
+      });
 
       expect(screen.getByText(TOPOLOGY_INV_APP.display_name, { exact: false })).toBeInTheDocument();
     });
@@ -225,7 +229,9 @@ describe('formatters', () => {
         )
       );
 
-      await user.click(screen.getByText('Cost Management'));
+      await waitFor(async () => {
+        await user.click(screen.getByText('Cost Management'));
+      });
 
       await waitFor(() => expect(screen.getByText('Everything works fine.', { exact: false })).toBeInTheDocument());
     });
@@ -254,7 +260,9 @@ describe('formatters', () => {
         )
       );
 
-      await user.click(screen.getByText('Cost Management'));
+      await waitFor(async () => {
+        await user.click(screen.getByText('Cost Management'));
+      });
 
       await waitFor(() => expect(screen.getByText(ERROR, { exact: false })).toBeInTheDocument());
     });
@@ -283,7 +291,9 @@ describe('formatters', () => {
         )
       );
 
-      await user.click(screen.getByText('Cost Management'));
+      await waitFor(async () => {
+        await user.click(screen.getByText('Cost Management'));
+      });
 
       await waitFor(() => expect(screen.getByText(ERROR, { exact: false })).toBeInTheDocument());
     });
@@ -311,7 +321,9 @@ describe('formatters', () => {
         )
       );
 
-      await user.click(screen.getByText('Cost Management'));
+      await waitFor(async () => {
+        await user.click(screen.getByText('Cost Management'));
+      });
 
       await waitFor(() =>
         expect(
@@ -345,7 +357,9 @@ describe('formatters', () => {
         )
       );
 
-      await user.click(screen.getByText('Cost Management'));
+      await waitFor(async () => {
+        await user.click(screen.getByText('Cost Management'));
+      });
 
       await waitFor(() =>
         expect(screen.getByText('Resume this application to continue data collection.', { exact: false })).toBeInTheDocument()
@@ -376,7 +390,9 @@ describe('formatters', () => {
         )
       );
 
-      await user.click(screen.getByText('Cost Management'));
+      await waitFor(async () => {
+        await user.click(screen.getByText('Cost Management'));
+      });
 
       await waitFor(() => expect(screen.getByText('Unknown error')).toBeInTheDocument());
     });
@@ -404,7 +420,9 @@ describe('formatters', () => {
         )
       );
 
-      await user.click(screen.getByText('Cost Management'));
+      await waitFor(async () => {
+        await user.click(screen.getByText('Cost Management'));
+      });
 
       await waitFor(() => expect(screen.getByText('Status has not been verified.')).toBeInTheDocument());
     });
@@ -652,7 +670,7 @@ describe('formatters', () => {
 
         render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
-        expect(screen.getByText('Available', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
+        expect(screen.getByText('Available', { exact: false, selector: '.pf-v5-c-label__text' })).toBeInTheDocument();
       });
 
       it('returns WARNING text', () => {
@@ -663,7 +681,7 @@ describe('formatters', () => {
 
         render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
-        expect(screen.getByText('Partially available', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
+        expect(screen.getByText('Partially available', { exact: false, selector: '.pf-v5-c-label__text' })).toBeInTheDocument();
       });
 
       it('returns DANGER text', () => {
@@ -673,7 +691,7 @@ describe('formatters', () => {
 
         render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
-        expect(screen.getByText('Unavailable', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
+        expect(screen.getByText('Unavailable', { exact: false, selector: '.pf-v5-c-label__text' })).toBeInTheDocument();
       });
 
       it('returns in progress text', () => {
@@ -683,7 +701,7 @@ describe('formatters', () => {
 
         render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
-        expect(screen.getByText('In progress', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
+        expect(screen.getByText('In progress', { exact: false, selector: '.pf-v5-c-label__text' })).toBeInTheDocument();
         expect(screen.getByText('wrench icon')).toBeInTheDocument();
       });
 
@@ -692,7 +710,7 @@ describe('formatters', () => {
 
         render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
-        expect(screen.getByText('Unknown', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
+        expect(screen.getByText('Unknown', { exact: false, selector: '.pf-v5-c-label__text' })).toBeInTheDocument();
       });
 
       it('returns paused text', () => {
@@ -703,7 +721,7 @@ describe('formatters', () => {
 
         render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
-        expect(screen.getByText('Paused', { exact: false, selector: '.pf-c-label__content' })).toBeInTheDocument();
+        expect(screen.getByText('Paused', { exact: false, selector: '.pf-v5-c-label__text' })).toBeInTheDocument();
         expect(screen.getByText('pause icon')).toBeInTheDocument();
       });
     });
@@ -1212,7 +1230,9 @@ describe('formatters', () => {
         replaceRouteId(`/settings/sources/${routes.sourcesDetailEditCredentials.path}`, SOURCE_ID)
       );
 
-      await user.hover(screen.getByText('exclamation icon'));
+      await waitFor(async () => {
+        await user.hover(screen.getByText('exclamation icon'));
+      });
 
       await waitFor(() => expect(screen.getByText('Your username is wrong')).toBeInTheDocument());
     });
@@ -1242,7 +1262,9 @@ describe('formatters', () => {
 
       expect(screen.getByText('Edit credentials', { selector: 'button' })).toBeInTheDocument();
 
-      await user.hover(screen.getByText('exclamation icon'));
+      await waitFor(async () => {
+        await user.hover(screen.getByText('exclamation icon'));
+      });
 
       await waitFor(() => expect(screen.getByText('Edit credentials required.')).toBeInTheDocument());
     });
@@ -1271,8 +1293,10 @@ describe('formatters', () => {
 
       render(wrapperWithIntl(<ApplicationLabel app={app} />));
 
-      expect(screen.getByText('Cost management').closest('.pf-c-label')).toHaveClass('pf-m-green');
-      await user.click(screen.getByText('Cost management'));
+      expect(screen.getByText('Cost management').closest('.pf-v5-c-label')).toHaveClass('pf-m-green');
+      await waitFor(async () => {
+        await user.click(screen.getByText('Cost management'));
+      });
       expect(screen.getByText('pause icon')).toBeInTheDocument();
 
       await waitFor(() => expect(screen.getByText('Application paused')).toBeInTheDocument());

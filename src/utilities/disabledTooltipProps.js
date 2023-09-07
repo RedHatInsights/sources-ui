@@ -11,6 +11,9 @@ export const disabledMessage = (intl, isOrgAdmin) =>
       });
 
 const disabledTooltipProps = (intl, isOrgAdmin) => ({
+  // need both for table actions and regular dropdowns
+  // FIXME: Make it configurable or split the implementation
+  tooltipProps: { content: disabledMessage(intl, isOrgAdmin) },
   tooltip: disabledMessage(intl, isOrgAdmin),
   isDisabled: true,
   className: 'src-m-dropdown-item-disabled',

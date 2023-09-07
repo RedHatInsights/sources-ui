@@ -7,9 +7,9 @@ import {
   Bullseye,
   Button,
   EmptyState,
+  EmptyStateActions,
   EmptyStateBody,
   EmptyStateIcon,
-  EmptyStateSecondaryActions,
   EmptyStateVariant,
   Grid,
   GridItem,
@@ -95,11 +95,11 @@ const AmazonFinishedStep = ({ onClose }) => {
           <Button variant="primary" onClick={onClose} className="pf-u-mt-xl">
             {intl.formatMessage({ id: 'exit', defaultMessage: 'Exit' })}
           </Button>
-          <EmptyStateSecondaryActions>
+          <EmptyStateActions>
             <Text component="a" href={LEARNMORE_HREF} target="_blank" rel="noopener noreferrer">
               {intl.formatMessage({ id: 'aws.learnMore', defaultMessage: 'Learn more about this Cloud' })}
             </Text>
-          </EmptyStateSecondaryActions>
+          </EmptyStateActions>
         </EmptyState>
       </Bullseye>
     </Fragment>

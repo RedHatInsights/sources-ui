@@ -21,16 +21,16 @@
 }
 
 .src-c-wizard__radio {
-  .pf-c-radio:not(:last-child) {
+  .pf-v5-c-radio:not(:last-child) {
     margin-bottom: var(--pf-global--spacer--lg);
   }
 }
 
 .src-c-wizard__conditional-radio {
-  .pf-c-radio:not(:last-child) {
+  .pf-v5-c-radio:not(:last-child) {
     margin-bottom: var(--pf-global--spacer--sm);
   }
-  .pf-c-radio__input {
+  .pf-v5-c-radio__input {
     margin-top: 3px;
   }
 }
@@ -45,7 +45,7 @@
 }
 
 .src-c-wizard__summary-description-list {
-  .pf-c-description-list__group {
+  .pf-v5-c-description-list__group {
     grid-template-columns: 150px 1fr;
   }
 }

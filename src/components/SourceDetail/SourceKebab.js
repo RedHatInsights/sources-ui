@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
+import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core/deprecated';
 
 import { replaceRouteId, routes } from '../../Routing';
 import { useSource } from '../../hooks/useSource';
@@ -34,6 +34,10 @@ const SourceKebab = () => {
   const pausedProps = {
     ...disabledProps,
     tooltip: pausedTooltip,
+    tooltipProps: {
+      ...disabledProps.tooltipProps,
+      content: pausedTooltip,
+    },
   };
 
   return (

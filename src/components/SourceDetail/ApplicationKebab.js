@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 
-import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
+import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core/deprecated';
 
 import { replaceRouteId, routes } from '../../Routing';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
@@ -33,6 +33,10 @@ const ApplicationKebab = ({ app, removeApp, addApp }) => {
   const pausedProps = {
     ...disabledProps,
     tooltip: pausedTooltip,
+    tooltipProps: {
+      ...disabledProps,
+      content: pausedTooltip,
+    },
   };
 
   const pausedButton = app.paused_at ? (

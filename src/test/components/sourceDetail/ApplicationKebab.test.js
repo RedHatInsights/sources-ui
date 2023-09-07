@@ -7,6 +7,7 @@ import { replaceRouteId, routes } from '../../../Routing';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import mockStore from '../../__mocks__/mockStore';
 import ApplicationKebab from '../../../components/SourceDetail/ApplicationKebab';
+import { act } from 'react-dom/test-utils';
 
 jest.mock('@patternfly/react-core/dist/js/components/Tooltip', () => {
   const lib = jest.requireActual('@patternfly/react-core/dist/js/components/Tooltip');
@@ -60,7 +61,9 @@ describe('ApplicationKebab', () => {
       )
     );
 
-    await user.click(screen.getByLabelText('Actions'));
+    await act(async () => {
+      await user.click(screen.getByLabelText('Actions'));
+    });
 
     expect(screen.getByText('Pause')).toBeInTheDocument();
     expect(screen.getByText('Temporarily stop this application from collecting data.')).toBeInTheDocument();
@@ -70,7 +73,9 @@ describe('ApplicationKebab', () => {
     expect(screen.getByText('Permanently stop data collection for this application.')).toBeInTheDocument();
     expect(screen.getByText('Remove').closest('.src-m-dropdown-item-disabled')).toBeInTheDocument();
 
-    await user.hover(screen.getByText('Remove'));
+    await act(async () => {
+      await user.hover(screen.getByText('Remove').closest('a'));
+    });
 
     const tooltipText =
       'To perform this action, your Organization Administrator must grant you Sources Administrator permissions.';
@@ -105,7 +110,9 @@ describe('ApplicationKebab', () => {
       )
     );
 
-    await user.click(screen.getByLabelText('Actions'));
+    await waitFor(async () => {
+      await user.click(screen.getByLabelText('Actions'));
+    });
 
     expect(screen.getByText('Resume')).toBeInTheDocument();
     expect(screen.getByText('Resume data collection for this application.')).toBeInTheDocument();
@@ -115,7 +122,9 @@ describe('ApplicationKebab', () => {
     expect(screen.getByText('Permanently stop data collection for this application.')).toBeInTheDocument();
     expect(screen.getByText('Remove').closest('.src-m-dropdown-item-disabled')).toBeInTheDocument();
 
-    await user.hover(screen.getByText('Remove'));
+    await waitFor(async () => {
+      await user.hover(screen.getByText('Remove'));
+    });
 
     const tooltipText =
       'To perform this action, your Organization Administrator must grant you Sources Administrator permissions.';
@@ -146,7 +155,9 @@ describe('ApplicationKebab', () => {
     it('renders correctly', async () => {
       const user = userEvent.setup();
 
-      await user.click(screen.getByLabelText('Actions'));
+      await waitFor(async () => {
+        await user.click(screen.getByLabelText('Actions'));
+      });
 
       expect(screen.getByText('Pause')).toBeInTheDocument();
       expect(screen.getByText('Temporarily stop this application from collecting data.')).toBeInTheDocument();
@@ -160,8 +171,12 @@ describe('ApplicationKebab', () => {
     it('remove application', async () => {
       const user = userEvent.setup();
 
-      await user.click(screen.getByLabelText('Actions'));
-      await user.click(screen.getByText('Remove'));
+      await waitFor(async () => {
+        await user.click(screen.getByLabelText('Actions'));
+      });
+      await waitFor(async () => {
+        await user.click(screen.getByText('Remove'));
+      });
 
       expect(screen.getByTestId('location-display').textContent).toEqual(
         replaceRouteId(`/settings/sources/${routes.sourcesDetailRemoveApp.path}`, sourceId).replace(':app_id', app.id)
@@ -171,8 +186,12 @@ describe('ApplicationKebab', () => {
     it('pause application', async () => {
       const user = userEvent.setup();
 
-      await user.click(screen.getByLabelText('Actions'));
-      await user.click(screen.getByText('Pause'));
+      await waitFor(async () => {
+        await user.click(screen.getByLabelText('Actions'));
+      });
+      await waitFor(async () => {
+        await user.click(screen.getByText('Pause'));
+      });
 
       expect(removeApp).toHaveBeenCalled();
     });
@@ -206,7 +225,9 @@ describe('ApplicationKebab', () => {
         )
       );
 
-      await user.click(screen.getByLabelText('Actions'));
+      await waitFor(async () => {
+        await user.click(screen.getByLabelText('Actions'));
+      });
 
       expect(screen.getByText('Resume')).toBeInTheDocument();
       expect(screen.getByText('Resume data collection for this application.')).toBeInTheDocument();
@@ -216,7 +237,9 @@ describe('ApplicationKebab', () => {
       expect(screen.getByText('Permanently stop data collection for this application.')).toBeInTheDocument();
       expect(screen.getByText('Remove').closest('.src-m-dropdown-item-disabled')).toBeInTheDocument();
 
-      await user.hover(screen.getByText('Resume'));
+      await waitFor(async () => {
+        await user.hover(screen.getByText('Resume'));
+      });
 
       const tooltipText = 'You cannot perform this action on a paused source.';
 
@@ -254,7 +277,9 @@ describe('ApplicationKebab', () => {
     it('renders correctly', async () => {
       const user = userEvent.setup();
 
-      await user.click(screen.getByLabelText('Actions'));
+      await waitFor(async () => {
+        await user.click(screen.getByLabelText('Actions'));
+      });
 
       expect(screen.getByText('Resume')).toBeInTheDocument();
       expect(screen.getByText('Resume data collection for this application.')).toBeInTheDocument();
@@ -268,8 +293,12 @@ describe('ApplicationKebab', () => {
     it('remove application', async () => {
       const user = userEvent.setup();
 
-      await user.click(screen.getByLabelText('Actions'));
-      await user.click(screen.getByText('Remove'));
+      await waitFor(async () => {
+        await user.click(screen.getByLabelText('Actions'));
+      });
+      await waitFor(async () => {
+        await user.click(screen.getByText('Remove'));
+      });
 
       expect(screen.getByTestId('location-display').textContent).toEqual(
         replaceRouteId(`/settings/sources/${routes.sourcesDetailRemoveApp.path}`, sourceId).replace(':app_id', app.id)
@@ -279,8 +308,12 @@ describe('ApplicationKebab', () => {
     it('resume application', async () => {
       const user = userEvent.setup();
 
-      await user.click(screen.getByLabelText('Actions'));
-      await user.click(screen.getByText('Resume'));
+      await waitFor(async () => {
+        await user.click(screen.getByLabelText('Actions'));
+      });
+      await waitFor(async () => {
+        await user.click(screen.getByText('Resume'));
+      });
 
       expect(addApp).toHaveBeenCalled();
     });

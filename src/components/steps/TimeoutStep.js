@@ -7,9 +7,9 @@ import {
   Bullseye,
   Button,
   EmptyState,
+  EmptyStateActions,
   EmptyStateBody,
   EmptyStateIcon,
-  EmptyStateSecondaryActions,
   EmptyStateVariant,
   Title,
 } from '@patternfly/react-core';
@@ -44,7 +44,7 @@ const TimeoutStep = ({ onClose, returnButtonTitle, title, secondaryActions, uuid
         <Button variant="primary" onClick={onClose} className="pf-u-mt-xl">
           {returnButtonTitle}
         </Button>
-        {secondaryActions && <EmptyStateSecondaryActions>{secondaryActions}</EmptyStateSecondaryActions>}
+        {secondaryActions && <EmptyStateActions>{secondaryActions}</EmptyStateActions>}
       </EmptyState>
     </Bullseye>
   );

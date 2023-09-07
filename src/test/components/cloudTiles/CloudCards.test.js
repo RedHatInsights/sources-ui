@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import CloudCards, { CLOUD_CARDS_KEY } from '../../../components/CloudTiles/CloudCards';
@@ -75,7 +75,9 @@ describe('CloudCards', () => {
 
     expect(screen.getByText('Use gold images')).toBeInTheDocument();
 
-    await user.click(screen.getByRole('button'));
+    await waitFor(async () => {
+      await user.click(screen.getByRole('button'));
+    });
 
     expect(() => screen.getByText('Use gold images')).toThrow();
 
@@ -83,7 +85,9 @@ describe('CloudCards', () => {
       [CLOUD_CARDS_KEY]: 'false',
     });
 
-    await user.click(screen.getByRole('button'));
+    await waitFor(async () => {
+      await user.click(screen.getByRole('button'));
+    });
 
     expect(screen.getByText('Use gold images')).toBeInTheDocument();
     expect(localStorage).toEqual({

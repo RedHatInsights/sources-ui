@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { ACCOUNT_AUTHORIZATION } from '../../../components/constants';
@@ -18,9 +18,9 @@ describe('SourceSummaryCard', () => {
   const initialEntry = [replaceRouteId(routes.sourcesDetail.path, sourceId)];
 
   const getCategories = (container) =>
-    [...container.getElementsByClassName('pf-c-description-list__group')].map((e) => [
-      e.getElementsByClassName('pf-c-description-list__term')[0].textContent,
-      e.getElementsByClassName('pf-c-description-list__description')[0].textContent,
+    [...container.getElementsByClassName('pf-v5-c-description-list__group')].map((e) => [
+      e.getElementsByClassName('pf-v5-c-description-list__term')[0].textContent,
+      e.getElementsByClassName('pf-v5-c-description-list__description')[0].textContent,
     ]);
 
   it('renders correctly', async () => {
@@ -211,7 +211,9 @@ describe('SourceSummaryCard', () => {
       )
     );
 
-    await user.click(screen.getByText('Edit credentials'));
+    await waitFor(async () => {
+      await user.click(screen.getByText('Edit credentials'));
+    });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
       replaceRouteId(`/settings/sources/${routes.sourcesDetailEditCredentials.path}`, sourceId)
