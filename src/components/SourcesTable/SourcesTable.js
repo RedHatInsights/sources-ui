@@ -13,6 +13,7 @@ import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import { replaceRouteId, routes } from '../../Routing';
 import disabledTooltipProps from '../../utilities/disabledTooltipProps';
 import { useAppNavigate } from '../../hooks/useAppNavigate';
+import './sourcesTable.scss';
 
 export const itemToCells = (item, columns, sourceTypes, appTypes) =>
   columns

@@ -1,0 +1,8 @@
+table {
+  .pf-v5-c-table__td.pf-v5-c-table__action {
+    .pf-v5-c-menu {
+      // remove after migrating SourcesTable to PF Table Composable
+      min-width: min(90vw, 315px) !important;
+    }
+  }
+}
