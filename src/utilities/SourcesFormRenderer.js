@@ -15,6 +15,9 @@ import AuthSelect from '../components/FormComponents/AuthSelect';
 import EnhancedRadio from '../components/FormComponents/EnhancedRadio';
 import SwitchGroup from '../components/FormComponents/SwitchGroup';
 import CheckboxWithIcon from '../components/FormComponents/CheckboxWithIcon';
+import PFDivider from '../components/FormComponents/PFDivider';
+import RhelAwsCheckbox from '../components/FormComponents/RhelAwsCheckbox';
+import CheckboxWithLink from '../components/FormComponents/CheckboxWithLink';
 
 export const mapperExtension = {
   'auth-select': AuthSelect,
@@ -25,6 +28,9 @@ export const mapperExtension = {
   'switch-group': SwitchGroup,
   authentication: Authentication,
   'checkbox-with-icon': CheckboxWithIcon,
+  divider: PFDivider,
+  'rhel-aws-checkbox': RhelAwsCheckbox,
+  'checkbox-with-link': CheckboxWithLink,
 };
 
 const SourcesFormRenderer = ({ componentMapper, ...props }) => (

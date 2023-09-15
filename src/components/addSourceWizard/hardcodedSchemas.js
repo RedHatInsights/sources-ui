@@ -222,6 +222,25 @@ const getArn = (authUsername, showHCS) => ({
           Content: () => <AwsArn.TagsDescription showHCS={showHCS} />,
         },
         {
+          name: 'application.extra.metered',
+          component: 'rhel-aws-checkbox',
+          label: <FormattedMessage id="cost.arn.includesRhelUsage" defaultMessage="Include RHEL usage" />,
+        },
+        {
+          name: 'aws.rhel_usage.divider',
+          component: 'divider',
+        },
+        {
+          name: 'cost.tags.aliasessOrgUnits',
+          component: 'plain-text',
+          label: (
+            <FormattedMessage
+              id="cost.tags.aliasessOrgUnits"
+              defaultMessage="To use account aliases and organizational units in the display and filter of AWS resources, select the following"
+            />
+          ),
+        },
+        {
           name: 'aws.aliases.enabled',
           component: 'checkbox-with-icon',
           label: <FormattedMessage id="cost.arn.includesAliases" defaultMessage="Include AWS account aliases" />,

@@ -182,11 +182,6 @@ describe('AWS-ARN hardcoded schemas', () => {
     expect(
       screen.getByText('Select the tags you want to use in the Cost Management application, and click Activate.')
     ).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        'To use account aliases and organizational units in the display and filter of AWS resources, select the following'
-      )
-    ).toBeInTheDocument();
   });
 
   it('TAGS DESCRIPTION is rendered correctly for HCS', () => {
@@ -203,11 +198,6 @@ describe('AWS-ARN hardcoded schemas', () => {
     ).toBeInTheDocument();
     expect(
       screen.getByText('Select the tags you want to use in the Hybrid Committed Spend application, and click Activate.')
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        'To use account aliases and organizational units in the display and filter of AWS resources, select the following'
-      )
     ).toBeInTheDocument();
   });
 

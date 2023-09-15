@@ -4,6 +4,7 @@ import { useIntl } from 'react-intl';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
+  Alert,
   Button,
   ButtonVariant,
   ClipboardCopy,
@@ -387,57 +388,61 @@ export const TagsDescription = ({ showHCS }) => {
   const application = showHCS ? HCS_APP_NAME : 'Cost Management';
 
   return (
-    <TextContent>
-      {showHCS ? null : ( // remove when HCS docs links are available
-        <Text>
-          <Text
-            component={TextVariants.a}
-            rel="noopener noreferrer"
-            target="_blank"
-            href={showHCS ? CONFIG_HCS_AWS_TAGS : CONFIG_AWS_TAGS}
-          >
-            {intl.formatMessage({
-              id: 'cost.tags.readMeLink',
-              defaultMessage: 'Learn more',
-            })}
+    <Fragment>
+      <TextContent>
+        {showHCS ? null : ( // remove when HCS docs links are available
+          <Text>
+            <Text
+              component={TextVariants.a}
+              rel="noopener noreferrer"
+              target="_blank"
+              href={showHCS ? CONFIG_HCS_AWS_TAGS : CONFIG_AWS_TAGS}
+            >
+              {intl.formatMessage({
+                id: 'cost.tags.readMeLink',
+                defaultMessage: 'Learn more',
+              })}
+            </Text>
           </Text>
-        </Text>
-      )}
-      <Text>
-        {intl.formatMessage(
-          {
-            id: 'cost.tags.desciption',
-            defaultMessage:
-              'To use tags to organize your AWS resources in the {application} application, activate your tags in AWS to allow them to be imported automatically.',
-          },
-          { application }
         )}
-      </Text>
-      <TextList component={TextListVariants.ol}>
-        <TextListItem>
-          {intl.formatMessage({
-            id: 'cost.tags.openSection',
-            defaultMessage: 'In the AWS Billing and Cost Management console, open the Cost Allocation Tags section.',
-          })}
-        </TextListItem>
-        <TextListItem>
+        <Text>
           {intl.formatMessage(
             {
-              id: 'cost.tags.selectTags',
-              defaultMessage: 'Select the tags you want to use in the {application} application, and click Activate.',
+              id: 'cost.tags.desciption',
+              defaultMessage:
+                'To use tags to organize your AWS resources in the {application} application, activate your tags in AWS to allow them to be imported automatically.',
             },
             { application }
           )}
-        </TextListItem>
-      </TextList>
-      <Text>
-        {intl.formatMessage({
-          id: 'cost.tags.aliasessOrgUnits',
+        </Text>
+        <TextList component={TextListVariants.ol}>
+          <TextListItem>
+            {intl.formatMessage({
+              id: 'cost.tags.openSection',
+              defaultMessage: 'In the AWS Billing and Cost Management console, open the Cost Allocation Tags section.',
+            })}
+          </TextListItem>
+          <TextListItem>
+            {intl.formatMessage(
+              {
+                id: 'cost.tags.selectTags',
+                defaultMessage: 'Select the tags you want to use in the {application} application, and click Activate.',
+              },
+              { application }
+            )}
+          </TextListItem>
+        </TextList>
+      </TextContent>
+      <Alert
+        variant="info"
+        isInline
+        title={intl.formatMessage({
+          id: 'cost.tags.alertTitle',
           defaultMessage:
-            'To use account aliases and organizational units in the display and filter of AWS resources, select the following',
+            'If your organization is converting systems from CentOS 7 to RHEL and using hourly billing, activate the comredhatrhel tag for your systems in the Cost Allocation Tags section of the AWS console. After activating the tag in AWS, select Include RHEL usage.',
         })}
-      </Text>
-    </TextContent>
+      />
+    </Fragment>
   );
 };
 
