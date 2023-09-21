@@ -21,7 +21,7 @@
     "@patternfly/react-icons": "^5.0.0",
     "@patternfly/react-table": "^5.0.0",
     "@redhat-cloud-services/frontend-components": "^4.0.9",
-    "@redhat-cloud-services/frontend-components-notifications": "^4.0.0",
+    "@redhat-cloud-services/frontend-components-notifications": "^4.0.4",
     "@redhat-cloud-services/frontend-components-utilities": "^4.0.0",
     "@sentry/minimal": "6.19.7",
     "@unleash/proxy-client-react": "^3.3.0",
