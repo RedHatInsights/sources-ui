@@ -21,6 +21,7 @@ import { bold } from '../../utilities/intlShared';
 import handleError from '../../api/handleError';
 import tryAgainMessage from '../../utilities/tryAgainMessage';
 import { checkAccountHCS } from '../../api/checkAccountHCS';
+import { INTEGRATIONS } from '../../utilities/constants';
 
 export const loadEntities = (options) => (dispatch, getState) => {
   dispatch({
@@ -252,7 +253,7 @@ export const setActiveCategory = (category) => (dispatch) => {
     payload: { category },
   });
 
-  return dispatch(loadEntities());
+  return category !== INTEGRATIONS && dispatch(loadEntities());
 };
 
 export const pauseSource = (sourceId, sourceName, intl) => (dispatch) => {

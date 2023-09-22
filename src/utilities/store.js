@@ -7,12 +7,15 @@ import promise from 'redux-promise-middleware';
 import SourcesReducer, { defaultSourcesState } from '../redux/sources/reducer';
 import UserReducer, { defaultUserState } from '../redux/user/reducer';
 import { updateQuery } from './urlQuery';
-import { ACTION_TYPES } from '../redux/sources/actionTypes';
+import { ACTION_TYPES, SET_CATEGORY } from '../redux/sources/actionTypes';
+import { INTEGRATIONS } from './constants';
 
 export const urlQueryMiddleware = (store) => (next) => (action) => {
   if (action.type === ACTION_TYPES.LOAD_ENTITIES_PENDING) {
     const sources = store.getState().sources;
     updateQuery({ ...sources, ...action.options });
+  } else if (action.type === SET_CATEGORY && action.payload?.category === INTEGRATIONS) {
+    updateQuery({ removeQuery: true, activeCategory: action.payload?.category });
   }
 
   next(action);
