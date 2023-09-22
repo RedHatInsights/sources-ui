@@ -1,9 +1,9 @@
 import { restFilterGenerator } from '../api/entities';
 import { AVAILABLE, UNAVAILABLE } from '../views/formatters';
 import { sourcesColumns } from '../views/sourcesViewDefinition';
-import { CLOUD_VENDOR, REDHAT_VENDOR } from './constants';
+import { CLOUD_VENDOR, INTEGRATIONS, REDHAT_VENDOR } from './constants';
 
-export const updateQuery = ({ sortBy, sortDirection, pageNumber, pageSize, filterValue, activeCategory }) => {
+export const updateQuery = ({ sortBy, sortDirection, pageNumber, pageSize, filterValue, activeCategory, removeQuery }) => {
   const sortQuery = `sort_by[]=${sortBy}:${sortDirection}`;
 
   const paginationQuery = `limit=${pageSize}&offset=${(pageNumber - 1) * pageSize}&category=${activeCategory || CLOUD_VENDOR}`;
@@ -12,7 +12,7 @@ export const updateQuery = ({ sortBy, sortDirection, pageNumber, pageSize, filte
 
   const query = `?${sortQuery}&${paginationQuery}${filterQuery ? `&${filterQuery}` : ''}`;
 
-  const fullHref = decodeURIComponent(`${window.location.pathname}${query}`);
+  const fullHref = decodeURIComponent(`${window.location.pathname}${removeQuery ? `?category=${activeCategory}` : query}`);
 
   if (location.href !== fullHref) {
     return history.replaceState('', '', fullHref);
@@ -150,7 +150,7 @@ export const parseQuery = (getState) => {
 
   const activeCategory = urlParams.get('category') || urlParams.get('activeVendor');
 
-  if (activeCategory === CLOUD_VENDOR || activeCategory === REDHAT_VENDOR) {
+  if (activeCategory === CLOUD_VENDOR || activeCategory === REDHAT_VENDOR || activeCategory === INTEGRATIONS) {
     fetchOptions = {
       ...fetchOptions,
       activeCategory,

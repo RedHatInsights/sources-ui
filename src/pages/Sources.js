@@ -1,19 +1,20 @@
 import React, { Suspense, useEffect, useReducer } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import AppLink from '../components/AppLink';
 import { Button, Tooltip } from '@patternfly/react-core';
 import { useIntl } from 'react-intl';
-import { useAppNavigate } from '../hooks/useAppNavigate';
+import { useFlag } from '@unleash/proxy-client-react';
 
+import AppLink from '../components/AppLink';
+import AsyncComponent from '@redhat-cloud-services/frontend-components/AsyncComponent';
 import { PrimaryToolbar } from '@redhat-cloud-services/frontend-components/PrimaryToolbar';
 import { Section } from '@redhat-cloud-services/frontend-components/Section';
 import { ErrorState } from '@redhat-cloud-services/frontend-components/ErrorState';
 import { isSmallScreen, useScreenSize } from '@redhat-cloud-services/frontend-components/useScreenSize';
-
 import { downloadFile } from '@redhat-cloud-services/frontend-components-utilities/helpers';
 
-import { filterSources, pageAndSize } from '../redux/sources/actions';
 import SourcesTable from '../components/SourcesTable/SourcesTable';
+import { filterSources, pageAndSize } from '../redux/sources/actions';
+import { useAppNavigate } from '../hooks/useAppNavigate';
 import { routes } from '../Routing';
 
 import {
@@ -31,7 +32,7 @@ import { useIsLoaded } from '../hooks/useIsLoaded';
 import { useHasWritePermissions } from '../hooks/useHasWritePermissions';
 import { PaginationLoader } from '../components/SourcesTable/loaders';
 import CloudCards from '../components/CloudTiles/CloudCards';
-import { CLOUD_VENDOR, REDHAT_VENDOR } from '../utilities/constants';
+import { CLOUD_VENDOR, INTEGRATIONS, REDHAT_VENDOR } from '../utilities/constants';
 import CloudEmptyState from '../components/CloudTiles/CloudEmptyState';
 import { AVAILABLE, UNAVAILABLE } from '../views/formatters';
 import RedHatEmptyState from '../components/RedHatTiles/RedHatEmptyState';
@@ -68,6 +69,7 @@ const SourcesPage = () => {
   const entitiesLoaded = useIsLoaded();
   const hasWritePermissions = useHasWritePermissions();
   const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
+  const enableIntegrations = useFlag('platform.sources.integrations');
 
   const appNavigate = useAppNavigate();
   const intl = useIntl();
@@ -183,7 +185,9 @@ const SourcesPage = () => {
   const setSelectedType = (selectedType) => stateDispatch({ type: 'setSelectedType', selectedType });
 
   const mainContent =
-    !fetchingError && !showEmptyState ? (
+    activeCategory === INTEGRATIONS && enableIntegrations ? (
+      <AsyncComponent appName="notifications" module="./IntegrationsTable" />
+    ) : !fetchingError && !showEmptyState ? (
       <React.Fragment>
         <PrimaryToolbar
           pagination={showPaginationLoader ? <PaginationLoader /> : numberOfEntities > 0 ? paginationConfig : undefined}

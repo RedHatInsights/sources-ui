@@ -5,6 +5,7 @@ export const AZURE_NAME = 'azure';
 export const GOOGLE_NAME = 'google';
 export const REDHAT_VENDOR = 'Red Hat';
 export const CLOUD_VENDOR = 'Cloud';
+export const INTEGRATIONS = 'Integrations';
 export const TOPOLOGY_INV_NAME = '/insights/platform/topological-inventory';
 export const COST_MANAGEMENT_APP_NAME = '/insights/platform/cost-management';
 export const CLOUD_METER_APP_NAME = '/insights/platform/cloud-meter';
