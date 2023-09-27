@@ -174,7 +174,10 @@ describe('SourceWizardSummary component', () => {
         getState: () => ({
           values: {
             source: { name: 'cosi' },
-            application: { application_type_id: '2', extra: { bucket: 'gfghf', bucket_region: 'test', storage_only: true } },
+            application: {
+              application_type_id: '2',
+              extra: { bucket: 'gfghf', bucket_region: 'test', metered: 'rhel', storage_only: true },
+            },
             source_type: 'amazon',
             authentication: { username: 'arn:aws:132', authtype: 'arn' },
             fixasyncvalidation: '',
@@ -193,6 +196,7 @@ describe('SourceWizardSummary component', () => {
         ['Application', 'Cost Management'],
         ['S3 bucket name', 'gfghf'],
         ['AWS region', 'test'],
+        ['Include RHEL usage', 'rhel'],
         ['ARN', 'arn:aws:132'],
       ]);
 
@@ -254,7 +258,7 @@ describe('SourceWizardSummary component', () => {
             source: { name: 'cosi' },
             application: {
               application_type_id: COST_MANAGEMENT_APP_ID,
-              extra: { bucket: 'gfghf', bucket_region: 'test', storage_only: true },
+              extra: { bucket: 'gfghf', bucket_region: 'test', metered: 'rhel', storage_only: true },
             },
             source_type: 'amazon',
             authentication: { username: 'arn:aws:132', authtype: 'arn' },
@@ -274,6 +278,7 @@ describe('SourceWizardSummary component', () => {
         ['Application', 'Hybrid Committed Spend'],
         ['S3 bucket name', 'gfghf'],
         ['AWS region', 'test'],
+        ['Include RHEL usage', 'rhel'],
         ['ARN', 'arn:aws:132'],
       ]);
 
