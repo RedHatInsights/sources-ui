@@ -32,6 +32,7 @@ import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 
 import { HCCM_DOCS_PREFIX } from '../../stringConstants';
 import { HCS_APP_NAME } from '../../../../utilities/constants';
+import { useFlag } from '@unleash/proxy-client-react';
 
 const CREATE_HCS_S3_BUCKET = ''; // specify when HCS docs links are available
 const CREATE_S3_BUCKET = `${HCCM_DOCS_PREFIX}/html/adding_an_amazon_web_services_aws_source_to_cost_management/assembly-adding-aws-sources#creating-an-aws-s3-bucket_adding-aws-sources`;
@@ -386,6 +387,7 @@ IAMPolicyDescription.propTypes = {
 export const TagsDescription = ({ showHCS }) => {
   const intl = useIntl();
   const application = showHCS ? HCS_APP_NAME : 'Cost Management';
+  const rhelAws = useFlag('platform.sources.metered-rhel');
 
   return (
     <Fragment>
@@ -433,15 +435,17 @@ export const TagsDescription = ({ showHCS }) => {
           </TextListItem>
         </TextList>
       </TextContent>
-      <Alert
-        variant="info"
-        isInline
-        title={intl.formatMessage({
-          id: 'cost.tags.alertTitle',
-          defaultMessage:
-            'If your organization is converting systems from CentOS 7 to RHEL and using hourly billing, activate the comredhatrhel tag for your systems in the Cost Allocation Tags section of the AWS console. After activating the tag in AWS, select Include RHEL usage.',
-        })}
-      />
+      {rhelAws ? (
+        <Alert
+          variant="info"
+          isInline
+          title={intl.formatMessage({
+            id: 'cost.tags.alertTitle',
+            defaultMessage:
+              'If your organization is converting systems from CentOS 7 to RHEL and using hourly billing, activate the comredhatrhel tag for your systems in the Cost Allocation Tags section of the AWS console. After activating the tag in AWS, select Include RHEL usage.',
+          })}
+        />
+      ) : null}
     </Fragment>
   );
 };
