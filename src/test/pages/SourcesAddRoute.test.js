@@ -17,6 +17,10 @@ import { getStore } from '../../utilities/store';
 import ElementWrapper from '../../components/ElementWrapper/ElementWrapper';
 import { Route, Routes } from 'react-router-dom';
 
+jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => {
+  return () => ({ getEnvironment: () => 'bar', isBeta: () => false });
+});
+
 describe('SourcesPage - addSource route', () => {
   let store;
 

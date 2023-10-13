@@ -1,14 +1,14 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
-import { useFlag } from '@unleash/proxy-client-react';
 
 import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
 
 import TabNavigation from './TabNavigation';
+import { usePreviewFlag } from '../utilities/usePreviewFlag';
 
 const SourcesHeader = () => {
   const intl = useIntl();
-  const enableIntegrations = useFlag('platform.sources.integrations');
+  const enableIntegrations = usePreviewFlag('platform.sources.integrations');
 
   return (
     <PageHeader className="pf-u-pb-0">
