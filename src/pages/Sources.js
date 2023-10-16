@@ -2,7 +2,6 @@ import React, { Suspense, useEffect, useReducer } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Button, Tooltip } from '@patternfly/react-core';
 import { useIntl } from 'react-intl';
-import { useFlag } from '@unleash/proxy-client-react';
 
 import AppLink from '../components/AppLink';
 import AsyncComponent from '@redhat-cloud-services/frontend-components/AsyncComponent';
@@ -42,6 +41,7 @@ import SourcesHeader from '../components/SourcesHeader';
 import generateCSV from '../utilities/generateCSV';
 import generateJSON from '../utilities/generateJSON';
 import { Outlet } from 'react-router-dom';
+import { usePreviewFlag } from '../utilities/usePreviewFlag';
 
 const initialState = {
   filter: undefined,
@@ -69,7 +69,7 @@ const SourcesPage = () => {
   const entitiesLoaded = useIsLoaded();
   const hasWritePermissions = useHasWritePermissions();
   const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
-  const enableIntegrations = useFlag('platform.sources.integrations');
+  const enableIntegrations = usePreviewFlag('platform.sources.integrations');
 
   const appNavigate = useAppNavigate();
   const intl = useIntl();

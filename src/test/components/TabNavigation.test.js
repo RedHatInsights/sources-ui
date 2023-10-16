@@ -9,6 +9,10 @@ import * as actions from '../../redux/sources/actions';
 
 import mockStore from '../__mocks__/mockStore';
 
+jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => {
+  return () => ({ getEnvironment: () => 'bar', isBeta: () => false });
+});
+
 describe('TabNavigation', () => {
   let store;
 
