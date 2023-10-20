@@ -38,7 +38,7 @@ describe('Steps components', () => {
       expect(screen.getByText('Go back to my application')).toBeInTheDocument();
       expect(screen.getByText('Here I Am')).toBeInTheDocument();
       expect(screen.getAllByRole('button')).toHaveLength(1);
-      expect(screen.getByRole('link')).toHaveAttribute('href', '/preview/settings/sources');
+      expect(screen.getByRole('link')).toHaveAttribute('href', '/preview/settings/integrations');
     });
 
     it('renders without takemetosources button', () => {

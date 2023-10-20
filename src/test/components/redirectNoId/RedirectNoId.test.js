@@ -13,7 +13,7 @@ describe('RedirectNoId', () => {
   let initialEntry;
 
   const wasRedirectedToRoot = () =>
-    screen.getByTestId('location-display').textContent === '/settings/sources' + routes.sources.path;
+    screen.getByTestId('location-display').textContent === '/settings/integrations' + routes.sources.path;
 
   beforeEach(() => {
     initialEntry = [replaceRouteId(routes.sourcesRemove.path, '1')];

@@ -209,7 +209,10 @@ describe('ApplicationsCard', () => {
       });
 
       expect(screen.getByTestId('location-display').textContent).toEqual(
-        replaceRouteId(`/settings/sources/${routes.sourcesDetailAddApp.path}`, sourceId).replace(':app_type_id', SUB_WATCH_APP.id)
+        replaceRouteId(`/settings/integrations/${routes.sourcesDetailAddApp.path}`, sourceId).replace(
+          ':app_type_id',
+          SUB_WATCH_APP.id
+        )
       );
     });
 

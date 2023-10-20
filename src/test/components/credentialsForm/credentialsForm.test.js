@@ -132,7 +132,7 @@ describe('CredentialsForm', () => {
     });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
-      replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, sourceId)
+      replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, sourceId)
     );
   });
 
@@ -156,7 +156,7 @@ describe('CredentialsForm', () => {
     });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
-      replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, sourceId)
+      replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, sourceId)
     );
   });
 
@@ -199,7 +199,7 @@ describe('CredentialsForm', () => {
     });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
-      replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, sourceId)
+      replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, sourceId)
     );
     expect(updateAuthentication).toHaveBeenCalledWith('auth-id', { username: 'newname' });
     expect(actions.addMessage).not.toHaveBeenCalled();
@@ -253,7 +253,7 @@ describe('CredentialsForm', () => {
     });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
-      replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, sourceId)
+      replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, sourceId)
     );
     expect(updateAuthentication).toHaveBeenCalledWith('auth-id', { username: 'newname' });
     expect(actions.addMessage).not.toHaveBeenCalled();

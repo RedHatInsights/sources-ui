@@ -91,7 +91,7 @@ describe('RemoveAppModal', () => {
 
     await waitFor(() =>
       expect(screen.getByTestId('location-display').textContent).toEqual(
-        replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, SOURCE_ID)
+        replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, SOURCE_ID)
       )
     );
   });
@@ -174,7 +174,7 @@ describe('RemoveAppModal', () => {
     });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
-      replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, SOURCE_ID)
+      replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, SOURCE_ID)
     );
   });
 

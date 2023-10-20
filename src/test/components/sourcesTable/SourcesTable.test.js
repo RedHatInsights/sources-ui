@@ -218,7 +218,7 @@ describe('SourcesTable', () => {
       await waitFor(async () => {
         await user.click(screen.getByText('Edit'));
       });
-      const expectedPath = replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, sourcesDataGraphQl[0].id);
+      const expectedPath = replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, sourcesDataGraphQl[0].id);
       expect(screen.getByTestId('location-display').textContent).toEqual(expectedPath);
     });
 
@@ -232,7 +232,7 @@ describe('SourcesTable', () => {
         await user.click(screen.getByText('Remove').closest('button'));
       });
 
-      const expectedPath = replaceRouteId(`/settings/sources/${routes.sourcesRemove.path}`, sourcesDataGraphQl[0].id);
+      const expectedPath = replaceRouteId(`/settings/integrations/${routes.sourcesRemove.path}`, sourcesDataGraphQl[0].id);
       expect(screen.getByTestId('location-display').textContent).toEqual(expectedPath);
     });
 

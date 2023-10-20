@@ -9,7 +9,7 @@ describe('routes', () => {
     });
 
     it('replaces :id with id', () => {
-      expect(replaceRouteId('/sources/:id', id)).toEqual(`/sources/${id}`);
+      expect(replaceRouteId('/integrations/:id', id)).toEqual(`/integrations/${id}`);
     });
 
     it('replaces :id in edit path', () => {

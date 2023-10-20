@@ -135,7 +135,7 @@ describe('SourcesPage', () => {
     let container;
     await act(async () => {
       const { container: internalContainer } = await render(
-        componentWrapperIntl(<SourcesPage {...initialProps} />, store, ['/settings/sources'])
+        componentWrapperIntl(<SourcesPage {...initialProps} />, store, ['/settings/integrations'])
       );
       container = internalContainer;
     });
