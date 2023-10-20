@@ -27,7 +27,7 @@ describe('EditLink', () => {
     }));
     render(<EditLink id={id} />);
 
-    expect(screen.getByRole('link')).toHaveAttribute('href', '/settings/sources/detail/some-id');
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/settings/integrations/detail/some-id');
   });
 
   it('renders on other app', () => {
@@ -38,6 +38,6 @@ describe('EditLink', () => {
 
     render(<EditLink id={id} />);
 
-    expect(screen.getByRole('link')).toHaveAttribute('href', '/preview/settings/sources/detail/some-id');
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/preview/settings/integrations/detail/some-id');
   });
 });

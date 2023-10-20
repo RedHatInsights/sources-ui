@@ -1,4 +1,4 @@
-export const linkBasename = '/settings/sources';
+export const linkBasename = '/settings/integrations';
 export const mergeToBasename = (to, basename) => {
   if (typeof to === 'string') {
     // replace possible "//" after basename

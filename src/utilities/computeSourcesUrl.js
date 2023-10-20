@@ -1,3 +1,3 @@
-const computeSourcesUrl = (isBeta = false) => (isBeta ? `/preview/settings/sources` : `/settings/sources`);
+const computeSourcesUrl = (isBeta = false) => (isBeta ? `/preview/settings/integrations` : `/settings/integrations`);
 
 export default computeSourcesUrl;

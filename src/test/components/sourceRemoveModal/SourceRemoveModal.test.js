@@ -94,7 +94,7 @@ describe('SourceRemoveModal', () => {
 
       const source = sourcesDataGraphQl.find((s) => s.id === '14');
 
-      expect(screen.getByTestId('location-display').textContent).toEqual(`/settings/sources${routes.sources.path}`);
+      expect(screen.getByTestId('location-display').textContent).toEqual(`/settings/integrations${routes.sources.path}`);
       expect(actions.removeSource).toHaveBeenCalledWith('14', `${source.name} was deleted successfully.`); // calls removeSource with id of the source and right message
     });
   });

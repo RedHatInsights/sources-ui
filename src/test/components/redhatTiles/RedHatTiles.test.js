@@ -69,7 +69,7 @@ describe('RedhatTiles', () => {
       await user.click(screen.getByText('OpenShift Container Platform'));
     });
 
-    expect(screen.getByTestId('location-display').textContent).toEqual(`/settings/sources/${routes.sourcesNew.path}`);
+    expect(screen.getByTestId('location-display').textContent).toEqual(`/settings/integrations/${routes.sourcesNew.path}`);
     expect(setSelectedType).toHaveBeenCalledWith('openshift');
   });
 });

@@ -58,7 +58,7 @@ describe('SourceRenameModal', () => {
     });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
-      replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, sourceId)
+      replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, sourceId)
     );
   });
 
@@ -70,7 +70,7 @@ describe('SourceRenameModal', () => {
     });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
-      replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, sourceId)
+      replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, sourceId)
     );
   });
 
@@ -91,7 +91,7 @@ describe('SourceRenameModal', () => {
 
     expect(actions.renameSource).toHaveBeenCalledWith(sourceId, 'new-name', 'Renaming was unsuccessful');
     expect(screen.getByTestId('location-display').textContent).toEqual(
-      replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, sourceId)
+      replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, sourceId)
     );
   });
 });

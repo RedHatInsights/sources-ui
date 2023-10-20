@@ -15,7 +15,7 @@ describe('RedirectNoPaused', () => {
 
   const wasRedirectedToDetail = () =>
     screen.getByTestId('location-display').textContent ===
-    '/settings/sources/' + replaceRouteId(routes.sourcesDetail.path, sourceId);
+    '/settings/integrations/' + replaceRouteId(routes.sourcesDetail.path, sourceId);
 
   beforeEach(() => {
     initialEntry = [replaceRouteId(routes.sourcesDetailRemoveApp.path, sourceId).replace(':app_id', '546')];

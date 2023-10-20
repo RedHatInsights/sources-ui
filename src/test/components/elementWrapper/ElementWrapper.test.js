@@ -90,7 +90,7 @@ describe('ElementWrapper', () => {
       )
     );
 
-    expect(screen.getByTestId('location-display').textContent).toEqual('/settings/sources/');
+    expect(screen.getByTestId('location-display').textContent).toEqual('/settings/integrations/');
   });
 
   it('renders RedirectNoId when redirectNoId set', () => {

@@ -179,7 +179,7 @@ describe('ApplicationKebab', () => {
       });
 
       expect(screen.getByTestId('location-display').textContent).toEqual(
-        replaceRouteId(`/settings/sources/${routes.sourcesDetailRemoveApp.path}`, sourceId).replace(':app_id', app.id)
+        replaceRouteId(`/settings/integrations/${routes.sourcesDetailRemoveApp.path}`, sourceId).replace(':app_id', app.id)
       );
     });
 
@@ -301,7 +301,7 @@ describe('ApplicationKebab', () => {
       });
 
       expect(screen.getByTestId('location-display').textContent).toEqual(
-        replaceRouteId(`/settings/sources/${routes.sourcesDetailRemoveApp.path}`, sourceId).replace(':app_id', app.id)
+        replaceRouteId(`/settings/integrations/${routes.sourcesDetailRemoveApp.path}`, sourceId).replace(':app_id', app.id)
       );
     });
 

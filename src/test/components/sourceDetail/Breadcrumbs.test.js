@@ -45,6 +45,6 @@ describe('Breadcrumbs', () => {
       await user.click(screen.getByText('Sources'));
     });
 
-    expect(screen.getByTestId('location-display').textContent).toEqual(`/settings/sources${routes.sources.path}`);
+    expect(screen.getByTestId('location-display').textContent).toEqual(`/settings/integrations${routes.sources.path}`);
   });
 });

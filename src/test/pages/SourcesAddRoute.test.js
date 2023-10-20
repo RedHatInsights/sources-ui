@@ -25,7 +25,7 @@ describe('SourcesPage - addSource route', () => {
   let store;
 
   const wasRedirectedToRoot = () =>
-    screen.getByTestId('location-display').textContent === '/settings/sources' + routes.sources.path;
+    screen.getByTestId('location-display').textContent === '/settings/integrations' + routes.sources.path;
 
   beforeEach(() => {
     wizard.AddSourceWizard = () => <h2>AddSource mock</h2>;

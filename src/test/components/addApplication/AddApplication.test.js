@@ -153,7 +153,7 @@ describe('AddApplication', () => {
 
       await waitFor(() =>
         expect(screen.getByTestId('location-display').textContent).toEqual(
-          '/settings/sources/' + replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID)
+          '/settings/integrations/' + replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID)
         )
       );
     });
@@ -182,7 +182,7 @@ describe('AddApplication', () => {
 
       await waitFor(() =>
         expect(screen.getByTestId('location-display').textContent).toEqual(
-          '/settings/sources/' + replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID)
+          '/settings/integrations/' + replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID)
         )
       );
     });
@@ -213,7 +213,7 @@ describe('AddApplication', () => {
 
       await waitFor(() =>
         expect(screen.getByTestId('location-display').textContent).toEqual(
-          '/settings/sources/' + replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID)
+          '/settings/integrations/' + replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID)
         )
       );
     });
@@ -307,7 +307,7 @@ describe('AddApplication', () => {
 
       await waitFor(() =>
         expect(screen.getByTestId('location-display').textContent).toEqual(
-          replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, SOURCE_NO_APS_ID)
+          replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, SOURCE_NO_APS_ID)
         )
       );
     });
@@ -332,7 +332,7 @@ describe('AddApplication', () => {
 
       await waitFor(() =>
         expect(screen.getByTestId('location-display').textContent).toEqual(
-          replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, SOURCE_NO_APS_ID)
+          replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, SOURCE_NO_APS_ID)
         )
       );
     });
@@ -748,7 +748,7 @@ describe('AddApplication', () => {
 
       await waitFor(() =>
         expect(screen.getByTestId('location-display').textContent).toEqual(
-          replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, source.id)
+          replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, source.id)
         )
       );
     });

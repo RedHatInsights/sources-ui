@@ -258,7 +258,7 @@ describe('Final wizard', () => {
     });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
-      replaceRouteId(`/settings/sources/${routes.sourcesDetail.path}`, id)
+      replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, id)
     );
   });
 

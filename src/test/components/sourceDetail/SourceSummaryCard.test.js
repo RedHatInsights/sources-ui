@@ -216,7 +216,7 @@ describe('SourceSummaryCard', () => {
     });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
-      replaceRouteId(`/settings/sources/${routes.sourcesDetailEditCredentials.path}`, sourceId)
+      replaceRouteId(`/settings/integrations/${routes.sourcesDetailEditCredentials.path}`, sourceId)
     );
   });
 

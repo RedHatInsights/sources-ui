@@ -1227,7 +1227,7 @@ describe('formatters', () => {
       expect(screen.getByText('Edit credentials', { selector: 'button' })).toBeInTheDocument();
       expect(screen.getByRole('link')).toHaveAttribute(
         'href',
-        replaceRouteId(`/settings/sources/${routes.sourcesDetailEditCredentials.path}`, SOURCE_ID)
+        replaceRouteId(`/settings/integrations/${routes.sourcesDetailEditCredentials.path}`, SOURCE_ID)
       );
 
       await waitFor(async () => {
