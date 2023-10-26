@@ -41,7 +41,7 @@ import SourcesHeader from '../components/SourcesHeader';
 import generateCSV from '../utilities/generateCSV';
 import generateJSON from '../utilities/generateJSON';
 import { Outlet } from 'react-router-dom';
-import { usePreviewFlag } from '../utilities/usePreviewFlag';
+import { useFlag } from '@unleash/proxy-client-react';
 
 const initialState = {
   filter: undefined,
@@ -69,7 +69,7 @@ const SourcesPage = () => {
   const entitiesLoaded = useIsLoaded();
   const hasWritePermissions = useHasWritePermissions();
   const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
-  const enableIntegrations = usePreviewFlag('platform.sources.integrations');
+  const enableIntegrations = useFlag('platform.sources.integrations');
 
   const appNavigate = useAppNavigate();
   const intl = useIntl();

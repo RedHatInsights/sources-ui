@@ -8,13 +8,13 @@ import CloudIcon from '@patternfly/react-icons/dist/esm/icons/cloud-icon';
 
 import { setActiveCategory } from '../redux/sources/actions';
 import { CLOUD_VENDOR, INTEGRATIONS, REDHAT_VENDOR } from '../utilities/constants';
-import { usePreviewFlag } from '../utilities/usePreviewFlag';
+import { useFlag } from '@unleash/proxy-client-react';
 
 const TabNavigation = () => {
   const intl = useIntl();
   const dispatch = useDispatch();
   const activeCategory = useSelector(({ sources }) => sources.activeCategory);
-  const enableIntegrations = usePreviewFlag('platform.sources.integrations');
+  const enableIntegrations = useFlag('platform.sources.integrations');
 
   return (
     <Tabs activeKey={activeCategory} onSelect={(_e, key) => dispatch(setActiveCategory(key))} className="pf-u-mt-md">
