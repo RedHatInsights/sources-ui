@@ -4,11 +4,11 @@ import { useIntl } from 'react-intl';
 import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
 
 import TabNavigation from './TabNavigation';
-import { usePreviewFlag } from '../utilities/usePreviewFlag';
+import { useFlag } from '@unleash/proxy-client-react';
 
 const SourcesHeader = () => {
   const intl = useIntl();
-  const enableIntegrations = usePreviewFlag('platform.sources.integrations');
+  const enableIntegrations = useFlag('platform.sources.integrations');
 
   return (
     <PageHeader className="pf-u-pb-0">
