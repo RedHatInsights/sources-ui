@@ -7,14 +7,16 @@ import RedhatIcon from '@patternfly/react-icons/dist/esm/icons/redhat-icon';
 import CloudIcon from '@patternfly/react-icons/dist/esm/icons/cloud-icon';
 
 import { setActiveCategory } from '../redux/sources/actions';
-import { CLOUD_VENDOR, INTEGRATIONS, REDHAT_VENDOR } from '../utilities/constants';
+import { CLOUD_VENDOR, COMMUNICATIONS, INTEGRATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../utilities/constants';
 import { useFlag } from '@unleash/proxy-client-react';
+import { usePreviewFlag } from '../utilities/usePreviewFlag';
 
 const TabNavigation = () => {
   const intl = useIntl();
   const dispatch = useDispatch();
   const activeCategory = useSelector(({ sources }) => sources.activeCategory);
   const enableIntegrations = useFlag('platform.sources.integrations');
+  const enableBreakdown = usePreviewFlag('platform.sources.integrations.breakdown');
 
   return (
     <Tabs activeKey={activeCategory} onSelect={(_e, key) => dispatch(setActiveCategory(key))} className="pf-u-mt-md">
@@ -50,14 +52,34 @@ const TabNavigation = () => {
           </React.Fragment>
         }
       />
-      {enableIntegrations && (
-        <Tab
-          eventKey={INTEGRATIONS}
-          title={
-            <TabTitleText>{intl.formatMessage({ id: 'sources.integrations', defaultMessage: 'Integrations' })}</TabTitleText>
-          }
-        />
-      )}
+      {enableIntegrations &&
+        (enableBreakdown ? (
+          <>
+            <Tab
+              eventKey={COMMUNICATIONS}
+              title={
+                <TabTitleText>
+                  {intl.formatMessage({ id: 'sources.communications', defaultMessage: 'Communications' })}
+                </TabTitleText>
+              }
+            />
+            <Tab
+              eventKey={REPORTING}
+              title={<TabTitleText>{intl.formatMessage({ id: 'sources.reporting', defaultMessage: 'Reporting' })}</TabTitleText>}
+            />
+            <Tab
+              eventKey={WEBHOOKS}
+              title={<TabTitleText>{intl.formatMessage({ id: 'sources.webhooks', defaultMessage: 'Webhooks' })}</TabTitleText>}
+            />
+          </>
+        ) : (
+          <Tab
+            eventKey={INTEGRATIONS}
+            title={
+              <TabTitleText>{intl.formatMessage({ id: 'sources.integrations', defaultMessage: 'Integrations' })}</TabTitleText>
+            }
+          />
+        ))}
     </Tabs>
   );
 };
