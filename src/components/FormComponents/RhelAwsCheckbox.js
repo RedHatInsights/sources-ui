@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import useFieldApi from '@data-driven-forms/react-form-renderer/use-field-api';
 
 import { Checkbox } from '@patternfly/react-core';
-import { useFlag } from '@unleash/proxy-client-react';
+import { usePreviewFlag } from '../../utilities/usePreviewFlag';
 
 const RhelAwsCheckbox = ({ ...props }) => {
   const { label, input } = useFieldApi(props);
-  const rhelAws = useFlag('platform.sources.metered-rhel');
+  const rhelAws = usePreviewFlag('platform.sources.metered-rhel');
 
   if (!rhelAws) {
     return null;

@@ -1,10 +1,10 @@
 import React from 'react';
 
 import { Divider } from '@patternfly/react-core';
-import { useFlag } from '@unleash/proxy-client-react';
+import { usePreviewFlag } from '../../utilities/usePreviewFlag';
 
 const PFDivider = () => {
-  const rhelAws = useFlag('platform.sources.metered-rhel');
+  const rhelAws = usePreviewFlag('platform.sources.metered-rhel');
 
   if (!rhelAws) {
     return null;

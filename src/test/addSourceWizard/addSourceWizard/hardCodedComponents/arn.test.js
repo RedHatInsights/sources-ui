@@ -13,6 +13,10 @@ jest.mock('uuid', () => ({
   v4: () => 'test-uuid',
 }));
 
+jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => {
+  return () => ({ getEnvironment: () => 'bar', isBeta: () => false });
+});
+
 describe('AWS-ARN hardcoded schemas', () => {
   it('ARN DESCRIPTION is rendered correctly', () => {
     render(<AwsArn.ArnDescription />);
