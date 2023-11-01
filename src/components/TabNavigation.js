@@ -52,7 +52,7 @@ const TabNavigation = () => {
           </React.Fragment>
         }
       />
-      {enableIntegrations &&
+      {(enableIntegrations || enableBreakdown) &&
         (enableBreakdown ? (
           <>
             <Tab
