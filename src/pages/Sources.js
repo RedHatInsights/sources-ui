@@ -31,7 +31,7 @@ import { useIsLoaded } from '../hooks/useIsLoaded';
 import { useHasWritePermissions } from '../hooks/useHasWritePermissions';
 import { PaginationLoader } from '../components/SourcesTable/loaders';
 import CloudCards from '../components/CloudTiles/CloudCards';
-import { CLOUD_VENDOR, INTEGRATIONS, REDHAT_VENDOR } from '../utilities/constants';
+import { CLOUD_VENDOR, COMMUNICATIONS, INTEGRATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../utilities/constants';
 import CloudEmptyState from '../components/CloudTiles/CloudEmptyState';
 import { AVAILABLE, UNAVAILABLE } from '../views/formatters';
 import RedHatEmptyState from '../components/RedHatTiles/RedHatEmptyState';
@@ -42,6 +42,7 @@ import generateCSV from '../utilities/generateCSV';
 import generateJSON from '../utilities/generateJSON';
 import { Outlet } from 'react-router-dom';
 import { useFlag } from '@unleash/proxy-client-react';
+import { usePreviewFlag } from '../utilities/usePreviewFlag';
 
 const initialState = {
   filter: undefined,
@@ -69,7 +70,7 @@ const SourcesPage = () => {
   const entitiesLoaded = useIsLoaded();
   const hasWritePermissions = useHasWritePermissions();
   const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
-  const enableIntegrations = useFlag('platform.sources.integrations');
+  const enableIntegrations = useFlag('platform.sources.integrations') || usePreviewFlag('platform.sources.breakdown');
 
   const appNavigate = useAppNavigate();
   const intl = useIntl();
@@ -185,8 +186,8 @@ const SourcesPage = () => {
   const setSelectedType = (selectedType) => stateDispatch({ type: 'setSelectedType', selectedType });
 
   const mainContent =
-    activeCategory === INTEGRATIONS && enableIntegrations ? (
-      <AsyncComponent appName="notifications" module="./IntegrationsTable" />
+    [INTEGRATIONS, COMMUNICATIONS, REPORTING, WEBHOOKS].includes(activeCategory) && enableIntegrations ? (
+      <AsyncComponent appName="notifications" module="./IntegrationsTable" activeCategory={activeCategory} />
     ) : !fetchingError && !showEmptyState ? (
       <React.Fragment>
         <PrimaryToolbar
