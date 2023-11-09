@@ -110,8 +110,8 @@ describe('SourceDetail', () => {
           <Route path={`${routes.sourcesDetail.path}/*`} element={<Detail />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(screen.getAllByRole('progressbar')).toHaveLength(4);
@@ -135,8 +135,8 @@ describe('SourceDetail', () => {
           <Route path={`${routes.sourcesDetail.path}/*`} element={<Detail />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(screen.getByText('Header')).toBeInTheDocument();
@@ -176,8 +176,8 @@ describe('SourceDetail', () => {
           <Route path={`${routes.sourcesDetail.path}/*`} element={<Detail />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(screen.getByText('Header')).toBeInTheDocument();
@@ -224,8 +224,8 @@ describe('SourceDetail', () => {
                 ChildElement={<SourceRemoveModal />}
               />,
               store,
-              initialEntry
-            )
+              initialEntry,
+            ),
           );
         });
 
@@ -252,8 +252,8 @@ describe('SourceDetail', () => {
                 ChildElement={<SourceRenameModal />}
               />,
               store,
-              initialEntry
-            )
+              initialEntry,
+            ),
           );
         });
 
@@ -270,8 +270,8 @@ describe('SourceDetail', () => {
             componentWrapperIntl(
               <RoutesSetup route={routes.sourcesDetailAddApp} RootElement={<Detail />} ChildElement={<AddApplication />} />,
               store,
-              initialEntry
-            )
+              initialEntry,
+            ),
           );
         });
 
@@ -288,8 +288,8 @@ describe('SourceDetail', () => {
             componentWrapperIntl(
               <RoutesSetup route={routes.sourcesDetailRemoveApp} RootElement={<Detail />} ChildElement={<RemoveAppModal />} />,
               store,
-              initialEntry
-            )
+              initialEntry,
+            ),
           );
         });
 
@@ -310,8 +310,8 @@ describe('SourceDetail', () => {
                 ChildElement={<CredentialsForm />}
               />,
               store,
-              initialEntry
-            )
+              initialEntry,
+            ),
           );
         });
 
@@ -340,8 +340,8 @@ describe('SourceDetail', () => {
                 <Route path={`${routes.sourcesDetail.path}/*`} element={<Detail />} />
               </Routes>,
               store,
-              initialEntry
-            )
+              initialEntry,
+            ),
           );
         });
 
@@ -358,8 +358,8 @@ describe('SourceDetail', () => {
                 <Route path={`${routes.sourcesDetail.path}/*`} element={<Detail />} />
               </Routes>,
               store,
-              initialEntry
-            )
+              initialEntry,
+            ),
           );
         });
 
@@ -376,8 +376,8 @@ describe('SourceDetail', () => {
                 <Route path={`${routes.sourcesDetail.path}/*`} element={<Detail />} />
               </Routes>,
               store,
-              initialEntry
-            )
+              initialEntry,
+            ),
           );
         });
 
@@ -394,8 +394,8 @@ describe('SourceDetail', () => {
                 <Route path={`${routes.sourcesDetail.path}/*`} element={<Detail />} />
               </Routes>,
               store,
-              initialEntry
-            )
+              initialEntry,
+            ),
           );
         });
 
@@ -412,8 +412,8 @@ describe('SourceDetail', () => {
                 <Route path={`${routes.sourcesDetail.path}/*`} element={<Detail />} />
               </Routes>,
               store,
-              initialEntry
-            )
+              initialEntry,
+            ),
           );
         });
 

@@ -18,7 +18,7 @@ export const defaultPort = (scheme) =>
   ({
     http: '80',
     https: '443',
-  }[scheme]);
+  })[scheme];
 
 export const importsTexts = (value) =>
   ({
@@ -28,7 +28,7 @@ export const importsTexts = (value) =>
         defaultMessage="This source can be managed from your connected CloudForms application."
       />
     ),
-  }[value.toLowerCase()]);
+  })[value.toLowerCase()];
 
 export const schemaToPort = (schema, port) => (port && String(port) !== defaultPort(schema) ? `:${port}` : '');
 
@@ -111,7 +111,7 @@ export const getStatusColor = (status) =>
     [AVAILABLE]: 'green',
     [PARTIALLY_UNAVAILABLE]: 'orange',
     [PAUSED]: 'cyan',
-  }[status] || 'grey');
+  })[status] || 'grey';
 
 export const getStatusText = (status) =>
   ({
@@ -120,7 +120,7 @@ export const getStatusText = (status) =>
     [PARTIALLY_UNAVAILABLE]: <FormattedMessage id="sources.partiallyAvailable" defaultMessage="Partially available" />,
     [IN_PROGRESS]: <FormattedMessage id="sources.inProgress" defaultMessage="In progress" />,
     [PAUSED]: <FormattedMessage id="sources.paused" defaultMessage="Paused" />,
-  }[status] || <FormattedMessage id="sources.unknown" defaultMessage="Unknown" />);
+  })[status] || <FormattedMessage id="sources.unknown" defaultMessage="Unknown" />;
 
 export const UnknownError = () => <FormattedMessage id="sources.unknownError" defaultMessage="unavailable" />;
 
@@ -223,7 +223,7 @@ export const getStatusTooltipText = (status, appTypes, errors = {}) =>
         defaultMessage="Data collection is temporarily disabled. Resume source to reestablish connection."
       />
     ),
-  }[status] || <FormattedMessage id="sources.appStatusUnknown" defaultMessage="Status has not been verified." />);
+  })[status] || <FormattedMessage id="sources.appStatusUnknown" defaultMessage="Status has not been verified." />;
 
 export const getAllErrors = ({
   availability_status,
@@ -351,11 +351,11 @@ export const getStatusTooltipTextApp = (status, error, intl) =>
         defaultMessage="We are still working to validate credentials. Check back for status updates."
       />
     ),
-  }[status] ||
+  })[status] ||
   intl.formatMessage({
     id: 'sources.appStatusUnknown',
     defaultMessage: 'Status has not been verified.',
-  }));
+  });
 
 export const ApplicationLabel = ({ app, showStatusText, ...props }) => {
   const intl = useIntl();
@@ -414,7 +414,7 @@ const EnhancedLabelGroup = ({ applications, ...props }) => {
       numLabels={2}
       collapsedText={intl.formatMessage(
         { id: 'applications.showMore', defaultMessage: '{remaining} more' },
-        { remaining: '${remaining}' }
+        { remaining: '${remaining}' },
       )}
     >
       {applications.map((app, index) => (
@@ -431,7 +431,7 @@ EnhancedLabelGroup.propTypes = {
       availability_status: PropTypes.string,
       availability_status_error: PropTypes.string,
       paused_at: PropTypes.string,
-    })
+    }),
   ).isRequired,
 };
 
@@ -491,12 +491,12 @@ export const configurationModeFormatter = (mode, item, { intl, sourceType }) => 
               })
             }
           >
-            <span className="pf-u-ml-sm">
+            <span className="pf-v5-u-ml-sm">
               <ExclamationCircleIcon fill="#C9190B" />
             </span>
           </Tooltip>
         )}
-        <div className="pf-u-mt-sm">
+        <div className="pf-v5-u-mt-sm">
           <AppLink to={replaceRouteId(routes.sourcesDetailEditCredentials.path, item.id)}>
             <Button variant="link" id="edit-super-credentials" isInline>
               {item.paused_at

@@ -39,7 +39,7 @@ const fields = (
   title,
   description,
   applicationTypes,
-  enableLighthouse
+  enableLighthouse,
 ) => {
   let authenticationFields = [];
   let firstStep;
@@ -60,7 +60,7 @@ const fields = (
     if (appType.supported_source_types.includes(sourceType.name)) {
       authTypes.forEach((authtype) => {
         authenticationFields.push(
-          generateFirstAuthStep(sourceType, appType, appendEndpoint, authtype, intl, shouldAddEmpty, enableLighthouse)
+          generateFirstAuthStep(sourceType, appType, appendEndpoint, authtype, intl, shouldAddEmpty, enableLighthouse),
         );
       });
     }
@@ -77,8 +77,8 @@ const fields = (
               auth.type,
               hasEndpointStep,
               auth.fields,
-              appType.name
-            )
+              appType.name,
+            ),
           );
         }
       }

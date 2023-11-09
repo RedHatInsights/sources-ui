@@ -15,8 +15,8 @@ describe('Error Boundary', () => {
       componentWrapperIntl(
         <ErrorBoundary>
           <ChildrenComponent />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>,
+      ),
     );
 
     expect(screen.getByText('Some content', { selector: 'h1' })).toBeInTheDocument();
@@ -47,8 +47,8 @@ describe('Error Boundary', () => {
         <ErrorBoundary>
           <ChildrenComponentError />
         </ErrorBoundary>,
-        store
-      )
+        store,
+      ),
     );
 
     expect(screen.getByText('Error occurred')).toBeInTheDocument();

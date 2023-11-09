@@ -99,8 +99,8 @@ describe('Steps components', () => {
       expect(screen.getByText('Something went wrong')).toBeInTheDocument();
       expect(
         screen.getByText(
-          'There was a problem while trying to add your source. Please try again. If the error persists, open a support case.'
-        )
+          'There was a problem while trying to add your source. Please try again. If the error persists, open a support case.',
+        ),
       ).toBeInTheDocument();
       expect(screen.getByText('Go back to my application')).toBeInTheDocument();
       expect(screen.getAllByRole('button')).toHaveLength(1);
@@ -147,10 +147,10 @@ describe('Steps components', () => {
 
       expect(screen.getByText('Configuration in progress')).toBeInTheDocument();
       expect(
-        screen.getByText('We are still working to confirm credentials and app settings.', { exact: false })
+        screen.getByText('We are still working to confirm credentials and app settings.', { exact: false }),
       ).toBeInTheDocument();
       expect(
-        screen.getByText('To track progress, check the Status column in the Sources table.', { exact: false })
+        screen.getByText('To track progress, check the Status column in the Sources table.', { exact: false }),
       ).toBeInTheDocument();
       expect(screen.getByText('go back')).toBeInTheDocument();
       expect(screen.getAllByRole('button')).toHaveLength(2);

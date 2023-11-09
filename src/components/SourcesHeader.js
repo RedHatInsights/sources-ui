@@ -12,7 +12,7 @@ const SourcesHeader = () => {
   const enableIntegrations = useFlag('platform.sources.integrations') || usePreviewFlag('platform.sources.breakdown');
 
   return (
-    <PageHeader className="pf-u-pb-0">
+    <PageHeader className="pf-v5-u-pb-0">
       <PageHeaderTitle
         title={intl.formatMessage(
           enableIntegrations
@@ -20,7 +20,7 @@ const SourcesHeader = () => {
             : {
                 id: 'sources.sources',
                 defaultMessage: 'Sources',
-              }
+              },
         )}
       />
       <TabNavigation />

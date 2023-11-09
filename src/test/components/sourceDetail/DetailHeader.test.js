@@ -33,8 +33,8 @@ describe('DetailHeader', () => {
           <Route path={routes.sourcesDetail.path} element={<DetailHeader />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(screen.getByText('Sources')).toBeInTheDocument();
@@ -45,7 +45,7 @@ describe('DetailHeader', () => {
     expect(formatters.availabilityFormatter).toHaveBeenCalledWith(
       undefined,
       { id: sourceId, name: 'Name of this source' },
-      { appTypes }
+      { appTypes },
     );
   });
 });

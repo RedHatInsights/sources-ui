@@ -7,7 +7,7 @@ const CheckboxWithLink = ({ Link, ...props }) => {
   const ref = useRef();
 
   return (
-    <div className="pf-u-display-flex">
+    <div className="pf-v5-u-display-flex">
       <Checkbox {...props} type="checkbox" />
       <span ref={ref}>
         <Link appendTo={ref.current} />

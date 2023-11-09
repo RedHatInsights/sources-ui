@@ -151,10 +151,10 @@ export const appRemovingPending = (state, { meta }) => ({
                   ...app,
                   isDeleting: true,
                 }
-              : app
+              : app,
           ),
         }
-      : entity
+      : entity,
   ),
 });
 
@@ -166,7 +166,7 @@ export const appRemovingFulfilled = (state, { meta }) => ({
           ...entity,
           applications: entity.applications.filter((app) => app.id !== meta.appId),
         }
-      : entity
+      : entity,
   ),
 });
 
@@ -182,10 +182,10 @@ export const appRemovingRejected = (state, { meta }) => ({
                   ...app,
                   isDeleting: undefined,
                 }
-              : app
+              : app,
           ),
         }
-      : entity
+      : entity,
   ),
 });
 
@@ -197,7 +197,7 @@ export const addAppToSource = (state, { payload: { sourceId, app } }) => ({
           ...entity,
           applications: [...entity.applications, app],
         }
-      : entity
+      : entity,
   ),
 });
 
@@ -225,7 +225,7 @@ export const sourceRenamePending = (state, { payload: { id, name } }) => ({
           ...entity,
           name,
         }
-      : entity
+      : entity,
   ),
 });
 
@@ -237,7 +237,7 @@ export const sourceStatusCheckPending = (state, { payload: { sourceId } }) => ({
           ...entity,
           isCheckPending: true,
         }
-      : entity
+      : entity,
   ),
 });
 

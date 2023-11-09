@@ -844,7 +844,7 @@ describe('removeEmpty', () => {
         },
         name: undefined,
         authenticaion: {},
-      })
+      }),
     ).toEqual({
       source: {
         id: '1213',
@@ -858,7 +858,7 @@ describe('removeEmpty', () => {
         billing_source: { bucket: 'njmbnmbn' },
         application: { application_type_id: '2' },
         authentication: {},
-      })
+      }),
     ).toEqual({
       billing_source: { bucket: 'njmbnmbn' },
       application: { application_type_id: '2' },

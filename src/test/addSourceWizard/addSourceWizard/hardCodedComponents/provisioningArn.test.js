@@ -13,15 +13,15 @@ describe('Provisioning AWS ARN hardcoded schemas', () => {
     expect(
       screen.getByText(
         'Create the following AWS Identity and Access Management (IAM) policy to grant Red Hat permissions to run instances on your Amazon Web Services (AWS) Elastic Cloud (EC2).',
-        { exact: false }
-      )
+        { exact: false },
+      ),
     ).toBeInTheDocument();
     expect(screen.getByText('Log in to AWS CLI by running:', { exact: false })).toBeInTheDocument();
     expect(
-      screen.getByText('Create a new policy and store its ARN by running following command in your terminal.', { exact: false })
+      screen.getByText('Create a new policy and store its ARN by running following command in your terminal.', { exact: false }),
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveDisplayValue(
-      /^\s*POLICY_ARN=\$\(aws iam create-policy --policy-name RH-HCC-provisioning-policy --policy-document/
+      /^\s*POLICY_ARN=\$\(aws iam create-policy --policy-name RH-HCC-provisioning-policy --policy-document/,
     );
   });
 
@@ -40,7 +40,7 @@ describe('Provisioning AWS ARN hardcoded schemas', () => {
     render(<ProvAwsArn.IAMRoleDescription />);
 
     expect(
-      screen.getByText('To delegate account access, create an IAM role and associate it with your IAM policy.', { exact: false })
+      screen.getByText('To delegate account access, create an IAM role and associate it with your IAM policy.', { exact: false }),
     ).toBeInTheDocument();
 
     expect(screen.getByText('Loading configuration...')).toBeInTheDocument();
@@ -50,7 +50,7 @@ describe('Provisioning AWS ARN hardcoded schemas', () => {
     expect(
       screen.getByText('Create a new role and add the Red Hat account as a trusted entity and fetch the role ARN:', {
         exact: false,
-      })
+      }),
     ).toBeInTheDocument();
     expect(copyInputs[0]).toHaveDisplayValue(/372779871274/);
 
@@ -70,8 +70,8 @@ describe('Provisioning AWS ARN hardcoded schemas', () => {
 
     expect(
       await screen.findByText(
-        'There was an error while loading the commands. Please go back and return to this step to try again.'
-      )
+        'There was an error while loading the commands. Please go back and return to this step to try again.',
+      ),
     ).toBeInTheDocument();
   });
 
@@ -79,7 +79,7 @@ describe('Provisioning AWS ARN hardcoded schemas', () => {
     render(<ProvAwsArn.ArnDescription />);
 
     expect(
-      screen.getByText('To enable account access, capture the ARN associated with the role you just created.', { exact: false })
+      screen.getByText('To enable account access, capture the ARN associated with the role you just created.', { exact: false }),
     ).toBeInTheDocument();
 
     expect(screen.getByText('Run', { exact: false })).toBeInTheDocument();

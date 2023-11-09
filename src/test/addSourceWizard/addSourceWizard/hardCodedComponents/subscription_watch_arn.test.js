@@ -10,7 +10,7 @@ describe('AWS-ARN hardcoded schemas', () => {
     render(<SubsAwsArn.ArnDescription />);
 
     expect(
-      screen.getByText('To enable account access, capture the ARN associated with the role you just created.', { exact: false })
+      screen.getByText('To enable account access, capture the ARN associated with the role you just created.', { exact: false }),
     ).toBeInTheDocument();
     expect(screen.getByText('Navigate to the role that you just created.', { exact: false })).toBeInTheDocument();
     expect(screen.getByText('screen, copy the role ARN and paste it in the ', { exact: false })).toBeInTheDocument();
@@ -30,13 +30,13 @@ describe('AWS-ARN hardcoded schemas', () => {
     expect(
       screen.getByText(
         'To grant Red Hat access to your Amazon Web Services (AWS) subscription data, create an AWS Identity and Access Management (IAM) policy.',
-        { exact: false }
-      )
+        { exact: false },
+      ),
     ).toBeInTheDocument();
     expect(screen.getByText('Log in to the', { exact: false })).toBeInTheDocument();
     expect(screen.getByText('AWS Identity and Management (IAM) console', { exact: false })).toBeInTheDocument();
     expect(
-      screen.getByText('Create a new policy, pasting the following content into the JSON text box.', { exact: false })
+      screen.getByText('Create a new policy, pasting the following content into the JSON text box.', { exact: false }),
     ).toBeInTheDocument();
     expect(screen.getByText('Complete the process to create your new policy.', { exact: false })).toBeInTheDocument();
   });
@@ -54,8 +54,8 @@ describe('AWS-ARN hardcoded schemas', () => {
 
     await waitFor(() =>
       expect(screen.getByLabelText('Copyable input')).toHaveValue(
-        JSON.stringify('There is an error with loading of the configuration. Please go back and return to this step.', null, 2)
-      )
+        JSON.stringify('There is an error with loading of the configuration. Please go back and return to this step.', null, 2),
+      ),
     );
 
     expect(console.error).toHaveBeenCalledWith(ERROR);
@@ -75,16 +75,16 @@ describe('AWS-ARN hardcoded schemas', () => {
     await waitFor(() => expect(screen.getByLabelText('Copyable input')).toHaveValue(CM_ID));
 
     expect(
-      screen.getByText('To delegate account access, create an IAM role to associate with your IAM policy.', { exact: false })
+      screen.getByText('To delegate account access, create an IAM role to associate with your IAM policy.', { exact: false }),
     ).toBeInTheDocument();
     expect(screen.getByText('From the AWS IAM console, create a new role.', { exact: false })).toBeInTheDocument();
     expect(
-      screen.getByText('from the list of trusted entities and paste the following value into the', { exact: false })
+      screen.getByText('from the list of trusted entities and paste the following value into the', { exact: false }),
     ).toBeInTheDocument();
     expect(screen.getByText('Attach the permissions policy that you just created.', { exact: false })).toBeInTheDocument();
     expect(screen.getByText('Complete the process to create your new role.', { exact: false })).toBeInTheDocument();
     expect(
-      screen.getByText('You will need to be logged in to the IAM console to complete the next step', { exact: false })
+      screen.getByText('You will need to be logged in to the IAM console to complete the next step', { exact: false }),
     ).toBeInTheDocument();
     expect(screen.getByText('Do not close your browser.', { exact: false })).toBeInTheDocument();
   });
@@ -102,8 +102,8 @@ describe('AWS-ARN hardcoded schemas', () => {
 
     await waitFor(() =>
       expect(screen.getByLabelText('Copyable input')).toHaveValue(
-        'There is an error with loading of the configuration. Please go back and return to this step.'
-      )
+        'There is an error with loading of the configuration. Please go back and return to this step.',
+      ),
     );
     expect(console.error).toHaveBeenCalledWith(ERROR);
     console.error = _cons;

@@ -31,8 +31,8 @@ describe('AddSourceButton', () => {
     render(
       componentWrapperIntl(
         <AddSourceButton sourceTypes={sourceTypes} applicationTypes={applicationTypes} activeCategory={CLOUD_VENDOR} />,
-        store
-      )
+        store,
+      ),
     );
     await act(async () => {
       await user.click(screen.getByText('Add Red Hat source'));

@@ -86,7 +86,7 @@ export const authenticationFields = (authentications, sourceType, appName, appId
         (field) =>
           additionalStepsFields.includes(field.name) ||
           (!additionalStepsFields.length && !field.stepKey) ||
-          (field.stepKey && additionalStepKeys.includes(field.stepKey))
+          (field.stepKey && additionalStepKeys.includes(field.stepKey)),
       )
       .map((field) => ({
         ...field,

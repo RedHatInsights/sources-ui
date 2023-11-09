@@ -22,13 +22,13 @@
 
 .src-c-wizard__radio {
   .pf-v5-c-radio:not(:last-child) {
-    margin-bottom: var(--pf-global--spacer--lg);
+    margin-bottom: var(--pf-v5-global--spacer--lg);
   }
 }
 
 .src-c-wizard__conditional-radio {
   .pf-v5-c-radio:not(:last-child) {
-    margin-bottom: var(--pf-global--spacer--sm);
+    margin-bottom: var(--pf-v5-global--spacer--sm);
   }
   .pf-v5-c-radio__input {
     margin-top: 3px;
@@ -56,5 +56,5 @@
 
 .src-c-wizard--switch-description {
   color:  #6a6e73;
-  font-size: var(--pf-global--FontSize--sm);
+  font-size: var(--pf-v5-global--FontSize--sm);
 }

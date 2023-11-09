@@ -27,7 +27,7 @@ describe('EditAlert', () => {
             customIcon: <WrenchIcon data-testid="wrench-icon" />,
           },
         }}
-      />
+      />,
     );
 
     expect(screen.getByText('Alert title')).toBeInTheDocument();

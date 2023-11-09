@@ -8,7 +8,7 @@ const removeAppSubmit = (app, intl, onCancel, dispatch, source) => {
     },
     {
       name: app.display_name,
-    }
+    },
   );
   const titleError = intl.formatMessage(
     {
@@ -17,7 +17,7 @@ const removeAppSubmit = (app, intl, onCancel, dispatch, source) => {
     },
     {
       name: app.display_name,
-    }
+    },
   );
   onCancel && onCancel();
   return dispatch(removeApplication(app.id, source.id, titleSuccess, titleError));

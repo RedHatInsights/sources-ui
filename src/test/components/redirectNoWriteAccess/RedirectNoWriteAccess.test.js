@@ -29,8 +29,8 @@ describe('RedirectNoWriteAccess', () => {
           <Route path={routes.sourcesRemove.path} element={<RedirectNoWriteAccess />} />
         </Routes>,
         initialStore,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(actions.addMessage).not.toHaveBeenCalled();
@@ -46,8 +46,8 @@ describe('RedirectNoWriteAccess', () => {
           <Route path={routes.sourcesRemove.path} element={<RedirectNoWriteAccess />} />
         </Routes>,
         initialStore,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(actions.addMessage).not.toHaveBeenCalled();
@@ -63,8 +63,8 @@ describe('RedirectNoWriteAccess', () => {
           <Route path={routes.sourcesRemove.path} element={<RedirectNoWriteAccess />} />
         </Routes>,
         initialStore,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(actions.addMessage).not.toHaveBeenCalled();
@@ -80,8 +80,8 @@ describe('RedirectNoWriteAccess', () => {
           <Route path={routes.sourcesRemove.path} element={<RedirectNoWriteAccess />} />
         </Routes>,
         initialStore,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
     await waitFor(() => expect(actions.addMessage).toHaveBeenCalled());
     expect(actions.addMessage).toHaveBeenCalledWith({

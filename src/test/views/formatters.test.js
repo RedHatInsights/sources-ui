@@ -76,7 +76,7 @@ describe('formatters', () => {
       expect(
         sourceTypeFormatter(OPENSHIFT_TYPE.id, undefined, {
           sourceTypes,
-        })
+        }),
       ).toEqual(sourceTypes.find((x) => x.id === OPENSHIFT_TYPE.id).product_name);
     });
 
@@ -89,7 +89,7 @@ describe('formatters', () => {
               product_name: undefined,
             },
           ],
-        })
+        }),
       ).toEqual(OPENSHIFT_TYPE.id);
     });
 
@@ -97,7 +97,7 @@ describe('formatters', () => {
       expect(
         sourceTypeFormatter(undefined, undefined, {
           sourceTypes,
-        })
+        }),
       ).toEqual('');
     });
   });
@@ -118,8 +118,8 @@ describe('formatters', () => {
         JSON.stringify(
           nameFormatter(sourcesDataGraphQl[0].name, sourcesDataGraphQl[0], {
             sourceTypes,
-          })
-        ).includes(sourcesDataGraphQl[0].name)
+          }),
+        ).includes(sourcesDataGraphQl[0].name),
       ).toEqual(true);
     });
   });
@@ -147,7 +147,7 @@ describe('formatters', () => {
       });
 
       await waitFor(() =>
-        expect(screen.getByText('This source can be managed from your connected CloudForms application.')).toBeInTheDocument()
+        expect(screen.getByText('This source can be managed from your connected CloudForms application.')).toBeInTheDocument(),
       );
     });
   });
@@ -162,8 +162,8 @@ describe('formatters', () => {
             {applicationFormatter(sourcesDataGraphQl[SOURCE_ALL_APS_INDEX].applications, undefined, {
               appTypes,
             })}
-          </React.Fragment>
-        )
+          </React.Fragment>,
+        ),
       );
 
       expect(screen.getByText(CATALOG_APP.display_name, { exact: false })).toBeInTheDocument();
@@ -186,8 +186,8 @@ describe('formatters', () => {
             {applicationFormatter(sourcesDataGraphQl[SOURCE_NO_APS_INDEX].applications, undefined, {
               appTypes,
             })}
-          </React.Fragment>
-        )
+          </React.Fragment>,
+        ),
       );
 
       expect(screen.getByText(EMPTY_LIST_PLACEHOLDER, { exact: false })).toBeInTheDocument();
@@ -200,8 +200,8 @@ describe('formatters', () => {
             {applicationFormatter(sourcesDataGraphQl[SOURCE_CATALOGAPP_INDEX].applications, undefined, {
               appTypes,
             })}
-          </React.Fragment>
-        )
+          </React.Fragment>,
+        ),
       );
 
       expect(screen.getByText(CATALOG_APP.display_name, { exact: false })).toBeInTheDocument();
@@ -223,10 +223,10 @@ describe('formatters', () => {
               undefined,
               {
                 appTypes,
-              }
+              },
             )}
-          </React.Fragment>
-        )
+          </React.Fragment>,
+        ),
       );
 
       await waitFor(async () => {
@@ -254,10 +254,10 @@ describe('formatters', () => {
               undefined,
               {
                 appTypes,
-              }
+              },
             )}
-          </React.Fragment>
-        )
+          </React.Fragment>,
+        ),
       );
 
       await waitFor(async () => {
@@ -285,10 +285,10 @@ describe('formatters', () => {
               { endpoints: [{ availability_status: UNAVAILABLE, availability_status_error: ERROR }] },
               {
                 appTypes,
-              }
+              },
             )}
-          </React.Fragment>
-        )
+          </React.Fragment>,
+        ),
       );
 
       await waitFor(async () => {
@@ -315,10 +315,10 @@ describe('formatters', () => {
               undefined,
               {
                 appTypes,
-              }
+              },
             )}
-          </React.Fragment>
-        )
+          </React.Fragment>,
+        ),
       );
 
       await waitFor(async () => {
@@ -327,8 +327,8 @@ describe('formatters', () => {
 
       await waitFor(() =>
         expect(
-          screen.getByText('We are still working to validate credentials. Check back for status updates.')
-        ).toBeInTheDocument()
+          screen.getByText('We are still working to validate credentials. Check back for status updates.'),
+        ).toBeInTheDocument(),
       );
       expect(screen.getByText('wrench icon')).toBeInTheDocument();
     });
@@ -351,10 +351,10 @@ describe('formatters', () => {
               undefined,
               {
                 appTypes,
-              }
+              },
             )}
-          </React.Fragment>
-        )
+          </React.Fragment>,
+        ),
       );
 
       await waitFor(async () => {
@@ -362,7 +362,7 @@ describe('formatters', () => {
       });
 
       await waitFor(() =>
-        expect(screen.getByText('Resume this application to continue data collection.', { exact: false })).toBeInTheDocument()
+        expect(screen.getByText('Resume this application to continue data collection.', { exact: false })).toBeInTheDocument(),
       );
       expect(screen.getByText('pause icon')).toBeInTheDocument();
     });
@@ -384,10 +384,10 @@ describe('formatters', () => {
               undefined,
               {
                 appTypes,
-              }
+              },
             )}
-          </React.Fragment>
-        )
+          </React.Fragment>,
+        ),
       );
 
       await waitFor(async () => {
@@ -414,10 +414,10 @@ describe('formatters', () => {
               undefined,
               {
                 appTypes,
-              }
+              },
             )}
-          </React.Fragment>
-        )
+          </React.Fragment>,
+        ),
       );
 
       await waitFor(async () => {
@@ -604,7 +604,7 @@ describe('formatters', () => {
         render(wrapperWithIntl(getStatusTooltipText(IN_PROGRESS, appTypes)));
 
         expect(
-          screen.getByText('We are still working to validate credentials. Check back for status updates.')
+          screen.getByText('We are still working to validate credentials. Check back for status updates.'),
         ).toBeInTheDocument();
       });
 
@@ -657,7 +657,7 @@ describe('formatters', () => {
         render(wrapperWithIntl(getStatusTooltipText(PAUSED, appTypes)));
 
         expect(
-          screen.getByText('Data collection is temporarily disabled. Resume source to reestablish connection.')
+          screen.getByText('Data collection is temporarily disabled. Resume source to reestablish connection.'),
         ).toBeInTheDocument();
       });
     });
@@ -813,7 +813,7 @@ describe('formatters', () => {
           getAllErrors({
             availability_status: AVAILABLE,
             endpoints: [{ availability_status: AVAILABLE }],
-          })
+          }),
         ).toEqual({
           errors: {},
           status: AVAILABLE,
@@ -825,7 +825,7 @@ describe('formatters', () => {
           getAllErrors({
             availability_status: '',
             endpoints: [{ availability_status: AVAILABLE }],
-          })
+          }),
         ).toEqual({
           errors: {},
           status: AVAILABLE,
@@ -842,7 +842,7 @@ describe('formatters', () => {
                 authentications: [{ availability_status: AVAILABLE }],
               },
             ],
-          })
+          }),
         ).toEqual({
           errors: {},
           status: AVAILABLE,
@@ -860,7 +860,7 @@ describe('formatters', () => {
               },
             ],
             applications: [{ availability_status: AVAILABLE }, { availability_status: AVAILABLE }],
-          })
+          }),
         ).toEqual({
           errors: {},
           status: AVAILABLE,
@@ -878,7 +878,7 @@ describe('formatters', () => {
               },
             ],
             applications: [{ availability_status: '' }, { availability_status: AVAILABLE }],
-          })
+          }),
         ).toEqual({
           errors: {},
           status: AVAILABLE,
@@ -895,7 +895,7 @@ describe('formatters', () => {
                 availability_status_error: errorMsg,
               },
             ],
-          })
+          }),
         ).toEqual({
           errors: { endpoint: errorMsg },
           status: PARTIALLY_UNAVAILABLE,
@@ -912,7 +912,7 @@ describe('formatters', () => {
                 availability_status_error: '',
               },
             ],
-          })
+          }),
         ).toEqual({
           errors: { endpoint: <UnknownError /> },
           status: PARTIALLY_UNAVAILABLE,
@@ -925,7 +925,7 @@ describe('formatters', () => {
             availability_status: UNAVAILABLE,
             availability_status_error: '',
             endpoints: [{ availability_status: AVAILABLE }],
-          })
+          }),
         ).toEqual({
           errors: { source: <UnknownError /> },
           status: PARTIALLY_UNAVAILABLE,
@@ -938,7 +938,7 @@ describe('formatters', () => {
             availability_status: UNAVAILABLE,
             availability_status_error: errorMsg,
             endpoints: [{ availability_status: AVAILABLE }],
-          })
+          }),
         ).toEqual({
           errors: { source: errorMsg },
           status: PARTIALLY_UNAVAILABLE,
@@ -961,7 +961,7 @@ describe('formatters', () => {
                 ],
               },
             ],
-          })
+          }),
         ).toEqual({
           errors: { authentications: [{ type: 'token', error: errorMsg }] },
           status: PARTIALLY_UNAVAILABLE,
@@ -984,7 +984,7 @@ describe('formatters', () => {
                 ],
               },
             ],
-          })
+          }),
         ).toEqual({
           errors: { authentications: [{ type: 'token', error: errorMsg }] },
           status: PARTIALLY_UNAVAILABLE,
@@ -1012,7 +1012,7 @@ describe('formatters', () => {
                 ],
               },
             ],
-          })
+          }),
         ).toEqual({
           errors: {
             authentications: [
@@ -1042,7 +1042,7 @@ describe('formatters', () => {
                 availability_status_error: errorMsg,
               },
             ],
-          })
+          }),
         ).toEqual({
           errors: { applications: [{ id: '151', error: errorMsg }] },
           status: PARTIALLY_UNAVAILABLE,
@@ -1060,7 +1060,7 @@ describe('formatters', () => {
                 availability_status_error: errorMsg,
               },
             ],
-          })
+          }),
         ).toEqual({
           errors: { endpoint: errorMsg, source: errorMsg },
           status: UNAVAILABLE,
@@ -1078,7 +1078,7 @@ describe('formatters', () => {
                 availability_status_error: errorMsg,
               },
             ],
-          })
+          }),
         ).toEqual({
           errors: { endpoint: errorMsg },
           status: UNAVAILABLE,
@@ -1101,7 +1101,7 @@ describe('formatters', () => {
                 ],
               },
             ],
-          })
+          }),
         ).toEqual({
           errors: { authentications: [{ type: 'token', error: errorMsg }] },
           status: UNAVAILABLE,
@@ -1126,7 +1126,7 @@ describe('formatters', () => {
                 availability_status_error: errorMsg,
               },
             ],
-          })
+          }),
         ).toEqual({
           errors: { applications: [{ id: '151', error: errorMsg }] },
           status: UNAVAILABLE,
@@ -1155,7 +1155,7 @@ describe('formatters', () => {
                 availability_status_error: undefined,
               },
             ],
-          })
+          }),
         ).toEqual({
           errors: {
             applications: [
@@ -1177,7 +1177,7 @@ describe('formatters', () => {
       render(
         <MemoryRouter>
           {wrapperWithIntl(configurationModeFormatter(ACCOUNT_AUTHORIZATION, { id: SOURCE_ID }, { intl: INTL }))}
-        </MemoryRouter>
+        </MemoryRouter>,
       );
 
       expect(screen.getByText('Edit credentials')).toBeInTheDocument();
@@ -1187,9 +1187,9 @@ describe('formatters', () => {
       render(
         <MemoryRouter>
           {wrapperWithIntl(
-            configurationModeFormatter(ACCOUNT_AUTHORIZATION, { id: SOURCE_ID, paused_at: 'today' }, { intl: INTL })
+            configurationModeFormatter(ACCOUNT_AUTHORIZATION, { id: SOURCE_ID, paused_at: 'today' }, { intl: INTL }),
           )}
-        </MemoryRouter>
+        </MemoryRouter>,
       );
 
       expect(screen.getByText('View credentials')).toBeInTheDocument();
@@ -1218,16 +1218,16 @@ describe('formatters', () => {
                   },
                 ],
               },
-              { intl: INTL, sourceType: AMAZON_TYPE }
-            )
+              { intl: INTL, sourceType: AMAZON_TYPE },
+            ),
           )}
-        </MemoryRouter>
+        </MemoryRouter>,
       );
 
       expect(screen.getByText('Edit credentials', { selector: 'button' })).toBeInTheDocument();
       expect(screen.getByRole('link')).toHaveAttribute(
         'href',
-        replaceRouteId(`/settings/integrations/${routes.sourcesDetailEditCredentials.path}`, SOURCE_ID)
+        replaceRouteId(`/settings/integrations/${routes.sourcesDetailEditCredentials.path}`, SOURCE_ID),
       );
 
       await waitFor(async () => {
@@ -1254,10 +1254,10 @@ describe('formatters', () => {
                   },
                 ],
               },
-              { intl: INTL, sourceType: AMAZON_TYPE }
-            )
+              { intl: INTL, sourceType: AMAZON_TYPE },
+            ),
           )}
-        </MemoryRouter>
+        </MemoryRouter>,
       );
 
       expect(screen.getByText('Edit credentials', { selector: 'button' })).toBeInTheDocument();
@@ -1273,7 +1273,7 @@ describe('formatters', () => {
       render(
         <MemoryRouter>
           {wrapperWithIntl(configurationModeFormatter(MANUAL_CONFIGURATION, { id: SOURCE_ID }, { intl: INTL }))}
-        </MemoryRouter>
+        </MemoryRouter>,
       );
 
       expect(screen.getByText('Manual configuration', { selector: 'div' })).toBeInTheDocument();

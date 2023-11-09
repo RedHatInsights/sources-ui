@@ -21,8 +21,8 @@ describe('Cost Management IBM steps', () => {
     expect(screen.getByText("Add the account's enterprise ID")).toBeInTheDocument();
     expect(
       screen.getByText(
-        'Login to the IBM Cloud Shell and run the following command. Paste the output string into the form field below.'
-      )
+        'Login to the IBM Cloud Shell and run the following command. Paste the output string into the form field below.',
+      ),
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveValue('ibmcloud enterprise show --output JSON | jq -r .id');
   });
@@ -32,7 +32,7 @@ describe('Cost Management IBM steps', () => {
 
     expect(screen.getByText('Add the account ID')).toBeInTheDocument();
     expect(
-      screen.getByText('In the IBM Cloud Shell, run the following command. Paste the output string into the form fields below.')
+      screen.getByText('In the IBM Cloud Shell, run the following command. Paste the output string into the form fields below.'),
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveValue('ibmcloud account show --output JSON | jq -r .account_id');
   });
@@ -42,11 +42,11 @@ describe('Cost Management IBM steps', () => {
 
     expect(
       screen.getByText(
-        'Create a service ID, which Cost Management will use to get billing and usage information from your account. In the IBM Cloud Shell, run the following command. Paste the output string into the form field below.'
-      )
+        'Create a service ID, which Cost Management will use to get billing and usage information from your account. In the IBM Cloud Shell, run the following command. Paste the output string into the form field below.',
+      ),
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveValue(
-      'ibmcloud iam service-id-create "Cost Management" -d "Service ID for cloud.redhat.com Cost Management" | jq -r .id'
+      'ibmcloud iam service-id-create "Cost Management" -d "Service ID for cloud.redhat.com Cost Management" | jq -r .id',
     );
   });
 
@@ -63,14 +63,14 @@ describe('Cost Management IBM steps', () => {
           }}
         >
           <Cm.ConfigureAccess />
-        </RendererContext.Provider>
-      )
+        </RendererContext.Provider>,
+      ),
     );
 
     expect(
       screen.getByText(
-        'Assign policies to the service ID you just created so that Cost Management will have access to account management, billing and usage service APIs. In the IBM Cloud Shell, run the following command:'
-      )
+        'Assign policies to the service ID you just created so that Cost Management will have access to account management, billing and usage service APIs. In the IBM Cloud Shell, run the following command:',
+      ),
     ).toBeInTheDocument();
 
     const value = `ibmcloud iam service-policy-create "service-id" --service-name billing  --roles Viewer
@@ -96,15 +96,15 @@ ibmcloud iam service-policy-create "service-id" --service-name globalcatalog  --
           }}
         >
           <Cm.ApiKey />
-        </RendererContext.Provider>
-      )
+        </RendererContext.Provider>,
+      ),
     );
 
     expect(
-      screen.getByText('In the IBM Cloud Shell, run the following command. Paste the output string into the form field below.')
+      screen.getByText('In the IBM Cloud Shell, run the following command. Paste the output string into the form field below.'),
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveValue(
-      'ibmcloud iam service-api-key-create "Cost Management API Key" "service-id" -d "Cost Management Service ID API Key" --output JSON | jq -r .apikey'
+      'ibmcloud iam service-api-key-create "Cost Management API Key" "service-id" -d "Cost Management Service ID API Key" --output JSON | jq -r .apikey',
     );
   });
 });

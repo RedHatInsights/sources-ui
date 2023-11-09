@@ -66,9 +66,9 @@ describe('CloudTiles', () => {
     await waitFor(() =>
       expect(
         screen.getByText(
-          'To perform this action, your Organization Administrator must grant you Sources Administrator permissions.'
-        )
-      ).toBeInTheDocument()
+          'To perform this action, your Organization Administrator must grant you Sources Administrator permissions.',
+        ),
+      ).toBeInTheDocument(),
     );
   });
 

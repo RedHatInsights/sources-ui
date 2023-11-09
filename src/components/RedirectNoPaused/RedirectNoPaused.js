@@ -25,7 +25,7 @@ const RedirectNoPaused = () => {
             id: 'sources.sourcePausedRedirectDescription',
             defaultMessage: 'You cannot perform this action on a paused source.',
           }),
-        })
+        }),
       );
     }
   }, [source.paused_at]);

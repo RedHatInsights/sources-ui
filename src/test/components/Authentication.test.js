@@ -65,8 +65,8 @@ describe('Authentication test', () => {
               id: 'someid',
             },
           }}
-        />
-      )
+        />,
+      ),
     );
 
     expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
@@ -94,8 +94,8 @@ describe('Authentication test', () => {
               id: 'someid',
             },
           }}
-        />
-      )
+        />,
+      ),
     );
 
     expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
@@ -150,8 +150,8 @@ describe('Authentication test', () => {
               id: 'someid',
             },
           }}
-        />
-      )
+        />,
+      ),
     );
 
     expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
@@ -196,8 +196,8 @@ describe('Authentication test', () => {
               id: 'someid',
             },
           }}
-        />
-      )
+        />,
+      ),
     );
 
     expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');
@@ -239,8 +239,8 @@ describe('Authentication test', () => {
               id: 'someid',
             },
           }}
-        />
-      )
+        />,
+      ),
     );
 
     expect(screen.getByRole('textbox')).toHaveValue('•••••••••••••');

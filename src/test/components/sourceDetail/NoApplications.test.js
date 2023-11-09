@@ -11,7 +11,7 @@ describe('NoApplications', () => {
 
     expect(screen.getByText('No connected applications')).toBeInTheDocument();
     expect(
-      screen.getByText('You have not connected any applications to this source. Use the switches above to add applications.')
+      screen.getByText('You have not connected any applications to this source. Use the switches above to add applications.'),
     ).toBeInTheDocument();
   });
 });

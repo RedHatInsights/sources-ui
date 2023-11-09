@@ -75,7 +75,7 @@ describe('selectAuthenticationStep', () => {
             ],
           }),
         ],
-      })
+      }),
     );
 
     expect(authSelection.nextStep({ values: {} })).toEqual('amazon-2-undefined');
@@ -85,7 +85,7 @@ describe('selectAuthenticationStep', () => {
           application: { application_type_id: COST_MANAGEMENT_APP.id },
           authtype: 'arn',
         },
-      })
+      }),
     ).toEqual('amazon-2-arn');
     expect(
       authSelection.nextStep({
@@ -93,7 +93,7 @@ describe('selectAuthenticationStep', () => {
           application: { application_type_id: COST_MANAGEMENT_APP.id },
           authentication: { authtype: 'arn' },
         },
-      })
+      }),
     ).toEqual('amazon-2-arn');
   });
 
@@ -124,7 +124,7 @@ describe('selectAuthenticationStep', () => {
             hideField: true,
           }),
         ],
-      })
+      }),
     );
   });
 
@@ -133,13 +133,13 @@ describe('selectAuthenticationStep', () => {
       render(
         <IntlProvider locale="en">
           <SelectAuthenticationDescription applicationTypeName="Catalog" authenticationTypeName="ARN" />
-        </IntlProvider>
+        </IntlProvider>,
       );
 
       expect(
         screen.getByText(
-          'Selected application Catalog supports ARN authentication type. You can use already defined authentication values or define new.'
-        )
+          'Selected application Catalog supports ARN authentication type. You can use already defined authentication values or define new.',
+        ),
       ).toBeInTheDocument();
     });
   });

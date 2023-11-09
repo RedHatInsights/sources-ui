@@ -22,7 +22,7 @@ const DataLoader = () => {
 
     if (applications || types) {
       Promise.all([dispatch(loadSourceTypes()), dispatch(loadAppTypes()), dispatch(loadHcsEnrollment(token, isProd()))]).then(
-        () => dispatch(loadEntities(parseQuery))
+        () => dispatch(loadEntities(parseQuery)),
       );
     } else {
       Promise.all([

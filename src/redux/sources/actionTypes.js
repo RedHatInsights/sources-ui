@@ -15,7 +15,7 @@ export const ACTION_TYPES = [
     [`${curr}_FULFILLED`]: `${curr}_FULFILLED`,
     [`${curr}_REJECTED`]: `${curr}_REJECTED`,
   }),
-  {}
+  {},
 );
 
 export const SORT_ENTITIES = 'SORT_ENTITIES';

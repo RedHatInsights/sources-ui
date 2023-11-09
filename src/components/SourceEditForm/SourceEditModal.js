@@ -69,7 +69,7 @@ const SourceEditModal = () => {
 
   if (isLoading) {
     return (
-      <Bullseye className="pf-u-m-2xl">
+      <Bullseye className="pf-v5-u-m-2xl">
         <Spinner />
       </Bullseye>
     );

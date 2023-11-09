@@ -19,7 +19,7 @@ const HybridCommittedSpendDescription = ({ id }) => {
     () =>
       (values.source.app_creation_workflow === ACCOUNT_AUTHORIZATION && values.applications?.includes(id)) ||
       (values.source.app_creation_workflow !== ACCOUNT_AUTHORIZATION && values.application?.application_type_id === id),
-    [values.application?.application_type_id]
+    [values.application?.application_type_id],
   );
 
   return (
@@ -36,9 +36,9 @@ const HybridCommittedSpendDescription = ({ id }) => {
           },
           {
             application: sourceTypes.find((type) => type.name === values.source_type)?.product_name,
-          }
+          },
         )}
-        className="pf-u-mb-sm"
+        className="pf-v5-u-mb-sm"
         isEnabled={isEnabled}
       />
       <Point

@@ -178,7 +178,7 @@ describe('edit form helpers', () => {
       };
 
       expect(prepareInitialValues(SOURCE_WITH_UNDEF_ENDPOINTS, SOURCE_TYPE_NAME)).toEqual(
-        EXPECTED_INITIAL_VALUES_WITH_UNDEF_ENDPOINTS
+        EXPECTED_INITIAL_VALUES_WITH_UNDEF_ENDPOINTS,
       );
     });
 
@@ -201,7 +201,7 @@ describe('edit form helpers', () => {
       };
 
       expect(prepareInitialValues(SOURCE_WITH_APPS_EXTRA, SOURCE_TYPE_NAME)).toEqual(
-        EXPECTED_INITIAL_VALUES_SOURCE_WITH_APPS_EXTRA
+        EXPECTED_INITIAL_VALUES_SOURCE_WITH_APPS_EXTRA,
       );
     });
   });

@@ -18,7 +18,7 @@ describe('configurationSteps', () => {
 
     expect(result.nextStep({ values: {} })).toEqual(undefined);
     expect(result.nextStep({ values: { source: { app_creation_workflow: ACCOUNT_AUTHORIZATION } } })).toEqual(
-      'select_applications'
+      'select_applications',
     );
     expect(result.nextStep({ values: { source: { app_creation_workflow: MANUAL_CONFIGURATION } } })).toEqual('application_step');
 
@@ -26,14 +26,14 @@ describe('configurationSteps', () => {
 
     expect(result.fields[0].component).toEqual(componentTypes.PLAIN_TEXT);
     expect(result.fields[0].label).toEqual(
-      'Configure your source manually or let us manage all necessary credentials by selecting <b>account authorization</b> configuration.'
+      'Configure your source manually or let us manage all necessary credentials by selecting <b>account authorization</b> configuration.',
     );
 
     expect(result.fields[1].component).toEqual(componentTypes.RADIO);
     expect(result.fields[1].label).toEqual('Select a configuration mode');
 
     expect(
-      result.fields[1].resolveProps(undefined, undefined, { getState: () => ({ values: { source_type: AMAZON_TYPE.name } }) })
+      result.fields[1].resolveProps(undefined, undefined, { getState: () => ({ values: { source_type: AMAZON_TYPE.name } }) }),
     ).toEqual({
       options: [
         {
@@ -42,7 +42,7 @@ describe('configurationSteps', () => {
           label: (
             <span className="src-c-wizard__rhel-mag-label">
               Account authorization
-              <Label className="pf-u-ml-sm" color="purple">
+              <Label className="pf-v5-u-ml-sm" color="purple">
                 Recommended
               </Label>
             </span>
@@ -52,7 +52,7 @@ describe('configurationSteps', () => {
       ],
     });
     expect(
-      result.fields[1].resolveProps(undefined, undefined, { getState: () => ({ values: { source_type: AZURE_TYPE.name } }) })
+      result.fields[1].resolveProps(undefined, undefined, { getState: () => ({ values: { source_type: AZURE_TYPE.name } }) }),
     ).toEqual({
       options: [
         {
@@ -61,7 +61,7 @@ describe('configurationSteps', () => {
           label: (
             <span className="src-c-wizard__rhel-mag-label">
               Account authorization
-              <Label className="pf-u-ml-sm" color="purple">
+              <Label className="pf-v5-u-ml-sm" color="purple">
                 Recommended
               </Label>
             </span>
@@ -71,7 +71,7 @@ describe('configurationSteps', () => {
       ],
     });
     expect(
-      result.fields[1].resolveProps(undefined, undefined, { getState: () => ({ values: { source_type: OPENSHIFT_TYPE.name } }) })
+      result.fields[1].resolveProps(undefined, undefined, { getState: () => ({ values: { source_type: OPENSHIFT_TYPE.name } }) }),
     ).toEqual({
       options: [
         {
@@ -80,7 +80,7 @@ describe('configurationSteps', () => {
           label: (
             <span className="src-c-wizard__rhel-mag-label">
               Account authorization
-              <Label className="pf-u-ml-sm" color="purple">
+              <Label className="pf-v5-u-ml-sm" color="purple">
                 Recommended
               </Label>
             </span>

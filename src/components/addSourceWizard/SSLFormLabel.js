@@ -27,7 +27,7 @@ const SSLFormLabel = () => {
                   defaultMessage:
                     'You can obtain your OpenShift Container Platform provider’s CA certificate for all endpoints (default, metrics, alerts) from {cmd}.',
                 },
-                { cmd: <b key="b">/etc/origin/master/ca.crt</b> }
+                { cmd: <b key="b">/etc/origin/master/ca.crt</b> },
               )}
             </Text>
             <Text component={TextVariants.p}>
@@ -40,7 +40,7 @@ const SSLFormLabel = () => {
           </TextContent>
         }
       >
-        <QuestionCircleIcon className="pf-u-ml-sm" />
+        <QuestionCircleIcon className="pf-v5-u-ml-sm" />
       </Popover>
     </React.Fragment>
   );

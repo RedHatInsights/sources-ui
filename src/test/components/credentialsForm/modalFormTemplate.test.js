@@ -43,8 +43,8 @@ describe('modalFormTemplate', () => {
           onSubmit={submit}
           onReset={reset}
           onCancel={cancel}
-        />
-      )
+        />,
+      ),
     );
   });
 

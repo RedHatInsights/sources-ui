@@ -33,22 +33,22 @@ const FinishedStep = ({
   const { isBeta } = useChrome();
   return (
     <Bullseye>
-      <EmptyState variant={EmptyStateVariant.full} className="pf-u-mt-4xl">
-        <EmptyStateIcon icon={CheckCircleIcon} color="var(--pf-global--success-color--100)" className="pf-u-mb-0" />
-        <Title headingLevel="h2" size="xl" className="pf-u-mt-xl">
+      <EmptyState variant={EmptyStateVariant.full} className="pf-v5-u-mt-4xl">
+        <EmptyStateIcon icon={CheckCircleIcon} color="var(--pf-v5-global--success-color--100)" className="pf-v5-u-mb-0" />
+        <Title headingLevel="h2" size="xl" className="pf-v5-u-mt-xl">
           {title}
         </Title>
         <EmptyStateBody className="src-c-wizard--step-text">{successfulMessage}</EmptyStateBody>
         {uuid && (
           <Form className="src-c-uuid">
             <FormGroup label={<FormattedMessage id="wizard.sourcesUid" defaultMessage="Source UUID" />} fieldId="source-uuid">
-              <ClipboardCopy id="source-uuid" isReadOnly hoverTip="Source UUID" clickTip="Copied" className="pf-u-mt-md">
+              <ClipboardCopy id="source-uuid" isReadOnly hoverTip="Source UUID" clickTip="Copied" className="pf-v5-u-mt-md">
                 {uuid}
               </ClipboardCopy>
             </FormGroup>
           </Form>
         )}
-        <Button variant="primary" onClick={onClose} className="pf-u-mt-xl">
+        <Button variant="primary" onClick={onClose} className="pf-v5-u-mt-xl">
           {returnButtonTitle}
         </Button>
         {!hideSourcesButton && (

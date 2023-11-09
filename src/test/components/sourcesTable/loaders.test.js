@@ -32,7 +32,7 @@ describe('loaders', () => {
           <tbody>
             <RowWrapperLoader row={{ ...row, isDeleting: true }} />
           </tbody>
-        </table>
+        </table>,
       );
 
       expect(screen.getByRole('progressbar')).toBeInTheDocument();
@@ -46,7 +46,7 @@ describe('loaders', () => {
           <tbody>
             <RowWrapperLoader row={row} />
           </tbody>
-        </table>
+        </table>,
       );
 
       expect(screen.getByTestId('row')).toBeInTheDocument();
@@ -59,7 +59,7 @@ describe('loaders', () => {
       render(
         <IntlProvider locale="en">
           <AppPlaceholder />
-        </IntlProvider>
+        </IntlProvider>,
       );
 
       expect(screen.getByRole('progressbar')).toBeInTheDocument();

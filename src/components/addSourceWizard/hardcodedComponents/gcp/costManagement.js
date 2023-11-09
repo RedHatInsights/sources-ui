@@ -22,7 +22,7 @@ export const Project = () => {
 
   return (
     <TextContent>
-      <Text component={TextVariants.p} className="pf-u-mb-lg">
+      <Text component={TextVariants.p} className="pf-v5-u-mb-lg">
         {intl.formatMessage(
           {
             id: 'cost.gcp.projectDescription',
@@ -44,7 +44,7 @@ export const Project = () => {
                 })}
               </Text>
             ),
-          }
+          },
         )}
       </Text>
       <Text component={TextVariants.p}>
@@ -80,7 +80,7 @@ export const CloudStorageBucket = () => {
                 </Text>
               </Fragment>
             ),
-          }
+          },
         )}
       </Text>
       <Text component={TextVariants.p}>
@@ -112,7 +112,7 @@ export const IAMRole = () => {
               id: 'cost.gcp.iam.firstStep',
               defaultMessage: 'From the GCP console, navigate to <b>IAM & Admin > Roles.</b>',
             },
-            { b }
+            { b },
           )}
         </TextListItem>
         <TextListItem>
@@ -121,7 +121,7 @@ export const IAMRole = () => {
               id: 'cost.gcp.iam.firstStepB',
               defaultMessage: 'Create a new role.',
             },
-            { b }
+            { b },
           )}
         </TextListItem>
         <TextListItem>
@@ -152,7 +152,7 @@ export const IAMRole = () => {
               id: 'cost.gcp.iam.thirdStep',
               defaultMessage: 'Click <b>Create role.</b>',
             },
-            { b }
+            { b },
           )}
         </TextListItem>
       </TextList>
@@ -175,7 +175,7 @@ export const Dataset = () => {
             id: 'cost.gcp.dataset.description',
             defaultMessage: 'To collect and store the information needed for {application}, create a BigQuery dataset.',
           },
-          { application: showHCS ? HCS_APP_NAME : 'Cost Management' }
+          { application: showHCS ? HCS_APP_NAME : 'Cost Management' },
         )}
       </Text>
       <TextList component={TextListVariants.ol}>
@@ -185,7 +185,7 @@ export const Dataset = () => {
               id: 'cost.gcp.dataset.firstStep',
               defaultMessage: 'In the BigQuery console, select your project (<b>{projectId}</b>) from the navigation menu.',
             },
-            { b, projectId }
+            { b, projectId },
           )}
         </TextListItem>
         <TextListItem>
@@ -194,7 +194,7 @@ export const Dataset = () => {
               id: 'cost.gcp.dataset.secondStep',
               defaultMessage: 'Click <b>Create dataset.</b>',
             },
-            { b }
+            { b },
           )}
         </TextListItem>
         <TextListItem>
@@ -203,7 +203,7 @@ export const Dataset = () => {
               id: 'cost.gcp.dataset.thirdStep',
               defaultMessage: 'In the <b>Dataset ID</b> field, enter a name for your dataset.',
             },
-            { b }
+            { b },
           )}
         </TextListItem>
         <TextListItem>
@@ -212,7 +212,7 @@ export const Dataset = () => {
               id: 'cost.gcp.dataset.fourthStep',
               defaultMessage: 'Click <b>Create dataset.</b>',
             },
-            { b }
+            { b },
           )}
         </TextListItem>
       </TextList>
@@ -255,7 +255,7 @@ export const AssignAccess = () => {
               id: 'cost.gcp.access.firstStep',
               defaultMessage: 'In your IAM & Admin console, navigate to <b>IAM</b> and click <b>Add</b> to add a new member.',
             },
-            { b }
+            { b },
           )}
         </TextListItem>
         <TextListItem>
@@ -264,10 +264,10 @@ export const AssignAccess = () => {
               id: 'cost.gcp.access.secondStep',
               defaultMessage: 'Paste the following value into the <b>New members</b> field:',
             },
-            { b }
+            { b },
           )}
         </TextListItem>
-        <ClipboardCopy className="pf-u-m-sm  pf-u-ml-0" isReadOnly>
+        <ClipboardCopy className="pf-v5-u-m-sm  pf-v5-u-ml-0" isReadOnly>
           {googleAccount || intl.formatMessage({ id: 'cost.gcp.access.loading', defaultMessage: 'Loading account address...' })}
         </ClipboardCopy>
         <TextListItem>
@@ -276,7 +276,7 @@ export const AssignAccess = () => {
               id: 'cost.gcp.access.thirdStep',
               defaultMessage: 'Select the role you just created.',
             },
-            { b }
+            { b },
           )}
         </TextListItem>
         <TextListItem>
@@ -285,7 +285,7 @@ export const AssignAccess = () => {
               id: 'cost.gcp.access.fourthStep',
               defaultMessage: 'Click <b>Save.</b>',
             },
-            { b }
+            { b },
           )}
         </TextListItem>
       </TextList>
@@ -316,7 +316,7 @@ export const ProjectDescription = () => {
                 </Text>
               </Fragment>
             ),
-          }
+          },
         )}
       </Text>
     </TextContent>
@@ -341,7 +341,7 @@ export const BillingExport = () => {
               id: 'cost.gcp.billingExport.firstStep',
               defaultMessage: 'In the Billing console, click <b>Billing export.</b>',
             },
-            { b }
+            { b },
           )}
         </TextListItem>
         <TextListItem>
@@ -350,7 +350,7 @@ export const BillingExport = () => {
               id: 'cost.gcp.billingExport.firstStepB',
               defaultMessage: 'Click the <b>BigQuery export</b> tab.',
             },
-            { b }
+            { b },
           )}
         </TextListItem>
         <TextListItem>
@@ -359,7 +359,7 @@ export const BillingExport = () => {
               id: 'cost.gcp.billingExport.secondStep',
               defaultMessage: 'In the <b>Detailed usage cost</b> section, click <b>Edit settings.</b>',
             },
-            { b }
+            { b },
           )}
         </TextListItem>
         <TextListItem>
@@ -374,7 +374,7 @@ export const BillingExport = () => {
               id: 'cost.gcp.billingExport.fourthStep',
               defaultMessage: 'Click <b>Save.</b>',
             },
-            { b }
+            { b },
           )}
         </TextListItem>
       </TextList>

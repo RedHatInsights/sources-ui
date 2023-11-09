@@ -18,7 +18,7 @@ const PauseAlert = () => {
   const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
 
   return (
-    <GridItem md={12} className="pf-u-m-lg pf-u-mb-0">
+    <GridItem md={12} className="pf-v5-u-m-lg pf-v5-u-mb-0">
       <Alert
         customIcon={<PauseIcon />}
         variant="default"

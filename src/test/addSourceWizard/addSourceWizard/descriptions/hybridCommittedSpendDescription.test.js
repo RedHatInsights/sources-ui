@@ -36,17 +36,17 @@ describe('HybridCommittedSpendDescription', () => {
           }}
           onSubmit={jest.fn()}
         />,
-        store
-      )
+        store,
+      ),
     );
 
     expect(screen.getByText('Track Red Hat committed spend')).toBeInTheDocument();
     expect(
-      screen.getByText('Track spend through Amazon Web Services and apply them to your Red Hat committed spend.')
+      screen.getByText('Track spend through Amazon Web Services and apply them to your Red Hat committed spend.'),
     ).toBeInTheDocument();
     expect(screen.getByText('Cost management')).toBeInTheDocument();
     expect(
-      screen.getByText('Analyze, forecast, and optimize your Red Hat OpenShift cluster costs in hybrid cloud environments.')
+      screen.getByText('Analyze, forecast, and optimize your Red Hat OpenShift cluster costs in hybrid cloud environments.'),
     ).toBeInTheDocument();
     expect(container.getElementsByTagName('svg')).toHaveLength(2);
     expect(container.getElementsByTagName('svg')[0]).toHaveAttribute('fill', '#3E8635');
@@ -68,17 +68,17 @@ describe('HybridCommittedSpendDescription', () => {
           }}
           onSubmit={jest.fn()}
         />,
-        store
-      )
+        store,
+      ),
     );
 
     expect(screen.getByText('Track Red Hat committed spend')).toBeInTheDocument();
     expect(
-      screen.getByText('Track spend through Amazon Web Services and apply them to your Red Hat committed spend.')
+      screen.getByText('Track spend through Amazon Web Services and apply them to your Red Hat committed spend.'),
     ).toBeInTheDocument();
     expect(screen.getByText('Cost management')).toBeInTheDocument();
     expect(
-      screen.getByText('Analyze, forecast, and optimize your Red Hat OpenShift cluster costs in hybrid cloud environments.')
+      screen.getByText('Analyze, forecast, and optimize your Red Hat OpenShift cluster costs in hybrid cloud environments.'),
     ).toBeInTheDocument();
     expect(container.getElementsByTagName('svg')).toHaveLength(2);
     expect(container.getElementsByTagName('svg')[0]).toHaveAttribute('fill', '#6A6E73');

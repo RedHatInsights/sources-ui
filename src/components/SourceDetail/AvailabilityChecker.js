@@ -36,7 +36,7 @@ const AvailabilityChecker = ({ setCheckPending }) => {
               id: 'sources.checkavailability.notificationDescription',
               defaultMessage: 'Check this page later for updates',
             }),
-          })
+          }),
         );
       }}
       isDisabled={loading}

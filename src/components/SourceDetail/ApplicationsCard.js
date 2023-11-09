@@ -47,11 +47,11 @@ const addResumeNotification = (typeId, dispatch, intl, appTypes) => {
           id: 'detail.applications.resumed.alert.title',
           defaultMessage: '{appName} connection resumed',
         },
-        { appName }
+        { appName },
       ),
       variant: 'default',
       customIcon: <PlayIcon />,
-    })
+    }),
   );
 };
 
@@ -65,18 +65,18 @@ const addPausedNotification = (typeId, dispatch, intl, appTypes) => {
           id: 'detail.applications.paused.alert.title',
           defaultMessage: '{appName} connection paused',
         },
-        { appName }
+        { appName },
       ),
       description: intl.formatMessage(
         {
           id: 'detail.applications.paused.alert.description',
           defaultMessage: 'Your application will not reflect the most recent data until {appName} connection is resumed',
         },
-        { appName }
+        { appName },
       ),
       variant: 'default',
       customIcon: <PauseIcon />,
-    })
+    }),
   );
 };
 
@@ -101,7 +101,7 @@ const addErrorNotification = (dispatch, intl, action, error) => {
       title,
       description: tryAgainMessage(intl, handleError(error)),
       variant: 'danger',
-    })
+    }),
   );
 };
 
@@ -185,7 +185,7 @@ const ApplicationsCard = () => {
   }
 
   return (
-    <Card className="src-c-card-applications pf-u-p-lg pf-u-pl-sm-on-md">
+    <Card className="src-c-card-applications pf-v5-u-p-lg pf-v5-u-pl-sm-on-md">
       <CardTitle>
         {intl.formatMessage({
           id: 'detail.applications.title',
@@ -224,7 +224,7 @@ const ApplicationsCard = () => {
                         />
                       </Wrapper>
                       {Boolean(connectedApp) && (
-                        <ApplicationLabel className="pf-u-ml-sm src-m-clickable" app={connectedApp} showStatusText />
+                        <ApplicationLabel className="pf-v5-u-ml-sm src-m-clickable" app={connectedApp} showStatusText />
                       )}
                       {(isPaused || appExist) && (
                         <ApplicationKebab

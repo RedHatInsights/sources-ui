@@ -46,8 +46,8 @@ describe('SourceSummaryCard', () => {
           <Route path={routes.sourcesDetail.path} element={<SourceSummaryCard />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(screen.getByText('Source summary')).toBeInTheDocument();
@@ -89,8 +89,8 @@ describe('SourceSummaryCard', () => {
           <Route path={routes.sourcesDetail.path} element={<SourceSummaryCard />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     const categories = getCategories(container);
@@ -128,8 +128,8 @@ describe('SourceSummaryCard', () => {
           <Route path={routes.sourcesDetail.path} element={<SourceSummaryCard />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     const categories = getCategories(container);
@@ -166,8 +166,8 @@ describe('SourceSummaryCard', () => {
           <Route path={routes.sourcesDetail.path} element={<SourceSummaryCard />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     const categories = getCategories(container);
@@ -207,8 +207,8 @@ describe('SourceSummaryCard', () => {
           <Route path={routes.sourcesDetail.path} element={<SourceSummaryCard />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(async () => {
@@ -216,7 +216,7 @@ describe('SourceSummaryCard', () => {
     });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
-      replaceRouteId(`/settings/integrations/${routes.sourcesDetailEditCredentials.path}`, sourceId)
+      replaceRouteId(`/settings/integrations/${routes.sourcesDetailEditCredentials.path}`, sourceId),
     );
   });
 
@@ -244,8 +244,8 @@ describe('SourceSummaryCard', () => {
           <Route path={routes.sourcesDetail.path} element={<SourceSummaryCard />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     const categories = getCategories(container);
@@ -287,8 +287,8 @@ describe('SourceSummaryCard', () => {
           <Route path={routes.sourcesDetail.path} element={<SourceSummaryCard />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     const categories = getCategories(container);

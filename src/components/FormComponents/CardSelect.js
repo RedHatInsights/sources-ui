@@ -32,7 +32,7 @@ const CardSelect = (originalProps) => {
 
   const handleMulti = (value) =>
     input.onChange(
-      inputValue.includes(value) ? inputValue.filter((valueSelect) => valueSelect !== value) : [...inputValue, value]
+      inputValue.includes(value) ? inputValue.filter((valueSelect) => valueSelect !== value) : [...inputValue, value],
     );
 
   const handleSingle = (value) => input.onChange(inputValue === value ? undefined : value);
@@ -89,7 +89,7 @@ const CardSelect = (originalProps) => {
       helperTextInvalid={error}
       validated={showError ? 'error' : 'default'}
     >
-      <Grid hasGutter className="pf-u-mb-md">
+      <Grid hasGutter className="pf-v5-u-mb-md">
         {prepareCards()}
       </Grid>
       <FormHelperText>

@@ -10,16 +10,16 @@ describe('Cost Management OpenShift steps components', () => {
     render(<OpCm.ConfigureCostOperator />);
 
     expect(
-      screen.getByText('For Red Hat OpenShift Container Platform 4.6 and later, install the', { exact: false })
+      screen.getByText('For Red Hat OpenShift Container Platform 4.6 and later, install the', { exact: false }),
     ).toBeInTheDocument();
     expect(screen.getByText('costmanagement-metrics-operator')).toBeInTheDocument();
     expect(
-      screen.getByText('If you configured the operator to create a source (create_source: true),', { exact: false })
+      screen.getByText('If you configured the operator to create a source (create_source: true),', { exact: false }),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        'Otherwise, enter the cluster identifier below. You can find the cluster identifier in the cluster’s Help > About screen.'
-      )
+        'Otherwise, enter the cluster identifier below. You can find the cluster identifier in the cluster’s Help > About screen.',
+      ),
     ).toBeInTheDocument();
   });
 });

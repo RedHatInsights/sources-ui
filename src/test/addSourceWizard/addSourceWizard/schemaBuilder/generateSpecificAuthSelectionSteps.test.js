@@ -135,7 +135,7 @@ describe('generate auth specific selection pages', () => {
           validate: [{ type: 'required' }],
         },
         {
-          className: 'pf-u-pl-md',
+          className: 'pf-v5-u-pl-md',
           component: 'sub-form',
           condition: { is: 'token', when: 'auth_select' },
           fields: [{ component: 'authentication', label: 'Token', name: 'authentication.password' }],
@@ -152,7 +152,7 @@ describe('generate auth specific selection pages', () => {
           validate: [{ type: 'required' }],
         },
         {
-          className: 'pf-u-pl-md',
+          className: 'pf-v5-u-pl-md',
           component: 'sub-form',
           condition: { is: 'arn', when: 'auth_select' },
           fields: [
@@ -169,7 +169,7 @@ describe('generate auth specific selection pages', () => {
     };
 
     expect(
-      createAuthTypeSelection(MULTIPLE_SELECTION_TYPE, APP_TYPE, APPEND_ENDPOINT_FIELDS, NOT_EDITING, HAS_ENDPOINT_STEP)
+      createAuthTypeSelection(MULTIPLE_SELECTION_TYPE, APP_TYPE, APPEND_ENDPOINT_FIELDS, NOT_EDITING, HAS_ENDPOINT_STEP),
     ).toEqual(expectedSchema);
   });
 
@@ -186,7 +186,7 @@ describe('generate auth specific selection pages', () => {
           validate: [{ type: 'required' }],
         },
         {
-          className: 'pf-u-pl-md',
+          className: 'pf-v5-u-pl-md',
           component: 'sub-form',
           condition: { is: 'token', when: 'auth_select' },
           fields: [{ component: 'authentication', label: 'Token', name: 'authentication.password' }],
@@ -203,7 +203,7 @@ describe('generate auth specific selection pages', () => {
           validate: [{ type: 'required' }],
         },
         {
-          className: 'pf-u-pl-md',
+          className: 'pf-v5-u-pl-md',
           component: 'sub-form',
           condition: { is: 'arn', when: 'auth_select' },
           fields: [{ component: 'authentication', label: 'ARN', name: 'authentication.password' }],
@@ -217,7 +217,7 @@ describe('generate auth specific selection pages', () => {
     };
 
     expect(createAuthTypeSelection(MULTIPLE_SELECTION_TYPE, APP_TYPE, [], NOT_EDITING, HAS_ENDPOINT_STEP)).toEqual(
-      expectedSchema
+      expectedSchema,
     );
   });
 });

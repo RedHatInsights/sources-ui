@@ -44,7 +44,7 @@ describe('SourcesTable', () => {
       Promise.resolve({
         sources: sourcesDataGraphQl,
         meta: { count: sourcesDataGraphQl.length },
-      })
+      }),
     );
   });
 
@@ -155,7 +155,7 @@ describe('SourcesTable', () => {
     expect(screen.getByTestId('row')).toBeInTheDocument();
     expect(screen.getByText('No sources found')).toBeInTheDocument();
     expect(
-      screen.getByText('No sources match the filter criteria. Remove all filters or clear all filters to show sources.')
+      screen.getByText('No sources match the filter criteria. Remove all filters or clear all filters to show sources.'),
     ).toBeInTheDocument();
     expect(screen.getByText('Clear all filters')).toBeInTheDocument();
   });

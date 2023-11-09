@@ -27,8 +27,8 @@ describe('AvailabilityChecker', () => {
           <Route path={routes.sourcesDetail.path} element={<AvailabilityChecker />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(screen.getByLabelText('Check source availability')).not.toBeDisabled();
@@ -45,8 +45,8 @@ describe('AvailabilityChecker', () => {
           <Route path={routes.sourcesDetail.path} element={<AvailabilityChecker />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     api.default = mockApi();

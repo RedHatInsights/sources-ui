@@ -26,7 +26,7 @@ describe('AddApplicationSchema', () => {
       authenticationValues,
       source,
       TITLE,
-      DESCRIPTION
+      DESCRIPTION,
     );
 
     expect(result.fields[0].fields.map(({ name }) => name)).toEqual([
@@ -54,7 +54,7 @@ describe('AddApplicationSchema', () => {
       TITLE,
       DESCRIPTION,
       undefined,
-      enableLighthouse
+      enableLighthouse,
     );
 
     expect(result.fields[0].fields.map(({ name }) => name)).toEqual([
@@ -81,7 +81,7 @@ describe('AddApplicationSchema', () => {
       TITLE,
       DESCRIPTION,
       undefined,
-      enableLighthouse
+      enableLighthouse,
     );
 
     expect(result.fields[0].fields.map(({ name }) => name)).toEqual([

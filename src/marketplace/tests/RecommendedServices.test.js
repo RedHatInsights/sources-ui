@@ -39,7 +39,7 @@ describe('<RecommendedServices />', () => {
     expect(screen.getByText('Add')).toBeInTheDocument();
 
     expect(
-      screen.getByText('Not what you’re looking for? Browse the catalog to see more offerings from Red Hat Marketplace.')
+      screen.getByText('Not what you’re looking for? Browse the catalog to see more offerings from Red Hat Marketplace.'),
     ).toBeInTheDocument();
     expect(screen.getByText('See more databases')).toBeInTheDocument();
   });

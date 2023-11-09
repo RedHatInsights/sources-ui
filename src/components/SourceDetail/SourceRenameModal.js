@@ -47,8 +47,8 @@ const SourceRenameModal = () => {
             renameSource(
               source.id,
               name,
-              intl.formatMessage({ id: 'sources.renameError', defaultMessage: 'Renaming was unsuccessful' })
-            )
+              intl.formatMessage({ id: 'sources.renameError', defaultMessage: 'Renaming was unsuccessful' }),
+            ),
           );
         }}
         onCancel={returnToSource}

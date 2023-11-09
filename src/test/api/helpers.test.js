@@ -52,7 +52,7 @@ describe('api helpers', () => {
       const filterValue = { applications: ['2', '898'] };
 
       expect(filtering(filterValue)).toEqual(
-        `filter: [ { name: "applications.application_type_id", operation: "eq", value: ["2", "898"] } ]`
+        `filter: [ { name: "applications.application_type_id", operation: "eq", value: ["2", "898"] } ]`,
       );
     });
 
@@ -73,7 +73,7 @@ describe('api helpers', () => {
       const activeCategory = CLOUD_VENDOR;
 
       expect(filtering(filterValue, activeCategory)).toEqual(
-        'filter: [ { name: "source_type.category", operation: "eq", value: "Cloud" } ]'
+        'filter: [ { name: "source_type.category", operation: "eq", value: "Cloud" } ]',
       );
     });
 
@@ -82,7 +82,7 @@ describe('api helpers', () => {
       const activeCategory = REDHAT_VENDOR;
 
       expect(filtering(filterValue, activeCategory)).toEqual(
-        'filter: [ { name: "source_type.category", operation: "eq", value: "Red Hat" } ]'
+        'filter: [ { name: "source_type.category", operation: "eq", value: "Red Hat" } ]',
       );
     });
 
@@ -90,7 +90,7 @@ describe('api helpers', () => {
       const filterValue = { availability_status: [AVAILABLE] };
 
       expect(filtering(filterValue)).toEqual(
-        `filter: [ { name: "availability_status", operation: "eq", value: "${AVAILABLE}" } ]`
+        `filter: [ { name: "availability_status", operation: "eq", value: "${AVAILABLE}" } ]`,
       );
     });
 
@@ -98,7 +98,7 @@ describe('api helpers', () => {
       const filterValue = { availability_status: [UNAVAILABLE] };
 
       expect(filtering(filterValue)).toEqual(
-        `filter: [ { name: "availability_status", operation: "eq", value: ["${PARTIALLY_UNAVAILABLE}", "${UNAVAILABLE}"] } ]`
+        `filter: [ { name: "availability_status", operation: "eq", value: ["${PARTIALLY_UNAVAILABLE}", "${UNAVAILABLE}"] } ]`,
       );
     });
 
@@ -162,7 +162,7 @@ describe('api helpers', () => {
       const filterValue = { availability_status: [UNAVAILABLE] };
 
       expect(restFilterGenerator(filterValue)).toEqual(
-        `filter[availability_status][]=${PARTIALLY_UNAVAILABLE}&filter[availability_status][]=${UNAVAILABLE}`
+        `filter[availability_status][]=${PARTIALLY_UNAVAILABLE}&filter[availability_status][]=${UNAVAILABLE}`,
       );
     });
 

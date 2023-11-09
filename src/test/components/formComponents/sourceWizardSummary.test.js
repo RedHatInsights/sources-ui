@@ -40,7 +40,7 @@ describe('SourceWizardSummary component', () => {
         <RendererContext.Provider value={{ formOptions }}>
           <Summary {...props} />
         </RendererContext.Provider>,
-        store
+        store,
       );
 
     const getListData = (container) =>
@@ -100,7 +100,7 @@ describe('SourceWizardSummary component', () => {
           {...initialProps}
           formOptions={formOptions('openshift', 'token', NO_APPLICATION_VALUE)}
           store={store}
-        />
+        />,
       );
 
       const data = getListData(container);
@@ -119,7 +119,7 @@ describe('SourceWizardSummary component', () => {
 
     it('openshift - NO_APPLICATION_VALUE set, ignore it', () => {
       const { container } = render(
-        <SourceWizardSummary {...initialProps} formOptions={formOptions('openshift', 'token')} store={store} />
+        <SourceWizardSummary {...initialProps} formOptions={formOptions('openshift', 'token')} store={store} />,
       );
 
       const data = getListData(container);
@@ -138,7 +138,7 @@ describe('SourceWizardSummary component', () => {
 
     it('amazon', () => {
       const { container } = render(
-        <SourceWizardSummary {...initialProps} formOptions={formOptions('amazon', 'access_key_secret_key')} store={store} />
+        <SourceWizardSummary {...initialProps} formOptions={formOptions('amazon', 'access_key_secret_key')} store={store} />,
       );
 
       const data = getListData(container);
@@ -155,7 +155,7 @@ describe('SourceWizardSummary component', () => {
 
     it('amazon - ARN', () => {
       const { container } = render(
-        <SourceWizardSummary {...initialProps} formOptions={formOptions('amazon', 'arn')} store={store} />
+        <SourceWizardSummary {...initialProps} formOptions={formOptions('amazon', 'arn')} store={store} />,
       );
 
       const data = getListData(container);
@@ -203,15 +203,15 @@ describe('SourceWizardSummary component', () => {
       expect(screen.getByText('Manage permissions in User Access')).toBeInTheDocument();
       expect(
         screen.getByText(
-          'Make sure to manage permissions for this source in custom roles that contain permissions for Cost Management.'
-        )
+          'Make sure to manage permissions for this source in custom roles that contain permissions for Cost Management.',
+        ),
       ).toBeInTheDocument();
       expect(screen.getByText("Don't forget additional configuration steps!")).toBeInTheDocument();
       expect(screen.getByText('Customizing your Amazon Web Services cost and usage report')).toBeInTheDocument();
       expect(
         screen.getByText(
-          'You will need to perform more configuration steps after creating the source. To find more information, click on the link below.'
-        )
+          'You will need to perform more configuration steps after creating the source. To find more information, click on the link below.',
+        ),
       ).toBeInTheDocument();
     });
 
@@ -285,8 +285,8 @@ describe('SourceWizardSummary component', () => {
       expect(screen.queryByText('Manage permissions in User Access')).not.toBeInTheDocument();
       expect(
         screen.getByText(
-          'You will need to perform more configuration steps after creating the source. To find more information, click on the link below.'
-        )
+          'You will need to perform more configuration steps after creating the source. To find more information, click on the link below.',
+        ),
       ).toBeInTheDocument();
     });
 
@@ -343,8 +343,8 @@ describe('SourceWizardSummary component', () => {
       ]);
       expect(
         screen.getByText(
-          'You will need to perform more configuration steps after creating the source. To find more information, click on the link below.'
-        )
+          'You will need to perform more configuration steps after creating the source. To find more information, click on the link below.',
+        ),
       ).toBeInTheDocument();
     });
 
@@ -375,8 +375,8 @@ describe('SourceWizardSummary component', () => {
       expect(screen.getByText('Manage permissions in User Access')).toBeInTheDocument();
       expect(
         screen.getByText(
-          'Make sure to manage permissions for this source in custom roles that contain permissions for Cost Management.'
-        )
+          'Make sure to manage permissions for this source in custom roles that contain permissions for Cost Management.',
+        ),
       ).toBeInTheDocument();
     });
 
@@ -397,7 +397,7 @@ describe('SourceWizardSummary component', () => {
       const { container } = render(
         <IntlProvider locale="en">
           <SourceWizardSummary {...initialProps} formOptions={formOptions} store={store} />
-        </IntlProvider>
+        </IntlProvider>,
       );
 
       const data = [...container.getElementsByClassName('pf-v5-c-description-list__group')].map((group) => [
@@ -416,8 +416,8 @@ describe('SourceWizardSummary component', () => {
       expect(screen.getByText('Manage permissions in User Access')).toBeInTheDocument();
       expect(
         screen.getByText(
-          'Make sure to manage permissions for this source in custom roles that contain permissions for Cost Management.'
-        )
+          'Make sure to manage permissions for this source in custom roles that contain permissions for Cost Management.',
+        ),
       ).toBeInTheDocument();
     });
 
@@ -451,8 +451,8 @@ describe('SourceWizardSummary component', () => {
       expect(screen.queryByText('Customizing your Amazon Web Services cost and usage report')).toBeNull();
       expect(
         screen.queryByText(
-          'You will need to perform more configuration steps after creating the source. To find more information, click on the link below.'
-        )
+          'You will need to perform more configuration steps after creating the source. To find more information, click on the link below.',
+        ),
       ).toBeNull();
     });
 
@@ -531,7 +531,7 @@ describe('SourceWizardSummary component', () => {
 
       expect(screen.getByText('This source will not be monitored in Sources')).toBeInTheDocument();
       expect(
-        screen.getByText('This source will be represented in the Sources list, but will not reflect true status or resources.')
+        screen.getByText('This source will be represented in the Sources list, but will not reflect true status or resources.'),
       ).toBeInTheDocument();
     });
 
@@ -647,7 +647,7 @@ describe('SourceWizardSummary component', () => {
 
     it('ansible-tower', () => {
       const { container } = render(
-        <SourceWizardSummary {...initialProps} formOptions={formOptions('ansible-tower', 'username_password')} store={store} />
+        <SourceWizardSummary {...initialProps} formOptions={formOptions('ansible-tower', 'username_password')} store={store} />,
       );
       const data = getListData(container);
 
@@ -672,7 +672,7 @@ describe('SourceWizardSummary component', () => {
           {...initialProps}
           formOptions={formOptions('ansible-tower', 'username_password', '1')}
           store={store}
-        />
+        />,
       );
       const data = getListData(container);
 
@@ -695,7 +695,7 @@ describe('SourceWizardSummary component', () => {
           formOptions={formOptions('ansible-tower', 'username_password', '1')}
           showApp={false}
           store={store}
-        />
+        />,
       );
       const data = getListData(container);
 
@@ -714,7 +714,7 @@ describe('SourceWizardSummary component', () => {
 
     it('do not contain hidden field', () => {
       render(
-        <SourceWizardSummary {...initialProps} formOptions={formOptions('ansible-tower', 'username_password')} store={store} />
+        <SourceWizardSummary {...initialProps} formOptions={formOptions('ansible-tower', 'username_password')} store={store} />,
       );
       expect(() => screen.getByText('kubernetes')).toThrow();
     });
@@ -787,7 +787,7 @@ describe('SourceWizardSummary component', () => {
           {...initialProps}
           formOptions={formOptions('ansible-tower', 'username_password', '1', false)}
           store={store}
-        />
+        />,
       );
       expect(screen.getByText('●●●●●●●●●●●●')).toBeInTheDocument();
       expect(() => screen.getByText('123456')).toThrow();

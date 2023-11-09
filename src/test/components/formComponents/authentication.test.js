@@ -66,7 +66,7 @@ describe('Authentication test', () => {
             id: 'someid',
           },
         }}
-      />
+      />,
     );
 
     expect(screen.getByRole('textbox')).toHaveAttribute('name', 'authentication.password');
@@ -93,7 +93,7 @@ describe('Authentication test', () => {
             id: 'someid',
           },
         }}
-      />
+      />,
     );
 
     expect(screen.getByRole('textbox')).toHaveAttribute('name', 'authentication.password');
@@ -150,7 +150,7 @@ describe('Authentication test', () => {
             id: 'someid',
           },
         }}
-      />
+      />,
     );
 
     expect(screen.getByRole('textbox')).toHaveAttribute('name', 'authentication.password');

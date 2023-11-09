@@ -22,7 +22,7 @@ export const loadWritePermissions = (getUserPermissions) => (dispatch) => {
             title: "Cannot get user's credentials",
           },
         },
-      })
+      }),
     );
 };
 
@@ -40,7 +40,7 @@ export const loadOrgAdmin = (getUser) => (dispatch) => {
           type: ACTION_TYPES.SET_ORG_ADMIN_FULFILLED,
           payload: is_org_admin,
         });
-      }
+      },
     )
     .catch((error) =>
       dispatch({
@@ -51,6 +51,6 @@ export const loadOrgAdmin = (getUser) => (dispatch) => {
             title: "Cannot get user's credentials",
           },
         },
-      })
+      }),
     );
 };

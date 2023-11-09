@@ -25,7 +25,7 @@ const convertFieldsToRows = (fields, initialValues) =>
   fields
     .flatMap((x) => x)
     .map(
-      (field) => !field.hideField && [<React.Fragment key="label">{field.label}</React.Fragment>, get(initialValues, field.name)]
+      (field) => !field.hideField && [<React.Fragment key="label">{field.label}</React.Fragment>, get(initialValues, field.name)],
     )
     .filter(Boolean);
 
@@ -37,7 +37,7 @@ const createRows = (source, appTypes, sourceType) => {
       app.authentications?.filter((auth) => Object.keys(auth).length > 1),
       sourceType,
       appType?.name,
-      app.id
+      app.id,
     );
 
     const initialValues = prepareInitialValues(source, sourceType.product_name);
@@ -101,7 +101,7 @@ const ResourcesTable = () => {
   }, [source?.applications?.length, isLoaded, appTypesLoaded, sourceTypesLoaded]);
 
   return (
-    <Card className="pf-u-m-lg pf-u-mt-0">
+    <Card className="pf-v5-u-m-lg pf-v5-u-mt-0">
       <CardTitle>
         {intl.formatMessage({
           id: 'resourceTable.title',
@@ -110,14 +110,14 @@ const ResourcesTable = () => {
       </CardTitle>
       <CardBody>
         {loading && (
-          <Bullseye className="pf-u-m-2xl">
+          <Bullseye className="pf-v5-u-m-2xl">
             <Spinner />
           </Bullseye>
         )}
         {!loading && !source.applications.length && <NoApplications />}
         {!loading && source.applications.length > 0 && (
           <React.Fragment>
-            <Text className="pf-u-mb-md">
+            <Text className="pf-v5-u-mb-md">
               {intl.formatMessage({
                 id: 'resourceTable.description',
                 defaultMessage: 'View resources for your connected applications.',
@@ -133,7 +133,7 @@ const ResourcesTable = () => {
                 return (
                   <Tab eventKey={app.id} key={app.id} title={<TabTitleText>{appName}</TabTitleText>}>
                     {app.paused_at && !source.paused_at && (
-                      <Alert isInline className="pf-u-mt-lg" {...alertProps}>
+                      <Alert isInline className="pf-v5-u-mt-lg" {...alertProps}>
                         {description}
                       </Alert>
                     )}
@@ -146,7 +146,7 @@ const ResourcesTable = () => {
                         variant="compact"
                         cells={columns}
                         rows={applicationsRows[app.id]}
-                        className="pf-u-mt-md"
+                        className="pf-v5-u-mt-md"
                       >
                         <TableHeader />
                         <TableBody />

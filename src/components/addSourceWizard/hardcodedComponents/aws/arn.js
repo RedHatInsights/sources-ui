@@ -71,10 +71,10 @@ export const StorageDescription = ({ showHCS }) => {
                 </Text>
               </Fragment>
             ),
-          }
+          },
         )}
       </Text>
-      <TextList className="pf-u-ml-0" component={TextListVariants.ol}>
+      <TextList className="pf-v5-u-ml-0" component={TextListVariants.ol}>
         <TextListItem>
           {intl.formatMessage({
             id: 'cost.storageDescription.specifyBucker',
@@ -105,7 +105,7 @@ export const UsageDescription = ({ showHCS }) => {
           },
           {
             application,
-          }
+          },
         )}
       </Text>
     </TextContent>
@@ -124,7 +124,7 @@ export const UsageSteps = () => {
 
   return application.extra.storage_only ? (
     <EmptyState variant={EmptyStateVariant.small}>
-      <EmptyStateIcon style={{ color: 'var(--pf-global--info-color--100)' }} icon={InfoCircleIcon} />
+      <EmptyStateIcon style={{ color: 'var(--pf-v5-global--info-color--100)' }} icon={InfoCircleIcon} />
       <Title size="lg" headingLevel="h4">
         {intl.formatMessage({
           id: 'cost.usageDescription.manualTitleCUR',
@@ -149,7 +149,7 @@ export const UsageSteps = () => {
     </EmptyState>
   ) : (
     <TextContent>
-      <TextList className="pf-u-ml-0" component={TextListVariants.ol}>
+      <TextList className="pf-v5-u-ml-0" component={TextListVariants.ol}>
         <TextListItem>
           {intl.formatMessage({
             id: 'cost.usageDescription.addFollowingValues',
@@ -234,7 +234,7 @@ export const IAMRoleDescription = () => {
               'Select another AWS account from the list of trusted entities and paste the following value into the Account ID field:',
           })}
         </TextListItem>
-        <ClipboardCopy className="pf-u-m-sm-on-sm" isReadOnly>
+        <ClipboardCopy className="pf-v5-u-m-sm-on-sm" isReadOnly>
           589173575009
         </ClipboardCopy>
         <TextListItem>
@@ -243,7 +243,7 @@ export const IAMRoleDescription = () => {
             defaultMessage: 'Paste the following value in the External ID field:',
           })}
         </TextListItem>
-        <ClipboardCopy className="pf-u-m-sm-on-sm" isReadOnly>
+        <ClipboardCopy className="pf-v5-u-m-sm-on-sm" isReadOnly>
           {externalId}
         </ClipboardCopy>
         <TextListItem>
@@ -307,7 +307,7 @@ export const IAMPolicyDescription = ({ showHCS }) => {
                 })}
               </Text>
             ),
-          }
+          },
         )}
       </Text>
       <TextList component={TextListVariants.ol}>
@@ -323,7 +323,7 @@ export const IAMPolicyDescription = ({ showHCS }) => {
             defaultMessage: 'Create a new policy, pasting the following content into the JSON text box.',
           })}
         </TextListItem>
-        <ClipboardCopy isCode variant={ClipboardCopyVariant.expansion} className="pf-u-m-sm-on-sm" isReadOnly>
+        <ClipboardCopy isCode variant={ClipboardCopyVariant.expansion} className="pf-v5-u-m-sm-on-sm" isReadOnly>
           {JSON.stringify(
             {
               Version: '2012-10-17',
@@ -348,7 +348,7 @@ export const IAMPolicyDescription = ({ showHCS }) => {
               ],
             },
             null,
-            2
+            2,
           )}
         </ClipboardCopy>
         <TextListItem component={TextListItemVariants.li}>
@@ -373,7 +373,7 @@ export const IAMPolicyDescription = ({ showHCS }) => {
                 })}
               </b>
             ),
-          }
+          },
         )}
       </Text>
     </TextContent>
@@ -414,7 +414,7 @@ export const TagsDescription = ({ showHCS }) => {
               defaultMessage:
                 'To use tags to organize your AWS resources in the {application} application, activate your tags in AWS to allow them to be imported automatically.',
             },
-            { application }
+            { application },
           )}
         </Text>
         <TextList component={TextListVariants.ol}>
@@ -430,7 +430,7 @@ export const TagsDescription = ({ showHCS }) => {
                 id: 'cost.tags.selectTags',
                 defaultMessage: 'Select the tags you want to use in the {application} application, and click Activate.',
               },
-              { application }
+              { application },
             )}
           </TextListItem>
         </TextList>
@@ -498,8 +498,8 @@ export const IncludeAliasesLabel = ({ appendTo }) => {
           'If there are account aliases, they will appear and be used for filtering when reporting on AWS accounts. This will include "iam:ListAccountAliases" to the Action of the IAM Policy.',
       })}
     >
-      <Button className="pf-u-p-0 pf-u-m-0" variant={ButtonVariant.plain}>
-        <QuestionCircleIcon className="pf-u-ml-sm" />
+      <Button className="pf-v5-u-p-0 pf-v5-u-m-0" variant={ButtonVariant.plain}>
+        <QuestionCircleIcon className="pf-v5-u-ml-sm" />
       </Button>
     </Popover>
   );
@@ -524,8 +524,8 @@ export const IncludeOrgUnitsLabel = ({ appendTo }) => {
           'If there are organizational units, they will be used for filtering when reporting on AWS resources. This will include "organizations:List*" and "organizations:Describe*" to the Action of the IAM Policy',
       })}
     >
-      <Button className="pf-u-p-0 pf-u-m-0" variant={ButtonVariant.plain}>
-        <QuestionCircleIcon className="pf-u-ml-sm" />
+      <Button className="pf-v5-u-p-0 pf-v5-u-m-0" variant={ButtonVariant.plain}>
+        <QuestionCircleIcon className="pf-v5-u-ml-sm" />
       </Button>
     </Popover>
   );

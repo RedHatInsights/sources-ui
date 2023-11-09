@@ -41,7 +41,7 @@ describe('redux > sources reducer', () => {
         expect.objectContaining({
           ...EXPECTED_STATE,
           ...ADDITIONAL_OPTIONS,
-        })
+        }),
       );
     });
 
@@ -57,7 +57,7 @@ describe('redux > sources reducer', () => {
       expect(
         sourcesReducer.filterSources(defaultSourcesState, {
           payload: { value },
-        })
+        }),
       ).toEqual({
         ...defaultSourcesState,
         filterValue: {

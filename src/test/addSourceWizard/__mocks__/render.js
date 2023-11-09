@@ -9,7 +9,7 @@ const render = (children) =>
     <MemoryRouter initialEntries={['/']} initialIndex={0} keyLength={0}>
       <IntlProvider locale="en">{children}</IntlProvider>
       <LocationDisplay />
-    </MemoryRouter>
+    </MemoryRouter>,
   );
 
 export default render;

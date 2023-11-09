@@ -27,8 +27,8 @@ describe('ElementWrapper', () => {
       componentWrapperIntl(
         <ElementWrapper route={route}>
           <PokusComponent />
-        </ElementWrapper>
-      )
+        </ElementWrapper>,
+      ),
     );
 
     expect(screen.getByText('Custom component', { selector: 'h1' })).toBeInTheDocument();
@@ -57,8 +57,8 @@ describe('ElementWrapper', () => {
           </Route>
         </Routes>,
         undefined,
-        ['/path']
-      )
+        ['/path'],
+      ),
     );
 
     expect(screen.getByText('Custom component', { selector: 'h1' })).toHaveClass('pepa');
@@ -86,8 +86,8 @@ describe('ElementWrapper', () => {
           />
         </Routes>,
         store,
-        ['/path']
-      )
+        ['/path'],
+      ),
     );
 
     expect(screen.getByTestId('location-display').textContent).toEqual('/settings/integrations/');
@@ -115,8 +115,8 @@ describe('ElementWrapper', () => {
           />
         </Routes>,
         undefined,
-        ['/path/']
-      )
+        ['/path/'],
+      ),
     );
 
     expect(screen.getByText('Redirect no ID mock')).toBeInTheDocument();
@@ -145,8 +145,8 @@ describe('ElementWrapper', () => {
           />
         </Routes>,
         store,
-        ['/path']
-      )
+        ['/path'],
+      ),
     );
 
     expect(screen.getByText('Custom component', { selector: 'h1' })).toBeInTheDocument();

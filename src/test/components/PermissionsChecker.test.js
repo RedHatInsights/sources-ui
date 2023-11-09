@@ -14,8 +14,8 @@ describe('PermissionChecker', () => {
       componentWrapperIntl(
         <PermissionsChecker>
           <Children />
-        </PermissionsChecker>
-      )
+        </PermissionsChecker>,
+      ),
     );
 
     expect(screen.getByText('App')).toBeInTheDocument();

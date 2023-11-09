@@ -16,12 +16,12 @@ describe('SubWatchDescription', () => {
         schema={{ fields: [{ name: 'desc', component: 'description', Content: () => <SubWatchDescription id="1" /> }] }}
         initialValues={{ application: { application_type_id: '1' }, source: { app_creation_workflow: MANUAL_CONFIGURATION } }}
         onSubmit={jest.fn()}
-      />
+      />,
     );
 
     expect(screen.getByText('Red Hat gold images')).toBeInTheDocument();
     expect(
-      screen.getByText('Unlock cloud images in AWS and bring your own subscription instead of paying hourly.')
+      screen.getByText('Unlock cloud images in AWS and bring your own subscription instead of paying hourly.'),
     ).toBeInTheDocument();
     expect(screen.getByText('High precision subscription watch data')).toBeInTheDocument();
     expect(screen.getByText('View precise public cloud usage data in subscription watch.')).toBeInTheDocument();
@@ -41,12 +41,12 @@ describe('SubWatchDescription', () => {
           source_type: 'azure',
         }}
         onSubmit={jest.fn()}
-      />
+      />,
     );
 
     expect(screen.getByText('Red Hat gold images')).toBeInTheDocument();
     expect(
-      screen.getByText('Unlock cloud images in Microsoft Azure and bring your own subscription instead of paying hourly.')
+      screen.getByText('Unlock cloud images in Microsoft Azure and bring your own subscription instead of paying hourly.'),
     ).toBeInTheDocument();
     expect(() => screen.getByText('High precision subscription watch data')).toThrow();
     expect(() => screen.getByText('View precise public cloud usage data in subscription watch.')).toThrow();
@@ -66,12 +66,12 @@ describe('SubWatchDescription', () => {
           source_type: 'google',
         }}
         onSubmit={jest.fn()}
-      />
+      />,
     );
 
     expect(screen.getByText('Red Hat gold images')).toBeInTheDocument();
     expect(
-      screen.getByText('Unlock cloud images in Google Cloud and bring your own subscription instead of paying hourly.')
+      screen.getByText('Unlock cloud images in Google Cloud and bring your own subscription instead of paying hourly.'),
     ).toBeInTheDocument();
     expect(screen.getByText('Autoregistration')).toBeInTheDocument();
     expect(screen.getByText('Cloud instances automatically connect to console.redhat.com when provisioned.')).toBeInTheDocument();
@@ -83,7 +83,7 @@ describe('SubWatchDescription', () => {
         schema={{ fields: [{ name: 'desc', component: 'description', Content: () => <SubWatchDescription id="1" /> }] }}
         initialValues={{ applications: ['1'], source: { app_creation_workflow: ACCOUNT_AUTHORIZATION } }}
         onSubmit={jest.fn()}
-      />
+      />,
     );
 
     expect(container.getElementsByTagName('svg')[0]).toHaveAttribute('fill', '#3E8635');
@@ -95,7 +95,7 @@ describe('SubWatchDescription', () => {
         schema={{ fields: [{ name: 'desc', component: 'description', Content: () => <SubWatchDescription id="1" /> }] }}
         initialValues={{ application: { application_type_id: '2' }, source: { app_creation_workflow: MANUAL_CONFIGURATION } }}
         onSubmit={jest.fn()}
-      />
+      />,
     );
 
     expect(container.getElementsByTagName('svg')[0]).toHaveAttribute('fill', '#6A6E73');
@@ -107,7 +107,7 @@ describe('SubWatchDescription', () => {
         schema={{ fields: [{ name: 'desc', component: 'description', Content: () => <SubWatchDescription id="1" /> }] }}
         initialValues={{ applications: [], source: { app_creation_workflow: ACCOUNT_AUTHORIZATION } }}
         onSubmit={jest.fn()}
-      />
+      />,
     );
 
     expect(container.getElementsByTagName('svg')[0]).toHaveAttribute('fill', '#6A6E73');

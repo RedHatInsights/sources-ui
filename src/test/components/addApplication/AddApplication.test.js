@@ -85,8 +85,8 @@ describe('AddApplication', () => {
           <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
@@ -112,8 +112,8 @@ describe('AddApplication', () => {
           <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(screen.getByLabelText('Contents')).toBeInTheDocument();
@@ -147,14 +147,14 @@ describe('AddApplication', () => {
             <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       await waitFor(() =>
         expect(screen.getByTestId('location-display').textContent).toEqual(
-          '/settings/integrations/' + replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID)
-        )
+          '/settings/integrations/' + replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID),
+        ),
       );
     });
 
@@ -176,14 +176,14 @@ describe('AddApplication', () => {
             <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       await waitFor(() =>
         expect(screen.getByTestId('location-display').textContent).toEqual(
-          '/settings/integrations/' + replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID)
-        )
+          '/settings/integrations/' + replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID),
+        ),
       );
     });
 
@@ -207,14 +207,14 @@ describe('AddApplication', () => {
             <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       await waitFor(() =>
         expect(screen.getByTestId('location-display').textContent).toEqual(
-          '/settings/integrations/' + replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID)
-        )
+          '/settings/integrations/' + replaceRouteId(routes.sourcesDetail.path, SOURCE_NO_APS_ID),
+        ),
       );
     });
   });
@@ -291,8 +291,8 @@ describe('AddApplication', () => {
             <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
@@ -307,8 +307,8 @@ describe('AddApplication', () => {
 
       await waitFor(() =>
         expect(screen.getByTestId('location-display').textContent).toEqual(
-          replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, SOURCE_NO_APS_ID)
-        )
+          replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, SOURCE_NO_APS_ID),
+        ),
       );
     });
 
@@ -332,8 +332,8 @@ describe('AddApplication', () => {
 
       await waitFor(() =>
         expect(screen.getByTestId('location-display').textContent).toEqual(
-          replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, SOURCE_NO_APS_ID)
-        )
+          replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, SOURCE_NO_APS_ID),
+        ),
       );
     });
 
@@ -375,7 +375,7 @@ describe('AddApplication', () => {
         listEndpointAuthentications: jest.fn().mockImplementation(() =>
           Promise.resolve({
             data: [authentication],
-          })
+          }),
         ),
         checkAvailabilitySource,
       });
@@ -421,8 +421,8 @@ describe('AddApplication', () => {
             <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
@@ -510,8 +510,8 @@ describe('AddApplication', () => {
             <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       expect(screen.getByText('Review details', { selector: 'h1' })).toBeInTheDocument();
@@ -524,7 +524,7 @@ describe('AddApplication', () => {
       attachSource.doAttachApp = jest.fn().mockImplementation(() =>
         Promise.resolve({
           availability_status: 'available',
-        })
+        }),
       );
 
       entities.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [], meta: { count: 0 } }));
@@ -535,8 +535,8 @@ describe('AddApplication', () => {
             <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       await act(async () => {
@@ -583,7 +583,7 @@ describe('AddApplication', () => {
       attachSource.doAttachApp = jest.fn().mockImplementation(() =>
         Promise.resolve({
           availability_status: 'available',
-        })
+        }),
       );
 
       entities.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [], meta: { count: 0 } }));
@@ -594,8 +594,8 @@ describe('AddApplication', () => {
             <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       await act(async () => {
@@ -636,7 +636,7 @@ describe('AddApplication', () => {
               availability_status: null,
             },
           ],
-        })
+        }),
       );
 
       entities.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [], meta: { count: 0 } }));
@@ -648,8 +648,8 @@ describe('AddApplication', () => {
               <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
             </Routes>,
             store,
-            initialEntry
-          )
+            initialEntry,
+          ),
         );
       });
 
@@ -660,8 +660,8 @@ describe('AddApplication', () => {
       await waitFor(() => expect(screen.getByText('Configuration in progress')).toBeInTheDocument());
       expect(
         screen.getByText(
-          'We are still working to confirm credentials and app settings.To track progress, check the Status column in the Sources table.'
-        )
+          'We are still working to confirm credentials and app settings.To track progress, check the Status column in the Sources table.',
+        ),
       ).toBeInTheDocument();
       expect(screen.getByText('Exit')).toBeInTheDocument();
     });
@@ -676,7 +676,7 @@ describe('AddApplication', () => {
               availability_status: null,
             },
           ],
-        })
+        }),
       );
 
       entities.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [], meta: { count: 0 } }));
@@ -687,8 +687,8 @@ describe('AddApplication', () => {
             <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       await act(async () => {
@@ -698,8 +698,8 @@ describe('AddApplication', () => {
       await waitFor(() => expect(screen.getByText('Configuration in progress')).toBeInTheDocument());
       expect(
         screen.getByText(
-          'We are still working to confirm credentials and app settings.To track progress, check the Status column in the Sources table.'
-        )
+          'We are still working to confirm credentials and app settings.To track progress, check the Status column in the Sources table.',
+        ),
       ).toBeInTheDocument();
       expect(screen.getByText('Exit')).toBeInTheDocument();
     });
@@ -717,7 +717,7 @@ describe('AddApplication', () => {
               availability_status_error: ERROR,
             },
           ],
-        })
+        }),
       );
 
       entities.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [], meta: { count: 0 } }));
@@ -728,8 +728,8 @@ describe('AddApplication', () => {
             <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       await act(async () => {
@@ -748,8 +748,8 @@ describe('AddApplication', () => {
 
       await waitFor(() =>
         expect(screen.getByTestId('location-display').textContent).toEqual(
-          replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, source.id)
-        )
+          replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, source.id),
+        ),
       );
     });
 
@@ -770,7 +770,7 @@ describe('AddApplication', () => {
               application_type_id: '2',
             },
           ],
-        })
+        }),
       );
 
       entities.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [], meta: { count: 0 } }));
@@ -781,8 +781,8 @@ describe('AddApplication', () => {
             <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       await act(async () => {
@@ -809,8 +809,8 @@ describe('AddApplication', () => {
           expect.objectContaining({ formatMessage: expect.any(Function) }), // intl
           undefined, // oncancel
           expect.any(Function), // dispatch
-          expect.any(Object) // source
-        )
+          expect.any(Object), // source
+        ),
       );
     });
 
@@ -827,8 +827,8 @@ describe('AddApplication', () => {
             <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       await act(async () => {
@@ -844,14 +844,14 @@ describe('AddApplication', () => {
       const authenticationValues = expect.any(Array);
 
       await waitFor(() =>
-        expect(attachSource.doAttachApp).toHaveBeenCalledWith(formValues, formApi, authenticationValues, initialValues, appTypes)
+        expect(attachSource.doAttachApp).toHaveBeenCalledWith(formValues, formApi, authenticationValues, initialValues, appTypes),
       );
 
       expect(screen.getByText('Something went wrong')).toBeInTheDocument();
       expect(
         screen.getByText(
-          'There was a problem while trying to add your source. Please try again. If the error persists, open a support case.'
-        )
+          'There was a problem while trying to add your source. Please try again. If the error persists, open a support case.',
+        ),
       ).toBeInTheDocument();
       expect(screen.getByText('Retry')).toBeInTheDocument();
       expect(screen.getByText('Open a support case')).toBeInTheDocument();
@@ -870,8 +870,8 @@ describe('AddApplication', () => {
             <Route path={routes.sourcesDetailAddApp.path} element={<AddApplication />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       await act(async () => {
@@ -887,7 +887,7 @@ describe('AddApplication', () => {
       const authenticationValues = expect.any(Array);
 
       await waitFor(() =>
-        expect(attachSource.doAttachApp).toHaveBeenCalledWith(formValues, formApi, authenticationValues, initialValues, appTypes)
+        expect(attachSource.doAttachApp).toHaveBeenCalledWith(formValues, formApi, authenticationValues, initialValues, appTypes),
       );
 
       expect(screen.getByText('Something went wrong')).toBeInTheDocument();
@@ -897,7 +897,7 @@ describe('AddApplication', () => {
       attachSource.doAttachApp = jest.fn().mockImplementation(() =>
         Promise.resolve({
           availability_status: 'available',
-        })
+        }),
       );
 
       await act(async () => {

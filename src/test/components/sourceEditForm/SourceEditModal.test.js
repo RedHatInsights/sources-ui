@@ -82,7 +82,7 @@ describe('SourceEditModal', () => {
           },
         ],
         authentications: [],
-      })
+      }),
     );
   });
 
@@ -93,8 +93,8 @@ describe('SourceEditModal', () => {
           <Route path={routes.sourcesDetail.path} element={<SourceEditModal />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
@@ -152,7 +152,7 @@ describe('SourceEditModal', () => {
           },
         ],
         authentications: [],
-      })
+      }),
     );
 
     render(
@@ -161,8 +161,8 @@ describe('SourceEditModal', () => {
           <Route path={routes.sourcesDetail.path} element={<SourceEditModal />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
@@ -259,7 +259,7 @@ describe('SourceEditModal', () => {
           },
         ],
         authentications: [],
-      })
+      }),
     );
 
     render(
@@ -268,8 +268,8 @@ describe('SourceEditModal', () => {
           <Route path={routes.sourcesDetail.path} element={<SourceEditModal />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
@@ -318,7 +318,7 @@ describe('SourceEditModal', () => {
           },
         ],
         authentications: [],
-      })
+      }),
     );
 
     render(
@@ -327,8 +327,8 @@ describe('SourceEditModal', () => {
           <Route path={routes.sourcesDetail.path} element={<SourceEditModal />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
@@ -376,7 +376,7 @@ describe('SourceEditModal', () => {
         ],
         endpoints: [],
         authentications: [],
-      })
+      }),
     );
 
     render(
@@ -385,8 +385,8 @@ describe('SourceEditModal', () => {
           <Route path={routes.sourcesDetail.path} element={<SourceEditModal />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
@@ -430,7 +430,7 @@ describe('SourceEditModal', () => {
         ],
         endpoints: [],
         authentications: [],
-      })
+      }),
     );
 
     render(
@@ -439,8 +439,8 @@ describe('SourceEditModal', () => {
           <Route path={routes.sourcesDetail.path} element={<SourceEditModal />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
@@ -474,7 +474,7 @@ describe('SourceEditModal', () => {
         ],
         endpoints: [],
         authentications: [],
-      })
+      }),
     );
 
     render(
@@ -483,8 +483,8 @@ describe('SourceEditModal', () => {
           <Route path={routes.sourcesDetail.path} element={<SourceEditModal />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
@@ -561,8 +561,8 @@ describe('SourceEditModal', () => {
           />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
@@ -603,8 +603,8 @@ describe('SourceEditModal', () => {
             <Route path={routes.sourcesDetail.path} element={<SourceEditModal />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
@@ -707,8 +707,8 @@ describe('SourceEditModal', () => {
 
       expect(
         screen.getByText(
-          'There was a problem while trying to edit your source. Please try again. If the error persists, open a support case.'
-        )
+          'There was a problem while trying to edit your source. Please try again. If the error persists, open a support case.',
+        ),
       ).toBeInTheDocument();
 
       expect(submit.onSubmit).toHaveBeenCalledWith(VALUES, EDITING, DISPATCH, SOURCE, INTL, SET_STATE);

@@ -39,8 +39,8 @@ describe('sourceAddModal', () => {
     render(
       componentWrapperIntl(
         <AddSourceWizard {...initialProps} sourceTypes={sourceTypes} applicationTypes={applicationTypes} />,
-        store
-      )
+        store,
+      ),
     );
 
     await waitFor(() => expect(screen.getByText('Select a cloud provider')).toBeInTheDocument());

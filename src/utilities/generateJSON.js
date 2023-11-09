@@ -4,7 +4,7 @@ import formatValueToExport from './formatValueToExport';
 const formatSource = (columns, source, applicationTypes, sourceTypes) =>
   columns.reduce(
     (acc, curr) => ({ ...acc, [curr.title]: formatValueToExport(curr.value, source[curr.value], applicationTypes, sourceTypes) }),
-    {}
+    {},
   );
 
 const generateJSON = (entities, intl, applicationTypes, sourceTypes) => {

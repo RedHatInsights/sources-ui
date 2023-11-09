@@ -23,7 +23,7 @@ describe('SuperKeyCredentials', () => {
           ],
         }}
         initialValues={{ source_type: 'amazon' }}
-      />
+      />,
     );
 
     expect(screen.getByText('Access key ID')).toBeInTheDocument();

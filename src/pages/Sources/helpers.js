@@ -29,7 +29,7 @@ export const setFilter = (column, value, dispatch) =>
   dispatch(
     filterSources({
       [column]: value,
-    })
+    }),
   );
 
 export const chipsFormatters = (key, filterValue, sourceTypes, appTypes, intl) =>
@@ -72,14 +72,14 @@ export const chipsFormatters = (key, filterValue, sourceTypes, appTypes, intl) =
         },
       ],
     }),
-  }[key] || (() => ({ name: key })));
+  })[key] || (() => ({ name: key }));
 
 export const prepareChips = (filterValue, sourceTypes, appTypes, intl) =>
   Object.keys(filterValue)
     .map((key) =>
       filterValue[key] && filterValue[key].length > 0
         ? chipsFormatters(key, filterValue, sourceTypes, appTypes, intl)()
-        : undefined
+        : undefined,
     )
     .filter(Boolean);
 
@@ -90,7 +90,7 @@ export const removeChips = (chips, filterValue, deleteAll) => {
         ...acc,
         [curr]: undefined,
       }),
-      {}
+      {},
     );
   }
 
@@ -122,7 +122,7 @@ export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
               defaultMessage:
                 'There was a problem while trying to add source {name}. Please try again. If the error persists, open a support case.',
             },
-            { name: <b>{state.values.source.name}</b> }
+            { name: <b>{state.values.source.name}</b> },
           ),
           variant: 'danger',
           id,
@@ -144,7 +144,7 @@ export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
               })}
             </AlertActionLink>
           ),
-        })
+        }),
       );
     } else {
       switch (computeSourceStatus(state.createdSource)) {
@@ -170,7 +170,7 @@ export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
                     }),
                   name: state.createdSource.name,
                   b: bold,
-                }
+                },
               ),
               variant: 'danger',
               id,
@@ -187,7 +187,7 @@ export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
                   })}
                 </AlertActionLink>
               ),
-            })
+            }),
           );
           break;
         case 'timeout':
@@ -203,10 +203,10 @@ export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
                   defaultMessage:
                     'We are still working to confirm credentials for source {name}. To track progress, check the Status column in the Sources table.',
                 },
-                { name: <b>{state.createdSource.name}</b> }
+                { name: <b>{state.createdSource.name}</b> },
               ),
               variant: 'info',
-            })
+            }),
           );
           break;
         default:
@@ -217,14 +217,14 @@ export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
                   id: 'alert.success.title',
                   defaultMessage: '{type} connection successful',
                 },
-                { type: state.sourceTypes.find(({ id }) => id === state.createdSource.source_type_id)?.product_name }
+                { type: state.sourceTypes.find(({ id }) => id === state.createdSource.source_type_id)?.product_name },
               ),
               description: intl.formatMessage(
                 {
                   id: 'alert.success.description',
                   defaultMessage: 'Source {name} was successfully added',
                 },
-                { name: <b>{state.createdSource.name}</b> }
+                { name: <b>{state.createdSource.name}</b> },
               ),
               variant: 'success',
               id,
@@ -241,7 +241,7 @@ export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
                   })}
                 </AlertActionLink>
               ),
-            })
+            }),
           );
           break;
       }

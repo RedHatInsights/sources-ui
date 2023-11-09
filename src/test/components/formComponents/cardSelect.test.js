@@ -139,7 +139,7 @@ describe('CardSelect component', () => {
       ({
         aws: () => <AwsIcon aria-label="aws-icon" />,
         ops: () => <OpenshiftIcon aria-label="openshift-icon" />,
-      }[value] || defaultIcon);
+      })[value] || defaultIcon;
 
     initialProps = {
       ...initialProps,

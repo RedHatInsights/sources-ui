@@ -77,11 +77,11 @@ export const getSourcesApi = () => ({
     axiosInstanceInsights.get(`${SOURCES_API_BASE_V3}/application_types?filter[name]=/insights/platform/provisioning`),
   getProvMetadata: (provAppTypeId) =>
     axiosInstanceInsights.get(
-      `${SOURCES_API_BASE_V3}/app_meta_data?filter[name]=aws_wizard_account_number&application_type_id=${provAppTypeId}`
+      `${SOURCES_API_BASE_V3}/app_meta_data?filter[name]=aws_wizard_account_number&application_type_id=${provAppTypeId}`,
     ),
   getProvisioningServiceAccount: (provAppTypeId) =>
     axiosInstanceInsights.get(
-      `${SOURCES_API_BASE_V3}/app_meta_data?filter[name]=gcp_service_account&application_type_id=${provAppTypeId}`
+      `${SOURCES_API_BASE_V3}/app_meta_data?filter[name]=gcp_service_account&application_type_id=${provAppTypeId}`,
     ),
 });
 
@@ -126,7 +126,7 @@ export const filtering = (filterValue = {}, category) => {
 
   if (filterValue.source_type_id?.length > 0) {
     filterQueries.push(
-      `{ name: "source_type_id", operation: "eq", value: [${filterValue.source_type_id.map((x) => `"${x}"`).join(', ')}] }`
+      `{ name: "source_type_id", operation: "eq", value: [${filterValue.source_type_id.map((x) => `"${x}"`).join(', ')}] }`,
     );
   }
 
@@ -134,7 +134,7 @@ export const filtering = (filterValue = {}, category) => {
     filterQueries.push(
       `{ name: "applications.application_type_id", operation: "eq", value: [${filterValue.applications
         .map((x) => `"${x}"`)
-        .join(', ')}] }`
+        .join(', ')}] }`,
     );
   }
 
@@ -152,7 +152,7 @@ export const filtering = (filterValue = {}, category) => {
       filterQueries.push(`{ name: "availability_status", operation: "eq", value: "${AVAILABLE}" }`);
     } else if (status === UNAVAILABLE) {
       filterQueries.push(
-        `{ name: "availability_status", operation: "eq", value: ["${PARTIALLY_UNAVAILABLE}", "${UNAVAILABLE}"] }`
+        `{ name: "availability_status", operation: "eq", value: ["${PARTIALLY_UNAVAILABLE}", "${UNAVAILABLE}"] }`,
       );
     }
   }

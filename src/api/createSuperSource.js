@@ -20,7 +20,7 @@ const createSuperSource = async (formData) => {
       undefined,
       undefined,
       'showAuthentication',
-      startDate
+      startDate,
     );
 
     return {

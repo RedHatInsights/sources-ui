@@ -31,8 +31,8 @@ describe('AppListInRemoval', () => {
           <Route path={routes.sourcesRemove.path} element={<AppListInRemoval {...initialProps} />} />
         </Routes>,
         store,
-        [replaceRouteId(routes.sourcesRemove.path, '406')]
-      )
+        [replaceRouteId(routes.sourcesRemove.path, '406')],
+      ),
     );
 
     expect(screen.getByText('Unknown')).toBeInTheDocument();
@@ -49,8 +49,8 @@ describe('AppListInRemoval', () => {
           <Route path={routes.sourcesRemove.path} element={<AppListInRemoval {...initialProps} />} />
         </Routes>,
         store,
-        [replaceRouteId(routes.sourcesRemove.path, '406')]
-      )
+        [replaceRouteId(routes.sourcesRemove.path, '406')],
+      ),
     );
 
     expect(screen.getByText(CATALOG_APP.display_name, { selector: 'p' })).toBeInTheDocument();
@@ -70,8 +70,8 @@ describe('AppListInRemoval', () => {
           <Route path={routes.sourcesRemove.path} element={<AppListInRemoval {...initialProps} />} />
         </Routes>,
         store,
-        [replaceRouteId(routes.sourcesRemove.path, '406')]
-      )
+        [replaceRouteId(routes.sourcesRemove.path, '406')],
+      ),
     );
 
     expect(screen.getByText(CATALOG_APP.display_name, { selector: 'li' })).toBeInTheDocument();

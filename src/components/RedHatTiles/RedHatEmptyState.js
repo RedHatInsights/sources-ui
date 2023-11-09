@@ -11,7 +11,7 @@ const RedHatEmptyState = ({ setSelectedType }) => {
   const intl = useIntl();
 
   return (
-    <Card className="src-c-card__cloud-empty-state pf-u-mt-md pf-u-mt-0-on-md">
+    <Card className="src-c-card__cloud-empty-state pf-v5-u-mt-md pf-v5-u-mt-0-on-md">
       <CardTitle>
         {intl.formatMessage({
           id: 'redhat.emptystate.cardTitle',
@@ -25,7 +25,7 @@ const RedHatEmptyState = ({ setSelectedType }) => {
             defaultMessage: 'Select an available application.',
           })}
         </Text>
-        <div className="provider-tiles pf-u-mt-md pf-u-mb-lg">
+        <div className="provider-tiles pf-v5-u-mt-md pf-v5-u-mb-lg">
           <RedHatTiles setSelectedType={setSelectedType} />
         </div>
       </CardBody>

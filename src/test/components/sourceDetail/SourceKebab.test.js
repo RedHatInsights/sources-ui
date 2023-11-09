@@ -42,8 +42,8 @@ describe('SourceKebab', () => {
           <Route path={routes.sourcesDetail.path} element={<SourceKebab />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(async () => {
@@ -55,7 +55,7 @@ describe('SourceKebab', () => {
 
     expect(screen.getByText('Remove')).toBeInTheDocument();
     expect(
-      screen.getByText('Permanently delete this source and all collected data').closest('.src-m-dropdown-item-disabled')
+      screen.getByText('Permanently delete this source and all collected data').closest('.src-m-dropdown-item-disabled'),
     ).toBeInTheDocument();
 
     expect(screen.getByText('Rename').closest('.src-m-dropdown-item-disabled')).toBeInTheDocument();
@@ -86,8 +86,8 @@ describe('SourceKebab', () => {
           <Route path={routes.sourcesDetail.path} element={<SourceKebab />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(async () => {
@@ -118,8 +118,8 @@ describe('SourceKebab', () => {
           <Route path={routes.sourcesDetail.path} element={<SourceKebab />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(async () => {
@@ -159,8 +159,8 @@ describe('SourceKebab', () => {
           <Route path={routes.sourcesDetail.path} element={<SourceKebab />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(async () => {
@@ -191,8 +191,8 @@ describe('SourceKebab', () => {
             <Route path={routes.sourcesDetail.path} element={<SourceKebab />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
     });
 
@@ -226,7 +226,7 @@ describe('SourceKebab', () => {
       });
 
       expect(screen.getByTestId('location-display').textContent).toEqual(
-        replaceRouteId(`/settings/integrations/${routes.sourcesDetailRemove.path}`, sourceId)
+        replaceRouteId(`/settings/integrations/${routes.sourcesDetailRemove.path}`, sourceId),
       );
     });
 
@@ -257,7 +257,7 @@ describe('SourceKebab', () => {
       });
 
       expect(screen.getByTestId('location-display').textContent).toEqual(
-        replaceRouteId(`/settings/integrations/${routes.sourcesDetailRename.path}`, sourceId)
+        replaceRouteId(`/settings/integrations/${routes.sourcesDetailRename.path}`, sourceId),
       );
     });
   });

@@ -117,7 +117,7 @@ describe('SourcesPage', () => {
       Promise.resolve({
         sources: sourcesDataGraphQl,
         meta: { count: sourcesDataGraphQl.length },
-      })
+      }),
     );
     api.doLoadAppTypes = jest.fn().mockImplementation(() => Promise.resolve({ data: applicationTypes }));
     typesApi.doLoadSourceTypes = jest.fn().mockImplementation(() => Promise.resolve(sourceTypes));
@@ -135,7 +135,7 @@ describe('SourcesPage', () => {
     let container;
     await act(async () => {
       const { container: internalContainer } = await render(
-        componentWrapperIntl(<SourcesPage {...initialProps} />, store, ['/settings/integrations'])
+        componentWrapperIntl(<SourcesPage {...initialProps} />, store, ['/settings/integrations']),
       );
       container = internalContainer;
     });
@@ -234,8 +234,8 @@ describe('SourcesPage', () => {
             MockElement={<AddSourceWizard.default onClose={jest.fn()} isOpen={false} />}
             route={routes.sourcesNew}
           />,
-          store
-        )
+          store,
+        ),
       );
     });
 
@@ -287,8 +287,8 @@ describe('SourcesPage', () => {
           MockElement={<AddSourceWizard.default onClose={jest.fn()} isOpen={false} />}
           route={routes.sourcesNew}
         />,
-        store
-      )
+        store,
+      ),
     );
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
 
@@ -494,8 +494,8 @@ describe('SourcesPage', () => {
             MockElement={<AddSourceWizard.default isOpen={false} onClose={jest.fn()} />}
             route={routes.sourcesNew}
           />,
-          store
-        )
+          store,
+        ),
       );
     });
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
@@ -509,8 +509,8 @@ describe('SourcesPage', () => {
     expect(screen.getByTestId('location-display').textContent).toEqual(`/${routes.sourcesNew.path}`);
     expect(
       screen.getByText(
-        'To import data for an application, you need to connect to a data source. Start by selecting your source type.'
-      )
+        'To import data for an application, you need to connect to a data source. Start by selecting your source type.',
+      ),
     ).toBeInTheDocument();
   });
 
@@ -538,8 +538,8 @@ describe('SourcesPage', () => {
             MockElement={<AddSourceWizard.default onClose={jest.fn()} isOpen={false} />}
             route={routes.sourcesNew}
           />,
-          store
-        )
+          store,
+        ),
       );
     });
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
@@ -577,8 +577,8 @@ describe('SourcesPage', () => {
             MockElement={<AddSourceWizard.AddSourceWizard />}
             route={routes.sourcesNew}
           />,
-          store
-        )
+          store,
+        ),
       );
     });
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
@@ -633,8 +633,8 @@ describe('SourcesPage', () => {
               route={routes.sourcesNew}
             />
           </React.Fragment>,
-          store
-        )
+          store,
+        ),
       );
     });
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
@@ -654,7 +654,7 @@ describe('SourcesPage', () => {
       expect.any(Function),
       expect.any(Function),
       expect.objectContaining({ formatMessage: expect.any(Function) }),
-      expect.any(Function)
+      expect.any(Function),
     );
 
     expect(screen.getByText('Success alert:')).toBeInTheDocument();
@@ -715,8 +715,8 @@ describe('SourcesPage', () => {
               SourcesPage={<SourcesPage {...initialProps} />}
             />
           </React.Fragment>,
-          store
-        )
+          store,
+        ),
       );
     });
     await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
@@ -736,7 +736,7 @@ describe('SourcesPage', () => {
       expect.any(Function),
       expect.any(Function),
       expect.objectContaining({ formatMessage: expect.any(Function) }),
-      expect.any(Function)
+      expect.any(Function),
     );
 
     await waitFor(() => expect(screen.getByText('Danger alert:')).toBeInTheDocument());
@@ -745,7 +745,7 @@ describe('SourcesPage', () => {
     expect(screen.getByText('There was a problem while trying to add source', { exact: false })).toBeInTheDocument();
     expect(screen.getByText('some-name', { selector: 'b' })).toBeInTheDocument();
     expect(
-      screen.getByText('Please try again. If the error persists, open a support case.', { exact: false })
+      screen.getByText('Please try again. If the error persists, open a support case.', { exact: false }),
     ).toBeInTheDocument();
 
     await act(async () => {
@@ -845,7 +845,7 @@ describe('SourcesPage', () => {
       await waitFor(() =>
         expect(store.getState().sources.filterValue).toEqual({
           name: SEARCH_TERM,
-        })
+        }),
       );
     });
 
@@ -1091,13 +1091,13 @@ describe('SourcesPage', () => {
       await waitFor(() =>
         expect(store.getState().sources.filterValue).toEqual({
           name: totalNonsense,
-        })
+        }),
       );
       expect(store.getState().sources.numberOfEntities).toEqual(0);
 
       expect(screen.getByText('No sources found')).toBeInTheDocument();
       expect(
-        screen.getByText('No sources match the filter criteria. Remove all filters or clear all filters to show sources.')
+        screen.getByText('No sources match the filter criteria. Remove all filters or clear all filters to show sources.'),
       ).toBeInTheDocument();
       expect(screen.getByText('Clear all filters')).toBeInTheDocument();
       expect(() => screen.getAllByLabelText('Items per page')).toThrow();
@@ -1168,7 +1168,7 @@ describe('SourcesPage', () => {
         Promise.resolve({
           sources: sourcesDataGraphQl,
           meta: { count: sourcesDataGraphQl.length },
-        })
+        }),
       );
 
       await act(async () => {
@@ -1214,8 +1214,8 @@ describe('SourcesPage', () => {
 
       await waitFor(() =>
         expect(
-          screen.getByText('To add a source, you must add Sources Administrator permissions to your user.')
-        ).toBeInTheDocument()
+          screen.getByText('To add a source, you must add Sources Administrator permissions to your user.'),
+        ).toBeInTheDocument(),
       );
 
       expect(screen.getByTestId('location-display').textContent).toEqual('/');
@@ -1245,8 +1245,8 @@ describe('SourcesPage', () => {
 
       await waitFor(() =>
         expect(
-          screen.getByText('To add a source, your Organization Administrator must grant you Sources Administrator permissions.')
-        ).toBeInTheDocument()
+          screen.getByText('To add a source, your Organization Administrator must grant you Sources Administrator permissions.'),
+        ).toBeInTheDocument(),
       );
 
       expect(screen.getByTestId('location-display').textContent).toEqual('/');
@@ -1279,8 +1279,8 @@ describe('SourcesPage', () => {
 
       await waitFor(() =>
         expect(
-          screen.getByText('To add a source, your Organization Administrator must grant you Sources Administrator permissions.')
-        ).toBeInTheDocument()
+          screen.getByText('To add a source, your Organization Administrator must grant you Sources Administrator permissions.'),
+        ).toBeInTheDocument(),
       );
 
       expect(screen.getByTestId('location-display').textContent).toEqual('/');
@@ -1313,8 +1313,8 @@ describe('SourcesPage', () => {
               SourcesPage={<SourcesPage {...initialProps} />}
             />,
             store,
-            initialEntry
-          )
+            initialEntry,
+          ),
         );
       });
 
@@ -1342,8 +1342,8 @@ describe('SourcesPage', () => {
                 SourcesPage={<SourcesPage {...initialProps} />}
               />,
               store,
-              initialEntry
-            )
+              initialEntry,
+            ),
           );
         });
 
@@ -1372,8 +1372,8 @@ describe('SourcesPage', () => {
                 SourcesPage={<SourcesPage {...initialProps} />}
               />,
               store,
-              initialEntry
-            )
+              initialEntry,
+            ),
           );
         });
 

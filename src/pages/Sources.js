@@ -261,7 +261,7 @@ const SourcesPage = () => {
                 filterValues: {
                   onChange: (_event, value) => setFilter('applications', value, dispatch),
                   items: prepareApplicationTypeSelection(
-                    appTypes?.filter(filterVendorAppTypes(filteredSourceTypes, activeCategory)) || []
+                    appTypes?.filter(filterVendorAppTypes(filteredSourceTypes, activeCategory)) || [],
                   ),
                   value: filterValue.applications,
                 },

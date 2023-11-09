@@ -14,16 +14,16 @@ describe('Azure-Provisioning hardcoded schemas', () => {
 
       expect(
         screen.getByText(
-          "Complete configuration steps in Azure Lighthouse according to Microsoft instructions. When you're finished, return to this wizard to finish creating this Azure source."
-        )
+          "Complete configuration steps in Azure Lighthouse according to Microsoft instructions. When you're finished, return to this wizard to finish creating this Azure source.",
+        ),
       ).toBeInTheDocument();
 
       expect(screen.getByText('Take me to Lighthouse')).not.toHaveAttribute('aria-disabled', 'true');
       expect(screen.getByText('Take me to Lighthouse')).toHaveAttribute(
         'href',
         expect.stringMatching(
-          /https%3A%2F%2Fprovisioning-public-assets.s3.amazonaws.com%2FAzureLighthouse%2Foffering_template.json$/
-        )
+          /https%3A%2F%2Fprovisioning-public-assets.s3.amazonaws.com%2FAzureLighthouse%2Foffering_template.json$/,
+        ),
       );
     });
 
@@ -32,16 +32,16 @@ describe('Azure-Provisioning hardcoded schemas', () => {
 
       expect(
         screen.getByText(
-          "Complete configuration steps in Azure Lighthouse according to Microsoft instructions. When you're finished, return to this wizard to finish creating this Azure source."
-        )
+          "Complete configuration steps in Azure Lighthouse according to Microsoft instructions. When you're finished, return to this wizard to finish creating this Azure source.",
+        ),
       ).toBeInTheDocument();
 
       expect(screen.getByText('Take me to Lighthouse')).not.toHaveAttribute('aria-disabled', 'true');
       expect(screen.getByText('Take me to Lighthouse')).toHaveAttribute(
         'href',
         expect.stringMatching(
-          /https%3A%2F%2Fprovisioning-public-assets.s3.amazonaws.com%2FAzureLighthouse%2Foffering_template.json$/
-        )
+          /https%3A%2F%2Fprovisioning-public-assets.s3.amazonaws.com%2FAzureLighthouse%2Foffering_template.json$/,
+        ),
       );
     });
 
@@ -67,8 +67,8 @@ describe('Azure-Provisioning hardcoded schemas', () => {
 
     expect(
       screen.getByText(
-        'Log in to your Azure account and navigate to your subscriptions. Copy the subscription ID you have connected through Lighthouse.'
-      )
+        'Log in to your Azure account and navigate to your subscriptions. Copy the subscription ID you have connected through Lighthouse.',
+      ),
     ).toBeInTheDocument();
   });
 });

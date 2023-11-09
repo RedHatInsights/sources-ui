@@ -52,7 +52,7 @@ describe('editSourceModal - on submit', () => {
     getAppStatus.checkAppAvailability = jest.fn().mockImplementation(() =>
       Promise.resolve({
         availability_status: 'available',
-      })
+      }),
     );
 
     const FILTERED_VALUES = {
@@ -100,7 +100,7 @@ describe('editSourceModal - on submit', () => {
       undefined,
       undefined,
       'getEndpoint',
-      expect.any(Date)
+      expect.any(Date),
     );
   });
 
@@ -160,7 +160,7 @@ describe('editSourceModal - on submit', () => {
       undefined,
       undefined,
       undefined,
-      expect.any(Date)
+      expect.any(Date),
     );
     expect(SET_STATE.mock.calls[1][0]).toEqual({
       type: 'submitFailed',
@@ -175,7 +175,7 @@ describe('editSourceModal - on submit', () => {
         availability_status: UNAVAILABLE,
         availability_status_error: APP_ERROR,
         id: 'application-id',
-      })
+      }),
     );
 
     SOURCE = {
@@ -214,7 +214,7 @@ describe('editSourceModal - on submit', () => {
       undefined,
       undefined,
       undefined,
-      expect.any(Date)
+      expect.any(Date),
     );
     expect(SET_STATE.mock.calls[1][0]).toEqual({
       type: 'submitFinished',
@@ -237,14 +237,14 @@ describe('editSourceModal - on submit', () => {
         Promise.resolve({
           availability_status: AVAILABLE,
           id: 'application-id-1',
-        })
+        }),
       )
       .mockImplementationOnce(() =>
         Promise.resolve({
           availability_status: UNAVAILABLE,
           availability_status_error: APP_ERROR,
           id: 'application-id-2',
-        })
+        }),
       );
 
     SOURCE = {
@@ -309,7 +309,7 @@ describe('editSourceModal - on submit', () => {
         availability_status: UNAVAILABLE,
         role: 'ansible',
         availability_status_error: ERROR,
-      })
+      }),
     );
 
     SOURCE = {
@@ -349,7 +349,7 @@ describe('editSourceModal - on submit', () => {
       undefined,
       undefined,
       'getEndpoint',
-      expect.any(Date)
+      expect.any(Date),
     );
     expect(SET_STATE.mock.calls[1][0]).toEqual({
       type: 'submitFinished',
@@ -368,7 +368,7 @@ describe('editSourceModal - on submit', () => {
       Promise.resolve({
         availability_status: null,
         id: 'application-id',
-      })
+      }),
     );
 
     SOURCE = {
@@ -407,7 +407,7 @@ describe('editSourceModal - on submit', () => {
       undefined,
       undefined,
       undefined,
-      expect.any(Date)
+      expect.any(Date),
     );
     expect(SET_STATE.mock.calls[1][0]).toEqual({
       type: 'submitFinished',
@@ -427,7 +427,7 @@ describe('editSourceModal - on submit', () => {
       Promise.resolve({
         availability_status: IN_PROGRESS,
         id: 'application-id',
-      })
+      }),
     );
 
     SOURCE = {
@@ -466,7 +466,7 @@ describe('editSourceModal - on submit', () => {
       undefined,
       undefined,
       undefined,
-      expect.any(Date)
+      expect.any(Date),
     );
     expect(SET_STATE.mock.calls[1][0]).toEqual({
       type: 'submitFinished',
@@ -486,7 +486,7 @@ describe('editSourceModal - on submit', () => {
       Promise.resolve({
         id: 'application-id',
         availability_status: AVAILABLE,
-      })
+      }),
     );
 
     SOURCE = {
@@ -525,7 +525,7 @@ describe('editSourceModal - on submit', () => {
       undefined,
       undefined,
       undefined,
-      expect.any(Date)
+      expect.any(Date),
     );
     expect(SET_STATE.mock.calls[1][0]).toEqual({
       type: 'submitFinished',

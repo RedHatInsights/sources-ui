@@ -34,8 +34,8 @@ describe('RedirectNoPaused', () => {
           <Route path={routes.sourcesDetailRemoveApp.path} element={<RedirectNoPaused />} />
         </Routes>,
         initialStore,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(actions.addMessage).not.toHaveBeenCalled();
@@ -53,8 +53,8 @@ describe('RedirectNoPaused', () => {
           <Route path={routes.sourcesDetailRemoveApp.path} element={<RedirectNoPaused />} />
         </Routes>,
         initialStore,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(() =>
@@ -62,7 +62,7 @@ describe('RedirectNoPaused', () => {
         description: 'You cannot perform this action on a paused source.',
         title: 'Source is paused',
         variant: 'danger',
-      })
+      }),
     );
 
     expect(wasRedirectedToDetail()).toEqual(true);

@@ -6,5 +6,5 @@ export const ACTION_TYPES = ['SET_WRITE_PERMISSIONS', 'SET_ORG_ADMIN'].reduce(
     [`${curr}_FULFILLED`]: `${curr}_FULFILLED`,
     [`${curr}_REJECTED`]: `${curr}_REJECTED`,
   }),
-  {}
+  {},
 );

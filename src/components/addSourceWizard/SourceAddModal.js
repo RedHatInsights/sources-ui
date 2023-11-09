@@ -52,7 +52,7 @@ const SourceAddModal = ({
       initialWizardState,
       activeCategory,
       hcsEnrolled,
-    }
+    },
   ) => {
     switch (type) {
       case 'loaded':
@@ -68,7 +68,7 @@ const SourceAddModal = ({
             initialWizardState,
             activeCategory,
             enableLighthouse,
-            hcsEnrolled
+            hcsEnrolled,
           ),
           isLoading: false,
           sourceTypes,
@@ -80,7 +80,7 @@ const SourceAddModal = ({
 
   const [{ schema, sourceTypes: stateSourceTypes, applicationTypes: stateApplicationTypes, isLoading }, dispatch] = useReducer(
     reducer,
-    initialValues
+    initialValues,
   );
   const hcsEnrolled = useSelector(({ sources }) => sources.hcsEnrolled, shallowEqual);
   const isMounted = useRef(false);
@@ -179,14 +179,14 @@ SourceAddModal.propTypes = {
         authentication: PropTypes.array,
         endpoint: PropTypes.object,
       }),
-    })
+    }),
   ),
   applicationTypes: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
       display_name: PropTypes.string.isRequired,
-    })
+    }),
   ),
   values: PropTypes.object,
   disableAppSelection: PropTypes.bool,

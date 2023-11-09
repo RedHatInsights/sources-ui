@@ -71,7 +71,7 @@ describe('AuthTypeSetter', () => {
           </Routes>
         </rendererContext.Provider>,
         store,
-        initialEntry
+        initialEntry,
       );
     }
   }
@@ -120,7 +120,7 @@ describe('AuthTypeSetter', () => {
             })),
           },
         }}
-      />
+      />,
     );
 
     expect(changeSpy).toHaveBeenCalledWith('authentication', {
@@ -142,7 +142,7 @@ describe('AuthTypeSetter', () => {
             })),
           },
         }}
-      />
+      />,
     );
 
     expect(changeSpy).toHaveBeenCalledWith('authentication', AUTH_VALUES1);
@@ -162,7 +162,7 @@ describe('AuthTypeSetter', () => {
             })),
           },
         }}
-      />
+      />,
     );
 
     expect(changeSpy).not.toHaveBeenCalled();
@@ -181,7 +181,7 @@ describe('AuthTypeSetter', () => {
             })),
           },
         }}
-      />
+      />,
     );
 
     expect(changeSpy).toHaveBeenCalledWith('authentication', AUTH_VALUES2);
@@ -201,7 +201,7 @@ describe('AuthTypeSetter', () => {
             })),
           },
         }}
-      />
+      />,
     );
 
     expect(changeSpy).toHaveBeenCalledWith('authentication', {
@@ -239,7 +239,7 @@ describe('AuthTypeSetter', () => {
             })),
           },
         }}
-      />
+      />,
     );
 
     expect(changeSpy).toHaveBeenCalledWith('authentication', AUTH_VALUES2);
@@ -259,7 +259,7 @@ describe('AuthTypeSetter', () => {
             })),
           },
         }}
-      />
+      />,
     );
 
     expect(changeSpy).toHaveBeenCalledWith('authentication', {

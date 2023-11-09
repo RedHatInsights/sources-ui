@@ -26,14 +26,14 @@ export const descriptionMapper = (type, intl, hcsEnrolled) =>
       id: 'provisioning.sources.description',
       defaultMessage: 'Build and launch images with custom content as Virtual Machines in hybrid cloud environments.',
     }),
-  }[type.name]);
+  })[type.name];
 
 export const labelMapper = (type, intl, hcsEnrolled) =>
   ({
     [CLOUD_METER_APP_NAME]: (
       <span className="src-c-wizard__rhel-mag-label">
         RHEL management{' '}
-        <Label className="pf-u-ml-sm" color="purple">
+        <Label className="pf-v5-u-ml-sm" color="purple">
           {intl.formatMessage({ id: 'sub.bundle', defaultMessage: 'Bundle' })}
         </Label>
       </span>
@@ -45,14 +45,14 @@ export const labelMapper = (type, intl, hcsEnrolled) =>
     [COST_MANAGEMENT_APP_NAME]: hcsEnrolled ? (
       <span className="src-c-wizard__rhel-mag-label">
         {`${HCS_APP_NAME} `}
-        <Label className="pf-u-ml-sm" color="purple">
+        <Label className="pf-v5-u-ml-sm" color="purple">
           {intl.formatMessage({ id: 'sub.bundle', defaultMessage: 'Bundle' })}
         </Label>
       </span>
     ) : (
       type.display_name
     ),
-  }[type.name]);
+  })[type.name];
 
 export const compileAllApplicationComboOptions = (applicationTypes, intl, activeCategory, hcsEnrolled) => [
   ...applicationTypes

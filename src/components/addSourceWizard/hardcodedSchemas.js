@@ -183,8 +183,8 @@ const getArn = (authUsername, showHCS) => ({
                       />
                     }
                   >
-                    <Button className="pf-u-p-0 pf-u-m-0" variant={ButtonVariant.plain}>
-                      <QuestionCircleIcon className="pf-u-ml-sm" />
+                    <Button className="pf-v5-u-p-0 pf-v5-u-m-0" variant={ButtonVariant.plain}>
+                      <QuestionCircleIcon className="pf-v5-u-ml-sm" />
                     </Button>
                   </Popover>
                 </span>

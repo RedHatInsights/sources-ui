@@ -104,7 +104,7 @@ describe('generate auth selection pages', () => {
       });
 
       expect(createAuthTypeSelection(ONE_SINGLE_SELECTION_TYPE, NO_APP, HAS_ENDPOINT, NOT_EDITING, HAS_ENDPOINT_STEP)).toEqual(
-        expectedSchema
+        expectedSchema,
       );
     });
 
@@ -132,7 +132,7 @@ describe('generate auth selection pages', () => {
         });
 
         expect(createAuthTypeSelection(MULTIPLE_SELECTION_TYPE, NO_APP, HAS_ENDPOINT, NOT_EDITING, HAS_ENDPOINT_STEP)).toEqual(
-          expectedSchema
+          expectedSchema,
         );
       });
     });

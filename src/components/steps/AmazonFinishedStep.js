@@ -22,7 +22,7 @@ import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 
 const AwsLink = ({ href, children }) => (
   <React.Fragment>
-    <CheckCircleIcon className="pf-u-mr-sm" fill="var(--pf-global--success-color--100)" />
+    <CheckCircleIcon className="pf-v5-u-mr-sm" fill="var(--pf-v5-global--success-color--100)" />
     <Text component="a" href={href} target="_blank" rel="noopener noreferrer">
       {children}
     </Text>
@@ -59,9 +59,9 @@ const AmazonFinishedStep = ({ onClose }) => {
         })}
       </Alert>
       <Bullseye>
-        <EmptyState variant={EmptyStateVariant.full} className="pf-u-mt-md">
-          <EmptyStateIcon icon={CheckCircleIcon} color="var(--pf-global--success-color--100)" className="pf-u-mb-0" />
-          <Title headingLevel="h2" size="xl" className="pf-u-mt-xl">
+        <EmptyState variant={EmptyStateVariant.full} className="pf-v5-u-mt-md">
+          <EmptyStateIcon icon={CheckCircleIcon} color="var(--pf-v5-global--success-color--100)" className="pf-v5-u-mb-0" />
+          <Title headingLevel="h2" size="xl" className="pf-v5-u-mt-xl">
             {intl.formatMessage({ id: 'aws.successTitle', defaultMessage: 'Amazon Web Services connection established' })}
           </Title>
           <EmptyStateBody>
@@ -69,7 +69,7 @@ const AmazonFinishedStep = ({ onClose }) => {
               id: 'aws.successDescription',
               defaultMessage: 'Discover the benefits of your connection or exit to manage your new source.',
             })}
-            <Grid hasGutter className="src-c-aws-grid pf-u-mt-md">
+            <Grid hasGutter className="src-c-aws-grid pf-v5-u-mt-md">
               <GridItem md="6">
                 <AwsLink href={GOLDIMAGES_HREF}>
                   {intl.formatMessage({ id: 'aws.goldImages', defaultMessage: 'View enabled AWS gold images' })}
@@ -92,7 +92,7 @@ const AmazonFinishedStep = ({ onClose }) => {
               </GridItem>
             </Grid>
           </EmptyStateBody>
-          <Button variant="primary" onClick={onClose} className="pf-u-mt-xl">
+          <Button variant="primary" onClick={onClose} className="pf-v5-u-mt-xl">
             {intl.formatMessage({ id: 'exit', defaultMessage: 'Exit' })}
           </Button>
           <EmptyStateActions>

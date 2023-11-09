@@ -16,14 +16,14 @@ import {
 
 const LoadingStep = ({ onClose, customText, cancelTitle, description }) => (
   <Bullseye>
-    <EmptyState variant={EmptyStateVariant.full} className="pf-u-mt-4xl">
-      <EmptyStateIcon icon={Spinner} className="pf-u-mb-0" />
-      <Title headingLevel="h2" size="xl" className="pf-u-mt-xl">
+    <EmptyState variant={EmptyStateVariant.full} className="pf-v5-u-mt-4xl">
+      <EmptyStateIcon icon={Spinner} className="pf-v5-u-mb-0" />
+      <Title headingLevel="h2" size="xl" className="pf-v5-u-mt-xl">
         {customText}
       </Title>
       {description && <EmptyStateBody className="src-c-wizard--step-text">{description}</EmptyStateBody>}
       {onClose && (
-        <EmptyStateActions className="pf-u-mt-xl">
+        <EmptyStateActions className="pf-v5-u-mt-xl">
           <Button variant="link" onClick={onClose}>
             {cancelTitle}
           </Button>

@@ -12,8 +12,8 @@ describe('Tower Catalog', () => {
     expect(
       screen.getByText(
         'Provide Ansible Tower service account user credentials to ensure optimized availability of resources to Catalog Administrators.',
-        { exact: false }
-      )
+        { exact: false },
+      ),
     ).toBeInTheDocument();
     expect(screen.getByText('All fields are required.', { exact: false })).toBeInTheDocument();
   });
@@ -22,7 +22,7 @@ describe('Tower Catalog', () => {
     render(<TowerCatalog.EndpointDescription />);
 
     expect(
-      screen.getByText('Enter the hostname of the Ansible Tower instance you want to connect to.', { exact: false })
+      screen.getByText('Enter the hostname of the Ansible Tower instance you want to connect to.', { exact: false }),
     ).toBeInTheDocument();
   });
 
