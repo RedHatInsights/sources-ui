@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import React from 'react';
 import 'whatwg-fetch'; // fetch for Nodejs
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom/jest-globals';
 
 global.React = React;
 
@@ -17,7 +17,7 @@ global.mockApi = () => {
       new Promise((res, rej) => {
         mockFn.resolve = res;
         mockFn.reject = rej;
-      })
+      }),
   );
 
   return mockFn;

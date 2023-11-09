@@ -1,5 +1,5 @@
 module.exports = {
-  appUrl: '/settings/sources',
+  appUrl: '/settings/integrations',
   debug: true,
   useProxy: true,
   proxyVerbose: true,
@@ -15,5 +15,5 @@ module.exports = {
     exclude: ['react-router-dom'],
     shared: [{ 'react-router-dom': { singleton: true, version: '^6.8.0' } }],
   },
-  _unstableHotReload: process.env.HOT === 'true',
+  hotReload: process.env.HOT === 'true',
 };
