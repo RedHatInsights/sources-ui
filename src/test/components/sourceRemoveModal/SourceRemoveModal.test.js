@@ -35,8 +35,8 @@ describe('SourceRemoveModal', () => {
             <Route path={routes.sourcesRemove.path} element={<SourceRemoveModal />} />
           </Routes>,
           store,
-          [replaceRouteId(routes.sourcesRemove.path, '14')]
-        )
+          [replaceRouteId(routes.sourcesRemove.path, '14')],
+        ),
       );
 
       expect(screen.getByRole('checkbox')).toBeInTheDocument();
@@ -57,8 +57,8 @@ describe('SourceRemoveModal', () => {
             <Route path={routes.sourcesRemove.path} element={<SourceRemoveModal />} />
           </Routes>,
           store,
-          [replaceRouteId(routes.sourcesRemove.path, '14')]
-        )
+          [replaceRouteId(routes.sourcesRemove.path, '14')],
+        ),
       );
 
       expect(screen.getByText('Remove source and its data')).toBeDisabled();
@@ -81,8 +81,8 @@ describe('SourceRemoveModal', () => {
             <Route path={routes.sourcesRemove.path} element={<SourceRemoveModal />} />
           </Routes>,
           store,
-          [replaceRouteId(routes.sourcesRemove.path, '14')]
-        )
+          [replaceRouteId(routes.sourcesRemove.path, '14')],
+        ),
       );
 
       await waitFor(async () => {
@@ -107,8 +107,8 @@ describe('SourceRemoveModal', () => {
             <Route path={routes.sourcesRemove.path} element={<SourceRemoveModal />} />
           </Routes>,
           store,
-          [replaceRouteId(routes.sourcesRemove.path, '406')]
-        )
+          [replaceRouteId(routes.sourcesRemove.path, '406')],
+        ),
       );
 
       const source = sourcesDataGraphQl.find((s) => s.id === '406');
@@ -149,8 +149,8 @@ describe('SourceRemoveModal', () => {
             <Route path={routes.sourcesRemove.path} element={<SourceRemoveModal />} />
           </Routes>,
           store,
-          [replaceRouteId(routes.sourcesRemove.path, '406')]
-        )
+          [replaceRouteId(routes.sourcesRemove.path, '406')],
+        ),
       );
 
       const source = sourcesDataGraphQl.find((s) => s.id === '406');
@@ -186,12 +186,12 @@ describe('SourceRemoveModal', () => {
             <Route path={routes.sourcesRemove.path} element={<SourceRemoveModal />} />
           </Routes>,
           store,
-          [replaceRouteId(routes.sourcesRemove.path, '406')]
-        )
+          [replaceRouteId(routes.sourcesRemove.path, '406')],
+        ),
       );
 
       expect(
-        screen.getByText('detaches the following connected application from this source:', { exact: false })
+        screen.getByText('detaches the following connected application from this source:', { exact: false }),
       ).toBeInTheDocument();
     });
 
@@ -222,14 +222,14 @@ describe('SourceRemoveModal', () => {
             <Route path={routes.sourcesRemove.path} element={<SourceRemoveModal />} />
           </Routes>,
           store,
-          [replaceRouteId(routes.sourcesRemove.path, '406')]
-        )
+          [replaceRouteId(routes.sourcesRemove.path, '406')],
+        ),
       );
 
       expect(
         screen.getByText('permanently deletes all collected data and detaches the following connected application:', {
           exact: false,
-        })
+        }),
       ).toBeInTheDocument();
     });
 
@@ -260,12 +260,12 @@ describe('SourceRemoveModal', () => {
             <Route path={routes.sourcesRemove.path} element={<SourceRemoveModal />} />
           </Routes>,
           store,
-          [replaceRouteId(routes.sourcesRemove.path, '406')]
-        )
+          [replaceRouteId(routes.sourcesRemove.path, '406')],
+        ),
       );
 
       expect(
-        screen.getByText('permanently deletes all collected data and detaches the following connected', { exact: false })
+        screen.getByText('permanently deletes all collected data and detaches the following connected', { exact: false }),
       ).toBeInTheDocument();
     });
   });

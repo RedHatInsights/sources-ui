@@ -43,7 +43,7 @@ export const loadEntities = (options) => (dispatch, getState) => {
       dispatch({
         type: ACTION_TYPES.LOAD_ENTITIES_FULFILLED,
         payload: { sources, meta },
-      })
+      }),
     )
     .catch((error) =>
       dispatch({
@@ -55,7 +55,7 @@ export const loadEntities = (options) => (dispatch, getState) => {
             title: error.title || 'Fetching data failed, try refresh page',
           },
         },
-      })
+      }),
     );
 };
 
@@ -67,14 +67,14 @@ export const loadSourceTypes = () => (dispatch) => {
       dispatch({
         type: ACTION_TYPES.LOAD_SOURCE_TYPES_FULFILLED,
         payload: sourceTypes,
-      })
+      }),
     )
     .catch((error) =>
       dispatch({
         type: ACTION_TYPES.LOAD_SOURCE_TYPES_REJECTED,
         payload: { error },
         meta: { noError: true },
-      })
+      }),
     );
 };
 
@@ -86,14 +86,14 @@ export const loadHcsEnrollment = (token, isProd) => (dispatch) => {
       dispatch({
         type: ACTION_TYPES.LOAD_HCS_ENROLLMENT_FULFILLED,
         payload: hcsDeal,
-      })
+      }),
     )
     .catch((error) =>
       dispatch({
         type: ACTION_TYPES.LOAD_HCS_ENROLLMENT_REJECTED,
         payload: { error },
         meta: { noError: true },
-      })
+      }),
     );
 };
 
@@ -105,14 +105,14 @@ export const loadAppTypes = () => (dispatch) => {
       dispatch({
         type: ACTION_TYPES.LOAD_APP_TYPES_FULFILLED,
         payload: appTypes.data,
-      })
+      }),
     )
     .catch((error) =>
       dispatch({
         type: ACTION_TYPES.LOAD_APP_TYPES_REJECTED,
         payload: { error },
         meta: { noError: true },
-      })
+      }),
     );
 };
 
@@ -177,7 +177,7 @@ export const removeSource = (sourceId, title) => (dispatch) => {
         meta: {
           sourceId,
         },
-      })
+      }),
     );
 };
 
@@ -243,7 +243,7 @@ export const renameSource = (id, name, errorTitle) => (dispatch, getState) => {
       dispatch({
         type: ACTION_TYPES.RENAME_SOURCE_REJECTED,
         payload: { error: { detail: error.errors?.[0]?.detail || error, title: errorTitle }, id, name: oldName },
-      })
+      }),
     );
 };
 
@@ -269,11 +269,11 @@ export const pauseSource = (sourceId, sourceName, intl) => (dispatch) => {
               defaultMessage:
                 'Source <b>{ sourceName }</b> is now paused. Data collection for all connected applications will be disabled until the source is resumed.',
             },
-            { sourceName, b: bold }
+            { sourceName, b: bold },
           ),
           variant: 'default',
           customIcon: <PauseIcon />,
-        })
+        }),
       );
       dispatch(loadEntities({ loaded: 0 }));
     })
@@ -283,7 +283,7 @@ export const pauseSource = (sourceId, sourceName, intl) => (dispatch) => {
           title: intl.formatMessage({ id: 'source.paused.alert.error', defaultMessage: 'Source pause failed' }),
           description: tryAgainMessage(intl, handleError(error)),
           variant: 'danger',
-        })
+        }),
       );
     });
 };
@@ -300,11 +300,11 @@ export const resumeSource = (sourceId, sourceName, intl) => (dispatch) => {
               id: 'source.resumed.alert.description',
               defaultMessage: 'Source <b>{ sourceName }</b> will recontinue data collection for connected applications.',
             },
-            { sourceName, b: bold }
+            { sourceName, b: bold },
           ),
           variant: 'default',
           customIcon: <PlayIcon />,
-        })
+        }),
       );
       dispatch(loadEntities({ loaded: 0 }));
     })
@@ -314,7 +314,7 @@ export const resumeSource = (sourceId, sourceName, intl) => (dispatch) => {
           title: intl.formatMessage({ id: 'source.resume.alert.error', defaultMessage: 'Source resume failed' }),
           description: tryAgainMessage(intl, handleError(error)),
           variant: 'danger',
-        })
+        }),
       );
     });
 };

@@ -21,7 +21,7 @@ export const SelectAuthenticationDescription = ({ applicationTypeName, authentic
             defaultMessage:
               'Selected application { applicationTypeName } supports { authenticationTypeName } authentication type. You can use already defined authentication values or define new.',
           },
-          { applicationTypeName, authenticationTypeName }
+          { applicationTypeName, authenticationTypeName },
         )}
       </Text>
     </TextContent>
@@ -81,7 +81,7 @@ const selectAuthenticationStep = ({ intl, source, authenticationValues, sourceTy
 
       if (hasAvailableAuthentications) {
         const supportedAuthTypeName = get(sourceType, `schema.authentication`, {}).find(
-          ({ type }) => type === supportedAuthType
+          ({ type }) => type === supportedAuthType,
         ).name;
 
         fields.push({
@@ -111,7 +111,7 @@ const selectAuthenticationStep = ({ intl, source, authenticationValues, sourceTy
                       id: 'sources.selectAuthenticationradioLabel',
                       defaultMessage: 'Define new { supportedAuthTypeName }',
                     },
-                    { supportedAuthTypeName }
+                    { supportedAuthTypeName },
                   ),
                   value: `new-${supportedAuthType}`,
                 },

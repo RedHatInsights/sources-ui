@@ -34,7 +34,7 @@ export const onSubmit = async (values, editing, dispatch, source, intl, setState
         checkAppAvailability(source.endpoints[0].id, undefined, undefined, 'getEndpoint', startDate).then((data) => ({
           ...data,
           id: checkInfo.replace(`${CHECK_ENDPOINT_COMMAND}-`, ''),
-        }))
+        })),
       );
     } else {
       promises.push(checkAppAvailability(checkInfo, undefined, undefined, undefined, startDate));

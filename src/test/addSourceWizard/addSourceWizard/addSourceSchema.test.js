@@ -107,7 +107,7 @@ describe('Add source schema', () => {
           onSubmit={jest.fn()}
           initialValues={{ source_type: 'amazon' }}
           schema={{ fields: [{ component: 'description', name: 'desc', Content: NameDescription, sourceTypes }] }}
-        />
+        />,
       );
 
       expect(screen.getByText('Enter a name for your Amazon Web Services source.')).toBeInTheDocument();
@@ -160,7 +160,7 @@ describe('Add source schema', () => {
 
       expect(result.fields[0].component).toEqual(componentTypes.PLAIN_TEXT);
       expect(result.fields[0].label).toEqual(
-        'To import data for an application, you need to connect to a data source. Start by selecting your source type.'
+        'To import data for an application, you need to connect to a data source. Start by selecting your source type.',
       );
 
       expect(result.fields[1].name).toEqual('source_type');
@@ -172,7 +172,7 @@ describe('Add source schema', () => {
 
       expect(result.fields[0].component).toEqual(componentTypes.PLAIN_TEXT);
       expect(result.fields[0].label).toEqual(
-        'To import data for an application, you need to connect to a data source. Start by selecting your source type and application.'
+        'To import data for an application, you need to connect to a data source. Start by selecting your source type and application.',
       );
       expect(result.fields).toHaveLength(3);
       expect(result.fields[1].name).toEqual('source_type');
@@ -227,7 +227,7 @@ describe('Add source schema', () => {
           label: (
             <span className="src-c-wizard__rhel-mag-label">
               {`${HCS_APP_NAME} `}
-              <Label className="pf-u-ml-sm" color="purple">
+              <Label className="pf-v5-u-ml-sm" color="purple">
                 Bundle
               </Label>
             </span>

@@ -53,7 +53,7 @@ const generateFirstAuthStep = (type, appType, endpointFields, authtype, intl, sh
           [...firstAdditonalStep.fields, ...additionalFields],
           type.name,
           authtype,
-          appType.name
+          appType.name,
         ),
       ],
     };
@@ -72,7 +72,7 @@ const generateFirstAuthStep = (type, appType, endpointFields, authtype, intl, sh
         schemaBuilder.getNoStepsFields(auth.fields, additionalIncludesStepKeys),
         type.name,
         authtype,
-        appType.name
+        appType.name,
       ),
     ],
     nextStep,

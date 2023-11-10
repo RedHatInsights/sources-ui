@@ -30,8 +30,8 @@ describe('ErroredModal', () => {
           <Route path={`${routes.sourcesDetail.path}/*`} element={<ErroredModal onRetry={onRetry} />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
   });
 
@@ -39,8 +39,8 @@ describe('ErroredModal', () => {
     expect(screen.getByText('Something went wrong')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'There was a problem while trying to edit your source. Please try again. If the error persists, open a support case.'
-      )
+        'There was a problem while trying to edit your source. Please try again. If the error persists, open a support case.',
+      ),
     ).toBeInTheDocument();
   });
 

@@ -28,8 +28,8 @@ describe('ApplicationResourcesCard', () => {
           <Route path={routes.sourcesDetail.path} element={<ApplicationResourcesCard />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(screen.getByText('Manage connected applications')).toBeInTheDocument();
@@ -51,8 +51,8 @@ describe('ApplicationResourcesCard', () => {
           <Route path={routes.sourcesDetail.path} element={<ApplicationResourcesCard />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(screen.getByText('Manage connected applications')).toBeInTheDocument();
@@ -76,8 +76,8 @@ describe('ApplicationResourcesCard', () => {
           <Route path={routes.sourcesDetail.path} element={<ApplicationResourcesCard />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(screen.getByText('Manage connected applications')).toBeInTheDocument();

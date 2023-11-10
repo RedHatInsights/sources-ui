@@ -30,7 +30,7 @@ export const IAMRoleDescription = () => {
           intl.formatMessage({
             id: 'subwatch.iampolicy.subWatchConfigError',
             defaultMessage: 'There is an error with loading of the configuration. Please go back and return to this step.',
-          })
+          }),
         );
       });
   }, []);
@@ -60,10 +60,10 @@ export const IAMRoleDescription = () => {
             {
               b,
               space: <React.Fragment>&nbsp;</React.Fragment>,
-            }
+            },
           )}
         </TextListItem>
-        <ClipboardCopy className="pf-u-m-sm-on-sm" isReadOnly>
+        <ClipboardCopy className="pf-v5-u-m-sm-on-sm" isReadOnly>
           {config || intl.formatMessage({ id: 'subwatch.iampolicy.loading', defaultMessage: 'Loading configuration...' })}
         </ClipboardCopy>
         <TextListItem>
@@ -94,7 +94,7 @@ export const IAMRoleDescription = () => {
                 })}
               </b>
             ),
-          }
+          },
         )}
       </Text>
     </TextContent>
@@ -115,7 +115,7 @@ export const IAMPolicyDescription = () => {
           intl.formatMessage({
             id: 'subwatch.iampolicy.subWatchConfigError',
             defaultMessage: 'There is an error with loading of the configuration. Please go back and return to this step.',
-          })
+          }),
         );
       });
   }, []);
@@ -150,7 +150,7 @@ export const IAMPolicyDescription = () => {
                   })}
                 </a>
               ),
-            }
+            },
           )}
         </TextListItem>
         <TextListItem>
@@ -159,7 +159,7 @@ export const IAMPolicyDescription = () => {
             defaultMessage: 'Create a new policy, pasting the following content into the JSON text box.',
           })}
         </TextListItem>
-        <ClipboardCopy isCode variant={ClipboardCopyVariant.expansion} className="pf-u-m-sm-on-sm" isReadOnly>
+        <ClipboardCopy isCode variant={ClipboardCopyVariant.expansion} className="pf-v5-u-m-sm-on-sm" isReadOnly>
           {config
             ? JSON.stringify(config, null, 2)
             : intl.formatMessage({ id: 'subwatch.iampolicy.loading', defaultMessage: 'Loading configuration...' })}
@@ -186,7 +186,7 @@ export const IAMPolicyDescription = () => {
                 })}
               </b>
             ),
-          }
+          },
         )}
       </Text>
     </TextContent>
@@ -217,7 +217,7 @@ export const ArnDescription = () => {
               id: 'subwatch.arn.copyArn',
               defaultMessage: 'From the <b>Summary</b> screen, copy the role ARN and paste it in the <b>ARN field</b> below.',
             },
-            { b }
+            { b },
           )}
         </TextListItem>
       </TextList>

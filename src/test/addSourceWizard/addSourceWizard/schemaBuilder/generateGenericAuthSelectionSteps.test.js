@@ -119,7 +119,7 @@ describe('generate auth selection pages', () => {
       });
 
       expect(createAuthTypeSelection(ONE_SINGLE_SELECTION_TYPE, NO_APP, ENDPOINT_FIELDS, NOT_EDITING, HAS_ENDPOINT_STEP)).toEqual(
-        expectedSchema
+        expectedSchema,
       );
     });
 
@@ -166,8 +166,8 @@ describe('generate auth selection pages', () => {
           NO_APP,
           APPEND_ENDPOINT_FIELDS,
           NOT_EDITING,
-          HAS_ENDPOINT_STEP
-        )
+          HAS_ENDPOINT_STEP,
+        ),
       ).toEqual(expectedSchema);
     });
 
@@ -180,7 +180,7 @@ describe('generate auth selection pages', () => {
       });
 
       expect(
-        createAuthTypeSelection(ONE_SINGLE_SELECTION_TYPE, NO_APP, EMPTY_APPEND_ENDPOINT, NOT_EDITING, HAS_ENDPOINT_STEP)
+        createAuthTypeSelection(ONE_SINGLE_SELECTION_TYPE, NO_APP, EMPTY_APPEND_ENDPOINT, NOT_EDITING, HAS_ENDPOINT_STEP),
       ).toEqual(expectedSchema);
     });
 
@@ -206,7 +206,7 @@ describe('generate auth selection pages', () => {
         });
 
         expect(
-          createAuthTypeSelection(MULTIPLE_SELECTION_TYPE, NO_APP, APPEND_ENDPOINT_FIELDS, NOT_EDITING, HAS_ENDPOINT_STEP)
+          createAuthTypeSelection(MULTIPLE_SELECTION_TYPE, NO_APP, APPEND_ENDPOINT_FIELDS, NOT_EDITING, HAS_ENDPOINT_STEP),
         ).toEqual(expectedSchema);
       });
 
@@ -227,7 +227,7 @@ describe('generate auth selection pages', () => {
         });
 
         expect(
-          createAuthTypeSelection(MULTIPLE_SELECTION_TYPE, NO_APP, EMPTY_APPEND_ENDPOINT, NOT_EDITING, HAS_ENDPOINT_STEP)
+          createAuthTypeSelection(MULTIPLE_SELECTION_TYPE, NO_APP, EMPTY_APPEND_ENDPOINT, NOT_EDITING, HAS_ENDPOINT_STEP),
         ).toEqual(expectedSchema);
       });
 
@@ -256,8 +256,8 @@ describe('generate auth selection pages', () => {
             NO_APP,
             APPEND_ENDPOINT_FIELDS,
             NOT_EDITING,
-            HAS_ENDPOINT_STEP
-          )
+            HAS_ENDPOINT_STEP,
+          ),
         ).toEqual(expectedSchema);
       });
     });

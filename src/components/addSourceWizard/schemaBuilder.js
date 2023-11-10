@@ -11,13 +11,13 @@ export const shouldAppendEmptyType = (type, appTypes) =>
   appTypes.some(
     ({ supported_source_types, supported_authentication_types }) =>
       supported_source_types.includes(type.name) &&
-      (!supported_authentication_types[type.name] || !supported_authentication_types[type.name].length === 0)
+      (!supported_authentication_types[type.name] || !supported_authentication_types[type.name].length === 0),
   );
 
 export const acronymMapper = (value) =>
   ({
     'Amazon Web Services': 'AWS',
-  }[value] || value);
+  })[value] || value;
 
 export const hardcodedSchema = (typeName, authName, appName) =>
   get(hardcodedSchemas, [typeName, 'authentication', authName, appName], undefined);
@@ -34,7 +34,7 @@ export const getAdditionalSteps = (typeName, authName, appName = 'generic', enab
       applicationName,
       'additionalSteps',
     ],
-    []
+    [],
   );
 };
 
@@ -110,7 +110,7 @@ export const createAdditionalSteps = (
   hasEndpointStep,
   fields,
   appName = 'generic',
-  hcsEnrolled
+  hcsEnrolled,
 ) =>
   additionalSteps.map((step) => {
     const stepKey = step.name || `${name}-${authName}-${appName}-additional-step`;
@@ -136,7 +136,7 @@ export const createAuthTypeSelection = (
   disableAuthType,
   hasEndpointStep,
   enableLighthouse,
-  hcsEnrolled
+  hcsEnrolled,
 ) => {
   const isGeneric = appType.name === 'generic';
 
@@ -191,7 +191,7 @@ export const createAuthTypeSelection = (
         fields.push({
           component: componentTypes.SUB_FORM,
           name: `${auth.type}-subform`,
-          className: 'pf-u-pl-md',
+          className: 'pf-v5-u-pl-md',
           fields: [
             ...(!shouldUseAppAuth(type.name, auth.type, hardcodedAppName) ? endpointFields : []),
             ...getAdditionalAuthFields(type.name, auth.type, hardcodedAppName),
@@ -199,7 +199,7 @@ export const createAuthTypeSelection = (
               getNoStepsFields(authFields, additionalIncludesStepKeys),
               type.name,
               auth.type,
-              hardcodedAppName
+              hardcodedAppName,
             ),
           ],
           condition: {
@@ -253,7 +253,7 @@ export const createAuthTypeSelection = (
 
     if (hasCustomStep) {
       const firstAdditonalStep = getAdditionalSteps(type.name, auth.type, hardcodedAppName, enableLighthouse, hcsEnrolled).find(
-        ({ name }) => !name
+        ({ name }) => !name,
       );
       const additionalFields = getAdditionalStepFields(auth.fields, additionalStepName);
 
@@ -284,7 +284,7 @@ export const createAuthTypeSelection = (
           getNoStepsFields(auth.fields, additionalIncludesStepKeys),
           type.name,
           auth.type,
-          hardcodedAppName
+          hardcodedAppName,
         ),
       ],
       nextStep,
@@ -301,13 +301,13 @@ export const schemaBuilder = (sourceTypes, appTypes, disableAuthType, enableLigh
     const hasEndpointStep = type.schema.endpoint && appendEndpoint.length === 0;
 
     schema.push(
-      createAuthTypeSelection(type, undefined, appendEndpoint, disableAuthType, hasEndpointStep, enableLighthouse, hcsEnrolled)
+      createAuthTypeSelection(type, undefined, appendEndpoint, disableAuthType, hasEndpointStep, enableLighthouse, hcsEnrolled),
     );
 
     appTypes.forEach((appType) => {
       if (appType.supported_source_types.includes(type.name)) {
         schema.push(
-          createAuthTypeSelection(type, appType, appendEndpoint, disableAuthType, hasEndpointStep, enableLighthouse, hcsEnrolled)
+          createAuthTypeSelection(type, appType, appendEndpoint, disableAuthType, hasEndpointStep, enableLighthouse, hcsEnrolled),
         );
       }
     });
@@ -323,7 +323,7 @@ export const schemaBuilder = (sourceTypes, appTypes, disableAuthType, enableLigh
 
       if (additionalSteps.length > 0) {
         schema.push(
-          ...createAdditionalSteps(additionalSteps, type.name, auth.type, hasEndpointStep, auth.fields, undefined, hcsEnrolled)
+          ...createAdditionalSteps(additionalSteps, type.name, auth.type, hasEndpointStep, auth.fields, undefined, hcsEnrolled),
         );
       }
 
@@ -339,8 +339,8 @@ export const schemaBuilder = (sourceTypes, appTypes, disableAuthType, enableLigh
               hasEndpointStep,
               auth.fields,
               appType.name,
-              hcsEnrolled
-            )
+              hcsEnrolled,
+            ),
           );
         }
       });

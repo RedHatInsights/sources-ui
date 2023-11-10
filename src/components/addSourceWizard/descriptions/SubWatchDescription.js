@@ -29,7 +29,7 @@ const SubWatchDescription = ({ id }) => {
             id: 'rhelbundle.goldImages.azure.description',
             defaultMessage: 'Unlock cloud images in Microsoft Azure and bring your own subscription instead of paying hourly.',
           })}
-          className="pf-u-mb-sm"
+          className="pf-v5-u-mb-sm"
           isEnabled={isEnabled}
         />
         <Point
@@ -59,7 +59,7 @@ const SubWatchDescription = ({ id }) => {
             id: 'rhelbundle.goldImages.google.description',
             defaultMessage: 'Unlock cloud images in Google Cloud and bring your own subscription instead of paying hourly.',
           })}
-          className="pf-u-mb-sm"
+          className="pf-v5-u-mb-sm"
           isEnabled={isEnabled}
         />
         <Point
@@ -88,7 +88,7 @@ const SubWatchDescription = ({ id }) => {
           id: 'rhelbundle.goldImages.description',
           defaultMessage: 'Unlock cloud images in AWS and bring your own subscription instead of paying hourly.',
         })}
-        className="pf-u-mb-sm"
+        className="pf-v5-u-mb-sm"
         isEnabled={isEnabled}
       />
       <Point
@@ -100,7 +100,7 @@ const SubWatchDescription = ({ id }) => {
           id: 'rhelbundle.subwatch.description',
           defaultMessage: 'View precise public cloud usage data in subscription watch.',
         })}
-        className="pf-u-mb-sm"
+        className="pf-v5-u-mb-sm"
         isEnabled={isEnabled}
       />
       <Point

@@ -83,7 +83,7 @@ describe('doCreateSource', () => {
           ...(data.endpoints.length > 0 && { endpoints: [{ id: CREATED_EDNPOINT_ID }] }),
           ...(data.applications.length > 0 && { applications: [{ id: CREATED_APP_ID }] }),
           ...(data.authentications.length > 0 && { authentications: [{ id: CREATED_AUTH_ID }] }),
-        })
+        }),
       );
 
       createAuthApp = jest.fn().mockImplementation(() => Promise.resolve());
@@ -100,7 +100,7 @@ describe('doCreateSource', () => {
       checkAppMock = jest
         .fn()
         .mockImplementation((id, timeout, delay, entity) =>
-          entity === 'getEndpoint' ? Promise.resolve({ id: CREATED_EDNPOINT_ID }) : Promise.resolve({ id: CREATED_APP_ID })
+          entity === 'getEndpoint' ? Promise.resolve({ id: CREATED_EDNPOINT_ID }) : Promise.resolve({ id: CREATED_APP_ID }),
         );
       checkApp.checkAppAvailability = checkAppMock;
     });
@@ -303,7 +303,7 @@ describe('doCreateSource', () => {
             applications: [{ id: CREATED_APP_ID, application_type_id: COST_MANAGEMENT_APP.id }],
           }),
           ...(data.authentications.length > 0 && { authentications: [{ id: CREATED_AUTH_ID }] }),
-        })
+        }),
       );
 
       mocks = {
@@ -383,7 +383,7 @@ describe('doCreateSource', () => {
             applications: [{ id: CREATED_APP_ID, application_type_id: COST_MANAGEMENT_APP.id }],
           }),
           ...(data.authentications.length > 0 && { authentications: [{ id: CREATED_AUTH_ID }] }),
-        })
+        }),
       );
 
       mocks = {
@@ -425,7 +425,7 @@ describe('doCreateSource', () => {
             applications: [{ id: CREATED_APP_ID, application_type_id: COST_MANAGEMENT_APP.id }],
           }),
           ...(data.authentications.length > 0 && { authentications: [{ id: CREATED_AUTH_ID }] }),
-        })
+        }),
       );
 
       mocks = {

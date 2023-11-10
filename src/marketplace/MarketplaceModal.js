@@ -42,7 +42,7 @@ const reducer = (state, { type, payload, meta }) => {
 const valuesMapper = (value) =>
   ({
     database: 'Database',
-  }[value] || value);
+  })[value] || value;
 
 export const chipFormatters = (key, filter) =>
   ({
@@ -50,7 +50,7 @@ export const chipFormatters = (key, filter) =>
       category: 'Type',
       chips: filter.map((value) => ({ name: valuesMapper(value) })),
     },
-  }[key] || { category: key, chips: filter.map((value) => ({ name: value })) });
+  })[key] || { category: key, chips: filter.map((value) => ({ name: value })) };
 
 const generateChips = (filters) =>
   Object.keys(filters)
@@ -70,7 +70,7 @@ const MarketplaceModal = ({ data, isOpen, onClose }) => {
     if (isOpen) {
       dispatch({ type: 'SET_LOADING_DATA' });
       getProducts({ perPage: config.perPage, page: config.page }).then(({ data, meta }) =>
-        dispatch({ type: 'LOAD_DATA', payload: data, meta })
+        dispatch({ type: 'LOAD_DATA', payload: data, meta }),
       );
     }
   }, [config.page, config.perPage]);
@@ -92,7 +92,7 @@ const MarketplaceModal = ({ data, isOpen, onClose }) => {
       variant="large"
     >
       {config.isLoading && (
-        <div className="pf-u-mb-md marketplace-flex">
+        <div className="pf-v5-u-mb-md marketplace-flex">
           <SkeletonMarketplaceCard />
           <SkeletonMarketplaceCard />
         </div>
@@ -134,7 +134,7 @@ const MarketplaceModal = ({ data, isOpen, onClose }) => {
               // onDelete: (_event, chips, deleteAll) => console.log(chips, deleteAll),
             }}
           />
-          <div className="pf-u-mb-md marketplace-flex">
+          <div className="pf-v5-u-mb-md marketplace-flex">
             {!isLoadingData && data.map((product) => <MarketplaceCard key={product.id} {...product} />)}
             {isLoadingData && (
               <React.Fragment>

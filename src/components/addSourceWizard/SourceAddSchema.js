@@ -101,7 +101,7 @@ export const iconMapper = (sourceTypes) => (name) => {
     <img
       src={shortIcons[name] || sourceType.icon_url}
       alt={sourceType.product_name}
-      className={`src-c-wizard__icon ${sourceType.category === 'Red Hat' ? 'redhat-icon' : 'pf-u-mb-sm'}`}
+      className={`src-c-wizard__icon ${sourceType.category === 'Red Hat' ? 'redhat-icon' : 'pf-v5-u-mb-sm'}`}
     />
   );
 
@@ -260,7 +260,7 @@ export const NameDescription = ({ sourceTypes }) => {
             id: 'wizard.nameDescription',
             defaultMessage: 'Enter a name for your {typeName} source.',
           },
-          { typeName }
+          { typeName },
         )}
       </Text>
     </TextContent>
@@ -315,7 +315,7 @@ export const SummaryDescription = () => {
           },
           {
             b: bold,
-          }
+          },
         )}
       </Text>
     </TextContent>
@@ -358,7 +358,7 @@ export default (
   initialWizardState,
   activeCategory,
   enableLighthouse,
-  hcsEnrolled
+  hcsEnrolled,
 ) => {
   setFirstValidated(true);
   return {

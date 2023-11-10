@@ -42,8 +42,8 @@ describe('ApplicationsCard', () => {
           <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(screen.getByText('Applications')).toBeInTheDocument();
@@ -62,9 +62,9 @@ describe('ApplicationsCard', () => {
     await waitFor(() =>
       expect(
         screen.getByText(
-          'To perform this action, your Organization Administrator must grant you Sources Administrator permissions.'
-        )
-      ).toBeInTheDocument()
+          'To perform this action, your Organization Administrator must grant you Sources Administrator permissions.',
+        ),
+      ).toBeInTheDocument(),
     );
   });
 
@@ -92,8 +92,8 @@ describe('ApplicationsCard', () => {
           <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(screen.getAllByRole('checkbox')).toHaveLength(2);
@@ -129,8 +129,8 @@ describe('ApplicationsCard', () => {
             <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       expect(screen.getByText('Applications')).toBeInTheDocument();
@@ -157,8 +157,8 @@ describe('ApplicationsCard', () => {
             <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       actions.loadEntities = jest.fn().mockImplementation(() => ({ type: 'nonsense' }));
@@ -200,8 +200,8 @@ describe('ApplicationsCard', () => {
             <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       await waitFor(async () => {
@@ -211,8 +211,8 @@ describe('ApplicationsCard', () => {
       expect(screen.getByTestId('location-display').textContent).toEqual(
         replaceRouteId(`/settings/integrations/${routes.sourcesDetailAddApp.path}`, sourceId).replace(
           ':app_type_id',
-          SUB_WATCH_APP.id
-        )
+          SUB_WATCH_APP.id,
+        ),
       );
     });
 
@@ -249,8 +249,8 @@ describe('ApplicationsCard', () => {
             <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       expect(screen.getAllByRole('checkbox')[0]).not.toBeChecked();
@@ -278,7 +278,7 @@ describe('ApplicationsCard', () => {
           customIcon: <PlayIcon />,
           title: 'Cost Management connection resumed',
           variant: 'default',
-        })
+        }),
       );
       expect(actions.loadEntities).toHaveBeenCalled();
     });
@@ -314,8 +314,8 @@ describe('ApplicationsCard', () => {
             <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       await waitFor(async () => {
@@ -327,7 +327,7 @@ describe('ApplicationsCard', () => {
           description: 'Some backend error. Please try again.',
           title: 'Application resume failed',
           variant: 'danger',
-        })
+        }),
       );
     });
 
@@ -363,8 +363,8 @@ describe('ApplicationsCard', () => {
             <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       await waitFor(async () => {
@@ -439,8 +439,8 @@ describe('ApplicationsCard', () => {
             <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       expect(screen.getAllByRole('checkbox')[0]).not.toBeChecked();
@@ -468,7 +468,7 @@ describe('ApplicationsCard', () => {
           customIcon: <PlayIcon />,
           title: 'Cost Management connection resumed',
           variant: 'default',
-        })
+        }),
       );
       await waitFor(() => expect(actions.loadEntities).toHaveBeenCalled());
     });
@@ -482,8 +482,8 @@ describe('ApplicationsCard', () => {
             <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       api.doCreateApplication = jest.fn().mockImplementation(() => Promise.reject('Some backend error'));
@@ -498,7 +498,7 @@ describe('ApplicationsCard', () => {
           description: 'Some backend error. Please try again.',
           title: 'Application create failed',
           variant: 'danger',
-        })
+        }),
       );
     });
 
@@ -511,8 +511,8 @@ describe('ApplicationsCard', () => {
             <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       const pauseApplication = jest.fn().mockImplementation(() => Promise.reject('Some backend error'));
@@ -532,7 +532,7 @@ describe('ApplicationsCard', () => {
           description: 'Some backend error. Please try again.',
           title: 'Application pause failed',
           variant: 'danger',
-        })
+        }),
       );
     });
 
@@ -568,8 +568,8 @@ describe('ApplicationsCard', () => {
             <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       actions.addMessage.mockClear();
@@ -583,7 +583,7 @@ describe('ApplicationsCard', () => {
           description: 'Some backend error. Please try again.',
           title: 'Application resume failed',
           variant: 'danger',
-        })
+        }),
       );
     });
 
@@ -596,8 +596,8 @@ describe('ApplicationsCard', () => {
             <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       api.doCreateApplication = mockApi();
@@ -630,8 +630,8 @@ describe('ApplicationsCard', () => {
             <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       const pauseApplication = mockApi();
@@ -668,7 +668,7 @@ describe('ApplicationsCard', () => {
           description: 'Your application will not reflect the most recent data until Cost Management connection is resumed',
           title: 'Cost Management connection paused',
           variant: 'default',
-        })
+        }),
       );
       expect(actions.loadEntities).toHaveBeenCalled();
     });
@@ -682,8 +682,8 @@ describe('ApplicationsCard', () => {
             <Route path={routes.sourcesDetail.path} element={<ApplicationsCard />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       const pauseApplication = jest.fn().mockImplementation(() => Promise.resolve('ok'));

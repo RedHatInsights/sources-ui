@@ -4,7 +4,7 @@ const tryAgainMessage = (intl, error) =>
       id: 'tryAgain.text',
       defaultMessage: '{ error }. Please try again.',
     },
-    { error }
+    { error },
   );
 
 export default tryAgainMessage;

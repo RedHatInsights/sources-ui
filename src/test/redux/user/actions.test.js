@@ -113,7 +113,7 @@ describe('user reducer actions', () => {
               is_org_admin: isOrgAdmin,
             },
           },
-        })
+        }),
       );
 
       await loadOrgAdmin(getUserSpy)(dispatch);
@@ -139,7 +139,7 @@ describe('user reducer actions', () => {
               is_org_admin: isOrgAdmin,
             },
           },
-        })
+        }),
       );
 
       await loadOrgAdmin(getUserSpy)(dispatch);

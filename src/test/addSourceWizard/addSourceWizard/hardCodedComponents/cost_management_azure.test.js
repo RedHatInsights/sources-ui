@@ -52,12 +52,12 @@ describe('Cost Management Azure steps components', () => {
     expect(
       screen.getByText(
         'Red Hat recommends creating a dedicated resource group and storage account in Azure to collect cost data and metrics for cost management.',
-        { exact: false }
-      )
+        { exact: false },
+      ),
     ).toBeInTheDocument();
     expect(screen.getByText('Learn more')).toBeInTheDocument();
     expect(
-      screen.getByText('After configuring a resource group and storage account in the Azure portal, enter the following:')
+      screen.getByText('After configuring a resource group and storage account in the Azure portal, enter the following:'),
     ).toBeInTheDocument();
   });
 
@@ -68,12 +68,12 @@ describe('Cost Management Azure steps components', () => {
     expect(
       screen.getByText(
         'Red Hat recommends creating a dedicated resource group and storage account in Azure to collect cost data and metrics for cost management.',
-        { exact: false }
-      )
+        { exact: false },
+      ),
     ).toBeInTheDocument();
     expect(screen.queryByText('Learn more')).not.toBeInTheDocument();
     expect(
-      screen.getByText('After configuring a resource group and storage account in the Azure portal, enter the following:')
+      screen.getByText('After configuring a resource group and storage account in the Azure portal, enter the following:'),
     ).toBeInTheDocument();
   });
 
@@ -82,8 +82,8 @@ describe('Cost Management Azure steps components', () => {
 
     expect(
       screen.getByText(
-        'Run the following command in Cloud Shell to obtain the Subscription ID where the cost export is being stored and enter it below:'
-      )
+        'Run the following command in Cloud Shell to obtain the Subscription ID where the cost export is being stored and enter it below:',
+      ),
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveValue(`az account show --query "{ id: id }" | jq '.id' | tr -d '"'`);
   });
@@ -103,24 +103,24 @@ describe('Cost Management Azure steps components', () => {
         >
           <Cm.ConfigureRolesDescription />
         </RenderContext.Provider>,
-        store
-      )
+        store,
+      ),
     );
 
     expect(
       screen.getByText(
         'Red Hat recommends configuring dedicated credentials to grant Cost Management read-only access to Azure cost data.',
-        { exact: false }
-      )
+        { exact: false },
+      ),
     ).toBeInTheDocument();
     expect(screen.getByText('Learn more')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'Run the following command in Cloud Shell to create a service principal with Cost Management Storage Account Contributor role. From the output enter the values in the fields below:'
-      )
+        'Run the following command in Cloud Shell to create a service principal with Cost Management Storage Account Contributor role. From the output enter the values in the fields below:',
+      ),
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveValue(
-      `az ad sp create-for-rbac -n "CostManagement" --role "Storage Account Contributor"  --scope /subscriptions/my-sub-id-1/resourceGroups/my-resource-group-1 --query '{"tenant": tenant, "client_id": appId, "secret": password}'`
+      `az ad sp create-for-rbac -n "CostManagement" --role "Storage Account Contributor"  --scope /subscriptions/my-sub-id-1/resourceGroups/my-resource-group-1 --query '{"tenant": tenant, "client_id": appId, "secret": password}'`,
     );
   });
 
@@ -139,24 +139,24 @@ describe('Cost Management Azure steps components', () => {
         >
           <Cm.ConfigureRolesDescription />
         </RenderContext.Provider>,
-        store
-      )
+        store,
+      ),
     );
 
     expect(
       screen.getByText(
         'Red Hat recommends configuring dedicated credentials to grant Hybrid Committed Spend read-only access to Azure cost data.',
-        { exact: false }
-      )
+        { exact: false },
+      ),
     ).toBeInTheDocument();
     expect(screen.queryByText('Learn more')).not.toBeInTheDocument();
     expect(
       screen.getByText(
-        'Run the following command in Cloud Shell to create a service principal with Cost Management Storage Account Contributor role. From the output enter the values in the fields below:'
-      )
+        'Run the following command in Cloud Shell to create a service principal with Cost Management Storage Account Contributor role. From the output enter the values in the fields below:',
+      ),
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveValue(
-      `az ad sp create-for-rbac -n "CostManagement" --role "Storage Account Contributor"  --scope /subscriptions/my-sub-id-1/resourceGroups/my-resource-group-1 --query '{"tenant": tenant, "client_id": appId, "secret": password}'`
+      `az ad sp create-for-rbac -n "CostManagement" --role "Storage Account Contributor"  --scope /subscriptions/my-sub-id-1/resourceGroups/my-resource-group-1 --query '{"tenant": tenant, "client_id": appId, "secret": password}'`,
     );
   });
 
@@ -179,14 +179,14 @@ describe('Cost Management Azure steps components', () => {
             <Cm.ReaderRoleDescription />
           </RenderContext.Provider>
         )}
-      </Form>
+      </Form>,
     );
 
     expect(
-      screen.getByText('Run the following command in Cloud Shell to create a Cost Management Reader role:')
+      screen.getByText('Run the following command in Cloud Shell to create a Cost Management Reader role:'),
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveValue(
-      `az role assignment create --assignee "some-user-name" --role "Cost Management Reader" --scope "/subscriptions/my-sub-id-1"`
+      `az role assignment create --assignee "some-user-name" --role "Cost Management Reader" --scope "/subscriptions/my-sub-id-1"`,
     );
   });
 
@@ -211,7 +211,7 @@ describe('Cost Management Azure steps components', () => {
             <Cm.ReaderRoleDescription />
           </RenderContext.Provider>
         )}
-      </Form>
+      </Form>,
     );
 
     expect(screen.queryByText('Run the following command in Cloud Shell to create a Cost Management Reader role:')).toEqual(null);
@@ -243,13 +243,13 @@ describe('Cost Management Azure steps components', () => {
             <Cm.ReaderRoleDescription />
           </RenderContext.Provider>
         )}
-      </Form>
+      </Form>,
     );
 
     expect(
       screen.getByText(
-        'Launch the Azure Enterprise Portal and give the service principal created above Administrator role on the associated account.'
-      )
+        'Launch the Azure Enterprise Portal and give the service principal created above Administrator role on the associated account.',
+      ),
     ).toBeInTheDocument();
   });
 
@@ -278,11 +278,11 @@ describe('Cost Management Azure steps components', () => {
             <Cm.ReaderRoleDescription />
           </RenderContext.Provider>
         )}
-      </Form>
+      </Form>,
     );
 
     expect(
-      screen.getByText('Launch the Azure Portal and give the service principal created above Billing account reader role.')
+      screen.getByText('Launch the Azure Portal and give the service principal created above Billing account reader role.'),
     ).toBeInTheDocument();
   });
 
@@ -311,11 +311,11 @@ describe('Cost Management Azure steps components', () => {
             <Cm.ReaderRoleDescription />
           </RenderContext.Provider>
         )}
-      </Form>
+      </Form>,
     );
 
     expect(
-      screen.getByText('Launch the Azure Portal and give the service principal created above Billing profile reader role.')
+      screen.getByText('Launch the Azure Portal and give the service principal created above Billing profile reader role.'),
     ).toBeInTheDocument();
   });
 
@@ -344,11 +344,11 @@ describe('Cost Management Azure steps components', () => {
             <Cm.ReaderRoleDescription />
           </RenderContext.Provider>
         )}
-      </Form>
+      </Form>,
     );
 
     expect(
-      screen.getByText('Launch the Azure Portal and give the service principal created above Invoice section reader role.')
+      screen.getByText('Launch the Azure Portal and give the service principal created above Invoice section reader role.'),
     ).toBeInTheDocument();
   });
 
@@ -377,14 +377,14 @@ describe('Cost Management Azure steps components', () => {
             <Cm.ReaderRoleDescription />
           </RenderContext.Provider>
         )}
-      </Form>
+      </Form>,
     );
 
     expect(
-      screen.getByText('Run the following command in Cloud Shell to create a Cost Management Reader role:')
+      screen.getByText('Run the following command in Cloud Shell to create a Cost Management Reader role:'),
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveValue(
-      `az role assignment create --assignee "some-user-name" --role "Cost Management Reader" --scope "/subscriptions/my-sub-id-1"`
+      `az role assignment create --assignee "some-user-name" --role "Cost Management Reader" --scope "/subscriptions/my-sub-id-1"`,
     );
   });
 
@@ -395,22 +395,22 @@ describe('Cost Management Azure steps components', () => {
         <RenderContext.Provider value={{ formOptions: FORM_OPTIONS }}>
           <Cm.ExportSchedule />
         </RenderContext.Provider>,
-        store
-      )
+        store,
+      ),
     );
 
     expect(
       screen.getByText(
         'Create a recurring task to export cost data to your Azure storage account, where Cost Management will retrieve the data.',
-        { exact: false }
-      )
+        { exact: false },
+      ),
     ).toBeInTheDocument();
     expect(screen.getByText('Learn more')).toBeInTheDocument();
     expect(screen.getByText('From the Azure portal, add a new cost export.')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'Provide a name for the container and directory path, and specify the below settings to create the daily export. Leave all other options as the default.'
-      )
+        'Provide a name for the container and directory path, and specify the below settings to create the daily export. Leave all other options as the default.',
+      ),
     ).toBeInTheDocument();
     expect(screen.getByText('Export type')).toBeInTheDocument();
     expect(screen.getByText('Daily export of month-to-date costs')).toBeInTheDocument();
@@ -425,22 +425,22 @@ describe('Cost Management Azure steps components', () => {
         <RenderContext.Provider value={{ formOptions: FORM_OPTIONS }}>
           <Cm.ExportSchedule />
         </RenderContext.Provider>,
-        store
-      )
+        store,
+      ),
     );
 
     expect(
       screen.getByText(
         'Create a recurring task to export cost data to your Azure storage account, where Cost Management will retrieve the data.',
-        { exact: false }
-      )
+        { exact: false },
+      ),
     ).toBeInTheDocument();
     expect(screen.queryByText('Learn more')).not.toBeInTheDocument();
     expect(screen.getByText('From the Azure portal, add a new cost export.')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'Provide a name for the container and directory path, and specify the below settings to create the daily export. Leave all other options as the default.'
-      )
+        'Provide a name for the container and directory path, and specify the below settings to create the daily export. Leave all other options as the default.',
+      ),
     ).toBeInTheDocument();
     expect(screen.getByText('Export type')).toBeInTheDocument();
     expect(screen.getByText('Daily export of month-to-date costs')).toBeInTheDocument();
@@ -452,14 +452,14 @@ describe('Cost Management Azure steps components', () => {
     mockedRender(
       <RenderContext.Provider value={{ formOptions: FORM_OPTIONS }}>
         <Cm.ExportScopeDescription />
-      </RenderContext.Provider>
+      </RenderContext.Provider>,
     );
 
     expect(
       screen.getByText(
         'From the Azure portal, select the scope for the new cost export. If there is a need to further customize the data you want to send to Red Hat, select the manually customize option to follow the special instructions on how to.',
-        { exact: false }
-      )
+        { exact: false },
+      ),
     ).toBeInTheDocument();
     expect(screen.getByText('Learn more')).toBeInTheDocument();
   });
@@ -468,20 +468,20 @@ describe('Cost Management Azure steps components', () => {
     mockedRender(
       <RenderContext.Provider value={{ formOptions: FORM_OPTIONS }}>
         <Cm.ExportScope />
-      </RenderContext.Provider>
+      </RenderContext.Provider>,
     );
 
     expect(
       screen.getByText(
-        'Run the following command from the Cloud Shell to obtain the Subscription ID associated with the generated cost export.'
-      )
+        'Run the following command from the Cloud Shell to obtain the Subscription ID associated with the generated cost export.',
+      ),
     ).toBeInTheDocument();
     expect(screen.getByText('After running the command, enter the output in the following field:')).toBeInTheDocument();
     expect(screen.queryByText('Skip this step and proceed to next step')).toBeNull();
     expect(
       screen.queryByText(
-        'Since you have chosen to manually customize the data set you want to send to Cost Management, you do not need to specify an export scope at this point and time.'
-      )
+        'Since you have chosen to manually customize the data set you want to send to Cost Management, you do not need to specify an export scope at this point and time.',
+      ),
     ).toBeNull();
   });
 
@@ -489,20 +489,20 @@ describe('Cost Management Azure steps components', () => {
     mockedRender(
       <RenderContext.Provider value={{ formOptions: FORM_OPTIONS_STORAGE_ONLY }}>
         <Cm.ExportScope />
-      </RenderContext.Provider>
+      </RenderContext.Provider>,
     );
 
     expect(
       screen.queryByText(
-        'Run the following command from the Cloud Shell to obtain the Subscription ID associated with the generated cost export.'
-      )
+        'Run the following command from the Cloud Shell to obtain the Subscription ID associated with the generated cost export.',
+      ),
     ).toBeNull();
     expect(screen.queryByText('After running the command, enter the output in the following field:')).toBeNull();
     expect(screen.getByText('Skip this step and proceed to next step')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'Since you have chosen to manually customize the data set you want to send to Cost Management, you do not need to specify an export scope at this point and time.'
-      )
+        'Since you have chosen to manually customize the data set you want to send to Cost Management, you do not need to specify an export scope at this point and time.',
+      ),
     ).toBeInTheDocument();
   });
 });

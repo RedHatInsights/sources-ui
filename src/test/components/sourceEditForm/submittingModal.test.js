@@ -26,8 +26,8 @@ describe('SubmittingModal', () => {
           <Route path={routes.sourcesDetail.path} element={<SubmittingModal />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
   });
 

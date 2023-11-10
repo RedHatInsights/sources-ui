@@ -7,7 +7,7 @@
 }
 
 .src-c-delete-icon {
-  color: var(--pf-global--warning-color--100);
+  color: var(--pf-v5-global--warning-color--100);
 }
 
 .src-c-row-vertical-centered {
@@ -24,16 +24,16 @@
 
 .src-c-detail-page {
   &-ok {
-    color: var(--pf-global--success-color--100);
+    color: var(--pf-v5-global--success-color--100);
   }
   &-partially {
-    color: var(--pf-global--warning-color--100);
+    color: var(--pf-v5-global--warning-color--100);
   }
   &-not-ok {
-    color: var(--pf-global--danger-color--100);
+    color: var(--pf-v5-global--danger-color--100);
   }
   &-unknown {
-    color: var(--pf-global--icon--Color--light);
+    color: var(--pf-v5-global--icon--Color--light);
   }
 }
 
@@ -106,7 +106,7 @@
     max-width: 536px;
   }
 
-  .pf-v5-c-empty-state.pf-u-mt-4xl {
+  .pf-v5-c-empty-state.pf-v5-u-mt-4xl {
     margin-top: 0 !important;
   }
 }
@@ -120,7 +120,7 @@ form.src-c-uuid {
 
 .src-c-card-info {
   .text {
-    font-size: var(--pf-global--FontSize--sm);
+    font-size: var(--pf-v5-global--FontSize--sm);
   }
 }
 
@@ -128,7 +128,7 @@ form.src-c-uuid {
   box-shadow: none !important;
 
   .catalog-link {
-    font-size: var(--pf-global--FontSize--sm);
+    font-size: var(--pf-v5-global--FontSize--sm);
   }
 
   .provider-tiles {
@@ -185,11 +185,11 @@ form.src-c-uuid {
 
 .src-c-card-info__header {
   font-weight: 600;
-  color: var(--pf-global--palette--blue-600);
+  color: var(--pf-v5-global--palette--blue-600);
 }
 
 .src-c-applications_form {
-  row-gap: var(--pf-global--spacer--sm);
+  row-gap: var(--pf-v5-global--spacer--sm);
 }
 
 .src-c-application_switch {

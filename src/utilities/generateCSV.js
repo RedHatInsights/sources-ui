@@ -9,7 +9,7 @@ const generateCSV = (entities, intl, applicationTypes, sourceTypes) => {
     ...entities.map((source) =>
       columns
         .map(({ value }) => formatValueToExport(value, source[value], applicationTypes, sourceTypes))
-        .map((value) => (value?.includes(',') ? `"${value}"` : value))
+        .map((value) => (value?.includes(',') ? `"${value}"` : value)),
     ),
   ];
 

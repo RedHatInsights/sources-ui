@@ -29,16 +29,16 @@ describe('DetailHeader', () => {
           <Route path={routes.sourcesDetail.path} element={<PauseAlert />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(screen.getByText('Default alert:')).toBeInTheDocument();
     expect(screen.getByText('Source paused')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'No data is being collected for this source. Turn the source back on to reestablish connection and data collection. Previous credentials will be restored and application connections will continue as seen on this page.'
-      )
+        'No data is being collected for this source. Turn the source back on to reestablish connection and data collection. Previous credentials will be restored and application connections will continue as seen on this page.',
+      ),
     ).toBeInTheDocument();
     expect(screen.getByText('Resume connection')).toBeDisabled();
   });
@@ -57,16 +57,16 @@ describe('DetailHeader', () => {
           <Route path={routes.sourcesDetail.path} element={<PauseAlert />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(screen.getByText('Default alert:')).toBeInTheDocument();
     expect(screen.getByText('Source paused')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'No data is being collected for this source. Turn the source back on to reestablish connection and data collection. Previous credentials will be restored and application connections will continue as seen on this page.'
-      )
+        'No data is being collected for this source. Turn the source back on to reestablish connection and data collection. Previous credentials will be restored and application connections will continue as seen on this page.',
+      ),
     ).toBeInTheDocument();
     expect(screen.getByText('Resume connection')).not.toBeDisabled();
   });
@@ -87,8 +87,8 @@ describe('DetailHeader', () => {
           <Route path={routes.sourcesDetail.path} element={<PauseAlert />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     actions.resumeSource = jest.fn().mockImplementation(() => ({ type: 'mock-resume-source' }));

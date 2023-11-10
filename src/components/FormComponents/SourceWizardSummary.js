@@ -31,7 +31,7 @@ import {
   shouldSkipEndpoint,
 } from '../../components/addSourceWizard/schemaBuilder';
 
-const linkMapper = (sourceType) => ({ amazon: CUR_AWS, azure: CUR_AZURE, google: CUR_GCP }?.[sourceType]);
+const linkMapper = (sourceType) => ({ amazon: CUR_AWS, azure: CUR_AZURE, google: CUR_GCP })?.[sourceType];
 
 const SummaryAlert = ({ appName, sourceType, hcsEnrolled }) => {
   const intl = useIntl();
@@ -59,7 +59,7 @@ const SummaryAlert = ({ appName, sourceType, hcsEnrolled }) => {
                     id: 'cost.customizingReportCUR',
                     defaultMessage: 'Customizing your {application} cost and usage report',
                   },
-                  { application }
+                  { application },
                 )}
               </Text>
             }
@@ -212,7 +212,7 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
       (app) =>
         app === COST_MANAGEMENT_APP_ID && hcsEnrolled
           ? HCS_APP_NAME
-          : applicationTypes.find((type) => type.id === app)?.display_name // overwrite Cost management for AWS with HCS for account auth.
+          : applicationTypes.find((type) => type.id === app)?.display_name, // overwrite Cost management for AWS with HCS for account auth.
     );
   }
 
@@ -248,7 +248,7 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
         ({ name }) =>
           name.startsWith('application.extra') ||
           authTypeFields.find((field) => field.name === name) ||
-          (hasCustomSteps && endpointFields.find((field) => field.name === name))
+          (hasCustomSteps && endpointFields.find((field) => field.name === name)),
       );
   }
 
@@ -388,14 +388,14 @@ SourceWizardSummary.propTypes = {
         authentication: PropTypes.array,
         endpoint: PropTypes.object,
       }),
-    })
+    }),
   ).isRequired,
   applicationTypes: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
       display_name: PropTypes.string.isRequired,
-    })
+    }),
   ).isRequired,
   showApp: PropTypes.bool,
   showAuthType: PropTypes.bool,

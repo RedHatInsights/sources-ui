@@ -75,7 +75,7 @@ const CredentialsForm = () => {
   if (loading) {
     return (
       <Modal title={title} variant="small" isOpen onClose={goBackToDetail}>
-        <Bullseye className="pf-u-m-2xl">
+        <Bullseye className="pf-v5-u-m-2xl">
           <Spinner />
         </Bullseye>
       </Modal>
@@ -87,7 +87,7 @@ const CredentialsForm = () => {
       clearedValue={null}
       schema={{
         fields: generateSuperKeyFields(sourceTypes, sourceTypeName).map((field) =>
-          source.paused_at ? { ...field, isDisabled: true } : field
+          source.paused_at ? { ...field, isDisabled: true } : field,
         ),
       }}
       // eslint-disable-next-line no-unused-vars
@@ -105,7 +105,7 @@ const CredentialsForm = () => {
                 defaultMessage: 'It may take some time to validate your new credentials. Check this page for status updates.',
               }),
               variant: 'info',
-            })
+            }),
           );
         } catch (error) {
           reduxDispatch(
@@ -120,7 +120,7 @@ const CredentialsForm = () => {
                   'There was a problem while trying to update credentials. Please try again. If the error persists, open a support case.',
               }),
               variant: 'danger',
-            })
+            }),
           );
         }
       }}

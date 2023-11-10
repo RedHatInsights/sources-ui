@@ -34,7 +34,7 @@ describe('SourcesPage - addSource route', () => {
       Promise.resolve({
         sources: sourcesDataGraphQl,
         meta: { count: sourcesDataGraphQl.length },
-      })
+      }),
     );
     api.doLoadAppTypes = jest.fn().mockImplementation(() => Promise.resolve(applicationTypes));
     typesApi.doLoadSourceTypes = jest.fn().mockImplementation(() => Promise.resolve(sourceTypes));
@@ -63,8 +63,8 @@ describe('SourcesPage - addSource route', () => {
             </Route>
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
     });
 

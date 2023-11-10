@@ -159,14 +159,14 @@ AddSourceWizard.propTypes = {
         authentication: PropTypes.array,
         endpoint: PropTypes.object,
       }),
-    })
+    }),
   ),
   applicationTypes: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
       display_name: PropTypes.string.isRequired,
-    })
+    }),
   ),
   onClose: PropTypes.func.isRequired,
   isOpen: PropTypes.bool.isRequired,

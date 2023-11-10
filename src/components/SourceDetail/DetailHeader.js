@@ -19,7 +19,7 @@ const DetailHeader = () => {
   return (
     <PageHeader>
       <Breadcrumbs />
-      <Flex className="pf-u-mb-sm">
+      <Flex className="pf-v5-u-mb-sm">
         <FlexItem>
           <Title headingLevel="h1" size="2xl">
             {source.name}

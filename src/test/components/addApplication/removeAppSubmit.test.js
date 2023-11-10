@@ -40,7 +40,7 @@ describe('removeAppSubmit', () => {
     result.payload();
     expect(api.doDeleteApplication).toHaveBeenCalledWith(
       '123',
-      'Removing of Catalog application from this source was unsuccessful.'
+      'Removing of Catalog application from this source was unsuccessful.',
     );
   });
 });

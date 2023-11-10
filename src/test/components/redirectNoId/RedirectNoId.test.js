@@ -33,8 +33,8 @@ describe('RedirectNoId', () => {
           <Route path={routes.sourcesRemove.path} element={<RedirectNoId />} />
         </Routes>,
         initialStore,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(actions.addMessage).not.toHaveBeenCalled();
@@ -55,8 +55,8 @@ describe('RedirectNoId', () => {
           <Route path={routes.sourcesRemove.path} element={<RedirectNoId />} />
         </Routes>,
         initialStore,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(() => expect(actions.addMessage).toHaveBeenCalled());
@@ -80,8 +80,8 @@ describe('RedirectNoId', () => {
           <Route path={routes.sourcesRemove.path} element={<RedirectNoId />} />
         </Routes>,
         initialStore,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(() => expect(actions.addHiddenSource).toHaveBeenCalledWith(SOURCE));

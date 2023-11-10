@@ -39,11 +39,11 @@ describe('Final wizard', () => {
     expect(screen.getByText('Validating credentials')).toBeInTheDocument();
     expect(
       screen.getByText(
-        "This might take some time. You'll receive a notification if you are still in the Sources application when the process completes. Otherwise, you can check the status in the main sources table at any time."
-      )
+        "This might take some time. You'll receive a notification if you are still in the Sources application when the process completes. Otherwise, you can check the status in the main sources table at any time.",
+      ),
     ).toBeInTheDocument();
     expect(
-      screen.getByText('In the meantime, you can close this window while the validation process continues.')
+      screen.getByText('In the meantime, you can close this window while the validation process continues.'),
     ).toBeInTheDocument();
   });
 
@@ -57,7 +57,7 @@ describe('Final wizard', () => {
           applications: [],
         }}
         isFinished={true}
-      />
+      />,
     );
 
     expect(screen.getByText('Amazon Web Services connection established')).toBeInTheDocument();
@@ -137,7 +137,7 @@ describe('Final wizard', () => {
             },
           ],
         }}
-      />
+      />,
     );
 
     expect(screen.getByText('Configuration unsuccessful')).toBeInTheDocument();
@@ -176,7 +176,7 @@ describe('Final wizard', () => {
             },
           ],
         }}
-      />
+      />,
     );
 
     expect(screen.getByText('Configuration unsuccessful')).toBeInTheDocument();
@@ -213,7 +213,7 @@ describe('Final wizard', () => {
             },
           ],
         }}
-      />
+      />,
     );
 
     expect(screen.getByText('Configuration unsuccessful')).toBeInTheDocument();
@@ -247,7 +247,7 @@ describe('Final wizard', () => {
             },
           ],
         }}
-      />
+      />,
     );
 
     expect(screen.getByText('Configuration unsuccessful')).toBeInTheDocument();
@@ -258,7 +258,7 @@ describe('Final wizard', () => {
     });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
-      replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, id)
+      replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, id),
     );
   });
 
@@ -278,7 +278,7 @@ describe('Final wizard', () => {
             },
           ],
         }}
-      />
+      />,
     );
 
     expect(screen.getByText('Configuration unsuccessful')).toBeInTheDocument();
@@ -298,7 +298,7 @@ describe('Final wizard', () => {
             },
           ],
         }}
-      />
+      />,
     );
 
     expect(screen.getByText('Configuration in progress')).toBeInTheDocument();
@@ -317,7 +317,7 @@ describe('Final wizard', () => {
             },
           ],
         }}
-      />
+      />,
     );
 
     expect(screen.getByText('Configuration successful')).toBeInTheDocument();

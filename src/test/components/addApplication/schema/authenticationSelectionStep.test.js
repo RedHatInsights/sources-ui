@@ -48,7 +48,7 @@ describe('authenticationSelectionStep', () => {
           application: { application_type_id: '456' },
           authtype: 'arn',
         },
-      })
+      }),
     ).toEqual('amazon-456-arn');
   });
 
@@ -59,7 +59,7 @@ describe('authenticationSelectionStep', () => {
           application: { application_type_id: '456' },
           authtype: 'password',
         },
-      })
+      }),
     ).toEqual('selectAuthentication');
   });
 
@@ -67,7 +67,7 @@ describe('authenticationSelectionStep', () => {
     expect(
       selectionStep.nextStep({
         values: { application: { application_type_id: '456' } },
-      })
+      }),
     ).toEqual(undefined);
   });
 });

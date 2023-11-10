@@ -8,7 +8,7 @@ describe('application parser - true data', () => {
     const schema = applicationsFields(
       [{ id: '3789', application_type_id: COST_MANAGEMENT_APP.id, authentications: [{ id: '123', authtype: 'token' }] }],
       OPENSHIFT_TYPE,
-      applicationTypes
+      applicationTypes,
     );
 
     expect(schema).toEqual([

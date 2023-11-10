@@ -36,7 +36,7 @@ describe('Provisioning GCP hardcoded schemas', () => {
     expect(
       screen.getByText('To delegate account access, create a custom role and grant it to Red Hat service account.', {
         exact: false,
-      })
+      }),
     ).toBeInTheDocument();
 
     await act(async () => {
@@ -48,15 +48,17 @@ describe('Provisioning GCP hardcoded schemas', () => {
     expect(
       screen.getByText('Create a new custom role and fetch the role name:', {
         exact: false,
-      })
+      }),
     ).toBeInTheDocument();
 
     expect(copyInputs[0]).toHaveDisplayValue(/--project=mocked-username/);
     expect(
-      screen.getByText('Attach the role that you just created to Red Hat service account to grant permissions.', { exact: false })
+      screen.getByText('Attach the role that you just created to Red Hat service account to grant permissions.', {
+        exact: false,
+      }),
     ).toBeInTheDocument();
     expect(copyInputs[1]).toHaveValue(
-      `gcloud projects add-iam-policy-binding mocked-username --member=serviceAccount:${gcpServiceAccount} --role=$ROLE_NAME`
+      `gcloud projects add-iam-policy-binding mocked-username --member=serviceAccount:${gcpServiceAccount} --role=$ROLE_NAME`,
     );
   });
 
@@ -72,8 +74,8 @@ describe('Provisioning GCP hardcoded schemas', () => {
 
     expect(
       await screen.findByText(
-        'There was an error while loading the commands. Please go back and return to this step to try again.'
-      )
+        'There was an error while loading the commands. Please go back and return to this step to try again.',
+      ),
     ).toBeInTheDocument();
   });
 

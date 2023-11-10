@@ -62,7 +62,7 @@ describe('EnhancedRadio', () => {
             },
           ],
         }}
-      />
+      />,
     );
 
     expect(screen.getAllByRole('radio').map((r) => [r.id, r.value])).toEqual([
@@ -106,7 +106,7 @@ describe('EnhancedRadio', () => {
             },
           ],
         }}
-      />
+      />,
     );
 
     await waitFor(async () => {
@@ -176,7 +176,7 @@ describe('EnhancedRadio', () => {
         initialValues={{
           source_type: 'aws',
         }}
-      />
+      />,
     );
 
     await waitFor(async () => {
@@ -249,7 +249,7 @@ describe('EnhancedRadio', () => {
         initialValues={{
           source_type: 'oracle-cloud-infrastructure',
         }}
-      />
+      />,
     );
 
     await waitFor(async () => {

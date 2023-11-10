@@ -11,16 +11,16 @@ describe('AWS-Access key hardcoded schemas', () => {
     expect(
       screen.getByText('An OpenShift Container Platform login token is required to communicate with the application.', {
         exact: false,
-      })
+      }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText('To collect data from a Red Hat OpenShift Container Platform source:', { exact: false })
+      screen.getByText('To collect data from a Red Hat OpenShift Container Platform source:', { exact: false }),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
         'Log in to the Red Hat OpenShift Container Platform cluster with an account that has access to the namespace',
-        { exact: false }
-      )
+        { exact: false },
+      ),
     ).toBeInTheDocument();
     expect(screen.getByText('Run the following command to obtain your login token:', { exact: false })).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveValue('# oc sa get-token -n management-infra management-admin');

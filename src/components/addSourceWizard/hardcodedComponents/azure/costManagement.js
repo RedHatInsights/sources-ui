@@ -64,7 +64,7 @@ export const ConfigureResourceGroupAndStorageAccount = () => {
                 })}
               </Text>
             ),
-          }
+          },
         )}
       </Text>
       <Text component={TextVariants.p}>
@@ -127,7 +127,7 @@ export const ConfigureRolesDescription = () => {
               </Text>
             ),
             application,
-          }
+          },
         )}
       </Text>
       <Text component={TextVariants.p}>
@@ -179,7 +179,7 @@ const InternalReaderRoleDescription = () => {
                   })}
                 </Text>
               ),
-            }
+            },
           )}
         </Text>
       </TextContent>
@@ -236,7 +236,7 @@ export const ExportSchedule = () => {
                 })}
               </Text>
             ),
-          }
+          },
         )}
       </Text>
       <TextContent className="list-align-left">
@@ -530,7 +530,7 @@ export const ExportScopeDescription = () => {
                 </Text>
               </Fragment>
             ),
-          }
+          },
         )}
       </Text>
     </TextContent>
@@ -546,7 +546,7 @@ export const ExportScope = () => {
 
   return application.extra.storage_only ? (
     <EmptyState variant={EmptyStateVariant.small}>
-      <EmptyStateIcon style={{ color: 'var(--pf-global--info-color--100)' }} icon={InfoCircleIcon} />
+      <EmptyStateIcon style={{ color: 'var(--pf-v5-global--info-color--100)' }} icon={InfoCircleIcon} />
       <Title size="lg" headingLevel="h4">
         {intl.formatMessage({
           id: 'cost.manualTitleCUR',

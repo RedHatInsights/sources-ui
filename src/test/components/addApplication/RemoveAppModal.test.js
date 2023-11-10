@@ -59,8 +59,8 @@ describe('RemoveAppModal', () => {
           <Route path={routes.sourcesDetailRemoveApp.path} element={<RemoveAppModal />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(screen.getByText('Remove application?')).toBeInTheDocument();
@@ -85,14 +85,14 @@ describe('RemoveAppModal', () => {
           <Route path={routes.sourcesDetailRemoveApp.path} element={<RemoveAppModal />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(() =>
       expect(screen.getByTestId('location-display').textContent).toEqual(
-        replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, SOURCE_ID)
-      )
+        replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, SOURCE_ID),
+      ),
     );
   });
 
@@ -119,8 +119,8 @@ describe('RemoveAppModal', () => {
           <Route path={routes.sourcesDetailRemoveApp.path} element={<RemoveAppModal />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(screen.getByText('This change will affect these applications: ', { exact: false })).toBeInTheDocument();
@@ -148,8 +148,8 @@ describe('RemoveAppModal', () => {
           <Route path={routes.sourcesDetailRemoveApp.path} element={<RemoveAppModal />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(() => screen.getByText(APP1_DISPLAY_NAME, { exact: false })).toThrow();
@@ -165,8 +165,8 @@ describe('RemoveAppModal', () => {
           <Route path={routes.sourcesDetailRemoveApp.path} element={<RemoveAppModal />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(async () => {
@@ -174,7 +174,7 @@ describe('RemoveAppModal', () => {
     });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
-      replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, SOURCE_ID)
+      replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, SOURCE_ID),
     );
   });
 
@@ -189,8 +189,8 @@ describe('RemoveAppModal', () => {
           <Route path={routes.sourcesDetailRemoveApp.path} element={<RemoveAppModal />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(async () => {

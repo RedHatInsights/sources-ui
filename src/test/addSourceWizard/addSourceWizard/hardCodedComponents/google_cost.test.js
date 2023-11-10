@@ -27,8 +27,8 @@ describe('Cost Management Google steps components', () => {
     expect(screen.getByText('Learn more')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'Google Cloud Platform (GCP) recommends that you create a cloud project to contain all your billing administration needs. We’ll use this project to set up your BigQuery billing export.'
-      )
+        'Google Cloud Platform (GCP) recommends that you create a cloud project to contain all your billing administration needs. We’ll use this project to set up your BigQuery billing export.',
+      ),
     ).toBeInTheDocument();
   });
 
@@ -40,8 +40,8 @@ describe('Cost Management Google steps components', () => {
     expect(screen.queryByText('Learn more')).not.toBeInTheDocument();
     expect(
       screen.getByText(
-        'Google Cloud Platform (GCP) recommends that you create a cloud project to contain all your billing administration needs. We’ll use this project to set up your BigQuery billing export.'
-      )
+        'Google Cloud Platform (GCP) recommends that you create a cloud project to contain all your billing administration needs. We’ll use this project to set up your BigQuery billing export.',
+      ),
     ).toBeInTheDocument();
   });
 
@@ -84,8 +84,8 @@ describe('Cost Management Google steps components', () => {
 
       await waitFor(() =>
         expect(screen.getByLabelText('Copyable input')).toHaveValue(
-          'There is an error with loading of the account address. Please go back and return to this step.'
-        )
+          'There is an error with loading of the account address. Please go back and return to this step.',
+        ),
       );
 
       expect(console.error).toHaveBeenCalledWith(error);
@@ -115,8 +115,8 @@ describe('Cost Management Google steps components', () => {
             },
           }}
         />,
-        store
-      )
+        store,
+      ),
     );
 
     expect(screen.getByText('some-project-id', { exact: false })).toBeInTheDocument();
@@ -124,7 +124,7 @@ describe('Cost Management Google steps components', () => {
     expect(
       screen.getByText('To collect and store the information needed for Cost Management, create a BigQuery dataset.', {
         exact: false,
-      })
+      }),
     ).toBeInTheDocument();
     expect(screen.getByText('In the BigQuery console, select your project', { exact: false })).toBeInTheDocument();
     expect(screen.getByText('enter a name for your dataset.', { exact: false })).toBeInTheDocument();
@@ -151,8 +151,8 @@ describe('Cost Management Google steps components', () => {
             },
           }}
         />,
-        store
-      )
+        store,
+      ),
     );
 
     expect(screen.getByText('some-project-id', { exact: false })).toBeInTheDocument();
@@ -160,7 +160,7 @@ describe('Cost Management Google steps components', () => {
     expect(
       screen.getByText('To collect and store the information needed for Hybrid Committed Spend, create a BigQuery dataset.', {
         exact: false,
-      })
+      }),
     ).toBeInTheDocument();
     expect(screen.getByText('In the BigQuery console, select your project', { exact: false })).toBeInTheDocument();
     expect(screen.getByText('enter a name for your dataset.', { exact: false })).toBeInTheDocument();
@@ -170,11 +170,11 @@ describe('Cost Management Google steps components', () => {
     mockedRender(<Cm.BillingExport />);
 
     expect(
-      screen.getByText('To enable detailed billing data exports to BigQuery, set up daily cost export.', { exact: false })
+      screen.getByText('To enable detailed billing data exports to BigQuery, set up daily cost export.', { exact: false }),
     ).toBeInTheDocument();
     expect(screen.getByText('In the Billing console, click', { exact: false })).toBeInTheDocument();
     expect(
-      screen.getByText('Use the dropdown menus to select the correct project and dataset.', { exact: false })
+      screen.getByText('Use the dropdown menus to select the correct project and dataset.', { exact: false }),
     ).toBeInTheDocument();
   });
 
@@ -198,14 +198,14 @@ describe('Cost Management Google steps components', () => {
             },
           }}
         />,
-        store
-      )
+        store,
+      ),
     );
 
     expect(
       screen.getByText('To specify GCP access permissions for Red Hat, create an Identity and Access Management (IAM) role.', {
         exact: false,
-      })
+      }),
     ).toBeInTheDocument();
     expect(screen.getByText('From the GCP console, navigate to', { exact: false })).toBeInTheDocument();
     expect(screen.getByText('Create a new role.', { exact: false })).toBeInTheDocument();

@@ -57,8 +57,8 @@ describe('ApplicationKebab', () => {
           <Route path={routes.sourcesDetail.path} element={<ApplicationKebab {...initialProps} />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await act(async () => {
@@ -106,8 +106,8 @@ describe('ApplicationKebab', () => {
           <Route path={routes.sourcesDetail.path} element={<ApplicationKebab {...initialProps} />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(async () => {
@@ -147,8 +147,8 @@ describe('ApplicationKebab', () => {
             <Route path={routes.sourcesDetail.path} element={<ApplicationKebab {...initialProps} />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
     });
 
@@ -179,7 +179,7 @@ describe('ApplicationKebab', () => {
       });
 
       expect(screen.getByTestId('location-display').textContent).toEqual(
-        replaceRouteId(`/settings/integrations/${routes.sourcesDetailRemoveApp.path}`, sourceId).replace(':app_id', app.id)
+        replaceRouteId(`/settings/integrations/${routes.sourcesDetailRemoveApp.path}`, sourceId).replace(':app_id', app.id),
       );
     });
 
@@ -221,8 +221,8 @@ describe('ApplicationKebab', () => {
             <Route path={routes.sourcesDetail.path} element={<ApplicationKebab {...initialProps} />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
 
       await waitFor(async () => {
@@ -269,8 +269,8 @@ describe('ApplicationKebab', () => {
             <Route path={routes.sourcesDetail.path} element={<ApplicationKebab {...initialProps} />} />
           </Routes>,
           store,
-          initialEntry
-        )
+          initialEntry,
+        ),
       );
     });
 
@@ -301,7 +301,7 @@ describe('ApplicationKebab', () => {
       });
 
       expect(screen.getByTestId('location-display').textContent).toEqual(
-        replaceRouteId(`/settings/integrations/${routes.sourcesDetailRemoveApp.path}`, sourceId).replace(':app_id', app.id)
+        replaceRouteId(`/settings/integrations/${routes.sourcesDetailRemoveApp.path}`, sourceId).replace(':app_id', app.id),
       );
     });
 

@@ -28,8 +28,8 @@ describe('Breadcrumbs', () => {
           <Route path={routes.sourcesDetail.path} element={<Breadcrumbs />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
   });
 

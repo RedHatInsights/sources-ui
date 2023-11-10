@@ -46,8 +46,8 @@ describe('ResourcesTable', () => {
           <Route path={routes.sourcesDetail.path} element={<ResourcesTable />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(screen.getByText('Connected application resources')).toBeInTheDocument();
@@ -80,7 +80,7 @@ describe('ResourcesTable', () => {
         ],
         endpoints: [],
         authentications: [],
-      })
+      }),
     );
 
     source = {
@@ -106,8 +106,8 @@ describe('ResourcesTable', () => {
           <Route path={routes.sourcesDetail.path} element={<ResourcesTable />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
@@ -149,7 +149,7 @@ describe('ResourcesTable', () => {
         ],
         endpoints: [],
         authentications: [],
-      })
+      }),
     );
 
     source = {
@@ -175,15 +175,15 @@ describe('ResourcesTable', () => {
           <Route path={routes.sourcesDetail.path} element={<ResourcesTable />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(() => expect(screen.getByText('Connected application resources')).toBeInTheDocument());
 
     expect(screen.getByText('Cost Management is paused')).toBeInTheDocument();
     expect(
-      screen.getByText('To resume data collection for this application, switch Cost Management on in the', { exact: false })
+      screen.getByText('To resume data collection for this application, switch Cost Management on in the', { exact: false }),
     ).toBeInTheDocument();
   });
 
@@ -245,7 +245,7 @@ describe('ResourcesTable', () => {
             extra: {},
           },
         ],
-      })
+      }),
     );
 
     source = {
@@ -274,8 +274,8 @@ describe('ResourcesTable', () => {
           <Route path={routes.sourcesDetail.path} element={<ResourcesTable />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
@@ -346,7 +346,7 @@ describe('ResourcesTable', () => {
             paused_at: 'today',
           },
         ],
-      })
+      }),
     );
 
     source = {
@@ -372,15 +372,15 @@ describe('ResourcesTable', () => {
           <Route path={routes.sourcesDetail.path} element={<ResourcesTable />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(() => expect(screen.getByText('Connected application resources')).toBeInTheDocument());
 
     expect(screen.getByText('Cost Management is paused')).toBeInTheDocument();
     expect(
-      screen.getByText('To resume data collection for this application, switch Cost Management on in the', { exact: false })
+      screen.getByText('To resume data collection for this application, switch Cost Management on in the', { exact: false }),
     ).toBeInTheDocument();
   });
 
@@ -421,7 +421,7 @@ describe('ResourcesTable', () => {
             paused_at: 'today',
           },
         ],
-      })
+      }),
     );
 
     source = {
@@ -448,8 +448,8 @@ describe('ResourcesTable', () => {
           <Route path={routes.sourcesDetail.path} element={<ResourcesTable />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(() => expect(screen.getByText('Connected application resources')).toBeInTheDocument());

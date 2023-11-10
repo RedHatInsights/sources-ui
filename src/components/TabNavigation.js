@@ -19,7 +19,7 @@ const TabNavigation = () => {
   const enableBreakdown = usePreviewFlag('platform.sources.integrations.breakdown');
 
   return (
-    <Tabs activeKey={activeCategory} onSelect={(_e, key) => dispatch(setActiveCategory(key))} className="pf-u-mt-md">
+    <Tabs activeKey={activeCategory} onSelect={(_e, key) => dispatch(setActiveCategory(key))} className="pf-v5-u-mt-md">
       <Tab
         eventKey={CLOUD_VENDOR}
         title={

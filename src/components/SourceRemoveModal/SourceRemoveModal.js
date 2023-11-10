@@ -39,9 +39,9 @@ const SourceRemoveModal = ({ backPath = '/' }) => {
             id: 'sources.notificationDeleteMessage',
             defaultMessage: `{title} was deleted successfully.`,
           },
-          { title: source.name }
-        )
-      )
+          { title: source.name },
+        ),
+      ),
     );
   };
 
@@ -108,7 +108,7 @@ const SourceRemoveModal = ({ backPath = '/' }) => {
       })}
       header={
         <Title headingLevel="h1" size="2xl" className="sources">
-          <ExclamationTriangleIcon size="sm" className="ins-m-alert src-c-delete-icon pf-u-mr-sm" />
+          <ExclamationTriangleIcon size="sm" className="ins-m-alert src-c-delete-icon pf-v5-u-mr-sm" />
           {intl.formatMessage({
             id: 'sources.deleteTitle',
             defaultMessage: `Remove source?`,

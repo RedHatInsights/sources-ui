@@ -13,7 +13,7 @@ const CloudEmptyState = ({ setSelectedType }) => {
   const intl = useIntl();
 
   return (
-    <Card className="src-c-card__cloud-empty-state pf-u-mt-md pf-u-mt-0-on-md">
+    <Card className="src-c-card__cloud-empty-state pf-v5-u-mt-md pf-v5-u-mt-0-on-md">
       <CardTitle>
         {intl.formatMessage({
           id: 'cloud.emptystate.cardTitle',
@@ -27,12 +27,12 @@ const CloudEmptyState = ({ setSelectedType }) => {
             defaultMessage: 'Select an available provider.',
           })}
         </Text>
-        <div className="provider-tiles pf-u-mt-md pf-u-mb-lg">
+        <div className="provider-tiles pf-v5-u-mt-md pf-v5-u-mb-lg">
           <CloudTiles setSelectedType={setSelectedType} />
         </div>
       </CardBody>
       <CardFooter className="cloud-footer">
-        <Text className="catalog-link pf-u-mt-lg">
+        <Text className="catalog-link pf-v5-u-mt-lg">
           {intl.formatMessage(
             {
               id: 'cloud.emptystate.catalogLink',
@@ -44,7 +44,7 @@ const CloudEmptyState = ({ setSelectedType }) => {
                   {chunks}
                 </Text>
               ),
-            }
+            },
           )}
         </Text>
       </CardFooter>

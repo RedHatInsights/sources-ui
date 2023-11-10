@@ -34,7 +34,7 @@ export const DescriptionSummary = () => {
             defaultMessage: 'Run the following command to obtain your login token:',
           })}
         </TextListItem>
-        <ClipboardCopy className="pf-u-mb-md" isReadOnly>
+        <ClipboardCopy className="pf-v5-u-mb-md" isReadOnly>
           {intl.formatMessage({
             id: 'openshift.token.comman',
             defaultMessage: '# oc sa get-token -n management-infra management-admin',

@@ -22,7 +22,7 @@ export const ConfigureCostOperator = () => {
           },
           {
             operator: <b key="bold">costmanagement-metrics-operator</b>,
-          }
+          },
         )}
       </Text>
       <Text>
@@ -42,7 +42,7 @@ export const ConfigureCostOperator = () => {
           },
           {
             b: bold,
-          }
+          },
         )}
       </Text>
       <Text>

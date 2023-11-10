@@ -39,7 +39,7 @@ describe('validatorReset', () => {
         }}
         onSubmit={(values) => onSubmit(values)}
         FormTemplate={FormTemplate}
-      />
+      />,
     );
 
     await waitFor(async () => {

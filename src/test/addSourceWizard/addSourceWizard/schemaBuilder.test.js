@@ -55,7 +55,7 @@ describe('schema builder', () => {
   describe('getAdditionalSteps', () => {
     it('returns additional steps for amazon-arn-cost-management', () => {
       expect(getAdditionalSteps('amazon', 'arn', COST_MANAGEMENT_APP.name)).toEqual(
-        hardcodedSchemas.amazon.authentication.arn[COST_MANAGEMENT_APP.name].additionalSteps
+        hardcodedSchemas.amazon.authentication.arn[COST_MANAGEMENT_APP.name].additionalSteps,
       );
     });
   });
@@ -83,7 +83,7 @@ describe('schema builder', () => {
   describe('getAdditionalAuthFields', () => {
     it('returns additionalAuthFields for openshift token, generic', () => {
       expect(getAdditionalAuthFields('openshift', 'token', 'generic')).toEqual(
-        hardcodedSchemas.openshift.authentication.token.generic.additionalFields
+        hardcodedSchemas.openshift.authentication.token.generic.additionalFields,
       );
     });
 
@@ -164,7 +164,7 @@ describe('schema builder', () => {
           title: sourceTypes.find(({ name }) => name === 'openshift').schema.endpoint.title,
           name: 'openshift-endpoint',
           nextStep: 'summary',
-        })
+        }),
       );
     });
   });
@@ -265,7 +265,7 @@ describe('schema builder', () => {
         const fields = OPENSHIFT_TYPE.schema.authentication[0].fields
           .filter(({ stepKey }) => !stepKey)
           .map((field) =>
-            expect.objectContaining(field.name === 'authentication.password' ? { ...field, component: 'authentication' } : field)
+            expect.objectContaining(field.name === 'authentication.password' ? { ...field, component: 'authentication' } : field),
           );
 
         expectedSchema = expect.objectContaining({
@@ -287,7 +287,7 @@ describe('schema builder', () => {
         });
 
         expect(
-          createAuthTypeSelection(OPENSHIFT_TYPE, NO_APP, EMPTY_APPEND_ENDPOINT, DISABLE_AUTH_TYPE, HAS_ENDPOINT_STEP)
+          createAuthTypeSelection(OPENSHIFT_TYPE, NO_APP, EMPTY_APPEND_ENDPOINT, DISABLE_AUTH_TYPE, HAS_ENDPOINT_STEP),
         ).toEqual(expectedSchema);
       });
 
@@ -352,7 +352,7 @@ describe('schema builder', () => {
         });
 
         expect(
-          createAuthTypeSelection(AZURE_TYPE, TOPOLOGY_INV_APP, EMPTY_APPEND_ENDPOINT, DISABLE_AUTH_TYPE, HAS_ENDPOINT_STEP)
+          createAuthTypeSelection(AZURE_TYPE, TOPOLOGY_INV_APP, EMPTY_APPEND_ENDPOINT, DISABLE_AUTH_TYPE, HAS_ENDPOINT_STEP),
         ).toEqual(expectedSchema);
       });
 
@@ -379,7 +379,7 @@ describe('schema builder', () => {
     it('builds schema', () => {
       const schema = schemaBuilder(
         sourceTypes.filter(({ schema }) => schema),
-        applicationTypes
+        applicationTypes,
       );
 
       expect(schema).toEqual(expect.arrayContaining([expect.any(Object)]));
@@ -460,7 +460,7 @@ describe('schema builder', () => {
         applicationTypes,
         undefined,
         true,
-        true
+        true,
       );
 
       expect(schema).toEqual(expect.arrayContaining([expect.any(Object)]));

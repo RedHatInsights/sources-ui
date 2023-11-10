@@ -43,9 +43,9 @@ const RedirectNoId = () => {
                     id: 'sources.sourceNotFoundTitleDescription',
                     defaultMessage: 'Source with { id } was not found. Try it again later.',
                   },
-                  { id }
+                  { id },
                 ),
-              })
+              }),
             );
           }
 

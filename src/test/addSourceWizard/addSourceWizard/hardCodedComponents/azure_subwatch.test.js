@@ -22,10 +22,10 @@ describe('Azure-Subwatch hardcoded schemas', () => {
 
     expect(screen.getByText('Download and run the following commands against a running Azure VM.')).toBeInTheDocument();
     expect(screen.getAllByLabelText('Copyable input')[0]).toHaveValue(
-      'ansible-galaxy collection install redhatinsights.subscriptions'
+      'ansible-galaxy collection install redhatinsights.subscriptions',
     );
     expect(screen.getAllByLabelText('Copyable input')[1]).toHaveValue(
-      'ansible-playbook -i <AZURE_VM_HOSTNAME>, -b ~/.ansible/collections/ansible_collections/redhatinsights/subscriptions/playbooks/verify_account.yml -e rh_api_refresh_token=<OFFLINE_AUTH_TOKEN>'
+      'ansible-playbook -i <AZURE_VM_HOSTNAME>, -b ~/.ansible/collections/ansible_collections/redhatinsights/subscriptions/playbooks/verify_account.yml -e rh_api_refresh_token=<OFFLINE_AUTH_TOKEN>',
     );
   });
 
@@ -41,8 +41,8 @@ describe('Azure-Subwatch hardcoded schemas', () => {
 
       expect(
         screen.getByText(
-          "Complete configuration steps in Azure Lighthouse according to Microsoft instructions. When you're finished, return to this wizard to finish creating this Azure source."
-        )
+          "Complete configuration steps in Azure Lighthouse according to Microsoft instructions. When you're finished, return to this wizard to finish creating this Azure source.",
+        ),
       ).toBeInTheDocument();
       expect(screen.getByText('Take me to Lighthouse')).toHaveAttribute('aria-disabled', 'true');
 
@@ -70,7 +70,7 @@ describe('Azure-Subwatch hardcoded schemas', () => {
 
       await waitFor(() => expect(screen.getByText('Take me to Lighthouse')).toHaveAttribute('aria-disabled', 'true'));
       expect(
-        screen.getByText('There is an error with loading of the configuration. Please go back and return to this step.')
+        screen.getByText('There is an error with loading of the configuration. Please go back and return to this step.'),
       ).toBeInTheDocument();
 
       console.error = _cons;
@@ -104,8 +104,8 @@ describe('Azure-Subwatch hardcoded schemas', () => {
 
     expect(
       screen.getByText(
-        'Log in to your Azure account and navigate to your subscriptions. Copy the subscription ID you wish to use and paste it into the field below.'
-      )
+        'Log in to your Azure account and navigate to your subscriptions. Copy the subscription ID you wish to use and paste it into the field below.',
+      ),
     ).toBeInTheDocument();
   });
 });

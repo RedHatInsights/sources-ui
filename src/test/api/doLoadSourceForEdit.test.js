@@ -54,7 +54,7 @@ describe('doLoadSourceForEdit', () => {
             applications: [],
           },
         ],
-      })
+      }),
     );
   });
 
@@ -87,7 +87,7 @@ describe('doLoadSourceForEdit', () => {
             applications: [APPLICATION_DATA],
           },
         ],
-      })
+      }),
     );
 
     api.getSourcesApi = () => mocks;
@@ -125,7 +125,7 @@ describe('doLoadSourceForEdit', () => {
             applications: [APPLICATION_DATA],
           },
         ],
-      })
+      }),
     );
 
     api.getSourcesApi = () => mocks;
@@ -163,7 +163,7 @@ describe('doLoadSourceForEdit', () => {
             applications: [APPLICATION_DATA],
           },
         ],
-      })
+      }),
     );
 
     const AUTHENTICATION_DATA = {

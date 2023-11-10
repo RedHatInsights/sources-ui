@@ -48,7 +48,7 @@ describe('redux actions', () => {
         payload: {
           source: SOURCE,
         },
-      })
+      }),
     );
   });
 

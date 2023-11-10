@@ -36,7 +36,7 @@ describe('Description component', () => {
         initialValues={{
           'copy-component': 'some value',
         }}
-      />
+      />,
     );
 
     expect(screen.getByText('Copy component label', { selector: 'span' })).toBeInTheDocument();

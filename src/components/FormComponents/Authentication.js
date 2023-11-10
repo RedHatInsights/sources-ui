@@ -23,7 +23,7 @@ const Authentication = (rest) => {
               id: 'wizard.changeAuthHelper',
               defaultMessage: 'Changing this resets your current {label}.',
             },
-            { label: rest.label }
+            { label: rest.label },
           ),
           validate: doNotRequirePassword,
         }

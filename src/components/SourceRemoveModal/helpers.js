@@ -40,4 +40,4 @@ export const bodyVariants = (variant, { name, count }) =>
         }}
       />
     ),
-  }[variant]);
+  })[variant];

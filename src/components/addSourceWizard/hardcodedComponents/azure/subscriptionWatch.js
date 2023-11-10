@@ -26,7 +26,7 @@ export const OfflineToken = () => {
           defaultMessage: 'Generate a token to authenticate the calls to APIs for Red Hat services.',
         })}
       </Text>
-      <TextList component={TextListVariants.ol} className="pf-u-ml-0">
+      <TextList component={TextListVariants.ol} className="pf-v5-u-ml-0">
         <TextListItem>
           {intl.formatMessage(
             {
@@ -39,7 +39,7 @@ export const OfflineToken = () => {
                   {API_LINK}
                 </Text>
               ),
-            }
+            },
           )}
         </TextListItem>
       </TextList>
@@ -58,7 +58,7 @@ export const AnsiblePlaybook = () => {
           defaultMessage: 'Download and run the following commands against a running Azure VM.',
         })}
       </Text>
-      <ClipboardCopy className="pf-u-mb-lg">ansible-galaxy collection install redhatinsights.subscriptions</ClipboardCopy>
+      <ClipboardCopy className="pf-v5-u-mb-lg">ansible-galaxy collection install redhatinsights.subscriptions</ClipboardCopy>
       <ClipboardCopy>
         {
           'ansible-playbook -i <AZURE_VM_HOSTNAME>, -b ~/.ansible/collections/ansible_collections/redhatinsights/subscriptions/playbooks/verify_account.yml -e rh_api_refresh_token=<OFFLINE_AUTH_TOKEN>'
@@ -86,7 +86,7 @@ export const LightHouseDescription = () => {
           intl.formatMessage({
             id: 'subwatch.iampolicy.subWatchConfigError',
             defaultMessage: 'There is an error with loading of the configuration. Please go back and return to this step.',
-          })
+          }),
         );
       });
   }, []);

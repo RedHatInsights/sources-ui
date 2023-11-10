@@ -21,7 +21,7 @@ class ErrorBoundary extends Component {
         title: `${error.toString()} (Sentry ID: ${sentryId})`,
         variant: 'danger',
         description: error.stack,
-      })
+      }),
     );
   }
 

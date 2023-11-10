@@ -174,7 +174,7 @@ const FinalWizard = ({
         })}
         description={
           <TextContent>
-            <Text className="pf-u-mb-md">
+            <Text className="pf-v5-u-mb-md">
               {intl.formatMessage({
                 id: 'wizard.loadingDescription-a',
                 defaultMessage:
@@ -234,7 +234,7 @@ FinalWizard.propTypes = {
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
-    })
+    }),
   ),
   activeCategory: PropTypes.string,
 };

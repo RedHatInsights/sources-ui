@@ -87,7 +87,7 @@ describe('patch cost management source', () => {
       .mockImplementationOnce(() => Promise.resolve({ availability_status: 'available', updated_at: UPDATED_TIME }))
       .mockImplementationOnce(() => Promise.resolve({ availability_status: 'available', updated_at: UPDATED_TIME }))
       .mockImplementationOnce(() =>
-        Promise.resolve({ availability_status: 'available', updated_at: new Date(Number(UPDATED_TIME) + 1000) })
+        Promise.resolve({ availability_status: 'available', updated_at: new Date(Number(UPDATED_TIME) + 1000) }),
       );
 
     api.getSourcesApi = () => ({
@@ -112,7 +112,7 @@ describe('patch cost management source', () => {
           availability_status: 'available',
           updated_at: UPDATED_TIME,
           last_checked_at: new Date(Number(UPDATED_TIME) + 1000),
-        })
+        }),
       );
 
     api.getSourcesApi = () => ({

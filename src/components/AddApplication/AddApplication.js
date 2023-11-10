@@ -48,7 +48,7 @@ export const onSubmit = (
   setState,
   initialValues,
   appTypes,
-  setSelectedApp
+  setSelectedApp,
 ) => {
   setState({ type: 'submit', values, formApi });
 
@@ -63,7 +63,7 @@ export const onSubmit = (
       setState({
         type: 'error',
         error,
-      })
+      }),
     );
 };
 
@@ -102,7 +102,7 @@ const AddApplication = () => {
       intl,
       undefined,
       dispatch,
-      source
+      source,
     );
   };
 
@@ -131,7 +131,7 @@ const AddApplication = () => {
                   application: selectedApp.current,
                 },
                 values: {},
-              })
+              }),
             );
         } else {
           setState({
@@ -153,7 +153,7 @@ const AddApplication = () => {
     },
     {
       appName: applicationType?.display_name || 'application',
-    }
+    },
   );
   const description = intl.formatMessage(
     {
@@ -162,7 +162,7 @@ const AddApplication = () => {
     },
     {
       appName: applicationType?.display_name || 'application',
-    }
+    },
   );
 
   if ((!appTypesLoaded || !sourceTypesLoaded || !loaded || state.state === 'loading') && state.state !== 'submitting') {
@@ -298,7 +298,7 @@ const AddApplication = () => {
               }
               Component={() => (
                 <AppLink to={replaceRouteId(routes.sourcesDetail.path, source.id)}>
-                  <Button variant="primary" className="pf-u-mt-xl">
+                  <Button variant="primary" className="pf-v5-u-mt-xl">
                     {intl.formatMessage({
                       id: 'wizard.editSource',
                       defaultMessage: 'Edit source',
@@ -353,7 +353,7 @@ const AddApplication = () => {
     title,
     description,
     appTypes,
-    enableLighthouse
+    enableLighthouse,
   );
 
   const hasAvailableApps = filteredAppTypes.length > 0;

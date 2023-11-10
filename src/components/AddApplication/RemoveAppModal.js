@@ -35,7 +35,7 @@ const RemoveAppModal = () => {
     display_name: appType?.display_name,
     dependent_applications: appType?.dependent_applications,
     sourceAppsNames: source.applications.map(
-      ({ application_type_id }) => appTypes.find(({ id }) => id === application_type_id)?.display_name
+      ({ application_type_id }) => appTypes.find(({ id }) => id === application_type_id)?.display_name,
     ),
   };
 
@@ -62,7 +62,7 @@ const RemoveAppModal = () => {
       })}
       header={
         <Title headingLevel="h1" size="2xl" className="sources">
-          <ExclamationTriangleIcon size="sm" className="ins-m-alert src-c-delete-icon pf-u-mr-sm" />
+          <ExclamationTriangleIcon size="sm" className="ins-m-alert src-c-delete-icon pf-v5-u-mr-sm" />
           {intl.formatMessage({
             id: 'sources.deleteAppTitle',
             defaultMessage: 'Remove application?',
@@ -91,7 +91,7 @@ const RemoveAppModal = () => {
               id: 'sources.deleteAppWarning',
               defaultMessage: '{ appName } will be disconnected from this source.',
             },
-            { appName: <b key="b">{app.display_name}</b> }
+            { appName: <b key="b">{app.display_name}</b> },
           )}
         </Text>
         {dependentApps.length > 0 && (
@@ -101,7 +101,7 @@ const RemoveAppModal = () => {
                 id: 'sources.deleteAppDetails',
                 defaultMessage: 'This change will affect these applications: { apps }.',
               },
-              { apps: dependentApps }
+              { apps: dependentApps },
             )}
           </Text>
         )}

@@ -61,8 +61,8 @@ describe('CredentialsForm', () => {
           <Route path={routes.sourcesDetailEditCredentials.path} element={<CredentialsForm />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
@@ -73,8 +73,8 @@ describe('CredentialsForm', () => {
     expect(screen.getByText('Edit account authorization credentials')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'Use the fields below to reset your account authorization credentials. It may take some time to validate new information.'
-      )
+        'Use the fields below to reset your account authorization credentials. It may take some time to validate new information.',
+      ),
     ).toBeInTheDocument();
 
     expect([...screen.getAllByRole('textbox')].map((e) => e.name || e.getAttribute('aria-label'))).toEqual([
@@ -103,8 +103,8 @@ describe('CredentialsForm', () => {
           <Route path={routes.sourcesDetailEditCredentials.path} element={<CredentialsForm />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(() => expect(screen.getByText('View account authorization credentials')).toBeInTheDocument());
@@ -121,8 +121,8 @@ describe('CredentialsForm', () => {
           <Route path={routes.sourcesDetailEditCredentials.path} element={<CredentialsForm />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
@@ -132,7 +132,7 @@ describe('CredentialsForm', () => {
     });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
-      replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, sourceId)
+      replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, sourceId),
     );
   });
 
@@ -145,8 +145,8 @@ describe('CredentialsForm', () => {
           <Route path={routes.sourcesDetailEditCredentials.path} element={<CredentialsForm />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
@@ -156,7 +156,7 @@ describe('CredentialsForm', () => {
     });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
-      replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, sourceId)
+      replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, sourceId),
     );
   });
 
@@ -178,8 +178,8 @@ describe('CredentialsForm', () => {
           <Route path={routes.sourcesDetailEditCredentials.path} element={<CredentialsForm />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
 
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
@@ -199,7 +199,7 @@ describe('CredentialsForm', () => {
     });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
-      replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, sourceId)
+      replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, sourceId),
     );
     expect(updateAuthentication).toHaveBeenCalledWith('auth-id', { username: 'newname' });
     expect(actions.addMessage).not.toHaveBeenCalled();
@@ -211,7 +211,7 @@ describe('CredentialsForm', () => {
         description: 'It may take some time to validate your new credentials. Check this page for status updates.',
         title: 'New credentials saved',
         variant: 'info',
-      })
+      }),
     );
   });
 
@@ -233,8 +233,8 @@ describe('CredentialsForm', () => {
           <Route path={routes.sourcesDetailEditCredentials.path} element={<CredentialsForm />} />
         </Routes>,
         store,
-        initialEntry
-      )
+        initialEntry,
+      ),
     );
     await waitFor(() => expect(() => screen.getByRole('progressbar')).toThrow());
 
@@ -253,7 +253,7 @@ describe('CredentialsForm', () => {
     });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(
-      replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, sourceId)
+      replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, sourceId),
     );
     expect(updateAuthentication).toHaveBeenCalledWith('auth-id', { username: 'newname' });
     expect(actions.addMessage).not.toHaveBeenCalled();
@@ -266,7 +266,7 @@ describe('CredentialsForm', () => {
           'There was a problem while trying to update credentials. Please try again. If the error persists, open a support case.',
         title: 'Error updating credentials',
         variant: 'danger',
-      })
+      }),
     );
   });
 });

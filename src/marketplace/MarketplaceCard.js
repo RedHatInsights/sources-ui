@@ -5,19 +5,19 @@ import ImageWithPlaceholder from '../components/TilesShared/ImageWithPlaceholder
 
 const MarketplaceCard = (product) => (
   <Card isFlat className="marketplace-card">
-    <CardTitle className="pf-u-pl-md pf-u-pr-md">
+    <CardTitle className="pf-v5-u-pl-md pf-v5-u-pr-md">
       <ImageWithPlaceholder src={product.logo_url} className="marketplace-card-icon" />
       <br />
       {product.title}
       <br />
-      <Label className="pf-u-mt-sm marketplace-label" icon={<DatabaseIcon />}>
+      <Label className="pf-v5-u-mt-sm marketplace-label" icon={<DatabaseIcon />}>
         {product.primary_category.display_name}
       </Label>
     </CardTitle>
-    <CardBody className="marketplace-card-body pf-u-mb-md pf-u-pl-md pf-u-pr-md" isFilled>
+    <CardBody className="marketplace-card-body pf-v5-u-mb-md pf-v5-u-pl-md pf-v5-u-pr-md" isFilled>
       {product.description_short}
     </CardBody>
-    <CardFooter className="pf-u-pl-md pf-u-pr-md pf-u-pb-md">
+    <CardFooter className="pf-v5-u-pl-md pf-v5-u-pr-md pf-v5-u-pb-md">
       <Button
         variant="link"
         isInline

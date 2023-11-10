@@ -21,8 +21,8 @@ describe('Azure-Subwatch hardcoded schemas', () => {
     expect(screen.getByDisplayValue('ansible-galaxy collection install redhatinsights.subscriptions')).toBeInTheDocument();
     expect(
       screen.getByDisplayValue(
-        'ansible-playbook -i <GCE_VM_HOSTNAME>, -b ~/.ansible/collections/ansible_collections/redhatinsights/subscriptions/playbooks/verify_account.yml -e rh_api_refresh_token=<OFFLINE_AUTH_TOKEN>'
-      )
+        'ansible-playbook -i <GCE_VM_HOSTNAME>, -b ~/.ansible/collections/ansible_collections/redhatinsights/subscriptions/playbooks/verify_account.yml -e rh_api_refresh_token=<OFFLINE_AUTH_TOKEN>',
+      ),
     ).toBeInTheDocument();
   });
 });

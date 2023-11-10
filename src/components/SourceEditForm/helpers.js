@@ -85,8 +85,8 @@ export const getEditedApplications = (source, editing) => {
             ({ id, resource_type }) =>
               resource_type &&
               id === editedId &&
-              addIfUnique(editedApplications, resource_type === 'Application' ? app.id : `${CHECK_ENDPOINT_COMMAND}-${app.id}`)
-          )
+              addIfUnique(editedApplications, resource_type === 'Application' ? app.id : `${CHECK_ENDPOINT_COMMAND}-${app.id}`),
+          ),
         );
       }
 
@@ -94,8 +94,8 @@ export const getEditedApplications = (source, editing) => {
         source.applications.forEach((app) =>
           app.authentications.forEach(
             ({ resource_type }) =>
-              resource_type === 'Endpoint' && addIfUnique(editedApplications, `${CHECK_ENDPOINT_COMMAND}-${app.id}`)
-          )
+              resource_type === 'Endpoint' && addIfUnique(editedApplications, `${CHECK_ENDPOINT_COMMAND}-${app.id}`),
+          ),
         );
       }
     }
@@ -126,7 +126,7 @@ export const prepareMessages = (source, intl, appTypes) => {
   if (source.endpoints?.[0]?.availability_status_error) {
     const applicationsUsingEndpoint = source.applications
       .map((app) =>
-        app.authentications.find(({ resource_type }) => !app.paused_at && resource_type === 'Endpoint') ? app.id : undefined
+        app.authentications.find(({ resource_type }) => !app.paused_at && resource_type === 'Endpoint') ? app.id : undefined,
       )
       .filter(Boolean);
 

@@ -12,8 +12,8 @@ describe('NoPermissions', () => {
     expect(screen.getByText('Missing permissions')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'To perform this action, your Organization Administrator must grant you Sources Administrator permissions.'
-      )
+        'To perform this action, your Organization Administrator must grant you Sources Administrator permissions.',
+      ),
     ).toBeInTheDocument();
   });
 });

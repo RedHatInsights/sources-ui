@@ -278,7 +278,7 @@ describe('entities spec', () => {
         const method = 'Get';
         mock[`on${method}`](`/api/sources/v3.1/application_types?filter[name]=/insights/platform/provisioning`).reply(
           200,
-          OK_RESPONSE
+          OK_RESPONSE,
         );
 
         const result = await api.getSourcesApi().getProvAppType();
@@ -290,7 +290,7 @@ describe('entities spec', () => {
         const id = 1;
         const method = 'Get';
         mock[`on${method}`](
-          `/api/sources/v3.1/app_meta_data?filter[name]=aws_wizard_account_number&application_type_id=${id}`
+          `/api/sources/v3.1/app_meta_data?filter[name]=aws_wizard_account_number&application_type_id=${id}`,
         ).reply(200, OK_RESPONSE);
 
         const result = await api.getSourcesApi().getProvMetadata(id);
@@ -347,7 +347,7 @@ describe('entities spec', () => {
         JSON.stringify({
           source_id: SOURCE_ID,
           application_type_id: APP_TYPE_ID,
-        })
+        }),
       );
     });
 

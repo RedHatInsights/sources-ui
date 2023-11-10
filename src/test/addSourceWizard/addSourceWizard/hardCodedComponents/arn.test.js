@@ -22,7 +22,7 @@ describe('AWS-ARN hardcoded schemas', () => {
     render(<AwsArn.ArnDescription />);
 
     expect(
-      screen.getByText('To enable account access, capture the ARN associated with the role you just created.')
+      screen.getByText('To enable account access, capture the ARN associated with the role you just created.'),
     ).toBeInTheDocument();
     expect(screen.getByText('From the Roles tab, select the role you just created.')).toBeInTheDocument();
     expect(screen.getByText('From the Summary screen, copy the role ARN and paste it in the ARN field:')).toBeInTheDocument();
@@ -45,13 +45,13 @@ describe('AWS-ARN hardcoded schemas', () => {
     render(
       <RendererContext.Provider value={{ formOptions: FORM_OPTIONS }}>
         <AwsArn.IAMPolicyDescription />
-      </RendererContext.Provider>
+      </RendererContext.Provider>,
     );
 
     expect(
       screen.getByText(
-        'To grant permissions to the cost management report you just configured, create an AWS Identity and Access Management (IAM) policy.'
-      )
+        'To grant permissions to the cost management report you just configured, create an AWS Identity and Access Management (IAM) policy.',
+      ),
     ).toBeInTheDocument();
     expect(screen.getByText('Learn more')).toBeInTheDocument();
     expect(screen.getByText('Sign in to the AWS Identity and Access Management (IAM) console.')).toBeInTheDocument();
@@ -90,7 +90,7 @@ describe('AWS-ARN hardcoded schemas', () => {
     render(
       <RendererContext.Provider value={{ formOptions: FORM_OPTIONS }}>
         <AwsArn.IAMPolicyDescription />
-      </RendererContext.Provider>
+      </RendererContext.Provider>,
     );
 
     expect(screen.getByText('Something went wrong, you are missing bucket value.')).toBeInTheDocument();
@@ -111,17 +111,17 @@ describe('AWS-ARN hardcoded schemas', () => {
     render(
       <RendererContext.Provider value={{ formOptions: FORM_OPTIONS }}>
         <AwsArn.IAMRoleDescription />
-      </RendererContext.Provider>
+      </RendererContext.Provider>,
     );
 
     expect(
-      screen.getByText('To delegate account access, create an IAM role to associate with your IAM policy.')
+      screen.getByText('To delegate account access, create an IAM role to associate with your IAM policy.'),
     ).toBeInTheDocument();
     expect(screen.getByText('From the AWS Identity Access Management console, create a new role.')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'Select another AWS account from the list of trusted entities and paste the following value into the Account ID field:'
-      )
+        'Select another AWS account from the list of trusted entities and paste the following value into the Account ID field:',
+      ),
     ).toBeInTheDocument();
     expect(screen.getByText('Attach the permissions policy that you just created.')).toBeInTheDocument();
     expect(screen.getByText('Complete the process to create your new role.')).toBeInTheDocument();
@@ -149,17 +149,17 @@ describe('AWS-ARN hardcoded schemas', () => {
     render(
       <RendererContext.Provider value={{ formOptions: FORM_OPTIONS }}>
         <AwsArn.IAMRoleDescription showHCS />
-      </RendererContext.Provider>
+      </RendererContext.Provider>,
     );
 
     expect(
-      screen.getByText('To delegate account access, create an IAM role to associate with your IAM policy.')
+      screen.getByText('To delegate account access, create an IAM role to associate with your IAM policy.'),
     ).toBeInTheDocument();
     expect(screen.getByText('From the AWS Identity Access Management console, create a new role.')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'Select another AWS account from the list of trusted entities and paste the following value into the Account ID field:'
-      )
+        'Select another AWS account from the list of trusted entities and paste the following value into the Account ID field:',
+      ),
     ).toBeInTheDocument();
     expect(screen.getByText('Attach the permissions policy that you just created.')).toBeInTheDocument();
     expect(screen.getByText('Complete the process to create your new role.')).toBeInTheDocument();
@@ -177,14 +177,14 @@ describe('AWS-ARN hardcoded schemas', () => {
     expect(screen.getByText('Learn more')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'To use tags to organize your AWS resources in the Cost Management application, activate your tags in AWS to allow them to be imported automatically.'
-      )
+        'To use tags to organize your AWS resources in the Cost Management application, activate your tags in AWS to allow them to be imported automatically.',
+      ),
     ).toBeInTheDocument();
     expect(
-      screen.getByText('In the AWS Billing and Cost Management console, open the Cost Allocation Tags section.')
+      screen.getByText('In the AWS Billing and Cost Management console, open the Cost Allocation Tags section.'),
     ).toBeInTheDocument();
     expect(
-      screen.getByText('Select the tags you want to use in the Cost Management application, and click Activate.')
+      screen.getByText('Select the tags you want to use in the Cost Management application, and click Activate.'),
     ).toBeInTheDocument();
   });
 
@@ -194,14 +194,14 @@ describe('AWS-ARN hardcoded schemas', () => {
     expect(screen.queryByText('Learn more')).not.toBeInTheDocument();
     expect(
       screen.getByText(
-        'To use tags to organize your AWS resources in the Hybrid Committed Spend application, activate your tags in AWS to allow them to be imported automatically.'
-      )
+        'To use tags to organize your AWS resources in the Hybrid Committed Spend application, activate your tags in AWS to allow them to be imported automatically.',
+      ),
     ).toBeInTheDocument();
     expect(
-      screen.getByText('In the AWS Billing and Cost Management console, open the Cost Allocation Tags section.')
+      screen.getByText('In the AWS Billing and Cost Management console, open the Cost Allocation Tags section.'),
     ).toBeInTheDocument();
     expect(
-      screen.getByText('Select the tags you want to use in the Hybrid Committed Spend application, and click Activate.')
+      screen.getByText('Select the tags you want to use in the Hybrid Committed Spend application, and click Activate.'),
     ).toBeInTheDocument();
   });
 
@@ -210,8 +210,8 @@ describe('AWS-ARN hardcoded schemas', () => {
 
     expect(
       screen.getByText(
-        "The information Cost Management would need is your AWS account's cost and usage report (CUR). If there is a need to further customize the CUR you want to send to Cost Management, select the manually customize option and follow the special instructions on how to."
-      )
+        "The information Cost Management would need is your AWS account's cost and usage report (CUR). If there is a need to further customize the CUR you want to send to Cost Management, select the manually customize option and follow the special instructions on how to.",
+      ),
     ).toBeInTheDocument();
   });
 
@@ -220,8 +220,8 @@ describe('AWS-ARN hardcoded schemas', () => {
 
     expect(
       screen.getByText(
-        `The information ${HCS_APP_NAME} would need is your AWS account's cost and usage report (CUR). If there is a need to further customize the CUR you want to send to ${HCS_APP_NAME}, select the manually customize option and follow the special instructions on how to.`
-      )
+        `The information ${HCS_APP_NAME} would need is your AWS account's cost and usage report (CUR). If there is a need to further customize the CUR you want to send to ${HCS_APP_NAME}, select the manually customize option and follow the special instructions on how to.`,
+      ),
     ).toBeInTheDocument();
   });
 
@@ -242,7 +242,7 @@ describe('AWS-ARN hardcoded schemas', () => {
     render(
       <RendererContext.Provider value={{ formOptions: FORM_OPTIONS }}>
         <AwsArn.UsageSteps />
-      </RendererContext.Provider>
+      </RendererContext.Provider>,
     );
 
     expect(screen.getByText('Create a cost and usage report using the following values:')).toBeInTheDocument();
@@ -271,14 +271,14 @@ describe('AWS-ARN hardcoded schemas', () => {
     render(
       <RendererContext.Provider value={{ formOptions: FORM_OPTIONS }}>
         <AwsArn.UsageSteps />
-      </RendererContext.Provider>
+      </RendererContext.Provider>,
     );
 
     expect(screen.getByText('Skip this step and proceed to next step')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'Since you have chosen to manually customize the CUR you want to send to Cost Management, you do not need to create at this point and time.'
-      )
+        'Since you have chosen to manually customize the CUR you want to send to Cost Management, you do not need to create at this point and time.',
+      ),
     ).toBeInTheDocument();
     expect(screen.queryByText('Additional configuration steps')).toBeInTheDocument();
   });
@@ -287,10 +287,10 @@ describe('AWS-ARN hardcoded schemas', () => {
     render(<AwsArn.StorageDescription />);
 
     expect(
-      screen.getByText('To store the cost and usage reports needed for cost management, you need to create an Amazon S3 bucket.')
+      screen.getByText('To store the cost and usage reports needed for cost management, you need to create an Amazon S3 bucket.'),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("On AWS, specify or create an Amazon S3 bucket for your account and enter it's name below.")
+      screen.getByText("On AWS, specify or create an Amazon S3 bucket for your account and enter it's name below."),
     ).toBeInTheDocument();
     expect(screen.getByText('Learn more')).toBeInTheDocument();
   });
@@ -299,10 +299,10 @@ describe('AWS-ARN hardcoded schemas', () => {
     render(<AwsArn.StorageDescription showHCS />);
 
     expect(
-      screen.getByText('To store the cost and usage reports needed for cost management, you need to create an Amazon S3 bucket.')
+      screen.getByText('To store the cost and usage reports needed for cost management, you need to create an Amazon S3 bucket.'),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("On AWS, specify or create an Amazon S3 bucket for your account and enter it's name below.")
+      screen.getByText("On AWS, specify or create an Amazon S3 bucket for your account and enter it's name below."),
     ).toBeInTheDocument();
     expect(screen.queryByText('Learn more')).toBeNull();
   });

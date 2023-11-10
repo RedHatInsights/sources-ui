@@ -12,8 +12,8 @@ describe('AWS-Access key hardcoded schemas', () => {
     expect(screen.getByText('Create an access key in your AWS user account and enter the details below.')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'For sufficient access and security, Red Hat recommends using the Power user identity and access management (IAM) policy for your AWS user account.'
-      )
+        'For sufficient access and security, Red Hat recommends using the Power user identity and access management (IAM) policy for your AWS user account.',
+      ),
     ).toBeInTheDocument();
     expect(screen.getByText('Create an access key in your AWS user account and enter the details below.')).toBeInTheDocument();
   });
