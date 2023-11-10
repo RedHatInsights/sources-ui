@@ -1,5 +1,11 @@
 @import '~@redhat-cloud-services/frontend-components-notifications/index.css';
 
+// background for integrations tabs
+.src-c-section-main {
+  height: 100%;
+  background: var(--pf-v5-global--BackgroundColor--200);
+}
+
 .src-c-bullseye__placeholder-loader {
   margin: 0;
   padding: 0;

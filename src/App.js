@@ -34,7 +34,7 @@ const App = () => {
         <NotificationsPortal />
         <ErrorBoundary>
           <PermissionsChecker>
-            <section className="pf-v5-u-p-0">
+            <section className="pf-v5-u-p-0 src-c-section-main">
               <DataLoader />
               <Routing />
             </section>
