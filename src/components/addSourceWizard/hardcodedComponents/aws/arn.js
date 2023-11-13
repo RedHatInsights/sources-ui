@@ -39,6 +39,7 @@ const CREATE_S3_BUCKET = `${HCCM_DOCS_PREFIX}/html/adding_an_amazon_web_services
 const ENABLE_AWS_ACCOUNT = `${HCCM_DOCS_PREFIX}/html/adding_an_amazon_web_services_aws_source_to_cost_management/assembly-adding-aws-sources#enabling-aws-account-access_adding-aws-sources`;
 const ENABLE_HCS_AWS_ACCOUNT = ''; // specify when HCS docs links are available
 const CONFIG_AWS_TAGS = `${HCCM_DOCS_PREFIX}/html/adding_an_amazon_web_services_aws_source_to_cost_management/assembly-cost-management-next-steps-aws#configure-cost-models-next-step_next-steps-aws`;
+const RHEL_METERED_AWS = `${HCCM_DOCS_PREFIX}/html/adding_an_amazon_web_services_aws_source_to_cost_management/index`;
 const CONFIG_HCS_AWS_TAGS = ''; // specify when HCS docs links are available
 export const MANUAL_CUR_STEPS = 'https://github.com/project-koku/koku-data-selector/blob/main/docs/aws/aws.rst';
 
@@ -398,7 +399,7 @@ export const TagsDescription = ({ showHCS }) => {
               component={TextVariants.a}
               rel="noopener noreferrer"
               target="_blank"
-              href={showHCS ? CONFIG_HCS_AWS_TAGS : CONFIG_AWS_TAGS}
+              href={showHCS ? CONFIG_HCS_AWS_TAGS : rhelAws ? RHEL_METERED_AWS : CONFIG_AWS_TAGS}
             >
               {intl.formatMessage({
                 id: 'cost.tags.readMeLink',
