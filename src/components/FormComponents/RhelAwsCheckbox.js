@@ -17,7 +17,7 @@ const RhelAwsCheckbox = ({ ...props }) => {
     <Checkbox
       label={label}
       isChecked={input.value === 'rhel'}
-      onChange={(checked) => {
+      onChange={(_ev, checked) => {
         input.onChange(checked ? 'rhel' : undefined);
       }}
     />
