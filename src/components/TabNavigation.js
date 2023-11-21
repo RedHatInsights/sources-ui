@@ -65,7 +65,11 @@ const TabNavigation = () => {
             />
             <Tab
               eventKey={REPORTING}
-              title={<TabTitleText>{intl.formatMessage({ id: 'sources.reporting', defaultMessage: 'Reporting' })}</TabTitleText>}
+              title={
+                <TabTitleText>
+                  {intl.formatMessage({ id: 'sources.reportingAutomation', defaultMessage: 'Reporting & Automation' })}
+                </TabTitleText>
+              }
             />
             <Tab
               eventKey={WEBHOOKS}
