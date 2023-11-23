@@ -30,7 +30,7 @@ import QuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/question-
 
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 
-import { HCCM_DOCS_PREFIX } from '../../stringConstants';
+import { HCCM_DOCS_PREFIX, HCCM_LATEST_DOCS_PREFIX } from '../../stringConstants';
 import { HCS_APP_NAME } from '../../../../utilities/constants';
 import { useFlag } from '@unleash/proxy-client-react';
 
@@ -39,7 +39,7 @@ const CREATE_S3_BUCKET = `${HCCM_DOCS_PREFIX}/html/adding_an_amazon_web_services
 const ENABLE_AWS_ACCOUNT = `${HCCM_DOCS_PREFIX}/html/adding_an_amazon_web_services_aws_source_to_cost_management/assembly-adding-aws-sources#enabling-aws-account-access_adding-aws-sources`;
 const ENABLE_HCS_AWS_ACCOUNT = ''; // specify when HCS docs links are available
 const CONFIG_AWS_TAGS = `${HCCM_DOCS_PREFIX}/html/adding_an_amazon_web_services_aws_source_to_cost_management/assembly-cost-management-next-steps-aws#configure-cost-models-next-step_next-steps-aws`;
-const RHEL_METERED_AWS = `${HCCM_DOCS_PREFIX}/html/integrating_amazon_web_services_aws_data_into_cost_management/index `;
+const RHEL_METERED_AWS = `${HCCM_LATEST_DOCS_PREFIX}/html/integrating_amazon_web_services_aws_data_into_cost_management/index`;
 const CONFIG_HCS_AWS_TAGS = ''; // specify when HCS docs links are available
 export const MANUAL_CUR_STEPS = 'https://github.com/project-koku/koku-data-selector/blob/main/docs/aws/aws.rst';
 
@@ -443,7 +443,7 @@ export const TagsDescription = ({ showHCS }) => {
           title={intl.formatMessage({
             id: 'cost.tags.alertTitle',
             defaultMessage:
-              'If your organization is converting systems from CentOS 7 to RHEL and using hourly billing, activate the comredhatrhel tag for your systems in the Cost Allocation Tags section of the AWS console. After activating the tag in AWS, select Include RHEL usage.',
+              'If your organization is converting systems from CentOS 7 to RHEL and using hourly billing, activate the com_redhat_rhel tag for your systems in the Cost Allocation Tags section of the AWS console. After activating the tag in AWS, select Include RHEL usage.',
           })}
         />
       ) : null}

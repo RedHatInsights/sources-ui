@@ -21,5 +21,6 @@ export const wizardTitle = (activeCategory) =>
     <FormattedMessage id="wizard.wizardTitleRedhat" defaultMessage="Add Red Hat source" />
   );
 export const HCCM_DOCS_PREFIX = 'https://access.redhat.com/documentation/en-us/cost_management_service/2023';
+export const HCCM_LATEST_DOCS_PREFIX = 'https://access.redhat.com/documentation/en-us/cost_management_service/1-latest';
 
 export const NO_APPLICATION_VALUE = 'no-application';
