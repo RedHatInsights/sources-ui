@@ -196,7 +196,6 @@ describe('SourceWizardSummary component', () => {
         ['Application', 'Cost Management'],
         ['S3 bucket name', 'gfghf'],
         ['AWS region', 'test'],
-        ['Include RHEL usage', 'rhel'],
         ['ARN', 'arn:aws:132'],
       ]);
 
@@ -211,6 +210,45 @@ describe('SourceWizardSummary component', () => {
       expect(
         screen.getByText(
           'You will need to perform more configuration steps after creating the source. To find more information, click on the link below.',
+        ),
+      ).toBeInTheDocument();
+    });
+
+    it('amazon - ARN cost management - show content rhel usage content if non-manual CUR', () => {
+      formOptions = {
+        getState: () => ({
+          values: {
+            source: { name: 'cosi' },
+            application: {
+              application_type_id: '2',
+              extra: { bucket: 'gfghf', bucket_region: 'test', metered: 'rhel', storage_only: false },
+            },
+            source_type: 'amazon',
+            authentication: { username: 'arn:aws:132', authtype: 'arn' },
+            fixasyncvalidation: '',
+            endpoint: { role: 'aws' },
+          },
+        }),
+      };
+
+      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} store={store} />);
+
+      const data = getListData(container);
+
+      expect(data).toEqual([
+        ['Name', 'cosi'],
+        ['Source type', 'Amazon Web Services'],
+        ['Application', 'Cost Management'],
+        ['S3 bucket name', 'gfghf'],
+        ['AWS region', 'test'],
+        ['Include RHEL usage', 'rhel'],
+        ['ARN', 'arn:aws:132'],
+      ]);
+
+      expect(screen.getByText('Manage permissions in User Access')).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'Make sure to manage permissions for this source in custom roles that contain permissions for Cost Management.',
         ),
       ).toBeInTheDocument();
     });
@@ -278,7 +316,6 @@ describe('SourceWizardSummary component', () => {
         ['Application', 'Hybrid Committed Spend'],
         ['S3 bucket name', 'gfghf'],
         ['AWS region', 'test'],
-        ['Include RHEL usage', 'rhel'],
         ['ARN', 'arn:aws:132'],
       ]);
 

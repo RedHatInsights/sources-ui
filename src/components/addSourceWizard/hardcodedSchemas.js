@@ -225,6 +225,7 @@ const getArn = (authUsername, showHCS) => ({
           name: 'application.extra.metered',
           component: 'rhel-aws-checkbox',
           label: <FormattedMessage id="cost.arn.includesRhelUsage" defaultMessage="Include RHEL usage" />,
+          condition: { when: 'application.extra.storage_only', is: false },
         },
         {
           name: 'aws.rhel_usage.divider',

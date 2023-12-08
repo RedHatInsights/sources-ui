@@ -177,7 +177,7 @@ export const UsageSteps = () => {
             </TextListItem>
             <TextListItem>
               {intl.formatMessage({
-                id: 'cost.usageDescription.enableSuppor',
+                id: 'cost.usageDescription.enableSupport',
                 defaultMessage: 'Enable support for: RedShift, QuickSight and disable support for Athena',
               })}
             </TextListItem>
@@ -386,9 +386,11 @@ IAMPolicyDescription.propTypes = {
 };
 
 export const TagsDescription = ({ showHCS }) => {
+  const formOptions = useFormApi();
   const intl = useIntl();
-  const application = showHCS ? HCS_APP_NAME : 'Cost Management';
+  const application_name = showHCS ? HCS_APP_NAME : 'Cost Management';
   const rhelAws = useFlag('platform.sources.metered-rhel');
+  const application = formOptions.getState().values.application;
 
   return (
     <Fragment>
@@ -413,9 +415,9 @@ export const TagsDescription = ({ showHCS }) => {
             {
               id: 'cost.tags.desciption',
               defaultMessage:
-                'To use tags to organize your AWS resources in the {application} application, activate your tags in AWS to allow them to be imported automatically.',
+                'To use tags to organize your AWS resources in the {application_name} application, activate your tags in AWS to allow them to be imported automatically.',
             },
-            { application },
+            { application_name },
           )}
         </Text>
         <TextList component={TextListVariants.ol}>
@@ -429,14 +431,14 @@ export const TagsDescription = ({ showHCS }) => {
             {intl.formatMessage(
               {
                 id: 'cost.tags.selectTags',
-                defaultMessage: 'Select the tags you want to use in the {application} application, and click Activate.',
+                defaultMessage: 'Select the tags you want to use in the {application_name} application, and click Activate.',
               },
-              { application },
+              { application_name },
             )}
           </TextListItem>
         </TextList>
       </TextContent>
-      {rhelAws ? (
+      {rhelAws && !application.extra.storage_only ? (
         <Alert
           variant="info"
           isInline
