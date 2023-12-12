@@ -388,7 +388,7 @@ IAMPolicyDescription.propTypes = {
 export const TagsDescription = ({ showHCS }) => {
   const formOptions = useFormApi();
   const intl = useIntl();
-  const application_name = showHCS ? HCS_APP_NAME : 'Cost Management';
+  const applicationName = showHCS ? HCS_APP_NAME : 'Cost Management';
   const rhelAws = useFlag('platform.sources.metered-rhel');
   const application = formOptions.getState().values.application;
 
@@ -415,9 +415,9 @@ export const TagsDescription = ({ showHCS }) => {
             {
               id: 'cost.tags.desciption',
               defaultMessage:
-                'To use tags to organize your AWS resources in the {application_name} application, activate your tags in AWS to allow them to be imported automatically.',
+                'To use tags to organize your AWS resources in the {applicationName} application, activate your tags in AWS to allow them to be imported automatically.',
             },
-            { application_name },
+            { applicationName },
           )}
         </Text>
         <TextList component={TextListVariants.ol}>
@@ -431,9 +431,9 @@ export const TagsDescription = ({ showHCS }) => {
             {intl.formatMessage(
               {
                 id: 'cost.tags.selectTags',
-                defaultMessage: 'Select the tags you want to use in the {application_name} application, and click Activate.',
+                defaultMessage: 'Select the tags you want to use in the {applicationName} application, and click Activate.',
               },
-              { application_name },
+              { applicationName },
             )}
           </TextListItem>
         </TextList>
