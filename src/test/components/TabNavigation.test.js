@@ -21,6 +21,7 @@ describe('TabNavigation', () => {
       sources: {
         activeCategory: CLOUD_VENDOR,
       },
+      user: { isOrgAdmin: true },
     });
 
     render(componentWrapperIntl(<TabNavigation />, store));
@@ -37,6 +38,7 @@ describe('TabNavigation', () => {
       sources: {
         activeCategory: REDHAT_VENDOR,
       },
+      user: { isOrgAdmin: true },
     });
 
     render(componentWrapperIntl(<TabNavigation />, store));
@@ -49,6 +51,12 @@ describe('TabNavigation', () => {
   });
 
   it('triggers redux changed', async () => {
+    store = mockStore({
+      sources: {
+        activeCategory: CLOUD_VENDOR,
+      },
+      user: { isOrgAdmin: true },
+    });
     const user = userEvent.setup();
 
     actions.setActiveCategory = jest.fn().mockImplementation(() => ({ type: 'something' }));

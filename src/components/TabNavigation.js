@@ -17,6 +17,9 @@ const TabNavigation = () => {
   const activeCategory = useSelector(({ sources }) => sources.activeCategory);
   const enableIntegrations = useFlag('platform.sources.integrations');
   const enableBreakdown = usePreviewFlag('platform.sources.integrations.breakdown');
+  const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
+
+  console.log(isOrgAdmin, 'this is orgAdmin');
 
   return (
     <Tabs activeKey={activeCategory} onSelect={(_e, key) => dispatch(setActiveCategory(key))} className="pf-v5-u-mt-md">
@@ -52,7 +55,8 @@ const TabNavigation = () => {
           </React.Fragment>
         }
       />
-      {(enableIntegrations || enableBreakdown) &&
+      {isOrgAdmin &&
+        (enableIntegrations || enableBreakdown) &&
         (enableBreakdown ? (
           <>
             <Tab
