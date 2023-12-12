@@ -172,7 +172,23 @@ describe('AWS-ARN hardcoded schemas', () => {
   });
 
   it('TAGS DESCRIPTION is rendered correctly for Cost Management', () => {
-    render(<AwsArn.TagsDescription />);
+    const changeSpy = jest.fn();
+    const FORM_OPTIONS = {
+      getState: () => ({
+        values: {
+          application: {
+            extra: {},
+          },
+        },
+      }),
+      change: changeSpy,
+    };
+
+    render(
+      <RendererContext.Provider value={{ formOptions: FORM_OPTIONS }}>
+        <AwsArn.TagsDescription />
+      </RendererContext.Provider>,
+    );
 
     expect(screen.getByText('Learn more')).toBeInTheDocument();
     expect(
@@ -189,7 +205,23 @@ describe('AWS-ARN hardcoded schemas', () => {
   });
 
   it('TAGS DESCRIPTION is rendered correctly for HCS', () => {
-    render(<AwsArn.TagsDescription showHCS />);
+    const changeSpy = jest.fn();
+    const FORM_OPTIONS = {
+      getState: () => ({
+        values: {
+          application: {
+            extra: {},
+          },
+        },
+      }),
+      change: changeSpy,
+    };
+
+    render(
+      <RendererContext.Provider value={{ formOptions: FORM_OPTIONS }}>
+        <AwsArn.TagsDescription showHCS />
+      </RendererContext.Provider>,
+    );
 
     expect(screen.queryByText('Learn more')).not.toBeInTheDocument();
     expect(

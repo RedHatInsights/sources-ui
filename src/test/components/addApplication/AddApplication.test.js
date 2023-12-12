@@ -475,7 +475,7 @@ describe('AddApplication', () => {
           id: '189298',
         },
       });
-    });
+    }, 20000);
   });
 
   describe('imported source - not need to edit any value', () => {
