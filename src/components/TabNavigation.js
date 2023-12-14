@@ -9,17 +9,14 @@ import CloudIcon from '@patternfly/react-icons/dist/esm/icons/cloud-icon';
 import { setActiveCategory } from '../redux/sources/actions';
 import { CLOUD_VENDOR, COMMUNICATIONS, INTEGRATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../utilities/constants';
 import { useFlag } from '@unleash/proxy-client-react';
-import { usePreviewFlag } from '../utilities/usePreviewFlag';
 
 const TabNavigation = () => {
   const intl = useIntl();
   const dispatch = useDispatch();
   const activeCategory = useSelector(({ sources }) => sources.activeCategory);
   const enableIntegrations = useFlag('platform.sources.integrations');
-  const enableBreakdown = usePreviewFlag('platform.sources.integrations.breakdown');
+  const enableBreakdown = useFlag('platform.sources.integrations.breakdown');
   const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
-
-  console.log(isOrgAdmin, 'this is orgAdmin');
 
   return (
     <Tabs activeKey={activeCategory} onSelect={(_e, key) => dispatch(setActiveCategory(key))} className="pf-v5-u-mt-md">

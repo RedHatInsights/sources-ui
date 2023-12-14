@@ -42,7 +42,6 @@ import generateCSV from '../utilities/generateCSV';
 import generateJSON from '../utilities/generateJSON';
 import { Outlet } from 'react-router-dom';
 import { useFlag } from '@unleash/proxy-client-react';
-import { usePreviewFlag } from '../utilities/usePreviewFlag';
 
 const initialState = {
   filter: undefined,
@@ -70,7 +69,7 @@ const SourcesPage = () => {
   const entitiesLoaded = useIsLoaded();
   const hasWritePermissions = useHasWritePermissions();
   const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
-  const enableIntegrations = useFlag('platform.sources.integrations') || usePreviewFlag('platform.sources.breakdown');
+  const enableIntegrations = useFlag('platform.sources.integrations') || useFlag('platform.sources.breakdown');
 
   const appNavigate = useAppNavigate();
   const intl = useIntl();
