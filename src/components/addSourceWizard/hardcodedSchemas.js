@@ -223,7 +223,7 @@ const getArn = (authUsername, showHCS) => ({
         },
         {
           name: 'application.extra.metered',
-          component: 'rhel-aws-checkbox',
+          component: 'rhel-usage-checkbox',
           label: <FormattedMessage id="cost.arn.includesRhelUsage" defaultMessage="Include RHEL usage" />,
           condition: { when: 'application.extra.storage_only', is: false },
         },
@@ -816,8 +816,8 @@ const hardcodedSchemas = {
                     {
                       label: (
                         <FormattedMessage
-                          id="cost.sendDefaultCUR"
-                          defaultMessage="I am OK with sending the default CUR to Cost Management"
+                          id="cost.sendDefaultCostExport"
+                          defaultMessage="I am OK with sending the default data set to Cost Management"
                         />
                       ),
                       value: false,
@@ -825,8 +825,8 @@ const hardcodedSchemas = {
                     {
                       label: (
                         <FormattedMessage
-                          id="cost.customizeCUR"
-                          defaultMessage="I wish to manually customize the CUR sent to Cost Management"
+                          id="cost.customizeCostExport"
+                          defaultMessage="I wish to manually customize the data set sent to Cost Management"
                         />
                       ),
                       value: true,
@@ -835,6 +835,22 @@ const hardcodedSchemas = {
                   mutator: (option) => option,
                   initialValue: false,
                   hideInReview: true,
+                },
+                {
+                  name: 'cost-export-scope-rhel-alert',
+                  component: 'description',
+                  Content: CMAzure.ExportScopeAlert,
+                  condition: { when: 'application.extra.storage_only', is: false },
+                },
+                {
+                  name: 'application.extra.metered',
+                  component: 'rhel-usage-checkbox',
+                  label: <FormattedMessage id="cost.azure.includesRhelUsage" defaultMessage="Include RHEL usage" />,
+                  condition: { when: 'application.extra.storage_only', is: false },
+                },
+                {
+                  name: 'azure.rhel_usage.divider',
+                  component: 'divider',
                 },
                 {
                   name: 'cost-export-scope',

@@ -5,11 +5,11 @@ import useFieldApi from '@data-driven-forms/react-form-renderer/use-field-api';
 import { Checkbox } from '@patternfly/react-core';
 import { useFlag } from '@unleash/proxy-client-react';
 
-const RhelAwsCheckbox = ({ ...props }) => {
+const RhelUsageCheckbox = ({ ...props }) => {
   const { label, input } = useFieldApi(props);
-  const rhelAws = useFlag('platform.sources.metered-rhel');
+  const rhelUsage = useFlag('platform.sources.metered-rhel');
 
-  if (!rhelAws) {
+  if (!rhelUsage) {
     return null;
   }
 
@@ -24,9 +24,9 @@ const RhelAwsCheckbox = ({ ...props }) => {
   );
 };
 
-RhelAwsCheckbox.propTypes = {
+RhelUsageCheckbox.propTypes = {
   label: PropTypes.node.isRequired,
   id: PropTypes.string.isRequired,
 };
 
-export default RhelAwsCheckbox;
+export default RhelUsageCheckbox;
