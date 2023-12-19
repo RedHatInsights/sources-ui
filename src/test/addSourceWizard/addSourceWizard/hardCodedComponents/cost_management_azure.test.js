@@ -160,7 +160,7 @@ describe('Cost Management Azure steps components', () => {
     );
   });
 
-  it('Read Role description', () => {
+  it('Cost Read Role description', () => {
     mockedRender(
       <Form onSubmit={jest.fn()}>
         {() => (
@@ -188,6 +188,33 @@ describe('Cost Management Azure steps components', () => {
     expect(screen.getByLabelText('Copyable input')).toHaveValue(
       `az role assignment create --assignee "some-user-name" --role "Cost Management Reader" --scope "/subscriptions/my-sub-id-1"`,
     );
+  });
+
+  it('Read Role description', () => {
+    mockedRender(
+      <Form onSubmit={jest.fn()}>
+        {() => (
+          <RenderContext.Provider
+            value={{
+              formOptions: {
+                getState: () => ({
+                  values: {
+                    authentication: { username: 'some-user-name' },
+                    application: {
+                      extra: { subscription_id: 'my-sub-id-1', resource_group: 'my-resource-group-1', metered: 'rhel' },
+                    },
+                  },
+                }),
+              },
+            }}
+          >
+            <Cm.ReaderRoleDescription />
+          </RenderContext.Provider>
+        )}
+      </Form>,
+    );
+
+    expect(screen.getByText('Run the following command in Cloud Shell to create a Reader role:')).toBeInTheDocument();
   });
 
   it('Read Role description - storage only', () => {
