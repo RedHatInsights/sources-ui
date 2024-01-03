@@ -2,14 +2,7 @@ import React from 'react';
 import { Label } from '@patternfly/react-core';
 import SubWatchDescription from './descriptions/SubWatchDescription';
 import HybridCommittedSpendDescription from './descriptions/HybridCommittedSpendDescription';
-import { NO_APPLICATION_VALUE } from './stringConstants';
-import {
-  CLOUD_METER_APP_NAME,
-  COST_MANAGEMENT_APP_NAME,
-  HCS_APP_NAME,
-  PROVISIONING_APP_NAME,
-  REDHAT_VENDOR,
-} from '../../utilities/constants';
+import { CLOUD_METER_APP_NAME, COST_MANAGEMENT_APP_NAME, HCS_APP_NAME, PROVISIONING_APP_NAME } from '../../utilities/constants';
 
 export const descriptionMapper = (type, intl, hcsEnrolled) =>
   ({
@@ -54,7 +47,7 @@ export const labelMapper = (type, intl, hcsEnrolled) =>
     ),
   })[type.name];
 
-export const compileAllApplicationComboOptions = (applicationTypes, intl, activeCategory, hcsEnrolled) => [
+export const compileAllApplicationComboOptions = (applicationTypes, intl, hcsEnrolled) => [
   ...applicationTypes
     .sort((a, b) => a.display_name.localeCompare(b.display_name))
     .map((t) => ({
@@ -62,15 +55,4 @@ export const compileAllApplicationComboOptions = (applicationTypes, intl, active
       label: labelMapper(t, intl, hcsEnrolled) || t.display_name,
       description: descriptionMapper(t, intl, hcsEnrolled),
     })),
-  ...(activeCategory !== REDHAT_VENDOR
-    ? [
-        {
-          label: intl.formatMessage({
-            id: 'wizard.noApplication',
-            defaultMessage: 'No application',
-          }),
-          value: NO_APPLICATION_VALUE,
-        },
-      ]
-    : []),
 ];
