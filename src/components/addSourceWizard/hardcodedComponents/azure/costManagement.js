@@ -530,7 +530,7 @@ export const ExportScopeDescription = () => {
         <Text component={TextVariants.p}>
           {intl.formatMessage(
             {
-              id: 'cost.azure.costExportScopeDescrption',
+              id: 'cost.azure.costExportScopeDescription',
               defaultMessage:
                 'From the Azure portal, select the scope for the new cost export. If there is a need to further customize the data you want to send to Red Hat, select the manually customize option to follow the special instructions on how to. {link}',
             },
