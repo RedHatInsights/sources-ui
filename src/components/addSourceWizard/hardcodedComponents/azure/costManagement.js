@@ -3,6 +3,7 @@ import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 
 import {
+  Alert,
   ClipboardCopy,
   EmptyState,
   EmptyStateBody,
@@ -187,18 +188,32 @@ const InternalReaderRoleDescription = () => {
   }
 
   return application.extra.storage_only ? null : (
-    <TextContent>
-      <Text component={TextVariants.p}>
-        {intl.formatMessage({
-          id: 'cost.azure.createReaderRole',
-          defaultMessage: 'Run the following command in Cloud Shell to create a Cost Management Reader role:',
-        })}
-      </Text>
-      <ClipboardCopy>
-        az role assignment create --assignee &quot;{authentication?.username}&quot; --role &quot;Cost Management Reader&quot;
-        --scope &quot;{scope}&quot;
-      </ClipboardCopy>
-    </TextContent>
+    <Fragment>
+      <TextContent>
+        <Text component={TextVariants.p}>
+          {intl.formatMessage({
+            id: 'cost.azure.createCostReaderRole',
+            defaultMessage: 'Run the following command in Cloud Shell to create a Cost Management Reader role:',
+          })}
+        </Text>
+        <ClipboardCopy>
+          {`az role assignment create --assignee "${authentication?.username}" --role "Cost Management Reader" --scope "${scope}"`}
+        </ClipboardCopy>
+      </TextContent>
+      {application?.extra?.metered && (
+        <TextContent>
+          <Text component={TextVariants.p}>
+            {intl.formatMessage({
+              id: 'cost.azure.createReaderRole',
+              defaultMessage: 'Run the following command in Cloud Shell to create a Reader role:',
+            })}
+          </Text>
+          <ClipboardCopy>
+            {`az role assignment create --assignee "${authentication?.username}" --role "Reader" --scope "${scope}"`}
+          </ClipboardCopy>
+        </TextContent>
+      )}
+    </Fragment>
   );
 };
 
@@ -510,30 +525,50 @@ export const ExportScopeDescription = () => {
   const intl = useIntl();
 
   return (
-    <TextContent>
-      <Text component={TextVariants.p}>
-        {intl.formatMessage(
-          {
-            id: 'cost.azure.costExportScopeDescrption',
-            defaultMessage:
-              'From the Azure portal, select the scope for the new cost export. If there is a need to further customize the data you want to send to Red Hat, select the manually customize option to follow the special instructions on how to. {link}',
-          },
-          {
-            link: (
-              <Fragment>
-                <br />
-                <Text key="link" component={TextVariants.a} href={MANUAL_CUR_STEPS} rel="noopener noreferrer" target="_blank">
-                  {intl.formatMessage({
-                    id: 'cost.learnMore',
-                    defaultMessage: 'Learn more',
-                  })}
-                </Text>
-              </Fragment>
-            ),
-          },
-        )}
-      </Text>
-    </TextContent>
+    <Fragment>
+      <TextContent>
+        <Text component={TextVariants.p}>
+          {intl.formatMessage(
+            {
+              id: 'cost.azure.costExportScopeDescription',
+              defaultMessage:
+                'From the Azure portal, select the scope for the new cost export. If there is a need to further customize the data you want to send to Red Hat, select the manually customize option to follow the special instructions on how to. {link}',
+            },
+            {
+              link: (
+                <Fragment>
+                  <br />
+                  <Text key="link" component={TextVariants.a} href={MANUAL_CUR_STEPS} rel="noopener noreferrer" target="_blank">
+                    {intl.formatMessage({
+                      id: 'cost.learnMore',
+                      defaultMessage: 'Learn more',
+                    })}
+                  </Text>
+                </Fragment>
+              ),
+            },
+          )}
+        </Text>
+      </TextContent>
+    </Fragment>
+  );
+};
+
+export const ExportScopeAlert = () => {
+  const intl = useIntl();
+
+  return (
+    <Fragment>
+      <Alert
+        variant="info"
+        isInline
+        title={intl.formatMessage({
+          id: 'cost.azure.alertTitle',
+          defaultMessage:
+            'If your organization is converting systems from CentOS 7 to RHEL and using hourly billing, select Include RHEL usage.',
+        })}
+      />
+    </Fragment>
   );
 };
 

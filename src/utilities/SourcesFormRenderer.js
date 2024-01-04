@@ -16,7 +16,7 @@ import EnhancedRadio from '../components/FormComponents/EnhancedRadio';
 import SwitchGroup from '../components/FormComponents/SwitchGroup';
 import CheckboxWithIcon from '../components/FormComponents/CheckboxWithIcon';
 import PFDivider from '../components/FormComponents/PFDivider';
-import RhelAwsCheckbox from '../components/FormComponents/RhelAwsCheckbox';
+import RhelUsageCheckbox from '../components/FormComponents/RhelUsageCheckbox';
 import CheckboxWithLink from '../components/FormComponents/CheckboxWithLink';
 
 export const mapperExtension = {
@@ -29,7 +29,7 @@ export const mapperExtension = {
   authentication: Authentication,
   'checkbox-with-icon': CheckboxWithIcon,
   divider: PFDivider,
-  'rhel-aws-checkbox': RhelAwsCheckbox,
+  'rhel-usage-checkbox': RhelUsageCheckbox,
   'checkbox-with-link': CheckboxWithLink,
 };
 
