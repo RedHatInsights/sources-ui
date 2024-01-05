@@ -206,7 +206,6 @@ describe('Add source schema', () => {
         },
         { label: expect.any(Object), value: '5', description: <SubWatchDescription id="5" /> },
         { label: 'Topological Inventory', value: '3', description: undefined },
-        { value: NO_APPLICATION_VALUE, label: 'No application' },
       ]);
     });
   });
@@ -237,7 +236,6 @@ describe('Add source schema', () => {
         },
         { label: expect.any(Object), value: '5', description: <SubWatchDescription id="5" /> },
         { label: 'Topological Inventory', value: '3', description: undefined },
-        { value: NO_APPLICATION_VALUE, label: 'No application' },
       ]);
     });
   });

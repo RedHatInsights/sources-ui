@@ -47,7 +47,6 @@ describe('applicationsStep', () => {
         value: '5',
       },
       { description: undefined, label: 'Topological Inventory', value: '3' },
-      { label: 'No application', value: NO_APPLICATION_VALUE },
     ]);
   });
 });
