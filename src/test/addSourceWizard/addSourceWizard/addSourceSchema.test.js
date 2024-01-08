@@ -17,7 +17,6 @@ import sourceTypes, { OPENSHIFT_TYPE } from '../../__mocks__/sourceTypes';
 import applicationTypes from '../../__mocks__/applicationTypes';
 
 import render from '../__mocks__/render';
-import { NO_APPLICATION_VALUE } from '../../../components/addSourceWizard/stringConstants';
 import SubWatchDescription from '../../../components/addSourceWizard/descriptions/SubWatchDescription';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import SourcesFormRenderer from '../../../utilities/SourcesFormRenderer';

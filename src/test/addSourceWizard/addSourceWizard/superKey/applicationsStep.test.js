@@ -6,7 +6,6 @@ import componentTypes from '@data-driven-forms/react-form-renderer/component-typ
 import applicationsStep from '../../../../components/addSourceWizard/superKey/applicationsStep';
 import applicationTypes from '../../../__mocks__/applicationTypes';
 import SubWatchDescription from '../../../../components/addSourceWizard/descriptions/SubWatchDescription';
-import { NO_APPLICATION_VALUE } from '../../../../components/addSourceWizard/stringConstants';
 
 describe('applicationsStep', () => {
   it('generates applications step', () => {
