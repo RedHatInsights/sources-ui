@@ -17,8 +17,8 @@ const HybridCommittedSpendDescription = ({ id }) => {
 
   const isEnabled = useMemo(
     () =>
-      (values.source.app_creation_workflow === ACCOUNT_AUTHORIZATION && values.applications?.includes(id)) ||
-      (values.source.app_creation_workflow !== ACCOUNT_AUTHORIZATION && values.application?.application_type_id === id),
+      (values.source?.app_creation_workflow === ACCOUNT_AUTHORIZATION && values.applications?.includes(id)) ||
+      (values.source?.app_creation_workflow !== ACCOUNT_AUTHORIZATION && values.application?.application_type_id === id),
     [values.application?.application_type_id],
   );
 
