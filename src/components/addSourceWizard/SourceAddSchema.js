@@ -186,9 +186,15 @@ export const applicationStep = (applicationTypes, intl, activeCategory, hcsEnrol
     {
       component: 'enhanced-radio',
       name: 'application.application_type_id',
-      options: compileAllApplicationComboOptions(applicationTypes, intl, activeCategory, hcsEnrolled),
+      label: intl.formatMessage({
+        id: 'wizard.selectApplicationType',
+        defaultMessage: 'Select an application',
+      }),
+      options: compileAllApplicationComboOptions(applicationTypes, intl, hcsEnrolled),
       mutator: appMutatorRedHat(applicationTypes),
       menuIsPortal: true,
+      isRequired: true,
+      validate: [{ type: validatorTypes.REQUIRED }],
     },
     {
       component: componentTypes.TEXT_FIELD,
