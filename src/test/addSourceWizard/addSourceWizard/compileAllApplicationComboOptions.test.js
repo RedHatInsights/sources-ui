@@ -1,10 +1,4 @@
-import {
-  CLOUD_VENDOR,
-  COST_MANAGEMENT_APP_ID,
-  COST_MANAGEMENT_APP_NAME,
-  HCS_APP_NAME,
-  REDHAT_VENDOR,
-} from '../../../utilities/constants';
+import { COST_MANAGEMENT_APP_ID, COST_MANAGEMENT_APP_NAME, HCS_APP_NAME, REDHAT_VENDOR } from '../../../utilities/constants';
 import { compileAllApplicationComboOptions } from '../../../components/addSourceWizard/compileAllApplicationComboOptions';
 import HybridCommittedSpendDescription from '../../../components/addSourceWizard/descriptions/HybridCommittedSpendDescription';
 import { Label } from '@patternfly/react-core';
@@ -22,7 +16,7 @@ describe('compileAllApplicationComboOptions', () => {
 
   it('cost type selection - HCS', () => {
     const appTypes = [{ name: COST_MANAGEMENT_APP_NAME, display_name: 'Cost Management', id: COST_MANAGEMENT_APP_ID }];
-    expect(compileAllApplicationComboOptions(appTypes, INTl, CLOUD_VENDOR, true)).toEqual([
+    expect(compileAllApplicationComboOptions(appTypes, INTl, true)).toEqual([
       {
         description: <HybridCommittedSpendDescription id="2" />,
         label: (

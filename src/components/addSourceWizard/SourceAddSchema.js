@@ -190,7 +190,7 @@ export const applicationStep = (applicationTypes, intl, activeCategory, hcsEnrol
         id: 'wizard.selectApplicationType',
         defaultMessage: 'Select an application',
       }),
-      options: compileAllApplicationComboOptions(applicationTypes, intl, activeCategory, hcsEnrolled),
+      options: compileAllApplicationComboOptions(applicationTypes, intl, hcsEnrolled),
       mutator: appMutatorRedHat(applicationTypes),
       menuIsPortal: true,
       isRequired: true,
