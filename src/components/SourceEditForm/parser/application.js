@@ -13,7 +13,7 @@ export const APP_NAMES = {
   CLOUD_METER: '/insights/platform/cloud-meter',
 };
 
-const createOneAppFields = (appType, sourceType, app) => [
+const createOneAppFields = (appType, sourceType, app, clusterId) => [
   {
     name: `messages.${app.id}`,
     component: 'description',
@@ -28,10 +28,11 @@ const createOneAppFields = (appType, sourceType, app) => [
     sourceType,
     appType?.name,
     app.id,
+    clusterId,
   ),
 ];
 
-export const applicationsFields = (applications, sourceType, appTypes, hcsEnrolled) => [
+export const applicationsFields = (applications, sourceType, appTypes, hcsEnrolled, clusterId) => [
   {
     component: componentTypes.TABS,
     name: 'app-tabs',
@@ -40,7 +41,7 @@ export const applicationsFields = (applications, sourceType, appTypes, hcsEnroll
       ...applications.map((app) => {
         const appType = appTypes.find(({ id }) => id === app.application_type_id);
 
-        let fields = createOneAppFields(appType, sourceType, app);
+        let fields = createOneAppFields(appType, sourceType, app, clusterId);
 
         const hasEndpoint = app.authentications.find(({ resource_type }) => resource_type === 'Endpoint');
 
