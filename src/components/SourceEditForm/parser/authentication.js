@@ -5,7 +5,6 @@ import { COST_MANAGEMENT_APP_NAME } from '../../../utilities/constants';
 import { FormattedMessage } from 'react-intl';
 import { doLoadRegions } from '../../../api/doLoadRegions';
 import hardcodedSchemas from '../../../components/addSourceWizard/hardcodedSchemas';
-import { MANUAL_CONFIGURATION } from '../../constants';
 
 export const createAuthFieldName = (fieldName, id) => `authentications.a${id}.${fieldName.replace('authentication.', '')}`;
 
