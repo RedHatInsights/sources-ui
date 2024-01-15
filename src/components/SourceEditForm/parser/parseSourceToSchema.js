@@ -5,5 +5,5 @@ export const parseSourceToSchema = (source, sourceType, appTypes, intl, hcsEnrol
     id: 'sources.editFormDescripiton',
     defaultMessage: 'Use the form fields to edit application credentials.',
   }),
-  fields: applicationsFields(source.applications, sourceType, appTypes, hcsEnrolled),
+  fields: applicationsFields(source.applications, sourceType, appTypes, hcsEnrolled, source?.source?.source_ref),
 });
