@@ -253,7 +253,7 @@ export const setActiveCategory = (category) => (dispatch) => {
     payload: { category },
   });
 
-  return category !== INTEGRATIONS && dispatch(loadEntities());
+  return category !== INTEGRATIONS && dispatch(loadEntities({ pageNumber: 1 }));
 };
 
 export const pauseSource = (sourceId, sourceName, intl) => (dispatch) => {
