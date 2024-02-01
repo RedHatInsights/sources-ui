@@ -35,7 +35,7 @@ describe('AddSourceButton', () => {
       ),
     );
     await act(async () => {
-      await user.click(screen.getByText('Add Red Hat source'));
+      await user.click(screen.getByText('Add Red Hat integration'));
     });
 
     expect(screen.getAllByRole('dialog')).toBeTruthy();

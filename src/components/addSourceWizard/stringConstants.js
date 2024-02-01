@@ -16,9 +16,9 @@ export const wizardDescription = (activeCategory) =>
   );
 export const wizardTitle = (activeCategory) =>
   activeCategory === CLOUD_VENDOR ? (
-    <FormattedMessage id="wizard.wizardTitleCloud" defaultMessage="Add a cloud source" />
+    <FormattedMessage id="wizard.wizardTitleCloud" defaultMessage="Add a cloud integration" />
   ) : (
-    <FormattedMessage id="wizard.wizardTitleRedhat" defaultMessage="Add Red Hat source" />
+    <FormattedMessage id="wizard.wizardTitleRedhat" defaultMessage="Add Red Hat integration" />
   );
 export const HCCM_DOCS_PREFIX = 'https://access.redhat.com/documentation/en-us/cost_management_service/2023';
 export const HCCM_LATEST_DOCS_PREFIX = 'https://access.redhat.com/documentation/en-us/cost_management_service/1-latest';

@@ -18,12 +18,12 @@ const RedirectNoPaused = () => {
         addMessage({
           title: intl.formatMessage({
             id: 'sources.sourcePausedRedirect',
-            defaultMessage: 'Source is paused',
+            defaultMessage: 'Integration is paused',
           }),
           variant: 'danger',
           description: intl.formatMessage({
             id: 'sources.sourcePausedRedirectDescription',
-            defaultMessage: 'You cannot perform this action on a paused source.',
+            defaultMessage: 'You cannot perform this action on a paused integration.',
           }),
         }),
       );

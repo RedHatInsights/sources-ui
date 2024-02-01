@@ -107,7 +107,7 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'openshift'],
-        ['Source type', 'OpenShift Container Platform'],
+        ['Integration type', 'OpenShift Container Platform'],
         ['Application', 'Not selected'],
         ['Authentication type', 'Token'],
         ['Token', '●●●●●●●●●●●●'],
@@ -126,7 +126,7 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'openshift'],
-        ['Source type', 'OpenShift Container Platform'],
+        ['Integration type', 'OpenShift Container Platform'],
         ['Application', 'Not selected'],
         ['Authentication type', 'Token'],
         ['Token', '●●●●●●●●●●●●'],
@@ -145,7 +145,7 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'openshift'],
-        ['Source type', 'Amazon Web Services'],
+        ['Integration type', 'Amazon Web Services'],
         ['Application', 'Not selected'],
         ['Authentication type', 'AWS Secret Key'],
         ['Access key ID', 'user_name'],
@@ -162,7 +162,7 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'openshift'],
-        ['Source type', 'Amazon Web Services'],
+        ['Integration type', 'Amazon Web Services'],
         ['Application', 'Not selected'],
         ['Authentication type', 'ARN'],
         ['ARN', 'user_name'],
@@ -192,7 +192,7 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'cosi'],
-        ['Source type', 'Amazon Web Services'],
+        ['Integration type', 'Amazon Web Services'],
         ['Application', 'Cost Management'],
         ['S3 bucket name', 'gfghf'],
         ['AWS region', 'test'],
@@ -237,7 +237,7 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'cosi'],
-        ['Source type', 'Amazon Web Services'],
+        ['Integration type', 'Amazon Web Services'],
         ['Application', 'Cost Management'],
         ['S3 bucket name', 'gfghf'],
         ['AWS region', 'test'],
@@ -280,7 +280,7 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'source-name'],
-        ['Source type', 'Oracle Cloud Infrastructure'],
+        ['Integration type', 'Oracle Cloud Infrastructure'],
         ['Application', 'Cost Management'],
         ['Bucket', 'bucket-name'],
         ['Bucket namespace', 'bucket-namespace'],
@@ -312,7 +312,7 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'cosi'],
-        ['Source type', 'Amazon Web Services'],
+        ['Integration type', 'Amazon Web Services'],
         ['Application', 'Hybrid Committed Spend'],
         ['S3 bucket name', 'gfghf'],
         ['AWS region', 'test'],
@@ -346,7 +346,7 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'cosi'],
-        ['Source type', 'Google Cloud'],
+        ['Integration type', 'Google Cloud'],
         ['Application', 'Cost Management'],
         ['Project ID', 'project_id_123'],
         ['Cloud storage bucket name', '-'],
@@ -373,7 +373,7 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'cosi'],
-        ['Source type', 'Google Cloud'],
+        ['Integration type', 'Google Cloud'],
         ['Application', HCS_APP_NAME],
         ['Project ID', 'project_id_123'],
         ['Cloud storage bucket name', '-'],
@@ -404,7 +404,7 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'cosi'],
-        ['Source type', 'OpenShift Container Platform'],
+        ['Integration type', 'OpenShift Container Platform'],
         ['Application', 'Cost Management'],
         ['Cluster Identifier', 'CLUSTER ID123'],
       ]);
@@ -443,7 +443,7 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'cosi'],
-        ['Source type', 'IBM Cloud'],
+        ['Integration type', 'IBM Cloud'],
         ['Application', 'Cost Management'],
         ['Enterprise ID', 'enterprise id'],
         ['Account ID', 'account id'],
@@ -478,7 +478,7 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'cosi'],
-        ['Source type', 'Microsoft Azure'],
+        ['Integration type', 'Microsoft Azure'],
         ['Application', 'Hybrid Committed Spend'],
         ['Subscription ID', 'some-subscription-id'],
       ]);
@@ -513,7 +513,7 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'cosi'],
-        ['Source type', 'Microsoft Azure'],
+        ['Integration type', 'Microsoft Azure'],
         ['Application', 'RHEL management'],
         ['Subscription ID', 'some-subscription-id'],
       ]);
@@ -538,7 +538,7 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'cosi'],
-        ['Source type', 'Microsoft Azure'],
+        ['Integration type', 'Microsoft Azure'],
         ['Application', 'RHEL management'],
       ]);
     });
@@ -562,13 +562,15 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'cosi'],
-        ['Source type', 'Google Cloud'],
+        ['Integration type', 'Google Cloud'],
         ['Application', 'RHEL management'],
       ]);
 
-      expect(screen.getByText('This source will not be monitored in Sources')).toBeInTheDocument();
+      expect(screen.getByText('This integration will not be monitored in Integrations')).toBeInTheDocument();
       expect(
-        screen.getByText('This source will be represented in the Sources list, but will not reflect true status or resources.'),
+        screen.getByText(
+          'This integration will be represented in the Integrations list, but will not reflect true status or resources.',
+        ),
       ).toBeInTheDocument();
     });
 
@@ -592,7 +594,7 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'cosi'],
-        ['Source type', 'Amazon Web Services'],
+        ['Integration type', 'Amazon Web Services'],
         ['Configuration mode', 'Account authorization'],
         ['Applications', 'Cost ManagementTopological Inventory'],
         ['Access key ID', 'arn:aws:132'],
@@ -620,7 +622,7 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'cosi'],
-        ['Source type', 'Amazon Web Services'],
+        ['Integration type', 'Amazon Web Services'],
         ['Configuration mode', 'Account authorization'],
         ['Applications', 'None'],
         ['Access key ID', 'arn:aws:132'],
@@ -648,7 +650,7 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'cosi'],
-        ['Source type', 'Amazon Web Services'],
+        ['Integration type', 'Amazon Web Services'],
         ['Configuration mode', 'Manual configuration'],
         ['Application', 'Not selected'],
         ['Authentication type', 'AWS Secret Key'],
@@ -676,7 +678,7 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'cosi'],
-        ['Source type', 'Amazon Web Services'],
+        ['Integration type', 'Amazon Web Services'],
         ['Application', 'RHEL management'],
         ['ARN', 'arn:aws:132'],
       ]);
@@ -690,7 +692,7 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'openshift'],
-        ['Source type', 'Ansible Tower'],
+        ['Integration type', 'Ansible Tower'],
         ['Application', 'Not selected'],
         ['Authentication type', 'Username and password'],
         ['Username', 'user_name'],
@@ -715,7 +717,7 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'openshift'],
-        ['Source type', 'Ansible Tower'],
+        ['Integration type', 'Ansible Tower'],
         ['Application', 'Catalog'],
         ['Hostname', 'neznam.cz'],
         ['Verify SSL', 'Enabled'],
@@ -738,7 +740,7 @@ describe('SourceWizardSummary component', () => {
 
       expect(data).toEqual([
         ['Name', 'openshift'],
-        ['Source type', 'Ansible Tower'],
+        ['Integration type', 'Ansible Tower'],
         ['Hostname', 'neznam.cz'],
         ['Verify SSL', 'Enabled'],
         ['Certificate authority', 'authority'],

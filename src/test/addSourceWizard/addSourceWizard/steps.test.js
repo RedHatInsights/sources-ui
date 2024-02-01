@@ -150,7 +150,7 @@ describe('Steps components', () => {
         screen.getByText('We are still working to confirm credentials and app settings.', { exact: false }),
       ).toBeInTheDocument();
       expect(
-        screen.getByText('To track progress, check the Status column in the Sources table.', { exact: false }),
+        screen.getByText('To track progress, check the Status column in the Integrations table.', { exact: false }),
       ).toBeInTheDocument();
       expect(screen.getByText('go back')).toBeInTheDocument();
       expect(screen.getAllByRole('button')).toHaveLength(2);

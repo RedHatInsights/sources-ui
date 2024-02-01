@@ -31,7 +31,7 @@ describe('AvailabilityChecker', () => {
       ),
     );
 
-    expect(screen.getByLabelText('Check source availability')).not.toBeDisabled();
+    expect(screen.getByLabelText('Check integration availability')).not.toBeDisabled();
     expect(() => screen.getByRole('progressbar')).toThrow();
     expect(screen.getByTestId('RedoIcon')).toBeInTheDocument();
   });
@@ -52,23 +52,23 @@ describe('AvailabilityChecker', () => {
     api.default = mockApi();
     actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'something' }));
 
-    expect(screen.getByLabelText('Check source availability')).not.toBeDisabled();
+    expect(screen.getByLabelText('Check integration availability')).not.toBeDisabled();
 
     await waitFor(async () => {
-      await user.click(screen.getByLabelText('Check source availability'));
+      await user.click(screen.getByLabelText('Check integration availability'));
     });
 
     expect(api.default).toHaveBeenCalledWith(sourceId);
-    expect(screen.getByLabelText('Check source availability')).toBeDisabled();
+    expect(screen.getByLabelText('Check integration availability')).toBeDisabled();
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
 
     api.default.resolve();
 
-    await waitFor(() => expect(screen.getByLabelText('Check source availability')).not.toBeDisabled());
+    await waitFor(() => expect(screen.getByLabelText('Check integration availability')).not.toBeDisabled());
     expect(() => screen.getByRole('progressbar')).toThrow();
 
     expect(actions.addMessage).toHaveBeenCalledWith({
-      title: 'Request to check source status was sent',
+      title: 'Request to check integration status was sent',
       variant: 'info',
       description: 'Check this page later for updates',
     });

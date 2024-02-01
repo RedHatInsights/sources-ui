@@ -25,7 +25,7 @@ const SourceRenameModal = () => {
 
   return (
     <Modal
-      title={intl.formatMessage({ id: 'sources.renameTitle', defaultMessage: 'Rename source' })}
+      title={intl.formatMessage({ id: 'sources.renameTitle', defaultMessage: 'Rename integration' })}
       description={intl.formatMessage({ id: 'sources.renameDescription', defaultMessage: 'Enter a new name for your source.' })}
       onClose={returnToSource}
       isOpen

@@ -301,7 +301,7 @@ const AddApplication = () => {
                   <Button variant="primary" className="pf-v5-u-mt-xl">
                     {intl.formatMessage({
                       id: 'wizard.editSource',
-                      defaultMessage: 'Edit source',
+                      defaultMessage: 'Edit integration',
                     })}
                   </Button>
                 </AppLink>

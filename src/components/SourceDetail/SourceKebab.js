@@ -26,7 +26,7 @@ const SourceKebab = () => {
 
   const pausedTooltip = intl.formatMessage({
     id: 'sources.pausedSourceAction',
-    defaultMessage: 'You cannot perform this action on a paused source.',
+    defaultMessage: 'You cannot perform this action on a paused integration.',
   });
 
   const disabledProps = disabledTooltipProps(intl, isOrgAdmin);
@@ -54,7 +54,7 @@ const SourceKebab = () => {
             onClick={wrappedFunction(() => dispatch(resumeSource(source.id, source.name, intl)))}
             description={intl.formatMessage({
               id: 'detail.resume.description',
-              defaultMessage: 'Unpause data collection for this source',
+              defaultMessage: 'Unpause data collection for this integration',
             })}
           >
             {intl.formatMessage({
@@ -85,7 +85,7 @@ const SourceKebab = () => {
           component={AppLink}
           description={intl.formatMessage({
             id: 'detail.remove.description',
-            defaultMessage: 'Permanently delete this source and all collected data',
+            defaultMessage: 'Permanently delete this integration and all collected data',
           })}
         >
           {intl.formatMessage({

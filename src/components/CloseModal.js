@@ -53,8 +53,8 @@ CloseModal.propTypes = {
 };
 
 CloseModal.defaultProps = {
-  title: <FormattedMessage id="wizard.closeTitle" defaultMessage="Exit source creation?" />,
-  exitTitle: <FormattedMessage id="wizard.exitText" defaultMessage="Exit" />,
+  title: <FormattedMessage id="wizard.closeTitle" defaultMessage="Cancel creating the integration?" />,
+  exitTitle: <FormattedMessage id="wizard.exitText" defaultMessage="Cancel" />,
   stayTitle: <FormattedMessage id="wizard.stayText" defaultMessage="Stay" />,
   description: <FormattedMessage id="wizard.closeWarning" defaultMessage="All inputs will be discarded." />,
 };

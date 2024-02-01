@@ -25,7 +25,7 @@ const PauseAlert = () => {
         isInline
         title={intl.formatMessage({
           id: 'source.detail.pausedTitle',
-          defaultMessage: 'Source paused',
+          defaultMessage: 'Integration paused',
         })}
         actionLinks={
           writePermissions ? (
@@ -50,7 +50,7 @@ const PauseAlert = () => {
         {intl.formatMessage({
           id: 'source.detail.pausedDescription',
           defaultMessage:
-            'No data is being collected for this source. Turn the source back on to reestablish connection and data collection. Previous credentials will be restored and application connections will continue as seen on this page.',
+            'No data is being collected for this integration. Turn the integration back on to reestablish connection and data collection. Previous credentials will be restored and application connections will continue as seen on this page.',
         })}
       </Alert>
     </GridItem>
