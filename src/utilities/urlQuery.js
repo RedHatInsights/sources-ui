@@ -1,7 +1,7 @@
 import { restFilterGenerator } from '../api/entities';
 import { AVAILABLE, UNAVAILABLE } from '../views/formatters';
 import { sourcesColumns } from '../views/sourcesViewDefinition';
-import { CLOUD_VENDOR, INTEGRATIONS, REDHAT_VENDOR } from './constants';
+import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from './constants';
 
 export const updateQuery = ({ sortBy, sortDirection, pageNumber, pageSize, filterValue, activeCategory, removeQuery }) => {
   const sortQuery = `sort_by[]=${sortBy}:${sortDirection}`;
@@ -26,10 +26,12 @@ export const loadEnhancedAttributes = (params) => {
 
   const applications = urlParams.getAll('application');
   const types = urlParams.getAll('type');
+  const category = urlParams.getAll('category');
 
   return {
     applications: applications.length && applications,
     types: types.length && types,
+    category,
   };
 };
 
@@ -150,7 +152,7 @@ export const parseQuery = (getState) => {
 
   const activeCategory = urlParams.get('category') || urlParams.get('activeVendor');
 
-  if (activeCategory === CLOUD_VENDOR || activeCategory === REDHAT_VENDOR || activeCategory === INTEGRATIONS) {
+  if ([CLOUD_VENDOR, REDHAT_VENDOR, COMMUNICATIONS, REPORTING, WEBHOOKS].includes(activeCategory)) {
     fetchOptions = {
       ...fetchOptions,
       activeCategory,

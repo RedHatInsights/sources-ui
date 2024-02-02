@@ -6,9 +6,9 @@ import promise from 'redux-promise-middleware';
 
 import SourcesReducer, { defaultSourcesState } from '../redux/sources/reducer';
 import UserReducer, { defaultUserState } from '../redux/user/reducer';
-import { updateQuery } from './urlQuery';
+import { parseQuery, updateQuery } from './urlQuery';
 import { ACTION_TYPES, SET_CATEGORY } from '../redux/sources/actionTypes';
-import { INTEGRATIONS } from './constants';
+import { CLOUD_VENDOR, COMMUNICATIONS, INTEGRATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from './constants';
 
 export const urlQueryMiddleware = (store) => (next) => (action) => {
   if (action.type === ACTION_TYPES.LOAD_ENTITIES_PENDING) {
@@ -32,11 +32,17 @@ export const getStore = (addMiddlewares = [], initialState = {}) => {
     urlQueryMiddleware,
     ...addMiddlewares,
   ];
+  const params = parseQuery();
 
   const registry = new ReducerRegistry({}, middlewares);
-
   registry.register({
-    sources: applyReducerHash(SourcesReducer, { ...defaultSourcesState, ...initialState.sources }),
+    sources: applyReducerHash(SourcesReducer, {
+      ...defaultSourcesState,
+      ...initialState.sources,
+      activeCategory: [CLOUD_VENDOR, REDHAT_VENDOR, COMMUNICATIONS, REPORTING, WEBHOOKS].includes(params?.activeCategory)
+        ? params.activeCategory
+        : initialState.sources?.activeCategory || defaultSourcesState?.activeCategory || CLOUD_VENDOR,
+    }),
   });
   registry.register({ user: applyReducerHash(UserReducer, { ...defaultUserState, ...initialState.user }) });
   registry.register({ notifications: notificationsReducer });
