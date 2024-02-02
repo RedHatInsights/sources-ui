@@ -35,14 +35,13 @@ export const getStore = (addMiddlewares = [], initialState = {}) => {
   const params = parseQuery();
 
   const registry = new ReducerRegistry({}, middlewares);
-
   registry.register({
     sources: applyReducerHash(SourcesReducer, {
       ...defaultSourcesState,
       ...initialState.sources,
       activeCategory: [CLOUD_VENDOR, REDHAT_VENDOR, COMMUNICATIONS, REPORTING, WEBHOOKS].includes(params?.activeCategory)
         ? params.activeCategory
-        : CLOUD_VENDOR,
+        : initialState.sources?.activeCategory || defaultSourcesState?.activeCategory || CLOUD_VENDOR,
     }),
   });
   registry.register({ user: applyReducerHash(UserReducer, { ...defaultUserState, ...initialState.user }) });
