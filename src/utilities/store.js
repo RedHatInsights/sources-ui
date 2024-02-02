@@ -40,7 +40,7 @@ export const getStore = (addMiddlewares = [], initialState = {}) => {
     sources: applyReducerHash(SourcesReducer, {
       ...defaultSourcesState,
       ...initialState.sources,
-      activeCategory: [CLOUD_VENDOR, REDHAT_VENDOR, COMMUNICATIONS, REPORTING, WEBHOOKS].includes(params.activeCategory)
+      activeCategory: [CLOUD_VENDOR, REDHAT_VENDOR, COMMUNICATIONS, REPORTING, WEBHOOKS].includes(params?.activeCategory)
         ? params.activeCategory
         : CLOUD_VENDOR,
     }),
