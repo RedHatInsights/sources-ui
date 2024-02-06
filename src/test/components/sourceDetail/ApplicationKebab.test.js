@@ -78,7 +78,7 @@ describe('ApplicationKebab', () => {
     });
 
     const tooltipText =
-      'To perform this action, your Organization Administrator must grant you Sources Administrator permissions.';
+      'To perform this action, your Organization Administrator must grant you Cloud Integration Administrator permissions.';
 
     await waitFor(() => expect(screen.getByText(tooltipText)).toBeInTheDocument());
   });
@@ -127,7 +127,7 @@ describe('ApplicationKebab', () => {
     });
 
     const tooltipText =
-      'To perform this action, your Organization Administrator must grant you Sources Administrator permissions.';
+      'To perform this action, your Organization Administrator must grant you Cloud Integration Administrator permissions.';
 
     await waitFor(() => expect(screen.getByText(tooltipText)).toBeInTheDocument());
   });
@@ -241,7 +241,7 @@ describe('ApplicationKebab', () => {
         await user.hover(screen.getByText('Resume'));
       });
 
-      const tooltipText = 'You cannot perform this action on a paused source.';
+      const tooltipText = 'You cannot perform this action on a paused integration.';
 
       await waitFor(() => expect(screen.getByText(tooltipText)).toBeInTheDocument());
     });

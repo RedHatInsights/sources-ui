@@ -19,7 +19,7 @@ const AvailabilityChecker = ({ setCheckPending }) => {
   return (
     <Button
       variant="plain"
-      aria-label={intl.formatMessage({ id: 'sources.checkavailability', defaultMessage: 'Check source availability' })}
+      aria-label={intl.formatMessage({ id: 'sources.checkavailability', defaultMessage: 'Check integration availability' })}
       onClick={async () => {
         setCheckPending && setCheckPending();
         setLoading(true);
@@ -29,7 +29,7 @@ const AvailabilityChecker = ({ setCheckPending }) => {
           addMessage({
             title: intl.formatMessage({
               id: 'sources.checkavailability.notificationTitle',
-              defaultMessage: 'Request to check source status was sent',
+              defaultMessage: 'Request to check integration status was sent',
             }),
             variant: 'info',
             description: intl.formatMessage({

@@ -27,9 +27,9 @@ describe('CloseModal', () => {
   it('renders correctly', () => {
     render(<CloseModal {...initialProps} />);
 
-    expect(screen.getByText('Exit source creation?')).toBeInTheDocument();
+    expect(screen.getByText('Cancel creating the integration?')).toBeInTheDocument();
     expect(screen.getByText('All inputs will be discarded.')).toBeInTheDocument();
-    expect(screen.getByText('Exit')).toBeInTheDocument();
+    expect(screen.getByText('Cancel')).toBeInTheDocument();
     expect(screen.getByText('Stay')).toBeInTheDocument();
     expect(screen.getByRole('dialog')).toBeInTheDocument();
     expect(screen.getByLabelText('Exclamation icon')).toBeInTheDocument();
@@ -45,7 +45,7 @@ describe('CloseModal', () => {
 
     expect(screen.getByText(initialProps.title)).toBeInTheDocument();
     expect(screen.getByText('All inputs will be discarded.')).toBeInTheDocument();
-    expect(screen.getByText('Exit')).toBeInTheDocument();
+    expect(screen.getByText('Cancel')).toBeInTheDocument();
     expect(screen.getByText('Stay')).toBeInTheDocument();
     expect(screen.getByRole('dialog')).toBeInTheDocument();
     expect(screen.getByLabelText('Exclamation icon')).toBeInTheDocument();
@@ -56,7 +56,7 @@ describe('CloseModal', () => {
 
     render(<CloseModal {...initialProps} />);
 
-    await user.click(screen.getByText('Exit'));
+    await user.click(screen.getByText('Cancel'));
 
     expect(onExit).toHaveBeenCalled();
   });

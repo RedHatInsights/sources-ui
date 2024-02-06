@@ -36,7 +36,7 @@ export const chipsFormatters = (key, filterValue, sourceTypes, appTypes, intl) =
   ({
     name: () => ({ name: filterValue[key], key }),
     source_type_id: () => ({
-      category: 'Source Type',
+      category: 'Integration Type',
       key,
       chips: filterValue[key].map((id) => {
         const sourceType = sourceTypes.find((type) => type.id === id);
@@ -114,13 +114,13 @@ export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
         addMessage({
           title: intl.formatMessage({
             id: 'alert.error.title',
-            defaultMessage: 'Error adding source',
+            defaultMessage: 'Error adding integration',
           }),
           description: intl.formatMessage(
             {
               id: 'alert.error.description',
               defaultMessage:
-                'There was a problem while trying to add source {name}. Please try again. If the error persists, open a support case.',
+                'There was a problem while trying to add integration {name}. Please try again. If the error persists, open a support case.',
             },
             { name: <b>{state.values.source.name}</b> },
           ),
@@ -183,7 +183,7 @@ export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
                 >
                   {intl.formatMessage({
                     id: 'alert.unavailable.link',
-                    defaultMessage: 'Edit source',
+                    defaultMessage: 'Edit integration',
                   })}
                 </AlertActionLink>
               ),
@@ -195,13 +195,13 @@ export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
             addMessage({
               title: intl.formatMessage({
                 id: 'alert.timeout.title',
-                defaultMessage: 'Source configuration in progress',
+                defaultMessage: 'Integration configuration in progress',
               }),
               description: intl.formatMessage(
                 {
                   id: 'alert.timeout.description',
                   defaultMessage:
-                    'We are still working to confirm credentials for source {name}. To track progress, check the Status column in the Sources table.',
+                    'We are still working to confirm credentials for integration {name}. To track progress, check the Status column in the Integrations table.',
                 },
                 { name: <b>{state.createdSource.name}</b> },
               ),

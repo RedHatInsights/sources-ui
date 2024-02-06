@@ -55,7 +55,7 @@ describe('SourceKebab', () => {
 
     expect(screen.getByText('Remove')).toBeInTheDocument();
     expect(
-      screen.getByText('Permanently delete this source and all collected data').closest('.src-m-dropdown-item-disabled'),
+      screen.getByText('Permanently delete this integration and all collected data').closest('.src-m-dropdown-item-disabled'),
     ).toBeInTheDocument();
 
     expect(screen.getByText('Rename').closest('.src-m-dropdown-item-disabled')).toBeInTheDocument();
@@ -65,7 +65,7 @@ describe('SourceKebab', () => {
     });
 
     const tooltipText =
-      'To perform this action, your Organization Administrator must grant you Sources Administrator permissions.';
+      'To perform this action, your Organization Administrator must grant you Cloud Integration Administrator permissions.';
 
     await waitFor(() => expect(screen.getByText(tooltipText)).toBeInTheDocument());
   });
@@ -97,7 +97,7 @@ describe('SourceKebab', () => {
       await user.hover(screen.getByText('Pause'));
     });
 
-    const tooltipText = 'To perform this action, you must add Sources Administrator permissions to your user.';
+    const tooltipText = 'To perform this action, you must add Cloud Integration Administrator permissions to your user.';
 
     await waitFor(() => expect(screen.getByText(tooltipText)).toBeInTheDocument());
   });
@@ -127,10 +127,10 @@ describe('SourceKebab', () => {
     });
 
     expect(screen.getByText('Resume')).toBeInTheDocument();
-    expect(screen.getByText('Unpause data collection for this source')).toBeInTheDocument();
+    expect(screen.getByText('Unpause data collection for this integration')).toBeInTheDocument();
 
     expect(screen.getByText('Remove')).toBeInTheDocument();
-    expect(screen.getByText('Permanently delete this source and all collected data')).toBeInTheDocument();
+    expect(screen.getByText('Permanently delete this integration and all collected data')).toBeInTheDocument();
 
     expect(screen.getByText('Rename')).toBeInTheDocument();
 
@@ -138,7 +138,7 @@ describe('SourceKebab', () => {
       await user.hover(screen.getByText('Rename'));
     });
 
-    const tooltipText = 'You cannot perform this action on a paused source.';
+    const tooltipText = 'You cannot perform this action on a paused integration.';
 
     await waitFor(() => expect(screen.getByText(tooltipText)).toBeInTheDocument());
   });
@@ -208,7 +208,7 @@ describe('SourceKebab', () => {
       expect(screen.getByText('Pause').closest('.src-m-dropdown-item-disabled')).toBeNull();
 
       expect(screen.getByText('Remove')).toBeInTheDocument();
-      expect(screen.getByText('Permanently delete this source and all collected data')).toBeInTheDocument();
+      expect(screen.getByText('Permanently delete this integration and all collected data')).toBeInTheDocument();
       expect(screen.getByText('Remove').closest('.src-m-dropdown-item-disabled')).toBeNull();
 
       expect(screen.getByText('Rename')).toBeInTheDocument();

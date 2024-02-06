@@ -63,7 +63,7 @@ describe('loaders', () => {
       );
 
       expect(screen.getByRole('progressbar')).toBeInTheDocument();
-      expect(screen.getByText('Sources')).toBeInTheDocument();
+      expect(screen.getByText('Integrations')).toBeInTheDocument();
     });
   });
 

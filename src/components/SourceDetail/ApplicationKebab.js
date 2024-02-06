@@ -27,7 +27,7 @@ const ApplicationKebab = ({ app, removeApp, addApp }) => {
 
   const pausedTooltip = intl.formatMessage({
     id: 'sources.pausedSourceAction',
-    defaultMessage: 'You cannot perform this action on a paused source.',
+    defaultMessage: 'You cannot perform this action on a paused integration.',
   });
 
   const pausedProps = {

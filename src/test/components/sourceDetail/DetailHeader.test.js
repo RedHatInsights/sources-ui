@@ -21,7 +21,7 @@ describe('DetailHeader', () => {
 
     store = mockStore({
       sources: {
-        entities: [{ id: sourceId, name: 'Name of this source' }],
+        entities: [{ id: sourceId, name: 'Name of this integration' }],
         appTypes,
       },
       user: { writePermissions: false },
@@ -37,14 +37,14 @@ describe('DetailHeader', () => {
       ),
     );
 
-    expect(screen.getByText('Sources')).toBeInTheDocument();
-    expect(screen.getAllByText('Name of this source')).toHaveLength(2);
-    expect(screen.getByText('View details and manage connections for this source.')).toBeInTheDocument();
+    expect(screen.getByText('Integrations')).toBeInTheDocument();
+    expect(screen.getAllByText('Name of this integration')).toHaveLength(2);
+    expect(screen.getByText('View details and manage connections for this integration.')).toBeInTheDocument();
     expect(screen.getByLabelText('Actions')).toBeInTheDocument();
 
     expect(formatters.availabilityFormatter).toHaveBeenCalledWith(
       undefined,
-      { id: sourceId, name: 'Name of this source' },
+      { id: sourceId, name: 'Name of this integration' },
       { appTypes },
     );
   });

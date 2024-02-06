@@ -16,7 +16,7 @@ const applicationsStep = (applicationTypes, intl) => ({
         id: 'applications.description',
         defaultMessage:
           // eslint-disable-next-line max-len
-          'Configuring your cloud sources provides additional capabilities included with your subscription. You can turn these features on or off at any time after source creation.',
+          'Configuring your cloud integrations provides additional capabilities included with your subscription. You can turn these features on or off at any time after integration creation.',
       }),
     },
     {

@@ -79,7 +79,7 @@ export const actionResolver = (intl, navigate, hasWritePermissions, dispatch, is
       }),
       description: intl.formatMessage({
         id: 'sources.resume.description',
-        defaultMessage: 'Unpause data collection for this source',
+        defaultMessage: 'Unpause data collection for this integration',
       }),
       onClick: (_ev, _i, { id }) => dispatch(resumeSource(id, rowData.originalName, intl)),
       ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
@@ -106,7 +106,7 @@ export const actionResolver = (intl, navigate, hasWritePermissions, dispatch, is
     }),
     description: intl.formatMessage({
       id: 'sources.remove.description',
-      defaultMessage: 'Permanently delete this source and all collected data',
+      defaultMessage: 'Permanently delete this integration and all collected data',
     }),
     onClick: (_ev, _i, { id }) => navigate(replaceRouteId(routes.sourcesRemove.path, id)),
     ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
@@ -222,7 +222,7 @@ const SourcesTable = () => {
       gridBreakPoint="grid-lg"
       aria-label={intl.formatMessage({
         id: 'sources.list',
-        defaultMessage: 'List of Sources',
+        defaultMessage: 'List of Integrations',
       })}
       onSort={(_event, key, direction) => reduxDispatch(sortEntities(state.cells[key].value, direction))}
       sortBy={{

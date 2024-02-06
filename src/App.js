@@ -19,7 +19,7 @@ import { initAxios } from './api/entities';
 const App = () => {
   const chrome = useChrome();
 
-  chrome?.updateDocumentTitle?.('Sources');
+  chrome?.updateDocumentTitle?.('Integrations');
 
   useEffect(() => {
     initAxios(chrome.auth.getUser, chrome.auth.logout);

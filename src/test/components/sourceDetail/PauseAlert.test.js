@@ -18,7 +18,7 @@ describe('DetailHeader', () => {
   it('renders with no permissions', async () => {
     store = mockStore({
       sources: {
-        entities: [{ id: sourceId, name: 'Name of this source', paused_at: 'today' }],
+        entities: [{ id: sourceId, name: 'Name of this integration', paused_at: 'today' }],
       },
       user: { writePermissions: false },
     });
@@ -34,10 +34,10 @@ describe('DetailHeader', () => {
     );
 
     expect(screen.getByText('Default alert:')).toBeInTheDocument();
-    expect(screen.getByText('Source paused')).toBeInTheDocument();
+    expect(screen.getByText('Integration paused')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'No data is being collected for this source. Turn the source back on to reestablish connection and data collection. Previous credentials will be restored and application connections will continue as seen on this page.',
+        'No data is being collected for this integration. Turn the integration back on to reestablish connection and data collection. Previous credentials will be restored and application connections will continue as seen on this page.',
       ),
     ).toBeInTheDocument();
     expect(screen.getByText('Resume connection')).toBeDisabled();
@@ -46,7 +46,7 @@ describe('DetailHeader', () => {
   it('renders with permissions', async () => {
     store = mockStore({
       sources: {
-        entities: [{ id: sourceId, name: 'Name of this source', paused_at: 'today' }],
+        entities: [{ id: sourceId, name: 'Name of this integration', paused_at: 'today' }],
       },
       user: { writePermissions: true },
     });
@@ -62,10 +62,10 @@ describe('DetailHeader', () => {
     );
 
     expect(screen.getByText('Default alert:')).toBeInTheDocument();
-    expect(screen.getByText('Source paused')).toBeInTheDocument();
+    expect(screen.getByText('Integration paused')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'No data is being collected for this source. Turn the source back on to reestablish connection and data collection. Previous credentials will be restored and application connections will continue as seen on this page.',
+        'No data is being collected for this integration. Turn the integration back on to reestablish connection and data collection. Previous credentials will be restored and application connections will continue as seen on this page.',
       ),
     ).toBeInTheDocument();
     expect(screen.getByText('Resume connection')).not.toBeDisabled();
@@ -76,7 +76,7 @@ describe('DetailHeader', () => {
 
     store = mockStore({
       sources: {
-        entities: [{ id: sourceId, name: 'Name of this source', paused_at: 'today' }],
+        entities: [{ id: sourceId, name: 'Name of this integration', paused_at: 'today' }],
       },
       user: { writePermissions: true },
     });
@@ -97,7 +97,9 @@ describe('DetailHeader', () => {
       await user.click(screen.getByText('Resume connection'));
     });
 
-    await waitFor(() => expect(actions.resumeSource).toHaveBeenCalledWith(sourceId, 'Name of this source', expect.any(Object)));
+    await waitFor(() =>
+      expect(actions.resumeSource).toHaveBeenCalledWith(sourceId, 'Name of this integration', expect.any(Object)),
+    );
 
     const calledActions = store.getActions();
     expect(calledActions[calledActions.length - 1]).toEqual({ type: 'mock-resume-source' });

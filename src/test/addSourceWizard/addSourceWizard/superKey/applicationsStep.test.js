@@ -20,7 +20,7 @@ describe('applicationsStep', () => {
 
     expect(result.fields[0].component).toEqual(componentTypes.PLAIN_TEXT);
     expect(result.fields[0].label).toEqual(
-      'Configuring your cloud sources provides additional capabilities included with your subscription. You can turn these features on or off at any time after source creation.',
+      'Configuring your cloud integrations provides additional capabilities included with your subscription. You can turn these features on or off at any time after integration creation.',
     );
 
     expect(result.fields[1].component).toEqual('switch-group');

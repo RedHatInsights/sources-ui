@@ -144,7 +144,7 @@ describe('SourceDetail', () => {
     expect(screen.getByText('AppCard')).toBeInTheDocument();
     expect(screen.getByText('ResourcesCard')).toBeInTheDocument();
 
-    expect(() => screen.getByText('Source paused')).toThrow();
+    expect(() => screen.getByText('Integration paused')).toThrow();
 
     expect(() => screen.getByText('Remove Modal')).toThrow();
     expect(() => screen.getByText('Add application')).toThrow();
@@ -185,7 +185,7 @@ describe('SourceDetail', () => {
     expect(screen.getByText('AppCard')).toBeInTheDocument();
     expect(screen.getByText('ResourcesCard')).toBeInTheDocument();
 
-    expect(screen.getByText('Source paused')).toBeInTheDocument();
+    expect(screen.getByText('Integration paused')).toBeInTheDocument();
 
     expect(() => screen.getByText('Remove Modal')).toThrow();
     expect(() => screen.getByText('Add application')).toThrow();

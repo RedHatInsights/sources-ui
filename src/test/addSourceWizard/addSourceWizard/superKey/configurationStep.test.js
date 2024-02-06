@@ -26,7 +26,7 @@ describe('configurationSteps', () => {
 
     expect(result.fields[0].component).toEqual(componentTypes.PLAIN_TEXT);
     expect(result.fields[0].label).toEqual(
-      'Configure your source manually or let us manage all necessary credentials by selecting <b>account authorization</b> configuration.',
+      'Configure your integration manually or let us manage all necessary credentials by selecting <b>account authorization</b> configuration.',
     );
 
     expect(result.fields[1].component).toEqual(componentTypes.RADIO);
@@ -38,7 +38,7 @@ describe('configurationSteps', () => {
       options: [
         {
           description:
-            'A new automated source configuration method. Provide your AWS account credentials and let Red Hat configure and manage your source for you.',
+            'A new automated integration configuration method. Provide your AWS account credentials and let Red Hat configure and manage your integration for you.',
           label: (
             <span className="src-c-wizard__rhel-mag-label">
               Account authorization
@@ -57,7 +57,7 @@ describe('configurationSteps', () => {
       options: [
         {
           description:
-            'A new automated source configuration method. Provide your Azure account credentials and let Red Hat configure and manage your source for you.',
+            'A new automated integration configuration method. Provide your Azure account credentials and let Red Hat configure and manage your integration for you.',
           label: (
             <span className="src-c-wizard__rhel-mag-label">
               Account authorization
@@ -76,7 +76,7 @@ describe('configurationSteps', () => {
       options: [
         {
           description:
-            'A new automated source configuration method. Provide your openshift account credentials and let Red Hat configure and manage your source for you.',
+            'A new automated integration configuration method. Provide your openshift account credentials and let Red Hat configure and manage your integration for you.',
           label: (
             <span className="src-c-wizard__rhel-mag-label">
               Account authorization
@@ -102,7 +102,7 @@ describe('configurationSteps', () => {
     expect(result.fields[3].options).toEqual([
       {
         description:
-          'Configure and manage your source manually if you do not wish to provide account authorization credentials. You will set up sources the same way you do today.',
+          'Configure and manage your integration manually if you do not wish to provide account authorization credentials. You will set up integrations the same way you do today.',
         label: 'Manual configuration',
         value: MANUAL_CONFIGURATION,
       },

@@ -34,7 +34,7 @@ const DetailHeader = () => {
         <Text>
           {intl.formatMessage({
             id: 'detail.description',
-            defaultMessage: 'View details and manage connections for this source.',
+            defaultMessage: 'View details and manage connections for this integration.',
           })}
         </Text>
       </TextContent>

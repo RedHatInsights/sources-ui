@@ -262,12 +262,12 @@ export const pauseSource = (sourceId, sourceName, intl) => (dispatch) => {
     .then(() => {
       dispatch(
         addMessage({
-          title: intl.formatMessage({ id: 'source.paused.alert.title', defaultMessage: 'Source paused' }),
+          title: intl.formatMessage({ id: 'source.paused.alert.title', defaultMessage: 'Integration paused' }),
           description: intl.formatMessage(
             {
               id: 'source.paused.alert.description',
               defaultMessage:
-                'Source <b>{ sourceName }</b> is now paused. Data collection for all connected applications will be disabled until the source is resumed.',
+                'Integration <b>{ sourceName }</b> is now paused. Data collection for all connected applications will be disabled until the integration is resumed.',
             },
             { sourceName, b: bold },
           ),
@@ -280,7 +280,7 @@ export const pauseSource = (sourceId, sourceName, intl) => (dispatch) => {
     .catch((error) => {
       dispatch(
         addMessage({
-          title: intl.formatMessage({ id: 'source.paused.alert.error', defaultMessage: 'Source pause failed' }),
+          title: intl.formatMessage({ id: 'source.paused.alert.error', defaultMessage: 'Integration pause failed' }),
           description: tryAgainMessage(intl, handleError(error)),
           variant: 'danger',
         }),
@@ -294,11 +294,11 @@ export const resumeSource = (sourceId, sourceName, intl) => (dispatch) => {
     .then(() => {
       dispatch(
         addMessage({
-          title: intl.formatMessage({ id: 'source.resumed.alert.title', defaultMessage: 'Source resumed' }),
+          title: intl.formatMessage({ id: 'source.resumed.alert.title', defaultMessage: 'Integration resumed' }),
           description: intl.formatMessage(
             {
               id: 'source.resumed.alert.description',
-              defaultMessage: 'Source <b>{ sourceName }</b> will recontinue data collection for connected applications.',
+              defaultMessage: 'Integration <b>{ sourceName }</b> will recontinue data collection for connected applications.',
             },
             { sourceName, b: bold },
           ),
@@ -311,7 +311,7 @@ export const resumeSource = (sourceId, sourceName, intl) => (dispatch) => {
     .catch((error) => {
       dispatch(
         addMessage({
-          title: intl.formatMessage({ id: 'source.resume.alert.error', defaultMessage: 'Source resume failed' }),
+          title: intl.formatMessage({ id: 'source.resume.alert.error', defaultMessage: 'Integration resume failed' }),
           description: tryAgainMessage(intl, handleError(error)),
           variant: 'danger',
         }),

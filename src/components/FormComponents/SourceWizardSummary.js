@@ -95,12 +95,13 @@ const SummaryAlert = ({ appName, sourceType, hcsEnrolled }) => {
         isInline
         title={intl.formatMessage({
           id: 'azure.rhelWarningTitle',
-          defaultMessage: 'This source will not be monitored in Sources',
+          defaultMessage: 'This integration will not be monitored in Integrations',
         })}
       >
         {intl.formatMessage({
           id: 'azure.rhelWarningDescription',
-          defaultMessage: 'This source will be represented in the Sources list, but will not reflect true status or resources.',
+          defaultMessage:
+            'This integration will be represented in the Integrations list, but will not reflect true status or resources.',
         })}
       </Alert>
     );
@@ -283,7 +284,7 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
         <DesctiptionListItem
           term={intl.formatMessage({
             id: 'wizard.sourceType',
-            defaultMessage: 'Source type',
+            defaultMessage: 'Integration type',
           })}
           description={type.product_name}
         />

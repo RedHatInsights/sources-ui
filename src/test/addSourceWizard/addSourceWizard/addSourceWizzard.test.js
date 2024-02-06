@@ -47,8 +47,8 @@ describe('AddSourceWizard', () => {
     dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
     render(componentWrapperIntl(<AddSourceWizard {...initialProps} />, store));
 
-    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
-    expect(screen.getByText('Name source')).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText('Select cloud provider', { selector: 'button' })).toBeInTheDocument());
+    expect(screen.getByText('Name integration')).toBeInTheDocument();
     expect(screen.getAllByRole('dialog')).toBeTruthy();
   });
 
@@ -58,7 +58,7 @@ describe('AddSourceWizard', () => {
 
     render(componentWrapperIntl(<AddSourceWizard {...initialProps} sourceTypes={undefined} />, store));
 
-    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Select cloud provider', { selector: 'button' })).toBeInTheDocument());
 
     expect(screen.getAllByRole('dialog')).toBeTruthy();
     expect(dependency.doLoadSourceTypes).toHaveBeenCalled();
@@ -73,7 +73,7 @@ describe('AddSourceWizard', () => {
 
     const { container } = render(componentWrapperIntl(<AddSourceWizard {...initialProps} />, store));
 
-    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Select cloud provider', { selector: 'button' })).toBeInTheDocument());
     await act(async () => {
       await user.click(screen.getByText('Google Cloud'));
     });
@@ -100,7 +100,7 @@ describe('AddSourceWizard', () => {
       componentWrapperIntl(<AddSourceWizard {...initialProps} afterSuccess={afterSubmitMock} />, store),
     );
 
-    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Select cloud provider', { selector: 'button' })).toBeInTheDocument());
 
     await waitFor(async () => {
       await user.click(screen.getByText('Google Cloud'));
@@ -124,7 +124,7 @@ describe('AddSourceWizard', () => {
       componentWrapperIntl(<AddSourceWizard {...initialProps} submitCallback={submitCallback} />, store),
     );
 
-    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Select cloud provider', { selector: 'button' })).toBeInTheDocument());
 
     await waitFor(async () => {
       await user.click(screen.getByText('Google Cloud'));
@@ -153,7 +153,7 @@ describe('AddSourceWizard', () => {
       componentWrapperIntl(<AddSourceWizard {...initialProps} submitCallback={submitCallback} />, store),
     );
 
-    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Select cloud provider', { selector: 'button' })).toBeInTheDocument());
 
     await waitFor(async () => {
       await user.click(screen.getByText('Google Cloud'));
@@ -182,7 +182,7 @@ describe('AddSourceWizard', () => {
 
     render(componentWrapperIntl(<AddSourceWizard {...initialProps} onClose={onClose} />, store));
 
-    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Select cloud provider', { selector: 'button' })).toBeInTheDocument());
 
     await waitFor(async () => {
       await user.click(screen.getByText('Google Cloud'));
@@ -191,9 +191,9 @@ describe('AddSourceWizard', () => {
       await user.click(screen.getByLabelText('Close wizard'));
     });
 
-    expect(screen.getByText('Exit source creation?')).toBeInTheDocument();
+    expect(screen.getByText('Cancel creating the integration?')).toBeInTheDocument();
     await waitFor(async () => {
-      await user.click(screen.getByText('Exit'));
+      await user.click(screen.getByText('Cancel', { selector: '#on-exit-button' }));
     });
     expect(onClose).toHaveBeenCalledWith({ source_type: GOOGLE_NAME });
   });
@@ -206,7 +206,7 @@ describe('AddSourceWizard', () => {
 
     render(componentWrapperIntl(<AddSourceWizard {...initialProps} onClose={onClose} />, store));
 
-    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Select cloud provider', { selector: 'button' })).toBeInTheDocument());
 
     await waitFor(async () => {
       await user.click(screen.getByText('Google Cloud'));
@@ -231,7 +231,7 @@ describe('AddSourceWizard', () => {
 
     const { container } = render(componentWrapperIntl(<AddSourceWizard {...initialProps} />, store));
 
-    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Select cloud provider', { selector: 'button' })).toBeInTheDocument());
 
     await waitFor(async () => {
       await user.click(screen.getByText('Google Cloud'));
@@ -260,7 +260,7 @@ describe('AddSourceWizard', () => {
 
     const { container } = render(componentWrapperIntl(<AddSourceWizard {...initialProps} onClose={closeCallback} />, store));
 
-    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Select cloud provider', { selector: 'button' })).toBeInTheDocument());
 
     await waitFor(async () => {
       await user.click(screen.getByText('Google Cloud'));
@@ -290,7 +290,7 @@ describe('AddSourceWizard', () => {
 
     const { container } = render(componentWrapperIntl(<AddSourceWizard {...initialProps} onClose={closeCallback} />, store));
 
-    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Select cloud provider', { selector: 'button' })).toBeInTheDocument());
 
     await waitFor(async () => {
       await user.click(screen.getByText('Google Cloud'));
@@ -318,7 +318,7 @@ describe('AddSourceWizard', () => {
 
     const { container } = render(componentWrapperIntl(<AddSourceWizard {...initialProps} />, store));
 
-    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Select cloud provider', { selector: 'button' })).toBeInTheDocument());
 
     await act(async () => {
       await user.click(screen.getByText('Google Cloud'));
@@ -330,7 +330,7 @@ describe('AddSourceWizard', () => {
     await waitFor(() => expect(() => screen.getByText('Validating credentials')).toThrow());
 
     await act(async () => {
-      await user.click(screen.getByText('Add another source'));
+      await user.click(screen.getByText('Add another integration'));
     });
 
     expect(screen.getByText('Google Cloud').closest('.pf-m-selected')).toBeNull();
@@ -344,7 +344,7 @@ describe('AddSourceWizard', () => {
 
     const { container } = render(componentWrapperIntl(<AddSourceWizard {...initialProps} />, store));
 
-    await waitFor(() => expect(screen.getByText('Select source type', { selector: 'button' })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Select cloud provider', { selector: 'button' })).toBeInTheDocument());
 
     await waitFor(async () => {
       await user.click(screen.getByText('Google Cloud'));
@@ -386,9 +386,9 @@ describe('AddSourceWizard', () => {
         componentWrapperIntl(<AddSourceWizard {...initialProps} selectedType="amazon" activeCategory={CLOUD_VENDOR} />, store),
       );
 
-      await waitFor(() => expect(screen.getByText('Name source', { selector: 'button' })).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText('Name integration', { selector: 'button' })).toBeInTheDocument());
 
-      expect(getNavigation(container)).toEqual(['Name source', 'Select configuration']);
+      expect(getNavigation(container)).toEqual(['Name integration', 'Select configuration']);
     });
 
     it('show source type selection when CLOUD', async () => {
@@ -400,9 +400,9 @@ describe('AddSourceWizard', () => {
         ),
       );
 
-      await waitFor(() => expect(screen.getByText('Name source', { selector: 'button' })).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText('Name integration', { selector: 'button' })).toBeInTheDocument());
 
-      expect(getNavigation(container)).toEqual(['Select source type', 'Name source', 'Select configuration']);
+      expect(getNavigation(container)).toEqual(['Select cloud provider', 'Name integration', 'Select configuration']);
     });
 
     it('show application step when selectedType is set and configuration is selected to true', async () => {
@@ -419,9 +419,14 @@ describe('AddSourceWizard', () => {
         ),
       );
 
-      await waitFor(() => expect(screen.getByText('Name source', { selector: 'button' })).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText('Name integration', { selector: 'button' })).toBeInTheDocument());
 
-      expect(getNavigation(container)).toEqual(['Name source', 'Select configuration', 'Select applications', 'Review details']);
+      expect(getNavigation(container)).toEqual([
+        'Name integration',
+        'Select configuration',
+        'Select applications',
+        'Review details',
+      ]);
     });
 
     it('show application step when selectedType is set and configuration is selected to false', async () => {
@@ -438,9 +443,9 @@ describe('AddSourceWizard', () => {
         ),
       );
 
-      await waitFor(() => expect(screen.getByText('Name source', { selector: 'button' })).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText('Name integration', { selector: 'button' })).toBeInTheDocument());
 
-      expect(getNavigation(container)).toEqual(['Name source', 'Select configuration', 'Select application', 'Credentials']);
+      expect(getNavigation(container)).toEqual(['Name integration', 'Select configuration', 'Select application', 'Credentials']);
     });
 
     it('show application step when selectedType is set - RED HAT', async () => {
@@ -452,10 +457,10 @@ describe('AddSourceWizard', () => {
         ),
       );
 
-      await waitFor(() => expect(screen.getByText('Name source', { selector: 'button' })).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText('Name integration', { selector: 'button' })).toBeInTheDocument());
 
       expect(getNavigation(container)).toEqual([
-        'Name source',
+        'Name integration',
         'Select application',
         'Credentials',
         'Configure OpenShift endpoint',
@@ -469,9 +474,9 @@ describe('AddSourceWizard', () => {
         componentWrapperIntl(<AddSourceWizard {...initialProps} activeCategory={REDHAT_VENDOR} />, store),
       );
 
-      await waitFor(() => expect(screen.getByText('Name source', { selector: 'button' })).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText('Name integration', { selector: 'button' })).toBeInTheDocument());
 
-      expect(getNavigation(container)).toEqual(['Source type and application', 'Name source']);
+      expect(getNavigation(container)).toEqual(['Integration type and application', 'Name integration']);
     });
   });
 
@@ -481,6 +486,6 @@ describe('AddSourceWizard', () => {
       render(componentWrapperIntl(<AddSourceWizard {...initialProps} initialWizardState={{ activeStep: 'name_step' }} />, store));
     });
 
-    await waitFor(() => expect(screen.getByText('Enter a name for your source.')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Enter a name for your integration.')).toBeInTheDocument());
   });
 });

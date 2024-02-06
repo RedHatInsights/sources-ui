@@ -59,8 +59,8 @@ describe('RedirectNoPaused', () => {
 
     await waitFor(() =>
       expect(actions.addMessage).toHaveBeenCalledWith({
-        description: 'You cannot perform this action on a paused source.',
-        title: 'Source is paused',
+        description: 'You cannot perform this action on a paused integration.',
+        title: 'Integration is paused',
         variant: 'danger',
       }),
     );
