@@ -137,7 +137,7 @@ const sourceTypeSelect = ({ intl, sourceTypes, applicationTypes }) => ({
   isRequired: true,
   label: intl.formatMessage({
     id: 'wizard.selectYourSourceType',
-    defaultMessage: 'A. Select your source type',
+    defaultMessage: 'A. Select your integration type',
   }),
   iconMapper: iconMapper(sourceTypes),
   validate: [
@@ -180,7 +180,7 @@ export const applicationStep = (applicationTypes, intl, activeCategory, hcsEnrol
       label: intl.formatMessage({
         id: 'wizard.applicationDescription',
         defaultMessage:
-          'Select an application to connect to your source. You can connect additional applications after source creation.',
+          'Select an application to connect to your integration. You can connect additional applications after integration creation.',
       }),
     },
     {
@@ -207,7 +207,7 @@ export const applicationStep = (applicationTypes, intl, activeCategory, hcsEnrol
 export const typesStep = (sourceTypes, applicationTypes, disableAppSelection, intl) => ({
   title: intl.formatMessage({
     id: 'wizard.chooseAppAndType',
-    defaultMessage: 'Source type and application',
+    defaultMessage: 'Integration type and application',
   }),
   name: 'types_step',
   nextStep: 'name_step',
@@ -218,7 +218,7 @@ export const typesStep = (sourceTypes, applicationTypes, disableAppSelection, in
       label: intl.formatMessage({
         id: 'wizard.selectRedHatType',
         defaultMessage:
-          'To import data for an application, you need to connect to a data source. Start by selecting your source type and application.',
+          'To import data for an application, you need to connect to a data source. Start by selecting your cloud provider and application.',
       }),
     },
     ...redhatTypes({ intl, sourceTypes, applicationTypes, disableAppSelection }),
@@ -228,7 +228,7 @@ export const typesStep = (sourceTypes, applicationTypes, disableAppSelection, in
 export const cloudTypesStep = (sourceTypes, applicationTypes, intl) => ({
   title: intl.formatMessage({
     id: 'wizard.chooseAppAndType',
-    defaultMessage: 'Select source type',
+    defaultMessage: 'Select cloud provider',
   }),
   name: 'types_step',
   nextStep: 'name_step',
@@ -239,7 +239,7 @@ export const cloudTypesStep = (sourceTypes, applicationTypes, intl) => ({
       label: intl.formatMessage({
         id: 'wizard.selectCloudType',
         defaultMessage:
-          'To import data for an application, you need to connect to a data source. Start by selecting your source type.',
+          'To import data for an application, you need to connect to a data source. Start by selecting your cloud provider.',
       }),
     },
     {
@@ -264,7 +264,7 @@ export const NameDescription = ({ sourceTypes }) => {
         {intl.formatMessage(
           {
             id: 'wizard.nameDescription',
-            defaultMessage: 'Enter a name for your {typeName} source.',
+            defaultMessage: 'Enter a name for your {typeName} integration.',
           },
           { typeName },
         )}
@@ -280,7 +280,7 @@ NameDescription.propTypes = {
 const nameStep = (intl, selectedType, sourceTypes, activeCategory) => ({
   title: intl.formatMessage({
     id: 'wizard.nameSource',
-    defaultMessage: 'Name source',
+    defaultMessage: 'Name integration',
   }),
   name: 'name_step',
   nextStep: activeCategory === REDHAT_VENDOR ? nextStep(selectedType) : nextStepCloud(sourceTypes),
@@ -297,9 +297,9 @@ const nameStep = (intl, selectedType, sourceTypes, activeCategory) => ({
       type: 'text',
       label: intl.formatMessage({
         id: 'wizard.name',
-        defaultMessage: 'Source name',
+        defaultMessage: 'Integration name',
       }),
-      placeholder: 'source_name',
+      placeholder: 'integration_name',
       isRequired: true,
       validate: [(value) => asyncValidatorDebouncedWrapper(intl)(value, undefined, intl), { type: validatorTypes.REQUIRED }],
       resolveProps: validated,
@@ -317,7 +317,7 @@ export const SummaryDescription = () => {
           {
             id: 'wizard.summaryDescription',
             defaultMessage:
-              'Review the information below and click <b>Add</b> to add your source. To edit details in previous steps, click <b>Back</b>.',
+              'Review the information below and click <b>Add</b> to add your integration. To edit details in previous steps, click <b>Back</b>.',
           },
           {
             b: bold,

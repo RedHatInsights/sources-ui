@@ -109,7 +109,7 @@ describe('Add source schema', () => {
         />,
       );
 
-      expect(screen.getByText('Enter a name for your Amazon Web Services source.')).toBeInTheDocument();
+      expect(screen.getByText('Enter a name for your Amazon Web Services integration.')).toBeInTheDocument();
     });
 
     it('renders summary description', () => {
@@ -155,11 +155,11 @@ describe('Add source schema', () => {
 
       expect(result.fields).toHaveLength(2);
       expect(result.name).toEqual('types_step');
-      expect(result.title).toEqual('Select source type');
+      expect(result.title).toEqual('Select cloud provider');
 
       expect(result.fields[0].component).toEqual(componentTypes.PLAIN_TEXT);
       expect(result.fields[0].label).toEqual(
-        'To import data for an application, you need to connect to a data source. Start by selecting your source type.',
+        'To import data for an application, you need to connect to a data source. Start by selecting your cloud provider.',
       );
 
       expect(result.fields[1].name).toEqual('source_type');
@@ -171,7 +171,7 @@ describe('Add source schema', () => {
 
       expect(result.fields[0].component).toEqual(componentTypes.PLAIN_TEXT);
       expect(result.fields[0].label).toEqual(
-        'To import data for an application, you need to connect to a data source. Start by selecting your source type and application.',
+        'To import data for an application, you need to connect to a data source. Start by selecting your cloud provider and application.',
       );
       expect(result.fields).toHaveLength(3);
       expect(result.fields[1].name).toEqual('source_type');

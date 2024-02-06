@@ -57,7 +57,7 @@ const FinalWizard = ({
     <Button variant="link" onClick={reset}>
       {intl.formatMessage({
         id: 'wizard.addAnotherSource',
-        defaultMessage: 'Add another source',
+        defaultMessage: 'Add another integration',
       })}
     </Button>
   );
@@ -70,7 +70,7 @@ const FinalWizard = ({
         title={intl.formatMessage({ id: 'wizard.removeSourceSuccessTitle', defaultMessage: 'Removing successful' })}
         successfulMessage={intl.formatMessage({
           id: 'wizard.removeSourceSuccessDescription',
-          defaultMessage: 'Source was successfully removed.',
+          defaultMessage: 'Integration was successfully removed.',
         })}
         hideSourcesButton={hideSourcesButton}
         returnButtonTitle={returnButtonTitle}
@@ -82,7 +82,7 @@ const FinalWizard = ({
       <LoadingStep
         customText={intl.formatMessage({
           id: 'wizard.removingSource',
-          defaultMessage: 'Removing source',
+          defaultMessage: 'Removing integration',
         })}
       />
     );
@@ -94,7 +94,7 @@ const FinalWizard = ({
             onClose={afterSubmit}
             secondaryActions={
               <Button variant="link" onClick={removeSource}>
-                {intl.formatMessage({ id: 'wizard.removeSource', defaultMessage: 'Remove source' })}
+                {intl.formatMessage({ id: 'wizard.removeSource', defaultMessage: 'Remove integration' })}
               </Button>
             }
             Component={() => <EditLink id={createdSource.id} />}
@@ -179,7 +179,7 @@ const FinalWizard = ({
                 id: 'wizard.loadingDescription-a',
                 defaultMessage:
                   // eslint-disable-next-line max-len
-                  "This might take some time. You'll receive a notification if you are still in the Sources application when the process completes. Otherwise, you can check the status in the main sources table at any time.",
+                  "This might take some time. You'll receive a notification if you are still in the Integrations application when the process completes. Otherwise, you can check the status in the main integrations table at any time.",
               })}
             </Text>
             <Text>

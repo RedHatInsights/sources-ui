@@ -28,7 +28,7 @@ const configurationStep = (intl, sourceTypes) => ({
         {
           id: 'wizard.accountAuthDescription',
           defaultMessage:
-            'Configure your source manually or let us manage all necessary credentials by selecting <b>account authorization</b> configuration.',
+            'Configure your integration manually or let us manage all necessary credentials by selecting <b>account authorization</b> configuration.',
         },
         {
           b: bold,
@@ -61,7 +61,7 @@ const configurationStep = (intl, sourceTypes) => ({
               {
                 id: 'wizard.accountAuth.desc',
                 defaultMessage:
-                  'A new automated source configuration method. Provide your {type} account credentials and let Red Hat configure and manage your source for you.',
+                  'A new automated integration configuration method. Provide your {type} account credentials and let Red Hat configure and manage your integration for you.',
               },
               {
                 type:
@@ -101,7 +101,7 @@ const configurationStep = (intl, sourceTypes) => ({
           description: intl.formatMessage({
             id: 'wizard.manualAuth.desc',
             defaultMessage:
-              'Configure and manage your source manually if you do not wish to provide account authorization credentials. You will set up sources the same way you do today.',
+              'Configure and manage your integration manually if you do not wish to provide account authorization credentials. You will set up integrations the same way you do today.',
           }),
           value: MANUAL_CONFIGURATION,
         },

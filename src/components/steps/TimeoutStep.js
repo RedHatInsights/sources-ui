@@ -31,7 +31,7 @@ const TimeoutStep = ({ onClose, returnButtonTitle, title, secondaryActions, uuid
             {
               id: 'wizard.uncompleteConfigurationDescription',
               defaultMessage:
-                'We are still working to confirm credentials and app settings.{newLine}To track progress, check the Status column in the Sources table.',
+                'We are still working to confirm credentials and app settings.{newLine}To track progress, check the Status column in the Integrations table.',
             },
             { newLine: <br key="br" /> },
           )}

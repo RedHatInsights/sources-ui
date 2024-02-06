@@ -30,7 +30,7 @@ export const AppPlaceholder = () => {
         <PageHeaderTitle
           title={intl.formatMessage({
             id: 'sources.sources',
-            defaultMessage: 'Sources',
+            defaultMessage: 'Integrations',
           })}
         />
       </PageHeader>

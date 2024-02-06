@@ -45,7 +45,7 @@ describe('SourceRenameModal', () => {
   });
 
   it('renders correctly', () => {
-    expect(screen.getByText('Rename source')).toBeInTheDocument();
+    expect(screen.getByText('Rename integration')).toBeInTheDocument();
     expect(screen.getByText('Enter a new name for your source.')).toBeInTheDocument();
     expect(screen.getByRole('textbox')).toBeInTheDocument();
   });

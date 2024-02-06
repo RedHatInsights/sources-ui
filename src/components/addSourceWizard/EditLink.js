@@ -9,7 +9,7 @@ import AppLink from '../AppLink';
 
 const EditLink = ({ id }) => {
   const intl = useIntl();
-  const message = intl.formatMessage({ id: 'wizard.editSource', defaultMessage: 'Edit source' });
+  const message = intl.formatMessage({ id: 'wizard.editSource', defaultMessage: 'Edit integration' });
   const { getApp, isBeta } = useChrome();
 
   if (getApp() === 'sources') {

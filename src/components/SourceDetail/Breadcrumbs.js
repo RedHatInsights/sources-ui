@@ -15,7 +15,7 @@ const Breadcrumbs = () => {
       <BreadcrumbItem component={({ href, ...props }) => <AppLink to={href} {...props} />} to={routes.sources.path}>
         {intl.formatMessage({
           id: 'sources.sources',
-          defaultMessage: 'Sources',
+          defaultMessage: 'Integrations',
         })}
       </BreadcrumbItem>
       <BreadcrumbItem isActive>{source.name}</BreadcrumbItem>

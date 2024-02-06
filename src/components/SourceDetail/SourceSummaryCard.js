@@ -52,7 +52,7 @@ const SourceSummaryCard = () => {
       <CardTitle>
         {intl.formatMessage({
           id: 'detail.summary.title',
-          defaultMessage: 'Source summary',
+          defaultMessage: 'Integration summary',
         })}
       </CardTitle>
       <CardBody>
@@ -64,7 +64,7 @@ const SourceSummaryCard = () => {
           <DescriptionListItem
             term={intl.formatMessage({
               id: 'detail.summary.type',
-              defaultMessage: 'Source type',
+              defaultMessage: 'Integration type',
             })}
             description={sourceTypeFormatter(source.source_type_id, undefined, { sourceTypes })}
           />

@@ -34,7 +34,7 @@ describe('Breadcrumbs', () => {
   });
 
   it('renders correctly', async () => {
-    expect(screen.getByText('Sources')).toBeInTheDocument();
+    expect(screen.getByText('Integrations')).toBeInTheDocument();
     expect(screen.getByText('Somename')).toBeInTheDocument();
   });
 
@@ -42,7 +42,7 @@ describe('Breadcrumbs', () => {
     const user = userEvent.setup();
 
     await waitFor(async () => {
-      await user.click(screen.getByText('Sources'));
+      await user.click(screen.getByText('Integrations'));
     });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(`/settings/integrations${routes.sources.path}`);

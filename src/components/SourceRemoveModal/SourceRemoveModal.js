@@ -49,7 +49,7 @@ const SourceRemoveModal = ({ backPath = '/' }) => {
     <Button id="deleteSubmit" key="submit" variant="danger" type="button" onClick={onSubmit} isDisabled={!acknowledge}>
       {intl.formatMessage({
         id: 'sources.deleteConfirm',
-        defaultMessage: 'Remove source and its data',
+        defaultMessage: 'Remove integration and its data',
       })}
     </Button>,
     <Button id="deleteCancel" key="cancel" variant="link" type="button" onClick={returnToSources}>
@@ -104,14 +104,14 @@ const SourceRemoveModal = ({ backPath = '/' }) => {
       className="sources"
       aria-label={intl.formatMessage({
         id: 'sources.deleteTitle',
-        defaultMessage: `Remove source?`,
+        defaultMessage: 'Remove integration?',
       })}
       header={
         <Title headingLevel="h1" size="2xl" className="sources">
           <ExclamationTriangleIcon size="sm" className="ins-m-alert src-c-delete-icon pf-v5-u-mr-sm" />
           {intl.formatMessage({
             id: 'sources.deleteTitle',
-            defaultMessage: `Remove source?`,
+            defaultMessage: 'Remove integration?',
           })}
         </Title>
       }

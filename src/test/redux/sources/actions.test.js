@@ -416,9 +416,9 @@ describe('redux actions', () => {
       expect(innerDispatch.mock.calls[0][0].payload).toEqual({
         customIcon: <PauseIcon />,
         description:
-          'Source <b>{ sourceName }</b> is now paused. Data collection for all connected applications will be disabled until the source is resumed.',
+          'Integration <b>{ sourceName }</b> is now paused. Data collection for all connected applications will be disabled until the integration is resumed.',
         dismissable: true,
-        title: 'Source paused',
+        title: 'Integration paused',
         variant: 'default',
       });
     });
@@ -440,7 +440,7 @@ describe('redux actions', () => {
       expect(innerDispatch.mock.calls[0][0].payload).toEqual({
         description: '{ error }. Please try again.',
         dismissable: true,
-        title: 'Source pause failed',
+        title: 'Integration pause failed',
         variant: 'danger',
       });
     });
@@ -461,9 +461,9 @@ describe('redux actions', () => {
 
       expect(innerDispatch.mock.calls[0][0].payload).toEqual({
         customIcon: <PlayIcon />,
-        description: 'Source <b>{ sourceName }</b> will recontinue data collection for connected applications.',
+        description: 'Integration <b>{ sourceName }</b> will recontinue data collection for connected applications.',
         dismissable: true,
-        title: 'Source resumed',
+        title: 'Integration resumed',
         variant: 'default',
       });
     });
@@ -485,7 +485,7 @@ describe('redux actions', () => {
       expect(innerDispatch.mock.calls[0][0].payload).toEqual({
         description: '{ error }. Please try again.',
         dismissable: true,
-        title: 'Source resume failed',
+        title: 'Integration resume failed',
         variant: 'danger',
       });
     });

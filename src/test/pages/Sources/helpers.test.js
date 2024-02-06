@@ -68,7 +68,7 @@ describe('Source page helpers', () => {
       const key = 'source_type_id';
 
       expect(chipsFormatters(key, filterValue, sourceTypes)()).toEqual({
-        category: 'Source Type',
+        category: 'Integration Type',
         key,
         chips: [
           {
@@ -327,8 +327,8 @@ describe('Source page helpers', () => {
         actionLinks: expect.any(Object),
         id: expect.any(String),
         description:
-          'There was a problem while trying to add source some-name. Please try again. If the error persists, open a support case.',
-        title: 'Error adding source',
+          'There was a problem while trying to add integration some-name. Please try again. If the error persists, open a support case.',
+        title: 'Error adding integration',
         variant: 'danger',
       });
       expect(push).not.toHaveBeenCalled();
@@ -375,7 +375,7 @@ describe('Source page helpers', () => {
 
       render(messageActionLinks);
 
-      await user.click(screen.getByText('Edit source'));
+      await user.click(screen.getByText('Edit integration'));
 
       expect(push).toHaveBeenCalledWith(replaceRouteId(routes.sourcesDetail.path, '1234'));
       expect(actions.removeMessage).toHaveBeenCalledWith(messageId);
@@ -445,8 +445,8 @@ describe('Source page helpers', () => {
       expect(dispatch).toHaveBeenCalled();
       expect(actions.addMessage).toHaveBeenCalledWith({
         description:
-          'We are still working to confirm credentials for source some-name. To track progress, check the Status column in the Sources table.',
-        title: 'Source configuration in progress',
+          'We are still working to confirm credentials for integration some-name. To track progress, check the Status column in the Integrations table.',
+        title: 'Integration configuration in progress',
         variant: 'info',
       });
       expect(push).not.toHaveBeenCalled();

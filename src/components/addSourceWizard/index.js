@@ -184,9 +184,9 @@ AddSourceWizard.propTypes = {
 };
 
 AddSourceWizard.defaultProps = {
-  successfulMessage: <FormattedMessage id="wizard.successfulMessage" defaultMessage="Your source was successfully added." />,
+  successfulMessage: <FormattedMessage id="wizard.successfulMessage" defaultMessage="Your integration was successfully added." />,
   initialValues: {},
-  returnButtonTitle: <FormattedMessage id="wizard.goBackToSources" defaultMessage="Go back to Sources" />,
+  returnButtonTitle: <FormattedMessage id="wizard.goBackToSources" defaultMessage="Go back to Integrations" />,
 };
 
 export const AddSourceButton = (props) => {

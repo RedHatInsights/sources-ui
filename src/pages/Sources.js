@@ -138,16 +138,17 @@ const SourcesPage = () => {
 
   const addSourceText = intl.formatMessage({
     id: 'sources.addSource',
-    defaultMessage: 'Add source',
+    defaultMessage: 'Add integration',
   });
   const noPermissionsText = isOrgAdmin
     ? intl.formatMessage({
         id: 'sources.notAdminAddButton',
-        defaultMessage: 'To add a source, you must add Sources Administrator permissions to your user.',
+        defaultMessage: 'To add a source, you must add Cloud Integration Administrator permissions to your user.',
       })
     : intl.formatMessage({
         id: 'sources.notPermissionsAddButton',
-        defaultMessage: 'To add a source, your Organization Administrator must grant you Sources Administrator permissions.',
+        defaultMessage:
+          'To add a source, your Organization Administrator must grant you Cloud Integration Administrator permissions.',
       });
 
   let actionsConfig;

@@ -327,7 +327,7 @@ describe('AddApplication', () => {
         await user.click(screen.getByLabelText('Close wizard'));
       });
       await act(async () => {
-        await user.click(screen.getByText('Exit'));
+        await user.click(screen.getByText('Cancel', { selector: '#on-exit-button' }));
       });
 
       await waitFor(() =>
@@ -660,7 +660,7 @@ describe('AddApplication', () => {
       await waitFor(() => expect(screen.getByText('Configuration in progress')).toBeInTheDocument());
       expect(
         screen.getByText(
-          'We are still working to confirm credentials and app settings.To track progress, check the Status column in the Sources table.',
+          'We are still working to confirm credentials and app settings.To track progress, check the Status column in the Integrations table.',
         ),
       ).toBeInTheDocument();
       expect(screen.getByText('Exit')).toBeInTheDocument();
@@ -698,7 +698,7 @@ describe('AddApplication', () => {
       await waitFor(() => expect(screen.getByText('Configuration in progress')).toBeInTheDocument());
       expect(
         screen.getByText(
-          'We are still working to confirm credentials and app settings.To track progress, check the Status column in the Sources table.',
+          'We are still working to confirm credentials and app settings.To track progress, check the Status column in the Integrations table.',
         ),
       ).toBeInTheDocument();
       expect(screen.getByText('Exit')).toBeInTheDocument();
@@ -739,11 +739,11 @@ describe('AddApplication', () => {
       await waitFor(() => expect(attachSource.doAttachApp).toHaveBeenCalled());
 
       expect(screen.getByText('Configuration unsuccessful')).toBeInTheDocument();
-      expect(screen.getByText('Edit source')).toBeInTheDocument();
+      expect(screen.getByText('Edit integration')).toBeInTheDocument();
       expect(screen.getByText('Remove application')).toBeInTheDocument();
 
       await act(async () => {
-        await user.click(screen.getByText('Edit source'));
+        await user.click(screen.getByText('Edit integration'));
       });
 
       await waitFor(() =>
@@ -792,7 +792,7 @@ describe('AddApplication', () => {
       await waitFor(() => expect(attachSource.doAttachApp).toHaveBeenCalled());
 
       expect(screen.getByText('Configuration unsuccessful')).toBeInTheDocument();
-      expect(screen.getByText('Edit source')).toBeInTheDocument();
+      expect(screen.getByText('Edit integration')).toBeInTheDocument();
       expect(screen.getByText('Remove application')).toBeInTheDocument();
 
       removeAppSubmit.default = jest.fn().mockImplementation(() => Promise.resolve('OK'));

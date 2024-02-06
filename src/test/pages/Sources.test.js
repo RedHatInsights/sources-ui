@@ -145,7 +145,7 @@ describe('SourcesPage', () => {
     expect(typesApi.doLoadSourceTypes).toHaveBeenCalled();
     expect(hcsApi.checkAccountHCS).toHaveBeenCalled();
 
-    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
     expect(screen.getByText('Cloud sources')).toBeInTheDocument();
     expect(screen.getByText('Red Hat sources')).toBeInTheDocument();
     expect(screen.getAllByText('Name')).toHaveLength(2);
@@ -169,7 +169,7 @@ describe('SourcesPage', () => {
     await act(async () => {
       render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
     });
-    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
     expect(screen.getAllByLabelText('Kebab toggle')[0]).toHaveClass('pf-m-plain');
 
@@ -183,7 +183,7 @@ describe('SourcesPage', () => {
     });
 
     render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
     expect(() => screen.getByText('I connected to cloud. Now what?')).toThrow();
   });
@@ -197,7 +197,7 @@ describe('SourcesPage', () => {
     api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [], meta: { count: 0 } }));
 
     render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
     expect(screen.getByText('Get started by connecting to your public clouds')).toBeInTheDocument();
 
@@ -245,7 +245,7 @@ describe('SourcesPage', () => {
 
     await waitFor(() => expect(screen.getByTestId('location-display').textContent).toEqual(`/${routes.sourcesNew.path}`));
 
-    expect(screen.getByText('Enter a name for your Amazon Web Services source.')).toBeInTheDocument();
+    expect(screen.getByText('Enter a name for your Amazon Web Services integration.')).toBeInTheDocument();
 
     window.location = tmpLocation;
   });
@@ -259,7 +259,7 @@ describe('SourcesPage', () => {
     api.doLoadEntities = jest.fn().mockImplementation(() => Promise.resolve({ sources: [], meta: { count: 0 } }));
 
     render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
     expect(screen.getByText('Get started by connecting to your Red Hat applications')).toBeInTheDocument();
 
@@ -290,7 +290,7 @@ describe('SourcesPage', () => {
         store,
       ),
     );
-    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
     await act(async () => {
       await user.click(screen.getByText('OpenShift Container Platform'));
@@ -298,7 +298,7 @@ describe('SourcesPage', () => {
 
     await waitFor(() => expect(screen.getByTestId('location-display').textContent).toEqual(`/${routes.sourcesNew.path}`));
 
-    expect(screen.getByText('Enter a name for your OpenShift Container Platform source.')).toBeInTheDocument();
+    expect(screen.getByText('Enter a name for your OpenShift Container Platform integration.')).toBeInTheDocument();
   });
 
   it('renders error state when there is fetching (loadEntities) error', async () => {
@@ -345,7 +345,7 @@ describe('SourcesPage', () => {
 
     render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
 
-    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
     api.doLoadEntities = mockApi();
 
@@ -400,7 +400,7 @@ describe('SourcesPage', () => {
         const { container: ci } = render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
         container = ci;
       });
-      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
       await act(async () => {
         await user.click(screen.getByText('Name', { selector: '.ins-c-conditional-filter__value-selector' }));
@@ -439,7 +439,7 @@ describe('SourcesPage', () => {
         const { container: ci } = render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
         container = ci;
       });
-      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
       await act(async () => {
         await user.click(screen.getByText('Name', { selector: '.ins-c-conditional-filter__value-selector' }));
@@ -475,7 +475,7 @@ describe('SourcesPage', () => {
       });
 
       render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
       expect(api.doLoadEntities).toHaveBeenCalled();
       expect(api.doLoadAppTypes).toHaveBeenCalled();
       expect(typesApi.doLoadSourceTypes).toHaveBeenCalled();
@@ -498,10 +498,10 @@ describe('SourcesPage', () => {
         ),
       );
     });
-    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
     await act(async () => {
-      await user.click(screen.getByText('Add source'));
+      await user.click(screen.getByText('Add integration'));
     });
 
     expect(screen.getAllByRole('dialog')).toBeTruthy();
@@ -509,7 +509,7 @@ describe('SourcesPage', () => {
     expect(screen.getByTestId('location-display').textContent).toEqual(`/${routes.sourcesNew.path}`);
     expect(
       screen.getByText(
-        'To import data for an application, you need to connect to a data source. Start by selecting your source type.',
+        'To import data for an application, you need to connect to a data source. Start by selecting your cloud provider.',
       ),
     ).toBeInTheDocument();
   });
@@ -521,7 +521,7 @@ describe('SourcesPage', () => {
     });
 
     render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
     expect(screen.getByLabelText('Current page')).toHaveValue(1);
   });
@@ -542,10 +542,10 @@ describe('SourcesPage', () => {
         ),
       );
     });
-    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
     await act(async () => {
-      await user.click(screen.getByText('Add source'));
+      await user.click(screen.getByText('Add integration'));
     });
 
     expect(screen.getAllByRole('dialog')).toBeTruthy();
@@ -581,13 +581,13 @@ describe('SourcesPage', () => {
         ),
       );
     });
-    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
     expect(urlQuery.parseQuery.mock.calls).toHaveLength(1);
     expect(urlQuery.updateQuery.mock.calls).toHaveLength(1);
 
     await act(async () => {
-      await user.click(screen.getByText('Add source'));
+      await user.click(screen.getByText('Add integration'));
     });
 
     await waitFor(() => expect(screen.getByText('after success')).toBeInTheDocument());
@@ -637,10 +637,10 @@ describe('SourcesPage', () => {
         ),
       );
     });
-    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
     await act(async () => {
-      await user.click(screen.getByText('Add source'));
+      await user.click(screen.getByText('Add integration'));
     });
 
     await waitFor(() => expect(screen.getByText('submit callback')).toBeInTheDocument());
@@ -719,10 +719,10 @@ describe('SourcesPage', () => {
         ),
       );
     });
-    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
     await act(async () => {
-      await user.click(screen.getByText('Add source'));
+      await user.click(screen.getByText('Add integration'));
     });
 
     await waitFor(() => expect(screen.getByText('submit callback')).toBeInTheDocument());
@@ -741,8 +741,8 @@ describe('SourcesPage', () => {
 
     await waitFor(() => expect(screen.getByText('Danger alert:')).toBeInTheDocument());
 
-    expect(screen.getByText('Error adding source', { exact: false })).toBeInTheDocument();
-    expect(screen.getByText('There was a problem while trying to add source', { exact: false })).toBeInTheDocument();
+    expect(screen.getByText('Error adding integration', { exact: false })).toBeInTheDocument();
+    expect(screen.getByText('There was a problem while trying to add integration', { exact: false })).toBeInTheDocument();
     expect(screen.getByText('some-name', { selector: 'b' })).toBeInTheDocument();
     expect(
       screen.getByText('Please try again. If the error persists, open a support case.', { exact: false }),
@@ -765,7 +765,7 @@ describe('SourcesPage', () => {
     await waitFor(() => expect(screen.getByTestId('location-display').textContent).toEqual(routes.sources.path));
 
     await act(async () => {
-      await user.click(screen.getByText('Add source'));
+      await user.click(screen.getByText('Add integration'));
     });
 
     await waitFor(() => expect(screen.getByText('submit callback')).toBeInTheDocument());
@@ -802,7 +802,7 @@ describe('SourcesPage', () => {
     await act(async () => {
       render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
     });
-    await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
     const exportButton = screen.getByLabelText('Export');
 
@@ -836,7 +836,7 @@ describe('SourcesPage', () => {
         render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
       });
 
-      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
       await act(async () => {
         await user.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
@@ -856,7 +856,7 @@ describe('SourcesPage', () => {
         render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
       });
 
-      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
       await act(async () => {
         await user.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
@@ -894,7 +894,7 @@ describe('SourcesPage', () => {
         render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
       });
 
-      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
       await act(async () => {
         await user.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
@@ -928,7 +928,7 @@ describe('SourcesPage', () => {
         render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
       });
 
-      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
       await act(async () => {
         await user.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
@@ -986,7 +986,7 @@ describe('SourcesPage', () => {
         render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
       });
 
-      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
       await act(async () => {
         await user.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
@@ -1002,7 +1002,7 @@ describe('SourcesPage', () => {
         render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
       });
 
-      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
       await act(async () => {
         await user.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
@@ -1026,7 +1026,7 @@ describe('SourcesPage', () => {
         render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
       });
 
-      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
       await act(async () => {
         await user.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
@@ -1048,7 +1048,7 @@ describe('SourcesPage', () => {
 
       render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
 
-      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
       await act(async () => {
         await user.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
@@ -1073,7 +1073,7 @@ describe('SourcesPage', () => {
         render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
       });
 
-      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
       await act(async () => {
         await user.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
@@ -1145,7 +1145,7 @@ describe('SourcesPage', () => {
         render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
       });
 
-      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
       await act(async () => {
         await user.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
@@ -1196,25 +1196,25 @@ describe('SourcesPage', () => {
       });
 
       render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
-      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
       expect(api.doLoadEntities).toHaveBeenCalled();
       expect(api.doLoadAppTypes).toHaveBeenCalled();
       expect(typesApi.doLoadSourceTypes).toHaveBeenCalled();
 
-      expect(screen.getByText('Add source')).toBeDisabled();
+      expect(screen.getByText('Add integration')).toBeDisabled();
 
       await act(async () => {
-        await user.click(screen.getByText('Add source'));
+        await user.click(screen.getByText('Add integration'));
       });
 
       await waitFor(async () => {
-        await user.click(screen.getByText('Add source').closest('.mocked-tooltip'));
+        await user.click(screen.getByText('Add integration').closest('.mocked-tooltip'));
       });
 
       await waitFor(() =>
         expect(
-          screen.getByText('To add a source, you must add Sources Administrator permissions to your user.'),
+          screen.getByText('To add a source, you must add Cloud Integration Administrator permissions to your user.'),
         ).toBeInTheDocument(),
       );
 
@@ -1227,25 +1227,27 @@ describe('SourcesPage', () => {
       await act(async () => {
         render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
       });
-      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
       expect(api.doLoadEntities).toHaveBeenCalled();
       expect(api.doLoadAppTypes).toHaveBeenCalled();
       expect(typesApi.doLoadSourceTypes).toHaveBeenCalled();
 
-      expect(screen.getByText('Add source')).toBeDisabled();
+      expect(screen.getByText('Add integration')).toBeDisabled();
 
       await act(async () => {
-        await user.click(screen.getByText('Add source'));
+        await user.click(screen.getByText('Add integration'));
       });
 
       await waitFor(async () => {
-        await user.click(screen.getByText('Add source').closest('.mocked-tooltip'));
+        await user.click(screen.getByText('Add integration').closest('.mocked-tooltip'));
       });
 
       await waitFor(() =>
         expect(
-          screen.getByText('To add a source, your Organization Administrator must grant you Sources Administrator permissions.'),
+          screen.getByText(
+            'To add a source, your Organization Administrator must grant you Cloud Integration Administrator permissions.',
+          ),
         ).toBeInTheDocument(),
       );
 
@@ -1261,7 +1263,7 @@ describe('SourcesPage', () => {
       await act(async () => {
         render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
       });
-      await waitFor(() => expect(screen.getByText('Add source')).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
 
       expect(screen.getAllByLabelText('kebab dropdown toggle')[0]).toHaveClass('pf-m-plain');
 
@@ -1270,16 +1272,18 @@ describe('SourcesPage', () => {
       });
 
       await act(async () => {
-        await user.click(screen.getAllByText('Add source')[0].closest('.src-m-dropdown-item-disabled'));
+        await user.click(screen.getAllByText('Add integration')[0].closest('.src-m-dropdown-item-disabled'));
       });
 
       await act(async () => {
-        await user.click(screen.getAllByText('Add source')[0].closest('.src-m-dropdown-item-disabled'));
+        await user.click(screen.getAllByText('Add integration')[0].closest('.src-m-dropdown-item-disabled'));
       });
 
       await waitFor(() =>
         expect(
-          screen.getByText('To add a source, your Organization Administrator must grant you Sources Administrator permissions.'),
+          screen.getByText(
+            'To add a source, your Organization Administrator must grant you Cloud Integration Administrator permissions.',
+          ),
         ).toBeInTheDocument(),
       );
 

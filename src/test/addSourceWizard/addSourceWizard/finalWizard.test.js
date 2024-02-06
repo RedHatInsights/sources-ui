@@ -39,7 +39,7 @@ describe('Final wizard', () => {
     expect(screen.getByText('Validating credentials')).toBeInTheDocument();
     expect(
       screen.getByText(
-        "This might take some time. You'll receive a notification if you are still in the Sources application when the process completes. Otherwise, you can check the status in the main sources table at any time.",
+        "This might take some time. You'll receive a notification if you are still in the Integrations application when the process completes. Otherwise, you can check the status in the main integrations table at any time.",
       ),
     ).toBeInTheDocument();
     expect(
@@ -82,7 +82,7 @@ describe('Final wizard', () => {
     render(<FinalWizard {...initialProps} isFinished={true} hideSourcesButton={true} />);
 
     await waitFor(async () => {
-      await user.click(screen.getByText('Add another source'));
+      await user.click(screen.getByText('Add another integration'));
     });
 
     expect(initialProps.reset).toHaveBeenCalled();
@@ -144,7 +144,7 @@ describe('Final wizard', () => {
     expect(screen.getByText(ERROR_MSG)).toBeInTheDocument();
 
     await waitFor(async () => {
-      await user.click(screen.getByText('Remove source'));
+      await user.click(screen.getByText('Remove integration'));
     });
     await waitFor(() => expect(deleteSource).toHaveBeenCalledWith(id));
 
@@ -183,7 +183,7 @@ describe('Final wizard', () => {
     expect(screen.getByText(ERROR_MSG)).toBeInTheDocument();
 
     await waitFor(async () => {
-      await user.click(screen.getByText('Remove source'));
+      await user.click(screen.getByText('Remove integration'));
     });
 
     await waitFor(() => expect(deleteSource).toHaveBeenCalledWith(id));
@@ -220,7 +220,7 @@ describe('Final wizard', () => {
     expect(screen.getByText(ERROR_MSG)).toBeInTheDocument();
 
     await waitFor(async () => {
-      await user.click(screen.getByText('Remove source'));
+      await user.click(screen.getByText('Remove integration'));
     });
 
     await waitFor(() => expect(deleteSource).toHaveBeenCalledWith(id));
@@ -254,7 +254,7 @@ describe('Final wizard', () => {
     expect(screen.getByText(ERROR_MSG)).toBeInTheDocument();
 
     await waitFor(async () => {
-      await user.click(screen.getByText('Edit source'));
+      await user.click(screen.getByText('Edit integration'));
     });
 
     expect(screen.getByTestId('location-display').textContent).toEqual(

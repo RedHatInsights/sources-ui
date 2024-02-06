@@ -50,13 +50,13 @@ describe('SourceSummaryCard', () => {
       ),
     );
 
-    expect(screen.getByText('Source summary')).toBeInTheDocument();
-    expect(screen.getByLabelText('Check source availability')).toBeInTheDocument();
+    expect(screen.getByText('Integration summary')).toBeInTheDocument();
+    expect(screen.getByLabelText('Check integration availability')).toBeInTheDocument();
 
     const categories = getCategories(container);
 
     expect(categories).toEqual([
-      ['Source type', 'Amazon Web Services'],
+      ['Integration type', 'Amazon Web Services'],
       ['Last availability check', 'Waiting for update'],
       ['Date added', 'some date'],
       ['Last modified', 'some date'],
@@ -96,7 +96,7 @@ describe('SourceSummaryCard', () => {
     const categories = getCategories(container);
 
     expect(categories).toEqual([
-      ['Source type', 'Amazon Web Services'],
+      ['Integration type', 'Amazon Web Services'],
       ['Last availability check', 'some date'],
       ['Date added', 'some date'],
       ['Last modified', 'some date'],
@@ -135,7 +135,7 @@ describe('SourceSummaryCard', () => {
     const categories = getCategories(container);
 
     expect(categories).toEqual([
-      ['Source type', 'Amazon Web Services'],
+      ['Integration type', 'Amazon Web Services'],
       ['Last availability check', 'Waiting for update'],
       ['Date added', 'some date'],
       ['Last modified', 'some date'],
@@ -173,7 +173,7 @@ describe('SourceSummaryCard', () => {
     const categories = getCategories(container);
 
     expect(categories).toEqual([
-      ['Source type', 'Amazon Web Services'],
+      ['Integration type', 'Amazon Web Services'],
       ['Last availability check', 'Waiting for update'],
       ['Date added', 'some date'],
       ['Last modified', 'some date'],
@@ -251,7 +251,7 @@ describe('SourceSummaryCard', () => {
     const categories = getCategories(container);
 
     expect(categories).toEqual([
-      ['Source type', 'Amazon Web Services'],
+      ['Integration type', 'Amazon Web Services'],
       ['Last availability check', 'Waiting for update'],
       ['Date added', 'some date'],
       ['Last modified', 'some date'],
@@ -294,7 +294,7 @@ describe('SourceSummaryCard', () => {
     const categories = getCategories(container);
 
     expect(categories).toEqual([
-      ['Source type', 'Amazon Web Services'],
+      ['Integration type', 'Amazon Web Services'],
       ['Last availability check', 'Waiting for update'],
       ['Date added', 'some date'],
       ['Last modified', 'some date'],

@@ -42,10 +42,10 @@ describe('SourceRemoveModal', () => {
       expect(screen.getByRole('checkbox')).toBeInTheDocument();
       expect([...screen.getAllByRole('button')].map((e) => e.textContent || e.getAttribute('aria-label'))).toEqual([
         'Close',
-        'Remove source and its data',
+        'Remove integration and its data',
         'Cancel',
       ]);
-      expect(screen.getByText('Remove source and its data')).toBeDisabled();
+      expect(screen.getByText('Remove integration and its data')).toBeDisabled();
     });
 
     it('enables submit button', async () => {
@@ -61,13 +61,13 @@ describe('SourceRemoveModal', () => {
         ),
       );
 
-      expect(screen.getByText('Remove source and its data')).toBeDisabled();
+      expect(screen.getByText('Remove integration and its data')).toBeDisabled();
 
       await waitFor(async () => {
         await user.click(screen.getByRole('checkbox'));
       });
 
-      expect(screen.getByText('Remove source and its data')).not.toBeDisabled();
+      expect(screen.getByText('Remove integration and its data')).not.toBeDisabled();
     });
 
     it('calls submit action', async () => {
@@ -89,7 +89,7 @@ describe('SourceRemoveModal', () => {
         await user.click(screen.getByRole('checkbox'));
       });
       await waitFor(async () => {
-        await user.click(screen.getByText('Remove source and its data'));
+        await user.click(screen.getByText('Remove integration and its data'));
       });
 
       const source = sourcesDataGraphQl.find((s) => s.id === '14');
@@ -117,10 +117,10 @@ describe('SourceRemoveModal', () => {
       expect(screen.getByRole('checkbox')).toBeInTheDocument();
       expect([...screen.getAllByRole('button')].map((e) => e.textContent || e.getAttribute('aria-label'))).toEqual([
         'Close',
-        'Remove source and its data',
+        'Remove integration and its data',
         'Cancel',
       ]);
-      expect(screen.getByText('Remove source and its data')).toBeDisabled();
+      expect(screen.getByText('Remove integration and its data')).toBeDisabled();
       expect(screen.getByText(application.display_name)).toBeInTheDocument();
     });
 
