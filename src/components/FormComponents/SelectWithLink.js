@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Select, SelectOption } from '@data-driven-forms/pf4-component-mapper/select';
+import { Select, SelectOption } from '@data-driven-forms/pf4-component-mapper';
 import { useFieldApi } from '@data-driven-forms/react-form-renderer';
 import { SelectVariant } from '@patternfly/react-core/deprecated';
 
