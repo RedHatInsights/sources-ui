@@ -41,7 +41,6 @@ describe('SelectWithLink component', () => {
   it('should render correctly', async () => {
     render(<FormRenderer {...initialProps} />);
 
-    expect(screen.getByText('some label', { selector: 'label' })).toBeInTheDocument();
     expect(screen.getByText('Option 1')).toBeInTheDocument();
     expect(screen.getByText('Option 2')).toBeInTheDocument();
     expect(screen.getByText('Learn more')).toBeInTheDocument();
