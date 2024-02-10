@@ -1,29 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Select, SelectOption } from '@data-driven-forms/pf4-component-mapper';
+import { Select } from '@data-driven-forms/pf4-component-mapper';
 import { useFieldApi } from '@data-driven-forms/react-form-renderer';
 import { SelectVariant } from '@patternfly/react-core/deprecated';
+import { Text, TextContent, TextVariants } from '@patternfly/react-core';
 
-const SelectWithLink = ({ Link, ...originalProps }) => {
-  const ref = React.useRef();
+const SelectWithLink = (originalProps) => {
 
-  const { label, input, isDisabled, options } = useFieldApi(originalProps);
-
-  const selectOptions = () =>
-    options.map(({ value, label, isDisabled }) => (
-      <SelectOption key={value} value={value} isDisabled={isDisabled}>
-        {label}
-      </SelectOption>
-    ));
+  const { label, input, isDisabled, options, linkTitle, href } = useFieldApi(originalProps);
 
   return (
-    <div className="pf-v5-u-display-flex">
-      <Select {...input} disabled={isDisabled} variant={SelectVariant.single} aria-label={label}>
-        {selectOptions()}
-      </Select>
-      <span ref={ref}>
-        <Link appendTo={ref.current} />
-      </span>
+    <div>
+      <Select
+        label={label}
+        options={options}
+        {...input}
+        disabled={isDisabled}
+        variant={SelectVariant.single}
+        aria-label={label}
+      />
+      <a href={href} target="_blank" rel="noopener noreferrer">
+        <Text component={TextVariants.a}>
+          <a>{linkTitle}</a>
+        </Text>
+      </a>
     </div>
   );
 };
@@ -32,12 +32,14 @@ SelectWithLink.propTypes = {
   isDisabled: PropTypes.bool,
   options: PropTypes.array,
   label: PropTypes.string.isRequired,
-  Link: PropTypes.elementType.isRequired,
+  href: PropTypes.string.isRequired,
+  linkTitle: PropTypes.string,
 };
 
 SelectWithLink.defaultProps = {
   isDisabled: false,
   options: [],
+  linkTitle: 'Learn more',
 };
 
 export default SelectWithLink;
