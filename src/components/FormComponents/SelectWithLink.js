@@ -5,22 +5,31 @@ import { useFieldApi } from '@data-driven-forms/react-form-renderer';
 import { SelectVariant } from '@patternfly/react-core/deprecated';
 import { Button, ButtonVariant } from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
+import { useIntl } from 'react-intl';
 
 const SelectWithLink = (originalProps) => {
   const { label, input, isDisabled, options, linkTitle, href } = useFieldApi(originalProps);
 
+  const intl = useIntl();
+  const linkTitleIntl =
+    linkTitle ||
+    intl.formatMessage({
+      id: 'sources.selectWithLink.learnMore',
+      defaultMessage: 'Learn more',
+    });
+
   return (
     <div>
-      <div className="pf-v5-u-display-inline-block">
-        <Select
-          label={label}
-          options={options}
-          {...input}
-          disabled={isDisabled}
-          variant={SelectVariant.single}
-          aria-label={label}
-        />
-      </div>
+      <Select
+        FormGroupProps={{
+          className: 'pf-v5-u-display-inline-block',
+        }}
+        label={label}
+        options={options}
+        {...input}
+        disabled={isDisabled}
+        variant={SelectVariant.single}
+      />
       <Button
         icon={<ExternalLinkAltIcon />}
         component="a"
@@ -29,7 +38,7 @@ const SelectWithLink = (originalProps) => {
         target="_blank"
         rel="noopener noreferrer"
       >
-        {linkTitle}
+        {linkTitleIntl}
       </Button>
     </div>
   );
@@ -46,7 +55,6 @@ SelectWithLink.propTypes = {
 SelectWithLink.defaultProps = {
   isDisabled: false,
   options: [],
-  linkTitle: 'Learn more',
 };
 
 export default SelectWithLink;

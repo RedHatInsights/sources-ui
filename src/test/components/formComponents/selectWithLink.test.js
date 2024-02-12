@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
@@ -27,11 +27,7 @@ describe('SelectWithLink component', () => {
               { label: 'Option 1', value: 'option-1' },
               { label: 'Option 2', value: 'option-2' },
             ],
-            Link: () => (
-              <a href="https://www.redhat.com" target="_blank" rel="noopener noreferrer">
-                Learn more
-              </a>
-            ),
+            href: 'https://www.redhat.com',
           },
         ],
       },
@@ -41,8 +37,14 @@ describe('SelectWithLink component', () => {
   it('should render correctly', async () => {
     render(<FormRenderer {...initialProps} />);
 
-    expect(screen.getByText('Option 1')).toBeInTheDocument();
-    expect(screen.getByText('Option 2')).toBeInTheDocument();
+    fireEvent.focus(screen.getByLabelText('some label'));
+
+    await waitFor(() => {
+      expect(screen.getByText('Option 1')).toBeInTheDocument();
+      expect(screen.getByText('Option 2')).toBeInTheDocument();
+      expect(screen.getByText('Learn more')).toBeInTheDocument();
+    });
+
     expect(screen.getByText('Learn more')).toBeInTheDocument();
   });
 });
