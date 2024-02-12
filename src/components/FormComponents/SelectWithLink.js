@@ -5,18 +5,9 @@ import { useFieldApi } from '@data-driven-forms/react-form-renderer';
 import { SelectVariant } from '@patternfly/react-core/deprecated';
 import { Button, ButtonVariant } from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
-import { useIntl } from 'react-intl';
 
 const SelectWithLink = (originalProps) => {
   const { label, input, isDisabled, options, linkTitle, href } = useFieldApi(originalProps);
-
-  const intl = useIntl();
-  const linkTitleIntl =
-    linkTitle ||
-    intl.formatMessage({
-      id: 'sources.selectWithLink.learnMore',
-      defaultMessage: 'Learn more',
-    });
 
   return (
     <div>
@@ -27,7 +18,7 @@ const SelectWithLink = (originalProps) => {
         label={label}
         options={options}
         {...input}
-        disabled={isDisabled}
+        isDisabled={isDisabled}
         variant={SelectVariant.single}
       />
       <Button
@@ -38,7 +29,7 @@ const SelectWithLink = (originalProps) => {
         target="_blank"
         rel="noopener noreferrer"
       >
-        {linkTitleIntl}
+        {linkTitle}
       </Button>
     </div>
   );
@@ -55,6 +46,7 @@ SelectWithLink.propTypes = {
 SelectWithLink.defaultProps = {
   isDisabled: false,
   options: [],
+  linkTitle: 'Learn more',
 };
 
 export default SelectWithLink;

@@ -22,7 +22,7 @@ describe('SelectWithLink component', () => {
           {
             component: 'select-with-link',
             name: 'select-name',
-            label: 'some label',
+            label: 'Test Select',
             options: [
               { label: 'Option 1', value: 'option-1' },
               { label: 'Option 2', value: 'option-2' },
@@ -37,14 +37,14 @@ describe('SelectWithLink component', () => {
   it('should render correctly', async () => {
     render(<FormRenderer {...initialProps} />);
 
-    fireEvent.focus(screen.getByLabelText('some label'));
+    expect(screen.getByText('Learn more')).toBeInTheDocument();
+    expect(screen.getByText('Test Select')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByLabelText('open menu'));
 
     await waitFor(() => {
       expect(screen.getByText('Option 1')).toBeInTheDocument();
       expect(screen.getByText('Option 2')).toBeInTheDocument();
-      expect(screen.getByText('Learn more')).toBeInTheDocument();
     });
-
-    expect(screen.getByText('Learn more')).toBeInTheDocument();
   });
 });
