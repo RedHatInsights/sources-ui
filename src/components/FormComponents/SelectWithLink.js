@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { Select } from '@data-driven-forms/pf4-component-mapper';
 import { useFieldApi } from '@data-driven-forms/react-form-renderer';
 import { SelectVariant } from '@patternfly/react-core/deprecated';
-import { Text, TextContent, TextVariants } from '@patternfly/react-core';
+import { Button, ButtonVariant } from '@patternfly/react-core';
+import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 
 const SelectWithLink = (originalProps) => {
-
   const { label, input, isDisabled, options, linkTitle, href } = useFieldApi(originalProps);
 
   return (
@@ -19,11 +19,16 @@ const SelectWithLink = (originalProps) => {
         variant={SelectVariant.single}
         aria-label={label}
       />
-      <a href={href} target="_blank" rel="noopener noreferrer">
-        <Text component={TextVariants.a}>
-          <a>{linkTitle}</a>
-        </Text>
-      </a>
+      <Button
+        icon={<ExternalLinkAltIcon />}
+        component="a"
+        variant={ButtonVariant.link}
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {linkTitle}
+      </Button>
     </div>
   );
 };

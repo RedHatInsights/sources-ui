@@ -388,11 +388,8 @@ const hardcodedSchemas = {
                       value: 'option-2',
                     },
                   ],
-                  Link: () => (
-                    <a href="https://www.redhat.com" target="_blank" rel="noopener noreferrer">
-                      Learn more
-                    </a>
-                  ),
+                  href: 'https://www.redhat.com',
+                  linkTitle: 'Learn more here',
                 },
                 {
                   name: 'application.extra.enterprise_id',
