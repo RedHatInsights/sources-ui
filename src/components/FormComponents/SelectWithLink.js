@@ -11,14 +11,16 @@ const SelectWithLink = (originalProps) => {
 
   return (
     <div>
-      <Select
-        label={label}
-        options={options}
-        {...input}
-        disabled={isDisabled}
-        variant={SelectVariant.single}
-        aria-label={label}
-      />
+      <div className="pf-v5-u-display-inline-block">
+        <Select
+          label={label}
+          options={options}
+          {...input}
+          disabled={isDisabled}
+          variant={SelectVariant.single}
+          aria-label={label}
+        />
+      </div>
       <Button
         icon={<ExternalLinkAltIcon />}
         component="a"
