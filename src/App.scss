@@ -125,6 +125,10 @@ form.src-c-uuid {
 }
 
 .src-c-card-info {
+  .pf-v5-c-card__title-text {
+    font-size: var(--pf-v5-global--FontSize--lg);
+    font-weight: var(--pf-v5-global--FontWeight--normal);
+  }
   .text {
     font-size: var(--pf-v5-global--FontSize--sm);
   }
@@ -187,11 +191,6 @@ form.src-c-uuid {
 .src-c-dropdown__application_kebab {
   max-height: 32px;
   margin-left: auto;
-}
-
-.src-c-card-info__header {
-  font-weight: 600;
-  color: var(--pf-v5-global--palette--blue-600);
 }
 
 .src-c-applications_form {

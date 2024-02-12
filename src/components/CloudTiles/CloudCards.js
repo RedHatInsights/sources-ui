@@ -10,6 +10,7 @@ import {
   CardTitle,
   Grid,
   GridItem,
+  Icon,
   Stack,
   StackItem,
   Text,
@@ -62,8 +63,10 @@ const CloudCards = () => {
               <GridItem md={4}>
                 <Stack>
                   <StackItem className="pf-v5-u-mb-sm">
-                    <Text className="src-c-card-info__header">
-                      <BuilderImageIcon className="pf-v5-u-mr-sm" color="#0066cc" aria-label="Builder image icon" />
+                    <Text className="pf-v5-u-font-size-sm pf-v5-u-font-weight-bold pf-v5-u-link-color-hover">
+                      <Icon size="md" className="pf-v5-u-pl-sm pf-v5-u-pr-md">
+                        <BuilderImageIcon color="#0066cc" aria-label="Builder image icon" />
+                      </Icon>
                       {intl.formatMessage({ id: 'cloud.goldImages', defaultMessage: 'Use gold images' })}
                     </Text>
                   </StackItem>
@@ -103,8 +106,10 @@ const CloudCards = () => {
               <GridItem md={4}>
                 <Stack>
                   <StackItem className="pf-v5-u-mb-sm">
-                    <Text className="src-c-card-info__header">
-                      <TrendUpIcon className="pf-v5-u-mr-sm" color="#0066cc" aria-label="Trend up icon" />
+                    <Text className="pf-v5-u-font-size-sm pf-v5-u-font-weight-bold pf-v5-u-link-color-hover">
+                      <Icon size="md" className="pf-v5-u-pl-sm pf-v5-u-pr-md">
+                        <TrendUpIcon color="#0066cc" aria-label="Trend up icon" />
+                      </Icon>
                       {intl.formatMessage({ id: 'cloud.insights', defaultMessage: 'Explore Red Hat Insights' })}
                     </Text>
                   </StackItem>
@@ -137,8 +142,10 @@ const CloudCards = () => {
               <GridItem md={4}>
                 <Stack>
                   <StackItem className="pf-v5-u-mb-sm">
-                    <Text className="src-c-card-info__header">
-                      <ListIcon className="pf-v5-u-mr-sm" color="#0066cc" aria-label="List icon" />
+                    <Text className="pf-v5-u-font-size-sm pf-v5-u-font-weight-bold pf-v5-u-link-color-hover">
+                      <Icon size="md" className="pf-v5-u-pl-sm pf-v5-u-pr-md">
+                        <ListIcon color="#0066cc" aria-label="List icon" />
+                      </Icon>
                       {intl.formatMessage({ id: 'cloud.subwatch', defaultMessage: 'Track usage with Subscriptions' })}
                     </Text>
                   </StackItem>
