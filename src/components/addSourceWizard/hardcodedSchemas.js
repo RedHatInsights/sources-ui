@@ -375,23 +375,6 @@ const hardcodedSchemas = {
                   Content: CMIbm.EnterpriseId,
                 },
                 {
-                  component: 'select-with-link',
-                  name: 'application.select-with-link-test-REMOVE',
-                  label: <FormattedMessage id="wizard.select" defaultMessage="Select" />,
-                  options: [
-                    {
-                      label: 'Option 1',
-                      value: 'option-1',
-                    },
-                    {
-                      label: 'Option 2',
-                      value: 'option-2',
-                    },
-                  ],
-                  href: 'https://www.redhat.com',
-                  linkTitle: 'Learn more here',
-                },
-                {
                   name: 'application.extra.enterprise_id',
                   label: 'Enterprise ID',
                   validate: [
