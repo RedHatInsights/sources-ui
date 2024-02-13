@@ -8,6 +8,7 @@
 - [Additional components](#additional-components)
   - [CardSelect](#cardselect)
   - [SourceWizardSummary](#sourcewizardsummary)
+  - [SelectWithLink](#selectwithlink)
 
 # Add Source wizard
 
@@ -149,3 +150,16 @@ Adds a summary of formValues to the form.
 |applicationTypes|array|applicationTypes array with schemas.|
 |showApp|bool|Default: `true`, shows the application selection in the summary|
 |showAuthType|bool|Default: `true`, shows the authtype selection in the summary|
+
+## SelectWithLink
+
+Use in schema as `component: 'select-with-link'` after you add it to your component mapper of your data driven form renderer.
+
+**Props**
+This component accepts all formGroup props `(label, helperText, isDisabled, isRequired, ...)`
+
+|Prop|Type|Description|
+|----|:--:|----------:|
+|options|array|Array of options with keys `value`, `label`, `isDisabled`|
+|href|string|Destination of the link|
+|linkTitle|string|Optional, title of the link. Defaults to 'Learn more'|

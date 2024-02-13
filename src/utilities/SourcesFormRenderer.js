@@ -18,6 +18,7 @@ import CheckboxWithIcon from '../components/FormComponents/CheckboxWithIcon';
 import PFDivider from '../components/FormComponents/PFDivider';
 import RhelUsageCheckbox from '../components/FormComponents/RhelUsageCheckbox';
 import CheckboxWithLink from '../components/FormComponents/CheckboxWithLink';
+import SelectWithLink from '../components/FormComponents/SelectWithLink';
 
 export const mapperExtension = {
   'auth-select': AuthSelect,
@@ -31,6 +32,7 @@ export const mapperExtension = {
   divider: PFDivider,
   'rhel-usage-checkbox': RhelUsageCheckbox,
   'checkbox-with-link': CheckboxWithLink,
+  'select-with-link': SelectWithLink,
 };
 
 const SourcesFormRenderer = ({ componentMapper, ...props }) => (
