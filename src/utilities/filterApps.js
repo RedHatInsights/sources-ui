@@ -1,6 +1,6 @@
-import { TOPOLOGY_INV_NAME } from './constants';
+import { REMEDIATIONS_NAME, TOPOLOGY_INV_NAME } from './constants';
 
-const filterApps = (type) => type.name !== TOPOLOGY_INV_NAME;
+const filterApps = (type) => type.name !== TOPOLOGY_INV_NAME && type.name !== REMEDIATIONS_NAME;
 
 export const filterVendorAppTypes =
   (sourceTypes, category) =>

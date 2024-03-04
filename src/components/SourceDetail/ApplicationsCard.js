@@ -184,7 +184,7 @@ const ApplicationsCard = () => {
     };
   }
 
-  return (
+  return filteredAppTypes.length > 0 ? (
     <Card className="src-c-card-applications pf-v5-u-p-lg pf-v5-u-pl-sm-on-md">
       <CardTitle>
         {intl.formatMessage({
@@ -244,7 +244,7 @@ const ApplicationsCard = () => {
         </div>
       </CardBody>
     </Card>
-  );
+  ) : null;
 };
 
 export default ApplicationsCard;
