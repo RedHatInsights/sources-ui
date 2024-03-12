@@ -31,7 +31,7 @@ export const loadReadIntegrationsEndpointsPermissions = (getUserPermissions) => 
 
   return getUserPermissions('integrations', true) // bypassCache = true
     .then((permissions) => {
-      const allPermission = permissions.reduce((acc, curr) => [...acc, curr?.permission], []);
+      const allPermission = permissions.map((curr) => curr?.permission);
       const readIntegrationsEndpointsPermissions =
         allPermission.includes('integrations:*:*') || allPermission.includes('integrations:endpoints:read');
 
