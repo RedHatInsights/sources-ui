@@ -9,6 +9,7 @@ describe('PermissionChecker', () => {
     const Children = () => <h1>App</h1>;
     actions.loadWritePermissions = jest.fn().mockImplementation(() => ({ type: 'type' }));
     actions.loadOrgAdmin = jest.fn().mockImplementation(() => ({ type: 'type' }));
+    actions.loadReadIntegrationsEndpointsPermissions = jest.fn().mockImplementation(() => ({ type: 'type' }));
 
     render(
       componentWrapperIntl(
