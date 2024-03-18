@@ -2,7 +2,7 @@ import { ACTION_TYPES } from './actionTypes';
 
 export const defaultUserState = {
   writePermissions: undefined,
-  readIntegrationsEndpointsPermissions: undefined,
+  integrationsEndpointsPermissions: undefined,
   isOrgAdmin: undefined,
 };
 
@@ -26,14 +26,14 @@ export const isOrgAdminLoaded = (state, { payload: isOrgAdmin }) => ({
   isOrgAdmin,
 });
 
-export const readIntegrationsEndpointsPermissionsPending = (state) => ({
+export const integrationsEndpointsPermissionsPending = (state) => ({
   ...state,
-  readIntegrationsEndpointsPermissions: undefined,
+  integrationsEndpointsPermissions: undefined,
 });
 
-export const readIntegrationsEndpointsPermissionsLoaded = (state, { payload: readIntegrationsEndpointsPermissions }) => ({
+export const integrationsEndpointsPermissionsLoaded = (state, { payload: integrationsEndpointsPermissions }) => ({
   ...state,
-  readIntegrationsEndpointsPermissions,
+  integrationsEndpointsPermissions,
 });
 
 export default {
@@ -43,7 +43,7 @@ export default {
   [ACTION_TYPES.SET_ORG_ADMIN_PENDING]: isOrgAdminPending,
   [ACTION_TYPES.SET_ORG_ADMIN_FULFILLED]: isOrgAdminLoaded,
   [ACTION_TYPES.SET_ORG_ADMIN_REJECTED]: isOrgAdminPending,
-  [ACTION_TYPES.SET_READ_INTEGRATIONS_ENDPOINTS_PERMISSIONS_PENDING]: readIntegrationsEndpointsPermissionsPending,
-  [ACTION_TYPES.SET_READ_INTEGRATIONS_ENDPOINTS_PERMISSIONS_FULFILLED]: readIntegrationsEndpointsPermissionsLoaded,
-  [ACTION_TYPES.SET_READ_INTEGRATIONS_ENDPOINTS_PERMISSIONS_REJECTED]: readIntegrationsEndpointsPermissionsPending,
+  [ACTION_TYPES.SET_INTEGRATIONS_ENDPOINTS_PERMISSIONS_PENDING]: integrationsEndpointsPermissionsPending,
+  [ACTION_TYPES.SET_INTEGRATIONS_ENDPOINTS_PERMISSIONS_FULFILLED]: integrationsEndpointsPermissionsLoaded,
+  [ACTION_TYPES.SET_INTEGRATIONS_ENDPOINTS_PERMISSIONS_REJECTED]: integrationsEndpointsPermissionsPending,
 };

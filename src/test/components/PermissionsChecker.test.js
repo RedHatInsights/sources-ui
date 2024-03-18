@@ -9,7 +9,7 @@ describe('PermissionChecker', () => {
     const Children = () => <h1>App</h1>;
     actions.loadWritePermissions = jest.fn().mockImplementation(() => ({ type: 'type' }));
     actions.loadOrgAdmin = jest.fn().mockImplementation(() => ({ type: 'type' }));
-    actions.loadReadIntegrationsEndpointsPermissions = jest.fn().mockImplementation(() => ({ type: 'type' }));
+    actions.loadIntegrationsEndpointsPermissions = jest.fn().mockImplementation(() => ({ type: 'type' }));
 
     render(
       componentWrapperIntl(
@@ -22,5 +22,6 @@ describe('PermissionChecker', () => {
     expect(screen.getByText('App')).toBeInTheDocument();
     expect(actions.loadWritePermissions).toHaveBeenCalled();
     expect(actions.loadOrgAdmin).toHaveBeenCalled();
+    expect(actions.loadIntegrationsEndpointsPermissions).toHaveBeenCalled();
   });
 });

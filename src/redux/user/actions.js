@@ -26,23 +26,25 @@ export const loadWritePermissions = (getUserPermissions) => (dispatch) => {
     );
 };
 
-export const loadReadIntegrationsEndpointsPermissions = (getUserPermissions) => (dispatch) => {
-  dispatch({ type: ACTION_TYPES.SET_READ_INTEGRATIONS_ENDPOINTS_PERMISSIONS_PENDING });
+export const loadIntegrationsEndpointsPermissions = (getUserPermissions) => (dispatch) => {
+  dispatch({ type: ACTION_TYPES.SET_INTEGRATIONS_ENDPOINTS_PERMISSIONS_PENDING });
 
   return getUserPermissions('integrations', true) // bypassCache = true
     .then((permissions) => {
       const allPermission = permissions.map((curr) => curr?.permission);
-      const readIntegrationsEndpointsPermissions =
-        allPermission.includes('integrations:*:*') || allPermission.includes('integrations:endpoints:read');
+      const integrationsEndpointsPermissions =
+        allPermission.includes('integrations:*:*') ||
+        allPermission.includes('integrations:endpoints:read') ||
+        allPermission.includes('integrations:endpoints:write');
 
       dispatch({
-        type: ACTION_TYPES.SET_READ_INTEGRATIONS_ENDPOINTS_PERMISSIONS_FULFILLED,
-        payload: readIntegrationsEndpointsPermissions,
+        type: ACTION_TYPES.SET_INTEGRATIONS_ENDPOINTS_PERMISSIONS_FULFILLED,
+        payload: integrationsEndpointsPermissions,
       });
     })
     .catch((error) =>
       dispatch({
-        type: ACTION_TYPES.SET_READ_INTEGRATIONS_ENDPOINTS_PERMISSIONS_REJECTED,
+        type: ACTION_TYPES.SET_INTEGRATIONS_ENDPOINTS_PERMISSIONS_REJECTED,
         payload: {
           error: {
             detail: error.detail || error.data,
