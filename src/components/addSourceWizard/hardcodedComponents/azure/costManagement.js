@@ -21,21 +21,21 @@ import {
 
 import { Select, SelectOption, SelectVariant } from '@patternfly/react-core/deprecated';
 
-import { HCCM_DOCS_PREFIX } from '../../stringConstants';
+import { HCCM_LATEST_DOCS_PREFIX, HCS_LATEST_DOCS_PREFIX } from '../../stringConstants';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 import FormSpy from '@data-driven-forms/react-form-renderer/form-spy';
 import { shallowEqual, useSelector } from 'react-redux';
 import { HCS_APP_NAME } from '../../../../utilities/constants';
 import { InfoCircleIcon } from '@patternfly/react-icons';
 
-const CREATE_AZURE_STORAGE = `${HCCM_DOCS_PREFIX}/html/adding_a_microsoft_azure_source_to_cost_management/assembly-adding-azure-sources#creating-an-azure-storage-account_adding-an-azure-source`;
-const CREATE_HCS_AZURE_STORAGE = ''; // specify when HCS docs links are available
-const AZURE_CREDS_URL = `${HCCM_DOCS_PREFIX}/html/adding_a_microsoft_azure_source_to_cost_management/assembly-adding-azure-sources#configuring-azure-roles_adding-an-azure-source`;
-const AZURE_HCS_CREDS_URL = ''; // specify when HCS docs links are available
-const AZURE_ROLES_URL = `${HCCM_DOCS_PREFIX}/html/adding_a_microsoft_azure_source_to_cost_management/assembly-adding-azure-sources#configuring-azure-roles_adding-an-azure-source`;
-const RECURRING_TASK_URL = `${HCCM_DOCS_PREFIX}/html/adding_a_microsoft_azure_source_to_cost_management/assembly-adding-azure-sources#configuring-an-azure-daily-export-schedule_adding-an-azure-source`;
-const RECURRING_HCS_TASK_URL = ''; // specify when HCS docs links are available
-export const MANUAL_CUR_STEPS = 'https://github.com/project-koku/koku-data-selector/blob/main/docs/azure/azure.rst';
+const CREATE_AZURE_STORAGE = `${HCCM_LATEST_DOCS_PREFIX}/html-single/integrating_microsoft_azure_data_into_cost_management/index#creating-an-azure-storage-account_adding-an-azure-int`;
+const CREATE_HCS_AZURE_STORAGE = `${HCS_LATEST_DOCS_PREFIX}/html/integrating_microsoft_azure_data_into_hybrid_committed_spend/assembly-adding-azure-int-hcs#creating-an-azure-storage-account-hcs_adding-an-azure-int-hcs`;
+const AZURE_CREDS_URL = `${HCCM_LATEST_DOCS_PREFIX}/html-single/integrating_microsoft_azure_data_into_cost_management/index#configuring-azure-roles_adding-an-azure-int`;
+const AZURE_HCS_CREDS_URL = `${HCS_LATEST_DOCS_PREFIX}/html/integrating_microsoft_azure_data_into_hybrid_committed_spend/assembly-adding-azure-int-hcs#configuring-azure-roles-hcs_adding-an-azure-int-hcs`;
+const AZURE_ROLES_URL = `${HCCM_LATEST_DOCS_PREFIX}/html-single/integrating_microsoft_azure_data_into_cost_management/index#configuring-azure-roles_adding-an-azure-int`;
+const RECURRING_TASK_URL = `${HCCM_LATEST_DOCS_PREFIX}/html-single/integrating_microsoft_azure_data_into_cost_management/index#creating-daily-export-azure-hcs_adding-filtered-azure-int`;
+const RECURRING_HCS_TASK_URL = `${HCS_LATEST_DOCS_PREFIX}/html/integrating_microsoft_azure_data_into_hybrid_committed_spend/assembly-adding-filtered-azure-int-hcs#creating-function-filter-azure-hcs_adding-filtered-azure-int-hcs`;
+export const MANUAL_CUR_STEPS = `${HCCM_LATEST_DOCS_PREFIX}/html-single/integrating_microsoft_azure_data_into_cost_management/index#choosing-azure-cost-export-scope_adding-an-azure-int`;
 
 export const ConfigureResourceGroupAndStorageAccount = () => {
   const intl = useIntl();

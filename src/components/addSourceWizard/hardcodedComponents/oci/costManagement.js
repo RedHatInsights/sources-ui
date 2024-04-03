@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
+import { HCCM_LATEST_DOCS_PREFIX } from '../../stringConstants';
 
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
+
+const CREATE_OCI_SCRIPT = `${HCCM_LATEST_DOCS_PREFIX}/html/integrating_oracle_cloud_data_into_cost_management/assembly-adding-oci-int#create-oci-script_adding-oci-int`;
 
 import {
   ClipboardCopy,
@@ -202,13 +205,8 @@ export const PopulateBucket = () => {
             defaultMessage:
               'In your Oracle Cloud account, create a VM and run a script similar to the one from this github repository:',
           })}
-          <a
-            className="pf-v5-u-mt-md pf-v5-u-display-block"
-            href="https://github.com/project-koku/koku/blob/main/dev/scripts/oci_replication_func.py"
-            target="_blank"
-            rel="noreferrer"
-          >
-            https://github.com/project-koku/koku/blob/main/dev/scripts/oci_replication_func.py
+          <a className="pf-v5-u-mt-md pf-v5-u-display-block" href={CREATE_OCI_SCRIPT} target="_blank" rel="noreferrer">
+            {CREATE_OCI_SCRIPT}
             <i className="pf-v5-u-ml-xs fas fa-external-link-alt pf-v5-u-font-size-xs"></i>
           </a>
         </TextListItem>

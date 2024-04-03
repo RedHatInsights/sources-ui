@@ -128,7 +128,9 @@ describe('Cost Management Oracle steps components', () => {
       ),
     ).toBeInTheDocument();
     expect(
-      screen.getByText('https://github.com/project-koku/koku/blob/main/dev/scripts/oci_replication_func.py'),
+      screen.getByText(
+        'https://access.redhat.com/documentation/en-us/cost_management_service/1-latest/html/integrating_oracle_cloud_data_into_cost_management/assembly-adding-oci-int#create-oci-script_adding-oci-int',
+      ),
     ).toBeInTheDocument();
     expect(screen.getByText('In your Oracle Cloud shell, create this read policy for the new bucket')).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveValue(
