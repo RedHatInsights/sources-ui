@@ -30,18 +30,18 @@ import QuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/question-
 
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 
-import { HCCM_DOCS_PREFIX, HCCM_LATEST_DOCS_PREFIX } from '../../stringConstants';
+import { HCCM_DOCS_PREFIX, HCCM_LATEST_DOCS_PREFIX, HCS_LATEST_DOCS_PREFIX } from '../../stringConstants';
 import { HCS_APP_NAME } from '../../../../utilities/constants';
 import { useFlag } from '@unleash/proxy-client-react';
 
-const CREATE_HCS_S3_BUCKET = ''; // specify when HCS docs links are available
-const CREATE_S3_BUCKET = `${HCCM_DOCS_PREFIX}/html/adding_an_amazon_web_services_aws_source_to_cost_management/assembly-adding-aws-sources#creating-an-aws-s3-bucket_adding-aws-sources`;
-const ENABLE_AWS_ACCOUNT = `${HCCM_DOCS_PREFIX}/html/adding_an_amazon_web_services_aws_source_to_cost_management/assembly-adding-aws-sources#enabling-aws-account-access_adding-aws-sources`;
-const ENABLE_HCS_AWS_ACCOUNT = ''; // specify when HCS docs links are available
+const CREATE_HCS_S3_BUCKET = `${HCS_LATEST_DOCS_PREFIX}/html/integrating_amazon_web_services_aws_data_into_hybrid_committed_spend/assembly-adding-aws-int-hcs#creating-an-aws-s3-bucket-hcs-n_adding-aws-int-hcs`;
+const CREATE_S3_BUCKET = `${HCCM_LATEST_DOCS_PREFIX}/html-single/integrating_amazon_web_services_aws_data_into_cost_management/index#creating-an-aws-s3-bucket_adding-aws-int`;
+const ENABLE_AWS_ACCOUNT = `${HCCM_LATEST_DOCS_PREFIX}/html/integrating_amazon_web_services_aws_data_into_cost_management/assembly-adding-aws-int#enabling-aws-account-access_adding-aws-int`;
+const ENABLE_HCS_AWS_ACCOUNT = `${HCS_LATEST_DOCS_PREFIX}/html/integrating_amazon_web_services_aws_data_into_hybrid_committed_spend/assembly-adding-aws-int-hcs#enabling-aws-account-access_adding-aws-int-hcs`;
 const CONFIG_AWS_TAGS = `${HCCM_DOCS_PREFIX}/html/adding_an_amazon_web_services_aws_source_to_cost_management/assembly-cost-management-next-steps-aws#configure-cost-models-next-step_next-steps-aws`;
-const RHEL_METERED_AWS = `${HCCM_LATEST_DOCS_PREFIX}/html/integrating_amazon_web_services_aws_data_into_cost_management/index`;
+const RHEL_METERED_AWS = `${HCCM_LATEST_DOCS_PREFIX}/html/integrating_amazon_web_services_aws_data_into_cost_management/assembly-adding-aws-int#activating-aws-tags_adding-aws-int`;
 const CONFIG_HCS_AWS_TAGS = ''; // specify when HCS docs links are available
-export const MANUAL_CUR_STEPS = 'https://github.com/project-koku/koku-data-selector/blob/main/docs/aws/aws.rst';
+export const MANUAL_CUR_STEPS = `${HCCM_LATEST_DOCS_PREFIX}/html/integrating_amazon_web_services_aws_data_into_cost_management/assembly-adding-filtered-aws-int`;
 
 export const StorageDescription = ({ showHCS }) => {
   const intl = useIntl();
@@ -136,11 +136,11 @@ export const UsageSteps = () => {
         {intl.formatMessage({
           id: 'cost.usageDescription.manualDescriptionCUR',
           defaultMessage:
-            'Since you have chosen to manually customize the CUR you want to send to Cost Management, you do not need to create at this point and time.',
+            'Since you have chosen to manually customize the data set you want to send to Cost Management, you do not need to create a cost and usage report at this point.',
         })}
       </EmptyStateBody>
       <EmptyStateActions>
-        <Text variant="link" component={TextVariants.a} href={MANUAL_CUR_STEPS}>
+        <Text variant="link" component={TextVariants.a} href={MANUAL_CUR_STEPS} rel="noopener noreferrer" target="_blank">
           {intl.formatMessage({
             id: 'cost.usageDescription.additionalStepsCUR',
             defaultMessage: 'Additional configuration steps',

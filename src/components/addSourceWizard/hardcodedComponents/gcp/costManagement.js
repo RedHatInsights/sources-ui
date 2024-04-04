@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 
 import { ClipboardCopy, Text, TextContent, TextList, TextListItem, TextListVariants, TextVariants } from '@patternfly/react-core';
 
-import { HCCM_DOCS_PREFIX } from '../../stringConstants';
+import { HCCM_LATEST_DOCS_PREFIX, HCS_LATEST_DOCS_PREFIX } from '../../stringConstants';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 
 import { getSourcesApi } from '../../../../api/entities';
@@ -12,9 +12,9 @@ import { HCS_APP_NAME } from '../../../../utilities/constants';
 
 const b = (chunks) => <b key={`b-${chunks.length}-${Math.floor(Math.random() * 1000)}`}>{chunks}</b>;
 
-const PROJECT_LINK = `${HCCM_DOCS_PREFIX}/html/adding_a_google_cloud_source_to_cost_management`;
-const PROJECT_HCS_LINK = ''; // specify when HCS docs links are available
-export const MANUAL_CUR_STEPS = 'https://github.com/project-koku/koku-data-selector/blob/main/docs/gcp/gcp.rst';
+const PROJECT_LINK = `${HCCM_LATEST_DOCS_PREFIX}/html/integrating_google_cloud_data_into_cost_management`;
+const PROJECT_HCS_LINK = `${HCS_LATEST_DOCS_PREFIX}/html/integrating_google_cloud_data_into_hybrid_committed_spend/index`;
+export const MANUAL_CUR_STEPS = `${HCS_LATEST_DOCS_PREFIX}/html/integrating_google_cloud_data_into_cost_management/assembly-adding-filtered-gcp-int#configuring-function-post-reports-gcp-hcs_adding-filtered-gcp-int`;
 
 export const Project = () => {
   const intl = useIntl();

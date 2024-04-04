@@ -1,12 +1,12 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
-import { HCCM_DOCS_PREFIX } from '../../stringConstants';
+import { HCCM_LATEST_DOCS_PREFIX } from '../../stringConstants';
 
 import { Text, TextContent, TextVariants } from '@patternfly/react-core';
 
 import { bold } from '../../../../utilities/intlShared';
 
-const INSTALL_PREREQUISITE = `${HCCM_DOCS_PREFIX}/html/adding_an_openshift_container_platform_source_to_cost_management/assembly-adding-openshift-container-platform-source#installing-cost-operator_adding-an-ocp-source`;
+const INSTALL_PREREQUISITE = `${HCCM_LATEST_DOCS_PREFIX}/html/adding_an_openshift_container_platform_source_to_cost_management/integrating_openshift_container_platform_data_into_cost_management/assembly-adding-openshift-container-platform-int#installing-cost-operator_adding-an-ocp-int`;
 
 export const ConfigureCostOperator = () => {
   const intl = useIntl();

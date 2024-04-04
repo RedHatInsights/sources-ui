@@ -309,7 +309,7 @@ describe('AWS-ARN hardcoded schemas', () => {
     expect(screen.getByText('Skip this step and proceed to next step')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'Since you have chosen to manually customize the CUR you want to send to Cost Management, you do not need to create at this point and time.',
+        'Since you have chosen to manually customize the data set you want to send to Cost Management, you do not need to create a cost and usage report at this point.',
       ),
     ).toBeInTheDocument();
     expect(screen.queryByText('Additional configuration steps')).toBeInTheDocument();
