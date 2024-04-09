@@ -94,7 +94,7 @@ export const PolicyCompartment = ({ fields }) => {
             defaultMessage: 'Create cost and usage reports policy using the following command',
           })}
           <ClipboardCopy className="pf-v5-u-mt-sm" variant={ClipboardCopyVariant.expansion}>
-            {`oci iam policy create --compartment-id ${values?.application?.extra?.compartment_id} --description "test" --name "test" --statements '["define tenancy usage-report as ocid1.tenancy.oc1..aaaaaaaaned4fkpkisbwjlr56u7cj63lf3wffbilvqknstgtvzub7vhqkggq","endorse group Administrators to read objects in tenancy usage-report"]'`}
+            {`oci iam policy create --compartment-id ${values?.application?.extra?.compartment_id} --description "test" --name "test" --statements '["define tenancy usage-report as ocid1.tenancy.oc1..aaaaaaaayikwwnfeirfik6fwqdt5rfjfajmwjuj5u34vkbpao5u6hohucnsa","endorse group Administrators to read objects in tenancy usage-report"]'`}
           </ClipboardCopy>
         </TextListItem>
         <TextListItem className="pf-v5-u-mb-lg">
