@@ -94,7 +94,7 @@ export const PolicyCompartment = ({ fields }) => {
             defaultMessage: 'Create cost and usage reports policy using the following command',
           })}
           <ClipboardCopy className="pf-v5-u-mt-sm" variant={ClipboardCopyVariant.expansion}>
-            {`oci iam policy create --compartment-id ${values?.application?.extra?.compartment_id} --description "test" --name "test" --statements '["define tenancy usage-report as ocid1.tenancy.oc1..aaaaaaaayikwwnfeirfik6fwqdt5rfjfajmwjuj5u34vkbpao5u6hohucnsa","endorse group Administrators to read objects in tenancy usage-report"]'`}
+            {`oci iam policy create --compartment-id ${values?.application?.extra?.compartment_id} --description "test" --name "test" --statements '["define tenancy usage-report as ocid1.tenancy.oc1..aaaaaaaaned4fkpkisbwjlr56u7cj63lf3wffbilvqknstgtvzub7vhqkggq","endorse group Administrators to read objects in tenancy usage-report"]'`}
           </ClipboardCopy>
         </TextListItem>
         <TextListItem className="pf-v5-u-mb-lg">
@@ -216,7 +216,7 @@ export const PopulateBucket = () => {
             defaultMessage: 'In your Oracle Cloud shell, create this read policy for the new bucket',
           })}
           <ClipboardCopy className="pf-v5-u-mt-sm" variant={ClipboardCopyVariant.expansion}>
-            {`oci iam policy create --compartment-id ${values?.application?.extra?.compartment_id} --description 'Grant cost management bucket read access' --name Cost-managment-bucket-read --statements '["Define tenancy SourceTenancy as ocid1.tenancy.oc1..aaaaaaaa7bmeqn34urxue57x75fg4nlzh4w6ttjxckhaue2itbefeen2gdma","Define group StorageAdmins as ocid1.group.oc1..aaaaaaaamwx3swyherxtnvtq3vjmcflmteojw6lxf5i6bgwjygq642a2ejpa","Admit group StorageAdmins of tenancy SourceTenancy to read objects in tenancy"]'`}
+            {`oci iam policy create --compartment-id ${values?.application?.extra?.compartment_id} --description 'Grant cost management bucket read access' --name Cost-managment-bucket-read --statements '["Define tenancy SourceTenancy as ocid1.tenancy.oc1..aaaaaaaayikwwnfeirfik6fwqdt5rfjfajmwjuj5u34vkbpao5u6hohucnsa","Define group StorageAdmins as ocid1.group.oc1..aaaaaaaaodcwqk362uyloxbzocfhufwihjxybten5h6xbqk3vlzgcnbmelpq","Admit group StorageAdmins of tenancy SourceTenancy to read objects in tenancy"]'`}
           </ClipboardCopy>
         </TextListItem>
       </TextList>
