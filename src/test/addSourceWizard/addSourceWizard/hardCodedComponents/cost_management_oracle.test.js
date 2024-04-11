@@ -134,7 +134,7 @@ describe('Cost Management Oracle steps components', () => {
     ).toBeInTheDocument();
     expect(screen.getByText('In your Oracle Cloud shell, create this read policy for the new bucket')).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveValue(
-      `oci iam policy create --compartment-id compartment-id --description 'Grant cost management bucket read access' --name Cost-managment-bucket-read --statements '["Define tenancy SourceTenancy as ocid1.tenancy.oc1..aaaaaaaa7bmeqn34urxue57x75fg4nlzh4w6ttjxckhaue2itbefeen2gdma","Define group StorageAdmins as ocid1.group.oc1..aaaaaaaamwx3swyherxtnvtq3vjmcflmteojw6lxf5i6bgwjygq642a2ejpa","Admit group StorageAdmins of tenancy SourceTenancy to read objects in tenancy"]'`,
+      `oci iam policy create --compartment-id compartment-id --description 'Grant cost management bucket read access' --name Cost-managment-bucket-read --statements '["Define tenancy SourceTenancy as ocid1.tenancy.oc1..aaaaaaaayikwwnfeirfik6fwqdt5rfjfajmwjuj5u34vkbpao5u6hohucnsa","Define group StorageAdmins as ocid1.group.oc1..aaaaaaaaodcwqk362uyloxbzocfhufwihjxybten5h6xbqk3vlzgcnbmelpq","Admit group StorageAdmins of tenancy SourceTenancy to read objects in tenancy"]'`,
     );
   });
 });
