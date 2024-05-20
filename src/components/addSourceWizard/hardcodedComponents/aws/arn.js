@@ -52,7 +52,7 @@ export const StorageDescription = ({ showHCS }) => {
           {
             id: 'cost.storageDescription.storageDescription',
             defaultMessage:
-              'To store the cost and usage reports needed for cost management, you need to create an Amazon S3 bucket. {link}',
+              'To store the data export (formerly cost and usage report) needed for cost management, you need to create an Amazon S3 bucket. {link}',
           },
           {
             link: showHCS ? null : ( // remove when HCS docs links are available
@@ -102,7 +102,7 @@ export const UsageDescription = ({ showHCS }) => {
           {
             id: 'cost.usageDescription.usageDescription',
             defaultMessage:
-              "The information {application} would need is your AWS account's cost and usage report (CUR). If there is a need to further customize the CUR you want to send to {application}, select the manually customize option and follow the special instructions on how to.",
+              "The information {application} would need is your AWS account's data export (formerly cost and usage report). If there is a need to further customize the data you want to send to {application}, select the manually customize option and follow the special instructions on how to.",
           },
           {
             application,
@@ -136,7 +136,7 @@ export const UsageSteps = () => {
         {intl.formatMessage({
           id: 'cost.usageDescription.manualDescriptionCUR',
           defaultMessage:
-            'Since you have chosen to manually customize the data set you want to send to Cost Management, you do not need to create a cost and usage report at this point.',
+            'Since you have chosen to manually customize the data set you want to send to Cost Management, you do not need to create a data export (formerly cost and usage report) at this point.',
         })}
       </EmptyStateBody>
       <EmptyStateActions>
@@ -154,19 +154,19 @@ export const UsageSteps = () => {
         <TextListItem>
           {intl.formatMessage({
             id: 'cost.usageDescription.addFollowingValues',
-            defaultMessage: 'Create a cost and usage report using the following values:',
+            defaultMessage: 'Create a data export (formerly cost and usage report) using the following values:',
           })}
           <TextList>
             <TextListItem>
               {intl.formatMessage({
-                id: 'cost.usageDescription.repornName',
-                defaultMessage: 'Report name: koku',
+                id: 'cost.usageDescription.exportType',
+                defaultMessage: 'Export type: Legacy CUR export',
               })}
             </TextListItem>
             <TextListItem>
               {intl.formatMessage({
-                id: 'cost.usageDescription.timeUnitHoulry',
-                defaultMessage: 'Time unit: hourly',
+                id: 'cost.usageDescription.exportName',
+                defaultMessage: 'Export name: koku',
               })}
             </TextListItem>
             <TextListItem>
@@ -177,20 +177,32 @@ export const UsageSteps = () => {
             </TextListItem>
             <TextListItem>
               {intl.formatMessage({
+                id: 'cost.usageDescription.dataRefreshSettings',
+                defaultMessage: 'Enable: Refresh automatically',
+              })}
+            </TextListItem>
+            <TextListItem>
+              {intl.formatMessage({
+                id: 'cost.usageDescription.timeUnitHourly',
+                defaultMessage: 'Time unit: hourly',
+              })}
+            </TextListItem>
+            <TextListItem>
+              {intl.formatMessage({
                 id: 'cost.usageDescription.enableSupport',
                 defaultMessage: 'Enable support for: RedShift, QuickSight and disable support for Athena',
               })}
             </TextListItem>
             <TextListItem>
               {intl.formatMessage({
-                id: 'cost.usageDescription.reportPathPrefix',
-                defaultMessage: 'Report path prefix: cost',
+                id: 'cost.usageDescription.compression',
+                defaultMessage: 'Compression type: GZIP',
               })}
             </TextListItem>
             <TextListItem>
               {intl.formatMessage({
-                id: 'cost.usageDescription.compression',
-                defaultMessage: 'Compression type: GZIP',
+                id: 'cost.usageDescription.reportBucket',
+                defaultMessage: 'Report path prefix: cost',
               })}
             </TextListItem>
           </TextList>

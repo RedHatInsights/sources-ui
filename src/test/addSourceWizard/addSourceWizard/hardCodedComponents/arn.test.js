@@ -242,7 +242,7 @@ describe('AWS-ARN hardcoded schemas', () => {
 
     expect(
       screen.getByText(
-        "The information Cost Management would need is your AWS account's cost and usage report (CUR). If there is a need to further customize the CUR you want to send to Cost Management, select the manually customize option and follow the special instructions on how to.",
+        "The information Cost Management would need is your AWS account's data export (formerly cost and usage report). If there is a need to further customize the data you want to send to Cost Management, select the manually customize option and follow the special instructions on how to.",
       ),
     ).toBeInTheDocument();
   });
@@ -252,7 +252,7 @@ describe('AWS-ARN hardcoded schemas', () => {
 
     expect(
       screen.getByText(
-        `The information ${HCS_APP_NAME} would need is your AWS account's cost and usage report (CUR). If there is a need to further customize the CUR you want to send to ${HCS_APP_NAME}, select the manually customize option and follow the special instructions on how to.`,
+        `The information ${HCS_APP_NAME} would need is your AWS account's data export (formerly cost and usage report). If there is a need to further customize the data you want to send to ${HCS_APP_NAME}, select the manually customize option and follow the special instructions on how to.`,
       ),
     ).toBeInTheDocument();
   });
@@ -277,10 +277,12 @@ describe('AWS-ARN hardcoded schemas', () => {
       </RendererContext.Provider>,
     );
 
-    expect(screen.getByText('Create a cost and usage report using the following values:')).toBeInTheDocument();
-    expect(screen.getByText('Report name: koku')).toBeInTheDocument();
-    expect(screen.getByText('Time unit: hourly')).toBeInTheDocument();
+    expect(screen.getByText('Create a data export (formerly cost and usage report) using the following values:')).toBeInTheDocument();
+    expect(screen.getByText('Export type: Legacy CUR export')).toBeInTheDocument();
+    expect(screen.getByText('Export name: koku')).toBeInTheDocument();
     expect(screen.getByText('Include: Resource IDs')).toBeInTheDocument();
+    expect(screen.getByText('Enable: Refresh automatically')).toBeInTheDocument();
+    expect(screen.getByText('Time unit: hourly')).toBeInTheDocument();
     expect(screen.getByText('Enable support for: RedShift, QuickSight and disable support for Athena')).toBeInTheDocument();
     expect(screen.getByText('Report path prefix: cost')).toBeInTheDocument();
     expect(screen.getByText('Compression type: GZIP')).toBeInTheDocument();
@@ -309,7 +311,7 @@ describe('AWS-ARN hardcoded schemas', () => {
     expect(screen.getByText('Skip this step and proceed to next step')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'Since you have chosen to manually customize the data set you want to send to Cost Management, you do not need to create a cost and usage report at this point.',
+        'Since you have chosen to manually customize the data set you want to send to Cost Management, you do not need to create a data export (formerly cost and usage report) at this point.',
       ),
     ).toBeInTheDocument();
     expect(screen.queryByText('Additional configuration steps')).toBeInTheDocument();
@@ -319,7 +321,7 @@ describe('AWS-ARN hardcoded schemas', () => {
     render(<AwsArn.StorageDescription />);
 
     expect(
-      screen.getByText('To store the cost and usage reports needed for cost management, you need to create an Amazon S3 bucket.'),
+      screen.getByText('To store the data export (formerly cost and usage report) needed for cost management, you need to create an Amazon S3 bucket.'),
     ).toBeInTheDocument();
     expect(
       screen.getByText("On AWS, specify or create an Amazon S3 bucket for your account and enter it's name below."),
@@ -331,7 +333,7 @@ describe('AWS-ARN hardcoded schemas', () => {
     render(<AwsArn.StorageDescription showHCS />);
 
     expect(
-      screen.getByText('To store the cost and usage reports needed for cost management, you need to create an Amazon S3 bucket.'),
+      screen.getByText('To store the data export (formerly cost and usage report) needed for cost management, you need to create an Amazon S3 bucket.'),
     ).toBeInTheDocument();
     expect(
       screen.getByText("On AWS, specify or create an Amazon S3 bucket for your account and enter it's name below."),
