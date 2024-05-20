@@ -277,7 +277,7 @@ describe('AWS-ARN hardcoded schemas', () => {
       </RendererContext.Provider>,
     );
 
-    expect(screen.getByText('Create a data export (formerly cost and usage report) using the following values:')).toBeInTheDocument();
+    expect(screen.getByText('Create a data export using the following values:')).toBeInTheDocument();
     expect(screen.getByText('Export type: Legacy CUR export')).toBeInTheDocument();
     expect(screen.getByText('Export name: koku')).toBeInTheDocument();
     expect(screen.getByText('Include: Resource IDs')).toBeInTheDocument();

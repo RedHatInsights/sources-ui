@@ -154,7 +154,7 @@ export const UsageSteps = () => {
         <TextListItem>
           {intl.formatMessage({
             id: 'cost.usageDescription.addFollowingValues',
-            defaultMessage: 'Create a data export (formerly cost and usage report) using the following values:',
+            defaultMessage: 'Create a data export using the following values:',
           })}
           <TextList>
             <TextListItem>
