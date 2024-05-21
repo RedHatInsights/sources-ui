@@ -52,7 +52,7 @@ export const StorageDescription = ({ showHCS }) => {
           {
             id: 'cost.storageDescription.storageDescription',
             defaultMessage:
-              'To store the data export (formerly cost and usage report) needed for cost management, you need to create an Amazon S3 bucket. {link}',
+              'To store the data export (previously called a cost and usage report) for cost management, create an Amazon S3 bucket. {link}',
           },
           {
             link: showHCS ? null : ( // remove when HCS docs links are available
@@ -136,7 +136,7 @@ export const UsageSteps = () => {
         {intl.formatMessage({
           id: 'cost.usageDescription.manualDescriptionCUR',
           defaultMessage:
-            'Since you have chosen to manually customize the data set you want to send to Cost Management, you do not need to create a data export (formerly cost and usage report) at this point.',
+            'Because you have chosen to manually customize the data set you want to send to cost management, you do not need to create a data export (previously called a  cost and usage report).',
         })}
       </EmptyStateBody>
       <EmptyStateActions>

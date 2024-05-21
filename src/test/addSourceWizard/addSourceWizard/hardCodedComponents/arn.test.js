@@ -311,7 +311,7 @@ describe('AWS-ARN hardcoded schemas', () => {
     expect(screen.getByText('Skip this step and proceed to next step')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'Since you have chosen to manually customize the data set you want to send to Cost Management, you do not need to create a data export (formerly cost and usage report) at this point.',
+        'Because you have chosen to manually customize the data set you want to send to cost management, you do not need to create a data export (previously called a  cost and usage report).',
       ),
     ).toBeInTheDocument();
     expect(screen.queryByText('Additional configuration steps')).toBeInTheDocument();
@@ -322,7 +322,7 @@ describe('AWS-ARN hardcoded schemas', () => {
 
     expect(
       screen.getByText(
-        'To store the data export (formerly cost and usage report) needed for cost management, you need to create an Amazon S3 bucket.'
+        'To store the data export (previously called a cost and usage report) for cost management, create an Amazon S3 bucket.'
       ),
     ).toBeInTheDocument();
     expect(
@@ -336,7 +336,7 @@ describe('AWS-ARN hardcoded schemas', () => {
 
     expect(
       screen.getByText(
-        'To store the data export (formerly cost and usage report) needed for cost management, you need to create an Amazon S3 bucket.'
+        'To store the data export (previously called a cost and usage report) for cost management, create an Amazon S3 bucket.'
       ),
     ).toBeInTheDocument();
     expect(
