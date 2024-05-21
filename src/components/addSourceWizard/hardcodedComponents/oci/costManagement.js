@@ -202,11 +202,10 @@ export const PopulateBucket = () => {
         <TextListItem className="pf-v5-u-mb-lg">
           {intl.formatMessage({
             id: 'cost.oci.populateBucket.subtitle1',
-            defaultMessage:
-              'In your Oracle Cloud account, create a VM and run a script similar to the one from this github repository:',
+            defaultMessage: 'In your Oracle Cloud account, create a VM and run a script provided in the documentation:',
           })}
           <a className="pf-v5-u-mt-md pf-v5-u-display-block" href={CREATE_OCI_SCRIPT} target="_blank" rel="noreferrer">
-            {CREATE_OCI_SCRIPT}
+            Replicating reports to a bucket
             <i className="pf-v5-u-ml-xs fas fa-external-link-alt pf-v5-u-font-size-xs"></i>
           </a>
         </TextListItem>

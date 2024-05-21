@@ -123,15 +123,9 @@ describe('Cost Management Oracle steps components', () => {
       ),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(
-        'In your Oracle Cloud account, create a VM and run a script similar to the one from this github repository:',
-      ),
+      screen.getByText('In your Oracle Cloud account, create a VM and run a script provided in the documentation:'),
     ).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        'https://access.redhat.com/documentation/en-us/cost_management_service/1-latest/html/integrating_oracle_cloud_data_into_cost_management/assembly-adding-oci-int#create-oci-script_adding-oci-int',
-      ),
-    ).toBeInTheDocument();
+    expect(screen.getByText('Replicating reports to a bucket')).toBeInTheDocument();
     expect(screen.getByText('In your Oracle Cloud shell, create this read policy for the new bucket')).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveValue(
       `oci iam policy create --compartment-id compartment-id --description 'Grant cost management bucket read access' --name Cost-managment-bucket-read --statements '["Define tenancy SourceTenancy as ocid1.tenancy.oc1..aaaaaaaayikwwnfeirfik6fwqdt5rfjfajmwjuj5u34vkbpao5u6hohucnsa","Define group StorageAdmins as ocid1.group.oc1..aaaaaaaaodcwqk362uyloxbzocfhufwihjxybten5h6xbqk3vlzgcnbmelpq","Admit group StorageAdmins of tenancy SourceTenancy to read objects in tenancy"]'`,
