@@ -102,7 +102,7 @@ export const UsageDescription = ({ showHCS }) => {
           {
             id: 'cost.usageDescription.usageDescription',
             defaultMessage:
-              "The information {application} would need is your AWS account's data export (formerly cost and usage report). If there is a need to further customize the data you want to send to {application}, select the manually customize option and follow the special instructions on how to.",
+              "The information {application} would need is your AWS account's data export. If there is a need to further customize the data export you want to send to {application}, select the manually customize option and follow the special instructions on how to.",
           },
           {
             application,

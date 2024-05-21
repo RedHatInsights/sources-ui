@@ -160,7 +160,7 @@ const getArn = (authUsername, showHCS) => ({
               label: (
                 <FormattedMessage
                   id="cost.arn.sendDefaultCUR"
-                  defaultMessage="I am OK with sending the default CUR to Cost Management"
+                  defaultMessage="I am OK with sending the default data export to Cost Management"
                 />
               ),
               value: false,
@@ -170,7 +170,7 @@ const getArn = (authUsername, showHCS) => ({
                 <span>
                   <FormattedMessage
                     id="cost.arn.customizeCUR"
-                    defaultMessage="I wish to manually customize the CUR sent to Cost Management"
+                    defaultMessage="I wish to manually customize the data export sent to Cost Management"
                   />{' '}
                   <Popover
                     aria-label="Help text"

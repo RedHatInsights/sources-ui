@@ -242,7 +242,7 @@ describe('AWS-ARN hardcoded schemas', () => {
 
     expect(
       screen.getByText(
-        "The information Cost Management would need is your AWS account's data export (formerly cost and usage report). If there is a need to further customize the data you want to send to Cost Management, select the manually customize option and follow the special instructions on how to.",
+        "The information Cost Management would need is your AWS account's data export. If there is a need to further customize the data export you want to send to Cost Management, select the manually customize option and follow the special instructions on how to.",
       ),
     ).toBeInTheDocument();
   });
@@ -252,7 +252,7 @@ describe('AWS-ARN hardcoded schemas', () => {
 
     expect(
       screen.getByText(
-        `The information ${HCS_APP_NAME} would need is your AWS account's data export (formerly cost and usage report). If there is a need to further customize the data you want to send to ${HCS_APP_NAME}, select the manually customize option and follow the special instructions on how to.`,
+        `The information ${HCS_APP_NAME} would need is your AWS account's data export. If there is a need to further customize the data export you want to send to ${HCS_APP_NAME}, select the manually customize option and follow the special instructions on how to.`,
       ),
     ).toBeInTheDocument();
   });
