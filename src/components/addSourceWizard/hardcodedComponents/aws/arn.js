@@ -136,7 +136,7 @@ export const UsageSteps = () => {
         {intl.formatMessage({
           id: 'cost.usageDescription.manualDescriptionCUR',
           defaultMessage:
-            'Because you have chosen to manually customize the data set you want to send to cost management, you do not need to create a data export (previously called a  cost and usage report).',
+            'Because you have chosen to manually customize the data set you want to send to cost management, you do not need to create a data export (previously called a cost and usage report).',
         })}
       </EmptyStateBody>
       <EmptyStateActions>
