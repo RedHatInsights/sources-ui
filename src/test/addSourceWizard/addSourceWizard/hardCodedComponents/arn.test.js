@@ -322,7 +322,7 @@ describe('AWS-ARN hardcoded schemas', () => {
 
     expect(
       screen.getByText(
-        'To store the data export (previously called a cost and usage report) for cost management, create an Amazon S3 bucket.'
+        'To store the data export (previously called a cost and usage report) for cost management, create an Amazon S3 bucket.',
       ),
     ).toBeInTheDocument();
     expect(
@@ -336,7 +336,7 @@ describe('AWS-ARN hardcoded schemas', () => {
 
     expect(
       screen.getByText(
-        'To store the data export (previously called a cost and usage report) for cost management, create an Amazon S3 bucket.'
+        'To store the data export (previously called a cost and usage report) for cost management, create an Amazon S3 bucket.',
       ),
     ).toBeInTheDocument();
     expect(
