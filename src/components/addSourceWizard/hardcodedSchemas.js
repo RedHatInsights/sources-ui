@@ -1015,7 +1015,19 @@ const hardcodedSchemas = {
                   label: 'Subscription ID',
                   isRequired: true,
                   placeholder: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
-                  validate: [{ type: 'required' }],
+                  validate: [
+                    {
+                      type: validatorTypes.PATTERN,
+                      pattern: /^[A-Za-z0-9-]+$/,
+                      message: (
+                        <FormattedMessage
+                          id="provisioning.subscriptionIdPattern"
+                          defaultMessage="Subscription ID must only contain alphanumeric characters and hyphens"
+                        />
+                      ),
+                    },
+                    { type: 'required' },
+                  ],
                 },
               ],
             },
