@@ -16,4 +16,14 @@ module.exports = {
     shared: [{ 'react-router-dom': { singleton: true, version: '^6.8.0' } }],
   },
   hotReload: process.env.HOT === 'true',
+  routes: {
+    ...(process.env.LOCAL_NOTIFICATIONS && {
+      '/beta/apps/notifications': {
+        host: `http://localhost:8003`,
+      },
+      '/apps/notifications': {
+        host: `http://localhost:8003`,
+      },
+    }),
+  },
 };
