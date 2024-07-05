@@ -1,125 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { useIntl } from 'react-intl';
-
+import { FormattedMessage } from 'react-intl';
+import { useFormApi } from '@data-driven-forms/react-form-renderer';
 import {
   Alert,
+  Button,
   ClipboardCopy,
-  ClipboardCopyVariant,
+  ExpandableSection,
+  ListComponent,
+  Stack,
+  StackItem,
   Text,
   TextContent,
   TextList,
   TextListItem,
-  TextListVariants,
   TextVariants,
 } from '@patternfly/react-core';
 
 import { getSourcesApi } from '../../../../api/entities';
 
+const STACK_TEMPLATE = 'https://provisioning-public-assets.s3.amazonaws.com/AWSStack/provisioning.yml';
 const ROLE_NAME = 'RH-HCC-provisioning-role';
-const POLICY_COMMAND_STRING = `
-POLICY_ARN=$(aws iam create-policy --policy-name RH-HCC-provisioning-policy --policy-document '{
-"Version": "2012-10-17",
-"Statement": [
-  {
-    "Sid": "RedHatProvisioning",
-    "Effect": "Allow",
-    "Action": [
-      "iam:GetPolicyVersion",
-      "iam:GetPolicy",
-      "iam:ListAttachedRolePolicies",
-      "iam:GetRolePolicy",
-      "ec2:CreateKeyPair",
-      "ec2:CreateLaunchTemplate",
-      "ec2:CreateLaunchTemplateVersion",
-      "ec2:CreateTags",
-      "ec2:DeleteKeyPair",
-      "ec2:DeleteTags",
-      "ec2:DescribeAvailabilityZones",
-      "ec2:DescribeImages",
-      "ec2:DescribeInstanceTypes",
-      "ec2:DescribeInstances",
-      "ec2:DescribeKeyPairs",
-      "ec2:DescribeLaunchTemplates",
-      "ec2:DescribeLaunchTemplateVersions",
-      "ec2:DescribeRegions",
-      "ec2:DescribeSecurityGroups",
-      "ec2:DescribeSnapshotAttribute",
-      "ec2:DescribeTags",
-      "ec2:ImportKeyPair",
-      "ec2:RunInstances",
-      "ec2:StartInstances",
-      "iam:ListRolePolicies"
-    ],
-    "Resource": "*"
-  }
-]
-}' | jq -r '.Policy.Arn')`;
-
-const ROLE_COMMAND_STRING = `
-ROLE_ARN=$(aws iam create-role --role-name ${ROLE_NAME} --assume-role-policy-document '{
-  "Version": "2012-10-17",
-  "Statement": {
-    "Effect": "Allow",
-    "Principal": {
-      "AWS": "<PROVISIONING_AWS_ACCOUNT>"
-    },
-    "Action": "sts:AssumeRole"
-  }
-}' | jq -r '.Role.Arn')`;
-
-const ATTACH_COMMAND_STRING = `aws iam attach-role-policy --role-name ${ROLE_NAME} --policy-arn $POLICY_ARN`;
-
-export const IAMPolicyDescription = () => {
-  const intl = useIntl();
-
-  return (
-    <TextContent>
-      <Text component={TextVariants.p}>
-        {intl.formatMessage({
-          id: 'provisioning.iam.grantPermissions',
-          defaultMessage:
-            'Create the following AWS Identity and Access Management (IAM) policy to grant Red Hat permissions to run instances on your Amazon Web Services (AWS) Elastic Cloud (EC2).',
-        })}
-      </Text>
-      <TextList component={TextListVariants.ol}>
-        <TextListItem>
-          {intl.formatMessage(
-            {
-              id: 'provisioning.iam.signIn',
-              defaultMessage: 'Log in to AWS CLI by running: {awsCliCommand}.',
-            },
-            {
-              awsCliCommand: (
-                <b>
-                  {intl.formatMessage({
-                    id: 'provisioning.iam.signInCommand',
-                    defaultMessage: 'aws configure',
-                  })}
-                </b>
-              ),
-            },
-          )}
-        </TextListItem>
-        <TextListItem>
-          {intl.formatMessage({
-            id: 'provisioning.iam.createPolicty',
-            defaultMessage: 'Create a new policy and store its ARN by running following command in your terminal.',
-          })}
-        </TextListItem>
-      </TextList>
-      <ClipboardCopy isCode variant={ClipboardCopyVariant.expansion} className="pf-v5-u-m-sm-on-sm" isReadOnly>
-        {POLICY_COMMAND_STRING}
-      </ClipboardCopy>
-    </TextContent>
-  );
-};
 
 export const IAMRoleDescription = () => {
-  const intl = useIntl();
-
   const [provAppTypeId, setAppTypeId] = useState();
   const [provAwsAccount, setAwsAccount] = useState(null);
   const [fetchError, setFetchError] = useState(null);
+
+  const StackCreationURL = `https://console.aws.amazon.com/cloudformation/home#/stacks/quickcreate?templateURL=${STACK_TEMPLATE}&stackName=RH-HCC-provisioning-stack&param_RoleName=${ROLE_NAME}&param_ProvisioningAwsAccount=${provAwsAccount}&param_PolicyName=RH-HCC-provisioning-policy`;
 
   useEffect(() => {
     getSourcesApi()
@@ -144,84 +51,156 @@ export const IAMRoleDescription = () => {
     }
   }, [provAppTypeId]);
 
+  if (fetchError) {
+    return (
+      <Alert
+        variant="warning"
+        title={
+          <FormattedMessage
+            id="provisioning.iam.fetchError"
+            defaultMessage="There was an error while loading the commands. Please go back and return to this step to try again."
+          />
+        }
+      />
+    );
+  }
+
+  if (provAwsAccount === null) {
+    return (
+      <TextContent>
+        <Text component={TextVariants.p}>
+          <FormattedMessage id="provisioning.iam.loading" defaultMessage="Loading configuration..." />
+        </Text>
+      </TextContent>
+    );
+  }
+
+  return (
+    <>
+      <Stack hasGutter>
+        <StackItem>
+          <Text>
+            <FormattedMessage
+              defaultMessage="To integrate your AWS account with our service, you need to create an IAM role."
+              id="provisioning.aws-role-creation.desc"
+            />
+          </Text>
+        </StackItem>
+        <StackItem>
+          <ExpandableSection isIndented toggleText="See role permissions">
+            <Text>
+              <TextList component="dl">
+                <TextListItem>IAM:GetPolicyVersion</TextListItem>
+                <TextListItem>IAM:GetPolicy</TextListItem>
+                <TextListItem>IAM:ListAttachedRolePolicies</TextListItem>
+                <TextListItem>IAM:GetRolePolicy</TextListItem>
+                <TextListItem>IAM:ListRolePolicies</TextListItem>
+                <TextListItem>EC2:CreateKeyPair</TextListItem>
+                <TextListItem>EC2:CreateLaunchTemplate</TextListItem>
+                <TextListItem>EC2:CreateLaunchTemplateVersion</TextListItem>
+                <TextListItem>EC2:CreateTags</TextListItem>
+                <TextListItem>EC2:DeleteKeyPair</TextListItem>
+                <TextListItem>EC2:DeleteTags</TextListItem>
+                <TextListItem>EC2:DescribeAvailabilityZones</TextListItem>
+                <TextListItem>EC2:DescribeImages</TextListItem>
+                <TextListItem>EC2:DescribeInstanceTypes</TextListItem>
+                <TextListItem>EC2:DescribeInstances</TextListItem>
+                <TextListItem>EC2:DescribeKeyPairs</TextListItem>
+                <TextListItem>EC2:DescribeLaunchTemplates</TextListItem>
+                <TextListItem>EC2:DescribeLaunchTemplateVersions</TextListItem>
+                <TextListItem>EC2:DescribeRegions</TextListItem>
+                <TextListItem>EC2:DescribeSecurityGroups</TextListItem>
+                <TextListItem>EC2:DescribeSnapshotAttribute</TextListItem>
+                <TextListItem>EC2:DescribeTags</TextListItem>
+                <TextListItem>EC2:ImportKeyPair</TextListItem>
+                <TextListItem>EC2:RunInstances</TextListItem>
+                <TextListItem>EC2:StartInstances</TextListItem>
+              </TextList>
+            </Text>
+          </ExpandableSection>
+        </StackItem>
+        <StackItem>
+          <TextContent>
+            <FormattedMessage
+              id="provisioning.aws-role-creation-follow.desc"
+              defaultMessage="Follow these steps to create the role:"
+            />
+          </TextContent>
+        </StackItem>
+        <StackItem>
+          <TextContent>
+            <TextList component={ListComponent.ol}>
+              <TextListItem>
+                <FormattedMessage
+                  id="provisioning.aws-role-step-1"
+                  defaultMessage="Click on {connectAWS} to open AWS CloudFormation in a new tab with the IAM Role template."
+                  values={{ connectAWS: <strong>&apos;Connect AWS&apos;</strong> }}
+                />
+              </TextListItem>
+              <TextListItem>
+                <FormattedMessage
+                  id="provisioning.aws-role-step-2"
+                  defaultMessage="In AWS CloudFormation, click {createStack} to initiate the creation of the IAM Role. Wait until the status shows {status}."
+                  values={{
+                    createStack: <strong>&apos;Create Stack&apos;</strong>,
+                    status: <strong>CREATE_COMPLETE</strong>,
+                  }}
+                />
+              </TextListItem>
+              <TextListItem>
+                <FormattedMessage
+                  id="provisioning.aws-role-step-3"
+                  defaultMessage="Return to this window and click {next} to retrieve the new Role's ARN."
+                  values={{ next: <strong>&apos;Next&apos;</strong> }}
+                />
+              </TextListItem>
+            </TextList>
+          </TextContent>
+        </StackItem>
+        <StackItem>
+          <Button component="a" target="_blank" href={StackCreationURL} isBlock variant="primary">
+            Connect AWS
+          </Button>
+        </StackItem>
+      </Stack>
+    </>
+  );
+};
+
+export const AccountNumber = () => {
   return (
     <TextContent>
-      <Text component={TextVariants.p}>
-        {intl.formatMessage({
-          id: 'provisioning.iam.delegateAccount',
-          defaultMessage: 'To delegate account access, create an IAM role and associate it with your IAM policy.',
-        })}
-      </Text>
-      {provAwsAccount === null && fetchError === null && (
-        <Text component={TextVariants.p}>
-          {intl.formatMessage({ id: 'provisioning.iam.loading', defaultMessage: 'Loading configuration...' })}
-        </Text>
-      )}
-      {fetchError && (
-        <Alert
-          variant="warning"
-          title={intl.formatMessage({
-            id: 'provisioning.iam.fetchError',
-            defaultMessage: 'There was an error while loading the commands. Please go back and return to this step to try again.',
-          })}
+      <Text>
+        <FormattedMessage
+          id="provisioning.aws-account-number.desc"
+          defaultMessage="Login to your AWS account and copy your account number"
         />
-      )}
-      {provAwsAccount !== null && (
-        <TextList component={TextListVariants.ol}>
-          <TextListItem>
-            {intl.formatMessage({
-              id: 'provisioning.iam.createRole',
-              defaultMessage: 'Create a new role and add the Red Hat account as a trusted entity and fetch the role ARN:',
-            })}
-            <ClipboardCopy isCode variant={ClipboardCopyVariant.expansion} className="pf-v5-u-m-sm-on-sm" isReadOnly>
-              {ROLE_COMMAND_STRING.replace('<PROVISIONING_AWS_ACCOUNT>', provAwsAccount)}
-            </ClipboardCopy>
-          </TextListItem>
-          <TextListItem>
-            {intl.formatMessage({
-              id: 'provisioning.iam.attachPolicy',
-              defaultMessage: 'Attach the permissions policy that you just created.',
-            })}
-          </TextListItem>
-          <ClipboardCopy isCode variant={ClipboardCopyVariant.expansion} className="pf-v5-u-m-sm-on-sm" isReadOnly>
-            {ATTACH_COMMAND_STRING}
-          </ClipboardCopy>
-        </TextList>
-      )}
+      </Text>
     </TextContent>
   );
 };
 
 export const ArnDescription = () => {
-  const intl = useIntl();
+  const formApi = useFormApi().getState();
+  const accountNumber = formApi.values.meta.account;
 
   return (
     <TextContent>
       <Text component={TextVariants.p}>
-        {intl.formatMessage({
-          id: 'provisioning.iam.enableAccount',
-          defaultMessage: 'To enable account access, capture the ARN associated with the role you just created.',
-        })}
+        <FormattedMessage
+          id="provisioning.iam.enableAccount"
+          defaultMessage="To enable account access, copy this provided {ARN} and paste it into the input field below. If you modified the role name during creation, update it accordingly."
+          values={{
+            ARN: (
+              <ClipboardCopy
+                hoverTip="Copy ARN"
+                clickTip="ARN Copied"
+                variant="inline-compact"
+              >{`arn:aws:iam::${accountNumber}:role/${ROLE_NAME}`}</ClipboardCopy>
+            ),
+          }}
+        />
       </Text>
-      <TextList component={TextListVariants.ol}>
-        <TextListItem>
-          {intl.formatMessage(
-            {
-              id: 'provisioning.iam.getRoleArn',
-              defaultMessage: 'Run {command} in your terminal to print the role ARN',
-            },
-            {
-              command: <b>echo $ROLE_ARN</b>,
-            },
-          )}
-        </TextListItem>
-        <TextListItem>
-          {intl.formatMessage({
-            id: 'provisioning.iam.copyArn',
-            defaultMessage: 'Copy it to the ARN field below.',
-          })}
-        </TextListItem>
-      </TextList>
     </TextContent>
   );
 };

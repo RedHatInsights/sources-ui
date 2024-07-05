@@ -1169,7 +1169,7 @@ const hardcodedSchemas = {
           'authentication.username': provArnField,
           additionalSteps: [
             {
-              title: <FormattedMessage id="provisioning.createIamPolicy" defaultMessage="Create IAM policy" />,
+              title: <FormattedMessage id="provisioning.createIamPolicy" defaultMessage="AWS Account Number" />,
               nextStep: 'prov-iam-role',
               substepOf: {
                 name: 'eaa',
@@ -1179,7 +1179,15 @@ const hardcodedSchemas = {
                 {
                   name: 'iam-policy-description',
                   component: 'description',
-                  Content: ProvAwsArn.IAMPolicyDescription,
+                  Content: ProvAwsArn.AccountNumber,
+                },
+                {
+                  component: componentTypes.TEXT_FIELD,
+                  name: 'meta.account',
+                  isRequired: true,
+                  label: 'Account number',
+                  placeholder: '123456789',
+                  validate: [{ type: 'required' }],
                 },
                 {
                   component: componentTypes.TEXT_FIELD,

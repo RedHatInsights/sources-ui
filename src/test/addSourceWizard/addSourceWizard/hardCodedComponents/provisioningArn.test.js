@@ -7,22 +7,9 @@ import * as ProvAwsArn from '../../../../components/addSourceWizard/hardcodedCom
 import * as api from '../../../../api/entities';
 
 describe('Provisioning AWS ARN hardcoded schemas', () => {
-  it('IAM POLICY is rendered correctly', async () => {
-    render(<ProvAwsArn.IAMPolicyDescription />);
-
-    expect(
-      screen.getByText(
-        'Create the following AWS Identity and Access Management (IAM) policy to grant Red Hat permissions to run instances on your Amazon Web Services (AWS) Elastic Cloud (EC2).',
-        { exact: false },
-      ),
-    ).toBeInTheDocument();
-    expect(screen.getByText('Log in to AWS CLI by running:', { exact: false })).toBeInTheDocument();
-    expect(
-      screen.getByText('Create a new policy and store its ARN by running following command in your terminal.', { exact: false }),
-    ).toBeInTheDocument();
-    expect(screen.getByLabelText('Copyable input')).toHaveDisplayValue(
-      /^\s*POLICY_ARN=\$\(aws iam create-policy --policy-name RH-HCC-provisioning-policy --policy-document/,
-    );
+  it('AccountNumber is rendered correctly', async () => {
+    render(<ProvAwsArn.AccountNumber />);
+    expect(screen.getByText('Login to your AWS account and copy your account number')).toBeInTheDocument();
   });
 
   it('IAM ROLE is rendered correctly', async () => {
@@ -39,23 +26,11 @@ describe('Provisioning AWS ARN hardcoded schemas', () => {
 
     render(<ProvAwsArn.IAMRoleDescription />);
 
-    expect(
-      screen.getByText('To delegate account access, create an IAM role and associate it with your IAM policy.', { exact: false }),
-    ).toBeInTheDocument();
-
     expect(screen.getByText('Loading configuration...')).toBeInTheDocument();
-
-    const copyInputs = await screen.findAllByLabelText('Copyable input');
-
-    expect(
-      screen.getByText('Create a new role and add the Red Hat account as a trusted entity and fetch the role ARN:', {
-        exact: false,
-      }),
-    ).toBeInTheDocument();
-    expect(copyInputs[0]).toHaveDisplayValue(/372779871274/);
-
-    expect(screen.getByText('Attach the permissions policy that you just created.', { exact: false })).toBeInTheDocument();
-    expect(copyInputs[1]).toHaveValue('aws iam attach-role-policy --role-name RH-HCC-provisioning-role --policy-arn $POLICY_ARN');
+    const button = await screen.findByText('Connect AWS');
+    expect(button).toBeInTheDocument();
+    const StackCreationURL = `https://console.aws.amazon.com/cloudformation/home#/stacks/quickcreate?templateURL=https://provisioning-public-assets.s3.amazonaws.com/AWSStack/provisioning.yml&stackName=RH-HCC-provisioning-stack&param_RoleName=RH-HCC-provisioning-role&param_ProvisioningAwsAccount=${awsAccId}&param_PolicyName=RH-HCC-provisioning-policy`;
+    expect(button).toHaveAttribute('href', StackCreationURL);
   });
 
   it('IAM ROLE is rendered correctly with error', async () => {
@@ -73,19 +48,5 @@ describe('Provisioning AWS ARN hardcoded schemas', () => {
         'There was an error while loading the commands. Please go back and return to this step to try again.',
       ),
     ).toBeInTheDocument();
-  });
-
-  it('IAM ARN is rendered correctly', async () => {
-    render(<ProvAwsArn.ArnDescription />);
-
-    expect(
-      screen.getByText('To enable account access, capture the ARN associated with the role you just created.', { exact: false }),
-    ).toBeInTheDocument();
-
-    expect(screen.getByText('Run', { exact: false })).toBeInTheDocument();
-    expect(screen.getByText('echo $ROLE_ARN', { exact: false })).toBeInTheDocument();
-    expect(screen.getByText('in your terminal to print the role ARN', { exact: false })).toBeInTheDocument();
-
-    expect(screen.getByText('Copy it to the ARN field below.', { exact: false })).toBeInTheDocument();
   });
 });
