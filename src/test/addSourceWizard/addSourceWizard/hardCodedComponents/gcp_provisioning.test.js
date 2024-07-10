@@ -1,16 +1,17 @@
 import React from 'react';
 import MockAdapter from 'axios-mock-adapter';
-import { act, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import render from '../../__mocks__/render';
 import * as useFormApi from '@data-driven-forms/react-form-renderer/use-form-api/use-form-api';
 import * as ProvGCP from '../../../../components/addSourceWizard/hardcodedComponents/gcp/provisioning';
 import * as api from '../../../../api/entities';
 
 describe('Provisioning GCP hardcoded schemas', () => {
+  const MOCKED_USERNAME = 'mocked-username';
   const getState = jest.fn(() => ({
     values: {
       authentication: {
-        username: 'mocked-username',
+        username: MOCKED_USERNAME,
       },
     },
   }));
@@ -31,35 +32,20 @@ describe('Provisioning GCP hardcoded schemas', () => {
       .onGet(`/api/sources/v3.1/app_meta_data?filter[name]=gcp_service_account&application_type_id=${appId}`)
       .reply(200, { data: [{ payload: gcpServiceAccount }] });
 
-    await render(<ProvGCP.AddRole />);
+    render(<ProvGCP.ConnectGCP />);
+
+    expect(screen.getByText('Loading configuration...')).toBeInTheDocument();
 
     expect(
-      screen.getByText('To delegate account access, create a custom role and grant it to Red Hat service account.', {
+      await screen.findByText('To delegate account access, create a custom role and grant it to Red Hat service account.', {
         exact: false,
       }),
     ).toBeInTheDocument();
 
-    await act(async () => {
-      expect(screen.getByText('Loading configuration...')).toBeInTheDocument();
-    });
-
-    const copyInputs = await screen.findAllByLabelText('Copyable input');
-
-    expect(
-      screen.getByText('Create a new custom role and fetch the role name:', {
-        exact: false,
-      }),
-    ).toBeInTheDocument();
-
-    expect(copyInputs[0]).toHaveDisplayValue(/--project=mocked-username/);
-    expect(
-      screen.getByText('Attach the role that you just created to Red Hat service account to grant permissions.', {
-        exact: false,
-      }),
-    ).toBeInTheDocument();
-    expect(copyInputs[1]).toHaveValue(
-      `gcloud projects add-iam-policy-binding mocked-username --member=serviceAccount:${gcpServiceAccount} --role=$ROLE_NAME`,
-    );
+    const cloudShellURL = `https://console.cloud.google.com/cloudshell/editor?project=${MOCKED_USERNAME}&cloudshell=true&shellonly=true`;
+    const button = await screen.findByText('Connect Google Cloud');
+    expect(button).toBeInTheDocument();
+    expect(button).toHaveAttribute('href', cloudShellURL);
   });
 
   it('ADD ROLE is rendered correctly with error', async () => {
@@ -68,7 +54,7 @@ describe('Provisioning GCP hardcoded schemas', () => {
       .onGet(`/api/sources/v3.1/application_types?filter[name]=/insights/platform/provisioning`)
       .reply(500, { errors: [{ detail: 'error details' }] });
 
-    render(<ProvGCP.AddRole />);
+    render(<ProvGCP.ConnectGCP />);
 
     expect(screen.getByText('Loading configuration...')).toBeInTheDocument();
 
