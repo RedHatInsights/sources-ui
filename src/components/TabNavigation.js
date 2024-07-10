@@ -39,38 +39,6 @@ const TabNavigation = () => {
             title={<TabTitleText> {intl.formatMessage({ id: 'sources.overview', defaultMessage: 'Overview' })}</TabTitleText>}
           ></Tab>
         )}
-        <Tab
-          eventKey={CLOUD_VENDOR}
-          title={
-            <React.Fragment>
-              <TabTitleIcon>
-                <CloudIcon aria-label="Cloud Icon" />
-              </TabTitleIcon>
-              <TabTitleText>
-                {intl.formatMessage({
-                  id: 'sources.cloudSources',
-                  defaultMessage: enableIntegrations ? 'Cloud' : 'Cloud sources',
-                })}
-              </TabTitleText>
-            </React.Fragment>
-          }
-        />
-        <Tab
-          eventKey={REDHAT_VENDOR}
-          title={
-            <React.Fragment>
-              <TabTitleIcon>
-                <RedhatIcon aria-label="Red Hat Icon" />
-              </TabTitleIcon>
-              <TabTitleText>
-                {intl.formatMessage({
-                  id: 'sources.redhatSources',
-                  defaultMessage: enableIntegrations ? 'Red Hat' : 'Red Hat sources',
-                })}
-              </TabTitleText>
-            </React.Fragment>
-          }
-        />
         {(isOrgAdmin || hasIntegrationsPermissions) &&
           (enableIntegrations || enableBreakdown) &&
           (enableBreakdown ? (
@@ -104,6 +72,46 @@ const TabNavigation = () => {
               }
             />
           ))}
+        <Tab
+          eventKey={CLOUD_VENDOR}
+          title={
+            <React.Fragment>
+              {enableIntegrationsOverview ? (
+                ''
+              ) : (
+                <TabTitleIcon>
+                  <CloudIcon aria-label="Cloud Icon" />
+                </TabTitleIcon>
+              )}
+              <TabTitleText>
+                {intl.formatMessage({
+                  id: 'sources.cloudSources',
+                  defaultMessage: enableIntegrations ? 'Cloud' : 'Cloud sources',
+                })}
+              </TabTitleText>
+            </React.Fragment>
+          }
+        />
+        <Tab
+          eventKey={REDHAT_VENDOR}
+          title={
+            <React.Fragment>
+              {enableIntegrationsOverview ? (
+                ''
+              ) : (
+                <TabTitleIcon>
+                  <RedhatIcon aria-label="Red Hat Icon" />
+                </TabTitleIcon>
+              )}
+              <TabTitleText>
+                {intl.formatMessage({
+                  id: 'sources.redhatSources',
+                  defaultMessage: enableIntegrations ? 'Red Hat' : 'Red Hat sources',
+                })}
+              </TabTitleText>
+            </React.Fragment>
+          }
+        />
       </Tabs>
     </PageSection>
   );
