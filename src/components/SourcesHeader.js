@@ -12,7 +12,7 @@ const SourcesHeader = () => {
 
   return (
     <>
-      {!enableIntegrationsOverview ? (
+      {enableIntegrationsOverview ? (
         <>
           <ContentHeader
             title={intl.formatMessage({ id: 'sources.integrations', defaultMessage: 'Integrations' })}

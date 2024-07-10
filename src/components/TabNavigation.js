@@ -33,7 +33,7 @@ const TabNavigation = () => {
           '2xl': 'inset2xl',
         }}
       >
-        {!enableIntegrationsOverview && (
+        {enableIntegrationsOverview && (
           <Tab
             eventKey={OVERVIEW}
             title={<TabTitleText> {intl.formatMessage({ id: 'sources.overview', defaultMessage: 'Overview' })}</TabTitleText>}
