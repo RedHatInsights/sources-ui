@@ -4,11 +4,11 @@ import TabNavigation from './TabNavigation';
 import { useFlag } from '@unleash/proxy-client-react';
 import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
 import { ContentHeader } from '@patternfly/react-component-groups';
-import integrationsIcon from './assets/integrationsIcon.svg';
 
 const SourcesHeader = () => {
   const intl = useIntl();
   const enableIntegrationsOverview = useFlag('platform.integrations.overview');
+  const integrationsIcon = '/apps/frontend-assets/sources-integrations/integrations-icon.svg';
 
   return (
     <>
@@ -21,7 +21,7 @@ const SourcesHeader = () => {
             linkProps={{
               label: 'Learn more',
               isExternal: true,
-              href: 'https://access.redhat.com/documentation/en-us/red_hat_hybrid_cloud_console/1-latest/html/configuring_notifications_on_the_red_hat_hybrid_cloud_console/index',
+              to: 'https://access.redhat.com/documentation/en-us/red_hat_hybrid_cloud_console/1-latest/html/configuring_notifications_on_the_red_hat_hybrid_cloud_console/index',
             }}
           />
           <TabNavigation />
