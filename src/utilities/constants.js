@@ -16,6 +16,7 @@ export const CLOUD_METER_APP_NAME = '/insights/platform/cloud-meter';
 export const PROVISIONING_APP_NAME = '/insights/platform/provisioning';
 export const CATALOG_APP = '/insights/platform/catalog';
 export const OPENSHIFT_NAME = 'openshift';
+export const OVERVIEW = 'overview';
 
 export const HCS_APP_NAME = 'Hybrid Committed Spend';
 export const COST_MANAGEMENT_APP_ID = '2'; // use only for Cost overwrite to HCS!
