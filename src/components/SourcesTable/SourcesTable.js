@@ -55,6 +55,7 @@ export const prepareColumnsCells = (columns) =>
       hidden: column.hidden,
       transforms: [wrappable],
       ...(column.sortable && { transforms: [sortable, wrappable] }),
+      props: { 'aria-label': column.title || column.ariaLabel || column.value },
     }));
 
 const reducer = (state, payload) => ({ ...state, ...payload, key: state.key + 1 });
