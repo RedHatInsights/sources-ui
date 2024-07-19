@@ -50,7 +50,7 @@ export const sourcesColumns = (intl, notSortable = false) => [
     ariaLabel: intl.formatMessage({
       id: 'sources.imported',
       defaultMessage: 'Imported',
-    })
+    }),
   },
   {
     title: intl.formatMessage({
