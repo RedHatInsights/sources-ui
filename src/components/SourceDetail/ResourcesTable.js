@@ -17,8 +17,14 @@ import ResourcesEmptyState from './ResourcesEmptyState';
 import { pausedAppAlert } from '../../utilities/alerts';
 
 const createColumns = (intl) => [
-  intl.formatMessage({ id: 'resourceTable.resourceType', defaultMessage: 'Resource type' }),
-  intl.formatMessage({ id: 'resourceTable.resourceValue', defaultMessage: 'Value' }),
+  {
+    title: intl.formatMessage({ id: 'resourceTable.resourceType', defaultMessage: 'Resource type' }),
+    props: { 'aria-label': 'Resource type' },
+  },
+  {
+    title: intl.formatMessage({ id: 'resourceTable.resourceValue', defaultMessage: 'Value' }),
+    props: { 'aria-label': 'Resource value' },
+  },
 ];
 
 const convertFieldsToRows = (fields, initialValues) =>
@@ -76,6 +82,8 @@ const reducer = (state, { type, intl, source, activeTab, appTypes, sourceType })
         ...state,
         loading: true,
       };
+    default:
+      return state;
   }
 };
 
