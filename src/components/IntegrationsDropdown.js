@@ -56,14 +56,20 @@ const IntegrationsDropdown = (props) => {
           module="./IntegrationsWizard"
           isOpen={isIntegrationsWizardOpen}
           category={selectedIntegration}
-          closeModal={() => setIsIntegrationsWizardOpen(false)}
+          closeModal={() => {
+            setIsIntegrationsWizardOpen(false);
+            setSelectedIntegration(null);
+          }}
           fallback={<div id="fallback-modal" />}
         />
       )}
       {[REDHAT_VENDOR, CLOUD_VENDOR].includes(selectedIntegration) && (
         <AddSourceWizard
           isOpen={isSourcesWizardOpen}
-          onClose={() => setIsSourcesWizardOpen(false)}
+          onClose={() => {
+            setIsSourcesWizardOpen(false);
+            setSelectedIntegration(null);
+          }}
           activeCategory={selectedIntegration}
         />
       )}
