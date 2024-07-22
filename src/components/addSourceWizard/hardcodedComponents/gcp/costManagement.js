@@ -232,7 +232,9 @@ export const AssignAccess = () => {
 
     getSourcesApi()
       .getGoogleAccount()
-      .then((data) => setGoogleAccount(data?.data?.[0]?.payload || errorMessage))
+      .then((data) =>
+        setGoogleAccount(data?.data?.find((item) => item?.payload?.includes('billing-export'))?.payload || errorMessage),
+      )
       .catch((e) => {
         // eslint-disable-next-line no-console
         console.error(e);
