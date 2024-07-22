@@ -17,6 +17,7 @@ const SourcesHeader = () => {
       {enableIntegrationsOverview ? (
         <>
           <ContentHeader
+            ouiaId={'sources-header'}
             title={intl.formatMessage({ id: 'sources.integrations', defaultMessage: 'Integrations' })}
             subtitle="Integrating third-party applications expands the scope of notifications beyond emails and messages, so that you can view and manage Hybrid Cloud Console events from your preferred platform dashboard."
             icon={<img src={integrationsIcon} alt="integrations-header-icon" />}
