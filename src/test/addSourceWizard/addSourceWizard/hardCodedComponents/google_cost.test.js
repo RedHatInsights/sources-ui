@@ -47,7 +47,7 @@ describe('Cost Management Google steps components', () => {
 
   describe('Assign access', () => {
     it('successfully loads data', async () => {
-      const email = 'super-google-email@gmail.com';
+      const email = 'billing-export-email@gmail.com';
 
       api.getSourcesApi = () => ({
         getGoogleAccount: () =>
