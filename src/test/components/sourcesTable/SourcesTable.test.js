@@ -345,11 +345,19 @@ describe('SourcesTable', () => {
 
         expect(prepareColumnsCells(columns)).toEqual([
           {
+            hidden: undefined,
+            props: {
+              'aria-label': 'name',
+            },
             title: 'name',
             value: 'name',
             transforms: [wrappable],
           },
           {
+            hidden: undefined,
+            props: {
+              'aria-label': 'date',
+            },
             title: 'date',
             value: 'date',
             transforms: [sortable, wrappable],
