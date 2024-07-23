@@ -47,6 +47,10 @@ export const sourcesColumns = (intl, notSortable = false) => [
     hidden: true,
     value: 'imported',
     formatter: importedFormatter,
+    ariaLabel: intl.formatMessage({
+      id: 'sources.imported',
+      defaultMessage: 'Imported',
+    }),
   },
   {
     title: intl.formatMessage({
