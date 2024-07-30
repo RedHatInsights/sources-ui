@@ -1,0 +1,11 @@
+.pf-c-card__cover-image {
+    position: relative;
+    background-image: url('https://console.redhat.com/apps/frontend-assets/integrations-landing/integrations-landing-minispot.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: right center;
+  }
+  
+  .pf-v5-c-data-list .active-item {
+    border-left: 3px solid var(--pf-v5-global--link--Color);
+  }
