@@ -66,7 +66,7 @@ describe('CloudTiles', () => {
     await waitFor(() =>
       expect(
         screen.getByText(
-          'To perform this action, your Organization Administrator must grant you Cloud Integration Administrator permissions.',
+          'To perform this action, your Organization Administrator must grant you Cloud Administrator permissions.',
         ),
       ).toBeInTheDocument(),
     );
