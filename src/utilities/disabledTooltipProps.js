@@ -2,12 +2,11 @@ export const disabledMessage = (intl, isOrgAdmin) =>
   isOrgAdmin
     ? intl.formatMessage({
         id: 'sources.notAdminButton',
-        defaultMessage: 'To perform this action, you must add Cloud Integration Administrator permissions to your user.',
+        defaultMessage: 'To perform this action, you must add Cloud Administrator permissions to your user.',
       })
     : intl.formatMessage({
         id: 'sources.notWritePermissionButton',
-        defaultMessage:
-          'To perform this action, your Organization Administrator must grant you Cloud Integration Administrator permissions.',
+        defaultMessage: 'To perform this action, your Organization Administrator must grant you Cloud Administrator permissions.',
       });
 
 const disabledTooltipProps = (intl, isOrgAdmin) => ({
