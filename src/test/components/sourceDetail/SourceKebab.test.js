@@ -64,8 +64,7 @@ describe('SourceKebab', () => {
       await user.hover(screen.getByText('Pause'));
     });
 
-    const tooltipText =
-      'To perform this action, your Organization Administrator must grant you Cloud Integration Administrator permissions.';
+    const tooltipText = 'To perform this action, your Organization Administrator must grant you Cloud Administrator permissions.';
 
     await waitFor(() => expect(screen.getByText(tooltipText)).toBeInTheDocument());
   });
@@ -97,7 +96,7 @@ describe('SourceKebab', () => {
       await user.hover(screen.getByText('Pause'));
     });
 
-    const tooltipText = 'To perform this action, you must add Cloud Integration Administrator permissions to your user.';
+    const tooltipText = 'To perform this action, you must add Cloud Administrator permissions to your user.';
 
     await waitFor(() => expect(screen.getByText(tooltipText)).toBeInTheDocument());
   });

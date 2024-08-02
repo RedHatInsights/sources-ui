@@ -1214,7 +1214,7 @@ describe('SourcesPage', () => {
 
       await waitFor(() =>
         expect(
-          screen.getByText('To add a source, you must add Cloud Integration Administrator permissions to your user.'),
+          screen.getByText('To add a source, you must add Cloud Administrator permissions to your user.'),
         ).toBeInTheDocument(),
       );
 
@@ -1245,9 +1245,7 @@ describe('SourcesPage', () => {
 
       await waitFor(() =>
         expect(
-          screen.getByText(
-            'To add a source, your Organization Administrator must grant you Cloud Integration Administrator permissions.',
-          ),
+          screen.getByText('To add a source, your Organization Administrator must grant you Cloud Administrator permissions.'),
         ).toBeInTheDocument(),
       );
 
@@ -1281,9 +1279,7 @@ describe('SourcesPage', () => {
 
       await waitFor(() =>
         expect(
-          screen.getByText(
-            'To add a source, your Organization Administrator must grant you Cloud Integration Administrator permissions.',
-          ),
+          screen.getByText('To add a source, your Organization Administrator must grant you Cloud Administrator permissions.'),
         ).toBeInTheDocument(),
       );
 

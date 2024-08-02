@@ -11,9 +11,7 @@ describe('NoPermissions', () => {
 
     expect(screen.getByText('Missing permissions')).toBeInTheDocument();
     expect(
-      screen.getByText(
-        'To perform this action, your Organization Administrator must grant you Cloud Integration Administrator permissions.',
-      ),
+      screen.getByText('To perform this action, your Organization Administrator must grant you Cloud Administrator permissions.'),
     ).toBeInTheDocument();
   });
 });
