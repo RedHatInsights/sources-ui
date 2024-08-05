@@ -1133,6 +1133,12 @@ const hardcodedSchemas = {
               substepOf: 'eaa',
               fields: [
                 {
+                  name: 'authentication.extra.external_id',
+                  component: componentTypes.TEXT_FIELD,
+                  hideField: true,
+                  initializeOnMount: true,
+                },
+                {
                   name: 'iam-role-description',
                   component: 'description',
                   Content: SWAwsArn.IAMRoleDescription,

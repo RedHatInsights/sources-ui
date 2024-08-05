@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { v4 as uuidv4 } from 'uuid';
 
 import {
   ClipboardCopy,
@@ -13,12 +14,16 @@ import {
 } from '@patternfly/react-core';
 
 import { getSubWatchConfig } from '../../../../api/subscriptionWatch';
+import { useFormApi } from '@data-driven-forms/react-form-renderer';
 
 const b = (chunks) => <b key={`b-${chunks.length}-${Math.floor(Math.random() * 1000)}`}>{chunks}</b>;
 
 export const IAMRoleDescription = () => {
   const intl = useIntl();
   const [config, setConfig] = useState();
+  const externalId = useMemo(() => uuidv4(), []);
+  const formOptions = useFormApi();
+  const { authentication = {} } = formOptions.getState().values;
 
   useEffect(() => {
     getSubWatchConfig()
@@ -34,6 +39,13 @@ export const IAMRoleDescription = () => {
         );
       });
   }, []);
+
+  useEffect(() => {
+    formOptions.change('authentication', {
+      ...authentication,
+      extra: { ...(authentication?.extra || {}), external_id: externalId },
+    });
+  }, [externalId]);
 
   return (
     <TextContent>
@@ -65,6 +77,15 @@ export const IAMRoleDescription = () => {
         </TextListItem>
         <ClipboardCopy className="pf-v5-u-m-sm-on-sm" isReadOnly>
           {config || intl.formatMessage({ id: 'subwatch.iampolicy.loading', defaultMessage: 'Loading configuration...' })}
+        </ClipboardCopy>
+        <TextListItem>
+          {intl.formatMessage({
+            id: 'subwatch.iamrole.pasteExternalId',
+            defaultMessage: 'Paste the following value in the External ID field:',
+          })}
+        </TextListItem>
+        <ClipboardCopy className="pf-v5-u-m-sm-on-sm" isReadOnly>
+          {externalId}
         </ClipboardCopy>
         <TextListItem>
           {intl.formatMessage({
