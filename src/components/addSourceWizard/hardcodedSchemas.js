@@ -1570,7 +1570,7 @@ const hardcodedSchemas = {
                 {
                   name: 'custom-role-description',
                   component: 'description',
-                  Content: ProvGCP.AddRole,
+                  Content: ProvGCP.ConnectGCP,
                 },
               ],
             },
