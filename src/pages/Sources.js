@@ -31,7 +31,7 @@ import { useIsLoaded } from '../hooks/useIsLoaded';
 import { useHasWritePermissions } from '../hooks/useHasWritePermissions';
 import { PaginationLoader } from '../components/SourcesTable/loaders';
 import CloudCards from '../components/CloudTiles/CloudCards';
-import { CLOUD_VENDOR, COMMUNICATIONS, INTEGRATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../utilities/constants';
+import { CLOUD_VENDOR, COMMUNICATIONS, INTEGRATIONS, OVERVIEW, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../utilities/constants';
 import CloudEmptyState from '../components/CloudTiles/CloudEmptyState';
 import { AVAILABLE, UNAVAILABLE } from '../views/formatters';
 import RedHatEmptyState from '../components/RedHatTiles/RedHatEmptyState';
@@ -42,6 +42,7 @@ import generateCSV from '../utilities/generateCSV';
 import generateJSON from '../utilities/generateJSON';
 import { Outlet } from 'react-router-dom';
 import { useFlag } from '@unleash/proxy-client-react';
+import Overview from '../components/Overview';
 
 const initialState = {
   filter: undefined,
@@ -180,6 +181,7 @@ const SourcesPage = () => {
       .filter(Boolean).length > 0;
 
   const showEmptyState = loaded && numberOfEntities === 0 && !hasSomeFilter;
+  const showOverview = activeCategory === OVERVIEW && !showEmptyState;
   const showInfoCards = activeCategory === CLOUD_VENDOR && !showEmptyState;
 
   const setSelectedType = (selectedType) => stateDispatch({ type: 'setSelectedType', selectedType });
@@ -335,6 +337,7 @@ const SourcesPage = () => {
       </Suspense>
       <SourcesHeader />
       <Section type="content">
+        {showOverview && <Overview />}
         {showInfoCards && <CloudCards />}
         {fetchingError && <ErrorState />}
         {!fetchingError && showEmptyState && activeCategory === CLOUD_VENDOR && (
@@ -343,7 +346,7 @@ const SourcesPage = () => {
         {!fetchingError && showEmptyState && activeCategory === REDHAT_VENDOR && (
           <RedHatEmptyState setSelectedType={setSelectedType} />
         )}
-        {mainContent}
+        {!showOverview && mainContent}
       </Section>
     </React.Fragment>
   );
