@@ -6,7 +6,9 @@ import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from
 export const updateQuery = ({ sortBy, sortDirection, pageNumber, pageSize, filterValue, activeCategory, removeQuery }) => {
   const sortQuery = `sort_by[]=${sortBy}:${sortDirection}`;
 
-  const paginationQuery = `limit=${pageSize}&offset=${(pageNumber - 1) * pageSize}&category=${activeCategory || CLOUD_VENDOR}`;
+  const paginationQuery = `limit=${pageSize}&offset=${(pageNumber - 1) * pageSize}${
+    activeCategory ? `&category=${activeCategory}` : ''
+  }`;
 
   const filterQuery = restFilterGenerator(filterValue);
 
