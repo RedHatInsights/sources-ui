@@ -23,7 +23,7 @@ const TabNavigation = () => {
   return (
     <PageSection type="tabs" variant={PageSectionVariants.light} isWidthLimited>
       <Tabs
-        activeKey={activeCategory}
+        activeKey={activeCategory || (enableIntegrations ? OVERVIEW : CLOUD_VENDOR)}
         onSelect={(_e, key) => dispatch(setActiveCategory(key))}
         className="pf-v5-u-mt-md"
         inset={{

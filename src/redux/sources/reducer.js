@@ -10,7 +10,6 @@ import {
   SORT_ENTITIES,
   STATUS_CHECK_PENDING,
 } from './actionTypes';
-import { CLOUD_VENDOR } from '../../utilities/constants';
 
 export const defaultSourcesState = {
   loaded: 0,
@@ -24,7 +23,7 @@ export const defaultSourcesState = {
   sortBy: 'created_at',
   sortDirection: 'desc',
   removingSources: [],
-  activeCategory: CLOUD_VENDOR,
+  activeCategory: null,
   appTypes: [],
   sourceTypes: [],
   hcsEnrolled: false,
