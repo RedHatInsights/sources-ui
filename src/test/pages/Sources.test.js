@@ -891,8 +891,6 @@ describe('SourcesPage', () => {
     it('should call onFilterSelect with applications', async () => {
       const user = userEvent.setup();
 
-      console.log(store, 'this is store!');
-
       await act(async () => {
         render(componentWrapperIntl(<SourcesPage {...initialProps} />, store));
       });
