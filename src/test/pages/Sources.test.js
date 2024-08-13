@@ -125,6 +125,7 @@ describe('SourcesPage', () => {
 
     store = getStore([], {
       user: { writePermissions: true },
+      sources: { activeCategory: CLOUD_VENDOR },
     });
 
     urlQuery.updateQuery = jest.fn();
@@ -160,7 +161,7 @@ describe('SourcesPage', () => {
 
     expect(urlQuery.parseQuery.mock.calls).toHaveLength(1);
     expect(urlQuery.updateQuery.mock.calls).toHaveLength(1);
-    expect(urlQuery.updateQuery).toHaveBeenCalledWith(defaultSourcesState);
+    expect(urlQuery.updateQuery).toHaveBeenCalledWith({ ...defaultSourcesState, activeCategory: 'Cloud' });
   });
 
   it('should use object config on small screen', async () => {
@@ -339,7 +340,7 @@ describe('SourcesPage', () => {
     const user = userEvent.setup();
 
     store = getStore([], {
-      sources: { pageSize: 1 }, // enable pagination
+      sources: { pageSize: 1, activeCategory: CLOUD_VENDOR }, // enable pagination
       user: { writePermissions: true },
     });
 
@@ -516,7 +517,7 @@ describe('SourcesPage', () => {
 
   it('renders and decreased page number if it is too great', async () => {
     store = getStore([], {
-      sources: { pageNumber: 20 },
+      sources: { pageNumber: 20, activeCategory: CLOUD_VENDOR },
       user: { writePermissions: true },
     });
 
@@ -1182,7 +1183,7 @@ describe('SourcesPage', () => {
   describe('not write permissions', () => {
     beforeEach(() => {
       store = getStore([], {
-        sources: {},
+        sources: { activeCategory: CLOUD_VENDOR },
         user: { writePermissions: false },
       });
     });
@@ -1191,7 +1192,7 @@ describe('SourcesPage', () => {
       const user = userEvent.setup({ pointerEventsCheck: false });
 
       store = getStore([], {
-        sources: {},
+        sources: { activeCategory: CLOUD_VENDOR },
         user: { writePermissions: false, isOrgAdmin: true },
       });
 
@@ -1355,7 +1356,7 @@ describe('SourcesPage', () => {
     describe('not org admin, redirect back to sources', () => {
       beforeEach(() => {
         store = getStore([], {
-          user: { writePermissions: false },
+          user: { writePermissions: false, activeCategory: CLOUD_VENDOR },
         });
       });
 
