@@ -71,6 +71,7 @@ const SourcesPage = () => {
   const hasWritePermissions = useHasWritePermissions();
   const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
   const enableIntegrations = useFlag('platform.sources.integrations') || useFlag('platform.sources.breakdown');
+  const enableIntegrationsOverview = useFlag('platform.integrations.overview');
 
   const appNavigate = useAppNavigate();
   const intl = useIntl();
@@ -181,8 +182,8 @@ const SourcesPage = () => {
       .filter(Boolean).length > 0;
 
   const showEmptyState = loaded && numberOfEntities === 0 && !hasSomeFilter;
-  const showOverview = activeCategory === OVERVIEW && !showEmptyState;
-  const showInfoCards = activeCategory === CLOUD_VENDOR && !showEmptyState;
+  const showOverview = enableIntegrationsOverview && [null, OVERVIEW].includes(activeCategory) && !showEmptyState;
+  const showInfoCards = !enableIntegrationsOverview && [null, CLOUD_VENDOR].includes(activeCategory) && !showEmptyState;
 
   const setSelectedType = (selectedType) => stateDispatch({ type: 'setSelectedType', selectedType });
 
