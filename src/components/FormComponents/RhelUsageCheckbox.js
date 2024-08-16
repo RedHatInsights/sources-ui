@@ -15,6 +15,7 @@ const RhelUsageCheckbox = ({ ...props }) => {
 
   return (
     <Checkbox
+      id={input.name}
       label={label}
       isChecked={input.value === 'rhel'}
       onChange={(_ev, checked) => {

@@ -225,7 +225,6 @@ const getArn = (authUsername, showHCS) => ({
           name: 'application.extra.metered',
           component: 'rhel-usage-checkbox',
           label: <FormattedMessage id="cost.arn.includesRhelUsage" defaultMessage="Include RHEL usage" />,
-          condition: { when: 'application.extra.storage_only', is: false },
         },
         {
           name: 'aws.rhel_usage.divider',
@@ -840,13 +839,11 @@ const hardcodedSchemas = {
                   name: 'cost-export-scope-rhel-alert',
                   component: 'description',
                   Content: CMAzure.ExportScopeAlert,
-                  condition: { when: 'application.extra.storage_only', is: false },
                 },
                 {
                   name: 'application.extra.metered',
                   component: 'rhel-usage-checkbox',
                   label: <FormattedMessage id="cost.azure.includesRhelUsage" defaultMessage="Include RHEL usage" />,
-                  condition: { when: 'application.extra.storage_only', is: false },
                 },
                 {
                   name: 'azure.rhel_usage.divider',

@@ -398,11 +398,9 @@ IAMPolicyDescription.propTypes = {
 };
 
 export const TagsDescription = ({ showHCS }) => {
-  const formOptions = useFormApi();
   const intl = useIntl();
   const applicationName = showHCS ? HCS_APP_NAME : 'Cost Management';
   const rhelAws = useFlag('platform.sources.metered-rhel');
-  const application = formOptions.getState().values.application;
 
   return (
     <Fragment>
@@ -450,7 +448,7 @@ export const TagsDescription = ({ showHCS }) => {
           </TextListItem>
         </TextList>
       </TextContent>
-      {rhelAws && !application.extra.storage_only ? (
+      {rhelAws ? (
         <Alert
           variant="info"
           isInline
