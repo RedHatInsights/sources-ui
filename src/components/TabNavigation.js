@@ -20,10 +20,86 @@ const TabNavigation = () => {
   const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
   const hasIntegrationsPermissions = useSelector(({ user }) => user?.integrationsEndpointsPermissions);
 
+  const integrationsTabs =
+    (isOrgAdmin || hasIntegrationsPermissions) &&
+    (enableIntegrations || enableBreakdown) &&
+    (enableBreakdown ? (
+      <>
+        <Tab
+          eventKey={COMMUNICATIONS}
+          title={
+            <TabTitleText>{intl.formatMessage({ id: 'sources.communications', defaultMessage: 'Communications' })}</TabTitleText>
+          }
+        />
+        <Tab
+          eventKey={REPORTING}
+          title={
+            <TabTitleText>
+              {intl.formatMessage({ id: 'sources.reportingAutomation', defaultMessage: 'Reporting & Automation' })}
+            </TabTitleText>
+          }
+        />
+        <Tab
+          eventKey={WEBHOOKS}
+          title={<TabTitleText>{intl.formatMessage({ id: 'sources.webhooks', defaultMessage: 'Webhooks' })}</TabTitleText>}
+        />
+      </>
+    ) : (
+      <Tab
+        eventKey={INTEGRATIONS}
+        title={<TabTitleText>{intl.formatMessage({ id: 'sources.integrations', defaultMessage: 'Integrations' })}</TabTitleText>}
+      />
+    ));
+
+  const cloudTabs = (
+    <>
+      <Tab
+        eventKey={CLOUD_VENDOR}
+        title={
+          <React.Fragment>
+            {enableIntegrationsOverview ? (
+              ''
+            ) : (
+              <TabTitleIcon>
+                <CloudIcon aria-label="Cloud Icon" />
+              </TabTitleIcon>
+            )}
+            <TabTitleText>
+              {intl.formatMessage({
+                id: 'sources.cloudSources',
+                defaultMessage: enableIntegrations ? 'Cloud' : 'Cloud sources',
+              })}
+            </TabTitleText>
+          </React.Fragment>
+        }
+      />
+      <Tab
+        eventKey={REDHAT_VENDOR}
+        title={
+          <React.Fragment>
+            {enableIntegrationsOverview ? (
+              ''
+            ) : (
+              <TabTitleIcon>
+                <RedhatIcon aria-label="Red Hat Icon" />
+              </TabTitleIcon>
+            )}
+            <TabTitleText>
+              {intl.formatMessage({
+                id: 'sources.redhatSources',
+                defaultMessage: enableIntegrations ? 'Red Hat' : 'Red Hat sources',
+              })}
+            </TabTitleText>
+          </React.Fragment>
+        }
+      />
+    </>
+  );
+
   return (
     <PageSection type="tabs" variant={PageSectionVariants.light} isWidthLimited>
       <Tabs
-        activeKey={activeCategory || (enableIntegrations ? OVERVIEW : CLOUD_VENDOR)}
+        activeKey={activeCategory || (enableIntegrationsOverview ? OVERVIEW : CLOUD_VENDOR)}
         onSelect={(_e, key) => dispatch(setActiveCategory(key))}
         className="pf-v5-u-mt-md"
         inset={{
@@ -33,85 +109,21 @@ const TabNavigation = () => {
           '2xl': 'inset2xl',
         }}
       >
-        {enableIntegrationsOverview && (
-          <Tab
-            eventKey={OVERVIEW}
-            title={<TabTitleText> {intl.formatMessage({ id: 'sources.overview', defaultMessage: 'Overview' })}</TabTitleText>}
-          ></Tab>
-        )}
-        {(isOrgAdmin || hasIntegrationsPermissions) &&
-          (enableIntegrations || enableBreakdown) &&
-          (enableBreakdown ? (
-            <>
-              <Tab
-                eventKey={COMMUNICATIONS}
-                title={
-                  <TabTitleText>
-                    {intl.formatMessage({ id: 'sources.communications', defaultMessage: 'Communications' })}
-                  </TabTitleText>
-                }
-              />
-              <Tab
-                eventKey={REPORTING}
-                title={
-                  <TabTitleText>
-                    {intl.formatMessage({ id: 'sources.reportingAutomation', defaultMessage: 'Reporting & Automation' })}
-                  </TabTitleText>
-                }
-              />
-              <Tab
-                eventKey={WEBHOOKS}
-                title={<TabTitleText>{intl.formatMessage({ id: 'sources.webhooks', defaultMessage: 'Webhooks' })}</TabTitleText>}
-              />
-            </>
-          ) : (
+        {enableIntegrationsOverview ? (
+          <>
             <Tab
-              eventKey={INTEGRATIONS}
-              title={
-                <TabTitleText>{intl.formatMessage({ id: 'sources.integrations', defaultMessage: 'Integrations' })}</TabTitleText>
-              }
-            />
-          ))}
-        <Tab
-          eventKey={CLOUD_VENDOR}
-          title={
-            <React.Fragment>
-              {enableIntegrationsOverview ? (
-                ''
-              ) : (
-                <TabTitleIcon>
-                  <CloudIcon aria-label="Cloud Icon" />
-                </TabTitleIcon>
-              )}
-              <TabTitleText>
-                {intl.formatMessage({
-                  id: 'sources.cloudSources',
-                  defaultMessage: enableIntegrations ? 'Cloud' : 'Cloud sources',
-                })}
-              </TabTitleText>
-            </React.Fragment>
-          }
-        />
-        <Tab
-          eventKey={REDHAT_VENDOR}
-          title={
-            <React.Fragment>
-              {enableIntegrationsOverview ? (
-                ''
-              ) : (
-                <TabTitleIcon>
-                  <RedhatIcon aria-label="Red Hat Icon" />
-                </TabTitleIcon>
-              )}
-              <TabTitleText>
-                {intl.formatMessage({
-                  id: 'sources.redhatSources',
-                  defaultMessage: enableIntegrations ? 'Red Hat' : 'Red Hat sources',
-                })}
-              </TabTitleText>
-            </React.Fragment>
-          }
-        />
+              eventKey={OVERVIEW}
+              title={<TabTitleText> {intl.formatMessage({ id: 'sources.overview', defaultMessage: 'Overview' })}</TabTitleText>}
+            ></Tab>
+            {integrationsTabs}
+            {cloudTabs}
+          </>
+        ) : (
+          <>
+            {cloudTabs}
+            {integrationsTabs}
+          </>
+        )}
       </Tabs>
     </PageSection>
   );

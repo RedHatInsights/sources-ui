@@ -26,11 +26,11 @@ describe('TabNavigation', () => {
 
     render(componentWrapperIntl(<TabNavigation />, store));
 
-    expect(screen.getByLabelText('Red Hat Icon')).toBeInTheDocument();
-    expect(screen.getByLabelText('Cloud Icon')).toBeInTheDocument();
+    expect(screen.getAllByLabelText('Red Hat Icon')[0]).toBeInTheDocument();
+    expect(screen.getAllByLabelText('Cloud Icon')[0]).toBeInTheDocument();
 
-    expect(screen.getByText('Cloud sources').closest('.pf-m-current')).toBeInTheDocument();
-    expect(screen.getByText('Red Hat sources')).toBeInTheDocument();
+    expect(screen.getAllByText('Cloud sources')[0].closest('.pf-m-current')).toBeInTheDocument();
+    expect(screen.getAllByText('Red Hat sources')[0]).toBeInTheDocument();
   });
 
   it('renders correctly on Red Hat Category', () => {
@@ -43,11 +43,11 @@ describe('TabNavigation', () => {
 
     render(componentWrapperIntl(<TabNavigation />, store));
 
-    expect(screen.getByLabelText('Red Hat Icon')).toBeInTheDocument();
-    expect(screen.getByLabelText('Cloud Icon')).toBeInTheDocument();
+    expect(screen.getAllByLabelText('Red Hat Icon')[0]).toBeInTheDocument();
+    expect(screen.getAllByLabelText('Cloud Icon')[0]).toBeInTheDocument();
 
-    expect(screen.getByText('Cloud sources')).toBeInTheDocument();
-    expect(screen.getByText('Red Hat sources').closest('.pf-m-current')).toBeInTheDocument();
+    expect(screen.getAllByText('Cloud sources')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Red Hat sources')[0].closest('.pf-m-current')).toBeInTheDocument();
   });
 
   it('triggers redux changed', async () => {
@@ -65,13 +65,13 @@ describe('TabNavigation', () => {
 
     expect(actions.setActiveCategory).not.toHaveBeenCalled();
 
-    await user.click(screen.getByText('Cloud sources'));
+    await user.click(screen.getAllByText('Cloud sources')[0]);
 
     expect(actions.setActiveCategory).toHaveBeenCalledWith(CLOUD_VENDOR);
 
     actions.setActiveCategory.mockClear();
 
-    await user.click(screen.getByText('Red Hat sources'));
+    await user.click(screen.getAllByText('Red Hat sources')[0]);
 
     expect(actions.setActiveCategory).toHaveBeenCalledWith(REDHAT_VENDOR);
   });

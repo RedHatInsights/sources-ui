@@ -147,8 +147,8 @@ describe('SourcesPage', () => {
     expect(hcsApi.checkAccountHCS).toHaveBeenCalled();
 
     await waitFor(() => expect(screen.getByText('Add integration')).toBeInTheDocument());
-    expect(screen.getByText('Cloud sources')).toBeInTheDocument();
-    expect(screen.getByText('Red Hat sources')).toBeInTheDocument();
+    expect(screen.getAllByText('Cloud sources')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Red Hat sources')[0]).toBeInTheDocument();
     expect(screen.getAllByText('Name')).toHaveLength(2);
     expect(screen.getByText('Type')).toBeInTheDocument();
     expect(screen.getByText('Connected applications')).toBeInTheDocument();
