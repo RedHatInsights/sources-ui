@@ -196,6 +196,7 @@ describe('SourceWizardSummary component', () => {
         ['Application', 'Cost Management'],
         ['S3 bucket name', 'gfghf'],
         ['AWS region', 'test'],
+        ['Include RHEL usage', 'rhel'],
         ['ARN', 'arn:aws:132'],
       ]);
 
@@ -316,6 +317,7 @@ describe('SourceWizardSummary component', () => {
         ['Application', 'Hybrid Committed Spend'],
         ['S3 bucket name', 'gfghf'],
         ['AWS region', 'test'],
+        ['Include RHEL usage', 'rhel'],
         ['ARN', 'arn:aws:132'],
       ]);
 
