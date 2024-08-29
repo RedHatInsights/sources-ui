@@ -12,7 +12,7 @@ import { isSmallScreen, useScreenSize } from '@redhat-cloud-services/frontend-co
 import { downloadFile } from '@redhat-cloud-services/frontend-components-utilities/helpers';
 
 import SourcesTable from '../components/SourcesTable/SourcesTable';
-import { filterSources, pageAndSize } from '../redux/sources/actions';
+import { filterSources, pageAndSize, setActiveCategory } from '../redux/sources/actions';
 import { useAppNavigate } from '../hooks/useAppNavigate';
 import { routes } from '../Routing';
 
@@ -98,6 +98,12 @@ const SourcesPage = () => {
   const loaded = entitiesLoaded && sourceTypesLoaded && appTypesLoaded;
 
   const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    if (activeCategory === null) {
+      dispatch(setActiveCategory(enableIntegrationsOverview ? OVERVIEW : CLOUD_VENDOR));
+    }
+  }, [enableIntegrationsOverview, activeCategory]);
 
   useEffect(() => {
     if (filter !== filterValue.name) {
