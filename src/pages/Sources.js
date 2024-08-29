@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useReducer } from 'react';
+import React, { Suspense, useEffect, useMemo, useReducer } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Button, Tooltip } from '@patternfly/react-core';
 import { useIntl } from 'react-intl';
@@ -188,8 +188,11 @@ const SourcesPage = () => {
       .filter(Boolean).length > 0;
 
   const showEmptyState = loaded && numberOfEntities === 0 && !hasSomeFilter;
-  const showOverview = enableIntegrationsOverview && [null, OVERVIEW].includes(activeCategory) && !showEmptyState;
-  const showInfoCards = !enableIntegrationsOverview && [null, CLOUD_VENDOR].includes(activeCategory) && !showEmptyState;
+  const showOverview = useMemo(() => enableIntegrationsOverview && [null, OVERVIEW].includes(activeCategory), [activeCategory]);
+  const showInfoCards = useMemo(
+    () => !enableIntegrationsOverview && [null, CLOUD_VENDOR].includes(activeCategory) && !showEmptyState,
+    [activeCategory, showEmptyState],
+  );
 
   const setSelectedType = (selectedType) => stateDispatch({ type: 'setSelectedType', selectedType });
 
