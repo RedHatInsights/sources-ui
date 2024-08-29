@@ -188,32 +188,17 @@ const InternalReaderRoleDescription = () => {
   }
 
   return application.extra.storage_only ? null : (
-    <Fragment>
-      <TextContent>
-        <Text component={TextVariants.p}>
-          {intl.formatMessage({
-            id: 'cost.azure.createCostReaderRole',
-            defaultMessage: 'Run the following command in Cloud Shell to create a Cost Management Reader role:',
-          })}
-        </Text>
-        <ClipboardCopy>
-          {`az role assignment create --assignee "${authentication?.username}" --role "Cost Management Reader" --scope "${scope}"`}
-        </ClipboardCopy>
-      </TextContent>
-      {application?.extra?.metered && (
-        <TextContent>
-          <Text component={TextVariants.p}>
-            {intl.formatMessage({
-              id: 'cost.azure.createReaderRole',
-              defaultMessage: 'Run the following command in Cloud Shell to create a Reader role:',
-            })}
-          </Text>
-          <ClipboardCopy>
-            {`az role assignment create --assignee "${authentication?.username}" --role "Reader" --scope "${scope}"`}
-          </ClipboardCopy>
-        </TextContent>
-      )}
-    </Fragment>
+    <TextContent>
+      <Text component={TextVariants.p}>
+        {intl.formatMessage({
+          id: 'cost.azure.createCostReaderRole',
+          defaultMessage: 'Run the following command in Cloud Shell to create a Cost Management Reader role:',
+        })}
+      </Text>
+      <ClipboardCopy>
+        {`az role assignment create --assignee "${authentication?.username}" --role "Cost Management Reader" --scope "${scope}"`}
+      </ClipboardCopy>
+    </TextContent>
   );
 };
 
