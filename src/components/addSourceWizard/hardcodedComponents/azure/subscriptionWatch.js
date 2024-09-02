@@ -1,19 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
-
-import { getSourcesApi } from '../../../../api/entities';
-import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 import {
+  Alert,
   Button,
   ClipboardCopy,
   Text,
   TextContent,
   TextList,
   TextListItem,
+  TextListItemVariants,
   TextListVariants,
   TextVariants,
 } from '@patternfly/react-core';
+import { ExternalLinkAltIcon } from '@patternfly/react-icons';
+
+import { getSourcesApi } from '../../../../api/entities';
+import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
+
 const API_LINK = 'https://access.redhat.com/management/api';
+const AZURE_DOCS_LINK =
+  'https://learn.microsoft.com/en-us/azure/lighthouse/how-to/onboard-customer#deploy-the-azure-resource-manager-template';
+const READER_LINK = 'https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/general#reader';
+const ROLE_LINK =
+  'https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/management-and-governance#managed-services-registration-assignment-delete-role';
+
+const b = (chunks) => <b key={`b-${chunks.length}-${Math.floor(Math.random() * 1000)}`}>{chunks}</b>;
 
 export const OfflineToken = () => {
   const intl = useIntl();
@@ -92,15 +103,104 @@ export const LightHouseDescription = () => {
   }, []);
 
   return (
-    <TextContent>
-      <Text>
-        {intl.formatMessage({
-          id: 'subwatch.lighthouse.desc',
-          defaultMessage:
-            "Complete configuration steps in Azure Lighthouse according to Microsoft instructions. When you're finished, return to this wizard to finish creating this Azure source.",
+    <>
+      <Alert
+        variant="info"
+        isInline
+        title={intl.formatMessage({
+          id: 'cost.azure.alertTitle',
+          defaultMessage: 'Azure role requirements',
         })}
-      </Text>
+      >
+        {intl.formatMessage(
+          {
+            id: 'subwatch.lighthouse.desc',
+            defaultMessage:
+              'To complete this step, your Azure account must have the Owner role, at a minimum, for the selected subscription. View the {link} for more information.',
+          },
+          {
+            link: (
+              <a key="link" href={AZURE_DOCS_LINK} rel="noopener noreferrer" target="_blank">
+                {intl.formatMessage({
+                  id: 'subwatch.lighthouse.azureDocs',
+                  defaultMessage: 'Azure documentation',
+                })}
+              </a>
+            ),
+          },
+        )}
+      </Alert>
+      <TextContent>
+        <Text>
+          {intl.formatMessage(
+            {
+              id: 'subwatch.lighthouse.desc',
+              defaultMessage:
+                'In Azure Lighthouse, deploy the Azure Resource Manager custom template that connects your Red Hat and Azure accounts. When ready, click <b>Go to Lighthouse</b> and follow these instructions:',
+            },
+            { b },
+          )}
+        </Text>
+        <TextList component={TextListVariants.ol} className="pf-v5-u-ml-0">
+          <TextListItem component={TextListItemVariants.li}>
+            {intl.formatMessage({
+              id: 'subwatch.lighthouse.selectAzureSubscription',
+              defaultMessage: 'Select the Azure subscription that you want to use with RHEL management.',
+            })}
+          </TextListItem>
+          <TextListItem component={TextListItemVariants.li}>
+            {intl.formatMessage(
+              {
+                id: 'subwatch.lighthouse.editInstanceDetails',
+                defaultMessage: 'Edit any other instance details and click <b>Review + create</b>.',
+              },
+              { b },
+            )}
+          </TextListItem>
+          <TextListItem component={TextListItemVariants.li}>
+            {intl.formatMessage(
+              {
+                id: 'subwatch.lighthouse.clickCreateToRunDeployment',
+                defaultMessage:
+                  'Click <b>Create</b> to run the deployment. This action creates two roles in your Azure account: {readerLink} and {roleLink}.',
+              },
+              {
+                b,
+                readerLink: (
+                  <a key="reader link" href={READER_LINK} rel="noopener noreferrer" target="_blank">
+                    {intl.formatMessage({
+                      id: 'subwatch.lighthouse.reader',
+                      defaultMessage: 'Reader',
+                    })}
+                  </a>
+                ),
+                roleLink: (
+                  <a key="role link" href={ROLE_LINK} rel="noopener noreferrer" target="_blank">
+                    {intl.formatMessage({
+                      id: 'subwatch.lighthouse.roleLink',
+                      defaultMessage: 'Managed Services Registration assignment Delete Role',
+                    })}
+                  </a>
+                ),
+              },
+            )}
+          </TextListItem>
+          <TextListItem component={TextListItemVariants.li}>
+            {intl.formatMessage(
+              {
+                id: 'subwatch.lighthouse.copySubscriptionId',
+                defaultMessage:
+                  'When the deployment is complete, click <b>Go to subscription</b> and copy the <b>Subscription ID</b>.',
+              },
+              { b },
+            )}
+          </TextListItem>
+        </TextList>
+      </TextContent>
       <Button
+        style={{ width: 'fit-content' }}
+        icon={<ExternalLinkAltIcon className="pf-v5-u-ml-md" />}
+        iconPosition="end"
         component="a"
         target="_blank"
         rel="noopener noreferrer"
@@ -110,15 +210,14 @@ export const LightHouseDescription = () => {
         onClick={() => {
           formOptions.change('lighthouse-clicked', true);
         }}
-        isBlock
       >
         {intl.formatMessage({
           id: 'subwatch.lighthouse.button',
-          defaultMessage: 'Take me to Lighthouse',
+          defaultMessage: 'Go to Lighthouse',
         })}
       </Button>
       {error}
-    </TextContent>
+    </>
   );
 };
 
@@ -130,8 +229,7 @@ export const SubscriptionID = () => {
       <Text>
         {intl.formatMessage({
           id: 'subwatch.subscriptionId.desc',
-          defaultMessage:
-            'Log in to your Azure account and navigate to your subscriptions. Copy the subscription ID you wish to use and paste it into the field below.',
+          defaultMessage: 'Paste your Azure subscription ID from the previous step into the field below.',
         })}
       </Text>
     </TextContent>
