@@ -38,18 +38,16 @@ describe('Azure-Subwatch hardcoded schemas', () => {
       });
 
       render(<SubAzure.LightHouseDescription />);
+      expect(screen.getByText('Azure role requirements')).toBeInTheDocument();
 
-      expect(
-        screen.getByText(
-          "Complete configuration steps in Azure Lighthouse according to Microsoft instructions. When you're finished, return to this wizard to finish creating this Azure source.",
-        ),
-      ).toBeInTheDocument();
-      expect(screen.getByText('Take me to Lighthouse')).toHaveAttribute('aria-disabled', 'true');
+      expect(screen.getByText('Select the Azure subscription that you want to use with RHEL management.')).toBeInTheDocument();
+
+      expect(screen.getAllByText('Go to Lighthouse').at(1)).toHaveAttribute('aria-disabled', 'true');
 
       getLighthouseLink.resolve({ data: [{ payload: 'href123' }] });
 
-      await waitFor(() => expect(screen.getByText('Take me to Lighthouse')).not.toHaveAttribute('aria-disabled', 'true'));
-      expect(screen.getByText('Take me to Lighthouse')).toHaveAttribute('href', 'href123');
+      await waitFor(() => expect(screen.getAllByText('Go to Lighthouse').at(1)).toHaveAttribute('aria-disabled', 'false'));
+      expect(screen.getAllByText('Go to Lighthouse').at(1)).toHaveAttribute('href', 'href123');
     });
 
     it('is rendered with error', async () => {
@@ -68,7 +66,7 @@ describe('Azure-Subwatch hardcoded schemas', () => {
         await getLighthouseLink.reject();
       });
 
-      await waitFor(() => expect(screen.getByText('Take me to Lighthouse')).toHaveAttribute('aria-disabled', 'true'));
+      await waitFor(() => expect(screen.getAllByText('Go to Lighthouse').at(1)).toHaveAttribute('aria-disabled', 'true'));
       expect(
         screen.getByText('There is an error with loading of the configuration. Please go back and return to this step.'),
       ).toBeInTheDocument();
@@ -90,7 +88,7 @@ describe('Azure-Subwatch hardcoded schemas', () => {
       const user = userEvent.setup();
 
       await waitFor(async () => {
-        await user.click(screen.getByText('Take me to Lighthouse'));
+        await user.click(screen.getAllByText('Go to Lighthouse').at(1));
       });
 
       expect(change).toHaveBeenCalledWith('lighthouse-clicked', true);
@@ -102,10 +100,6 @@ describe('Azure-Subwatch hardcoded schemas', () => {
   it('SubscriptionID is rendered correctly', () => {
     render(<SubAzure.SubscriptionID />);
 
-    expect(
-      screen.getByText(
-        'Log in to your Azure account and navigate to your subscriptions. Copy the subscription ID you wish to use and paste it into the field below.',
-      ),
-    ).toBeInTheDocument();
+    expect(screen.getByText('Paste your Azure subscription ID from the previous step into the field below.')).toBeInTheDocument();
   });
 });
