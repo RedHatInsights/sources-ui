@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   appUrl: '/settings/integrations',
   debug: true,
@@ -12,6 +14,10 @@ module.exports = {
    */
   plugins: [],
   moduleFederation: {
+    exposes: {
+      './RootApp': path.resolve(__dirname, './src/AppEntry.js'),
+      './IntegrationsWidget': path.resolve(__dirname, './src/components/Widget/IntegrationsWidget'),
+    },
     exclude: ['react-router-dom'],
     shared: [{ 'react-router-dom': { singleton: true, version: '^6.8.0' } }],
   },
