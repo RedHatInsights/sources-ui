@@ -115,8 +115,8 @@ const TabNavigation = () => {
               eventKey={OVERVIEW}
               title={<TabTitleText> {intl.formatMessage({ id: 'sources.overview', defaultMessage: 'Overview' })}</TabTitleText>}
             ></Tab>
-            {integrationsTabs}
             {cloudTabs}
+            {integrationsTabs}
           </>
         ) : (
           <>
