@@ -124,7 +124,7 @@ const Overview = () => {
           'To use public cloud provider data with Hybrid Cloud Console services, connect your Amazon Web Services (AWS), Google Cloud, Microsoft Azure, or Oracle Cloud account to the Hybrid Cloud Console.',
       })}`,
       learnMoreLink:
-        'https://access.redhat.com/documentation/en-us/red_hat_hybrid_cloud_console/1-latest/html/configuring_cloud_integrations_for_red_hat_services/index',
+        'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/configuring_cloud_integrations_for_red_hat_services/about-cloud-integrations_crc-cloud-integrations',
     },
     {
       isExpanded: false,
