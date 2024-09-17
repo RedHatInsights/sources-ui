@@ -6,6 +6,16 @@ import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from
 
 const dropdownItems = [
   {
+    title: 'Cloud',
+    description: 'Amazon Web Services, Google Cloud Platform, Microsoft Azure, Oracle Cloud Platform',
+    value: CLOUD_VENDOR,
+  },
+  {
+    title: 'Red Hat',
+    description: 'Red Hat OpenShift Container Platform, Red Hat Satellite, Red Hat Ansible Automation Platform',
+    value: REDHAT_VENDOR,
+  },
+  {
     title: 'Communications',
     description: 'Google Chat, Microsoft Office Teams, Slack',
     value: COMMUNICATIONS,
@@ -19,16 +29,6 @@ const dropdownItems = [
     title: 'Webhooks',
     description: '',
     value: WEBHOOKS,
-  },
-  {
-    title: 'Cloud',
-    description: 'Amazon Web Services, Google Cloud Platform, Microsoft Azure, Oracle Cloud Platform',
-    value: CLOUD_VENDOR,
-  },
-  {
-    title: 'Red Hat',
-    description: 'Red Hat OpenShift Container Platform, Red Hat Satellite, Red Hat Ansible Automation Platform',
-    value: REDHAT_VENDOR,
   },
 ];
 
@@ -50,6 +50,16 @@ const IntegrationsDropdown = (props) => {
 
   return (
     <div className="integrations-dropdown">
+      {[REDHAT_VENDOR, CLOUD_VENDOR].includes(selectedIntegration) && (
+        <AddSourceWizard
+          isOpen={isSourcesWizardOpen}
+          onClose={() => {
+            setIsSourcesWizardOpen(false);
+            setSelectedIntegration(null);
+          }}
+          activeCategory={selectedIntegration}
+        />
+      )}
       {[COMMUNICATIONS, REPORTING, WEBHOOKS].includes(selectedIntegration) && (
         <AsyncComponent
           appName="notifications"
@@ -61,16 +71,6 @@ const IntegrationsDropdown = (props) => {
             setSelectedIntegration(null);
           }}
           fallback={<div id="fallback-modal" />}
-        />
-      )}
-      {[REDHAT_VENDOR, CLOUD_VENDOR].includes(selectedIntegration) && (
-        <AddSourceWizard
-          isOpen={isSourcesWizardOpen}
-          onClose={() => {
-            setIsSourcesWizardOpen(false);
-            setSelectedIntegration(null);
-          }}
-          activeCategory={selectedIntegration}
         />
       )}
       <Dropdown
