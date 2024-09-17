@@ -104,7 +104,7 @@ const Overview = () => {
           'Receive Hybrid Cloud Console event notifications in third-party applications where native integration is not available by configuring a webhook integration.',
       })}`,
       learnMoreLink:
-        'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/configuring_notifications_on_the_red_hat_hybrid_cloud_console/assembly-intro_notifications#con-notif-events-options_notif-config-intro',
+        'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html-single/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/index#assembly-configuring-integration-with-webhooks_integrations',
     },
     {
       isExpanded: false,
@@ -144,7 +144,7 @@ const Overview = () => {
           'Manage your cloud costs with Hybrid Cloud Console services by connecting your Red Hat OpenShift Container Platform environment.',
       })}`,
       learnMoreLink:
-        'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html-single/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/index#assembly-configuring-integration-with-webhooks_integrations',
+        'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/configuring_cloud_integrations_for_red_hat_services/redhat-cloud-integrations_crc-cloud-integrations',
     },
   ];
 
