@@ -202,7 +202,7 @@ describe('SourcesPage', () => {
 
     expect(screen.getByText('Get started by connecting to your public clouds')).toBeInTheDocument();
 
-    expect(() => screen.getByText('I connected to cloud. Now what?')).toThrow();
+    await waitFor(() => expect(screen.queryByText('I connected to cloud. Now what?')).not.toBeInTheDocument());
     expect(() => screen.getByLabelText('Items per page')).toThrow();
     expect(() => screen.getByText('Connected applications')).toThrow();
     expect(() => screen.getByText('Get started by connecting to your Red Hat applications')).toThrow();
