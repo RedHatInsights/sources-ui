@@ -31,5 +31,13 @@ module.exports = {
         host: `http://localhost:8003`,
       },
     }),
+    ...(process.env.CONFIG_PORT && {
+      '/api/chrome-service/v1/static': {
+        host: `http://localhost:${process.env.CONFIG_PORT}`,
+      },
+      '/api/chrome-service/v1/dashboard-templates': {
+        host: `http://localhost:${process.env.CONFIG_PORT}`,
+      },
+    }),
   },
 };
