@@ -1,4 +1,4 @@
-import { Badge, Card, CardBody, CardFooter, ExpandableSection, List, ListItem, ListVariant, Spinner, Split, SplitItem } from '@patternfly/react-core';
+import { Badge, Card, CardBody, CardFooter, ExpandableSection, List, ListItem, ListVariant, Spinner } from '@patternfly/react-core';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 import IntegrationsDropdown from '../IntegrationsDropdown';
@@ -142,11 +142,11 @@ const integrationsData = [
 
 const IntegrationsWidget: FunctionComponent = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const [isExpanded, setIsExpanded] = useState<number | null>(null);
+    const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
     const [integrations, setIntegrations] = useState<Integration[]>([]);
 
-    const onToggle = (index: number, isExpanded: boolean) => {
-      setIsExpanded(isExpanded ? null : index);
+    const onToggle = (index: number) => {
+      setExpandedIndex(expandedIndex === index ? null : index);
     };
 
     const fetchIntegrations = async () => {
@@ -169,7 +169,6 @@ const IntegrationsWidget: FunctionComponent = () => {
     }, []);
 
     const integrationCount = integrationsData.length
-    console.log(integrationCount);
 
   return (
     <>
@@ -195,8 +194,8 @@ key={integrationIndex}
             <Badge isRead>{integrationCount}</Badge>
           </div>
       }
-      onToggle={(event, isExpanded) => onToggle(integrationIndex, isExpanded)}
-      isExpanded={isExpanded === integrationIndex}
+      onToggle={() => onToggle(integrationIndex)}
+      isExpanded={expandedIndex === integrationIndex}
     >
         {integration.items.map((item, itemIndex) => (
           <List variant={ListVariant.inline} key={itemIndex} className='pf-v5-u-mb-md'>
