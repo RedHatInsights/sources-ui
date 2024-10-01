@@ -1,76 +1,152 @@
-import { Badge, Card, CardBody, CardFooter, Divider, ExpandableSection, List, ListItem, ListVariant, Spinner, Tile } from '@patternfly/react-core';
+import { Badge, Card, CardBody, CardFooter, ExpandableSection, List, ListItem, ListVariant, Spinner, Split, SplitItem } from '@patternfly/react-core';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 import IntegrationsDropdown from '../IntegrationsDropdown';
 import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../../utilities/constants';
 import { getProdStore } from '../../utilities/store';
-import { PlusIcon } from '@patternfly/react-icons';
+import ImageWithPlaceholder from '../TilesShared/ImageWithPlaceholder';
 
-export type Integration = {
-    id: string;
-    name: string;
-    type: string;
-    isEnabled: boolean;
-  };
+interface IntegrationItem {
+  name: string;
+  icon: React.ReactNode;
+}
 
-  export enum IntegrationType {
-    WEBHOOK = 'webhook',
-    SPLUNK = 'camel:splunk',
-    SLACK = 'camel:slack',
-    SERVICE_NOW = 'camel:servicenow',
-    TEAMS = 'camel:teams',
-    GOOGLE_CHAT = 'Google Chat',
-    ANSIBLE = 'ansible', // Event-Driven Ansible
-  }
-  
-  export const UserIntegrationType = {
-    WEBHOOK: IntegrationType.WEBHOOK,
-    ANSIBLE: IntegrationType.ANSIBLE,
-    SPLUNK: IntegrationType.SPLUNK,
-    SERVICE_NOW: IntegrationType.SERVICE_NOW,
-    SLACK: IntegrationType.SLACK,
-    TEAMS: IntegrationType.TEAMS,
-    GOOGLE_CHAT: IntegrationType.GOOGLE_CHAT,
-  } as const;
+interface Integration {
+  title: string;
+  items: IntegrationItem[];
+}
 
-  export enum IntegrationCategory {
-    COMMUNICATIONS = 'Communications',
-    REPORTING = 'Reporting',
-    WEBHOOKS = 'Webhooks',
-  }
-
-  interface IntegrationsWidgetProps {
-    category?: IntegrationCategory;
-  }
-
-const categoryNames = [
+const integrationsData = [
   {
-    categoryName: COMMUNICATIONS,
-    googleChat: 'Google Chat',
-    microSoft: 'Microsoft office Teams',
-    slack: 'Slack'
+    title: COMMUNICATIONS,
+    items: [
+      { name: 'Google Chat',
+        id: '0',
+        icon: <ImageWithPlaceholder 
+        className="google-chat-logo" 
+        src="/apps/frontend-assets/sources-integrations/google-chat.svg" 
+        alt="google chat" 
+      />
+      },
+      { name: 'Microsoft Office Teams',
+        id: '1',
+        icon: <ImageWithPlaceholder 
+        className="microsoft-teams-logo" 
+        src="/apps/frontend-assets/sources-integrations/microsoft-office-teams.svg" 
+        alt="microsoft teams" 
+      />
+      },
+      { name: 'Slack',
+        id: '2',
+        icon: <ImageWithPlaceholder 
+        className="slack-logo" 
+        src="/apps/frontend-assets/sources-integrations/slack.svg" 
+        alt="slack" 
+      />
+      }
+    ]
   },
   {
-    categoryName: REPORTING,
-    ansible: 'Event-Driven Ansible',
-    serviceNow: 'ServiceNow',
-    splunk: 'Splunk'
-
+    title: REPORTING,
+    items: [
+      { name: 'Event-Driven Ansible',
+        id: '3',
+        icon: <ImageWithPlaceholder 
+        className="ansible-logo" 
+        src="/apps/frontend-assets/sources-integrations/ansible.svg" 
+        alt="ansible" 
+      />
+      },
+      { name: 'ServiceNow',
+        id: '4',
+        icon: <ImageWithPlaceholder 
+        className="service-now-logo" 
+        src="/apps/frontend-assets/sources-integrations/service-now.svg" 
+        alt="service" 
+      />
+      },
+      { name: 'Splunk',
+        id: '5',
+        icon: <ImageWithPlaceholder 
+        className="splunk-logo" 
+        src="/apps/frontend-assets/sources-integrations/splunk.svg" 
+        alt="splunk" 
+      />
+      }
+    ]
   },
   {
-    categoryName: WEBHOOKS,
+    title: WEBHOOKS,
+    items: [
+      { name: 'Webhooks',
+        id: '6',
+        icon: <ImageWithPlaceholder 
+        className="webhook-logo" 
+        src="/apps/frontend-assets/integrations-landing/integrations-landing-webhook-icon.svg" 
+        alt="webhooks" 
+      />
+    }
+  ]
   },
-  {categoryName: CLOUD_VENDOR},
-  {categoryName: REDHAT_VENDOR},
+  {
+    title: CLOUD_VENDOR,
+    items: [
+      { name: 'Amazon Web Services',
+        id: '7',
+        icon: <ImageWithPlaceholder
+        className="aws-logo"
+        src="/apps/frontend-assets/partners-icons/aws.svg"
+        alt="aws logo"
+      />
+       },
+      { name: 'Google Cloud',
+        id: '8',
+        icon: <ImageWithPlaceholder
+        className="google-logo"
+        src="/apps/frontend-assets/partners-icons/google-cloud-short.svg"
+        alt="google logo"
+      />
+       },
+      { name: 'Microsoft Azure',
+        id: '9',
+        icon: <ImageWithPlaceholder
+        className="azure-logo"
+        src="/apps/frontend-assets/partners-icons/microsoft-azure-short.svg"
+        alt="azure logo"
+      />
+       },
+      { name: 'Oracle Cloud Infrastructure',
+        id: '10',
+        icon: <ImageWithPlaceholder
+        className="oracle-logo"
+        src="/apps/frontend-assets/partners-icons/oracle-short.svg"
+        alt="oracle logo"
+      />
+      }
+    ]
+  },
+  {
+    title: REDHAT_VENDOR,
+    items: [
+      { name: 'OpenShift Container Platform',
+        id: '11',
+        icon: <ImageWithPlaceholder 
+        className="redhat-icon" 
+        src="/apps/frontend-assets/red-hat-logos/stacked.svg" 
+        alt="red hat logo" 
+      />
+      }
+    ]
+  }
 ];
 
-const IntegrationsWidget: FunctionComponent<IntegrationsWidgetProps> = ({ category }) => {
-    const [integrations, setIntegrations] = useState<Integration[]>([]);
-    const [isExpanded, setIsExpanded] = useState(false);
+const IntegrationsWidget: FunctionComponent = () => {
     const [isLoading, setIsLoading] = useState(false);
+    const [isExpanded, setIsExpanded] = useState<number | null>(null);
+    const [integrations, setIntegrations] = useState<Integration[]>([]);
 
-    const onToggle = (_event: React.MouseEvent, isExpanded: boolean) => {
-      setIsExpanded(isExpanded);
+    const onToggle = (index: number, isExpanded: boolean) => {
+      setIsExpanded(isExpanded ? null : index);
     };
 
     const fetchIntegrations = async () => {
@@ -80,8 +156,8 @@ const IntegrationsWidget: FunctionComponent<IntegrationsWidgetProps> = ({ catego
         );
         const { data } = await response.json();
         console.log(data);
-        setIntegrations(data);
         setIsLoading(false);
+        setIntegrations(data)
       } catch (error) {
         console.error('Unable to get Integrations ', error);
       }
@@ -92,12 +168,15 @@ const IntegrationsWidget: FunctionComponent<IntegrationsWidgetProps> = ({ catego
       fetchIntegrations();
     }, []);
 
+    const integrationCount = integrationsData.length
+    console.log(integrationCount);
+
   return (
     <>
     {isLoading ? (
       <Spinner />
     ) :
-    integrations.length === 0 ? (
+    integrationsData.length === 0 ? (
       <>
       <Card isPlain ouiaId="integrations-widget-empty-state">
           <CardBody>Click on a third-party application to create an integration for it. <a href="/settings/integrations?category=overview">Learn more about Integrations.</a>
@@ -105,46 +184,27 @@ const IntegrationsWidget: FunctionComponent<IntegrationsWidgetProps> = ({ catego
           </Card>
           </>
      ) : (
-      <Card>
+      <Card ouiaId='integrations-widget' isFullHeight>
         <CardBody>
-        {...categoryNames.map((cat) => 
+        {integrationsData.map((integration, integrationIndex) => 
 <ExpandableSection
+key={integrationIndex}
       toggleContent={
           <div>
-            <>
-            <span>{cat.categoryName} </span>
-            <Badge isRead>{integrations.length}</Badge>
-            </>
+            <span>{integration.title} </span>
+            <Badge isRead>{integrationCount}</Badge>
           </div>
       }
-      onToggle={onToggle}
-      isExpanded={isExpanded}
+      onToggle={(event, isExpanded) => onToggle(integrationIndex, isExpanded)}
+      isExpanded={isExpanded === integrationIndex}
     >
-      {cat.categoryName === COMMUNICATIONS && 
-      <div role="listbox" aria-label="Tiles with icon">
-       <List variant={ListVariant.inline}>
-    <ListItem>{cat.googleChat}</ListItem>
-    <ListItem>{cat.microSoft}</ListItem>
-    <ListItem>{cat.slack}</ListItem>
-  </List>
-    </div>    
-    }
-     {cat.categoryName === REPORTING && 
-      <div role="listbox" aria-label="Tiles with icon">
-       <List variant={ListVariant.inline}>
-    <ListItem>{cat.ansible} ({integrations.length})</ListItem>
-    <ListItem>{cat.serviceNow}</ListItem>
-    <ListItem>{cat.splunk}</ListItem>
-  </List>
-    </div>    
-    }
-      {cat.categoryName === WEBHOOKS && 
-      <div role="listbox" aria-label="Tiles with icon">
-       <List variant={ListVariant.inline}>
-    <ListItem>{WEBHOOKS}</ListItem>
-  </List>
-    </div>    
-    }
+        {integration.items.map((item, itemIndex) => (
+          <List variant={ListVariant.inline} key={itemIndex} className='pf-v5-u-mb-md'>
+            <ListItem icon={item.icon}>
+              {item.name} ()
+            </ListItem>
+         </List>
+        ))}
     </ExpandableSection>
   )}
     </CardBody>
