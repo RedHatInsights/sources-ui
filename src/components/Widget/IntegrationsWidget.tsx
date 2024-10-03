@@ -167,33 +167,6 @@ const IntegrationsWidget: FunctionComponent = () => {
       setIsWizardOpen(true);
     };
 
-    const handleModalClose = () => {
-      setIsWizardOpen(false);
-      setSelectedTileValue(null);
-    };
-
-        // case 'COMMUNICATIONS' || 'REPORTING' || 'WEBHOOKS':
-        //   return  <AsyncComponent
-        //   appName="notifications"
-        //   module="./IntegrationsWizard"
-        //   isOpen={isWizardOpen}
-        //   category={selectedTileValue}
-        //   closeModal={() => {
-        //     setIsWizardOpen(false);
-        //     setSelectedTileValue(null);
-        //   }}
-        //   fallback={<div id="fallback-modal" />}
-        // />
-        // case 'CLOUD_VENDOR' || 'REDHAT_VENDOR':
-        //   return <AddSourceWizard
-        //   isOpen={isWizardOpen}
-        //   onClose={() => {
-        //     setIsWizardOpen(false);
-        //     setSelectedTileValue(null);
-        //   }}
-        //   activeCategory={selectedTileValue}
-        // />
-
     const allItems = integrationsData.flatMap((category) => category.items);
     const sortedItems = allItems.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -227,7 +200,7 @@ const IntegrationsWidget: FunctionComponent = () => {
     {isLoading ? (
       <Spinner />
     ) :
-    integrationsData.length === 5 ? (
+    integrationsData.length === 0 ? (
       <>
       <Card isPlain ouiaId="integrations-widget-empty-state" isClickable>
           <CardBody>
