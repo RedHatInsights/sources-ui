@@ -1,10 +1,12 @@
-import { Badge, Card, CardBody, CardFooter, ExpandableSection, List, ListItem, ListVariant, Spinner } from '@patternfly/react-core';
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import { Badge, Card, CardBody, CardFooter, ExpandableSection, Grid, GridItem, List, ListItem, ListVariant, Spinner, Tile} from '@patternfly/react-core';
+import React, { FunctionComponent, SetStateAction, useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 import IntegrationsDropdown from '../IntegrationsDropdown';
 import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../../utilities/constants';
 import { getProdStore } from '../../utilities/store';
 import ImageWithPlaceholder from '../TilesShared/ImageWithPlaceholder';
+import { AsyncComponent } from '@redhat-cloud-services/frontend-components';
+import AddSourceWizard from '../addSourceWizard';
 
 interface IntegrationItem {
   name: string;
@@ -22,6 +24,7 @@ const integrationsData = [
     items: [
       { name: 'Google Chat',
         id: '0',
+        value: COMMUNICATIONS,
         icon: <ImageWithPlaceholder 
         className="google-chat-logo" 
         src="/apps/frontend-assets/sources-integrations/google-chat.svg" 
@@ -30,6 +33,7 @@ const integrationsData = [
       },
       { name: 'Microsoft Office Teams',
         id: '1',
+        value: COMMUNICATIONS,
         icon: <ImageWithPlaceholder 
         className="microsoft-teams-logo" 
         src="/apps/frontend-assets/sources-integrations/microsoft-office-teams.svg" 
@@ -38,6 +42,7 @@ const integrationsData = [
       },
       { name: 'Slack',
         id: '2',
+        value: COMMUNICATIONS,
         icon: <ImageWithPlaceholder 
         className="slack-logo" 
         src="/apps/frontend-assets/sources-integrations/slack.svg" 
@@ -51,6 +56,7 @@ const integrationsData = [
     items: [
       { name: 'Event-Driven Ansible',
         id: '3',
+        value: REPORTING,
         icon: <ImageWithPlaceholder 
         className="ansible-logo" 
         src="/apps/frontend-assets/sources-integrations/ansible.svg" 
@@ -59,6 +65,7 @@ const integrationsData = [
       },
       { name: 'ServiceNow',
         id: '4',
+        value: REPORTING,
         icon: <ImageWithPlaceholder 
         className="service-now-logo" 
         src="/apps/frontend-assets/sources-integrations/service-now.svg" 
@@ -67,6 +74,7 @@ const integrationsData = [
       },
       { name: 'Splunk',
         id: '5',
+        value: REPORTING,
         icon: <ImageWithPlaceholder 
         className="splunk-logo" 
         src="/apps/frontend-assets/sources-integrations/splunk.svg" 
@@ -80,6 +88,7 @@ const integrationsData = [
     items: [
       { name: 'Webhooks',
         id: '6',
+        value: WEBHOOKS,
         icon: <ImageWithPlaceholder 
         className="webhook-logo" 
         src="/apps/frontend-assets/integrations-landing/integrations-landing-webhook-icon.svg" 
@@ -93,6 +102,7 @@ const integrationsData = [
     items: [
       { name: 'Amazon Web Services',
         id: '7',
+        value: CLOUD_VENDOR,
         icon: <ImageWithPlaceholder
         className="aws-logo"
         src="/apps/frontend-assets/partners-icons/aws.svg"
@@ -101,6 +111,7 @@ const integrationsData = [
        },
       { name: 'Google Cloud',
         id: '8',
+        value: CLOUD_VENDOR,
         icon: <ImageWithPlaceholder
         className="google-logo"
         src="/apps/frontend-assets/partners-icons/google-cloud-short.svg"
@@ -109,6 +120,7 @@ const integrationsData = [
        },
       { name: 'Microsoft Azure',
         id: '9',
+        value: CLOUD_VENDOR,
         icon: <ImageWithPlaceholder
         className="azure-logo"
         src="/apps/frontend-assets/partners-icons/microsoft-azure-short.svg"
@@ -117,6 +129,7 @@ const integrationsData = [
        },
       { name: 'Oracle Cloud Infrastructure',
         id: '10',
+        value: CLOUD_VENDOR,
         icon: <ImageWithPlaceholder
         className="oracle-logo"
         src="/apps/frontend-assets/partners-icons/oracle-short.svg"
@@ -130,6 +143,7 @@ const integrationsData = [
     items: [
       { name: 'OpenShift Container Platform',
         id: '11',
+        value: REDHAT_VENDOR,
         icon: <ImageWithPlaceholder 
         className="redhat-icon" 
         src="/apps/frontend-assets/red-hat-logos/stacked.svg" 
@@ -144,6 +158,44 @@ const IntegrationsWidget: FunctionComponent = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
     const [integrations, setIntegrations] = useState<Integration[]>([]);
+
+    const [selectedTileValue, setSelectedTileValue] = useState<string | null>(null);
+    const [isWizardOpen, setIsWizardOpen] = useState(false);
+
+    const handleTileClick = (value: string) => {
+      setSelectedTileValue(value);
+      setIsWizardOpen(true);
+    };
+
+    const handleModalClose = () => {
+      setIsWizardOpen(false);
+      setSelectedTileValue(null);
+    };
+
+        // case 'COMMUNICATIONS' || 'REPORTING' || 'WEBHOOKS':
+        //   return  <AsyncComponent
+        //   appName="notifications"
+        //   module="./IntegrationsWizard"
+        //   isOpen={isWizardOpen}
+        //   category={selectedTileValue}
+        //   closeModal={() => {
+        //     setIsWizardOpen(false);
+        //     setSelectedTileValue(null);
+        //   }}
+        //   fallback={<div id="fallback-modal" />}
+        // />
+        // case 'CLOUD_VENDOR' || 'REDHAT_VENDOR':
+        //   return <AddSourceWizard
+        //   isOpen={isWizardOpen}
+        //   onClose={() => {
+        //     setIsWizardOpen(false);
+        //     setSelectedTileValue(null);
+        //   }}
+        //   activeCategory={selectedTileValue}
+        // />
+
+    const allItems = integrationsData.flatMap((category) => category.items);
+    const sortedItems = allItems.sort((a, b) => a.name.localeCompare(b.name));
 
     const onToggle = (index: number) => {
       setExpandedIndex(expandedIndex === index ? null : index);
@@ -175,12 +227,48 @@ const IntegrationsWidget: FunctionComponent = () => {
     {isLoading ? (
       <Spinner />
     ) :
-    integrationsData.length === 0 ? (
+    integrationsData.length === 5 ? (
       <>
-      <Card isPlain ouiaId="integrations-widget-empty-state">
-          <CardBody>Click on a third-party application to create an integration for it. <a href="/settings/integrations?category=overview">Learn more about Integrations.</a>
+      <Card isPlain ouiaId="integrations-widget-empty-state" isClickable>
+          <CardBody>
+          Click on a third-party application to create an integration for it. <a href="/settings/integrations?category=overview">Learn more about Integrations.</a>
+         </CardBody>
+          <CardBody>
+          {sortedItems.map((item) => (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
+              <Tile 
+              title={item.name} 
+              id={item.id} 
+              icon={item.icon}
+              isStacked
+              onClick={() => handleTileClick(item.value)}
+              isSelected={selectedTileValue === item.id} />
+            </div>
+            ))}
           </CardBody>
-          </Card>
+          {selectedTileValue === 'COMMUNICATIONS' || 'REPORTING' || 'WEBHOOKS' ? (
+            <AsyncComponent
+              appName="notifications"
+              module="./IntegrationsWizard"
+              isOpen={isWizardOpen}
+              category={selectedTileValue}
+              closeModal={() => {
+                setIsWizardOpen(false);
+                setSelectedTileValue(null);
+              }}
+              fallback={<div id="fallback-modal" />}
+            />
+          ) : (
+            <AddSourceWizard
+          isOpen={isWizardOpen}
+          onClose={() => {
+            setIsWizardOpen(false);
+            setSelectedTileValue(null);
+          }}
+          activeCategory={selectedTileValue}
+        />
+          )}
+          </Card> 
           </>
      ) : (
       <Card ouiaId='integrations-widget' isFullHeight>
