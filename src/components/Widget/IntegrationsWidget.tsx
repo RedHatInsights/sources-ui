@@ -1,5 +1,5 @@
-import { Badge, Card, CardBody, CardFooter, ExpandableSection, Grid, GridItem, List, ListItem, ListVariant, Spinner, Tile} from '@patternfly/react-core';
-import React, { FunctionComponent, SetStateAction, useEffect, useState } from 'react';
+import { Badge, Card, CardBody, CardFooter, ExpandableSection, List, ListItem, ListVariant, Spinner, Tile} from '@patternfly/react-core';
+import React, { FunctionComponent, useState } from 'react';
 import { Provider } from 'react-redux';
 import IntegrationsDropdown from '../IntegrationsDropdown';
 import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../../utilities/constants';
@@ -159,12 +159,17 @@ const IntegrationsWidget: FunctionComponent = () => {
     const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
     const [integrations, setIntegrations] = useState<Integration[]>([]);
 
-    const [selectedTileValue, setSelectedTileValue] = useState<string | null>(null);
-    const [isWizardOpen, setIsWizardOpen] = useState(false);
+    const [selectedTileValue, setSelectedTileValue] = useState<string>('');
+    const [isIntegrationsWizardOpen, setIsIntegrationsWizardOpen] = useState(false);
+    const [isSourcesWizardOpen, setIsSourcesWizardOpen] = useState(false);
 
     const handleTileClick = (value: string) => {
       setSelectedTileValue(value);
-      setIsWizardOpen(true);
+      if ([REDHAT_VENDOR, CLOUD_VENDOR].includes(value)) {
+        setIsSourcesWizardOpen(true);
+      } else if ([COMMUNICATIONS, REPORTING, WEBHOOKS].includes(value)) {
+        setIsIntegrationsWizardOpen(true);
+      }
     };
 
     const allItems = integrationsData.flatMap((category) => category.items);
@@ -174,33 +179,33 @@ const IntegrationsWidget: FunctionComponent = () => {
       setExpandedIndex(expandedIndex === index ? null : index);
     };
 
-    const fetchIntegrations = async () => {
-      try {
-        const response = await fetch(
-          '/api/integrations/v1.0/endpoints?type=ansible&type=webhook&type=camel'
-        );
-        const { data } = await response.json();
-        console.log(data);
-        setIsLoading(false);
-        setIntegrations(data)
-      } catch (error) {
-        console.error('Unable to get Integrations ', error);
-      }
-    };
+    // const fetchIntegrations = async () => {
+    //   try {
+    //     const response = await fetch(
+    //       '/api/integrations/v1.0/endpoints?type=ansible&type=webhook&type=camel'
+    //     );
+    //     const { data } = await response.json();
+    //     console.log(data);
+    //     setIsLoading(false);
+    //     setIntegrations(data)
+    //   } catch (error) {
+    //     console.error('Unable to get Integrations ', error);
+    //   }
+    // };
   
-    useEffect(() => {
-      setIsLoading(true);
-      fetchIntegrations();
-    }, []);
+    // useEffect(() => {
+    //   setIsLoading(true);
+    //   fetchIntegrations();
+    // }, []);
 
-    const integrationCount = integrationsData.length
+    const integrationCount = integrations.length
 
   return (
     <>
     {isLoading ? (
       <Spinner />
     ) :
-    integrationsData.length === 0 ? (
+    integrationsData.length === 5 ? (
       <>
       <Card isPlain ouiaId="integrations-widget-empty-state" isClickable>
           <CardBody>
@@ -208,41 +213,40 @@ const IntegrationsWidget: FunctionComponent = () => {
          </CardBody>
           <CardBody>
           {sortedItems.map((item) => (
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
               <Tile 
               title={item.name} 
               id={item.id} 
               icon={item.icon}
               isStacked
               onClick={() => handleTileClick(item.value)}
-              isSelected={selectedTileValue === item.id} />
-            </div>
+              isSelected={selectedTileValue === item.value} />
             ))}
           </CardBody>
-          {selectedTileValue === 'COMMUNICATIONS' || 'REPORTING' || 'WEBHOOKS' ? (
-            <AsyncComponent
-              appName="notifications"
-              module="./IntegrationsWizard"
-              isOpen={isWizardOpen}
-              category={selectedTileValue}
-              closeModal={() => {
-                setIsWizardOpen(false);
-                setSelectedTileValue(null);
-              }}
-              fallback={<div id="fallback-modal" />}
-            />
-          ) : (
-            <AddSourceWizard
-          isOpen={isWizardOpen}
+          {[COMMUNICATIONS, REPORTING, WEBHOOKS].includes(selectedTileValue) && (
+        <AsyncComponent
+          appName="notifications"
+          module="./IntegrationsWizard"
+          isOpen={isIntegrationsWizardOpen}
+          category={selectedTileValue}
+          closeModal={() => {
+            setIsIntegrationsWizardOpen(false);
+            setSelectedTileValue('');
+          }}
+          fallback={<div id="fallback-modal" />}
+        />
+      )}
+      {[REDHAT_VENDOR, CLOUD_VENDOR].includes(selectedTileValue) && (
+        <AddSourceWizard
+          isOpen={isSourcesWizardOpen}
           onClose={() => {
-            setIsWizardOpen(false);
-            setSelectedTileValue(null);
+            setIsSourcesWizardOpen(false);
+            setSelectedTileValue('');
           }}
           activeCategory={selectedTileValue}
         />
-          )}
-          </Card> 
-          </>
+      )}
+     </Card> 
+   </>
      ) : (
       <Card ouiaId='integrations-widget' isFullHeight>
         <CardBody>
