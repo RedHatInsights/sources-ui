@@ -34,7 +34,7 @@ export const loadIntegrationsEndpointsPermissions = (getUserPermissions) => (dis
       const allPermission = permissions.map((curr) => curr?.permission);
       const integrationsEndpointsPermissions =
         allPermission.includes('integrations:*:*') ||
-        allPermission.includes('integrations:endpoints:read') ||
+        allPermission.includes('integrations:*:write') ||
         allPermission.includes('integrations:endpoints:write');
 
       dispatch({

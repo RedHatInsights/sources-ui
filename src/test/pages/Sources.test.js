@@ -47,14 +47,6 @@ jest.mock('@redhat-cloud-services/frontend-components/useScreenSize', () => ({
   isSmallScreen: (size) => size === 'sm',
   useScreenSize: () => global.mockWidth || 'md',
 }));
-jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => {
-  return () => ({
-    getEnvironment: () => 'bar',
-    isBeta: () => false,
-    auth: { getToken: () => Promise.resolve() },
-    isProd: () => false,
-  });
-});
 
 jest.mock('react', () => {
   const React = jest.requireActual('react');
