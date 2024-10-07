@@ -1,0 +1,26 @@
+.sources-integrations {
+  overflow-y: auto;
+  .pf-v5-c-list {
+    &__item-icon {
+      height: 20px;
+      width: 20px;
+      margin-top: 0;
+    }
+  }
+  .pf-v5-c-tile {
+    --pf-v5-c-tile--PaddingTop: 1rem;
+    --pf-v5-c-tile--PaddingBottom: 1rem;
+    --pf-v5-c-tile--PaddingRight: 1rem;
+    --pf-v5-c-tile--PaddingLeft: 1rem;
+    &__icon {
+      height: 30px;
+      width: 30px;
+    }
+  }
+  .pf-v5-c-badge {
+    --pf-v5-c-badge--m-read--BackgroundColor: var(--pf-v5-global--primary-color--100);
+    --pf-v5-c-badge--m-unread--BackgroundColor: var(--pf-v5-global--primary-color--100);
+    --pf-v5-c-badge--m-read--Color: var(--pf-v5-global--Color--light-100);
+    --pf-v5-c-badge--m-unread--Color: var(--pf-v5-global--Color--light-100);
+  }
+}
