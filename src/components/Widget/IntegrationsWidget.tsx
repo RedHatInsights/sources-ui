@@ -22,14 +22,9 @@ import AddSourceWizard from '../addSourceWizard';
 
 import './IntegrationsWidget.scss';
 
-interface IntegrationItem {
-  name: string;
-  icon: React.ReactNode;
-}
-
 interface Integration {
-  title: string;
-  items: IntegrationItem[];
+  type: string;
+  sub_type?: string;
 }
 
 const integrationsData = [
@@ -38,7 +33,7 @@ const integrationsData = [
     items: [
       {
         name: 'Google Chat',
-        id: '0',
+        id: 'google_chat',
         value: COMMUNICATIONS,
         icon: (
           <ImageWithPlaceholder
@@ -50,7 +45,7 @@ const integrationsData = [
       },
       {
         name: 'Microsoft Office Teams',
-        id: '1',
+        id: 'teams',
         value: COMMUNICATIONS,
         icon: (
           <ImageWithPlaceholder
@@ -62,7 +57,7 @@ const integrationsData = [
       },
       {
         name: 'Slack',
-        id: '2',
+        id: 'slack',
         value: COMMUNICATIONS,
         icon: (
           <ImageWithPlaceholder className="slack-logo" src="/apps/frontend-assets/sources-integrations/slack.svg" alt="slack" />
@@ -75,7 +70,7 @@ const integrationsData = [
     items: [
       {
         name: 'Event-Driven Ansible',
-        id: '3',
+        id: 'ansible',
         value: REPORTING,
         icon: (
           <ImageWithPlaceholder
@@ -87,7 +82,7 @@ const integrationsData = [
       },
       {
         name: 'ServiceNow',
-        id: '4',
+        id: 'servicenow',
         value: REPORTING,
         icon: (
           <ImageWithPlaceholder
@@ -99,7 +94,7 @@ const integrationsData = [
       },
       {
         name: 'Splunk',
-        id: '5',
+        id: 'splunk',
         value: REPORTING,
         icon: (
           <ImageWithPlaceholder
@@ -116,7 +111,7 @@ const integrationsData = [
     items: [
       {
         name: 'Webhooks',
-        id: '6',
+        id: 'webhook',
         value: WEBHOOKS,
         icon: (
           <ImageWithPlaceholder
@@ -197,7 +192,7 @@ const integrationsData = [
 const IntegrationsWidget: FunctionComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
-  const [integrations, setIntegrations] = useState<Integration[]>([]);
+  const [integrationCounts, setIntegrationCounts] = useState<{ [key: string]: number }>({});
 
   const [selectedTileValue, setSelectedTileValue] = useState<string>('');
   const [isIntegrationsWizardOpen, setIsIntegrationsWizardOpen] = useState(false);
@@ -224,8 +219,37 @@ const IntegrationsWidget: FunctionComponent = () => {
       const response = await fetch('/api/integrations/v1.0/endpoints?type=ansible&type=webhook&type=camel');
       const { data } = await response.json();
       console.log(data);
+
+      const validCamelSubTypes = ['teams', 'google_chat', 'slack', 'servicenow', 'splunk'];
+
+      const counts: { [key: string]: number } = {
+        ansible: 0,
+        webhook: 0,
+        camel: 0,
+        camel_google_chat: 0,
+        camel_teams: 0,
+        camel_slack: 0,
+        camel_servicenow: 0,
+        camel_splunk:0
+      };
+
+      counts.ansible = data.filter((integration: Integration) => integration.type === 'ansible').length;
+      counts.webhook = data.filter((integration: Integration) => integration.type === 'webhook').length;
+      data.forEach((integration: Integration) => {
+        if (integration.type === 'camel') {
+          counts.camel++;
+          if (integration.sub_type) {
+            counts[integration.sub_type] = (counts[integration.sub_type] || 0) + 1;
+          }
+        }
+      });
+      const camelSubTypeCount = data.filter(
+        (integration: Integration) => integration.type === 'camel' && validCamelSubTypes.includes(integration.sub_type ?? '')
+      ).length;
+      counts.camel += camelSubTypeCount;
+
       setIsLoading(false);
-      setIntegrations(data);
+      setIntegrationCounts(counts)
     } catch (error) {
       console.error('Unable to get Integrations ', error);
     }
@@ -236,13 +260,16 @@ const IntegrationsWidget: FunctionComponent = () => {
     fetchIntegrations();
   }, []);
 
-  const integrationCount = integrationsData.length;
+  const badgeCounts = (items: typeof integrationsData[0]['items']) => {
+    return items.reduce((total, item) => total + (integrationCounts[item.id] || 0), 0);
+  };
+
 
   return (
     <>
       {isLoading ? (
         <Spinner />
-      ) : integrationsData.length === 0 ? (
+      ) : integrationCounts.length === 0 ? (
         <>
           <Card isPlain ouiaId="integrations-widget-empty-state" isClickable>
             <CardBody>
@@ -297,7 +324,10 @@ const IntegrationsWidget: FunctionComponent = () => {
                 toggleContent={
                   <div>
                     <span>{integration.title} </span>
-                    <Badge isRead>{integrationCount}</Badge>
+                    <Badge 
+                    isRead={badgeCounts(integration.items) === 0}>
+                      {badgeCounts(integration.items)}
+                    </Badge>
                   </div>
                 }
                 onToggle={() => onToggle(integrationIndex)}
@@ -306,7 +336,7 @@ const IntegrationsWidget: FunctionComponent = () => {
                 <List variant={ListVariant.inline} className="pf-v5-u-mb-md">
                   {integration.items.map((item, itemIndex) => (
                     <ListItem key={itemIndex} icon={item.icon}>
-                      {item.name} ()
+                      {item.name} ( {integrationCounts[item.id] || 0} )
                     </ListItem>
                   ))}
                 </List>
