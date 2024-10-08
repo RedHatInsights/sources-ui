@@ -218,7 +218,6 @@ const IntegrationsWidget: FunctionComponent = () => {
     try {
       const response = await fetch('/api/integrations/v1.0/endpoints?type=ansible&type=webhook&type=camel');
       const { data } = await response.json();
-      console.log(data);
 
       const validCamelSubTypes = ['teams', 'google_chat', 'slack', 'servicenow', 'splunk'];
 
@@ -243,6 +242,7 @@ const IntegrationsWidget: FunctionComponent = () => {
           }
         }
       });
+
       const camelSubTypeCount = data.filter(
         (integration: Integration) => integration.type === 'camel' && validCamelSubTypes.includes(integration.sub_type ?? '')
       ).length;
@@ -264,12 +264,13 @@ const IntegrationsWidget: FunctionComponent = () => {
     return items.reduce((total, item) => total + (integrationCounts[item.id] || 0), 0);
   };
 
+  const isEmptyState = Object.values(integrationCounts).reduce((total, count) => total + count, 0) === 0;
 
   return (
     <>
       {isLoading ? (
         <Spinner />
-      ) : integrationCounts.length === 0 ? (
+      ) : isEmptyState ? (
         <>
           <Card isPlain ouiaId="integrations-widget-empty-state" isClickable>
             <CardBody>
