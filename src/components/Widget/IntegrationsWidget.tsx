@@ -5,15 +5,13 @@ import {
   CardFooter,
   ExpandableSection,
   Gallery,
-  Grid,
-  GridItem,
   List,
   ListItem,
   ListVariant,
   Spinner,
   Tile,
 } from '@patternfly/react-core';
-import React, { FunctionComponent, SetStateAction, useEffect, useState } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 import IntegrationsDropdown from '../IntegrationsDropdown';
 import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../../utilities/constants';
@@ -201,12 +199,17 @@ const IntegrationsWidget: FunctionComponent = () => {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
   const [integrations, setIntegrations] = useState<Integration[]>([]);
 
-  const [selectedTileValue, setSelectedTileValue] = useState<string | null>(null);
-  const [isWizardOpen, setIsWizardOpen] = useState(false);
+  const [selectedTileValue, setSelectedTileValue] = useState<string>('');
+  const [isIntegrationsWizardOpen, setIsIntegrationsWizardOpen] = useState(false);
+  const [isSourcesWizardOpen, setIsSourcesWizardOpen] = useState(false);
 
   const handleTileClick = (value: string) => {
     setSelectedTileValue(value);
-    setIsWizardOpen(true);
+        if ([REDHAT_VENDOR, CLOUD_VENDOR].includes(value)) {
+        setIsSourcesWizardOpen(true);
+      } else if ([COMMUNICATIONS, REPORTING, WEBHOOKS].includes(value)) {
+        setIsIntegrationsWizardOpen(true);
+      }
   };
 
   const allItems = integrationsData.flatMap((category) => category.items);
@@ -260,24 +263,25 @@ const IntegrationsWidget: FunctionComponent = () => {
                 ))}
               </Gallery>
             </CardBody>
-            {selectedTileValue === 'COMMUNICATIONS' || 'REPORTING' || 'WEBHOOKS' ? (
+            {[COMMUNICATIONS, REPORTING, WEBHOOKS].includes(selectedTileValue) && (
               <AsyncComponent
                 appName="notifications"
                 module="./IntegrationsWizard"
-                isOpen={isWizardOpen}
+                isOpen={isIntegrationsWizardOpen}
                 category={selectedTileValue}
                 closeModal={() => {
-                  setIsWizardOpen(false);
-                  setSelectedTileValue(null);
+                  setIsIntegrationsWizardOpen(false);
+                  setSelectedTileValue('');
                 }}
                 fallback={<div id="fallback-modal" />}
               />
-            ) : (
+            )}
+            {[REDHAT_VENDOR, CLOUD_VENDOR].includes(selectedTileValue) && (
               <AddSourceWizard
-                isOpen={isWizardOpen}
+                isOpen={isSourcesWizardOpen}
                 onClose={() => {
-                  setIsWizardOpen(false);
-                  setSelectedTileValue(null);
+                  setIsSourcesWizardOpen(false);
+                  setSelectedTileValue('');
                 }}
                 activeCategory={selectedTileValue}
               />
@@ -322,5 +326,6 @@ const IntegrationsWidgetWrapper = () => (
   (<Provider store={getProdStore()}>
   <IntegrationsWidget />
 </Provider>)
+);
 
 export default IntegrationsWidgetWrapper;
