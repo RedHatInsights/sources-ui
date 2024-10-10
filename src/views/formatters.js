@@ -11,7 +11,6 @@ import { ACCOUNT_AUTHORIZATION } from '../components/constants';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { DateFormat } from '@redhat-cloud-services/frontend-components/DateFormat';
 import { Link } from 'react-router-dom';
-import { replaceRouteId, routes } from '../Routing';
 import AppLink from '../components/AppLink';
 
 export const defaultPort = (scheme) =>
@@ -19,6 +18,14 @@ export const defaultPort = (scheme) =>
     http: '80',
     https: '443',
   })[scheme];
+
+const replaceRouteId = (path, id) => path.replace(':id', id);
+const routes = {
+  sourcesDetail: {
+    path: 'detail/:id',
+    redirectNoId: true,
+  },
+};
 
 export const importsTexts = (value) =>
   ({
