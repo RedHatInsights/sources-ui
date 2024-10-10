@@ -3,6 +3,7 @@ import { Dropdown, DropdownItem, DropdownList, MenuToggle } from '@patternfly/re
 import AsyncComponent from '@redhat-cloud-services/frontend-components/AsyncComponent';
 import AddSourceWizard from './addSourceWizard';
 import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../utilities/constants';
+import { checkPropTypes } from 'prop-types';
 
 const dropdownItems = [
   {
@@ -78,7 +79,13 @@ const IntegrationsDropdown = (props) => {
         onSelect={handleSelect}
         onOpenChange={setIsOpen}
         toggle={(toggleRef) => (
-          <MenuToggle ref={toggleRef} onClick={() => setIsOpen(!isOpen)} isExpanded={isOpen} variant="primary">
+          <MenuToggle
+            ref={toggleRef}
+            onClick={() => setIsOpen(!isOpen)}
+            isExpanded={isOpen}
+            isDisabled={props.isDisabled}
+            variant="primary"
+          >
             Create Integration
           </MenuToggle>
         )}
@@ -94,6 +101,10 @@ const IntegrationsDropdown = (props) => {
       </Dropdown>
     </div>
   );
+};
+
+IntegrationsDropdown.propTypes = {
+  isDisabled: checkPropTypes.bool,
 };
 
 export default IntegrationsDropdown;
