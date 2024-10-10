@@ -50,8 +50,6 @@ const Overview = () => {
 
   const checkSourcesPermissions = async () => {
     const userPermissions = await getUserPermissions('sources', true);
-    console.log('checkSourcesPermissions: ', userPermissions);
-    console.log('AAAA', rest);
     const allPermissions = userPermissions.map((permissionObj) => permissionObj.permission);
 
     const hasSourcesPermissions = allPermissions.includes('sources:*:write') || allPermissions.includes('sources:*:*');
