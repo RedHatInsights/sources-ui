@@ -2,6 +2,8 @@ import React from 'react';
 import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 import { useIntl } from 'react-intl';
 import {
+  Alert,
+  AlertActionLink,
   Button,
   Card,
   CardBody,
@@ -27,6 +29,7 @@ import {
   CheckIcon,
   CloudIcon,
   ExternalLinkAltIcon,
+  LockIcon,
   OutlinedCommentsIcon,
   RedhatIcon,
 } from '@patternfly/react-icons';
@@ -36,11 +39,17 @@ import CustomDataListItem from './CustomDataListItem';
 import './overview.scss';
 import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../../utilities/constants';
 import { Link, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const Overview = () => {
   const { quickStarts } = useChrome();
   const navigate = useNavigate();
   const intl = useIntl();
+
+  const hasSourcesPermissions = useSelector(({ user }) => user?.writePermissions);
+  const hasIntegrationsPermissions = useSelector(({ user }) => user?.integrationsEndpointsPermissions);
+
+  console.log('AAA: ', hasSourcesPermissions, hasIntegrationsPermissions);
 
   const VIEW_DOCUMENTATION =
     'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/configuring_notifications_on_the_red_hat_hybrid_cloud_console/assembly-intro_notifications';
@@ -197,49 +206,88 @@ const Overview = () => {
               </List>
             </CardBody>
             <CardFooter>
-              <IntegrationsDropdown
-                popperProps={{
-                  appendTo: document.body,
-                  position: 'left',
-                }}
-              />
+              {hasSourcesPermissions || hasIntegrationsPermissions ? (
+                <IntegrationsDropdown
+                  popperProps={{
+                    appendTo: document.body,
+                    position: 'left',
+                  }}
+                />
+              ) : (
+                <Alert
+                  customIcon={<LockIcon />}
+                  variant="info"
+                  isInline
+                  isExpandable
+                  title={intl.formatMessage({
+                    id: 'integrations.overview.alertTitle',
+                    defaultMessage: 'Need to create an integration?',
+                  })}
+                  actionLinks={
+                    <React.Fragment>
+                      <AlertActionLink
+                        component="a"
+                        href="https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/getting_started_with_the_red_hat_hybrid_cloud_console/hcc-help-options_getting-started#virtual-assistant_getting-started"
+                        target="_blank"
+                      >
+                        {intl.formatMessage({
+                          id: 'integrations.overview.alertLink',
+                          defaultMessage: 'Learn about requesting access via the Virtual Assistant',
+                        })}
+                      </AlertActionLink>
+                    </React.Fragment>
+                  }
+                >
+                  <TextContent>
+                    <Text component={TextVariants.p}>
+                      {intl.formatMessage({
+                        id: 'integrations.overview.alertParagraph',
+                        defaultMessage:
+                          'You do not have the permissions for integration management. Contact your organization administrator if you need these permissions updated.',
+                      })}
+                    </Text>
+                  </TextContent>
+                </Alert>
+              )}
             </CardFooter>
           </GridItem>
           <GridItem md={6} lg={4} className="pf-u-display-none pf-u-display-block-on-md pf-c-card__cover-image"></GridItem>
         </Grid>
       </Card>
 
-      <Hint className="pf-u-mb-lg">
-        <HintBody>
-          <span className="pf-u-font-weight-bold">
+      {hasSourcesPermissions || hasIntegrationsPermissions ? (
+        <Hint className="pf-u-mb-lg">
+          <HintBody>
+            <span className="pf-u-font-weight-bold">
+              {intl.formatMessage({
+                id: 'integrations.overview.hintTextBold',
+                defaultMessage: 'Already set up your integrations?',
+              })}
+            </span>{' '}
             {intl.formatMessage({
-              id: 'integrations.overview.hintTextBold',
-              defaultMessage: 'Already set up your integrations?',
-            })}
-          </span>{' '}
-          {intl.formatMessage({
-            id: 'integrations.overview.hintText1',
-            defaultMessage: 'As a next step, you can',
-          })}{' '}
-          <Button
-            variant="link"
-            onClick={(e) => {
-              e.preventDefault();
-              navigate('/settings/notifications/configure-events');
-            }}
-            isInline
-          >
+              id: 'integrations.overview.hintText1',
+              defaultMessage: 'As a next step, you can',
+            })}{' '}
+            <Button
+              variant="link"
+              onClick={(e) => {
+                e.preventDefault();
+                navigate('/settings/notifications/configure-events');
+              }}
+              isInline
+            >
+              {intl.formatMessage({
+                id: 'integrations.overview.hintLink',
+                defaultMessage: 'enable the notifications',
+              })}
+            </Button>{' '}
             {intl.formatMessage({
-              id: 'integrations.overview.hintLink',
-              defaultMessage: 'enable the notifications',
+              id: 'integrations.overview.hintText2',
+              defaultMessage: 'of your choice to alert you via integrations.',
             })}
-          </Button>{' '}
-          {intl.formatMessage({
-            id: 'integrations.overview.hintText2',
-            defaultMessage: 'of your choice to alert you via integrations.',
-          })}
-        </HintBody>
-      </Hint>
+          </HintBody>
+        </Hint>
+      ) : null}
 
       <Title headingLevel="h2" className="pf-u-mb-md">
         {intl.formatMessage({
@@ -254,7 +302,7 @@ const Overview = () => {
             initialExpanded={item.isExpanded}
             icon={item.icon}
             title={item.title}
-            actionTitle={item.actionTitle}
+            actionTitle={hasSourcesPermissions || hasIntegrationsPermissions ? item.actionTitle : null}
             action={item.action}
             content={item.content}
             learnMoreLink={item.learnMoreLink}

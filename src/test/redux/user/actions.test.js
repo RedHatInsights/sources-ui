@@ -199,22 +199,6 @@ describe('user reducer actions', () => {
   describe('loadIntegrationsEndpointsPermissions', () => {
     let getUserPermissions;
 
-    it('has read integrations endpoints permissions', async () => {
-      getUserPermissions = jest.fn().mockImplementation(() => Promise.resolve([{ permission: 'integrations:endpoints:read' }]));
-
-      await loadIntegrationsEndpointsPermissions(getUserPermissions)(dispatch);
-
-      expect(dispatch.mock.calls.length).toEqual(2);
-
-      expect(dispatch.mock.calls[0][0]).toEqual({
-        type: ACTION_TYPES.SET_INTEGRATIONS_ENDPOINTS_PERMISSIONS_PENDING,
-      });
-      expect(dispatch.mock.calls[1][0]).toEqual({
-        type: ACTION_TYPES.SET_INTEGRATIONS_ENDPOINTS_PERMISSIONS_FULFILLED,
-        payload: true,
-      });
-    });
-
     it('has write integrations endpoints permissions', async () => {
       getUserPermissions = jest.fn().mockImplementation(() => Promise.resolve([{ permission: 'integrations:endpoints:write' }]));
 

@@ -6,11 +6,17 @@ import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-com
 import { ContentHeader } from '@patternfly/react-component-groups';
 import IntegrationsDropdown from './IntegrationsDropdown';
 import '../styles/sourcesHeader.scss';
+import { LockIcon } from '@patternfly/react-icons';
+import { Button, Popover, Text, TextContent, TextVariants } from '@patternfly/react-core';
+import { useSelector } from 'react-redux';
 
 const SourcesHeader = () => {
   const intl = useIntl();
   const enableIntegrationsOverview = useFlag('platform.integrations.overview');
   const integrationsIcon = '/apps/frontend-assets/sources-integrations/integrations-icon.svg';
+
+  const hasSourcesPermissions = useSelector(({ user }) => user?.writePermissions);
+  const hasIntegrationsPermissions = useSelector(({ user }) => user?.integrationsEndpointsPermissions);
 
   return (
     <>
@@ -33,12 +39,60 @@ const SourcesHeader = () => {
               href: 'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/index',
             }}
             actionMenu={
-              <IntegrationsDropdown
-                popperProps={{
-                  appendTo: document.body,
-                  position: 'right',
-                }}
-              />
+              !hasSourcesPermissions && !hasIntegrationsPermissions ? (
+                <Popover
+                  triggerAction="hover"
+                  alertSeverityVariant="info"
+                  minWidth="450px"
+                  aria-label="Popover with icon in the title example"
+                  headerContent={intl.formatMessage({
+                    id: 'sources.integrations.popoverHeader',
+                    defaultMessage: 'Access needed',
+                  })}
+                  headerIcon={<LockIcon />}
+                  bodyContent={
+                    <TextContent>
+                      <Text component={TextVariants.p}>
+                        {intl.formatMessage({
+                          id: 'integrations.overview.popoverBody',
+                          defaultMessage:
+                            'You do not the permissions for integration management. Contact your organization admin if you need these permissions updated.',
+                        })}{' '}
+                        <Button
+                          component="a"
+                          href="https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/getting_started_with_the_red_hat_hybrid_cloud_console/hcc-help-options_getting-started#virtual-assistant_getting-started"
+                          isInline
+                          target="_blank"
+                          variant="link"
+                        >
+                          {intl.formatMessage({
+                            id: 'integrations.overview.popoverLink',
+                            defaultMessage: 'Learn about requesting access via the Virtual Assistant',
+                          })}
+                        </Button>
+                      </Text>
+                    </TextContent>
+                  }
+                  position="left"
+                  appendTo={document.body}
+                >
+                  <IntegrationsDropdown
+                    isDisabled={!hasSourcesPermissions && !hasIntegrationsPermissions}
+                    popperProps={{
+                      appendTo: document.body,
+                      position: 'right',
+                    }}
+                  />
+                </Popover>
+              ) : (
+                <IntegrationsDropdown
+                  isDisabled={!hasSourcesPermissions && !hasIntegrationsPermissions}
+                  popperProps={{
+                    appendTo: document.body,
+                    position: 'right',
+                  }}
+                />
+              )
             }
           />
           <TabNavigation />
