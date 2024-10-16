@@ -37,15 +37,15 @@ const CustomDataListItem = ({ initialExpanded, icon, title, actionTitle, action,
   return (
     <React.Fragment>
       <DataListItem aria-labelledby="item1" isExpanded={isExpanded} className={isExpanded && 'active-item'}>
-        <DataListItemRow className="pf-u-align-items-center">
+        <DataListItemRow className="pf-v5-u-align-items-center">
           <DataListToggle isExpanded={isExpanded} id="toggle1" aria-controls="expand1" onClick={toggleExpand} />
           <DataListItemCells
             dataListCells={[
               <DataListCell key={`cell-${icon.toString().toLowerCase()}`}>
                 <div>
-                  <Flex className="pf-u-flex-nowrap">
-                    <FlexItem className="pf-u-align-self-center">
-                      <Icon size="lg" className="pf-u-primary-color-100">
+                  <Flex className="pf-v5-u-flex-nowrap">
+                    <FlexItem className="pf-v5-u-align-self-center">
+                      <Icon size="lg" className="pf-v5-u-primary-color-100">
                         {icon}
                       </Icon>
                     </FlexItem>
@@ -54,7 +54,7 @@ const CustomDataListItem = ({ initialExpanded, icon, title, actionTitle, action,
                         default: 'vertical',
                       }}
                     />
-                    <FlexItem className="pf-u-align-self-center">
+                    <FlexItem className="pf-v5-u-align-self-center">
                       <Title headingLevel="h4">{title}</Title>
                     </FlexItem>
                   </Flex>
@@ -83,11 +83,12 @@ const CustomDataListItem = ({ initialExpanded, icon, title, actionTitle, action,
         </DataListItemRow>
         <DataListContent aria-label={`${title} - Detailed Explanation`} id="expand1" isHidden={!isExpanded}>
           <TextContent>
-            <Text component={TextVariants.p} className="pf-u-mb-lg">
+            <Text component={TextVariants.p} className="pf-v5-u-mb-lg">
               {content}
             </Text>
           </TextContent>
           <Button
+            isInline
             component="a"
             href={learnMoreLink}
             target="_blank"

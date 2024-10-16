@@ -41,6 +41,9 @@ import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
+const VIEW_DOCUMENTATION =
+  'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/configuring_notifications_on_the_red_hat_hybrid_cloud_console/assembly-intro_notifications';
+
 const Overview = () => {
   const { quickStarts } = useChrome();
   const navigate = useNavigate();
@@ -49,15 +52,10 @@ const Overview = () => {
   const hasSourcesPermissions = useSelector(({ user }) => user?.writePermissions);
   const hasIntegrationsPermissions = useSelector(({ user }) => user?.integrationsEndpointsPermissions);
 
-  console.log('AAA: ', hasSourcesPermissions, hasIntegrationsPermissions);
-
-  const VIEW_DOCUMENTATION =
-    'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/configuring_notifications_on_the_red_hat_hybrid_cloud_console/assembly-intro_notifications';
-
   const data = [
     {
       isExpanded: true,
-      icon: <OutlinedCommentsIcon className="pf-u-primary-color-100" />,
+      icon: <OutlinedCommentsIcon className="pf-v5-u-primary-color-100" />,
       title: `${intl.formatMessage({
         id: 'integrations.overview.dataListItemTitle1',
         defaultMessage: 'Set up communication integrations',
@@ -77,7 +75,7 @@ const Overview = () => {
     },
     {
       isExpanded: false,
-      icon: <AutomationIcon className="pf-u-primary-color-100" />,
+      icon: <AutomationIcon className="pf-v5-u-primary-color-100" />,
       title: `${intl.formatMessage({
         id: 'integrations.overview.dataListItemTitle2',
         defaultMessage: 'Set up reporting and automation integrations',
@@ -97,7 +95,7 @@ const Overview = () => {
     },
     {
       isExpanded: false,
-      icon: <WebhooksIcon className="pf-u-primary-color-100" />,
+      icon: <WebhooksIcon className="pf-v5-u-primary-color-100" />,
       title: `${intl.formatMessage({
         id: 'integrations.overview.dataListItemTitle3',
         defaultMessage: 'Set up webhook integrations',
@@ -117,7 +115,7 @@ const Overview = () => {
     },
     {
       isExpanded: false,
-      icon: <CloudIcon className="pf-u-primary-color-100" />,
+      icon: <CloudIcon className="pf-v5-u-primary-color-100" />,
       title: `${intl.formatMessage({
         id: 'integrations.overview.dataListItemTitle4',
         defaultMessage: 'Connect to cloud providers',
@@ -137,7 +135,7 @@ const Overview = () => {
     },
     {
       isExpanded: false,
-      icon: <RedhatIcon className="pf-u-primary-color-100" />,
+      icon: <RedhatIcon className="pf-v5-u-primary-color-100" />,
       title: `${intl.formatMessage({
         id: 'integrations.overview.dataListItemTitle5',
         defaultMessage: 'Connect with Red Hat platforms',
@@ -163,7 +161,7 @@ const Overview = () => {
 
   return (
     <React.Fragment>
-      <Card className="pf-u-mb-lg">
+      <Card className="pf-v5-u-mb-lg">
         <Grid hasGutter>
           <GridItem sm={12} md={6} lg={8}>
             <CardTitle>
@@ -176,7 +174,7 @@ const Overview = () => {
             </CardTitle>
             <CardBody>
               <TextContent>
-                <Text component={TextVariants.p} className="pf-u-mb-md">
+                <Text component={TextVariants.p} className="pf-v5-u-mb-md">
                   {intl.formatMessage({
                     id: 'integrations.overview.heroParagraph',
                     defaultMessage:
@@ -184,7 +182,7 @@ const Overview = () => {
                   })}
                 </Text>
               </TextContent>
-              <Title headingLevel="h4" className="pf-u-mb-sm">
+              <Title headingLevel="h4" className="pf-v5-u-mb-sm">
                 {intl.formatMessage({
                   id: 'integrations.overview.heroListTitle',
                   defaultMessage: 'Key features',
@@ -251,14 +249,14 @@ const Overview = () => {
               )}
             </CardFooter>
           </GridItem>
-          <GridItem md={6} lg={4} className="pf-u-display-none pf-u-display-block-on-md pf-c-card__cover-image"></GridItem>
+          <GridItem md={6} lg={4} className="pf-v5-u-display-none pf-v5-u-display-block-on-md pf-c-card__cover-image"></GridItem>
         </Grid>
       </Card>
 
       {hasSourcesPermissions || hasIntegrationsPermissions ? (
-        <Hint className="pf-u-mb-lg">
+        <Hint className="pf-v5-u-mb-lg">
           <HintBody>
-            <span className="pf-u-font-weight-bold">
+            <span className="pf-v5-u-font-weight-bold">
               {intl.formatMessage({
                 id: 'integrations.overview.hintTextBold',
                 defaultMessage: 'Already set up your integrations?',
@@ -289,13 +287,13 @@ const Overview = () => {
         </Hint>
       ) : null}
 
-      <Title headingLevel="h2" className="pf-u-mb-md">
+      <Title headingLevel="h2" className="pf-v5-u-mb-md">
         {intl.formatMessage({
           id: 'integrations.overview.titleIntegrationTypes',
           defaultMessage: 'Integration types',
         })}
       </Title>
-      <DataList aria-label="Integration types" className="pf-u-mb-lg">
+      <DataList aria-label="Integration types" className="pf-v5-u-mb-lg">
         {data.map((item, index) => (
           <CustomDataListItem
             key={index}
@@ -310,13 +308,13 @@ const Overview = () => {
         ))}
       </DataList>
 
-      <Title headingLevel="h2" className="pf-u-mb-md">
+      <Title headingLevel="h2" className="pf-v5-u-mb-md">
         {intl.formatMessage({
           id: 'integrations.overview.titleRecommendedContent',
           defaultMessage: 'Recommended content',
         })}
       </Title>
-      <Table aria-label="Recommended content" className="pf-u-mb-lg">
+      <Table aria-label="Recommended content" className="pf-v5-u-mb-lg">
         <Tbody>
           <Tr>
             <Td>
@@ -377,7 +375,7 @@ const Overview = () => {
         </Tbody>
       </Table>
       <Link to={'/settings/learning-resources'}>
-        <Button variant="link" className="pf-u-mb-lg" isInline>
+        <Button variant="link" className="pf-v5-u-mb-lg" isInline>
           {intl.formatMessage({
             id: 'integrations.overview.viewAllLearningResources',
             defaultMessage: 'View all Settings learning resources',
