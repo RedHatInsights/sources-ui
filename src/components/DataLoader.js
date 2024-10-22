@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { loadAppTypes, loadEntities, loadHcsEnrollment, loadSourceTypes } from '../redux/sources/actions';
 import { loadEnhancedAttributes, parseQuery, updateQuery } from '../utilities/urlQuery';
 import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
+import { OVERVIEW } from '../utilities/constants';
 
 const DataLoader = () => {
   const dispatch = useDispatch();
@@ -19,16 +20,17 @@ const DataLoader = () => {
   const loadData = async () => {
     const { applications, types } = loadEnhancedAttributes();
     const token = await getToken();
+    const noEntities = [OVERVIEW, null].includes(sources.activeCategory);
 
     if (applications || types) {
       Promise.all([dispatch(loadSourceTypes()), dispatch(loadAppTypes()), dispatch(loadHcsEnrollment(token, isProd()))]).then(
-        () => dispatch(loadEntities(parseQuery)),
+        () => noEntities || dispatch(loadEntities(parseQuery)),
       );
     } else {
       Promise.all([
         dispatch(loadSourceTypes()),
         dispatch(loadAppTypes()),
-        dispatch(loadEntities(parseQuery)),
+        noEntities || dispatch(loadEntities(parseQuery)),
         dispatch(loadHcsEnrollment(token, isProd())),
       ]);
     }
