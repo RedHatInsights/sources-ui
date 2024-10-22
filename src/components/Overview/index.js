@@ -40,6 +40,7 @@ import './overview.scss';
 import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../../utilities/constants';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { bold } from '../../utilities/intlShared';
 
 const VIEW_DOCUMENTATION =
   'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/configuring_notifications_on_the_red_hat_hybrid_cloud_console/assembly-intro_notifications';
@@ -56,100 +57,125 @@ const Overview = () => {
     {
       isExpanded: true,
       icon: <OutlinedCommentsIcon className="pf-v5-u-primary-color-100" />,
-      title: `${intl.formatMessage({
-        id: 'integrations.overview.dataListItemTitle1',
-        defaultMessage: 'Set up communication integrations',
-      })}`,
-      actionTitle: `${intl.formatMessage({
+      title: intl.formatMessage(
+        {
+          id: 'integrations.overview.dataListItemTitle1',
+          defaultMessage: '<b>Communication integrations</b> (Microsoft Teams, Google Chat, Slack)',
+        },
+        {
+          b: bold,
+        },
+      ),
+      actionTitle: intl.formatMessage({
         id: 'integrations.overview.dataListItemActionTitle1',
-        defaultMessage: 'Set up communication integrations',
-      })}`,
+        defaultMessage: 'Set up communication integration',
+      }),
       action: COMMUNICATIONS,
-      content: `${intl.formatMessage({
+      content: intl.formatMessage({
         id: 'integrations.overview.dataListItemContent1',
         defaultMessage:
           'Receive event notifications in your preferred communications application by connecting the Hybrid Cloud Console with Microsoft Teams, Google Chat, or Slack.',
-      })}`,
+      }),
       learnMoreLink:
         'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/index',
     },
     {
       isExpanded: false,
       icon: <AutomationIcon className="pf-v5-u-primary-color-100" />,
-      title: `${intl.formatMessage({
-        id: 'integrations.overview.dataListItemTitle2',
-        defaultMessage: 'Set up reporting and automation integrations',
-      })}`,
-      actionTitle: `${intl.formatMessage({
+      title: intl.formatMessage(
+        {
+          id: 'integrations.overview.dataListItemTitle2',
+          defaultMessage: '<b>Reporting and automation integrations</b> (Event-Driven Ansible, PagerDuty, ServiceNow, Splunk) ',
+        },
+        {
+          b: bold,
+        },
+      ),
+      actionTitle: intl.formatMessage({
         id: 'integrations.overview.dataListItemActionTitle2',
-        defaultMessage: 'Set up reporting and automation integrations',
-      })}`,
+        defaultMessage: 'Set up reporting and automation integration',
+      }),
       action: REPORTING,
-      content: `${intl.formatMessage({
+      content: intl.formatMessage({
         id: 'integrations.overview.dataListItemContent2',
         defaultMessage:
           'Receive and manage event notifications where you manage other sources of data by connecting the Hybrid Cloud Console with Splunk, ServiceNow, or Event-Driven Ansible.',
-      })}`,
+      }),
       learnMoreLink:
         'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/index',
     },
     {
       isExpanded: false,
       icon: <WebhooksIcon className="pf-v5-u-primary-color-100" />,
-      title: `${intl.formatMessage({
-        id: 'integrations.overview.dataListItemTitle3',
-        defaultMessage: 'Set up webhook integrations',
-      })}`,
-      actionTitle: `${intl.formatMessage({
+      title: intl.formatMessage(
+        {
+          id: 'integrations.overview.dataListItemTitle3',
+          defaultMessage: '<b>Webhook integrations</b>',
+        },
+        {
+          b: bold,
+        },
+      ),
+      actionTitle: intl.formatMessage({
         id: 'integrations.overview.dataListItemActionTitle3',
-        defaultMessage: 'Set up webhook integrations',
-      })}`,
+        defaultMessage: 'Set up webhook integration',
+      }),
       action: WEBHOOKS,
-      content: `${intl.formatMessage({
+      content: intl.formatMessage({
         id: 'integrations.overview.dataListItemContent3',
         defaultMessage:
           'Receive Hybrid Cloud Console event notifications in third-party applications where native integration is not available by configuring a webhook integration.',
-      })}`,
+      }),
       learnMoreLink:
         'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html-single/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/index#assembly-configuring-integration-with-webhooks_integrations',
     },
     {
       isExpanded: false,
       icon: <CloudIcon className="pf-v5-u-primary-color-100" />,
-      title: `${intl.formatMessage({
-        id: 'integrations.overview.dataListItemTitle4',
-        defaultMessage: 'Connect to cloud providers',
-      })}`,
-      actionTitle: `${intl.formatMessage({
+      title: intl.formatMessage(
+        {
+          id: 'integrations.overview.dataListItemTitle4',
+          defaultMessage: '<b>Cloud provider integrations</b> (Amazon Web Services, Azure, Google Cloud Platform, Oracle)',
+        },
+        {
+          b: bold,
+        },
+      ),
+      actionTitle: intl.formatMessage({
         id: 'integrations.overview.dataListItemActionTitle4',
-        defaultMessage: 'Connect to cloud providers',
-      })}`,
+        defaultMessage: 'Configure cloud provider integration',
+      }),
       action: CLOUD_VENDOR,
-      content: `${intl.formatMessage({
+      content: intl.formatMessage({
         id: 'integrations.overview.dataListItemContent4',
         defaultMessage:
           'To use public cloud provider data with Hybrid Cloud Console services, connect your Amazon Web Services (AWS), Google Cloud, Microsoft Azure, or Oracle Cloud account to the Hybrid Cloud Console.',
-      })}`,
+      }),
       learnMoreLink:
         'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/configuring_cloud_integrations_for_red_hat_services/about-cloud-integrations_crc-cloud-integrations',
     },
     {
       isExpanded: false,
       icon: <RedhatIcon className="pf-v5-u-primary-color-100" />,
-      title: `${intl.formatMessage({
-        id: 'integrations.overview.dataListItemTitle5',
-        defaultMessage: 'Connect with Red Hat platforms',
-      })}`,
-      actionTitle: `${intl.formatMessage({
+      title: intl.formatMessage(
+        {
+          id: 'integrations.overview.dataListItemTitle5',
+          defaultMessage: '<b>Red Hat integrations</b> (OpenShift Container Platform)',
+        },
+        {
+          b: bold,
+        },
+      ),
+      actionTitle: intl.formatMessage({
         id: 'integrations.overview.dataListItemActionTitle5',
-        defaultMessage: 'Connect with Red Hat platforms',
-      })}`,
+        defaultMessage: 'Configure Red Hat integration',
+      }),
       action: REDHAT_VENDOR,
-      content: `${intl.formatMessage({
+      content: intl.formatMessage({
         id: 'integrations.overview.dataListItemContent5',
         defaultMessage:
           'Manage your cloud costs with Hybrid Cloud Console services by connecting your Red Hat OpenShift Container Platform environment.',
-      })}`,
+      }),
       learnMoreLink:
         'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/configuring_cloud_integrations_for_red_hat_services/redhat-cloud-integrations_crc-cloud-integrations',
     },
