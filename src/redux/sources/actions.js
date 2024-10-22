@@ -21,7 +21,7 @@ import { bold } from '../../utilities/intlShared';
 import handleError from '../../api/handleError';
 import tryAgainMessage from '../../utilities/tryAgainMessage';
 import { checkAccountHCS } from '../../api/checkAccountHCS';
-import { INTEGRATIONS } from '../../utilities/constants';
+import { INTEGRATIONS, OVERVIEW } from '../../utilities/constants';
 
 export const loadEntities = (options) => (dispatch, getState) => {
   dispatch({
@@ -253,7 +253,7 @@ export const setActiveCategory = (category) => (dispatch) => {
     payload: { category },
   });
 
-  return category !== INTEGRATIONS && dispatch(loadEntities({ pageNumber: 1 }));
+  return [INTEGRATIONS, OVERVIEW].includes(category) || dispatch(loadEntities({ pageNumber: 1 }));
 };
 
 export const pauseSource = (sourceId, sourceName, intl) => (dispatch) => {

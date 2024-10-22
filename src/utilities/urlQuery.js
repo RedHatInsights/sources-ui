@@ -1,20 +1,20 @@
 import { restFilterGenerator } from '../api/entities';
 import { AVAILABLE, UNAVAILABLE } from '../views/formatters';
 import { sourcesColumns } from '../views/sourcesViewDefinition';
-import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from './constants';
+import { CLOUD_VENDOR, COMMUNICATIONS, OVERVIEW, REDHAT_VENDOR, REPORTING, WEBHOOKS } from './constants';
 
-export const updateQuery = ({ sortBy, sortDirection, pageNumber, pageSize, filterValue, activeCategory, removeQuery }) => {
+export const updateQuery = ({ sortBy, sortDirection, pageNumber, pageSize, filterValue, activeCategory }) => {
   const sortQuery = `sort_by[]=${sortBy}:${sortDirection}`;
+  const category = activeCategory === null ? OVERVIEW : activeCategory;
+  const removeQuery = category === OVERVIEW;
 
-  const paginationQuery = `limit=${pageSize}&offset=${(pageNumber - 1) * pageSize}${
-    activeCategory ? `&category=${activeCategory}` : ''
-  }`;
+  const paginationQuery = `limit=${pageSize}&offset=${(pageNumber - 1) * pageSize}${category ? `&category=${category}` : ''}`;
 
   const filterQuery = restFilterGenerator(filterValue);
 
   const query = `?${sortQuery}&${paginationQuery}${filterQuery ? `&${filterQuery}` : ''}`;
 
-  const fullHref = decodeURIComponent(`${window.location.pathname}${removeQuery ? `?category=${activeCategory}` : query}`);
+  const fullHref = decodeURIComponent(`${window.location.pathname}${removeQuery ? `?category=${category}` : query}`);
 
   if (location.href !== fullHref) {
     return history.replaceState('', '', fullHref);
