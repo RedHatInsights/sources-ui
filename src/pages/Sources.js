@@ -189,10 +189,7 @@ const SourcesPage = () => {
 
   const showEmptyState = loaded && numberOfEntities === 0 && !hasSomeFilter;
   const showOverview = useMemo(() => enableIntegrationsOverview && [null, OVERVIEW].includes(activeCategory), [activeCategory]);
-  const showInfoCards = useMemo(
-    () => !enableIntegrationsOverview && [null, CLOUD_VENDOR].includes(activeCategory) && !showEmptyState,
-    [activeCategory, showEmptyState],
-  );
+  const showInfoCards = useMemo(() => activeCategory === CLOUD_VENDOR && !showEmptyState, [activeCategory, showEmptyState]);
 
   const setSelectedType = (selectedType) => stateDispatch({ type: 'setSelectedType', selectedType });
 
