@@ -128,13 +128,13 @@ const integrationsData = [
     items: [
       {
         name: 'Amazon Web Services',
-        id: '7',
+        id: 'aws',
         value: CLOUD_VENDOR,
         icon: <ImageWithPlaceholder className="aws-logo" src="/apps/frontend-assets/partners-icons/aws.svg" alt="aws logo" />,
       },
       {
         name: 'Google Cloud',
-        id: '8',
+        id: 'google_cloud',
         value: CLOUD_VENDOR,
         icon: (
           <ImageWithPlaceholder
@@ -146,7 +146,7 @@ const integrationsData = [
       },
       {
         name: 'Microsoft Azure',
-        id: '9',
+        id: 'azure',
         value: CLOUD_VENDOR,
         icon: (
           <ImageWithPlaceholder
@@ -158,7 +158,7 @@ const integrationsData = [
       },
       {
         name: 'Oracle Cloud Infrastructure',
-        id: '10',
+        id: 'oracle_cloud',
         value: CLOUD_VENDOR,
         icon: (
           <ImageWithPlaceholder
@@ -175,7 +175,7 @@ const integrationsData = [
     items: [
       {
         name: 'OpenShift Container Platform',
-        id: '11',
+        id: 'openshift',
         value: REDHAT_VENDOR,
         icon: (
           <ImageWithPlaceholder
@@ -214,6 +214,119 @@ const IntegrationsWidget: FunctionComponent = () => {
     setExpandedIndex(expandedIndex === index ? null : index);
   };
 
+  const fetchCloudSources = async () => {
+    try {
+      const response = await fetch('/api/sources/v3.1/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `{
+            sources(limit: 50, offset: 0, sort_by: { name: "created_at", direction: desc }, filter: [
+              { name: "source_type.category", operation: "eq", value: "Cloud" }
+            ]) {
+              id
+              created_at
+              name
+              source_type_id
+              availability_status
+            }
+            meta {
+              count
+            }
+          }`
+        })
+      });
+  
+      const { data } = await response.json();
+  
+      const counts: { [key: string]: number } = {
+        cloud: 0,
+        aws: 0,
+        google_cloud: 0,
+        azure: 0,
+        oracle_cloud: 0,
+      };
+  
+      const cloudProviderIds: Record<string, keyof typeof counts> = {
+        '1': 'aws',
+        '2': 'google_cloud',
+        '3': 'azure',
+        '4': 'oracle_cloud',
+      };
+  
+      counts.cloud = data.meta.count;
+  
+      data.sources.forEach((source: { source_type_id: string }) => {
+        const providerKey = cloudProviderIds[source.source_type_id];
+        if (providerKey) {
+          counts[providerKey]++;
+        }
+      });
+    
+      setIsLoading(false);
+      setIntegrationCounts((prevCounts) => ({ ...prevCounts, ...counts }));
+    } catch (error) {
+      console.error('Unable to get Cloud Sources', error);
+    }
+  };
+    
+  const fetchRedHatSources = async () => {
+    try {
+      const response = await fetch('/api/sources/v3.1/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `{
+            sources(limit: 50, offset: 0, sort_by: { name: "created_at", direction: desc }, filter: [
+              { name: "source_type.category", operation: "eq", value: "Red Hat" }
+            ]) {
+              id
+              created_at
+              name
+              source_type_id
+              availability_status
+            }
+            meta {
+              count
+            }
+          }`
+        })
+      });
+  
+      const { data } = await response.json();
+  
+      const counts: { [key: string]: number } = { 
+        red_hat: 0,
+        openshift: 0,
+      };
+  
+      const redHatSourceTypes: Record<string, keyof typeof counts> = {
+        '1': 'openshift',
+      };
+  
+      counts.red_hat = data.meta.count;
+  
+      data.sources.forEach((source: { source_type_id: string }) => {
+        const sourceKey = redHatSourceTypes[source.source_type_id];
+        if (sourceKey) {
+          counts[sourceKey]++;
+        }
+      });
+    
+      setIsLoading(false);
+      setIntegrationCounts((prevCounts) => ({ ...prevCounts, ...counts }));
+    } catch (error) {
+      console.error('Unable to get Red Hat Sources', error);
+    }
+  };
+    
+
   const fetchIntegrations = async () => {
     try {
       const response = await fetch('/api/integrations/v1.0/endpoints?type=ansible&type=webhook&type=camel');
@@ -249,7 +362,7 @@ const IntegrationsWidget: FunctionComponent = () => {
       counts.camel += camelSubTypeCount;
 
       setIsLoading(false);
-      setIntegrationCounts(counts)
+      setIntegrationCounts((prevCounts) => ({ ...prevCounts, ...counts }));
     } catch (error) {
       console.error('Unable to get Integrations ', error);
     }
@@ -257,6 +370,8 @@ const IntegrationsWidget: FunctionComponent = () => {
 
   useEffect(() => {
     setIsLoading(true);
+    fetchCloudSources();
+    fetchRedHatSources();
     fetchIntegrations();
   }, []);
 
