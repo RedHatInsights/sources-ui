@@ -25,6 +25,10 @@ const routes = {
     path: 'detail/:id',
     redirectNoId: true,
   },
+  sourcesDetailEditCredentials: {
+    path: 'detail/:id/edit_credentials',
+    redirectNoId: false,
+  },
 };
 
 export const importsTexts = (value) =>
