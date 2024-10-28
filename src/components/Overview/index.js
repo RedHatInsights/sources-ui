@@ -41,6 +41,7 @@ import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { bold } from '../../utilities/intlShared';
+import { useFlag } from '@unleash/proxy-client-react';
 
 const VIEW_DOCUMENTATION =
   'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/configuring_notifications_on_the_red_hat_hybrid_cloud_console/assembly-intro_notifications';
@@ -52,6 +53,7 @@ const Overview = () => {
 
   const hasSourcesPermissions = useSelector(({ user }) => user?.writePermissions);
   const hasIntegrationsPermissions = useSelector(({ user }) => user?.integrationsEndpointsPermissions);
+  const isPagerDutyEnabled = useFlag('platform.integrations.pager-duty');
 
   const data = [
     {
@@ -85,7 +87,9 @@ const Overview = () => {
       title: intl.formatMessage(
         {
           id: 'integrations.overview.dataListItemTitle2',
-          defaultMessage: '<b>Reporting and automation integrations</b> (Event-Driven Ansible, PagerDuty, ServiceNow, Splunk) ',
+          defaultMessage: `<b>Reporting and automation integrations</b> (Event-Driven Ansible, ${
+            isPagerDutyEnabled ? 'PagerDuty' : null
+          }, ServiceNow, Splunk) `,
         },
         {
           b: bold,
@@ -98,8 +102,9 @@ const Overview = () => {
       action: REPORTING,
       content: intl.formatMessage({
         id: 'integrations.overview.dataListItemContent2',
-        defaultMessage:
-          'Receive and manage event notifications where you manage other sources of data by connecting the Hybrid Cloud Console with Event-Driven Ansible, PagerDuty, ServiceNow, or Splunk.',
+        defaultMessage: `Receive and manage event notifications where you manage other sources of data by connecting the Hybrid Cloud Console with Event-Driven Ansible, ${
+          isPagerDutyEnabled ? 'PagerDuty' : null
+        }, ServiceNow, or Splunk.`,
       }),
       learnMoreLink:
         'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/index',
