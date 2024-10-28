@@ -99,7 +99,7 @@ const Overview = () => {
       content: intl.formatMessage({
         id: 'integrations.overview.dataListItemContent2',
         defaultMessage:
-          'Receive and manage event notifications where you manage other sources of data by connecting the Hybrid Cloud Console with Splunk, ServiceNow, or Event-Driven Ansible.',
+          'Receive and manage event notifications where you manage other sources of data by connecting the Hybrid Cloud Console with Event-Driven Ansible, PagerDuty, ServiceNow, or Splunk.',
       }),
       learnMoreLink:
         'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/index',

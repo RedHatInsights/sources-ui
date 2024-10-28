@@ -23,7 +23,7 @@ const dropdownItems = [
   },
   {
     title: 'Reporting & Automation',
-    description: 'Event-Driven Ansible, ServiceNow, Splunk',
+    description: 'Event-Driven Ansible, PagerDuty, ServiceNow, Splunk',
     value: REPORTING,
   },
   {
