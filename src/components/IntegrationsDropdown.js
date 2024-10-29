@@ -6,9 +6,7 @@ import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from
 import { checkPropTypes } from 'prop-types';
 import { useFlag } from '@unleash/proxy-client-react';
 
-const isPagerDutyEnabled = useFlag('platform.integrations.pager-duty');
-
-const dropdownItems = [
+const dropdownItems = (isPagerDutyEnabled) => [
   {
     title: 'Cloud',
     description: 'Amazon Web Services, Google Cloud Platform, Microsoft Azure, Oracle Cloud Platform',
@@ -41,6 +39,7 @@ const IntegrationsDropdown = (props) => {
   const [isIntegrationsWizardOpen, setIsIntegrationsWizardOpen] = useState(false);
   const [isSourcesWizardOpen, setIsSourcesWizardOpen] = useState(false);
   const [selectedIntegration, setSelectedIntegration] = useState(null);
+  const isPagerDutyEnabled = useFlag('platform.integrations.pager-duty');
 
   const handleSelect = (_event, value) => {
     setIsOpen(false);
@@ -95,7 +94,7 @@ const IntegrationsDropdown = (props) => {
         {...props}
       >
         <DropdownList>
-          {dropdownItems.map(({ title, value, description }) => (
+          {dropdownItems(isPagerDutyEnabled).map(({ title, value, description }) => (
             <DropdownItem key={title} value={value} description={description}>
               {title}
             </DropdownItem>
