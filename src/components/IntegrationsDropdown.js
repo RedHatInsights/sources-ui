@@ -4,6 +4,9 @@ import AsyncComponent from '@redhat-cloud-services/frontend-components/AsyncComp
 import AddSourceWizard from './addSourceWizard';
 import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../utilities/constants';
 import { checkPropTypes } from 'prop-types';
+import { useFlag } from '@unleash/proxy-client-react';
+
+const isPagerDutyEnabled = useFlag('platform.integrations.pager-duty');
 
 const dropdownItems = [
   {
@@ -23,7 +26,7 @@ const dropdownItems = [
   },
   {
     title: 'Reporting & Automation',
-    description: 'Event-Driven Ansible, ServiceNow, Splunk',
+    description: `Event-Driven Ansible, ${isPagerDutyEnabled ? 'PagerDuty' : null}, ServiceNow, Splunk`,
     value: REPORTING,
   },
   {
