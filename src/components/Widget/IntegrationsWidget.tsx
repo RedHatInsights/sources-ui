@@ -16,178 +16,14 @@ import { Provider } from 'react-redux';
 import IntegrationsDropdown from '../IntegrationsDropdown';
 import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../../utilities/constants';
 import { getProdStore } from '../../utilities/store';
-import ImageWithPlaceholder from '../TilesShared/ImageWithPlaceholder';
 import { AsyncComponent } from '@redhat-cloud-services/frontend-components';
 import AddSourceWizard from '../addSourceWizard';
-
 import './IntegrationsWidget.scss';
-
-interface Integration {
-  type: string;
-  sub_type?: string;
-}
-
-const integrationsData = [
-  {
-    title: COMMUNICATIONS,
-    items: [
-      {
-        name: 'Google Chat',
-        id: 'google_chat',
-        value: COMMUNICATIONS,
-        icon: (
-          <ImageWithPlaceholder
-            className="google-chat-logo"
-            src="/apps/frontend-assets/sources-integrations/google-chat.svg"
-            alt="google chat"
-          />
-        ),
-      },
-      {
-        name: 'Microsoft Office Teams',
-        id: 'teams',
-        value: COMMUNICATIONS,
-        icon: (
-          <ImageWithPlaceholder
-            className="microsoft-teams-logo"
-            src="/apps/frontend-assets/sources-integrations/microsoft-office-teams.svg"
-            alt="microsoft teams"
-          />
-        ),
-      },
-      {
-        name: 'Slack',
-        id: 'slack',
-        value: COMMUNICATIONS,
-        icon: (
-          <ImageWithPlaceholder className="slack-logo" src="/apps/frontend-assets/sources-integrations/slack.svg" alt="slack" />
-        ),
-      },
-    ],
-  },
-  {
-    title: REPORTING,
-    items: [
-      {
-        name: 'Event-Driven Ansible',
-        id: 'ansible',
-        value: REPORTING,
-        icon: (
-          <ImageWithPlaceholder
-            className="ansible-logo"
-            src="/apps/frontend-assets/sources-integrations/ansible.svg"
-            alt="ansible"
-          />
-        ),
-      },
-      {
-        name: 'ServiceNow',
-        id: 'servicenow',
-        value: REPORTING,
-        icon: (
-          <ImageWithPlaceholder
-            className="service-now-logo"
-            src="/apps/frontend-assets/sources-integrations/service-now.svg"
-            alt="service"
-          />
-        ),
-      },
-      {
-        name: 'Splunk',
-        id: 'splunk',
-        value: REPORTING,
-        icon: (
-          <ImageWithPlaceholder
-            className="splunk-logo"
-            src="/apps/frontend-assets/sources-integrations/splunk.svg"
-            alt="splunk"
-          />
-        ),
-      },
-    ],
-  },
-  {
-    title: WEBHOOKS,
-    items: [
-      {
-        name: 'Webhooks',
-        id: 'webhook',
-        value: WEBHOOKS,
-        icon: (
-          <ImageWithPlaceholder
-            className="webhook-logo"
-            src="/apps/frontend-assets/integrations-landing/integrations-landing-webhook-icon.svg"
-            alt="webhooks"
-          />
-        ),
-      },
-    ],
-  },
-  {
-    title: CLOUD_VENDOR,
-    items: [
-      {
-        name: 'Amazon Web Services',
-        id: 'aws',
-        value: CLOUD_VENDOR,
-        icon: <ImageWithPlaceholder className="aws-logo" src="/apps/frontend-assets/partners-icons/aws.svg" alt="aws logo" />,
-      },
-      {
-        name: 'Google Cloud',
-        id: 'google_cloud',
-        value: CLOUD_VENDOR,
-        icon: (
-          <ImageWithPlaceholder
-            className="google-logo"
-            src="/apps/frontend-assets/partners-icons/google-cloud-short.svg"
-            alt="google logo"
-          />
-        ),
-      },
-      {
-        name: 'Microsoft Azure',
-        id: 'azure',
-        value: CLOUD_VENDOR,
-        icon: (
-          <ImageWithPlaceholder
-            className="azure-logo"
-            src="/apps/frontend-assets/partners-icons/microsoft-azure-short.svg"
-            alt="azure logo"
-          />
-        ),
-      },
-      {
-        name: 'Oracle Cloud Infrastructure',
-        id: 'oracle_cloud',
-        value: CLOUD_VENDOR,
-        icon: (
-          <ImageWithPlaceholder
-            className="oracle-logo"
-            src="/apps/frontend-assets/partners-icons/oracle-short.svg"
-            alt="oracle logo"
-          />
-        ),
-      },
-    ],
-  },
-  {
-    title: REDHAT_VENDOR,
-    items: [
-      {
-        name: 'OpenShift Container Platform',
-        id: 'openshift',
-        value: REDHAT_VENDOR,
-        icon: (
-          <ImageWithPlaceholder
-            className="redhat-icon"
-            src="/apps/frontend-assets/red-hat-logos/stacked.svg"
-            alt="red hat logo"
-          />
-        ),
-      },
-    ],
-  },
-];
+import { Link } from 'react-router-dom';
+import { fetchCloudSources } from './services/fetchCloudSources';
+import { fetchIntegrations } from './services/fetchIntegrations';
+import { fetchRedHatSources } from './services/fetchRedHatSources';
+import { integrationsData } from './consts/widgetData';
 
 const IntegrationsWidget: FunctionComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -214,165 +50,27 @@ const IntegrationsWidget: FunctionComponent = () => {
     setExpandedIndex(expandedIndex === index ? null : index);
   };
 
-  const fetchCloudSources = async () => {
-    try {
-      const response = await fetch('/api/sources/v3.1/graphql', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          query: `{
-            sources(limit: 50, offset: 0, sort_by: { name: "created_at", direction: desc }, filter: [
-              { name: "source_type.category", operation: "eq", value: "Cloud" }
-            ]) {
-              id
-              created_at
-              name
-              source_type_id
-              availability_status
-            }
-            meta {
-              count
-            }
-          }`
-        })
-      });
-  
-      const { data } = await response.json();
-  
-      const counts: { [key: string]: number } = {
-        cloud: 0,
-        aws: 0,
-        google_cloud: 0,
-        azure: 0,
-        oracle_cloud: 0,
-      };
-  
-      const cloudProviderIds: Record<string, keyof typeof counts> = {
-        '1': 'aws',
-        '2': 'google_cloud',
-        '3': 'azure',
-        '4': 'oracle_cloud',
-      };
-  
-      counts.cloud = data.meta.count;
-  
-      data.sources.forEach((source: { source_type_id: string }) => {
-        const providerKey = cloudProviderIds[source.source_type_id];
-        if (providerKey) {
-          counts[providerKey]++;
-        }
-      });
-    
-      setIsLoading(false);
-      setIntegrationCounts((prevCounts) => ({ ...prevCounts, ...counts }));
-    } catch (error) {
-      console.error('Unable to get Cloud Sources', error);
-    }
-  };
-    
-  const fetchRedHatSources = async () => {
-    try {
-      const response = await fetch('/api/sources/v3.1/graphql', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          query: `{
-            sources(limit: 50, offset: 0, sort_by: { name: "created_at", direction: desc }, filter: [
-              { name: "source_type.category", operation: "eq", value: "Red Hat" }
-            ]) {
-              id
-              created_at
-              name
-              source_type_id
-              availability_status
-            }
-            meta {
-              count
-            }
-          }`
-        })
-      });
-  
-      const { data } = await response.json();
-  
-      const counts: { [key: string]: number } = { 
-        red_hat: 0,
-        openshift: 0,
-      };
-  
-      const redHatSourceTypes: Record<string, keyof typeof counts> = {
-        '1': 'openshift',
-      };
-  
-      counts.red_hat = data.meta.count;
-  
-      data.sources.forEach((source: { source_type_id: string }) => {
-        const sourceKey = redHatSourceTypes[source.source_type_id];
-        if (sourceKey) {
-          counts[sourceKey]++;
-        }
-      });
-    
-      setIsLoading(false);
-      setIntegrationCounts((prevCounts) => ({ ...prevCounts, ...counts }));
-    } catch (error) {
-      console.error('Unable to get Red Hat Sources', error);
-    }
-  };
-    
-
-  const fetchIntegrations = async () => {
-    try {
-      const response = await fetch('/api/integrations/v1.0/endpoints?type=ansible&type=webhook&type=camel');
-      const { data } = await response.json();
-
-      const validCamelSubTypes = ['teams', 'google_chat', 'slack', 'servicenow', 'splunk'];
-
-      const counts: { [key: string]: number } = {
-        ansible: 0,
-        webhook: 0,
-        camel: 0,
-        camel_google_chat: 0,
-        camel_teams: 0,
-        camel_slack: 0,
-        camel_servicenow: 0,
-        camel_splunk:0
-      };
-
-      counts.ansible = data.filter((integration: Integration) => integration.type === 'ansible').length;
-      counts.webhook = data.filter((integration: Integration) => integration.type === 'webhook').length;
-      data.forEach((integration: Integration) => {
-        if (integration.type === 'camel') {
-          counts.camel++;
-          if (integration.sub_type) {
-            counts[integration.sub_type] = (counts[integration.sub_type] || 0) + 1;
-          }
-        }
-      });
-
-      const camelSubTypeCount = data.filter(
-        (integration: Integration) => integration.type === 'camel' && validCamelSubTypes.includes(integration.sub_type ?? '')
-      ).length;
-      counts.camel += camelSubTypeCount;
-
-      setIsLoading(false);
-      setIntegrationCounts((prevCounts) => ({ ...prevCounts, ...counts }));
-    } catch (error) {
-      console.error('Unable to get Integrations ', error);
-    }
-  };
-
   useEffect(() => {
-    setIsLoading(true);
-    fetchCloudSources();
-    fetchRedHatSources();
-    fetchIntegrations();
+    const loadAllSources = async () => {
+      setIsLoading(true);
+      
+      const [cloudResult, redHatResult, integrationResult] = await Promise.all([
+        fetchCloudSources(),
+        fetchRedHatSources(),
+        fetchIntegrations(),
+      ]);
+
+      setIntegrationCounts((prevCounts) => ({
+        ...prevCounts,
+        ...(cloudResult?.counts || {}),
+        ...(redHatResult?.counts || {}),
+        ...(integrationResult?.counts || {}),
+      }));
+
+      setIsLoading(false);
+    };
+
+    loadAllSources();
   }, []);
 
   const badgeCounts = (items: typeof integrationsData[0]['items']) => {
@@ -390,7 +88,7 @@ const IntegrationsWidget: FunctionComponent = () => {
           <Card isPlain ouiaId="integrations-widget-empty-state" isClickable>
             <CardBody>
               Click on a third-party application to create an integration for it.{' '}
-              <a href="/settings/integrations?category=overview">Learn more about Integrations.</a>
+              <Link to="/settings/integrations?category=overview">Learn more about Integrations.</Link>
             </CardBody>
             <CardBody>
               <Gallery hasGutter>
