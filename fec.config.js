@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   appUrl: '/settings/integrations',
   debug: true,
@@ -12,6 +14,10 @@ module.exports = {
    */
   plugins: [],
   moduleFederation: {
+    exposes: {
+      './RootApp': path.resolve(__dirname, './src/AppEntry.js'),
+      './IntegrationsWidget': path.resolve(__dirname, './src/components/Widget/IntegrationsWidget'),
+    },
     exclude: ['react-router-dom'],
     shared: [{ 'react-router-dom': { singleton: true, version: '^6.8.0' } }],
   },
@@ -23,6 +29,14 @@ module.exports = {
       },
       '/apps/notifications': {
         host: `http://localhost:8003`,
+      },
+    }),
+    ...(process.env.CONFIG_PORT && {
+      '/api/chrome-service/v1/static': {
+        host: `http://localhost:${process.env.CONFIG_PORT}`,
+      },
+      '/api/chrome-service/v1/dashboard-templates': {
+        host: `http://localhost:${process.env.CONFIG_PORT}`,
       },
     }),
   },
