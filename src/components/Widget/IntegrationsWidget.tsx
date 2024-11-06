@@ -27,7 +27,7 @@ import { integrationsData } from './consts/widgetData';
 
 const IntegrationsWidget: FunctionComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
+  const [expandedIndex, setExpandedIndex] = useState<number[]>([]);
   const [integrationCounts, setIntegrationCounts] = useState<{ [key: string]: number }>({});
 
   const [selectedTileValue, setSelectedTileValue] = useState<string>('');
@@ -45,10 +45,6 @@ const IntegrationsWidget: FunctionComponent = () => {
 
   const allItems = integrationsData.flatMap((category) => category.items);
   const sortedItems = allItems.sort((a, b) => a.name.localeCompare(b.name));
-
-  const onToggle = (index: number) => {
-    setExpandedIndex(expandedIndex === index ? null : index);
-  };
 
   useEffect(() => {
     const loadAllSources = async () => {
@@ -75,6 +71,23 @@ const IntegrationsWidget: FunctionComponent = () => {
 
   const badgeCounts = (items: typeof integrationsData[0]['items']) => {
     return items.reduce((total, item) => total + (integrationCounts[item.id] || 0), 0);
+  };
+
+  useEffect(() => {
+    const initiallyExpandedIndex = integrationsData
+      .map((integration, index) => 
+        badgeCounts(integration.items) > 0 ? index : null
+      )
+      .filter(index => index !== null) as number[];
+    setExpandedIndex(initiallyExpandedIndex);
+  }, [integrationsData, integrationCounts]);
+
+  const onToggle = (index: number) => {
+    setExpandedIndex((prevIndices) =>
+      prevIndices.includes(index)
+        ? prevIndices.filter(i => i !== index)
+        : [...prevIndices, index]
+    );
   };
 
   const isEmptyState = Object.values(integrationCounts).reduce((total, count) => total + count, 0) === 0;
@@ -145,8 +158,7 @@ const IntegrationsWidget: FunctionComponent = () => {
                   </div>
                 }
                 onToggle={() => onToggle(integrationIndex)}
-                isExpanded={expandedIndex === integrationIndex}
-              >
+                isExpanded={expandedIndex.includes(integrationIndex)}              >
                 <List variant={ListVariant.inline} className="pf-v5-u-mb-md">
                   {integration.items.map((item, itemIndex) => (
                     <ListItem key={itemIndex} icon={item.icon}>
