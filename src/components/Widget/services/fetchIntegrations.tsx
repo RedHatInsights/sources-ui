@@ -7,7 +7,7 @@ export interface Integration {
     counts: { [key: string]: number };
   } | null> => {
     try {
-      const response = await fetch('/api/integrations/v1.0/endpoints?type=ansible&type=webhook&type=camel');
+      const response = await fetch('/api/integrations/v1.0/endpoints?type=ansible&type=webhook&type=camel&type=pagerduty');
       const { data } = await response.json();
 
       const validCamelSubTypes = ['teams', 'google_chat', 'slack', 'servicenow', 'splunk'];
@@ -15,6 +15,7 @@ export interface Integration {
       const counts: { [key: string]: number } = {
         ansible: 0,
         webhook: 0,
+        pagerduty: 0,
         camel: 0,
         camel_google_chat: 0,
         camel_teams: 0,
@@ -25,6 +26,7 @@ export interface Integration {
 
       counts.ansible = data.filter((integration: Integration) => integration.type === 'ansible').length;
       counts.webhook = data.filter((integration: Integration) => integration.type === 'webhook').length;
+      counts.pagerduty = data.filter((integration: Integration) => integration.type === 'pagerduty').length;
       data.forEach((integration: Integration) => {
         if (integration.type === 'camel') {
           counts.camel++;
@@ -41,7 +43,7 @@ export interface Integration {
       
       return { counts };
     } catch (error) {
-      console.error('Unable to get Cloud Sources', error);
+      console.error('Unable to get Integrations', error);
       return null;
     }
   };

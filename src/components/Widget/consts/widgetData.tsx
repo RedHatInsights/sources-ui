@@ -56,6 +56,18 @@ export const integrationsData = [
           ),
         },
         {
+          name: 'PagerDuty',
+          id: 'pagerduty',
+          value: REPORTING,
+          icon: (
+            <ImageWithPlaceholder
+              className="pagerduty-logo"
+              src="/apps/frontend-assets/sources-integrations/pagerduty-widget.svg"
+              alt="pagerduty"
+            />
+          ),
+        },
+        {
           name: 'ServiceNow',
           id: 'servicenow',
           value: REPORTING,
