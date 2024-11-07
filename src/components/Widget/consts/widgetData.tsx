@@ -2,7 +2,19 @@ import React from "react";
 import { COMMUNICATIONS, REPORTING, WEBHOOKS, CLOUD_VENDOR, REDHAT_VENDOR } from "../../../utilities/constants";
 import ImageWithPlaceholder from "../../TilesShared/ImageWithPlaceholder";
 
-export const integrationsData = [
+type IntegrationItem = {
+  name: string;
+  id: string;
+  value: string;
+  icon: React.JSX.Element;
+};
+
+type IntegrationCategory = {
+  title: string;
+  items: IntegrationItem[];
+};
+
+export const createIntegrationsData = (isPagerDutyEnabled: boolean): IntegrationCategory[] => [
     {
       title: COMMUNICATIONS,
       items: [
@@ -55,7 +67,8 @@ export const integrationsData = [
             />
           ),
         },
-        {
+        ...(isPagerDutyEnabled ? 
+        [{
           name: 'PagerDuty',
           id: 'pagerduty',
           value: REPORTING,
@@ -66,7 +79,7 @@ export const integrationsData = [
               alt="pagerduty"
             />
           ),
-        },
+        }] : []),
         {
           name: 'ServiceNow',
           id: 'servicenow',
