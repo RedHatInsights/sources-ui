@@ -162,8 +162,7 @@ const IntegrationsWidget: FunctionComponent = () => {
             ))}
           </CardBody>
           <CardFooter>
-            <IntegrationsDropdown 
-            />
+            <IntegrationsDropdown />
           </CardFooter>
         </Card>
       )}{' '}
