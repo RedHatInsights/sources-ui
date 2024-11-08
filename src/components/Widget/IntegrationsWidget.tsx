@@ -23,7 +23,8 @@ import { Link } from 'react-router-dom';
 import { fetchCloudSources } from './services/fetchCloudSources';
 import { fetchIntegrations } from './services/fetchIntegrations';
 import { fetchRedHatSources } from './services/fetchRedHatSources';
-import { integrationsData } from './consts/widgetData';
+import { createIntegrationsData } from './consts/widgetData';
+import { useFlag } from '@unleash/proxy-client-react';
 
 const IntegrationsWidget: FunctionComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -33,6 +34,9 @@ const IntegrationsWidget: FunctionComponent = () => {
   const [selectedTileValue, setSelectedTileValue] = useState<string>('');
   const [isIntegrationsWizardOpen, setIsIntegrationsWizardOpen] = useState(false);
   const [isSourcesWizardOpen, setIsSourcesWizardOpen] = useState(false);
+
+  const isPagerDutyEnabled = useFlag('platform.integrations.pager-duty');
+  const integrationsData = createIntegrationsData(isPagerDutyEnabled);
 
   const handleTileClick = (value: string) => {
     setSelectedTileValue(value);
