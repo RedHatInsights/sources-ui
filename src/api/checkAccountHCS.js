@@ -1,5 +1,5 @@
 export const checkAccountHCS = async (jwtToken, isProd) => {
-  return fetch(`https://billing.${isProd ? '' : 'stage.'}api.redhat.com/v1/authorization/hcsEnrollment`, {
+  return fetch(`https://console.${isProd ? '' : 'stage.'}redhat.com/api/billing/v1/authorization/hcsEnrollment`, {
     headers: { Authorization: `Bearer ${jwtToken}` },
   })
     .then((response) => {
