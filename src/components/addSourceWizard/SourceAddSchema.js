@@ -218,7 +218,7 @@ export const typesStep = (sourceTypes, applicationTypes, disableAppSelection, in
       label: intl.formatMessage({
         id: 'wizard.selectRedHatType',
         defaultMessage:
-          'To import data for an application, you need to connect to a data source. Start by selecting your cloud provider and application.',
+          'To import data for an application, you need to configure an integration. Start by selecting your cloud provider and application.',
       }),
     },
     ...redhatTypes({ intl, sourceTypes, applicationTypes, disableAppSelection }),
@@ -239,7 +239,7 @@ export const cloudTypesStep = (sourceTypes, applicationTypes, intl) => ({
       label: intl.formatMessage({
         id: 'wizard.selectCloudType',
         defaultMessage:
-          'To import data for an application, you need to connect to a data source. Start by selecting your cloud provider.',
+          'To import data for an application, you need to configure an integration. Start by selecting your cloud provider.',
       }),
     },
     {

@@ -55,7 +55,7 @@ const AmazonFinishedStep = ({ onClose }) => {
       >
         {intl.formatMessage({
           id: 'aws.alertDescription',
-          defaultMessage: 'Manage connections for this source at any time in Settings > Sources.',
+          defaultMessage: 'Manage connections for this integration at any time in Settings > Integrations.',
         })}
       </Alert>
       <Bullseye>
@@ -67,7 +67,7 @@ const AmazonFinishedStep = ({ onClose }) => {
           <EmptyStateBody>
             {intl.formatMessage({
               id: 'aws.successDescription',
-              defaultMessage: 'Discover the benefits of your connection or exit to manage your new source.',
+              defaultMessage: 'Discover the benefits of your connection or exit to manage your new integration.',
             })}
             <Grid hasGutter className="src-c-aws-grid pf-v5-u-mt-md">
               <GridItem md="6">

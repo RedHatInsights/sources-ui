@@ -89,7 +89,7 @@ const RemoveAppModal = () => {
           {intl.formatMessage(
             {
               id: 'sources.deleteAppWarning',
-              defaultMessage: '{ appName } will be disconnected from this source.',
+              defaultMessage: '{ appName } will be disconnected from this integration.',
             },
             { appName: <b key="b">{app.display_name}</b> },
           )}

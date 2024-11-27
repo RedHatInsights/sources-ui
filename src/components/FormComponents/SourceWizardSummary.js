@@ -80,7 +80,7 @@ const SummaryAlert = ({ appName, sourceType, hcsEnrolled }) => {
             {intl.formatMessage({
               id: 'cost.rbacWarningDescription',
               defaultMessage:
-                'Make sure to manage permissions for this source in custom roles that contain permissions for Cost Management.',
+                'Make sure to manage permissions for this integration in custom roles that contain permissions for Cost Management.',
             })}
           </Alert>
         )}

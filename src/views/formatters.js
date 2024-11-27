@@ -36,7 +36,7 @@ export const importsTexts = (value) =>
     cfme: (
       <FormattedMessage
         id="sources.cloudformImportTooltip"
-        defaultMessage="This source can be managed from your connected CloudForms application."
+        defaultMessage="This integration can be managed from your connected CloudForms application."
       />
     ),
   })[value.toLowerCase()];

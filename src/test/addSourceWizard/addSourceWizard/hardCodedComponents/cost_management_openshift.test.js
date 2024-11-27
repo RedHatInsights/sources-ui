@@ -14,7 +14,7 @@ describe('Cost Management OpenShift steps components', () => {
     ).toBeInTheDocument();
     expect(screen.getByText('costmanagement-metrics-operator')).toBeInTheDocument();
     expect(
-      screen.getByText('If you configured the operator to create a source (create_source: true),', { exact: false }),
+      screen.getByText('If you configured the operator to create an integration (create_source: true),', { exact: false }),
     ).toBeInTheDocument();
     expect(
       screen.getByText(

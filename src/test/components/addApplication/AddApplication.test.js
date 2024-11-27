@@ -615,7 +615,9 @@ describe('AddApplication', () => {
       expect(attachSource.doAttachApp).toHaveBeenCalledWith(formValues, formApi, authenticationValues, initialValues, appTypes);
 
       expect(screen.getByText('Amazon Web Services connection established')).toBeInTheDocument();
-      expect(screen.getByText('Discover the benefits of your connection or exit to manage your new source.')).toBeInTheDocument();
+      expect(
+        screen.getByText('Discover the benefits of your connection or exit to manage your new integration.'),
+      ).toBeInTheDocument();
       expect([...screen.getAllByRole('link')].map((l) => [l.textContent, l.href])).toEqual([
         ['View enabled AWS gold images', 'https://access.redhat.com/management/cloud'],
         ['Subscription Watch usage', 'http://localhost/preview/subscriptions'],

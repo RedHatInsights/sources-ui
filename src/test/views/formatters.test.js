@@ -147,7 +147,9 @@ describe('formatters', () => {
       });
 
       await waitFor(() =>
-        expect(screen.getByText('This source can be managed from your connected CloudForms application.')).toBeInTheDocument(),
+        expect(
+          screen.getByText('This integration can be managed from your connected CloudForms application.'),
+        ).toBeInTheDocument(),
       );
     });
   });
@@ -470,13 +472,13 @@ describe('formatters', () => {
     it('returns object for cfme', () => {
       render(wrapperWithIntl(importsTexts('cfme')));
 
-      expect(screen.getByText('This source can be managed from your connected CloudForms application.')).toBeInTheDocument();
+      expect(screen.getByText('This integration can be managed from your connected CloudForms application.')).toBeInTheDocument();
     });
 
     it('returns object for CFME', () => {
       render(wrapperWithIntl(importsTexts('CFME')));
 
-      expect(screen.getByText('This source can be managed from your connected CloudForms application.')).toBeInTheDocument();
+      expect(screen.getByText('This integration can be managed from your connected CloudForms application.')).toBeInTheDocument();
     });
 
     it('returns default undefined', () => {

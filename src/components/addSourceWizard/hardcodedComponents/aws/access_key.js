@@ -32,7 +32,7 @@ export const DescriptionSummary = () => {
                 {intl.formatMessage({
                   id: 'wizard.createAccesKeyHelpText',
                   defaultMessage:
-                    'The Power user policy allows the user full access to API functionality and AWS services for user administration. Create an access key in the Security Credentials area of your AWS user account. When adding your AWS account as a source, the access key ID and secret access key act as your user ID and password.',
+                    'The Power user policy allows the user full access to API functionality and AWS services for user administration. Create an access key in the Security Credentials area of your AWS user account. When adding your AWS account as an integration, the access key ID and secret access key act as your user ID and password.',
                 })}
               </Text>
             </React.Fragment>

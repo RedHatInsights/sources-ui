@@ -11,7 +11,7 @@ export const wizardDescription = (activeCategory) =>
   ) : (
     <FormattedMessage
       id="wizard.wizardDescriptionRedhat"
-      defaultMessage="Configure a data source to connect to your Red Hat applications."
+      defaultMessage="Configure an integration to connect to your Red Hat applications."
     />
   );
 export const wizardTitle = (activeCategory) =>

@@ -20,7 +20,7 @@ const CloseModal = ({ onExit, onStay, title, exitTitle, stayTitle, description }
       className="sources"
       variant="small"
       title={title}
-      aria-label={intl.formatMessage({ id: 'wizard.closeAriaLabel', defaultMessage: 'Close add source wizard' })}
+      aria-label={intl.formatMessage({ id: 'wizard.closeAriaLabel', defaultMessage: 'Close add integration wizard' })}
       header={
         <Title headingLevel="h1" size="2xl">
           <ExclamationTriangleIcon size="sm" className="src-c-warning-icon" aria-label="Exclamation icon" />
