@@ -185,9 +185,13 @@ describe('Steps components', () => {
       render(<AmazonFinishedStep {...initialProps} />);
 
       expect(screen.getByText('Allow 24 hours for full activation')).toBeInTheDocument();
-      expect(screen.getByText('Manage connections for this source at any time in Settings > Sources.')).toBeInTheDocument();
+      expect(
+        screen.getByText('Manage connections for this integration at any time in Settings > Integrations.'),
+      ).toBeInTheDocument();
       expect(screen.getByText('Amazon Web Services connection established')).toBeInTheDocument();
-      expect(screen.getByText('Discover the benefits of your connection or exit to manage your new source.')).toBeInTheDocument();
+      expect(
+        screen.getByText('Discover the benefits of your connection or exit to manage your new integration.'),
+      ).toBeInTheDocument();
       expect([...screen.getAllByRole('link')].map((l) => [l.textContent, l.href])).toEqual([
         ['View enabled AWS gold images', 'https://access.redhat.com/management/cloud'],
         ['Subscription Watch usage', 'http://localhost/preview/subscriptions'],

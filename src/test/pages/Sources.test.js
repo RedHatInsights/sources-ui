@@ -502,7 +502,7 @@ describe('SourcesPage', () => {
     expect(screen.getByTestId('location-display').textContent).toEqual(`/${routes.sourcesNew.path}`);
     expect(
       screen.getByText(
-        'To import data for an application, you need to connect to a data source. Start by selecting your cloud provider.',
+        'To import data for an application, you need to configure an integration. Start by selecting your cloud provider.',
       ),
     ).toBeInTheDocument();
   });
@@ -1207,7 +1207,7 @@ describe('SourcesPage', () => {
 
       await waitFor(() =>
         expect(
-          screen.getByText('To add a source, you must add Cloud Administrator permissions to your user.'),
+          screen.getByText('To add an integration, you must add Cloud Administrator permissions to your user.'),
         ).toBeInTheDocument(),
       );
 
@@ -1238,7 +1238,9 @@ describe('SourcesPage', () => {
 
       await waitFor(() =>
         expect(
-          screen.getByText('To add a source, your Organization Administrator must grant you Cloud Administrator permissions.'),
+          screen.getByText(
+            'To add an integration, your Organization Administrator must grant you Cloud Administrator permissions.',
+          ),
         ).toBeInTheDocument(),
       );
 
@@ -1272,7 +1274,9 @@ describe('SourcesPage', () => {
 
       await waitFor(() =>
         expect(
-          screen.getByText('To add a source, your Organization Administrator must grant you Cloud Administrator permissions.'),
+          screen.getByText(
+            'To add an integration, your Organization Administrator must grant you Cloud Administrator permissions.',
+          ),
         ).toBeInTheDocument(),
       );
 

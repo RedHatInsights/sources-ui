@@ -29,7 +29,9 @@ describe('removeAppSubmit', () => {
     expect(result).toEqual({
       meta: {
         appId: '123',
-        notifications: { fulfilled: { dismissable: true, title: 'Catalog was removed from this source.', variant: 'success' } },
+        notifications: {
+          fulfilled: { dismissable: true, title: 'Catalog was removed from this integration.', variant: 'success' },
+        },
         sourceId: '56',
       },
       payload: expect.any(Function),
@@ -40,7 +42,7 @@ describe('removeAppSubmit', () => {
     result.payload();
     expect(api.doDeleteApplication).toHaveBeenCalledWith(
       '123',
-      'Removing of Catalog application from this source was unsuccessful.',
+      'Removing of Catalog application from this integration was unsuccessful.',
     );
   });
 });

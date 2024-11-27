@@ -191,7 +191,7 @@ describe('SourceRemoveModal', () => {
       );
 
       expect(
-        screen.getByText('detaches the following connected application from this source:', { exact: false }),
+        screen.getByText('detaches the following connected application from this integration:', { exact: false }),
       ).toBeInTheDocument();
     });
 

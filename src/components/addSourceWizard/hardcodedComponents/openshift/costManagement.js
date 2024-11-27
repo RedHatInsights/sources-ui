@@ -38,7 +38,7 @@ export const ConfigureCostOperator = () => {
           {
             id: 'cost.openshift.operator_configured',
             defaultMessage:
-              'If you configured the operator to create a source (create_source: true), <b>STOP</b> here and <b>CANCEL</b> out of this flow.',
+              'If you configured the operator to create an integration (create_source: true), <b>STOP</b> here and <b>CANCEL</b> out of this flow.',
           },
           {
             b: bold,

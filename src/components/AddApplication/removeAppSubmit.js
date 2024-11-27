@@ -4,7 +4,7 @@ const removeAppSubmit = (app, intl, onCancel, dispatch, source) => {
   const titleSuccess = intl.formatMessage(
     {
       id: 'sources.removeAppWarning',
-      defaultMessage: `{ name } was removed from this source.`,
+      defaultMessage: `{ name } was removed from this integration.`,
     },
     {
       name: app.display_name,
@@ -13,7 +13,7 @@ const removeAppSubmit = (app, intl, onCancel, dispatch, source) => {
   const titleError = intl.formatMessage(
     {
       id: 'sources.removeAppError',
-      defaultMessage: `Removing of { name } application from this source was unsuccessful.`,
+      defaultMessage: `Removing of { name } application from this integration was unsuccessful.`,
     },
     {
       name: app.display_name,

@@ -203,7 +203,7 @@ describe('SourceWizardSummary component', () => {
       expect(screen.getByText('Manage permissions in User Access')).toBeInTheDocument();
       expect(
         screen.getByText(
-          'Make sure to manage permissions for this source in custom roles that contain permissions for Cost Management.',
+          'Make sure to manage permissions for this integration in custom roles that contain permissions for Cost Management.',
         ),
       ).toBeInTheDocument();
       expect(screen.getByText("Don't forget additional configuration steps!")).toBeInTheDocument();
@@ -249,7 +249,7 @@ describe('SourceWizardSummary component', () => {
       expect(screen.getByText('Manage permissions in User Access')).toBeInTheDocument();
       expect(
         screen.getByText(
-          'Make sure to manage permissions for this source in custom roles that contain permissions for Cost Management.',
+          'Make sure to manage permissions for this integration in custom roles that contain permissions for Cost Management.',
         ),
       ).toBeInTheDocument();
     });
@@ -414,7 +414,7 @@ describe('SourceWizardSummary component', () => {
       expect(screen.getByText('Manage permissions in User Access')).toBeInTheDocument();
       expect(
         screen.getByText(
-          'Make sure to manage permissions for this source in custom roles that contain permissions for Cost Management.',
+          'Make sure to manage permissions for this integration in custom roles that contain permissions for Cost Management.',
         ),
       ).toBeInTheDocument();
     });
@@ -455,7 +455,7 @@ describe('SourceWizardSummary component', () => {
       expect(screen.getByText('Manage permissions in User Access')).toBeInTheDocument();
       expect(
         screen.getByText(
-          'Make sure to manage permissions for this source in custom roles that contain permissions for Cost Management.',
+          'Make sure to manage permissions for this integration in custom roles that contain permissions for Cost Management.',
         ),
       ).toBeInTheDocument();
     });

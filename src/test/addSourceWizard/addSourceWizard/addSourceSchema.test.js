@@ -159,7 +159,7 @@ describe('Add source schema', () => {
 
       expect(result.fields[0].component).toEqual(componentTypes.PLAIN_TEXT);
       expect(result.fields[0].label).toEqual(
-        'To import data for an application, you need to connect to a data source. Start by selecting your cloud provider.',
+        'To import data for an application, you need to configure an integration. Start by selecting your cloud provider.',
       );
 
       expect(result.fields[1].name).toEqual('source_type');
@@ -171,7 +171,7 @@ describe('Add source schema', () => {
 
       expect(result.fields[0].component).toEqual(componentTypes.PLAIN_TEXT);
       expect(result.fields[0].label).toEqual(
-        'To import data for an application, you need to connect to a data source. Start by selecting your cloud provider and application.',
+        'To import data for an application, you need to configure an integration. Start by selecting your cloud provider and application.',
       );
       expect(result.fields).toHaveLength(3);
       expect(result.fields[1].name).toEqual('source_type');

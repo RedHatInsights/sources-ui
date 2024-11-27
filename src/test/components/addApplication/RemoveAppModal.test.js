@@ -67,7 +67,7 @@ describe('RemoveAppModal', () => {
     expect(screen.getByText('Remove')).toBeInTheDocument();
     expect(screen.getByText('Cancel')).toBeInTheDocument();
     expect(screen.getByText(APP1_DISPLAY_NAME, { selector: 'b' })).toBeInTheDocument();
-    expect(screen.getByText('will be disconnected from this source.', { exact: false })).toBeInTheDocument();
+    expect(screen.getByText('will be disconnected from this integration.', { exact: false })).toBeInTheDocument();
   });
 
   it('redirect when app does not exist', async () => {

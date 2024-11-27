@@ -22,7 +22,7 @@ export const bodyVariants = (variant, { name, count }) =>
       <FormattedMessage
         id="sources.deleteTextBodyWithApps"
         defaultMessage={`Removing { name } detaches the following
-        connected {count, plural, one {application} other {applications}} from this source:`}
+        connected {count, plural, one {application} other {applications}} from this integration:`}
         values={{
           name: <b>{name}</b>,
           count,

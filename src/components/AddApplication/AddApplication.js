@@ -158,7 +158,7 @@ const AddApplication = () => {
   const description = intl.formatMessage(
     {
       id: 'sources.addApplicationNameDescription',
-      defaultMessage: 'Configure {appName} for this source.',
+      defaultMessage: 'Configure {appName} for this integration.',
     },
     {
       appName: applicationType?.display_name || 'application',
