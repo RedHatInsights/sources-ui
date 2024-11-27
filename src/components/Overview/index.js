@@ -79,7 +79,7 @@ const Overview = () => {
           'Receive event notifications in your preferred communications application by connecting the Hybrid Cloud Console with Microsoft Teams, Google Chat, or Slack.',
       }),
       learnMoreLink:
-        'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/index',
+        'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html-single/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/index#assembly-integrating-comms_integrations',
     },
     {
       isExpanded: false,
@@ -107,7 +107,7 @@ const Overview = () => {
         }, ServiceNow, or Splunk.`,
       }),
       learnMoreLink:
-        'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/index',
+        'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html-single/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/index#assembly-integrating-reporting_integrating-communications',
     },
     {
       isExpanded: false,
