@@ -43,6 +43,7 @@ import generateJSON from '../utilities/generateJSON';
 import { Outlet } from 'react-router-dom';
 import { useFlag } from '@unleash/proxy-client-react';
 import Overview from '../components/Overview';
+import UnauthorizedState from '../components/UnauthorizedState/UnauthorizedState';
 
 const initialState = {
   filter: undefined,
@@ -70,6 +71,7 @@ const SourcesPage = () => {
   const entitiesLoaded = useIsLoaded();
   const hasWritePermissions = useHasWritePermissions();
   const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
+  const hasIntegrationsReadPermissions = useSelector(({ user }) => user?.integrationsReadPermissions);
   const enableIntegrations = useFlag('platform.sources.integrations') || useFlag('platform.sources.breakdown');
   const enableIntegrationsOverview = useFlag('platform.integrations.overview');
 
@@ -195,7 +197,11 @@ const SourcesPage = () => {
 
   const mainContent =
     [INTEGRATIONS, COMMUNICATIONS, REPORTING, WEBHOOKS].includes(activeCategory) && enableIntegrations ? (
-      <AsyncComponent appName="notifications" module="./IntegrationsTable" activeCategory={activeCategory} />
+      hasIntegrationsReadPermissions ? (
+        <UnauthorizedState />
+      ) : (
+        <AsyncComponent appName="notifications" module="./IntegrationsTable" activeCategory={activeCategory} />
+      )
     ) : !fetchingError && !showEmptyState ? (
       <React.Fragment>
         <PrimaryToolbar
