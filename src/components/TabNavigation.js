@@ -19,9 +19,10 @@ const TabNavigation = () => {
   const enableIntegrationsOverview = useFlag('platform.integrations.overview');
   const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
   const hasIntegrationsPermissions = useSelector(({ user }) => user?.integrationsEndpointsPermissions);
+  const hasIntegrationsReadPermissions = useSelector(({ user }) => user?.integrationsReadPermissions);
 
   const integrationsTabs =
-    (isOrgAdmin || hasIntegrationsPermissions) &&
+    (isOrgAdmin || hasIntegrationsPermissions || hasIntegrationsReadPermissions) &&
     (enableIntegrations || enableBreakdown) &&
     (enableBreakdown ? (
       <>
