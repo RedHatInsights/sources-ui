@@ -12,7 +12,7 @@ import {
   Tile,
 } from '@patternfly/react-core';
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import IntegrationsDropdown from '../IntegrationsDropdown';
 import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../../utilities/constants';
 import { getProdStore } from '../../utilities/store';
@@ -25,6 +25,7 @@ import { fetchIntegrations } from './services/fetchIntegrations';
 import { fetchRedHatSources } from './services/fetchRedHatSources';
 import { createIntegrationsData } from './consts/widgetData';
 import { useFlag } from '@unleash/proxy-client-react';
+import PermissionsChecker from '../PermissionsChecker';
 
 const IntegrationsWidget: FunctionComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -35,8 +36,10 @@ const IntegrationsWidget: FunctionComponent = () => {
   const [isIntegrationsWizardOpen, setIsIntegrationsWizardOpen] = useState(false);
   const [isSourcesWizardOpen, setIsSourcesWizardOpen] = useState(false);
 
+  const hasSourcesPermissions = useSelector(({ user }) => user?.writePermissions);
+  const hasIntegrationsPermissions = useSelector(({ user }) => user?.integrationsEndpointsPermissions);
   const isPagerDutyEnabled = useFlag('platform.integrations.pager-duty');
-  const integrationsData = createIntegrationsData(isPagerDutyEnabled);
+  const integrationsData = createIntegrationsData(isPagerDutyEnabled, hasSourcesPermissions, hasIntegrationsPermissions);
 
   const handleTileClick = (value: string) => {
     setSelectedTileValue(value);
@@ -97,7 +100,7 @@ const IntegrationsWidget: FunctionComponent = () => {
   const isEmptyState = Object.values(integrationCounts).reduce((total, count) => total + count, 0) === 0;
 
   return (
-    <>
+    <PermissionsChecker>
       {isLoading ? (
         <Spinner />
       ) : isEmptyState ? (
@@ -178,7 +181,7 @@ const IntegrationsWidget: FunctionComponent = () => {
           </CardFooter>
         </Card>
       )}{' '}
-    </>
+    </PermissionsChecker>
   );
 };
 
