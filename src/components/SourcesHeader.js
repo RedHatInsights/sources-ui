@@ -56,7 +56,7 @@ const SourcesHeader = () => {
                         {intl.formatMessage({
                           id: 'integrations.overview.popoverBody',
                           defaultMessage:
-                            'You do not the permissions for integration management. Contact your organization admin if you need these permissions updated.',
+                            'You do not have the permissions for integration management. Contact your organization admin if you need these permissions updated.',
                         })}{' '}
                         <Button
                           component="a"
