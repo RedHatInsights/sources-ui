@@ -6,7 +6,6 @@ import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from
 import { checkPropTypes } from 'prop-types';
 import { useFlag } from '@unleash/proxy-client-react';
 import { useSelector } from 'react-redux';
-import PermissionsChecker from './PermissionsChecker';
 
 const dropdownItems = (isPagerDutyEnabled, hasSourcesPermissions, hasIntegrationsPermissions) => [
   ...(hasSourcesPermissions
@@ -64,60 +63,58 @@ const IntegrationsDropdown = (props) => {
   };
 
   return (
-    <PermissionsChecker>
-      <div className="integrations-dropdown">
-        {[REDHAT_VENDOR, CLOUD_VENDOR].includes(selectedIntegration) && (
-          <AddSourceWizard
-            isOpen={isSourcesWizardOpen}
-            onClose={() => {
-              setIsSourcesWizardOpen(false);
-              setSelectedIntegration(null);
-            }}
-            activeCategory={selectedIntegration}
-          />
+    <div className="integrations-dropdown">
+      {[REDHAT_VENDOR, CLOUD_VENDOR].includes(selectedIntegration) && (
+        <AddSourceWizard
+          isOpen={isSourcesWizardOpen}
+          onClose={() => {
+            setIsSourcesWizardOpen(false);
+            setSelectedIntegration(null);
+          }}
+          activeCategory={selectedIntegration}
+        />
+      )}
+      {[COMMUNICATIONS, REPORTING, WEBHOOKS].includes(selectedIntegration) && (
+        <AsyncComponent
+          appName="notifications"
+          module="./IntegrationsWizard"
+          isOpen={isIntegrationsWizardOpen}
+          category={selectedIntegration}
+          closeModal={() => {
+            setIsIntegrationsWizardOpen(false);
+            setSelectedIntegration(null);
+          }}
+          fallback={<div id="fallback-modal" />}
+        />
+      )}
+      <Dropdown
+        isOpen={isOpen}
+        onSelect={handleSelect}
+        onOpenChange={setIsOpen}
+        toggle={(toggleRef) => (
+          <MenuToggle
+            ref={toggleRef}
+            onClick={() => setIsOpen(!isOpen)}
+            isExpanded={isOpen}
+            isDisabled={props.isDisabled || (!hasSourcesPermissions && !hasIntegrationsPermissions)}
+            variant="primary"
+          >
+            Create Integration
+          </MenuToggle>
         )}
-        {[COMMUNICATIONS, REPORTING, WEBHOOKS].includes(selectedIntegration) && (
-          <AsyncComponent
-            appName="notifications"
-            module="./IntegrationsWizard"
-            isOpen={isIntegrationsWizardOpen}
-            category={selectedIntegration}
-            closeModal={() => {
-              setIsIntegrationsWizardOpen(false);
-              setSelectedIntegration(null);
-            }}
-            fallback={<div id="fallback-modal" />}
-          />
-        )}
-        <Dropdown
-          isOpen={isOpen}
-          onSelect={handleSelect}
-          onOpenChange={setIsOpen}
-          toggle={(toggleRef) => (
-            <MenuToggle
-              ref={toggleRef}
-              onClick={() => setIsOpen(!isOpen)}
-              isExpanded={isOpen}
-              isDisabled={props.isDisabled || (!hasSourcesPermissions && !hasIntegrationsPermissions)}
-              variant="primary"
-            >
-              Create Integration
-            </MenuToggle>
+        {...props}
+      >
+        <DropdownList>
+          {dropdownItems(isPagerDutyEnabled, hasSourcesPermissions, hasIntegrationsPermissions).map(
+            ({ title, value, description }) => (
+              <DropdownItem key={title} value={value} description={description}>
+                {title}
+              </DropdownItem>
+            ),
           )}
-          {...props}
-        >
-          <DropdownList>
-            {dropdownItems(isPagerDutyEnabled, hasSourcesPermissions, hasIntegrationsPermissions).map(
-              ({ title, value, description }) => (
-                <DropdownItem key={title} value={value} description={description}>
-                  {title}
-                </DropdownItem>
-              ),
-            )}
-          </DropdownList>
-        </Dropdown>
-      </div>
-    </PermissionsChecker>
+        </DropdownList>
+      </Dropdown>
+    </div>
   );
 };
 
