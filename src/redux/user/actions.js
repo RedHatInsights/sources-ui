@@ -55,6 +55,33 @@ export const loadIntegrationsEndpointsPermissions = (getUserPermissions) => (dis
     );
 };
 
+export const loadIntegrationsReadPermissions = (getUserPermissions) => (dispatch) => {
+  dispatch({ type: ACTION_TYPES.SET_INTEGRATIONS_READ_PERMISSIONS_PENDING });
+
+  return getUserPermissions('integrations', true) // bypassCache = true
+    .then((permissions) => {
+      const allPermission = permissions.map((curr) => curr?.permission);
+      const integrationsReadPermissions =
+        allPermission.includes('integrations:*:read') || allPermission.includes('integrations:endpoints:read');
+
+      dispatch({
+        type: ACTION_TYPES.SET_INTEGRATIONS_READ_PERMISSIONS_FULFILLED,
+        payload: integrationsReadPermissions,
+      });
+    })
+    .catch((error) =>
+      dispatch({
+        type: ACTION_TYPES.SET_INTEGRATIONS_READ_PERMISSIONS_REJECTED,
+        payload: {
+          error: {
+            detail: error.detail || error.data,
+            title: "Cannot get user's credentials",
+          },
+        },
+      }),
+    );
+};
+
 export const loadOrgAdmin = (getUser) => (dispatch) => {
   dispatch({ type: ACTION_TYPES.SET_ORG_ADMIN_PENDING });
 
