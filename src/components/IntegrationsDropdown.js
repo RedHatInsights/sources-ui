@@ -5,7 +5,7 @@ import AddSourceWizard from './addSourceWizard';
 import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../utilities/constants';
 import { checkPropTypes } from 'prop-types';
 import { useFlag } from '@unleash/proxy-client-react';
-import { useSelector } from 'react-redux';
+import { useSelector, useStore } from 'react-redux';
 
 const dropdownItems = (isPagerDutyEnabled, hasSourcesPermissions, hasIntegrationsPermissions) => [
   ...(hasSourcesPermissions
@@ -62,6 +62,8 @@ const IntegrationsDropdown = (props) => {
     }
   };
 
+  const store = useStore();
+
   return (
     <div className="integrations-dropdown">
       {[REDHAT_VENDOR, CLOUD_VENDOR].includes(selectedIntegration) && (
@@ -78,6 +80,7 @@ const IntegrationsDropdown = (props) => {
         <AsyncComponent
           appName="notifications"
           module="./IntegrationsWizard"
+          store={store}
           isOpen={isIntegrationsWizardOpen}
           category={selectedIntegration}
           closeModal={() => {
