@@ -29,6 +29,7 @@ import PermissionsChecker from '../PermissionsChecker';
 
 const IntegrationsWidget: FunctionComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [hasInitialized, setHasInitialized] = useState(false);
   const [expandedIndex, setExpandedIndex] = useState<number[]>([]);
   const [integrationCounts, setIntegrationCounts] = useState<{ [key: string]: number }>({});
 
@@ -81,13 +82,14 @@ const IntegrationsWidget: FunctionComponent = () => {
   };
 
   useEffect(() => {
-    const initiallyExpandedIndex = integrationsData
-      .map((integration, index) => 
-        badgeCounts(integration.items) > 0 ? index : null
-      )
-      .filter(index => index !== null) as number[];
-    setExpandedIndex(initiallyExpandedIndex);
-  }, [integrationsData, integrationCounts]);
+    if (!hasInitialized && Object.keys(integrationCounts).length > 0) {
+      const initiallyExpandedIndex = integrationsData
+        .map((integration, index) => (badgeCounts(integration.items) > 0 ? index : null))
+        .filter((index) => index !== null) as number[];
+      setExpandedIndex(initiallyExpandedIndex);
+      setHasInitialized(true);
+    }
+  }, [integrationsData, integrationCounts, hasInitialized]);
 
   const onToggle = (index: number) => {
     setExpandedIndex((prevIndices) =>
