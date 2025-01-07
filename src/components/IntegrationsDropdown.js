@@ -101,6 +101,7 @@ const IntegrationsDropdown = (props) => {
             isExpanded={isOpen}
             isDisabled={props.isDisabled || (!hasSourcesPermissions && !hasIntegrationsPermissions)}
             variant="primary"
+            className="pf-v5-u-pl-md"
           >
             Create Integration
           </MenuToggle>
