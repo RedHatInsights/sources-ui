@@ -12,7 +12,7 @@ import {
   Tile,
 } from '@patternfly/react-core';
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { Provider, useSelector } from 'react-redux';
+import { Provider, useSelector, useStore } from 'react-redux';
 import IntegrationsDropdown from '../IntegrationsDropdown';
 import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../../utilities/constants';
 import { getProdStore } from '../../utilities/store';
@@ -99,6 +99,8 @@ const IntegrationsWidget: FunctionComponent = () => {
     );
   };
 
+  const store = useStore();
+
   const isEmptyState = Object.values(integrationCounts).reduce((total, count) => total + count, 0) === 0;
 
   return (
@@ -130,6 +132,7 @@ const IntegrationsWidget: FunctionComponent = () => {
               <AsyncComponent
                 appName="notifications"
                 module="./IntegrationsWizard"
+                store={store}
                 isOpen={isIntegrationsWizardOpen}
                 category={selectedTileValue}
                 closeModal={() => {
