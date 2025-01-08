@@ -23,6 +23,7 @@ import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from
 import { AsyncComponent } from '@redhat-cloud-services/frontend-components';
 import AddSourceWizard from '../addSourceWizard';
 import { useIntl } from 'react-intl';
+import { useStore } from 'react-redux';
 
 const CustomDataListItem = ({ initialExpanded, icon, title, actionTitle, action, content, learnMoreLink }) => {
   const [isExpanded, setIsExpanded] = useState(initialExpanded);
@@ -33,6 +34,8 @@ const CustomDataListItem = ({ initialExpanded, icon, title, actionTitle, action,
   const intl = useIntl();
 
   const toggleExpand = () => setIsExpanded((prev) => !prev);
+
+  const store = useStore();
 
   return (
     <React.Fragment>
@@ -107,6 +110,7 @@ const CustomDataListItem = ({ initialExpanded, icon, title, actionTitle, action,
         <AsyncComponent
           appName="notifications"
           module="./IntegrationsWizard"
+          store={store}
           isOpen={isIntegrationsWizardOpen}
           category={selectedIntegration}
           closeModal={() => {
