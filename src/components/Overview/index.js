@@ -10,6 +10,10 @@ import {
   CardFooter,
   CardTitle,
   DataList,
+  DataListCell,
+  DataListItem,
+  DataListItemCells,
+  DataListItemRow,
   Grid,
   GridItem,
   Hint,
@@ -22,7 +26,6 @@ import {
   TextVariants,
   Title,
 } from '@patternfly/react-core';
-import { Table, Tbody, Td, Tr } from '@patternfly/react-table';
 import {
   ArrowRightIcon,
   AutomationIcon,
@@ -345,66 +348,80 @@ const Overview = () => {
           defaultMessage: 'Recommended content',
         })}
       </Title>
-      <Table aria-label="Recommended content" className="pf-v5-u-mb-lg">
-        <Tbody>
-          <Tr>
-            <Td>
-              {intl.formatMessage({
-                id: 'integrations.overview.recommendedContentTableTitle1',
-                defaultMessage: 'Configuring notifications and integrations',
-              })}
-            </Td>
-            <Td>
-              <Label color="orange">
-                {intl.formatMessage({
-                  id: 'integrations.overview.recommendedContentTableLabel1',
-                  defaultMessage: 'Documentation',
-                })}
-              </Label>
-            </Td>
-            <Td className="pf-v5-u-text-align-right">
-              <Button
-                component="a"
-                href={VIEW_DOCUMENTATION}
-                target="_blank"
-                variant="link"
-                icon={<ExternalLinkAltIcon />}
-                iconPosition="end"
-              >
-                {intl.formatMessage({
-                  id: 'integrations.overview.recommendedContentTableLink1',
-                  defaultMessage: 'View documentation',
-                })}
-              </Button>
-            </Td>
-          </Tr>
-          <Tr>
-            <Td>
-              {intl.formatMessage({
-                id: 'integrations.overview.recommendedContentTableTitle2',
-                defaultMessage: 'Configuring console notifications in Slack',
-              })}
-            </Td>
-            <Td>
-              <Label color="green">
-                {intl.formatMessage({
-                  id: 'integrations.overview.recommendedContentTableLabel2',
-                  defaultMessage: 'Quick start',
-                })}
-              </Label>
-            </Td>
-            <Td className="pf-v5-u-text-align-right">
-              <Button variant="link" onClick={handleActivateQuickstart} isInline>
-                {intl.formatMessage({
-                  id: 'integrations.overview.recommendedContentTableLink2',
-                  defaultMessage: 'Begin Quick start',
-                })}{' '}
-                <ArrowRightIcon />
-              </Button>
-            </Td>
-          </Tr>
-        </Tbody>
-      </Table>
+      <DataList aria-label="Recommended content">
+        <DataListItem aria-labelledby="configure-notif-int">
+          <DataListItemRow>
+            <DataListItemCells
+              dataListCells={[
+                <DataListCell key="title" width={2}>
+                  <span id="configure-notif-int">
+                    {intl.formatMessage({
+                      id: 'integrations.overview.recommendedContentTableTitle1',
+                      defaultMessage: 'Configuring notifications and integrations',
+                    })}
+                  </span>
+                </DataListCell>,
+                <DataListCell key="label" width={1}>
+                  <Label color="orange">
+                    {intl.formatMessage({
+                      id: 'integrations.overview.recommendedContentTableLabel1',
+                      defaultMessage: 'Documentation',
+                    })}
+                  </Label>
+                </DataListCell>,
+                <DataListCell key="action" className="pf-v5-u-display-flex pf-v5-u-justify-content-flex-end">
+                  <Button
+                    component="a"
+                    href={VIEW_DOCUMENTATION}
+                    target="_blank"
+                    variant="link"
+                    icon={<ExternalLinkAltIcon />}
+                    iconPosition="end"
+                  >
+                    {intl.formatMessage({
+                      id: 'integrations.overview.recommendedContentTableLink1',
+                      defaultMessage: 'View documentation',
+                    })}
+                  </Button>
+                </DataListCell>,
+              ]}
+            />
+          </DataListItemRow>
+        </DataListItem>
+        <DataListItem aria-labelledby="configure-console-int-slack">
+          <DataListItemRow>
+            <DataListItemCells
+              dataListCells={[
+                <DataListCell key="title" width={2}>
+                  <span>
+                    {intl.formatMessage({
+                      id: 'integrations.overview.recommendedContentTableTitle2',
+                      defaultMessage: 'Configuring console notifications in Slack',
+                    })}
+                  </span>
+                </DataListCell>,
+                <DataListCell key="label" width={1}>
+                  <Label color="green">
+                    {intl.formatMessage({
+                      id: 'integrations.overview.recommendedContentTableLabel2',
+                      defaultMessage: 'Quick start',
+                    })}
+                  </Label>
+                </DataListCell>,
+                <DataListCell key="action" className="pf-v5-u-display-flex pf-v5-u-justify-content-flex-end">
+                  <Button variant="link" onClick={handleActivateQuickstart} isInline>
+                    {intl.formatMessage({
+                      id: 'integrations.overview.recommendedContentTableLink2',
+                      defaultMessage: 'Begin Quick start',
+                    })}
+                    <ArrowRightIcon />
+                  </Button>
+                </DataListCell>,
+              ]}
+            />
+          </DataListItemRow>
+        </DataListItem>
+      </DataList>
       <Link to={'/settings/learning-resources'}>
         <Button variant="link" className="pf-v5-u-mb-lg" isInline>
           {intl.formatMessage({
