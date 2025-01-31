@@ -4,7 +4,6 @@ import { RendererContext } from '@data-driven-forms/react-form-renderer';
 import render from '../../__mocks__/render';
 
 import * as SubsAwsArn from '../../../../components/addSourceWizard/hardcodedComponents/aws/subscriptionWatch';
-import * as api from '../../../../api/subscriptionWatch';
 
 describe('AWS-ARN hardcoded schemas', () => {
   it('ARN DESCRIPTION is rendered correctly', () => {
@@ -18,15 +17,13 @@ describe('AWS-ARN hardcoded schemas', () => {
   });
 
   it('IAM POLICY is rendered correctly', async () => {
-    const IAM_POLICY = { version: '1234' };
-    const CONFIG = { some: 'fake', config: 'oh yeah', aws_policies: { traditional_inspection: IAM_POLICY } };
-    api.getSubWatchConfig = jest.fn().mockImplementation(() => Promise.resolve(CONFIG));
-
     render(<SubsAwsArn.IAMPolicyDescription />);
 
-    expect(screen.getByLabelText('Copyable input')).toHaveValue(`Loading configuration...`);
-
-    await waitFor(() => expect(screen.getByLabelText('Copyable input')).toHaveValue(`{   "version": "1234" }`));
+    await waitFor(() =>
+      expect(screen.getByLabelText('Copyable input')).toHaveValue(
+        `{   "Version": "2012-10-17",   "Statement": [     {       "Sid": "CloudigradePolicy",       "Effect": "Allow",       "Action": [         "sts:GetCallerIdentity"       ],       "Resource": "*"     }   ] }`,
+      ),
+    );
 
     expect(
       screen.getByText(
@@ -42,33 +39,7 @@ describe('AWS-ARN hardcoded schemas', () => {
     expect(screen.getByText('Complete the process to create your new policy.', { exact: false })).toBeInTheDocument();
   });
 
-  it('IAM POLICY is rendered correctly with error', async () => {
-    const _cons = console.error;
-    console.error = jest.fn();
-
-    const ERROR = 'Something went wrong';
-    api.getSubWatchConfig = jest.fn().mockImplementation(() => Promise.reject(ERROR));
-
-    render(<SubsAwsArn.IAMPolicyDescription />);
-
-    expect(screen.getByLabelText('Copyable input')).toHaveValue(`Loading configuration...`);
-
-    await waitFor(() =>
-      expect(screen.getByLabelText('Copyable input')).toHaveValue(
-        JSON.stringify('There is an error with loading of the configuration. Please go back and return to this step.', null, 2),
-      ),
-    );
-
-    expect(console.error).toHaveBeenCalledWith(ERROR);
-
-    console.error = _cons;
-  });
-
   it('IAM ROLE is rendered correctly with external ID', async () => {
-    const CM_ID = '372779871274';
-    const CONFIG = { aws_account_id: CM_ID };
-    api.getSubWatchConfig = jest.fn().mockImplementation(() => Promise.resolve(CONFIG));
-
     render(
       <RendererContext.Provider
         value={{
@@ -81,10 +52,9 @@ describe('AWS-ARN hardcoded schemas', () => {
         <SubsAwsArn.IAMRoleDescription />
       </RendererContext.Provider>,
     );
-    expect(screen.getAllByLabelText('Copyable input').at(0)).toHaveValue(`Loading configuration...`);
     expect(screen.getAllByLabelText('Copyable input').at(1)).toBeInTheDocument();
 
-    await waitFor(() => expect(screen.getAllByLabelText('Copyable input').at(0)).toHaveValue(CM_ID));
+    await waitFor(() => expect(screen.getAllByLabelText('Copyable input').at(0)).toHaveValue('998366406740'));
 
     expect(
       screen.getByText('To delegate account access, create an IAM role to associate with your IAM policy.', { exact: false }),
@@ -99,33 +69,5 @@ describe('AWS-ARN hardcoded schemas', () => {
       screen.getByText('You will need to be logged in to the IAM console to complete the next step', { exact: false }),
     ).toBeInTheDocument();
     expect(screen.getByText('Do not close your browser.', { exact: false })).toBeInTheDocument();
-  });
-
-  it('IAM ROLE is rendered correctly with error', async () => {
-    const _cons = console.error;
-    console.error = jest.fn();
-
-    const ERROR = 'Something went wrong';
-    api.getSubWatchConfig = jest.fn().mockImplementation(() => Promise.reject(ERROR));
-
-    render(
-      <RendererContext.Provider
-        value={{
-          formOptions: { getState: () => ({ values: {} }), change: () => null },
-        }}
-      >
-        <SubsAwsArn.IAMRoleDescription />
-      </RendererContext.Provider>,
-    );
-    expect(screen.getAllByLabelText('Copyable input').at(0)).toHaveValue(`Loading configuration...`);
-    expect(screen.getAllByLabelText('Copyable input').at(1)).toBeInTheDocument();
-
-    await waitFor(() =>
-      expect(screen.getAllByLabelText('Copyable input').at(0)).toHaveValue(
-        'There is an error with loading of the configuration. Please go back and return to this step.',
-      ),
-    );
-    expect(console.error).toHaveBeenCalledWith(ERROR);
-    console.error = _cons;
   });
 });

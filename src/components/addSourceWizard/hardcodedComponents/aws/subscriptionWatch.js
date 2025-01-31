@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -13,32 +13,15 @@ import {
   TextVariants,
 } from '@patternfly/react-core';
 
-import { getSubWatchConfig } from '../../../../api/subscriptionWatch';
 import { useFormApi } from '@data-driven-forms/react-form-renderer';
 
 const b = (chunks) => <b key={`b-${chunks.length}-${Math.floor(Math.random() * 1000)}`}>{chunks}</b>;
 
 export const IAMRoleDescription = () => {
   const intl = useIntl();
-  const [config, setConfig] = useState();
   const externalId = useMemo(() => uuidv4(), []);
   const formOptions = useFormApi();
   const { authentication = {} } = formOptions.getState().values;
-
-  useEffect(() => {
-    getSubWatchConfig()
-      .then((conf) => setConfig(conf?.aws_account_id))
-      .catch((e) => {
-        // eslint-disable-next-line no-console
-        console.error(e);
-        setConfig(
-          intl.formatMessage({
-            id: 'subwatch.iampolicy.subWatchConfigError',
-            defaultMessage: 'There is an error with loading of the configuration. Please go back and return to this step.',
-          }),
-        );
-      });
-  }, []);
 
   useEffect(() => {
     formOptions.change('authentication', {
@@ -76,7 +59,7 @@ export const IAMRoleDescription = () => {
           )}
         </TextListItem>
         <ClipboardCopy className="pf-v5-u-m-sm-on-sm" isReadOnly>
-          {config || intl.formatMessage({ id: 'subwatch.iampolicy.loading', defaultMessage: 'Loading configuration...' })}
+          998366406740
         </ClipboardCopy>
         <TextListItem>
           {intl.formatMessage({
@@ -124,22 +107,6 @@ export const IAMRoleDescription = () => {
 
 export const IAMPolicyDescription = () => {
   const intl = useIntl();
-  const [config, setConfig] = useState();
-
-  useEffect(() => {
-    getSubWatchConfig()
-      .then((conf) => setConfig(conf?.aws_policies?.traditional_inspection))
-      .catch((e) => {
-        // eslint-disable-next-line no-console
-        console.error(e);
-        setConfig(
-          intl.formatMessage({
-            id: 'subwatch.iampolicy.subWatchConfigError',
-            defaultMessage: 'There is an error with loading of the configuration. Please go back and return to this step.',
-          }),
-        );
-      });
-  }, []);
 
   return (
     <TextContent>
@@ -181,9 +148,21 @@ export const IAMPolicyDescription = () => {
           })}
         </TextListItem>
         <ClipboardCopy isCode variant={ClipboardCopyVariant.expansion} className="pf-v5-u-m-sm-on-sm" isReadOnly>
-          {config
-            ? JSON.stringify(config, null, 2)
-            : intl.formatMessage({ id: 'subwatch.iampolicy.loading', defaultMessage: 'Loading configuration...' })}
+          {JSON.stringify(
+            {
+              Version: '2012-10-17',
+              Statement: [
+                {
+                  Sid: 'CloudigradePolicy',
+                  Effect: 'Allow',
+                  Action: ['sts:GetCallerIdentity'],
+                  Resource: '*',
+                },
+              ],
+            },
+            null,
+            2,
+          )}
         </ClipboardCopy>
         <TextListItem>
           {intl.formatMessage({
