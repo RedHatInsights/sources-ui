@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/RedHatInsights/frontend-components/refs/heads/master/packages/config-utils/src/feo/spec/frontend-crd.schema.json
+
 apiVersion: v1
 kind: Template
 metadata:
@@ -8,6 +10,16 @@ objects:
     metadata:
       name: sources
     spec:
+      feoConfigEnabled: true
+      bundleSegments:
+        - segmentId: sources-settings
+          bundleId: settings
+          position: 100
+          navItems:
+            - id: integrations
+              title: Integrations
+              icon: PlaceholderIcon
+              href: /settings/integrations
       envName: ${ENV_NAME}
       title: Sources
       deploymentRepo: https://github.com/RedHatInsights/sources-ui
@@ -18,17 +30,15 @@ objects:
         paths:
           - /apps/sources
       image: ${IMAGE}:${IMAGE_TAG}
-      navItems:
-        - appId: "sources"
-          title: "Sources"
-          href: "/settings/sources"
       module:
         manifestLocation: "/apps/sources/fed-mods.json"
+        defaultDocumentTitle: "Sources | Settings"
         modules:
           - id: "sources"
             module: "./RootApp"
             routes:
-              - pathname: /settings/sources
+              - pathname: /settings
+              - pathname: /settings/integrations
 
 parameters:
   - name: ENV_NAME
