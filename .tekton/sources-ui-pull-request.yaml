@@ -414,7 +414,9 @@ spec:
           operator: in
           values:
             - "false"
-      workspaces: []
+      workspaces:
+          - name: workspace
+            workspace: workspace
     - name: deprecated-base-image-check
       params:
       - name: IMAGE_URL
