@@ -39,6 +39,49 @@ objects:
             routes:
               - pathname: /settings
               - pathname: /settings/integrations
+      searchEntries:
+        - id: sources
+          title: Integrations
+          href: /settings/integrations
+          description: Integrations provide a way for applications to collect data outside of the Red Hat Hybrid Cloud Console through either a direct connection to the source or indirectly.
+          alt_title:
+            - providers
+            - cloud providers
+            - cloud sources
+            - Red Hat sources
+            - integrations
+            - cloud integrations
+            - cloud connection
+            - aws
+            - Amazon
+            - Google
+            - cloud
+            - IBM
+            - Microsoft
+            - secrets
+            - Azure
+            - Oracle
+            - Infrastructure
+            - prediction
+            - cost
+            - subscriptions
+            - account
+            - credentials
+      serviceTiles:
+        - section: integrations-notifications
+          group: settings
+          id: integrations
+          href: /settings/integrations
+          title: Integrations
+          description: Integrations provide a way for applications to collect data outside of the Red Hat Hybrid Cloud Console through either a direct connection to the source or indirectly.
+          icon: PlaceholderIcon
+        - section: systemConfiguration
+          group: settings
+          id: integrations-configuration
+          href: /settings/integrations
+          title: Integrations
+          description: Integrations provide a way for applications to collect data outside of the Red Hat Hybrid Cloud Console through either a direct connection to the source or indirectly.
+          icon: PlaceholderIcon
 
 parameters:
   - name: ENV_NAME
