@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { shallowEqual, useSelector } from 'react-redux';
 import get from 'lodash/get';
 
-import { Table, TableBody, TableHeader } from '@patternfly/react-table/deprecated';
+import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import { Alert, Bullseye, Card, CardBody, CardTitle, Spinner, Tab, TabTitleText, Tabs, Text } from '@patternfly/react-core';
 
@@ -146,19 +146,37 @@ const ResourcesTable = () => {
                       </Alert>
                     )}
                     {applicationsRows[app.id]?.length ? (
-                      <Table
-                        aria-label={intl.formatMessage({
-                          id: 'resourceTable.title',
-                          defaultMessage: 'Connected application resources',
-                        })}
-                        variant="compact"
-                        cells={columns}
-                        rows={applicationsRows[app.id]}
-                        className="pf-v5-u-mt-md"
-                      >
-                        <TableHeader />
-                        <TableBody />
-                      </Table>
+                      <React.Fragment>
+                        <Table
+                          variant="compact"
+                          aria-label={intl.formatMessage({
+                            id: 'resourceTable.title',
+                            defaultMessage: 'Connected application resources',
+                          })}
+                          className="pf-v5-u-mt-md"
+                        >
+                          <Thead>
+                            <Tr>
+                              {columns.map((item, key) => (
+                                <Th key={key} {...item.props}>
+                                  {item.title}
+                                </Th>
+                              ))}
+                            </Tr>
+                          </Thead>
+                          <Tbody>
+                            {applicationsRows[app.id].map((row, key) => (
+                              <Tr key={key}>
+                                {columns.map((cell, key) => (
+                                  <Td key={`cell-${key}`} data-label={cell.title} aria-label={cell.title} data-key={key}>
+                                    {row?.[key] || ''}
+                                  </Td>
+                                ))}
+                              </Tr>
+                            ))}
+                          </Tbody>
+                        </Table>
+                      </React.Fragment>
                     ) : (
                       <ResourcesEmptyState applicationName={appName} />
                     )}
