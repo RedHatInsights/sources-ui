@@ -1,4 +1,12 @@
 .sources-integrations {
+  .pf-v5-c-card__body {
+    padding: 8px 0 0 0;
+  }
+  .pf-v5-c-expandable-section {
+    border: 1px solid var(--pf-v5-global--BackgroundColor--200);
+    border-top: 0;
+    padding-left: 16px;
+  }
   overflow-y: auto;
   .pf-v5-c-list {
     &__item-icon {

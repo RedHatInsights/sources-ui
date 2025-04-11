@@ -162,7 +162,7 @@ const IntegrationsWidget: FunctionComponent = () => {
                 key={integrationIndex}
                 toggleContent={
                   <div>
-                    <span>{integration.title} </span>
+                    <span className="pf-v5-u-pr-sm">{integration.title}</span>
                     <Badge 
                     isRead={badgeCounts(integration.items) === 0}>
                       {badgeCounts(integration.items)}
@@ -181,7 +181,7 @@ const IntegrationsWidget: FunctionComponent = () => {
               </ExpandableSection>
             ))}
           </CardBody>
-          <CardFooter>
+          <CardFooter className="pf-v5-u-pt-md pf-v5-u-background-color-100">
             <IntegrationsDropdown />
           </CardFooter>
         </Card>
