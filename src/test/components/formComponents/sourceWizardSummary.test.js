@@ -254,41 +254,6 @@ describe('SourceWizardSummary component', () => {
       ).toBeInTheDocument();
     });
 
-    it('Oracle Cloud Infrastructure - OCID', () => {
-      formOptions = {
-        getState: () => ({
-          values: {
-            source: { name: 'source-name' },
-            application: {
-              application_type_id: '2',
-              extra: {
-                bucket: 'bucket-name',
-                bucket_namespace: 'bucket-namespace',
-                bucket_region: 'bucket-region',
-                compartment_id: 'compartment-id',
-                policy_compartment: 'policy-compartment',
-              },
-            },
-            source_type: 'oracle-cloud-infrastructure',
-            authentication: { username: 'ocid.uuid', authtype: 'ocid' },
-          },
-        }),
-      };
-
-      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} store={store} />);
-
-      const data = getListData(container);
-
-      expect(data).toEqual([
-        ['Name', 'source-name'],
-        ['Integration type', 'Oracle Cloud Infrastructure'],
-        ['Application', 'Cost Management'],
-        ['Bucket', 'bucket-name'],
-        ['Bucket namespace', 'bucket-namespace'],
-        ['Bucket region', 'bucket-region'],
-      ]);
-    });
-
     it('amazon - ARN HCS - should not include rbac alert message', () => {
       store = mockStore({ sources: { ...initialState.sources, hcsEnrolled: true } });
       formOptions = {

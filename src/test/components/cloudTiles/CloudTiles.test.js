@@ -35,9 +35,8 @@ describe('CloudTiles', () => {
       'Google Cloud',
       'IBM Cloud',
       'Microsoft Azure',
-      'Oracle Cloud Infrastructure',
     ]);
-    expect(container.getElementsByTagName('img')).toHaveLength(5);
+    expect(container.getElementsByTagName('img')).toHaveLength(4);
   });
 
   it('renders correctly when no permissions', async () => {
@@ -55,9 +54,8 @@ describe('CloudTiles', () => {
       'Google Cloud',
       'IBM Cloud',
       'Microsoft Azure',
-      'Oracle Cloud Infrastructure',
     ]);
-    expect(container.getElementsByTagName('img')).toHaveLength(5);
+    expect(container.getElementsByTagName('img')).toHaveLength(4);
 
     await waitFor(async () => {
       await user.click(screen.getByText('Google Cloud'));
@@ -120,18 +118,5 @@ describe('CloudTiles', () => {
 
     expect(screen.getByTestId('location-display').textContent).toEqual(`/settings/integrations/${routes.sourcesNew.path}`);
     expect(setSelectedType).toHaveBeenCalledWith('ibm');
-  });
-
-  it('sets oracle', async () => {
-    const user = userEvent.setup();
-
-    render(componentWrapperIntl(<CloudTiles {...initialProps} />, store));
-
-    await waitFor(async () => {
-      await user.click(screen.getByText('Oracle Cloud Infrastructure'));
-    });
-
-    expect(screen.getByTestId('location-display').textContent).toEqual(`/settings/integrations/${routes.sourcesNew.path}`);
-    expect(setSelectedType).toHaveBeenCalledWith('oracle-cloud-infrastructure');
   });
 });

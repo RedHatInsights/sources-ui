@@ -12,7 +12,7 @@ const dropdownItems = (isPagerDutyEnabled, hasSourcesPermissions, hasIntegration
     ? [
         {
           title: 'Cloud',
-          description: 'Amazon Web Services, Google Cloud Platform, Microsoft Azure, Oracle Cloud Platform',
+          description: 'Amazon Web Services, Google Cloud Platform, Microsoft Azure',
           value: CLOUD_VENDOR,
         },
         {

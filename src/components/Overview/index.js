@@ -143,7 +143,7 @@ const Overview = () => {
       title: intl.formatMessage(
         {
           id: 'integrations.overview.dataListItemTitle4',
-          defaultMessage: '<b>Cloud provider integrations</b> (Amazon Web Services, Azure, Google Cloud Platform, Oracle)',
+          defaultMessage: '<b>Cloud provider integrations</b> (Amazon Web Services, Azure, Google Cloud Platform)',
         },
         {
           b: bold,
@@ -157,7 +157,7 @@ const Overview = () => {
       content: intl.formatMessage({
         id: 'integrations.overview.dataListItemContent4',
         defaultMessage:
-          'To use public cloud provider data with Hybrid Cloud Console services, connect your Amazon Web Services (AWS), Google Cloud, Microsoft Azure, or Oracle Cloud account to the Hybrid Cloud Console.',
+          'To use public cloud provider data with Hybrid Cloud Console services, connect your Amazon Web Services (AWS), Google Cloud or Microsoft Azure account to the Hybrid Cloud Console.',
       }),
       learnMoreLink:
         'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/configuring_cloud_integrations_for_red_hat_services/about-cloud-integrations_crc-cloud-integrations',
