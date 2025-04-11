@@ -450,7 +450,6 @@ describe('SourcesPage', () => {
         'Google Cloud',
         'IBM Cloud',
         'Microsoft Azure',
-        'Oracle Cloud Infrastructure',
       ]);
     });
 

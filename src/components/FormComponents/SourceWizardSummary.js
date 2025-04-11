@@ -332,15 +332,6 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
             }
           />
         )}
-        {showApp && values.source_type === 'oracle-cloud-infrastructure' && values.application?.extra?.bucket && (
-          <DesctiptionListItem
-            term={intl.formatMessage({
-              id: 'wizard.bucket',
-              defaultMessage: 'Bucket',
-            })}
-            description={values.application?.extra?.bucket}
-          />
-        )}
         {showApp && values.application?.extra?.bucket_namespace && (
           <DesctiptionListItem
             term={intl.formatMessage({
@@ -348,15 +339,6 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
               defaultMessage: 'Bucket namespace',
             })}
             description={values.application?.extra?.bucket_namespace}
-          />
-        )}
-        {showApp && values.source_type === 'oracle-cloud-infrastructure' && values.application?.extra?.bucket_region && (
-          <DesctiptionListItem
-            term={intl.formatMessage({
-              id: 'wizard.bucket',
-              defaultMessage: 'Bucket region',
-            })}
-            description={values.application?.extra?.bucket_region}
           />
         )}
         {!skipEndpoint &&

@@ -68,22 +68,6 @@ const mapper = (type, openWizard, TileComponent) =>
         }
       />
     ),
-    'oracle-cloud-infrastructure': (
-      <TileComponent
-        isStacked
-        key={type}
-        title="Oracle Cloud Infrastructure"
-        onClick={() => openWizard('oracle-cloud-infrastructure')}
-        className="tile pf-v5-u-mr-md pf-v5-u-mt-md"
-        icon={
-          <ImageWithPlaceholder
-            className="provider-icon pf-v5-u-mb-sm"
-            src="/apps/frontend-assets/partners-icons/oracle-short.svg"
-            alt="oracle logo"
-          />
-        }
-      />
-    ),
   })[type];
 
 const CloudTiles = (props) => <TilesArray {...props} mapper={mapper} />;

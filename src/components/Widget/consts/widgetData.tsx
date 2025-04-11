@@ -175,18 +175,6 @@ export const createIntegrationsData = (
                 />
               ),
             },
-            {
-              name: 'Oracle Cloud Infrastructure',
-              id: 'oracle_cloud',
-              value: CLOUD_VENDOR,
-              icon: (
-                <ImageWithPlaceholder
-                  className="oracle-logo"
-                  src="/apps/frontend-assets/partners-icons/oracle-short.svg"
-                  alt="oracle logo"
-                />
-              ),
-            },
           ],
         },
         {
