@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Dropdown, DropdownItem, DropdownList, MenuToggle } from '@patternfly/react-core';
+import { Dropdown, DropdownItem, DropdownList, Icon, MenuToggle } from '@patternfly/react-core';
 import AsyncComponent from '@redhat-cloud-services/frontend-components/AsyncComponent';
 import AddSourceWizard from './addSourceWizard';
 import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../utilities/constants';
 import { checkPropTypes } from 'prop-types';
 import { useFlag } from '@unleash/proxy-client-react';
 import { useSelector, useStore } from 'react-redux';
+
+import PlusCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/plus-circle-icon';
 
 const dropdownItems = (isPagerDutyEnabled, hasSourcesPermissions, hasIntegrationsPermissions) => [
   ...(hasSourcesPermissions
@@ -94,15 +96,22 @@ const IntegrationsDropdown = (props) => {
         isOpen={isOpen}
         onSelect={handleSelect}
         onOpenChange={setIsOpen}
+        popperProps={{
+          appendTo: () => document.body,
+          position: 'top',
+        }}
         toggle={(toggleRef) => (
           <MenuToggle
             ref={toggleRef}
             onClick={() => setIsOpen(!isOpen)}
             isExpanded={isOpen}
             isDisabled={props.isDisabled || (!hasSourcesPermissions && !hasIntegrationsPermissions)}
-            variant="primary"
+            variant="secondary"
             className="pf-v5-u-pl-md"
           >
+            <Icon className="pf-v5-u-mr-sm">
+              <PlusCircleIcon />
+            </Icon>
             Create Integration
           </MenuToggle>
         )}
