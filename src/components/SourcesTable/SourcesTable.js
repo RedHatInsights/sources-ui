@@ -1,11 +1,10 @@
 import React, { useEffect, useReducer } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { sortable, wrappable } from '@patternfly/react-table';
-import { Table, TableBody, TableHeader } from '@patternfly/react-table/deprecated';
+import { ActionsColumn, Table, Tbody, Td, Th, Thead, Tr, sortable, wrappable } from '@patternfly/react-table';
 import { useIntl } from 'react-intl';
 
 import { pauseSource, resumeSource, sortEntities } from '../../redux/sources/actions';
-import { PlaceHolderTable, RowWrapperLoader } from './loaders';
+import { PlaceHolderTable } from './loaders';
 import { COLUMN_COUNT, sourcesColumns } from '../../views/sourcesViewDefinition';
 import EmptyStateTable from './EmptyStateTable';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
@@ -189,6 +188,7 @@ const SourcesTable = () => {
   }, [entities, removingSources]);
 
   let shownRows = state.rows;
+  // TODO: Loading states for data view
   if (numberOfEntities === 0 && state.isLoaded) {
     shownRows = [
       {
@@ -221,26 +221,48 @@ const SourcesTable = () => {
   return (
     <Table
       gridBreakPoint="grid-lg"
-      aria-label={intl.formatMessage({
-        id: 'sources.list',
-        defaultMessage: 'List of Integrations',
-      })}
-      onSort={(_event, key, direction) => reduxDispatch(sortEntities(state.cells[key].value, direction))}
-      sortBy={{
-        index: state.cells.map((cell) => (cell.hidden ? 'hidden' : cell.value)).indexOf(sortBy),
-        direction: sortDirection,
-      }}
+      aria-label={intl.formatMessage({ id: 'sources.list', defaultMessage: 'List of Integrations' })}
       key={state.key}
-      rows={shownRows}
-      cells={state.cells}
-      actionResolver={
-        loaded && numberOfEntities > 0 ? actionResolver(intl, navigate, writePermissions, reduxDispatch, isOrgAdmin) : undefined
-      }
-      rowWrapper={RowWrapperLoader}
-      className={numberOfEntities === 0 && state.isLoaded ? 'ins-c-table-empty-state' : ''}
     >
-      <TableHeader />
-      <TableBody />
+      <Thead>
+        <Tr>
+          {sourcesColumns(intl, notSortable)
+            .map((column, index) => (
+              <Th
+                sort={
+                  column.sortable
+                    ? {
+                        columnIndex: index,
+                        sortBy: {
+                          index: state.cells.map((cell) => (cell.hidden ? 'hidden' : cell.value)).indexOf(sortBy),
+                          direction: sortDirection,
+                        },
+                        onSort: (_event, _key, direction) => reduxDispatch(sortEntities(column.value, direction)),
+                      }
+                    : undefined
+                }
+                key={column.value}
+              >
+                {column.title}
+              </Th>
+            ))
+            .concat(<Th key="actions" />)}
+        </Tr>
+      </Thead>
+      <Tbody>
+        {state.rows.map((row, index) => (
+          <Tr key={index}>
+            {row.cells
+              .map(({ title }, index) => <Td key={index}>{title}</Td>)
+              .concat(
+                <ActionsColumn
+                  items={actionResolver(intl, navigate, writePermissions, reduxDispatch, isOrgAdmin)(row)}
+                  isDisabled={row.disableActions}
+                />,
+              )}
+          </Tr>
+        ))}
+      </Tbody>
     </Table>
   );
 };
