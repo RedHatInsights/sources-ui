@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { Button, Modal, Text, TextContent } from '@patternfly/react-core';
-import { Wizard } from '@patternfly/react-core/deprecated';
+import { Button, Content, Wizard, WizardHeader, WizardStep } from '@patternfly/react-core';
+import { Modal } from '@patternfly/react-core/deprecated';
 
 import { wizardDescription, wizardTitle } from './stringConstants';
 import { getSourcesApi } from '../../api/entities';
@@ -150,14 +150,14 @@ const FinalWizard = ({
         onClose={afterError}
         primaryAction={tryAgain}
         secondaryActions={
-          <Text
+          <Content
             component="a"
             target="_blank"
             href="https://access.redhat.com/support/cases/#/case/new/open-case?caseCreate=true"
             rel="noopener noreferrer"
           >
             {intl.formatMessage({ id: 'wizard.openTicket', defaultMessage: 'Open a support case' })}
-          </Text>
+          </Content>
         }
         returnButtonTitle={intl.formatMessage({
           id: 'wizard.retryText',
@@ -173,22 +173,22 @@ const FinalWizard = ({
           defaultMessage: 'Validating credentials',
         })}
         description={
-          <TextContent>
-            <Text className="pf-v5-u-mb-md">
+          <Content>
+            <Content component="p" className="pf-v6-u-mb-md">
               {intl.formatMessage({
                 id: 'wizard.loadingDescription-a',
                 defaultMessage:
                   // eslint-disable-next-line max-len
                   "This might take some time. You'll receive a notification if you are still in the Integrations application when the process completes. Otherwise, you can check the status in the main integrations table at any time.",
               })}
-            </Text>
-            <Text>
+            </Content>
+            <Content component="p">
               {intl.formatMessage({
                 id: 'wizard.loadingDescription-b',
                 defaultMessage: 'In the meantime, you can close this window while the validation process continues.',
               })}
-            </Text>
-          </TextContent>
+            </Content>
+          </Content>
         }
         onClose={afterError}
         cancelTitle={intl.formatMessage({ id: 'wizard.close', defaultMessage: 'Close' })}
@@ -196,23 +196,23 @@ const FinalWizard = ({
     );
   }
 
-  const appendTo = React.useMemo(() => document.querySelector('.pf-v5-c-page.chr-c-page'), []);
+  const appendTo = React.useMemo(() => document.querySelector('.pf-v6-c-page.chr-c-page'), []);
 
   return (
     <Modal isOpen width="58%" hasNoBodyWrapper appendTo={appendTo} showClose={false}>
       <Wizard
+        header={<WizardHeader title={wizardTitle(activeCategory)} description={wizardDescription(activeCategory)} />}
         className="sources"
         onClose={isFinished ? afterSubmit : afterError}
-        title={wizardTitle(activeCategory)}
-        description={wizardDescription(activeCategory)}
-        steps={[
-          {
-            name: 'Finish',
-            component: step,
-            isFinishedStep: true,
-          },
-        ]}
-      />
+      >
+        <WizardStep
+          name="Finish"
+          id="finish-step"
+          footer={{ nextButtonText: 'Finish', onNext: isFinished ? afterSubmit : afterError }}
+        >
+          {step}
+        </WizardStep>
+      </Wizard>
     </Modal>
   );
 };

@@ -147,7 +147,7 @@ describe('SourcesPage', () => {
     expect(screen.getByText('Date added')).toBeInTheDocument();
     expect(screen.getByText('Status')).toBeInTheDocument();
     expect(screen.getByText('Date added')).toBeInTheDocument();
-    expect(container.querySelectorAll('.pf-v5-c-pagination')).toHaveLength(2);
+    expect(container.querySelectorAll('.pf-v6-c-pagination')).toHaveLength(2);
     expect(screen.getByText('I connected to cloud. Now what?')).toBeInTheDocument();
     expect(screen.getByText(sourcesDataGraphQl[0].name)).toBeInTheDocument();
 
@@ -325,7 +325,7 @@ describe('SourcesPage', () => {
       expect(screen.getAllByRole('progressbar')[0].closest('.top-pagination')).toBeInTheDocument();
     });
 
-    await waitFor(() => expect(container.querySelectorAll('.pf-v5-c-pagination')).toHaveLength(2));
+    await waitFor(() => expect(container.querySelectorAll('.pf-v6-c-pagination')).toHaveLength(2));
   });
 
   it('renders table and filtering - loading with paginationClicked: true, do not show paginationLoader', async () => {
@@ -399,13 +399,13 @@ describe('SourcesPage', () => {
         await user.click(screen.getByText('Name', { selector: '.ins-c-conditional-filter__value-selector' }));
       });
       await act(async () => {
-        await user.click(screen.getByText('Type', { selector: '.pf-v5-c-menu__item-text' }));
+        await user.click(screen.getByText('Type', { selector: '.pf-v6-c-menu__item-text' }));
       });
       await act(async () => {
         await user.click(screen.getByText('Filter by Type'));
       });
 
-      expect([...container.getElementsByClassName('pf-v5-c-menu__item-text')].map((e) => e.textContent)).toEqual([
+      expect([...container.getElementsByClassName('pf-v6-c-menu__item-text')].map((e) => e.textContent)).toEqual([
         'Ansible Tower',
         'OpenShift Container Platform',
         'Red Hat Satellite',
@@ -439,13 +439,13 @@ describe('SourcesPage', () => {
       });
 
       await act(async () => {
-        await user.click(screen.getByText('Type', { selector: '.pf-v5-c-menu__item-text' }));
+        await user.click(screen.getByText('Type', { selector: '.pf-v6-c-menu__item-text' }));
       });
       await act(async () => {
         await user.click(screen.getByText('Filter by Type'));
       });
 
-      expect([...container.getElementsByClassName('pf-v5-c-menu__item-text')].map((e) => e.textContent)).toEqual([
+      expect([...container.getElementsByClassName('pf-v6-c-menu__item-text')].map((e) => e.textContent)).toEqual([
         'Amazon Web Services',
         'Google Cloud',
         'IBM Cloud',
@@ -854,24 +854,24 @@ describe('SourcesPage', () => {
         await user.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
       });
 
-      await waitFor(() => expect(screen.getByText(SEARCH_TERM, { selector: '.pf-v5-c-chip__text' })).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText(SEARCH_TERM, { selector: '.pf-v6-c-chip__text' })).toBeInTheDocument());
 
       await act(async () => {
         await user.click(screen.getByText('Name', { selector: '.ins-c-conditional-filter__value-selector' }));
       });
       await act(async () => {
-        await user.click(screen.getByText('Type', { selector: '.pf-v5-c-menu__item-text' }));
+        await user.click(screen.getByText('Type', { selector: '.pf-v6-c-menu__item-text' }));
       });
       await act(async () => {
         await user.click(screen.getByText('Filter by Type'));
       });
 
       await act(async () => {
-        await user.click(screen.getByText('Amazon Web Services', { selector: '.pf-v5-c-menu__item-text' }));
+        await user.click(screen.getByText('Amazon Web Services', { selector: '.pf-v6-c-menu__item-text' }));
       });
 
-      await waitFor(() => expect(screen.getByText(SEARCH_TERM, { selector: '.pf-v5-c-chip__text' })).toBeInTheDocument());
-      expect(screen.getByText('Amazon Web Services', { selector: '.pf-v5-c-chip__text' })).toBeInTheDocument();
+      await waitFor(() => expect(screen.getByText(SEARCH_TERM, { selector: '.pf-v6-c-chip__text' })).toBeInTheDocument());
+      expect(screen.getByText('Amazon Web Services', { selector: '.pf-v6-c-chip__text' })).toBeInTheDocument();
 
       expect(store.getState().sources.filterValue).toEqual({
         name: SEARCH_TERM,
@@ -895,17 +895,17 @@ describe('SourcesPage', () => {
         await user.click(screen.getByText('Name', { selector: '.ins-c-conditional-filter__value-selector' }));
       });
       await act(async () => {
-        await user.click(screen.getByText('Application', { selector: '.pf-v5-c-menu__item-text' }));
+        await user.click(screen.getByText('Application', { selector: '.pf-v6-c-menu__item-text' }));
       });
       await act(async () => {
         await user.click(screen.getByText('Filter by Application'));
       });
       await waitFor(async () => {
-        await user.click(screen.getByText('Cost Management', { selector: '.pf-v5-c-menu__item-text' }));
+        await user.click(screen.getByText('Cost Management', { selector: '.pf-v6-c-menu__item-text' }));
       });
 
-      await waitFor(() => expect(screen.getByText(SEARCH_TERM, { selector: '.pf-v5-c-chip__text' })).toBeInTheDocument());
-      expect(screen.getByText('Cost Management', { selector: '.pf-v5-c-chip__text' })).toBeInTheDocument();
+      await waitFor(() => expect(screen.getByText(SEARCH_TERM, { selector: '.pf-v6-c-chip__text' })).toBeInTheDocument());
+      expect(screen.getByText('Cost Management', { selector: '.pf-v6-c-chip__text' })).toBeInTheDocument();
 
       expect(store.getState().sources.filterValue).toEqual({
         name: SEARCH_TERM,
@@ -930,17 +930,17 @@ describe('SourcesPage', () => {
       });
 
       await act(async () => {
-        await user.click(screen.getByText('Status', { selector: '.pf-v5-c-menu__item-text' }));
+        await user.click(screen.getByText('Status', { selector: '.pf-v6-c-menu__item-text' }));
       });
       await act(async () => {
         await user.click(screen.getByText('Filter by Status'));
       });
       await act(async () => {
-        await user.click(screen.getByText('Available', { selector: '.pf-v5-c-menu__item-text' }));
+        await user.click(screen.getByText('Available', { selector: '.pf-v6-c-menu__item-text' }));
       });
 
-      await waitFor(() => expect(screen.getByText(SEARCH_TERM, { selector: '.pf-v5-c-chip__text' })).toBeInTheDocument());
-      expect(screen.getByText('Available', { selector: '.pf-v5-c-chip__text' })).toBeInTheDocument();
+      await waitFor(() => expect(screen.getByText(SEARCH_TERM, { selector: '.pf-v6-c-chip__text' })).toBeInTheDocument());
+      expect(screen.getByText('Available', { selector: '.pf-v6-c-chip__text' })).toBeInTheDocument();
 
       expect(store.getState().sources.filterValue).toEqual({
         name: SEARCH_TERM,
@@ -948,11 +948,11 @@ describe('SourcesPage', () => {
       });
 
       await act(async () => {
-        await user.click(screen.getByText('Unavailable', { selector: '.pf-v5-c-menu__item-text' }));
+        await user.click(screen.getByText('Unavailable', { selector: '.pf-v6-c-menu__item-text' }));
       });
 
-      await waitFor(() => expect(screen.getByText(SEARCH_TERM, { selector: '.pf-v5-c-chip__text' })).toBeInTheDocument());
-      expect(screen.getByText('Unavailable', { selector: '.pf-v5-c-chip__text' })).toBeInTheDocument();
+      await waitFor(() => expect(screen.getByText(SEARCH_TERM, { selector: '.pf-v6-c-chip__text' })).toBeInTheDocument());
+      expect(screen.getByText('Unavailable', { selector: '.pf-v6-c-chip__text' })).toBeInTheDocument();
 
       expect(store.getState().sources.filterValue).toEqual({
         name: SEARCH_TERM,
@@ -960,10 +960,10 @@ describe('SourcesPage', () => {
       });
 
       await act(async () => {
-        await user.click(screen.getByText('Unavailable', { selector: '.pf-v5-c-menu__item-text' }));
+        await user.click(screen.getByText('Unavailable', { selector: '.pf-v6-c-menu__item-text' }));
       });
 
-      await waitFor(() => expect(screen.getByText(SEARCH_TERM, { selector: '.pf-v5-c-chip__text' })).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText(SEARCH_TERM, { selector: '.pf-v6-c-chip__text' })).toBeInTheDocument());
 
       expect(store.getState().sources.filterValue).toEqual({
         name: SEARCH_TERM,
@@ -1007,7 +1007,7 @@ describe('SourcesPage', () => {
         await screen.getByLabelText('close').click();
       });
 
-      expect(() => screen.getByText(SEARCH_TERM, { selector: '.pf-v5-c-chip__text' })).toThrow();
+      expect(() => screen.getByText(SEARCH_TERM, { selector: '.pf-v6-c-chip__text' })).toThrow();
       expect(screen.getByPlaceholderText('Filter by Name')).toHaveValue('');
     });
 
@@ -1024,13 +1024,13 @@ describe('SourcesPage', () => {
         await user.type(screen.getByPlaceholderText('Filter by Name'), SEARCH_TERM);
       });
 
-      await waitFor(() => expect(screen.getByText(SEARCH_TERM, { selector: '.pf-v5-c-chip__text' })).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText(SEARCH_TERM, { selector: '.pf-v6-c-chip__text' })).toBeInTheDocument());
 
       await act(async () => {
-        await user.click(screen.getByText(SEARCH_TERM, { selector: '.pf-v5-c-chip__text' }));
+        await user.click(screen.getByText(SEARCH_TERM, { selector: '.pf-v6-c-chip__text' }));
       });
 
-      await waitFor(() => expect(screen.getByText(SEARCH_TERM, { selector: '.pf-v5-c-chip__text' })).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByText(SEARCH_TERM, { selector: '.pf-v6-c-chip__text' })).toBeInTheDocument());
 
       expect(screen.getByPlaceholderText('Filter by Name')).toHaveValue(SEARCH_TERM);
     });
@@ -1052,7 +1052,7 @@ describe('SourcesPage', () => {
         await user.click(screen.getByText('Clear filters'));
       });
 
-      await waitFor(() => expect(() => screen.getByText(SEARCH_TERM, { selector: '.pf-v5-c-chip__text' })).toThrow());
+      await waitFor(() => expect(() => screen.getByText(SEARCH_TERM, { selector: '.pf-v6-c-chip__text' })).toThrow());
 
       expect(screen.getByPlaceholderText('Filter by Name')).toHaveValue('');
       expect(() => screen.getByText('Clear filters')).toThrow();

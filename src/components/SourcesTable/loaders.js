@@ -35,7 +35,7 @@ export const AppPlaceholder = () => {
         />
       </PageHeader>
       <Section type="content">
-        <div className="src-c-fake_content pf-v5-u-p-lg">
+        <div className="src-c-fake_content pf-v6-u-p-lg">
           <Loader />
         </div>
       </Section>
@@ -54,7 +54,7 @@ export const PlaceHolderTable = () => (
 export const RowWrapperLoader = ({ row: { isDeleting, ...row }, ...initialProps }) =>
   isDeleting ? (
     <tr>
-      <td colSpan={COLUMN_COUNT} className="pf-v5-u-p-md" data-testid="removing-row">
+      <td colSpan={COLUMN_COUNT} className="pf-v6-u-p-md" data-testid="removing-row">
         <Loader height={100} />
       </td>
     </tr>
@@ -67,7 +67,7 @@ RowWrapperLoader.propTypes = {
 };
 
 export const CardLoader = (props) => (
-  <Card className="pf-v5-u-m-md">
+  <Card className="pf-v6-u-m-md">
     <CardBody>
       <Loader {...props} />
     </CardBody>

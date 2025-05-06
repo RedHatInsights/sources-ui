@@ -6,11 +6,10 @@ import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 import {
   ClipboardCopy,
   ClipboardCopyButton,
+  Content,
+  ContentVariants,
   InputGroup,
-  Text,
   TextArea,
-  TextContent,
-  TextVariants,
   Title,
   clipboardCopyFunc,
 } from '@patternfly/react-core';
@@ -19,22 +18,22 @@ export const EnterpriseId = () => {
   const intl = useIntl();
 
   return (
-    <TextContent>
+    <Content>
       <Title headingLevel="h1">
         {intl.formatMessage({
           id: 'cost.ibm.enterpriseIdStepTitle',
           defaultMessage: "Add the account's enterprise ID",
         })}
       </Title>
-      <Text component={TextVariants.p}>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage({
           id: 'cost.ibm.enterpriseIdDescription',
           defaultMessage:
             'Login to the IBM Cloud Shell and run the following command. Paste the output string into the form field below.',
         })}
-      </Text>
+      </Content>
       <ClipboardCopy>ibmcloud enterprise show --output JSON | jq -r .id</ClipboardCopy>
-    </TextContent>
+    </Content>
   );
 };
 
@@ -42,22 +41,22 @@ export const AccountId = () => {
   const intl = useIntl();
 
   return (
-    <TextContent>
+    <Content>
       <Title headingLevel="h1">
         {intl.formatMessage({
           id: 'cost.ibm.accountIdStepTitle',
           defaultMessage: 'Add the account ID',
         })}
       </Title>
-      <Text component={TextVariants.p}>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage({
           id: 'cost.ibm.accountIdDescription',
           defaultMessage:
             'In the IBM Cloud Shell, run the following command. Paste the output string into the form fields below.',
         })}
-      </Text>
+      </Content>
       <ClipboardCopy>ibmcloud account show --output JSON | jq -r .account_id</ClipboardCopy>
-    </TextContent>
+    </Content>
   );
 };
 
@@ -65,18 +64,18 @@ export const ServiceId = () => {
   const intl = useIntl();
 
   return (
-    <TextContent>
-      <Text component={TextVariants.p}>
+    <Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage({
           id: 'cost.ibm.serviceIdDescription',
           defaultMessage:
             'Create a service ID, which Cost Management will use to get billing and usage information from your account. In the IBM Cloud Shell, run the following command. Paste the output string into the form field below.',
         })}
-      </Text>
+      </Content>
       <ClipboardCopy variant="expansion">
         {'ibmcloud iam service-id-create "Cost Management" -d "Service ID for cloud.redhat.com Cost Management" | jq -r .id'}
       </ClipboardCopy>
-    </TextContent>
+    </Content>
   );
 };
 
@@ -94,14 +93,14 @@ ibmcloud iam service-policy-create "${serviceId}" --service-name enterprise --ro
 ibmcloud iam service-policy-create "${serviceId}" --service-name globalcatalog  --roles Viewer`;
 
   return (
-    <TextContent>
-      <Text component={TextVariants.p}>
+    <Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage({
           id: 'cost.ibm.accessDescription',
           defaultMessage:
             'Assign policies to the service ID you just created so that Cost Management will have access to account management, billing and usage service APIs.  In the IBM Cloud Shell, run the following command:',
         })}
-      </Text>
+      </Content>
       <InputGroup>
         <TextArea
           rows={6}
@@ -120,7 +119,7 @@ ibmcloud iam service-policy-create "${serviceId}" --service-name globalcatalog  
           {intl.formatMessage({ id: 'ibm.cost.copy', defaultMessage: 'Copy to clipboard' })}
         </ClipboardCopyButton>
       </InputGroup>
-    </TextContent>
+    </Content>
   );
 };
 
@@ -133,16 +132,16 @@ export const ApiKey = () => {
   const serviceId = values.cost.service_id;
 
   return (
-    <TextContent>
-      <Text component={TextVariants.p}>
+    <Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage({
           id: 'cost.ibm.apiKeyDescription',
           defaultMessage: 'In the IBM Cloud Shell, run the following command. Paste the output string into the form field below.',
         })}
-      </Text>
+      </Content>
       <ClipboardCopy variant="expansion">
         {`ibmcloud iam service-api-key-create "Cost Management API Key" "${serviceId}" -d "Cost Management Service ID API Key" --output JSON | jq -r .apikey`}
       </ClipboardCopy>
-    </TextContent>
+    </Content>
   );
 };

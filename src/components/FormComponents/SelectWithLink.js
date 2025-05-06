@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Select } from '@data-driven-forms/pf4-component-mapper';
 import { useFieldApi } from '@data-driven-forms/react-form-renderer';
-import { SelectVariant } from '@patternfly/react-core/deprecated';
 import { Button, ButtonVariant } from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 
@@ -13,13 +12,12 @@ const SelectWithLink = (originalProps) => {
     <div>
       <Select
         FormGroupProps={{
-          className: 'pf-v5-u-display-inline-block',
+          className: 'pf-v6-u-display-inline-block',
         }}
         label={label}
         options={options}
         {...input}
         isDisabled={isDisabled}
-        variant={SelectVariant.single}
       />
       <Button
         icon={<ExternalLinkAltIcon />}

@@ -3,17 +3,12 @@
 // background for integrations tabs
 .src-c-section-main {
   height: 100%;
-  background: var(--pf-v5-global--BackgroundColor--200);
 }
 
 .src-c-bullseye__placeholder-loader {
   margin: 0;
   padding: 0;
   min-height: 500px;
-}
-
-.src-c-delete-icon {
-  color: var(--pf-v5-global--warning-color--100);
 }
 
 .src-c-row-vertical-centered {
@@ -25,21 +20,6 @@
 .src-m-help-cursor {
   &:hover {
     cursor: help;
-  }
-}
-
-.src-c-detail-page {
-  &-ok {
-    color: var(--pf-v5-global--success-color--100);
-  }
-  &-partially {
-    color: var(--pf-v5-global--warning-color--100);
-  }
-  &-not-ok {
-    color: var(--pf-v5-global--danger-color--100);
-  }
-  &-unknown {
-    color: var(--pf-v5-global--icon--Color--light);
   }
 }
 
@@ -61,12 +41,12 @@
   }
 
   .src-c-row-vertical-centered {
-    border-bottom: 16px solid var(--pf-v5-c-table--responsive--BorderColor) !important;
+    border-bottom: 16px solid var(--pf-v6-c-table--responsive--BorderColor) !important;
   }
 
-  .pf-v5-c-table {
+  .pf-v6-c-table {
     tbody {
-      border-top: 16px solid var(--pf-v5-c-table--responsive--BorderColor) !important;
+      border-top: 16px solid var(--pf-v6-c-table--responsive--BorderColor) !important;
     }
   }
 
@@ -75,14 +55,14 @@
   }
 
   .bottom-pagination {
-    .pf-v5-c-options-menu, .pf-v5-c-pagination__nav {
+    .pf-v6-c-options-menu, .pf-v6-c-pagination__nav {
       display: flex !important;
       visibility: visible !important;
     }
   }
-  .ins-c-table-empty-state.pf-m-grid-lg.pf-v5-c-table {
+  .ins-c-table-empty-state.pf-m-grid-lg.pf-v6-c-table {
     [data-label] {
-        --pf-v5-c-table--cell--hidden-visible--Display: 0;
+        --pf-v6-c-table--cell--hidden-visible--Display: 0;
     }
     tr:first-of-type {
         > td::before {
@@ -93,7 +73,7 @@
 }
 
 .src-c-detail-page {
-  .pf-v5-c-card {
+  .pf-v6-c-card {
     box-shadow: none !important;
   }
 
@@ -104,33 +84,33 @@
   }
 
   .src-c-card-applications {
-    min-height: 100%;
     background-clip: content-box;
+    height: calc(100% - 48px); // margin 2x24px
   }
 
   .src-c-empty-state__body {
     max-width: 536px;
   }
 
-  .pf-v5-c-empty-state.pf-v5-u-mt-4xl {
+  .pf-v6-c-empty-state.pf-v6-u-mt-4xl {
     margin-top: 0 !important;
   }
 }
 
 form.src-c-uuid {
   text-align: left;
-  .pf-v5-c-form__group-label {
+  .pf-v6-c-form__group-label {
     padding: 0;
   }
 }
 
 .src-c-card-info {
-  .pf-v5-c-card__title-text {
-    font-size: var(--pf-v5-global--FontSize--lg);
-    font-weight: var(--pf-v5-global--FontWeight--normal);
+  .pf-v6-c-card__title-text {
+    font-size: var(--pf-t--global--font--size--lg);
+    font-weight: var(--pf-t--global--font--weight--body--default);
   }
   .text {
-    font-size: var(--pf-v5-global--FontSize--sm);
+    font-size: var(--pf-t--global--font--size--sm);
   }
 }
 
@@ -138,7 +118,7 @@ form.src-c-uuid {
   box-shadow: none !important;
 
   .catalog-link {
-    font-size: var(--pf-v5-global--FontSize--sm);
+    font-size: var(--pf-t--global--font--size--sm);
   }
 
   .provider-tiles {
@@ -177,7 +157,7 @@ form.src-c-uuid {
   display: flex;
 
   // for some reason popover does not work properly in wizard
-  .pf-v5-c-popover {
+  .pf-v6-c-popover {
     visibility: initial;
     pointer-events: initial;
   }
@@ -194,7 +174,7 @@ form.src-c-uuid {
 }
 
 .src-c-applications_form {
-  row-gap: var(--pf-v5-global--spacer--sm);
+  row-gap: var(--pf-t--global--spacer--sm);
 }
 
 .src-c-application_switch {

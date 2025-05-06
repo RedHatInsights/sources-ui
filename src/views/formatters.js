@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Badge, Button, Label, LabelGroup, Popover, Text, TextContent, TextVariants, Tooltip } from '@patternfly/react-core';
+import { Badge, Button, Content, ContentVariants, Label, LabelGroup, Popover, Tooltip } from '@patternfly/react-core';
 
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
@@ -76,13 +76,13 @@ export const dateFormatter = (str) => (
 );
 
 export const nameFormatter = (name, source, { sourceTypes }) => (
-  <TextContent>
+  <Content>
     <Link to={replaceRouteId(routes.sourcesDetail.path, source.id)}>{name}</Link>
     <br key={`${source.id}-br`} />
-    <Text key={source.id} component={TextVariants.small}>
+    <Content key={source.id} component={ContentVariants.small}>
       {sourceIsOpenShift(source, sourceTypes) && formatURL(source)}
-    </Text>
-  </TextContent>
+    </Content>
+  </Content>
 );
 
 export const importedFormatter = (value) => {
@@ -320,8 +320,8 @@ export const getAllErrors = ({
           ? UNKNOWN
           : AVAILABLE
         : errorsCount === statusesCount
-        ? UNAVAILABLE
-        : PARTIALLY_UNAVAILABLE,
+          ? UNAVAILABLE
+          : PARTIALLY_UNAVAILABLE,
   };
 };
 
@@ -502,12 +502,12 @@ export const configurationModeFormatter = (mode, item, { intl, sourceType }) => 
               })
             }
           >
-            <span className="pf-v5-u-ml-sm">
+            <span className="pf-v6-u-ml-sm">
               <ExclamationCircleIcon fill="#C9190B" />
             </span>
           </Tooltip>
         )}
-        <div className="pf-v5-u-mt-sm">
+        <div className="pf-v6-u-mt-sm">
           <AppLink to={replaceRouteId(routes.sourcesDetailEditCredentials.path, item.id)}>
             <Button variant="link" id="edit-super-credentials" isInline>
               {item.paused_at

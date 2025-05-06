@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 
 import { addMessage } from '../../redux/sources/actions';
-import { replaceRouteId, routes } from '../../Routing';
+import { replaceRouteId, routes } from '../../routes';
 import { useSource } from '../../hooks/useSource';
 import AppNavigate from '../AppNavigate';
 

@@ -6,15 +6,15 @@ import { useIntl } from 'react-intl';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
 
-import { Text, TextContent, TextVariants } from '@patternfly/react-core';
+import { Content, ContentVariants } from '@patternfly/react-core';
 import { AuthTypeSetter } from '../AuthTypeSetter';
 
 export const SelectAuthenticationDescription = ({ applicationTypeName, authenticationTypeName }) => {
   const intl = useIntl();
 
   return (
-    <TextContent>
-      <Text component={TextVariants.p}>
+    <Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage(
           {
             id: 'sources.selectAuthenticationDescription',
@@ -23,8 +23,8 @@ export const SelectAuthenticationDescription = ({ applicationTypeName, authentic
           },
           { applicationTypeName, authenticationTypeName },
         )}
-      </Text>
-    </TextContent>
+      </Content>
+    </Content>
   );
 };
 

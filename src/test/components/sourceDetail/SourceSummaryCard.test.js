@@ -18,9 +18,9 @@ describe('SourceSummaryCard', () => {
   const initialEntry = [replaceRouteId(routes.sourcesDetail.path, sourceId)];
 
   const getCategories = (container) =>
-    [...container.getElementsByClassName('pf-v5-c-description-list__group')].map((e) => [
-      e.getElementsByClassName('pf-v5-c-description-list__term')[0].textContent,
-      e.getElementsByClassName('pf-v5-c-description-list__description')[0].textContent,
+    [...container.getElementsByClassName('pf-v6-c-description-list__group')].map((e) => [
+      e.getElementsByClassName('pf-v6-c-description-list__term')[0].textContent,
+      e.getElementsByClassName('pf-v6-c-description-list__description')[0].textContent,
     ]);
 
   it('renders correctly', async () => {

@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 
 import { addMessage } from '../../redux/sources/actions';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
-import { routes } from '../../Routing';
+import { routes } from '../../routes';
 import { disabledMessage } from '../../utilities/disabledTooltipProps';
 import AppNavigate from '../AppNavigate';
 

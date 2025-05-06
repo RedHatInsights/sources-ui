@@ -135,7 +135,7 @@ describe('generate auth specific selection pages', () => {
           validate: [{ type: 'required' }],
         },
         {
-          className: 'pf-v5-u-pl-md',
+          className: 'pf-v6-u-pl-md',
           component: 'sub-form',
           condition: { is: 'token', when: 'auth_select' },
           fields: [{ component: 'authentication', label: 'Token', name: 'authentication.password' }],
@@ -152,7 +152,7 @@ describe('generate auth specific selection pages', () => {
           validate: [{ type: 'required' }],
         },
         {
-          className: 'pf-v5-u-pl-md',
+          className: 'pf-v6-u-pl-md',
           component: 'sub-form',
           condition: { is: 'arn', when: 'auth_select' },
           fields: [
@@ -186,7 +186,7 @@ describe('generate auth specific selection pages', () => {
           validate: [{ type: 'required' }],
         },
         {
-          className: 'pf-v5-u-pl-md',
+          className: 'pf-v6-u-pl-md',
           component: 'sub-form',
           condition: { is: 'token', when: 'auth_select' },
           fields: [{ component: 'authentication', label: 'Token', name: 'authentication.password' }],
@@ -203,7 +203,7 @@ describe('generate auth specific selection pages', () => {
           validate: [{ type: 'required' }],
         },
         {
-          className: 'pf-v5-u-pl-md',
+          className: 'pf-v6-u-pl-md',
           component: 'sub-form',
           condition: { is: 'arn', when: 'auth_select' },
           fields: [{ component: 'authentication', label: 'ARN', name: 'authentication.password' }],

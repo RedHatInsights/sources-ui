@@ -3,11 +3,11 @@ import { useIntl } from 'react-intl';
 import TabNavigation from './TabNavigation';
 import { useFlag } from '@unleash/proxy-client-react';
 import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
-import { ContentHeader } from '@patternfly/react-component-groups';
+import { PageHeader as PFPageHeader } from '@patternfly/react-component-groups';
 import IntegrationsDropdown from './IntegrationsDropdown';
 import '../styles/sourcesHeader.scss';
 import { LockIcon } from '@patternfly/react-icons';
-import { Button, Popover, Text, TextContent, TextVariants } from '@patternfly/react-core';
+import { Button, Content, ContentVariants, Popover } from '@patternfly/react-core';
 import { useSelector } from 'react-redux';
 
 const SourcesHeader = () => {
@@ -22,7 +22,8 @@ const SourcesHeader = () => {
     <>
       {enableIntegrationsOverview ? (
         <>
-          <ContentHeader
+          <PFPageHeader
+            data-codemods
             ouiaId={'sources-header'}
             title={intl.formatMessage({ id: 'sources.integrations', defaultMessage: 'Integrations' })}
             subtitle={intl.formatMessage({
@@ -51,8 +52,8 @@ const SourcesHeader = () => {
                   })}
                   headerIcon={<LockIcon />}
                   bodyContent={
-                    <TextContent>
-                      <Text component={TextVariants.p}>
+                    <Content>
+                      <Content component={ContentVariants.p}>
                         {intl.formatMessage({
                           id: 'integrations.overview.popoverBody',
                           defaultMessage:
@@ -70,8 +71,8 @@ const SourcesHeader = () => {
                             defaultMessage: 'Learn about requesting access via the Virtual Assistant',
                           })}
                         </Button>
-                      </Text>
-                    </TextContent>
+                      </Content>
+                    </Content>
                   }
                   position="left"
                   appendTo={document.body}
@@ -98,7 +99,7 @@ const SourcesHeader = () => {
           <TabNavigation />
         </>
       ) : (
-        <PageHeader className="pf-v5-u-pb-0">
+        <PageHeader className="pf-v6-u-pb-0">
           <PageHeaderTitle title={intl.formatMessage({ id: 'sources.integrations', defaultMessage: 'Integrations' })} />
           <TabNavigation />
         </PageHeader>

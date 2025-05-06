@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/NotificationPortal';
+import NotificationsProvider from '@redhat-cloud-services/frontend-components-notifications/NotificationsProvider';
 import { IntlProvider } from 'react-intl';
 import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 
@@ -31,10 +31,10 @@ const App = () => {
   return (
     <IntlProvider locale="en">
       <React.Fragment>
-        <NotificationsPortal />
+        <NotificationsProvider />
         <ErrorBoundary>
           <PermissionsChecker>
-            <section className="pf-v5-u-p-0 src-c-section-main">
+            <section className="pf-v6-u-p-0 src-c-section-main">
               <DataLoader />
               <Routing />
             </section>

@@ -4,21 +4,25 @@ import { useIntl } from 'react-intl';
 
 import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
 
-import { Bullseye, EmptyState, EmptyStateBody, EmptyStateIcon, EmptyStateVariant, Title } from '@patternfly/react-core';
+import { Bullseye, EmptyState, EmptyStateBody, EmptyStateVariant, Title } from '@patternfly/react-core';
 
 export const ResourcesEmptyState = ({ applicationName, message, Icon }) => {
   const intl = useIntl();
 
   return (
     <Bullseye>
-      <EmptyState variant={EmptyStateVariant.small}>
-        <EmptyStateIcon icon={Icon} />
-        <Title headingLevel="h2" size="lg">
-          {intl.formatMessage({
-            id: 'resourceTable.emptyStateTitle',
-            defaultMessage: 'No application resources',
-          })}
-        </Title>
+      <EmptyState
+        titleText={
+          <Title headingLevel="h2" size="lg">
+            {intl.formatMessage({
+              id: 'resourceTable.emptyStateTitle',
+              defaultMessage: 'No application resources',
+            })}
+          </Title>
+        }
+        icon={Icon}
+        variant={EmptyStateVariant.small}
+      >
         <EmptyStateBody>{intl.formatMessage(message, { applicationName })}</EmptyStateBody>
       </EmptyState>
     </Bullseye>

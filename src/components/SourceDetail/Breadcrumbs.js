@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import AppLink from '../AppLink';
 
 import { Breadcrumb, BreadcrumbItem } from '@patternfly/react-core';
-import { routes } from '../../Routing';
+import { routes } from '../../routes';
 import { useSource } from '../../hooks/useSource';
 
 const Breadcrumbs = () => {

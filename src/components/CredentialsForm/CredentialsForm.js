@@ -2,11 +2,12 @@ import React, { useEffect, useReducer } from 'react';
 import { useIntl } from 'react-intl';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 
-import { Bullseye, Modal, Spinner } from '@patternfly/react-core';
+import { Bullseye, Spinner } from '@patternfly/react-core';
+import { Modal } from '@patternfly/react-core/deprecated';
 
 import { useSource } from '../../hooks/useSource';
 
-import { replaceRouteId, routes } from '../../Routing';
+import { replaceRouteId, routes } from '../../routes';
 
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
 import ModalFormTemplate from './ModalFormTemplate';
@@ -75,7 +76,7 @@ const CredentialsForm = () => {
   if (loading) {
     return (
       <Modal title={title} variant="small" isOpen onClose={goBackToDetail}>
-        <Bullseye className="pf-v5-u-m-2xl">
+        <Bullseye className="pf-v6-u-m-2xl">
           <Spinner />
         </Bullseye>
       </Modal>

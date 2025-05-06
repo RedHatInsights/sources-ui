@@ -1,10 +1,9 @@
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { Button, Icon, Modal, ModalBody, ModalFooter, ModalHeader, Title } from '@patternfly/react-core';
 
-import { Button, Modal, Title } from '@patternfly/react-core';
-
-import ExclamationTriangleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-triangle-icon';
+import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 
 const CloseModal = ({ onExit, onStay, title, exitTitle, stayTitle, description }) => {
   const intl = useIntl();
@@ -21,24 +20,26 @@ const CloseModal = ({ onExit, onStay, title, exitTitle, stayTitle, description }
       variant="small"
       title={title}
       aria-label={intl.formatMessage({ id: 'wizard.closeAriaLabel', defaultMessage: 'Close add integration wizard' })}
-      header={
-        <Title headingLevel="h1" size="2xl">
-          <ExclamationTriangleIcon size="sm" className="src-c-warning-icon" aria-label="Exclamation icon" />
-          {title}
-        </Title>
-      }
       isOpen
       onClose={onStay}
-      actions={[
+    >
+      <ModalHeader>
+        <Title headingLevel="h1" size="2xl">
+          <Icon size="sm" status="warning">
+            <ExclamationTriangleIcon className="src-c-warning-icon" aria-label="Exclamation icon" />
+          </Icon>
+          {title}
+        </Title>
+      </ModalHeader>
+      <ModalBody>{description}</ModalBody>
+      <ModalFooter>
         <Button key="confirm" variant="primary" id="on-exit-button" onClick={onExit}>
           {exitTitle}
-        </Button>,
+        </Button>
         <Button key="cancel" variant="link" id="on-stay-button" onClick={onStay}>
           {stayTitle}
-        </Button>,
-      ]}
-    >
-      {description}
+        </Button>
+      </ModalFooter>
     </Modal>
   );
 };

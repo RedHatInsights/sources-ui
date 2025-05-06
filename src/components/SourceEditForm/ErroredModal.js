@@ -2,7 +2,7 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 
-import { Text } from '@patternfly/react-core';
+import { Content } from '@patternfly/react-core';
 
 import ErroredStep from '../steps/ErroredStep';
 
@@ -18,7 +18,7 @@ const ErroredModal = ({ onRetry }) => {
           'There was a problem while trying to edit your source. Please try again. If the error persists, open a support case.',
       })}
       secondaryActions={
-        <Text
+        <Content
           component="a"
           target="_blank"
           href="https://access.redhat.com/support/cases/#/case/new/open-case?caseCreate=true"
@@ -28,7 +28,7 @@ const ErroredModal = ({ onRetry }) => {
             id: 'sources.openTicket',
             defaultMessage: 'Open a support case',
           })}
-        </Text>
+        </Content>
       }
       returnButtonTitle={intl.formatMessage({
         id: 'sources.retryText',

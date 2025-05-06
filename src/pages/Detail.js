@@ -8,7 +8,7 @@ import ApplicationResourcesCard from '../components/SourceDetail/ApplicationReso
 import RedirectNoId from '../components/RedirectNoId/RedirectNoId';
 import { useSource } from '../hooks/useSource';
 import { DetailLoader } from '../components/SourcesTable/loaders';
-import { replaceRouteId, routes } from '../Routing';
+import { replaceRouteId, routes } from '../routes';
 import DetailHeader from '../components/SourceDetail/DetailHeader';
 import isSuperKey from '../utilities/isSuperKey';
 import ResourcesTable from '../components/SourceDetail/ResourcesTable';

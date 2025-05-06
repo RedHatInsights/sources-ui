@@ -6,13 +6,13 @@ import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 import { FormattedMessage, useIntl } from 'react-intl';
 import {
   Alert,
+  Content,
+  ContentVariants,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
   Label,
-  Text,
-  TextVariants,
 } from '@patternfly/react-core';
 import { useFlag } from '@unleash/proxy-client-react';
 
@@ -53,7 +53,7 @@ const SummaryAlert = ({ appName, sourceType, hcsEnrolled }) => {
               defaultMessage: "Don't forget additional configuration steps!",
             })}
             actionLinks={
-              <Text component={TextVariants.a} href={linkMapper(sourceType)}>
+              <Content component={ContentVariants.a} href={linkMapper(sourceType)}>
                 {intl.formatMessage(
                   {
                     id: 'cost.customizingReportCUR',
@@ -61,7 +61,7 @@ const SummaryAlert = ({ appName, sourceType, hcsEnrolled }) => {
                   },
                   { application },
                 )}
-              </Text>
+              </Content>
             }
           >
             {intl.formatMessage({
@@ -356,7 +356,7 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
           )}
         {valuesList}
       </DescriptionList>
-      <SummaryAlert appName={name} sourceType={type.name} hcsEnrolled={hcsEnrolled} />
+      <SummaryAlert scope={name} sourceType={type.name} hcsEnrolled={hcsEnrolled} />
     </React.Fragment>
   );
 };

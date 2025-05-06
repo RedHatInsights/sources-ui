@@ -14,7 +14,7 @@ import { downloadFile } from '@redhat-cloud-services/frontend-components-utiliti
 import SourcesTable from '../components/SourcesTable/SourcesTable';
 import { filterSources, pageAndSize, setActiveCategory } from '../redux/sources/actions';
 import { useAppNavigate } from '../hooks/useAppNavigate';
-import { routes } from '../Routing';
+import { routes } from '../routes';
 
 import {
   afterSuccess,
@@ -200,7 +200,7 @@ const SourcesPage = () => {
       hasIntegrationsReadPermissions ? (
         <UnauthorizedState />
       ) : (
-        <AsyncComponent appName="notifications" module="./IntegrationsTable" activeCategory={activeCategory} />
+        <AsyncComponent scope="notifications" module="./IntegrationsTable" activeCategory={activeCategory} />
       )
     ) : !fetchingError && !showEmptyState ? (
       <React.Fragment>
@@ -326,6 +326,7 @@ const SourcesPage = () => {
       </React.Fragment>
     ) : null;
 
+  console.log({ showInfoCards });
   return (
     <React.Fragment>
       <Suspense fallback={null}>

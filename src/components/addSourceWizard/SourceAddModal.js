@@ -5,7 +5,7 @@ import { useIntl } from 'react-intl';
 
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 
-import { Wizard } from '@patternfly/react-core/deprecated';
+import { Wizard, WizardHeader, WizardStep } from '@patternfly/react-core';
 
 import createSchema from './SourceAddSchema';
 import { doLoadApplicationTypes, doLoadSourceTypes } from '../../api/wizardHelpers';
@@ -134,16 +134,12 @@ const SourceAddModal = ({
         className="sources"
         isOpen={true}
         onClose={onCancel}
-        title={wizardTitle(activeCategory)}
-        description={wizardDescription(activeCategory)}
-        steps={[
-          {
-            name: 'Loading',
-            component: <LoadingStep onClose={() => onCancel()} />,
-            isFinishedStep: true,
-          },
-        ]}
-      />
+        header={<WizardHeader title={wizardTitle(activeCategory)} description={wizardDescription(activeCategory)} />}
+      >
+        <WizardStep name="Loading" id="loading-step" footer={{ nextButtonText: 'Finish', onNext: () => onCancel() }}>
+          <LoadingStep onClose={() => onCancel()} />
+        </WizardStep>
+      </Wizard>
     );
   }
 

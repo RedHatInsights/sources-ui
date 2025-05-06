@@ -1,7 +1,7 @@
 import React from 'react';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 
-import { Text, TextContent, TextVariants } from '@patternfly/react-core';
+import { Content, ContentVariants } from '@patternfly/react-core';
 import { useIntl } from 'react-intl';
 import * as schemaBuilder from '../../components/addSourceWizard/schemaBuilder';
 import get from 'lodash/get';
@@ -14,15 +14,15 @@ export const ApplicationSummary = () => {
   const intl = useIntl();
 
   return (
-    <TextContent>
-      <Text component={TextVariants.p}>
+    <Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage({
           id: 'sources.reviewAddAppSummary',
           defaultMessage:
             'Review the information below and click Add to add the application to your source. Use the Back button to make changes.',
         })}
-      </Text>
-    </TextContent>
+      </Content>
+    </Content>
   );
 };
 

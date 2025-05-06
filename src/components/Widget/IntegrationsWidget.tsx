@@ -1,5 +1,6 @@
 import {
   Badge,
+  Bullseye,
   Card,
   CardBody,
   CardFooter,
@@ -138,7 +139,9 @@ const IntegrationsWidget: FunctionComponent = () => {
   return (
     <PermissionsChecker>
       {isLoading ? (
-        <Spinner />
+        <Bullseye>
+          <Spinner />
+        </Bullseye>
       ) : isEmptyState ? (
         <Card ouiaId="integrations-widget-empty-state">
   <CardBody className='pf-v6-u-ml-sm'>
@@ -269,7 +272,7 @@ const IntegrationsWidget: FunctionComponent = () => {
       )}
         {[COMMUNICATIONS, REPORTING, WEBHOOKS].includes(selectedTileValue) && (
               <AsyncComponent
-                appName="notifications"
+                scope="notifications"
                 module="./IntegrationsWizard"
                 store={store}
                 isOpen={isIntegrationsWizardOpen}
