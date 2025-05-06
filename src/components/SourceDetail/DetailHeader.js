@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { shallowEqual, useSelector } from 'react-redux';
 
 import { PageHeader } from '@redhat-cloud-services/frontend-components/PageHeader';
-import { Flex, FlexItem, Text, TextContent, Title } from '@patternfly/react-core';
+import { Content, Flex, FlexItem, Title } from '@patternfly/react-core';
 
 import Breadcrumbs from './Breadcrumbs';
 import { useSource } from '../../hooks/useSource';
@@ -19,7 +19,7 @@ const DetailHeader = () => {
   return (
     <PageHeader>
       <Breadcrumbs />
-      <Flex className="pf-v5-u-mb-sm">
+      <Flex className="pf-v6-u-mb-sm">
         <FlexItem>
           <Title headingLevel="h1" size="2xl">
             {source.name}
@@ -30,14 +30,14 @@ const DetailHeader = () => {
           <SourceKebab />
         </FlexItem>
       </Flex>
-      <TextContent>
-        <Text>
+      <Content>
+        <Content component="p">
           {intl.formatMessage({
             id: 'detail.description',
             defaultMessage: 'View details and manage connections for this integration.',
           })}
-        </Text>
-      </TextContent>
+        </Content>
+      </Content>
     </PageHeader>
   );
 };

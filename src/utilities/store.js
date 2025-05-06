@@ -1,6 +1,4 @@
 import ReducerRegistry, { applyReducerHash } from '@redhat-cloud-services/frontend-components-utilities/ReducerRegistry';
-import notificationsMiddleware from '@redhat-cloud-services/frontend-components-notifications/notificationsMiddleware';
-import { notificationsReducer } from '@redhat-cloud-services/frontend-components-notifications/redux';
 import thunk from 'redux-thunk';
 import promise from 'redux-promise-middleware';
 
@@ -9,6 +7,7 @@ import UserReducer, { defaultUserState } from '../redux/user/reducer';
 import { parseQuery, updateQuery } from './urlQuery';
 import { ACTION_TYPES, SET_CATEGORY } from '../redux/sources/actionTypes';
 import { CLOUD_VENDOR, COMMUNICATIONS, INTEGRATIONS, OVERVIEW, REDHAT_VENDOR, REPORTING, WEBHOOKS } from './constants';
+import createNotificationsMiddleware from '../redux/notifications/notificationsMiddleware';
 
 export const urlQueryMiddleware = (store) => (next) => (action) => {
   if (action.type === ACTION_TYPES.LOAD_ENTITIES_PENDING) {
@@ -24,7 +23,7 @@ export const urlQueryMiddleware = (store) => (next) => (action) => {
 export const getStore = (addMiddlewares = [], initialState = {}) => {
   const middlewares = [
     thunk,
-    notificationsMiddleware({
+    createNotificationsMiddleware({
       errorTitleKey: 'error.title',
       errorDescriptionKey: 'error.detail',
     }),
@@ -47,7 +46,6 @@ export const getStore = (addMiddlewares = [], initialState = {}) => {
     }),
   });
   registry.register({ user: applyReducerHash(UserReducer, { ...defaultUserState, ...initialState.user }) });
-  registry.register({ notifications: notificationsReducer });
 
   return registry.getStore();
 };

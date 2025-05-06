@@ -378,7 +378,7 @@ describe('AddSourceWizard', () => {
 
   describe('different variants', () => {
     const getNavigation = (container) =>
-      [...container.parentElement.getElementsByClassName('pf-v5-c-wizard__nav-item')].map((item) => item.textContent);
+      [...container.parentElement.getElementsByClassName('pf-v6-c-wizard__nav-item')].map((item) => item.textContent);
 
     it('show configuration step when selectedType is set - CLOUD', async () => {
       dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));

@@ -17,13 +17,13 @@ import { getSourcesApi } from '../../api/entities';
 import { useSource } from '../../hooks/useSource';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
 import { endpointToUrl } from '../../views/formatters';
-import { replaceRouteId, routes } from '../../Routing';
+import { replaceRouteId, routes } from '../../routes';
 
 import { doAttachApp } from '../../api/doAttachApp';
 import { checkSourceStatus } from '../../api/checkSourceStatus';
 
 import reducer, { initialState } from './reducer';
-import { Button, Text } from '@patternfly/react-core';
+import { Button, Content } from '@patternfly/react-core';
 
 import removeAppSubmit from './removeAppSubmit';
 import { diff } from 'deep-object-diff';
@@ -237,7 +237,7 @@ const AddApplication = () => {
           })}
           primaryAction={() => onSubmitWrapper(state.values, state.formApi)}
           secondaryActions={
-            <Text
+            <Content
               component="a"
               target="_blank"
               href="https://access.redhat.com/support/cases/#/case/new/open-case?caseCreate=true"
@@ -247,7 +247,7 @@ const AddApplication = () => {
                 id: 'wizard.openTicket',
                 defaultMessage: 'Open a support case',
               })}
-            </Text>
+            </Content>
           }
         />
       );
@@ -298,7 +298,7 @@ const AddApplication = () => {
               }
               Component={() => (
                 <AppLink to={replaceRouteId(routes.sourcesDetail.path, source.id)}>
-                  <Button variant="primary" className="pf-v5-u-mt-xl">
+                  <Button variant="primary" className="pf-v6-u-mt-xl">
                     {intl.formatMessage({
                       id: 'wizard.editSource',
                       defaultMessage: 'Edit integration',

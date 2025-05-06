@@ -2,7 +2,7 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 import { HCCM_LATEST_DOCS_PREFIX } from '../../stringConstants';
 
-import { Text, TextContent, TextVariants } from '@patternfly/react-core';
+import { Content, ContentVariants } from '@patternfly/react-core';
 
 import { bold } from '../../../../utilities/intlShared';
 
@@ -12,8 +12,8 @@ export const ConfigureCostOperator = () => {
   const intl = useIntl();
 
   return (
-    <TextContent>
-      <Text>
+    <Content>
+      <Content component="p">
         {intl.formatMessage(
           {
             id: 'cost.openshift.description',
@@ -24,16 +24,16 @@ export const ConfigureCostOperator = () => {
             operator: <b key="bold">costmanagement-metrics-operator</b>,
           },
         )}
-      </Text>
-      <Text>
-        <Text key="link" component={TextVariants.a} href={INSTALL_PREREQUISITE} target="_blank" rel="noopener noreferrer">
+      </Content>
+      <Content component="p">
+        <Content key="link" component={ContentVariants.a} href={INSTALL_PREREQUISITE} target="_blank" rel="noopener noreferrer">
           {intl.formatMessage({
             id: 'wizard.learnMore',
             defaultMessage: 'Learn more',
           })}
-        </Text>
-      </Text>
-      <Text>
+        </Content>
+      </Content>
+      <Content component="p">
         {intl.formatMessage(
           {
             id: 'cost.openshift.operator_configured',
@@ -44,14 +44,14 @@ export const ConfigureCostOperator = () => {
             b: bold,
           },
         )}
-      </Text>
-      <Text>
+      </Content>
+      <Content component="p">
         {intl.formatMessage({
           id: 'cost.openshift.operator_not_configured',
           defaultMessage:
             'Otherwise, enter the cluster identifier below. You can find the cluster identifier in the cluster’s Help > About screen.',
         })}
-      </Text>
-    </TextContent>
+      </Content>
+    </Content>
   );
 };

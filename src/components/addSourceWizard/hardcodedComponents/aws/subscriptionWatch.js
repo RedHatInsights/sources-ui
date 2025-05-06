@@ -2,16 +2,7 @@ import React, { useEffect, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { v4 as uuidv4 } from 'uuid';
 
-import {
-  ClipboardCopy,
-  ClipboardCopyVariant,
-  Text,
-  TextContent,
-  TextList,
-  TextListItem,
-  TextListVariants,
-  TextVariants,
-} from '@patternfly/react-core';
+import { ClipboardCopy, ClipboardCopyVariant, Content, ContentVariants } from '@patternfly/react-core';
 
 import { useFormApi } from '@data-driven-forms/react-form-renderer';
 
@@ -31,21 +22,21 @@ export const IAMRoleDescription = () => {
   }, [externalId]);
 
   return (
-    <TextContent>
-      <Text component={TextVariants.p}>
+    <Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage({
           id: 'subwatch.iamrole.delegateAccount',
           defaultMessage: 'To delegate account access, create an IAM role to associate with your IAM policy.',
         })}
-      </Text>
-      <TextList component={TextListVariants.ol}>
-        <TextListItem>
+      </Content>
+      <Content component={ContentVariants.ol}>
+        <Content component="li">
           {intl.formatMessage({
             id: 'subwatch.iamrole.createRole',
             defaultMessage: 'From the AWS IAM console, create a new role.',
           })}
-        </TextListItem>
-        <TextListItem>
+        </Content>
+        <Content component="li">
           {intl.formatMessage(
             {
               id: 'subwatch.iamrole.pasteAccountID',
@@ -57,33 +48,33 @@ export const IAMRoleDescription = () => {
               space: <React.Fragment>&nbsp;</React.Fragment>,
             },
           )}
-        </TextListItem>
-        <ClipboardCopy className="pf-v5-u-m-sm-on-sm" isReadOnly>
+        </Content>
+        <ClipboardCopy className="pf-v6-u-m-sm-on-sm" isReadOnly>
           998366406740
         </ClipboardCopy>
-        <TextListItem>
+        <Content component="li">
           {intl.formatMessage({
             id: 'subwatch.iamrole.pasteExternalId',
             defaultMessage: 'Paste the following value in the External ID field:',
           })}
-        </TextListItem>
-        <ClipboardCopy className="pf-v5-u-m-sm-on-sm" isReadOnly>
+        </Content>
+        <ClipboardCopy className="pf-v6-u-m-sm-on-sm" isReadOnly>
           {externalId}
         </ClipboardCopy>
-        <TextListItem>
+        <Content component="li">
           {intl.formatMessage({
             id: 'subwatch.iamrole.attachPolicy',
             defaultMessage: 'Attach the permissions policy that you just created.',
           })}
-        </TextListItem>
-        <TextListItem>
+        </Content>
+        <Content component="li">
           {intl.formatMessage({
             id: 'subwatch.iamrole.completeProcess',
             defaultMessage: 'Complete the process to create your new role.',
           })}
-        </TextListItem>
-      </TextList>
-      <Text component={TextVariants.p}>
+        </Content>
+      </Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage(
           {
             id: 'subwatch.iampolicy.BDoNotCloseYourBrowserBYouWillNeedToBeLoggedInToTheIamConsoleToComputeTheNextStep',
@@ -100,8 +91,8 @@ export const IAMRoleDescription = () => {
             ),
           },
         )}
-      </Text>
-    </TextContent>
+      </Content>
+    </Content>
   );
 };
 
@@ -109,16 +100,16 @@ export const IAMPolicyDescription = () => {
   const intl = useIntl();
 
   return (
-    <TextContent>
-      <Text component={TextVariants.p}>
+    <Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage({
           id: 'subwatch.iampolicy.grantPermissions',
           defaultMessage:
             'To grant Red Hat access to your Amazon Web Services (AWS) subscription data, create an AWS Identity and Access Management (IAM) policy.',
         })}
-      </Text>
-      <TextList component={TextListVariants.ol}>
-        <TextListItem>
+      </Content>
+      <Content component={ContentVariants.ol}>
+        <Content component="li">
           {intl.formatMessage(
             {
               id: 'subwatch.iampolicy.signIn',
@@ -140,14 +131,14 @@ export const IAMPolicyDescription = () => {
               ),
             },
           )}
-        </TextListItem>
-        <TextListItem>
+        </Content>
+        <Content component="li">
           {intl.formatMessage({
             id: 'subwatch.iampolicy.createPolicty',
             defaultMessage: 'Create a new policy, pasting the following content into the JSON text box.',
           })}
-        </TextListItem>
-        <ClipboardCopy isCode variant={ClipboardCopyVariant.expansion} className="pf-v5-u-m-sm-on-sm" isReadOnly>
+        </Content>
+        <ClipboardCopy isCode variant={ClipboardCopyVariant.expansion} className="pf-v6-u-m-sm-on-sm" isReadOnly>
           {JSON.stringify(
             {
               Version: '2012-10-17',
@@ -164,14 +155,14 @@ export const IAMPolicyDescription = () => {
             2,
           )}
         </ClipboardCopy>
-        <TextListItem>
+        <Content component="li">
           {intl.formatMessage({
             id: 'subwatch.iampolicy.completeProcess',
             defaultMessage: 'Complete the process to create your new policy.',
           })}
-        </TextListItem>
-      </TextList>
-      <Text component={TextVariants.p}>
+        </Content>
+      </Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage(
           {
             id: 'subwatch.iampolicy.BDoNotCloseYourBrowserBYouWillNeedToBeLoggedInToTheIamConsoleToComputeTheNextStep',
@@ -188,8 +179,8 @@ export const IAMPolicyDescription = () => {
             ),
           },
         )}
-      </Text>
-    </TextContent>
+      </Content>
+    </Content>
   );
 };
 
@@ -197,21 +188,21 @@ export const ArnDescription = () => {
   const intl = useIntl();
 
   return (
-    <TextContent>
-      <Text component={TextVariants.p}>
+    <Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage({
           id: 'subwatch.arn.enableAccount',
           defaultMessage: 'To enable account access, capture the ARN associated with the role you just created.',
         })}
-      </Text>
-      <TextList component={TextListVariants.ol}>
-        <TextListItem>
+      </Content>
+      <Content component={ContentVariants.ol}>
+        <Content component="li">
           {intl.formatMessage({
             id: 'subwatch.arn.selectRole',
             defaultMessage: 'Navigate to the role that you just created. ',
           })}
-        </TextListItem>
-        <TextListItem>
+        </Content>
+        <Content component="li">
           {intl.formatMessage(
             {
               id: 'subwatch.arn.copyArn',
@@ -219,8 +210,8 @@ export const ArnDescription = () => {
             },
             { b },
           )}
-        </TextListItem>
-      </TextList>
-    </TextContent>
+        </Content>
+      </Content>
+    </Content>
   );
 };

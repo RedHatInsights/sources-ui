@@ -3,7 +3,6 @@ import React from 'react';
 import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 import PlayIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
 
-import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications/redux';
 import {
   ACTION_TYPES,
   ADD_APP_TO_SOURCE,
@@ -22,6 +21,7 @@ import handleError from '../../api/handleError';
 import tryAgainMessage from '../../utilities/tryAgainMessage';
 import { checkAccountHCS } from '../../api/checkAccountHCS';
 import { INTEGRATIONS, OVERVIEW } from '../../utilities/constants';
+import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from '../notifications/actions';
 
 export const loadEntities = (options) => (dispatch, getState) => {
   dispatch({

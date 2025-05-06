@@ -6,7 +6,7 @@ import { useIntl } from 'react-intl';
 import { addHiddenSource, addMessage } from '../../redux/sources/actions';
 import { doLoadSource } from '../../api/entities';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
-import { routes } from '../../Routing';
+import { routes } from '../../routes';
 import { useSource } from '../../hooks/useSource';
 import AppNavigate from '../AppNavigate';
 

@@ -5,15 +5,12 @@ import {
   Alert,
   Button,
   ClipboardCopy,
+  Content,
+  ContentVariants,
   ExpandableSection,
   ListComponent,
   Stack,
   StackItem,
-  Text,
-  TextContent,
-  TextList,
-  TextListItem,
-  TextVariants,
 } from '@patternfly/react-core';
 import { useFormApi } from '@data-driven-forms/react-form-renderer';
 
@@ -24,14 +21,14 @@ export const ProjectID = () => {
   const intl = useIntl();
 
   return (
-    <TextContent>
-      <Text>
+    <Content>
+      <Content component="p">
         {intl.formatMessage({
           id: 'provisioning.project-id.desc',
           defaultMessage: 'Login to Google Cloud Plattform and Copy your project ID',
         })}
-      </Text>
-    </TextContent>
+      </Content>
+    </Content>
   );
 };
 
@@ -89,11 +86,11 @@ export const ConnectGCP = () => {
 
   if (!gcpServiceAccount) {
     return (
-      <TextContent>
-        <Text component={TextVariants.p}>
+      <Content>
+        <Content component={ContentVariants.p}>
           <FormattedMessage id="provisioning.iam.loading" defaultMessage="Loading configuration..." />
-        </Text>
-      </TextContent>
+        </Content>
+      </Content>
     );
   }
 
@@ -101,61 +98,61 @@ export const ConnectGCP = () => {
     <>
       <Stack hasGutter>
         <StackItem>
-          <Text>
+          <Content component="p">
             <FormattedMessage
               defaultMessage="To delegate account access, create a custom role and grant it to Red Hat service account."
               id="provisioning.gcp-role-creation.desc"
             />
-          </Text>
+          </Content>
         </StackItem>
         <StackItem>
           <ExpandableSection isIndented toggleText="See role permissions">
-            <Text>
-              <TextList component="dl">
-                <TextListItem>compute.disks.create</TextListItem>
-                <TextListItem>compute.images.useReadOnly</TextListItem>
-                <TextListItem>compute.instanceTemplates.create</TextListItem>
-                <TextListItem>compute.instanceTemplates.list</TextListItem>
-                <TextListItem>compute.instanceTemplates.useReadOnly</TextListItem>
-                <TextListItem>compute.instances.create</TextListItem>
-                <TextListItem>compute.instances.get</TextListItem>
-                <TextListItem>compute.instances.list</TextListItem>
-                <TextListItem>compute.instances.setLabels</TextListItem>
-                <TextListItem>compute.instances.setMetadata</TextListItem>
-                <TextListItem>compute.instances.setServiceAccount</TextListItem>
-                <TextListItem>compute.networks.useExternalIp</TextListItem>
-                <TextListItem>compute.subnetworks.use</TextListItem>
-                <TextListItem>compute.subnetworks.useExternalIp</TextListItem>
-                <TextListItem>iam.roles.get</TextListItem>
-                <TextListItem>iam.serviceAccounts.actAs</TextListItem>
-                <TextListItem>iam.serviceAccounts.getIamPolicy</TextListItem>
-                <TextListItem>resourcemanager.projects.getIamPolicy</TextListItem>
-                <TextListItem>serviceusage.services.use</TextListItem>
-                <TextListItem>compute.instances.setTags</TextListItem>
-                <TextListItem>compute.regions.list</TextListItem>
-              </TextList>
-            </Text>
+            <Content component="p">
+              <Content component="dl">
+                <Content component="li">compute.disks.create</Content>
+                <Content component="li">compute.images.useReadOnly</Content>
+                <Content component="li">compute.instanceTemplates.create</Content>
+                <Content component="li">compute.instanceTemplates.list</Content>
+                <Content component="li">compute.instanceTemplates.useReadOnly</Content>
+                <Content component="li">compute.instances.create</Content>
+                <Content component="li">compute.instances.get</Content>
+                <Content component="li">compute.instances.list</Content>
+                <Content component="li">compute.instances.setLabels</Content>
+                <Content component="li">compute.instances.setMetadata</Content>
+                <Content component="li">compute.instances.setServiceAccount</Content>
+                <Content component="li">compute.networks.useExternalIp</Content>
+                <Content component="li">compute.subnetworks.use</Content>
+                <Content component="li">compute.subnetworks.useExternalIp</Content>
+                <Content component="li">iam.roles.get</Content>
+                <Content component="li">iam.serviceAccounts.actAs</Content>
+                <Content component="li">iam.serviceAccounts.getIamPolicy</Content>
+                <Content component="li">resourcemanager.projects.getIamPolicy</Content>
+                <Content component="li">serviceusage.services.use</Content>
+                <Content component="li">compute.instances.setTags</Content>
+                <Content component="li">compute.regions.list</Content>
+              </Content>
+            </Content>
           </ExpandableSection>
         </StackItem>
         <StackItem>
-          <TextContent>
+          <Content>
             <FormattedMessage
               id="provisioning.gcp-role-creation-follow.desc"
               defaultMessage="Follow these steps to create the role:"
             />
-          </TextContent>
+          </Content>
         </StackItem>
         <StackItem>
-          <TextContent>
-            <TextList component={ListComponent.ol}>
-              <TextListItem>
+          <Content>
+            <Content component={ListComponent.ol}>
+              <Content component="li">
                 <FormattedMessage
                   id="provisioning.gcp-role-step-1"
                   defaultMessage="Click on {connectGCP} to open Google cloud shell in a new tab."
                   values={{ connectGCP: <strong>&apos;Connect Google Cloud&apos;</strong> }}
                 />
-              </TextListItem>
-              <TextListItem>
+              </Content>
+              <Content component="li">
                 <FormattedMessage
                   id="provisioning.aws-role-step-2"
                   defaultMessage="In the cloud shell, paste this {script} to initiate the creation and binding the role. Wait until the the process has done."
@@ -167,16 +164,16 @@ export const ConnectGCP = () => {
                     ),
                   }}
                 />
-              </TextListItem>
-              <TextListItem>
+              </Content>
+              <Content component="li">
                 <FormattedMessage
                   id="provisioning.aws-role-step-3"
                   defaultMessage="Return to this window and click {next}."
                   values={{ next: <strong>&apos;Next&apos;</strong> }}
                 />
-              </TextListItem>
-            </TextList>
-          </TextContent>
+              </Content>
+            </Content>
+          </Content>
         </StackItem>
         <StackItem>
           <Button component="a" target="_blank" href={cloudShellURL} isBlock variant="primary">

@@ -71,13 +71,13 @@ describe('loaders', () => {
     it('CardLoader renders correctly', () => {
       render(<CardLoader />);
 
-      expect(screen.getByRole('progressbar').closest('.pf-v5-c-card')).toBeInTheDocument();
+      expect(screen.getByRole('progressbar').closest('.pf-v6-c-card')).toBeInTheDocument();
     });
 
     it('DetailLoader renders correctly', () => {
       render(<DetailLoader />);
 
-      expect(screen.getAllByRole('progressbar')[1].closest('.pf-v5-c-card')).toBeInTheDocument();
+      expect(screen.getAllByRole('progressbar')[1].closest('.pf-v6-c-card')).toBeInTheDocument();
     });
   });
 });

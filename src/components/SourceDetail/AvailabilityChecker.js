@@ -18,6 +18,12 @@ const AvailabilityChecker = ({ setCheckPending }) => {
 
   return (
     <Button
+      icon={
+        <>
+          {!loading && <RedoIcon data-testid="RedoIcon" />}
+          {loading && <Spinner size="md" />}
+        </>
+      }
       variant="plain"
       aria-label={intl.formatMessage({ id: 'sources.checkavailability', defaultMessage: 'Check integration availability' })}
       onClick={async () => {
@@ -40,10 +46,7 @@ const AvailabilityChecker = ({ setCheckPending }) => {
         );
       }}
       isDisabled={loading}
-    >
-      {!loading && <RedoIcon data-testid="RedoIcon" />}
-      {loading && <Spinner size="md" />}
-    </Button>
+    />
   );
 };
 

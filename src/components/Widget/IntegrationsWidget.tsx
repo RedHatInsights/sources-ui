@@ -1,16 +1,18 @@
 import {
-  Badge,
-  Card,
-  CardBody,
-  CardFooter,
-  ExpandableSection,
-  Gallery,
-  List,
-  ListItem,
-  ListVariant,
-  Spinner,
-  Tile,
+	Badge,
+	Card,
+	CardBody,
+	CardFooter,
+	ExpandableSection,
+	Gallery,
+	List,
+	ListItem,
+	ListVariant,
+	Spinner
 } from '@patternfly/react-core';
+import {
+	Tile
+} from '@patternfly/react-core/deprecated';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Provider, useSelector, useStore } from 'react-redux';
 import IntegrationsDropdown from '../IntegrationsDropdown';
@@ -130,7 +132,7 @@ const IntegrationsWidget: FunctionComponent = () => {
             </CardBody>
             {[COMMUNICATIONS, REPORTING, WEBHOOKS].includes(selectedTileValue) && (
               <AsyncComponent
-                appName="notifications"
+                scope="notifications"
                 module="./IntegrationsWizard"
                 store={store}
                 isOpen={isIntegrationsWizardOpen}
@@ -162,7 +164,7 @@ const IntegrationsWidget: FunctionComponent = () => {
                 key={integrationIndex}
                 toggleContent={
                   <div>
-                    <span className="pf-v5-u-pr-sm">{integration.title}</span>
+                    <span className="pf-v6-u-pr-sm">{integration.title}</span>
                     <Badge 
                     isRead={badgeCounts(integration.items) === 0}>
                       {badgeCounts(integration.items)}
@@ -171,7 +173,7 @@ const IntegrationsWidget: FunctionComponent = () => {
                 }
                 onToggle={() => onToggle(integrationIndex)}
                 isExpanded={expandedIndex.includes(integrationIndex)}              >
-                <List variant={ListVariant.inline} className="pf-v5-u-mb-md">
+                <List variant={ListVariant.inline} className="pf-v6-u-mb-md">
                   {integration.items.map((item, itemIndex) => (
                     <ListItem key={itemIndex} icon={item.icon}>
                       {item.name} ( {integrationCounts[item.id] || 0} )
@@ -181,7 +183,7 @@ const IntegrationsWidget: FunctionComponent = () => {
               </ExpandableSection>
             ))}
           </CardBody>
-          <CardFooter className="pf-v5-u-pt-md pf-v5-u-background-color-100">
+          <CardFooter className="pf-v6-u-pt-md pf-v6-u-background-color-100">
             <IntegrationsDropdown />
           </CardFooter>
         </Card>

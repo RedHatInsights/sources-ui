@@ -2,14 +2,14 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 
-import { Modal } from '@patternfly/react-core';
+import { Modal } from '@patternfly/react-core/deprecated';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 
 import { useSource } from '../../hooks/useSource';
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
-import { replaceRouteId, routes } from '../../Routing';
+import { replaceRouteId, routes } from '../../routes';
 import { renameSource } from '../../redux/sources/actions';
 import { asyncValidatorDebounced } from '../../components/addSourceWizard/SourceAddSchema';
 import validated from '../../utilities/resolveProps/validated';

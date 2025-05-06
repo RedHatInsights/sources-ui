@@ -8,7 +8,7 @@ import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 import PlayIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
 
 import { useSource } from '../../hooks/useSource';
-import { replaceRouteId, routes } from '../../Routing';
+import { replaceRouteId, routes } from '../../routes';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import isSuperKey from '../../utilities/isSuperKey';
 import { doCreateApplication, getSourcesApi } from '../../api/entities';
@@ -185,7 +185,7 @@ const ApplicationsCard = () => {
   }
 
   return filteredAppTypes.length > 0 ? (
-    <Card className="src-c-card-applications pf-v5-u-p-lg pf-v5-u-pl-sm-on-md">
+    <Card className="src-c-card-applications pf-v6-u-m-lg pf-v6-u-mr-sm-on-md pf-v6-u-p-lg pf-v6-u-pl-sm-on-md">
       <CardTitle>
         {intl.formatMessage({
           id: 'detail.applications.title',
@@ -193,7 +193,7 @@ const ApplicationsCard = () => {
         })}
       </CardTitle>
       <CardBody>
-        <div className="pf-v5-c-form src-c-applications_form">
+        <div className="pf-v6-c-form src-c-applications_form">
           {filteredAppTypes.map((app) => {
             const connectedApp = source.applications.find((connectedApp) => connectedApp.application_type_id === app.id);
 
@@ -224,7 +224,7 @@ const ApplicationsCard = () => {
                         />
                       </Wrapper>
                       {Boolean(connectedApp) && (
-                        <ApplicationLabel className="pf-v5-u-ml-sm src-m-clickable" app={connectedApp} showStatusText />
+                        <ApplicationLabel className="pf-v6-u-ml-sm src-m-clickable" app={connectedApp} showStatusText />
                       )}
                       {(isPaused || appExist) && (
                         <ApplicationKebab

@@ -52,7 +52,7 @@ const configurationStep = (intl, sourceTypes) => ({
                   id: 'wizard.accountAuth',
                   defaultMessage: 'Account authorization',
                 })}
-                <Label className="pf-v5-u-ml-sm" color="purple">
+                <Label className="pf-v6-u-ml-sm" color="purple">
                   {intl.formatMessage({ id: 'wizard.confMode.reccomended', defaultMessage: 'Recommended' })}
                 </Label>
               </span>
@@ -87,7 +87,7 @@ const configurationStep = (intl, sourceTypes) => ({
         },
       ],
       condition: { when: 'source.app_creation_workflow', is: ACCOUNT_AUTHORIZATION },
-      className: 'pf-v5-u-ml-md',
+      className: 'pf-v6-u-ml-md',
     },
     {
       component: componentTypes.RADIO,

@@ -9,7 +9,7 @@ import { COLUMN_COUNT, sourcesColumns } from '../../views/sourcesViewDefinition'
 import EmptyStateTable from './EmptyStateTable';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
-import { replaceRouteId, routes } from '../../Routing';
+import { replaceRouteId, routes } from '../../routes';
 import disabledTooltipProps from '../../utilities/disabledTooltipProps';
 import { useAppNavigate } from '../../hooks/useAppNavigate';
 import './sourcesTable.scss';
@@ -81,7 +81,7 @@ export const actionResolver = (intl, navigate, hasWritePermissions, dispatch, is
         id: 'sources.resume.description',
         defaultMessage: 'Unpause data collection for this integration',
       }),
-      onClick: (_ev, _i, { id }) => dispatch(resumeSource(id, rowData.originalName, intl)),
+      onClick: () => dispatch(resumeSource(rowData.id, rowData.originalName, intl)),
       ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
     });
   } else {
@@ -94,7 +94,7 @@ export const actionResolver = (intl, navigate, hasWritePermissions, dispatch, is
         id: 'sources.pause.description',
         defaultMessage: 'Temporarily disable data collection',
       }),
-      onClick: (_ev, _i, { id }) => dispatch(pauseSource(id, rowData.originalName, intl)),
+      onClick: () => dispatch(pauseSource(rowData.id, rowData.originalName, intl)),
       ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
     });
   }
@@ -108,7 +108,7 @@ export const actionResolver = (intl, navigate, hasWritePermissions, dispatch, is
       id: 'sources.remove.description',
       defaultMessage: 'Permanently delete this integration and all collected data',
     }),
-    onClick: (_ev, _i, { id }) => navigate(replaceRouteId(routes.sourcesRemove.path, id)),
+    onClick: () => navigate(replaceRouteId(routes.sourcesRemove.path, rowData.id)),
     ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
   });
 
@@ -122,7 +122,7 @@ export const actionResolver = (intl, navigate, hasWritePermissions, dispatch, is
           id: 'sources.viewDetails',
           defaultMessage: 'View details',
         }),
-    onClick: (_ev, _i, { id }) => navigate(replaceRouteId(routes.sourcesDetail.path, id)),
+    onClick: () => navigate(replaceRouteId(routes.sourcesDetail.path, rowData.id)),
     ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
   });
 

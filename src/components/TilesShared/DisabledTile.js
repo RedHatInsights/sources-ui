@@ -2,7 +2,8 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 
-import { Tile, Tooltip } from '@patternfly/react-core';
+import { Tooltip } from '@patternfly/react-core';
+import { Tile } from '@patternfly/react-core/deprecated';
 import { disabledMessage } from '../../utilities/disabledTooltipProps';
 
 const DisabledTile = (props) => {

@@ -39,7 +39,7 @@ describe('AuthSelect component', () => {
   it('renders correctly', () => {
     render(<FormRenderer {...initialProps} />);
 
-    expect(screen.getByText('Test').closest('.pf-v5-c-radio')).toBeInTheDocument();
+    expect(screen.getByText('Test').closest('.pf-v6-c-radio')).toBeInTheDocument();
   });
 
   it('renders correctly when disableAuthType', async () => {
