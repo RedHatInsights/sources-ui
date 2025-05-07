@@ -89,7 +89,7 @@ const IntegrationsWidget: FunctionComponent = () => {
     loadAllSources();
   }, []);
 
-  const badgeCounts = (items: typeof integrationsData[0]['items']) => {
+  const badgeCounts = (items: (typeof integrationsData)[0]['items']) => {
     return items.reduce((total, item) => total + (integrationCounts[item.id] || 0), 0);
   };
 

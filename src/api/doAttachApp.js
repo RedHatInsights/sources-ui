@@ -111,8 +111,7 @@ export const doAttachApp = async (values, formApi, authenticationInitialValues, 
       promises.push(Promise.resolve(undefined));
     }
 
-    // eslint-disable-next-line no-unused-vars
-    const [_sourceDataOut, endpointDataOut, applicationDataOut] = await Promise.all(promises);
+    const [, endpointDataOut, applicationDataOut] = await Promise.all(promises);
 
     appId = applicationDataOut?.id;
 

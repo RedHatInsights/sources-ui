@@ -326,7 +326,6 @@ const SourcesPage = () => {
       </React.Fragment>
     ) : null;
 
-  console.log({ showInfoCards });
   return (
     <React.Fragment>
       <Suspense fallback={null}>

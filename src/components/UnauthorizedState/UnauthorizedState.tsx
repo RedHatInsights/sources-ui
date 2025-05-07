@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, AlertActionLink, Icon, Stack, StackItem, Content, ContentVariants } from '@patternfly/react-core';
+import { Alert, AlertActionLink, Content, ContentVariants, Icon, Stack, StackItem } from '@patternfly/react-core';
 import { AutomationIcon, LockIcon, OutlinedCommentsIcon } from '@patternfly/react-icons';
 import { useIntl } from 'react-intl';
 import { COMMUNICATIONS, REPORTING, WEBHOOKS } from '../../utilities/constants';
@@ -187,7 +187,7 @@ const UnauthorizedState = () => {
       </StackItem>
       <StackItem>
         <ul className="pf-v6-c-list pf-m-inline pf-m-icon-lg pf-v6-u-justify-content-center" role="list">
-          {activeData.items?.map((item: any, index: any) => (
+          {activeData.items?.map((item: { name: string; src: string; href: string }, index: number) => (
             <li className="pf-v6-c-list__item" key={index}>
               <ImageWithPlaceholder
                 className="pf-v6-c-list__item-icon"
