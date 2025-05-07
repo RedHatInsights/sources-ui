@@ -21,7 +21,7 @@ import handleError from '../../api/handleError';
 import tryAgainMessage from '../../utilities/tryAgainMessage';
 import { checkAccountHCS } from '../../api/checkAccountHCS';
 import { INTEGRATIONS, OVERVIEW } from '../../utilities/constants';
-import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from '../notifications/actions';
+import notificationsStore from '../../utilities/notificationsStore';
 
 export const loadEntities = (options) => (dispatch, getState) => {
   dispatch({
@@ -143,13 +143,10 @@ export const filterSources = (value) => (dispatch) => {
   return dispatch(loadEntities());
 };
 
-export const addMessage = (props) => (dispatch) =>
-  dispatch({
-    type: ADD_NOTIFICATION,
-    payload: {
-      dismissable: true,
-      ...props,
-    },
+export const addMessage = (props) => () =>
+  notificationsStore.addNotification({
+    dismissable: true,
+    ...props,
   });
 
 export const removeSource = (sourceId, title) => (dispatch) => {
@@ -181,10 +178,7 @@ export const removeSource = (sourceId, title) => (dispatch) => {
     );
 };
 
-export const removeMessage = (id) => ({
-  type: REMOVE_NOTIFICATION,
-  payload: id,
-});
+export const removeMessage = (id) => notificationsStore.removeNotification(id);
 
 export const removeApplication = (appId, sourceId, successTitle, errorTitle) => ({
   type: ACTION_TYPES.REMOVE_APPLICATION,
