@@ -1,10 +1,10 @@
 import get from 'lodash/get';
 import has from 'lodash/has';
-import { addNotification } from './actions';
 
 import { Middleware } from 'redux';
 import { NotificationConfig } from '@redhat-cloud-services/frontend-components-notifications';
 import { AlertVariant } from '@patternfly/react-core';
+import notificationsStore from '../../utilities/notificationsStore';
 
 type PrepareErrorMessagePayload =
   | string
@@ -13,7 +13,11 @@ type PrepareErrorMessagePayload =
       requestId?: string;
     };
 
-const prepareErrorMessage = (payload: PrepareErrorMessagePayload, errorTitleKey?: string[] | string, errorDescriptionKey?: string[] | string) => {
+const prepareErrorMessage = (
+  payload: PrepareErrorMessagePayload,
+  errorTitleKey?: string[] | string,
+  errorDescriptionKey?: string[] | string,
+) => {
   if (typeof payload === 'string') {
     return {
       title: 'Error',
@@ -46,8 +50,12 @@ type DispatchDefaultErrorConfig = {
   dispatchDefaultFailure?: boolean;
 };
 
-const shouldDispatchDefaultError = ({ isRejected, hasCustomNotification, noErrorOverride, dispatchDefaultFailure }: DispatchDefaultErrorConfig) =>
-  isRejected && !hasCustomNotification && !noErrorOverride && dispatchDefaultFailure;
+const shouldDispatchDefaultError = ({
+  isRejected,
+  hasCustomNotification,
+  noErrorOverride,
+  dispatchDefaultFailure,
+}: DispatchDefaultErrorConfig) => isRejected && !hasCustomNotification && !noErrorOverride && dispatchDefaultFailure;
 
 type CreateNotificationsMiddlewareOptions = {
   dispatchDefaultFailure?: boolean;
@@ -85,96 +93,84 @@ export const createNotificationsMiddleware = (options?: CreateNotificationsMiddl
     dismissDelay: middlewareOptions.dismissDelay,
   };
 
-  const middleware: Middleware<Record<string, unknown>, NotificationConfig[]> =
-    ({ dispatch }) =>
-    (next) =>
-    (action) => {
-      const { meta, type } = action;
-      if (meta && meta.notifications) {
-        const { notifications } = meta;
-        if (matchPending(type) && notifications.pending) {
-          if (typeof notifications.pending === 'function') {
-            notifications.pending = notifications.pending(action.payload);
-          }
-
-          dispatch(addNotification({ ...defaultNotificationOptions, ...notifications.pending }));
-        } else if (matchFulfilled(type) && notifications.fulfilled) {
-          if (typeof notifications.fulfilled === 'function') {
-            notifications.fulfilled = notifications.fulfilled(action.payload);
-          }
-
-          dispatch(addNotification({ ...defaultNotificationOptions, ...notifications.fulfilled }));
-        } else if (matchRejected(type) && notifications.rejected) {
-          if (typeof notifications.rejected === 'function') {
-            notifications.rejected = notifications.rejected(action.payload);
-          }
-
-          dispatch(
-            addNotification({
-              ...defaultNotificationOptions,
-              ...notifications.rejected,
-              sentryId: action.payload && action.payload.sentryId,
-              requestId: action.payload && action.payload.requestId,
-            })
-          );
+  const middleware: Middleware<Record<string, unknown>, NotificationConfig[]> = () => (next) => (action) => {
+    const { meta, type } = action;
+    if (meta && meta.notifications) {
+      const { notifications } = meta;
+      if (matchPending(type) && notifications.pending) {
+        if (typeof notifications.pending === 'function') {
+          notifications.pending = notifications.pending(action.payload);
         }
-      }
 
-      if (
-        shouldDispatchDefaultError({
-          isRejected: matchRejected(type),
-          hasCustomNotification: meta && meta.notifications && meta.notifications.rejected,
-          noErrorOverride: meta && meta.noError,
-          dispatchDefaultFailure: middlewareOptions.dispatchDefaultFailure,
-        })
-      ) {
-        if (middlewareOptions.useStatusText) {
-          dispatch(
-            addNotification({
+        notificationsStore.addNotification({ ...defaultNotificationOptions, ...notifications.pending });
+      } else if (matchFulfilled(type) && notifications.fulfilled) {
+        if (typeof notifications.fulfilled === 'function') {
+          notifications.fulfilled = notifications.fulfilled(action.payload);
+        }
+
+        notificationsStore.addNotification({ ...defaultNotificationOptions, ...notifications.fulfilled });
+      } else if (matchRejected(type) && notifications.rejected) {
+        if (typeof notifications.rejected === 'function') {
+          notifications.rejected = notifications.rejected(action.payload);
+        }
+
+        notificationsStore.addNotification({
+          ...defaultNotificationOptions,
+          ...notifications.rejected,
+          sentryId: action.payload && action.payload.sentryId,
+          requestId: action.payload && action.payload.requestId,
+        });
+      }
+    }
+
+    if (
+      shouldDispatchDefaultError({
+        isRejected: matchRejected(type),
+        hasCustomNotification: meta && meta.notifications && meta.notifications.rejected,
+        noErrorOverride: meta && meta.noError,
+        dispatchDefaultFailure: middlewareOptions.dispatchDefaultFailure,
+      })
+    ) {
+      if (middlewareOptions.useStatusText) {
+        notificationsStore.addNotification({
+          variant: AlertVariant.danger,
+          dismissable: true,
+          ...prepareErrorMessage(action.payload, middlewareOptions.errorTitleKey, 'statusText'),
+        });
+      } else {
+        const namespaceKey =
+          Array.isArray(middlewareOptions.errorNamespaceKey) &&
+          middlewareOptions.errorNamespaceKey.find((key) => has(action.payload, key));
+        if (namespaceKey) {
+          get(action.payload, namespaceKey).map((item: PrepareErrorMessagePayload) => {
+            notificationsStore.addNotification({
               variant: AlertVariant.danger,
               dismissable: true,
-              ...prepareErrorMessage(action.payload, middlewareOptions.errorTitleKey, 'statusText'),
-            })
-          );
+              ...prepareErrorMessage(item, middlewareOptions.errorTitleKey, middlewareOptions.errorDescriptionKey),
+            });
+          });
         } else {
-          const namespaceKey =
-            Array.isArray(middlewareOptions.errorNamespaceKey) && middlewareOptions.errorNamespaceKey.find((key) => has(action.payload, key));
-          if (namespaceKey) {
-            get(action.payload, namespaceKey).map((item: PrepareErrorMessagePayload) => {
-              dispatch(
-                addNotification({
-                  variant: AlertVariant.danger,
-                  dismissable: true,
-                  ...prepareErrorMessage(item, middlewareOptions.errorTitleKey, middlewareOptions.errorDescriptionKey),
-                })
-              );
+          if (Array.isArray(action.payload)) {
+            action.payload.map((item: PrepareErrorMessagePayload) => {
+              notificationsStore.addNotification({
+                variant: AlertVariant.danger,
+                dismissable: true,
+                ...prepareErrorMessage(item, middlewareOptions.errorTitleKey, middlewareOptions.errorDescriptionKey),
+              });
             });
           } else {
-            if (Array.isArray(action.payload)) {
-              action.payload.map((item: PrepareErrorMessagePayload) => {
-                dispatch(
-                  addNotification({
-                    variant: AlertVariant.danger,
-                    dismissable: true,
-                    ...prepareErrorMessage(item, middlewareOptions.errorTitleKey, middlewareOptions.errorDescriptionKey),
-                  })
-                );
-              });
-            } else {
-              dispatch(
-                addNotification({
-                  variant: AlertVariant.danger,
-                  dismissable: true,
-                  ...prepareErrorMessage(action.payload, middlewareOptions.errorTitleKey, middlewareOptions.errorDescriptionKey),
-                })
-              );
-            }
+            notificationsStore.addNotification({
+              variant: AlertVariant.danger,
+              dismissable: true,
+              ...prepareErrorMessage(action.payload, middlewareOptions.errorTitleKey, middlewareOptions.errorDescriptionKey),
+            });
           }
         }
       }
+    }
 
-      next(action);
-    };
+    next(action);
+  };
 
   return middleware;
 };

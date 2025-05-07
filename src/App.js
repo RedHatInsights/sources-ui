@@ -15,6 +15,7 @@ import PermissionsChecker from './components/PermissionsChecker';
 import DataLoader from './components/DataLoader';
 import { CLOUD_CARDS_KEY } from './components/CloudTiles/CloudCards';
 import { initAxios } from './api/entities';
+import notificationsStore from './utilities/notificationsStore';
 
 const App = () => {
   const chrome = useChrome();
@@ -31,7 +32,7 @@ const App = () => {
   return (
     <IntlProvider locale="en">
       <React.Fragment>
-        <NotificationsProvider />
+        <NotificationsProvider store={notificationsStore} />
         <ErrorBoundary>
           <PermissionsChecker>
             <section className="pf-v6-u-p-0 src-c-section-main">
