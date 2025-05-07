@@ -1,5 +1,5 @@
 import React from 'react';
-import { COMMUNICATIONS, REPORTING, WEBHOOKS, CLOUD_VENDOR, REDHAT_VENDOR } from '../../../utilities/constants';
+import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../../../utilities/constants';
 import ImageWithPlaceholder from '../../TilesShared/ImageWithPlaceholder';
 
 type IntegrationItem = {

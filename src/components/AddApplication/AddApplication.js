@@ -367,9 +367,7 @@ const AddApplication = () => {
   };
 
   const cancelBeforeExit = (values) => {
-    // eslint-disable-next-line no-unused-vars
     const { application: _a, ...initialValues } = state.initialValues;
-    // eslint-disable-next-line no-unused-vars
     const { application: _a1, ...newValues } = values;
 
     const isChanged = !isEmpty(diff(initialValues, newValues));

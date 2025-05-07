@@ -1,18 +1,16 @@
 import {
-	Badge,
-	Card,
-	CardBody,
-	CardFooter,
-	ExpandableSection,
-	Gallery,
-	List,
-	ListItem,
-	ListVariant,
-	Spinner
+  Badge,
+  Card,
+  CardBody,
+  CardFooter,
+  ExpandableSection,
+  Gallery,
+  List,
+  ListItem,
+  ListVariant,
+  Spinner,
 } from '@patternfly/react-core';
-import {
-	Tile
-} from '@patternfly/react-core/deprecated';
+import { Tile } from '@patternfly/react-core/deprecated';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Provider, useSelector, useStore } from 'react-redux';
 import IntegrationsDropdown from '../IntegrationsDropdown';
@@ -46,11 +44,11 @@ const IntegrationsWidget: FunctionComponent = () => {
 
   const handleTileClick = (value: string) => {
     setSelectedTileValue(value);
-        if ([REDHAT_VENDOR, CLOUD_VENDOR].includes(value)) {
-        setIsSourcesWizardOpen(true);
-      } else if ([COMMUNICATIONS, REPORTING, WEBHOOKS].includes(value)) {
-        setIsIntegrationsWizardOpen(true);
-      }
+    if ([REDHAT_VENDOR, CLOUD_VENDOR].includes(value)) {
+      setIsSourcesWizardOpen(true);
+    } else if ([COMMUNICATIONS, REPORTING, WEBHOOKS].includes(value)) {
+      setIsIntegrationsWizardOpen(true);
+    }
   };
 
   const allItems = integrationsData.flatMap((category) => category.items);
@@ -59,7 +57,7 @@ const IntegrationsWidget: FunctionComponent = () => {
   useEffect(() => {
     const loadAllSources = async () => {
       setIsLoading(true);
-      
+
       const [cloudResult, redHatResult, integrationResult] = await Promise.all([
         fetchCloudSources(),
         fetchRedHatSources(),
@@ -79,7 +77,7 @@ const IntegrationsWidget: FunctionComponent = () => {
     loadAllSources();
   }, []);
 
-  const badgeCounts = (items: typeof integrationsData[0]['items']) => {
+  const badgeCounts = (items: (typeof integrationsData)[0]['items']) => {
     return items.reduce((total, item) => total + (integrationCounts[item.id] || 0), 0);
   };
 
@@ -95,9 +93,7 @@ const IntegrationsWidget: FunctionComponent = () => {
 
   const onToggle = (index: number) => {
     setExpandedIndex((prevIndices) =>
-      prevIndices.includes(index)
-        ? prevIndices.filter(i => i !== index)
-        : [...prevIndices, index]
+      prevIndices.includes(index) ? prevIndices.filter((i) => i !== index) : [...prevIndices, index],
     );
   };
 
@@ -120,6 +116,7 @@ const IntegrationsWidget: FunctionComponent = () => {
               <Gallery hasGutter>
                 {sortedItems.map((item) => (
                   <Tile
+                    key={item.id}
                     title={item.name}
                     id={item.id}
                     icon={item.icon}
@@ -165,14 +162,12 @@ const IntegrationsWidget: FunctionComponent = () => {
                 toggleContent={
                   <div>
                     <span className="pf-v6-u-pr-sm">{integration.title}</span>
-                    <Badge 
-                    isRead={badgeCounts(integration.items) === 0}>
-                      {badgeCounts(integration.items)}
-                    </Badge>
+                    <Badge isRead={badgeCounts(integration.items) === 0}>{badgeCounts(integration.items)}</Badge>
                   </div>
                 }
                 onToggle={() => onToggle(integrationIndex)}
-                isExpanded={expandedIndex.includes(integrationIndex)}              >
+                isExpanded={expandedIndex.includes(integrationIndex)}
+              >
                 <List variant={ListVariant.inline} className="pf-v6-u-mb-md">
                   {integration.items.map((item, itemIndex) => (
                     <ListItem key={itemIndex} icon={item.icon}>
@@ -193,9 +188,9 @@ const IntegrationsWidget: FunctionComponent = () => {
 };
 
 const IntegrationsWidgetWrapper = () => (
-  (<Provider store={getProdStore()}>
-  <IntegrationsWidget />
-</Provider>)
+  <Provider store={getProdStore()}>
+    <IntegrationsWidget />
+  </Provider>
 );
 
 export default IntegrationsWidgetWrapper;

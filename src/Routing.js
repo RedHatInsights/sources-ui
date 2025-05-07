@@ -7,15 +7,15 @@ import { routes } from './routes';
 const SourcesPage = lazy(() => import(/* webpackChunkName: "sourcesPage" */ './pages/Sources'));
 const SourceDetail = lazy(() => import(/* webpackChunkName: "sourceDetail" */ './pages/Detail'));
 const AddSourceWizard = lazy(() => import(/* webpackChunkName: "addSourceWizard" */ './components/addSourceWizard'));
-const SourceRemoveModal = lazy(() =>
-  import(/* webpackChunkName: "removeSource" */ './components/SourceRemoveModal/SourceRemoveModal'),
+const SourceRemoveModal = lazy(
+  () => import(/* webpackChunkName: "removeSource" */ './components/SourceRemoveModal/SourceRemoveModal'),
 );
 
 const AddApplication = lazy(() => import(/* webpackChunkName "addApp" */ './components/AddApplication/AddApplication'));
 const RemoveAppModal = lazy(() => import(/* webpackChunkName "removeApp" */ './components/AddApplication/RemoveAppModal'));
 const SourceRenameModal = lazy(() => import(/* webpackChunkName "renameSource" */ './components/SourceDetail/SourceRenameModal'));
-const CredentialsForm = lazy(() =>
-  import(/* webpackChunkName "credentialsForm" */ './components/CredentialsForm/CredentialsForm'),
+const CredentialsForm = lazy(
+  () => import(/* webpackChunkName "credentialsForm" */ './components/CredentialsForm/CredentialsForm'),
 );
 
 const routeMap = [
