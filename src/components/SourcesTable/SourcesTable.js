@@ -1,18 +1,20 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useMemo, useReducer } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { ActionsColumn, Table, Tbody, Td, Th, Thead, Tr, sortable, wrappable } from '@patternfly/react-table';
+import { ActionsColumn, sortable, wrappable } from '@patternfly/react-table';
 import { useIntl } from 'react-intl';
 
-import { pauseSource, resumeSource, sortEntities } from '../../redux/sources/actions';
-import { PlaceHolderTable } from './loaders';
-import { COLUMN_COUNT, sourcesColumns } from '../../views/sourcesViewDefinition';
-import EmptyStateTable from './EmptyStateTable';
+import { pageAndSize, pauseSource, resumeSource, sortEntities } from '../../redux/sources/actions';
+import { DWPlaceHolderTable } from './loaders';
+import { sourcesColumns } from '../../views/sourcesViewDefinition';
+import { EmptyStateDataView } from './EmptyStateTable';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import { replaceRouteId, routes } from '../../routes';
 import disabledTooltipProps from '../../utilities/disabledTooltipProps';
 import { useAppNavigate } from '../../hooks/useAppNavigate';
 import './sourcesTable.scss';
+import { DataView, DataViewState, DataViewTable, DataViewToolbar } from '@patternfly/react-data-view';
+import { Pagination } from '@patternfly/react-core';
 
 export const itemToCells = (item, columns, sourceTypes, appTypes) =>
   columns
@@ -147,8 +149,14 @@ const SourcesTable = () => {
     sortDirection,
     numberOfEntities,
     removingSources,
+    pageNumber,
+    pageSize,
   } = useSelector(({ sources }) => sources, shallowEqual);
   const reduxDispatch = useDispatch();
+
+  const onSetPage = (_e, page) => reduxDispatch(pageAndSize(page, pageSize));
+
+  const onPerPageSelect = (_e, perPage) => reduxDispatch(pageAndSize(1, perPage));
 
   const notSortable = numberOfEntities === 0 || !loaded;
 
@@ -187,83 +195,101 @@ const SourcesTable = () => {
     }
   }, [entities, removingSources]);
 
-  let shownRows = state.rows;
-  // TODO: Loading states for data view
-  if (numberOfEntities === 0 && state.isLoaded) {
-    shownRows = [
-      {
-        heightAuto: true,
-        cells: [
-          {
-            props: { colSpan: COLUMN_COUNT },
-            title: <EmptyStateTable />,
-          },
-        ],
-      },
-    ];
-  } else if (!loaded || !appTypesLoaded || !sourceTypesLoaded) {
-    shownRows = [
-      {
-        heightAuto: true,
-        cells: [
-          {
+  const loading = !loaded || !appTypesLoaded || !sourceTypesLoaded;
+  const empty = numberOfEntities === 0 && state.isLoaded;
+
+  const dwColumns = useMemo(
+    () =>
+      sourcesColumns(intl, notSortable).map((column, index) => {
+        if (column.sortable) {
+          return {
+            cell: column.title,
+            ...(!loading && !empty
+              ? {
+                  props: {
+                    sort: {
+                      columnIndex: index,
+                      sortBy: {
+                        index: state.cells.map((cell) => (cell.hidden ? 'hidden' : cell.value)).indexOf(sortBy),
+                        direction: sortDirection,
+                      },
+                      onSort: (_event, _key, direction) => reduxDispatch(sortEntities(column.value, direction)),
+                    },
+                  },
+                }
+              : {}),
+          };
+        }
+
+        return column.title;
+      }),
+    [notSortable, sourcesColumns, sortEntities, loading, empty],
+  );
+  const dwRows = useMemo(
+    () =>
+      state.rows.map((row) =>
+        row.cells
+          .map(({ title }) => ({ cell: title }))
+          .concat({
+            cell: (
+              <ActionsColumn
+                items={actionResolver(intl, navigate, writePermissions, reduxDispatch, isOrgAdmin)(row)}
+                isDisabled={row.disableActions}
+              />
+            ),
             props: {
-              colSpan: COLUMN_COUNT,
-              className: 'sources-placeholder-row',
+              isActionCell: true,
             },
-            title: <PlaceHolderTable />,
-          },
-        ],
-      },
-    ];
-  }
+          }),
+      ),
+    [state.rows],
+  );
+  const activeState = useMemo(() => {
+    if (loading) {
+      return DataViewState.loading;
+    }
+
+    if (empty) {
+      return DataViewState.empty;
+    }
+
+    return undefined;
+  }, [loading, empty]);
+
+  const maximumPageNumber = Math.ceil(numberOfEntities / pageSize);
+  useEffect(() => {
+    if (loaded && numberOfEntities > 0 && pageNumber > Math.max(maximumPageNumber, 1)) {
+      onSetPage({}, maximumPageNumber);
+    }
+  }, [loaded, numberOfEntities, pageNumber, maximumPageNumber]);
 
   return (
-    <Table
-      gridBreakPoint="grid-lg"
-      aria-label={intl.formatMessage({ id: 'sources.list', defaultMessage: 'List of Integrations' })}
-      key={state.key}
-    >
-      <Thead>
-        <Tr>
-          {sourcesColumns(intl, notSortable)
-            .map((column, index) => (
-              <Th
-                sort={
-                  column.sortable
-                    ? {
-                        columnIndex: index,
-                        sortBy: {
-                          index: state.cells.map((cell) => (cell.hidden ? 'hidden' : cell.value)).indexOf(sortBy),
-                          direction: sortDirection,
-                        },
-                        onSort: (_event, _key, direction) => reduxDispatch(sortEntities(column.value, direction)),
-                      }
-                    : undefined
-                }
-                key={column.value}
-              >
-                {column.title}
-              </Th>
-            ))
-            .concat(<Th key="actions" />)}
-        </Tr>
-      </Thead>
-      <Tbody>
-        {state.rows.map((row, index) => (
-          <Tr key={index}>
-            {row.cells
-              .map(({ title }, index) => <Td key={index}>{title}</Td>)
-              .concat(
-                <ActionsColumn
-                  items={actionResolver(intl, navigate, writePermissions, reduxDispatch, isOrgAdmin)(row)}
-                  isDisabled={row.disableActions}
-                />,
-              )}
-          </Tr>
-        ))}
-      </Tbody>
-    </Table>
+    <DataView activeState={activeState}>
+      <DataViewTable
+        bodyStates={{
+          [DataViewState.empty]: <EmptyStateDataView columns={dwColumns.length} />,
+          [DataViewState.loading]: <DWPlaceHolderTable columns={dwColumns.length} />,
+        }}
+        columns={dwColumns}
+        rows={dwRows}
+      />
+      <DataViewToolbar
+        pagination={
+          <Pagination
+            isCompact
+            perPageOptions={pageSize}
+            itemCount={numberOfEntities}
+            page={pageNumber}
+            perPage={pageSize}
+            onSetPage={onSetPage}
+            onPerPageSelect={onPerPageSelect}
+            variant="bottom"
+            className="bottom-pagination"
+            popp
+          />
+        }
+      />
+    </DataView>
   );
 };
 

@@ -126,5 +126,17 @@
     "sort-imports": [2, {
       "ignoreDeclarationSort": true
     }]
-  }
+  },
+
+  "overrides": [
+    {
+      "files": ["**/*.ts", "**/*.tsx", "**/*.js"],
+      "parser": "@typescript-eslint/parser",
+      "plugins": ["@typescript-eslint"],
+      "extends": ["plugin:@typescript-eslint/recommended"],
+      "rules": {
+        "react/prop-types": "off"
+      }
+    }
+  ]
 }
