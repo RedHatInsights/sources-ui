@@ -6,6 +6,8 @@ import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 
 import { clearFilters } from '../../redux/sources/actions';
+import { Tbody, Td, Tr } from '@patternfly/react-table';
+import PropTypes from 'prop-types';
 
 const EmptyStateTable = () => {
   const intl = useIntl();
@@ -40,6 +42,22 @@ const EmptyStateTable = () => {
       </EmptyState>
     </Bullseye>
   );
+};
+
+export const EmptyStateDataView = ({ columns = 1 }) => {
+  return (
+    <Tbody>
+      <Tr>
+        <Td colSpan={columns}>
+          <EmptyStateTable />
+        </Td>
+      </Tr>
+    </Tbody>
+  );
+};
+
+EmptyStateDataView.propTypes = {
+  columns: PropTypes.number,
 };
 
 export default EmptyStateTable;

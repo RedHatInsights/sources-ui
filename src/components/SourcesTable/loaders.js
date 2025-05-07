@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { RowWrapper } from '@patternfly/react-table';
+import { RowWrapper, Tbody, Td, Tr } from '@patternfly/react-table';
 import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
 import { Section } from '@redhat-cloud-services/frontend-components/Section';
 
@@ -50,6 +50,20 @@ export const PlaceHolderTable = () => (
     <Spinner size="xl" />
   </Bullseye>
 );
+
+export const DWPlaceHolderTable = ({ columns = 1 }) => (
+  <Tbody>
+    <Tr>
+      <Td colSpan={columns}>
+        <PlaceHolderTable />
+      </Td>
+    </Tr>
+  </Tbody>
+);
+
+DWPlaceHolderTable.propTypes = {
+  columns: PropTypes.number,
+};
 
 export const RowWrapperLoader = ({ row: { isDeleting, ...row }, ...initialProps }) =>
   isDeleting ? (
