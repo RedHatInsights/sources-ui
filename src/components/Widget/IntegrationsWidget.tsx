@@ -3,6 +3,15 @@ import {
   Card,
   CardBody,
   CardFooter,
+  DataList,
+  DataListAction,
+  DataListCell,
+  DataListItem,
+  DataListItemCells,
+  DataListItemRow,
+  DataListToggle,
+  Dropdown,
+  DropdownItem,
   ExpandableSection,
   Gallery,
   List,
@@ -26,6 +35,7 @@ import { fetchRedHatSources } from './services/fetchRedHatSources';
 import { createIntegrationsData } from './consts/widgetData';
 import { useFlag } from '@unleash/proxy-client-react';
 import PermissionsChecker from '../PermissionsChecker';
+import { DropdownToggle } from '@patternfly/react-core/deprecated';
 
 const IntegrationsWidget: FunctionComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -41,6 +51,14 @@ const IntegrationsWidget: FunctionComponent = () => {
   const hasIntegrationsPermissions = useSelector(({ user }) => user?.integrationsEndpointsPermissions);
   const isPagerDutyEnabled = useFlag('platform.integrations.pager-duty');
   const integrationsData = createIntegrationsData(isPagerDutyEnabled, hasSourcesPermissions, hasIntegrationsPermissions);
+
+  const [dropdownOpenIndexes, setDropdownOpenIndexes] = useState<Record<number, boolean>>(() => {
+    const initialState: Record<number, boolean> = {};
+    integrationsData.forEach((_, index) => {
+      initialState[index] = false;
+    });
+    return initialState;
+  });
 
   const handleTileClick = (value: string) => {
     setSelectedTileValue(value);
@@ -97,6 +115,13 @@ const IntegrationsWidget: FunctionComponent = () => {
         ? prevIndices.filter(i => i !== index)
         : [...prevIndices, index]
     );
+  };
+
+  const onToggleDropdown = (index: number, isOpen: boolean) => {
+    setDropdownOpenIndexes((prev) => ({
+      ...prev,
+      [index]: isOpen,
+    }));
   };
 
   const store = useStore();
@@ -157,29 +182,78 @@ const IntegrationsWidget: FunctionComponent = () => {
       ) : (
         <Card ouiaId="integrations-widget" isFullHeight>
           <CardBody>
-            {integrationsData.map((integration, integrationIndex) => (
-              <ExpandableSection
-                key={integrationIndex}
-                toggleContent={
-                  <div>
-                    <span className="pf-v5-u-pr-sm">{integration.title}</span>
-                    <Badge 
-                    isRead={badgeCounts(integration.items) === 0}>
-                      {badgeCounts(integration.items)}
-                    </Badge>
-                  </div>
-                }
-                onToggle={() => onToggle(integrationIndex)}
-                isExpanded={expandedIndex.includes(integrationIndex)}              >
-                <List variant={ListVariant.inline} className="pf-v5-u-mb-md">
-                  {integration.items.map((item, itemIndex) => (
-                    <ListItem key={itemIndex} icon={item.icon}>
-                      {item.name} ( {integrationCounts[item.id] || 0} )
-                    </ListItem>
-                  ))}
-                </List>
-              </ExpandableSection>
-            ))}
+          <DataList aria-label="Expandable Data List">
+  {integrationsData.map((integration, integrationIndex) => (
+    <DataListItem
+      key={integrationIndex}
+      aria-labelledby={`integration-${integrationIndex}`}
+      isExpanded={expandedIndex.includes(integrationIndex)}
+    >
+      <DataListItemRow>
+        <DataListToggle
+          onClick={() => onToggle(integrationIndex)}
+          isExpanded={expandedIndex.includes(integrationIndex)}
+          id={`toggle-${integrationIndex}`}
+          aria-controls={`expand-${integrationIndex}`}
+        />
+        <DataListItemCells
+          dataListCells={[
+            <DataListCell key="primary content">
+              <div className="flex items-center justify-between w-full">
+                <div className="flex items-center">
+                  <span className="pf-v5-u-pr-sm">{integration.title}</span>
+                  <Badge isRead={badgeCounts(integration.items) === 0}>
+                    {badgeCounts(integration.items)}
+                  </Badge>
+                </div>
+                {/* Right-aligned Dropdown */}
+                <DataListAction aria-labelledby="actions" id="actions" aria-label="Actions" style={{ marginLeft: 'auto' }}>
+                  <Dropdown
+                    popperProps={{ position: 'right' }}
+                    onSelect={() => onToggleDropdown(integrationIndex, false)}
+                    toggle={(toggleRef) => (
+                      <DropdownToggle
+                        onToggle={() => {
+                          const newDropdownState = !dropdownOpenIndexes[integrationIndex];
+                          onToggleDropdown(integrationIndex, newDropdownState);
+                        }}
+                        id={`dropdown-toggle-${integrationIndex}`}
+                        ref={toggleRef}
+                      >
+                        Manage
+                      </DropdownToggle>
+                    )}
+                    isOpen={dropdownOpenIndexes[integrationIndex] || false} // Ensures it's closed initially
+                  >
+                    <DropdownItem key="action-1">
+                      Create new {integration.title} integration
+                    </DropdownItem>
+                    <DropdownItem key="action-2">
+                      View all {integration.title} Integrations
+                    </DropdownItem>
+                  </Dropdown>
+                </DataListAction>
+              </div>
+            </DataListCell>
+          ]}
+        />
+      </DataListItemRow>
+      {expandedIndex.includes(integrationIndex) && (
+        <div id={`expand-${integrationIndex}`} className="pl-8 py-2 flex gap-4">
+          {integration.items.map((item, itemIndex) => (
+            <div key={itemIndex} className="pf-v5-u-mb-md">
+              <span className="pf-v5-u-mb-md">
+                {item.icon}
+              </span>
+              <span>{item.name} ({integrationCounts[item.id] || 0})</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </DataListItem>
+  ))}
+</DataList>
+
           </CardBody>
           <CardFooter className="pf-v5-u-pt-md pf-v5-u-background-color-100">
             <IntegrationsDropdown />
