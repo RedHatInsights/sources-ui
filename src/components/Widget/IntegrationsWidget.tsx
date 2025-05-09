@@ -6,17 +6,17 @@ import {
   DataList,
   DataListAction,
   DataListCell,
+  DataListContent,
   DataListItem,
   DataListItemCells,
   DataListItemRow,
   DataListToggle,
   Dropdown,
   DropdownItem,
-  ExpandableSection,
+  Flex,
+  FlexItem,
   Gallery,
-  List,
-  ListItem,
-  ListVariant,
+  Icon,
   Spinner,
   Tile,
 } from '@patternfly/react-core';
@@ -52,13 +52,7 @@ const IntegrationsWidget: FunctionComponent = () => {
   const isPagerDutyEnabled = useFlag('platform.integrations.pager-duty');
   const integrationsData = createIntegrationsData(isPagerDutyEnabled, hasSourcesPermissions, hasIntegrationsPermissions);
 
-  const [dropdownOpenIndexes, setDropdownOpenIndexes] = useState<Record<number, boolean>>(() => {
-    const initialState: Record<number, boolean> = {};
-    integrationsData.forEach((_, index) => {
-      initialState[index] = false;
-    });
-    return initialState;
-  });
+  const [dropdownOpenIndexes, setDropdownOpenIndexes] = useState<Record<number, boolean>>({});
 
   const handleTileClick = (value: string) => {
     setSelectedTileValue(value);
@@ -102,26 +96,24 @@ const IntegrationsWidget: FunctionComponent = () => {
   useEffect(() => {
     if (!hasInitialized && Object.keys(integrationCounts).length > 0) {
       const initiallyExpandedIndex = integrationsData
-        .map((integration, index) => (badgeCounts(integration.items) > 0 ? index : null))
+        .map((integration, index) =>
+          badgeCounts(integration.items) > 0 ? index : null
+        )
         .filter((index) => index !== null) as number[];
       setExpandedIndex(initiallyExpandedIndex);
       setHasInitialized(true);
     }
   }, [integrationsData, integrationCounts, hasInitialized]);
 
-  const onToggle = (index: number) => {
-    setExpandedIndex((prevIndices) =>
-      prevIndices.includes(index)
-        ? prevIndices.filter(i => i !== index)
-        : [...prevIndices, index]
+  const onToggle = (index: number, isExpandable: boolean) => {
+    if (!isExpandable) return; // Prevent toggling if it's not expandable
+    setExpandedIndex((prev) =>
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
     );
   };
 
   const onToggleDropdown = (index: number, isOpen: boolean) => {
-    setDropdownOpenIndexes((prev) => ({
-      ...prev,
-      [index]: isOpen,
-    }));
+    setDropdownOpenIndexes({ [index]: isOpen });
   };
 
   const store = useStore();
@@ -182,78 +174,90 @@ const IntegrationsWidget: FunctionComponent = () => {
       ) : (
         <Card ouiaId="integrations-widget" isFullHeight>
           <CardBody>
-          <DataList aria-label="Expandable Data List">
-  {integrationsData.map((integration, integrationIndex) => (
-    <DataListItem
-      key={integrationIndex}
-      aria-labelledby={`integration-${integrationIndex}`}
-      isExpanded={expandedIndex.includes(integrationIndex)}
+          <DataList aria-label="Integrations List" isCompact>
+              {integrationsData.map((integration, integrationIndex) => {
+                const isExpandable = integration.title !== 'Webhooks';
+                return (
+                  <React.Fragment key={`integration-fragment-${integrationIndex}`}>
+                    <DataListItem
+                      key={integrationIndex}
+                      aria-labelledby={`integration-${integrationIndex}`}
+                      isExpanded={isExpandable ? expandedIndex.includes(integrationIndex) : false}
+                    >
+                      <DataListItemRow>
+                        {isExpandable ? (
+                          <DataListToggle
+                            onClick={() => onToggle(integrationIndex, isExpandable)}
+                            isExpanded={expandedIndex.includes(integrationIndex)}
+                            id={`toggle-${integrationIndex}`}
+                            aria-controls={`expand-${integrationIndex}`}
+                          />
+                        ) : (
+                          <div style={{ width: '40px' }} />
+                        )}
+                        <DataListItemCells
+                dataListCells={[
+                  <DataListCell key="primary content">
+                      <span className="pf-v5-u-pr-sm">{integration.title}</span>
+                      <Badge isRead={badgeCounts(integration.items) === 0}>
+                        {badgeCounts(integration.items)}
+                      </Badge>
+                  </DataListCell>
+                ]}
+              />
+              <DataListAction aria-labelledby="actions" id="actions" aria-label="Actions">
+                <Dropdown
+                  onSelect={() => onToggleDropdown(integrationIndex, false)}
+                  toggle={(toggleRef) => (
+                    <DropdownToggle
+                      onToggle={() =>
+                        onToggleDropdown(integrationIndex, !dropdownOpenIndexes[integrationIndex])
+                      }
+                      id={`dropdown-toggle-${integrationIndex}`}
+                      ref={toggleRef}
+                    >
+                      Manage
+                    </DropdownToggle>
+                  )}
+                  isOpen={dropdownOpenIndexes[integrationIndex] || false}
+                >
+                  <DropdownItem
+      key={`create-new-${integrationIndex}`}
+      onClick={() => console.log(`Create new ${integration.title} integration`)}
     >
-      <DataListItemRow>
-        <DataListToggle
-          onClick={() => onToggle(integrationIndex)}
-          isExpanded={expandedIndex.includes(integrationIndex)}
-          id={`toggle-${integrationIndex}`}
-          aria-controls={`expand-${integrationIndex}`}
-        />
-        <DataListItemCells
-          dataListCells={[
-            <DataListCell key="primary content">
-              <div className="flex items-center justify-between w-full">
-                <div className="flex items-center">
-                  <span className="pf-v5-u-pr-sm">{integration.title}</span>
-                  <Badge isRead={badgeCounts(integration.items) === 0}>
-                    {badgeCounts(integration.items)}
-                  </Badge>
+      Create new {integration.title} integration
+    </DropdownItem>
+    <DropdownItem
+      key={`view-all-${integrationIndex}`}
+      onClick={() => console.log(`View all ${integration.title} integrations`)}
+    >
+      View all {integration.title} Integrations
+    </DropdownItem>
+                </Dropdown>
+              </DataListAction>
+                      </DataListItemRow>
+            <DataListContent aria-label="widget-content" id={`expand-${integrationIndex}`}>
+              {expandedIndex.includes(integrationIndex) && (
+                <div>
+                  {integration.items.filter((item) => item.name !== 'Webhooks').map((item, itemIndex) => (
+                      <Flex display={{ default: 'inlineFlex' }}
+                            className="pf-v5-u-p-md">
+                    <FlexItem>
+                      <Icon size="lg" className="pf-v5-u-mr-sm">{item.icon}</Icon>
+                      </FlexItem>
+                      <FlexItem>
+                        {item.name} ({integrationCounts[item.id] || 0})
+                      </FlexItem>
+                      </Flex>
+                  ))}
                 </div>
-                {/* Right-aligned Dropdown */}
-                <DataListAction aria-labelledby="actions" id="actions" aria-label="Actions" style={{ marginLeft: 'auto' }}>
-                  <Dropdown
-                    popperProps={{ position: 'right' }}
-                    onSelect={() => onToggleDropdown(integrationIndex, false)}
-                    toggle={(toggleRef) => (
-                      <DropdownToggle
-                        onToggle={() => {
-                          const newDropdownState = !dropdownOpenIndexes[integrationIndex];
-                          onToggleDropdown(integrationIndex, newDropdownState);
-                        }}
-                        id={`dropdown-toggle-${integrationIndex}`}
-                        ref={toggleRef}
-                      >
-                        Manage
-                      </DropdownToggle>
-                    )}
-                    isOpen={dropdownOpenIndexes[integrationIndex] || false} // Ensures it's closed initially
-                  >
-                    <DropdownItem key="action-1">
-                      Create new {integration.title} integration
-                    </DropdownItem>
-                    <DropdownItem key="action-2">
-                      View all {integration.title} Integrations
-                    </DropdownItem>
-                  </Dropdown>
-                </DataListAction>
-              </div>
-            </DataListCell>
-          ]}
-        />
-      </DataListItemRow>
-      {expandedIndex.includes(integrationIndex) && (
-        <div id={`expand-${integrationIndex}`} className="pl-8 py-2 flex gap-4">
-          {integration.items.map((item, itemIndex) => (
-            <div key={itemIndex} className="pf-v5-u-mb-md">
-              <span className="pf-v5-u-mb-md">
-                {item.icon}
-              </span>
-              <span>{item.name} ({integrationCounts[item.id] || 0})</span>
-            </div>
-          ))}
-        </div>
-      )}
-    </DataListItem>
-  ))}
-</DataList>
-
+              )}
+            </DataListContent>
+                    </DataListItem>
+                  </React.Fragment>
+                );
+              })}
+            </DataList>
           </CardBody>
           <CardFooter className="pf-v5-u-pt-md pf-v5-u-background-color-100">
             <IntegrationsDropdown />
