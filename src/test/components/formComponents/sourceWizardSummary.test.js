@@ -510,7 +510,7 @@ describe('SourceWizardSummary component', () => {
       ]);
     });
 
-    it('google rhel management - include error message', () => {
+    it('google rhel management - include error message', async () => {
       formOptions = {
         getState: () => ({
           values: {
@@ -523,7 +523,11 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} store={store} />);
+      let container;
+      await waitFor(async () => {
+        const results = await render(<SourceWizardSummary {...initialProps} app formOptions={formOptions} store={store} />);
+        container = results.container;
+      });
 
       const data = getListData(container);
 

@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { replaceRouteId, routes } from '../../../Routing';
+import { replaceRouteId, routes } from '../../../routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import Breadcrumbs from '../../../components/SourceDetail/Breadcrumbs';
 import mockStore from '../../__mocks__/mockStore';

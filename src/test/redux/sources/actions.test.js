@@ -12,7 +12,6 @@ import {
   pageAndSize,
   pauseSource,
   removeApplication,
-  removeMessage,
   removeSource,
   renameSource,
   resumeSource,
@@ -28,16 +27,18 @@ import {
   SET_CATEGORY,
   SORT_ENTITIES,
 } from '../../../redux/sources/actionTypes';
-import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications';
 import * as api from '../../../api/entities';
 import * as types_api from '../../../api/source_types';
 import { CLOUD_VENDOR } from '../../../utilities/constants';
+import notificationsStore from '../../../utilities/notificationsStore';
 
 describe('redux actions', () => {
   let dispatch;
+  let addNotificationSpy = jest.spyOn(notificationsStore, 'addNotification');
 
   beforeEach(() => {
     dispatch = jest.fn().mockImplementation((x) => x);
+    addNotificationSpy.mockClear();
   });
 
   it('add hidden source', () => {
@@ -50,15 +51,6 @@ describe('redux actions', () => {
         },
       }),
     );
-  });
-
-  it('removeMessage creates an object', () => {
-    const ID = '123456';
-
-    expect(removeMessage(ID)).toEqual({
-      type: REMOVE_NOTIFICATION,
-      payload: ID,
-    });
   });
 
   it('filterSources creates an object', async () => {
@@ -215,7 +207,7 @@ describe('redux actions', () => {
 
       await removeSource(sourceId, title)(dispatch);
 
-      expect(dispatch.mock.calls).toHaveLength(4);
+      expect(dispatch.mock.calls).toHaveLength(3);
 
       expect(dispatch.mock.calls[0][0]).toEqual({
         type: ACTION_TYPES.REMOVE_SOURCE_PENDING,
@@ -232,8 +224,6 @@ describe('redux actions', () => {
           sourceId,
         },
       });
-
-      expect(dispatch.mock.calls[3][0]).toEqual(expect.any(Function));
     });
 
     it('handle failure', async () => {
@@ -411,13 +401,12 @@ describe('redux actions', () => {
       expect(pauseSourceApi).toHaveBeenCalledWith(sourceId);
 
       const types = innerDispatch.mock.calls.map(([{ type }]) => type);
-      expect(types).toEqual([ADD_NOTIFICATION, 'LOAD_ENTITIES_PENDING', 'LOAD_ENTITIES_FULFILLED']);
+      expect(types).toEqual(['LOAD_ENTITIES_PENDING', 'LOAD_ENTITIES_FULFILLED']);
 
-      expect(innerDispatch.mock.calls[0][0].payload).toEqual({
+      expect(addNotificationSpy).toHaveBeenCalledWith({
         customIcon: <PauseIcon />,
         description:
           'Integration <b>{ sourceName }</b> is now paused. Data collection for all connected applications will be disabled until the integration is resumed.',
-        dismissable: true,
         title: 'Integration paused',
         variant: 'default',
       });
@@ -434,12 +423,8 @@ describe('redux actions', () => {
 
       expect(pauseSourceApi).toHaveBeenCalledWith(sourceId);
 
-      const types = innerDispatch.mock.calls.map(([{ type }]) => type);
-      expect(types).toEqual([ADD_NOTIFICATION]);
-
-      expect(innerDispatch.mock.calls[0][0].payload).toEqual({
+      expect(addNotificationSpy).toHaveBeenCalledWith({
         description: '{ error }. Please try again.',
-        dismissable: true,
         title: 'Integration pause failed',
         variant: 'danger',
       });
@@ -457,12 +442,11 @@ describe('redux actions', () => {
       expect(unpauseSourceApi).toHaveBeenCalledWith(sourceId);
 
       const types = innerDispatch.mock.calls.map(([{ type }]) => type);
-      expect(types).toEqual([ADD_NOTIFICATION, 'LOAD_ENTITIES_PENDING', 'LOAD_ENTITIES_FULFILLED']);
+      expect(types).toEqual(['LOAD_ENTITIES_PENDING', 'LOAD_ENTITIES_FULFILLED']);
 
-      expect(innerDispatch.mock.calls[0][0].payload).toEqual({
+      expect(addNotificationSpy).toHaveBeenCalledWith({
         customIcon: <PlayIcon />,
         description: 'Integration <b>{ sourceName }</b> will recontinue data collection for connected applications.',
-        dismissable: true,
         title: 'Integration resumed',
         variant: 'default',
       });
@@ -479,12 +463,8 @@ describe('redux actions', () => {
 
       expect(unpauseSourceApi).toHaveBeenCalledWith(sourceId);
 
-      const types = innerDispatch.mock.calls.map(([{ type }]) => type);
-      expect(types).toEqual([ADD_NOTIFICATION]);
-
-      expect(innerDispatch.mock.calls[0][0].payload).toEqual({
+      expect(addNotificationSpy).toHaveBeenCalledWith({
         description: '{ error }. Please try again.',
-        dismissable: true,
         title: 'Integration resume failed',
         variant: 'danger',
       });

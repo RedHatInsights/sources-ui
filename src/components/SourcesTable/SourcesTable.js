@@ -207,6 +207,7 @@ const SourcesTable = () => {
             ...(!loading && !empty
               ? {
                   props: {
+                    'aria-label': column.value,
                     sort: {
                       columnIndex: index,
                       sortBy: {
@@ -217,7 +218,11 @@ const SourcesTable = () => {
                     },
                   },
                 }
-              : {}),
+              : {
+                  props: {
+                    'aria-label': column.value,
+                  },
+                }),
           };
         }
 

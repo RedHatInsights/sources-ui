@@ -18,9 +18,16 @@ import sourceTypes, { AMAZON_TYPE, ANSIBLE_TOWER_TYPE, OPENSHIFT_TYPE } from '..
 import applicationTypes, { CATALOG_APP } from '../../__mocks__/applicationTypes';
 import { REDHAT_VENDOR } from '../../../utilities/constants';
 import { AVAILABLE, UNAVAILABLE } from '../../../views/formatters';
-import { replaceRouteId, routes } from '../../../Routing';
+import { replaceRouteId, routes } from '../../../routes';
+import notificationsStore from '../../../utilities/notificationsStore';
 
 describe('Source page helpers', () => {
+  let addNotificationSpy = jest.spyOn(notificationsStore, 'addNotification');
+  let removeNotificationSpy = jest.spyOn(notificationsStore, 'removeNotification');
+  beforeEach(() => {
+    addNotificationSpy.mockClear();
+    removeNotificationSpy.mockClear();
+  });
   describe('afterSuccess', () => {
     it('calls function and checks source availibility status', () => {
       const dispatch = jest.fn();
@@ -286,11 +293,10 @@ describe('Source page helpers', () => {
         formatMessage: ({ defaultMessage }) => defaultMessage.replace('{name}', 'some-name').replace('{type}', 'some-type'),
       };
 
-      actions.addMessage = jest.fn().mockImplementation(({ actionLinks, id }) => {
+      addNotificationSpy.mockImplementation(({ actionLinks, id }) => {
         messageActionLinks = actionLinks;
         messageId = id;
       });
-      actions.removeMessage = jest.fn();
     });
 
     afterEach(() => {
@@ -303,7 +309,7 @@ describe('Source page helpers', () => {
       checkSubmit(state, dispatch, push, intl);
 
       expect(dispatch).not.toHaveBeenCalled();
-      expect(actions.addMessage).not.toHaveBeenCalled();
+      expect(addNotificationSpy).not.toHaveBeenCalled();
       expect(push).not.toHaveBeenCalled();
     });
 
@@ -322,8 +328,7 @@ describe('Source page helpers', () => {
 
       checkSubmit(state, dispatch, push, intl, stateDispatch);
 
-      expect(dispatch).toHaveBeenCalled();
-      expect(actions.addMessage).toHaveBeenCalledWith({
+      expect(addNotificationSpy).toHaveBeenCalledWith({
         actionLinks: expect.any(Object),
         id: expect.any(String),
         description:
@@ -339,7 +344,7 @@ describe('Source page helpers', () => {
       await user.click(screen.getByText('Retry'));
 
       expect(push).toHaveBeenCalledWith(routes.sourcesNew.path);
-      expect(actions.removeMessage).toHaveBeenCalledWith(messageId);
+      expect(removeNotificationSpy).toHaveBeenCalledWith(messageId);
       expect(stateDispatch).toHaveBeenCalledWith({
         type: 'retryWizard',
         initialValues: { source: { name: 'some-name' } },
@@ -363,8 +368,7 @@ describe('Source page helpers', () => {
 
       checkSubmit(state, dispatch, push, intl);
 
-      expect(dispatch).toHaveBeenCalled();
-      expect(actions.addMessage).toHaveBeenCalledWith({
+      expect(addNotificationSpy).toHaveBeenCalledWith({
         actionLinks: expect.any(Object),
         id: expect.any(String),
         description: '{error} [<b>some-name</b>]',
@@ -378,7 +382,7 @@ describe('Source page helpers', () => {
       await user.click(screen.getByText('Edit integration'));
 
       expect(push).toHaveBeenCalledWith(replaceRouteId(routes.sourcesDetail.path, '1234'));
-      expect(actions.removeMessage).toHaveBeenCalledWith(messageId);
+      expect(removeNotificationSpy).toHaveBeenCalledWith(messageId);
     });
 
     it('unavailable - endpoint error', async () => {
@@ -396,7 +400,7 @@ describe('Source page helpers', () => {
 
       checkSubmit(state, dispatch, push, intl);
 
-      expect(actions.addMessage).toHaveBeenCalledWith({
+      expect(addNotificationSpy).toHaveBeenCalledWith({
         actionLinks: expect.any(Object),
         id: expect.any(String),
         description: '{error} [<b>some-name</b>]',
@@ -420,7 +424,7 @@ describe('Source page helpers', () => {
 
       checkSubmit(state, dispatch, push, intl);
 
-      expect(actions.addMessage).toHaveBeenCalledWith({
+      expect(addNotificationSpy).toHaveBeenCalledWith({
         actionLinks: expect.any(Object),
         id: expect.any(String),
         description: '{error} [<b>some-name</b>]',
@@ -442,8 +446,7 @@ describe('Source page helpers', () => {
 
       checkSubmit(state, dispatch, push, intl);
 
-      expect(dispatch).toHaveBeenCalled();
-      expect(actions.addMessage).toHaveBeenCalledWith({
+      expect(addNotificationSpy).toHaveBeenCalledWith({
         description:
           'We are still working to confirm credentials for integration some-name. To track progress, check the Status column in the Integrations table.',
         title: 'Integration configuration in progress',
@@ -468,8 +471,7 @@ describe('Source page helpers', () => {
 
       checkSubmit(state, dispatch, push, intl);
 
-      expect(dispatch).toHaveBeenCalled();
-      expect(actions.addMessage).toHaveBeenCalledWith({
+      expect(addNotificationSpy).toHaveBeenCalledWith({
         actionLinks: expect.any(Object),
         id: expect.any(String),
         description: 'Source some-name was successfully added',
@@ -483,7 +485,7 @@ describe('Source page helpers', () => {
       await user.click(screen.getByText('View source details'));
 
       expect(push).toHaveBeenCalledWith(replaceRouteId(routes.sourcesDetail.path, '1234'));
-      expect(actions.removeMessage).toHaveBeenCalledWith(messageId);
+      expect(removeNotificationSpy).toHaveBeenCalledWith(messageId);
     });
   });
 });

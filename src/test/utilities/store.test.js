@@ -7,7 +7,6 @@ import { getDevStore } from '../../utilities/getDevStore';
 
 describe('store creator', () => {
   const EXPECTED_DEFAULT_STATE = {
-    notifications: [],
     sources: defaultSourcesState,
     user: defaultUserState,
   };

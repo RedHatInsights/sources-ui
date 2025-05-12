@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 
 import AppListInRemoval from '../../../components/SourceRemoveModal/AppListInRemoval';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import { replaceRouteId, routes } from '../../../Routing';
+import { replaceRouteId, routes } from '../../../routes';
 import appTypes, { CATALOG_APP, COST_MANAGEMENT_APP } from '../../__mocks__/applicationTypes';
 
 import mockStore from '../../__mocks__/mockStore';

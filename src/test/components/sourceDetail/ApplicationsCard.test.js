@@ -8,7 +8,7 @@ import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 
 import { ACCOUNT_AUTHORIZATION } from '../../../components/constants';
 import ApplicationsCard from '../../../components/SourceDetail/ApplicationsCard';
-import { replaceRouteId, routes } from '../../../Routing';
+import { replaceRouteId, routes } from '../../../routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import sourceTypes, { AMAZON_TYPE } from '../../__mocks__/sourceTypes';
 import appTypes, { COST_MANAGEMENT_APP, SUB_WATCH_APP } from '../../__mocks__/applicationTypes';
@@ -16,9 +16,14 @@ import mockStore from '../../__mocks__/mockStore';
 
 import * as api from '../../../api/entities';
 import * as actions from '../../../redux/sources/actions';
+import notificationsStore from '../../../utilities/notificationsStore';
 
 describe('ApplicationsCard', () => {
   let store;
+  const addNotificationSpy = jest.spyOn(notificationsStore, 'addNotification');
+  beforeEach(() => {
+    addNotificationSpy.mockClear();
+  });
 
   const sourceId = '3627987';
   const initialEntry = [replaceRouteId(routes.sourcesDetail.path, sourceId)];
@@ -47,16 +52,16 @@ describe('ApplicationsCard', () => {
     );
 
     expect(screen.getByText('Applications')).toBeInTheDocument();
-    expect(screen.getAllByRole('checkbox')).toHaveLength(2);
+    expect(screen.getAllByRole('switch')).toHaveLength(2);
 
     expect(screen.getAllByText('Cost Management')).toBeTruthy();
-    expect(screen.getAllByRole('checkbox')[0]).toBeDisabled();
+    expect(screen.getAllByRole('switch')[0]).toBeDisabled();
 
     expect(screen.getAllByText('RHEL management')).toBeTruthy();
-    expect(screen.getAllByRole('checkbox')[1]).toBeDisabled();
+    expect(screen.getAllByRole('switch')[1]).toBeDisabled();
 
     await waitFor(async () => {
-      await user.hover(screen.getByText('Cost Management', { selector: '.pf-m-off' }));
+      await user.hover(screen.getByText('Cost Management'));
     });
 
     await waitFor(() =>
@@ -96,9 +101,9 @@ describe('ApplicationsCard', () => {
       ),
     );
 
-    expect(screen.getAllByRole('checkbox')).toHaveLength(2);
-    expect(screen.getAllByRole('checkbox')[0]).toBeDisabled();
-    expect(screen.getAllByRole('checkbox')[1]).toBeDisabled();
+    expect(screen.getAllByRole('switch')).toHaveLength(2);
+    expect(screen.getAllByRole('switch')[0]).toBeDisabled();
+    expect(screen.getAllByRole('switch')[1]).toBeDisabled();
   });
 
   describe('with permissions', () => {
@@ -118,8 +123,6 @@ describe('ApplicationsCard', () => {
         },
         user: { writePermissions: true },
       });
-
-      actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'undefined' }));
     });
 
     it('renders correctly', () => {
@@ -140,12 +143,12 @@ describe('ApplicationsCard', () => {
 
       expect(screen.getByLabelText('Actions')).toBeInTheDocument();
 
-      expect(screen.getAllByRole('checkbox')).toHaveLength(2);
-      expect(screen.getAllByRole('checkbox')[0]).not.toBeDisabled();
-      expect(screen.getAllByRole('checkbox')[0]).toBeChecked();
+      expect(screen.getAllByRole('switch')).toHaveLength(2);
+      expect(screen.getAllByRole('switch')[0]).not.toBeDisabled();
+      expect(screen.getAllByRole('switch')[0]).toBeChecked();
 
-      expect(screen.getAllByRole('checkbox')[1]).not.toBeDisabled();
-      expect(screen.getAllByRole('checkbox')[1]).not.toBeChecked();
+      expect(screen.getAllByRole('switch')[1]).not.toBeDisabled();
+      expect(screen.getAllByRole('switch')[1]).not.toBeChecked();
     });
 
     it('pause application', async () => {
@@ -168,19 +171,19 @@ describe('ApplicationsCard', () => {
         pauseApplication,
       });
 
-      expect(screen.getAllByRole('checkbox')[0]).toBeChecked();
+      expect(screen.getAllByRole('switch')[0]).toBeChecked();
 
       await waitFor(async () => {
-        await user.click(screen.getAllByRole('checkbox')[0]);
+        await user.click(screen.getAllByRole('switch')[0]);
       });
 
-      expect(screen.getAllByRole('checkbox')[0]).not.toBeChecked();
+      expect(screen.getAllByRole('switch')[0]).not.toBeChecked();
 
       expect(pauseApplication).toHaveBeenCalledWith('123');
       pauseApplication.mockClear();
 
       await waitFor(async () => {
-        await user.click(screen.getAllByRole('checkbox')[0]);
+        await user.click(screen.getAllByRole('switch')[0]);
       });
 
       expect(pauseApplication).not.toHaveBeenCalled();
@@ -205,7 +208,7 @@ describe('ApplicationsCard', () => {
       );
 
       await waitFor(async () => {
-        await user.click(screen.getAllByRole('checkbox')[1]);
+        await user.click(screen.getAllByRole('switch')[1]);
       });
 
       expect(screen.getByTestId('location-display').textContent).toEqual(
@@ -253,19 +256,19 @@ describe('ApplicationsCard', () => {
         ),
       );
 
-      expect(screen.getAllByRole('checkbox')[0]).not.toBeChecked();
+      expect(screen.getAllByRole('switch')[0]).not.toBeChecked();
 
       await waitFor(async () => {
-        await user.click(screen.getAllByRole('checkbox')[0]);
+        await user.click(screen.getAllByRole('switch')[0]);
       });
 
-      expect(screen.getAllByRole('checkbox')[0]).toBeChecked();
+      expect(screen.getAllByRole('switch')[0]).toBeChecked();
 
       expect(unpauseApplication).toHaveBeenCalledWith('123');
       unpauseApplication.mockClear();
 
       await waitFor(async () => {
-        await user.click(screen.getAllByRole('checkbox')[0]);
+        await user.click(screen.getAllByRole('switch')[0]);
       });
 
       expect(unpauseApplication).not.toHaveBeenCalled();
@@ -274,7 +277,7 @@ describe('ApplicationsCard', () => {
       unpauseApplication.resolve();
 
       await waitFor(() =>
-        expect(actions.addMessage).toHaveBeenCalledWith({
+        expect(addNotificationSpy).toHaveBeenCalledWith({
           customIcon: <PlayIcon />,
           title: 'Cost Management connection resumed',
           variant: 'default',
@@ -319,11 +322,11 @@ describe('ApplicationsCard', () => {
       );
 
       await waitFor(async () => {
-        await user.click(screen.getAllByRole('checkbox')[0]);
+        await user.click(screen.getAllByRole('switch')[0]);
       });
 
       await waitFor(() =>
-        expect(actions.addMessage).toHaveBeenCalledWith({
+        expect(addNotificationSpy).toHaveBeenCalledWith({
           description: 'Some backend error. Please try again.',
           title: 'Application resume failed',
           variant: 'danger',
@@ -375,7 +378,7 @@ describe('ApplicationsCard', () => {
       });
 
       await waitFor(() => expect(unpauseApplication).toHaveBeenCalledWith('123'));
-      expect(actions.addMessage).toHaveBeenCalledWith({
+      expect(addNotificationSpy).toHaveBeenCalledWith({
         customIcon: <PlayIcon />,
         title: 'Cost Management connection resumed',
         variant: 'default',
@@ -403,7 +406,6 @@ describe('ApplicationsCard', () => {
         user: { writePermissions: true },
       });
 
-      actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'undefined' }));
       actions.loadEntities = jest.fn().mockImplementation(() => ({ type: 'nonsense' }));
     });
 
@@ -443,19 +445,19 @@ describe('ApplicationsCard', () => {
         ),
       );
 
-      expect(screen.getAllByRole('checkbox')[0]).not.toBeChecked();
+      expect(screen.getAllByRole('switch')[0]).not.toBeChecked();
 
       await waitFor(async () => {
-        await user.click(screen.getAllByRole('checkbox')[0]);
+        await user.click(screen.getAllByRole('switch')[0]);
       });
 
-      expect(screen.getAllByRole('checkbox')[0]).toBeChecked();
+      expect(screen.getAllByRole('switch')[0]).toBeChecked();
 
       expect(unpauseApplication).toHaveBeenCalledWith('123');
       unpauseApplication.mockClear();
 
       await waitFor(async () => {
-        await user.click(screen.getAllByRole('checkbox')[0]);
+        await user.click(screen.getAllByRole('switch')[0]);
       });
 
       expect(unpauseApplication).not.toHaveBeenCalled();
@@ -464,7 +466,7 @@ describe('ApplicationsCard', () => {
       unpauseApplication.resolve();
 
       await waitFor(() =>
-        expect(actions.addMessage).toHaveBeenCalledWith({
+        expect(addNotificationSpy).toHaveBeenCalledWith({
           customIcon: <PlayIcon />,
           title: 'Cost Management connection resumed',
           variant: 'default',
@@ -487,14 +489,14 @@ describe('ApplicationsCard', () => {
       );
 
       api.doCreateApplication = jest.fn().mockImplementation(() => Promise.reject('Some backend error'));
-      actions.addMessage.mockClear();
+      addNotificationSpy.mockClear();
 
       await waitFor(async () => {
-        await user.click(screen.getAllByRole('checkbox')[1]);
+        await user.click(screen.getAllByRole('switch')[1]);
       });
 
       await waitFor(() =>
-        expect(actions.addMessage).toHaveBeenCalledWith({
+        expect(addNotificationSpy).toHaveBeenCalledWith({
           description: 'Some backend error. Please try again.',
           title: 'Application create failed',
           variant: 'danger',
@@ -517,18 +519,18 @@ describe('ApplicationsCard', () => {
 
       const pauseApplication = jest.fn().mockImplementation(() => Promise.reject('Some backend error'));
 
-      actions.addMessage.mockClear();
+      addNotificationSpy.mockClear();
 
       api.getSourcesApi = () => ({
         pauseApplication,
       });
 
       await waitFor(async () => {
-        await user.click(screen.getAllByRole('checkbox')[0]);
+        await user.click(screen.getAllByRole('switch')[0]);
       });
 
       await waitFor(() =>
-        expect(actions.addMessage).toHaveBeenCalledWith({
+        expect(addNotificationSpy).toHaveBeenCalledWith({
           description: 'Some backend error. Please try again.',
           title: 'Application pause failed',
           variant: 'danger',
@@ -572,14 +574,14 @@ describe('ApplicationsCard', () => {
         ),
       );
 
-      actions.addMessage.mockClear();
+      addNotificationSpy.mockClear();
 
       await waitFor(async () => {
-        await user.click(screen.getAllByRole('checkbox')[0]);
+        await user.click(screen.getAllByRole('switch')[0]);
       });
 
       await waitFor(() =>
-        expect(actions.addMessage).toHaveBeenCalledWith({
+        expect(addNotificationSpy).toHaveBeenCalledWith({
           description: 'Some backend error. Please try again.',
           title: 'Application resume failed',
           variant: 'danger',
@@ -602,13 +604,13 @@ describe('ApplicationsCard', () => {
 
       api.doCreateApplication = mockApi();
 
-      expect(screen.getAllByRole('checkbox')[1]).not.toBeChecked();
+      expect(screen.getAllByRole('switch')[1]).not.toBeChecked();
 
       await waitFor(async () => {
-        await user.click(screen.getAllByRole('checkbox')[1]);
+        await user.click(screen.getAllByRole('switch')[1]);
       });
 
-      expect(screen.getAllByRole('checkbox')[1]).toBeChecked();
+      expect(screen.getAllByRole('switch')[1]).toBeChecked();
 
       expect(api.doCreateApplication).toHaveBeenCalledWith({
         application_type_id: SUB_WATCH_APP.id,
@@ -640,21 +642,21 @@ describe('ApplicationsCard', () => {
         pauseApplication,
       });
 
-      expect(screen.getAllByRole('checkbox')[0]).toBeChecked();
+      expect(screen.getAllByRole('switch')[0]).toBeChecked();
 
-      actions.addMessage.mockClear();
+      addNotificationSpy.mockClear();
 
       await act(async () => {
-        await user.click(screen.getAllByRole('checkbox')[0]);
+        await user.click(screen.getAllByRole('switch')[0]);
       });
 
-      expect(screen.getAllByRole('checkbox')[0]).not.toBeChecked();
+      expect(screen.getAllByRole('switch')[0]).not.toBeChecked();
 
       expect(pauseApplication).toHaveBeenCalledWith('123');
       pauseApplication.mockClear();
 
       await waitFor(async () => {
-        await user.click(screen.getAllByRole('checkbox')[0]);
+        await user.click(screen.getAllByRole('switch')[0]);
       });
 
       expect(pauseApplication).not.toHaveBeenCalled();
@@ -663,7 +665,7 @@ describe('ApplicationsCard', () => {
       pauseApplication.resolve();
 
       await waitFor(() =>
-        expect(actions.addMessage).toHaveBeenCalledWith({
+        expect(addNotificationSpy).toHaveBeenCalledWith({
           customIcon: <PauseIcon />,
           description: 'Your application will not reflect the most recent data until Cost Management connection is resumed',
           title: 'Cost Management connection paused',
@@ -701,7 +703,7 @@ describe('ApplicationsCard', () => {
 
       expect(pauseApplication).toHaveBeenCalled();
       await waitFor(() => expect(actions.loadEntities).toHaveBeenCalled());
-      expect(actions.addMessage).toHaveBeenCalledWith({
+      expect(addNotificationSpy).toHaveBeenCalledWith({
         customIcon: <PauseIcon />,
         description: 'Your application will not reflect the most recent data until Cost Management connection is resumed',
         title: 'Cost Management connection paused',

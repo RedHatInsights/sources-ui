@@ -7,7 +7,7 @@ import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import sourceTypes, { AMAZON_TYPE } from '../../__mocks__/sourceTypes';
 import SourceSummaryCard from '../../../components/SourceDetail/SourceSummaryCard';
 import { Route, Routes } from 'react-router-dom';
-import { replaceRouteId, routes } from '../../../Routing';
+import { replaceRouteId, routes } from '../../../routes';
 import * as formatters from '../../../views/formatters';
 import mockStore from '../../__mocks__/mockStore';
 
