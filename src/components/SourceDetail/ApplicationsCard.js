@@ -1,4 +1,4 @@
-import React, { Fragment, useReducer } from 'react';
+import React, { Fragment, useReducer, useRef } from 'react';
 import { useIntl } from 'react-intl';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 
@@ -12,7 +12,7 @@ import { replaceRouteId, routes } from '../../routes';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import isSuperKey from '../../utilities/isSuperKey';
 import { doCreateApplication, getSourcesApi } from '../../api/entities';
-import { addMessage, loadEntities } from '../../redux/sources/actions';
+import { loadEntities } from '../../redux/sources/actions';
 import filterApps from '../../utilities/filterApps';
 import ApplicationKebab from './ApplicationKebab';
 import { ApplicationLabel } from '../../views/formatters';
@@ -21,6 +21,8 @@ import tryAgainMessage from '../../utilities/tryAgainMessage';
 import { disabledMessage } from '../../utilities/disabledTooltipProps';
 import { COST_MANAGEMENT_APP_ID, HCS_APP_NAME } from '../../utilities/constants';
 import { useAppNavigate } from '../../hooks/useAppNavigate';
+import notificationsStore from '../../utilities/notificationsStore';
+import PropTypes from 'prop-types';
 
 const initialState = {
   selectedApps: {},
@@ -40,44 +42,40 @@ const reducer = (state, { type, id }) => {
 const addResumeNotification = (typeId, dispatch, intl, appTypes) => {
   const appName = appTypes.find((type) => type.id === typeId)?.display_name;
 
-  dispatch(
-    addMessage({
-      title: intl.formatMessage(
-        {
-          id: 'detail.applications.resumed.alert.title',
-          defaultMessage: '{appName} connection resumed',
-        },
-        { appName },
-      ),
-      variant: 'default',
-      customIcon: <PlayIcon />,
-    }),
-  );
+  notificationsStore.addNotification({
+    title: intl.formatMessage(
+      {
+        id: 'detail.applications.resumed.alert.title',
+        defaultMessage: '{appName} connection resumed',
+      },
+      { appName },
+    ),
+    variant: 'default',
+    customIcon: <PlayIcon />,
+  });
 };
 
 const addPausedNotification = (typeId, dispatch, intl, appTypes) => {
   const appName = appTypes.find((type) => type.id === typeId)?.display_name;
 
-  dispatch(
-    addMessage({
-      title: intl.formatMessage(
-        {
-          id: 'detail.applications.paused.alert.title',
-          defaultMessage: '{appName} connection paused',
-        },
-        { appName },
-      ),
-      description: intl.formatMessage(
-        {
-          id: 'detail.applications.paused.alert.description',
-          defaultMessage: 'Your application will not reflect the most recent data until {appName} connection is resumed',
-        },
-        { appName },
-      ),
-      variant: 'default',
-      customIcon: <PauseIcon />,
-    }),
-  );
+  notificationsStore.addNotification({
+    title: intl.formatMessage(
+      {
+        id: 'detail.applications.paused.alert.title',
+        defaultMessage: '{appName} connection paused',
+      },
+      { appName },
+    ),
+    description: intl.formatMessage(
+      {
+        id: 'detail.applications.paused.alert.description',
+        defaultMessage: 'Your application will not reflect the most recent data until {appName} connection is resumed',
+      },
+      { appName },
+    ),
+    variant: 'default',
+    customIcon: <PauseIcon />,
+  });
 };
 
 const addErrorNotification = (dispatch, intl, action, error) => {
@@ -96,13 +94,81 @@ const addErrorNotification = (dispatch, intl, action, error) => {
     }),
   }[action];
 
-  dispatch(
-    addMessage({
-      title,
-      description: tryAgainMessage(intl, handleError(error)),
-      variant: 'danger',
-    }),
+  notificationsStore.addNotification({
+    title,
+    description: tryAgainMessage(intl, handleError(error)),
+    variant: 'danger',
+  });
+};
+
+const ApplicationCardSwitch = ({ selectedApps, app, removeApp, addApp }) => {
+  const source = useSource();
+  const switchRef = useRef(null);
+  const intl = useIntl();
+  const hcsEnrolled = useSelector(({ sources }) => sources.hcsEnrolled, shallowEqual);
+  const hcsEnrolledLoaded = useSelector(({ sources }) => sources.hcsEnrolledLoaded, shallowEqual);
+  const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
+  const hasRightAccess = useHasWritePermissions();
+
+  const connectedApp = source.applications.find((connectedApp) => connectedApp.application_type_id === app.id);
+
+  const appExist = Boolean(connectedApp);
+  const isPaused = Boolean(connectedApp?.paused_at);
+
+  const pausedApp = isPaused ? false : appExist;
+
+  const isChecked = typeof selectedApps[app.id] === 'boolean' ? selectedApps[app.id] : pausedApp;
+
+  const Wrapper = hasRightAccess ? React.Fragment : Tooltip;
+
+  return (
+    <FormGroup key={app.id}>
+      <div className="src-c-application_flex">
+        {hcsEnrolledLoaded ? (
+          <Fragment>
+            <Wrapper {...(!hasRightAccess && { content: disabledMessage(intl, isOrgAdmin), triggerRef: switchRef })}>
+              {/* Can't add ref to the switch itself. its still a class component and does not allow passing refs to it
+              https://github.com/patternfly/patternfly-react/blob/main/packages/react-core/src/components/Switch/Switch.tsx
+               */}
+              <span ref={switchRef}>
+                <Switch
+                  className="src-c-application_switch"
+                  id={`app-switch-${app.id}`}
+                  label={app.id === COST_MANAGEMENT_APP_ID && hcsEnrolled ? HCS_APP_NAME : app.display_name}
+                  isChecked={isChecked}
+                  isDisabled={connectedApp?.isDeleting || !hasRightAccess || Boolean(source.paused_at)}
+                  onChange={(_e, value) => (!value ? removeApp(connectedApp.id, app.id) : addApp(app.id, connectedApp?.id))}
+                />
+              </span>
+            </Wrapper>
+            {Boolean(connectedApp) && (
+              <ApplicationLabel className="pf-v6-u-ml-sm src-m-clickable" app={connectedApp} showStatusText />
+            )}
+            {(isPaused || appExist) && (
+              <ApplicationKebab
+                app={connectedApp}
+                removeApp={() => removeApp(connectedApp.id, app.id)}
+                addApp={() => addApp(app.id, connectedApp.id)}
+              />
+            )}
+          </Fragment>
+        ) : (
+          <Skeleton width="75%" />
+        )}
+      </div>
+    </FormGroup>
   );
+};
+
+ApplicationCardSwitch.propTypes = {
+  app: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    display_name: PropTypes.string.isRequired,
+    supported_source_types: PropTypes.arrayOf(PropTypes.string).isRequired,
+  }).isRequired,
+  selectedApps: PropTypes.object.isRequired,
+  removeApp: PropTypes.func.isRequired,
+  addApp: PropTypes.func.isRequired,
 };
 
 const ApplicationsCard = () => {
@@ -111,10 +177,6 @@ const ApplicationsCard = () => {
   const navigate = useAppNavigate();
   const sourceTypes = useSelector(({ sources }) => sources.sourceTypes, shallowEqual);
   const appTypes = useSelector(({ sources }) => sources.appTypes, shallowEqual);
-  const hcsEnrolled = useSelector(({ sources }) => sources.hcsEnrolled, shallowEqual);
-  const hcsEnrolledLoaded = useSelector(({ sources }) => sources.hcsEnrolledLoaded, shallowEqual);
-  const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
-  const hasRightAccess = useHasWritePermissions();
   const dispatch = useDispatch();
   const [{ selectedApps }, stateDispatch] = useReducer(reducer, initialState);
 
@@ -194,53 +256,9 @@ const ApplicationsCard = () => {
       </CardTitle>
       <CardBody>
         <div className="pf-v6-c-form src-c-applications_form">
-          {filteredAppTypes.map((app) => {
-            const connectedApp = source.applications.find((connectedApp) => connectedApp.application_type_id === app.id);
-
-            const appExist = Boolean(connectedApp);
-            const isPaused = Boolean(connectedApp?.paused_at);
-
-            const pausedApp = isPaused ? false : appExist;
-
-            const isChecked = typeof selectedApps[app.id] === 'boolean' ? selectedApps[app.id] : pausedApp;
-
-            const Wrapper = hasRightAccess ? React.Fragment : Tooltip;
-
-            return (
-              <FormGroup key={app.id}>
-                <div className="src-c-application_flex">
-                  {hcsEnrolledLoaded ? (
-                    <Fragment>
-                      <Wrapper {...(!hasRightAccess && { content: disabledMessage(intl, isOrgAdmin) })}>
-                        <Switch
-                          className="src-c-application_switch"
-                          id={`app-switch-${app.id}`}
-                          label={app.id === COST_MANAGEMENT_APP_ID && hcsEnrolled ? HCS_APP_NAME : app.display_name}
-                          isChecked={isChecked}
-                          isDisabled={connectedApp?.isDeleting || !hasRightAccess || Boolean(source.paused_at)}
-                          onChange={(_e, value) =>
-                            !value ? removeApp(connectedApp.id, app.id) : addApp(app.id, connectedApp?.id)
-                          }
-                        />
-                      </Wrapper>
-                      {Boolean(connectedApp) && (
-                        <ApplicationLabel className="pf-v6-u-ml-sm src-m-clickable" app={connectedApp} showStatusText />
-                      )}
-                      {(isPaused || appExist) && (
-                        <ApplicationKebab
-                          app={connectedApp}
-                          removeApp={() => removeApp(connectedApp.id, app.id)}
-                          addApp={() => addApp(app.id, connectedApp.id)}
-                        />
-                      )}
-                    </Fragment>
-                  ) : (
-                    <Skeleton width="75%" />
-                  )}
-                </div>
-              </FormGroup>
-            );
-          })}
+          {filteredAppTypes.map((app) => (
+            <ApplicationCardSwitch key={app.id} app={app} selectedApps={selectedApps} addApp={addApp} removeApp={removeApp} />
+          ))}
         </div>
       </CardBody>
     </Card>

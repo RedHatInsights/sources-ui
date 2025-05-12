@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 
 import ApplicationResourcesCard from '../../../components/SourceDetail/ApplicationResourcesCard';
 import * as SourceEditModal from '../../../components/SourceEditForm/SourceEditModal';
-import { replaceRouteId, routes } from '../../../Routing';
+import { replaceRouteId, routes } from '../../../routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import mockStore from '../../__mocks__/mockStore';
 

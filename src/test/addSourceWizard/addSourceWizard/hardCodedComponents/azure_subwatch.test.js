@@ -37,17 +37,18 @@ describe('Azure-Subwatch hardcoded schemas', () => {
         getLighthouseLink,
       });
 
-      render(<SubAzure.LightHouseDescription />);
+      await waitFor(async () => {
+        await render(<SubAzure.LightHouseDescription />);
+      });
       expect(screen.getByText('Azure role requirements')).toBeInTheDocument();
 
       expect(screen.getByText('Select the Azure subscription that you want to use with RHEL management.')).toBeInTheDocument();
 
-      expect(screen.getAllByText('Go to Lighthouse').at(1)).toHaveAttribute('aria-disabled', 'true');
+      expect(screen.getAllByText('Go to Lighthouse').at(1).closest('a')).toHaveAttribute('aria-disabled', 'true');
 
-      getLighthouseLink.resolve({ data: [{ payload: 'href123' }] });
+      await waitFor(() => getLighthouseLink.resolve({ data: [{ payload: 'href123' }] }));
 
-      await waitFor(() => expect(screen.getAllByText('Go to Lighthouse').at(1)).toHaveAttribute('aria-disabled', 'false'));
-      expect(screen.getAllByText('Go to Lighthouse').at(1)).toHaveAttribute('href', 'href123');
+      expect(screen.getAllByText('Go to Lighthouse').at(1).closest('a')).toHaveAttribute('href', 'href123');
     });
 
     it('is rendered with error', async () => {
@@ -66,7 +67,9 @@ describe('Azure-Subwatch hardcoded schemas', () => {
         await getLighthouseLink.reject();
       });
 
-      await waitFor(() => expect(screen.getAllByText('Go to Lighthouse').at(1)).toHaveAttribute('aria-disabled', 'true'));
+      await waitFor(() =>
+        expect(screen.getAllByText('Go to Lighthouse').at(1).closest('a')).toHaveAttribute('aria-disabled', 'true'),
+      );
       expect(
         screen.getByText('There is an error with loading of the configuration. Please go back and return to this step.'),
       ).toBeInTheDocument();

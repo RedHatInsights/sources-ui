@@ -33,7 +33,7 @@ import {
 
 const linkMapper = (sourceType) => ({ amazon: CUR_AWS, azure: CUR_AZURE, google: CUR_GCP })?.[sourceType];
 
-const SummaryAlert = ({ appName, sourceType, hcsEnrolled }) => {
+const SummaryAlert = ({ scope, sourceType, hcsEnrolled }) => {
   const intl = useIntl();
   const formOptions = useFormApi();
   const sourceTypes = useSelector(({ sources }) => sources.sourceTypes, shallowEqual);
@@ -41,7 +41,7 @@ const SummaryAlert = ({ appName, sourceType, hcsEnrolled }) => {
   const storageOnly = formOptions.getState().values.application?.extra?.storage_only;
   const application = sourceTypes.find((type) => type.name === sourceType)?.product_name;
 
-  if (appName === COST_MANAGEMENT_APP_NAME) {
+  if (scope === COST_MANAGEMENT_APP_NAME) {
     return (
       <Fragment>
         {['azure', 'amazon', 'google'].includes(sourceType) && storageOnly ? (
@@ -88,7 +88,7 @@ const SummaryAlert = ({ appName, sourceType, hcsEnrolled }) => {
     );
   }
 
-  if (appName === CLOUD_METER_APP_NAME && ['google'].includes(sourceType)) {
+  if (scope === CLOUD_METER_APP_NAME && ['google'].includes(sourceType)) {
     return (
       <Alert
         variant="info"
@@ -111,7 +111,7 @@ const SummaryAlert = ({ appName, sourceType, hcsEnrolled }) => {
 };
 
 SummaryAlert.propTypes = {
-  appName: PropTypes.string,
+  scope: PropTypes.string,
   sourceType: PropTypes.string,
   hcsEnrolled: PropTypes.bool,
 };
@@ -165,11 +165,11 @@ export const createItem = (formField, values, stepKeys) => {
 export const getAllFieldsValues = (fields, values, stepKeys) =>
   fields.map((field) => createItem(field, values, stepKeys)).filter(Boolean);
 
-export const getStepKeys = (typeName, authName, appName = 'generic', appId) =>
+export const getStepKeys = (typeName, authName, scope = 'generic', appId) =>
   [
-    ...get(hardcodedSchemas, [typeName, 'authentication', authName, appName, 'includeStepKeyFields'], []),
-    ...get(hardcodedSchemas, [typeName, 'authentication', authName, appName, 'additionalSteps'], []).map(({ name }) => name),
-    `${typeName}-${authName}-${appName}-additional-step`,
+    ...get(hardcodedSchemas, [typeName, 'authentication', authName, scope, 'includeStepKeyFields'], []),
+    ...get(hardcodedSchemas, [typeName, 'authentication', authName, scope, 'additionalSteps'], []).map(({ name }) => name),
+    `${typeName}-${authName}-${scope}-additional-step`,
     `${typeName}-${authName}-additional-step`,
     appId ? `${typeName}-${appId}` : undefined,
   ].filter(Boolean);

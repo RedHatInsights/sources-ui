@@ -84,9 +84,9 @@ export const createNotificationsMiddleware = (options?: CreateNotificationsMiddl
   };
   const middlewareOptions = { ...defaultOptions, ...options };
 
-  const matchPending = (type: string) => Boolean(type.match(new RegExp(`^.*${middlewareOptions.pendingSuffix}$`)));
-  const matchFulfilled = (type: string) => Boolean(type.match(new RegExp(`^.*${middlewareOptions.fulfilledSuffix}$`)));
-  const matchRejected = (type: string) => Boolean(type.match(new RegExp(`^.*${middlewareOptions.rejectedSuffix}$`)));
+  const matchPending = (type = '') => Boolean(type.match(new RegExp(`^.*${middlewareOptions.pendingSuffix}$`)));
+  const matchFulfilled = (type = '') => Boolean(type.match(new RegExp(`^.*${middlewareOptions.fulfilledSuffix}$`)));
+  const matchRejected = (type = '') => Boolean(type.match(new RegExp(`^.*${middlewareOptions.rejectedSuffix}$`)));
 
   const defaultNotificationOptions = {
     dismissable: !middlewareOptions.autoDismiss,
@@ -94,8 +94,9 @@ export const createNotificationsMiddleware = (options?: CreateNotificationsMiddl
   };
 
   const middleware: Middleware<Record<string, unknown>, NotificationConfig[]> = () => (next) => (action) => {
-    const { meta, type } = action;
-    if (meta && meta.notifications) {
+    const type = action?.type;
+    const meta = action?.meta || action?.payload?.meta;
+    if (meta && meta.notifications && type) {
       const { notifications } = meta;
       if (matchPending(type) && notifications.pending) {
         if (typeof notifications.pending === 'function') {
@@ -124,6 +125,7 @@ export const createNotificationsMiddleware = (options?: CreateNotificationsMiddl
     }
 
     if (
+      type &&
       shouldDispatchDefaultError({
         isRejected: matchRejected(type),
         hasCustomNotification: meta && meta.notifications && meta.notifications.rejected,
@@ -131,7 +133,7 @@ export const createNotificationsMiddleware = (options?: CreateNotificationsMiddl
         dispatchDefaultFailure: middlewareOptions.dispatchDefaultFailure,
       })
     ) {
-      if (middlewareOptions.useStatusText) {
+      if (middlewareOptions.useStatusText && action.payload) {
         notificationsStore.addNotification({
           variant: AlertVariant.danger,
           dismissable: true,

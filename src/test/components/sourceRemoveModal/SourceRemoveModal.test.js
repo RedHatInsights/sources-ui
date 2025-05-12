@@ -11,7 +11,7 @@ import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
 import appTypes, { CATALOG_APP } from '../../__mocks__/applicationTypes';
 import sourceTypes, { ANSIBLE_TOWER_TYPE, OPENSHIFT_TYPE, SATELLITE_TYPE } from '../../__mocks__/sourceTypes';
 
-import { replaceRouteId, routes } from '../../../Routing';
+import { replaceRouteId, routes } from '../../../routes';
 import mockStore from '../../__mocks__/mockStore';
 
 describe('SourceRemoveModal', () => {
@@ -45,7 +45,7 @@ describe('SourceRemoveModal', () => {
         'Remove integration and its data',
         'Cancel',
       ]);
-      expect(screen.getByText('Remove integration and its data')).toBeDisabled();
+      expect(screen.getByText('Remove integration and its data').closest('button')).toBeDisabled();
     });
 
     it('enables submit button', async () => {
@@ -61,7 +61,7 @@ describe('SourceRemoveModal', () => {
         ),
       );
 
-      expect(screen.getByText('Remove integration and its data')).toBeDisabled();
+      expect(screen.getByText('Remove integration and its data').closest('button')).toBeDisabled();
 
       await waitFor(async () => {
         await user.click(screen.getByRole('checkbox'));
@@ -120,7 +120,7 @@ describe('SourceRemoveModal', () => {
         'Remove integration and its data',
         'Cancel',
       ]);
-      expect(screen.getByText('Remove integration and its data')).toBeDisabled();
+      expect(screen.getByText('Remove integration and its data').closest('button')).toBeDisabled();
       expect(screen.getByText(application.display_name)).toBeInTheDocument();
     });
 

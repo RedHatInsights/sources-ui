@@ -7,7 +7,7 @@ import sourceTypes, { AMAZON_TYPE } from '../../__mocks__/sourceTypes';
 import appTypes, { COST_MANAGEMENT_APP, SUB_WATCH_APP } from '../../__mocks__/applicationTypes';
 
 import { Route, Routes } from 'react-router-dom';
-import { replaceRouteId, routes } from '../../../Routing';
+import { replaceRouteId, routes } from '../../../routes';
 import mockStore from '../../__mocks__/mockStore';
 import ResourcesTable from '../../../components/SourceDetail/ResourcesTable';
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
 import { useIntl } from 'react-intl';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useSelector } from 'react-redux';
 
 import { Bullseye, Spinner } from '@patternfly/react-core';
 import { Modal } from '@patternfly/react-core/deprecated';
@@ -12,9 +12,9 @@ import { replaceRouteId, routes } from '../../routes';
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
 import ModalFormTemplate from './ModalFormTemplate';
 import { getSourcesApi } from '../../api/entities';
-import { addMessage } from '../../redux/sources/actions';
 import generateSuperKeyFields from '../../components/addSourceWizard/superKey/generateSuperKeyFields';
 import { useAppNavigate } from '../../hooks/useAppNavigate';
+import notificationsStore from '../../utilities/notificationsStore';
 
 const initialState = {
   loading: true,
@@ -38,7 +38,6 @@ const CredentialsForm = () => {
   const source = useSource();
   const navigate = useAppNavigate();
   const intl = useIntl();
-  const reduxDispatch = useDispatch();
   const sourceTypes = useSelector(({ sources }) => sources.sourceTypes, shallowEqual);
   const sourceTypeName = sourceTypes.find(({ id }) => id === source.source_type_id).name;
 
@@ -98,31 +97,27 @@ const CredentialsForm = () => {
         try {
           await getSourcesApi().updateAuthentication(id, values);
 
-          reduxDispatch(
-            addMessage({
-              title: intl.formatMessage({ id: 'editCredentials.alert.title', defaultMessage: 'New credentials saved' }),
-              description: intl.formatMessage({
-                id: 'editCredentials.alert.description',
-                defaultMessage: 'It may take some time to validate your new credentials. Check this page for status updates.',
-              }),
-              variant: 'info',
+          notificationsStore.addNotification({
+            title: intl.formatMessage({ id: 'editCredentials.alert.title', defaultMessage: 'New credentials saved' }),
+            description: intl.formatMessage({
+              id: 'editCredentials.alert.description',
+              defaultMessage: 'It may take some time to validate your new credentials. Check this page for status updates.',
             }),
-          );
+            variant: 'info',
+          });
         } catch (error) {
-          reduxDispatch(
-            addMessage({
-              title: intl.formatMessage({
-                id: 'editCredentials.alert.warning.title',
-                defaultMessage: 'Error updating credentials',
-              }),
-              description: intl.formatMessage({
-                id: 'editCredentials.alert.warning.description',
-                defaultMessage:
-                  'There was a problem while trying to update credentials. Please try again. If the error persists, open a support case.',
-              }),
-              variant: 'danger',
+          notificationsStore.addNotification({
+            title: intl.formatMessage({
+              id: 'editCredentials.alert.warning.title',
+              defaultMessage: 'Error updating credentials',
             }),
-          );
+            description: intl.formatMessage({
+              id: 'editCredentials.alert.warning.description',
+              defaultMessage:
+                'There was a problem while trying to update credentials. Please try again. If the error persists, open a support case.',
+            }),
+            variant: 'danger',
+          });
         }
       }}
       initialValues={initialValues}

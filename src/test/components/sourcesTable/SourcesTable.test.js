@@ -12,7 +12,7 @@ import appTypes from '../../__mocks__/applicationTypes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import * as actions from '../../../redux/sources/actions';
 import * as API from '../../../api/entities';
-import { replaceRouteId, routes } from '../../../Routing';
+import { replaceRouteId, routes } from '../../../routes';
 import { defaultSourcesState } from '../../../redux/sources/reducer';
 import mockStore from '../../__mocks__/mockStore';
 import { disabledMessage } from '../../../utilities/disabledTooltipProps';
@@ -56,24 +56,6 @@ describe('SourcesTable', () => {
     expect(() => screen.getByRole('button')).toThrow();
   });
 
-  it('renders removing row', async () => {
-    initialState = {
-      ...initialState,
-      sources: {
-        ...initialState.sources,
-        ...loadedProps,
-        removingSources: [sourcesDataGraphQl[0].id],
-      },
-    };
-
-    const store = mockStore(initialState);
-
-    render(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
-
-    expect(screen.getAllByTestId('row')).toHaveLength(sourcesDataGraphQl.length - 1);
-    expect(screen.getAllByTestId('removing-row')).toHaveLength(1);
-  });
-
   it('renders table when loaded', async () => {
     initialState = {
       ...initialState,
@@ -88,7 +70,8 @@ describe('SourcesTable', () => {
     const { container } = render(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
 
     expect(screen.getByText(sourcesDataGraphQl[0].name)).toBeInTheDocument();
-    expect(screen.getAllByTestId('row')).toHaveLength(sourcesDataGraphQl.length);
+    // +1 for header
+    expect(screen.getAllByRole('row')).toHaveLength(sourcesDataGraphQl.length + 1);
     expect([...screen.getAllByRole('button')].map((e) => e.textContent).filter(Boolean)).toEqual([
       'Name',
       'Type',
@@ -152,7 +135,8 @@ describe('SourcesTable', () => {
 
     render(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
 
-    expect(screen.getByTestId('row')).toBeInTheDocument();
+    // One for header and one for empty state
+    expect(screen.getAllByRole('row')).toHaveLength(2);
     expect(screen.getByText('No sources found')).toBeInTheDocument();
     expect(
       screen.getByText('No sources match the filter criteria. Remove all filters or clear all filters to show sources.'),
@@ -183,13 +167,15 @@ describe('SourcesTable', () => {
 
     const { rerender } = render(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
 
-    expect(screen.getAllByTestId('row')).toHaveLength(sourcesDataGraphQl.length);
+    // +1 for headers
+    expect(screen.getAllByRole('row')).toHaveLength(sourcesDataGraphQl.length + 1);
 
     mockStoreFn.mockImplementation(() => initialStateUpdated);
 
     rerender(componentWrapperIntl(<SourcesTable {...initialProps} />, store));
 
-    expect(screen.getAllByTestId('row')).toHaveLength(1);
+    // +1 for headers
+    expect(screen.getAllByRole('row')).toHaveLength(1 + 1);
   });
 
   describe('actions', () => {

@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 
-import { Modal, ModalBody } from '@patternfly/react-core';
+import { Modal, ModalBody, ModalHeader } from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 
 import PrimaryToolbar from '@redhat-cloud-services/frontend-components/PrimaryToolbar/PrimaryToolbar';
@@ -76,7 +76,8 @@ const MarketplaceModal = ({ data, isOpen, onClose }) => {
   }, [config.page, config.perPage]);
 
   return (
-    <Modal className="sources" onClose={onClose} isOpen={isOpen} title="Browse catalog" variant="large">
+    <Modal className="sources" onClose={onClose} isOpen={isOpen} variant="large">
+      <ModalHeader title="Browse catalog" />
       <ModalBody>
         <span>
           A curated selection of offerings available for purchase from{' '}

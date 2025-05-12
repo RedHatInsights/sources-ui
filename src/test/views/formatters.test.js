@@ -43,7 +43,7 @@ import appTypes, { CATALOG_APP, COST_MANAGEMENT_APP, TOPOLOGY_INV_APP } from '..
 import { IntlProvider } from 'react-intl';
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
 import { MemoryRouter } from 'react-router-dom';
-import { replaceRouteId, routes } from '../../Routing';
+import { replaceRouteId, routes } from '../../routes';
 
 jest.mock('@patternfly/react-icons/dist/esm/icons/pause-icon', () => ({
   __esModule: true,
@@ -1226,7 +1226,7 @@ describe('formatters', () => {
         </MemoryRouter>,
       );
 
-      expect(screen.getByText('Edit credentials', { selector: 'button' })).toBeInTheDocument();
+      expect(screen.getByText('Edit credentials', { selector: '.pf-v6-c-button__text' })).toBeInTheDocument();
       expect(screen.getByRole('link')).toHaveAttribute(
         'href',
         replaceRouteId(`/settings/integrations/${routes.sourcesDetailEditCredentials.path}`, SOURCE_ID),
@@ -1262,7 +1262,7 @@ describe('formatters', () => {
         </MemoryRouter>,
       );
 
-      expect(screen.getByText('Edit credentials', { selector: 'button' })).toBeInTheDocument();
+      expect(screen.getByText('Edit credentials', { selector: '.pf-v6-c-button__text' })).toBeInTheDocument();
 
       await waitFor(async () => {
         await user.hover(screen.getByText('exclamation icon'));

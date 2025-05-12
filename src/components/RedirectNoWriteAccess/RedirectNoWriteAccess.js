@@ -1,20 +1,18 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 
-import { addMessage } from '../../redux/sources/actions';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import { routes } from '../../routes';
 import { disabledMessage } from '../../utilities/disabledTooltipProps';
 import AppNavigate from '../AppNavigate';
+import notificationsStore from '../../utilities/notificationsStore';
 
 const RedirectNoWriteAccess = () => {
   const intl = useIntl();
 
   const writePermissions = useHasWritePermissions();
   const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
-
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (writePermissions === false) {
@@ -24,7 +22,7 @@ const RedirectNoWriteAccess = () => {
       });
       const description = disabledMessage(intl, isOrgAdmin);
 
-      dispatch(addMessage({ title, variant: 'danger', description }));
+      notificationsStore.addNotification({ title, variant: 'danger', description });
     }
   }, [writePermissions]);
 
