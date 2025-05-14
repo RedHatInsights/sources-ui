@@ -28,7 +28,7 @@ import { getProdStore } from '../../utilities/store';
 import { AsyncComponent } from '@redhat-cloud-services/frontend-components';
 import AddSourceWizard from '../addSourceWizard';
 import './IntegrationsWidget.scss';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { fetchCloudSources } from './services/fetchCloudSources';
 import { fetchIntegrations } from './services/fetchIntegrations';
 import { fetchRedHatSources } from './services/fetchRedHatSources';
@@ -119,6 +119,17 @@ const IntegrationsWidget: FunctionComponent = () => {
   const store = useStore();
 
   const isEmptyState = Object.values(integrationCounts).reduce((total, count) => total + count, 0) === 0;
+
+  const navigate = useNavigate();
+
+  const handleDropdownAction = (action: string, integrationTitle: string) => {
+    if (action === 'create') {
+      handleTileClick(integrationTitle);
+
+    } else if (action === 'view') {
+      navigate(`/settings/integrations?category=${integrationTitle}`);
+    }
+  };
 
   return (
     <PermissionsChecker>
@@ -223,14 +234,16 @@ const IntegrationsWidget: FunctionComponent = () => {
                 >
                   <DropdownItem
       key={`create-new-${integrationIndex}`}
-      onClick={() => console.log(`Create new ${integration.title} integration`)}
+      onClick={() => handleDropdownAction('create', integration.title)}
+      isSelected={selectedTileValue === integration.title}
     >
       Create new {integration.title} integration
     </DropdownItem>
+
     <DropdownItem
       key={`view-all-${integrationIndex}`}
-      onClick={() => console.log(`View all ${integration.title} integrations`)}
-    >
+      onClick={() => handleDropdownAction('view', integration.title)}    
+      >
       View all {integration.title} Integrations
     </DropdownItem>
                 </Dropdown>
