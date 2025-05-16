@@ -3,11 +3,20 @@ import {
   Card,
   CardBody,
   CardFooter,
-  ExpandableSection,
+  DataList,
+  DataListAction,
+  DataListCell,
+  DataListContent,
+  DataListItem,
+  DataListItemCells,
+  DataListItemRow,
+  DataListToggle,
+  Dropdown,
+  DropdownItem,
+  Flex,
+  FlexItem,
   Gallery,
-  List,
-  ListItem,
-  ListVariant,
+  Icon,
   Spinner,
   Tile,
 } from '@patternfly/react-core';
@@ -19,13 +28,14 @@ import { getProdStore } from '../../utilities/store';
 import { AsyncComponent } from '@redhat-cloud-services/frontend-components';
 import AddSourceWizard from '../addSourceWizard';
 import './IntegrationsWidget.scss';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { fetchCloudSources } from './services/fetchCloudSources';
 import { fetchIntegrations } from './services/fetchIntegrations';
 import { fetchRedHatSources } from './services/fetchRedHatSources';
 import { createIntegrationsData } from './consts/widgetData';
 import { useFlag } from '@unleash/proxy-client-react';
 import PermissionsChecker from '../PermissionsChecker';
+import { DropdownToggle } from '@patternfly/react-core/deprecated';
 
 const IntegrationsWidget: FunctionComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -41,6 +51,8 @@ const IntegrationsWidget: FunctionComponent = () => {
   const hasIntegrationsPermissions = useSelector(({ user }) => user?.integrationsEndpointsPermissions);
   const isPagerDutyEnabled = useFlag('platform.integrations.pager-duty');
   const integrationsData = createIntegrationsData(isPagerDutyEnabled, hasSourcesPermissions, hasIntegrationsPermissions);
+
+  const [dropdownOpenIndexes, setDropdownOpenIndexes] = useState<Record<number, boolean>>({});
 
   const handleTileClick = (value: string) => {
     setSelectedTileValue(value);
@@ -84,24 +96,40 @@ const IntegrationsWidget: FunctionComponent = () => {
   useEffect(() => {
     if (!hasInitialized && Object.keys(integrationCounts).length > 0) {
       const initiallyExpandedIndex = integrationsData
-        .map((integration, index) => (badgeCounts(integration.items) > 0 ? index : null))
+        .map((integration, index) =>
+          badgeCounts(integration.items) > 0 ? index : null
+        )
         .filter((index) => index !== null) as number[];
       setExpandedIndex(initiallyExpandedIndex);
       setHasInitialized(true);
     }
   }, [integrationsData, integrationCounts, hasInitialized]);
 
-  const onToggle = (index: number) => {
-    setExpandedIndex((prevIndices) =>
-      prevIndices.includes(index)
-        ? prevIndices.filter(i => i !== index)
-        : [...prevIndices, index]
+  const onToggle = (index: number, isExpandable: boolean) => {
+    if (!isExpandable) return; // Prevent toggling if it's not expandable
+    setExpandedIndex((prev) =>
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
     );
+  };
+
+  const onToggleDropdown = (index: number, isOpen: boolean) => {
+    setDropdownOpenIndexes({ [index]: isOpen });
   };
 
   const store = useStore();
 
   const isEmptyState = Object.values(integrationCounts).reduce((total, count) => total + count, 0) === 0;
+
+  const navigate = useNavigate();
+
+  const handleDropdownAction = (action: string, integrationTitle: string) => {
+    if (action === 'create') {
+      handleTileClick(integrationTitle);
+
+    } else if (action === 'view') {
+      navigate(`/settings/integrations?category=${integrationTitle}`);
+    }
+  };
 
   return (
     <PermissionsChecker>
@@ -157,29 +185,92 @@ const IntegrationsWidget: FunctionComponent = () => {
       ) : (
         <Card ouiaId="integrations-widget" isFullHeight>
           <CardBody>
-            {integrationsData.map((integration, integrationIndex) => (
-              <ExpandableSection
-                key={integrationIndex}
-                toggleContent={
-                  <div>
-                    <span className="pf-v5-u-pr-sm">{integration.title}</span>
-                    <Badge 
-                    isRead={badgeCounts(integration.items) === 0}>
-                      {badgeCounts(integration.items)}
-                    </Badge>
-                  </div>
-                }
-                onToggle={() => onToggle(integrationIndex)}
-                isExpanded={expandedIndex.includes(integrationIndex)}              >
-                <List variant={ListVariant.inline} className="pf-v5-u-mb-md">
-                  {integration.items.map((item, itemIndex) => (
-                    <ListItem key={itemIndex} icon={item.icon}>
-                      {item.name} ( {integrationCounts[item.id] || 0} )
-                    </ListItem>
+          <DataList aria-label="Integrations List" isCompact>
+              {integrationsData.map((integration, integrationIndex) => {
+                const isExpandable = integration.title !== 'Webhooks';
+                return (
+                  <React.Fragment key={`integration-fragment-${integrationIndex}`}>
+                    <DataListItem
+                      key={integrationIndex}
+                      aria-labelledby={`integration-${integrationIndex}`}
+                      isExpanded={isExpandable ? expandedIndex.includes(integrationIndex) : false}
+                    >
+                      <DataListItemRow>
+                        {isExpandable ? (
+                          <DataListToggle
+                            onClick={() => onToggle(integrationIndex, isExpandable)}
+                            isExpanded={expandedIndex.includes(integrationIndex)}
+                            id={`toggle-${integrationIndex}`}
+                            aria-controls={`expand-${integrationIndex}`}
+                          />
+                        ) : (
+                          <div style={{ width: '40px' }} />
+                        )}
+                        <DataListItemCells
+                dataListCells={[
+                  <DataListCell key="primary content">
+                      <span className="pf-v5-u-pr-sm">{integration.title}</span>
+                      <Badge isRead={badgeCounts(integration.items) === 0}>
+                        {badgeCounts(integration.items)}
+                      </Badge>
+                  </DataListCell>
+                ]}
+              />
+              <DataListAction aria-labelledby="actions" id="actions" aria-label="Actions">
+                <Dropdown
+                  onSelect={() => onToggleDropdown(integrationIndex, false)}
+                  toggle={(toggleRef) => (
+                    <DropdownToggle
+                      onToggle={() =>
+                        onToggleDropdown(integrationIndex, !dropdownOpenIndexes[integrationIndex])
+                      }
+                      id={`dropdown-toggle-${integrationIndex}`}
+                      ref={toggleRef}
+                    >
+                      Manage
+                    </DropdownToggle>
+                  )}
+                  isOpen={dropdownOpenIndexes[integrationIndex] || false}
+                >
+                  <DropdownItem
+      key={`create-new-${integrationIndex}`}
+      onClick={() => handleDropdownAction('create', integration.title)}
+      isSelected={selectedTileValue === integration.title}
+    >
+      Create new {integration.title} integration
+    </DropdownItem>
+
+    <DropdownItem
+      key={`view-all-${integrationIndex}`}
+      onClick={() => handleDropdownAction('view', integration.title)}    
+      >
+      View all {integration.title} Integrations
+    </DropdownItem>
+                </Dropdown>
+              </DataListAction>
+                      </DataListItemRow>
+            <DataListContent aria-label="widget-content" id={`expand-${integrationIndex}`}>
+              {expandedIndex.includes(integrationIndex) && (
+                <div>
+                  {integration.items.filter((item) => item.name !== 'Webhooks').map((item, itemIndex) => (
+                      <Flex display={{ default: 'inlineFlex' }}
+                            className="pf-v5-u-p-md">
+                    <FlexItem>
+                      <Icon size="lg" className="pf-v5-u-mr-sm">{item.icon}</Icon>
+                      </FlexItem>
+                      <FlexItem>
+                        {item.name} ({integrationCounts[item.id] || 0})
+                      </FlexItem>
+                      </Flex>
                   ))}
-                </List>
-              </ExpandableSection>
-            ))}
+                </div>
+              )}
+            </DataListContent>
+                    </DataListItem>
+                  </React.Fragment>
+                );
+              })}
+            </DataList>
           </CardBody>
           <CardFooter className="pf-v5-u-pt-md pf-v5-u-background-color-100">
             <IntegrationsDropdown />
