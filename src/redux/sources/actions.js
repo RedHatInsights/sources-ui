@@ -3,7 +3,6 @@ import React from 'react';
 import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 import PlayIcon from '@patternfly/react-icons/dist/esm/icons/play-icon';
 
-import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from '@redhat-cloud-services/frontend-components-notifications/redux';
 import {
   ACTION_TYPES,
   ADD_APP_TO_SOURCE,
@@ -22,6 +21,7 @@ import handleError from '../../api/handleError';
 import tryAgainMessage from '../../utilities/tryAgainMessage';
 import { checkAccountHCS } from '../../api/checkAccountHCS';
 import { INTEGRATIONS, OVERVIEW } from '../../utilities/constants';
+import notificationsStore from '../../utilities/notificationsStore';
 
 export const loadEntities = (options) => (dispatch, getState) => {
   dispatch({
@@ -143,15 +143,6 @@ export const filterSources = (value) => (dispatch) => {
   return dispatch(loadEntities());
 };
 
-export const addMessage = (props) => (dispatch) =>
-  dispatch({
-    type: ADD_NOTIFICATION,
-    payload: {
-      dismissable: true,
-      ...props,
-    },
-  });
-
 export const removeSource = (sourceId, title) => (dispatch) => {
   dispatch({
     type: ACTION_TYPES.REMOVE_SOURCE_PENDING,
@@ -169,7 +160,7 @@ export const removeSource = (sourceId, title) => (dispatch) => {
           sourceId,
         },
       });
-      dispatch(addMessage({ title, variant: 'success' }));
+      notificationsStore.addNotification({ title, variant: 'success' });
     })
     .catch(() =>
       dispatch({
@@ -180,11 +171,6 @@ export const removeSource = (sourceId, title) => (dispatch) => {
       }),
     );
 };
-
-export const removeMessage = (id) => ({
-  type: REMOVE_NOTIFICATION,
-  payload: id,
-});
 
 export const removeApplication = (appId, sourceId, successTitle, errorTitle) => ({
   type: ACTION_TYPES.REMOVE_APPLICATION,
@@ -260,31 +246,27 @@ export const pauseSource = (sourceId, sourceName, intl) => (dispatch) => {
   return getSourcesApi()
     .pauseSource(sourceId)
     .then(() => {
-      dispatch(
-        addMessage({
-          title: intl.formatMessage({ id: 'source.paused.alert.title', defaultMessage: 'Integration paused' }),
-          description: intl.formatMessage(
-            {
-              id: 'source.paused.alert.description',
-              defaultMessage:
-                'Integration <b>{ sourceName }</b> is now paused. Data collection for all connected applications will be disabled until the integration is resumed.',
-            },
-            { sourceName, b: bold },
-          ),
-          variant: 'default',
-          customIcon: <PauseIcon />,
-        }),
-      );
+      notificationsStore.addNotification({
+        title: intl.formatMessage({ id: 'source.paused.alert.title', defaultMessage: 'Integration paused' }),
+        description: intl.formatMessage(
+          {
+            id: 'source.paused.alert.description',
+            defaultMessage:
+              'Integration <b>{ sourceName }</b> is now paused. Data collection for all connected applications will be disabled until the integration is resumed.',
+          },
+          { sourceName, b: bold },
+        ),
+        variant: 'default',
+        customIcon: <PauseIcon />,
+      });
       dispatch(loadEntities({ loaded: 0 }));
     })
     .catch((error) => {
-      dispatch(
-        addMessage({
-          title: intl.formatMessage({ id: 'source.paused.alert.error', defaultMessage: 'Integration pause failed' }),
-          description: tryAgainMessage(intl, handleError(error)),
-          variant: 'danger',
-        }),
-      );
+      notificationsStore.addNotification({
+        title: intl.formatMessage({ id: 'source.paused.alert.error', defaultMessage: 'Integration pause failed' }),
+        description: tryAgainMessage(intl, handleError(error)),
+        variant: 'danger',
+      });
     });
 };
 
@@ -292,29 +274,25 @@ export const resumeSource = (sourceId, sourceName, intl) => (dispatch) => {
   return getSourcesApi()
     .unpauseSource(sourceId)
     .then(() => {
-      dispatch(
-        addMessage({
-          title: intl.formatMessage({ id: 'source.resumed.alert.title', defaultMessage: 'Integration resumed' }),
-          description: intl.formatMessage(
-            {
-              id: 'source.resumed.alert.description',
-              defaultMessage: 'Integration <b>{ sourceName }</b> will recontinue data collection for connected applications.',
-            },
-            { sourceName, b: bold },
-          ),
-          variant: 'default',
-          customIcon: <PlayIcon />,
-        }),
-      );
+      notificationsStore.addNotification({
+        title: intl.formatMessage({ id: 'source.resumed.alert.title', defaultMessage: 'Integration resumed' }),
+        description: intl.formatMessage(
+          {
+            id: 'source.resumed.alert.description',
+            defaultMessage: 'Integration <b>{ sourceName }</b> will recontinue data collection for connected applications.',
+          },
+          { sourceName, b: bold },
+        ),
+        variant: 'default',
+        customIcon: <PlayIcon />,
+      });
       dispatch(loadEntities({ loaded: 0 }));
     })
     .catch((error) => {
-      dispatch(
-        addMessage({
-          title: intl.formatMessage({ id: 'source.resume.alert.error', defaultMessage: 'Integration resume failed' }),
-          description: tryAgainMessage(intl, handleError(error)),
-          variant: 'danger',
-        }),
-      );
+      notificationsStore.addNotification({
+        title: intl.formatMessage({ id: 'source.resume.alert.error', defaultMessage: 'Integration resume failed' }),
+        description: tryAgainMessage(intl, handleError(error)),
+        variant: 'danger',
+      });
     });
 };

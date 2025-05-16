@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
+  Content,
+  ContentVariants,
   DataListAction,
   DataListCell,
   DataListContent,
@@ -13,9 +15,6 @@ import {
   Flex,
   FlexItem,
   Icon,
-  Text,
-  TextContent,
-  TextVariants,
   Title,
 } from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
@@ -40,15 +39,15 @@ const CustomDataListItem = ({ initialExpanded, icon, title, actionTitle, action,
   return (
     <React.Fragment>
       <DataListItem aria-labelledby="item1" isExpanded={isExpanded} className={isExpanded && 'active-item'}>
-        <DataListItemRow className="pf-v5-u-align-items-center">
+        <DataListItemRow className="pf-v6-u-align-items-center">
           <DataListToggle isExpanded={isExpanded} id="toggle1" aria-controls="expand1" onClick={toggleExpand} />
           <DataListItemCells
             dataListCells={[
               <DataListCell key={`cell-${icon.toString().toLowerCase()}`}>
                 <div>
-                  <Flex className="pf-v5-u-flex-nowrap">
-                    <FlexItem className="pf-v5-u-align-self-center">
-                      <Icon size="lg" className="pf-v5-u-primary-color-100">
+                  <Flex className="pf-v6-u-flex-nowrap">
+                    <FlexItem className="pf-v6-u-align-self-center">
+                      <Icon size="lg" className="pf-v6-u-primary-color-100">
                         {icon}
                       </Icon>
                     </FlexItem>
@@ -57,7 +56,7 @@ const CustomDataListItem = ({ initialExpanded, icon, title, actionTitle, action,
                         default: 'vertical',
                       }}
                     />
-                    <FlexItem className="pf-v5-u-align-self-center">
+                    <FlexItem className="pf-v6-u-align-self-center">
                       <Title headingLevel="h4">{title}</Title>
                     </FlexItem>
                   </Flex>
@@ -66,7 +65,7 @@ const CustomDataListItem = ({ initialExpanded, icon, title, actionTitle, action,
             ]}
           />
           {actionTitle && action && (
-            <DataListAction aria-labelledby="item1 action1" id="action1" aria-label="Actions" isPlainButtonAction>
+            <DataListAction aria-labelledby="item1 action1" id="action1" aria-label="Actions">
               <Button
                 variant="link"
                 onClick={(e) => {
@@ -85,11 +84,11 @@ const CustomDataListItem = ({ initialExpanded, icon, title, actionTitle, action,
           )}
         </DataListItemRow>
         <DataListContent aria-label={`${title} - Detailed Explanation`} id="expand1" isHidden={!isExpanded}>
-          <TextContent>
-            <Text component={TextVariants.p} className="pf-v5-u-mb-lg">
+          <Content>
+            <Content component={ContentVariants.p} className="pf-v6-u-mb-lg">
               {content}
-            </Text>
-          </TextContent>
+            </Content>
+          </Content>
           <Button
             isInline
             component="a"
@@ -108,7 +107,7 @@ const CustomDataListItem = ({ initialExpanded, icon, title, actionTitle, action,
       </DataListItem>
       {[COMMUNICATIONS, REPORTING, WEBHOOKS].includes(selectedIntegration) && (
         <AsyncComponent
-          appName="notifications"
+          scope="notifications"
           module="./IntegrationsWizard"
           store={store}
           isOpen={isIntegrationsWizardOpen}

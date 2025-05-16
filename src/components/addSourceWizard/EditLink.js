@@ -15,7 +15,7 @@ const EditLink = ({ id }) => {
   if (getApp() === 'sources') {
     return (
       <AppLink to={`/detail/${id}`}>
-        <Button variant="primary" className="pf-v5-u-mt-xl">
+        <Button variant="primary" className="pf-v6-u-mt-xl">
           {message}
         </Button>
       </AppLink>
@@ -25,7 +25,7 @@ const EditLink = ({ id }) => {
   return (
     <Button
       variant="primary"
-      className="pf-v5-u-mt-xl"
+      className="pf-v6-u-mt-xl"
       component="a"
       target="_blank"
       href={`${computeSourcesUrl(isBeta())}/detail/${id}`}

@@ -9,19 +9,13 @@ import {
   ButtonVariant,
   ClipboardCopy,
   ClipboardCopyVariant,
+  Content,
+  ContentVariants,
   EmptyState,
   EmptyStateActions,
   EmptyStateBody,
-  EmptyStateIcon,
   EmptyStateVariant,
   Popover,
-  Text,
-  TextContent,
-  TextList,
-  TextListItem,
-  TextListItemVariants,
-  TextListVariants,
-  TextVariants,
   Title,
 } from '@patternfly/react-core';
 
@@ -46,8 +40,8 @@ export const MANUAL_CUR_STEPS = `${HCCM_LATEST_DOCS_PREFIX}/html/integrating_ama
 export const StorageDescription = ({ showHCS }) => {
   const intl = useIntl();
   return (
-    <TextContent>
-      <Text>
+    <Content>
+      <Content component="p">
         {intl.formatMessage(
           {
             id: 'cost.storageDescription.storageDescription',
@@ -58,9 +52,9 @@ export const StorageDescription = ({ showHCS }) => {
             link: showHCS ? null : ( // remove when HCS docs links are available
               <Fragment>
                 <br />
-                <Text
+                <Content
                   key="link"
-                  component={TextVariants.a}
+                  component={ContentVariants.a}
                   href={showHCS ? CREATE_HCS_S3_BUCKET : CREATE_S3_BUCKET}
                   rel="noopener noreferrer"
                   target="_blank"
@@ -69,21 +63,21 @@ export const StorageDescription = ({ showHCS }) => {
                     id: 'cost.learnMore',
                     defaultMessage: 'Learn more',
                   })}
-                </Text>
+                </Content>
               </Fragment>
             ),
           },
         )}
-      </Text>
-      <TextList className="pf-v5-u-ml-0" component={TextListVariants.ol}>
-        <TextListItem>
+      </Content>
+      <Content className="pf-v6-u-ml-0" component={ContentVariants.ol}>
+        <Content component="li">
           {intl.formatMessage({
             id: 'cost.storageDescription.specifyBucker',
             defaultMessage: "On AWS, specify or create an Amazon S3 bucket for your account and enter it's name below.",
           })}
-        </TextListItem>
-      </TextList>
-    </TextContent>
+        </Content>
+      </Content>
+    </Content>
   );
 };
 
@@ -96,8 +90,8 @@ export const UsageDescription = ({ showHCS }) => {
   const application = showHCS ? HCS_APP_NAME : 'Cost Management';
 
   return (
-    <TextContent>
-      <Text>
+    <Content>
+      <Content component="p">
         {intl.formatMessage(
           {
             id: 'cost.usageDescription.usageDescription',
@@ -108,8 +102,8 @@ export const UsageDescription = ({ showHCS }) => {
             application,
           },
         )}
-      </Text>
-    </TextContent>
+      </Content>
+    </Content>
   );
 };
 
@@ -124,14 +118,18 @@ export const UsageSteps = () => {
   const application = formOptions.getState().values.application;
 
   return application.extra.storage_only ? (
-    <EmptyState variant={EmptyStateVariant.small}>
-      <EmptyStateIcon style={{ color: 'var(--pf-v5-global--info-color--100)' }} icon={InfoCircleIcon} />
-      <Title size="lg" headingLevel="h4">
-        {intl.formatMessage({
-          id: 'cost.usageDescription.manualTitleCUR',
-          defaultMessage: 'Skip this step and proceed to next step',
-        })}
-      </Title>
+    <EmptyState
+      titleText={
+        <Title size="lg" headingLevel="h4">
+          {intl.formatMessage({
+            id: 'cost.usageDescription.manualTitleCUR',
+            defaultMessage: 'Skip this step and proceed to next step',
+          })}
+        </Title>
+      }
+      icon={InfoCircleIcon}
+      variant={EmptyStateVariant.small}
+    >
       <EmptyStateBody>
         {intl.formatMessage({
           id: 'cost.usageDescription.manualDescriptionCUR',
@@ -140,75 +138,75 @@ export const UsageSteps = () => {
         })}
       </EmptyStateBody>
       <EmptyStateActions>
-        <Text variant="link" component={TextVariants.a} href={MANUAL_CUR_STEPS} rel="noopener noreferrer" target="_blank">
+        <Content variant="link" component={ContentVariants.a} href={MANUAL_CUR_STEPS} rel="noopener noreferrer" target="_blank">
           {intl.formatMessage({
             id: 'cost.usageDescription.additionalStepsCUR',
             defaultMessage: 'Additional configuration steps',
           })}
-        </Text>
+        </Content>
       </EmptyStateActions>
     </EmptyState>
   ) : (
-    <TextContent>
-      <TextList className="pf-v5-u-ml-0" component={TextListVariants.ol}>
-        <TextListItem>
+    <Content>
+      <Content className="pf-v6-u-ml-0" component={ContentVariants.ol}>
+        <Content component="li">
           {intl.formatMessage({
             id: 'cost.usageDescription.addFollowingValues',
             defaultMessage: 'Create a data export using the following values:',
           })}
-          <TextList>
-            <TextListItem>
+          <Content component="ul">
+            <Content component="li">
               {intl.formatMessage({
                 id: 'cost.usageDescription.exportType',
                 defaultMessage: 'Export type: Legacy CUR export',
               })}
-            </TextListItem>
-            <TextListItem>
+            </Content>
+            <Content component="li">
               {intl.formatMessage({
                 id: 'cost.usageDescription.exportName',
                 defaultMessage: 'Export name: koku',
               })}
-            </TextListItem>
-            <TextListItem>
+            </Content>
+            <Content component="li">
               {intl.formatMessage({
                 id: 'cost.usageDescription.includesResourceIDs',
                 defaultMessage: 'Include: Resource IDs',
               })}
-            </TextListItem>
-            <TextListItem>
+            </Content>
+            <Content component="li">
               {intl.formatMessage({
                 id: 'cost.usageDescription.dataRefreshSettings',
                 defaultMessage: 'Enable: Refresh automatically',
               })}
-            </TextListItem>
-            <TextListItem>
+            </Content>
+            <Content component="li">
               {intl.formatMessage({
                 id: 'cost.usageDescription.timeUnitHourly',
                 defaultMessage: 'Time unit: hourly',
               })}
-            </TextListItem>
-            <TextListItem>
+            </Content>
+            <Content component="li">
               {intl.formatMessage({
                 id: 'cost.usageDescription.enableSupport',
                 defaultMessage: 'Enable support for: RedShift, QuickSight and disable support for Athena',
               })}
-            </TextListItem>
-            <TextListItem>
+            </Content>
+            <Content component="li">
               {intl.formatMessage({
                 id: 'cost.usageDescription.compression',
                 defaultMessage: 'Compression type: GZIP',
               })}
-            </TextListItem>
-            <TextListItem>
+            </Content>
+            <Content component="li">
               {intl.formatMessage({
                 id: 'cost.usageDescription.reportBucket',
                 defaultMessage: 'Report path prefix: cost',
               })}
-            </TextListItem>
-          </TextList>
-        </TextListItem>
-      </TextList>
-    </TextContent>
+            </Content>
+          </Content>
+        </Content>
+      </Content>
+    </Content>
   );
 };
 
@@ -226,53 +224,53 @@ export const IAMRoleDescription = () => {
   }, [externalId]);
 
   return (
-    <TextContent>
-      <Text>
+    <Content>
+      <Content component="p">
         {intl.formatMessage({
           id: 'cost.iamrole.createIamRole',
           defaultMessage: 'To delegate account access, create an IAM role to associate with your IAM policy.',
         })}
-      </Text>
-      <TextList component={TextListVariants.ol}>
-        <TextListItem>
+      </Content>
+      <Content component={ContentVariants.ol}>
+        <Content component="li">
           {intl.formatMessage({
             id: 'cost.iamrole.createNewRole',
             defaultMessage: 'From the AWS Identity Access Management console, create a new role.',
           })}
-        </TextListItem>
-        <TextListItem>
+        </Content>
+        <Content component="li">
           {intl.formatMessage({
             id: 'cost.iamrole.enterAccountId',
             defaultMessage:
               'Select another AWS account from the list of trusted entities and paste the following value into the Account ID field:',
           })}
-        </TextListItem>
-        <ClipboardCopy className="pf-v5-u-m-sm-on-sm" isReadOnly>
+        </Content>
+        <ClipboardCopy className="pf-v6-u-m-sm-on-sm" isReadOnly>
           589173575009
         </ClipboardCopy>
-        <TextListItem>
+        <Content component="li">
           {intl.formatMessage({
             id: 'cost.iamrole.enterExternalId',
             defaultMessage: 'Paste the following value in the External ID field:',
           })}
-        </TextListItem>
-        <ClipboardCopy className="pf-v5-u-m-sm-on-sm" isReadOnly>
+        </Content>
+        <ClipboardCopy className="pf-v6-u-m-sm-on-sm" isReadOnly>
           {externalId}
         </ClipboardCopy>
-        <TextListItem>
+        <Content component="li">
           {intl.formatMessage({
             id: 'cost.iamrole.attachPolicy',
             defaultMessage: 'Attach the permissions policy that you just created.',
           })}
-        </TextListItem>
-        <TextListItem>
+        </Content>
+        <Content component="li">
           {intl.formatMessage({
             id: 'cost.iamrole.completeProccess',
             defaultMessage: 'Complete the process to create your new role.',
           })}
-        </TextListItem>
-      </TextList>
-    </TextContent>
+        </Content>
+      </Content>
+    </Content>
   );
 };
 
@@ -287,18 +285,18 @@ export const IAMPolicyDescription = ({ showHCS }) => {
 
   if (!s3Bucket) {
     return (
-      <Text>
+      <Content component="p">
         {intl.formatMessage({
           id: 'cost.iampolicy.somethingWrong',
           defaultMessage: 'Something went wrong, you are missing bucket value.',
         })}
-      </Text>
+      </Content>
     );
   }
 
   return (
-    <TextContent>
-      <Text>
+    <Content>
+      <Content component="p">
         {intl.formatMessage(
           {
             id: 'cost.iampolicy.grantPermissions',
@@ -307,9 +305,9 @@ export const IAMPolicyDescription = ({ showHCS }) => {
           },
           {
             link: showHCS ? null : ( // remove when HCS docs links are available
-              <Text
+              <Content
                 key="link"
-                component={TextVariants.a}
+                component={ContentVariants.a}
                 href={showHCS ? ENABLE_HCS_AWS_ACCOUNT : ENABLE_AWS_ACCOUNT}
                 rel="noopener noreferrer"
                 target="_blank"
@@ -318,25 +316,25 @@ export const IAMPolicyDescription = ({ showHCS }) => {
                   id: 'wizard.learnMore',
                   defaultMessage: 'Learn more',
                 })}
-              </Text>
+              </Content>
             ),
           },
         )}
-      </Text>
-      <TextList component={TextListVariants.ol}>
-        <TextListItem component={TextListItemVariants.li}>
+      </Content>
+      <Content component={ContentVariants.ol}>
+        <Content component={ContentVariants.li}>
           {intl.formatMessage({
             id: 'cost.iampolicy.signInIAMConsole',
             defaultMessage: 'Sign in to the AWS Identity and Access Management (IAM) console.',
           })}
-        </TextListItem>
-        <TextListItem component={TextListItemVariants.li}>
+        </Content>
+        <Content component={ContentVariants.li}>
           {intl.formatMessage({
             id: 'cost.iampolicy.createPolicy',
             defaultMessage: 'Create a new policy, pasting the following content into the JSON text box.',
           })}
-        </TextListItem>
-        <ClipboardCopy isCode variant={ClipboardCopyVariant.expansion} className="pf-v5-u-m-sm-on-sm" isReadOnly>
+        </Content>
+        <ClipboardCopy isCode variant={ClipboardCopyVariant.expansion} className="pf-v6-u-m-sm-on-sm" isReadOnly>
           {JSON.stringify(
             {
               Version: '2012-10-17',
@@ -364,14 +362,14 @@ export const IAMPolicyDescription = ({ showHCS }) => {
             2,
           )}
         </ClipboardCopy>
-        <TextListItem component={TextListItemVariants.li}>
+        <Content component={ContentVariants.li}>
           {intl.formatMessage({
             id: 'cost.iampolicy.completeProccess',
             defaultMessage: 'Complete the process to create your new policy.',
           })}
-        </TextListItem>
-      </TextList>
-      <Text component={TextVariants.p}>
+        </Content>
+      </Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage(
           {
             id: 'cost.iampolicy.logInIam',
@@ -388,8 +386,8 @@ export const IAMPolicyDescription = ({ showHCS }) => {
             ),
           },
         )}
-      </Text>
-    </TextContent>
+      </Content>
+    </Content>
   );
 };
 
@@ -404,11 +402,11 @@ export const TagsDescription = ({ showHCS }) => {
 
   return (
     <Fragment>
-      <TextContent>
+      <Content>
         {showHCS ? null : ( // remove when HCS docs links are available
-          <Text>
-            <Text
-              component={TextVariants.a}
+          <Content component="p">
+            <Content
+              component={ContentVariants.a}
               rel="noopener noreferrer"
               target="_blank"
               href={showHCS ? CONFIG_HCS_AWS_TAGS : rhelAws ? RHEL_METERED_AWS : CONFIG_AWS_TAGS}
@@ -417,10 +415,10 @@ export const TagsDescription = ({ showHCS }) => {
                 id: 'cost.tags.readMeLink',
                 defaultMessage: 'Learn more',
               })}
-            </Text>
-          </Text>
+            </Content>
+          </Content>
         )}
-        <Text>
+        <Content component="p">
           {intl.formatMessage(
             {
               id: 'cost.tags.desciption',
@@ -429,15 +427,15 @@ export const TagsDescription = ({ showHCS }) => {
             },
             { applicationName },
           )}
-        </Text>
-        <TextList component={TextListVariants.ol}>
-          <TextListItem>
+        </Content>
+        <Content component={ContentVariants.ol}>
+          <Content component="li">
             {intl.formatMessage({
               id: 'cost.tags.openSection',
               defaultMessage: 'In the AWS Billing and Cost Management console, open the Cost Allocation Tags section.',
             })}
-          </TextListItem>
-          <TextListItem>
+          </Content>
+          <Content component="li">
             {intl.formatMessage(
               {
                 id: 'cost.tags.selectTags',
@@ -445,9 +443,9 @@ export const TagsDescription = ({ showHCS }) => {
               },
               { applicationName },
             )}
-          </TextListItem>
-        </TextList>
-      </TextContent>
+          </Content>
+        </Content>
+      </Content>
       {rhelAws ? (
         <Alert
           variant="info"
@@ -471,28 +469,28 @@ export const ArnDescription = () => {
   const intl = useIntl();
 
   return (
-    <TextContent>
-      <Text>
+    <Content>
+      <Content component="p">
         {intl.formatMessage({
           id: 'cost.arn.enableAccess',
           defaultMessage: 'To enable account access, capture the ARN associated with the role you just created.',
         })}
-      </Text>
-      <TextList component={TextListVariants.ol}>
-        <TextListItem>
+      </Content>
+      <Content component={ContentVariants.ol}>
+        <Content component="li">
           {intl.formatMessage({
             id: 'cost.arn.selectRole',
             defaultMessage: 'From the Roles tab, select the role you just created.',
           })}
-        </TextListItem>
-        <TextListItem>
+        </Content>
+        <Content component="li">
           {intl.formatMessage({
             id: 'cost.arn.copyArn',
             defaultMessage: 'From the Summary screen, copy the role ARN and paste it in the ARN field:',
           })}
-        </TextListItem>
-      </TextList>
-    </TextContent>
+        </Content>
+      </Content>
+    </Content>
   );
 };
 
@@ -511,9 +509,11 @@ export const IncludeAliasesLabel = ({ appendTo }) => {
           'If there are account aliases, they will appear and be used for filtering when reporting on AWS accounts. This will include "iam:ListAccountAliases" to the Action of the IAM Policy.',
       })}
     >
-      <Button className="pf-v5-u-p-0 pf-v5-u-m-0" variant={ButtonVariant.plain}>
-        <QuestionCircleIcon className="pf-v5-u-ml-sm" />
-      </Button>
+      <Button
+        icon={<QuestionCircleIcon className="pf-v6-u-ml-sm" />}
+        className="pf-v6-u-p-0 pf-v6-u-m-0"
+        variant={ButtonVariant.plain}
+      />
     </Popover>
   );
 };
@@ -537,9 +537,11 @@ export const IncludeOrgUnitsLabel = ({ appendTo }) => {
           'If there are organizational units, they will be used for filtering when reporting on AWS resources. This will include "organizations:List*" and "organizations:Describe*" to the Action of the IAM Policy',
       })}
     >
-      <Button className="pf-v5-u-p-0 pf-v5-u-m-0" variant={ButtonVariant.plain}>
-        <QuestionCircleIcon className="pf-v5-u-ml-sm" />
-      </Button>
+      <Button
+        icon={<QuestionCircleIcon className="pf-v6-u-ml-sm" />}
+        className="pf-v6-u-p-0 pf-v6-u-m-0"
+        variant={ButtonVariant.plain}
+      />
     </Popover>
   );
 };

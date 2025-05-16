@@ -15,7 +15,7 @@ const ApplicationResourcesCard = () => {
   const hasRightAccess = useHasWritePermissions();
 
   return (
-    <Card className="card pf-v5-u-m-lg pf-v5-u-mt-0">
+    <Card className="card pf-v6-u-m-lg pf-v6-u-mt-0">
       <CardTitle>
         {intl.formatMessage({
           id: 'detail.resources.title',

@@ -14,7 +14,7 @@ import { downloadFile } from '@redhat-cloud-services/frontend-components-utiliti
 import SourcesTable from '../components/SourcesTable/SourcesTable';
 import { filterSources, pageAndSize, setActiveCategory } from '../redux/sources/actions';
 import { useAppNavigate } from '../hooks/useAppNavigate';
-import { routes } from '../Routing';
+import { routes } from '../routes';
 
 import {
   afterSuccess,
@@ -112,6 +112,7 @@ const SourcesPage = () => {
       stateDispatch({ type: 'setFilterValue', value: filterValue.name });
     }
   }, [filterValue.name]);
+  const addIntegrationRef = React.useRef(null);
 
   const onSetPage = (_e, page) => dispatch(pageAndSize(page, pageSize));
 
@@ -132,14 +133,7 @@ const SourcesPage = () => {
     onSetPage,
     onPerPageSelect,
     className: 'top-pagination',
-  };
-
-  const paginationConfigBottom = {
-    ...paginationConfig,
-    dropDirection: 'up',
-    variant: 'bottom',
     isCompact: false,
-    className: 'bottom-pagination',
   };
 
   const showPaginationLoader = (!loaded || !appTypesLoaded || !sourceTypesLoaded) && !paginationClicked;
@@ -200,7 +194,7 @@ const SourcesPage = () => {
       hasIntegrationsReadPermissions ? (
         <UnauthorizedState />
       ) : (
-        <AsyncComponent appName="notifications" module="./IntegrationsTable" activeCategory={activeCategory} />
+        <AsyncComponent scope="notifications" module="./IntegrationsTable" activeCategory={activeCategory} />
       )
     ) : !fetchingError && !showEmptyState ? (
       <React.Fragment>
@@ -224,8 +218,8 @@ const SourcesPage = () => {
                     </AppLink>,
                   ]
                 : [
-                    <Tooltip content={noPermissionsText} key="addSourceButton">
-                      <span tabIndex="0">
+                    <Tooltip content={noPermissionsText} key="addSourceButton" triggerRef={addIntegrationRef}>
+                      <span tabIndex={0} ref={addIntegrationRef}>
                         <Button variant="primary" isDisabled id="addSourceButton">
                           {addSourceText}
                         </Button>
@@ -320,9 +314,6 @@ const SourcesPage = () => {
           }}
         />
         <SourcesTable />
-        <PrimaryToolbar
-          pagination={showPaginationLoader ? <PaginationLoader /> : numberOfEntities > 0 ? paginationConfigBottom : undefined}
-        />
       </React.Fragment>
     ) : null;
 

@@ -1,25 +1,25 @@
 .sources-integrations {
-  .pf-v5-c-card__body {
+  .pf-v6-c-card__body {
     padding: 8px 0 0 0;
   }
-  .pf-v5-c-expandable-section {
-    border: 1px solid var(--pf-v5-global--BackgroundColor--200);
+  .pf-v6-c-expandable-section {
+    border: 1px solid var(--pf-t--color--gray--10);
     border-top: 0;
     padding-left: 16px;
   }
   overflow-y: auto;
-  .pf-v5-c-list {
+  .pf-v6-c-list {
     &__item-icon {
       height: 20px;
       width: 20px;
       margin-top: 0;
     }
   }
-  .pf-v5-c-tile {
-    --pf-v5-c-tile--PaddingTop: 1rem;
-    --pf-v5-c-tile--PaddingBottom: 1rem;
-    --pf-v5-c-tile--PaddingRight: 1rem;
-    --pf-v5-c-tile--PaddingLeft: 1rem;
+  .pf-v6-c-tile {
+    --pf-v6-c-tile--PaddingBlockStart: 1rem;
+    --pf-v6-c-tile--PaddingBlockEnd: 1rem;
+    --pf-v6-c-tile--PaddingInlineEnd: 1rem;
+    --pf-v6-c-tile--PaddingInlineStart: 1rem;
     &__icon {
       height: 30px;
       width: 30px;

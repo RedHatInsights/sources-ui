@@ -43,7 +43,7 @@ describe('Provisioning GCP hardcoded schemas', () => {
     ).toBeInTheDocument();
 
     const cloudShellURL = `https://console.cloud.google.com/cloudshell/editor?project=${MOCKED_USERNAME}&cloudshell=true&shellonly=true`;
-    const button = await screen.findByText('Connect Google Cloud');
+    const button = (await screen.findByText('Connect Google Cloud')).closest('a');
     expect(button).toBeInTheDocument();
     expect(button).toHaveAttribute('href', cloudShellURL);
   });

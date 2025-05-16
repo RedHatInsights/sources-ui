@@ -1,4 +1,4 @@
-import { replaceRouteId, routes } from '../Routing';
+import { replaceRouteId, routes } from '../routes';
 
 describe('routes', () => {
   describe('replaceRouteId', () => {

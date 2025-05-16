@@ -3,14 +3,15 @@ import PropTypes from 'prop-types';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 
-import { Button, Checkbox, Modal, Text, TextContent, TextVariants, Title } from '@patternfly/react-core';
+import { Button, Checkbox, Content, ContentVariants, Icon, Title } from '@patternfly/react-core';
+import { Modal } from '@patternfly/react-core/deprecated';
 
 import ExclamationTriangleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-triangle-icon';
 
 import { removeSource } from '../../redux/sources/actions';
 import { useSource } from '../../hooks/useSource';
 import { useAppNavigate } from '../../hooks/useAppNavigate';
-import { routes } from '../../Routing';
+import { routes } from '../../routes';
 
 import { bodyVariants, typesWithExtendedText } from './helpers';
 import AppListInRemoval from './AppListInRemoval';
@@ -65,8 +66,8 @@ const SourceRemoveModal = ({ backPath = '/' }) => {
   const filteredApps = source.applications.filter(({ isDeleting }) => !isDeleting);
 
   const body = (
-    <TextContent>
-      <Text component={TextVariants.p}>
+    <Content>
+      <Content component={ContentVariants.p}>
         {filteredApps.length === 0 && bodyVariants('noApps', { name: source.name })}
         {filteredApps.length > 0 &&
           typesWithExtendedText.includes(sourceType) &&
@@ -80,7 +81,7 @@ const SourceRemoveModal = ({ backPath = '/' }) => {
             name: source.name,
             count: filteredApps.length,
           })}
-      </Text>
+      </Content>
       {filteredApps.length > 0 && <AppListInRemoval applications={filteredApps} />}
       <Checkbox
         label={intl.formatMessage({
@@ -96,7 +97,7 @@ const SourceRemoveModal = ({ backPath = '/' }) => {
         name="acknowledgeDelete"
         isChecked={acknowledge}
       />
-    </TextContent>
+    </Content>
   );
 
   return (
@@ -108,7 +109,9 @@ const SourceRemoveModal = ({ backPath = '/' }) => {
       })}
       header={
         <Title headingLevel="h1" size="2xl" className="sources">
-          <ExclamationTriangleIcon size="sm" className="ins-m-alert src-c-delete-icon pf-v5-u-mr-sm" />
+          <Icon size="xl" status="warning">
+            <ExclamationTriangleIcon className="ins-m-alert pf-v6-u-mr-sm" />
+          </Icon>
           {intl.formatMessage({
             id: 'sources.deleteTitle',
             defaultMessage: 'Remove integration?',

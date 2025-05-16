@@ -10,11 +10,11 @@ const SeeMoreCard = ({ data }) => {
   return (
     <React.Fragment>
       <MarketplaceModal onClose={() => setOpen(false)} data={data} isOpen={isOpen} />
-      <Card isFlat className="marketplace-card marketplace-seemore-card">
-        <CardBody isFilled className="pf-v5-u-pl-md pf-v5-u-pr-md card-text">
+      <Card className="marketplace-card marketplace-seemore-card">
+        <CardBody isFilled className="pf-v6-u-pl-md pf-v6-u-pr-md card-text">
           Not what you’re looking for? Browse the catalog to see more offerings from Red Hat Marketplace.
         </CardBody>
-        <CardFooter className="pf-v5-u-pl-md pf-v5-u-pr-md pf-v5-u-pb-md">
+        <CardFooter className="pf-v6-u-pl-md pf-v6-u-pr-md pf-v6-u-pb-md">
           <Button variant="primary" onClick={() => setOpen(true)}>
             See more databases
           </Button>

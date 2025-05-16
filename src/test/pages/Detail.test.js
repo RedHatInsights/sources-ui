@@ -11,7 +11,7 @@ import * as ApplicationResourcesCard from '../../components/SourceDetail/Applica
 import * as ApplicationsCard from '../../components/SourceDetail/ApplicationsCard';
 import * as SourceSummaryCard from '../../components/SourceDetail/SourceSummaryCard';
 import * as DetailHeader from '../../components/SourceDetail/DetailHeader';
-import { replaceRouteId, routes } from '../../Routing';
+import { replaceRouteId, routes } from '../../routes';
 import componentWrapperIntl from '../../utilities/testsHelpers';
 import mockStore from '../__mocks__/mockStore';
 import ElementWrapper from '../../components/ElementWrapper/ElementWrapper';

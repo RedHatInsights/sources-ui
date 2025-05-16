@@ -27,7 +27,7 @@ describe('Provisioning AWS ARN hardcoded schemas', () => {
     render(<ProvAwsArn.IAMRoleDescription />);
 
     expect(screen.getByText('Loading configuration...')).toBeInTheDocument();
-    const button = await screen.findByText('Connect AWS');
+    const button = (await screen.findByText('Connect AWS')).closest('a');
     expect(button).toBeInTheDocument();
     const StackCreationURL = `https://console.aws.amazon.com/cloudformation/home#/stacks/quickcreate?templateURL=https://provisioning-public-assets.s3.amazonaws.com/AWSStack/provisioning.yml&stackName=RH-HCC-provisioning-stack&param_RoleName=RH-HCC-provisioning-role&param_ProvisioningAwsAccount=${awsAccId}&param_PolicyName=RH-HCC-provisioning-policy`;
     expect(button).toHaveAttribute('href', StackCreationURL);

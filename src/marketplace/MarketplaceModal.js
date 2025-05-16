@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 
-import { Modal } from '@patternfly/react-core';
+import { Modal, ModalBody, ModalHeader } from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 
 import PrimaryToolbar from '@redhat-cloud-services/frontend-components/PrimaryToolbar/PrimaryToolbar';
@@ -76,75 +76,70 @@ const MarketplaceModal = ({ data, isOpen, onClose }) => {
   }, [config.page, config.perPage]);
 
   return (
-    <Modal
-      className="sources"
-      onClose={onClose}
-      isOpen={isOpen}
-      title="Browse catalog"
-      description={
+    <Modal className="sources" onClose={onClose} isOpen={isOpen} variant="large">
+      <ModalHeader title="Browse catalog" />
+      <ModalBody>
         <span>
           A curated selection of offerings available for purchase from{' '}
           <a href={MARKETPLACE_URL} target="_blank" rel="noopener noreferrer">
             Red Hat Marketplace <ExternalLinkAltIcon />
           </a>
         </span>
-      }
-      variant="large"
-    >
-      {config.isLoading && (
-        <div className="pf-v5-u-mb-md marketplace-flex">
-          <SkeletonMarketplaceCard />
-          <SkeletonMarketplaceCard />
-        </div>
-      )}
-      {!config.isLoading && (
-        <React.Fragment>
-          <PrimaryToolbar
-            useMobileLayout
-            className="marketplace-modal-toolbar"
-            pagination={{
-              itemCount: config.itemCount,
-              page: config.page,
-              perPage: config.perPage,
-              onSetPage: (_e, page) => dispatch({ type: 'SET_PAGE', payload: page }),
-              onPerPageSelect: (_e, perPage) => dispatch({ type: 'SET_PER_PAGE', payload: perPage }),
-              'data-testid': 'pagination',
-            }}
-            filterConfig={{
-              items: [
-                {
-                  label: 'Type',
-                  placeholder: 'Filter by product type',
-                  type: 'checkbox',
-                  filterValues: {
-                    //onChange: (_event, value) => console.log(value),
-                    value: ['database'],
-                    items: config.categories.map((category) => ({
-                      label: category.display_name,
-                      value: category.page_name,
-                      isDisabled: true,
-                    })),
-                  },
-                },
-              ],
-            }}
-            activeFiltersConfig={{
-              showDeleteButton: false,
-              filters: generateChips(config.filters),
-              // onDelete: (_event, chips, deleteAll) => console.log(chips, deleteAll),
-            }}
-          />
-          <div className="pf-v5-u-mb-md marketplace-flex">
-            {!isLoadingData && data.map((product) => <MarketplaceCard key={product.id} {...product} />)}
-            {isLoadingData && (
-              <React.Fragment>
-                <SkeletonMarketplaceCard />
-                <SkeletonMarketplaceCard />
-              </React.Fragment>
-            )}
+        {config.isLoading && (
+          <div className="pf-v6-u-mb-md marketplace-flex">
+            <SkeletonMarketplaceCard />
+            <SkeletonMarketplaceCard />
           </div>
-        </React.Fragment>
-      )}
+        )}
+        {!config.isLoading && (
+          <React.Fragment>
+            <PrimaryToolbar
+              useMobileLayout
+              className="marketplace-modal-toolbar"
+              pagination={{
+                itemCount: config.itemCount,
+                page: config.page,
+                perPage: config.perPage,
+                onSetPage: (_e, page) => dispatch({ type: 'SET_PAGE', payload: page }),
+                onPerPageSelect: (_e, perPage) => dispatch({ type: 'SET_PER_PAGE', payload: perPage }),
+                'data-testid': 'pagination',
+              }}
+              filterConfig={{
+                items: [
+                  {
+                    label: 'Type',
+                    placeholder: 'Filter by product type',
+                    type: 'checkbox',
+                    filterValues: {
+                      //onChange: (_event, value) => console.log(value),
+                      value: ['database'],
+                      items: config.categories.map((category) => ({
+                        label: category.display_name,
+                        value: category.page_name,
+                        isDisabled: true,
+                      })),
+                    },
+                  },
+                ],
+              }}
+              activeFiltersConfig={{
+                showDeleteButton: false,
+                filters: generateChips(config.filters),
+                // onDelete: (_event, chips, deleteAll) => console.log(chips, deleteAll),
+              }}
+            />
+            <div className="pf-v6-u-mb-md marketplace-flex">
+              {!isLoadingData && data.map((product) => <MarketplaceCard key={product.id} {...product} />)}
+              {isLoadingData && (
+                <React.Fragment>
+                  <SkeletonMarketplaceCard />
+                  <SkeletonMarketplaceCard />
+                </React.Fragment>
+              )}
+            </div>
+          </React.Fragment>
+        )}
+      </ModalBody>
     </Modal>
   );
 };

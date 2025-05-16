@@ -80,7 +80,7 @@ const IntegrationsDropdown = (props) => {
       )}
       {[COMMUNICATIONS, REPORTING, WEBHOOKS].includes(selectedIntegration) && (
         <AsyncComponent
-          appName="notifications"
+          scope="notifications"
           module="./IntegrationsWizard"
           store={store}
           isOpen={isIntegrationsWizardOpen}
@@ -107,9 +107,9 @@ const IntegrationsDropdown = (props) => {
             isExpanded={isOpen}
             isDisabled={props.isDisabled || (!hasSourcesPermissions && !hasIntegrationsPermissions)}
             variant="secondary"
-            className="pf-v5-u-pl-md"
+            className="pf-v6-u-pl-md"
           >
-            <Icon className="pf-v5-u-mr-sm">
+            <Icon className="pf-v6-u-mr-sm">
               <PlusCircleIcon />
             </Icon>
             Create Integration

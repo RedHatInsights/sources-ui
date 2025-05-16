@@ -10,10 +10,10 @@ const mapper = (type, openWizard, TileComponent) =>
         key={type}
         title="Amazon Web Services"
         onClick={() => openWizard('amazon')}
-        className="tile pf-v5-u-mr-md pf-v5-u-mt-md"
+        className="tile pf-v6-u-mr-md pf-v6-u-mt-md"
         icon={
           <ImageWithPlaceholder
-            className="provider-icon pf-v5-u-mb-sm"
+            className="provider-icon pf-v6-u-mb-sm"
             src="/apps/frontend-assets/partners-icons/aws.svg"
             alt="aws logo"
           />
@@ -25,11 +25,11 @@ const mapper = (type, openWizard, TileComponent) =>
         isStacked
         key={type}
         title="Google Cloud"
-        className="tile pf-v5-u-mr-md pf-v5-u-mt-md"
+        className="tile pf-v6-u-mr-md pf-v6-u-mt-md"
         onClick={() => openWizard('google')}
         icon={
           <ImageWithPlaceholder
-            className="provider-icon pf-v5-u-mb-sm"
+            className="provider-icon pf-v6-u-mb-sm"
             src="/apps/frontend-assets/partners-icons/google-cloud-short.svg"
             alt="google logo"
           />
@@ -42,10 +42,10 @@ const mapper = (type, openWizard, TileComponent) =>
         key={type}
         title="Microsoft Azure"
         onClick={() => openWizard('azure')}
-        className="tile pf-v5-u-mr-md pf-v5-u-mt-md"
+        className="tile pf-v6-u-mr-md pf-v6-u-mt-md"
         icon={
           <ImageWithPlaceholder
-            className="provider-icon pf-v5-u-mb-sm"
+            className="provider-icon pf-v6-u-mb-sm"
             src="/apps/frontend-assets/partners-icons/microsoft-azure-short.svg"
             alt="azure logo"
           />
@@ -58,10 +58,10 @@ const mapper = (type, openWizard, TileComponent) =>
         key={type}
         title="IBM Cloud"
         onClick={() => openWizard('ibm')}
-        className="tile pf-v5-u-mr-md pf-v5-u-mt-md"
+        className="tile pf-v6-u-mr-md pf-v6-u-mt-md"
         icon={
           <ImageWithPlaceholder
-            className="provider-icon pf-v5-u-mb-sm"
+            className="provider-icon pf-v6-u-mb-sm"
             src="/apps/frontend-assets/partners-icons/ibm-cloud.svg"
             alt="ibm logo"
           />

@@ -26,7 +26,7 @@ export const labelMapper = (type, intl, hcsEnrolled) =>
     [CLOUD_METER_APP_NAME]: (
       <span className="src-c-wizard__rhel-mag-label">
         RHEL management{' '}
-        <Label className="pf-v5-u-ml-sm" color="purple">
+        <Label className="pf-v6-u-ml-sm" color="purple">
           {intl.formatMessage({ id: 'sub.bundle', defaultMessage: 'Bundle' })}
         </Label>
       </span>
@@ -38,7 +38,7 @@ export const labelMapper = (type, intl, hcsEnrolled) =>
     [COST_MANAGEMENT_APP_NAME]: hcsEnrolled ? (
       <span className="src-c-wizard__rhel-mag-label">
         {`${HCS_APP_NAME} `}
-        <Label className="pf-v5-u-ml-sm" color="purple">
+        <Label className="pf-v6-u-ml-sm" color="purple">
           {intl.formatMessage({ id: 'sub.bundle', defaultMessage: 'Bundle' })}
         </Label>
       </span>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 
-import { Popover, Text, TextContent, TextVariants } from '@patternfly/react-core';
+import { Content, ContentVariants, Popover } from '@patternfly/react-core';
 
 import QuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/question-circle-icon';
 
@@ -18,8 +18,8 @@ const SSLFormLabel = () => {
         aria-label="Help text"
         maxWidth="50%"
         bodyContent={
-          <TextContent>
-            <Text component={TextVariants.p}>
+          <Content>
+            <Content component={ContentVariants.p}>
               {intl.formatMessage(
                 {
                   id: 'wizard.openshiftCADescription1',
@@ -29,18 +29,18 @@ const SSLFormLabel = () => {
                 },
                 { cmd: <b key="b">/etc/origin/master/ca.crt</b> },
               )}
-            </Text>
-            <Text component={TextVariants.p}>
+            </Content>
+            <Content component={ContentVariants.p}>
               {intl.formatMessage({
                 id: 'wizard.openshiftCADescription2',
                 defaultMessage:
                   'Paste the output (a block of text starting with --BEGIN CERTIFICATE--) into the Trusted CA Certificates field.',
               })}
-            </Text>
-          </TextContent>
+            </Content>
+          </Content>
         }
       >
-        <QuestionCircleIcon className="pf-v5-u-ml-sm" />
+        <QuestionCircleIcon className="pf-v6-u-ml-sm" />
       </Popover>
     </React.Fragment>
   );

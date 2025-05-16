@@ -5,7 +5,7 @@ import get from 'lodash/get';
 
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
-import { Alert, Bullseye, Card, CardBody, CardTitle, Spinner, Tab, TabTitleText, Tabs, Text } from '@patternfly/react-core';
+import { Alert, Bullseye, Card, CardBody, CardTitle, Content, Spinner, Tab, TabTitleText, Tabs } from '@patternfly/react-core';
 
 import NoApplications from './NoApplications';
 import { useSource } from '../../hooks/useSource';
@@ -109,7 +109,7 @@ const ResourcesTable = () => {
   }, [source?.applications?.length, isLoaded, appTypesLoaded, sourceTypesLoaded]);
 
   return (
-    <Card className="pf-v5-u-m-lg pf-v5-u-mt-0">
+    <Card className="pf-v6-u-m-lg pf-v6-u-mt-0">
       <CardTitle>
         {intl.formatMessage({
           id: 'resourceTable.title',
@@ -118,19 +118,19 @@ const ResourcesTable = () => {
       </CardTitle>
       <CardBody>
         {loading && (
-          <Bullseye className="pf-v5-u-m-2xl">
+          <Bullseye className="pf-v6-u-m-2xl">
             <Spinner />
           </Bullseye>
         )}
         {!loading && !source.applications.length && <NoApplications />}
         {!loading && source.applications.length > 0 && (
           <React.Fragment>
-            <Text className="pf-v5-u-mb-md">
+            <Content component="p" className="pf-v6-u-mb-md">
               {intl.formatMessage({
                 id: 'resourceTable.description',
                 defaultMessage: 'View resources for your connected applications.',
               })}
-            </Text>
+            </Content>
             <Tabs isBox activeKey={activeTab} onSelect={(_e, activeTab) => dispatch({ type: 'switchTab', activeTab })}>
               {source.applications.map((app) => {
                 const appName =
@@ -141,7 +141,7 @@ const ResourcesTable = () => {
                 return (
                   <Tab eventKey={app.id} key={app.id} title={<TabTitleText>{appName}</TabTitleText>}>
                     {app.paused_at && !source.paused_at && (
-                      <Alert isInline className="pf-v5-u-mt-lg" {...alertProps}>
+                      <Alert isInline className="pf-v6-u-mt-lg" {...alertProps}>
                         {description}
                       </Alert>
                     )}
@@ -153,7 +153,7 @@ const ResourcesTable = () => {
                             id: 'resourceTable.title',
                             defaultMessage: 'Connected application resources',
                           })}
-                          className="pf-v5-u-mt-md"
+                          className="pf-v6-u-mt-md"
                         >
                           <Thead>
                             <Tr>

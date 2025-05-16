@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import { shallowEqual, useSelector } from 'react-redux';
-import { routes } from '../../Routing';
+import { routes } from '../../routes';
 
-import { Tile } from '@patternfly/react-core';
+import { Tile } from '@patternfly/react-core/deprecated';
 
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import { useAppNavigate } from '../../hooks/useAppNavigate';

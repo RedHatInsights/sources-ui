@@ -8,7 +8,6 @@ import {
   EmptyState,
   EmptyStateActions,
   EmptyStateBody,
-  EmptyStateIcon,
   EmptyStateVariant,
   Title,
 } from '@patternfly/react-core';
@@ -17,16 +16,21 @@ import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclam
 
 const ErroredStep = ({ onClose, returnButtonTitle, message, title, customText, primaryAction, secondaryActions, Component }) => (
   <Bullseye>
-    <EmptyState variant={EmptyStateVariant.full} className="pf-v5-u-mt-4xl">
-      <EmptyStateIcon icon={ExclamationCircleIcon} color="var(--pf-v5-global--danger-color--100)" className="pf-v5-u-mb-0" />
-      <Title headingLevel="h2" size="xl" className="pf-v5-u-mt-xl">
-        {title}
-      </Title>
+    <EmptyState
+      titleText={
+        <Title headingLevel="h2" size="xl" className="pf-v6-u-mt-xl">
+          {title}
+        </Title>
+      }
+      icon={ExclamationCircleIcon}
+      variant={EmptyStateVariant.full}
+      className="pf-v6-u-mt-4xl"
+    >
       <EmptyStateBody className="src-c-wizard--step-text">{message || customText}</EmptyStateBody>
       <Component variant="primary" onClick={primaryAction || onClose}>
         {returnButtonTitle}
       </Component>
-      {secondaryActions && <EmptyStateActions className="pf-v5-u-mt-sm">{secondaryActions}</EmptyStateActions>}
+      {secondaryActions && <EmptyStateActions className="pf-v6-u-mt-sm">{secondaryActions}</EmptyStateActions>}
     </EmptyState>
   </Bullseye>
 );
