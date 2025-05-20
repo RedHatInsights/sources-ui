@@ -4,16 +4,15 @@ import { sortable, wrappable } from '@patternfly/react-table';
 import { Table, TableBody, TableHeader } from '@patternfly/react-table/deprecated';
 import { useIntl } from 'react-intl';
 
-import { pauseSource, resumeSource, sortEntities } from '../../redux/sources/actions';
+import { sortEntities } from '../../redux/sources/actions';
 import { PlaceHolderTable, RowWrapperLoader } from './loaders';
 import { COLUMN_COUNT, sourcesColumns } from '../../views/sourcesViewDefinition';
 import EmptyStateTable from './EmptyStateTable';
 import { useIsLoaded } from '../../hooks/useIsLoaded';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
-import { replaceRouteId, routes } from '../../Routing';
-import disabledTooltipProps from '../../utilities/disabledTooltipProps';
 import { useAppNavigate } from '../../hooks/useAppNavigate';
 import './sourcesTable.scss';
+import { actionResolver } from '../../utilities/utils';
 
 export const itemToCells = (item, columns, sourceTypes, appTypes) =>
   columns
@@ -67,68 +66,6 @@ const initialState = (columns) => ({
   cells: prepareColumnsCells(columns),
   key: 0,
 });
-
-export const actionResolver = (intl, navigate, hasWritePermissions, dispatch, isOrgAdmin) => (rowData) => {
-  const disabledProps = disabledTooltipProps(intl, isOrgAdmin);
-  const actions = [];
-
-  if (rowData.paused_at) {
-    actions.push({
-      title: intl.formatMessage({
-        id: 'sources.resume',
-        defaultMessage: 'Resume',
-      }),
-      description: intl.formatMessage({
-        id: 'sources.resume.description',
-        defaultMessage: 'Unpause data collection for this integration',
-      }),
-      onClick: (_ev, _i, { id }) => dispatch(resumeSource(id, rowData.originalName, intl)),
-      ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
-    });
-  } else {
-    actions.push({
-      title: intl.formatMessage({
-        id: 'sources.pause',
-        defaultMessage: 'Pause',
-      }),
-      description: intl.formatMessage({
-        id: 'sources.pause.description',
-        defaultMessage: 'Temporarily disable data collection',
-      }),
-      onClick: (_ev, _i, { id }) => dispatch(pauseSource(id, rowData.originalName, intl)),
-      ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
-    });
-  }
-
-  actions.push({
-    title: intl.formatMessage({
-      id: 'sources.remove',
-      defaultMessage: 'Remove',
-    }),
-    description: intl.formatMessage({
-      id: 'sources.remove.description',
-      defaultMessage: 'Permanently delete this integration and all collected data',
-    }),
-    onClick: (_ev, _i, { id }) => navigate(replaceRouteId(routes.sourcesRemove.path, id)),
-    ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
-  });
-
-  actions.push({
-    title: !rowData.paused_at
-      ? intl.formatMessage({
-          id: 'sources.edit',
-          defaultMessage: 'Edit',
-        })
-      : intl.formatMessage({
-          id: 'sources.viewDetails',
-          defaultMessage: 'View details',
-        }),
-    onClick: (_ev, _i, { id }) => navigate(replaceRouteId(routes.sourcesDetail.path, id)),
-    ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
-  });
-
-  return actions;
-};
 
 const SourcesTable = () => {
   const navigate = useAppNavigate();
