@@ -16,6 +16,7 @@ import {
   Flex,
   Gallery,
   Icon,
+  MenuToggle,
   Spinner,
   Tile,
 } from '@patternfly/react-core';
@@ -34,7 +35,6 @@ import { fetchRedHatSources } from './services/fetchRedHatSources';
 import { createIntegrationsData } from './consts/widgetData';
 import { useFlag } from '@unleash/proxy-client-react';
 import PermissionsChecker from '../PermissionsChecker';
-import { DropdownToggle } from '@patternfly/react-core/deprecated';
 
 const IntegrationsWidget: FunctionComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -200,15 +200,15 @@ const IntegrationsWidget: FunctionComponent = () => {
                           <Dropdown
                             onSelect={() => onToggleDropdown(integrationIndex, false)}
                             toggle={(toggleRef) => (
-                              <DropdownToggle
-                                onToggle={() =>
+                              <MenuToggle
+                                onClick={() =>
                                   onToggleDropdown(integrationIndex, !dropdownOpenIndexes[integrationIndex])
                                 }
                                 id={`dropdown-toggle-${integrationIndex}`}
                                 ref={toggleRef}
                               >
                                 Manage
-                              </DropdownToggle>
+                              </MenuToggle>
                             )}
                             isOpen={dropdownOpenIndexes[integrationIndex] || false}
                           >
