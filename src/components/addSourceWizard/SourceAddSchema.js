@@ -177,11 +177,29 @@ export const applicationStep = (applicationTypes, intl, activeCategory, hcsEnrol
     {
       component: componentTypes.PLAIN_TEXT,
       name: 'app-description',
-      label: intl.formatMessage({
-        id: 'wizard.applicationDescription',
-        defaultMessage:
-          'Select an application to connect to your integration. You can connect additional applications after integration creation.',
-      }),
+      label: intl.formatMessage(
+        {
+          id: 'wizard.applicationDescription',
+          defaultMessage:
+            'Select an application to connect to your integration. You can connect additional applications after integration creation. {learnMore}',
+        },
+        {
+          learnMore: (
+            <Text
+              key="link"
+              rel="noopener noreferrer"
+              target="_blank"
+              component={TextVariants.a}
+              href="https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/configuring_cloud_integrations_for_red_hat_services/assembly-adding-cloud-integrations_crc-cloud-integrations#adding-azure-integration_assembly-adding-cloud-integrations"
+            >
+              {intl.formatMessage({
+                id: 'wizard.learnMore defaultMessage=Learn more',
+                defaultMessage: 'Learn more',
+              })}
+            </Text>
+          ),
+        },
+      ),
     },
     {
       component: 'enhanced-radio',
