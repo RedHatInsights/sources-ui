@@ -4,7 +4,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import componentWrapperIntl from '../../../utilities/testsHelpers';
-import { routes } from '../../../Routing';
+import { routes } from '../../../routes';
 import CloudTiles from '../../../components/CloudTiles/CloudTiles';
 import mockStore from '../../__mocks__/mockStore';
 import sourceTypes from '../../__mocks__/sourceTypes';
@@ -30,7 +30,7 @@ describe('CloudTiles', () => {
 
   it('renders correctly', async () => {
     const { container } = render(componentWrapperIntl(<CloudTiles {...initialProps} />, store));
-    expect([...container.getElementsByClassName('pf-v5-c-tile__title')].map((e) => e.textContent)).toEqual([
+    expect([...container.getElementsByClassName('pf-v6-c-tile__title')].map((e) => e.textContent)).toEqual([
       'Amazon Web Services',
       'Google Cloud',
       'IBM Cloud',
@@ -49,7 +49,7 @@ describe('CloudTiles', () => {
 
     const { container } = render(componentWrapperIntl(<CloudTiles {...initialProps} />, store));
 
-    expect([...container.getElementsByClassName('pf-v5-c-tile__title')].map((e) => e.textContent)).toEqual([
+    expect([...container.getElementsByClassName('pf-v6-c-tile__title')].map((e) => e.textContent)).toEqual([
       'Amazon Web Services',
       'Google Cloud',
       'IBM Cloud',

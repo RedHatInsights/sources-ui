@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
-import { ClipboardCopy, Text, TextContent, TextList, TextListItem, TextListVariants, TextVariants } from '@patternfly/react-core';
+import { ClipboardCopy, Content, ContentVariants } from '@patternfly/react-core';
 
 import { HCCM_LATEST_DOCS_PREFIX, HCS_LATEST_DOCS_PREFIX } from '../../stringConstants';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
@@ -21,8 +21,8 @@ export const Project = () => {
   const showHCS = useSelector(({ sources }) => sources.hcsEnrolled, shallowEqual);
 
   return (
-    <TextContent>
-      <Text component={TextVariants.p} className="pf-v5-u-mb-lg">
+    <Content>
+      <Content component={ContentVariants.p} className="pf-v6-u-mb-lg">
         {intl.formatMessage(
           {
             id: 'cost.gcp.projectDescription',
@@ -31,9 +31,9 @@ export const Project = () => {
           },
           {
             link: showHCS ? null : ( // remove when HCS docs links are available
-              <Text
+              <Content
                 key="link"
-                component={TextVariants.a}
+                component={ContentVariants.a}
                 href={showHCS ? PROJECT_HCS_LINK : PROJECT_LINK}
                 rel="noopener noreferrer"
                 target="_blank"
@@ -42,18 +42,18 @@ export const Project = () => {
                   id: 'wizard.learnMore',
                   defaultMessage: 'Learn more',
                 })}
-              </Text>
+              </Content>
             ),
           },
         )}
-      </Text>
-      <Text component={TextVariants.p}>
+      </Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage({
           id: 'cost.gcp.projectDescription2',
           defaultMessage: 'Enter the ID of a project within your GCP billing account.',
         })}
-      </Text>
-    </TextContent>
+      </Content>
+    </Content>
   );
 };
 
@@ -61,8 +61,8 @@ export const CloudStorageBucket = () => {
   const intl = useIntl();
 
   return (
-    <TextContent>
-      <Text component={TextVariants.p}>
+    <Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage(
           {
             id: 'cost.gcp.cloudStorageBucket',
@@ -72,24 +72,30 @@ export const CloudStorageBucket = () => {
           {
             link: (
               <Fragment>
-                <Text key="link" component={TextVariants.a} href={MANUAL_CUR_STEPS} rel="noopener noreferrer" target="_blank">
+                <Content
+                  key="link"
+                  component={ContentVariants.a}
+                  href={MANUAL_CUR_STEPS}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
                   {intl.formatMessage({
                     id: 'cost.learnMore',
                     defaultMessage: 'Learn more',
                   })}
-                </Text>
+                </Content>
               </Fragment>
             ),
           },
         )}
-      </Text>
-      <Text component={TextVariants.p}>
+      </Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage({
           id: 'cost.gcp.csb.name',
           defaultMessage: 'After creating the cloud storage bucket, enter its name in the following:',
         })}
-      </Text>
-    </TextContent>
+      </Content>
+    </Content>
   );
 };
 
@@ -98,15 +104,15 @@ export const IAMRole = () => {
   const { getState } = useFormApi();
 
   return (
-    <TextContent>
-      <Text component={TextVariants.p}>
+    <Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage({
           id: 'cost.gcp.iamRoleDescription',
           defaultMessage: 'To specify GCP access permissions for Red Hat, create an Identity and Access Management (IAM) role.',
         })}
-      </Text>
-      <TextList component={TextListVariants.ol}>
-        <TextListItem>
+      </Content>
+      <Content component={ContentVariants.ol}>
+        <Content component="li">
           {intl.formatMessage(
             {
               id: 'cost.gcp.iam.firstStep',
@@ -114,8 +120,8 @@ export const IAMRole = () => {
             },
             { b },
           )}
-        </TextListItem>
-        <TextListItem>
+        </Content>
+        <Content component="li">
           {intl.formatMessage(
             {
               id: 'cost.gcp.iam.firstStepB',
@@ -123,30 +129,30 @@ export const IAMRole = () => {
             },
             { b },
           )}
-        </TextListItem>
-        <TextListItem>
+        </Content>
+        <Content component="li">
           {intl.formatMessage({
             id: 'cost.gcp.iam.secondStep',
             defaultMessage: 'Add the following permissions to your custom role:',
           })}
-        </TextListItem>
-        <TextList>
-          <TextListItem>
+        </Content>
+        <Content component="ul">
+          <Content component="li">
             <b>{getState().values?.application?.extra?.storage_only ? 'storage.buckets.get' : 'bigquery.jobs.create'}</b>
-          </TextListItem>
-          <TextListItem>
+          </Content>
+          <Content component="li">
             <b>{getState().values?.application?.extra?.storage_only ? 'storage.objects.get' : 'bigquery.tables.getData'}</b>
-          </TextListItem>
-          <TextListItem>
+          </Content>
+          <Content component="li">
             <b>{getState().values?.application?.extra?.storage_only ? 'storage.objects.list' : 'bigquery.tables.get'}</b>
-          </TextListItem>
+          </Content>
           {!getState().values?.application?.extra?.storage_only && (
-            <TextListItem>
+            <Content component="li">
               <b>bigquery.tables.list</b>
-            </TextListItem>
+            </Content>
           )}
-        </TextList>
-        <TextListItem>
+        </Content>
+        <Content component="li">
           {intl.formatMessage(
             {
               id: 'cost.gcp.iam.thirdStep',
@@ -154,9 +160,9 @@ export const IAMRole = () => {
             },
             { b },
           )}
-        </TextListItem>
-      </TextList>
-    </TextContent>
+        </Content>
+      </Content>
+    </Content>
   );
 };
 
@@ -168,8 +174,8 @@ export const Dataset = () => {
   const projectId = getState().values.authentication?.username;
 
   return (
-    <TextContent>
-      <Text component={TextVariants.p}>
+    <Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage(
           {
             id: 'cost.gcp.dataset.description',
@@ -177,9 +183,9 @@ export const Dataset = () => {
           },
           { application: showHCS ? HCS_APP_NAME : 'Cost Management' },
         )}
-      </Text>
-      <TextList component={TextListVariants.ol}>
-        <TextListItem>
+      </Content>
+      <Content component={ContentVariants.ol}>
+        <Content component="li">
           {intl.formatMessage(
             {
               id: 'cost.gcp.dataset.firstStep',
@@ -187,8 +193,8 @@ export const Dataset = () => {
             },
             { b, projectId },
           )}
-        </TextListItem>
-        <TextListItem>
+        </Content>
+        <Content component="li">
           {intl.formatMessage(
             {
               id: 'cost.gcp.dataset.secondStep',
@@ -196,8 +202,8 @@ export const Dataset = () => {
             },
             { b },
           )}
-        </TextListItem>
-        <TextListItem>
+        </Content>
+        <Content component="li">
           {intl.formatMessage(
             {
               id: 'cost.gcp.dataset.thirdStep',
@@ -205,8 +211,8 @@ export const Dataset = () => {
             },
             { b },
           )}
-        </TextListItem>
-        <TextListItem>
+        </Content>
+        <Content component="li">
           {intl.formatMessage(
             {
               id: 'cost.gcp.dataset.fourthStep',
@@ -214,9 +220,9 @@ export const Dataset = () => {
             },
             { b },
           )}
-        </TextListItem>
-      </TextList>
-    </TextContent>
+        </Content>
+      </Content>
+    </Content>
   );
 };
 
@@ -243,15 +249,15 @@ export const AssignAccess = () => {
   }, []);
 
   return (
-    <TextContent>
-      <Text component={TextVariants.p}>
+    <Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage({
           id: 'cost.gcp.assignAccessDesc',
           defaultMessage: 'To delegate account access, add a new member to your project.',
         })}
-      </Text>
-      <TextList component={TextListVariants.ol}>
-        <TextListItem>
+      </Content>
+      <Content component={ContentVariants.ol}>
+        <Content component="li">
           {intl.formatMessage(
             {
               id: 'cost.gcp.access.firstStep',
@@ -259,8 +265,8 @@ export const AssignAccess = () => {
             },
             { b },
           )}
-        </TextListItem>
-        <TextListItem>
+        </Content>
+        <Content component="li">
           {intl.formatMessage(
             {
               id: 'cost.gcp.access.secondStep',
@@ -268,11 +274,11 @@ export const AssignAccess = () => {
             },
             { b },
           )}
-        </TextListItem>
-        <ClipboardCopy className="pf-v5-u-m-sm  pf-v5-u-ml-0" isReadOnly>
+        </Content>
+        <ClipboardCopy className="pf-v6-u-m-sm  pf-v6-u-ml-0" isReadOnly>
           {googleAccount || intl.formatMessage({ id: 'cost.gcp.access.loading', defaultMessage: 'Loading account address...' })}
         </ClipboardCopy>
-        <TextListItem>
+        <Content component="li">
           {intl.formatMessage(
             {
               id: 'cost.gcp.access.thirdStep',
@@ -280,8 +286,8 @@ export const AssignAccess = () => {
             },
             { b },
           )}
-        </TextListItem>
-        <TextListItem>
+        </Content>
+        <Content component="li">
           {intl.formatMessage(
             {
               id: 'cost.gcp.access.fourthStep',
@@ -289,9 +295,9 @@ export const AssignAccess = () => {
             },
             { b },
           )}
-        </TextListItem>
-      </TextList>
-    </TextContent>
+        </Content>
+      </Content>
+    </Content>
   );
 };
 
@@ -299,8 +305,8 @@ export const ProjectDescription = () => {
   const intl = useIntl();
 
   return (
-    <TextContent>
-      <Text component={TextVariants.p}>
+    <Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage(
           {
             id: 'cost.gcp.costProjectDescrption',
@@ -310,18 +316,24 @@ export const ProjectDescription = () => {
           {
             link: (
               <Fragment>
-                <Text key="link" component={TextVariants.a} href={MANUAL_CUR_STEPS} rel="noopener noreferrer" target="_blank">
+                <Content
+                  key="link"
+                  component={ContentVariants.a}
+                  href={MANUAL_CUR_STEPS}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
                   {intl.formatMessage({
                     id: 'cost.learnMore',
                     defaultMessage: 'Learn more',
                   })}
-                </Text>
+                </Content>
               </Fragment>
             ),
           },
         )}
-      </Text>
-    </TextContent>
+      </Content>
+    </Content>
   );
 };
 
@@ -329,15 +341,15 @@ export const BillingExport = () => {
   const intl = useIntl();
 
   return (
-    <TextContent>
-      <Text component={TextVariants.p}>
+    <Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage({
           id: 'cost.gcp.billingExport.description',
           defaultMessage: 'To enable detailed billing data exports to BigQuery, set up daily cost export.',
         })}
-      </Text>
-      <TextList component={TextListVariants.ol}>
-        <TextListItem>
+      </Content>
+      <Content component={ContentVariants.ol}>
+        <Content component="li">
           {intl.formatMessage(
             {
               id: 'cost.gcp.billingExport.firstStep',
@@ -345,8 +357,8 @@ export const BillingExport = () => {
             },
             { b },
           )}
-        </TextListItem>
-        <TextListItem>
+        </Content>
+        <Content component="li">
           {intl.formatMessage(
             {
               id: 'cost.gcp.billingExport.firstStepB',
@@ -354,8 +366,8 @@ export const BillingExport = () => {
             },
             { b },
           )}
-        </TextListItem>
-        <TextListItem>
+        </Content>
+        <Content component="li">
           {intl.formatMessage(
             {
               id: 'cost.gcp.billingExport.secondStep',
@@ -363,14 +375,14 @@ export const BillingExport = () => {
             },
             { b },
           )}
-        </TextListItem>
-        <TextListItem>
+        </Content>
+        <Content component="li">
           {intl.formatMessage({
             id: 'cost.gcp.billingExport.thirdStep',
             defaultMessage: 'Use the dropdown menus to select the correct project and dataset.',
           })}
-        </TextListItem>
-        <TextListItem>
+        </Content>
+        <Content component="li">
           {intl.formatMessage(
             {
               id: 'cost.gcp.billingExport.fourthStep',
@@ -378,8 +390,8 @@ export const BillingExport = () => {
             },
             { b },
           )}
-        </TextListItem>
-      </TextList>
-    </TextContent>
+        </Content>
+      </Content>
+    </Content>
   );
 };

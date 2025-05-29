@@ -5,7 +5,7 @@ import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
 
-import { Text, TextContent, TextVariants } from '@patternfly/react-core';
+import { Content, ContentVariants } from '@patternfly/react-core';
 
 import debouncePromise from '../../utilities/debouncePromise';
 import { findSource } from '../../api/wizardHelpers';
@@ -101,7 +101,7 @@ export const iconMapper = (sourceTypes) => (name) => {
     <img
       src={shortIcons[name] || sourceType.icon_url}
       alt={sourceType.product_name}
-      className={`src-c-wizard__icon ${sourceType.category === 'Red Hat' ? 'redhat-icon' : 'pf-v5-u-mb-sm'}`}
+      className={`src-c-wizard__icon ${sourceType.category === 'Red Hat' ? 'redhat-icon' : 'pf-v6-u-mb-sm'}`}
     />
   );
 
@@ -277,8 +277,8 @@ export const NameDescription = ({ sourceTypes }) => {
   const typeName = sourceTypes.find(({ name }) => name === getState().values.source_type)?.product_name;
 
   return (
-    <TextContent key="step1">
-      <Text component={TextVariants.p}>
+    <Content key="step1">
+      <Content component={ContentVariants.p}>
         {intl.formatMessage(
           {
             id: 'wizard.nameDescription',
@@ -286,8 +286,8 @@ export const NameDescription = ({ sourceTypes }) => {
           },
           { typeName },
         )}
-      </Text>
-    </TextContent>
+      </Content>
+    </Content>
   );
 };
 
@@ -329,8 +329,8 @@ export const SummaryDescription = () => {
   const intl = useIntl();
 
   return (
-    <TextContent>
-      <Text component={TextVariants.p}>
+    <Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage(
           {
             id: 'wizard.summaryDescription',
@@ -341,8 +341,8 @@ export const SummaryDescription = () => {
             b: bold,
           },
         )}
-      </Text>
-    </TextContent>
+      </Content>
+    </Content>
   );
 };
 

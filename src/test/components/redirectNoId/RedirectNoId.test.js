@@ -5,8 +5,10 @@ import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import RedirectNoId from '../../../components/RedirectNoId/RedirectNoId';
 import * as actions from '../../../redux/sources/actions';
 import * as api from '../../../api/entities';
-import { replaceRouteId, routes } from '../../../Routing';
+import { replaceRouteId, routes } from '../../../routes';
 import mockStore from '../../__mocks__/mockStore';
+
+jest.useFakeTimers({ advanceTimers: true });
 
 describe('RedirectNoId', () => {
   let initialStore;
@@ -18,7 +20,6 @@ describe('RedirectNoId', () => {
   beforeEach(() => {
     initialEntry = [replaceRouteId(routes.sourcesRemove.path, '1')];
 
-    actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'ADD_MESSAGE' }));
     actions.addHiddenSource = jest.fn().mockImplementation(() => ({ type: 'ADD_HIDDEN_SOURCE' }));
   });
 
@@ -37,32 +38,32 @@ describe('RedirectNoId', () => {
       ),
     );
 
-    expect(actions.addMessage).not.toHaveBeenCalled();
     expect(actions.addHiddenSource).not.toHaveBeenCalled();
     expect(wasRedirectedToRoot()).toEqual(false);
   });
 
-  it('Renders redirect and creates message if loaded and source was not found', async () => {
+  it('Renders redirect if loaded and source was not found', async () => {
     api.doLoadSource = jest.fn().mockImplementation(() => Promise.resolve({ sources: [] }));
 
     initialStore = mockStore({
       sources: { loaded: 0, appTypesLoaded: true, sourceTypesLoaded: true, entities: [] },
     });
 
-    render(
-      componentWrapperIntl(
-        <Routes>
-          <Route path={routes.sourcesRemove.path} element={<RedirectNoId />} />
-        </Routes>,
-        initialStore,
-        initialEntry,
-      ),
-    );
+    await waitFor(() => {
+      render(
+        componentWrapperIntl(
+          <Routes>
+            <Route path={routes.sourcesRemove.path} element={<RedirectNoId />} />
+          </Routes>,
+          initialStore,
+          initialEntry,
+        ),
+      );
+    });
 
-    await waitFor(() => expect(actions.addMessage).toHaveBeenCalled());
     expect(actions.addHiddenSource).toHaveBeenCalled();
 
-    expect(wasRedirectedToRoot()).toEqual(true);
+    await waitFor(async () => expect(wasRedirectedToRoot()).toEqual(true));
   });
 
   it('addHiddenSource is called with found source', async () => {

@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import componentWrapperIntl from '../../../utilities/testsHelpers';
-import { routes } from '../../../Routing';
+import { routes } from '../../../routes';
 import mockStore from '../../__mocks__/mockStore';
 import RedHatTiles from '../../../components/RedHatTiles/RedHatTiles';
 import sourceTypes from '../../__mocks__/sourceTypes';

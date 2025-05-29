@@ -4,11 +4,11 @@ import userEvent from '@testing-library/user-event';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { Route, Routes } from 'react-router-dom';
-import { replaceRouteId, routes } from '../../../Routing';
+import { replaceRouteId, routes } from '../../../routes';
 import AvailabilityChecker from '../../../components/SourceDetail/AvailabilityChecker';
 import * as api from '../../../api/checkSourceStatus';
-import * as actions from '../../../redux/sources/actions';
 import mockStore from '../../__mocks__/mockStore';
+import notificationsStore from '../../../utilities/notificationsStore';
 
 describe('AvailabilityChecker', () => {
   let store;
@@ -38,6 +38,7 @@ describe('AvailabilityChecker', () => {
 
   it('checks status (click > loading > message)', async () => {
     const user = userEvent.setup();
+    const addNotificationSpy = jest.spyOn(notificationsStore, 'addNotification');
 
     render(
       componentWrapperIntl(
@@ -50,7 +51,6 @@ describe('AvailabilityChecker', () => {
     );
 
     api.default = mockApi();
-    actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'something' }));
 
     expect(screen.getByLabelText('Check integration availability')).not.toBeDisabled();
 
@@ -67,7 +67,7 @@ describe('AvailabilityChecker', () => {
     await waitFor(() => expect(screen.getByLabelText('Check integration availability')).not.toBeDisabled());
     expect(() => screen.getByRole('progressbar')).toThrow();
 
-    expect(actions.addMessage).toHaveBeenCalledWith({
+    expect(addNotificationSpy).toHaveBeenCalledWith({
       title: 'Request to check integration status was sent',
       variant: 'info',
       description: 'Check this page later for updates',

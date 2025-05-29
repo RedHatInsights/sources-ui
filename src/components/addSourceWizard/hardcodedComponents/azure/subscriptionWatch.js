@@ -1,17 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
-import {
-  Alert,
-  Button,
-  ClipboardCopy,
-  Text,
-  TextContent,
-  TextList,
-  TextListItem,
-  TextListItemVariants,
-  TextListVariants,
-  TextVariants,
-} from '@patternfly/react-core';
+import { Alert, Button, ClipboardCopy, Content, ContentVariants } from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 
 import { getSourcesApi } from '../../../../api/entities';
@@ -30,15 +19,15 @@ export const OfflineToken = () => {
   const intl = useIntl();
 
   return (
-    <TextContent>
-      <Text>
+    <Content>
+      <Content component="p">
         {intl.formatMessage({
           id: 'subwatch.azure.tokenDesc',
           defaultMessage: 'Generate a token to authenticate the calls to APIs for Red Hat services.',
         })}
-      </Text>
-      <TextList component={TextListVariants.ol} className="pf-v5-u-ml-0">
-        <TextListItem>
+      </Content>
+      <Content component={ContentVariants.ol} className="pf-v6-u-ml-0">
+        <Content component="li">
           {intl.formatMessage(
             {
               id: 'subwatch.azure.tokenLink',
@@ -46,15 +35,15 @@ export const OfflineToken = () => {
             },
             {
               link: (
-                <Text key="link" rel="noopener noreferrer" target="_blank" component={TextVariants.a} href={API_LINK}>
+                <Content key="link" rel="noopener noreferrer" target="_blank" component={ContentVariants.a} href={API_LINK}>
                   {API_LINK}
-                </Text>
+                </Content>
               ),
             },
           )}
-        </TextListItem>
-      </TextList>
-    </TextContent>
+        </Content>
+      </Content>
+    </Content>
   );
 };
 
@@ -62,20 +51,20 @@ export const AnsiblePlaybook = () => {
   const intl = useIntl();
 
   return (
-    <TextContent>
-      <Text component={TextVariants.p}>
+    <Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage({
           id: 'subwatch.azure.ansiblePlaybookDesc',
           defaultMessage: 'Download and run the following commands against a running Azure VM.',
         })}
-      </Text>
-      <ClipboardCopy className="pf-v5-u-mb-lg">ansible-galaxy collection install redhatinsights.subscriptions</ClipboardCopy>
+      </Content>
+      <ClipboardCopy className="pf-v6-u-mb-lg">ansible-galaxy collection install redhatinsights.subscriptions</ClipboardCopy>
       <ClipboardCopy>
         {
           'ansible-playbook -i <AZURE_VM_HOSTNAME>, -b ~/.ansible/collections/ansible_collections/redhatinsights/subscriptions/playbooks/verify_account.yml -e rh_api_refresh_token=<OFFLINE_AUTH_TOKEN>'
         }
       </ClipboardCopy>
-    </TextContent>
+    </Content>
   );
 };
 
@@ -130,8 +119,8 @@ export const LightHouseDescription = () => {
           },
         )}
       </Alert>
-      <TextContent>
-        <Text>
+      <Content>
+        <Content component="p">
           {intl.formatMessage(
             {
               id: 'subwatch.lighthouse.desc',
@@ -140,15 +129,15 @@ export const LightHouseDescription = () => {
             },
             { b },
           )}
-        </Text>
-        <TextList component={TextListVariants.ol} className="pf-v5-u-ml-0">
-          <TextListItem component={TextListItemVariants.li}>
+        </Content>
+        <Content component={ContentVariants.ol} className="pf-v6-u-ml-0">
+          <Content component={ContentVariants.li}>
             {intl.formatMessage({
               id: 'subwatch.lighthouse.selectAzureSubscription',
               defaultMessage: 'Select the Azure subscription that you want to use with RHEL management.',
             })}
-          </TextListItem>
-          <TextListItem component={TextListItemVariants.li}>
+          </Content>
+          <Content component={ContentVariants.li}>
             {intl.formatMessage(
               {
                 id: 'subwatch.lighthouse.editInstanceDetails',
@@ -156,8 +145,8 @@ export const LightHouseDescription = () => {
               },
               { b },
             )}
-          </TextListItem>
-          <TextListItem component={TextListItemVariants.li}>
+          </Content>
+          <Content component={ContentVariants.li}>
             {intl.formatMessage(
               {
                 id: 'subwatch.lighthouse.clickCreateToRunDeployment',
@@ -184,8 +173,8 @@ export const LightHouseDescription = () => {
                 ),
               },
             )}
-          </TextListItem>
-          <TextListItem component={TextListItemVariants.li}>
+          </Content>
+          <Content component={ContentVariants.li}>
             {intl.formatMessage(
               {
                 id: 'subwatch.lighthouse.copySubscriptionId',
@@ -194,12 +183,12 @@ export const LightHouseDescription = () => {
               },
               { b },
             )}
-          </TextListItem>
-        </TextList>
-      </TextContent>
+          </Content>
+        </Content>
+      </Content>
       <Button
         style={{ width: 'fit-content' }}
-        icon={<ExternalLinkAltIcon className="pf-v5-u-ml-md" />}
+        icon={<ExternalLinkAltIcon className="pf-v6-u-ml-md" />}
         iconPosition="end"
         component="a"
         target="_blank"
@@ -225,13 +214,13 @@ export const SubscriptionID = () => {
   const intl = useIntl();
 
   return (
-    <TextContent>
-      <Text>
+    <Content>
+      <Content component="p">
         {intl.formatMessage({
           id: 'subwatch.subscriptionId.desc',
           defaultMessage: 'Paste your Azure subscription ID from the previous step into the field below.',
         })}
-      </Text>
-    </TextContent>
+      </Content>
+    </Content>
   );
 };

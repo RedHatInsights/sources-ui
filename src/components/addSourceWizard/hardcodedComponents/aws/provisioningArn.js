@@ -5,15 +5,12 @@ import {
   Alert,
   Button,
   ClipboardCopy,
+  Content,
+  ContentVariants,
   ExpandableSection,
   ListComponent,
   Stack,
   StackItem,
-  Text,
-  TextContent,
-  TextList,
-  TextListItem,
-  TextVariants,
 } from '@patternfly/react-core';
 
 import { getSourcesApi } from '../../../../api/entities';
@@ -67,11 +64,11 @@ export const IAMRoleDescription = () => {
 
   if (provAwsAccount === null) {
     return (
-      <TextContent>
-        <Text component={TextVariants.p}>
+      <Content>
+        <Content component={ContentVariants.p}>
           <FormattedMessage id="provisioning.iam.loading" defaultMessage="Loading configuration..." />
-        </Text>
-      </TextContent>
+        </Content>
+      </Content>
     );
   }
 
@@ -79,65 +76,65 @@ export const IAMRoleDescription = () => {
     <>
       <Stack hasGutter>
         <StackItem>
-          <Text>
+          <Content component="p">
             <FormattedMessage
               defaultMessage="To integrate your AWS account with our service, you need to create an IAM role."
               id="provisioning.aws-role-creation.desc"
             />
-          </Text>
+          </Content>
         </StackItem>
         <StackItem>
           <ExpandableSection isIndented toggleText="See role permissions">
-            <Text>
-              <TextList component="dl">
-                <TextListItem>IAM:GetPolicyVersion</TextListItem>
-                <TextListItem>IAM:GetPolicy</TextListItem>
-                <TextListItem>IAM:ListAttachedRolePolicies</TextListItem>
-                <TextListItem>IAM:GetRolePolicy</TextListItem>
-                <TextListItem>IAM:ListRolePolicies</TextListItem>
-                <TextListItem>EC2:CreateKeyPair</TextListItem>
-                <TextListItem>EC2:CreateLaunchTemplate</TextListItem>
-                <TextListItem>EC2:CreateLaunchTemplateVersion</TextListItem>
-                <TextListItem>EC2:CreateTags</TextListItem>
-                <TextListItem>EC2:DeleteKeyPair</TextListItem>
-                <TextListItem>EC2:DeleteTags</TextListItem>
-                <TextListItem>EC2:DescribeAvailabilityZones</TextListItem>
-                <TextListItem>EC2:DescribeImages</TextListItem>
-                <TextListItem>EC2:DescribeInstanceTypes</TextListItem>
-                <TextListItem>EC2:DescribeInstances</TextListItem>
-                <TextListItem>EC2:DescribeKeyPairs</TextListItem>
-                <TextListItem>EC2:DescribeLaunchTemplates</TextListItem>
-                <TextListItem>EC2:DescribeLaunchTemplateVersions</TextListItem>
-                <TextListItem>EC2:DescribeRegions</TextListItem>
-                <TextListItem>EC2:DescribeSecurityGroups</TextListItem>
-                <TextListItem>EC2:DescribeSnapshotAttribute</TextListItem>
-                <TextListItem>EC2:DescribeTags</TextListItem>
-                <TextListItem>EC2:ImportKeyPair</TextListItem>
-                <TextListItem>EC2:RunInstances</TextListItem>
-                <TextListItem>EC2:StartInstances</TextListItem>
-              </TextList>
-            </Text>
+            <Content component="p">
+              <Content component="dl">
+                <Content component="li">IAM:GetPolicyVersion</Content>
+                <Content component="li">IAM:GetPolicy</Content>
+                <Content component="li">IAM:ListAttachedRolePolicies</Content>
+                <Content component="li">IAM:GetRolePolicy</Content>
+                <Content component="li">IAM:ListRolePolicies</Content>
+                <Content component="li">EC2:CreateKeyPair</Content>
+                <Content component="li">EC2:CreateLaunchTemplate</Content>
+                <Content component="li">EC2:CreateLaunchTemplateVersion</Content>
+                <Content component="li">EC2:CreateTags</Content>
+                <Content component="li">EC2:DeleteKeyPair</Content>
+                <Content component="li">EC2:DeleteTags</Content>
+                <Content component="li">EC2:DescribeAvailabilityZones</Content>
+                <Content component="li">EC2:DescribeImages</Content>
+                <Content component="li">EC2:DescribeInstanceTypes</Content>
+                <Content component="li">EC2:DescribeInstances</Content>
+                <Content component="li">EC2:DescribeKeyPairs</Content>
+                <Content component="li">EC2:DescribeLaunchTemplates</Content>
+                <Content component="li">EC2:DescribeLaunchTemplateVersions</Content>
+                <Content component="li">EC2:DescribeRegions</Content>
+                <Content component="li">EC2:DescribeSecurityGroups</Content>
+                <Content component="li">EC2:DescribeSnapshotAttribute</Content>
+                <Content component="li">EC2:DescribeTags</Content>
+                <Content component="li">EC2:ImportKeyPair</Content>
+                <Content component="li">EC2:RunInstances</Content>
+                <Content component="li">EC2:StartInstances</Content>
+              </Content>
+            </Content>
           </ExpandableSection>
         </StackItem>
         <StackItem>
-          <TextContent>
+          <Content>
             <FormattedMessage
               id="provisioning.aws-role-creation-follow.desc"
               defaultMessage="Follow these steps to create the role:"
             />
-          </TextContent>
+          </Content>
         </StackItem>
         <StackItem>
-          <TextContent>
-            <TextList component={ListComponent.ol}>
-              <TextListItem>
+          <Content>
+            <Content component={ListComponent.ol}>
+              <Content component="li">
                 <FormattedMessage
                   id="provisioning.aws-role-step-1"
                   defaultMessage="Click on {connectAWS} to open AWS CloudFormation in a new tab with the IAM Role template."
                   values={{ connectAWS: <strong>&apos;Connect AWS&apos;</strong> }}
                 />
-              </TextListItem>
-              <TextListItem>
+              </Content>
+              <Content component="li">
                 <FormattedMessage
                   id="provisioning.aws-role-step-2"
                   defaultMessage="In AWS CloudFormation, click {createStack} to initiate the creation of the IAM Role. Wait until the status shows {status}."
@@ -146,16 +143,16 @@ export const IAMRoleDescription = () => {
                     status: <strong>CREATE_COMPLETE</strong>,
                   }}
                 />
-              </TextListItem>
-              <TextListItem>
+              </Content>
+              <Content component="li">
                 <FormattedMessage
                   id="provisioning.aws-role-step-3"
                   defaultMessage="Return to this window and click {next} to retrieve the new Role's ARN."
                   values={{ next: <strong>&apos;Next&apos;</strong> }}
                 />
-              </TextListItem>
-            </TextList>
-          </TextContent>
+              </Content>
+            </Content>
+          </Content>
         </StackItem>
         <StackItem>
           <Button component="a" target="_blank" href={StackCreationURL} isBlock variant="primary">
@@ -169,14 +166,14 @@ export const IAMRoleDescription = () => {
 
 export const AccountNumber = () => {
   return (
-    <TextContent>
-      <Text>
+    <Content>
+      <Content component="p">
         <FormattedMessage
           id="provisioning.aws-account-number.desc"
           defaultMessage="Login to your AWS account and copy your account number"
         />
-      </Text>
-    </TextContent>
+      </Content>
+    </Content>
   );
 };
 
@@ -185,8 +182,8 @@ export const ArnDescription = () => {
   const accountNumber = formApi.values.meta.account;
 
   return (
-    <TextContent>
-      <Text component={TextVariants.p}>
+    <Content>
+      <Content component={ContentVariants.p}>
         <FormattedMessage
           id="provisioning.iam.enableAccount"
           defaultMessage="To enable account access, copy this provided {ARN} and paste it into the input field below. If you modified the role name during creation, update it accordingly."
@@ -200,7 +197,7 @@ export const ArnDescription = () => {
             ),
           }}
         />
-      </Text>
-    </TextContent>
+      </Content>
+    </Content>
   );
 };

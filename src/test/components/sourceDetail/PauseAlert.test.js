@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { replaceRouteId, routes } from '../../../Routing';
+import { replaceRouteId, routes } from '../../../routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import mockStore from '../../__mocks__/mockStore';
 import PauseAlert from '../../../components/SourceDetail/PauseAlert';
@@ -40,7 +40,7 @@ describe('DetailHeader', () => {
         'No data is being collected for this integration. Turn the integration back on to reestablish connection and data collection. Previous credentials will be restored and application connections will continue as seen on this page.',
       ),
     ).toBeInTheDocument();
-    expect(screen.getByText('Resume connection')).toBeDisabled();
+    expect(screen.getByText('Resume connection').closest('button')).toBeDisabled();
   });
 
   it('renders with permissions', async () => {

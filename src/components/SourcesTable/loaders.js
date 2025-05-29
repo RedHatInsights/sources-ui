@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { RowWrapper } from '@patternfly/react-table';
+import { Tbody, Td, Tr } from '@patternfly/react-table';
 import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
 import { Section } from '@redhat-cloud-services/frontend-components/Section';
 
 import { Bullseye, Card, CardBody, Grid, GridItem, Spinner } from '@patternfly/react-core';
-
-import { COLUMN_COUNT } from '../../views/sourcesViewDefinition';
 
 import './loaders.scss';
 import { useIntl } from 'react-intl';
@@ -35,7 +33,7 @@ export const AppPlaceholder = () => {
         />
       </PageHeader>
       <Section type="content">
-        <div className="src-c-fake_content pf-v5-u-p-lg">
+        <div className="src-c-fake_content pf-v6-u-p-lg">
           <Loader />
         </div>
       </Section>
@@ -51,23 +49,22 @@ export const PlaceHolderTable = () => (
   </Bullseye>
 );
 
-export const RowWrapperLoader = ({ row: { isDeleting, ...row }, ...initialProps }) =>
-  isDeleting ? (
-    <tr>
-      <td colSpan={COLUMN_COUNT} className="pf-v5-u-p-md" data-testid="removing-row">
-        <Loader height={100} />
-      </td>
-    </tr>
-  ) : (
-    <RowWrapper {...initialProps} row={row} className="src-c-row-vertical-centered" data-testid="row" />
-  );
+export const DWPlaceHolderTable = ({ columns = 1 }) => (
+  <Tbody>
+    <Tr>
+      <Td colSpan={columns}>
+        <PlaceHolderTable />
+      </Td>
+    </Tr>
+  </Tbody>
+);
 
-RowWrapperLoader.propTypes = {
-  row: PropTypes.object.isRequired,
+DWPlaceHolderTable.propTypes = {
+  columns: PropTypes.number,
 };
 
 export const CardLoader = (props) => (
-  <Card className="pf-v5-u-m-md">
+  <Card className="pf-v6-u-m-md">
     <CardBody>
       <Loader {...props} />
     </CardBody>

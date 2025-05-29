@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardBody, CardFooter, CardTitle, Skeleton } from '@patternfly/react-core';
 
 const SkeletonMarketplaceCard = () => (
-  <Card isFlat className="marketplace-card">
+  <Card className="marketplace-card">
     <CardTitle>
       <Skeleton role="progressbar" />
     </CardTitle>

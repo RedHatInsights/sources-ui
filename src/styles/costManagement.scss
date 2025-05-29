@@ -1,14 +1,14 @@
 .list-align-top {
-  margin-top: calc(var(--pf-v5-global--spacer--xl) * -1);
+  margin-top: calc(var(--pf-t--global--spacer--xl) * -1);
 }
 
 .list-align-left {
-  margin-left: calc(var(--pf-v5-global--spacer--xl) * -1);
+  margin-left: calc(var(--pf-t--global--spacer--xl) * -1);
 }
 
 .export-table {
-  margin-left: calc(var(--pf-v5-global--spacer--xl) * 1.5);
-  margin-top: var(--pf-v5-global--spacer--md);
+  margin-left: calc(var(--pf-t--global--spacer--xl) * 1.5);
+  margin-top: var(--pf-t--global--spacer--md);
 }
 
 .cluster-id-question-button {
@@ -17,5 +17,5 @@
 }
 
 .src-wizard--all-required-text {
-  color: var(--pf-v5-global--disabled-color--100);
+  color: var(--pf-t--color--gray--50);
 }

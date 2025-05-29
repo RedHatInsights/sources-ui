@@ -8,7 +8,7 @@ import render from '../__mocks__/render';
 import sourceTypes, { AMAZON_TYPE } from '../../__mocks__/sourceTypes';
 
 import * as api from '../../../api/entities';
-import { replaceRouteId, routes } from '../../../Routing';
+import { replaceRouteId, routes } from '../../../routes';
 
 describe('Final wizard', () => {
   let initialProps;

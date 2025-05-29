@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { Route, Routes } from 'react-router-dom';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import { replaceRouteId, routes } from '../../../Routing';
+import { replaceRouteId, routes } from '../../../routes';
 import { sourcesDataGraphQl } from '../../__mocks__/sourcesData';
 
 import ErroredModal from '../../../components/SourceEditForm/ErroredModal';

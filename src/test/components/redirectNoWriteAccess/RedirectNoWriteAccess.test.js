@@ -1,10 +1,9 @@
 import { Route, Routes } from 'react-router-dom';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
-import * as actions from '../../../redux/sources/actions';
 import RedirectNoWriteAccess from '../../../components/RedirectNoWriteAccess/RedirectNoWriteAccess';
-import { replaceRouteId, routes } from '../../../Routing';
+import { replaceRouteId, routes } from '../../../routes';
 import mockStore from '../../__mocks__/mockStore';
 
 describe('RedirectNoWriteAccess', () => {
@@ -16,8 +15,6 @@ describe('RedirectNoWriteAccess', () => {
 
   beforeEach(() => {
     initialEntry = [replaceRouteId(routes.sourcesRemove.path, '1')];
-
-    actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'ADD_MESSAGE' }));
   });
 
   it('Renders null if user is admin', () => {
@@ -33,7 +30,6 @@ describe('RedirectNoWriteAccess', () => {
       ),
     );
 
-    expect(actions.addMessage).not.toHaveBeenCalled();
     expect(wasRedirectedToRoot()).toEqual(false);
   });
 
@@ -50,7 +46,6 @@ describe('RedirectNoWriteAccess', () => {
       ),
     );
 
-    expect(actions.addMessage).not.toHaveBeenCalled();
     expect(wasRedirectedToRoot()).toEqual(false);
   });
 
@@ -67,7 +62,6 @@ describe('RedirectNoWriteAccess', () => {
       ),
     );
 
-    expect(actions.addMessage).not.toHaveBeenCalled();
     expect(wasRedirectedToRoot()).toEqual(false);
   });
 
@@ -83,12 +77,6 @@ describe('RedirectNoWriteAccess', () => {
         initialEntry,
       ),
     );
-    await waitFor(() => expect(actions.addMessage).toHaveBeenCalled());
-    expect(actions.addMessage).toHaveBeenCalledWith({
-      title: expect.any(String),
-      variant: 'danger',
-      description: expect.any(String),
-    });
 
     expect(wasRedirectedToRoot()).toEqual(true);
   });

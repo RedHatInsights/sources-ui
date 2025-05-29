@@ -1,9 +1,9 @@
 import promise from 'redux-promise-middleware';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import notificationsMiddleware from '@redhat-cloud-services/frontend-components-notifications/notificationsMiddleware';
+import createNotificationsMiddleware from '../../redux/notifications/notificationsMiddleware';
 
-const middlewares = [thunk, promise, notificationsMiddleware()];
+const middlewares = [thunk, promise, createNotificationsMiddleware()];
 
 const mockStore = (state) => configureStore(middlewares)(state);
 

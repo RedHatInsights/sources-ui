@@ -9,6 +9,8 @@ import {
   CardBody,
   CardFooter,
   CardTitle,
+  Content,
+  ContentVariants,
   DataList,
   DataListCell,
   DataListItem,
@@ -21,9 +23,6 @@ import {
   Label,
   List,
   ListItem,
-  Text,
-  TextContent,
-  TextVariants,
   Title,
 } from '@patternfly/react-core';
 import {
@@ -61,7 +60,7 @@ const Overview = () => {
   const data = [
     {
       isExpanded: true,
-      icon: <OutlinedCommentsIcon className="pf-v5-u-primary-color-100" />,
+      icon: <OutlinedCommentsIcon className="pf-v6-u-primary-color-100" />,
       title: intl.formatMessage(
         {
           id: 'integrations.overview.dataListItemTitle1',
@@ -86,7 +85,7 @@ const Overview = () => {
     },
     {
       isExpanded: false,
-      icon: <AutomationIcon className="pf-v5-u-primary-color-100" />,
+      icon: <AutomationIcon className="pf-v6-u-primary-color-100" />,
       title: intl.formatMessage(
         {
           id: 'integrations.overview.dataListItemTitle2',
@@ -114,7 +113,7 @@ const Overview = () => {
     },
     {
       isExpanded: false,
-      icon: <WebhooksIcon className="pf-v5-u-primary-color-100" />,
+      icon: <WebhooksIcon className="pf-v6-u-primary-color-100" />,
       title: intl.formatMessage(
         {
           id: 'integrations.overview.dataListItemTitle3',
@@ -139,7 +138,7 @@ const Overview = () => {
     },
     {
       isExpanded: false,
-      icon: <CloudIcon className="pf-v5-u-primary-color-100" />,
+      icon: <CloudIcon className="pf-v6-u-primary-color-100" />,
       title: intl.formatMessage(
         {
           id: 'integrations.overview.dataListItemTitle4',
@@ -164,7 +163,7 @@ const Overview = () => {
     },
     {
       isExpanded: false,
-      icon: <RedhatIcon className="pf-v5-u-primary-color-100" />,
+      icon: <RedhatIcon className="pf-v6-u-primary-color-100" />,
       title: intl.formatMessage(
         {
           id: 'integrations.overview.dataListItemTitle5',
@@ -195,7 +194,7 @@ const Overview = () => {
 
   return (
     <React.Fragment>
-      <Card className="pf-v5-u-mb-lg">
+      <Card className="pf-v6-u-mb-lg">
         <Grid hasGutter>
           <GridItem sm={12} md={6} lg={8}>
             <CardTitle>
@@ -207,16 +206,16 @@ const Overview = () => {
               </Title>
             </CardTitle>
             <CardBody>
-              <TextContent>
-                <Text component={TextVariants.p} className="pf-v5-u-mb-md">
+              <Content>
+                <Content component={ContentVariants.p} className="pf-v6-u-mb-md">
                   {intl.formatMessage({
                     id: 'integrations.overview.heroParagraph',
                     defaultMessage:
                       'Notifications and integrations services work together to transmit messages to third-party application endpoints, such as instant messaging platforms and external ticketing systems, when triggering events occur.',
                   })}
-                </Text>
-              </TextContent>
-              <Title headingLevel="h4" className="pf-v5-u-mb-sm">
+                </Content>
+              </Content>
+              <Title headingLevel="h4" className="pf-v6-u-mb-sm">
                 {intl.formatMessage({
                   id: 'integrations.overview.heroListTitle',
                   defaultMessage: 'Key features',
@@ -270,27 +269,27 @@ const Overview = () => {
                     </React.Fragment>
                   }
                 >
-                  <TextContent>
-                    <Text component={TextVariants.p}>
+                  <Content>
+                    <Content component={ContentVariants.p}>
                       {intl.formatMessage({
                         id: 'integrations.overview.alertParagraph',
                         defaultMessage:
                           'You do not have the permissions for integration management. Contact your organization administrator if you need these permissions updated.',
                       })}
-                    </Text>
-                  </TextContent>
+                    </Content>
+                  </Content>
                 </Alert>
               )}
             </CardFooter>
           </GridItem>
-          <GridItem md={6} lg={4} className="pf-v5-u-display-none pf-v5-u-display-block-on-md pf-c-card__cover-image"></GridItem>
+          <GridItem md={6} lg={4} className="pf-v6-u-display-none pf-v6-u-display-block-on-md pf-c-card__cover-image"></GridItem>
         </Grid>
       </Card>
 
       {hasSourcesPermissions || hasIntegrationsPermissions ? (
-        <Hint className="pf-v5-u-mb-lg">
+        <Hint className="pf-v6-u-mb-lg">
           <HintBody>
-            <span className="pf-v5-u-font-weight-bold">
+            <span className="pf-v6-u-font-weight-bold">
               {intl.formatMessage({
                 id: 'integrations.overview.hintTextBold',
                 defaultMessage: 'Already set up your integrations?',
@@ -321,13 +320,13 @@ const Overview = () => {
         </Hint>
       ) : null}
 
-      <Title headingLevel="h2" className="pf-v5-u-mb-md">
+      <Title headingLevel="h2" className="pf-v6-u-mb-md">
         {intl.formatMessage({
           id: 'integrations.overview.titleIntegrationTypes',
           defaultMessage: 'Integration types',
         })}
       </Title>
-      <DataList aria-label="Integration types" className="pf-v5-u-mb-lg">
+      <DataList aria-label="Integration types" className="pf-v6-u-mb-lg">
         {data.map((item, index) => (
           <CustomDataListItem
             key={index}
@@ -342,7 +341,7 @@ const Overview = () => {
         ))}
       </DataList>
 
-      <Title headingLevel="h2" className="pf-v5-u-mb-md">
+      <Title headingLevel="h2" className="pf-v6-u-mb-md">
         {intl.formatMessage({
           id: 'integrations.overview.titleRecommendedContent',
           defaultMessage: 'Recommended content',
@@ -369,7 +368,7 @@ const Overview = () => {
                     })}
                   </Label>
                 </DataListCell>,
-                <DataListCell key="action" className="pf-v5-u-display-flex pf-v5-u-justify-content-flex-end">
+                <DataListCell key="action" className="pf-v6-u-display-flex pf-v6-u-justify-content-flex-end">
                   <Button
                     component="a"
                     href={VIEW_DOCUMENTATION}
@@ -408,13 +407,12 @@ const Overview = () => {
                     })}
                   </Label>
                 </DataListCell>,
-                <DataListCell key="action" className="pf-v5-u-display-flex pf-v5-u-justify-content-flex-end">
-                  <Button variant="link" onClick={handleActivateQuickstart} isInline>
+                <DataListCell key="action" className="pf-v6-u-display-flex pf-v6-u-justify-content-flex-end">
+                  <Button icon={<ArrowRightIcon />} variant="link" onClick={handleActivateQuickstart} isInline>
                     {intl.formatMessage({
                       id: 'integrations.overview.recommendedContentTableLink2',
                       defaultMessage: 'Begin Quick start',
                     })}
-                    <ArrowRightIcon />
                   </Button>
                 </DataListCell>,
               ]}
@@ -423,7 +421,7 @@ const Overview = () => {
         </DataListItem>
       </DataList>
       <Link to={'/settings/learning-resources'}>
-        <Button variant="link" className="pf-v5-u-mb-lg" isInline>
+        <Button variant="link" className="pf-v6-u-mb-lg" isInline>
           {intl.formatMessage({
             id: 'integrations.overview.viewAllLearningResources',
             defaultMessage: 'View all Settings learning resources',

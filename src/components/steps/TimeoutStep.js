@@ -9,7 +9,6 @@ import {
   EmptyState,
   EmptyStateActions,
   EmptyStateBody,
-  EmptyStateIcon,
   EmptyStateVariant,
   Title,
 } from '@patternfly/react-core';
@@ -21,11 +20,16 @@ const TimeoutStep = ({ onClose, returnButtonTitle, title, secondaryActions, uuid
 
   return (
     <Bullseye>
-      <EmptyState variant={EmptyStateVariant.full} className="pf-v5-u-mt-4xl">
-        <EmptyStateIcon icon={WrenchIcon} color="var(--pf-v5-global--Color--200)" className="pf-v5-u-mb-0" />
-        <Title headingLevel="h2" size="xl" className="pf-v5-u-mt-xl">
-          {title}
-        </Title>
+      <EmptyState
+        titleText={
+          <Title headingLevel="h2" size="xl" className="pf-v6-u-mt-xl">
+            {title}
+          </Title>
+        }
+        icon={WrenchIcon}
+        variant={EmptyStateVariant.full}
+        className="pf-v6-u-mt-4xl"
+      >
         <EmptyStateBody>
           {intl.formatMessage(
             {
@@ -36,12 +40,12 @@ const TimeoutStep = ({ onClose, returnButtonTitle, title, secondaryActions, uuid
             { newLine: <br key="br" /> },
           )}
           {uuid ?? (
-            <ClipboardCopy isReadOnly hoverTip="Source UUID" clickTip="Copied" className="pf-v5-u-mt-md">
+            <ClipboardCopy isReadOnly hoverTip="Source UUID" clickTip="Copied" className="pf-v6-u-mt-md">
               {uuid}
             </ClipboardCopy>
           )}
         </EmptyStateBody>
-        <Button variant="primary" onClick={onClose} className="pf-v5-u-mt-xl">
+        <Button variant="primary" onClick={onClose} className="pf-v6-u-mt-xl">
           {returnButtonTitle}
         </Button>
         {secondaryActions && <EmptyStateActions>{secondaryActions}</EmptyStateActions>}

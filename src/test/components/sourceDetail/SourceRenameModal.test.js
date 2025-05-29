@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import { Route, Routes } from 'react-router-dom';
-import { replaceRouteId, routes } from '../../../Routing';
+import { replaceRouteId, routes } from '../../../routes';
 import SourceRenameModal from '../../../components/SourceDetail/SourceRenameModal';
 import * as actions from '../../../redux/sources/actions';
 import mockStore from '../../__mocks__/mockStore';

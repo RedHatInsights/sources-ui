@@ -11,7 +11,7 @@ import { componentWrapperIntl } from '../../utilities/testsHelpers';
 import * as api from '../../api/entities';
 import * as typesApi from '../../api/source_types';
 
-import { routes } from '../../Routing';
+import { routes } from '../../routes';
 import * as wizard from '../../components/addSourceWizard';
 import { getStore } from '../../utilities/store';
 import ElementWrapper from '../../components/ElementWrapper/ElementWrapper';

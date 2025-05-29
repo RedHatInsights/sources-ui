@@ -5,21 +5,15 @@ import PropTypes from 'prop-types';
 import {
   Alert,
   ClipboardCopy,
+  Content,
+  ContentVariants,
   EmptyState,
   EmptyStateBody,
-  EmptyStateIcon,
   EmptyStateVariant,
-  Text,
-  TextContent,
-  TextList,
-  TextListItem,
-  TextListItemVariants,
-  TextListVariants,
-  TextVariants,
   Title,
 } from '@patternfly/react-core';
 
-import { Select, SelectOption, SelectVariant } from '@patternfly/react-core/deprecated';
+import { MenuToggle, Select, SelectList, SelectOption } from '@patternfly/react-core';
 
 import { HCCM_LATEST_DOCS_PREFIX, HCS_LATEST_DOCS_PREFIX } from '../../stringConstants';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
@@ -42,8 +36,8 @@ export const ConfigureResourceGroupAndStorageAccount = () => {
   const showHCS = useSelector(({ sources }) => sources.hcsEnrolled, shallowEqual);
 
   return (
-    <TextContent>
-      <Text component={TextVariants.p}>
+    <Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage(
           {
             id: 'cost.azure.storageAccountDescription',
@@ -52,29 +46,29 @@ export const ConfigureResourceGroupAndStorageAccount = () => {
           },
           {
             link: showHCS ? null : ( // remove when HCS docs links are available
-              <Text
+              <Content
                 key="link"
                 rel="noopener noreferrer"
                 target="_blank"
-                component={TextVariants.a}
+                component={ContentVariants.a}
                 href={showHCS ? CREATE_HCS_AZURE_STORAGE : CREATE_AZURE_STORAGE}
               >
                 {intl.formatMessage({
                   id: 'wizard.learnMore defaultMessage=Learn more',
                   defaultMessage: 'Learn more',
                 })}
-              </Text>
+              </Content>
             ),
           },
         )}
-      </Text>
-      <Text component={TextVariants.p}>
+      </Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage({
           id: 'cost.azure.storageAccountAfterDescription',
           defaultMessage: 'After configuring a resource group and storage account in the Azure portal, enter the following:',
         })}
-      </Text>
-    </TextContent>
+      </Content>
+    </Content>
   );
 };
 
@@ -82,16 +76,16 @@ export const SubscriptionID = () => {
   const intl = useIntl();
 
   return (
-    <TextContent>
-      <Text component={TextVariants.p}>
+    <Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage({
           id: 'cost.azure.subscriptionIdCommand',
           defaultMessage:
             'Run the following command in Cloud Shell to obtain the Subscription ID where the cost export is being stored and enter it below:',
         })}
-      </Text>
+      </Content>
       <ClipboardCopy>{`az account show --query "{ id: id }" | jq '.id' | tr -d '"'`}</ClipboardCopy>
-    </TextContent>
+    </Content>
   );
 };
 
@@ -104,8 +98,8 @@ export const ConfigureRolesDescription = () => {
   const values = getState().values;
 
   return (
-    <TextContent>
-      <Text component={TextVariants.p}>
+    <Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage(
           {
             id: 'cost.azure.dedicatedCredentials',
@@ -114,32 +108,32 @@ export const ConfigureRolesDescription = () => {
           },
           {
             link: showHCS ? null : ( // remove when HCS docs links are available
-              <Text
+              <Content
                 key="link"
                 rel="noopener noreferrer"
                 target="_blank"
-                component={TextVariants.a}
+                component={ContentVariants.a}
                 href={showHCS ? AZURE_HCS_CREDS_URL : AZURE_CREDS_URL}
               >
                 {intl.formatMessage({
                   id: 'wizard.learnMore defaultMessage=Learn more',
                   defaultMessage: 'Learn more',
                 })}
-              </Text>
+              </Content>
             ),
             application,
           },
         )}
-      </Text>
-      <Text component={TextVariants.p}>
+      </Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage({
           id: 'cost.azure.createContributorRole',
           defaultMessage:
             'Run the following command in Cloud Shell to create a service principal with Cost Management Storage Account Contributor role. From the output enter the values in the fields below:',
         })}
-      </Text>
+      </Content>
       <ClipboardCopy>{`az ad sp create-for-rbac -n "CostManagement" --role "Storage Account Contributor"  --scope /subscriptions/${values?.application?.extra?.subscription_id}/resourceGroups/${values?.application?.extra?.resource_group} --query '{"tenant": tenant, "client_id": appId, "secret": password}'`}</ClipboardCopy>
-    </TextContent>
+    </Content>
   );
 };
 
@@ -154,8 +148,8 @@ const InternalReaderRoleDescription = () => {
 
   if (scope.includes('billingAccounts')) {
     return (
-      <TextContent>
-        <Text component={TextVariants.p}>
+      <Content>
+        <Content component={ContentVariants.p}>
           {intl.formatMessage(
             scope.includes('enrollmentAccounts')
               ? {
@@ -173,32 +167,38 @@ const InternalReaderRoleDescription = () => {
                 },
             {
               link: (
-                <Text key="link" rel="noopener noreferrer" target="_blank" component={TextVariants.a} href={AZURE_ROLES_URL}>
+                <Content
+                  key="link"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  component={ContentVariants.a}
+                  href={AZURE_ROLES_URL}
+                >
                   {intl.formatMessage({
                     id: 'wizard.learnMore defaultMessage=Learn more',
                     defaultMessage: 'Learn more',
                   })}
-                </Text>
+                </Content>
               ),
             },
           )}
-        </Text>
-      </TextContent>
+        </Content>
+      </Content>
     );
   }
 
   return application.extra.storage_only ? null : (
-    <TextContent>
-      <Text component={TextVariants.p}>
+    <Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage({
           id: 'cost.azure.createCostReaderRole',
           defaultMessage: 'Run the following command in Cloud Shell to create a Cost Management Reader role:',
         })}
-      </Text>
+      </Content>
       <ClipboardCopy>
         {`az role assignment create --assignee "${authentication?.username}" --role "Cost Management Reader" --scope "${scope}"`}
       </ClipboardCopy>
-    </TextContent>
+    </Content>
   );
 };
 
@@ -213,8 +213,8 @@ export const ExportSchedule = () => {
   const application = formOptions.getState().values.application;
 
   return (
-    <TextContent>
-      <Text component={TextVariants.p}>
+    <Content>
+      <Content component={ContentVariants.p}>
         {intl.formatMessage(
           {
             id: 'cost.azure.storageAccountDescription',
@@ -223,134 +223,140 @@ export const ExportSchedule = () => {
           },
           {
             link: showHCS ? null : ( // remove when HCS docs links are available
-              <Text
+              <Content
                 key="link"
                 rel="noopener noreferrer"
                 target="_blank"
-                component={TextVariants.a}
+                component={ContentVariants.a}
                 href={showHCS ? RECURRING_HCS_TASK_URL : RECURRING_TASK_URL}
               >
                 {intl.formatMessage({
                   id: 'wizard.learnMore defaultMessage=Learn more',
                   defaultMessage: 'Learn more',
                 })}
-              </Text>
+              </Content>
             ),
           },
         )}
-      </Text>
-      <TextContent className="list-align-left">
-        <TextList component={TextListVariants.ol}>
-          <TextListItem component={TextListItemVariants.li}>
+      </Content>
+      <Content className="list-align-left">
+        <Content component={ContentVariants.ol}>
+          <Content component={ContentVariants.li}>
             {intl.formatMessage({
               id: 'cost.azure.storageExportDescription',
               defaultMessage: 'From the Azure portal, add a new cost export.',
             })}
-          </TextListItem>
-          <TextListItem component={TextListItemVariants.li}>
+          </Content>
+          <Content component={ContentVariants.li}>
             {intl.formatMessage({
               id: 'cost.azure.storageAccountDescription',
               defaultMessage:
                 'Provide a name for the container and directory path, and specify the below settings to create the daily export. Leave all other options as the default.',
             })}
-          </TextListItem>
-        </TextList>
-      </TextContent>
-      <TextList className="export-table" component={TextListVariants.dl}>
-        <TextListItem component={TextListItemVariants.dt}>
-          <Text component={TextVariants.b}>
+          </Content>
+        </Content>
+      </Content>
+      <Content className="export-table" component={ContentVariants.dl}>
+        <Content component={ContentVariants.dt}>
+          <Content component={ContentVariants.b}>
             {intl.formatMessage({
               id: 'cost.azure.exportType',
               defaultMessage: 'Export type',
             })}
-          </Text>
-        </TextListItem>
-        <TextListItem component={TextListItemVariants.dd}>
+          </Content>
+        </Content>
+        <Content component={ContentVariants.dd}>
           {intl.formatMessage({
             id: 'cost.azure.dailyExport',
             defaultMessage: 'Daily export of month-to-date costs',
           })}
-        </TextListItem>
-        <TextListItem component={TextListItemVariants.dt}>
-          <Text component={TextVariants.b}>
+        </Content>
+        <Content component={ContentVariants.dt}>
+          <Content component={ContentVariants.b}>
             {intl.formatMessage({
               id: 'cost.azure.storageAccountName',
               defaultMessage: 'Storage account name',
             })}
-          </Text>
-        </TextListItem>
-        <TextListItem component={TextListItemVariants.dd}>
+          </Content>
+        </Content>
+        <Content component={ContentVariants.dd}>
           {intl.formatMessage({
             id: 'cost.azure.createdAccountName',
             defaultMessage: 'Created storage account name or existing storage account name',
           })}
-        </TextListItem>
-        <TextListItem component={TextListItemVariants.dt}>
-          <Text component={TextVariants.b}>
+        </Content>
+        <Content component={ContentVariants.dt}>
+          <Content component={ContentVariants.b}>
             {intl.formatMessage({
               id: 'cost.azure.resourceGroupName',
               defaultMessage: 'Resource group name',
             })}
-          </Text>
-        </TextListItem>
-        <TextListItem component={TextListItemVariants.dd}>
+          </Content>
+        </Content>
+        <Content component={ContentVariants.dd}>
           {intl.formatMessage({
             id: 'cost.azure.createdResourceGroupName',
             defaultMessage: 'Resource group for the storage account',
           })}
-        </TextListItem>
-      </TextList>
+        </Content>
+      </Content>
       {application.extra.storage_only ? null : (
         <Fragment>
           <br />
-          <Text component={TextVariants.p}>
+          <Content component={ContentVariants.p}>
             {intl.formatMessage({
               id: 'cost.azure.exportNameFollowup',
               defaultMessage: 'After configuring the daily export, enter the following:',
             })}
-          </Text>
+          </Content>
         </Fragment>
       )}
-    </TextContent>
+    </Content>
   );
 };
 
 const CostExportSelect = ({ handleSelect }) => {
-  const [isOpen, setOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = React.useState(false);
   const [selected, setSelected] = React.useState('Subscription');
-  const onToggle = (isOpen) => setOpen(isOpen);
 
   const clearSelection = () => {
     setSelected(null);
-    setOpen(false);
+    setIsOpen(false);
   };
 
-  const onSelect = (event, selection, isPlaceholder) => {
+  const onSelect = (_event, selection, isPlaceholder) => {
     if (isPlaceholder) {
       clearSelection();
     } else {
       setSelected(selection);
-      setOpen(false);
+      setIsOpen(false);
       handleSelect(selection);
     }
   };
 
+  const toggle = (toggleRef) => (
+    <MenuToggle ref={toggleRef} onClick={() => setIsOpen((prev) => !prev)} isExpanded={isOpen}>
+      {selected}
+    </MenuToggle>
+  );
   return (
     <Select
-      variant={SelectVariant.single}
       aria-label="Select Input"
-      onToggle={onToggle}
+      toggle={toggle}
+      onOpenChange={(isOpen) => setIsOpen(isOpen)}
       onSelect={onSelect}
-      selections={selected}
+      selected={selected}
       isOpen={isOpen}
     >
-      <SelectOption key="subscription" value="Subscription" />
-      <SelectOption key="resourceGroup" value="Resource Group" />
-      <SelectOption key="management" value="Management Group" />
-      <SelectOption key="billingAccount" value="Billing Account" />
-      <SelectOption key="billingProfile" value="Billing Profile" />
-      <SelectOption key="invoiceSection" value="Invoice Section" />
-      <SelectOption key="enrollment" value="Enrollment Account" />
+      <SelectList>
+        <SelectOption key="subscription" value="Subscription" />
+        <SelectOption key="resourceGroup" value="Resource Group" />
+        <SelectOption key="management" value="Management Group" />
+        <SelectOption key="billingAccount" value="Billing Account" />
+        <SelectOption key="billingProfile" value="Billing Profile" />
+        <SelectOption key="invoiceSection" value="Invoice Section" />
+        <SelectOption key="enrollment" value="Enrollment Account" />
+      </SelectList>
     </Select>
   );
 };
@@ -363,144 +369,144 @@ const CostExportDescription = ({ selection }) => {
   const intl = useIntl();
   const selectionText = {
     Subscription: (
-      <TextContent>
-        <Text component={TextVariants.p}>
+      <Content>
+        <Content component={ContentVariants.p}>
           {intl.formatMessage({
             id: 'cost.azure.subscription',
             defaultMessage:
               'Run the following command from the Cloud Shell to obtain the Subscription ID associated with the generated cost export.',
           })}
-        </Text>
+        </Content>
         <ClipboardCopy>
           {`az account show --query "{ id: id }" | jq '.id' | tr -d '"' | awk '{print "/subscriptions/"$0}'`}
         </ClipboardCopy>
         <br />
-        <Text component={TextVariants.p}>
+        <Content component={ContentVariants.p}>
           {intl.formatMessage({
             id: 'cost.azure.costExportInput',
             defaultMessage: 'After running the command, enter the output in the following field:',
           })}
-        </Text>
-      </TextContent>
+        </Content>
+      </Content>
     ),
     'Resource Group': (
-      <TextContent>
-        <Text component={TextVariants.p}>
+      <Content>
+        <Content component={ContentVariants.p}>
           {intl.formatMessage({
             id: 'cost.azure.resourceGroup',
             defaultMessage:
               'Run the following command from the Cloud Shell, providing the Resource Group name, to obtain the Resource Group scope associated with the generated cost export.',
           })}
-        </Text>
+        </Content>
         <ClipboardCopy>{`az group show --name {ResourceGroupName} | jq .id | tr -d '"'`}</ClipboardCopy>
         <br />
-        <Text component={TextVariants.p}>
+        <Content component={ContentVariants.p}>
           {intl.formatMessage({
             id: 'cost.azure.costExportInput',
             defaultMessage: 'After running the command, enter the output in the following field:',
           })}
-        </Text>
-      </TextContent>
+        </Content>
+      </Content>
     ),
     'Billing Account': (
-      <TextContent>
-        <Text component={TextVariants.p}>
+      <Content>
+        <Content component={ContentVariants.p}>
           {intl.formatMessage({
             id: 'cost.azure.billingAccount',
             defaultMessage:
               'Run the following command from the Cloud Shell, providing the Billing Account name, to obtain the Billing Account scope associated with the generated cost export.',
           })}
-        </Text>
+        </Content>
         <ClipboardCopy>{`az billing account show --name "{billingAccountName}" | jq '.id' | tr -d '"'`}</ClipboardCopy>
         <br />
-        <Text component={TextVariants.p}>
+        <Content component={ContentVariants.p}>
           {intl.formatMessage({
             id: 'cost.azure.costExportInput',
             defaultMessage: 'After running the command, enter the output in the following field:',
           })}
-        </Text>
-      </TextContent>
+        </Content>
+      </Content>
     ),
     'Enrollment Account': (
-      <TextContent>
-        <Text component={TextVariants.p}>
+      <Content>
+        <Content component={ContentVariants.p}>
           {intl.formatMessage({
             id: 'cost.azure.enrollment',
             defaultMessage: 'enrollment.',
           })}
-        </Text>
+        </Content>
         <ClipboardCopy>
           {`az billing enrollment-account show --name "{enrollmentAccountName}" | jq '.id' | tr -d '"'`}
         </ClipboardCopy>
         <br />
-        <Text component={TextVariants.p}>
+        <Content component={ContentVariants.p}>
           {intl.formatMessage({
             id: 'cost.azure.costExportInput',
             defaultMessage: 'After running the command, enter the output in the following field:',
           })}
-        </Text>
-      </TextContent>
+        </Content>
+      </Content>
     ),
     'Management Group': (
-      <TextContent>
-        <Text component={TextVariants.p}>
+      <Content>
+        <Content component={ContentVariants.p}>
           {intl.formatMessage({
             id: 'cost.azure.management',
             defaultMessage:
               'Run the following command from the Cloud Shell, providing the Management Group name, to obtain the Management Group scope associated with the generated cost export.',
           })}
-        </Text>
+        </Content>
         <ClipboardCopy>{`az account management-group show --name "{GroupName}" | jq '.id' | tr -d '"'`}</ClipboardCopy>
         <br />
-        <Text component={TextVariants.p}>
+        <Content component={ContentVariants.p}>
           {intl.formatMessage({
             id: 'cost.azure.costExportInput',
             defaultMessage: 'After running the command, enter the output in the following field:',
           })}
-        </Text>
-      </TextContent>
+        </Content>
+      </Content>
     ),
     'Billing Profile': (
-      <TextContent>
-        <Text component={TextVariants.p}>
+      <Content>
+        <Content component={ContentVariants.p}>
           {intl.formatMessage({
             id: 'cost.azure.billingProfile',
             defaultMessage:
               'Run the following command from the Cloud Shell, providing the Billing Account name and the Billig Profile name, to obtain the Billing Profile scope associated with the generated cost export.',
           })}
-        </Text>
+        </Content>
         <ClipboardCopy>
           {`az billing profile show --account-name "{billingAccountName}" --name "{billingProfileName}" | jq '.id' | tr -d '"'`}
         </ClipboardCopy>
         <br />
-        <Text component={TextVariants.p}>
+        <Content component={ContentVariants.p}>
           {intl.formatMessage({
             id: 'cost.azure.costExportInput',
             defaultMessage: 'After running the command, enter the output in the following field:',
           })}
-        </Text>
-      </TextContent>
+        </Content>
+      </Content>
     ),
     'Invoice Section': (
-      <TextContent>
-        <Text component={TextVariants.p}>
+      <Content>
+        <Content component={ContentVariants.p}>
           {intl.formatMessage({
             id: 'cost.azure.invoiceSection',
             defaultMessage:
               'Run the following command from the Cloud Shell, providing the Billing Account name, Billing Profile name, and Invoice Section name, to obtain the Invoice Section scope associated with the generated cost export.',
           })}
-        </Text>
+        </Content>
         <ClipboardCopy>
           {`az billing invoice section show --account-name "{billingAccountName}" --profile-name "{billingProfileName}" --name "{invoiceSectionName}" | jq '.id' | tr -d '"'`}
         </ClipboardCopy>
         <br />
-        <Text component={TextVariants.p}>
+        <Content component={ContentVariants.p}>
           {intl.formatMessage({
             id: 'cost.azure.invoiceSectionInput',
             defaultMessage: 'After running the command, enter the output in the following field:',
           })}
-        </Text>
-      </TextContent>
+        </Content>
+      </Content>
     ),
   };
   return selection ? selectionText[selection] : selectionText.Subscription;
@@ -511,8 +517,8 @@ export const ExportScopeDescription = () => {
 
   return (
     <Fragment>
-      <TextContent>
-        <Text component={TextVariants.p}>
+      <Content>
+        <Content component={ContentVariants.p}>
           {intl.formatMessage(
             {
               id: 'cost.azure.costExportScopeDescription',
@@ -523,18 +529,24 @@ export const ExportScopeDescription = () => {
               link: (
                 <Fragment>
                   <br />
-                  <Text key="link" component={TextVariants.a} href={MANUAL_CUR_STEPS} rel="noopener noreferrer" target="_blank">
+                  <Content
+                    key="link"
+                    component={ContentVariants.a}
+                    href={MANUAL_CUR_STEPS}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
                     {intl.formatMessage({
                       id: 'cost.learnMore',
                       defaultMessage: 'Learn more',
                     })}
-                  </Text>
+                  </Content>
                 </Fragment>
               ),
             },
           )}
-        </Text>
-      </TextContent>
+        </Content>
+      </Content>
     </Fragment>
   );
 };
@@ -565,14 +577,18 @@ export const ExportScope = () => {
   const handleSelect = (selection = 'Subscription') => setSelection(selection);
 
   return application.extra.storage_only ? (
-    <EmptyState variant={EmptyStateVariant.small}>
-      <EmptyStateIcon style={{ color: 'var(--pf-v5-global--info-color--100)' }} icon={InfoCircleIcon} />
-      <Title size="lg" headingLevel="h4">
-        {intl.formatMessage({
-          id: 'cost.manualTitleCUR',
-          defaultMessage: 'Skip this step and proceed to next step',
-        })}
-      </Title>
+    <EmptyState
+      titleText={
+        <Title size="lg" headingLevel="h4">
+          {intl.formatMessage({
+            id: 'cost.manualTitleCUR',
+            defaultMessage: 'Skip this step and proceed to next step',
+          })}
+        </Title>
+      }
+      icon={InfoCircleIcon}
+      variant={EmptyStateVariant.small}
+    >
       <EmptyStateBody>
         {intl.formatMessage({
           id: 'cost.manualDescriptionCUR',
