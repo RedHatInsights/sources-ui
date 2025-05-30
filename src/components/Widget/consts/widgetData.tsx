@@ -187,7 +187,7 @@ export const createIntegrationsData = (
               icon: (
                 <ImageWithPlaceholder
                   className="redhat-icon"
-                  src="/apps/frontend-assets/service-dropdown-icons/openshift.svg"
+                  src="/apps/frontend-assets/platform-logos/openshift.svg"
                   alt="red hat logo"
                 />
               ),

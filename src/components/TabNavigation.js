@@ -36,7 +36,7 @@ const TabNavigation = () => {
           eventKey={REPORTING}
           title={
             <TabTitleText>
-              {intl.formatMessage({ id: 'sources.reportingAutomation', defaultMessage: 'Reporting & Automation' })}
+              {intl.formatMessage({ id: 'sources.reportingAutomation', defaultMessage: 'Reporting & automation' })}
             </TabTitleText>
           }
         />

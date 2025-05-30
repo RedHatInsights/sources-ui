@@ -32,7 +32,7 @@ const dropdownItems = (isPagerDutyEnabled, hasSourcesPermissions, hasIntegration
           value: COMMUNICATIONS,
         },
         {
-          title: 'Reporting & Automation',
+          title: 'Reporting & automation',
           description: `Event-Driven Ansible, ${isPagerDutyEnabled ? 'PagerDuty, ' : ''}ServiceNow, Splunk`,
           value: REPORTING,
         },
