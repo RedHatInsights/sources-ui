@@ -3,6 +3,7 @@ import {
   Card,
   CardBody,
   CardFooter,
+  CardHeader,
   DataList,
   DataListAction,
   DataListCell,
@@ -18,7 +19,6 @@ import {
   Icon,
   MenuToggle,
   Spinner,
-  Tile,
 } from '@patternfly/react-core';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Provider, useSelector, useStore } from 'react-redux';
@@ -140,28 +140,39 @@ const IntegrationsWidget: FunctionComponent = () => {
       {isLoading ? (
         <Spinner />
       ) : isEmptyState ? (
-        <>
-          <Card isPlain ouiaId="integrations-widget-empty-state" isClickable>
-            <CardBody>
-              Click on a third-party application to create an integration for it.{' '}
-              <Link to="/settings/integrations?category=overview">Learn more about Integrations.</Link>
-            </CardBody>
-            <CardBody>
-              <Gallery hasGutter>
-                {sortedItems.map((item) => (
-                  <Tile
-                    title={item.name}
-                    id={item.id}
-                    icon={item.icon}
-                    isStacked
-                    onClick={() => handleTileClick(item.value)}
-                    isSelected={selectedTileValue === item.id}
-                  />
-                ))}
-              </Gallery>
-            </CardBody>
-          </Card>
-        </>
+        <Card ouiaId="integrations-widget-empty-state">
+  <CardBody className='pf-v6-u-ml-sm'>
+    Click on a third-party application to create an integration for it.{' '}
+    <Link to="/settings/integrations?category=overview">Learn more about Integrations.</Link>
+  </CardBody>
+  <CardBody>
+    <Gallery hasGutter>
+      {sortedItems.map((item) => (
+        <Card
+          key={item.id}
+          isSelectable
+          isSelected={selectedTileValue === item.id}
+          onClick={() => handleTileClick(item.value)}
+          id={item.id}
+          className='pf-v6-u-m-sm'
+          isCompact
+        >
+          <CardHeader
+          selectableActions={{
+            selectableActionId: item.id,
+            name: item.id,
+            variant: 'single',
+          }}
+        ></CardHeader>
+          <CardBody className="pf-v5-u-text-align-center pf-v5-u-p-lg">
+  <Icon size="lg" className="pf-v5-u-mb-md">{item.icon}</Icon>
+  <div className="pf-v5-u-font-weight-bold">{item.name}</div>
+</CardBody>
+        </Card>
+      ))}
+    </Gallery>
+  </CardBody>
+</Card>
       ) : (
         <Card ouiaId="integrations-widget" isFullHeight>
           <CardBody className="pf-v5-u-pt-0">
@@ -175,7 +186,7 @@ const IntegrationsWidget: FunctionComponent = () => {
                       aria-labelledby={`integration-${integrationIndex}`}
                       isExpanded={isExpandable ? expandedIndex.includes(integrationIndex) : false}
                     >
-                      <DataListItemRow>
+                      <DataListItemRow className="pf-v5-u-pl-0 pf-v5-u-ml-lg">
                         {isExpandable ? (
                           <DataListToggle
                             onClick={() => onToggle(integrationIndex, isExpandable)}
@@ -184,7 +195,7 @@ const IntegrationsWidget: FunctionComponent = () => {
                             aria-controls={`expand-${integrationIndex}`}
                           />
                         ) : (
-                          <div style={{ width: '47px' }} />
+                          <div className="pf-v5-u-ml-lg" />
                         )}
                         <DataListItemCells
                           dataListCells={[
@@ -206,12 +217,13 @@ const IntegrationsWidget: FunctionComponent = () => {
                                 }
                                 id={`dropdown-toggle-${integrationIndex}`}
                                 ref={toggleRef}
+                                className="pf-v5-u-mr-0"
                               >
                                 Manage
                               </MenuToggle>
                             )}
                             isOpen={dropdownOpenIndexes[integrationIndex] || false}
-                          >
+                            popperProps={{ position: "end", appendTo: 'inline', preventOverflow: true}}                          >
                             <DropdownItem
                               key={`create-new-${integrationIndex}`}
                               onClick={() => {
@@ -236,7 +248,7 @@ const IntegrationsWidget: FunctionComponent = () => {
                         {expandedIndex.includes(integrationIndex) && (
                           <div>
                             {integration.items.filter((item) => item.name !== 'Webhooks').map((item, itemIndex) => (
-                              <Flex display={{ default: 'inlineFlex' }} className="pf-v5-u-p-sm pf-v6-u-align-items-center">
+                              <Flex display={{ default: 'inlineFlex' }} className="pf-v5-u-p-sm pf-v5-u-pt-0 pf-v6-u-align-items-center">
                                 <Icon size="md" iconSize="lg" className="pf-v5-u-mr-sm" isInline>{item.icon}</Icon>
                                 {item.name} ({integrationCounts[item.id] || 0})
                               </Flex>

@@ -1,30 +1,25 @@
 .sources-integrations {
+  overflow-y: auto;
   .pf-v5-c-card__body {
-    padding: 8px 0 0 0;
-  }
-  .pf-v5-c-tile {
-    --pf-v5-c-tile--PaddingTop: 1rem;
-    --pf-v5-c-tile--PaddingBottom: 1rem;
-    --pf-v5-c-tile--PaddingRight: 1rem;
-    --pf-v5-c-tile--PaddingLeft: 1rem;
+    padding: var(--pf-v5-global--spacer--sm) 0 0 0;
   }
   .pf-v5-c-data-list {
     border-block-start-width: 0;
   }
-  .pf-v5-c-data-list__expandable-content .pf-v5-c-data-list__expandable-content-body  {
+  .pf-v5-c-data-list__item-content {
+    padding-bottom: 0;
+  }
+  .pf-v5-c-data-list__expandable-content .pf-v5-c-data-list__expandable-content-body {
+    margin-left: 0;
+    padding-left: var(--pf-v5-global--spacer--sm);
     padding-block-start: 0;
     padding-block-end: 0;
   }
   .pf-v5-c-data-list__item-control {
     margin-right: 0;
-   }
-  .pf-v5-c-dropdown__toggle + .pf-v5-c-menu {
-    margin-top: 35px;
-    left: auto !important;
-    right: 0;
   }
-
-  .pf-v5-c-dropdown__toggle {
-    margin-right: 0;
+  .pf-v5-c-button {
+    margin-left: 0;
+    padding-left: 0;
   }
 }
