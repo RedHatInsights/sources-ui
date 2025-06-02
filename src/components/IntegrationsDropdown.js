@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dropdown, DropdownItem, DropdownList, Icon, MenuToggle } from '@patternfly/react-core';
+import { Dropdown, DropdownItem, DropdownList, MenuToggle } from '@patternfly/react-core';
 import AsyncComponent from '@redhat-cloud-services/frontend-components/AsyncComponent';
 import AddSourceWizard from './addSourceWizard';
 import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../utilities/constants';
@@ -108,10 +108,8 @@ const IntegrationsDropdown = (props) => {
             isDisabled={props.isDisabled || (!hasSourcesPermissions && !hasIntegrationsPermissions)}
             variant="secondary"
             className="pf-v6-u-pl-md"
+            icon={<PlusCircleIcon />}
           >
-            <Icon className="pf-v6-u-mr-sm">
-              <PlusCircleIcon />
-            </Icon>
             Create Integration
           </MenuToggle>
         )}

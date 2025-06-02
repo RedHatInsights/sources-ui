@@ -142,7 +142,7 @@ const IntegrationsWidget: FunctionComponent = () => {
           <Spinner />
         </Bullseye>
       ) : isEmptyState ? (
-        <Card ouiaId="integrations-widget-empty-state">
+        <Card ouiaId="integrations-widget-empty-state" isPlain>
           <CardBody className="pf-v6-u-ml-sm">
             Click on a third-party application to create an integration for it.{' '}
             <Link to="/settings/integrations?category=overview">Learn more about Integrations.</Link>
@@ -178,7 +178,7 @@ const IntegrationsWidget: FunctionComponent = () => {
           </CardBody>
         </Card>
       ) : (
-        <Card ouiaId="integrations-widget" isFullHeight>
+        <Card ouiaId="integrations-widget" isFullHeight isPlain>
           <CardBody className="pf-v6-u-pt-0">
             <DataList aria-label="Integrations List" isCompact>
               {integrationsData.map((integration, integrationIndex) => {
@@ -186,7 +186,6 @@ const IntegrationsWidget: FunctionComponent = () => {
                 return (
                   <React.Fragment key={`integration-fragment-${integrationIndex}`}>
                     <DataListItem
-                      className="pf-v6-u-pt-md"
                       key={integrationIndex}
                       aria-labelledby={`integration-${integrationIndex}`}
                       isExpanded={isExpandable ? expandedIndex.includes(integrationIndex) : false}
@@ -220,7 +219,8 @@ const IntegrationsWidget: FunctionComponent = () => {
                                 onClick={() => onToggleDropdown(integrationIndex, !dropdownOpenIndexes[integrationIndex])}
                                 id={`dropdown-toggle-${integrationIndex}`}
                                 ref={toggleRef}
-                                className="pf-v6-u-mr-0"
+                                className="pf-v6-u-mr-0 pf-v6-u-my-xs"
+                                size="sm"
                               >
                                 Manage
                               </MenuToggle>
@@ -258,9 +258,9 @@ const IntegrationsWidget: FunctionComponent = () => {
                                 <Flex
                                   key={item.id}
                                   display={{ default: 'inlineFlex' }}
-                                  className="pf-v6-u-p-sm pf-v6-u-align-items-center"
+                                  className="pf-v6-u-p-sm pf-v6-u-pl-0 pf-v6-u-align-items-center"
                                 >
-                                  <Icon size="md" iconSize="lg" className="pf-v6-u-mr-sm" isInline>
+                                  <Icon size="lg" iconSize="lg" className="pf-v6-u-mr-sm" isInline>
                                     {item.icon}
                                   </Icon>
                                   {item.name} ({integrationCounts[item.id] || 0})
