@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, AlertActionLink, Icon, Stack, StackItem, Text, TextContent, TextVariants } from '@patternfly/react-core';
+import { Alert, AlertActionLink, Content, ContentVariants, Icon, Stack, StackItem } from '@patternfly/react-core';
 import { AutomationIcon, LockIcon, OutlinedCommentsIcon } from '@patternfly/react-icons';
 import { useIntl } from 'react-intl';
 import { COMMUNICATIONS, REPORTING, WEBHOOKS } from '../../utilities/constants';
@@ -98,7 +98,7 @@ const UnauthorizedState = () => {
     [WEBHOOKS]: {
       icon: (
         <ImageWithPlaceholder
-          className="pf-v5-c-list__item-icon pf-v5-u-danger-color-100"
+          className="pf-v6-c-list__item-icon pf-v6-u-danger-color-100"
           src="/apps/frontend-assets/integrations-landing/integrations-landing-webhook-icon.svg"
           width="54px"
           height="54px"
@@ -161,42 +161,42 @@ const UnauthorizedState = () => {
             </AlertActionLink>
           }
         >
-          <TextContent>
-            <Text component={TextVariants.p}>
+          <Content>
+            <Content component={ContentVariants.p}>
               {intl.formatMessage({
                 id: 'integrations.overview.alertParagraph',
                 defaultMessage:
                   'You do not have the permissions for integration management. Contact your organization admin if you need these permissions updated.',
               })}
-            </Text>
-          </TextContent>
+            </Content>
+          </Content>
         </Alert>
       </StackItem>
       <StackItem>
-        <Icon size="xl" className="pf-v5-u-color-200 pf-v5-u-display-block pf-v5-u-mx-auto pf-v5-u-mb-lg">
+        <Icon size="xl" className="pf-v6-u-color-200 pf-v6-u-display-block pf-v6-u-mx-auto pf-v6-u-mb-lg">
           {activeData.icon}
         </Icon>
-        <TextContent className="pf-v5-u-mb-md">
-          <Text component={TextVariants.h2} className="pf-v5-u-text-align-center pf-v5-u-mb-md">
+        <Content className="pf-v6-u-mb-md">
+          <Content component={ContentVariants.h2} className="pf-v6-u-text-align-center pf-v6-u-mb-md">
             {activeData.heading}
-          </Text>
-          <Text component={TextVariants.p} className="pf-v5-u-text-align-center pf-v5-u-px-4xl">
+          </Content>
+          <Content component={ContentVariants.p} className="pf-v6-u-text-align-center pf-v6-u-px-4xl">
             {activeData.description}
-          </Text>
-        </TextContent>
+          </Content>
+        </Content>
       </StackItem>
       <StackItem>
-        <ul className="pf-v5-c-list pf-m-inline pf-m-icon-lg pf-v5-u-justify-content-center" role="list">
-          {activeData.items?.map((item: any, index: any) => (
-            <li className="pf-v5-c-list__item" key={index}>
+        <ul className="pf-v6-c-list pf-m-inline pf-m-icon-lg pf-v6-u-justify-content-center" role="list">
+          {activeData.items?.map((item: { name: string; src: string; href: string }, index: number) => (
+            <li className="pf-v6-c-list__item" key={index}>
               <ImageWithPlaceholder
-                className="pf-v5-c-list__item-icon"
+                className="pf-v6-c-list__item-icon"
                 src={item.src}
                 width="24px"
                 height="24px"
                 alt={`${item.name} icon`}
               />
-              <span className="pf-v5-c-list__item-text">
+              <span className="pf-v6-c-list__item-text">
                 <a href={item.href} target="_blank" rel="noopener noreferrer">
                   {item.name}
                 </a>

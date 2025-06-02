@@ -3,11 +3,11 @@ import { Route, Routes } from 'react-router-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { replaceRouteId, routes } from '../../../Routing';
+import { replaceRouteId, routes } from '../../../routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import mockStore from '../../__mocks__/mockStore';
 import ApplicationKebab from '../../../components/SourceDetail/ApplicationKebab';
-import { act } from 'react-dom/test-utils';
+import { act } from 'react';
 
 jest.mock('@patternfly/react-core/dist/js/components/Tooltip', () => {
   const lib = jest.requireActual('@patternfly/react-core/dist/js/components/Tooltip');
@@ -67,14 +67,14 @@ describe('ApplicationKebab', () => {
 
     expect(screen.getByText('Pause')).toBeInTheDocument();
     expect(screen.getByText('Temporarily stop this application from collecting data.')).toBeInTheDocument();
-    expect(screen.getByText('Pause').closest('.src-m-dropdown-item-disabled')).toBeInTheDocument();
+    expect(screen.getByText('Pause').closest('.sr-c-disabled-dropdown-item-with-tooltip')).toBeInTheDocument();
 
     expect(screen.getByText('Remove')).toBeInTheDocument();
     expect(screen.getByText('Permanently stop data collection for this application.')).toBeInTheDocument();
-    expect(screen.getByText('Remove').closest('.src-m-dropdown-item-disabled')).toBeInTheDocument();
+    expect(screen.getByText('Remove').closest('.sr-c-disabled-dropdown-item-with-tooltip')).toBeInTheDocument();
 
     await act(async () => {
-      await user.hover(screen.getByText('Remove').closest('a'));
+      await user.hover(screen.getByText('Remove').closest('button').closest('span'));
     });
 
     const tooltipText = 'To perform this action, your Organization Administrator must grant you Cloud Administrator permissions.';
@@ -115,14 +115,14 @@ describe('ApplicationKebab', () => {
 
     expect(screen.getByText('Resume')).toBeInTheDocument();
     expect(screen.getByText('Resume data collection for this application.')).toBeInTheDocument();
-    expect(screen.getByText('Resume').closest('.src-m-dropdown-item-disabled')).toBeInTheDocument();
+    expect(screen.getByText('Resume').closest('.sr-c-disabled-dropdown-item-with-tooltip')).toBeInTheDocument();
 
     expect(screen.getByText('Remove')).toBeInTheDocument();
     expect(screen.getByText('Permanently stop data collection for this application.')).toBeInTheDocument();
-    expect(screen.getByText('Remove').closest('.src-m-dropdown-item-disabled')).toBeInTheDocument();
+    expect(screen.getByText('Remove').closest('.sr-c-disabled-dropdown-item-with-tooltip')).toBeInTheDocument();
 
     await waitFor(async () => {
-      await user.hover(screen.getByText('Remove'));
+      await user.hover(screen.getByText('Remove').closest('button').closest('span'));
     });
 
     const tooltipText = 'To perform this action, your Organization Administrator must grant you Cloud Administrator permissions.';
@@ -159,11 +159,11 @@ describe('ApplicationKebab', () => {
 
       expect(screen.getByText('Pause')).toBeInTheDocument();
       expect(screen.getByText('Temporarily stop this application from collecting data.')).toBeInTheDocument();
-      expect(screen.getByText('Pause').closest('.src-m-dropdown-item-disabled')).toBeNull();
+      expect(screen.getByText('Pause').closest('.sr-c-disabled-dropdown-item-with-tooltip')).toBeNull();
 
       expect(screen.getByText('Remove')).toBeInTheDocument();
       expect(screen.getByText('Permanently stop data collection for this application.')).toBeInTheDocument();
-      expect(screen.getByText('Remove').closest('.src-m-dropdown-item-disabled')).toBeNull();
+      expect(screen.getByText('Remove').closest('.sr-c-disabled-dropdown-item-with-tooltip')).toBeNull();
     });
 
     it('remove application', async () => {
@@ -188,7 +188,7 @@ describe('ApplicationKebab', () => {
         await user.click(screen.getByLabelText('Actions'));
       });
       await waitFor(async () => {
-        await user.click(screen.getByText('Pause'));
+        await user.click(screen.getByText('Pause').closest('a'));
       });
 
       expect(removeApp).toHaveBeenCalled();
@@ -229,11 +229,11 @@ describe('ApplicationKebab', () => {
 
       expect(screen.getByText('Resume')).toBeInTheDocument();
       expect(screen.getByText('Resume data collection for this application.')).toBeInTheDocument();
-      expect(screen.getByText('Resume').closest('.src-m-dropdown-item-disabled')).toBeInTheDocument();
+      expect(screen.getByText('Resume').closest('.sr-c-disabled-dropdown-item-with-tooltip')).toBeInTheDocument();
 
       expect(screen.getByText('Remove')).toBeInTheDocument();
       expect(screen.getByText('Permanently stop data collection for this application.')).toBeInTheDocument();
-      expect(screen.getByText('Remove').closest('.src-m-dropdown-item-disabled')).toBeInTheDocument();
+      expect(screen.getByText('Remove').closest('.sr-c-disabled-dropdown-item-with-tooltip')).toBeInTheDocument();
 
       await waitFor(async () => {
         await user.hover(screen.getByText('Resume'));
@@ -246,7 +246,7 @@ describe('ApplicationKebab', () => {
   });
 
   describe('with permissions and paused', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       store = mockStore({
         sources: {
           entities: [{ id: sourceId }],
@@ -261,15 +261,17 @@ describe('ApplicationKebab', () => {
 
       initialProps = { ...initialProps, app };
 
-      render(
-        componentWrapperIntl(
-          <Routes>
-            <Route path={routes.sourcesDetail.path} element={<ApplicationKebab {...initialProps} />} />
-          </Routes>,
-          store,
-          initialEntry,
-        ),
-      );
+      await waitFor(async () => {
+        render(
+          componentWrapperIntl(
+            <Routes>
+              <Route path={routes.sourcesDetail.path} element={<ApplicationKebab {...initialProps} />} />
+            </Routes>,
+            store,
+            initialEntry,
+          ),
+        );
+      });
     });
 
     it('renders correctly', async () => {
@@ -281,11 +283,11 @@ describe('ApplicationKebab', () => {
 
       expect(screen.getByText('Resume')).toBeInTheDocument();
       expect(screen.getByText('Resume data collection for this application.')).toBeInTheDocument();
-      expect(screen.getByText('Resume').closest('.src-m-dropdown-item-disabled')).toBeNull();
+      expect(screen.getByText('Resume').closest('.sr-c-disabled-dropdown-item-with-tooltip')).toBeNull();
 
       expect(screen.getByText('Remove')).toBeInTheDocument();
       expect(screen.getByText('Permanently stop data collection for this application.')).toBeInTheDocument();
-      expect(screen.getByText('Remove').closest('.src-m-dropdown-item-disabled')).toBeNull();
+      expect(screen.getByText('Remove').closest('.sr-c-disabled-dropdown-item-with-tooltip')).toBeNull();
     });
 
     it('remove application', async () => {

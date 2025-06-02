@@ -31,8 +31,8 @@ export const modifyAuthSchemas = (fields, id, appId, useOpenShiftOperatorExcepti
     let editedName = field.name.startsWith('authentication')
       ? createAuthFieldName(field.name, id)
       : field.name.startsWith('application')
-      ? createAuthAppFieldName(field.name, appId)
-      : field.name;
+        ? createAuthAppFieldName(field.name, appId)
+        : field.name;
 
     const finalField = {
       ...field,

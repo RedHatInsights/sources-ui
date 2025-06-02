@@ -1,7 +1,7 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
-import { Button, Text, TextContent } from '@patternfly/react-core';
+import { Button, Content } from '@patternfly/react-core';
 
 export const LighthouseDescription = () => {
   const intl = useIntl();
@@ -10,14 +10,14 @@ export const LighthouseDescription = () => {
   const link = `https://portal.azure.com/#create/Microsoft.Template/uri/${encodeURIComponent(templateLink)}`;
 
   return (
-    <TextContent>
-      <Text>
+    <Content>
+      <Content component="p">
         {intl.formatMessage({
           id: 'provisioning.lighthouse.desc',
           defaultMessage:
             "Complete configuration steps in Azure Lighthouse according to Microsoft instructions. When you're finished, return to this wizard to finish creating this Azure source.",
         })}
-      </Text>
+      </Content>
       <Button
         component="a"
         target="_blank"
@@ -33,7 +33,7 @@ export const LighthouseDescription = () => {
           defaultMessage: 'Take me to Lighthouse',
         })}
       </Button>
-    </TextContent>
+    </Content>
   );
 };
 
@@ -41,14 +41,14 @@ export const SubscriptionID = () => {
   const intl = useIntl();
 
   return (
-    <TextContent>
-      <Text>
+    <Content>
+      <Content component="p">
         {intl.formatMessage({
           id: 'provisioning.subscriptionId.desc',
           defaultMessage:
             'Log in to your Azure account and navigate to your subscriptions. Copy the subscription ID you have connected through Lighthouse.',
         })}
-      </Text>
-    </TextContent>
+      </Content>
+    </Content>
   );
 };

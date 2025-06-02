@@ -1,15 +1,19 @@
-import React, { useState } from 'react';
+/* eslint-disable react/prop-types */
+/* eslint-disable react/display-name */
+import React, { forwardRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 
-import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core/deprecated';
+import { Dropdown, DropdownItem, DropdownList, MenuToggle } from '@patternfly/react-core';
+import EllipsisVIcon from '@patternfly/react-icons/dist/esm/icons/ellipsis-v-icon';
 
-import { replaceRouteId, routes } from '../../Routing';
+import { replaceRouteId, routes } from '../../routes';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import { useSource } from '../../hooks/useSource';
 import disabledTooltipProps from '../../utilities/disabledTooltipProps';
 import AppLink from '../AppLink';
+import DisabledDropdownItemWithTooltip from '../DisabledDropdownItemWithTooltip';
 
 const ApplicationKebab = ({ app, removeApp, addApp }) => {
   const [isOpen, setOpen] = useState(false);
@@ -39,11 +43,32 @@ const ApplicationKebab = ({ app, removeApp, addApp }) => {
     },
   };
 
+  let tooltipProps = undefined;
+  if (source.paused_at) {
+    tooltipProps = pausedProps.tooltipProps;
+  }
+
+  if (!hasRightAccess) {
+    tooltipProps = disabledProps.tooltipProps;
+  }
+
+  const isTooltipDisabled = source.paused_at || !hasRightAccess;
+
   const pausedButton = app.paused_at ? (
     <DropdownItem
-      {...(source.paused_at && pausedProps)}
-      {...(!hasRightAccess && disabledProps)}
       key="resume"
+      component={forwardRef(({ isDisabled, ...props }, ref) => {
+        return (
+          <DisabledDropdownItemWithTooltip
+            innerRef={ref}
+            {...props}
+            tooltipProps={tooltipProps}
+            isDisabled={isTooltipDisabled}
+            to={replaceRouteId(routes.sourcesDetailRename.path, source.id)}
+            component={AppLink}
+          />
+        );
+      })}
       description={intl.formatMessage({
         id: 'app.kebab.resume.title',
         defaultMessage: 'Resume data collection for this application.',
@@ -57,8 +82,18 @@ const ApplicationKebab = ({ app, removeApp, addApp }) => {
     </DropdownItem>
   ) : (
     <DropdownItem
-      {...(source.paused_at && pausedProps)}
-      {...(!hasRightAccess && disabledProps)}
+      component={forwardRef(({ isDisabled, ...props }, ref) => {
+        return (
+          <DisabledDropdownItemWithTooltip
+            innerRef={ref}
+            {...props}
+            tooltipProps={tooltipProps}
+            isDisabled={isTooltipDisabled}
+            to={replaceRouteId(routes.sourcesDetailRename.path, source.id)}
+            component={AppLink}
+          />
+        );
+      })}
       key="pause"
       description={intl.formatMessage({
         id: 'app.kebab.pause.title',
@@ -72,34 +107,57 @@ const ApplicationKebab = ({ app, removeApp, addApp }) => {
       })}
     </DropdownItem>
   );
-  const removedButton = (
-    <DropdownItem
-      {...(source.paused_at && pausedProps)}
-      {...(!hasRightAccess && disabledProps)}
-      key="remove"
-      description={intl.formatMessage({
-        id: 'app.kebab.remove.title',
-        defaultMessage: 'Permanently stop data collection for this application.',
-      })}
-      to={replaceRouteId(routes.sourcesDetailRemoveApp.path, source.id).replace(':app_id', app.id)}
-      component={AppLink}
-    >
-      {intl.formatMessage({
-        id: 'app.kebab.pause.button',
-        defaultMessage: 'Remove',
-      })}
-    </DropdownItem>
-  );
 
   return (
     <Dropdown
       isPlain
       isOpen={isOpen}
-      position="right"
-      dropdownItems={[pausedButton, removedButton]}
+      popperProps={{
+        position: 'right',
+      }}
+      onOpenChange={(isOpen) => setOpen(isOpen)}
       className="src-c-dropdown__application_kebab"
-      toggle={<KebabToggle onToggle={() => setOpen((open) => !open)} />}
-    />
+      toggle={(toggleRef) => (
+        <MenuToggle
+          ref={toggleRef}
+          aria-label="Actions"
+          variant="plain"
+          onClick={() => setOpen((prev) => !prev)}
+          isExpanded={isOpen}
+          icon={<EllipsisVIcon />}
+        />
+      )}
+      shouldFocusToggleOnSelect
+    >
+      <DropdownList>
+        {pausedButton}
+
+        <DropdownItem
+          key="remove"
+          component={forwardRef(({ isDisabled, ...props }, ref) => {
+            return (
+              <DisabledDropdownItemWithTooltip
+                innerRef={ref}
+                {...props}
+                tooltipProps={tooltipProps}
+                isDisabled={isTooltipDisabled}
+                to={replaceRouteId(routes.sourcesDetailRemoveApp.path, source.id).replace(':app_id', app.id)}
+                component={AppLink}
+              />
+            );
+          })}
+          description={intl.formatMessage({
+            id: 'app.kebab.remove.title',
+            defaultMessage: 'Permanently stop data collection for this application.',
+          })}
+        >
+          {intl.formatMessage({
+            id: 'app.kebab.pause.button',
+            defaultMessage: 'Remove',
+          })}
+        </DropdownItem>
+      </DropdownList>
+    </Dropdown>
   );
 };
 

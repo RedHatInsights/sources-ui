@@ -3,9 +3,9 @@ import { render, screen, waitFor } from '@testing-library/react';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import RedirectNoPaused from '../../../components/RedirectNoPaused/RedirectNoPaused';
-import * as actions from '../../../redux/sources/actions';
-import { replaceRouteId, routes } from '../../../Routing';
+import { replaceRouteId, routes } from '../../../routes';
 import mockStore from '../../__mocks__/mockStore';
+import notificationsStore from '../../../utilities/notificationsStore';
 
 describe('RedirectNoPaused', () => {
   let initialStore;
@@ -19,8 +19,6 @@ describe('RedirectNoPaused', () => {
 
   beforeEach(() => {
     initialEntry = [replaceRouteId(routes.sourcesDetailRemoveApp.path, sourceId).replace(':app_id', '546')];
-
-    actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'ADD_MESSAGE' }));
   });
 
   it('Renders null if source is not paused', () => {
@@ -38,7 +36,7 @@ describe('RedirectNoPaused', () => {
       ),
     );
 
-    expect(actions.addMessage).not.toHaveBeenCalled();
+    expect(notificationsStore.getNotifications().length).toEqual(0);
     expect(wasRedirectedToDetail()).toEqual(false);
   });
 
@@ -47,23 +45,29 @@ describe('RedirectNoPaused', () => {
       sources: { entities: [{ id: sourceId, paused_at: 'today' }] },
     });
 
-    render(
-      componentWrapperIntl(
-        <Routes>
-          <Route path={routes.sourcesDetailRemoveApp.path} element={<RedirectNoPaused />} />
-        </Routes>,
-        initialStore,
-        initialEntry,
-      ),
-    );
+    await waitFor(() => {
+      render(
+        componentWrapperIntl(
+          <Routes>
+            <Route path={routes.sourcesDetailRemoveApp.path} element={<RedirectNoPaused />} />
+          </Routes>,
+          initialStore,
+          initialEntry,
+        ),
+      );
+    });
 
-    await waitFor(() =>
-      expect(actions.addMessage).toHaveBeenCalledWith({
+    await waitFor(() => {
+      const { id, ...notification } = notificationsStore
+        .getNotifications()
+        .find((notification) => notification.title === 'Integration is paused');
+      expect(notification).toBeDefined();
+      expect(notification).toEqual({
         description: 'You cannot perform this action on a paused integration.',
         title: 'Integration is paused',
         variant: 'danger',
-      }),
-    );
+      });
+    });
 
     expect(wasRedirectedToDetail()).toEqual(true);
   });

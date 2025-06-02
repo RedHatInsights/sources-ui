@@ -3,13 +3,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
 
-import { Button, Modal, Text, TextContent, TextVariants, Title } from '@patternfly/react-core';
-import ExclamationTriangleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-triangle-icon';
+import {
+  Button,
+  Content,
+  ContentVariants,
+  Icon,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  Title,
+} from '@patternfly/react-core';
+import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 
 import { useSource } from '../../hooks/useSource';
 
 import removeAppSubmit from './removeAppSubmit';
-import { replaceRouteId, routes } from '../../Routing';
+import { replaceRouteId, routes } from '../../routes';
 import { useAppNavigate } from '../../hooks/useAppNavigate';
 import AppNavigate from '../AppNavigate';
 
@@ -60,52 +70,56 @@ const RemoveAppModal = () => {
         id: 'sources.deleteAppTitle',
         defaultMessage: 'Remove application?',
       })}
-      header={
+    >
+      <ModalHeader>
         <Title headingLevel="h1" size="2xl" className="sources">
-          <ExclamationTriangleIcon size="sm" className="ins-m-alert src-c-delete-icon pf-v5-u-mr-sm" />
+          <Icon size="xl" status="warning">
+            <ExclamationTriangleIcon className="ins-m-alert pf-v6-u-mr-sm" />
+          </Icon>
           {intl.formatMessage({
             id: 'sources.deleteAppTitle',
             defaultMessage: 'Remove application?',
           })}
         </Title>
-      }
-      actions={[
+      </ModalHeader>
+      <ModalBody>
+        <Content>
+          <Content component={ContentVariants.p}>
+            {intl.formatMessage(
+              {
+                id: 'sources.deleteAppWarning',
+                defaultMessage: '{ appName } will be disconnected from this integration.',
+              },
+              { appName: <b key="b">{app.display_name}</b> },
+            )}
+          </Content>
+          {dependentApps.length > 0 && (
+            <Content component={ContentVariants.p}>
+              {intl.formatMessage(
+                {
+                  id: 'sources.deleteAppDetails',
+                  defaultMessage: 'This change will affect these applications: { apps }.',
+                },
+                { apps: dependentApps },
+              )}
+            </Content>
+          )}
+        </Content>
+      </ModalBody>
+      <ModalFooter>
         <Button id="deleteSubmit" key="submit" variant="danger" type="button" onClick={onSubmit}>
           {intl.formatMessage({
             id: 'sources.remove',
             defaultMessage: 'Remove',
           })}
-        </Button>,
+        </Button>
         <Button id="deleteCancel" key="cancel" variant="link" type="button" onClick={onCancel}>
           {intl.formatMessage({
             id: 'sources.cancel',
             defaultMessage: 'Cancel',
           })}
-        </Button>,
-      ]}
-    >
-      <TextContent>
-        <Text component={TextVariants.p}>
-          {intl.formatMessage(
-            {
-              id: 'sources.deleteAppWarning',
-              defaultMessage: '{ appName } will be disconnected from this integration.',
-            },
-            { appName: <b key="b">{app.display_name}</b> },
-          )}
-        </Text>
-        {dependentApps.length > 0 && (
-          <Text component={TextVariants.p}>
-            {intl.formatMessage(
-              {
-                id: 'sources.deleteAppDetails',
-                defaultMessage: 'This change will affect these applications: { apps }.',
-              },
-              { apps: dependentApps },
-            )}
-          </Text>
-        )}
-      </TextContent>
+        </Button>
+      </ModalFooter>
     </Modal>
   );
 };

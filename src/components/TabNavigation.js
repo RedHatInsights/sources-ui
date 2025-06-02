@@ -2,7 +2,7 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { PageSection, PageSectionVariants, Tab, TabTitleIcon, TabTitleText, Tabs } from '@patternfly/react-core';
+import { PageSection, Tab, TabTitleIcon, TabTitleText, Tabs } from '@patternfly/react-core';
 import RedhatIcon from '@patternfly/react-icons/dist/esm/icons/redhat-icon';
 import CloudIcon from '@patternfly/react-icons/dist/esm/icons/cloud-icon';
 
@@ -98,11 +98,11 @@ const TabNavigation = () => {
   );
 
   return (
-    <PageSection type="tabs" variant={PageSectionVariants.light} isWidthLimited>
+    <PageSection hasBodyWrapper type="tabs" isWidthLimited>
       <Tabs
         activeKey={activeCategory || (enableIntegrationsOverview ? OVERVIEW : CLOUD_VENDOR)}
         onSelect={(_e, key) => dispatch(setActiveCategory(key))}
-        className="pf-v5-u-mt-md"
+        className="pf-v6-u-mt-md"
         inset={{
           default: 'insetNone',
           md: 'insetSm',

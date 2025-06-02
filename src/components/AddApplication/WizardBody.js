@@ -1,21 +1,17 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
-import { Wizard } from '@patternfly/react-core/deprecated';
+import { Modal, ModalBody, Wizard, WizardHeader, WizardStep } from '@patternfly/react-core';
 
 const WizardBodyAttach = ({ step, goToSources, title, description }) => (
-  <Wizard
-    isOpen={true}
-    onClose={goToSources}
-    title={title}
-    description={description}
-    steps={[
-      {
-        name: 'Finish',
-        component: step,
-        isFinishedStep: true,
-      },
-    ]}
-  />
+  <Modal isOpen onClose={goToSources} onEscapePress={goToSources}>
+    <ModalBody>
+      <Wizard onClose={goToSources} header={<WizardHeader title={title} description={description} />}>
+        <WizardStep id="finish" name="Finish" footer={{ nextButtonText: 'Finish', onNext: goToSources }}>
+          {step}
+        </WizardStep>
+      </Wizard>
+    </ModalBody>
+  </Modal>
 );
 
 WizardBodyAttach.propTypes = {

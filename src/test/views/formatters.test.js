@@ -43,7 +43,7 @@ import appTypes, { CATALOG_APP, COST_MANAGEMENT_APP, TOPOLOGY_INV_APP } from '..
 import { IntlProvider } from 'react-intl';
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
 import { MemoryRouter } from 'react-router-dom';
-import { replaceRouteId, routes } from '../../Routing';
+import { replaceRouteId, routes } from '../../routes';
 
 jest.mock('@patternfly/react-icons/dist/esm/icons/pause-icon', () => ({
   __esModule: true,
@@ -132,7 +132,7 @@ describe('formatters', () => {
     it('returns only imported badge', () => {
       render(<IntlProvider locale="en">{importedFormatter('value with no text')}</IntlProvider>);
 
-      expect(screen.getByText('imported', { selector: '.pf-v5-c-badge' })).toBeInTheDocument();
+      expect(screen.getByText('imported', { selector: '.pf-v6-c-badge' })).toBeInTheDocument();
     });
 
     it('returns imported badge with tooltip', async () => {
@@ -140,10 +140,10 @@ describe('formatters', () => {
 
       render(<IntlProvider locale="en">{importedFormatter('cfme')}</IntlProvider>);
 
-      expect(screen.getByText('imported', { selector: '.pf-v5-c-badge' })).toBeInTheDocument();
+      expect(screen.getByText('imported', { selector: '.pf-v6-c-badge' })).toBeInTheDocument();
 
       await waitFor(async () => {
-        await user.hover(screen.getByText('imported', { selector: '.pf-v5-c-badge' }));
+        await user.hover(screen.getByText('imported', { selector: '.pf-v6-c-badge' }));
       });
 
       await waitFor(() =>
@@ -672,7 +672,7 @@ describe('formatters', () => {
 
         render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
-        expect(screen.getByText('Available', { exact: false, selector: '.pf-v5-c-label__text' })).toBeInTheDocument();
+        expect(screen.getByText('Available', { exact: false, selector: '.pf-v6-c-label__text' })).toBeInTheDocument();
       });
 
       it('returns WARNING text', () => {
@@ -683,7 +683,7 @@ describe('formatters', () => {
 
         render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
-        expect(screen.getByText('Partially available', { exact: false, selector: '.pf-v5-c-label__text' })).toBeInTheDocument();
+        expect(screen.getByText('Partially available', { exact: false, selector: '.pf-v6-c-label__text' })).toBeInTheDocument();
       });
 
       it('returns DANGER text', () => {
@@ -693,7 +693,7 @@ describe('formatters', () => {
 
         render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
-        expect(screen.getByText('Unavailable', { exact: false, selector: '.pf-v5-c-label__text' })).toBeInTheDocument();
+        expect(screen.getByText('Unavailable', { exact: false, selector: '.pf-v6-c-label__text' })).toBeInTheDocument();
       });
 
       it('returns in progress text', () => {
@@ -703,7 +703,7 @@ describe('formatters', () => {
 
         render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
-        expect(screen.getByText('In progress', { exact: false, selector: '.pf-v5-c-label__text' })).toBeInTheDocument();
+        expect(screen.getByText('In progress', { exact: false, selector: '.pf-v6-c-label__text' })).toBeInTheDocument();
         expect(screen.getByText('wrench icon')).toBeInTheDocument();
       });
 
@@ -712,7 +712,7 @@ describe('formatters', () => {
 
         render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
-        expect(screen.getByText('Unknown', { exact: false, selector: '.pf-v5-c-label__text' })).toBeInTheDocument();
+        expect(screen.getByText('Unknown', { exact: false, selector: '.pf-v6-c-label__text' })).toBeInTheDocument();
       });
 
       it('returns paused text', () => {
@@ -723,7 +723,7 @@ describe('formatters', () => {
 
         render(wrapperWithIntl(availabilityFormatter('', SOURCE, { appTypes, sourceTypes })));
 
-        expect(screen.getByText('Paused', { exact: false, selector: '.pf-v5-c-label__text' })).toBeInTheDocument();
+        expect(screen.getByText('Paused', { exact: false, selector: '.pf-v6-c-label__text' })).toBeInTheDocument();
         expect(screen.getByText('pause icon')).toBeInTheDocument();
       });
     });
@@ -1226,7 +1226,7 @@ describe('formatters', () => {
         </MemoryRouter>,
       );
 
-      expect(screen.getByText('Edit credentials', { selector: 'button' })).toBeInTheDocument();
+      expect(screen.getByText('Edit credentials', { selector: '.pf-v6-c-button__text' })).toBeInTheDocument();
       expect(screen.getByRole('link')).toHaveAttribute(
         'href',
         replaceRouteId(`/settings/integrations/${routes.sourcesDetailEditCredentials.path}`, SOURCE_ID),
@@ -1262,7 +1262,7 @@ describe('formatters', () => {
         </MemoryRouter>,
       );
 
-      expect(screen.getByText('Edit credentials', { selector: 'button' })).toBeInTheDocument();
+      expect(screen.getByText('Edit credentials', { selector: '.pf-v6-c-button__text' })).toBeInTheDocument();
 
       await waitFor(async () => {
         await user.hover(screen.getByText('exclamation icon'));
@@ -1295,7 +1295,7 @@ describe('formatters', () => {
 
       render(wrapperWithIntl(<ApplicationLabel app={app} />));
 
-      expect(screen.getByText('Cost management').closest('.pf-v5-c-label')).toHaveClass('pf-m-green');
+      expect(screen.getByText('Cost management').closest('.pf-v6-c-label')).toHaveClass('pf-m-green');
       await waitFor(async () => {
         await user.click(screen.getByText('Cost management'));
       });

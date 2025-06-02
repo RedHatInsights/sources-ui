@@ -1,12 +1,11 @@
-.pf-v5-c-form__helper-text {
+.pf-v6-c-form__helper-text {
   &.pf-m-disabled {
-    color: var(--pf-v5-global--disabled-color--100);
+    color: var(--pf-t--color--gray--50);
   }
 }
 
 .src-c-warning-icon {
-  fill: var(--pf-v5-global--warning-color--100);
-  margin-right: var(--pf-v5-global--spacer--sm);
+  margin-right: var(--pf-t--global--spacer--sm);
 }
 
 .src-c-aws-grid {

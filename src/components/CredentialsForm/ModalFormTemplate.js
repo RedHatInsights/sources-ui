@@ -6,7 +6,8 @@ import FormSpy from '@data-driven-forms/react-form-renderer/form-spy';
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 
-import { ActionGroup, Button, Form, Modal } from '@patternfly/react-core';
+import { ActionGroup, Button, Form } from '@patternfly/react-core';
+import { Modal } from '@patternfly/react-core/deprecated';
 
 const CustomFormWrapper = (props) => <Form {...props} id="modal-form" />;
 
@@ -24,8 +25,8 @@ const CustomButtons = () => {
       }}
     >
       {({ pristine, invalid, validating, submitting }) => (
-        <div className="pf-v5-c-form">
-          <ActionGroup className="pf-v5-u-mt-0">
+        <div className="pf-v6-c-form">
+          <ActionGroup className="pf-v6-u-mt-0">
             <Button
               variant="primary"
               form="modal-form"

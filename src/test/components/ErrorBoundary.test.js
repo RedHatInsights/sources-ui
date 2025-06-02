@@ -4,8 +4,8 @@ import ErrorBoundary from '../../components/ErrorBoundary';
 import { componentWrapperIntl } from '../../utilities/testsHelpers';
 import * as sentry from '@sentry/browser';
 
-import * as actions from '../../redux/sources/actions';
 import mockStore from '../__mocks__/mockStore';
+import notificationsStore from '../../utilities/notificationsStore';
 
 describe('Error Boundary', () => {
   it('renders children', () => {
@@ -25,6 +25,7 @@ describe('Error Boundary', () => {
   it('dispatch message', () => {
     const SENTRY_ID = '2132s1ad5s1ad5sa1d51sfd321sa';
     sentry.captureException = jest.fn().mockImplementation(() => SENTRY_ID);
+    const addNotificationSpy = jest.spyOn(notificationsStore, 'addNotification');
 
     const ERROR_TO_STRING = expect.any(String);
     const ERROR_STACK = expect.any(String);
@@ -40,8 +41,6 @@ describe('Error Boundary', () => {
       throw ERROR;
     };
 
-    actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'type' }));
-
     render(
       componentWrapperIntl(
         <ErrorBoundary>
@@ -52,11 +51,11 @@ describe('Error Boundary', () => {
     );
 
     expect(screen.getByText('Error occurred')).toBeInTheDocument();
-    expect(actions.addMessage).toHaveBeenCalledWith({ title: ERROR_TO_STRING, variant: 'danger', description: ERROR_STACK });
+    expect(addNotificationSpy).toHaveBeenCalledWith({ title: ERROR_TO_STRING, variant: 'danger', description: ERROR_STACK });
 
-    expect(actions.addMessage.mock.calls[0][0].title.includes(ERROR.toString()));
-    expect(actions.addMessage.mock.calls[0][0].title.includes('Sentry ID'));
-    expect(actions.addMessage.mock.calls[0][0].title.includes(SENTRY_ID));
+    expect(addNotificationSpy.mock.calls[0][0].title.includes(ERROR.toString()));
+    expect(addNotificationSpy.mock.calls[0][0].title.includes('Sentry ID'));
+    expect(addNotificationSpy.mock.calls[0][0].title.includes(SENTRY_ID));
 
     expect(sentry.captureException).toHaveBeenCalledWith(ERROR);
 

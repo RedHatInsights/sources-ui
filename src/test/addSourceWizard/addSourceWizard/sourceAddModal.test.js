@@ -96,9 +96,11 @@ describe('sourceAddModal', () => {
       .mockImplementation(() => new Promise((resolve) => resolve({ applicationTypes })));
     dependency.checkAccountHCS = jest.fn(() => new Promise((resolve) => resolve(hcsEnrollment)));
 
-    render(componentWrapperIntl(<AddSourceWizard {...initialProps} onCancel={onCancel} />, store));
+    await waitFor(async () => {
+      render(componentWrapperIntl(<AddSourceWizard {...initialProps} onCancel={onCancel} />, store));
+    });
 
-    expect(screen.getByText('Loading')).toBeInTheDocument(1);
+    expect(screen.getAllByText('Loading')).toHaveLength(2);
 
     expect(onCancel).not.toHaveBeenCalled();
 

@@ -5,7 +5,7 @@ import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
 
-import { Text, TextContent, TextVariants } from '@patternfly/react-core';
+import { Content, ContentVariants } from '@patternfly/react-core';
 
 import debouncePromise from '../../utilities/debouncePromise';
 import { findSource } from '../../api/wizardHelpers';
@@ -101,7 +101,7 @@ export const iconMapper = (sourceTypes) => (name) => {
     <img
       src={shortIcons[name] || sourceType.icon_url}
       alt={sourceType.product_name}
-      className={`src-c-wizard__icon ${sourceType.category === 'Red Hat' ? 'redhat-icon' : 'pf-v5-u-mb-sm'}`}
+      className={`src-c-wizard__icon ${sourceType.category === 'Red Hat' ? 'redhat-icon' : 'pf-v6-u-mb-sm'}`}
     />
   );
 
@@ -185,18 +185,18 @@ export const applicationStep = (applicationTypes, intl, activeCategory, hcsEnrol
         },
         {
           learnMore: (
-            <Text
+            <Content
               key="link"
               rel="noopener noreferrer"
               target="_blank"
-              component={TextVariants.a}
+              component={ContentVariants.a}
               href="https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/configuring_cloud_integrations_for_red_hat_services/assembly-adding-cloud-integrations_crc-cloud-integrations#adding-azure-integration_assembly-adding-cloud-integrations"
             >
               {intl.formatMessage({
                 id: 'wizard.learnMore defaultMessage=Learn more',
                 defaultMessage: 'Learn more',
               })}
-            </Text>
+            </Content>
           ),
         },
       ),
@@ -277,17 +277,15 @@ export const NameDescription = ({ sourceTypes }) => {
   const typeName = sourceTypes.find(({ name }) => name === getState().values.source_type)?.product_name;
 
   return (
-    <TextContent key="step1">
-      <Text component={TextVariants.p}>
-        {intl.formatMessage(
-          {
-            id: 'wizard.nameDescription',
-            defaultMessage: 'Enter a name for your {typeName} integration.',
-          },
-          { typeName },
-        )}
-      </Text>
-    </TextContent>
+    <Content key="step1" component={ContentVariants.p}>
+      {intl.formatMessage(
+        {
+          id: 'wizard.nameDescription',
+          defaultMessage: 'Enter a name for your {typeName} integration.',
+        },
+        { typeName },
+      )}
+    </Content>
   );
 };
 
@@ -329,20 +327,18 @@ export const SummaryDescription = () => {
   const intl = useIntl();
 
   return (
-    <TextContent>
-      <Text component={TextVariants.p}>
-        {intl.formatMessage(
-          {
-            id: 'wizard.summaryDescription',
-            defaultMessage:
-              'Review the information below and click <b>Add</b> to add your integration. To edit details in previous steps, click <b>Back</b>.',
-          },
-          {
-            b: bold,
-          },
-        )}
-      </Text>
-    </TextContent>
+    <Content component={ContentVariants.p}>
+      {intl.formatMessage(
+        {
+          id: 'wizard.summaryDescription',
+          defaultMessage:
+            'Review the information below and click <b>Add</b> to add your integration. To edit details in previous steps, click <b>Back</b>.',
+        },
+        {
+          b: bold,
+        },
+      )}
+    </Content>
   );
 };
 

@@ -6,7 +6,7 @@ import { Route, Routes } from 'react-router-dom';
 
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import SourceEditModal from '../../../components/SourceEditForm/SourceEditModal';
-import { replaceRouteId, routes } from '../../../Routing';
+import { replaceRouteId, routes } from '../../../routes';
 import appTypes, { CATALOG_APP, TOPOLOGY_INV_APP } from '../../__mocks__/applicationTypes';
 import sourceTypes, { ANSIBLE_TOWER_TYPE } from '../../__mocks__/sourceTypes';
 
@@ -107,7 +107,7 @@ describe('SourceEditModal', () => {
       'endpoint.receptor_node',
     ]);
     expect([...screen.getAllByRole('button')].map((e) => e.textContent)).toEqual(['Save changes', 'Reset']);
-    expect(screen.getAllByRole('checkbox')).toHaveLength(2);
+    expect(screen.getAllByRole('switch')).toHaveLength(2);
     expect(screen.getByRole('tab')).toHaveTextContent('Catalog');
   });
 

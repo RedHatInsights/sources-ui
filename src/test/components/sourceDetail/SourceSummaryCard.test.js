@@ -7,7 +7,7 @@ import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import sourceTypes, { AMAZON_TYPE } from '../../__mocks__/sourceTypes';
 import SourceSummaryCard from '../../../components/SourceDetail/SourceSummaryCard';
 import { Route, Routes } from 'react-router-dom';
-import { replaceRouteId, routes } from '../../../Routing';
+import { replaceRouteId, routes } from '../../../routes';
 import * as formatters from '../../../views/formatters';
 import mockStore from '../../__mocks__/mockStore';
 
@@ -18,9 +18,9 @@ describe('SourceSummaryCard', () => {
   const initialEntry = [replaceRouteId(routes.sourcesDetail.path, sourceId)];
 
   const getCategories = (container) =>
-    [...container.getElementsByClassName('pf-v5-c-description-list__group')].map((e) => [
-      e.getElementsByClassName('pf-v5-c-description-list__term')[0].textContent,
-      e.getElementsByClassName('pf-v5-c-description-list__description')[0].textContent,
+    [...container.getElementsByClassName('pf-v6-c-description-list__group')].map((e) => [
+      e.getElementsByClassName('pf-v6-c-description-list__term')[0].textContent,
+      e.getElementsByClassName('pf-v6-c-description-list__description')[0].textContent,
     ]);
 
   it('renders correctly', async () => {

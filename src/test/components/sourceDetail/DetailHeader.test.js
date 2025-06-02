@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 
 import { render, screen } from '@testing-library/react';
 
-import { replaceRouteId, routes } from '../../../Routing';
+import { replaceRouteId, routes } from '../../../routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import appTypes from '../../__mocks__/applicationTypes';
 import DetailHeader from '../../../components/SourceDetail/DetailHeader';

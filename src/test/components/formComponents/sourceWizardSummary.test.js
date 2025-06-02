@@ -44,8 +44,8 @@ describe('SourceWizardSummary component', () => {
       );
 
     const getListData = (container) =>
-      [...container.getElementsByClassName('pf-v5-c-description-list__group')].map((group) => [
-        ...[...group.getElementsByClassName('pf-v5-c-description-list__text')].map((el) => el.textContent),
+      [...container.getElementsByClassName('pf-v6-c-description-list__group')].map((group) => [
+        ...[...group.getElementsByClassName('pf-v6-c-description-list__text')].map((el) => el.textContent),
       ]);
 
     beforeEach(() => {
@@ -404,8 +404,8 @@ describe('SourceWizardSummary component', () => {
         </IntlProvider>,
       );
 
-      const data = [...container.getElementsByClassName('pf-v5-c-description-list__group')].map((group) => [
-        ...[...group.getElementsByClassName('pf-v5-c-description-list__text')].map((el) => el.textContent),
+      const data = [...container.getElementsByClassName('pf-v6-c-description-list__group')].map((group) => [
+        ...[...group.getElementsByClassName('pf-v6-c-description-list__text')].map((el) => el.textContent),
       ]);
 
       expect(data).toEqual([
@@ -510,7 +510,7 @@ describe('SourceWizardSummary component', () => {
       ]);
     });
 
-    it('google rhel management - include error message', () => {
+    it('google rhel management - include error message', async () => {
       formOptions = {
         getState: () => ({
           values: {
@@ -523,7 +523,11 @@ describe('SourceWizardSummary component', () => {
         }),
       };
 
-      const { container } = render(<SourceWizardSummary {...initialProps} formOptions={formOptions} store={store} />);
+      let container;
+      await waitFor(async () => {
+        const results = await render(<SourceWizardSummary {...initialProps} app formOptions={formOptions} store={store} />);
+        container = results.container;
+      });
 
       const data = getListData(container);
 

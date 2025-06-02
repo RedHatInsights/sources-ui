@@ -12,7 +12,7 @@ import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import sourceTypes, { AMAZON_TYPE, OPENSHIFT_TYPE } from '../../__mocks__/sourceTypes';
 import { SOURCE_NO_APS_ID } from '../../__mocks__/sourcesData';
 import appTypes, { COST_MANAGEMENT_APP } from '../../__mocks__/applicationTypes';
-import { replaceRouteId, routes } from '../../../Routing';
+import { replaceRouteId, routes } from '../../../routes';
 import reducer from '../../../components/AddApplication/reducer';
 import * as removeAppSubmit from '../../../components/AddApplication/removeAppSubmit';
 
@@ -327,7 +327,7 @@ describe('AddApplication', () => {
         await user.click(screen.getByLabelText('Close wizard'));
       });
       await act(async () => {
-        await user.click(screen.getByText('Cancel', { selector: '#on-exit-button' }));
+        await user.click(screen.getAllByText('Cancel')[1]);
       });
 
       await waitFor(() =>

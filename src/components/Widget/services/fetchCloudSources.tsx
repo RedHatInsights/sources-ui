@@ -36,9 +36,9 @@ export const fetchCloudSources = async (): Promise<{
     };
 
     const cloudProviderIds: Record<string, keyof typeof counts> = {
-      '1': 'aws',
-      '2': 'google_cloud',
-      '3': 'azure',
+      1: 'aws',
+      2: 'google_cloud',
+      3: 'azure',
     };
 
     counts.cloud = data.meta.count;

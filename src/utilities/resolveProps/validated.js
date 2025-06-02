@@ -11,7 +11,7 @@ export const ValidatingSpinner = ({ validating }) => {
 
   return (
     <FormHelperText isHidden={!validating}>
-      <Spinner size="md" className="pf-v5-u-mr-md" />
+      <Spinner size="md" className="pf-v6-u-mr-md" />
       {intl.formatMessage({ id: 'wizard.validating', defaultMessage: 'Validating' })}
     </FormHelperText>
   );

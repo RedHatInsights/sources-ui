@@ -3,17 +3,18 @@ import { Route, Routes } from 'react-router-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { replaceRouteId, routes } from '../../../Routing';
+import { replaceRouteId, routes } from '../../../routes';
 import { componentWrapperIntl } from '../../../utilities/testsHelpers';
 import sourceTypes, { AMAZON_TYPE } from '../../__mocks__/sourceTypes';
 import mockStore from '../../__mocks__/mockStore';
 import CredentialsForm from '../../../components/CredentialsForm/CredentialsForm';
 
 import * as api from '../../../api/entities';
-import * as actions from '../../../redux/sources/actions';
+import notificationsStore from '../../../utilities/notificationsStore';
 
 describe('CredentialsForm', () => {
   let store;
+  const addNotification = jest.spyOn(notificationsStore, 'addNotification');
 
   const sourceId = '3627987';
   const initialEntry = [replaceRouteId(routes.sourcesDetailEditCredentials.path, sourceId)];
@@ -36,6 +37,7 @@ describe('CredentialsForm', () => {
 
   beforeEach(() => {
     listSourceAuthentications = jest.fn().mockImplementation(() => Promise.resolve(authentications));
+    addNotification.mockClear();
 
     api.getSourcesApi = () => ({
       listSourceAuthentications,
@@ -170,8 +172,6 @@ describe('CredentialsForm', () => {
       updateAuthentication,
     });
 
-    actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'nonsense' }));
-
     render(
       componentWrapperIntl(
         <Routes>
@@ -192,7 +192,7 @@ describe('CredentialsForm', () => {
     });
 
     expect(updateAuthentication).not.toHaveBeenCalled();
-    expect(actions.addMessage).not.toHaveBeenCalled();
+    expect(addNotification).not.toHaveBeenCalled();
 
     await waitFor(async () => {
       await user.click(screen.getByText('Submit'));
@@ -202,12 +202,12 @@ describe('CredentialsForm', () => {
       replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, sourceId),
     );
     expect(updateAuthentication).toHaveBeenCalledWith('auth-id', { username: 'newname' });
-    expect(actions.addMessage).not.toHaveBeenCalled();
+    expect(addNotification).not.toHaveBeenCalled();
 
     updateAuthentication.resolve();
 
     await waitFor(() =>
-      expect(actions.addMessage).toHaveBeenCalledWith({
+      expect(addNotification).toHaveBeenCalledWith({
         description: 'It may take some time to validate your new credentials. Check this page for status updates.',
         title: 'New credentials saved',
         variant: 'info',
@@ -225,8 +225,6 @@ describe('CredentialsForm', () => {
       updateAuthentication,
     });
 
-    actions.addMessage = jest.fn().mockImplementation(() => ({ type: 'nonsense' }));
-
     render(
       componentWrapperIntl(
         <Routes>
@@ -246,7 +244,7 @@ describe('CredentialsForm', () => {
     });
 
     expect(updateAuthentication).not.toHaveBeenCalled();
-    expect(actions.addMessage).not.toHaveBeenCalled();
+    expect(addNotification).not.toHaveBeenCalled();
 
     await waitFor(async () => {
       await user.click(screen.getByText('Submit'));
@@ -256,12 +254,12 @@ describe('CredentialsForm', () => {
       replaceRouteId(`/settings/integrations/${routes.sourcesDetail.path}`, sourceId),
     );
     expect(updateAuthentication).toHaveBeenCalledWith('auth-id', { username: 'newname' });
-    expect(actions.addMessage).not.toHaveBeenCalled();
+    expect(addNotification).not.toHaveBeenCalled();
 
     updateAuthentication.reject();
 
     await waitFor(() =>
-      expect(actions.addMessage).toHaveBeenCalledWith({
+      expect(addNotification).toHaveBeenCalledWith({
         description:
           'There was a problem while trying to update credentials. Please try again. If the error persists, open a support case.',
         title: 'Error updating credentials',

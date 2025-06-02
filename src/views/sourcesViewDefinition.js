@@ -61,8 +61,3 @@ export const sourcesColumns = (intl, notSortable = false) => [
     formatter: availabilityFormatter,
   },
 ];
-
-const KEBAB_COLUMN = 1;
-const COUNT_OF_COLUMNS = sourcesColumns({ formatMessage: () => '' }).length;
-
-export const COLUMN_COUNT = COUNT_OF_COLUMNS + KEBAB_COLUMN;

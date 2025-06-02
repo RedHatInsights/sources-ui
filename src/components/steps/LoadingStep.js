@@ -8,7 +8,6 @@ import {
   EmptyState,
   EmptyStateActions,
   EmptyStateBody,
-  EmptyStateIcon,
   EmptyStateVariant,
   Spinner,
   Title,
@@ -16,14 +15,19 @@ import {
 
 const LoadingStep = ({ onClose, customText, cancelTitle, description }) => (
   <Bullseye>
-    <EmptyState variant={EmptyStateVariant.full} className="pf-v5-u-mt-4xl">
-      <EmptyStateIcon icon={Spinner} className="pf-v5-u-mb-0" />
-      <Title headingLevel="h2" size="xl" className="pf-v5-u-mt-xl">
-        {customText}
-      </Title>
+    <EmptyState
+      titleText={
+        <Title headingLevel="h2" size="xl" className="pf-v6-u-mt-xl">
+          {customText}
+        </Title>
+      }
+      icon={Spinner}
+      variant={EmptyStateVariant.full}
+      className="pf-v6-u-mt-4xl"
+    >
       {description && <EmptyStateBody className="src-c-wizard--step-text">{description}</EmptyStateBody>}
       {onClose && (
-        <EmptyStateActions className="pf-v5-u-mt-xl">
+        <EmptyStateActions className="pf-v6-u-mt-xl">
           <Button variant="link" onClick={onClose}>
             {cancelTitle}
           </Button>

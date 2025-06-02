@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { shallowEqual, useSelector } from 'react-redux';
 
-import { Text, TextList, TextListItem, TextVariants } from '@patternfly/react-core';
+import { Content, ContentVariants } from '@patternfly/react-core';
 
 import { idToName } from './helpers';
 
@@ -10,15 +10,21 @@ const AppListInRemoval = ({ applications }) => {
   const { appTypes } = useSelector(({ sources }) => sources, shallowEqual);
 
   if (applications.length === 1) {
-    return <Text variant={TextVariants.p}>{idToName(applications[0].application_type_id, appTypes)}</Text>;
+    return (
+      <Content component="p" variant={ContentVariants.p}>
+        {idToName(applications[0].application_type_id, appTypes)}
+      </Content>
+    );
   }
 
   return (
-    <TextList>
+    <Content component="ul">
       {applications.map(({ id, application_type_id }) => (
-        <TextListItem key={id}>{idToName(application_type_id, appTypes)}</TextListItem>
+        <Content component="li" key={id}>
+          {idToName(application_type_id, appTypes)}
+        </Content>
       ))}
-    </TextList>
+    </Content>
   );
 };
 

@@ -6,14 +6,14 @@ import {
   Alert,
   Bullseye,
   Button,
+  Content,
   EmptyState,
   EmptyStateActions,
   EmptyStateBody,
-  EmptyStateIcon,
   EmptyStateVariant,
   Grid,
   GridItem,
-  Text,
+  Icon,
   Title,
 } from '@patternfly/react-core';
 
@@ -22,10 +22,12 @@ import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 
 const AwsLink = ({ href, children }) => (
   <React.Fragment>
-    <CheckCircleIcon className="pf-v5-u-mr-sm" fill="var(--pf-v5-global--success-color--100)" />
-    <Text component="a" href={href} target="_blank" rel="noopener noreferrer">
+    <Icon className="pf-v6-u-mr-sm" status="success">
+      <CheckCircleIcon />
+    </Icon>
+    <Content component="a" href={href} target="_blank" rel="noopener noreferrer">
       {children}
-    </Text>
+    </Content>
   </React.Fragment>
 );
 
@@ -59,17 +61,22 @@ const AmazonFinishedStep = ({ onClose }) => {
         })}
       </Alert>
       <Bullseye>
-        <EmptyState variant={EmptyStateVariant.full} className="pf-v5-u-mt-md">
-          <EmptyStateIcon icon={CheckCircleIcon} color="var(--pf-v5-global--success-color--100)" className="pf-v5-u-mb-0" />
-          <Title headingLevel="h2" size="xl" className="pf-v5-u-mt-xl">
-            {intl.formatMessage({ id: 'aws.successTitle', defaultMessage: 'Amazon Web Services connection established' })}
-          </Title>
+        <EmptyState
+          titleText={
+            <Title headingLevel="h2" size="xl" className="pf-v6-u-mt-xl">
+              {intl.formatMessage({ id: 'aws.successTitle', defaultMessage: 'Amazon Web Services connection established' })}
+            </Title>
+          }
+          icon={CheckCircleIcon}
+          variant={EmptyStateVariant.full}
+          className="pf-v6-u-mt-md"
+        >
           <EmptyStateBody>
             {intl.formatMessage({
               id: 'aws.successDescription',
               defaultMessage: 'Discover the benefits of your connection or exit to manage your new integration.',
             })}
-            <Grid hasGutter className="src-c-aws-grid pf-v5-u-mt-md">
+            <Grid hasGutter className="src-c-aws-grid pf-v6-u-mt-md">
               <GridItem md="6">
                 <AwsLink href={GOLDIMAGES_HREF}>
                   {intl.formatMessage({ id: 'aws.goldImages', defaultMessage: 'View enabled AWS gold images' })}
@@ -92,13 +99,13 @@ const AmazonFinishedStep = ({ onClose }) => {
               </GridItem>
             </Grid>
           </EmptyStateBody>
-          <Button variant="primary" onClick={onClose} className="pf-v5-u-mt-xl">
+          <Button variant="primary" onClick={onClose} className="pf-v6-u-mt-xl">
             {intl.formatMessage({ id: 'exit', defaultMessage: 'Exit' })}
           </Button>
           <EmptyStateActions>
-            <Text component="a" href={LEARNMORE_HREF} target="_blank" rel="noopener noreferrer">
+            <Content component="a" href={LEARNMORE_HREF} target="_blank" rel="noopener noreferrer">
               {intl.formatMessage({ id: 'aws.learnMore', defaultMessage: 'Learn more about this Cloud' })}
-            </Text>
+            </Content>
           </EmptyStateActions>
         </EmptyState>
       </Bullseye>

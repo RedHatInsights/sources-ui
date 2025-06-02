@@ -128,8 +128,8 @@ describe('<RecommendedServices />', () => {
         await user.click(screen.getByTestId('pagination').querySelector('#options-menu-top-toggle'));
       });
 
-      expect(screen.getByText('10 per page').closest('button')).toHaveAttribute('class', 'pf-v5-c-menu__item pf-m-selected');
-      expect(screen.getByText('20 per page').closest('button')).toHaveAttribute('class', 'pf-v5-c-menu__item');
+      expect(screen.getByText('10 per page').closest('button')).toHaveAttribute('class', 'pf-v6-c-menu__item pf-m-selected');
+      expect(screen.getByText('20 per page').closest('button')).toHaveAttribute('class', 'pf-v6-c-menu__item');
 
       await act(async () => {
         await user.click(screen.getByText('20 per page'));
@@ -146,8 +146,8 @@ describe('<RecommendedServices />', () => {
         await user.click(screen.getByTestId('pagination').querySelector('#options-menu-top-toggle'));
       });
 
-      expect(screen.getByText('10 per page').closest('button')).toHaveAttribute('class', 'pf-v5-c-menu__item');
-      expect(screen.getByText('20 per page').closest('button')).toHaveAttribute('class', 'pf-v5-c-menu__item pf-m-selected');
+      expect(screen.getByText('10 per page').closest('button')).toHaveAttribute('class', 'pf-v6-c-menu__item');
+      expect(screen.getByText('20 per page').closest('button')).toHaveAttribute('class', 'pf-v6-c-menu__item pf-m-selected');
     });
 
     it('change page', async () => {
