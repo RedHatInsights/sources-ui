@@ -4,18 +4,16 @@ import { useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
 
 import {
-	Button,
-	Content,
-	ContentVariants,
-	Icon,
-	ModalBody,
-	ModalFooter,
-	ModalHeader,
-	Title
+  Button,
+  Content,
+  ContentVariants,
+  Icon,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  Title,
 } from '@patternfly/react-core';
-import {
-	Modal
-} from '@patternfly/react-core/deprecated';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 
 import { useSource } from '../../hooks/useSource';

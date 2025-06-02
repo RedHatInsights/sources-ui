@@ -96,9 +96,7 @@ const IntegrationsWidget: FunctionComponent = () => {
   useEffect(() => {
     if (!hasInitialized && Object.keys(integrationCounts).length > 0) {
       const initiallyExpandedIndex = integrationsData
-        .map((integration, index) =>
-          badgeCounts(integration.items) > 0 ? index : null
-        )
+        .map((integration, index) => (badgeCounts(integration.items) > 0 ? index : null))
         .filter((index) => index !== null) as number[];
       setExpandedIndex(initiallyExpandedIndex);
       setHasInitialized(true);
@@ -106,10 +104,11 @@ const IntegrationsWidget: FunctionComponent = () => {
   }, [integrationsData, integrationCounts, hasInitialized]);
 
   const onToggle = (index: number, isExpandable: boolean) => {
-    if (!isExpandable) return; // Prevent toggling if it's not expandable
-    setExpandedIndex((prev) =>
-      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
-    );
+    if (!isExpandable) {
+      return;
+    } // Prevent toggling if it's not expandable
+
+    setExpandedIndex((prev) => (prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]));
   };
 
   const onToggleDropdown = (index: number, isOpen: boolean) => {
@@ -144,52 +143,55 @@ const IntegrationsWidget: FunctionComponent = () => {
         </Bullseye>
       ) : isEmptyState ? (
         <Card ouiaId="integrations-widget-empty-state">
-  <CardBody className='pf-v6-u-ml-sm'>
-    Click on a third-party application to create an integration for it.{' '}
-    <Link to="/settings/integrations?category=overview">Learn more about Integrations.</Link>
-  </CardBody>
-  <CardBody>
-    <Gallery hasGutter>
-      {sortedItems.map((item) => (
-        <Card
-          key={item.id}
-          isSelectable
-          isSelected={selectedTileValue === item.id}
-          onClick={() => handleTileClick(item.value)}
-          id={item.id}
-          className='pf-v6-u-m-sm'
-          isCompact
-        >
-          <CardHeader
-          selectableActions={{
-            selectableActionId: item.id,
-            name: item.id,
-            variant: 'single',
-          }}
-        ></CardHeader>
-          <CardBody className="pf-v5-u-text-align-center pf-v5-u-p-lg">
-  <Icon size="lg" className="pf-v5-u-mb-md">{item.icon}</Icon>
-  <div className="pf-v5-u-font-weight-bold">{item.name}</div>
-</CardBody>
+          <CardBody className="pf-v6-u-ml-sm">
+            Click on a third-party application to create an integration for it.{' '}
+            <Link to="/settings/integrations?category=overview">Learn more about Integrations.</Link>
+          </CardBody>
+          <CardBody>
+            <Gallery hasGutter>
+              {sortedItems.map((item) => (
+                <Card
+                  key={item.id}
+                  isSelectable
+                  isSelected={selectedTileValue === item.id}
+                  onClick={() => handleTileClick(item.value)}
+                  id={item.id}
+                  className="pf-v6-u-m-sm"
+                  isCompact
+                >
+                  <CardHeader
+                    selectableActions={{
+                      selectableActionId: item.id,
+                      name: item.id,
+                      variant: 'single',
+                    }}
+                  ></CardHeader>
+                  <CardBody className="pf-v6-u-text-align-center pf-v6-u-p-lg">
+                    <Icon size="lg" className="pf-v6-u-mb-md">
+                      {item.icon}
+                    </Icon>
+                    <div className="pf-v6-u-font-weight-bold">{item.name}</div>
+                  </CardBody>
+                </Card>
+              ))}
+            </Gallery>
+          </CardBody>
         </Card>
-      ))}
-    </Gallery>
-  </CardBody>
-</Card>
       ) : (
         <Card ouiaId="integrations-widget" isFullHeight>
-          <CardBody className="pf-v5-u-pt-0">
+          <CardBody className="pf-v6-u-pt-0">
             <DataList aria-label="Integrations List" isCompact>
               {integrationsData.map((integration, integrationIndex) => {
                 const isExpandable = integration.title !== 'Webhooks';
                 return (
                   <React.Fragment key={`integration-fragment-${integrationIndex}`}>
                     <DataListItem
+                      className="pf-v6-u-pt-md"
                       key={integrationIndex}
                       aria-labelledby={`integration-${integrationIndex}`}
                       isExpanded={isExpandable ? expandedIndex.includes(integrationIndex) : false}
                     >
-                      <DataListItemRow className="pf-v5-u-pl-0 pf-v5-u-ml-lg">
+                      <DataListItemRow className="pf-v6-u-pl-0 pf-v6-u-ml-lg">
                         {isExpandable ? (
                           <DataListToggle
                             onClick={() => onToggle(integrationIndex, isExpandable)}
@@ -198,16 +200,16 @@ const IntegrationsWidget: FunctionComponent = () => {
                             aria-controls={`expand-${integrationIndex}`}
                           />
                         ) : (
-                          <div className="pf-v5-u-ml-lg" />
+                          <div className="pf-v6-u-ml-lg" />
                         )}
                         <DataListItemCells
                           dataListCells={[
                             <DataListCell key="primary content">
-                              <span className="pf-v5-u-pr-sm pf-v6-u-text-color-link pf-v6-u-font-weight-bold">{integration.title}</span>
-                              <Badge isRead={badgeCounts(integration.items) === 0}>
-                                {badgeCounts(integration.items)}
-                              </Badge>
-                            </DataListCell>
+                              <span className="pf-v6-u-pr-sm pf-v6-u-text-color-link pf-v6-u-font-weight-bold">
+                                {integration.title}
+                              </span>
+                              <Badge isRead={badgeCounts(integration.items) === 0}>{badgeCounts(integration.items)}</Badge>
+                            </DataListCell>,
                           ]}
                         />
                         <DataListAction aria-labelledby="actions" id="actions" aria-label="Actions">
@@ -215,22 +217,22 @@ const IntegrationsWidget: FunctionComponent = () => {
                             onSelect={() => onToggleDropdown(integrationIndex, false)}
                             toggle={(toggleRef) => (
                               <MenuToggle
-                                onClick={() =>
-                                  onToggleDropdown(integrationIndex, !dropdownOpenIndexes[integrationIndex])
-                                }
+                                onClick={() => onToggleDropdown(integrationIndex, !dropdownOpenIndexes[integrationIndex])}
                                 id={`dropdown-toggle-${integrationIndex}`}
                                 ref={toggleRef}
-                                className="pf-v5-u-mr-0"
+                                className="pf-v6-u-mr-0"
                               >
                                 Manage
                               </MenuToggle>
                             )}
                             isOpen={dropdownOpenIndexes[integrationIndex] || false}
-                            popperProps={{ position: "end", appendTo: 'inline', preventOverflow: true}}                          >
+                            popperProps={{ position: 'end', appendTo: 'inline', preventOverflow: true }}
+                          >
                             <DropdownItem
                               key={`create-new-${integrationIndex}`}
                               onClick={() => {
-                                handleDropdownAction('create', integration.title)}}
+                                handleDropdownAction('create', integration.title);
+                              }}
                               isSelected={selectedTileValue === integration.title}
                             >
                               Create new {integration.title} integration
@@ -240,7 +242,7 @@ const IntegrationsWidget: FunctionComponent = () => {
                               key={`view-all-${integrationIndex}`}
                               onClick={() => {
                                 handleDropdownAction('view', integration.title);
-                            }} 
+                              }}
                             >
                               View all {integration.title} Integrations
                             </DropdownItem>
@@ -250,12 +252,20 @@ const IntegrationsWidget: FunctionComponent = () => {
                       <DataListContent aria-label="widget-content" id={`expand-${integrationIndex}`}>
                         {expandedIndex.includes(integrationIndex) && (
                           <div>
-                            {integration.items.filter((item) => item.name !== 'Webhooks').map((item, itemIndex) => (
-                              <Flex display={{ default: 'inlineFlex' }} className="pf-v5-u-p-sm pf-v5-u-pt-0 pf-v6-u-align-items-center">
-                                <Icon size="md" iconSize="lg" className="pf-v5-u-mr-sm" isInline>{item.icon}</Icon>
-                                {item.name} ({integrationCounts[item.id] || 0})
-                              </Flex>
-                            ))}
+                            {integration.items
+                              .filter((item) => item.name !== 'Webhooks')
+                              .map((item) => (
+                                <Flex
+                                  key={item.id}
+                                  display={{ default: 'inlineFlex' }}
+                                  className="pf-v6-u-p-sm pf-v6-u-align-items-center"
+                                >
+                                  <Icon size="md" iconSize="lg" className="pf-v6-u-mr-sm" isInline>
+                                    {item.icon}
+                                  </Icon>
+                                  {item.name} ({integrationCounts[item.id] || 0})
+                                </Flex>
+                              ))}
                           </div>
                         )}
                       </DataListContent>
@@ -265,35 +275,35 @@ const IntegrationsWidget: FunctionComponent = () => {
               })}
             </DataList>
           </CardBody>
-          <CardFooter className="pf-v5-u-pt-md pf-v5-u-background-color-100">
+          <CardFooter className="pf-v6-u-pt-md pf-v6-u-background-color-100">
             <IntegrationsDropdown />
           </CardFooter>
         </Card>
       )}
-        {[COMMUNICATIONS, REPORTING, WEBHOOKS].includes(selectedTileValue) && (
-              <AsyncComponent
-                scope="notifications"
-                module="./IntegrationsWizard"
-                store={store}
-                isOpen={isIntegrationsWizardOpen}
-                category={selectedTileValue}
-                closeModal={() => {
-                  setIsIntegrationsWizardOpen(false);
-                  setSelectedTileValue('');
-                }}
-                fallback={<div id="fallback-modal" />}
-              />
-            )}
-            {[REDHAT_VENDOR, CLOUD_VENDOR].includes(selectedTileValue) && (
-              <AddSourceWizard
-                isOpen={isSourcesWizardOpen}
-                onClose={() => {
-                  setIsSourcesWizardOpen(false);
-                  setSelectedTileValue('');
-                }}
-                activeCategory={selectedTileValue}
-              />
-            )}
+      {[COMMUNICATIONS, REPORTING, WEBHOOKS].includes(selectedTileValue) && (
+        <AsyncComponent
+          scope="notifications"
+          module="./IntegrationsWizard"
+          store={store}
+          isOpen={isIntegrationsWizardOpen}
+          category={selectedTileValue}
+          closeModal={() => {
+            setIsIntegrationsWizardOpen(false);
+            setSelectedTileValue('');
+          }}
+          fallback={<div id="fallback-modal" />}
+        />
+      )}
+      {[REDHAT_VENDOR, CLOUD_VENDOR].includes(selectedTileValue) && (
+        <AddSourceWizard
+          isOpen={isSourcesWizardOpen}
+          onClose={() => {
+            setIsSourcesWizardOpen(false);
+            setSelectedTileValue('');
+          }}
+          activeCategory={selectedTileValue}
+        />
+      )}
     </PermissionsChecker>
   );
 };

@@ -185,18 +185,18 @@ export const applicationStep = (applicationTypes, intl, activeCategory, hcsEnrol
         },
         {
           learnMore: (
-            <Text
+            <Content
               key="link"
               rel="noopener noreferrer"
               target="_blank"
-              component={TextVariants.a}
+              component={ContentVariants.a}
               href="https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/configuring_cloud_integrations_for_red_hat_services/assembly-adding-cloud-integrations_crc-cloud-integrations#adding-azure-integration_assembly-adding-cloud-integrations"
             >
               {intl.formatMessage({
                 id: 'wizard.learnMore defaultMessage=Learn more',
                 defaultMessage: 'Learn more',
               })}
-            </Text>
+            </Content>
           ),
         },
       ),
@@ -277,16 +277,14 @@ export const NameDescription = ({ sourceTypes }) => {
   const typeName = sourceTypes.find(({ name }) => name === getState().values.source_type)?.product_name;
 
   return (
-    <Content key="step1">
-      <Content component={ContentVariants.p}>
-        {intl.formatMessage(
-          {
-            id: 'wizard.nameDescription',
-            defaultMessage: 'Enter a name for your {typeName} integration.',
-          },
-          { typeName },
-        )}
-      </Content>
+    <Content key="step1" component={ContentVariants.p}>
+      {intl.formatMessage(
+        {
+          id: 'wizard.nameDescription',
+          defaultMessage: 'Enter a name for your {typeName} integration.',
+        },
+        { typeName },
+      )}
     </Content>
   );
 };
@@ -329,19 +327,17 @@ export const SummaryDescription = () => {
   const intl = useIntl();
 
   return (
-    <Content>
-      <Content component={ContentVariants.p}>
-        {intl.formatMessage(
-          {
-            id: 'wizard.summaryDescription',
-            defaultMessage:
-              'Review the information below and click <b>Add</b> to add your integration. To edit details in previous steps, click <b>Back</b>.',
-          },
-          {
-            b: bold,
-          },
-        )}
-      </Content>
+    <Content component={ContentVariants.p}>
+      {intl.formatMessage(
+        {
+          id: 'wizard.summaryDescription',
+          defaultMessage:
+            'Review the information below and click <b>Add</b> to add your integration. To edit details in previous steps, click <b>Back</b>.',
+        },
+        {
+          b: bold,
+        },
+      )}
     </Content>
   );
 };
