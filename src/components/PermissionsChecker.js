@@ -17,7 +17,7 @@ const PermissionsChecker = ({ children }) => {
       dispatch(loadOrgAdmin(getUser)),
       dispatch(loadIntegrationsEndpointsPermissions(getUserPermissions)),
     ]);
-  }, []);
+  }, [getUser, getUserPermissions]);
 
   return children;
 };
