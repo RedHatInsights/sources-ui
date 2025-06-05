@@ -5,6 +5,7 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
+  Content,
   DataList,
   DataListAction,
   DataListCell,
@@ -142,13 +143,15 @@ const IntegrationsWidget: FunctionComponent = () => {
           <Spinner />
         </Bullseye>
       ) : isEmptyState ? (
-        <Card ouiaId="integrations-widget-empty-state" isPlain>
-          <CardBody className="pf-v6-u-ml-sm">
-            Click on a third-party application to create an integration for it.{' '}
-            <Link to="/settings/integrations?category=overview">Learn more about Integrations.</Link>
+        <Card ouiaId="integrations-widget-empty-state" className="integrations-widget-empty-state" isPlain>
+          <CardBody className="pf-v6-u-p-md" pf-v6-u-mb-md>
+            <Content>
+              Click on a third-party application to create an integration for it.{' '}
+              <Link to="/settings/integrations?category=overview">Learn more about Integrations.</Link>
+            </Content>
           </CardBody>
-          <CardBody>
-            <Gallery hasGutter>
+          <CardBody className="pf-v6-u-p-md pf-v6-u-pt-0">
+            <Gallery className="pf-v6-u-pt-lg" hasGutter>
               {sortedItems.map((item) => (
                 <Card
                   key={item.id}
@@ -156,7 +159,6 @@ const IntegrationsWidget: FunctionComponent = () => {
                   isSelected={selectedTileValue === item.id}
                   onClick={() => handleTileClick(item.value)}
                   id={item.id}
-                  className="pf-v6-u-m-sm"
                   isCompact
                 >
                   <CardHeader
@@ -164,12 +166,12 @@ const IntegrationsWidget: FunctionComponent = () => {
                       selectableActionId: item.id,
                       name: item.id,
                       variant: 'single',
+                      isHidden: true,
                     }}
-                  ></CardHeader>
+                  />
+
                   <CardBody className="pf-v6-u-text-align-center pf-v6-u-p-lg">
-                    <Icon size="lg" className="pf-v6-u-mb-md">
-                      {item.icon}
-                    </Icon>
+                    <div className="empty-state-icon">{item.icon}</div>
                     <div className="pf-v6-u-font-weight-bold">{item.name}</div>
                   </CardBody>
                 </Card>
