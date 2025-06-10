@@ -271,6 +271,7 @@ const SourcesTable = () => {
   return (
     <DataView activeState={activeState}>
       <DataViewTable
+        aria-label="List of Integrations"
         bodyStates={{
           [DataViewState.empty]: <EmptyStateDataView columns={dwColumns.length} />,
           [DataViewState.loading]: <DWPlaceHolderTable columns={dwColumns.length} />,
