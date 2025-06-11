@@ -2,14 +2,14 @@ import React from 'react';
 import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../../../utilities/constants';
 import ImageWithPlaceholder from '../../TilesShared/ImageWithPlaceholder';
 
-type IntegrationItem = {
+export type IntegrationItem = {
   name: string;
   id: string;
   value: string;
   icon: React.JSX.Element;
 };
 
-type IntegrationCategory = {
+export type IntegrationCategory = {
   title: string;
   items: IntegrationItem[];
 };

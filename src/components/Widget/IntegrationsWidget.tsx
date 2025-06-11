@@ -4,7 +4,6 @@ import {
   Card,
   CardBody,
   CardFooter,
-  CardHeader,
   Content,
   DataList,
   DataListAction,
@@ -21,6 +20,8 @@ import {
   Icon,
   MenuToggle,
   Spinner,
+  Stack,
+  StackItem,
 } from '@patternfly/react-core';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Provider, useSelector, useStore } from 'react-redux';
@@ -34,7 +35,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { fetchCloudSources } from './services/fetchCloudSources';
 import { fetchIntegrations } from './services/fetchIntegrations';
 import { fetchRedHatSources } from './services/fetchRedHatSources';
-import { createIntegrationsData } from './consts/widgetData';
+import { IntegrationItem, createIntegrationsData } from './consts/widgetData';
 import { useFlag } from '@unleash/proxy-client-react';
 import PermissionsChecker from '../PermissionsChecker';
 
@@ -44,7 +45,8 @@ const IntegrationsWidget: FunctionComponent = () => {
   const [expandedIndex, setExpandedIndex] = useState<number[]>([]);
   const [integrationCounts, setIntegrationCounts] = useState<{ [key: string]: number }>({});
 
-  const [selectedTileValue, setSelectedTileValue] = useState<string>('');
+  const [selectedTileValue, setSelectedTileValue] = useState<string | null>(null);
+  const [wizardCategory, setWizardCategory] = useState<string | null>(null);
   const [isIntegrationsWizardOpen, setIsIntegrationsWizardOpen] = useState(false);
   const [isSourcesWizardOpen, setIsSourcesWizardOpen] = useState(false);
 
@@ -55,16 +57,36 @@ const IntegrationsWidget: FunctionComponent = () => {
 
   const [dropdownOpenIndexes, setDropdownOpenIndexes] = useState<Record<number, boolean>>({});
 
-  const handleTileClick = (value: string) => {
-    setSelectedTileValue(value);
-    if ([REDHAT_VENDOR, CLOUD_VENDOR].includes(value)) {
-      setIsSourcesWizardOpen(true);
-    } else if ([COMMUNICATIONS, REPORTING, WEBHOOKS].includes(value)) {
-      setIsIntegrationsWizardOpen(true);
+  const handleTileClick = (id: string, value: string) => {
+    const newSelectedId = selectedTileValue === id ? null : id;
+    setSelectedTileValue(newSelectedId);
+    setWizardCategory(value);
+
+    if (newSelectedId !== null) {
+      if ([REDHAT_VENDOR, CLOUD_VENDOR].includes(value)) {
+        setIsSourcesWizardOpen(true);
+      } else if ([COMMUNICATIONS, REPORTING, WEBHOOKS].includes(value)) {
+        setIsIntegrationsWizardOpen(true);
+      }
     }
   };
 
-  const allItems = integrationsData.flatMap((category) => category.items);
+  const navigate = useNavigate();
+
+  const handleDropdownAction = (action: string, integrationTitle: string) => {
+    if (action === 'create') {
+      setWizardCategory(integrationTitle);
+      if ([REDHAT_VENDOR, CLOUD_VENDOR].includes(integrationTitle)) {
+        setIsSourcesWizardOpen(true);
+      } else if ([COMMUNICATIONS, REPORTING, WEBHOOKS].includes(integrationTitle)) {
+        setIsIntegrationsWizardOpen(true);
+      }
+    } else if (action === 'view') {
+      navigate(`/settings/integrations?category=${integrationTitle}`);
+    }
+  };
+
+  const allItems: IntegrationItem[] = integrationsData.flatMap((category) => category.items);
   const sortedItems = allItems.sort((a, b) => a.name.localeCompare(b.name));
 
   useEffect(() => {
@@ -107,7 +129,7 @@ const IntegrationsWidget: FunctionComponent = () => {
   const onToggle = (index: number, isExpandable: boolean) => {
     if (!isExpandable) {
       return;
-    } // Prevent toggling if it's not expandable
+    }
 
     setExpandedIndex((prev) => (prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]));
   };
@@ -120,22 +142,6 @@ const IntegrationsWidget: FunctionComponent = () => {
 
   const isEmptyState = Object.values(integrationCounts).reduce((total, count) => total + count, 0) === 0;
 
-  const navigate = useNavigate();
-
-  const handleDropdownAction = (action: string, integrationTitle: string) => {
-    if (action === 'create') {
-      if ([REDHAT_VENDOR, CLOUD_VENDOR].includes(integrationTitle)) {
-        setSelectedTileValue(integrationTitle);
-        setIsSourcesWizardOpen(true);
-      } else if ([COMMUNICATIONS, REPORTING, WEBHOOKS].includes(integrationTitle)) {
-        setSelectedTileValue(integrationTitle);
-        setIsIntegrationsWizardOpen(true);
-      }
-    } else if (action === 'view') {
-      navigate(`/settings/integrations?category=${integrationTitle}`);
-    }
-  };
-
   return (
     <PermissionsChecker>
       {isLoading ? (
@@ -143,33 +149,25 @@ const IntegrationsWidget: FunctionComponent = () => {
           <Spinner />
         </Bullseye>
       ) : isEmptyState ? (
-        <Card ouiaId="integrations-widget-empty-state" className="integrations-widget-empty-state" isPlain>
-          <CardBody className="pf-v6-u-p-md" pf-v6-u-mb-md>
-            <Content>
-              Click on a third-party application to create an integration for it.{' '}
-              <Link to="/settings/integrations?category=overview">Learn more about Integrations.</Link>
-            </Content>
-          </CardBody>
-          <CardBody className="pf-v6-u-p-md pf-v6-u-pt-0">
-            <Gallery className="pf-v6-u-pt-lg" hasGutter>
+        <Stack className="integrations-widget-container pf-v6-u-p-lg">
+          <StackItem>
+            <div className="pf-v6-u-mb-md">
+              <Content>
+                Click on a third-party application to create an integration for it.{' '}
+                <Link to="/settings/integrations?category=overview">Learn more about Integrations.</Link>
+              </Content>
+            </div>
+          </StackItem>
+          <StackItem>
+            <Gallery hasGutter>
               {sortedItems.map((item) => (
                 <Card
                   key={item.id}
+                  id={item.id}
                   isSelectable
                   isSelected={selectedTileValue === item.id}
-                  onClick={() => handleTileClick(item.value)}
-                  id={item.id}
-                  isCompact
+                  onClick={() => handleTileClick(item.id, item.value)}
                 >
-                  <CardHeader
-                    selectableActions={{
-                      selectableActionId: item.id,
-                      name: item.id,
-                      variant: 'single',
-                      isHidden: true,
-                    }}
-                  />
-
                   <CardBody className="pf-v6-u-text-align-center pf-v6-u-p-lg">
                     <div className="empty-state-icon">{item.icon}</div>
                     <div className="pf-v6-u-font-weight-bold">{item.name}</div>
@@ -177,8 +175,8 @@ const IntegrationsWidget: FunctionComponent = () => {
                 </Card>
               ))}
             </Gallery>
-          </CardBody>
-        </Card>
+          </StackItem>
+        </Stack>
       ) : (
         <Card ouiaId="integrations-widget" isFullHeight isPlain>
           <CardBody className="pf-v6-u-pt-0">
@@ -235,7 +233,6 @@ const IntegrationsWidget: FunctionComponent = () => {
                               onClick={() => {
                                 handleDropdownAction('create', integration.title);
                               }}
-                              isSelected={selectedTileValue === integration.title}
                             >
                               Create new {integration.title} integration
                             </DropdownItem>
@@ -282,28 +279,28 @@ const IntegrationsWidget: FunctionComponent = () => {
           </CardFooter>
         </Card>
       )}
-      {[COMMUNICATIONS, REPORTING, WEBHOOKS].includes(selectedTileValue) && (
+      {[COMMUNICATIONS, REPORTING, WEBHOOKS].includes(wizardCategory || '') && (
         <AsyncComponent
           scope="notifications"
           module="./IntegrationsWizard"
           store={store}
           isOpen={isIntegrationsWizardOpen}
-          category={selectedTileValue}
+          category={wizardCategory}
           closeModal={() => {
             setIsIntegrationsWizardOpen(false);
-            setSelectedTileValue('');
+            setWizardCategory(null);
           }}
           fallback={<div id="fallback-modal" />}
         />
       )}
-      {[REDHAT_VENDOR, CLOUD_VENDOR].includes(selectedTileValue) && (
+      {[REDHAT_VENDOR, CLOUD_VENDOR].includes(wizardCategory || '') && (
         <AddSourceWizard
           isOpen={isSourcesWizardOpen}
           onClose={() => {
             setIsSourcesWizardOpen(false);
-            setSelectedTileValue('');
+            setWizardCategory(null);
           }}
-          activeCategory={selectedTileValue}
+          activeCategory={wizardCategory}
         />
       )}
     </PermissionsChecker>
