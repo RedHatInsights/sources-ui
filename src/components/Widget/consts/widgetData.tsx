@@ -12,6 +12,7 @@ export type IntegrationItem = {
 export type IntegrationCategory = {
   title: string;
   items: IntegrationItem[];
+  value: string;
 };
 
 export const createIntegrationsData = (
@@ -23,6 +24,7 @@ export const createIntegrationsData = (
     ? [
         {
           title: COMMUNICATIONS,
+          value: COMMUNICATIONS,
           items: [
             {
               name: 'Google Chat',
@@ -63,7 +65,8 @@ export const createIntegrationsData = (
           ],
         },
         {
-          title: REPORTING,
+          title: 'Reporting & automation',
+          value: REPORTING,
           items: [
             {
               name: 'Event-Driven Ansible',
@@ -121,6 +124,7 @@ export const createIntegrationsData = (
         },
         {
           title: WEBHOOKS,
+          value: WEBHOOKS,
           items: [
             {
               name: 'Webhooks',
@@ -142,6 +146,7 @@ export const createIntegrationsData = (
     ? [
         {
           title: CLOUD_VENDOR,
+          value: CLOUD_VENDOR,
           items: [
             {
               name: 'Amazon Web Services',
@@ -179,6 +184,7 @@ export const createIntegrationsData = (
         },
         {
           title: REDHAT_VENDOR,
+          value: REDHAT_VENDOR,
           items: [
             {
               name: 'OpenShift Container Platform',
