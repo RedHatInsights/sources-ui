@@ -73,16 +73,16 @@ const IntegrationsWidget: FunctionComponent = () => {
 
   const navigate = useNavigate();
 
-  const handleDropdownAction = (action: string, integrationTitle: string) => {
+  const handleDropdownAction = (action: string, value: string) => {
     if (action === 'create') {
-      setWizardCategory(integrationTitle);
-      if ([REDHAT_VENDOR, CLOUD_VENDOR].includes(integrationTitle)) {
+      setWizardCategory(value);
+      if ([REDHAT_VENDOR, CLOUD_VENDOR].includes(value)) {
         setIsSourcesWizardOpen(true);
-      } else if ([COMMUNICATIONS, REPORTING, WEBHOOKS].includes(integrationTitle)) {
+      } else if ([COMMUNICATIONS, REPORTING, WEBHOOKS].includes(value)) {
         setIsIntegrationsWizardOpen(true);
       }
     } else if (action === 'view') {
-      navigate(`/settings/integrations?category=${integrationTitle}`);
+      navigate(`/settings/integrations?category=${value}`);
     }
   };
 
@@ -231,7 +231,7 @@ const IntegrationsWidget: FunctionComponent = () => {
                             <DropdownItem
                               key={`create-new-${integrationIndex}`}
                               onClick={() => {
-                                handleDropdownAction('create', integration.title);
+                                handleDropdownAction('create', integration.value);
                               }}
                             >
                               Create new {integration.title} integration
@@ -240,7 +240,7 @@ const IntegrationsWidget: FunctionComponent = () => {
                             <DropdownItem
                               key={`view-all-${integrationIndex}`}
                               onClick={() => {
-                                handleDropdownAction('view', integration.title);
+                                handleDropdownAction('view', integration.value);
                               }}
                             >
                               View all {integration.title} Integrations
