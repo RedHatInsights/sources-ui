@@ -64,6 +64,10 @@ const SourceKebab = () => {
           id: 'detail.resume.description',
           defaultMessage: 'Unpause data collection for this integration',
         })}
+        aria-label={intl.formatMessage({
+          id: 'detail.resume.button',
+          defaultMessage: 'Resume',
+        })}
       >
         {intl.formatMessage({
           id: 'detail.resume.button',
@@ -87,6 +91,10 @@ const SourceKebab = () => {
         description={intl.formatMessage({
           id: 'detail.pause.description',
           defaultMessage: 'Temporarily disable data collection',
+        })}
+        aria-label={intl.formatMessage({
+          id: 'detail.pause.button',
+          defaultMessage: 'Pause',
         })}
       >
         {intl.formatMessage({
@@ -113,6 +121,10 @@ const SourceKebab = () => {
         id: 'detail.remove.description',
         defaultMessage: 'Permanently delete this integration and all collected data',
       })}
+      aria-label={intl.formatMessage({
+        id: 'detail.remove.button',
+        defaultMessage: 'Remove',
+      })}
     >
       {intl.formatMessage({
         id: 'detail.remove.button',
@@ -121,6 +133,10 @@ const SourceKebab = () => {
     </DropdownItem>,
     <DropdownItem
       key="rename"
+      aria-label={intl.formatMessage({
+        id: 'detail.rename.button',
+        defaultMessage: 'Rename',
+      })}
       component={forwardRef(({ isDisabled, ...props }, ref) => {
         return (
           <DisabledDropdownItemWithTooltip
