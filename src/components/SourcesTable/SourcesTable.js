@@ -84,6 +84,10 @@ export const actionResolver = (intl, navigate, hasWritePermissions, dispatch, is
         defaultMessage: 'Unpause data collection for this integration',
       }),
       onClick: () => dispatch(resumeSource(rowData.id, rowData.originalName, intl)),
+      'aria-label': intl.formatMessage({
+        id: 'sources.resume',
+        defaultMessage: 'Resume',
+      }),
       ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
     });
   } else {
@@ -95,6 +99,10 @@ export const actionResolver = (intl, navigate, hasWritePermissions, dispatch, is
       description: intl.formatMessage({
         id: 'sources.pause.description',
         defaultMessage: 'Temporarily disable data collection',
+      }),
+      'aria-label': intl.formatMessage({
+        id: 'sources.pause',
+        defaultMessage: 'Pause',
       }),
       onClick: () => dispatch(pauseSource(rowData.id, rowData.originalName, intl)),
       ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
@@ -111,6 +119,10 @@ export const actionResolver = (intl, navigate, hasWritePermissions, dispatch, is
       defaultMessage: 'Permanently delete this integration and all collected data',
     }),
     onClick: () => navigate(replaceRouteId(routes.sourcesRemove.path, rowData.id)),
+    'aria-label': intl.formatMessage({
+      id: 'sources.remove',
+      defaultMessage: 'Remove',
+    }),
     ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
   });
 
@@ -125,6 +137,15 @@ export const actionResolver = (intl, navigate, hasWritePermissions, dispatch, is
           defaultMessage: 'View details',
         }),
     onClick: () => navigate(replaceRouteId(routes.sourcesDetail.path, rowData.id)),
+    'aria-label': !rowData.paused_at
+      ? intl.formatMessage({
+          id: 'sources.edit',
+          defaultMessage: 'Edit',
+        })
+      : intl.formatMessage({
+          id: 'sources.viewDetails',
+          defaultMessage: 'View details',
+        }),
     ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
   });
 
