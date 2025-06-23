@@ -58,6 +58,8 @@
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "axios-mock-adapter": "^1.22.0",
+    "cypress": "^13.6.1",
+    "cypress-localstorage-commands": "^2.2.5",
     "eslint": "^8.53.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.1",
@@ -72,12 +74,17 @@
     "ts-patch": "^3.3.0",
     "typescript": "^5.2.2",
     "webpack-bundle-analyzer": "^4.9.1",
-    "whatwg-fetch": "^3.6.19"
+    "whatwg-fetch": "^3.6.19",
+    "yargs": "^18.0.0"
   },
   "scripts": {
     "test": "jest --coverage",
+    "test:e2e": "node ./cypress/e2e.js",
+    "test:ct": "node ./cypress/run-test.js",
+    "cypress": "cypress",
+    "cypress:run": "cypress run --browser electron",
     "lint": "npm-run-all lint:*",
-    "lint:js": "eslint config src",
+    "lint:js": "eslint config src cypress",
     "travis:verify": "npm-run-all lint test build",
     "verify": "npm-run-all build lint test",
     "extract:messages": "npx @formatjs/cli extract 'src/**/*.{js,jsx}' --out-file ./translations/messages.json",
