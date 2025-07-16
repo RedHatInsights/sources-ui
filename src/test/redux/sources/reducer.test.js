@@ -171,6 +171,15 @@ describe('redux > sources reducer', () => {
     });
   });
 
+  it('hcsEnrolledLoaded sets correct state when disabled', () => {
+    const hcsDeal = false;
+    expect(sourcesReducer.hcsEnrolledLoaded(defaultSourcesState, { payload: hcsDeal })).toEqual({
+      ...defaultSourcesState,
+      hcsEnrolled: false,
+      hcsEnrolledLoaded: true,
+    });
+  });
+
   it('sourceTypesPending sets sourceTypes', () => {
     const SOURCE_TYPES = ['aaa', 'bbb'];
     const payload = { payload: SOURCE_TYPES };
