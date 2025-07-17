@@ -48,6 +48,9 @@ import { useFlag } from '@unleash/proxy-client-react';
 const VIEW_DOCUMENTATION =
   'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/configuring_notifications_on_the_red_hat_hybrid_cloud_console/assembly-intro_notifications';
 
+const VIEW_DOCUMENTATION_CLOUD =
+  'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html-single/configuring_cloud_integrations_for_red_hat_services/index';
+
 const Overview = () => {
   const { quickStarts } = useChrome();
   const navigate = useNavigate();
@@ -387,6 +390,45 @@ const Overview = () => {
             />
           </DataListItemRow>
         </DataListItem>
+        <DataListItem aria-labelledby="configure-cloud-int">
+          <DataListItemRow>
+            <DataListItemCells
+              dataListCells={[
+                <DataListCell key="title" width={2}>
+                  <span id="configure-cloud-int">
+                    {intl.formatMessage({
+                      id: 'integrations.overview.recommendedContentTableTitle2',
+                      defaultMessage: 'Configuring cloud integrations for Red Hat services',
+                    })}
+                  </span>
+                </DataListCell>,
+                <DataListCell key="label" width={1}>
+                  <Label color="orange">
+                    {intl.formatMessage({
+                      id: 'integrations.overview.recommendedContentTableLabel2',
+                      defaultMessage: 'Documentation',
+                    })}
+                  </Label>
+                </DataListCell>,
+                <DataListCell key="action" className="pf-v6-u-display-flex pf-v6-u-justify-content-flex-end">
+                  <Button
+                    component="a"
+                    href={VIEW_DOCUMENTATION_CLOUD}
+                    target="_blank"
+                    variant="link"
+                    icon={<ExternalLinkAltIcon />}
+                    iconPosition="end"
+                  >
+                    {intl.formatMessage({
+                      id: 'integrations.overview.recommendedContentTableLink2',
+                      defaultMessage: 'View documentation',
+                    })}
+                  </Button>
+                </DataListCell>,
+              ]}
+            />
+          </DataListItemRow>
+        </DataListItem>
         <DataListItem aria-labelledby="configure-console-int-slack">
           <DataListItemRow>
             <DataListItemCells
@@ -394,7 +436,7 @@ const Overview = () => {
                 <DataListCell key="title" width={2}>
                   <span>
                     {intl.formatMessage({
-                      id: 'integrations.overview.recommendedContentTableTitle2',
+                      id: 'integrations.overview.recommendedContentTableTitle3',
                       defaultMessage: 'Configuring console notifications in Slack',
                     })}
                   </span>
@@ -402,7 +444,7 @@ const Overview = () => {
                 <DataListCell key="label" width={1}>
                   <Label color="green">
                     {intl.formatMessage({
-                      id: 'integrations.overview.recommendedContentTableLabel2',
+                      id: 'integrations.overview.recommendedContentTableLabel3',
                       defaultMessage: 'Quick start',
                     })}
                   </Label>
@@ -410,7 +452,7 @@ const Overview = () => {
                 <DataListCell key="action" className="pf-v6-u-display-flex pf-v6-u-justify-content-flex-end">
                   <Button icon={<ArrowRightIcon />} variant="link" onClick={handleActivateQuickstart} isInline>
                     {intl.formatMessage({
-                      id: 'integrations.overview.recommendedContentTableLink2',
+                      id: 'integrations.overview.recommendedContentTableLink3',
                       defaultMessage: 'Begin Quick start',
                     })}
                   </Button>
