@@ -29,7 +29,7 @@ const SourcesHeader = () => {
             subtitle={intl.formatMessage({
               id: 'sources.integrations.subtitle',
               defaultMessage:
-                'Integrating third-party applications expands the scope of notifications beyond emails and messages, so that you can view and manage Hybrid Cloud Console events from your preferred platform dashboard.',
+                'Integrating third-party applications expands the scope of notifications beyond emails and messages, so that you can view and manage Hybrid Cloud Console events from your preferred platform dashboard. Cloud integrations connect your cloud provider accounts with the Hybrid Cloud Console to collect data, so you can use console services with your cloud providers.',
             })}
             icon={<img src={integrationsIcon} alt="integrations-header-icon" />}
             linkProps={{
