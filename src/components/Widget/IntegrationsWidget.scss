@@ -1,4 +1,4 @@
-.sources-integrations {
+.sources-integrations, [class*="sources-sources-./IntegrationsWidget"] {
   overflow-y: auto;
   .pf-v6-c-card__body {
     padding: var(--pf-v5-global--spacer--sm) 0 0 0;
