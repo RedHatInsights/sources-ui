@@ -166,6 +166,18 @@ const redhatTypes = ({ intl, sourceTypes, applicationTypes, disableAppSelection 
   },
 ];
 
+// Custom validator to ensure a real application is selected (not NO_APPLICATION_VALUE)
+const validateApplicationSelection = (intl) => (value) => {
+  if (!value || value === NO_APPLICATION_VALUE) {
+    return intl.formatMessage({
+      id: 'wizard.applicationRequired',
+      defaultMessage: 'An application must be selected.',
+    });
+  }
+
+  return undefined;
+};
+
 export const applicationStep = (applicationTypes, intl, activeCategory, hcsEnrolled) => ({
   name: 'application_step',
   title: intl.formatMessage({
@@ -212,7 +224,7 @@ export const applicationStep = (applicationTypes, intl, activeCategory, hcsEnrol
       mutator: appMutatorRedHat(applicationTypes),
       menuIsPortal: true,
       isRequired: true,
-      validate: [{ type: validatorTypes.REQUIRED }],
+      validate: [validateApplicationSelection(intl)],
     },
     {
       component: componentTypes.TEXT_FIELD,
