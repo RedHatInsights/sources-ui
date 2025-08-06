@@ -81,12 +81,12 @@ export const appMutatorRedHat = (appTypes) => (option, formOptions) => {
 };
 
 const shortIcons = {
-  amazon: '/apps/frontend-assets/partners-icons/aws.svg',
+  amazon: '/apps/frontend-assets/partners-icons/aws-logomark.svg',
   'ansible-tower': '/apps/frontend-assets/red-hat-logos/stacked.svg',
-  azure: '/apps/frontend-assets/partners-icons/microsoft-azure-short.svg',
+  azure: '/apps/frontend-assets/partners-icons/microsoft-azure-logomark.svg',
   openshift: '/apps/frontend-assets/red-hat-logos/stacked.svg',
   satellite: '/apps/frontend-assets/red-hat-logos/stacked.svg',
-  google: '/apps/frontend-assets/partners-icons/google-cloud-short.svg',
+  google: '/apps/frontend-assets/partners-icons/google-cloud-logomark.svg',
 };
 
 // eslint-disable-next-line react/display-name

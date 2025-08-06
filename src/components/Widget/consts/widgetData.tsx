@@ -153,7 +153,7 @@ export const createIntegrationsData = (
               id: 'aws',
               value: CLOUD_VENDOR,
               icon: (
-                <ImageWithPlaceholder className="aws-logo" src="/apps/frontend-assets/partners-icons/aws.svg" alt="aws logo" />
+                <ImageWithPlaceholder className="aws-logo" src="/apps/frontend-assets/partners-icons/aws-logomark.svg" alt="aws logo" />
               ),
             },
             {
@@ -163,7 +163,7 @@ export const createIntegrationsData = (
               icon: (
                 <ImageWithPlaceholder
                   className="google-logo"
-                  src="/apps/frontend-assets/partners-icons/google-cloud-short.svg"
+                  src="/apps/frontend-assets/partners-icons/google-cloud-logomark.svg"
                   alt="google logo"
                 />
               ),
@@ -175,7 +175,7 @@ export const createIntegrationsData = (
               icon: (
                 <ImageWithPlaceholder
                   className="azure-logo"
-                  src="/apps/frontend-assets/partners-icons/microsoft-azure-short.svg"
+                  src="/apps/frontend-assets/partners-icons/microsoft-azure-logomark.svg"
                   alt="azure logo"
                 />
               ),
