@@ -14,7 +14,7 @@ const mapper = (type, openWizard, TileComponent) =>
         icon={
           <ImageWithPlaceholder
             className="provider-icon pf-v6-u-mb-sm"
-            src="/apps/frontend-assets/partners-icons/aws.svg"
+            src="/apps/frontend-assets/partners-icons/aws-logomark.svg"
             alt="aws logo"
           />
         }
@@ -30,7 +30,7 @@ const mapper = (type, openWizard, TileComponent) =>
         icon={
           <ImageWithPlaceholder
             className="provider-icon pf-v6-u-mb-sm"
-            src="/apps/frontend-assets/partners-icons/google-cloud-short.svg"
+            src="/apps/frontend-assets/partners-icons/google-cloud-logomark.svg"
             alt="google logo"
           />
         }
@@ -46,7 +46,7 @@ const mapper = (type, openWizard, TileComponent) =>
         icon={
           <ImageWithPlaceholder
             className="provider-icon pf-v6-u-mb-sm"
-            src="/apps/frontend-assets/partners-icons/microsoft-azure-short.svg"
+            src="/apps/frontend-assets/partners-icons/microsoft-azure-logomark.svg"
             alt="azure logo"
           />
         }
