@@ -36,7 +36,7 @@ const UnauthorizedState = () => {
             id: 'integrations.serviceName.slack',
             defaultMessage: 'Slack',
           }),
-          src: '/apps/frontend-assets/sources-integrations/slack.svg',
+          src: '/apps/frontend-assets/partners-icons/slack.svg',
           href: 'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-configuring-insights-integration-with-slack_integrations',
         },
         {
@@ -44,7 +44,7 @@ const UnauthorizedState = () => {
             id: 'integrations.serviceName.microsoftTeams',
             defaultMessage: 'Microsoft Teams',
           }),
-          src: '/apps/frontend-assets/sources-integrations/microsoft-office-teams.svg',
+          src: '/apps/frontend-assets/partners-icons/microsoft-office-teams.svg',
           href: 'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-configuring-integration-with-teams_integrations',
         },
         {
@@ -52,7 +52,7 @@ const UnauthorizedState = () => {
             id: 'integrations.serviceName.googleChat',
             defaultMessage: 'Google Chat',
           }),
-          src: '/apps/frontend-assets/sources-integrations/google-chat.svg',
+          src: '/apps/frontend-assets/partners-icons/google-chat.svg',
           href: 'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-configuring-integration-with-gchat_integrations',
         },
       ],
@@ -74,7 +74,7 @@ const UnauthorizedState = () => {
             id: 'integrations.serviceName.eventDrivenAnsible',
             defaultMessage: 'Event-Driven Ansible',
           }),
-          src: '/apps/frontend-assets/sources-integrations/ansible.svg',
+          src: '/apps/frontend-assets/technlogy-icons/ansible.svg',
           href: 'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-configuring-integration-with-eda_integrations',
         },
         {
@@ -82,7 +82,7 @@ const UnauthorizedState = () => {
             id: 'integrations.serviceName.serviceNow',
             defaultMessage: 'ServiceNow',
           }),
-          src: '/apps/frontend-assets/sources-integrations/service-now.svg',
+          src: '/apps/frontend-assets/partners-icons/service-now-logomark.svg',
           href: 'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-installing-configuring-insights-for-snow_integrations',
         },
         {
@@ -90,7 +90,7 @@ const UnauthorizedState = () => {
             id: 'integrations.serviceName.splunk',
             defaultMessage: 'Splunk',
           }),
-          src: '/apps/frontend-assets/sources-integrations/splunk.svg',
+          src: '/apps/frontend-assets/partners-icons/splunk-logomark.svg',
           href: 'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-installing-configuring-insights-for-splunk_integrations',
         },
       ],
@@ -99,7 +99,7 @@ const UnauthorizedState = () => {
       icon: (
         <ImageWithPlaceholder
           className="pf-v6-c-list__item-icon pf-v6-u-danger-color-100"
-          src="/apps/frontend-assets/integrations-landing/integrations-landing-webhook-icon.svg"
+          src="/apps/frontend-assets/technlogy-icons/webhook-integrations-1.svg"
           width="54px"
           height="54px"
           alt="Webhooks icon"

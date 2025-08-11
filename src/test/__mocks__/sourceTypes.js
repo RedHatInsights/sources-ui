@@ -81,7 +81,7 @@ export const OPENSHIFT_TYPE = {
 
 export const AMAZON_TYPE = {
   created_at: '2019-03-26T14:05:45Z',
-  icon_url: '/apps/frontend-assets/partners-icons/aws-long.svg',
+  icon_url: '/apps/frontend-assets/partners-icons/aws.svg',
   id: '2',
   name: 'amazon',
   product_name: 'Amazon Web Services',
