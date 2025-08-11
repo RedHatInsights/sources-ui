@@ -89,7 +89,7 @@ export const createIntegrationsData = (
                     icon: (
                       <ImageWithPlaceholder
                         className="pagerduty-logo"
-                        src="/apps/frontend-assets/sources-integrations/pagerduty-widget.svg"
+                        src="/apps/frontend-assets/partners-icons/pagerduty-short.svg"
                         alt="pagerduty"
                       />
                     ),
