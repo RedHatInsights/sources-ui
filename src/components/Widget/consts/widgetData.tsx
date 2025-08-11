@@ -153,7 +153,11 @@ export const createIntegrationsData = (
               id: 'aws',
               value: CLOUD_VENDOR,
               icon: (
-                <ImageWithPlaceholder className="aws-logo" src="/apps/frontend-assets/partners-icons/aws-logomark.svg" alt="aws logo" />
+                <ImageWithPlaceholder
+                  className="aws-logo"
+                  src="/apps/frontend-assets/partners-icons/aws-logomark.svg"
+                  alt="aws logo"
+                />
               ),
             },
             {
