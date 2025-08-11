@@ -33,7 +33,7 @@ export const createIntegrationsData = (
               icon: (
                 <ImageWithPlaceholder
                   className="google-chat-logo"
-                  src="/apps/frontend-assets/sources-integrations/google-chat.svg"
+                  src="/apps/frontend-assets/partners-icons/google-chat.svg"
                   alt="google chat"
                 />
               ),
@@ -45,7 +45,7 @@ export const createIntegrationsData = (
               icon: (
                 <ImageWithPlaceholder
                   className="microsoft-teams-logo"
-                  src="/apps/frontend-assets/sources-integrations/microsoft-office-teams.svg"
+                  src="/apps/frontend-assets/partners-icons/microsoft-office-teams.svg"
                   alt="microsoft teams"
                 />
               ),
@@ -55,11 +55,7 @@ export const createIntegrationsData = (
               id: 'slack',
               value: COMMUNICATIONS,
               icon: (
-                <ImageWithPlaceholder
-                  className="slack-logo"
-                  src="/apps/frontend-assets/sources-integrations/slack.svg"
-                  alt="slack"
-                />
+                <ImageWithPlaceholder className="slack-logo" src="/apps/frontend-assets/partners-icons/slack.svg" alt="slack" />
               ),
             },
           ],
@@ -75,7 +71,7 @@ export const createIntegrationsData = (
               icon: (
                 <ImageWithPlaceholder
                   className="ansible-logo"
-                  src="/apps/frontend-assets/sources-integrations/ansible.svg"
+                  src="/apps/frontend-assets/technology-icons/ansible.svg"
                   alt="ansible"
                 />
               ),
@@ -103,7 +99,7 @@ export const createIntegrationsData = (
               icon: (
                 <ImageWithPlaceholder
                   className="service-now-logo"
-                  src="/apps/frontend-assets/sources-integrations/service-now.svg"
+                  src="/apps/frontend-assets/partners-icons/service-now-logomark.svg"
                   alt="service"
                 />
               ),
@@ -115,7 +111,7 @@ export const createIntegrationsData = (
               icon: (
                 <ImageWithPlaceholder
                   className="splunk-logo"
-                  src="/apps/frontend-assets/sources-integrations/splunk.svg"
+                  src="/apps/frontend-assets/partners-icons/splunk-logomark.svg"
                   alt="splunk"
                 />
               ),
@@ -133,7 +129,7 @@ export const createIntegrationsData = (
               icon: (
                 <ImageWithPlaceholder
                   className="webhook-logo"
-                  src="/apps/frontend-assets/integrations-landing/integrations-landing-webhook-icon.svg"
+                  src="/apps/frontend-assets/technology-icons/webhook-integrations-1.svg"
                   alt="webhooks"
                 />
               ),
@@ -197,7 +193,7 @@ export const createIntegrationsData = (
               icon: (
                 <ImageWithPlaceholder
                   className="redhat-icon"
-                  src="/apps/frontend-assets/platform-logos/openshift.svg"
+                  src="/apps/frontend-assets/technology-icons/openshift.svg"
                   alt="red hat logo"
                 />
               ),

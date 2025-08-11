@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 const SourcesHeader = () => {
   const intl = useIntl();
   const enableIntegrationsOverview = useFlag('platform.integrations.overview');
-  const integrationsIcon = '/apps/frontend-assets/sources-integrations/integrations-icon.svg';
+  const integrationsIcon = '/apps/frontend-assets/technology-icons/integrations.svg';
 
   const hasSourcesPermissions = useSelector(({ user }) => user?.writePermissions);
   const hasIntegrationsPermissions = useSelector(({ user }) => user?.integrationsEndpointsPermissions);
