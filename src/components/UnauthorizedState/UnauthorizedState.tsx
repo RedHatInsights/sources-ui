@@ -74,7 +74,7 @@ const UnauthorizedState = () => {
             id: 'integrations.serviceName.eventDrivenAnsible',
             defaultMessage: 'Event-Driven Ansible',
           }),
-          src: '/apps/frontend-assets/technlogy-icons/ansible.svg',
+          src: '/apps/frontend-assets/technology-icons/ansible.svg',
           href: 'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-configuring-integration-with-eda_integrations',
         },
         {
@@ -99,7 +99,7 @@ const UnauthorizedState = () => {
       icon: (
         <ImageWithPlaceholder
           className="pf-v6-c-list__item-icon pf-v6-u-danger-color-100"
-          src="/apps/frontend-assets/technlogy-icons/webhook-integrations-1.svg"
+          src="/apps/frontend-assets/technology-icons/webhook-integrations-1.svg"
           width="54px"
           height="54px"
           alt="Webhooks icon"
