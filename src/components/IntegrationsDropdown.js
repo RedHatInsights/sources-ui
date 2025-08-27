@@ -28,7 +28,7 @@ const dropdownItems = (isPagerDutyEnabled, hasSourcesPermissions, hasIntegration
     ? [
         {
           title: 'Communications',
-          description: 'Google Chat, Microsoft Office Teams, Slack',
+          description: 'Google Chat, Microsoft Office Teams, Slack, Email',
           value: COMMUNICATIONS,
         },
         {
