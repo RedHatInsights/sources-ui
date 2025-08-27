@@ -67,7 +67,7 @@ const Overview = () => {
       title: intl.formatMessage(
         {
           id: 'integrations.overview.dataListItemTitle1',
-          defaultMessage: '<b>Communication integrations</b> (Microsoft Teams, Google Chat, Slack)',
+          defaultMessage: '<b>Communication integrations</b> (Microsoft Teams, Google Chat, Slack, Email)',
         },
         {
           b: bold,
@@ -81,7 +81,7 @@ const Overview = () => {
       content: intl.formatMessage({
         id: 'integrations.overview.dataListItemContent1',
         defaultMessage:
-          'Receive event notifications in your preferred communications application by connecting the Hybrid Cloud Console with Microsoft Teams, Google Chat, or Slack.',
+          'Receive event notifications in your preferred communications application by connecting the Hybrid Cloud Console with Microsoft Teams, Google Chat, Slack, email',
       }),
       learnMoreLink:
         'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html-single/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/index#assembly-integrating-comms_integrations',
