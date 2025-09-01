@@ -1036,6 +1036,31 @@ const hardcodedSchemas = {
   },
   amazon: {
     authentication: {
+      'image-builder-aws-account-id': {
+        generic: {
+          'authentication.username': {
+            label: <FormattedMessage id="wizard.accountId" defaultMessage="Account ID" />,
+            placeholder: '123456789012',
+            isRequired: true,
+            pattern: '[0-9]{12}',
+            maxlength: 12,
+            type: 'number',
+            validate: [
+              { type: validatorTypes.REQUIRED },
+              {
+                type: validatorTypes.PATTERN,
+                pattern: /^\d{12}$/,
+                message: (
+                  <FormattedMessage
+                    id="image-builder-aws-account-id.accountIdPatter"
+                    defaultMessage="Account Id has to be 12 numbers"
+                  />
+                ),
+              },
+            ],
+          },
+        },
+      },
       access_key_secret_key: {
         generic: {
           'authentication.username': {
