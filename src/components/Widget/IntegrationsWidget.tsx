@@ -55,7 +55,6 @@ const IntegrationsWidget: FunctionComponent = () => {
   const isPagerDutyEnabled = useFlag('platform.integrations.pager-duty');
   const integrationsData = createIntegrationsData(isPagerDutyEnabled, hasSourcesPermissions, hasIntegrationsPermissions);
 
-  // eslint-disable-next-line prettier/prettier
   const [dropdownOpenIndexes, setDropdownOpenIndexes] = useState<Record<number, boolean>>({});
 
   const handleTileClick = (id: string, value: string) => {
