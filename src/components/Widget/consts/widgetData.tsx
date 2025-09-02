@@ -1,5 +1,5 @@
 import React from 'react';
-import EnvelopeIcon from '@patternfly/react-icons/dist/esm/icons/envelope-icon';
+import EnvelopeIcon from '@patternfly/react-icons/dist/dynamic/icons/envelope-icon';
 import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../../../utilities/constants';
 import ImageWithPlaceholder from '../../TilesShared/ImageWithPlaceholder';
 
