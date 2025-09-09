@@ -217,7 +217,6 @@ export const IAMRoleDescription = () => {
   const { authentication = {} } = formOptions.getState().values;
   const isNewHccmStgAwsAccount = useFlag('platform.sources.integrations.new-hccm-stg-account');
 
-
   useEffect(() => {
     formOptions.change('authentication', {
       ...authentication,
