@@ -53,7 +53,13 @@ const IntegrationsWidget: FunctionComponent = () => {
   const hasSourcesPermissions = useSelector(({ user }) => user?.writePermissions);
   const hasIntegrationsPermissions = useSelector(({ user }) => user?.integrationsEndpointsPermissions);
   const isPagerDutyEnabled = useFlag('platform.integrations.pager-duty');
-  const integrationsData = createIntegrationsData(isPagerDutyEnabled, hasSourcesPermissions, hasIntegrationsPermissions);
+  const isEmailEnabled = useFlag('platform.notifications.email.integration');
+  const integrationsData = createIntegrationsData(
+    isPagerDutyEnabled,
+    hasSourcesPermissions,
+    hasIntegrationsPermissions,
+    isEmailEnabled,
+  );
 
   const [dropdownOpenIndexes, setDropdownOpenIndexes] = useState<Record<number, boolean>>({});
 
