@@ -26,6 +26,9 @@ objects:
       API:
         versions:
           - v3.1
+        specs:
+          - url: https://console.redhat.com/api/sources/v3.1/openapi.json
+            bundleLabels: ['settings']
       frontend:
         paths:
           - /apps/sources
