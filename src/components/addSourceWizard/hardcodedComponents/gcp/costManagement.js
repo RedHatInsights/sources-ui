@@ -307,31 +307,11 @@ export const ProjectDescription = () => {
   return (
     <Content>
       <Content component={ContentVariants.p}>
-        {intl.formatMessage(
-          {
-            id: 'cost.gcp.costProjectDescrption',
-            defaultMessage:
-              'If there is a need to further customize the data you want to send to Cost Management, select the manually customize option to follow the special instructions on how to. {link}',
-          },
-          {
-            link: (
-              <Fragment>
-                <Content
-                  key="link"
-                  component={ContentVariants.a}
-                  href={MANUAL_CUR_STEPS}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  {intl.formatMessage({
-                    id: 'cost.learnMore',
-                    defaultMessage: 'Learn more',
-                  })}
-                </Content>
-              </Fragment>
-            ),
-          },
-        )}
+        {intl.formatMessage({
+          id: 'cost.gcp.costProjectDescrption',
+          defaultMessage:
+            'If there is a need to further customize the data you want to send to Cost Management, select the manually customize option to follow the special instructions on how to.',
+        })}
       </Content>
     </Content>
   );
