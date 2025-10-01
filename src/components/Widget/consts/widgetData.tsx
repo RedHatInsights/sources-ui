@@ -20,6 +20,7 @@ export const createIntegrationsData = (
   isPagerDutyEnabled: boolean,
   hasSourcesPermissions: boolean,
   hasIntegrationsPermissions: boolean,
+  isEmailEnabled: boolean,
 ): IntegrationCategory[] => [
   ...(hasIntegrationsPermissions
     ? [
@@ -59,12 +60,16 @@ export const createIntegrationsData = (
                 <ImageWithPlaceholder className="slack-logo" src="/apps/frontend-assets/partners-icons/slack.svg" alt="slack" />
               ),
             },
-            {
-              name: 'Email',
-              id: 'email',
-              value: COMMUNICATIONS,
-              icon: <EnvelopeIcon />,
-            },
+            ...(isEmailEnabled
+              ? [
+                  {
+                    name: 'Email',
+                    id: 'email',
+                    value: COMMUNICATIONS,
+                    icon: <EnvelopeIcon />,
+                  },
+                ]
+              : []),
           ],
         },
         {
