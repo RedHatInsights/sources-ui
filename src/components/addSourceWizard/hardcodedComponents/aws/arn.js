@@ -215,7 +215,6 @@ export const IAMRoleDescription = () => {
   const externalId = useMemo(() => uuidv4(), []);
   const formOptions = useFormApi();
   const { authentication = {} } = formOptions.getState().values;
-  const isNewHccmStgAwsAccount = useFlag('platform.sources.integrations.new-hccm-stg-account');
 
   useEffect(() => {
     formOptions.change('authentication', {
@@ -247,7 +246,7 @@ export const IAMRoleDescription = () => {
           })}
         </Content>
         <ClipboardCopy className="pf-v6-u-m-sm-on-sm" isReadOnly>
-          {isNewHccmStgAwsAccount ? '148761653619' : '589173575009'}
+          148761653619
         </ClipboardCopy>
         <Content component="li">
           {intl.formatMessage({
