@@ -113,7 +113,7 @@ const CloudCards = () => {
                         <TrendUpIcon color="#0066cc" aria-label="Trend up icon" />
                       </Icon>
                       {intl.formatMessage({
-                        id: 'cloud.insights',
+                        id: lightspeedRebrand ? 'cloud.lightspeed' : 'cloud.insights',
                         defaultMessage: lightspeedRebrand ? 'Explore Red Hat Lightspeed' : 'Explore Red Hat Insights',
                       })}
                     </Content>
@@ -128,7 +128,7 @@ const CloudCards = () => {
                     </Content>
                     <Content className="text" component="a" href={INSIGHTS_REF} target="_blank" rel="noopener noreferrer">
                       {intl.formatMessage({
-                        id: 'cloud.insights.insightsLinkt',
+                        id: lightspeedRebrand ? 'cloud.lightspeed.lightspeedLink' : 'cloud.insights.insightsLinkt',
                         defaultMessage: lightspeedRebrand
                           ? 'Learn more about Red Hat Lightspeed'
                           : 'Learn more about Red Hat Insights',
