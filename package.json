@@ -44,9 +44,9 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@babel/core": "7.23.3",
+    "@babel/core": "7.28.4",
     "@babel/eslint-parser": "^7.23.3",
-    "@babel/preset-env": "7.23.3",
+    "@babel/preset-env": "7.28.3",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
     "@redhat-cloud-services/frontend-components-config": "^6.5.8",
