@@ -21,6 +21,7 @@ import BuilderImageIcon from '@patternfly/react-icons/dist/esm/icons/builder-ima
 import TrendUpIcon from '@patternfly/react-icons/dist/esm/icons/trend-up-icon';
 import ListIcon from '@patternfly/react-icons/dist/esm/icons/list-icon';
 import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
+import { useFlag } from '@unleash/proxy-client-react';
 
 export const CLOUD_CARDS_KEY = 'ins-c-sources__cloud_cards_expanded';
 const GOLD_IMAGES_AWS =
@@ -49,6 +50,8 @@ const CloudCards = () => {
 
   const INSIGHTS_SERVICES = `/${PREFIX}settings/connector`;
   const SUBWATCH_HREF = `/${PREFIX}insights/subscriptions/rhel`;
+
+  const lightspeedRebrand = useFlag('platform.lightspeed-rebrand');
 
   return (
     <Card isExpanded={isExpanded} className="pf-v6-u-mb-lg pf-v6-u-mt-md pf-v6-u-mt-0-on-md src-c-card-info">
@@ -109,7 +112,10 @@ const CloudCards = () => {
                       <Icon size="md" className="pf-v6-u-pl-sm pf-v6-u-pr-md">
                         <TrendUpIcon color="#0066cc" aria-label="Trend up icon" />
                       </Icon>
-                      {intl.formatMessage({ id: 'cloud.insights', defaultMessage: 'Explore Red Hat Insights' })}
+                      {intl.formatMessage({
+                        id: lightspeedRebrand ? 'cloud.lightspeed' : 'cloud.insights',
+                        defaultMessage: lightspeedRebrand ? 'Explore Red Hat Lightspeed' : 'Explore Red Hat Insights',
+                      })}
                     </Content>
                   </StackItem>
                   <StackItem isFilled>
@@ -122,8 +128,10 @@ const CloudCards = () => {
                     </Content>
                     <Content className="text" component="a" href={INSIGHTS_REF} target="_blank" rel="noopener noreferrer">
                       {intl.formatMessage({
-                        id: 'cloud.insights.insightsLinkt',
-                        defaultMessage: 'Learn more about Red Hat Insights',
+                        id: lightspeedRebrand ? 'cloud.lightspeed.lightspeedLink' : 'cloud.insights.insightsLinkt',
+                        defaultMessage: lightspeedRebrand
+                          ? 'Learn more about Red Hat Lightspeed'
+                          : 'Learn more about Red Hat Insights',
                       })}
                     </Content>
                   </StackItem>
