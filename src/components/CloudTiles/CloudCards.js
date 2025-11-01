@@ -138,8 +138,10 @@ const CloudCards = () => {
                   <StackItem className="pf-v6-u-mt-lg">
                     <Content className="text" component="a" href={INSIGHTS_SERVICES} target="_blank" rel="noopener noreferrer">
                       {intl.formatMessage({
-                        id: 'cloud.insights.moreLink',
-                        defaultMessage: 'Enable additional Insights services',
+                        id: lightspeedRebrand ? 'cloud.insights.moreLink' : 'cloud.lightspeed.moreLink',
+                        defaultMessage: lightspeedRebrand
+                          ? 'Enable additional Insights services'
+                          : 'Enable additional Red Hat Lightspeed services',
                       })}
                       <ArrowRightIcon className="pf-v6-u-ml-sm" />
                     </Content>
