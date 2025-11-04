@@ -140,8 +140,8 @@ const CloudCards = () => {
                       {intl.formatMessage({
                         id: lightspeedRebrand ? 'cloud.insights.moreLink' : 'cloud.lightspeed.moreLink',
                         defaultMessage: lightspeedRebrand
-                          ? 'Enable additional Insights services'
-                          : 'Enable additional Red Hat Lightspeed services',
+                          ? 'Enable additional Red Hat Lightspeed services' : 
+                          'Enable additional Insights services',
                       })}
                       <ArrowRightIcon className="pf-v6-u-ml-sm" />
                     </Content>
