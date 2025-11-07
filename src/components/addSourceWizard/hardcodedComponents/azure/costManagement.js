@@ -129,10 +129,10 @@ export const ConfigureRolesDescription = () => {
         {intl.formatMessage({
           id: 'cost.azure.createContributorRole',
           defaultMessage:
-            'Run the following command in Cloud Shell to create a service principal with Cost Management Storage Account Contributor role. From the output enter the values in the fields below:',
+            'Run the following command in Cloud Shell to create a service principal with Cost Management Storage Blob Data Reader role. From the output enter the values in the fields below:',
         })}
       </Content>
-      <ClipboardCopy>{`az ad sp create-for-rbac -n "CostManagement" --role "Storage Account Contributor"  --scope /subscriptions/${values?.application?.extra?.subscription_id}/resourceGroups/${values?.application?.extra?.resource_group} --query '{"tenant": tenant, "client_id": appId, "secret": password}'`}</ClipboardCopy>
+      <ClipboardCopy>{`az ad sp create-for-rbac -n "CostManagement" --role "Storage Blob Data Reader"  --scope /subscriptions/${values?.application?.extra?.subscription_id}/resourceGroups/${values?.application?.extra?.resource_group} --query '{"tenant": tenant, "client_id": appId, "secret": password}'`}</ClipboardCopy>
     </Content>
   );
 };

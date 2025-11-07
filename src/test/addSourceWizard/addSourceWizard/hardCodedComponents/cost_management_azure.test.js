@@ -116,11 +116,11 @@ describe('Cost Management Azure steps components', () => {
     expect(screen.getByText('Learn more')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'Run the following command in Cloud Shell to create a service principal with Cost Management Storage Account Contributor role. From the output enter the values in the fields below:',
+        'Run the following command in Cloud Shell to create a service principal with Cost Management Storage Blob Data Reader role. From the output enter the values in the fields below:',
       ),
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveValue(
-      `az ad sp create-for-rbac -n "CostManagement" --role "Storage Account Contributor"  --scope /subscriptions/my-sub-id-1/resourceGroups/my-resource-group-1 --query '{"tenant": tenant, "client_id": appId, "secret": password}'`,
+      `az ad sp create-for-rbac -n "CostManagement" --role "Storage Blob Data Reader"  --scope /subscriptions/my-sub-id-1/resourceGroups/my-resource-group-1 --query '{"tenant": tenant, "client_id": appId, "secret": password}'`,
     );
   });
 
@@ -152,11 +152,11 @@ describe('Cost Management Azure steps components', () => {
     expect(screen.queryByText('Learn more')).not.toBeInTheDocument();
     expect(
       screen.getByText(
-        'Run the following command in Cloud Shell to create a service principal with Cost Management Storage Account Contributor role. From the output enter the values in the fields below:',
+        'Run the following command in Cloud Shell to create a service principal with Cost Management Storage Blob Data Reader role. From the output enter the values in the fields below:',
       ),
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Copyable input')).toHaveValue(
-      `az ad sp create-for-rbac -n "CostManagement" --role "Storage Account Contributor"  --scope /subscriptions/my-sub-id-1/resourceGroups/my-resource-group-1 --query '{"tenant": tenant, "client_id": appId, "secret": password}'`,
+      `az ad sp create-for-rbac -n "CostManagement" --role "Storage Blob Data Reader"  --scope /subscriptions/my-sub-id-1/resourceGroups/my-resource-group-1 --query '{"tenant": tenant, "client_id": appId, "secret": password}'`,
     );
   });
 
