@@ -49,7 +49,7 @@
     "@babel/preset-env": "7.28.5",
     "@babel/preset-react": "^7.28.5",
     "@babel/preset-typescript": "^7.28.5",
-    "@redhat-cloud-services/frontend-components-config": "^6.7.4",
+    "@redhat-cloud-services/frontend-components-config": "^6.7.21",
     "@redhat-cloud-services/tsc-transform-imports": "^1.0.26",
     "@testing-library/dom": "^9.3.4",
     "@testing-library/jest-dom": "^6.9.1",
