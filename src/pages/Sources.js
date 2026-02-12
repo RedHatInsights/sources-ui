@@ -191,7 +191,7 @@ const SourcesPage = () => {
 
   const mainContent =
     [INTEGRATIONS, COMMUNICATIONS, REPORTING, WEBHOOKS].includes(activeCategory) && enableIntegrations ? (
-      hasIntegrationsReadPermissions ? (
+      !hasIntegrationsReadPermissions ? (
         <UnauthorizedState />
       ) : (
         <AsyncComponent scope="notifications" module="./IntegrationsTable" activeCategory={activeCategory} />

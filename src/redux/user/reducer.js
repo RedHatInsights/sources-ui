@@ -39,7 +39,7 @@ export const integrationsEndpointsPermissionsLoaded = (state, { payload: integra
 
 export const integrationsReadPermissionsPending = (state) => ({
   ...state,
-  integrationsEndpointsPermissions: undefined,
+  integrationsReadPermissions: undefined,
 });
 
 export const integrationsReadPermissionsLoaded = (state, { payload: integrationsReadPermissions }) => ({

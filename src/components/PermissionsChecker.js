@@ -2,7 +2,12 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 
-import { loadIntegrationsEndpointsPermissions, loadOrgAdmin, loadWritePermissions } from '../redux/user/actions';
+import {
+  loadIntegrationsEndpointsPermissions,
+  loadIntegrationsReadPermissions,
+  loadOrgAdmin,
+  loadWritePermissions,
+} from '../redux/user/actions';
 
 const PermissionsChecker = ({ children }) => {
   const dispatch = useDispatch();
@@ -16,6 +21,7 @@ const PermissionsChecker = ({ children }) => {
       dispatch(loadWritePermissions(getUserPermissions)),
       dispatch(loadOrgAdmin(getUser)),
       dispatch(loadIntegrationsEndpointsPermissions(getUserPermissions)),
+      dispatch(loadIntegrationsReadPermissions(getUserPermissions)),
     ]);
   }, [getUser, getUserPermissions]);
 
