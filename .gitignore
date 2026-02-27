@@ -31,3 +31,7 @@ cc-test-reporter
 coverage
 playwright-report
 test-results
+
+# Storybook artifacts
+*storybook.log
+storybook-static

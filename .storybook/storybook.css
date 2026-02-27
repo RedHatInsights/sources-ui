@@ -1,0 +1,37 @@
+/**
+ * Custom CSS for Storybook documentation and stories
+ */
+
+/* Storybook documentation styling */
+.sbdocs-wrapper {
+  padding: var(--pf-t--global--spacer--lg);
+}
+
+.sbdocs-content {
+  max-width: 1200px;
+}
+
+/* Code blocks in MDX */
+.sbdocs pre {
+  background-color: var(--pf-t--global--color--nonstatus--gray--dark);
+  border-radius: var(--pf-t--global--border--radius--small);
+  padding: var(--pf-t--global--spacer--md);
+}
+
+/* Tables in MDX */
+.sbdocs table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.sbdocs table th,
+.sbdocs table td {
+  border: 1px solid var(--pf-t--global--border--color--default);
+  padding: var(--pf-t--global--spacer--sm);
+  text-align: left;
+}
+
+.sbdocs table th {
+  background-color: var(--pf-t--global--color--nonstatus--gray--light);
+  font-weight: var(--pf-t--global--font--weight--heading--default);
+}
