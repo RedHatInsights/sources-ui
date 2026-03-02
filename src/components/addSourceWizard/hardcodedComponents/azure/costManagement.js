@@ -349,13 +349,27 @@ const CostExportSelect = ({ handleSelect }) => {
       isOpen={isOpen}
     >
       <SelectList>
-        <SelectOption key="subscription" value="Subscription" />
-        <SelectOption key="resourceGroup" value="Resource Group" />
-        <SelectOption key="management" value="Management Group" />
-        <SelectOption key="billingAccount" value="Billing Account" />
-        <SelectOption key="billingProfile" value="Billing Profile" />
-        <SelectOption key="invoiceSection" value="Invoice Section" />
-        <SelectOption key="enrollment" value="Enrollment Account" />
+        <SelectOption key="subscription" value="Subscription">
+          Subscription
+        </SelectOption>
+        <SelectOption key="resourceGroup" value="Resource Group">
+          Resource Group
+        </SelectOption>
+        <SelectOption key="management" value="Management Group">
+          Management Group
+        </SelectOption>
+        <SelectOption key="billingAccount" value="Billing Account">
+          Billing Account
+        </SelectOption>
+        <SelectOption key="billingProfile" value="Billing Profile">
+          Billing Profile
+        </SelectOption>
+        <SelectOption key="invoiceSection" value="Invoice Section">
+          Invoice Section
+        </SelectOption>
+        <SelectOption key="enrollment" value="Enrollment Account">
+          Enrollment Account
+        </SelectOption>
       </SelectList>
     </Select>
   );

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import RenderContext from '@data-driven-forms/react-form-renderer/renderer-context';
 import Form from '@data-driven-forms/react-form-renderer/form';
 
@@ -483,6 +484,31 @@ describe('Cost Management Azure steps components', () => {
         'Since you have chosen to manually customize the data set you want to send to Cost Management, you do not need to specify an export scope at this point and time.',
       ),
     ).toBeNull();
+  });
+
+  it('Export Scope dropdown displays all scope option labels', async () => {
+    const user = userEvent.setup();
+    mockedRender(
+      <RenderContext.Provider value={{ formOptions: FORM_OPTIONS }}>
+        <Cm.ExportScope />
+      </RenderContext.Provider>,
+    );
+
+    const scopeToggle = screen.getByRole('button', { name: /Subscription/ });
+    await user.click(scopeToggle);
+
+    const scopeOptions = [
+      'Subscription',
+      'Resource Group',
+      'Management Group',
+      'Billing Account',
+      'Billing Profile',
+      'Invoice Section',
+      'Enrollment Account',
+    ];
+    scopeOptions.forEach((label) => {
+      expect(screen.getAllByText(label).length).toBeGreaterThanOrEqual(1);
+    });
   });
 
   it('Export Scope - storage only', () => {
