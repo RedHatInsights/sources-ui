@@ -29,3 +29,5 @@ yarn-error.log*
 .DS_Store
 cc-test-reporter
 coverage
+playwright-report
+test-results
