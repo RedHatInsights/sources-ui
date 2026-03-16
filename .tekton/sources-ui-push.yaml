@@ -5,10 +5,10 @@ metadata:
     build.appstudio.openshift.io/repo: https://github.com/RedHatInsights/sources-ui?rev={{revision}}
     build.appstudio.redhat.com/commit_sha: '{{revision}}'
     build.appstudio.redhat.com/target_branch: '{{target_branch}}'
-    pipelinesascode.tekton.dev/max-keep-runs: '3'
+    pipelinesascode.tekton.dev/max-keep-runs: "3"
     pipelinesascode.tekton.dev/on-cel-expression: event == "push" && target_branch
       == "master"
-    pipelinesascode.tekton.dev/pipeline: https://github.com/RedHatInsights/konflux-pipelines/raw/main/pipelines/platform-ui/docker-build-run-all-tests.yaml
+    pipelinesascode.tekton.dev/pipeline: https://github.com/RedHatInsights/konflux-pipelines/raw/main/pipelines/platform-ui/docker-build-run-unit-tests.yaml
   creationTimestamp: null
   labels:
     appstudio.openshift.io/application: sources-ui
@@ -18,58 +18,39 @@ metadata:
   namespace: rh-platform-experien-tenant
 spec:
   params:
-    - name: git-url
-      value: '{{source_url}}'
-    - name: revision
-      value: '{{revision}}'
-    - name: output-image
-      value: quay.io/redhat-user-workloads/rh-platform-experien-tenant/sources-ui/sources-ui:{{revision}}
-    - name: dockerfile
-      value: ./build-tools/Dockerfile
-    - name: unit-tests-script
-      value: |
-        #!/bin/bash
-        set -ex
+  - name: git-url
+    value: '{{source_url}}'
+  - name: revision
+    value: '{{revision}}'
+  - name: output-image
+    value: quay.io/redhat-user-workloads/rh-platform-experien-tenant/sources-ui/sources-ui:{{revision}}
+  - name: dockerfile
+    value: ./build-tools/Dockerfile
+  - name: unit-tests-script
+    value: |
+      #!/bin/bash
+      set -ex
 
-        npm install
-        npm run lint
-        npm test --  --runInBand --no-cache
-    - name: e2e-tests-script
-      value: |
-        #!/bin/bash
-        set -ex
-        npx playwright test
-    - name: run-app-script
-      value: |
-        #!/bin/bash
-        set -ex
-        # Start Caddy to serve app assets
-        caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
-    - name: e2e-playwright-image
-      value: "mcr.microsoft.com/playwright:v1.58.2-jammy"
-    - name: frontend-proxy-routes-configmap
-      value: "sources-ui-dev-proxy-caddyfile"
-    - name: e2e-credentials-secret
-      value: "sources-ui-credentials-secret"
-    - name: e2e-app-port
-      value: "8000"
+      npm install
+      npm run lint
+      npm test --  --runInBand --no-cache
   pipelineRef:
     name: docker-build
   taskRunTemplate:
     serviceAccountName: build-pipeline-sources-ui
   workspaces:
-    - name: workspace
-      volumeClaimTemplate:
-        metadata:
-          creationTimestamp: null
-        spec:
-          accessModes:
-            - ReadWriteOnce
-          resources:
-            requests:
-              storage: 3Gi
-        status: {}
-    - name: git-auth
-      secret:
-        secretName: '{{ git_auth_secret }}'
+  - name: workspace
+    volumeClaimTemplate:
+      metadata:
+        creationTimestamp: null
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+      status: {}
+  - name: git-auth
+    secret:
+      secretName: '{{ git_auth_secret }}'
 status: {}
