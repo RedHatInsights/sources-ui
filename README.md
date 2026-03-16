@@ -21,6 +21,8 @@ This application allows to
   - [Debug functions](#debug-functions)
 - [Queries](#queries)
 - [Testing](#testing)
+  - [Unit Tests](#unit-tests)
+  - [E2E Tests](#e2e-tests)
 - [Patternfly](#patternfly)
 - [Data-driven forms](#data-driven-forms)
 - [Insights Chrome](#insights-chrome)
@@ -75,9 +77,28 @@ You can use queries to modify the initial state of the application. Read more [h
 
 # Testing
 
+## Unit Tests
+
 - Travis is used to test the build for this code.
   - `npm run test` will run tests locally,
   - `npm run lint` will run just the linter.
+
+## E2E Tests
+
+End-to-end tests are written using Playwright and located in the `playwright/` directory.
+
+**Running E2E tests:**
+
+```bash
+E2E_USER=your-username E2E_PASSWORD=your-password npm run playwright -- test
+```
+
+See [playwright/README.md](playwright/README.md) for detailed documentation on:
+- Prerequisites and setup
+- Running tests with custom URLs
+- Writing authenticated tests
+- Debugging options
+- Test artifacts and troubleshooting
 
 # Patternfly
 
