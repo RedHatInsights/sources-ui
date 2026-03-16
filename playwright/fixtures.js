@@ -17,8 +17,6 @@ export async function login(page, user, password) {
   // Fail in a friendly way if the proxy config is not set up correctly
   await expect(page.locator('text=Lockdown'), 'proxy config incorrect').toHaveCount(0);
 
-  await disableCookiePrompt(page);
-
   // Wait for and fill username field
   await page.getByLabel('Red Hat login').first().fill(user);
   await page.getByRole('button', { name: 'Next' }).click();
@@ -32,9 +30,12 @@ export async function login(page, user, password) {
 }
 
 export async function ensureLoggedIn(page) {
+  // Block cookie prompts before navigating
+  await disableCookiePrompt(page);
+
   await page.goto(`https://${APP_TEST_HOST_PORT}`, { waitUntil: 'load', timeout: 60000 });
 
-  const loggedIn = await page.getByText('Hi,').isVisible();
+  const loggedIn = await page.locator('#chrome-app-render-root').isVisible();
 
   if (!loggedIn) {
     const user = process.env.E2E_USER;
