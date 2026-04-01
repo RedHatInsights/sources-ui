@@ -89,6 +89,29 @@ objects:
           title: Integrations
           description: Integrations provide a way for applications to collect data outside of the Red Hat Hybrid Cloud Console through either a direct connection to the source or indirectly.
           icon: PlaceholderIcon
+      widgetRegistry:
+        - scope: sources
+          module: ./IntegrationsWidget
+          config:
+            title: Integrations
+            icon: IntegrationsIcon
+            headerLink:
+              title: Explore integrations
+              href: /settings/integrations
+            permissions:
+              - method: featureFlag
+                args:
+                  - chrome-service.integrations-widget.enabled
+                  - true
+              - method: loosePermissions
+                args:
+                  - - sources:*:read
+                    - integrations:endpoints:read
+          defaults:
+            w: 2
+            h: 4
+            maxH: 10
+            minH: 1
 
 parameters:
   - name: ENV_NAME

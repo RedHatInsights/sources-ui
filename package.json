@@ -50,7 +50,7 @@
     "@babel/preset-react": "^7.28.5",
     "@babel/preset-typescript": "^7.28.5",
     "@playwright/test": "^1.56.1",
-    "@redhat-cloud-services/frontend-components-config": "^6.7.54",
+    "@redhat-cloud-services/frontend-components-config": "^6.8.3",
     "@redhat-cloud-services/tsc-transform-imports": "^1.0.37",
     "@testing-library/dom": "^9.3.4",
     "@testing-library/jest-dom": "^6.9.1",
