@@ -163,7 +163,7 @@ const meta: Meta<typeof SourcesTable> = {
   title: 'Components/SourcesTable',
   decorators: [
     (Story, context) => {
-      const store = context.parameters.store || createMockStore();
+      const store = createMockStore(context.parameters.storeOverrides);
       return (
         <Provider store={store}>
           <Story />
@@ -256,13 +256,13 @@ export const WithMultipleSources: Story = {
  */
 export const WithPagination: Story = {
   parameters: {
-    store: createMockStore({
+    storeOverrides: {
       sources: {
         numberOfEntities: 150,
         pageNumber: 1,
         pageSize: 20,
       },
-    }),
+    },
     docs: {
       description: {
         story:
@@ -297,12 +297,12 @@ export const WithPagination: Story = {
  */
 export const WithUnavailableSource: Story = {
   parameters: {
-    store: createMockStore({
+    storeOverrides: {
       sources: {
         entities: [mockSources[2]], // Only the GCP unavailable source
         numberOfEntities: 1,
       },
-    }),
+    },
     docs: {
       description: {
         story: 'Shows how unavailable sources are displayed with error indicators in the status column.',
@@ -331,12 +331,12 @@ export const WithUnavailableSource: Story = {
  */
 export const WithPausedSource: Story = {
   parameters: {
-    store: createMockStore({
+    storeOverrides: {
       sources: {
         entities: [mockSources[3]], // Only the paused OpenShift source
         numberOfEntities: 1,
       },
-    }),
+    },
     docs: {
       description: {
         story:
@@ -380,12 +380,12 @@ export const WithPausedSource: Story = {
  */
 export const WithSourceNoApplications: Story = {
   parameters: {
-    store: createMockStore({
+    storeOverrides: {
       sources: {
         entities: [mockSources[4]], // Testing AWS with no applications
         numberOfEntities: 1,
       },
-    }),
+    },
     docs: {
       description: {
         story: 'Shows a source with no connected applications. The applications column should show 0 or empty state.',
@@ -410,7 +410,7 @@ export const WithSourceNoApplications: Story = {
  */
 export const LoadingState: Story = {
   parameters: {
-    store: createMockStore({
+    storeOverrides: {
       sources: {
         loaded: 1, // >0 indicates loading in progress
         sourceTypesLoaded: false,
@@ -418,7 +418,7 @@ export const LoadingState: Story = {
         entities: [],
         numberOfEntities: 0,
       },
-    }),
+    },
     docs: {
       description: {
         story: 'Shows the loading skeleton while sources data is being fetched from the API.',
@@ -446,12 +446,12 @@ export const LoadingState: Story = {
  */
 export const RowActionsInteraction: Story = {
   parameters: {
-    store: createMockStore({
+    storeOverrides: {
       sources: {
         entities: [mockSources[0]], // Single AWS source
         numberOfEntities: 1,
       },
-    }),
+    },
     docs: {
       description: {
         story:
@@ -500,7 +500,7 @@ export const RowActionsInteraction: Story = {
  */
 export const ReadOnlyView: Story = {
   parameters: {
-    store: createMockStore({
+    storeOverrides: {
       sources: {
         entities: [mockSources[0]],
         numberOfEntities: 1,
@@ -509,7 +509,7 @@ export const ReadOnlyView: Story = {
         isOrgAdmin: false,
         writePermissions: false,
       },
-    }),
+    },
     docs: {
       description: {
         story:
@@ -533,12 +533,18 @@ export const ReadOnlyView: Story = {
       const actionsButton = canvas.getByLabelText(/Kebab toggle/i);
       await user.click(actionsButton);
 
-      // Actions should be present - menu is rendered in a portal
-      // For users without permissions, they may be disabled or have tooltips
+      // Verify actions are disabled for users without write permissions
       await waitFor(
         () => {
           const pauseAction = within(document.body).getByText(/Pause/i);
           expect(pauseAction).toBeInTheDocument();
+          // Check that the action is disabled
+          const pauseButton = pauseAction.closest('button');
+          if (pauseButton) {
+            expect(pauseButton).toBeDisabled();
+          } else {
+            expect(pauseAction).toHaveAttribute('aria-disabled', 'true');
+          }
         },
         { timeout: 3000 },
       );
