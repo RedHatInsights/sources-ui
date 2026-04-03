@@ -127,7 +127,7 @@ const mockSources = [
 ];
 
 // Create mock Redux store using the app's store factory
-const createMockStore = (overrides = {}) => {
+const createMockStore = (overrides: { sources?: Record<string, unknown>; user?: Record<string, unknown> } = {}) => {
   const initialState = {
     sources: {
       entities: mockSources,

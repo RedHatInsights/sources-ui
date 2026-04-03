@@ -52,7 +52,7 @@ export default meta;
 type Story = StoryObj;
 
 // Helper to reduce FormRenderer boilerplate
-const buildFormStory = (schema: { fields: unknown[] }, overrides?: Record<string, unknown>) => (
+const buildFormStory = (schema: Record<string, unknown>, overrides?: Record<string, unknown>) => (
   <FormRenderer
     FormTemplate={FormTemplate}
     schema={schema}
