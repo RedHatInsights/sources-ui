@@ -4,6 +4,8 @@ module.exports = {
   collectCoverageFrom: [
     'src/**/*.{js,jsx}',
     '!src/**/stories/*',
+    '!src/**/*.stories.{js,jsx,ts,tsx}',
+    '!src/docs/*.mdx',
     '!src/entry.js',
     '!src/entry-dev.js',
     '!src/frontend-components-copies/*',

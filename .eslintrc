@@ -14,7 +14,8 @@
     "plugin:prettier/recommended",
     "prettier",
     "eslint:recommended",
-    "plugin:react/recommended"
+    "plugin:react/recommended",
+    "plugin:storybook/recommended"
   ],
   "plugins": [
     "react"
@@ -136,6 +137,12 @@
       "extends": ["plugin:@typescript-eslint/recommended"],
       "rules": {
         "react/prop-types": "off"
+      }
+    },
+    {
+      "files": ["**/*.stories.@(ts|tsx|js|jsx|mjs)"],
+      "rules": {
+        "import/no-anonymous-default-export": "off"
       }
     }
   ]
