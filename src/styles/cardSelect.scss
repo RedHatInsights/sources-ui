@@ -38,7 +38,7 @@
 }
 
 .src-c-wizard__rhel-desc-title {
-  color: initial;
+  color: var(--pf-t--global--text--color--regular);
 }
 
 .src-c-wizard__summary-description-list {
@@ -52,6 +52,6 @@
 }
 
 .src-c-wizard--switch-description {
-  color:  #6a6e73;
+  color: var(--pf-t--global--text--color--subtle);
   font-size: var(--pf-t--global--font--size--sm);
 }
