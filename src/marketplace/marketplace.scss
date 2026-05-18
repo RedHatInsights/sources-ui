@@ -8,7 +8,7 @@
 
 .marketplace-card-body {
   overflow: auto;
-  color: #151515;
+  color: var(--pf-t--global--text--color--regular);
   font-size: var(--pf-t--global--font--size--sm);
   line-height: 21px;
   text-align: left;
@@ -36,7 +36,7 @@
 }
 
 .marketplace-seemore-card {
-  border: 1px dashed #0066CC;
+  border: 1px dashed var(--pf-t--global--border--color--clicked);
 
   .card-text {
     font-size: var(--pf-t--global--font--size--sm);

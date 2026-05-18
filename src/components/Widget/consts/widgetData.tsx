@@ -1,5 +1,6 @@
 import React from 'react';
 import EnvelopeIcon from '@patternfly/react-icons/dist/dynamic/icons/envelope-icon';
+import { Icon } from '@patternfly/react-core';
 import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../../../utilities/constants';
 import ImageWithPlaceholder from '../../TilesShared/ImageWithPlaceholder';
 
@@ -66,7 +67,11 @@ export const createIntegrationsData = (
                     name: 'Email',
                     id: 'email',
                     value: COMMUNICATIONS,
-                    icon: <EnvelopeIcon />,
+                    icon: (
+                      <Icon>
+                        <EnvelopeIcon />
+                      </Icon>
+                    ),
                   },
                 ]
               : []),

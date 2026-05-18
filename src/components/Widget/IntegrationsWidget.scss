@@ -1,7 +1,7 @@
 .sources-integrations, [class*="sources-sources-./IntegrationsWidget"] {
   overflow-y: auto;
   .pf-v6-c-card__body {
-    padding: var(--pf-v5-global--spacer--sm) 0 0 0;
+    padding: var(--pf-t--global--spacer--sm) 0 0 0;
   }
   .pf-v6-c-data-list {
     border-block-start-width: 0;
@@ -12,7 +12,7 @@
     }
   }
   .pf-v6-c-data-list__item {
-    padding-top: var(--pf-v5-global--spacer--sm);
+    padding-top: var(--pf-t--global--spacer--sm);
     &-content {
       padding-bottom: 0;
     }
@@ -21,10 +21,10 @@
     }
   }
   .pf-v6-c-data-list__expandable-content {
-    margin-bottom: var(--pf-v5-global--spacer--sm);
+    margin-bottom: var(--pf-t--global--spacer--sm);
   }
   .pf-v6-c-data-list__expandable-content .pf-v6-c-data-list__expandable-content-body {
-    padding-left: var(--pf-v5-global--spacer--sm);
+    padding-left: var(--pf-t--global--spacer--sm);
     padding-block-start: 0;
     padding-block-end: 0;
   }
@@ -33,8 +33,18 @@
     padding-left: 0;
   }
 
-  .empty-state-icon img {
-    height: 36px;
-    width: auto;
+  .empty-state-icon {
+    color: var(--pf-t--global--text--color--regular);
+
+    img {
+      height: 36px;
+      width: auto;
+    }
+
+    svg {
+      height: 36px;
+      width: auto;
+      fill: currentcolor;
+    }
   }
 }

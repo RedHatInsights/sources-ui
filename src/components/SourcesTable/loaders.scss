@@ -17,12 +17,12 @@
   height: 100%;
   display: block;
   border-radius: 3px;
-  background-color: #f3f3f3;
+  background-color: var(--pf-t--global--color--nonstatus--gray--light);
 }
 
 .src-c-loader::after {
   animation: 2s loader linear 0.5s infinite;
-  background: linear-gradient(90deg, transparent, #ecebeb, transparent);
+  background: linear-gradient(90deg, transparent, var(--pf-t--global--color--nonstatus--gray--default), transparent);
   content: '';
   position: absolute;
   bottom: 0;

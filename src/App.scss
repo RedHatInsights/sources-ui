@@ -140,13 +140,8 @@ form.src-c-uuid {
   .disabled-tile-with-tooltip {
     display: inline-block;
 
-    .provider-icon {
-      opacity: 0.5;
-    }
-
-    .redhat-icon {
-      opacity: 0.5;
-    }
+    // PatternFly Tile component handles disabled state styling via isDisabled prop
+    // No custom opacity needed - PF's built-in disabled state is theme-aware
   }
   .cloud-footer {
     text-align: center;
