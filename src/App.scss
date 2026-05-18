@@ -139,6 +139,7 @@ form.src-c-uuid {
 
   .disabled-tile-with-tooltip {
     display: inline-block;
+
     // PatternFly Tile component handles disabled state styling via isDisabled prop
     // No custom opacity needed - PF's built-in disabled state is theme-aware
   }
