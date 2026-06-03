@@ -25,11 +25,11 @@ import { useFlag } from '@unleash/proxy-client-react';
 
 export const CLOUD_CARDS_KEY = 'ins-c-sources__cloud_cards_expanded';
 const GOLD_IMAGES_AWS =
-  'https://docs.redhat.com/en/documentation/subscription_central/1-latest/html/red_hat_cloud_access_reference_guide/getting-started-with-ca_cloud-access#proc_new-ca-experience-option3_cloud-access';
+  'https://docs.redhat.com/en/documentation/subscription_central/1-latest/html-single/getting_started_with_rhel_system_registration/index#assembly-using-gold-images-on-aws';
 const GOLD_IMAGES_AZURE =
-  ' https://docs.redhat.com/en/documentation/subscription_central/1-latest/html/red_hat_cloud_access_reference_guide/getting-started-with-ca_cloud-access#proc_new-ca-experience-option3_cloud-access';
+  'https://docs.redhat.com/en/documentation/subscription_central/1-latest/html-single/getting_started_with_rhel_system_registration/index#assembly-using-gold-images-on-azure';
 const GOLD_IMAGES_MORE =
-  'https://docs.redhat.com/en/documentation/subscription_central/1-latest/html/red_hat_cloud_access_reference_guide/understanding-gold-images_cloud-access#getting-access-to-gold-images_cloud-access';
+  'https://docs.redhat.com/en/documentation/subscription_central/1-latest/html-single/getting_started_with_rhel_system_registration/index#assembly-understanding-gold-images';
 const INSIGHTS_REF = 'https://www.redhat.com/en/technologies/management/insights';
 const SUBWATCH_MORE_HREF = 'https://access.redhat.com/products/subscription-central';
 
