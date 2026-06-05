@@ -30,6 +30,7 @@ yarn-error.log*
 cc-test-reporter
 coverage
 playwright-report
+playwright/.auth
 test-results
 
 # Storybook artifacts
