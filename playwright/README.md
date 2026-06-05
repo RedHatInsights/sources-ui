@@ -56,32 +56,12 @@ E2E_USER=your-username E2E_PASSWORD=your-password npm run playwright -- test --d
 
 ## Writing Tests
 
-### Authenticated Tests
-
-Most tests require user authentication. Use `authTest` instead of `test` to automatically handle login:
-
-```javascript
-import { authTest, expect } from './fixtures.js';
-
-authTest.use({ ignoreHTTPSErrors: true });
-
-authTest.describe('my feature', () => {
-  authTest('should do something', async ({ page }) => {
-    // User is already logged in here
-    await page.goto('/settings/integrations');
-    await expect(page.locator('h1')).toBeVisible();
-  });
-});
-```
-
 ### Using Authentication Utilities
 
-You can also use the authentication functions directly:
+You can use the authentication functions directly from the shared package:
 
 ```javascript
-import { disableCookiePrompt } from './fixtures.js';
-// Or import directly from the shared package:
-// import { disableCookiePrompt } from '@redhat-cloud-services/playwright-test-auth';
+import { disableCookiePrompt } from '@redhat-cloud-services/playwright-test-auth';
 
 // Disable cookie prompts
 await disableCookiePrompt(page);
@@ -112,7 +92,6 @@ The Playwright configuration is in `playwright.config.js` and includes:
 ```
 playwright/
 ├── README.md                 # This file
-├── fixtures.js               # Authentication utilities and authTest fixture
 ├── integrations.spec.js      # Integration page tests
 └── [other test files]
 ```

@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { disableCookiePrompt } from './fixtures.js';
+import { disableCookiePrompt } from '@redhat-cloud-services/playwright-test-auth';
 
 test.describe('integrations application', async () => {
   test('navigate to integrations via settings dropdown', async ({ page }) => {
