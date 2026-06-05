@@ -14,7 +14,7 @@ Before running the tests, you need to:
 2. **Set up environment variables**
    - `E2E_USER` - Red Hat SSO username for testing
    - `E2E_PASSWORD` - Red Hat SSO password for testing
-   - `APP_TEST_HOST_PORT` (optional) - Custom URL for the test environment
+   - `PLAYWRIGHT_BASE_URL` (optional) - Custom URL for the test environment
 
 ## Running Tests
 
@@ -29,7 +29,7 @@ E2E_USER=your-username E2E_PASSWORD=your-password npm run playwright -- test
 Override the default test URL:
 
 ```bash
-APP_TEST_HOST_PORT=localhost:8080 E2E_USER=your-username E2E_PASSWORD=your-password npm run playwright -- test
+PLAYWRIGHT_BASE_URL=localhost:8080 E2E_USER=your-username E2E_PASSWORD=your-password npm run playwright -- test
 ```
 
 ### Running Specific Tests
@@ -107,9 +107,9 @@ playwright/
 ### Tests Timeout
 
 - Check that your local dev server is running
-- Verify the `APP_TEST_HOST_PORT` matches your actual server
+- Verify the `PLAYWRIGHT_BASE_URL` matches your actual server
 - Check network connectivity to external dependencies
 
 ### Certificate Errors
 
-Tests use `ignoreHTTPSErrors: true` to handle self-signed certificates in development environments. This is configured per-test using `authTest.use()`.
+Tests use `ignoreHTTPSErrors: true` to handle self-signed certificates in development environments. This is configured in the Playwright config and applied during globalSetup.
