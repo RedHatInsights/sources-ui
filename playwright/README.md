@@ -79,13 +79,9 @@ authTest.describe('my feature', () => {
 You can also use the authentication functions directly:
 
 ```javascript
-import { ensureLoggedIn, login, disableCookiePrompt } from './fixtures.js';
-
-// Ensure user is logged in (checks if already logged in first)
-await ensureLoggedIn(page);
-
-// Direct login
-await login(page, 'username', 'password');
+import { disableCookiePrompt } from './fixtures.js';
+// Or import directly from the shared package:
+// import { disableCookiePrompt } from '@redhat-cloud-services/playwright-test-auth';
 
 // Disable cookie prompts
 await disableCookiePrompt(page);
