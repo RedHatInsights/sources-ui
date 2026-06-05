@@ -13,7 +13,7 @@ export default defineConfig({
 
   // Global setup for authentication
   // Authenticates once before all tests and saves the session state
-  globalSetup: '@redhat-cloud-services/playwright-test-auth/global-setup',
+  globalSetup: require.resolve('@redhat-cloud-services/playwright-test-auth/global-setup'),
 
   use: {
     baseURL: process.env.PLAYWRIGHT_BASE_URL || 'https://stage.foo.redhat.com:1337',
