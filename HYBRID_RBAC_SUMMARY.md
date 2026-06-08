@@ -14,7 +14,7 @@ The sources service has **not yet migrated to Kessel**, so sources permissions m
 
 ### Permission Loading Flow
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │              PermissionsChecker Component                   │
 └─────────────────────────────────────────────────────────────┘
@@ -72,6 +72,7 @@ The sources service has **not yet migrated to Kessel**, so sources permissions m
 ### Permission Mappings
 
 #### Integrations (v2 Ready)
+
 | v1 Permission | v2 Kessel Relation | Redux State |
 |--------------|-------------------|-------------|
 | `integrations:endpoints:write` | `integrations_endpoints_edit` | `user.integrationsEndpointsPermissions` |
@@ -80,6 +81,7 @@ The sources service has **not yet migrated to Kessel**, so sources permissions m
 Source: [`notifications.ksl`](https://github.com/RedHatInsights/rbac-config/blob/master/configs/prod/schemas/src/notifications.ksl)
 
 #### Sources (v1 Continues)
+
 | v1 Permission | Redux State | Status |
 |--------------|-------------|---------|
 | `sources:*:write` or `sources:*:*` | `user.writePermissions` | ✅ Chrome API v1 |

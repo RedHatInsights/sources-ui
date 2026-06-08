@@ -19,7 +19,8 @@ This document describes the migration from Chrome API's `getUserPermissions()` (
 ## Files Modified
 
 ### New Files
-```
+
+```text
 src/rbac/
 ├── KesselRbacAccessContext.ts          # Context for Kessel v2 permissions
 ├── KesselRbacAccessProvider.tsx        # Provider component
@@ -27,18 +28,20 @@ src/rbac/
 ├── hooks/useDefaultWorkspace.ts        # Fetch workspace ID
 └── utils/permissionMapper.ts           # Map Kessel perms to Redux state
 
-src/redux/user/kesselActions.js          # Redux action for v2 permissions
+src/redux/user/kesselActions.ts          # Redux action for v2 permissions
 ```
 
 ### Modified Files
-```
+
+```text
 package.json                             # Added @project-kessel/react-kessel-access-check
 src/AppEntry.js → src/AppEntry.tsx      # Wrapped with Kessel providers
 src/components/PermissionsChecker.js → .tsx  # Added v1/v2 branching logic
 ```
 
 ### Deleted Files
-```
+
+```text
 src/AppEntry.js                         # Replaced with .tsx version
 src/components/PermissionsChecker.js    # Replaced with .tsx version
 ```
@@ -94,6 +97,7 @@ state.user = {
 ## Permission Mappings
 
 ### Sources (✅ Continues using v1)
+
 | v1 Permission | Status |
 |--------------|--------|
 | `sources:*:*` or `sources:*:write` | ✅ Uses Chrome API v1 (all orgs) |
@@ -102,6 +106,7 @@ state.user = {
 > **Note**: Sources permissions will continue using `getUserPermissions('sources')` until the sources service migrates to Kessel. This is expected and no action needed.
 
 ### Integrations (✅ Migrated to v2)
+
 | v1 Permission | v2 Relation | Context Permission |
 |--------------|------------|-------------------|
 | `integrations:endpoints:write` | `integrations_endpoints_edit` | `canWriteIntegrationsEndpoints` |

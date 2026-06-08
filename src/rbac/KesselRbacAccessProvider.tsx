@@ -39,22 +39,11 @@ export const KesselRbacAccessProvider: React.FC<{
   }, [workspaceError]);
 
   // Build workspace resource for permission checks
-  // Only create resource if workspace ID is available
-  const workspace = useMemo(() => {
-    if (!defaultWorkspaceId) {
-      // Return a placeholder - permission hooks will handle undefined gracefully
-      return {
-        id: '',
-        type: 'workspace' as const,
-        reporter: { type: 'rbac' as const },
-      };
-    }
-    return {
-      id: defaultWorkspaceId,
-      type: 'workspace' as const,
-      reporter: { type: 'rbac' as const },
-    };
-  }, [defaultWorkspaceId]);
+  const workspace = useMemo(() => ({
+    id: defaultWorkspaceId || '',
+    type: 'workspace' as const,
+    reporter: { type: 'rbac' as const },
+  }), [defaultWorkspaceId]);
 
   // Permission checks - using v0.5.0 API which returns { loading, error, data }
   // Note: Only checking integrations permissions - sources continues using Chrome API v1
@@ -67,6 +56,24 @@ export const KesselRbacAccessProvider: React.FC<{
     relation: KESSEL_WORKSPACE_RELATIONS.INTEGRATIONS_ENDPOINTS_VIEW,
     resource: workspace,
   });
+
+  // Track permission check errors
+  useEffect(() => {
+    const permissionErrors: Error[] = [];
+    if (integrationsEndpointsEdit.error) {
+      permissionErrors.push(
+        new Error(`Integrations endpoints edit check failed: ${integrationsEndpointsEdit.error.message}`)
+      );
+    }
+    if (integrationsEndpointsView.error) {
+      permissionErrors.push(
+        new Error(`Integrations endpoints view check failed: ${integrationsEndpointsView.error.message}`)
+      );
+    }
+    if (permissionErrors.length > 0) {
+      setErrors((prev) => [...prev, ...permissionErrors]);
+    }
+  }, [integrationsEndpointsEdit.error, integrationsEndpointsView.error]);
 
   // Aggregate loading states
   const isLoading =

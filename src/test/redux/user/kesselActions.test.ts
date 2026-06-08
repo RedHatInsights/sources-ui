@@ -17,10 +17,10 @@ describe('kesselActions', () => {
       };
 
       const action = loadPermissionsFromKessel(kesselPermissions);
-      action(dispatch);
+      action(dispatch, jest.fn(), undefined);
 
       expect(dispatch).toHaveBeenCalledWith({
-        type: 'SET_INTEGRATIONS_ENDPOINTS_PERMISSIONS_FULFILLED',
+        type: (ACTION_TYPES as any).SET_INTEGRATIONS_ENDPOINTS_PERMISSIONS_FULFILLED,
         payload: true,
       });
     });
@@ -32,10 +32,10 @@ describe('kesselActions', () => {
       };
 
       const action = loadPermissionsFromKessel(kesselPermissions);
-      action(dispatch);
+      action(dispatch, jest.fn(), undefined);
 
       expect(dispatch).toHaveBeenCalledWith({
-        type: 'SET_INTEGRATIONS_READ_PERMISSIONS_FULFILLED',
+        type: (ACTION_TYPES as any).SET_INTEGRATIONS_READ_PERMISSIONS_FULFILLED,
         payload: true,
       });
     });
@@ -47,15 +47,15 @@ describe('kesselActions', () => {
       };
 
       const action = loadPermissionsFromKessel(kesselPermissions);
-      action(dispatch);
+      action(dispatch, jest.fn(), undefined);
 
       expect(dispatch).toHaveBeenCalledTimes(2);
       expect(dispatch).toHaveBeenCalledWith({
-        type: 'SET_INTEGRATIONS_ENDPOINTS_PERMISSIONS_FULFILLED',
+        type: (ACTION_TYPES as any).SET_INTEGRATIONS_ENDPOINTS_PERMISSIONS_FULFILLED,
         payload: true,
       });
       expect(dispatch).toHaveBeenCalledWith({
-        type: 'SET_INTEGRATIONS_READ_PERMISSIONS_FULFILLED',
+        type: (ACTION_TYPES as any).SET_INTEGRATIONS_READ_PERMISSIONS_FULFILLED,
         payload: true,
       });
     });
@@ -67,15 +67,15 @@ describe('kesselActions', () => {
       };
 
       const action = loadPermissionsFromKessel(kesselPermissions);
-      action(dispatch);
+      action(dispatch, jest.fn(), undefined);
 
       expect(dispatch).toHaveBeenCalledTimes(2);
       expect(dispatch).toHaveBeenCalledWith({
-        type: 'SET_INTEGRATIONS_ENDPOINTS_PERMISSIONS_FULFILLED',
+        type: (ACTION_TYPES as any).SET_INTEGRATIONS_ENDPOINTS_PERMISSIONS_FULFILLED,
         payload: false,
       });
       expect(dispatch).toHaveBeenCalledWith({
-        type: 'SET_INTEGRATIONS_READ_PERMISSIONS_FULFILLED',
+        type: (ACTION_TYPES as any).SET_INTEGRATIONS_READ_PERMISSIONS_FULFILLED,
         payload: false,
       });
     });
@@ -87,7 +87,7 @@ describe('kesselActions', () => {
       };
 
       const action = loadPermissionsFromKessel(kesselPermissions);
-      action(dispatch);
+      action(dispatch, jest.fn(), undefined);
 
       // Should only dispatch 2 integrations permissions, NOT sources
       expect(dispatch).toHaveBeenCalledTimes(2);
@@ -95,7 +95,7 @@ describe('kesselActions', () => {
       // Verify it's NOT dispatching sources permissions
       const calls = dispatch.mock.calls;
       const hasSourcesPermission = calls.some(
-        (call) => call[0].type === 'SET_WRITE_PERMISSIONS_FULFILLED'
+        (call: any[]) => call[0].type === (ACTION_TYPES as any).SET_WRITE_PERMISSIONS_FULFILLED
       );
       expect(hasSourcesPermission).toBe(false);
     });
@@ -107,12 +107,14 @@ describe('kesselActions', () => {
       };
 
       const action = loadPermissionsFromKessel(kesselPermissions);
-      action(dispatch);
+      action(dispatch, jest.fn(), undefined);
 
-      const dispatchedTypes = dispatch.mock.calls.map((call) => call[0].type);
+      const dispatchedTypes = dispatch.mock.calls.map((call: any[]) => call[0].type);
 
-      expect(dispatchedTypes).toContain('SET_INTEGRATIONS_ENDPOINTS_PERMISSIONS_FULFILLED');
-      expect(dispatchedTypes).toContain('SET_INTEGRATIONS_READ_PERMISSIONS_FULFILLED');
+      expect(dispatchedTypes).toContain(
+        (ACTION_TYPES as any).SET_INTEGRATIONS_ENDPOINTS_PERMISSIONS_FULFILLED
+      );
+      expect(dispatchedTypes).toContain((ACTION_TYPES as any).SET_INTEGRATIONS_READ_PERMISSIONS_FULFILLED);
     });
   });
 });

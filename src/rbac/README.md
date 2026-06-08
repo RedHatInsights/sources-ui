@@ -22,7 +22,7 @@ The application now supports both RBAC v1 (legacy) and v2 (Kessel-based) permiss
 
 ### Files Structure
 
-```
+```text
 src/rbac/
 ├── README.md                           # This file
 ├── KesselRbacAccessContext.ts          # React context for Kessel permissions
@@ -37,6 +37,7 @@ src/rbac/
 ### Permission Mapping
 
 #### Sources Permissions (Continues using v1)
+
 | v1 Permission | Status |
 |--------------|--------|
 | `sources:*:*` or `sources:*:write` | ✅ Uses Chrome API v1 (all orgs) |
@@ -45,6 +46,7 @@ src/rbac/
 **Note**: Sources permissions will continue using Chrome's `getUserPermissions('sources')` until the sources service migrates to Kessel. No v2 schema needed yet.
 
 #### Integrations Permissions (Migrated to v2)
+
 | v1 Permission | v2 Relation | Kessel Permission |
 |--------------|------------|-------------------|
 | `integrations:endpoints:write` | `integrations_endpoints_edit` | `canWriteIntegrationsEndpoints` |

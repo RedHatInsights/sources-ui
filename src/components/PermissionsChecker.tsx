@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 import { useFlag } from '@unleash/proxy-client-react';
+import { ThunkDispatch } from 'redux-thunk';
+import { AnyAction } from 'redux';
 
 import {
   loadIntegrationsEndpointsPermissions,
@@ -16,8 +18,10 @@ interface PermissionsCheckerProps {
   children: React.ReactNode;
 }
 
+type AppDispatch = ThunkDispatch<any, unknown, AnyAction>;
+
 const PermissionsChecker: React.FC<PermissionsCheckerProps> = ({ children }) => {
-  const dispatch = useDispatch<any>();
+  const dispatch = useDispatch<AppDispatch>();
   const {
     auth: { getUser },
     getUserPermissions,
