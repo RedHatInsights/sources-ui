@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { loadPermissionsFromKessel } from '../../../redux/user/kesselActions';
 import { KesselRbacAccessContextValue } from '../../../rbac/KesselRbacAccessContext';
 import { ACTION_TYPES } from '../../../redux/user/actionTypes';
@@ -95,7 +96,7 @@ describe('kesselActions', () => {
       // Verify it's NOT dispatching sources permissions
       const calls = dispatch.mock.calls;
       const hasSourcesPermission = calls.some(
-        (call: any[]) => call[0].type === (ACTION_TYPES as any).SET_WRITE_PERMISSIONS_FULFILLED
+        (call: any[]) => call[0].type === (ACTION_TYPES as any).SET_WRITE_PERMISSIONS_FULFILLED,
       );
       expect(hasSourcesPermission).toBe(false);
     });
@@ -111,9 +112,7 @@ describe('kesselActions', () => {
 
       const dispatchedTypes = dispatch.mock.calls.map((call: any[]) => call[0].type);
 
-      expect(dispatchedTypes).toContain(
-        (ACTION_TYPES as any).SET_INTEGRATIONS_ENDPOINTS_PERMISSIONS_FULFILLED
-      );
+      expect(dispatchedTypes).toContain((ACTION_TYPES as any).SET_INTEGRATIONS_ENDPOINTS_PERMISSIONS_FULFILLED);
       expect(dispatchedTypes).toContain((ACTION_TYPES as any).SET_INTEGRATIONS_READ_PERMISSIONS_FULFILLED);
     });
   });

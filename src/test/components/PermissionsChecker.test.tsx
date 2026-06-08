@@ -40,6 +40,7 @@ jest.mock('../../redux/user/kesselActions', () => ({
 }));
 
 describe('PermissionsChecker - Hybrid RBAC', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let store: any;
 
   const mockKesselContext = {
@@ -70,7 +71,7 @@ describe('PermissionsChecker - Hybrid RBAC', () => {
             <Children />
           </PermissionsChecker>
         </KesselRbacAccessContext.Provider>
-      </Provider>
+      </Provider>,
     );
   };
 
@@ -99,9 +100,7 @@ describe('PermissionsChecker - Hybrid RBAC', () => {
       renderWithProviders();
 
       await waitFor(() => {
-        expect(actions.loadIntegrationsEndpointsPermissions).toHaveBeenCalledWith(
-          mockGetUserPermissions
-        );
+        expect(actions.loadIntegrationsEndpointsPermissions).toHaveBeenCalledWith(mockGetUserPermissions);
         expect(actions.loadIntegrationsReadPermissions).toHaveBeenCalledWith(mockGetUserPermissions);
       });
     });
@@ -145,9 +144,7 @@ describe('PermissionsChecker - Hybrid RBAC', () => {
       renderWithProviders();
 
       await waitFor(() => {
-        expect(kesselActions.loadPermissionsFromKessel).toHaveBeenCalledWith(
-          mockKesselContext.permissions
-        );
+        expect(kesselActions.loadPermissionsFromKessel).toHaveBeenCalledWith(mockKesselContext.permissions);
       });
     });
 

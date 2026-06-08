@@ -12,22 +12,24 @@ import { KesselRbacAccessContextValue } from '../../rbac/KesselRbacAccessContext
  *
  * @param kesselPermissions - Permissions from KesselRbacAccessContext
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const loadPermissionsFromKessel =
-  (
-    kesselPermissions: KesselRbacAccessContextValue['permissions']
-  ): ThunkAction<void, any, unknown, AnyAction> =>
-  (dispatch) => {
-    // Map Kessel v2 permissions to v1 Redux state structure
-    const v1Permissions = mapKesselToV1Permissions(kesselPermissions);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (kesselPermissions: KesselRbacAccessContextValue['permissions']): ThunkAction<void, any, unknown, AnyAction> =>
+    (dispatch) => {
+      // Map Kessel v2 permissions to v1 Redux state structure
+      const v1Permissions = mapKesselToV1Permissions(kesselPermissions);
 
-    // Dispatch integrations permission updates (sources permissions loaded separately via Chrome API)
-    dispatch({
-      type: (ACTION_TYPES as any).SET_INTEGRATIONS_ENDPOINTS_PERMISSIONS_FULFILLED,
-      payload: v1Permissions.integrationsEndpointsPermissions,
-    });
+      // Dispatch integrations permission updates (sources permissions loaded separately via Chrome API)
+      dispatch({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        type: (ACTION_TYPES as any).SET_INTEGRATIONS_ENDPOINTS_PERMISSIONS_FULFILLED,
+        payload: v1Permissions.integrationsEndpointsPermissions,
+      });
 
-    dispatch({
-      type: (ACTION_TYPES as any).SET_INTEGRATIONS_READ_PERMISSIONS_FULFILLED,
-      payload: v1Permissions.integrationsReadPermissions,
-    });
-  };
+      dispatch({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        type: (ACTION_TYPES as any).SET_INTEGRATIONS_READ_PERMISSIONS_FULFILLED,
+        payload: v1Permissions.integrationsReadPermissions,
+      });
+    };

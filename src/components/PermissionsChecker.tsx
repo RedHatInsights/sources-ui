@@ -18,6 +18,7 @@ interface PermissionsCheckerProps {
   children: React.ReactNode;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AppDispatch = ThunkDispatch<any, unknown, AnyAction>;
 
 const PermissionsChecker: React.FC<PermissionsCheckerProps> = ({ children }) => {

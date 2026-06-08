@@ -17,7 +17,7 @@ export interface V1IntegrationsPermissionsState {
 }
 
 export const mapKesselToV1Permissions = (
-  kesselPermissions: KesselRbacAccessContextValue['permissions']
+  kesselPermissions: KesselRbacAccessContextValue['permissions'],
 ): V1IntegrationsPermissionsState => {
   return {
     // v2: canWriteIntegrationsEndpoints → v1: integrationsEndpointsPermissions

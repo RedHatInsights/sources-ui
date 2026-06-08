@@ -31,9 +31,7 @@ export interface KesselRbacAccessContextValue {
   errors: Error[];
 }
 
-export const KesselRbacAccessContext = createContext<KesselRbacAccessContextValue | undefined>(
-  undefined
-);
+export const KesselRbacAccessContext = createContext<KesselRbacAccessContextValue | undefined>(undefined);
 
 /**
  * Hook to access Kessel RBAC context.
@@ -44,5 +42,6 @@ export const useKesselRbacAccess = (): KesselRbacAccessContextValue => {
   if (!context) {
     throw new Error('useKesselRbacAccess must be used within KesselRbacAccessProvider');
   }
+
   return context;
 };
