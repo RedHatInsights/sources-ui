@@ -22,12 +22,12 @@ export const loadPermissionsFromKessel =
 
     // Dispatch integrations permission updates (sources permissions loaded separately via Chrome API)
     dispatch({
-      type: ACTION_TYPES.SET_INTEGRATIONS_ENDPOINTS_PERMISSIONS_FULFILLED,
+      type: (ACTION_TYPES as any).SET_INTEGRATIONS_ENDPOINTS_PERMISSIONS_FULFILLED,
       payload: v1Permissions.integrationsEndpointsPermissions,
     });
 
     dispatch({
-      type: ACTION_TYPES.SET_INTEGRATIONS_READ_PERMISSIONS_FULFILLED,
+      type: (ACTION_TYPES as any).SET_INTEGRATIONS_READ_PERMISSIONS_FULFILLED,
       payload: v1Permissions.integrationsReadPermissions,
     });
   };
