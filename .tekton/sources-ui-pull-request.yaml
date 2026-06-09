@@ -46,7 +46,6 @@ spec:
       #!/bin/bash
       set -ex
       npm ci
-      npm run playwright install --with-deps chromium
   # E2E testing configuration
   - name: e2e-app-port
     value: "8000"
