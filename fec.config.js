@@ -15,7 +15,7 @@ module.exports = {
   plugins: [],
   moduleFederation: {
     exposes: {
-      './RootApp': path.resolve(__dirname, './src/AppEntry.js'),
+      './RootApp': path.resolve(__dirname, './src/AppEntry.tsx'),
       './IntegrationsWidget': path.resolve(__dirname, './src/components/Widget/IntegrationsWidget'),
     },
     exclude: ['react-router-dom'],

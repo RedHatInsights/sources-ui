@@ -1,0 +1,35 @@
+import { ThunkAction } from 'redux-thunk';
+import { AnyAction } from 'redux';
+import { ACTION_TYPES } from './actionTypes';
+import { mapKesselToV1Permissions } from '../../rbac/utils/permissionMapper';
+import { KesselRbacAccessContextValue } from '../../rbac/KesselRbacAccessContext';
+
+/**
+ * Load integrations permissions from Kessel v2 and map them to the existing Redux state structure.
+ * This allows v2 orgs to use Kessel permissions for integrations without changing the rest of the application.
+ *
+ * Note: Sources permissions continue using Chrome API v1 (loaded separately) until sources service migrates to Kessel.
+ *
+ * @param kesselPermissions - Permissions from KesselRbacAccessContext
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const loadPermissionsFromKessel =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (kesselPermissions: KesselRbacAccessContextValue['permissions']): ThunkAction<void, any, unknown, AnyAction> =>
+    (dispatch) => {
+      // Map Kessel v2 permissions to v1 Redux state structure
+      const v1Permissions = mapKesselToV1Permissions(kesselPermissions);
+
+      // Dispatch integrations permission updates (sources permissions loaded separately via Chrome API)
+      dispatch({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        type: (ACTION_TYPES as any).SET_INTEGRATIONS_ENDPOINTS_PERMISSIONS_FULFILLED,
+        payload: v1Permissions.integrationsEndpointsPermissions,
+      });
+
+      dispatch({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        type: (ACTION_TYPES as any).SET_INTEGRATIONS_READ_PERMISSIONS_FULFILLED,
+        payload: v1Permissions.integrationsReadPermissions,
+      });
+    };
