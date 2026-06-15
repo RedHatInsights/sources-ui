@@ -148,13 +148,15 @@ describe('PermissionsChecker - Hybrid RBAC', () => {
       });
     });
 
-    it('does NOT load integrations via Chrome API', async () => {
+    it('ALSO loads integrations via Chrome API for v1 wildcard fallback', async () => {
       renderWithProviders();
 
       await waitFor(() => {
         expect(kesselActions.loadPermissionsFromKessel).toHaveBeenCalled();
-        expect(actions.loadIntegrationsEndpointsPermissions).not.toHaveBeenCalled();
-        expect(actions.loadIntegrationsReadPermissions).not.toHaveBeenCalled();
+        // v2 orgs now ALSO load v1 permissions for wildcard fallback
+        // See: https://github.com/RedHatInsights/insights-chrome/pull/3362
+        expect(actions.loadIntegrationsEndpointsPermissions).toHaveBeenCalled();
+        expect(actions.loadIntegrationsReadPermissions).toHaveBeenCalled();
       });
     });
 
@@ -197,7 +199,7 @@ describe('PermissionsChecker - Hybrid RBAC', () => {
       });
     });
 
-    it('v2 org: sources via Chrome, integrations via Kessel', async () => {
+    it('v2 org: sources via Chrome, integrations via Kessel + v1 fallback', async () => {
       mockUseFlag.mockReturnValue(true);
       renderWithProviders();
 
@@ -208,9 +210,10 @@ describe('PermissionsChecker - Hybrid RBAC', () => {
         // Integrations via Kessel
         expect(kesselActions.loadPermissionsFromKessel).toHaveBeenCalled();
 
-        // Integrations NOT via Chrome
-        expect(actions.loadIntegrationsEndpointsPermissions).not.toHaveBeenCalled();
-        expect(actions.loadIntegrationsReadPermissions).not.toHaveBeenCalled();
+        // Integrations ALSO via Chrome (for v1 wildcard fallback)
+        // See: https://github.com/RedHatInsights/insights-chrome/pull/3362
+        expect(actions.loadIntegrationsEndpointsPermissions).toHaveBeenCalled();
+        expect(actions.loadIntegrationsReadPermissions).toHaveBeenCalled();
       });
     });
   });
