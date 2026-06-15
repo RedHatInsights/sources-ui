@@ -49,7 +49,6 @@ const PermissionsChecker: React.FC<PermissionsCheckerProps> = ({ children }) => 
   // Effect to load v1 integrations permissions (for v1 orgs only)
   useEffect(() => {
     if (!isV2Org) {
-      console.log('[SOURCES RBAC DEBUG] v1 org - loading Chrome API permissions');
       Promise.all([
         dispatch(loadIntegrationsEndpointsPermissions(getUserPermissions)),
         dispatch(loadIntegrationsReadPermissions(getUserPermissions)),
@@ -64,15 +63,12 @@ const PermissionsChecker: React.FC<PermissionsCheckerProps> = ({ children }) => 
       // Kessel v2 does not support wildcard expansion, so we must check v1 wildcards
       // (integrations:*:*, notifications:*:*) as fallback for Org Admins and legacy roles.
       // See: https://github.com/RedHatInsights/insights-chrome/pull/3362
-      console.log('[SOURCES RBAC DEBUG] v2 org - loading Kessel + v1 fallback');
       dispatch(loadPermissionsFromKessel(kesselPermissions));
       // Also load v1 permissions for wildcard fallback
       Promise.all([
         dispatch(loadIntegrationsEndpointsPermissions(getUserPermissions)),
         dispatch(loadIntegrationsReadPermissions(getUserPermissions)),
-      ]).then(() => {
-        console.log('[SOURCES RBAC DEBUG] v1 fallback permissions loaded');
-      });
+      ]);
     }
   }, [isV2Org, isKesselLoading, kesselPermissions, getUserPermissions, dispatch]);
 
