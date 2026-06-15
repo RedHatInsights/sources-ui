@@ -37,12 +37,18 @@ export const loadIntegrationsEndpointsPermissions = (getUserPermissions) => (dis
         allPermission.includes('integrations:*:write') ||
         allPermission.includes('integrations:endpoints:write');
 
+      console.log('[SOURCES RBAC DEBUG] loadIntegrationsEndpointsPermissions result:', {
+        allPermission,
+        integrationsEndpointsPermissions,
+      });
+
       dispatch({
         type: ACTION_TYPES.SET_INTEGRATIONS_ENDPOINTS_PERMISSIONS_FULFILLED,
         payload: integrationsEndpointsPermissions,
       });
     })
-    .catch((error) =>
+    .catch((error) => {
+      console.error('[SOURCES RBAC DEBUG] loadIntegrationsEndpointsPermissions FAILED:', error);
       dispatch({
         type: ACTION_TYPES.SET_INTEGRATIONS_ENDPOINTS_PERMISSIONS_REJECTED,
         payload: {
@@ -51,8 +57,8 @@ export const loadIntegrationsEndpointsPermissions = (getUserPermissions) => (dis
             title: "Cannot get user's credentials",
           },
         },
-      }),
-    );
+      });
+    });
 };
 
 export const loadIntegrationsReadPermissions = (getUserPermissions) => (dispatch) => {
@@ -62,14 +68,22 @@ export const loadIntegrationsReadPermissions = (getUserPermissions) => (dispatch
     .then((permissions) => {
       const allPermission = permissions.map((curr) => curr?.permission);
       const integrationsReadPermissions =
-        allPermission.includes('integrations:*:read') || allPermission.includes('integrations:endpoints:read');
+        allPermission.includes('integrations:*:*') ||
+        allPermission.includes('integrations:*:read') ||
+        allPermission.includes('integrations:endpoints:read');
+
+      console.log('[SOURCES RBAC DEBUG] loadIntegrationsReadPermissions result:', {
+        allPermission,
+        integrationsReadPermissions,
+      });
 
       dispatch({
         type: ACTION_TYPES.SET_INTEGRATIONS_READ_PERMISSIONS_FULFILLED,
         payload: integrationsReadPermissions,
       });
     })
-    .catch((error) =>
+    .catch((error) => {
+      console.error('[SOURCES RBAC DEBUG] loadIntegrationsReadPermissions FAILED:', error);
       dispatch({
         type: ACTION_TYPES.SET_INTEGRATIONS_READ_PERMISSIONS_REJECTED,
         payload: {
@@ -78,8 +92,8 @@ export const loadIntegrationsReadPermissions = (getUserPermissions) => (dispatch
             title: "Cannot get user's credentials",
           },
         },
-      }),
-    );
+      });
+    });
 };
 
 export const loadOrgAdmin = (getUser) => (dispatch) => {

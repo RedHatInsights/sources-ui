@@ -35,9 +35,10 @@ export const integrationsEndpointsPermissionsPending = (state) => ({
 export const integrationsEndpointsPermissionsLoaded = (state, { payload: integrationsEndpointsPermissions }) => ({
   ...state,
   // Use OR logic to combine permissions - if either Kessel v2 OR v1 wildcard grants access, allow it
+  // Prioritize new value, but keep true if state was already true
   // This handles the case where Kessel v2 doesn't support wildcard expansion
   // See: https://github.com/RedHatInsights/insights-chrome/pull/3362
-  integrationsEndpointsPermissions: state.integrationsEndpointsPermissions || integrationsEndpointsPermissions,
+  integrationsEndpointsPermissions: integrationsEndpointsPermissions || state.integrationsEndpointsPermissions,
 });
 
 export const integrationsReadPermissionsPending = (state) => ({
@@ -48,9 +49,10 @@ export const integrationsReadPermissionsPending = (state) => ({
 export const integrationsReadPermissionsLoaded = (state, { payload: integrationsReadPermissions }) => ({
   ...state,
   // Use OR logic to combine permissions - if either Kessel v2 OR v1 wildcard grants access, allow it
+  // Prioritize new value, but keep true if state was already true
   // This handles the case where Kessel v2 doesn't support wildcard expansion
   // See: https://github.com/RedHatInsights/insights-chrome/pull/3362
-  integrationsReadPermissions: state.integrationsReadPermissions || integrationsReadPermissions,
+  integrationsReadPermissions: integrationsReadPermissions || state.integrationsReadPermissions,
 });
 
 export default {
