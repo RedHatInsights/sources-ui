@@ -62,7 +62,9 @@ export const loadIntegrationsReadPermissions = (getUserPermissions) => (dispatch
     .then((permissions) => {
       const allPermission = permissions.map((curr) => curr?.permission);
       const integrationsReadPermissions =
-        allPermission.includes('integrations:*:read') || allPermission.includes('integrations:endpoints:read');
+        allPermission.includes('integrations:*:*') ||
+        allPermission.includes('integrations:*:read') ||
+        allPermission.includes('integrations:endpoints:read');
 
       dispatch({
         type: ACTION_TYPES.SET_INTEGRATIONS_READ_PERMISSIONS_FULFILLED,

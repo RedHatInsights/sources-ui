@@ -166,6 +166,63 @@ useEffect(() => {
 - Monitor Kessel API calls
 - Monitor error rates
 
+## V2 RBAC with V1 Wildcard Fallback (TEMPORARY)
+
+### Current Behavior
+
+For v2 orgs (when `platform.rbac.workspaces` flag is ON), we fetch BOTH Kessel v2 permissions AND v1 Chrome API permissions, then combine them using OR logic in `PermissionsChecker.tsx`:
+
+```typescript
+// Load v1 Chrome API permissions for integrations (even on v2 orgs)
+useEffect(() => {
+  dispatch(loadIntegrationsEndpointsPermissions(getUserPermissions));
+  dispatch(loadIntegrationsReadPermissions(getUserPermissions));
+}, [getUserPermissions, dispatch]);
+
+// Then overlay Kessel v2 permissions (for v2 orgs only)
+useEffect(() => {
+  if (isV2Org && !isKesselLoading) {
+    dispatch(loadPermissionsFromKessel(kesselPermissions));
+  }
+}, [isV2Org, isKesselLoading, kesselPermissions, dispatch]);
+```
+
+The Redux reducer combines them with OR logic - permission granted if EITHER v1 OR v2 check passes.
+
+### Why This Exists
+
+Kessel v2 does not currently support **wildcard permission expansion**. Org Admins and some legacy roles have wildcard permissions like:
+- `integrations:*:*`
+- `integrations:endpoints:*`
+
+Without the v1 fallback, these users would **lose access** when their org is moved to v2.
+
+### Known Issue
+
+This creates a **permanent dependency on v1 Chrome API** for v2 orgs, which defeats the purpose of migrating to v2. Once we're fully on v2, we still call the v1 permissions endpoint.
+
+### When to Remove
+
+Remove this fallback logic once **EITHER**:
+1. Kessel v2 supports wildcard permission expansion, **OR**
+2. All wildcard permissions are migrated to explicit Kessel workspace relations
+
+### Coordinated Removal Required
+
+This same pattern exists in:
+- **notifications-frontend**: `src/app/useApp.ts`
+- **sources-ui**: `src/components/PermissionsChecker.tsx` (this repo)
+- **insights-chrome**: RBACProvider (see PR #3362)
+
+All three repos must be updated together to avoid breaking permissions.
+
+### References
+
+- Chrome PR: https://github.com/RedHatInsights/insights-chrome/pull/3362
+- Related Jira: RHCLOUD-48396
+
+---
+
 ## Future: Sources Migration to Kessel
 
 When the sources service team migrates to Kessel:
