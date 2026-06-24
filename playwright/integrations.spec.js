@@ -1,9 +1,13 @@
-import { authTest, expect } from './fixtures.js';
+import { expect, test } from '@playwright/test';
+import { disableCookiePrompt } from '@redhat-cloud-services/playwright-test-auth';
 
-authTest.use({ ignoreHTTPSErrors: true });
+test.describe('integrations application', async () => {
+  test('navigate to integrations via settings dropdown', async ({ page }) => {
+    // Block cookie prompts before navigation
+    await disableCookiePrompt(page);
 
-authTest.describe('integrations application', async () => {
-  authTest('navigate to integrations via settings dropdown', async ({ page }) => {
+    // Navigate to the application (already authenticated via globalSetup)
+    await page.goto('/');
     // Click on the settings icon
     await page.getByLabel('Settings menu').click();
 

@@ -5,12 +5,24 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: './playwright',
-  fullyParallel: true,
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: 1,
   reporter: 'html',
+
+  // Global setup for authentication
+  // Authenticates once before all tests and saves the session state
+  globalSetup: require.resolve('@redhat-cloud-services/playwright-test-auth/global-setup'),
+
   use: {
+    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'https://stage.foo.redhat.com:1337',
+    ignoreHTTPSErrors: true,
+
+    // Storage state for authenticated sessions
+    // Global setup saves authentication here, all tests reuse it
+    storageState: 'playwright/.auth/user.json',
+
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',

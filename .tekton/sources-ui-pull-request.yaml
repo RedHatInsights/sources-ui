@@ -40,11 +40,17 @@ spec:
       npm install
       npm run lint
       npm test -- --runInBand --no-cache
+  # Workspace setup script (runs before E2E tests)
+  - name: workspace-setup-script
+    value: |
+      #!/bin/bash
+      set -ex
+      npm ci
   # E2E testing configuration
   - name: e2e-app-port
     value: "8000"
   - name: e2e-playwright-image
-    value: "mcr.microsoft.com/playwright:v1.58.2-jammy"
+    value: "mcr.microsoft.com/playwright:v1.60.0-jammy"
   # Application startup script (Caddy serves app assets)
   - name: run-app-script
     value: |
@@ -63,7 +69,6 @@ spec:
       timeout 120s bash -c 'until curl -k -s -m 5 https://stage.foo.redhat.com:1337 > /dev/null 2>&1; do sleep 5; done'
       echo "Proxy ready!"
 
-      npm run playwright install --with-deps chromium
       npm run playwright -- test
   - name: e2e-credentials-secret
     value: sources-ui-credentials-secret
