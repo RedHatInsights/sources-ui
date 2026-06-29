@@ -20,7 +20,7 @@ import { bold } from '../../utilities/intlShared';
 import handleError from '../../api/handleError';
 import tryAgainMessage from '../../utilities/tryAgainMessage';
 import { checkAccountHCS } from '../../api/checkAccountHCS';
-import { INTEGRATIONS, OVERVIEW } from '../../utilities/constants';
+import { COMMUNICATIONS, INTEGRATIONS, OVERVIEW, REPORTING, WEBHOOKS } from '../../utilities/constants';
 import notificationsStore from '../../utilities/notificationsStore';
 
 export const loadEntities = (options) => (dispatch, getState) => {
@@ -239,7 +239,7 @@ export const setActiveCategory = (category) => (dispatch) => {
     payload: { category },
   });
 
-  return [INTEGRATIONS, OVERVIEW].includes(category) || dispatch(loadEntities({ pageNumber: 1 }));
+  return [INTEGRATIONS, OVERVIEW, COMMUNICATIONS, REPORTING, WEBHOOKS].includes(category) || dispatch(loadEntities({ pageNumber: 1 }));
 };
 
 export const pauseSource = (sourceId, sourceName, intl) => (dispatch) => {

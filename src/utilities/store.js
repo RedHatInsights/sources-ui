@@ -13,7 +13,7 @@ export const urlQueryMiddleware = (store) => (next) => (action) => {
   if (action.type === ACTION_TYPES.LOAD_ENTITIES_PENDING) {
     const sources = store.getState().sources;
     updateQuery({ ...sources, ...action.options });
-  } else if (action.type === SET_CATEGORY && [OVERVIEW, INTEGRATIONS].includes(action.payload?.category)) {
+  } else if (action.type === SET_CATEGORY && [OVERVIEW, INTEGRATIONS, COMMUNICATIONS, REPORTING, WEBHOOKS].includes(action.payload?.category)) {
     updateQuery({ activeCategory: action.payload?.category });
   }
 
