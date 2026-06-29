@@ -239,7 +239,9 @@ export const setActiveCategory = (category) => (dispatch) => {
     payload: { category },
   });
 
-  return [INTEGRATIONS, OVERVIEW, COMMUNICATIONS, REPORTING, WEBHOOKS].includes(category) || dispatch(loadEntities({ pageNumber: 1 }));
+  return (
+    [INTEGRATIONS, OVERVIEW, COMMUNICATIONS, REPORTING, WEBHOOKS].includes(category) || dispatch(loadEntities({ pageNumber: 1 }))
+  );
 };
 
 export const pauseSource = (sourceId, sourceName, intl) => (dispatch) => {
