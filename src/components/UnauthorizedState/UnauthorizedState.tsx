@@ -37,7 +37,7 @@ const UnauthorizedState = () => {
             defaultMessage: 'Slack',
           }),
           src: '/apps/frontend-assets/partners-icons/slack.svg',
-          href: 'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-configuring-insights-integration-with-slack_integrations',
+          href: 'https://docs.redhat.com/en/documentation/red_hat_lightspeed/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-integrating-comms_integrations#assembly-configuring-insights-integration-with-slack_integrating-communications',
         },
         {
           name: intl.formatMessage({
@@ -45,7 +45,7 @@ const UnauthorizedState = () => {
             defaultMessage: 'Microsoft Teams',
           }),
           src: '/apps/frontend-assets/partners-icons/microsoft-office-teams.svg',
-          href: 'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-configuring-integration-with-teams_integrations',
+          href: 'https://docs.redhat.com/en/documentation/red_hat_lightspeed/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-integrating-comms_integrations#assembly-configuring-integration-with-teams_integrating-communications',
         },
         {
           name: intl.formatMessage({
@@ -53,7 +53,7 @@ const UnauthorizedState = () => {
             defaultMessage: 'Google Chat',
           }),
           src: '/apps/frontend-assets/partners-icons/google-chat.svg',
-          href: 'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-configuring-integration-with-gchat_integrations',
+          href: 'https://docs.redhat.com/en/documentation/red_hat_lightspeed/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-integrating-comms_integrations#assembly-configuring-integration-with-gchat_integrating-communications',
         },
       ],
     },
@@ -75,7 +75,7 @@ const UnauthorizedState = () => {
             defaultMessage: 'Event-Driven Ansible',
           }),
           src: '/apps/frontend-assets/technology-icons/ansible.svg',
-          href: 'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-configuring-integration-with-eda_integrations',
+          href: 'https://docs.redhat.com/en/documentation/red_hat_lightspeed/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-integrating-reporting_integrating-communications#assembly-configuring-integration-with-eda_integrating-communications',
         },
         {
           name: intl.formatMessage({
@@ -83,7 +83,7 @@ const UnauthorizedState = () => {
             defaultMessage: 'ServiceNow',
           }),
           src: '/apps/frontend-assets/partners-icons/service-now-logomark.svg',
-          href: 'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-installing-configuring-insights-for-snow_integrations',
+          href: 'https://docs.redhat.com/en/documentation/red_hat_lightspeed/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-integrating-reporting_integrating-communications#assembly-installing-configuring-insights-for-snow_integrating-communications',
         },
         {
           name: intl.formatMessage({
@@ -91,7 +91,7 @@ const UnauthorizedState = () => {
             defaultMessage: 'Splunk',
           }),
           src: '/apps/frontend-assets/partners-icons/splunk-logomark.svg',
-          href: 'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-installing-configuring-insights-for-splunk_integrations',
+          href: 'https://docs.redhat.com/en/documentation/red_hat_lightspeed/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-integrating-reporting_integrating-communications#assembly-installing-configuring-insights-for-splunk_integrating-communications',
         },
       ],
     },
@@ -116,7 +116,7 @@ const UnauthorizedState = () => {
             defaultMessage: 'Connect',
           })}{' '}
           <a
-            href="https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-configuring-integration-with-webhooks_integrations"
+            href="https://docs.redhat.com/en/documentation/red_hat_lightspeed/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-configuring-integration-with-webhooks_integrating-communications#proc-notif-webhooks-config_assembly-configuring-integration-with-webhooks"
             target="_blank"
             rel="noopener noreferrer"
           >
