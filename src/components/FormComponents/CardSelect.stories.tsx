@@ -1,7 +1,8 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
 import { expect, fn, userEvent, within } from 'storybook/test';
-import { FormRenderer, Schema } from '@data-driven-forms/react-form-renderer';
+import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
+import type LegacyField from '@data-driven-forms/react-form-renderer/common-types/field';
 import componentMapper from '@data-driven-forms/pf4-component-mapper/component-mapper';
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 import CardSelect from './CardSelect';
@@ -52,7 +53,7 @@ export default meta;
 type Story = StoryObj;
 
 // Helper to reduce FormRenderer boilerplate
-const buildFormStory = (schema: Schema, overrides?: Record<string, unknown>) => (
+const buildFormStory = (schema: { fields: LegacyField[] }, overrides?: Record<string, unknown>) => (
   <FormRenderer
     FormTemplate={FormTemplate}
     schema={schema}
