@@ -27,8 +27,8 @@ describe('SubWatchDescription', () => {
     expect(screen.getByText('View precise public cloud usage data in subscription watch.')).toBeInTheDocument();
     expect(screen.getByText('Autoregistration')).toBeInTheDocument();
     expect(screen.getByText('Cloud instances automatically connect to console.redhat.com when provisioned.')).toBeInTheDocument();
-    expect(container.getElementsByTagName('svg')).toHaveLength(3);
-    expect(container.getElementsByTagName('svg')[0]).toHaveAttribute('fill', '#3E8635');
+    expect(container.querySelectorAll('svg[aria-hidden="true"]')).toHaveLength(3);
+    expect(container.querySelectorAll('svg[aria-hidden="true"]')[0]).toHaveAttribute('fill', '#3E8635');
   });
 
   it('Renders correctly with azure', () => {
@@ -52,8 +52,8 @@ describe('SubWatchDescription', () => {
     expect(() => screen.getByText('View precise public cloud usage data in subscription watch.')).toThrow();
     expect(screen.getByText('Autoregistration')).toBeInTheDocument();
     expect(screen.getByText('Cloud instances automatically connect to console.redhat.com when provisioned.')).toBeInTheDocument();
-    expect(container.getElementsByTagName('svg')).toHaveLength(2);
-    expect(container.getElementsByTagName('svg')[0]).toHaveAttribute('fill', '#3E8635');
+    expect(container.querySelectorAll('svg[aria-hidden="true"]')).toHaveLength(2);
+    expect(container.querySelectorAll('svg[aria-hidden="true"]')[0]).toHaveAttribute('fill', '#3E8635');
   });
 
   it('Renders correctly with google', () => {
@@ -86,7 +86,7 @@ describe('SubWatchDescription', () => {
       />,
     );
 
-    expect(container.getElementsByTagName('svg')[0]).toHaveAttribute('fill', '#3E8635');
+    expect(container.querySelectorAll('svg[aria-hidden="true"]')[0]).toHaveAttribute('fill', '#3E8635');
   });
 
   it('Renders correctly when not enabled - not super key mode', () => {
@@ -98,7 +98,7 @@ describe('SubWatchDescription', () => {
       />,
     );
 
-    expect(container.getElementsByTagName('svg')[0]).toHaveAttribute('fill', '#6A6E73');
+    expect(container.querySelectorAll('svg[aria-hidden="true"]')[0]).toHaveAttribute('fill', '#6A6E73');
   });
 
   it('Renders correctly when not enabled - super key mode', () => {
@@ -110,6 +110,6 @@ describe('SubWatchDescription', () => {
       />,
     );
 
-    expect(container.getElementsByTagName('svg')[0]).toHaveAttribute('fill', '#6A6E73');
+    expect(container.querySelectorAll('svg[aria-hidden="true"]')[0]).toHaveAttribute('fill', '#6A6E73');
   });
 });

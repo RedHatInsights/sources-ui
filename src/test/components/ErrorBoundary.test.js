@@ -7,6 +7,11 @@ import * as sentry from '@sentry/browser';
 import mockStore from '../__mocks__/mockStore';
 import notificationsStore from '../../utilities/notificationsStore';
 
+jest.mock('@sentry/browser', () => ({
+  ...jest.requireActual('@sentry/browser'),
+  captureException: jest.fn(),
+}));
+
 describe('Error Boundary', () => {
   it('renders children', () => {
     const ChildrenComponent = () => <h1>Some content</h1>;
@@ -24,7 +29,7 @@ describe('Error Boundary', () => {
 
   it('dispatch message', () => {
     const SENTRY_ID = '2132s1ad5s1ad5sa1d51sfd321sa';
-    sentry.captureException = jest.fn().mockImplementation(() => SENTRY_ID);
+    sentry.captureException.mockImplementation(() => SENTRY_ID);
     const addNotificationSpy = jest.spyOn(notificationsStore, 'addNotification');
 
     const ERROR_TO_STRING = expect.any(String);
