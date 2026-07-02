@@ -19,7 +19,7 @@ const createOneAppFields = (appType, sourceType, app, clusterId) => [
     component: 'description',
     Content: EditAlert,
     condition: {
-      when: ({ name }) => name,
+      when: (name) => name,
       isNotEmpty: true,
     },
   },

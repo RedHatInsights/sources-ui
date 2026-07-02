@@ -48,9 +48,9 @@ describe('HybridCommittedSpendDescription', () => {
     expect(
       screen.getByText('Analyze, forecast, and optimize your Red Hat OpenShift cluster costs in hybrid cloud environments.'),
     ).toBeInTheDocument();
-    expect(container.getElementsByTagName('svg')).toHaveLength(2);
-    expect(container.getElementsByTagName('svg')[0]).toHaveAttribute('fill', '#3E8635');
-    expect(container.getElementsByTagName('svg')[1]).toHaveAttribute('fill', '#3E8635');
+    expect(container.querySelectorAll('svg[aria-hidden="true"]')).toHaveLength(2);
+    expect(container.querySelectorAll('svg[aria-hidden="true"]')[0]).toHaveAttribute('fill', '#3E8635');
+    expect(container.querySelectorAll('svg[aria-hidden="true"]')[1]).toHaveAttribute('fill', '#3E8635');
   });
 
   it('Renders correctly when not enabled - not super key mode ', () => {
@@ -80,8 +80,8 @@ describe('HybridCommittedSpendDescription', () => {
     expect(
       screen.getByText('Analyze, forecast, and optimize your Red Hat OpenShift cluster costs in hybrid cloud environments.'),
     ).toBeInTheDocument();
-    expect(container.getElementsByTagName('svg')).toHaveLength(2);
-    expect(container.getElementsByTagName('svg')[0]).toHaveAttribute('fill', '#6A6E73');
-    expect(container.getElementsByTagName('svg')[1]).toHaveAttribute('fill', '#6A6E73');
+    expect(container.querySelectorAll('svg[aria-hidden="true"]')).toHaveLength(2);
+    expect(container.querySelectorAll('svg[aria-hidden="true"]')[0]).toHaveAttribute('fill', '#6A6E73');
+    expect(container.querySelectorAll('svg[aria-hidden="true"]')[1]).toHaveAttribute('fill', '#6A6E73');
   });
 });
