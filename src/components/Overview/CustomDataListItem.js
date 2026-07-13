@@ -23,6 +23,7 @@ import { AsyncComponent } from '@redhat-cloud-services/frontend-components';
 import AddSourceWizard from '../addSourceWizard';
 import { useIntl } from 'react-intl';
 import { useStore } from 'react-redux';
+import { useFlag } from '@unleash/proxy-client-react';
 
 const CustomDataListItem = ({ initialExpanded, icon, title, actionTitle, action, content, learnMoreLink }) => {
   const [isExpanded, setIsExpanded] = useState(initialExpanded);
@@ -31,6 +32,7 @@ const CustomDataListItem = ({ initialExpanded, icon, title, actionTitle, action,
   const [selectedIntegration, setSelectedIntegration] = useState(null);
 
   const intl = useIntl();
+  const hidePagerDutySeverity = useFlag('platform.integrations.pager-duty.hide-severity');
 
   const toggleExpand = () => setIsExpanded((prev) => !prev);
 
@@ -112,6 +114,7 @@ const CustomDataListItem = ({ initialExpanded, icon, title, actionTitle, action,
           store={store}
           isOpen={isIntegrationsWizardOpen}
           category={selectedIntegration}
+          hidePagerDutySeverity={hidePagerDutySeverity}
           closeModal={() => {
             setIsIntegrationsWizardOpen(false);
             setSelectedIntegration(null);

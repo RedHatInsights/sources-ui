@@ -51,6 +51,7 @@ const IntegrationsDropdown = (props) => {
   const [isSourcesWizardOpen, setIsSourcesWizardOpen] = useState(false);
   const [selectedIntegration, setSelectedIntegration] = useState(null);
   const isPagerDutyEnabled = useFlag('platform.integrations.pager-duty');
+  const hidePagerDutySeverity = useFlag('platform.integrations.pager-duty.hide-severity');
   const hasSourcesPermissions = useSelector(({ user }) => user?.writePermissions);
   const hasIntegrationsPermissions = useSelector(({ user }) => user?.integrationsEndpointsPermissions);
 
@@ -85,6 +86,7 @@ const IntegrationsDropdown = (props) => {
           store={store}
           isOpen={isIntegrationsWizardOpen}
           category={selectedIntegration}
+          hidePagerDutySeverity={hidePagerDutySeverity}
           closeModal={() => {
             setIsIntegrationsWizardOpen(false);
             setSelectedIntegration(null);

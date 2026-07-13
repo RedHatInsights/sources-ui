@@ -53,6 +53,7 @@ const IntegrationsWidget: FunctionComponent = () => {
   const hasSourcesPermissions = useSelector(({ user }) => user?.writePermissions);
   const hasIntegrationsPermissions = useSelector(({ user }) => user?.integrationsEndpointsPermissions);
   const isPagerDutyEnabled = useFlag('platform.integrations.pager-duty');
+  const hidePagerDutySeverity = useFlag('platform.integrations.pager-duty.hide-severity');
   const isEmailEnabled = useFlag('platform.notifications.email.integration');
   const integrationsData = createIntegrationsData(
     isPagerDutyEnabled,
@@ -292,6 +293,7 @@ const IntegrationsWidget: FunctionComponent = () => {
           store={store}
           isOpen={isIntegrationsWizardOpen}
           category={wizardCategory}
+          hidePagerDutySeverity={hidePagerDutySeverity}
           closeModal={() => {
             setIsIntegrationsWizardOpen(false);
             setWizardCategory(null);
