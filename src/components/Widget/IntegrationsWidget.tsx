@@ -24,11 +24,13 @@ import {
   StackItem,
 } from '@patternfly/react-core';
 import React, { FunctionComponent, useEffect, useState } from 'react';
+import { AccessCheck } from '@project-kessel/react-kessel-access-check';
 import { Provider, useSelector, useStore } from 'react-redux';
 import IntegrationsDropdown from '../IntegrationsDropdown';
 import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../../utilities/constants';
 import { getProdStore } from '../../utilities/store';
 import { AsyncComponent } from '@redhat-cloud-services/frontend-components';
+import { KesselRbacAccessProvider } from '../../rbac/KesselRbacAccessProvider';
 import AddSourceWizard from '../addSourceWizard';
 import './IntegrationsWidget.scss';
 import { Link, useNavigate } from 'react-router-dom';
@@ -315,7 +317,11 @@ const IntegrationsWidget: FunctionComponent = () => {
 
 const IntegrationsWidgetWrapper = () => (
   <Provider store={getProdStore()}>
-    <IntegrationsWidget />
+    <AccessCheck.Provider baseUrl={window.location.origin} apiPath="/api/kessel/v1beta2">
+      <KesselRbacAccessProvider>
+        <IntegrationsWidget />
+      </KesselRbacAccessProvider>
+    </AccessCheck.Provider>
   </Provider>
 );
 
