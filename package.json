@@ -52,6 +52,7 @@
     "@babel/preset-typescript": "^7.29.7",
     "@playwright/test": "^1.61.1",
     "@redhat-cloud-services/frontend-components-config": "^6.11.2",
+    "@redhat-cloud-services/hcc-storybook-hub": "^0.2.1",
     "@redhat-cloud-services/tsc-transform-imports": "^1.2.1",
     "@storybook/addon-docs": "^9.1.20",
     "@storybook/addon-webpack5-compiler-swc": "^3.0.0",
