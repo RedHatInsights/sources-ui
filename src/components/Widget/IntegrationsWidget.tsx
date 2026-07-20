@@ -41,7 +41,7 @@ import { IntegrationItem, createIntegrationsData } from './consts/widgetData';
 import { useFlag } from '@unleash/proxy-client-react';
 import PermissionsChecker from '../PermissionsChecker';
 
-const IntegrationsWidget: FunctionComponent = () => {
+export const IntegrationsWidget: FunctionComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasInitialized, setHasInitialized] = useState(false);
   const [expandedIndex, setExpandedIndex] = useState<number[]>([]);
