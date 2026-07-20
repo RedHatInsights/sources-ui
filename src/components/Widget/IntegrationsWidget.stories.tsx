@@ -2,7 +2,7 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
 import { expect, waitFor, within } from 'storybook/test';
 import { Provider } from 'react-redux';
-import { http, HttpResponse } from 'msw';
+import { HttpResponse, http } from 'msw';
 import { getStore } from '../../utilities/store';
 import { IntegrationsWidget } from './IntegrationsWidget';
 import { KesselRbacAccessContext } from '../../rbac/KesselRbacAccessContext';
@@ -52,6 +52,7 @@ const graphqlHandler = (cloudSources: unknown[], redHatSources: unknown[]) =>
         },
       });
     }
+
     return HttpResponse.json({
       data: {
         sources: redHatSources,
