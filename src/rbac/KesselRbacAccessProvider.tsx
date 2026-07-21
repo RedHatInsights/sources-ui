@@ -80,7 +80,11 @@ export const KesselRbacAccessProvider: React.FC<{
 
   // Aggregate loading states — permission hook loading only matters when a workspace
   // exists for them to check against; without one the hooks never fire.
-  const isLoading = isLoadingWorkspace || (!!defaultWorkspaceId && (integrationsEndpointsEdit.loading || integrationsEndpointsView.loading));
+  const isLoading =
+    isLoadingWorkspace ||
+    (!!defaultWorkspaceId &&
+      (integrationsEndpointsEdit.loading ||
+        integrationsEndpointsView.loading));
 
   // Build context value
   const contextValue: KesselRbacAccessContextValue = useMemo(

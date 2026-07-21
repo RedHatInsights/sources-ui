@@ -39,9 +39,10 @@ describe('PermissionsChecker', () => {
 
   const Children = () => <h1>App</h1>;
 
-  const renderWithProviders = (
-    { kesselLoading, workspaceId }: { kesselLoading?: boolean; workspaceId?: string | undefined } = {},
-  ) => {
+  const renderWithProviders = ({
+    kesselLoading,
+    workspaceId,
+  }: { kesselLoading?: boolean; workspaceId?: string | undefined } = {}) => {
     const mockReducer = (state = {}) => state;
     store = createStore(mockReducer);
 
