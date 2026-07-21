@@ -21,12 +21,6 @@ jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => ({
   }),
 }));
 
-// Mock Unleash flag
-const mockUseFlag = jest.fn();
-jest.mock('@unleash/proxy-client-react', () => ({
-  useFlag: () => mockUseFlag(),
-}));
-
 // Mock actions
 jest.mock('../../redux/user/actions', () => ({
   loadWritePermissions: jest.fn(() => ({ type: 'LOAD_WRITE_PERMISSIONS' })),
@@ -39,29 +33,26 @@ jest.mock('../../redux/user/kesselActions', () => ({
   loadPermissionsFromKessel: jest.fn(() => ({ type: 'LOAD_KESSEL_PERMISSIONS' })),
 }));
 
-describe('PermissionsChecker - Hybrid RBAC', () => {
+describe('PermissionsChecker', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let store: any;
 
-  const mockKesselContext = {
-    workspaceId: 'test-workspace-id',
-    isLoading: false,
-    permissions: {
-      canWriteIntegrationsEndpoints: true,
-      canReadIntegrationsEndpoints: true,
-    },
-    errors: [],
-  };
-
   const Children = () => <h1>App</h1>;
 
-  const renderWithProviders = (kesselLoading = false) => {
+  const renderWithProviders = (
+    { kesselLoading, workspaceId }: { kesselLoading?: boolean; workspaceId?: string | undefined } = {},
+  ) => {
     const mockReducer = (state = {}) => state;
     store = createStore(mockReducer);
 
     const contextValue = {
-      ...mockKesselContext,
-      isLoading: kesselLoading,
+      workspaceId: workspaceId !== undefined ? workspaceId : 'test-workspace-id',
+      isLoading: kesselLoading ?? false,
+      permissions: {
+        canWriteIntegrationsEndpoints: true,
+        canReadIntegrationsEndpoints: true,
+      },
+      errors: [],
     };
 
     return render(
@@ -83,138 +74,73 @@ describe('PermissionsChecker - Hybrid RBAC', () => {
     mockGetUserPermissions.mockResolvedValue([]);
   });
 
-  describe('v1 Organization (feature flag OFF)', () => {
-    beforeEach(() => {
-      mockUseFlag.mockReturnValue(false); // platform.rbac.workspaces = false
-    });
+  it('renders children', () => {
+    renderWithProviders();
+    expect(screen.getByText('App')).toBeInTheDocument();
+  });
 
-    it('loads sources permissions via Chrome API', async () => {
-      renderWithProviders();
+  it('loads org admin status', async () => {
+    renderWithProviders();
 
-      await waitFor(() => {
-        expect(actions.loadWritePermissions).toHaveBeenCalledWith(mockGetUserPermissions);
-      });
-    });
-
-    it('loads integrations permissions via Chrome API', async () => {
-      renderWithProviders();
-
-      await waitFor(() => {
-        expect(actions.loadIntegrationsEndpointsPermissions).toHaveBeenCalledWith(mockGetUserPermissions);
-        expect(actions.loadIntegrationsReadPermissions).toHaveBeenCalledWith(mockGetUserPermissions);
-      });
-    });
-
-    it('loads org admin status', async () => {
-      renderWithProviders();
-
-      await waitFor(() => {
-        expect(actions.loadOrgAdmin).toHaveBeenCalledWith(mockGetUser);
-      });
-    });
-
-    it('does NOT load permissions from Kessel', async () => {
-      renderWithProviders();
-
-      await waitFor(() => {
-        expect(kesselActions.loadPermissionsFromKessel).not.toHaveBeenCalled();
-      });
-    });
-
-    it('renders children', () => {
-      renderWithProviders();
-      expect(screen.getByText('App')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(actions.loadOrgAdmin).toHaveBeenCalledWith(mockGetUser);
     });
   });
 
-  describe('v2 Organization (feature flag ON)', () => {
-    beforeEach(() => {
-      mockUseFlag.mockReturnValue(true); // platform.rbac.workspaces = true
-    });
+  it('loads sources permissions via Chrome API', async () => {
+    renderWithProviders();
 
-    it('loads sources permissions via Chrome API (not Kessel)', async () => {
-      renderWithProviders();
+    await waitFor(() => {
+      expect(actions.loadWritePermissions).toHaveBeenCalledWith(mockGetUserPermissions);
+    });
+  });
+
+  it('loads v1 integrations permissions immediately', async () => {
+    renderWithProviders();
+
+    await waitFor(() => {
+      expect(actions.loadIntegrationsEndpointsPermissions).toHaveBeenCalledWith(mockGetUserPermissions);
+      expect(actions.loadIntegrationsReadPermissions).toHaveBeenCalledWith(mockGetUserPermissions);
+    });
+  });
+
+  it('loads v1 integrations permissions even while Kessel is still loading', async () => {
+    renderWithProviders({ kesselLoading: true });
+
+    await waitFor(() => {
+      expect(actions.loadIntegrationsEndpointsPermissions).toHaveBeenCalledWith(mockGetUserPermissions);
+      expect(actions.loadIntegrationsReadPermissions).toHaveBeenCalledWith(mockGetUserPermissions);
+    });
+  });
+
+  describe('when Kessel workspace is available', () => {
+    it('loads integrations permissions via Kessel', async () => {
+      renderWithProviders({ workspaceId: 'test-workspace-id' });
 
       await waitFor(() => {
-        expect(actions.loadWritePermissions).toHaveBeenCalledWith(mockGetUserPermissions);
-      });
-    });
-
-    it('loads integrations permissions via Kessel SDK', async () => {
-      renderWithProviders();
-
-      await waitFor(() => {
-        expect(kesselActions.loadPermissionsFromKessel).toHaveBeenCalledWith(mockKesselContext.permissions);
-      });
-    });
-
-    it('ALSO loads integrations via Chrome API for v1 wildcard fallback', async () => {
-      renderWithProviders();
-
-      await waitFor(() => {
-        expect(kesselActions.loadPermissionsFromKessel).toHaveBeenCalled();
-        // v2 orgs now ALSO load v1 permissions for wildcard fallback
-        // See: https://github.com/RedHatInsights/insights-chrome/pull/3362
-        expect(actions.loadIntegrationsEndpointsPermissions).toHaveBeenCalled();
-        expect(actions.loadIntegrationsReadPermissions).toHaveBeenCalled();
+        expect(kesselActions.loadPermissionsFromKessel).toHaveBeenCalledWith({
+          canWriteIntegrationsEndpoints: true,
+          canReadIntegrationsEndpoints: true,
+        });
       });
     });
 
     it('waits for Kessel to finish loading before dispatching', async () => {
-      renderWithProviders(true); // isLoading = true
+      renderWithProviders({ kesselLoading: true });
 
-      // Should not dispatch while loading
       expect(kesselActions.loadPermissionsFromKessel).not.toHaveBeenCalled();
-    });
-
-    it('loads org admin status', async () => {
-      renderWithProviders();
-
-      await waitFor(() => {
-        expect(actions.loadOrgAdmin).toHaveBeenCalledWith(mockGetUser);
-      });
-    });
-
-    it('renders children', () => {
-      renderWithProviders();
-      expect(screen.getByText('App')).toBeInTheDocument();
     });
   });
 
-  describe('Hybrid Behavior Verification', () => {
-    it('v1 org: all permissions from Chrome API', async () => {
-      mockUseFlag.mockReturnValue(false);
-      renderWithProviders();
+  describe('when Kessel workspace is not available', () => {
+    it('does NOT dispatch Kessel permissions', async () => {
+      renderWithProviders({ workspaceId: '' });
 
       await waitFor(() => {
-        // Sources via Chrome
-        expect(actions.loadWritePermissions).toHaveBeenCalled();
-
-        // Integrations via Chrome
         expect(actions.loadIntegrationsEndpointsPermissions).toHaveBeenCalled();
-        expect(actions.loadIntegrationsReadPermissions).toHaveBeenCalled();
-
-        // NOT via Kessel
-        expect(kesselActions.loadPermissionsFromKessel).not.toHaveBeenCalled();
       });
-    });
 
-    it('v2 org: sources via Chrome, integrations via Kessel + v1 fallback', async () => {
-      mockUseFlag.mockReturnValue(true);
-      renderWithProviders();
-
-      await waitFor(() => {
-        // Sources via Chrome (always)
-        expect(actions.loadWritePermissions).toHaveBeenCalled();
-
-        // Integrations via Kessel
-        expect(kesselActions.loadPermissionsFromKessel).toHaveBeenCalled();
-
-        // Integrations ALSO via Chrome (for v1 wildcard fallback)
-        // See: https://github.com/RedHatInsights/insights-chrome/pull/3362
-        expect(actions.loadIntegrationsEndpointsPermissions).toHaveBeenCalled();
-        expect(actions.loadIntegrationsReadPermissions).toHaveBeenCalled();
-      });
+      expect(kesselActions.loadPermissionsFromKessel).not.toHaveBeenCalled();
     });
   });
 });

@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
-import { useFlag } from '@unleash/proxy-client-react';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 
@@ -28,49 +27,31 @@ const PermissionsChecker: React.FC<PermissionsCheckerProps> = ({ children }) => 
     getUserPermissions,
   } = useChrome();
 
-  // Determine if org is using RBAC v2
-  const isV2Org = useFlag('platform.rbac.workspaces');
+  const { permissions: kesselPermissions, isLoading: isKesselLoading, workspaceId } = useKesselRbacAccess();
 
-  // Get Kessel v2 permissions (only used if isV2Org is true)
-  const kesselRbacContext = useKesselRbacAccess();
-  const { permissions: kesselPermissions, isLoading: isKesselLoading } = kesselRbacContext;
-
-  // Always load org admin status (works for both v1 and v2)
   useEffect(() => {
     dispatch(loadOrgAdmin(getUser));
   }, [getUser, dispatch]);
 
-  // Effect to load sources permissions (always uses v1 Chrome API)
-  // Sources service has not migrated to Kessel v2 yet
   useEffect(() => {
     dispatch(loadWritePermissions(getUserPermissions));
   }, [getUserPermissions, dispatch]);
 
-  // Effect to load v1 integrations permissions (for v1 orgs only)
   useEffect(() => {
-    if (!isV2Org) {
-      Promise.all([
-        dispatch(loadIntegrationsEndpointsPermissions(getUserPermissions)),
-        dispatch(loadIntegrationsReadPermissions(getUserPermissions)),
-      ]);
-    }
-  }, [isV2Org, getUserPermissions, dispatch]);
+    Promise.all([
+      dispatch(loadIntegrationsEndpointsPermissions(getUserPermissions)),
+      dispatch(loadIntegrationsReadPermissions(getUserPermissions)),
+    ]);
+  }, [getUserPermissions, dispatch]);
 
-  // Effect to load integrations permissions for v2 orgs (Kessel + v1 fallback)
+  // Dispatch Kessel v2 results only when a workspace was resolved — if the workspace
+  // fetch failed (no Kessel in this environment), Kessel has no signal to contribute
+  // and the v1 Chrome API results above are authoritative.
   useEffect(() => {
-    if (isV2Org && !isKesselLoading) {
-      // v2 org: Use Kessel for integrations permissions AND load v1 for wildcard fallback
-      // Kessel v2 does not support wildcard expansion, so we must check v1 wildcards
-      // (integrations:*:*, notifications:*:*) as fallback for Org Admins and legacy roles.
-      // See: https://github.com/RedHatInsights/insights-chrome/pull/3362
+    if (!isKesselLoading && workspaceId) {
       dispatch(loadPermissionsFromKessel(kesselPermissions));
-      // Also load v1 permissions for wildcard fallback
-      Promise.all([
-        dispatch(loadIntegrationsEndpointsPermissions(getUserPermissions)),
-        dispatch(loadIntegrationsReadPermissions(getUserPermissions)),
-      ]);
     }
-  }, [isV2Org, isKesselLoading, kesselPermissions, getUserPermissions, dispatch]);
+  }, [isKesselLoading, workspaceId, kesselPermissions, dispatch]);
 
   return children;
 };

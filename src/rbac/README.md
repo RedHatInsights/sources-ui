@@ -1,21 +1,22 @@
 # RBAC v2 Migration with Kessel SDK
 
-This directory contains the implementation for RBAC v2 using the Kessel SDK, allowing the application to work with both RBAC v1 and v2 organizations.
+This directory contains the implementation for RBAC v2 using the Kessel SDK.
 
 ## Overview
 
-The application now supports both RBAC v1 (legacy) and v2 (Kessel-based) permission checks using a **hybrid approach**:
+The application uses Kessel v2 for integrations permission checks globally, with v1 wildcard fallback:
 
-- **Integrations permissions**: Switches based on `platform.rbac.workspaces` feature flag (v1 → v2)
+- **Integrations permissions**: Kessel v2 access checks for all orgs, plus Chrome v1 for wildcard fallback
 - **Sources permissions**: Always uses Chrome API v1 until sources service migrates to Kessel
 
 ## Architecture
 
-### Feature Flag Detection (Hybrid Approach)
+### Permission Strategy
 
 **For Integrations permissions:**
-- **v1 orgs**: `platform.rbac.workspaces` = `false` → Uses Chrome's `getUserPermissions('integrations')`
-- **v2 orgs**: `platform.rbac.workspaces` = `true` → Uses Kessel SDK
+- Kessel v2 access checks run globally (no per-org feature flag gating)
+- Chrome v1 `getUserPermissions('integrations')` also runs for wildcard fallback (`integrations:*:*`)
+- Redux reducer uses OR logic so either path can grant access
 
 **For Sources permissions:**
 - **All orgs**: Always uses Chrome's `getUserPermissions('sources')` until sources service migrates
@@ -40,8 +41,8 @@ src/rbac/
 
 | v1 Permission | Status |
 |--------------|--------|
-| `sources:*:*` or `sources:*:write` | ✅ Uses Chrome API v1 (all orgs) |
-| `sources:*:read` | ✅ Uses Chrome API v1 (all orgs) |
+| `sources:*:*` or `sources:*:write` | Uses Chrome API v1 (all orgs) |
+| `sources:*:read` | Uses Chrome API v1 (all orgs) |
 
 **Note**: Sources permissions will continue using Chrome's `getUserPermissions('sources')` until the sources service migrates to Kessel. No v2 schema needed yet.
 
@@ -79,21 +80,18 @@ Kessel v2 permissions are mapped to the existing Redux state structure in `user`
 </AccessCheck.Provider>
 ```
 
-### 2. Permission Loading (PermissionsChecker.tsx) - Hybrid Approach
+### 2. Permission Loading (PermissionsChecker.tsx)
 ```tsx
-const isV2Org = useFlag('platform.rbac.workspaces');
-
-// Sources permissions: Always use v1 Chrome API (all orgs)
+// Sources permissions: Always use v1 Chrome API
 dispatch(loadWritePermissions(getUserPermissions));
 
-// Integrations permissions: Use v2 for v2 orgs, v1 for v1 orgs
-if (isV2Org && !isKesselLoading) {
-  // v2 org: Load integrations from Kessel
+// Integrations permissions: v1 Chrome API loads unconditionally
+dispatch(loadIntegrationsEndpointsPermissions(getUserPermissions));
+dispatch(loadIntegrationsReadPermissions(getUserPermissions));
+
+// Kessel v2: supplements v1 results when workspace is available
+if (!isKesselLoading && workspaceId) {
   dispatch(loadPermissionsFromKessel(kesselPermissions));
-} else if (!isV2Org) {
-  // v1 org: Load integrations from Chrome API
-  dispatch(loadIntegrationsEndpointsPermissions(getUserPermissions));
-  dispatch(loadIntegrationsReadPermissions(getUserPermissions));
 }
 ```
 
@@ -115,12 +113,12 @@ const hasIntegrationsPermissions = useSelector(({ user }) => user?.integrationsE
 - **`sources`** (this app) - Integration sources for Hybrid Cloud Console
   - Calls: `getUserPermissions('sources')`
   - Permissions: `sources:*:write`, `sources:*:read`
-  - **Status**: ⏳ Continues using v1 until service migration
+  - **Status**: Continues using v1 until service migration
 
 - **`content-sources`** (different app) - Content management (repositories, templates)
   - Has schema: [`content-sources.ksl`](https://github.com/RedHatInsights/rbac-config/blob/master/configs/prod/schemas/src/content-sources.ksl)
   - Permissions: `content_sources_repository_view`, `content_sources_template_edit`, etc.
-  - **Status**: ✅ Already has v2 schema
+  - **Status**: Already has v2 schema
 
 ### Future Migration (when sources service is ready):
 1. Sources team will create `sources.ksl` in [rbac-config](https://github.com/RedHatInsights/rbac-config)
@@ -128,15 +126,6 @@ const hasIntegrationsPermissions = useSelector(({ user }) => user?.integrationsE
 3. Update this codebase to use Kessel for sources permissions
 
 ## Testing
-
-### v1 Organization (Feature Flag Off)
-- Permissions loaded via Chrome API `getUserPermissions()`
-- Existing behavior unchanged
-
-### v2 Organization (Feature Flag On)
-- Permissions loaded via Kessel SDK
-- Workspace fetched from `/api/rbac/v2/workspaces/?type=default`
-- Access checks via `/api/kessel/v1beta2` endpoints
 
 ### Test Checklist
 - [ ] Sources write operations (add/edit/delete source)

@@ -6,7 +6,7 @@ import { KesselRbacAccessContextValue } from '../../rbac/KesselRbacAccessContext
 
 /**
  * Load integrations permissions from Kessel v2 and map them to the existing Redux state structure.
- * This allows v2 orgs to use Kessel permissions for integrations without changing the rest of the application.
+ * Kessel v2 permissions supplement v1 Chrome API permissions via Redux OR logic.
  *
  * Note: Sources permissions continue using Chrome API v1 (loaded separately) until sources service migrates to Kessel.
  *

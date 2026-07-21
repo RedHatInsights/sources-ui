@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSelfAccessCheck } from '@project-kessel/react-kessel-access-check';
+import type { SelfAccessCheckResource } from '@project-kessel/react-kessel-access-check';
 import { KesselRbacAccessContext, KesselRbacAccessContextValue } from './KesselRbacAccessContext';
 import { KESSEL_WORKSPACE_RELATIONS } from './kesselWorkspaceRelations';
 import { useDefaultWorkspace } from './hooks/useDefaultWorkspace';
@@ -34,13 +35,18 @@ export const KesselRbacAccessProvider: React.FC<{
     }
   }, [workspaceError]);
 
-  // Build workspace resource for permission checks
+  // Build workspace resource for permission checks.
+  // When no workspace is available, return undefined so the SDK skips the API call
+  // (its internal guard: `if (!resource) return`) — prevents 400 errors from empty resource_id.
   const workspace = useMemo(
-    () => ({
-      id: defaultWorkspaceId || '',
-      type: 'workspace' as const,
-      reporter: { type: 'rbac' as const },
-    }),
+    () =>
+      defaultWorkspaceId
+        ? {
+            id: defaultWorkspaceId,
+            type: 'workspace' as const,
+            reporter: { type: 'rbac' as const },
+          }
+        : undefined,
     [defaultWorkspaceId],
   );
 
@@ -48,12 +54,12 @@ export const KesselRbacAccessProvider: React.FC<{
   // Note: Only checking integrations permissions - sources continues using Chrome API v1
   const integrationsEndpointsEdit = useSelfAccessCheck({
     relation: KESSEL_WORKSPACE_RELATIONS.INTEGRATIONS_ENDPOINTS_EDIT,
-    resource: workspace,
+    resource: workspace as unknown as SelfAccessCheckResource,
   });
 
   const integrationsEndpointsView = useSelfAccessCheck({
     relation: KESSEL_WORKSPACE_RELATIONS.INTEGRATIONS_ENDPOINTS_VIEW,
-    resource: workspace,
+    resource: workspace as unknown as SelfAccessCheckResource,
   });
 
   // Track permission check errors
@@ -72,8 +78,9 @@ export const KesselRbacAccessProvider: React.FC<{
     }
   }, [integrationsEndpointsEdit.error, integrationsEndpointsView.error]);
 
-  // Aggregate loading states
-  const isLoading = isLoadingWorkspace || integrationsEndpointsEdit.loading || integrationsEndpointsView.loading;
+  // Aggregate loading states — permission hook loading only matters when a workspace
+  // exists for them to check against; without one the hooks never fire.
+  const isLoading = isLoadingWorkspace || (!!defaultWorkspaceId && (integrationsEndpointsEdit.loading || integrationsEndpointsView.loading));
 
   // Build context value
   const contextValue: KesselRbacAccessContextValue = useMemo(
