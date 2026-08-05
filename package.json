@@ -90,7 +90,6 @@
     "test": "jest --coverage",
     "lint": "npm-run-all lint:*",
     "lint:js": "eslint config src .storybook",
-    "travis:verify": "npm-run-all lint test build",
     "verify": "npm-run-all build lint test",
     "extract:messages": "npx @formatjs/cli extract 'src/**/*.{js,jsx}' --out-file ./translations/messages.json",
     "start": "HOT=true fec dev",
