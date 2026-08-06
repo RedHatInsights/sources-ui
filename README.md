@@ -2,7 +2,6 @@
 
 ![Main screen with "Add a new Source" wizard](doc/images/sources-main-add.png)
 
-[![Build Status](https://travis-ci.com/RedHatInsights/sources-ui.svg?branch=master)](https://travis-ci.com/RedHatInsights/sources-ui)
 [![Test Coverage](https://codecov.io/gh/RedHatInsights/sources-ui/branch/master/graph/badge.svg)](https://codecov.io/gh/RedHatInsights/sources-ui)
 
 List of Sources for Red Hat Hybrid Cloud Console.
@@ -79,8 +78,7 @@ You can use queries to modify the initial state of the application. Read more [h
 
 ## Unit Tests
 
-- Travis is used to test the build for this code.
-  - `npm run test` will run tests locally,
+- `npm run test` will run tests locally,
   - `npm run lint` will run just the linter.
 
 ## E2E Tests
@@ -151,7 +149,7 @@ Static assets are deployed to [Insights Frontend Assets](https://github.com/RedH
 
 # Deploying
 
-- The Platform team is using Travis to deploy the application
+- The application is built and deployed via Konflux (Tekton) pipelines
 
 ## How it works
 
