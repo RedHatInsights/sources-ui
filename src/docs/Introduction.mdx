@@ -1,0 +1,136 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Introduction" />
+
+# Welcome to Sources UI Storybook
+
+Welcome to the **Red Hat Console Sources UI** component library! This Storybook showcases all the reusable components, design patterns, and documentation for our cloud source integration and management system.
+
+## What is Sources UI?
+
+The Sources UI is a React application that provides:
+
+- **Cloud Source Management** - Connect and manage cloud provider accounts (AWS, Azure, GCP, etc.)
+- **Application Integrations** - Connect sources to Red Hat applications
+- **Authentication Management** - Configure credentials and authentication methods
+- **Source Monitoring** - View source health and connection status
+
+## Architecture Overview
+
+Our application is built with modern React patterns and integrates with the Red Hat Console platform:
+
+### Key Technologies
+- **React 18** with functional components and hooks
+- **Redux** with ReducerRegistry for state management
+- **PatternFly 6** for design system and components
+- **Data-Driven Forms** for dynamic form rendering
+- **React Router 6** for navigation
+- **react-intl** for internationalization
+- **Storybook** for component development
+
+### Integration Points
+- **Red Hat Console Chrome** - Platform integration via `useChrome`
+- **Sources Backend API** - Source and application management
+- **Feature Flags (Unleash)** - Feature toggling via `useFlag`
+- **Data-Driven Forms** - Dynamic form schemas for source configuration
+
+## How to Use This Storybook
+
+### Component Stories
+Browse through our components organized by category:
+- **Components** - Reusable UI components
+- **Form Components** - Data-Driven Forms field components
+- **Documentation** - Guides and best practices
+
+### Interactive Controls
+Most stories include interactive controls that let you:
+- Toggle props and see real-time changes
+- Test different component states
+- Experiment with various data configurations
+- Test form behaviors with Data-Driven Forms
+
+### Documentation
+Each component includes:
+- **Props documentation** - All available properties
+- **Usage examples** - Common patterns and implementations
+- **Design guidelines** - When and how to use components
+- **Form integration** - How to use with Data-Driven Forms
+
+## Context & Environment Testing
+
+Our Storybook includes a context mocking system that allows you to test components with different:
+
+### Environment Contexts
+- **Production** - Prod environment behavior
+- **Staging** - Stage environment features
+- **CI/QA** - Testing environment configurations
+
+### Feature Flags
+- Test components with different feature flag combinations
+- Validate new features before rollout
+- Test legacy behavior alongside new features
+
+## Getting Started
+
+### For Developers
+1. **Install dependencies**: `npm install`
+2. **Start Storybook**: `npm run storybook`
+3. **Build Storybook**: `npm run build-storybook`
+
+### For Designers
+- Browse components in the **Components** section
+- Use the **Controls** panel to experiment with different states
+- Check the **Docs** tab for detailed usage guidelines
+
+## Contributing
+
+### Adding New Stories
+When creating new components, always include:
+- Comprehensive prop documentation
+- Multiple usage examples
+- Different state variations
+- Accessibility considerations
+- Data-Driven Forms integration examples (for form components)
+
+### Story File Naming
+- Place stories next to their component: `Component.stories.tsx`
+- Use descriptive story names that explain the variant
+
+### Documentation Standards
+- Use descriptive story names
+- Include context about when to use components
+- Document any special behaviors or limitations
+- Show how to integrate with Data-Driven Forms
+
+## Design Principles
+
+### Consistency
+- Follow PatternFly design guidelines
+- Use consistent spacing and typography
+- Maintain design token usage
+
+### Accessibility
+- Ensure WCAG 2.1 AA compliance
+- Include proper ARIA labels
+- Test with screen readers
+- Provide keyboard navigation
+
+### Form Best Practices
+- Use Data-Driven Forms for dynamic form fields
+- Follow component mapper patterns
+- Provide clear validation messages
+- Support both controlled and uncontrolled forms
+
+## Useful Links
+
+- [Sources Backend](https://github.com/RedHatInsights/sources-api)
+- [PatternFly Design System](https://www.patternfly.org/)
+- [Data-Driven Forms](https://data-driven-forms.org/)
+- [Red Hat Hybrid Cloud Console](https://console.redhat.com)
+- [Project Repository](https://github.com/RedHatInsights/sources-ui)
+
+---
+
+**Happy exploring!**
+
+Use the sidebar navigation to browse components, or jump directly to specific sections using the search functionality.

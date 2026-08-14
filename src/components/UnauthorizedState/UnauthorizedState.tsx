@@ -1,0 +1,212 @@
+import React from 'react';
+import { Alert, AlertActionLink, Content, ContentVariants, Icon, Stack, StackItem } from '@patternfly/react-core';
+import { AutomationIcon, LockIcon, OutlinedCommentsIcon } from '@patternfly/react-icons';
+import { useIntl } from 'react-intl';
+import { COMMUNICATIONS, REPORTING, WEBHOOKS } from '../../utilities/constants';
+import { useSelector } from 'react-redux';
+import ImageWithPlaceholder from '../TilesShared/ImageWithPlaceholder';
+
+interface CategoryData {
+  icon: React.ReactElement;
+  heading: string;
+  description: React.ReactNode;
+  items?: { name: string; src: string; href: string }[];
+}
+
+const UnauthorizedState = () => {
+  const intl = useIntl();
+
+  const activeCategory = useSelector(({ sources }) => sources.activeCategory);
+
+  const categoryData: Record<typeof COMMUNICATIONS | typeof REPORTING | typeof WEBHOOKS, CategoryData> = {
+    [COMMUNICATIONS]: {
+      icon: <OutlinedCommentsIcon />,
+      heading: intl.formatMessage({
+        id: 'integrations.unauthorizedState.headingIntegrations',
+        defaultMessage: 'No communication integrations',
+      }),
+      description: intl.formatMessage({
+        id: 'integrations.unauthorizedState.descriptionIntegrations',
+        defaultMessage:
+          'Connect with 3rd party communication tools to stay up to date on event notifications for your Hybrid Cloud Console assets.',
+      }),
+      items: [
+        {
+          name: intl.formatMessage({
+            id: 'integrations.serviceName.slack',
+            defaultMessage: 'Slack',
+          }),
+          src: '/apps/frontend-assets/partners-icons/slack.svg',
+          href: 'https://docs.redhat.com/en/documentation/red_hat_lightspeed/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-integrating-comms_integrations#assembly-configuring-insights-integration-with-slack_integrating-communications',
+        },
+        {
+          name: intl.formatMessage({
+            id: 'integrations.serviceName.microsoftTeams',
+            defaultMessage: 'Microsoft Teams',
+          }),
+          src: '/apps/frontend-assets/partners-icons/microsoft-office-teams.svg',
+          href: 'https://docs.redhat.com/en/documentation/red_hat_lightspeed/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-integrating-comms_integrations#assembly-configuring-integration-with-teams_integrating-communications',
+        },
+        {
+          name: intl.formatMessage({
+            id: 'integrations.serviceName.googleChat',
+            defaultMessage: 'Google Chat',
+          }),
+          src: '/apps/frontend-assets/partners-icons/google-chat.svg',
+          href: 'https://docs.redhat.com/en/documentation/red_hat_lightspeed/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-integrating-comms_integrations#assembly-configuring-integration-with-gchat_integrating-communications',
+        },
+      ],
+    },
+    [REPORTING]: {
+      icon: <AutomationIcon />,
+      heading: intl.formatMessage({
+        id: 'integrations.unauthorizedState.headingReporting',
+        defaultMessage: 'No reporting and automation integrations',
+      }),
+      description: intl.formatMessage({
+        id: 'integrations.unauthorizedState.descriptionReporting',
+        defaultMessage:
+          'Connect with 3rd party reporting and automation tools to stay up to date on event notifications for your Hybrid Cloud Console assets.',
+      }),
+      items: [
+        {
+          name: intl.formatMessage({
+            id: 'integrations.serviceName.eventDrivenAnsible',
+            defaultMessage: 'Event-Driven Ansible',
+          }),
+          src: '/apps/frontend-assets/technology-icons/ansible.svg',
+          href: 'https://docs.redhat.com/en/documentation/red_hat_lightspeed/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-integrating-reporting_integrating-communications#assembly-configuring-integration-with-eda_integrating-communications',
+        },
+        {
+          name: intl.formatMessage({
+            id: 'integrations.serviceName.serviceNow',
+            defaultMessage: 'ServiceNow',
+          }),
+          src: '/apps/frontend-assets/partners-icons/service-now-logomark.svg',
+          href: 'https://docs.redhat.com/en/documentation/red_hat_lightspeed/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-integrating-reporting_integrating-communications#assembly-installing-configuring-insights-for-snow_integrating-communications',
+        },
+        {
+          name: intl.formatMessage({
+            id: 'integrations.serviceName.splunk',
+            defaultMessage: 'Splunk',
+          }),
+          src: '/apps/frontend-assets/partners-icons/splunk-logomark.svg',
+          href: 'https://docs.redhat.com/en/documentation/red_hat_lightspeed/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-integrating-reporting_integrating-communications#assembly-installing-configuring-insights-for-splunk_integrating-communications',
+        },
+      ],
+    },
+    [WEBHOOKS]: {
+      icon: (
+        <ImageWithPlaceholder
+          className="pf-v6-c-list__item-icon pf-v6-u-danger-color-100"
+          src="/apps/frontend-assets/technology-icons/webhook-integrations-1.svg"
+          width="54px"
+          height="54px"
+          alt="Webhooks icon"
+        />
+      ),
+      heading: intl.formatMessage({
+        id: 'integrations.unauthorizedState.headingWebhooks',
+        defaultMessage: 'No webhook integrations',
+      }),
+      description: (
+        <>
+          {intl.formatMessage({
+            id: 'integrations.unauthorizedState.descriptionWebhooks1',
+            defaultMessage: 'Connect',
+          })}{' '}
+          <a
+            href="https://docs.redhat.com/en/documentation/red_hat_lightspeed/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-configuring-integration-with-webhooks_integrating-communications#proc-notif-webhooks-config_assembly-configuring-integration-with-webhooks"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {intl.formatMessage({
+              id: 'integrations.unauthorizedState.linkWebhookEp',
+              defaultMessage: 'webhook endpoints',
+            })}
+          </a>{' '}
+          {intl.formatMessage({
+            id: 'integrations.unauthorizedState.descriptionWebhooks2',
+            defaultMessage: 'to stay up to date on event notifications for your Hybrid Cloud Console assets.',
+          })}
+        </>
+      ),
+    },
+  };
+
+  const activeData = categoryData[activeCategory as keyof typeof categoryData] || null;
+
+  if (!activeData) {
+    return null;
+  }
+
+  return (
+    <Stack hasGutter>
+      <StackItem>
+        <Alert
+          customIcon={<LockIcon />}
+          variant="info"
+          isInline
+          isExpandable
+          title={intl.formatMessage({
+            id: 'integrations.overview.alertTitle',
+            defaultMessage: 'Need to create an integration?',
+          })}
+          actionLinks={
+            <AlertActionLink component="a" href="#" target="_blank">
+              {intl.formatMessage({
+                id: 'integrations.overview.alertLink',
+                defaultMessage: 'Learn about requesting access via the Virtual Assistant',
+              })}
+            </AlertActionLink>
+          }
+        >
+          <Content>
+            <Content component={ContentVariants.p}>
+              {intl.formatMessage({
+                id: 'integrations.overview.alertParagraph',
+                defaultMessage:
+                  'You do not have the permissions for integration management. Contact your organization admin if you need these permissions updated.',
+              })}
+            </Content>
+          </Content>
+        </Alert>
+      </StackItem>
+      <StackItem>
+        <Icon size="xl" className="pf-v6-u-color-200 pf-v6-u-display-block pf-v6-u-mx-auto pf-v6-u-mb-lg">
+          {activeData.icon}
+        </Icon>
+        <Content className="pf-v6-u-mb-md">
+          <Content component={ContentVariants.h2} className="pf-v6-u-text-align-center pf-v6-u-mb-md">
+            {activeData.heading}
+          </Content>
+          <Content component={ContentVariants.p} className="pf-v6-u-text-align-center pf-v6-u-px-4xl">
+            {activeData.description}
+          </Content>
+        </Content>
+      </StackItem>
+      <StackItem>
+        <ul className="pf-v6-c-list pf-m-inline pf-m-icon-lg pf-v6-u-justify-content-center" role="list">
+          {activeData.items?.map((item: { name: string; src: string; href: string }, index: number) => (
+            <li className="pf-v6-c-list__item" key={index}>
+              <ImageWithPlaceholder
+                className="pf-v6-c-list__item-icon"
+                src={item.src}
+                width="24px"
+                height="24px"
+                alt={`${item.name} icon`}
+              />
+              <span className="pf-v6-c-list__item-text">
+                <a href={item.href} target="_blank" rel="noopener noreferrer">
+                  {item.name}
+                </a>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </StackItem>
+    </Stack>
+  );
+};
+
+export default UnauthorizedState;

@@ -1,0 +1,55 @@
+.marketplace-card {
+  height: 322px;
+  width: 213px;
+  .marketplace-card-icon {
+    max-height: 24px;
+  }
+}
+
+.marketplace-card-body {
+  overflow: auto;
+  color: var(--pf-t--global--text--color--regular);
+  font-size: var(--pf-t--global--font--size--sm);
+  line-height: 21px;
+  text-align: left;
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.marketplace-card-body::-webkit-scrollbar {
+  display: none;
+}
+
+.marketplace-label {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+}
+
+.marketplace-flex {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.marketplace-seemore-card {
+  border: 1px dashed var(--pf-t--global--border--color--clicked);
+
+  .card-text {
+    font-size: var(--pf-t--global--font--size--sm);
+    line-height: 21px;
+  }
+}
+
+.marketplace-modal-toolbar {
+  .pf-v6-c-toolbar__content {
+    padding-left: 0;
+  }
+  .pf-v6-c-select__menu {
+    max-height: 400px;
+    overflow: auto;
+  }
+}

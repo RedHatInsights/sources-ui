@@ -1,0 +1,410 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Storybook Guide" />
+
+# Storybook Guide
+
+This guide explains the Storybook setup for the Sources UI project and best practices for creating effective component stories.
+
+## Quick Start
+
+```bash
+# Start Storybook development server
+npm run storybook
+
+# Build Storybook for deployment
+npm run build-storybook
+```
+
+## Project Structure
+
+```
+.storybook/
+  main.ts              # Storybook configuration
+  preview.tsx          # Global decorators and providers
+  context-providers.tsx # Mock Chrome, Unleash contexts
+  hooks/
+    useChrome.js       # Mock useChrome hook
+    unleash.js         # Mock useFlag hook
+  storybook.css        # Custom styling
+  types.ts             # TypeScript types for stories
+
+src/
+  components/
+    Component.js
+    Component.stories.tsx  # Stories co-located with components
+  docs/
+    Introduction.mdx       # Welcome documentation
+    StorybookGuide.mdx     # This guide
+```
+
+## Creating Stories
+
+### Basic Story Structure
+
+```typescript
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react-webpack5';
+import { MyComponent } from './MyComponent';
+
+const meta: Meta<typeof MyComponent> = {
+  title: 'Components/MyComponent',
+  component: MyComponent,
+  parameters: {
+    docs: {
+      description: {
+        component: `
+**MyComponent** does something useful.
+
+## Usage
+Describe when and how to use this component.
+        `,
+      },
+    },
+  },
+};
+
+export default meta;
+type Story = StoryObj<typeof MyComponent>;
+
+export const Default: Story = {
+  args: {
+    // Default prop values
+  },
+};
+
+export const WithCustomProps: Story = {
+  args: {
+    // Custom prop values for this variant
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Description of this specific story variant.',
+      },
+    },
+  },
+};
+```
+
+### Using Interactive Controls
+
+Define `argTypes` to create interactive controls:
+
+```typescript
+const meta: Meta<typeof MyComponent> = {
+  component: MyComponent,
+  argTypes: {
+    variant: {
+      control: 'select',
+      options: ['primary', 'secondary', 'danger'],
+      description: 'Visual style variant',
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Whether the component is disabled',
+    },
+    size: {
+      control: { type: 'range', min: 10, max: 100, step: 10 },
+      description: 'Size in pixels',
+    },
+  },
+};
+```
+
+## React Intl Integration
+
+Sources UI uses `react-intl` for internationalization. Components using `useIntl`, `FormattedMessage`, or other react-intl hooks work automatically in Storybook because the global decorator includes `IntlProvider`:
+
+```typescript
+// Component using react-intl
+import { useIntl } from 'react-intl';
+
+export const MyComponent = () => {
+  const intl = useIntl();
+  return <div>{intl.formatMessage({ id: 'sources.myMessage' })}</div>;
+};
+
+// Story works without any special setup
+export const Default: Story = {
+  args: {},
+};
+```
+
+No special configuration needed! The `IntlProvider` wrapper is configured globally in `.storybook/preview.tsx`.
+
+## Context Testing
+
+### Testing with Different Environments
+
+```typescript
+export const ProductionBehavior: Story = {
+  parameters: {
+    chrome: {
+      environment: 'prod',
+    },
+  },
+};
+
+export const StagingBehavior: Story = {
+  parameters: {
+    chrome: {
+      environment: 'stage',
+    },
+  },
+};
+```
+
+### Testing with Feature Flags
+
+```typescript
+export const WithFeatureEnabled: Story = {
+  parameters: {
+    featureFlags: {
+      'sources.new-feature': true,
+    },
+  },
+};
+```
+
+## Redux State
+
+Components that use Redux state are automatically wrapped with the Redux Provider in Storybook. The provider uses `getProdStore()` from `src/utilities/store.js`, so all reducers are available:
+
+- `sources` - Source state management
+- `user` - User state management
+
+You don't need to do anything special to use Redux in your stories - it just works!
+
+## Data-Driven Forms Integration
+
+Many of our components use Data-Driven Forms. To properly render these components in Storybook, wrap them in a `FormRenderer`:
+
+```typescript
+import { FormRenderer, componentTypes } from '@data-driven-forms/react-form-renderer';
+import { componentMapper } from '@data-driven-forms/pf4-component-mapper';
+import { fn } from 'storybook/test';
+import { MyFormField } from './MyFormField';
+
+export const Default: Story = {
+  render: () => (
+    <FormRenderer
+      schema={{
+        fields: [
+          {
+            component: 'my-form-field',
+            name: 'myField',
+            label: 'Field Label',
+            description: 'Field description',
+            isRequired: true,
+          },
+        ],
+      }}
+      componentMapper={{
+        ...componentMapper,
+        'my-form-field': MyFormField,
+      }}
+      onSubmit={fn()}
+    />
+  ),
+};
+```
+
+### Form Components with useFieldApi
+
+Components that use `useFieldApi` from Data-Driven Forms **must** be wrapped in `FormRenderer`:
+
+```typescript
+// Component using useFieldApi
+import { useFieldApi } from '@data-driven-forms/react-form-renderer';
+
+export const MyFormField = (props) => {
+  const { input, meta } = useFieldApi(props);
+  // ... component logic
+};
+
+// Story MUST wrap in FormRenderer
+export const Default: Story = {
+  render: () => (
+    <FormRenderer
+      schema={{
+        fields: [{
+          component: 'my-form-field',
+          name: 'fieldName',
+        }],
+      }}
+      componentMapper={{
+        ...componentMapper,
+        'my-form-field': MyFormField,
+      }}
+      onSubmit={fn()}
+    />
+  ),
+};
+```
+
+### Testing Different Form States
+
+```typescript
+// Test with validation error
+export const WithValidationError: Story = {
+  render: () => (
+    <FormRenderer
+      schema={{
+        fields: [{
+          component: 'my-form-field',
+          name: 'myField',
+          label: 'Required Field',
+          isRequired: true,
+          validate: [{ type: 'required' }],
+        }],
+      }}
+      componentMapper={{
+        ...componentMapper,
+        'my-form-field': MyFormField,
+      }}
+      onSubmit={fn()}
+    />
+  ),
+};
+
+// Test with initial values
+export const WithInitialValue: Story = {
+  render: () => (
+    <FormRenderer
+      schema={{
+        fields: [{
+          component: 'my-form-field',
+          name: 'myField',
+          label: 'Pre-filled Field',
+        }],
+      }}
+      componentMapper={{
+        ...componentMapper,
+        'my-form-field': MyFormField,
+      }}
+      initialValues={{
+        myField: 'Initial value',
+      }}
+      onSubmit={fn()}
+    />
+  ),
+};
+```
+
+## MSW API Mocking
+
+Use MSW (Mock Service Worker) to mock API responses:
+
+```typescript
+import { http, HttpResponse } from 'msw';
+
+export const WithMockedData: Story = {
+  parameters: {
+    msw: {
+      handlers: [
+        http.get('/api/sources/v3.1/sources', () => {
+          return HttpResponse.json({
+            data: [
+              { id: '1', name: 'AWS Source', source_type_id: '1' },
+            ],
+          });
+        }),
+      ],
+    },
+  },
+};
+
+export const WithErrorState: Story = {
+  parameters: {
+    msw: {
+      handlers: [
+        http.get('/api/sources/v3.1/sources', () => {
+          return HttpResponse.json(
+            { error: 'Server error' },
+            { status: 500 }
+          );
+        }),
+      ],
+    },
+  },
+};
+```
+
+## Best Practices
+
+### Story Organization
+- **Co-locate stories** with their components
+- **Use descriptive names** for story exports
+- **Group related stories** under the same meta title
+- **Order stories** from basic to complex
+
+### Documentation
+- **Always add component description** in meta parameters
+- **Document each story variant** with its purpose
+- **Include usage examples** in markdown
+- **Note accessibility considerations**
+- **Document Data-Driven Forms integration** for form components
+
+### Testing Different States
+- **Default state** - Normal component appearance
+- **Loading state** - Show loading indicators
+- **Empty state** - No data available
+- **Error state** - Error messages and handling
+- **Interactive states** - Hover, focus, active
+- **Form states** - Valid, invalid, pristine, dirty (for form components)
+
+### TypeScript
+- **Use proper types** from `@storybook/react-webpack5`
+- **Type your Story** with `StoryObj<typeof Component>`
+- **Use `fn()` from `storybook/test`** for action callbacks
+
+```typescript
+import { fn } from 'storybook/test';
+
+export const WithCallback: Story = {
+  args: {
+    onClick: fn(),
+    onSubmit: fn(),
+  },
+};
+```
+
+## Troubleshooting
+
+### Stories Not Appearing
+- Check file naming: must end with `.stories.tsx` or `.stories.js`
+- Verify the story is exported
+- Check `main.ts` stories glob pattern
+
+### Controls Not Working
+- Ensure `argTypes` are properly defined
+- Check that args match component props
+
+### Context Not Updating
+- Verify decorator configuration in `preview.tsx`
+- Check that parameters are correctly structured
+
+### Data-Driven Forms Errors
+- **"useFieldApi must be used within FormRenderer"** - Wrap your story in FormRenderer
+- **Component not rendering** - Check that component is in componentMapper
+- **Props not working** - Verify field schema in FormRenderer matches component expectations
+
+### React Intl Errors
+- react-intl hooks work automatically in all stories
+- If you see "IntlProvider" errors, check `.storybook/preview.tsx` for the IntlProvider wrapper
+
+### Import Errors
+- For `useChrome`: Uses mocked version from `.storybook/hooks/`
+- For `useFlag`: Uses mocked version from `.storybook/hooks/`
+- Redux is provided automatically, no special imports needed
+- react-intl is provided automatically via IntlProvider
+
+## Resources
+
+- [Storybook Documentation](https://storybook.js.org/docs)
+- [Data-Driven Forms Documentation](https://data-driven-forms.org/)
+- [MSW Documentation](https://mswjs.io/docs/)
+- [PatternFly Storybook](https://www.patternfly.org/)
+- [Redux Documentation](https://redux.js.org/)
+- [React Intl Documentation](https://formatjs.io/docs/react-intl/)

@@ -1,0 +1,122 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/RedHatInsights/frontend-components/refs/heads/master/packages/config-utils/src/feo/spec/frontend-crd.schema.json
+
+apiVersion: v1
+kind: Template
+metadata:
+  name: sources-ui
+objects:
+  - apiVersion: cloud.redhat.com/v1alpha1
+    kind: Frontend
+    metadata:
+      name: sources
+    spec:
+      feoConfigEnabled: true
+      bundleSegments:
+        - segmentId: sources-settings
+          bundleId: settings
+          position: 100
+          navItems:
+            - id: integrations
+              title: Integrations
+              icon: PlaceholderIcon
+              href: /settings/integrations
+      envName: ${ENV_NAME}
+      title: Sources
+      deploymentRepo: https://github.com/RedHatInsights/sources-ui
+      API:
+        versions:
+          - v3.1
+        specs:
+          - url: https://console.redhat.com/api/sources/v3.1/openapi.json
+            bundleLabels: ["settings"]
+          - url: https://console.redhat.com/api/integrations/v1/openapi.json
+            bundleLabels: ["settings"]
+          - url: https://console.redhat.com/api/integrations/v2/openapi.json
+            bundleLabels: ["settings"]
+      frontend:
+        paths:
+          - /apps/sources
+      image: ${IMAGE}:${IMAGE_TAG}
+      module:
+        manifestLocation: "/apps/sources/fed-mods.json"
+        defaultDocumentTitle: "Sources | Settings"
+        modules:
+          - id: "sources"
+            module: "./RootApp"
+            routes:
+              - pathname: /settings
+              - pathname: /settings/integrations
+      searchEntries:
+        - id: sources
+          title: Integrations
+          href: /settings/integrations
+          description: Integrations provide a way for applications to collect data outside of the Red Hat Hybrid Cloud Console through either a direct connection to the source or indirectly.
+          alt_title:
+            - providers
+            - cloud providers
+            - cloud sources
+            - Red Hat sources
+            - integrations
+            - cloud integrations
+            - cloud connection
+            - aws
+            - Amazon
+            - Google
+            - cloud
+            - IBM
+            - Microsoft
+            - secrets
+            - Azure
+            - Oracle
+            - Infrastructure
+            - prediction
+            - cost
+            - subscriptions
+            - account
+            - credentials
+      serviceTiles:
+        - section: integrations-notifications
+          group: settings
+          id: integrations
+          href: /settings/integrations
+          title: Integrations
+          description: Integrations provide a way for applications to collect data outside of the Red Hat Hybrid Cloud Console through either a direct connection to the source or indirectly.
+          icon: PlaceholderIcon
+        - section: systemConfiguration
+          group: settings
+          id: integrations-configuration
+          href: /settings/integrations
+          title: Integrations
+          description: Integrations provide a way for applications to collect data outside of the Red Hat Hybrid Cloud Console through either a direct connection to the source or indirectly.
+          icon: PlaceholderIcon
+      widgetRegistry:
+        - scope: sources
+          module: ./IntegrationsWidget
+          config:
+            title: Integrations
+            icon: IntegrationsIcon
+            headerLink:
+              title: Explore integrations
+              href: /settings/integrations
+            permissions:
+              - method: featureFlag
+                args:
+                  - chrome-service.integrations-widget.enabled
+                  - true
+              - method: loosePermissions
+                args:
+                  - - sources:*:read
+                    - integrations:endpoints:read
+          defaults:
+            w: 2
+            h: 4
+            maxH: 10
+            minH: 1
+
+parameters:
+  - name: ENV_NAME
+    required: true
+  - name: IMAGE_TAG
+    required: true
+  - name: IMAGE
+    value: quay.io/cloudservices/sources-ui

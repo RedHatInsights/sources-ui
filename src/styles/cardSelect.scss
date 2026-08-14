@@ -1,0 +1,57 @@
+.src-c-wizard__tile {
+  width: 100%;
+
+  .src-c-wizard__icon {
+    height: 40px;
+  }
+
+  &.disabled {
+    .src-c-wizard__icon {
+      opacity: 0.5;
+    }
+  }
+
+  .redhat-icon {
+    height: 50px;
+  }
+}
+
+.src-c-wizard--step-text {
+  max-width: 536px;
+}
+
+.src-c-wizard__radio {
+  .pf-v6-c-radio:not(:last-child) {
+    margin-bottom: var(--pf-t--global--spacer--lg);
+  }
+}
+
+.src-c-wizard__conditional-radio {
+  .pf-v6-c-radio:not(:last-child) {
+    margin-bottom: var(--pf-t--global--spacer--sm);
+  }
+}
+
+.src-c-wizard__rhel-mag-label {
+  position: relative;
+  top: -3px;
+}
+
+.src-c-wizard__rhel-desc-title {
+  color: var(--pf-t--global--text--color--regular);
+}
+
+.src-c-wizard__summary-description-list {
+  .pf-v6-c-description-list__group {
+    grid-template-columns: 150px 1fr;
+  }
+}
+
+.src-m-wizard-hide-me {
+  opacity: 0;
+}
+
+.src-c-wizard--switch-description {
+  color: var(--pf-t--global--text--color--subtle);
+  font-size: var(--pf-t--global--font--size--sm);
+}

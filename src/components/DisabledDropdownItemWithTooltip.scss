@@ -1,0 +1,8 @@
+.sr-c-disabled-dropdown-item-with-tooltip {
+  color: var(--pf-v6-c-menu__item--m-disabled--Color) !important;
+  padding: 0 !important;
+  cursor: not-allowed;
+  .pf-v6-c-menu__item-description {
+    color: var(--pf-v6-c-menu__item--m-disabled--Color) !important;
+  }
+}

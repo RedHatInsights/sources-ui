@@ -1,0 +1,181 @@
+@import '~@redhat-cloud-services/frontend-components-notifications/index.css';
+
+// background for integrations tabs
+.src-c-section-main {
+  height: 100%;
+}
+
+.src-c-bullseye__placeholder-loader {
+  margin: 0;
+  padding: 0;
+  min-height: 500px;
+}
+
+.src-c-row-vertical-centered {
+  td {
+    vertical-align: middle !important;
+  }
+}
+
+.src-m-help-cursor {
+  &:hover {
+    cursor: help;
+  }
+}
+
+.src-m-clickable {
+  cursor: pointer;
+}
+
+.src-m-dropdown-item-disabled {
+  pointer-events: auto !important;
+}
+
+@media (max-width: 768px) {
+  .ins-l-content {
+    padding: 0 !important;
+  }
+
+  .top-pagination {
+    display: none;
+  }
+
+  .src-c-row-vertical-centered {
+    border-bottom: 16px solid var(--pf-v6-c-table--responsive--BorderColor) !important;
+  }
+
+  .pf-v6-c-table {
+    tbody {
+      border-top: 16px solid var(--pf-v6-c-table--responsive--BorderColor) !important;
+    }
+  }
+
+  .ins-c-primary-toolbar__pagination {
+    width: 100%;
+  }
+
+  .bottom-pagination {
+    .pf-v6-c-options-menu, .pf-v6-c-pagination__nav {
+      display: flex !important;
+      visibility: visible !important;
+    }
+  }
+  .ins-c-table-empty-state.pf-m-grid-lg.pf-v6-c-table {
+    [data-label] {
+        --pf-v6-c-table--cell--hidden-visible--Display: 0;
+    }
+    tr:first-of-type {
+        > td::before {
+            display: none;
+        }
+    }
+  }
+}
+
+.src-c-detail-page {
+  .pf-v6-c-card {
+    box-shadow: none !important;
+  }
+
+  .src-c-card-summary {
+    cursor: initial !important;
+    background-clip: content-box;
+    height: calc(100% - 48px); // margin 2x24px
+  }
+
+  .src-c-card-applications {
+    background-clip: content-box;
+    height: calc(100% - 48px); // margin 2x24px
+  }
+
+  .src-c-empty-state__body {
+    max-width: 536px;
+  }
+
+  .pf-v6-c-empty-state.pf-v6-u-mt-4xl {
+    margin-top: 0 !important;
+  }
+}
+
+form.src-c-uuid {
+  text-align: left;
+  .pf-v6-c-form__group-label {
+    padding: 0;
+  }
+}
+
+.src-c-card-info {
+  .pf-v6-c-card__title-text {
+    font-size: var(--pf-t--global--font--size--lg);
+    font-weight: var(--pf-t--global--font--weight--body--default);
+  }
+  .text {
+    font-size: var(--pf-t--global--font--size--sm);
+  }
+}
+
+.src-c-card__cloud-empty-state {
+  box-shadow: none !important;
+
+  .catalog-link {
+    font-size: var(--pf-t--global--font--size--sm);
+  }
+
+  .provider-tiles {
+    text-align: center;
+
+    .tile {
+      width:  284px;
+    }
+  }
+
+  .provider-icon {
+    height: 40px;
+  }
+
+  .redhat-icon {
+    height: 50px;
+  }
+
+  .disabled-tile-with-tooltip {
+    display: inline-block;
+
+    // PatternFly Tile component handles disabled state styling via isDisabled prop
+    // No custom opacity needed - PF's built-in disabled state is theme-aware
+  }
+  .cloud-footer {
+    text-align: center;
+  }
+}
+
+.src-c-checkbox-with-icon {
+  display: flex;
+
+  // for some reason popover does not work properly in wizard
+  .pf-v6-c-popover {
+    visibility: initial;
+    pointer-events: initial;
+  }
+}
+
+.pf-v6-c-tile {
+  background-color: var(--pf-t--global--background--color--600);
+}
+
+.src-c-application_flex {
+  display: flex;
+  align-items: center;
+}
+
+.src-c-dropdown__application_kebab {
+  max-height: 32px;
+  margin-left: auto;
+}
+
+.src-c-applications_form {
+  row-gap: var(--pf-t--global--spacer--sm);
+}
+
+.src-c-application_switch {
+  min-width: 50%;
+}

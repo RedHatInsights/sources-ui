@@ -1,0 +1,243 @@
+import React from 'react';
+import awesomeDebounce from 'awesome-debounce-promise';
+
+import { AlertActionLink } from '@patternfly/react-core';
+
+import { filterSources, loadEntities } from '../../redux/sources/actions';
+import { replaceRouteId, routes } from '../../routes';
+import { AVAILABLE } from '../../views/formatters';
+import computeSourceStatus from '../../utilities/computeSourceStatus';
+import { bold } from '../../utilities/intlShared';
+import notificationsStore from '../../utilities/notificationsStore';
+
+export const debouncedFiltering = awesomeDebounce((refresh) => refresh(), 500);
+
+export const afterSuccessLoadParameters = {
+  pageNumber: 1,
+  sortBy: 'created_at',
+  sortDirection: 'desc',
+};
+
+export const afterSuccess = (dispatch) => dispatch(loadEntities(afterSuccessLoadParameters));
+
+export const prepareSourceTypeSelection = (sourceTypes) =>
+  sourceTypes.map(({ id, product_name }) => ({ label: product_name, value: id })).sort((a, b) => a.label.localeCompare(b.label));
+
+export const prepareApplicationTypeSelection = (appTypes) =>
+  appTypes.map(({ id, display_name }) => ({ label: display_name, value: id })).sort((a, b) => a.label.localeCompare(b.label));
+
+export const setFilter = (column, value, dispatch) =>
+  dispatch(
+    filterSources({
+      [column]: value,
+    }),
+  );
+
+export const chipsFormatters = (key, filterValue, sourceTypes, appTypes, intl) =>
+  ({
+    name: () => ({ name: filterValue[key], key }),
+    source_type_id: () => ({
+      category: 'Integration Type',
+      key,
+      chips: filterValue[key].map((id) => {
+        const sourceType = sourceTypes.find((type) => type.id === id);
+
+        return { name: sourceType ? sourceType.product_name : id, value: id };
+      }),
+    }),
+    applications: () => ({
+      category: 'Application',
+      key,
+      chips: filterValue[key].map((id) => {
+        const appType = appTypes.find((type) => type.id === id);
+
+        return { name: appType ? appType.display_name : id, value: id };
+      }),
+    }),
+    availability_status: () => ({
+      category: 'Status',
+      key,
+      chips: [
+        {
+          value: filterValue[key][0],
+          name:
+            filterValue[key][0] === AVAILABLE
+              ? intl.formatMessage({
+                  id: 'sources.available',
+                  defaultMessage: 'Available',
+                })
+              : intl.formatMessage({
+                  id: 'sources.unavailable',
+                  defaultMessage: 'Unavailable',
+                }),
+        },
+      ],
+    }),
+  })[key] || (() => ({ name: key }));
+
+export const prepareChips = (filterValue, sourceTypes, appTypes, intl) =>
+  Object.keys(filterValue)
+    .map((key) =>
+      filterValue[key] && filterValue[key].length > 0
+        ? chipsFormatters(key, filterValue, sourceTypes, appTypes, intl)()
+        : undefined,
+    )
+    .filter(Boolean);
+
+export const removeChips = (chips, filterValue, deleteAll) => {
+  if (deleteAll) {
+    return Object.keys(filterValue).reduce(
+      (acc, curr) => ({
+        ...acc,
+        [curr]: undefined,
+      }),
+      {},
+    );
+  }
+
+  const chip = chips[0];
+
+  return {
+    ...filterValue,
+    [chip.key]: chip.chips ? filterValue[chip.key].filter((value) => value !== chip.chips[0].value) : undefined,
+  };
+};
+
+export const loadedTypes = (types, loaded) => (loaded && types.length > 0 ? types : undefined);
+
+export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
+  const id = `sources-wizard-notification-${Date.now()}`;
+
+  if (location.pathname.split('/').filter(Boolean).pop() !== routes.sourcesNew.path.split('/').pop()) {
+    if (state.isErrored) {
+      const { activeStep, activeStepIndex, maxStepIndex, prevSteps, registeredFieldsHistory } = state.wizardState;
+      notificationsStore.addNotification({
+        title: intl.formatMessage({
+          id: 'alert.error.title',
+          defaultMessage: 'Error adding integration',
+        }),
+        description: intl.formatMessage(
+          {
+            id: 'alert.error.description',
+            defaultMessage:
+              'There was a problem while trying to add integration {name}. Please try again. If the error persists, open a support case.',
+          },
+          { name: <b>{state.values.source.name}</b> },
+        ),
+        variant: 'danger',
+        id,
+        actionLinks: (
+          <AlertActionLink
+            onClick={() => {
+              stateDispatch({
+                type: 'retryWizard',
+                initialValues: state.values,
+                initialState: { activeStep, activeStepIndex, maxStepIndex, prevSteps, registeredFieldsHistory },
+              });
+              notificationsStore.removeNotification(id);
+              push(routes.sourcesNew.path);
+            }}
+          >
+            {intl.formatMessage({
+              id: 'alert.error.link',
+              defaultMessage: 'Retry',
+            })}
+          </AlertActionLink>
+        ),
+      });
+    } else {
+      switch (computeSourceStatus(state.createdSource)) {
+        case 'unavailable':
+          notificationsStore.addNotification({
+            title: intl.formatMessage({
+              id: 'alert.error.title',
+              defaultMessage: 'Source configuration unsuccessful',
+            }),
+            description: intl.formatMessage(
+              {
+                id: 'error.notification',
+                defaultMessage: '{error} [<b>{name}</b>]',
+              },
+              {
+                error:
+                  state.createdSource.applications?.[0]?.availability_status_error ||
+                  state.createdSource.endpoint?.[0]?.availability_status_error ||
+                  intl.formatMessage({
+                    id: 'wizard.unknownError',
+                    defaultMessage: 'Unknown error',
+                  }),
+                name: state.createdSource.name,
+                b: bold,
+              },
+            ),
+            variant: 'danger',
+            id,
+            actionLinks: (
+              <AlertActionLink
+                onClick={() => {
+                  notificationsStore.removeNotification(id);
+                  push(replaceRouteId(routes.sourcesDetail.path, state.createdSource.id));
+                }}
+              >
+                {intl.formatMessage({
+                  id: 'alert.unavailable.link',
+                  defaultMessage: 'Edit integration',
+                })}
+              </AlertActionLink>
+            ),
+          });
+          break;
+        case 'timeout':
+          notificationsStore.addNotification({
+            title: intl.formatMessage({
+              id: 'alert.timeout.title',
+              defaultMessage: 'Integration configuration in progress',
+            }),
+            description: intl.formatMessage(
+              {
+                id: 'alert.timeout.description',
+                defaultMessage:
+                  'We are still working to confirm credentials for integration {name}. To track progress, check the Status column in the Integrations table.',
+              },
+              { name: <b>{state.createdSource.name}</b> },
+            ),
+            variant: 'info',
+          });
+          break;
+        default:
+          notificationsStore.addNotification({
+            title: intl.formatMessage(
+              {
+                id: 'alert.success.title',
+                defaultMessage: '{type} connection successful',
+              },
+              { type: state.sourceTypes.find(({ id }) => id === state.createdSource.source_type_id)?.product_name },
+            ),
+            description: intl.formatMessage(
+              {
+                id: 'alert.success.description',
+                defaultMessage: 'Source {name} was successfully added',
+              },
+              { name: <b>{state.createdSource.name}</b> },
+            ),
+            variant: 'success',
+            id,
+            actionLinks: (
+              <AlertActionLink
+                onClick={() => {
+                  notificationsStore.removeNotification(id);
+                  push(replaceRouteId(routes.sourcesDetail.path, state.createdSource.id));
+                }}
+              >
+                {intl.formatMessage({
+                  id: 'alert.success.link',
+                  defaultMessage: 'View source details',
+                })}
+              </AlertActionLink>
+            ),
+          });
+          break;
+      }
+    }
+  }
+};
