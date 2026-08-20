@@ -6,7 +6,7 @@ This directory contains the implementation for RBAC v2 using the Kessel SDK, all
 
 The application now supports both RBAC v1 (legacy) and v2 (Kessel-based) permission checks using a **hybrid approach**:
 
-- **Integrations permissions**: Switches based on `platform.rbac.workspaces` feature flag (v1 → v2)
+- **Integrations permissions**: Switches based on `platform.chrome.kessel` feature flag (v1 → v2)
 - **Sources permissions**: Always uses Chrome API v1 until sources service migrates to Kessel
 
 ## Architecture
@@ -14,8 +14,8 @@ The application now supports both RBAC v1 (legacy) and v2 (Kessel-based) permiss
 ### Feature Flag Detection (Hybrid Approach)
 
 **For Integrations permissions:**
-- **v1 orgs**: `platform.rbac.workspaces` = `false` → Uses Chrome's `getUserPermissions('integrations')`
-- **v2 orgs**: `platform.rbac.workspaces` = `true` → Uses Kessel SDK
+- **v1 orgs**: `platform.chrome.kessel` = `false` → Uses Chrome's `getUserPermissions('integrations')`
+- **v2 orgs**: `platform.chrome.kessel` = `true` → Uses Kessel SDK
 
 **For Sources permissions:**
 - **All orgs**: Always uses Chrome's `getUserPermissions('sources')` until sources service migrates
@@ -81,17 +81,22 @@ Kessel v2 permissions are mapped to the existing Redux state structure in `user`
 
 ### 2. Permission Loading (PermissionsChecker.tsx) - Hybrid Approach
 ```tsx
-const isV2Org = useFlag('platform.rbac.workspaces');
+const isKesselEnabled = useFlag('platform.chrome.kessel');
 
 // Sources permissions: Always use v1 Chrome API (all orgs)
 dispatch(loadWritePermissions(getUserPermissions));
 
-// Integrations permissions: Use v2 for v2 orgs, v1 for v1 orgs
-if (isV2Org && !isKesselLoading) {
-  // v2 org: Load integrations from Kessel
+// Integrations permissions: Use v2 for Kessel-enabled envs, v1 otherwise
+if (isKesselEnabled && !isKesselLoading) {
+  // Kessel enabled: Load integrations from Kessel
   dispatch(loadPermissionsFromKessel(kesselPermissions));
-} else if (!isV2Org) {
-  // v1 org: Load integrations from Chrome API
+  // Also load v1 permissions for wildcard fallback — Kessel v2 does not
+  // support wildcard expansion, so Org Admins and legacy roles with
+  // permissions like integrations:*:* need the v1 check as well.
+  dispatch(loadIntegrationsEndpointsPermissions(getUserPermissions));
+  dispatch(loadIntegrationsReadPermissions(getUserPermissions));
+} else if (!isKesselEnabled) {
+  // v1 only: Load integrations from Chrome API
   dispatch(loadIntegrationsEndpointsPermissions(getUserPermissions));
   dispatch(loadIntegrationsReadPermissions(getUserPermissions));
 }

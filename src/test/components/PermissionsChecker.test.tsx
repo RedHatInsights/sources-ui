@@ -85,7 +85,7 @@ describe('PermissionsChecker - Hybrid RBAC', () => {
 
   describe('v1 Organization (feature flag OFF)', () => {
     beforeEach(() => {
-      mockUseFlag.mockReturnValue(false); // platform.rbac.workspaces = false
+      mockUseFlag.mockReturnValue(false); // platform.chrome.kessel = false
     });
 
     it('loads sources permissions via Chrome API', async () => {
@@ -129,7 +129,7 @@ describe('PermissionsChecker - Hybrid RBAC', () => {
 
   describe('v2 Organization (feature flag ON)', () => {
     beforeEach(() => {
-      mockUseFlag.mockReturnValue(true); // platform.rbac.workspaces = true
+      mockUseFlag.mockReturnValue(true); // platform.chrome.kessel = true
     });
 
     it('loads sources permissions via Chrome API (not Kessel)', async () => {
