@@ -29,7 +29,7 @@ export const isOrgAdminLoaded = (state, { payload: isOrgAdmin }) => ({
 
 export const integrationsEndpointsPermissionsPending = (state) => ({
   ...state,
-  integrationsEndpointsPermissions: undefined,
+  integrationsEndpointsPermissions: state.integrationsEndpointsPermissions || undefined,
 });
 
 export const integrationsEndpointsPermissionsLoaded = (state, { payload: integrationsEndpointsPermissions }) => ({
@@ -43,7 +43,7 @@ export const integrationsEndpointsPermissionsLoaded = (state, { payload: integra
 
 export const integrationsReadPermissionsPending = (state) => ({
   ...state,
-  integrationsReadPermissions: undefined,
+  integrationsReadPermissions: state.integrationsReadPermissions || undefined,
 });
 
 export const integrationsReadPermissionsLoaded = (state, { payload: integrationsReadPermissions }) => ({
