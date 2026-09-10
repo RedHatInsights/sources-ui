@@ -37,7 +37,7 @@ const UnauthorizedState = () => {
             defaultMessage: 'Slack',
           }),
           src: '/apps/frontend-assets/partners-icons/slack.svg',
-          href: 'https://docs.redhat.com/en/documentation/red_hat_lightspeed/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-integrating-comms_integrations#assembly-configuring-insights-integration-with-slack_integrating-communications',
+          href: 'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/extend-integrate_communication_apps',
         },
         {
           name: intl.formatMessage({
@@ -45,7 +45,7 @@ const UnauthorizedState = () => {
             defaultMessage: 'Microsoft Teams',
           }),
           src: '/apps/frontend-assets/partners-icons/microsoft-office-teams.svg',
-          href: 'https://docs.redhat.com/en/documentation/red_hat_lightspeed/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-integrating-comms_integrations#assembly-configuring-integration-with-teams_integrating-communications',
+          href: 'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/extend-integrate_communication_apps',
         },
         {
           name: intl.formatMessage({
@@ -53,7 +53,7 @@ const UnauthorizedState = () => {
             defaultMessage: 'Google Chat',
           }),
           src: '/apps/frontend-assets/partners-icons/google-chat.svg',
-          href: 'https://docs.redhat.com/en/documentation/red_hat_lightspeed/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-integrating-comms_integrations#assembly-configuring-integration-with-gchat_integrating-communications',
+          href: 'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/extend-integrate_communication_apps',
         },
       ],
     },
