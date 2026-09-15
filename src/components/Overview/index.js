@@ -46,10 +46,10 @@ import { bold } from '../../utilities/intlShared';
 import { useFlag } from '@unleash/proxy-client-react';
 
 const VIEW_DOCUMENTATION =
-  'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/configuring_notifications_on_the_red_hat_hybrid_cloud_console/assembly-intro_notifications';
+  'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/observe-configure_notifications_hcc_services';
 
 const VIEW_DOCUMENTATION_CLOUD =
-  'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html-single/configuring_cloud_integrations_for_red_hat_services/index';
+  'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/integrate-integrate_external_infrastructure_with_rh_services';
 
 const Overview = () => {
   const { quickStarts } = useChrome();
@@ -84,7 +84,7 @@ const Overview = () => {
           'Receive event notifications in your preferred communications application by connecting the Hybrid Cloud Console with Microsoft Teams, Google Chat, Slack, email',
       }),
       learnMoreLink:
-        'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html-single/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/index#assembly-integrating-comms_integrations',
+        'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/extend-integrate_communication_apps',
     },
     {
       isExpanded: false,
@@ -112,7 +112,7 @@ const Overview = () => {
         }, ServiceNow, or Splunk.`,
       }),
       learnMoreLink:
-        'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html-single/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/index#assembly-integrating-reporting_integrating-communications',
+        'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/extend-integrate_reporting_automation_apps',
     },
     {
       isExpanded: false,
@@ -137,7 +137,7 @@ const Overview = () => {
           'Receive Hybrid Cloud Console event notifications in third-party applications where native integration is not available by configuring a webhook integration.',
       }),
       learnMoreLink:
-        'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html-single/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/index#assembly-configuring-integration-with-webhooks_integrations',
+        'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/extend-integrate_other_apps_with_webhooks',
     },
     {
       isExpanded: false,
@@ -162,7 +162,7 @@ const Overview = () => {
           'To use public cloud provider data with Hybrid Cloud Console services, connect your Amazon Web Services (AWS), Google Cloud or Microsoft Azure account to the Hybrid Cloud Console.',
       }),
       learnMoreLink:
-        'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/configuring_cloud_integrations_for_red_hat_services/about-cloud-integrations_crc-cloud-integrations',
+        'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/integrate-integrate_external_infrastructure_with_rh_services',
     },
     {
       isExpanded: false,
@@ -187,7 +187,7 @@ const Overview = () => {
           'Manage your cloud costs with Hybrid Cloud Console services by connecting your Red Hat OpenShift Container Platform environment.',
       }),
       learnMoreLink:
-        'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/configuring_cloud_integrations_for_red_hat_services/redhat-cloud-integrations_crc-cloud-integrations',
+        'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/integrate-connect_ocp_integration',
     },
   ];
 
@@ -261,7 +261,7 @@ const Overview = () => {
                     <React.Fragment>
                       <AlertActionLink
                         component="a"
-                        href="https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/getting_started_with_the_red_hat_hybrid_cloud_console/hcc-help-options_getting-started#virtual-assistant_getting-started"
+                        href="https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/get_started-access_ai_powered_support#virtual-assistant"
                         target="_blank"
                       >
                         {intl.formatMessage({

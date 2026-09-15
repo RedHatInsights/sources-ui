@@ -37,7 +37,7 @@ const SourcesHeader = () => {
               isExternal: true,
               target: '_blank',
               component: 'a',
-              href: 'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/index',
+              href: 'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/extend-manage_alerts_preferred_platform',
             }}
             actionMenu={
               !hasSourcesPermissions && !hasIntegrationsPermissions ? (
@@ -61,7 +61,7 @@ const SourcesHeader = () => {
                         })}{' '}
                         <Button
                           component="a"
-                          href="https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/getting_started_with_the_red_hat_hybrid_cloud_console/hcc-help-options_getting-started#virtual-assistant_getting-started"
+                          href="https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/get_started-access_ai_powered_support#virtual-assistant"
                           isInline
                           target="_blank"
                           variant="link"
