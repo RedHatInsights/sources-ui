@@ -61,7 +61,7 @@ const SourcesHeader = () => {
                         })}{' '}
                         <Button
                           component="a"
-                          href="https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/get_started-access_ai_powered_support#virtual-assistant"
+                          href="https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/get_started-ai_powered_support#virtual-assistant"
                           isInline
                           target="_blank"
                           variant="link"
