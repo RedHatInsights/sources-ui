@@ -186,8 +186,7 @@ const Overview = () => {
         defaultMessage:
           'Manage your cloud costs with Hybrid Cloud Console services by connecting your Red Hat OpenShift Container Platform environment.',
       }),
-      learnMoreLink:
-        'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/integrate-connect_ocp_integration',
+      learnMoreLink: 'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/create_ocp_integration',
     },
   ];
 
@@ -261,7 +260,7 @@ const Overview = () => {
                     <React.Fragment>
                       <AlertActionLink
                         component="a"
-                        href="https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/get_started-access_ai_powered_support#virtual-assistant"
+                        href="https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/get_started-ai_powered_support#virtual-assistant"
                         target="_blank"
                       >
                         {intl.formatMessage({
