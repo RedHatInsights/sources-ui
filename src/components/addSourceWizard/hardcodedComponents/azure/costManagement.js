@@ -22,14 +22,14 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { HCS_APP_NAME } from '../../../../utilities/constants';
 import { InfoCircleIcon } from '@patternfly/react-icons';
 
-const CREATE_AZURE_STORAGE = `${HCCM_LATEST_DOCS_PREFIX}/html-single/integrating_microsoft_azure_data_into_cost_management/index#creating-an-azure-storage-account_adding-an-azure-int`;
+const CREATE_AZURE_STORAGE = `${HCCM_LATEST_DOCS_PREFIX}/integrate-adding_azure_int#creating-an-azure-storage-account`;
 const CREATE_HCS_AZURE_STORAGE = `${HCS_LATEST_DOCS_PREFIX}/html/integrating_microsoft_azure_data_into_hybrid_committed_spend/assembly-adding-azure-int-hcs#creating-an-azure-storage-account-filtered_adding-an-azure-int-hcs`;
-const AZURE_CREDS_URL = `${HCCM_LATEST_DOCS_PREFIX}/html-single/integrating_microsoft_azure_data_into_cost_management/index#configuring-azure-roles_adding-an-azure-int`;
+const AZURE_CREDS_URL = `${HCCM_LATEST_DOCS_PREFIX}/integrate-adding_azure_int#configuring-azure-roles`;
 const AZURE_HCS_CREDS_URL = `${HCS_LATEST_DOCS_PREFIX}/html/integrating_microsoft_azure_data_into_hybrid_committed_spend/assembly-adding-azure-int-hcs#configuring-azure-roles-hcs_adding-an-azure-int-hcs`;
-const AZURE_ROLES_URL = `${HCCM_LATEST_DOCS_PREFIX}/html-single/integrating_microsoft_azure_data_into_cost_management/index#configuring-azure-roles_adding-an-azure-int`;
-const RECURRING_TASK_URL = `${HCCM_LATEST_DOCS_PREFIX}/html-single/integrating_microsoft_azure_data_into_cost_management/index#creating-daily-export-azure_adding-filtered-azure-int`;
+const AZURE_ROLES_URL = `${HCCM_LATEST_DOCS_PREFIX}/integrate-adding_azure_int#configuring-azure-roles`;
+const RECURRING_TASK_URL = `${HCCM_LATEST_DOCS_PREFIX}/integrate-adding_azure_int#configuring-an-azure-daily-export-schedule`;
 const RECURRING_HCS_TASK_URL = `${HCS_LATEST_DOCS_PREFIX}/html/integrating_microsoft_azure_data_into_hybrid_committed_spend/assembly-adding-filtered-azure-int-hcs#creating-function-filter-azure_adding-filtered-azure-int-hcs`;
-export const MANUAL_CUR_STEPS = `${HCCM_LATEST_DOCS_PREFIX}/html/integrating_microsoft_azure_data_into_cost_management/assembly-updating-int#updating-azure-int-for-rhel-metering_updating-int`;
+export const MANUAL_CUR_STEPS = `${HCCM_LATEST_DOCS_PREFIX}/integrate-azure_integration`;
 
 export const ConfigureResourceGroupAndStorageAccount = () => {
   const intl = useIntl();
