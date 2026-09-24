@@ -117,11 +117,14 @@ export const sorting = (sortBy, sortDirection) => {
   return `sort_by: { name: "${sortBy}", direction: ${sortDirection} }`;
 };
 
+export const escapeGraphQLString = (value) =>
+  typeof value === 'string' ? value.replace(/\\/g, '\\\\').replace(/"/g, '\\"') : value;
+
 export const filtering = (filterValue = {}, category) => {
   let filterQueries = [];
 
   if (filterValue.name) {
-    filterQueries.push(`{ name: "name", operation: "contains_i", value: "${filterValue.name}" }`);
+    filterQueries.push(`{ name: "name", operation: "contains_i", value: "${escapeGraphQLString(filterValue.name)}" }`);
   }
 
   if (filterValue.source_type_id?.length > 0) {
