@@ -12,7 +12,7 @@ import { HCS_APP_NAME } from '../../../../utilities/constants';
 
 const b = (chunks) => <b key={`b-${chunks.length}-${Math.floor(Math.random() * 1000)}`}>{chunks}</b>;
 
-const PROJECT_LINK = `${HCCM_LATEST_DOCS_PREFIX}/html/integrating_google_cloud_data_into_cost_management`;
+const PROJECT_LINK = `${HCCM_LATEST_DOCS_PREFIX}/integrate-integrate_google_cloud_data_with_cost_management`;
 const PROJECT_HCS_LINK = `${HCS_LATEST_DOCS_PREFIX}/html/integrating_google_cloud_data_into_hybrid_committed_spend/index`;
 export const MANUAL_CUR_STEPS = `${HCS_LATEST_DOCS_PREFIX}/html/integrating_google_cloud_data_into_cost_management/assembly-adding-filtered-gcp-int#configuring-function-post-reports-gcp-hcs_adding-filtered-gcp-int`;
 

@@ -29,13 +29,13 @@ import { HCS_APP_NAME } from '../../../../utilities/constants';
 import { useFlag } from '@unleash/proxy-client-react';
 
 const CREATE_HCS_S3_BUCKET = `${HCS_LATEST_DOCS_PREFIX}/html/integrating_amazon_web_services_aws_data_into_hybrid_committed_spend/assembly-adding-aws-int-hcs#creating-an-aws-s3-bucket-hcs-n_adding-aws-int-hcs`;
-const CREATE_S3_BUCKET = `${HCCM_LATEST_DOCS_PREFIX}/html-single/integrating_amazon_web_services_aws_data_into_cost_management/index#creating-an-aws-s3-bucket_adding-aws-int`;
-const ENABLE_AWS_ACCOUNT = `${HCCM_LATEST_DOCS_PREFIX}/html/integrating_amazon_web_services_aws_data_into_cost_management/assembly-adding-aws-int#enabling-aws-account-access_adding-aws-int`;
+const CREATE_S3_BUCKET = `${HCCM_LATEST_DOCS_PREFIX}/integrate-adding_filtered_aws_int#creating-an-aws-s3-bucket-hcs-n`;
+const ENABLE_AWS_ACCOUNT = `${HCCM_LATEST_DOCS_PREFIX}/integrate-adding_filtered_aws_int#enabling-aws-account-access`;
 const ENABLE_HCS_AWS_ACCOUNT = `${HCS_LATEST_DOCS_PREFIX}/html/integrating_amazon_web_services_aws_data_into_hybrid_committed_spend/assembly-adding-aws-int-hcs#enabling-aws-account-access_adding-aws-int-hcs`;
 const CONFIG_AWS_TAGS = `${HCCM_DOCS_PREFIX}/html/integrating_amazon_web_services_aws_data_into_cost_management/assembly-cost-management-next-steps-aws#configure-cost-models-next-step_next-steps-aws`;
-const RHEL_METERED_AWS = `${HCCM_LATEST_DOCS_PREFIX}/html/integrating_amazon_web_services_aws_data_into_cost_management/assembly-adding-aws-int#activating-aws-tags_adding-aws-int`;
+const RHEL_METERED_AWS = `${HCCM_LATEST_DOCS_PREFIX}/integrate-adding_filtered_aws_int#activating-aws-tags`;
 const CONFIG_HCS_AWS_TAGS = ''; // specify when HCS docs links are available
-export const MANUAL_CUR_STEPS = `${HCCM_LATEST_DOCS_PREFIX}/html/integrating_amazon_web_services_aws_data_into_cost_management/assembly-adding-filtered-aws-int`;
+export const MANUAL_CUR_STEPS = `${HCCM_LATEST_DOCS_PREFIX}/integrate-adding_filtered_aws_int`;
 
 export const StorageDescription = ({ showHCS }) => {
   const intl = useIntl();
