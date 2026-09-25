@@ -1,4 +1,4 @@
-import { filtering, pagination, restFilterGenerator, sorting } from '../../api/entities';
+import { escapeGraphQLString, filtering, pagination, restFilterGenerator, sorting } from '../../api/entities';
 import { CLOUD_VENDOR, REDHAT_VENDOR } from '../../utilities/constants';
 import { AVAILABLE, PARTIALLY_UNAVAILABLE, UNAVAILABLE } from '../../views/formatters';
 
@@ -26,6 +26,30 @@ describe('api helpers', () => {
     });
   });
 
+  describe('escapeGraphQLString', () => {
+    it('escapes backslashes', () => {
+      expect(escapeGraphQLString('\\')).toEqual('\\\\');
+    });
+
+    it('escapes double quotes', () => {
+      expect(escapeGraphQLString('"')).toEqual('\\"');
+    });
+
+    it('escapes mixed special characters', () => {
+      expect(escapeGraphQLString('a\\b"c')).toEqual('a\\\\b\\"c');
+    });
+
+    it('returns plain strings unchanged', () => {
+      expect(escapeGraphQLString('hello')).toEqual('hello');
+    });
+
+    it('handles non-string values', () => {
+      expect(escapeGraphQLString(123)).toEqual(123);
+      expect(escapeGraphQLString(null)).toEqual(null);
+      expect(escapeGraphQLString(undefined)).toEqual(undefined);
+    });
+  });
+
   describe('filtering', () => {
     const NAME = 'jonas';
     const SOURCE_TYPE_ID = ['1', '09090'];
@@ -40,6 +64,18 @@ describe('api helpers', () => {
       const filterValue = { name: NAME };
 
       expect(filtering(filterValue)).toEqual(`filter: [ ${EXPECTED_NAME_QUERY} ]`);
+    });
+
+    it('escapes backslash in name filter [GRAPHQL]', () => {
+      const filterValue = { name: '\\' };
+
+      expect(filtering(filterValue)).toEqual('filter: [ { name: "name", operation: "contains_i", value: "\\\\" } ]');
+    });
+
+    it('escapes double quotes in name filter [GRAPHQL]', () => {
+      const filterValue = { name: 'test"value' };
+
+      expect(filtering(filterValue)).toEqual('filter: [ { name: "name", operation: "contains_i", value: "test\\"value" } ]');
     });
 
     it('creates filtering query source_type_id param [GRAPHQL]', () => {
