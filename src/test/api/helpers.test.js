@@ -75,9 +75,7 @@ describe('api helpers', () => {
     it('escapes double quotes in name filter [GRAPHQL]', () => {
       const filterValue = { name: 'test"value' };
 
-      expect(filtering(filterValue)).toEqual(
-        'filter: [ { name: "name", operation: "contains_i", value: "test\\"value" } ]',
-      );
+      expect(filtering(filterValue)).toEqual('filter: [ { name: "name", operation: "contains_i", value: "test\\"value" } ]');
     });
 
     it('creates filtering query source_type_id param [GRAPHQL]', () => {
