@@ -95,7 +95,7 @@ schema = {
     :hidden => true, # If true, the endpoint step will be hidden, use if all components have `:hideField => true`
     :fields => {
       # DDF Fields
-      {:component => "checkbox", :name => "endpoint.verify_ssl", :label => "Verify SSL"},
+      {:component => "checkbox", :name => "endpoint.verify_ssl", :label => "Verify TLS"},
       ...
     }
   }

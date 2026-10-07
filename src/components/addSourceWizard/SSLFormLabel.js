@@ -12,7 +12,7 @@ const SSLFormLabel = () => {
     <React.Fragment>
       {intl.formatMessage({
         id: 'wizard.sslCertificate',
-        defaultMessage: 'SSL Certificate',
+        defaultMessage: 'TLS Certificate',
       })}
       <Popover
         aria-label="Help text"

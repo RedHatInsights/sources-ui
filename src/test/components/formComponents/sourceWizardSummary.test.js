@@ -112,8 +112,8 @@ describe('SourceWizardSummary component', () => {
         ['Authentication type', 'Token'],
         ['Token', '●●●●●●●●●●●●'],
         ['URL', 'neznam.cz'],
-        ['Verify SSL', 'Enabled'],
-        ['SSL Certificate', 'authority'],
+        ['Verify TLS', 'Enabled'],
+        ['TLS Certificate', 'authority'],
       ]);
     });
 
@@ -131,8 +131,8 @@ describe('SourceWizardSummary component', () => {
         ['Authentication type', 'Token'],
         ['Token', '●●●●●●●●●●●●'],
         ['URL', 'neznam.cz'],
-        ['Verify SSL', 'Enabled'],
-        ['SSL Certificate', 'authority'],
+        ['Verify TLS', 'Enabled'],
+        ['TLS Certificate', 'authority'],
       ]);
     });
 
@@ -669,7 +669,7 @@ describe('SourceWizardSummary component', () => {
         ['Username', 'user_name'],
         ['Password', '●●●●●●●●●●●●'],
         ['Hostname', 'neznam.cz'],
-        ['Verify SSL', 'Enabled'],
+        ['Verify TLS', 'Enabled'],
         ['Certificate authority', 'authority'],
         ['Use Platform Receptor and PKI (?)', '-'],
         ['Receptor ID', '-'],
@@ -691,7 +691,7 @@ describe('SourceWizardSummary component', () => {
         ['Integration type', 'Ansible Tower'],
         ['Application', 'Catalog'],
         ['Hostname', 'neznam.cz'],
-        ['Verify SSL', 'Enabled'],
+        ['Verify TLS', 'Enabled'],
         ['Certificate authority', 'authority'],
         ['Username', 'user_name'],
         ['Password', '●●●●●●●●●●●●'],
@@ -713,7 +713,7 @@ describe('SourceWizardSummary component', () => {
         ['Name', 'openshift'],
         ['Integration type', 'Ansible Tower'],
         ['Hostname', 'neznam.cz'],
-        ['Verify SSL', 'Enabled'],
+        ['Verify TLS', 'Enabled'],
         ['Certificate authority', 'authority'],
         ['Username', 'user_name'],
         ['Password', '●●●●●●●●●●●●'],

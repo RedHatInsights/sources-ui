@@ -8,6 +8,6 @@ describe('Tower Catalog', () => {
   it('Endpoint description', () => {
     render(<OpenShift.EndpointDesc />);
 
-    expect(screen.getByText('Provide the OpenShift Container Platform URL and SSL certificate.')).toBeInTheDocument();
+    expect(screen.getByText('Provide the OpenShift Container Platform URL and TLS certificate.')).toBeInTheDocument();
   });
 });

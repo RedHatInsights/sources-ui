@@ -8,6 +8,6 @@ describe('SSLFormLabel', () => {
   it('renders loading step correctly', () => {
     render(<SSLFormLabel />);
 
-    expect(screen.getByText('SSL Certificate')).toBeInTheDocument();
+    expect(screen.getByText('TLS Certificate')).toBeInTheDocument();
   });
 });

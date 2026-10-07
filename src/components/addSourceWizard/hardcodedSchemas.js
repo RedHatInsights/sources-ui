@@ -558,7 +558,7 @@ const hardcodedSchemas = {
       },
       'endpoint.certificate_authority': {
         label: <SSLFormLabel />,
-        'aria-label': 'SSL Certificate',
+        'aria-label': 'TLS Certificate',
       },
       additionalFields: [
         {
@@ -1349,7 +1349,7 @@ const hardcodedSchemas = {
           },
           'endpoint.verify_ssl': {
             initialValue: false,
-            label: <FormattedMessage id="wizard.verifySsl" defaultMessage="Verify SSL" />,
+            label: <FormattedMessage id="wizard.verifySsl" defaultMessage="Verify TLS" />,
           },
           additionalSteps: [
             {
@@ -1427,7 +1427,7 @@ const hardcodedSchemas = {
           },
           'endpoint.verify_ssl': {
             initialValue: false,
-            label: <FormattedMessage id="wizard.verifySsl" defaultMessage="Verify SSL" />,
+            label: <FormattedMessage id="wizard.verifySsl" defaultMessage="Verify TLS" />,
           },
           additionalSteps: [
             {

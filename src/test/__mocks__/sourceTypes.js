@@ -60,7 +60,7 @@ export const OPENSHIFT_TYPE = {
         {
           component: 'checkbox',
           name: 'endpoint.verify_ssl',
-          label: 'Verify SSL',
+          label: 'Verify TLS',
         },
         {
           component: 'text-field',
@@ -277,7 +277,7 @@ export const ANSIBLE_TOWER_TYPE = {
         },
         {
           name: 'endpoint.verify_ssl',
-          label: 'Verify SSL',
+          label: 'Verify TLS',
           component: 'switch',
         },
         {
