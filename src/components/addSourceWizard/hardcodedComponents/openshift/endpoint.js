@@ -11,7 +11,7 @@ export const EndpointDesc = () => {
       <Content component={ContentVariants.p}>
         {intl.formatMessage({
           id: 'openshift.endpoint.urlAndCA',
-          defaultMessage: 'Provide the OpenShift Container Platform URL and SSL certificate.',
+          defaultMessage: 'Provide the OpenShift Container Platform URL and TLS certificate.',
         })}
       </Content>
     </Content>
