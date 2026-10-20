@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, defineMessages } from 'react-intl';
 
 import {
   Bullseye,
@@ -13,6 +13,18 @@ import {
 } from '@patternfly/react-core';
 
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
+
+const messages = defineMessages({
+  wizardUnsuccconfiguration: {
+    id: 'wizard.unsuccConfiguration',
+    defaultMessage: 'Something went wrong',
+  },
+  wizardErrortext: {
+    id: 'wizard.errorText',
+    defaultMessage:
+      'There was a problem while trying to add your source. Please try again. If the error persists, open a support case.',
+  },
+});
 
 const ErroredStep = ({ onClose, returnButtonTitle, message, title, customText, primaryAction, secondaryActions, Component }) => (
   <Bullseye>
@@ -47,14 +59,9 @@ ErroredStep.propTypes = {
 };
 
 ErroredStep.defaultProps = {
-  title: <FormattedMessage id="wizard.unsuccConfiguration" defaultMessage="Something went wrong" />,
+  title: <FormattedMessage {...messages.wizardUnsuccconfiguration} />,
   // eslint-disable-next-line max-len
-  customText: (
-    <FormattedMessage
-      id="wizard.errorText"
-      defaultMessage="There was a problem while trying to add your source. Please try again. If the error persists, open a support case."
-    />
-  ),
+  customText: <FormattedMessage {...messages.wizardErrortext} />,
   Component: Button,
 };
 

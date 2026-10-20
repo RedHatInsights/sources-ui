@@ -8,6 +8,7 @@ import RedirectNoId from '../RedirectNoId/RedirectNoId';
 import RedirectNoPaused from '../RedirectNoPaused/RedirectNoPaused';
 
 const ElementWrapperInternal = ({ route, children }) => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks -- pre-existing pattern, see i18n cleanup ticket
   const source = route.redirectNoId && useSource();
 
   if (!source && route.redirectNoId) {

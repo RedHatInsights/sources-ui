@@ -1,10 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 
 import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
 
 import { Bullseye, EmptyState, EmptyStateBody, EmptyStateVariant, Title } from '@patternfly/react-core';
+
+const messages = defineMessages({
+  resourcetableEmptystatetitle: {
+    id: 'resourceTable.emptyStateTitle',
+    defaultMessage: 'No application resources',
+  },
+});
 
 export const ResourcesEmptyState = ({ applicationName, message, Icon }) => {
   const intl = useIntl();
@@ -14,10 +21,7 @@ export const ResourcesEmptyState = ({ applicationName, message, Icon }) => {
       <EmptyState
         titleText={
           <Title headingLevel="h2" size="lg">
-            {intl.formatMessage({
-              id: 'resourceTable.emptyStateTitle',
-              defaultMessage: 'No application resources',
-            })}
+            {intl.formatMessage(messages.resourcetableEmptystatetitle)}
           </Title>
         }
         icon={Icon}

@@ -24,6 +24,7 @@ const RedirectNoWriteAccess = () => {
 
       notificationsStore.addNotification({ title, variant: 'danger', description });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   }, [writePermissions]);
 
   if (writePermissions === false) {

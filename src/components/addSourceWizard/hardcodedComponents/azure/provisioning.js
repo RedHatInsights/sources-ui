@@ -1,7 +1,24 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 import { Button, Content } from '@patternfly/react-core';
+
+const messages = defineMessages({
+  provisioningLighthouseDesc: {
+    id: 'provisioning.lighthouse.desc',
+    defaultMessage:
+      "Complete configuration steps in Azure Lighthouse according to Microsoft instructions. When you're finished, return to this wizard to finish creating this Azure source.",
+  },
+  provisioningLighthouseButton: {
+    id: 'provisioning.lighthouse.button',
+    defaultMessage: 'Take me to Lighthouse',
+  },
+  provisioningSubscriptionidDesc: {
+    id: 'provisioning.subscriptionId.desc',
+    defaultMessage:
+      'Log in to your Azure account and navigate to your subscriptions. Copy the subscription ID you have connected through Lighthouse.',
+  },
+});
 
 export const LighthouseDescription = () => {
   const intl = useIntl();
@@ -11,13 +28,7 @@ export const LighthouseDescription = () => {
 
   return (
     <Content>
-      <Content component="p">
-        {intl.formatMessage({
-          id: 'provisioning.lighthouse.desc',
-          defaultMessage:
-            "Complete configuration steps in Azure Lighthouse according to Microsoft instructions. When you're finished, return to this wizard to finish creating this Azure source.",
-        })}
-      </Content>
+      <Content component="p">{intl.formatMessage(messages.provisioningLighthouseDesc)}</Content>
       <Button
         component="a"
         target="_blank"
@@ -28,10 +39,7 @@ export const LighthouseDescription = () => {
         }}
         isBlock
       >
-        {intl.formatMessage({
-          id: 'provisioning.lighthouse.button',
-          defaultMessage: 'Take me to Lighthouse',
-        })}
+        {intl.formatMessage(messages.provisioningLighthouseButton)}
       </Button>
     </Content>
   );
@@ -42,13 +50,7 @@ export const SubscriptionID = () => {
 
   return (
     <Content>
-      <Content component="p">
-        {intl.formatMessage({
-          id: 'provisioning.subscriptionId.desc',
-          defaultMessage:
-            'Log in to your Azure account and navigate to your subscriptions. Copy the subscription ID you have connected through Lighthouse.',
-        })}
-      </Content>
+      <Content component="p">{intl.formatMessage(messages.provisioningSubscriptionidDesc)}</Content>
     </Content>
   );
 };

@@ -1,6 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, defineMessages } from 'react-intl';
+
+const messages = defineMessages({
+  wizardLoadingtext: {
+    id: 'wizard.loadingStepText',
+    defaultMessage: 'Loading, please wait.',
+  },
+  wizardCanceltext: {
+    id: 'wizard.cancelText',
+    defaultMessage: 'Cancel',
+  },
+});
 
 import {
   Bullseye,
@@ -45,8 +56,8 @@ LoadingStep.propTypes = {
 };
 
 LoadingStep.defaultProps = {
-  customText: <FormattedMessage id="wizard.loadingText" defaultMessage="Loading, please wait." />,
-  cancelTitle: <FormattedMessage id="wizard.cancelText" defaultMessage="Cancel" />,
+  customText: <FormattedMessage {...messages.wizardLoadingtext} />,
+  cancelTitle: <FormattedMessage {...messages.wizardCanceltext} />,
 };
 
 export default LoadingStep;

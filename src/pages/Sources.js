@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect, useMemo, useReducer } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Button, Tooltip } from '@patternfly/react-core';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 
 import AppLink from '../components/AppLink';
 import AsyncComponent from '@redhat-cloud-services/frontend-components/AsyncComponent';
@@ -45,6 +45,49 @@ import { useFlag } from '@unleash/proxy-client-react';
 import Overview from '../components/Overview';
 import UnauthorizedState from '../components/UnauthorizedState/UnauthorizedState';
 
+const messages = defineMessages({
+  sourcesAddsource: {
+    id: 'sources.addSource',
+    defaultMessage: 'Add integration',
+  },
+  sourcesNotadminaddbutton: {
+    id: 'sources.notAdminAddButton',
+    defaultMessage: 'To add an integration, you must add Cloud Administrator permissions to your user.',
+  },
+  sourcesNotpermissionsaddbutton: {
+    id: 'sources.notPermissionsAddButton',
+    defaultMessage: 'To add an integration, your Organization Administrator must grant you Cloud Administrator permissions.',
+  },
+  sourcesName: {
+    id: 'sources.name',
+    defaultMessage: 'Name',
+  },
+  sourcesFilterbyname: {
+    id: 'sources.filterByName',
+    defaultMessage: 'Filter by name',
+  },
+  sourcesType: {
+    id: 'sources.type',
+    defaultMessage: 'Type',
+  },
+  sourcesApplication: {
+    id: 'sources.application',
+    defaultMessage: 'Application',
+  },
+  sourcesAvailabilitystatus: {
+    id: 'sources.availabilityStatus',
+    defaultMessage: 'Status',
+  },
+  sourcesAvailable: {
+    id: 'sources.available',
+    defaultMessage: 'Available',
+  },
+  sourcesUnavailable: {
+    id: 'sources.unavailable',
+    defaultMessage: 'Unavailable',
+  },
+});
+
 const initialState = {
   filter: undefined,
   selectedType: undefined,
@@ -72,6 +115,7 @@ const SourcesPage = () => {
   const hasWritePermissions = useHasWritePermissions();
   const isOrgAdmin = useSelector(({ user }) => user.isOrgAdmin);
   const hasIntegrationsReadPermissions = useSelector(({ user }) => user?.integrationsReadPermissions);
+  // eslint-disable-next-line react-hooks/rules-of-hooks -- pre-existing pattern, see i18n cleanup ticket
   const enableIntegrations = useFlag('platform.sources.integrations') || useFlag('platform.sources.breakdown');
   const enableIntegrationsOverview = useFlag('platform.integrations.overview');
 
@@ -105,12 +149,14 @@ const SourcesPage = () => {
     if (activeCategory === null) {
       dispatch(setActiveCategory(enableIntegrationsOverview ? OVERVIEW : CLOUD_VENDOR));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   }, [enableIntegrationsOverview, activeCategory]);
 
   useEffect(() => {
     if (filter !== filterValue.name) {
       stateDispatch({ type: 'setFilterValue', value: filterValue.name });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   }, [filterValue.name]);
   const addIntegrationRef = React.useRef(null);
 
@@ -140,19 +186,10 @@ const SourcesPage = () => {
 
   const filteredSourceTypes = sourceTypes.filter(filterVendorTypes(activeCategory, true));
 
-  const addSourceText = intl.formatMessage({
-    id: 'sources.addSource',
-    defaultMessage: 'Add integration',
-  });
+  const addSourceText = intl.formatMessage(messages.sourcesAddsource);
   const noPermissionsText = isOrgAdmin
-    ? intl.formatMessage({
-        id: 'sources.notAdminAddButton',
-        defaultMessage: 'To add an integration, you must add Cloud Administrator permissions to your user.',
-      })
-    : intl.formatMessage({
-        id: 'sources.notPermissionsAddButton',
-        defaultMessage: 'To add an integration, your Organization Administrator must grant you Cloud Administrator permissions.',
-      });
+    ? intl.formatMessage(messages.sourcesNotadminaddbutton)
+    : intl.formatMessage(messages.sourcesNotpermissionsaddbutton);
 
   let actionsConfig;
 
@@ -184,6 +221,7 @@ const SourcesPage = () => {
       .filter(Boolean).length > 0;
 
   const showEmptyState = loaded && numberOfEntities === 0 && !hasSomeFilter;
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   const showOverview = useMemo(() => enableIntegrationsOverview && [null, OVERVIEW].includes(activeCategory), [activeCategory]);
   const showInfoCards = useMemo(() => activeCategory === CLOUD_VENDOR && !showEmptyState, [activeCategory, showEmptyState]);
 
@@ -232,15 +270,9 @@ const SourcesPage = () => {
             items: [
               {
                 type: 'text',
-                label: intl.formatMessage({
-                  id: 'sources.name',
-                  defaultMessage: 'Name',
-                }),
+                label: intl.formatMessage(messages.sourcesName),
                 filterValues: {
-                  'aria-label': intl.formatMessage({
-                    id: 'sources.filterByName',
-                    defaultMessage: 'Filter by name',
-                  }),
+                  'aria-label': intl.formatMessage(messages.sourcesFilterbyname),
                   onChange: (_event, value) => {
                     stateDispatch({ type: 'setFilterValue', value });
                     debouncedFiltering(() => setFilter('name', value, dispatch));
@@ -249,10 +281,7 @@ const SourcesPage = () => {
                 },
               },
               {
-                label: intl.formatMessage({
-                  id: 'sources.type',
-                  defaultMessage: 'Type',
-                }),
+                label: intl.formatMessage(messages.sourcesType),
                 type: 'checkbox',
                 filterValues: {
                   onChange: (_event, value) => setFilter('source_type_id', value, dispatch),
@@ -261,10 +290,7 @@ const SourcesPage = () => {
                 },
               },
               {
-                label: intl.formatMessage({
-                  id: 'sources.application',
-                  defaultMessage: 'Application',
-                }),
+                label: intl.formatMessage(messages.sourcesApplication),
                 type: 'checkbox',
                 filterValues: {
                   onChange: (_event, value) => setFilter('applications', value, dispatch),
@@ -275,18 +301,15 @@ const SourcesPage = () => {
                 },
               },
               {
-                label: intl.formatMessage({
-                  id: 'sources.availabilityStatus',
-                  defaultMessage: 'Status',
-                }),
+                label: intl.formatMessage(messages.sourcesAvailabilitystatus),
                 type: 'checkbox',
                 filterValues: {
                   onChange: (event, value, selectedValue) =>
                     setFilter('availability_status', event.target.checked ? [selectedValue] : [], dispatch),
                   items: [
-                    { label: intl.formatMessage({ id: 'sources.available', defaultMessage: 'Available' }), value: AVAILABLE },
+                    { label: intl.formatMessage(messages.sourcesAvailable), value: AVAILABLE },
                     {
-                      label: intl.formatMessage({ id: 'sources.unavailable', defaultMessage: 'Unavailable' }),
+                      label: intl.formatMessage(messages.sourcesUnavailable),
                       value: UNAVAILABLE,
                     },
                   ],

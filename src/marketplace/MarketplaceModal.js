@@ -1,3 +1,4 @@
+import { FormattedMessage, defineMessages, useIntl } from 'react-intl';
 import React, { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 
@@ -57,7 +58,35 @@ const generateChips = (filters) =>
     .map((key) => (!filters[key] || filters[key]?.length === 0 ? null : chipFormatters(key, filters[key])))
     .filter(Boolean);
 
+const DATABASE_FILTER = 'database';
+
+const messages = defineMessages({
+  browseCatalog: {
+    id: 'marketplace.browseCatalog',
+    defaultMessage: 'Browse catalog',
+  },
+  typeLabel: {
+    id: 'marketplace.typeLabel',
+    defaultMessage: 'Type',
+  },
+  filterByProductType: {
+    id: 'marketplace.filterByProductType',
+    defaultMessage: 'Filter by product type',
+  },
+  curatedSelection: {
+    id: 'marketplace.curatedSelection',
+    defaultMessage: 'A curated selection of offerings available for purchase from {link}.',
+  },
+});
+
+const MARKETPLACE_LINK = (
+  <a href={MARKETPLACE_URL} target="_blank" rel="noopener noreferrer">
+    Red Hat Marketplace <ExternalLinkAltIcon />
+  </a>
+);
+
 const MarketplaceModal = ({ data, isOpen, onClose }) => {
+  const intl = useIntl();
   const [config, dispatch] = useReducer(reducer, data, init);
 
   const isLoadingData = config.loaded > 0;
@@ -73,18 +102,14 @@ const MarketplaceModal = ({ data, isOpen, onClose }) => {
         dispatch({ type: 'LOAD_DATA', payload: data, meta }),
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   }, [config.page, config.perPage]);
 
   return (
     <Modal className="sources" onClose={onClose} isOpen={isOpen} variant="large">
-      <ModalHeader title="Browse catalog" />
+      <ModalHeader title={intl.formatMessage(messages.browseCatalog)} />
       <ModalBody>
-        <span>
-          A curated selection of offerings available for purchase from{' '}
-          <a href={MARKETPLACE_URL} target="_blank" rel="noopener noreferrer">
-            Red Hat Marketplace <ExternalLinkAltIcon />
-          </a>
-        </span>
+        <FormattedMessage {...messages.curatedSelection} values={{ link: MARKETPLACE_LINK }} />
         {config.isLoading && (
           <div className="pf-v6-u-mb-md marketplace-flex">
             <SkeletonMarketplaceCard />
@@ -107,12 +132,12 @@ const MarketplaceModal = ({ data, isOpen, onClose }) => {
               filterConfig={{
                 items: [
                   {
-                    label: 'Type',
-                    placeholder: 'Filter by product type',
+                    label: intl.formatMessage(messages.typeLabel),
+                    placeholder: intl.formatMessage(messages.filterByProductType),
                     type: 'checkbox',
                     filterValues: {
                       //onChange: (_event, value) => console.log(value),
-                      value: ['database'],
+                      value: [DATABASE_FILTER],
                       items: config.categories.map((category) => ({
                         label: category.display_name,
                         value: category.page_name,

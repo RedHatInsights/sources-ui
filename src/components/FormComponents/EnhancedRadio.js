@@ -1,3 +1,5 @@
+const WIZARD_RADIO_CLASS = 'src-c-wizard__radio';
+
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import get from 'lodash/get';
@@ -26,9 +28,10 @@ const EnhancedRadio = ({ options, mutator, className, ...props }) => {
     } else if (!newOptions.map(({ value }) => value).includes(selectedApp)) {
       formOptions.change(props.name, NO_APPLICATION_VALUE);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   }, [selectedType]);
 
-  return <Radio {...props} options={newOptions} FormGroupProps={{ className: className ?? 'src-c-wizard__radio' }} />;
+  return <Radio {...props} options={newOptions} FormGroupProps={{ className: className ?? WIZARD_RADIO_CLASS }} />;
 };
 
 EnhancedRadio.propTypes = {

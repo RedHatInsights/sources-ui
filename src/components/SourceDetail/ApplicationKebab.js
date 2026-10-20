@@ -2,7 +2,7 @@
 /* eslint-disable react/display-name */
 import React, { forwardRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 
 import { Dropdown, DropdownItem, DropdownList, MenuToggle } from '@patternfly/react-core';
@@ -14,6 +14,46 @@ import { useSource } from '../../hooks/useSource';
 import disabledTooltipProps from '../../utilities/disabledTooltipProps';
 import AppLink from '../AppLink';
 import DisabledDropdownItemWithTooltip from '../DisabledDropdownItemWithTooltip';
+
+const messages = defineMessages({
+  actionsAria: {
+    id: 'applicationKebab.actionsAria',
+    defaultMessage: 'Actions',
+  },
+  listOfIntegrationsAria: {
+    id: 'sourcesTable.listOfIntegrationsAria',
+    defaultMessage: 'List of Integrations',
+  },
+
+  sourcesPausedsourceaction: {
+    id: 'sources.pausedSourceAction',
+    defaultMessage: 'You cannot perform this action on a paused integration.',
+  },
+  appKebabResumeTitle: {
+    id: 'app.kebab.resume.title',
+    defaultMessage: 'Resume data collection for this application.',
+  },
+  appKebabResumeButton: {
+    id: 'app.kebab.resume.button',
+    defaultMessage: 'Resume',
+  },
+  appKebabPauseTitle: {
+    id: 'app.kebab.pause.title',
+    defaultMessage: 'Temporarily stop this application from collecting data.',
+  },
+  appKebabPauseButton: {
+    id: 'app.kebab.pause.button',
+    defaultMessage: 'Pause',
+  },
+  appKebabRemoveTitle: {
+    id: 'app.kebab.remove.title',
+    defaultMessage: 'Permanently stop data collection for this application.',
+  },
+  appKebabPauseButton_1: {
+    id: 'app.kebab.remove.button',
+    defaultMessage: 'Remove',
+  },
+});
 
 const ApplicationKebab = ({ app, removeApp, addApp }) => {
   const [isOpen, setOpen] = useState(false);
@@ -29,10 +69,7 @@ const ApplicationKebab = ({ app, removeApp, addApp }) => {
 
   const disabledProps = disabledTooltipProps(intl, isOrgAdmin);
 
-  const pausedTooltip = intl.formatMessage({
-    id: 'sources.pausedSourceAction',
-    defaultMessage: 'You cannot perform this action on a paused integration.',
-  });
+  const pausedTooltip = intl.formatMessage(messages.sourcesPausedsourceaction);
 
   const pausedProps = {
     ...disabledProps,
@@ -69,16 +106,10 @@ const ApplicationKebab = ({ app, removeApp, addApp }) => {
           />
         );
       })}
-      description={intl.formatMessage({
-        id: 'app.kebab.resume.title',
-        defaultMessage: 'Resume data collection for this application.',
-      })}
+      description={intl.formatMessage(messages.appKebabResumeTitle)}
       onClick={wrappedFunction(addApp)}
     >
-      {intl.formatMessage({
-        id: 'app.kebab.resume.button',
-        defaultMessage: 'Resume',
-      })}
+      {intl.formatMessage(messages.appKebabResumeButton)}
     </DropdownItem>
   ) : (
     <DropdownItem
@@ -95,16 +126,10 @@ const ApplicationKebab = ({ app, removeApp, addApp }) => {
         );
       })}
       key="pause"
-      description={intl.formatMessage({
-        id: 'app.kebab.pause.title',
-        defaultMessage: 'Temporarily stop this application from collecting data.',
-      })}
+      description={intl.formatMessage(messages.appKebabPauseTitle)}
       onClick={wrappedFunction(removeApp)}
     >
-      {intl.formatMessage({
-        id: 'app.kebab.pause.button',
-        defaultMessage: 'Pause',
-      })}
+      {intl.formatMessage(messages.appKebabPauseButton)}
     </DropdownItem>
   );
 
@@ -120,7 +145,7 @@ const ApplicationKebab = ({ app, removeApp, addApp }) => {
       toggle={(toggleRef) => (
         <MenuToggle
           ref={toggleRef}
-          aria-label="Actions"
+          aria-label={intl.formatMessage(messages.actionsAria)}
           variant="plain"
           onClick={() => setOpen((prev) => !prev)}
           isExpanded={isOpen}
@@ -146,15 +171,9 @@ const ApplicationKebab = ({ app, removeApp, addApp }) => {
               />
             );
           })}
-          description={intl.formatMessage({
-            id: 'app.kebab.remove.title',
-            defaultMessage: 'Permanently stop data collection for this application.',
-          })}
+          description={intl.formatMessage(messages.appKebabRemoveTitle)}
         >
-          {intl.formatMessage({
-            id: 'app.kebab.pause.button',
-            defaultMessage: 'Remove',
-          })}
+          {intl.formatMessage(messages.appKebabPauseButton_1)}
         </DropdownItem>
       </DropdownList>
     </Dropdown>

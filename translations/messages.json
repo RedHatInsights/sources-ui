@@ -1,0 +1,2156 @@
+{
+  "alert.error.description": {
+    "defaultMessage": "There was a problem while trying to add integration {name}. Please try again. If the error persists, open a support case."
+  },
+  "alert.error.link": {
+    "defaultMessage": "Retry"
+  },
+  "alert.error.title": {
+    "defaultMessage": "Error adding integration"
+  },
+  "alert.sourceConfigurationUnsuccessful": {
+    "defaultMessage": "Source configuration unsuccessful"
+  },
+  "alert.success.description": {
+    "defaultMessage": "Source {name} was successfully added"
+  },
+  "alert.success.link": {
+    "defaultMessage": "View source details"
+  },
+  "alert.success.title": {
+    "defaultMessage": "{type} connection successful"
+  },
+  "alert.timeout.description": {
+    "defaultMessage": "We are still working to confirm credentials for integration {name}. To track progress, check the Status column in the Integrations table."
+  },
+  "alert.timeout.title": {
+    "defaultMessage": "Integration configuration in progress"
+  },
+  "alert.unavailable.link": {
+    "defaultMessage": "Edit integration"
+  },
+  "app.kebab.pause.button": {
+    "defaultMessage": "Pause"
+  },
+  "app.kebab.pause.title": {
+    "defaultMessage": "Temporarily stop this application from collecting data."
+  },
+  "app.kebab.remove.button": {
+    "defaultMessage": "Remove"
+  },
+  "app.kebab.remove.title": {
+    "defaultMessage": "Permanently stop data collection for this application."
+  },
+  "app.kebab.resume.button": {
+    "defaultMessage": "Resume"
+  },
+  "app.kebab.resume.title": {
+    "defaultMessage": "Resume data collection for this application."
+  },
+  "application.paused.header": {
+    "defaultMessage": "Application paused"
+  },
+  "applicationKebab.actionsAria": {
+    "defaultMessage": "Actions"
+  },
+  "applications.availableApplications": {
+    "defaultMessage": "Available applications"
+  },
+  "applications.description": {
+    "defaultMessage": "Configuring your cloud integrations provides additional capabilities included with your subscription. You can turn these features on or off at any time after integration creation."
+  },
+  "applications.select": {
+    "defaultMessage": "Select applications"
+  },
+  "applications.showMore": {
+    "defaultMessage": "{remaining} more"
+  },
+  "appplication.paused.additionalText": {
+    "defaultMessage": "Resume this application to continue data collection."
+  },
+  "arn.helpTextAria": {
+    "defaultMessage": "Help text"
+  },
+  "auth.filledPasswordAria": {
+    "defaultMessage": "Filled password"
+  },
+  "aws.alertDescription": {
+    "defaultMessage": "Manage connections for this integration at any time in Settings > Integrations."
+  },
+  "aws.alertTitle": {
+    "defaultMessage": "Allow 24 hours for full activation"
+  },
+  "aws.costLink": {
+    "defaultMessage": "Cost Management reporting"
+  },
+  "aws.goldImages": {
+    "defaultMessage": "View enabled AWS gold images"
+  },
+  "aws.insights": {
+    "defaultMessage": "Get started with Red Hat Insights"
+  },
+  "aws.learnMore": {
+    "defaultMessage": "Learn more about this Cloud"
+  },
+  "aws.subwtachUsage": {
+    "defaultMessage": "Subscription Watch usage"
+  },
+  "aws.successDescription": {
+    "defaultMessage": "Discover the benefits of your connection or exit to manage your new integration."
+  },
+  "aws.successTitle": {
+    "defaultMessage": "Amazon Web Services connection established"
+  },
+  "azure.generic.username": {
+    "defaultMessage": "App ID"
+  },
+  "azure.rhelWarningDescription": {
+    "defaultMessage": "This integration will be represented in the Integrations list, but will not reflect true status or resources."
+  },
+  "azure.rhelWarningTitle": {
+    "defaultMessage": "This integration will not be monitored in Integrations"
+  },
+  "catalog.ansibleTowerEndpoint": {
+    "defaultMessage": "Ansible Tower endpoint"
+  },
+  "catalog.auth.allFieldsRequired": {
+    "defaultMessage": "All fields are required."
+  },
+  "catalog.auth.provideTowerCredentials": {
+    "defaultMessage": "Provide Ansible Tower service account user credentials to ensure optimized availability of resources to Catalog Administrators."
+  },
+  "catalog.endpoint.enterHostname": {
+    "defaultMessage": "Enter the hostname of the Ansible Tower instance you want to connect to."
+  },
+  "catalog.hostnameHelper": {
+    "defaultMessage": "For example, https://myansibleinstance.example.com/ or https://127.0.0.1/"
+  },
+  "catalog.urlPatternMessage": {
+    "defaultMessage": "URL must start with https:// or http://"
+  },
+  "closeModal.exclamationIconAria": {
+    "defaultMessage": "Exclamation icon"
+  },
+  "cloud.amazonTitle": {
+    "defaultMessage": "Amazon Web Services"
+  },
+  "cloud.azureTitle": {
+    "defaultMessage": "Microsoft Azure"
+  },
+  "cloud.builderImageIconAria": {
+    "defaultMessage": "Builder image icon"
+  },
+  "cloud.emptystate.cardDescription": {
+    "defaultMessage": "Select an available provider."
+  },
+  "cloud.emptystate.cardTitle": {
+    "defaultMessage": "Get started by connecting to your public clouds"
+  },
+  "cloud.emptystate.catalogLink": {
+    "defaultMessage": "Looking for a different provider? <a>See all Red Hat Certified Cloud and Service Providers</a>"
+  },
+  "cloud.goldImages": {
+    "defaultMessage": "Use gold images"
+  },
+  "cloud.goldImages.awsLink": {
+    "defaultMessage": "Use Red Hat gold images on AWS"
+  },
+  "cloud.goldImages.azureLink": {
+    "defaultMessage": "Use Red Hat gold images on Microsoft Azure"
+  },
+  "cloud.goldImages.description": {
+    "defaultMessage": "Connecting to Amazon Web Services or Microsoft Azure unlocks automatic access to Red Hat gold images. View gold images in your provider console."
+  },
+  "cloud.goldImages.moreLink": {
+    "defaultMessage": "Learn more about Red Hat gold images"
+  },
+  "cloud.googleTitle": {
+    "defaultMessage": "Google Cloud"
+  },
+  "cloud.ibmTitle": {
+    "defaultMessage": "IBM Cloud"
+  },
+  "cloud.insights": {
+    "defaultMessage": "Explore Red Hat Insights"
+  },
+  "cloud.insights.description": {
+    "defaultMessage": "Use RHEL instances in the cloud and gain other value-add services, such as predictive analytics."
+  },
+  "cloud.insights.insightsLink": {
+    "defaultMessage": "Learn more about Red Hat Insights"
+  },
+  "cloud.insights.moreLink": {
+    "defaultMessage": "Enable additional Insights services"
+  },
+  "cloud.lightspeed": {
+    "defaultMessage": "Explore Red Hat Lightspeed"
+  },
+  "cloud.lightspeed.lightspeedLink": {
+    "defaultMessage": "Learn more about Red Hat Lightspeed"
+  },
+  "cloud.lightspeed.moreLink": {
+    "defaultMessage": "Enable additional Red Hat Lightspeed services"
+  },
+  "cloud.listIconAria": {
+    "defaultMessage": "List icon"
+  },
+  "cloud.nowWhat": {
+    "defaultMessage": "I connected to cloud. Now what?"
+  },
+  "cloud.subwatch": {
+    "defaultMessage": "Track usage with Subscriptions"
+  },
+  "cloud.subwatch.description": {
+    "defaultMessage": "Use the Subscriptions service to monitor account-level summaries of your Red Hat subscription profile."
+  },
+  "cloud.subwatch.goTo": {
+    "defaultMessage": "Go to Subscriptions"
+  },
+  "cloud.subwatch.learnMore": {
+    "defaultMessage": "Learn more about Subscriptions"
+  },
+  "cloud.trendUpIconAria": {
+    "defaultMessage": "Trend up icon"
+  },
+  "cloudmeter.createIamPolicy": {
+    "defaultMessage": "Create IAM policy"
+  },
+  "cloudmeter.createIamRole": {
+    "defaultMessage": "Create IAM role"
+  },
+  "cloudmeter.enableAccountAccess": {
+    "defaultMessage": "Enable account access"
+  },
+  "cloudmeter.enterArn": {
+    "defaultMessage": "Enter ARN"
+  },
+  "configurationMode.manual": {
+    "defaultMessage": "Manual configuration"
+  },
+  "configurationMode.trust": {
+    "defaultMessage": "Account authorization"
+  },
+  "configurationMode.trustmode.defaultError": {
+    "defaultMessage": "Edit credentials required."
+  },
+  "cost.DoNotCloseYourBrowser": {
+    "defaultMessage": "Do not close your browser."
+  },
+  "cost.app.description": {
+    "defaultMessage": "Analyze, forecast, and optimize your Red Hat OpenShift cluster costs in hybrid cloud environments."
+  },
+  "cost.app.title": {
+    "defaultMessage": "Cost management"
+  },
+  "cost.arn.awsRegion": {
+    "defaultMessage": "AWS region"
+  },
+  "cost.arn.copyArn": {
+    "defaultMessage": "From the Summary screen, copy the role ARN and paste it in the ARN field:"
+  },
+  "cost.arn.customizeCUR": {
+    "defaultMessage": "I wish to manually customize the data export sent to Cost Management"
+  },
+  "cost.arn.enableAccess": {
+    "defaultMessage": "To enable account access, capture the ARN associated with the role you just created."
+  },
+  "cost.arn.enableAccountAccess": {
+    "defaultMessage": "Enable account access"
+  },
+  "cost.arn.enterArn": {
+    "defaultMessage": "Enter ARN"
+  },
+  "cost.arn.externalId": {
+    "defaultMessage": "External ID"
+  },
+  "cost.arn.helpCustomizeCUR": {
+    "defaultMessage": "There will be a set of instructions at the end of this wizard that will guide you on how to complete the customize configuration that will be completed in the AWS console."
+  },
+  "cost.arn.iamPolicyTitle": {
+    "defaultMessage": "Create IAM policy"
+  },
+  "cost.arn.iamRoleStepTitle": {
+    "defaultMessage": "Create IAM role"
+  },
+  "cost.arn.includeAliasesPopover": {
+    "defaultMessage": "If there are account aliases, they will appear and be used for filtering when reporting on AWS accounts. This will include \"iam:ListAccountAliases\" to the Action of the IAM Policy."
+  },
+  "cost.arn.includeOrgUnits": {
+    "defaultMessage": "Include AWS organizational units"
+  },
+  "cost.arn.includeOrgUnitsPopover": {
+    "defaultMessage": "If there are organizational units, they will be used for filtering when reporting on AWS resources. This will include \"organizations:List*\" and \"organizations:Describe*\" to the Action of the IAM Policy"
+  },
+  "cost.arn.includesAliases": {
+    "defaultMessage": "Include AWS account aliases"
+  },
+  "cost.arn.includesRhelUsage": {
+    "defaultMessage": "Include RHEL usage"
+  },
+  "cost.arn.s3BucketPattern": {
+    "defaultMessage": "S3 bucket name must start with alphanumeric character and can contain lowercase letters, numbers, dots, and hyphens"
+  },
+  "cost.arn.s3Label": {
+    "defaultMessage": "S3 bucket name"
+  },
+  "cost.arn.selectRole": {
+    "defaultMessage": "From the Roles tab, select the role you just created."
+  },
+  "cost.arn.sendDefaultCUR": {
+    "defaultMessage": "I am OK with sending the default data export to Cost Management"
+  },
+  "cost.arn.storageTitle": {
+    "defaultMessage": "Create storage"
+  },
+  "cost.arn.tagsStepTitle": {
+    "defaultMessage": "Tags, aliases and organizational units"
+  },
+  "cost.arn.usageDescriptionTitle": {
+    "defaultMessage": "Create cost and usage report"
+  },
+  "cost.azure.alertTitle": {
+    "defaultMessage": "If your organization is converting systems from CentOS 7 to RHEL and using hourly billing, select Include RHEL usage."
+  },
+  "cost.azure.billingAccount": {
+    "defaultMessage": "Run the following command from the Cloud Shell, providing the Billing Account name, to obtain the Billing Account scope associated with the generated cost export."
+  },
+  "cost.azure.billingProfile": {
+    "defaultMessage": "Run the following command from the Cloud Shell, providing the Billing Account name and the Billig Profile name, to obtain the Billing Profile scope associated with the generated cost export."
+  },
+  "cost.azure.costExportInput": {
+    "defaultMessage": "After running the command, enter the output in the following field:"
+  },
+  "cost.azure.costExportScopeDescription": {
+    "defaultMessage": "From the Azure portal, select the scope for the new cost export. If there is a need to further customize the data you want to send to Red Hat, select the manually customize option to follow the special instructions on how to. {link}"
+  },
+  "cost.azure.createContributorRole": {
+    "defaultMessage": "Run the following command in Cloud Shell to create a service principal with Cost Management Storage Blob Data Reader role. From the output enter the values in the fields below:"
+  },
+  "cost.azure.createCostReaderRole": {
+    "defaultMessage": "Run the following command in Cloud Shell to create a Cost Management Reader role:"
+  },
+  "cost.azure.createdAccountName": {
+    "defaultMessage": "Created storage account name or existing storage account name"
+  },
+  "cost.azure.createdResourceGroupName": {
+    "defaultMessage": "Resource group for the storage account"
+  },
+  "cost.azure.dailyExport": {
+    "defaultMessage": "Daily export of month-to-date costs"
+  },
+  "cost.azure.dedicatedCredentials": {
+    "defaultMessage": "Red Hat recommends configuring dedicated credentials to grant {application} read-only access to Azure cost data. {link}"
+  },
+  "cost.azure.enrollment": {
+    "defaultMessage": "enrollment."
+  },
+  "cost.azure.exportNameFollowup": {
+    "defaultMessage": "After configuring the daily export, enter the following:"
+  },
+  "cost.azure.exportType": {
+    "defaultMessage": "Export type"
+  },
+  "cost.azure.includesRhelUsage": {
+    "defaultMessage": "Include RHEL usage"
+  },
+  "cost.azure.invoiceSection": {
+    "defaultMessage": "Run the following command from the Cloud Shell, providing the Billing Account name, Billing Profile name, and Invoice Section name, to obtain the Invoice Section scope associated with the generated cost export."
+  },
+  "cost.azure.invoiceSectionInput": {
+    "defaultMessage": "After running the command, enter the output in the following field:"
+  },
+  "cost.azure.management": {
+    "defaultMessage": "Run the following command from the Cloud Shell, providing the Management Group name, to obtain the Management Group scope associated with the generated cost export."
+  },
+  "cost.azure.resourceGroup": {
+    "defaultMessage": "Run the following command from the Cloud Shell, providing the Resource Group name, to obtain the Resource Group scope associated with the generated cost export."
+  },
+  "cost.azure.resourceGroupName": {
+    "defaultMessage": "Resource group name"
+  },
+  "cost.azure.scopeTitle": {
+    "defaultMessage": "Scope"
+  },
+  "cost.azure.select.billingAccount": {
+    "defaultMessage": "Billing Account"
+  },
+  "cost.azure.select.billingProfile": {
+    "defaultMessage": "Billing Profile"
+  },
+  "cost.azure.select.enrollment": {
+    "defaultMessage": "Enrollment Account"
+  },
+  "cost.azure.select.invoiceSection": {
+    "defaultMessage": "Invoice Section"
+  },
+  "cost.azure.select.management": {
+    "defaultMessage": "Management Group"
+  },
+  "cost.azure.select.resourceGroup": {
+    "defaultMessage": "Resource Group"
+  },
+  "cost.azure.select.subscription": {
+    "defaultMessage": "Subscription"
+  },
+  "cost.azure.selectInputAria": {
+    "defaultMessage": "Select Input"
+  },
+  "cost.azure.setupEAReaderRole": {
+    "defaultMessage": "Launch the Azure Enterprise Portal and give the service principal created above Administrator role on the associated account. {link}"
+  },
+  "cost.azure.setupMCABillingAccountReaderRole": {
+    "defaultMessage": "Launch the Azure Portal and give the service principal created above Billing account reader role. {link}"
+  },
+  "cost.azure.setupMCABillingProfileReaderRole": {
+    "defaultMessage": "Launch the Azure Portal and give the service principal created above Billing profile reader role. {link}"
+  },
+  "cost.azure.setupMCAInvoiceReaderRole": {
+    "defaultMessage": "Launch the Azure Portal and give the service principal created above Invoice section reader role. {link}"
+  },
+  "cost.azure.storageAccountAfterDescription": {
+    "defaultMessage": "After configuring a resource group and storage account in the Azure portal, enter the following:"
+  },
+  "cost.azure.storageAccountContainerDescription": {
+    "defaultMessage": "Provide a name for the container and directory path, and specify the below settings to create the daily export. Leave all other options as the default."
+  },
+  "cost.azure.storageAccountDescription": {
+    "defaultMessage": "Red Hat recommends creating a dedicated resource group and storage account in Azure to collect cost data and metrics for cost management. {link}"
+  },
+  "cost.azure.storageAccountExportDescription": {
+    "defaultMessage": "Create a recurring task to export cost data to your Azure storage account, where Cost Management will retrieve the data. {link}"
+  },
+  "cost.azure.storageAccountName": {
+    "defaultMessage": "Storage account name"
+  },
+  "cost.azure.storageExportDescription": {
+    "defaultMessage": "From the Azure portal, add a new cost export."
+  },
+  "cost.azure.subscription": {
+    "defaultMessage": "Run the following command from the Cloud Shell to obtain the Subscription ID associated with the generated cost export."
+  },
+  "cost.azure.subscriptionIdCommand": {
+    "defaultMessage": "Run the following command in Cloud Shell to obtain the Subscription ID where the cost export is being stored and enter it below:"
+  },
+  "cost.azureSubStepId": {
+    "defaultMessage": "Resource group and storage account"
+  },
+  "cost.clientAppId": {
+    "defaultMessage": "Client (Application) ID"
+  },
+  "cost.clientSecret": {
+    "defaultMessage": "Client secret"
+  },
+  "cost.configureOperator": {
+    "defaultMessage": "Install and configure operator"
+  },
+  "cost.createDailyExport": {
+    "defaultMessage": "Specify cost export scope"
+  },
+  "cost.customizeCostExport": {
+    "defaultMessage": "I wish to manually customize the data set sent to Cost Management"
+  },
+  "cost.customizingReportCUR": {
+    "defaultMessage": "Customizing your {application} cost and usage report"
+  },
+  "cost.exportNamePattern": {
+    "defaultMessage": "Cost export name must start with alphanumeric character and can contain underscore and hyphen"
+  },
+  "cost.gcp.access.firstStep": {
+    "defaultMessage": "In your IAM & Admin console, navigate to <b>IAM</b> and click <b>Add</b> to add a new member."
+  },
+  "cost.gcp.access.fourthStep": {
+    "defaultMessage": "Click <b>Save.</b>"
+  },
+  "cost.gcp.access.loading": {
+    "defaultMessage": "Loading account address..."
+  },
+  "cost.gcp.access.secondStep": {
+    "defaultMessage": "Paste the following value into the <b>New members</b> field:"
+  },
+  "cost.gcp.access.thirdStep": {
+    "defaultMessage": "Select the role you just created."
+  },
+  "cost.gcp.accessTitle": {
+    "defaultMessage": "Assign access"
+  },
+  "cost.gcp.assignAccessDesc": {
+    "defaultMessage": "To delegate account access, add a new member to your project."
+  },
+  "cost.gcp.billingExport.description": {
+    "defaultMessage": "To enable detailed billing data exports to BigQuery, set up daily cost export."
+  },
+  "cost.gcp.billingExport.firstStep": {
+    "defaultMessage": "In the Billing console, click <b>Billing export.</b>"
+  },
+  "cost.gcp.billingExport.firstStepB": {
+    "defaultMessage": "Click the <b>BigQuery export</b> tab."
+  },
+  "cost.gcp.billingExport.fourthStep": {
+    "defaultMessage": "Click <b>Save.</b>"
+  },
+  "cost.gcp.billingExport.secondStep": {
+    "defaultMessage": "In the <b>Detailed usage cost</b> section, click <b>Edit settings.</b>"
+  },
+  "cost.gcp.billingExport.thirdStep": {
+    "defaultMessage": "Use the dropdown menus to select the correct project and dataset."
+  },
+  "cost.gcp.billingExportTitle": {
+    "defaultMessage": "Billing export"
+  },
+  "cost.gcp.cloudStorage": {
+    "defaultMessage": "Create cloud storage bucket"
+  },
+  "cost.gcp.cloudStorageBucket": {
+    "defaultMessage": "You will need to create a cloud storage bucket that will contain the customized billing reports. {link}"
+  },
+  "cost.gcp.costProjectDescrption": {
+    "defaultMessage": "If there is a need to further customize the data you want to send to Cost Management, select the manually customize option to follow the special instructions on how to."
+  },
+  "cost.gcp.csb.name": {
+    "defaultMessage": "After creating the cloud storage bucket, enter its name in the following:"
+  },
+  "cost.gcp.customizeCUR": {
+    "defaultMessage": "I wish to manually customize the dataset sent to Cost Management"
+  },
+  "cost.gcp.dataset.description": {
+    "defaultMessage": "To collect and store the information needed for {application}, create a BigQuery dataset."
+  },
+  "cost.gcp.dataset.firstStep": {
+    "defaultMessage": "In the BigQuery console, select your project (<b>{projectId}</b>) from the navigation menu."
+  },
+  "cost.gcp.dataset.fourthStep": {
+    "defaultMessage": "Click <b>Create dataset.</b>"
+  },
+  "cost.gcp.dataset.secondStep": {
+    "defaultMessage": "Click <b>Create dataset.</b>"
+  },
+  "cost.gcp.dataset.thirdStep": {
+    "defaultMessage": "In the <b>Dataset ID</b> field, enter a name for your dataset."
+  },
+  "cost.gcp.datasetTitle": {
+    "defaultMessage": "Create dataset"
+  },
+  "cost.gcp.iam.firstStep": {
+    "defaultMessage": "From the GCP console, navigate to <b>IAM & Admin > Roles.</b>"
+  },
+  "cost.gcp.iam.firstStepB": {
+    "defaultMessage": "Create a new role."
+  },
+  "cost.gcp.iam.secondStep": {
+    "defaultMessage": "Add the following permissions to your custom role:"
+  },
+  "cost.gcp.iam.thirdStep": {
+    "defaultMessage": "Click <b>Create role.</b>"
+  },
+  "cost.gcp.iamRoleDescription": {
+    "defaultMessage": "To specify GCP access permissions for Red Hat, create an Identity and Access Management (IAM) role."
+  },
+  "cost.gcp.iamTitle": {
+    "defaultMessage": "Create IAM role"
+  },
+  "cost.gcp.noAccount": {
+    "defaultMessage": "There is an error with loading of the account address. Please go back and return to this step."
+  },
+  "cost.gcp.projectDescription": {
+    "defaultMessage": "Google Cloud Platform (GCP) recommends that you create a cloud project to contain all your billing administration needs. We’ll use this project to set up your BigQuery billing export. {link}"
+  },
+  "cost.gcp.projectDescription2": {
+    "defaultMessage": "Enter the ID of a project within your GCP billing account."
+  },
+  "cost.gcp.projectTitle": {
+    "defaultMessage": "Project"
+  },
+  "cost.gcp.sendDefaultCUR": {
+    "defaultMessage": "I am OK with sending the default dataset to Cost Management"
+  },
+  "cost.iampolicy.completeProccess": {
+    "defaultMessage": "Complete the process to create your new policy."
+  },
+  "cost.iampolicy.createPolicy": {
+    "defaultMessage": "Create a new policy, pasting the following content into the JSON text box."
+  },
+  "cost.iampolicy.grantPermissions": {
+    "defaultMessage": "To grant permissions to the cost management report you just configured, create an AWS Identity and Access Management (IAM) policy. {link}"
+  },
+  "cost.iampolicy.logInIam": {
+    "defaultMessage": "{bold} You will need to be logged in to the IAM console to complete the next step."
+  },
+  "cost.iampolicy.signInIAMConsole": {
+    "defaultMessage": "Sign in to the AWS Identity and Access Management (IAM) console."
+  },
+  "cost.iampolicy.somethingWrong": {
+    "defaultMessage": "Something went wrong, you are missing bucket value."
+  },
+  "cost.iamrole.attachPolicy": {
+    "defaultMessage": "Attach the permissions policy that you just created."
+  },
+  "cost.iamrole.completeProccess": {
+    "defaultMessage": "Complete the process to create your new role."
+  },
+  "cost.iamrole.createIamRole": {
+    "defaultMessage": "To delegate account access, create an IAM role to associate with your IAM policy."
+  },
+  "cost.iamrole.createNewRole": {
+    "defaultMessage": "From the AWS Identity Access Management console, create a new role."
+  },
+  "cost.iamrole.enterAccountId": {
+    "defaultMessage": "Select another AWS account from the list of trusted entities and paste the following value into the Account ID field:"
+  },
+  "cost.iamrole.enterExternalId": {
+    "defaultMessage": "Paste the following value in the External ID field:"
+  },
+  "cost.ibm.accessDescription": {
+    "defaultMessage": "Assign policies to the service ID you just created so that Cost Management will have access to account management, billing and usage service APIs. In the IBM Cloud Shell, run the following command:"
+  },
+  "cost.ibm.accessId": {
+    "defaultMessage": "Configure service ID access"
+  },
+  "cost.ibm.accountIdDescription": {
+    "defaultMessage": "In the IBM Cloud Shell, run the following command. Paste the output string into the form fields below."
+  },
+  "cost.ibm.accountIdStepTitle": {
+    "defaultMessage": "Add the account ID"
+  },
+  "cost.ibm.accountIdTitle": {
+    "defaultMessage": "Add account ID"
+  },
+  "cost.ibm.apiKeyDescription": {
+    "defaultMessage": "In the IBM Cloud Shell, run the following command. Paste the output string into the form field below."
+  },
+  "cost.ibm.apiKeyTitle": {
+    "defaultMessage": "Create an API key"
+  },
+  "cost.ibm.enterpriseIdDescription": {
+    "defaultMessage": "Login to the IBM Cloud Shell and run the following command. Paste the output string into the form field below."
+  },
+  "cost.ibm.enterpriseIdStepTitle": {
+    "defaultMessage": "Add the account's enterprise ID"
+  },
+  "cost.ibm.enterpriseIdTitle": {
+    "defaultMessage": "Add enterprise ID"
+  },
+  "cost.ibm.serviceIdDescription": {
+    "defaultMessage": "Create a service ID, which Cost Management will use to get billing and usage information from your account. In the IBM Cloud Shell, run the following command. Paste the output string into the form field below."
+  },
+  "cost.ibm.serviceIdTitle": {
+    "defaultMessage": "Create a service ID"
+  },
+  "cost.ibm.substepTitle": {
+    "defaultMessage": "Enter account IDs"
+  },
+  "cost.learnMore": {
+    "defaultMessage": "Learn more"
+  },
+  "cost.manualDescriptionCUR": {
+    "defaultMessage": "Since you have chosen to manually customize the data set you want to send to Cost Management, you do not need to specify an export scope at this point and time."
+  },
+  "cost.manualTitleCUR": {
+    "defaultMessage": "Skip this step and proceed to next step"
+  },
+  "cost.openshift.description": {
+    "defaultMessage": "For Red Hat OpenShift Container Platform 4.6 and later, install the {operator} from the OpenShift Container Platform web console."
+  },
+  "cost.openshift.operator_configured": {
+    "defaultMessage": "If you configured the operator to create an integration (create_source: true), <b>STOP</b> here and <b>CANCEL</b> out of this flow."
+  },
+  "cost.openshift.operator_not_configured": {
+    "defaultMessage": "Otherwise, enter the cluster identifier below. You can find the cluster identifier in the cluster’s Help > About screen."
+  },
+  "cost.rbacWarningDescription": {
+    "defaultMessage": "Make sure to manage permissions for this integration in custom roles that contain permissions for Cost Management."
+  },
+  "cost.rbacWarningTitle": {
+    "defaultMessage": "Manage permissions in User Access"
+  },
+  "cost.resourceGroupPattern": {
+    "defaultMessage": "Resource group must start with alphanumeric character and can contain underscore and hyphen"
+  },
+  "cost.scopePattern": {
+    "defaultMessage": "Cost export scope must start with alphanumeric character and can contain underscore, hyphen, and foward slash"
+  },
+  "cost.sendDefaultCostExport": {
+    "defaultMessage": "I am OK with sending the default data set to Cost Management"
+  },
+  "cost.storageAccountPattern": {
+    "defaultMessage": "Storage account must start with alphanumeric character and can contain underscore and hyphen"
+  },
+  "cost.storageDescription.specifyBucker": {
+    "defaultMessage": "On AWS, specify or create an Amazon S3 bucket for your account and enter it's name below."
+  },
+  "cost.storageDescription.storageDescription": {
+    "defaultMessage": "To store the data export (previously called a cost and usage report) for cost management, create an Amazon S3 bucket. {link}"
+  },
+  "cost.subidPattern": {
+    "defaultMessage": "Subscription ID must start with alphanumeric character and can contain underscore and hyphen"
+  },
+  "cost.tags.alertTitle": {
+    "defaultMessage": "If your organization is converting systems from CentOS 7 to RHEL and using hourly billing, activate the com_redhat_rhel tag for your systems in the Cost Allocation Tags section of the AWS console. After activating the tag in AWS, select Include RHEL usage."
+  },
+  "cost.tags.aliasessOrgUnits": {
+    "defaultMessage": "To use account aliases and organizational units in the display and filter of AWS resources, select the following"
+  },
+  "cost.tags.desciption": {
+    "defaultMessage": "To use tags to organize your AWS resources in the {applicationName} application, activate your tags in AWS to allow them to be imported automatically."
+  },
+  "cost.tags.openSection": {
+    "defaultMessage": "In the AWS Billing and Cost Management console, open the Cost Allocation Tags section."
+  },
+  "cost.tags.readMeLink": {
+    "defaultMessage": "Learn more"
+  },
+  "cost.tags.selectTags": {
+    "defaultMessage": "Select the tags you want to use in the {applicationName} application, and click Activate."
+  },
+  "cost.tenantDirId": {
+    "defaultMessage": "Tenant (Directory) ID"
+  },
+  "cost.usageDescription.addFollowingValues": {
+    "defaultMessage": "Create a data export using the following values:"
+  },
+  "cost.usageDescription.additionalStepsCUR": {
+    "defaultMessage": "Additional configuration steps"
+  },
+  "cost.usageDescription.compression": {
+    "defaultMessage": "Compression type: GZIP"
+  },
+  "cost.usageDescription.dataRefreshSettings": {
+    "defaultMessage": "Enable: Refresh automatically"
+  },
+  "cost.usageDescription.enableSupport": {
+    "defaultMessage": "Enable support for: RedShift, QuickSight and disable support for Athena"
+  },
+  "cost.usageDescription.exportName": {
+    "defaultMessage": "Export name: koku"
+  },
+  "cost.usageDescription.exportType": {
+    "defaultMessage": "Export type: Legacy CUR export"
+  },
+  "cost.usageDescription.includesResourceIDs": {
+    "defaultMessage": "Include: Resource IDs"
+  },
+  "cost.usageDescription.manualDescriptionCUR": {
+    "defaultMessage": "Because you have chosen to manually customize the data set you want to send to cost management, you do not need to create a data export (previously called a cost and usage report)."
+  },
+  "cost.usageDescription.manualTitleCUR": {
+    "defaultMessage": "Skip this step and proceed to next step"
+  },
+  "cost.usageDescription.reportBucket": {
+    "defaultMessage": "Report path prefix: cost"
+  },
+  "cost.usageDescription.timeUnitHourly": {
+    "defaultMessage": "Time unit: hourly"
+  },
+  "cost.usageDescription.usageDescription": {
+    "defaultMessage": "The information {application} would need is your AWS account's data export. If there is a need to further customize the data export you want to send to {application}, select the manually customize option and follow the special instructions on how to."
+  },
+  "cost.warningDescriptionCUR": {
+    "defaultMessage": "You will need to perform more configuration steps after creating the source. To find more information, click on the link below."
+  },
+  "cost.warningTitleCUR": {
+    "defaultMessage": "Don't forget additional configuration steps!"
+  },
+  "customDataList.actionsAria": {
+    "defaultMessage": "Actions"
+  },
+  "detail.applications.add.error": {
+    "defaultMessage": "Application create failed"
+  },
+  "detail.applications.pause.error": {
+    "defaultMessage": "Application pause failed"
+  },
+  "detail.applications.paused.alert.description": {
+    "defaultMessage": "Your application will not reflect the most recent data until {appName} connection is resumed"
+  },
+  "detail.applications.paused.alert.title": {
+    "defaultMessage": "{appName} connection paused"
+  },
+  "detail.applications.resume.error": {
+    "defaultMessage": "Application resume failed"
+  },
+  "detail.applications.resumed.alert.title": {
+    "defaultMessage": "{appName} connection resumed"
+  },
+  "detail.applications.title": {
+    "defaultMessage": "Applications"
+  },
+  "detail.description": {
+    "defaultMessage": "View details and manage connections for this integration."
+  },
+  "detail.noapplications.description": {
+    "defaultMessage": "You have not connected any applications to this integration. Use the switches above to add applications."
+  },
+  "detail.noapplications.title": {
+    "defaultMessage": "No connected applications"
+  },
+  "detail.nopermissions.title": {
+    "defaultMessage": "Missing permissions"
+  },
+  "detail.pause.button": {
+    "defaultMessage": "Pause"
+  },
+  "detail.pause.description": {
+    "defaultMessage": "Temporarily disable data collection"
+  },
+  "detail.remove.button": {
+    "defaultMessage": "Remove"
+  },
+  "detail.remove.description": {
+    "defaultMessage": "Permanently delete this integration and all collected data"
+  },
+  "detail.rename.button": {
+    "defaultMessage": "Rename"
+  },
+  "detail.resources.title": {
+    "defaultMessage": "Manage connected applications"
+  },
+  "detail.resume.button": {
+    "defaultMessage": "Resume"
+  },
+  "detail.resume.description": {
+    "defaultMessage": "Unpause data collection for this integration"
+  },
+  "detail.summary.awsAccountNumber": {
+    "defaultMessage": "AWS account number"
+  },
+  "detail.summary.configurationMode": {
+    "defaultMessage": "Configuration mode"
+  },
+  "detail.summary.dateAdded": {
+    "defaultMessage": "Date added"
+  },
+  "detail.summary.lastChecked": {
+    "defaultMessage": "Last availability check"
+  },
+  "detail.summary.lastModified": {
+    "defaultMessage": "Last modified"
+  },
+  "detail.summary.title": {
+    "defaultMessage": "Integration summary"
+  },
+  "detail.summary.type": {
+    "defaultMessage": "Integration type"
+  },
+  "detail.summary.waitingForUpdate": {
+    "defaultMessage": "Waiting for update"
+  },
+  "editCredentials.alert.description": {
+    "defaultMessage": "It may take some time to validate your new credentials. Check this page for status updates."
+  },
+  "editCredentials.alert.title": {
+    "defaultMessage": "New credentials saved"
+  },
+  "editCredentials.alert.warning.description": {
+    "defaultMessage": "There was a problem while trying to update credentials. Please try again. If the error persists, open a support case."
+  },
+  "editCredentials.alert.warning.title": {
+    "defaultMessage": "Error updating credentials"
+  },
+  "editCredentials.description": {
+    "defaultMessage": "Use the fields below to reset your account authorization credentials. It may take some time to validate new information."
+  },
+  "editCredentials.paused.title": {
+    "defaultMessage": "View account authorization credentials"
+  },
+  "editCredentials.title": {
+    "defaultMessage": "Edit account authorization credentials"
+  },
+  "error.notification": {
+    "defaultMessage": "{error} [<b>{name}</b>]"
+  },
+  "errorBoundary.errorOccurred": {
+    "defaultMessage": "Error occurred"
+  },
+  "exit": {
+    "defaultMessage": "Exit"
+  },
+  "finishedStep.copied": {
+    "defaultMessage": "Copied"
+  },
+  "finishedStep.sourceUuid": {
+    "defaultMessage": "Source UUID"
+  },
+  "hcsbundle.track.description": {
+    "defaultMessage": "Track spend through {application} and apply them to your Red Hat committed spend."
+  },
+  "hcsbundle.track.title": {
+    "defaultMessage": "Track Red Hat committed spend"
+  },
+  "ibm.cost.copy": {
+    "defaultMessage": "Copy to clipboard"
+  },
+  "ibm.cost.textarea": {
+    "defaultMessage": "Commands to create policies."
+  },
+  "image-builder-aws-account-id.accountIdPatter": {
+    "defaultMessage": "Account Id has to be 12 numbers"
+  },
+  "integrations.overview.alertLink": {
+    "defaultMessage": "Learn about requesting access via the Virtual Assistant"
+  },
+  "integrations.overview.alertParagraph": {
+    "defaultMessage": "You do not have the permissions for integration management. Contact your organization administrator if you need these permissions updated."
+  },
+  "integrations.overview.alertTitle": {
+    "defaultMessage": "Need to create an integration?"
+  },
+  "integrations.overview.dataListItemActionTitle1": {
+    "defaultMessage": "Set up communication integration"
+  },
+  "integrations.overview.dataListItemActionTitle2": {
+    "defaultMessage": "Set up reporting and automation integration"
+  },
+  "integrations.overview.dataListItemActionTitle3": {
+    "defaultMessage": "Set up webhook integration"
+  },
+  "integrations.overview.dataListItemActionTitle4": {
+    "defaultMessage": "Configure cloud provider integration"
+  },
+  "integrations.overview.dataListItemActionTitle5": {
+    "defaultMessage": "Configure Red Hat integration"
+  },
+  "integrations.overview.dataListItemContent1": {
+    "defaultMessage": "Receive event notifications in your preferred communications application by connecting the Hybrid Cloud Console with Microsoft Teams, Google Chat, Slack, email"
+  },
+  "integrations.overview.dataListItemContent2": {
+    "defaultMessage": "Receive and manage event notifications where you manage other sources of data by connecting the Hybrid Cloud Console with Event-Driven Ansible{pagerDuty, select, on {, PagerDuty} other {}}, ServiceNow, or Splunk."
+  },
+  "integrations.overview.dataListItemContent3": {
+    "defaultMessage": "Receive Hybrid Cloud Console event notifications in third-party applications where native integration is not available by configuring a webhook integration."
+  },
+  "integrations.overview.dataListItemContent4": {
+    "defaultMessage": "To use public cloud provider data with Hybrid Cloud Console services, connect your Amazon Web Services (AWS), Google Cloud or Microsoft Azure account to the Hybrid Cloud Console."
+  },
+  "integrations.overview.dataListItemContent5": {
+    "defaultMessage": "Manage your cloud costs with Hybrid Cloud Console services by connecting your Red Hat OpenShift Container Platform environment."
+  },
+  "integrations.overview.dataListItemLearnMore": {
+    "defaultMessage": "Learn more"
+  },
+  "integrations.overview.dataListItemTitle1": {
+    "defaultMessage": "<b>Communication integrations</b> (Microsoft Teams, Google Chat, Slack, Email)"
+  },
+  "integrations.overview.dataListItemTitle2": {
+    "defaultMessage": "<b>Reporting and automation integrations</b> (Event-Driven Ansible{pagerDuty, select, on {, PagerDuty} other {}}, ServiceNow, Splunk)"
+  },
+  "integrations.overview.dataListItemTitle3": {
+    "defaultMessage": "<b>Webhook integrations</b>"
+  },
+  "integrations.overview.dataListItemTitle4": {
+    "defaultMessage": "<b>Cloud provider integrations</b> (Amazon Web Services, Azure, Google Cloud Platform)"
+  },
+  "integrations.overview.dataListItemTitle5": {
+    "defaultMessage": "<b>Red Hat integrations</b> (OpenShift Container Platform)"
+  },
+  "integrations.overview.heroListItem1": {
+    "defaultMessage": "Create integrations and configure notifications to integrate with third-party applications"
+  },
+  "integrations.overview.heroListItem2": {
+    "defaultMessage": "Manage your integrations and troubleshoot broken connections"
+  },
+  "integrations.overview.heroListTitle": {
+    "defaultMessage": "Key features"
+  },
+  "integrations.overview.heroParagraph": {
+    "defaultMessage": "Notifications and integrations services work together to transmit messages to third-party application endpoints, such as instant messaging platforms and external ticketing systems, when triggering events occur."
+  },
+  "integrations.overview.heroTitle": {
+    "defaultMessage": "Get started with Integrations"
+  },
+  "integrations.overview.hintLink": {
+    "defaultMessage": "enable the notifications"
+  },
+  "integrations.overview.hintText1": {
+    "defaultMessage": "As a next step, you can"
+  },
+  "integrations.overview.hintText2": {
+    "defaultMessage": "of your choice to alert you via integrations."
+  },
+  "integrations.overview.hintTextBold": {
+    "defaultMessage": "Already set up your integrations?"
+  },
+  "integrations.overview.learnMore": {
+    "defaultMessage": "Learn more"
+  },
+  "integrations.overview.popoverBody": {
+    "defaultMessage": "You do not have the permissions for integration management. Contact your organization admin if you need these permissions updated."
+  },
+  "integrations.overview.popoverLink": {
+    "defaultMessage": "Learn about requesting access via the Virtual Assistant"
+  },
+  "integrations.overview.recommendedContentTableLabel1": {
+    "defaultMessage": "Documentation"
+  },
+  "integrations.overview.recommendedContentTableLabel2": {
+    "defaultMessage": "Documentation"
+  },
+  "integrations.overview.recommendedContentTableLabel3": {
+    "defaultMessage": "Quick start"
+  },
+  "integrations.overview.recommendedContentTableLink1": {
+    "defaultMessage": "View documentation"
+  },
+  "integrations.overview.recommendedContentTableLink2": {
+    "defaultMessage": "View documentation"
+  },
+  "integrations.overview.recommendedContentTableLink3": {
+    "defaultMessage": "Begin Quick start"
+  },
+  "integrations.overview.recommendedContentTableTitle1": {
+    "defaultMessage": "Configuring notifications and integrations"
+  },
+  "integrations.overview.recommendedContentTableTitle2": {
+    "defaultMessage": "Configuring cloud integrations for Red Hat services"
+  },
+  "integrations.overview.recommendedContentTableTitle3": {
+    "defaultMessage": "Configuring console notifications in Slack"
+  },
+  "integrations.overview.titleIntegrationTypes": {
+    "defaultMessage": "Integration types"
+  },
+  "integrations.overview.titleRecommendedContent": {
+    "defaultMessage": "Recommended content"
+  },
+  "integrations.overview.viewAllLearningResources": {
+    "defaultMessage": "View all Settings learning resources"
+  },
+  "integrations.serviceName.eventDrivenAnsible": {
+    "defaultMessage": "Event-Driven Ansible"
+  },
+  "integrations.serviceName.googleChat": {
+    "defaultMessage": "Google Chat"
+  },
+  "integrations.serviceName.microsoftTeams": {
+    "defaultMessage": "Microsoft Teams"
+  },
+  "integrations.serviceName.serviceNow": {
+    "defaultMessage": "ServiceNow"
+  },
+  "integrations.serviceName.slack": {
+    "defaultMessage": "Slack"
+  },
+  "integrations.serviceName.splunk": {
+    "defaultMessage": "Splunk"
+  },
+  "integrations.unauthorizedState.descriptionIntegrations": {
+    "defaultMessage": "Connect with 3rd party communication tools to stay up to date on event notifications for your Hybrid Cloud Console assets."
+  },
+  "integrations.unauthorizedState.descriptionReporting": {
+    "defaultMessage": "Connect with 3rd party reporting and automation tools to stay up to date on event notifications for your Hybrid Cloud Console assets."
+  },
+  "integrations.unauthorizedState.descriptionWebhooks1": {
+    "defaultMessage": "Connect"
+  },
+  "integrations.unauthorizedState.descriptionWebhooks2": {
+    "defaultMessage": "to stay up to date on event notifications for your Hybrid Cloud Console assets."
+  },
+  "integrations.unauthorizedState.headingIntegrations": {
+    "defaultMessage": "No communication integrations"
+  },
+  "integrations.unauthorizedState.headingReporting": {
+    "defaultMessage": "No reporting and automation integrations"
+  },
+  "integrations.unauthorizedState.headingWebhooks": {
+    "defaultMessage": "No webhook integrations"
+  },
+  "integrations.unauthorizedState.linkWebhookEp": {
+    "defaultMessage": "webhook endpoints"
+  },
+  "integrationsDropdown.createIntegration": {
+    "defaultMessage": "Create Integration"
+  },
+  "marketplace.add": {
+    "defaultMessage": "Add"
+  },
+  "marketplace.browseCatalog": {
+    "defaultMessage": "Browse catalog"
+  },
+  "marketplace.curatedSelection": {
+    "defaultMessage": "A curated selection of offerings available for purchase from {link}."
+  },
+  "marketplace.filterByProductType": {
+    "defaultMessage": "Filter by product type"
+  },
+  "marketplace.notWhatYouAreLookingFor": {
+    "defaultMessage": "Not what you’re looking for? Browse the catalog to see more offerings from Red Hat Marketplace."
+  },
+  "marketplace.recommendedServices": {
+    "defaultMessage": "Recommended services"
+  },
+  "marketplace.seeMoreDatabases": {
+    "defaultMessage": "See more databases"
+  },
+  "marketplace.typeLabel": {
+    "defaultMessage": "Type"
+  },
+  "none": {
+    "defaultMessage": "None"
+  },
+  "openshift.endpoint.urlAndCA": {
+    "defaultMessage": "Provide the OpenShift Container Platform URL and TLS certificate."
+  },
+  "openshift.token.collectData": {
+    "defaultMessage": "To collect data from a Red Hat OpenShift Container Platform source:"
+  },
+  "openshift.token.comman": {
+    "defaultMessage": "# oc sa get-token -n management-infra management-admin"
+  },
+  "openshift.token.copyToken": {
+    "defaultMessage": "Copy the token and paste it in the Token field"
+  },
+  "openshift.token.description": {
+    "defaultMessage": "An OpenShift Container Platform login token is required to communicate with the application."
+  },
+  "openshift.token.logIn": {
+    "defaultMessage": "Log in to the Red Hat OpenShift Container Platform cluster with an account that has access to the namespace"
+  },
+  "openshift.token.runCommand": {
+    "defaultMessage": "Run the following command to obtain your login token:"
+  },
+  "overview.overviewIntegrationTypesAria": {
+    "defaultMessage": "Integration types"
+  },
+  "overview.overviewRecommendedContentAria": {
+    "defaultMessage": "Recommended content"
+  },
+  "provisioning.aws-account-number.desc": {
+    "defaultMessage": "Login to your AWS account and copy your account number"
+  },
+  "provisioning.aws-role-creation-follow.desc": {
+    "defaultMessage": "Follow these steps to create the role:"
+  },
+  "provisioning.aws-role-creation.desc": {
+    "defaultMessage": "To integrate your AWS account with our service, you need to create an IAM role."
+  },
+  "provisioning.aws-role-step-1": {
+    "defaultMessage": "Click on {connectAWS} to open AWS CloudFormation in a new tab with the IAM Role template."
+  },
+  "provisioning.aws-role-step-2": {
+    "defaultMessage": "In AWS CloudFormation, click {createStack} to initiate the creation of the IAM Role. Wait until the status shows {status}."
+  },
+  "provisioning.aws-role-step-3": {
+    "defaultMessage": "Return to this window and click {next} to retrieve the new Role's ARN."
+  },
+  "provisioning.createIamPolicy": {
+    "defaultMessage": "AWS Account Number"
+  },
+  "provisioning.createIamRole": {
+    "defaultMessage": "Create IAM role"
+  },
+  "provisioning.createRole": {
+    "defaultMessage": "Create custom role"
+  },
+  "provisioning.enableAccountAccess": {
+    "defaultMessage": "Enable account access"
+  },
+  "provisioning.enterArn": {
+    "defaultMessage": "Enter ARN"
+  },
+  "provisioning.enterProjectID": {
+    "defaultMessage": "Enter Project ID"
+  },
+  "provisioning.gcp-role-creation-follow.desc": {
+    "defaultMessage": "Follow these steps to create the role:"
+  },
+  "provisioning.gcp-role-creation.desc": {
+    "defaultMessage": "To delegate account access, create a custom role and grant it to Red Hat service account."
+  },
+  "provisioning.gcp-role-step-1": {
+    "defaultMessage": "Click on {connectGCP} to open Google cloud shell in a new tab."
+  },
+  "provisioning.gcp-role-step-2": {
+    "defaultMessage": "In the cloud shell, paste this {script} to initiate the creation and binding the role. Wait until the the process has done."
+  },
+  "provisioning.gcp-role-step-3": {
+    "defaultMessage": "Return to this window and click {next}."
+  },
+  "provisioning.iam.enableAccount": {
+    "defaultMessage": "To enable account access, copy this provided {ARN} and paste it into the input field below. If you modified the role name during creation, update it accordingly."
+  },
+  "provisioning.iam.fetchError": {
+    "defaultMessage": "There was an error while loading the commands. Please go back and return to this step to try again."
+  },
+  "provisioning.iam.loading": {
+    "defaultMessage": "Loading configuration..."
+  },
+  "provisioning.lighthouse.button": {
+    "defaultMessage": "Take me to Lighthouse"
+  },
+  "provisioning.lighthouse.desc": {
+    "defaultMessage": "Complete configuration steps in Azure Lighthouse according to Microsoft instructions. When you're finished, return to this wizard to finish creating this Azure source."
+  },
+  "provisioning.lighthouse.subscriptionId": {
+    "defaultMessage": "Set subscription ID"
+  },
+  "provisioning.lighthouse.title": {
+    "defaultMessage": "Configure Azure Lighthouse"
+  },
+  "provisioning.project-id.desc": {
+    "defaultMessage": "Login to Google Cloud Plattform and Copy your project ID"
+  },
+  "provisioning.sources.description": {
+    "defaultMessage": "Build and launch images with custom content as Virtual Machines in hybrid cloud environments."
+  },
+  "provisioning.sources.label": {
+    "defaultMessage": "Launch images"
+  },
+  "provisioning.subscriptionId.desc": {
+    "defaultMessage": "Log in to your Azure account and navigate to your subscriptions. Copy the subscription ID you have connected through Lighthouse."
+  },
+  "provisioning.subscriptionIdPattern": {
+    "defaultMessage": "Subscription ID must only contain alphanumeric characters and hyphens"
+  },
+  "provisioningArn.connectAws": {
+    "defaultMessage": "Connect AWS"
+  },
+  "provisioningArn.seeRolePermissions": {
+    "defaultMessage": "See role permissions"
+  },
+  "provisioningGcp.connectGoogleCloud": {
+    "defaultMessage": "Connect Google Cloud"
+  },
+  "provisioningGcp.copyScript": {
+    "defaultMessage": "Copy script"
+  },
+  "provisioningGcp.scriptCopied": {
+    "defaultMessage": "script Copied"
+  },
+  "provisioningGcp.seeRolePermissions": {
+    "defaultMessage": "See role permissions"
+  },
+  "redhat.emptystate.cardDescription": {
+    "defaultMessage": "Select an available application."
+  },
+  "redhat.emptystate.cardTitle": {
+    "defaultMessage": "Get started by connecting to your Red Hat applications"
+  },
+  "redhatTiles.ocpTitle": {
+    "defaultMessage": "OpenShift Container Platform"
+  },
+  "redhatTiles.redHatLogoAlt": {
+    "defaultMessage": "red hat logo"
+  },
+  "resourceTable.description": {
+    "defaultMessage": "View resources for your connected applications."
+  },
+  "resourceTable.emptyStateTitle": {
+    "defaultMessage": "No application resources"
+  },
+  "resourceTable.resourceType": {
+    "defaultMessage": "Resource type"
+  },
+  "resourceTable.resourceValue": {
+    "defaultMessage": "Value"
+  },
+  "resourceTable.title": {
+    "defaultMessage": "Connected application resources"
+  },
+  "rhelbundle.autoregistration.title": {
+    "defaultMessage": "Autoregistration"
+  },
+  "rhelbundle.goldImages.azure.description": {
+    "defaultMessage": "Unlock cloud images in Microsoft Azure and bring your own subscription instead of paying hourly."
+  },
+  "rhelbundle.goldImages.bringYourOwn": {
+    "defaultMessage": "Unlock cloud images in AWS and bring your own subscription instead of paying hourly."
+  },
+  "rhelbundle.goldImages.description": {
+    "defaultMessage": "Cloud instances automatically connect to console.redhat.com when provisioned."
+  },
+  "rhelbundle.goldImages.google.description": {
+    "defaultMessage": "Unlock cloud images in Google Cloud and bring your own subscription instead of paying hourly."
+  },
+  "rhelbundle.goldImages.title": {
+    "defaultMessage": "Red Hat gold images"
+  },
+  "rhelbundle.subwatch.description": {
+    "defaultMessage": "View precise public cloud usage data in subscription watch."
+  },
+  "rhelbundle.subwatch.title": {
+    "defaultMessage": "High precision subscription watch data"
+  },
+  "satellite.credentials": {
+    "defaultMessage": "Credentials"
+  },
+  "satellite.receptorId": {
+    "defaultMessage": "Receptor ID"
+  },
+  "satellite.satelliteId": {
+    "defaultMessage": "Satellite ID"
+  },
+  "source.detail.pausedDescription": {
+    "defaultMessage": "No data is being collected for this integration. Turn the integration back on to reestablish connection and data collection. Previous credentials will be restored and application connections will continue as seen on this page."
+  },
+  "source.detail.pausedTitle": {
+    "defaultMessage": "Integration paused"
+  },
+  "source.detail.resumeConnection": {
+    "defaultMessage": "Resume connection"
+  },
+  "source.paused.alert.description": {
+    "defaultMessage": "Integration <b>{ sourceName }</b> is now paused. Data collection for all connected applications will be disabled until the integration is resumed."
+  },
+  "source.paused.alert.error": {
+    "defaultMessage": "Integration pause failed"
+  },
+  "source.paused.alert.title": {
+    "defaultMessage": "Integration paused"
+  },
+  "source.resume.alert.error": {
+    "defaultMessage": "Integration resume failed"
+  },
+  "source.resumed.alert.description": {
+    "defaultMessage": "Integration <b>{ sourceName }</b> will recontinue data collection for connected applications."
+  },
+  "source.resumed.alert.title": {
+    "defaultMessage": "Integration resumed"
+  },
+  "sourceEdit.saveChanges": {
+    "defaultMessage": "Save changes"
+  },
+  "sourceKebab.actionsAria": {
+    "defaultMessage": "Actions"
+  },
+  "sources.add": {
+    "defaultMessage": "Add"
+  },
+  "sources.addApplicationNameDescription": {
+    "defaultMessage": "Configure {appName} for this integration."
+  },
+  "sources.addApplicationNameTitle": {
+    "defaultMessage": "Connect {appName}"
+  },
+  "sources.addSource": {
+    "defaultMessage": "Add integration"
+  },
+  "sources.addedDate": {
+    "defaultMessage": "Date added"
+  },
+  "sources.appErrors": {
+    "defaultMessage": "Application {count, plural, one {status} other {statutes}}: { errors }"
+  },
+  "sources.appStatusOK": {
+    "defaultMessage": "Everything works fine."
+  },
+  "sources.appStatusPartiallyOK": {
+    "defaultMessage": "We found {count, plural, one {this error} other {these errors}}."
+  },
+  "sources.appStatusUnknown": {
+    "defaultMessage": "Status has not been verified."
+  },
+  "sources.application": {
+    "defaultMessage": "Application"
+  },
+  "sources.authErrors": {
+    "defaultMessage": "Authentication {count, plural, one {status} other {statuses}} : { errors }"
+  },
+  "sources.availabilityStatus": {
+    "defaultMessage": "Status"
+  },
+  "sources.available": {
+    "defaultMessage": "Available"
+  },
+  "sources.back": {
+    "defaultMessage": "Back"
+  },
+  "sources.cancel": {
+    "defaultMessage": "Cancel"
+  },
+  "sources.checkavailability": {
+    "defaultMessage": "Check integration availability"
+  },
+  "sources.checkavailability.notificationDescription": {
+    "defaultMessage": "Check this page later for updates"
+  },
+  "sources.checkavailability.notificationTitle": {
+    "defaultMessage": "Request to check integration status was sent"
+  },
+  "sources.clearAllFilters": {
+    "defaultMessage": "Clear all filters"
+  },
+  "sources.close": {
+    "defaultMessage": "Close"
+  },
+  "sources.cloud": {
+    "defaultMessage": "Cloud"
+  },
+  "sources.cloudIconAria": {
+    "defaultMessage": "Cloud Icon"
+  },
+  "sources.cloudSources": {
+    "defaultMessage": "Cloud sources"
+  },
+  "sources.cloudformImportTooltip": {
+    "defaultMessage": "This integration can be managed from your connected CloudForms application."
+  },
+  "sources.communications": {
+    "defaultMessage": "Communications"
+  },
+  "sources.configurationSuccessful": {
+    "defaultMessage": "Configuration successful"
+  },
+  "sources.configurationUnsuccessful": {
+    "defaultMessage": "Configuration unsuccessful"
+  },
+  "sources.configureCredentials": {
+    "defaultMessage": "Configure credentials"
+  },
+  "sources.connectedApplications": {
+    "defaultMessage": "Connected applications"
+  },
+  "sources.deleteAppDetails": {
+    "defaultMessage": "This change will affect these applications: { apps }."
+  },
+  "sources.deleteAppTitle": {
+    "defaultMessage": "Remove application?"
+  },
+  "sources.deleteAppWarning": {
+    "defaultMessage": "{ appName } will be disconnected from this integration."
+  },
+  "sources.deleteCancel": {
+    "defaultMessage": "Cancel"
+  },
+  "sources.deleteCheckboxTitle": {
+    "defaultMessage": "I acknowledge that this action cannot be undone."
+  },
+  "sources.deleteConfirm": {
+    "defaultMessage": "Remove integration and its data"
+  },
+  "sources.deleteTextBodyNoApps": {
+    "defaultMessage": "Removing { name } will permanently delete all data collected."
+  },
+  "sources.deleteTextBodyWithApps": {
+    "defaultMessage": "Removing { name } detaches the following connected {count, plural, one {application} other {applications}} from this integration:"
+  },
+  "sources.deleteTextBodyWithAppsExtended": {
+    "defaultMessage": "Removing { name } permanently deletes all collected data and detaches the following connected {count, plural, one {application} other {applications}}:"
+  },
+  "sources.deleteTitle": {
+    "defaultMessage": "Remove integration?"
+  },
+  "sources.edit": {
+    "defaultMessage": "Edit"
+  },
+  "sources.editCredentials": {
+    "defaultMessage": "Edit credentials"
+  },
+  "sources.editErrorDescription": {
+    "defaultMessage": "There was a problem while trying to edit your source. Please try again. If the error persists, open a support case."
+  },
+  "sources.editFormDescripiton": {
+    "defaultMessage": "Use the form fields to edit application credentials."
+  },
+  "sources.editSubmittingTitle": {
+    "defaultMessage": "Validating edited source credentials"
+  },
+  "sources.endpointError": {
+    "defaultMessage": "Endpoint error: { error }"
+  },
+  "sources.errorAppTemplate": {
+    "defaultMessage": "{ app }: { error }"
+  },
+  "sources.errorAuthTemplate": {
+    "defaultMessage": "{ type }: { error }"
+  },
+  "sources.exit": {
+    "defaultMessage": "Exit"
+  },
+  "sources.filterByName": {
+    "defaultMessage": "Filter by name"
+  },
+  "sources.imported": {
+    "defaultMessage": "Imported"
+  },
+  "sources.importedStatus": {
+    "defaultMessage": "imported"
+  },
+  "sources.inProgress": {
+    "defaultMessage": "In progress"
+  },
+  "sources.inProgressStatus": {
+    "defaultMessage": "We are still working to validate credentials. Check back for status updates."
+  },
+  "sources.insufficietnPerms": {
+    "defaultMessage": "Insufficient permissions"
+  },
+  "sources.integrations": {
+    "defaultMessage": "Integrations"
+  },
+  "sources.integrations.popoverHeader": {
+    "defaultMessage": "Access needed"
+  },
+  "sources.integrations.subtitle": {
+    "defaultMessage": "Integrating third-party applications expands the scope of notifications beyond emails and messages, so that you can view and manage Hybrid Cloud Console events from your preferred platform dashboard. Cloud integrations connect your cloud provider accounts with the Hybrid Cloud Console to collect data, so you can use console services with your cloud providers."
+  },
+  "sources.loading": {
+    "defaultMessage": "Loading, please wait."
+  },
+  "sources.manageAppsCloseModalTitle": {
+    "defaultMessage": "Exit application adding?"
+  },
+  "sources.name": {
+    "defaultMessage": "Name"
+  },
+  "sources.noResultsFoundDescription": {
+    "defaultMessage": "No sources match the filter criteria. Remove all filters or clear all filters to show sources."
+  },
+  "sources.noResultsFoundTitle": {
+    "defaultMessage": "No sources found"
+  },
+  "sources.notAdminAddButton": {
+    "defaultMessage": "To add an integration, you must add Cloud Administrator permissions to your user."
+  },
+  "sources.notAdminButton": {
+    "defaultMessage": "To perform this action, you must add Cloud Administrator permissions to your user."
+  },
+  "sources.notPermissionsAddButton": {
+    "defaultMessage": "To add an integration, your Organization Administrator must grant you Cloud Administrator permissions."
+  },
+  "sources.notWritePermissionButton": {
+    "defaultMessage": "To perform this action, your Organization Administrator must grant you Cloud Administrator permissions."
+  },
+  "sources.notificationDeleteMessage": {
+    "defaultMessage": "{title} was deleted successfully."
+  },
+  "sources.openTicket": {
+    "defaultMessage": "Open a support case"
+  },
+  "sources.overview": {
+    "defaultMessage": "Overview"
+  },
+  "sources.partiallyAvailable": {
+    "defaultMessage": "Partially available"
+  },
+  "sources.pause": {
+    "defaultMessage": "Pause"
+  },
+  "sources.pause.description": {
+    "defaultMessage": "Temporarily disable data collection"
+  },
+  "sources.paused": {
+    "defaultMessage": "Paused"
+  },
+  "sources.pausedSourceAction": {
+    "defaultMessage": "You cannot perform this action on a paused integration."
+  },
+  "sources.pausedStatus": {
+    "defaultMessage": "Data collection is temporarily disabled. Resume source to reestablish connection."
+  },
+  "sources.redhat": {
+    "defaultMessage": "Red Hat"
+  },
+  "sources.redhatIconAria": {
+    "defaultMessage": "Red Hat Icon"
+  },
+  "sources.redhatSources": {
+    "defaultMessage": "Red Hat sources"
+  },
+  "sources.remove": {
+    "defaultMessage": "Remove"
+  },
+  "sources.remove.description": {
+    "defaultMessage": "Permanently delete this integration and all collected data"
+  },
+  "sources.removeAppError": {
+    "defaultMessage": "Removing of { name } application from this integration was unsuccessful."
+  },
+  "sources.removeAppWarning": {
+    "defaultMessage": "{ name } was removed from this integration."
+  },
+  "sources.renameDescription": {
+    "defaultMessage": "Enter a new name for your source."
+  },
+  "sources.renameError": {
+    "defaultMessage": "Renaming was unsuccessful"
+  },
+  "sources.renameTitle": {
+    "defaultMessage": "Rename integration"
+  },
+  "sources.reportingAutomation": {
+    "defaultMessage": "Reporting & automation"
+  },
+  "sources.resume": {
+    "defaultMessage": "Resume"
+  },
+  "sources.resume.description": {
+    "defaultMessage": "Unpause data collection for this integration"
+  },
+  "sources.retry": {
+    "defaultMessage": "Retry"
+  },
+  "sources.retryText": {
+    "defaultMessage": "Retry"
+  },
+  "sources.reviewAddAppSummary": {
+    "defaultMessage": "Review the information below and click Add to add the application to your source. Use the Back button to make changes."
+  },
+  "sources.reviewDetails": {
+    "defaultMessage": "Review details"
+  },
+  "sources.save": {
+    "defaultMessage": "Save"
+  },
+  "sources.selectAuthenticationDescription": {
+    "defaultMessage": "Selected application { applicationTypeName } supports { authenticationTypeName } authentication type. You can use already defined authentication values or define new."
+  },
+  "sources.selectAuthenticationTitle": {
+    "defaultMessage": "Select authentication"
+  },
+  "sources.selectAuthenticationType": {
+    "defaultMessage": "Select authentication type"
+  },
+  "sources.selectAuthenticationradioLabel": {
+    "defaultMessage": "Define new { supportedAuthTypeName }"
+  },
+  "sources.sourceError": {
+    "defaultMessage": "Source's status: { error }"
+  },
+  "sources.sourceNotFoundTitle": {
+    "defaultMessage": "Requested source was not found"
+  },
+  "sources.sourceNotFoundTitleDescription": {
+    "defaultMessage": "Source with { id } was not found. Try it again later."
+  },
+  "sources.sourcePausedRedirect": {
+    "defaultMessage": "Integration is paused"
+  },
+  "sources.sourcePausedRedirectDescription": {
+    "defaultMessage": "You cannot perform this action on a paused integration."
+  },
+  "sources.sources": {
+    "defaultMessage": "Integrations"
+  },
+  "sources.status": {
+    "defaultMessage": "Status"
+  },
+  "sources.submit": {
+    "defaultMessage": "Submit"
+  },
+  "sources.successAddApp": {
+    "defaultMessage": "Your application was successfully added."
+  },
+  "sources.type": {
+    "defaultMessage": "Type"
+  },
+  "sources.unavailable": {
+    "defaultMessage": "Unavailable"
+  },
+  "sources.unknown": {
+    "defaultMessage": "Unknown"
+  },
+  "sources.unknownError": {
+    "defaultMessage": "Unknown error"
+  },
+  "sources.viewCredentials": {
+    "defaultMessage": "View credentials"
+  },
+  "sources.viewDetails": {
+    "defaultMessage": "View details"
+  },
+  "sources.webhooks": {
+    "defaultMessage": "Webhooks"
+  },
+  "sourcesHeader.popoverAria": {
+    "defaultMessage": "Popover with icon in the title example"
+  },
+  "sourcesTable.actions": {
+    "defaultMessage": "Actions"
+  },
+  "sourcesTable.listOfIntegrationsAria": {
+    "defaultMessage": "List of Integrations"
+  },
+  "sub.bundle": {
+    "defaultMessage": "Bundle"
+  },
+  "subwatch.arn.copyArn": {
+    "defaultMessage": "From the <b>Summary</b> screen, copy the role ARN and paste it in the <b>ARN field</b> below."
+  },
+  "subwatch.arn.enableAccount": {
+    "defaultMessage": "To enable account access, capture the ARN associated with the role you just created."
+  },
+  "subwatch.arn.selectRole": {
+    "defaultMessage": "Navigate to the role that you just created."
+  },
+  "subwatch.azure.alertTitle": {
+    "defaultMessage": "Azure role requirements"
+  },
+  "subwatch.azure.ansiblePlaybookDesc": {
+    "defaultMessage": "Download and run the following commands against a running Azure VM."
+  },
+  "subwatch.azure.playbookTitle": {
+    "defaultMessage": "Run Ansible playbook"
+  },
+  "subwatch.azure.substepTitle": {
+    "defaultMessage": "Enable account access"
+  },
+  "subwatch.azure.tokenDesc": {
+    "defaultMessage": "Generate a token to authenticate the calls to APIs for Red Hat services."
+  },
+  "subwatch.azure.tokenLink": {
+    "defaultMessage": "To obtain an offline token, follow the steps at {link}."
+  },
+  "subwatch.azure.tokenTitle": {
+    "defaultMessage": "Obtain offline token"
+  },
+  "subwatch.google.ansiblePlaybookDesc": {
+    "defaultMessage": "Download and run the following commands against a running Google Cloud VM."
+  },
+  "subwatch.google.tokenDesc": {
+    "defaultMessage": "Generate a token to authenticate the calls to APIs for Red Hat services."
+  },
+  "subwatch.google.tokenLink": {
+    "defaultMessage": "To obtain an offline token, follow the steps at {link}."
+  },
+  "subwatch.iampolicy.BDoNotCloseYourBrowserBYouWillNeedToBeLoggedInToTheIamConsoleToComputeTheNextStep": {
+    "defaultMessage": "{bold} You will need to be logged in to the IAM console to complete the next step."
+  },
+  "subwatch.iampolicy.IAMconsole": {
+    "defaultMessage": "AWS Identity and Management (IAM) console"
+  },
+  "subwatch.iampolicy.completeProcess": {
+    "defaultMessage": "Complete the process to create your new policy."
+  },
+  "subwatch.iampolicy.createPolicty": {
+    "defaultMessage": "Create a new policy, pasting the following content into the JSON text box."
+  },
+  "subwatch.iampolicy.dontCloseBrowser": {
+    "defaultMessage": "Do not close your browser."
+  },
+  "subwatch.iampolicy.grantPermissions": {
+    "defaultMessage": "To grant Red Hat access to your Amazon Web Services (AWS) subscription data, create an AWS Identity and Access Management (IAM) policy."
+  },
+  "subwatch.iampolicy.signIn": {
+    "defaultMessage": "Log in to the {link}."
+  },
+  "subwatch.iampolicy.subWatchConfigError": {
+    "defaultMessage": "There is an error with loading of the configuration. Please go back and return to this step."
+  },
+  "subwatch.iamrole.attachPolicy": {
+    "defaultMessage": "Attach the permissions policy that you just created."
+  },
+  "subwatch.iamrole.completeProcess": {
+    "defaultMessage": "Complete the process to create your new role."
+  },
+  "subwatch.iamrole.createRole": {
+    "defaultMessage": "From the AWS IAM console, create a new role."
+  },
+  "subwatch.iamrole.delegateAccount": {
+    "defaultMessage": "To delegate account access, create an IAM role to associate with your IAM policy."
+  },
+  "subwatch.iamrole.pasteAccountID": {
+    "defaultMessage": "Select <b>Another AWS account</b> from the list of trusted entities and paste the following value into the <b>Account{space}ID</b> field:"
+  },
+  "subwatch.iamrole.pasteExternalId": {
+    "defaultMessage": "Paste the following value in the External ID field:"
+  },
+  "subwatch.lighthouse.azureDocs": {
+    "defaultMessage": "Azure documentation"
+  },
+  "subwatch.lighthouse.button": {
+    "defaultMessage": "Go to Lighthouse"
+  },
+  "subwatch.lighthouse.clickCreateToRunDeployment": {
+    "defaultMessage": "Click <b>Create</b> to run the deployment. This action creates two roles in your Azure account: {readerLink} and {roleLink}."
+  },
+  "subwatch.lighthouse.copySubscriptionId": {
+    "defaultMessage": "When the deployment is complete, click <b>Go to subscription</b> and copy the <b>Subscription ID</b>."
+  },
+  "subwatch.lighthouse.deployStep": {
+    "defaultMessage": "In Azure Lighthouse, deploy the Azure Resource Manager custom template that connects your Red Hat and Azure accounts. When ready, click <b>Go to Lighthouse</b> and follow these instructions:"
+  },
+  "subwatch.lighthouse.desc": {
+    "defaultMessage": "To complete this step, your Azure account must have the Owner role, at a minimum, for the selected subscription. View the {link} for more information."
+  },
+  "subwatch.lighthouse.editInstanceDetails": {
+    "defaultMessage": "Edit any other instance details and click <b>Review + create</b>."
+  },
+  "subwatch.lighthouse.reader": {
+    "defaultMessage": "Reader"
+  },
+  "subwatch.lighthouse.roleLink": {
+    "defaultMessage": "Managed Services Registration assignment Delete Role"
+  },
+  "subwatch.lighthouse.selectAzureSubscription": {
+    "defaultMessage": "Select the Azure subscription that you want to use with RHEL management."
+  },
+  "subwatch.lighthouse.subscriptionId": {
+    "defaultMessage": "Set subscription ID"
+  },
+  "subwatch.lighthouse.title": {
+    "defaultMessage": "Configure Azure Lighthouse"
+  },
+  "subwatch.subscriptionId.desc": {
+    "defaultMessage": "Paste your Azure subscription ID from the previous step into the field below."
+  },
+  "timeoutStep.copied": {
+    "defaultMessage": "Copied"
+  },
+  "timeoutStep.sourceUuid": {
+    "defaultMessage": "Source UUID"
+  },
+  "tryAgain.text": {
+    "defaultMessage": "{ error }. Please try again."
+  },
+  "wizard.accessKeyId": {
+    "defaultMessage": "Access key ID"
+  },
+  "wizard.accountAuth": {
+    "defaultMessage": "Account authorization"
+  },
+  "wizard.accountAuth.desc": {
+    "defaultMessage": "A new automated integration configuration method. Provide your {type} account credentials and let Red Hat configure and manage your integration for you."
+  },
+  "wizard.accountAuthDescription": {
+    "defaultMessage": "Configure your integration manually or let us manage all necessary credentials by selecting <b>account authorization</b> configuration."
+  },
+  "wizard.accountId": {
+    "defaultMessage": "Account ID"
+  },
+  "wizard.addAnotherSource": {
+    "defaultMessage": "Add another integration"
+  },
+  "wizard.application": {
+    "defaultMessage": "Application"
+  },
+  "wizard.applicationDescription": {
+    "defaultMessage": "Select an application to connect to your integration. You can connect additional applications after integration creation. {learnMore}"
+  },
+  "wizard.applicationRequired": {
+    "defaultMessage": "An application must be selected."
+  },
+  "wizard.applicationStepTitle": {
+    "defaultMessage": "B. Application"
+  },
+  "wizard.applications": {
+    "defaultMessage": "Applications"
+  },
+  "wizard.arn": {
+    "defaultMessage": "ARN"
+  },
+  "wizard.arnLength": {
+    "defaultMessage": "ARN should have at least 10 characters"
+  },
+  "wizard.arnPattern": {
+    "defaultMessage": "ARN must start with arn:aws:"
+  },
+  "wizard.authenticationType": {
+    "defaultMessage": "Authentication type"
+  },
+  "wizard.back": {
+    "defaultMessage": "Back"
+  },
+  "wizard.bucket": {
+    "defaultMessage": "Bucket namespace"
+  },
+  "wizard.cancel": {
+    "defaultMessage": "Cancel"
+  },
+  "wizard.cancelText": {
+    "defaultMessage": "Cancel"
+  },
+  "wizard.certificateAuthority": {
+    "defaultMessage": "Certificate authority"
+  },
+  "wizard.certificateAuthoriy": {
+    "defaultMessage": "Certificate authority"
+  },
+  "wizard.changeAuthHelper": {
+    "defaultMessage": "Changing this resets your current {label}."
+  },
+  "wizard.chooseAppAndType": {
+    "defaultMessage": "Integration type and application"
+  },
+  "wizard.close": {
+    "defaultMessage": "Close"
+  },
+  "wizard.closeAriaLabel": {
+    "defaultMessage": "Close add integration wizard"
+  },
+  "wizard.closeTitle": {
+    "defaultMessage": "Cancel creating the integration?"
+  },
+  "wizard.closeWarning": {
+    "defaultMessage": "All inputs will be discarded."
+  },
+  "wizard.closeWizard": {
+    "defaultMessage": "Close wizard"
+  },
+  "wizard.clusterId": {
+    "defaultMessage": "Cluster Identifier"
+  },
+  "wizard.clusterIdPattern": {
+    "defaultMessage": "Cluster ID must start with alphanumeric character and can contain underscore and hyphen"
+  },
+  "wizard.confMode.reccomended": {
+    "defaultMessage": "Recommended"
+  },
+  "wizard.configurationMode": {
+    "defaultMessage": "Configuration mode"
+  },
+  "wizard.configurationStep": {
+    "defaultMessage": "Select configuration"
+  },
+  "wizard.configurationUnsuccessful": {
+    "defaultMessage": "Configuration unsuccessful"
+  },
+  "wizard.configureAccountAccess": {
+    "defaultMessage": "Account access"
+  },
+  "wizard.configureRoles": {
+    "defaultMessage": "Roles"
+  },
+  "wizard.costExportName": {
+    "defaultMessage": "Cost export name"
+  },
+  "wizard.costExportScope": {
+    "defaultMessage": "Cost export scope"
+  },
+  "wizard.createAccesKeyHelpText": {
+    "defaultMessage": "The Power user policy allows the user full access to API functionality and AWS services for user administration. Create an access key in the Security Credentials area of your AWS user account. When adding your AWS account as an integration, the access key ID and secret access key act as your user ID and password."
+  },
+  "wizard.createAccesKeyPart1": {
+    "defaultMessage": "Create an access key in your AWS user account and enter the details below."
+  },
+  "wizard.createAccesKeyPart2": {
+    "defaultMessage": "For sufficient access and security, Red Hat recommends using the Power user identity and access management (IAM) policy for your AWS user account."
+  },
+  "wizard.credentials": {
+    "defaultMessage": "Credentials"
+  },
+  "wizard.disabled": {
+    "defaultMessage": "Disabled"
+  },
+  "wizard.editSource": {
+    "defaultMessage": "Edit integration"
+  },
+  "wizard.enabled": {
+    "defaultMessage": "Enabled"
+  },
+  "wizard.errorText": {
+    "defaultMessage": "There was a problem while trying to add your source. Please try again. If the error persists, open a support case."
+  },
+  "wizard.exitText": {
+    "defaultMessage": "Cancel"
+  },
+  "wizard.failEditToastTitle": {
+    "defaultMessage": "Edit application credentials failed."
+  },
+  "wizard.failEditToastTitleBeforeEdit": {
+    "defaultMessage": "This application is unavailable"
+  },
+  "wizard.finish": {
+    "defaultMessage": "Finish"
+  },
+  "wizard.goBackToSources": {
+    "defaultMessage": "Go back to Integrations"
+  },
+  "wizard.helpTextAria": {
+    "defaultMessage": "Help text"
+  },
+  "wizard.hostname": {
+    "defaultMessage": "Hostname"
+  },
+  "wizard.integrationName": {
+    "defaultMessage": "Integration name"
+  },
+  "wizard.learnMore": {
+    "defaultMessage": "Learn more"
+  },
+  "wizard.learnMore defaultMessage=Learn more": {
+    "defaultMessage": "Learn more"
+  },
+  "wizard.loading": {
+    "defaultMessage": "Loading"
+  },
+  "wizard.loadingDescription": {
+    "defaultMessage": "This could take a minute. If you prefer not to wait, close this dialog and the process will continue."
+  },
+  "wizard.loadingDescription-a": {
+    "defaultMessage": "This might take some time. You'll receive a notification if you are still in the Integrations application when the process completes. Otherwise, you can check the status in the main integrations table at any time."
+  },
+  "wizard.loadingDescription-b": {
+    "defaultMessage": "In the meantime, you can close this window while the validation process continues."
+  },
+  "wizard.loadingStepText": {
+    "defaultMessage": "Loading, please wait."
+  },
+  "wizard.loadingText": {
+    "defaultMessage": "Validating credentials"
+  },
+  "wizard.manualAuth": {
+    "defaultMessage": "Manual configuration"
+  },
+  "wizard.manualAuth.desc": {
+    "defaultMessage": "Configure and manage your integration manually if you do not wish to provide account authorization credentials. You will set up integrations the same way you do today."
+  },
+  "wizard.manualConfig": {
+    "defaultMessage": "Manual configuration"
+  },
+  "wizard.name": {
+    "defaultMessage": "Name"
+  },
+  "wizard.nameDescription": {
+    "defaultMessage": "Enter a name for your {typeName} integration."
+  },
+  "wizard.nameSource": {
+    "defaultMessage": "Name integration"
+  },
+  "wizard.nameTaken": {
+    "defaultMessage": "That name is taken. Try another."
+  },
+  "wizard.next": {
+    "defaultMessage": "Next"
+  },
+  "wizard.notSelected": {
+    "defaultMessage": "Not selected"
+  },
+  "wizard.openTicket": {
+    "defaultMessage": "Open a support case"
+  },
+  "wizard.openshiftCADescription1": {
+    "defaultMessage": "You can obtain your OpenShift Container Platform provider’s CA certificate for all endpoints (default, metrics, alerts) from {cmd}."
+  },
+  "wizard.openshiftCADescription2": {
+    "defaultMessage": "Paste the output (a block of text starting with --BEGIN CERTIFICATE--) into the Trusted CA Certificates field."
+  },
+  "wizard.password": {
+    "defaultMessage": "Password"
+  },
+  "wizard.pausedApplication": {
+    "defaultMessage": "{application} is paused"
+  },
+  "wizard.pausedApplicationDescription": {
+    "defaultMessage": "To resume data collection for this application, switch {application} on in the <b>Applications</b> section of this page."
+  },
+  "wizard.removeApp": {
+    "defaultMessage": "Remove application"
+  },
+  "wizard.removeSource": {
+    "defaultMessage": "Remove integration"
+  },
+  "wizard.removeSourceSuccessDescription": {
+    "defaultMessage": "Integration was successfully removed."
+  },
+  "wizard.removeSourceSuccessTitle": {
+    "defaultMessage": "Removing successful"
+  },
+  "wizard.removingSource": {
+    "defaultMessage": "Removing integration"
+  },
+  "wizard.resourceGroupName": {
+    "defaultMessage": "Resource group name"
+  },
+  "wizard.retryText": {
+    "defaultMessage": "Retry"
+  },
+  "wizard.reviewDetails": {
+    "defaultMessage": "Review details"
+  },
+  "wizard.secretAccessKey": {
+    "defaultMessage": "Secret access key"
+  },
+  "wizard.selectApplication": {
+    "defaultMessage": "Select application"
+  },
+  "wizard.selectApplicationType": {
+    "defaultMessage": "Select an application"
+  },
+  "wizard.selectCloudProvider": {
+    "defaultMessage": "Select cloud provider"
+  },
+  "wizard.selectCloudProviderHeading": {
+    "defaultMessage": "Select a cloud provider"
+  },
+  "wizard.selectCloudType": {
+    "defaultMessage": "To import data for an application, you need to configure an integration. Start by selecting your cloud provider."
+  },
+  "wizard.selectConfigurationMode": {
+    "defaultMessage": "Select a configuration mode"
+  },
+  "wizard.selectRedHatType": {
+    "defaultMessage": "To import data for an application, you need to configure an integration. Start by selecting your cloud provider and application."
+  },
+  "wizard.selectYourSourceType": {
+    "defaultMessage": "A. Select your integration type"
+  },
+  "wizard.showMore": {
+    "defaultMessage": "Show more"
+  },
+  "wizard.sourceType": {
+    "defaultMessage": "Integration type"
+  },
+  "wizard.sourcesUid": {
+    "defaultMessage": "Source UUID"
+  },
+  "wizard.sslCertificate": {
+    "defaultMessage": "TLS Certificate"
+  },
+  "wizard.stayText": {
+    "defaultMessage": "Stay"
+  },
+  "wizard.storageAccountName": {
+    "defaultMessage": "Storage account name"
+  },
+  "wizard.subscriptionId": {
+    "defaultMessage": "Subscription ID"
+  },
+  "wizard.succConfiguration": {
+    "defaultMessage": "Configuration successful"
+  },
+  "wizard.successEditToastTitle": {
+    "defaultMessage": "Application credentials were edited successfully."
+  },
+  "wizard.successfulMessage": {
+    "defaultMessage": "Your integration was successfully added."
+  },
+  "wizard.summaryDescription": {
+    "defaultMessage": "Review the information below and click <b>Add</b> to add your integration. To edit details in previous steps, click <b>Back</b>."
+  },
+  "wizard.timeoutEditToastDescription": {
+    "defaultMessage": "We are still working to confirm your updated credentials. Changes will be reflected in this table when complete."
+  },
+  "wizard.timeoutEditToastTitle": {
+    "defaultMessage": "Edit in progress"
+  },
+  "wizard.toSources": {
+    "defaultMessage": "Take me to sources"
+  },
+  "wizard.uncompleteConfigurationDescription": {
+    "defaultMessage": "We are still working to confirm credentials and app settings.{newLine}To track progress, check the Status column in the Integrations table."
+  },
+  "wizard.uncompleteConfigurationTitle": {
+    "defaultMessage": "Configuration in progress"
+  },
+  "wizard.unknownError": {
+    "defaultMessage": "Unknown error"
+  },
+  "wizard.unsuccConfiguration": {
+    "defaultMessage": "Something went wrong"
+  },
+  "wizard.urlPatternMessage": {
+    "defaultMessage": "The URL is not formatted correctly."
+  },
+  "wizard.username": {
+    "defaultMessage": "Username"
+  },
+  "wizard.validating": {
+    "defaultMessage": "Validating"
+  },
+  "wizard.verifySsl": {
+    "defaultMessage": "Verify TLS"
+  },
+  "wizard.waitTheresMore": {
+    "defaultMessage": "Success, but wait there's more!"
+  },
+  "wizard.wizardDescriptionCloud": {
+    "defaultMessage": "Register your provider to manage your Red Hat products in the cloud."
+  },
+  "wizard.wizardDescriptionRedhat": {
+    "defaultMessage": "Configure an integration to connect to your Red Hat applications."
+  },
+  "wizard.wizardTitleCloud": {
+    "defaultMessage": "Add a cloud integration"
+  },
+  "wizard.wizardTitleRedhat": {
+    "defaultMessage": "Add Red Hat integration"
+  }
+}

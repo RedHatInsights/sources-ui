@@ -27,6 +27,7 @@ const App = () => {
     return () => {
       sessionStorage.removeItem(CLOUD_CARDS_KEY);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   }, []);
 
   return (

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, defineMessages, useIntl } from 'react-intl';
 import { ClipboardCopy } from '@patternfly/react-core';
 
 import {
@@ -19,6 +19,30 @@ import CheckCircleIcon from '@patternfly/react-icons/dist/esm/icons/check-circle
 import computeSourcesUrl from '../../utilities/computeSourcesUrl';
 import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 
+const messages = defineMessages({
+  sourceUuid: {
+    id: 'finishedStep.sourceUuid',
+    defaultMessage: 'Source UUID',
+  },
+  copied: {
+    id: 'finishedStep.copied',
+    defaultMessage: 'Copied',
+  },
+
+  wizardSourcesuid: {
+    id: 'wizard.sourcesUid',
+    defaultMessage: 'Source UUID',
+  },
+  wizardSuccconfiguration: {
+    id: 'wizard.succConfiguration',
+    defaultMessage: 'Configuration successful',
+  },
+  wizardTosources: {
+    id: 'wizard.toSources',
+    defaultMessage: 'Take me to sources',
+  },
+});
+
 const FinishedStep = ({
   onClose,
   successfulMessage,
@@ -29,6 +53,7 @@ const FinishedStep = ({
   secondaryActions,
   uuid,
 }) => {
+  const intl = useIntl();
   const { isBeta } = useChrome();
   return (
     <Bullseye>
@@ -45,8 +70,14 @@ const FinishedStep = ({
         <EmptyStateBody className="src-c-wizard--step-text">{successfulMessage}</EmptyStateBody>
         {uuid && (
           <Form className="src-c-uuid">
-            <FormGroup label={<FormattedMessage id="wizard.sourcesUid" defaultMessage="Source UUID" />} fieldId="source-uuid">
-              <ClipboardCopy id="source-uuid" isReadOnly hoverTip="Source UUID" clickTip="Copied" className="pf-v6-u-mt-md">
+            <FormGroup label={<FormattedMessage {...messages.wizardSourcesuid} />} fieldId="source-uuid">
+              <ClipboardCopy
+                id="source-uuid"
+                isReadOnly
+                hoverTip={intl.formatMessage(messages.sourceUuid)}
+                clickTip={intl.formatMessage(messages.copied)}
+                className="pf-v6-u-mt-md"
+              >
                 {uuid}
               </ClipboardCopy>
             </FormGroup>
@@ -80,8 +111,8 @@ FinishedStep.propTypes = {
 };
 
 FinishedStep.defaultProps = {
-  title: <FormattedMessage id="wizard.succConfiguration" defaultMessage="Configuration successful" />,
-  linkText: <FormattedMessage id="wizard.toSources" defaultMessage="Take me to sources" />,
+  title: <FormattedMessage {...messages.wizardSuccconfiguration} />,
+  linkText: <FormattedMessage {...messages.wizardTosources} />,
 };
 
 export default FinishedStep;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 
 import { Card, CardBody, CardTitle } from '@patternfly/react-core';
 
@@ -9,6 +9,13 @@ import { useSource } from '../../hooks/useSource';
 import NoPermissions from './NoPermissions';
 import SourceEditModal from '../SourceEditForm/SourceEditModal';
 
+const messages = defineMessages({
+  detailResourcesTitle: {
+    id: 'detail.resources.title',
+    defaultMessage: 'Manage connected applications',
+  },
+});
+
 const ApplicationResourcesCard = () => {
   const intl = useIntl();
   const source = useSource();
@@ -16,12 +23,7 @@ const ApplicationResourcesCard = () => {
 
   return (
     <Card className="card pf-v6-u-m-lg pf-v6-u-mt-0">
-      <CardTitle>
-        {intl.formatMessage({
-          id: 'detail.resources.title',
-          defaultMessage: 'Manage connected applications',
-        })}
-      </CardTitle>
+      <CardTitle>{intl.formatMessage(messages.detailResourcesTitle)}</CardTitle>
       <CardBody>
         {!hasRightAccess && <NoPermissions />}
         {hasRightAccess && source.applications.length === 0 && <NoApplications />}

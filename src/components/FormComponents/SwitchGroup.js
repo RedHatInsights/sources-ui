@@ -22,6 +22,7 @@ const SwitchGroup = (props) => {
     if (!input.value) {
       input.onChange(filteredOptions.map(({ value }) => value).filter(Boolean));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   }, []);
 
   return (

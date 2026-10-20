@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer, useRef } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
 
@@ -16,6 +16,17 @@ import Authentication from '../FormComponents/Authentication';
 import SourcesFormRenderer from '../../utilities/SourcesFormRenderer';
 import LoadingStep from '../steps/LoadingStep';
 import { useFlag } from '@unleash/proxy-client-react';
+
+const messages = defineMessages({
+  loading: {
+    id: 'wizard.loading',
+    defaultMessage: 'Loading',
+  },
+  finish: {
+    id: 'wizard.finish',
+    defaultMessage: 'Finish',
+  },
+});
 
 const initialValues = {
   schema: {},
@@ -37,6 +48,7 @@ const SourceAddModal = ({
   initialWizardState,
   activeCategory,
 }) => {
+  const intl = useIntl();
   const enableLighthouse = useFlag('sources.wizard.lighthouse');
 
   const reducer = (
@@ -85,7 +97,6 @@ const SourceAddModal = ({
   const hcsEnrolled = useSelector(({ sources }) => sources.hcsEnrolled, shallowEqual);
   const isMounted = useRef(false);
   const container = useRef(document.createElement('div'));
-  const intl = useIntl();
 
   useEffect(() => {
     isMounted.current = true;
@@ -122,6 +133,7 @@ const SourceAddModal = ({
     return () => {
       isMounted.current = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   }, []);
 
   useEffect(() => {
@@ -136,7 +148,11 @@ const SourceAddModal = ({
         onClose={onCancel}
         header={<WizardHeader title={wizardTitle(activeCategory)} description={wizardDescription(activeCategory)} />}
       >
-        <WizardStep name="Loading" id="loading-step" footer={{ nextButtonText: 'Finish', onNext: () => onCancel() }}>
+        <WizardStep
+          name={intl.formatMessage(messages.loading)}
+          id="loading-step"
+          footer={{ nextButtonText: intl.formatMessage(messages.finish), onNext: () => onCancel() }}
+        >
           <LoadingStep onClose={() => onCancel()} />
         </WizardStep>
       </Wizard>

@@ -1,24 +1,37 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, defineMessages } from 'react-intl';
 import { CLOUD_VENDOR } from '../../utilities/constants';
+
+const messages = defineMessages({
+  wizardWizarddescriptioncloud: {
+    id: 'wizard.wizardDescriptionCloud',
+    defaultMessage: 'Register your provider to manage your Red Hat products in the cloud.',
+  },
+  wizardWizarddescriptionredhat: {
+    id: 'wizard.wizardDescriptionRedhat',
+    defaultMessage: 'Configure an integration to connect to your Red Hat applications.',
+  },
+  wizardWizardtitlecloud: {
+    id: 'wizard.wizardTitleCloud',
+    defaultMessage: 'Add a cloud integration',
+  },
+  wizardWizardtitleredhat: {
+    id: 'wizard.wizardTitleRedhat',
+    defaultMessage: 'Add Red Hat integration',
+  },
+});
 
 export const wizardDescription = (activeCategory) =>
   activeCategory === CLOUD_VENDOR ? (
-    <FormattedMessage
-      id="wizard.wizardDescriptionCloud"
-      defaultMessage="Register your provider to manage your Red Hat products in the cloud."
-    />
+    <FormattedMessage {...messages.wizardWizarddescriptioncloud} />
   ) : (
-    <FormattedMessage
-      id="wizard.wizardDescriptionRedhat"
-      defaultMessage="Configure an integration to connect to your Red Hat applications."
-    />
+    <FormattedMessage {...messages.wizardWizarddescriptionredhat} />
   );
 export const wizardTitle = (activeCategory) =>
   activeCategory === CLOUD_VENDOR ? (
-    <FormattedMessage id="wizard.wizardTitleCloud" defaultMessage="Add a cloud integration" />
+    <FormattedMessage {...messages.wizardWizardtitlecloud} />
   ) : (
-    <FormattedMessage id="wizard.wizardTitleRedhat" defaultMessage="Add Red Hat integration" />
+    <FormattedMessage {...messages.wizardWizardtitleredhat} />
   );
 export const HCCM_DOCS_PREFIX = 'https://access.redhat.com/documentation/en-us/cost_management_service/1-latest';
 export const HCCM_LATEST_DOCS_PREFIX = 'https://docs.redhat.com/en/documentation/cost_management_service/1-latest';

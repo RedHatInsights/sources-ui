@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useReducer } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { ActionsColumn, sortable, wrappable } from '@patternfly/react-table';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 
 import { pageAndSize, pauseSource, resumeSource, sortEntities } from '../../redux/sources/actions';
 import { DWPlaceHolderTable } from './loaders';
@@ -15,6 +15,50 @@ import { useAppNavigate } from '../../hooks/useAppNavigate';
 import './sourcesTable.scss';
 import { DataView, DataViewState, DataViewTable, DataViewToolbar } from '@patternfly/react-data-view';
 import { Pagination } from '@patternfly/react-core';
+
+const messages = defineMessages({
+  actionsAria: {
+    id: 'sourcesTable.actions',
+    defaultMessage: 'Actions',
+  },
+  listOfIntegrationsAria: {
+    id: 'sourcesTable.listOfIntegrationsAria',
+    defaultMessage: 'List of Integrations',
+  },
+
+  sourcesResume: {
+    id: 'sources.resume',
+    defaultMessage: 'Resume',
+  },
+  sourcesResumeDescription: {
+    id: 'sources.resume.description',
+    defaultMessage: 'Unpause data collection for this integration',
+  },
+  sourcesPause: {
+    id: 'sources.pause',
+    defaultMessage: 'Pause',
+  },
+  sourcesPauseDescription: {
+    id: 'sources.pause.description',
+    defaultMessage: 'Temporarily disable data collection',
+  },
+  sourcesRemove: {
+    id: 'sources.remove',
+    defaultMessage: 'Remove',
+  },
+  sourcesRemoveDescription: {
+    id: 'sources.remove.description',
+    defaultMessage: 'Permanently delete this integration and all collected data',
+  },
+  sourcesEdit: {
+    id: 'sources.edit',
+    defaultMessage: 'Edit',
+  },
+  sourcesViewdetails: {
+    id: 'sources.viewDetails',
+    defaultMessage: 'View details',
+  },
+});
 
 export const itemToCells = (item, columns, sourceTypes, appTypes) =>
   columns
@@ -75,77 +119,34 @@ export const actionResolver = (intl, navigate, hasWritePermissions, dispatch, is
 
   if (rowData.paused_at) {
     actions.push({
-      title: intl.formatMessage({
-        id: 'sources.resume',
-        defaultMessage: 'Resume',
-      }),
-      description: intl.formatMessage({
-        id: 'sources.resume.description',
-        defaultMessage: 'Unpause data collection for this integration',
-      }),
+      title: intl.formatMessage(messages.sourcesResume),
+      description: intl.formatMessage(messages.sourcesResumeDescription),
       onClick: () => dispatch(resumeSource(rowData.id, rowData.originalName, intl)),
-      'aria-label': intl.formatMessage({
-        id: 'sources.resume',
-        defaultMessage: 'Resume',
-      }),
+      'aria-label': intl.formatMessage(messages.sourcesResume),
       ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
     });
   } else {
     actions.push({
-      title: intl.formatMessage({
-        id: 'sources.pause',
-        defaultMessage: 'Pause',
-      }),
-      description: intl.formatMessage({
-        id: 'sources.pause.description',
-        defaultMessage: 'Temporarily disable data collection',
-      }),
-      'aria-label': intl.formatMessage({
-        id: 'sources.pause',
-        defaultMessage: 'Pause',
-      }),
+      title: intl.formatMessage(messages.sourcesPause),
+      description: intl.formatMessage(messages.sourcesPauseDescription),
+      'aria-label': intl.formatMessage(messages.sourcesPause),
       onClick: () => dispatch(pauseSource(rowData.id, rowData.originalName, intl)),
       ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
     });
   }
 
   actions.push({
-    title: intl.formatMessage({
-      id: 'sources.remove',
-      defaultMessage: 'Remove',
-    }),
-    description: intl.formatMessage({
-      id: 'sources.remove.description',
-      defaultMessage: 'Permanently delete this integration and all collected data',
-    }),
+    title: intl.formatMessage(messages.sourcesRemove),
+    description: intl.formatMessage(messages.sourcesRemoveDescription),
     onClick: () => navigate(replaceRouteId(routes.sourcesRemove.path, rowData.id)),
-    'aria-label': intl.formatMessage({
-      id: 'sources.remove',
-      defaultMessage: 'Remove',
-    }),
+    'aria-label': intl.formatMessage(messages.sourcesRemove),
     ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
   });
 
   actions.push({
-    title: !rowData.paused_at
-      ? intl.formatMessage({
-          id: 'sources.edit',
-          defaultMessage: 'Edit',
-        })
-      : intl.formatMessage({
-          id: 'sources.viewDetails',
-          defaultMessage: 'View details',
-        }),
+    title: !rowData.paused_at ? intl.formatMessage(messages.sourcesEdit) : intl.formatMessage(messages.sourcesViewdetails),
     onClick: () => navigate(replaceRouteId(routes.sourcesDetail.path, rowData.id)),
-    'aria-label': !rowData.paused_at
-      ? intl.formatMessage({
-          id: 'sources.edit',
-          defaultMessage: 'Edit',
-        })
-      : intl.formatMessage({
-          id: 'sources.viewDetails',
-          defaultMessage: 'View details',
-        }),
+    'aria-label': !rowData.paused_at ? intl.formatMessage(messages.sourcesEdit) : intl.formatMessage(messages.sourcesViewdetails),
     ...(!hasWritePermissions ? disabledProps : { component: 'button' }),
   });
 
@@ -208,12 +209,14 @@ const SourcesTable = () => {
       dispatch({ isLoaded: false });
       refreshColumns();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   }, [loaded, sourceTypesLoaded, appTypesLoaded]);
 
   useEffect(() => {
     if (state.isLoaded) {
       refreshSources();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   }, [entities, removingSources]);
 
   const loading = !loaded || !appTypesLoaded || !sourceTypesLoaded;
@@ -249,6 +252,7 @@ const SourcesTable = () => {
 
         return column.title;
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
     [notSortable, sourcesColumns, sortEntities, loading, empty],
   );
   const dwRows = useMemo(
@@ -268,6 +272,7 @@ const SourcesTable = () => {
             },
           }),
       ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
     [state.rows],
   );
   const activeState = useMemo(() => {
@@ -287,12 +292,13 @@ const SourcesTable = () => {
     if (loaded && numberOfEntities > 0 && pageNumber > Math.max(maximumPageNumber, 1)) {
       onSetPage({}, maximumPageNumber);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   }, [loaded, numberOfEntities, pageNumber, maximumPageNumber]);
 
   return (
     <DataView activeState={activeState}>
       <DataViewTable
-        aria-label="List of Integrations"
+        aria-label={intl.formatMessage(messages.listOfIntegrationsAria)}
         bodyStates={{
           [DataViewState.empty]: <EmptyStateDataView columns={dwColumns.length} />,
           [DataViewState.loading]: <DWPlaceHolderTable columns={dwColumns.length} />,
