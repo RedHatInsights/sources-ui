@@ -2,7 +2,7 @@
 /* eslint-disable react/display-name */
 
 import React, { forwardRef, useState } from 'react';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Dropdown, DropdownItem, DropdownList, MenuToggle } from '@patternfly/react-core';
@@ -15,6 +15,50 @@ import { pauseSource, resumeSource } from '../../redux/sources/actions';
 import disabledTooltipProps from '../../utilities/disabledTooltipProps';
 import AppLink from '../AppLink';
 import DisabledDropdownItemWithTooltip from '../DisabledDropdownItemWithTooltip';
+
+const messages = defineMessages({
+  actionsAria: {
+    id: 'sourceKebab.actionsAria',
+    defaultMessage: 'Actions',
+  },
+  listOfIntegrationsAria: {
+    id: 'sourcesTable.listOfIntegrationsAria',
+    defaultMessage: 'List of Integrations',
+  },
+
+  sourcesPausedsourceaction: {
+    id: 'sources.pausedSourceAction',
+    defaultMessage: 'You cannot perform this action on a paused integration.',
+  },
+  detailResumeDescription: {
+    id: 'detail.resume.description',
+    defaultMessage: 'Unpause data collection for this integration',
+  },
+  detailResumeButton: {
+    id: 'detail.resume.button',
+    defaultMessage: 'Resume',
+  },
+  detailPauseDescription: {
+    id: 'detail.pause.description',
+    defaultMessage: 'Temporarily disable data collection',
+  },
+  detailPauseButton: {
+    id: 'detail.pause.button',
+    defaultMessage: 'Pause',
+  },
+  detailRemoveDescription: {
+    id: 'detail.remove.description',
+    defaultMessage: 'Permanently delete this integration and all collected data',
+  },
+  detailRemoveButton: {
+    id: 'detail.remove.button',
+    defaultMessage: 'Remove',
+  },
+  detailRenameButton: {
+    id: 'detail.rename.button',
+    defaultMessage: 'Rename',
+  },
+});
 
 const SourceKebab = () => {
   const [isOpen, setOpen] = useState(false);
@@ -29,10 +73,7 @@ const SourceKebab = () => {
     func();
   };
 
-  const pausedTooltip = intl.formatMessage({
-    id: 'sources.pausedSourceAction',
-    defaultMessage: 'You cannot perform this action on a paused integration.',
-  });
+  const pausedTooltip = intl.formatMessage(messages.sourcesPausedsourceaction);
 
   const disabledProps = disabledTooltipProps(intl, isOrgAdmin);
 
@@ -60,19 +101,10 @@ const SourceKebab = () => {
           );
         })}
         onClick={wrappedFunction(() => dispatch(resumeSource(source.id, source.name, intl)))}
-        description={intl.formatMessage({
-          id: 'detail.resume.description',
-          defaultMessage: 'Unpause data collection for this integration',
-        })}
-        aria-label={intl.formatMessage({
-          id: 'detail.resume.button',
-          defaultMessage: 'Resume',
-        })}
+        description={intl.formatMessage(messages.detailResumeDescription)}
+        aria-label={intl.formatMessage(messages.detailResumeButton)}
       >
-        {intl.formatMessage({
-          id: 'detail.resume.button',
-          defaultMessage: 'Resume',
-        })}
+        {intl.formatMessage(messages.detailResumeButton)}
       </DropdownItem>
     ) : (
       <DropdownItem
@@ -88,19 +120,10 @@ const SourceKebab = () => {
           );
         })}
         onClick={wrappedFunction(() => dispatch(pauseSource(source.id, source.name, intl)))}
-        description={intl.formatMessage({
-          id: 'detail.pause.description',
-          defaultMessage: 'Temporarily disable data collection',
-        })}
-        aria-label={intl.formatMessage({
-          id: 'detail.pause.button',
-          defaultMessage: 'Pause',
-        })}
+        description={intl.formatMessage(messages.detailPauseDescription)}
+        aria-label={intl.formatMessage(messages.detailPauseButton)}
       >
-        {intl.formatMessage({
-          id: 'detail.pause.button',
-          defaultMessage: 'Pause',
-        })}
+        {intl.formatMessage(messages.detailPauseButton)}
       </DropdownItem>
     ),
     <DropdownItem
@@ -117,26 +140,14 @@ const SourceKebab = () => {
           />
         );
       })}
-      description={intl.formatMessage({
-        id: 'detail.remove.description',
-        defaultMessage: 'Permanently delete this integration and all collected data',
-      })}
-      aria-label={intl.formatMessage({
-        id: 'detail.remove.button',
-        defaultMessage: 'Remove',
-      })}
+      description={intl.formatMessage(messages.detailRemoveDescription)}
+      aria-label={intl.formatMessage(messages.detailRemoveButton)}
     >
-      {intl.formatMessage({
-        id: 'detail.remove.button',
-        defaultMessage: 'Remove',
-      })}
+      {intl.formatMessage(messages.detailRemoveButton)}
     </DropdownItem>,
     <DropdownItem
       key="rename"
-      aria-label={intl.formatMessage({
-        id: 'detail.rename.button',
-        defaultMessage: 'Rename',
-      })}
+      aria-label={intl.formatMessage(messages.detailRenameButton)}
       component={forwardRef(({ isDisabled, ...props }, ref) => {
         return (
           <DisabledDropdownItemWithTooltip
@@ -150,10 +161,7 @@ const SourceKebab = () => {
         );
       })}
     >
-      {intl.formatMessage({
-        id: 'detail.rename.button',
-        defaultMessage: 'Rename',
-      })}
+      {intl.formatMessage(messages.detailRenameButton)}
     </DropdownItem>,
   ];
 
@@ -163,7 +171,7 @@ const SourceKebab = () => {
       toggle={(toggleRef) => (
         <MenuToggle
           ref={toggleRef}
-          aria-label="Actions"
+          aria-label={intl.formatMessage(messages.actionsAria)}
           variant="plain"
           onClick={() => setOpen((prev) => !prev)}
           isExpanded={isOpen}

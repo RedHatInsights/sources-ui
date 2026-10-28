@@ -1,18 +1,33 @@
 import React from 'react';
+import { defineMessages, useIntl } from 'react-intl';
 import { PropTypes } from 'prop-types';
 import { Modal, ModalBody, Wizard, WizardHeader, WizardStep } from '@patternfly/react-core';
 
-const WizardBodyAttach = ({ step, goToSources, title, description }) => (
-  <Modal isOpen onClose={goToSources} onEscapePress={goToSources}>
-    <ModalBody>
-      <Wizard onClose={goToSources} header={<WizardHeader title={title} description={description} />}>
-        <WizardStep id="finish" name="Finish" footer={{ nextButtonText: 'Finish', onNext: goToSources }}>
-          {step}
-        </WizardStep>
-      </Wizard>
-    </ModalBody>
-  </Modal>
-);
+const messages = defineMessages({
+  finish: {
+    id: 'wizard.finish',
+    defaultMessage: 'Finish',
+  },
+});
+
+const WizardBodyAttach = ({ step, goToSources, title, description }) => {
+  const intl = useIntl();
+  return (
+    <Modal isOpen onClose={goToSources} onEscapePress={goToSources}>
+      <ModalBody>
+        <Wizard onClose={goToSources} header={<WizardHeader title={title} description={description} />}>
+          <WizardStep
+            id="finish"
+            name={intl.formatMessage(messages.finish)}
+            footer={{ nextButtonText: intl.formatMessage(messages.finish), onNext: goToSources }}
+          >
+            {step}
+          </WizardStep>
+        </Wizard>
+      </ModalBody>
+    </Modal>
+  );
+};
 
 WizardBodyAttach.propTypes = {
   step: PropTypes.node.isRequired,

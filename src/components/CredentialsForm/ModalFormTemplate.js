@@ -1,5 +1,5 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 
 import FormSpy from '@data-driven-forms/react-form-renderer/form-spy';
@@ -8,6 +8,17 @@ import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 
 import { ActionGroup, Button, Form } from '@patternfly/react-core';
 import { Modal } from '@patternfly/react-core/deprecated';
+
+const messages = defineMessages({
+  sourcesSubmit: {
+    id: 'sources.submit',
+    defaultMessage: 'Submit',
+  },
+  sourcesCancel: {
+    id: 'sources.cancel',
+    defaultMessage: 'Cancel',
+  },
+});
 
 const CustomFormWrapper = (props) => <Form {...props} id="modal-form" />;
 
@@ -33,16 +44,10 @@ const CustomButtons = () => {
               type="submit"
               isDisabled={pristine || validating || submitting || invalid}
             >
-              {intl.formatMessage({
-                id: 'sources.submit',
-                defaultMessage: 'Submit',
-              })}
+              {intl.formatMessage(messages.sourcesSubmit)}
             </Button>
             <Button variant="link" onClick={onCancel} id="cancel-modal">
-              {intl.formatMessage({
-                id: 'sources.cancel',
-                defaultMessage: 'Cancel',
-              })}
+              {intl.formatMessage(messages.sourcesCancel)}
             </Button>
           </ActionGroup>
         </div>

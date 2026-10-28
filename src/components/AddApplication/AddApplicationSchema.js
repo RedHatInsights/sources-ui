@@ -2,7 +2,7 @@ import React from 'react';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 
 import { Content, ContentVariants } from '@patternfly/react-core';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import * as schemaBuilder from '../../components/addSourceWizard/schemaBuilder';
 import get from 'lodash/get';
 
@@ -10,18 +10,41 @@ import authenticationSelectionStep from './schema/authenticationSelectionStep';
 import generateFirstAuthStep from './schema/generateFirstAuthStep';
 import selectAuthenticationStep from './schema/selectAuthenticationStep';
 import emptyAuthType from '../addSourceWizard/emptyAuthType';
+
+const messages = defineMessages({
+  sourcesReviewaddappsummary: {
+    id: 'sources.reviewAddAppSummary',
+    defaultMessage:
+      'Review the information below and click Add to add the application to your source. Use the Back button to make changes.',
+  },
+  wizardClose: {
+    id: 'wizard.closeWizard',
+    defaultMessage: 'Close wizard',
+  },
+  sourcesAdd: {
+    id: 'sources.add',
+    defaultMessage: 'Add',
+  },
+  sourcesCancel: {
+    id: 'sources.cancel',
+    defaultMessage: 'Cancel',
+  },
+  sourcesBack: {
+    id: 'sources.back',
+    defaultMessage: 'Back',
+  },
+  sourcesReviewdetails: {
+    id: 'sources.reviewDetails',
+    defaultMessage: 'Review details',
+  },
+});
+
 export const ApplicationSummary = () => {
   const intl = useIntl();
 
   return (
     <Content>
-      <Content component={ContentVariants.p}>
-        {intl.formatMessage({
-          id: 'sources.reviewAddAppSummary',
-          defaultMessage:
-            'Review the information below and click Add to add the application to your source. Use the Back button to make changes.',
-        })}
-      </Content>
+      <Content component={ContentVariants.p}>{intl.formatMessage(messages.sourcesReviewaddappsummary)}</Content>
     </Content>
   );
 };
@@ -129,23 +152,11 @@ const fields = (
         showTitles: true,
         crossroads: ['selectedAuthentication', 'authtype'],
         description,
-        closeButtonAriaLabel: intl.formatMessage({
-          id: 'wizard.close',
-          defaultMessage: 'Close wizard',
-        }),
+        closeButtonAriaLabel: intl.formatMessage(messages.wizardClose),
         buttonLabels: {
-          submit: intl.formatMessage({
-            id: 'sources.add',
-            defaultMessage: 'Add',
-          }),
-          cancel: intl.formatMessage({
-            id: 'sources.cancel',
-            defaultMessage: 'Cancel',
-          }),
-          back: intl.formatMessage({
-            id: 'sources.back',
-            defaultMessage: 'Back',
-          }),
+          submit: intl.formatMessage(messages.sourcesAdd),
+          cancel: intl.formatMessage(messages.sourcesCancel),
+          back: intl.formatMessage(messages.sourcesBack),
         },
         fields: [
           ...(source.imported
@@ -157,10 +168,7 @@ const fields = (
                 },
               ]),
           {
-            title: intl.formatMessage({
-              id: 'sources.reviewDetails',
-              defaultMessage: 'Review details',
-            }),
+            title: intl.formatMessage(messages.sourcesReviewdetails),
             name: 'summary',
             fields: [
               {

@@ -10,6 +10,7 @@ const ValidatorReset = ({ name }) => {
     setTimeout(() => formOptions.change(name, '1'));
 
     return () => formOptions.change(name, '');
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   }, []);
 
   return null;

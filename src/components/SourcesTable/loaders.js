@@ -7,7 +7,14 @@ import { Section } from '@redhat-cloud-services/frontend-components/Section';
 import { Bullseye, Card, CardBody, Grid, GridItem, Spinner } from '@patternfly/react-core';
 
 import './loaders.scss';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
+
+const messages = defineMessages({
+  sourcesSources: {
+    id: 'sources.sources',
+    defaultMessage: 'Integrations',
+  },
+});
 
 export const Loader = ({ width = '100%', height = '100%', className = '' }) => (
   <span className={`src-c-loader ${className}`} style={{ width, height }} role="progressbar" />
@@ -25,12 +32,7 @@ export const AppPlaceholder = () => {
   return (
     <React.Fragment>
       <PageHeader>
-        <PageHeaderTitle
-          title={intl.formatMessage({
-            id: 'sources.sources',
-            defaultMessage: 'Integrations',
-          })}
-        />
+        <PageHeaderTitle title={intl.formatMessage(messages.sourcesSources)} />
       </PageHeader>
       <Section type="content">
         <div className="src-c-fake_content pf-v6-u-p-lg">

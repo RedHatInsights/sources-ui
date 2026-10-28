@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer } from 'react';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import { shallowEqual, useSelector } from 'react-redux';
 
 import { Bullseye, Spinner } from '@patternfly/react-core';
@@ -15,6 +15,39 @@ import { getSourcesApi } from '../../api/entities';
 import generateSuperKeyFields from '../../components/addSourceWizard/superKey/generateSuperKeyFields';
 import { useAppNavigate } from '../../hooks/useAppNavigate';
 import notificationsStore from '../../utilities/notificationsStore';
+
+const messages = defineMessages({
+  editcredentialsPausedTitle: {
+    id: 'editCredentials.paused.title',
+    defaultMessage: 'View account authorization credentials',
+  },
+  editcredentialsTitle: {
+    id: 'editCredentials.title',
+    defaultMessage: 'Edit account authorization credentials',
+  },
+  editcredentialsDescription: {
+    id: 'editCredentials.description',
+    defaultMessage:
+      'Use the fields below to reset your account authorization credentials. It may take some time to validate new information.',
+  },
+  editcredentialsAlertTitle: {
+    id: 'editCredentials.alert.title',
+    defaultMessage: 'New credentials saved',
+  },
+  editcredentialsAlertDescription: {
+    id: 'editCredentials.alert.description',
+    defaultMessage: 'It may take some time to validate your new credentials. Check this page for status updates.',
+  },
+  editcredentialsAlertWarningTitle: {
+    id: 'editCredentials.alert.warning.title',
+    defaultMessage: 'Error updating credentials',
+  },
+  editcredentialsAlertWarningDescription: {
+    id: 'editCredentials.alert.warning.description',
+    defaultMessage:
+      'There was a problem while trying to update credentials. Please try again. If the error persists, open a support case.',
+  },
+});
 
 const initialState = {
   loading: true,
@@ -48,15 +81,9 @@ const CredentialsForm = () => {
   const isPaused = source.paused_at;
 
   const title = isPaused
-    ? intl.formatMessage({ id: 'editCredentials.paused.title', defaultMessage: 'View account authorization credentials' })
-    : intl.formatMessage({ id: 'editCredentials.title', defaultMessage: 'Edit account authorization credentials' });
-  const description = isPaused
-    ? undefined
-    : intl.formatMessage({
-        id: 'editCredentials.description',
-        defaultMessage:
-          'Use the fields below to reset your account authorization credentials. It may take some time to validate new information.',
-      });
+    ? intl.formatMessage(messages.editcredentialsPausedTitle)
+    : intl.formatMessage(messages.editcredentialsTitle);
+  const description = isPaused ? undefined : intl.formatMessage(messages.editcredentialsDescription);
 
   useEffect(() => {
     getSourcesApi()
@@ -70,6 +97,7 @@ const CredentialsForm = () => {
 
         dispatch({ type: 'loaded', values });
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   }, []);
 
   if (loading) {
@@ -98,24 +126,14 @@ const CredentialsForm = () => {
           await getSourcesApi().updateAuthentication(id, values);
 
           notificationsStore.addNotification({
-            title: intl.formatMessage({ id: 'editCredentials.alert.title', defaultMessage: 'New credentials saved' }),
-            description: intl.formatMessage({
-              id: 'editCredentials.alert.description',
-              defaultMessage: 'It may take some time to validate your new credentials. Check this page for status updates.',
-            }),
+            title: intl.formatMessage(messages.editcredentialsAlertTitle),
+            description: intl.formatMessage(messages.editcredentialsAlertDescription),
             variant: 'info',
           });
         } catch (error) {
           notificationsStore.addNotification({
-            title: intl.formatMessage({
-              id: 'editCredentials.alert.warning.title',
-              defaultMessage: 'Error updating credentials',
-            }),
-            description: intl.formatMessage({
-              id: 'editCredentials.alert.warning.description',
-              defaultMessage:
-                'There was a problem while trying to update credentials. Please try again. If the error persists, open a support case.',
-            }),
+            title: intl.formatMessage(messages.editcredentialsAlertWarningTitle),
+            description: intl.formatMessage(messages.editcredentialsAlertWarningDescription),
             variant: 'danger',
           });
         }

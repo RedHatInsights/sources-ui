@@ -1,3 +1,4 @@
+import { defineMessages } from 'react-intl';
 import React from 'react';
 import awesomeDebounce from 'awesome-debounce-promise';
 
@@ -9,6 +10,67 @@ import { AVAILABLE } from '../../views/formatters';
 import computeSourceStatus from '../../utilities/computeSourceStatus';
 import { bold } from '../../utilities/intlShared';
 import notificationsStore from '../../utilities/notificationsStore';
+
+const messages = defineMessages({
+  sourcesAvailable: {
+    id: 'sources.available',
+    defaultMessage: 'Available',
+  },
+  sourcesUnavailable: {
+    id: 'sources.unavailable',
+    defaultMessage: 'Unavailable',
+  },
+  alertErrorTitle: {
+    id: 'alert.error.title',
+    defaultMessage: 'Error adding integration',
+  },
+  alertErrorDescription: {
+    id: 'alert.error.description',
+    defaultMessage:
+      'There was a problem while trying to add integration {name}. Please try again. If the error persists, open a support case.',
+  },
+  alertErrorLink: {
+    id: 'alert.error.link',
+    defaultMessage: 'Retry',
+  },
+  alertErrorTitle_1: {
+    id: 'alert.sourceConfigurationUnsuccessful',
+    defaultMessage: 'Source configuration unsuccessful',
+  },
+  errorNotification: {
+    id: 'error.notification',
+    defaultMessage: '{error} [<b>{name}</b>]',
+  },
+  wizardUnknownerror: {
+    id: 'wizard.unknownError',
+    defaultMessage: 'Unknown error',
+  },
+  alertUnavailableLink: {
+    id: 'alert.unavailable.link',
+    defaultMessage: 'Edit integration',
+  },
+  alertTimeoutTitle: {
+    id: 'alert.timeout.title',
+    defaultMessage: 'Integration configuration in progress',
+  },
+  alertTimeoutDescription: {
+    id: 'alert.timeout.description',
+    defaultMessage:
+      'We are still working to confirm credentials for integration {name}. To track progress, check the Status column in the Integrations table.',
+  },
+  alertSuccessTitle: {
+    id: 'alert.success.title',
+    defaultMessage: '{type} connection successful',
+  },
+  alertSuccessDescription: {
+    id: 'alert.success.description',
+    defaultMessage: 'Source {name} was successfully added',
+  },
+  alertSuccessLink: {
+    id: 'alert.success.link',
+    defaultMessage: 'View source details',
+  },
+});
 
 export const debouncedFiltering = awesomeDebounce((refresh) => refresh(), 500);
 
@@ -62,14 +124,8 @@ export const chipsFormatters = (key, filterValue, sourceTypes, appTypes, intl) =
           value: filterValue[key][0],
           name:
             filterValue[key][0] === AVAILABLE
-              ? intl.formatMessage({
-                  id: 'sources.available',
-                  defaultMessage: 'Available',
-                })
-              : intl.formatMessage({
-                  id: 'sources.unavailable',
-                  defaultMessage: 'Unavailable',
-                }),
+              ? intl.formatMessage(messages.sourcesAvailable)
+              : intl.formatMessage(messages.sourcesUnavailable),
         },
       ],
     }),
@@ -112,18 +168,8 @@ export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
     if (state.isErrored) {
       const { activeStep, activeStepIndex, maxStepIndex, prevSteps, registeredFieldsHistory } = state.wizardState;
       notificationsStore.addNotification({
-        title: intl.formatMessage({
-          id: 'alert.error.title',
-          defaultMessage: 'Error adding integration',
-        }),
-        description: intl.formatMessage(
-          {
-            id: 'alert.error.description',
-            defaultMessage:
-              'There was a problem while trying to add integration {name}. Please try again. If the error persists, open a support case.',
-          },
-          { name: <b>{state.values.source.name}</b> },
-        ),
+        title: intl.formatMessage(messages.alertErrorTitle),
+        description: intl.formatMessage(messages.alertErrorDescription, { name: <b>{state.values.source.name}</b> }),
         variant: 'danger',
         id,
         actionLinks: (
@@ -138,10 +184,7 @@ export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
               push(routes.sourcesNew.path);
             }}
           >
-            {intl.formatMessage({
-              id: 'alert.error.link',
-              defaultMessage: 'Retry',
-            })}
+            {intl.formatMessage(messages.alertErrorLink)}
           </AlertActionLink>
         ),
       });
@@ -149,27 +192,15 @@ export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
       switch (computeSourceStatus(state.createdSource)) {
         case 'unavailable':
           notificationsStore.addNotification({
-            title: intl.formatMessage({
-              id: 'alert.error.title',
-              defaultMessage: 'Source configuration unsuccessful',
+            title: intl.formatMessage(messages.alertErrorTitle_1),
+            description: intl.formatMessage(messages.errorNotification, {
+              error:
+                state.createdSource.applications?.[0]?.availability_status_error ||
+                state.createdSource.endpoint?.[0]?.availability_status_error ||
+                intl.formatMessage(messages.wizardUnknownerror),
+              name: state.createdSource.name,
+              b: bold,
             }),
-            description: intl.formatMessage(
-              {
-                id: 'error.notification',
-                defaultMessage: '{error} [<b>{name}</b>]',
-              },
-              {
-                error:
-                  state.createdSource.applications?.[0]?.availability_status_error ||
-                  state.createdSource.endpoint?.[0]?.availability_status_error ||
-                  intl.formatMessage({
-                    id: 'wizard.unknownError',
-                    defaultMessage: 'Unknown error',
-                  }),
-                name: state.createdSource.name,
-                b: bold,
-              },
-            ),
             variant: 'danger',
             id,
             actionLinks: (
@@ -179,47 +210,24 @@ export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
                   push(replaceRouteId(routes.sourcesDetail.path, state.createdSource.id));
                 }}
               >
-                {intl.formatMessage({
-                  id: 'alert.unavailable.link',
-                  defaultMessage: 'Edit integration',
-                })}
+                {intl.formatMessage(messages.alertUnavailableLink)}
               </AlertActionLink>
             ),
           });
           break;
         case 'timeout':
           notificationsStore.addNotification({
-            title: intl.formatMessage({
-              id: 'alert.timeout.title',
-              defaultMessage: 'Integration configuration in progress',
-            }),
-            description: intl.formatMessage(
-              {
-                id: 'alert.timeout.description',
-                defaultMessage:
-                  'We are still working to confirm credentials for integration {name}. To track progress, check the Status column in the Integrations table.',
-              },
-              { name: <b>{state.createdSource.name}</b> },
-            ),
+            title: intl.formatMessage(messages.alertTimeoutTitle),
+            description: intl.formatMessage(messages.alertTimeoutDescription, { name: <b>{state.createdSource.name}</b> }),
             variant: 'info',
           });
           break;
         default:
           notificationsStore.addNotification({
-            title: intl.formatMessage(
-              {
-                id: 'alert.success.title',
-                defaultMessage: '{type} connection successful',
-              },
-              { type: state.sourceTypes.find(({ id }) => id === state.createdSource.source_type_id)?.product_name },
-            ),
-            description: intl.formatMessage(
-              {
-                id: 'alert.success.description',
-                defaultMessage: 'Source {name} was successfully added',
-              },
-              { name: <b>{state.createdSource.name}</b> },
-            ),
+            title: intl.formatMessage(messages.alertSuccessTitle, {
+              type: state.sourceTypes.find(({ id }) => id === state.createdSource.source_type_id)?.product_name,
+            }),
+            description: intl.formatMessage(messages.alertSuccessDescription, { name: <b>{state.createdSource.name}</b> }),
             variant: 'success',
             id,
             actionLinks: (
@@ -229,10 +237,7 @@ export const checkSubmit = (state, dispatch, push, intl, stateDispatch) => {
                   push(replaceRouteId(routes.sourcesDetail.path, state.createdSource.id));
                 }}
               >
-                {intl.formatMessage({
-                  id: 'alert.success.link',
-                  defaultMessage: 'View source details',
-                })}
+                {intl.formatMessage(messages.alertSuccessLink)}
               </AlertActionLink>
             ),
           });

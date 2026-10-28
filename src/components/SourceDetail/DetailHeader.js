@@ -1,5 +1,5 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import { shallowEqual, useSelector } from 'react-redux';
 
 import { PageHeader } from '@redhat-cloud-services/frontend-components/PageHeader';
@@ -9,6 +9,13 @@ import Breadcrumbs from './Breadcrumbs';
 import { useSource } from '../../hooks/useSource';
 import { availabilityFormatter } from '../../views/formatters';
 import SourceKebab from './SourceKebab';
+
+const messages = defineMessages({
+  detailDescription: {
+    id: 'detail.description',
+    defaultMessage: 'View details and manage connections for this integration.',
+  },
+});
 
 const DetailHeader = () => {
   const intl = useIntl();
@@ -31,12 +38,7 @@ const DetailHeader = () => {
         </FlexItem>
       </Flex>
       <Content>
-        <Content component="p">
-          {intl.formatMessage({
-            id: 'detail.description',
-            defaultMessage: 'View details and manage connections for this integration.',
-          })}
-        </Content>
+        <Content component="p">{intl.formatMessage(messages.detailDescription)}</Content>
       </Content>
     </PageHeader>
   );

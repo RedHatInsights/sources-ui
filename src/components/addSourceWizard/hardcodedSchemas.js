@@ -1,5 +1,7 @@
+const HELP_TEXT_ARIA = 'Help text';
+
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, defineMessages } from 'react-intl';
 import { Button, ButtonVariant, FormHelperText, Popover } from '@patternfly/react-core';
 
 import QuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/question-circle-icon';
@@ -38,8 +40,396 @@ import {
 import emptyAuthType from './emptyAuthType';
 import { doLoadRegions } from '../../api/doLoadRegions';
 
-const arnMessagePattern = <FormattedMessage id="wizard.arnPattern" defaultMessage="ARN must start with arn:aws:" />;
-const arnMessageLength = <FormattedMessage id="wizard.arnLength" defaultMessage="ARN should have at least 10 characters" />;
+const messages = defineMessages({
+  helpTextAria: {
+    id: 'wizard.helpTextAria',
+    defaultMessage: 'Help text',
+  },
+
+  wizardArnpattern: {
+    id: 'wizard.arnPattern',
+    defaultMessage: 'ARN must start with arn:aws:',
+  },
+  wizardArnlength: {
+    id: 'wizard.arnLength',
+    defaultMessage: 'ARN should have at least 10 characters',
+  },
+  costArnS3bucketpattern: {
+    id: 'cost.arn.s3BucketPattern',
+    defaultMessage:
+      'S3 bucket name must start with alphanumeric character and can contain lowercase letters, numbers, dots, and hyphens',
+  },
+  costArnStoragetitle: {
+    id: 'cost.arn.storageTitle',
+    defaultMessage: 'Create storage',
+  },
+  costArnS3label: {
+    id: 'cost.arn.s3Label',
+    defaultMessage: 'S3 bucket name',
+  },
+  costArnAwsregion: {
+    id: 'cost.arn.awsRegion',
+    defaultMessage: 'AWS region',
+  },
+  costArnUsagedescriptiontitle: {
+    id: 'cost.arn.usageDescriptionTitle',
+    defaultMessage: 'Create cost and usage report',
+  },
+  costArnSenddefaultcur: {
+    id: 'cost.arn.sendDefaultCUR',
+    defaultMessage: 'I am OK with sending the default data export to Cost Management',
+  },
+  costArnCustomizecur: {
+    id: 'cost.arn.customizeCUR',
+    defaultMessage: 'I wish to manually customize the data export sent to Cost Management',
+  },
+  costArnHelpcustomizecur: {
+    id: 'cost.arn.helpCustomizeCUR',
+    defaultMessage:
+      'There will be a set of instructions at the end of this wizard that will guide you on how to complete the customize configuration that will be completed in the AWS console.',
+  },
+  costArnTagssteptitle: {
+    id: 'cost.arn.tagsStepTitle',
+    defaultMessage: 'Tags, aliases and organizational units',
+  },
+  costArnIncludesrhelusage: {
+    id: 'cost.arn.includesRhelUsage',
+    defaultMessage: 'Include RHEL usage',
+  },
+  costTagsAliasessorgunits: {
+    id: 'cost.tags.aliasessOrgUnits',
+    defaultMessage:
+      'To use account aliases and organizational units in the display and filter of AWS resources, select the following',
+  },
+  costArnIncludesaliases: {
+    id: 'cost.arn.includesAliases',
+    defaultMessage: 'Include AWS account aliases',
+  },
+  costArnIncludeorgunits: {
+    id: 'cost.arn.includeOrgUnits',
+    defaultMessage: 'Include AWS organizational units',
+  },
+  costArnIampolicytitle: {
+    id: 'cost.arn.iamPolicyTitle',
+    defaultMessage: 'Create IAM policy',
+  },
+  costArnEnableaccountaccess: {
+    id: 'cost.arn.enableAccountAccess',
+    defaultMessage: 'Enable account access',
+  },
+  costArnIamrolesteptitle: {
+    id: 'cost.arn.iamRoleStepTitle',
+    defaultMessage: 'Create IAM role',
+  },
+  costArnEnterarn: {
+    id: 'cost.arn.enterArn',
+    defaultMessage: 'Enter ARN',
+  },
+  wizardArn: {
+    id: 'wizard.arn',
+    defaultMessage: 'ARN',
+  },
+  catalogUrlpatternmessage: {
+    id: 'catalog.urlPatternMessage',
+    defaultMessage: 'URL must start with https:// or http://',
+  },
+  catalogHostnamehelper: {
+    id: 'catalog.hostnameHelper',
+    defaultMessage: 'For example, https://myansibleinstance.example.com/ or https://127.0.0.1/',
+  },
+  wizardHostname: {
+    id: 'wizard.hostname',
+    defaultMessage: 'Hostname',
+  },
+  costIbmEnterpriseidtitle: {
+    id: 'cost.ibm.enterpriseIdTitle',
+    defaultMessage: 'Add enterprise ID',
+  },
+  costIbmSubsteptitle: {
+    id: 'cost.ibm.substepTitle',
+    defaultMessage: 'Enter account IDs',
+  },
+  costIbmAccountidtitle: {
+    id: 'cost.ibm.accountIdTitle',
+    defaultMessage: 'Add account ID',
+  },
+  costIbmServiceidtitle: {
+    id: 'cost.ibm.serviceIdTitle',
+    defaultMessage: 'Create a service ID',
+  },
+  costIbmAccessid: {
+    id: 'cost.ibm.accessId',
+    defaultMessage: 'Configure service ID access',
+  },
+  costIbmApikeytitle: {
+    id: 'cost.ibm.apiKeyTitle',
+    defaultMessage: 'Create an API key',
+  },
+  wizardClusterid: {
+    id: 'wizard.clusterId',
+    defaultMessage: 'Cluster Identifier',
+  },
+  wizardClusteridpattern: {
+    id: 'wizard.clusterIdPattern',
+    defaultMessage: 'Cluster ID must start with alphanumeric character and can contain underscore and hyphen',
+  },
+  costConfigureoperator: {
+    id: 'cost.configureOperator',
+    defaultMessage: 'Install and configure operator',
+  },
+  wizardUrlpatternmessage: {
+    id: 'wizard.urlPatternMessage',
+    defaultMessage: 'The URL is not formatted correctly.',
+  },
+  azureGenericUsername: {
+    id: 'azure.generic.username',
+    defaultMessage: 'App ID',
+  },
+  subwatchAzureTokentitle: {
+    id: 'subwatch.azure.tokenTitle',
+    defaultMessage: 'Obtain offline token',
+  },
+  subwatchAzureSubsteptitle: {
+    id: 'subwatch.azure.substepTitle',
+    defaultMessage: 'Enable account access',
+  },
+  subwatchAzurePlaybooktitle: {
+    id: 'subwatch.azure.playbookTitle',
+    defaultMessage: 'Run Ansible playbook',
+  },
+  subwatchLighthouseTitle: {
+    id: 'subwatch.lighthouse.title',
+    defaultMessage: 'Configure Azure Lighthouse',
+  },
+  subwatchLighthouseSubscriptionid: {
+    id: 'subwatch.lighthouse.subscriptionId',
+    defaultMessage: 'Set subscription ID',
+  },
+  costSubidpattern: {
+    id: 'cost.subidPattern',
+    defaultMessage: 'Subscription ID must start with alphanumeric character and can contain underscore and hyphen',
+  },
+  costResourcegrouppattern: {
+    id: 'cost.resourceGroupPattern',
+    defaultMessage: 'Resource group must start with alphanumeric character and can contain underscore and hyphen',
+  },
+  costStorageaccountpattern: {
+    id: 'cost.storageAccountPattern',
+    defaultMessage: 'Storage account must start with alphanumeric character and can contain underscore and hyphen',
+  },
+  costScopepattern: {
+    id: 'cost.scopePattern',
+    defaultMessage:
+      'Cost export scope must start with alphanumeric character and can contain underscore, hyphen, and foward slash',
+  },
+  costExportnamepattern: {
+    id: 'cost.exportNamePattern',
+    defaultMessage: 'Cost export name must start with alphanumeric character and can contain underscore and hyphen',
+  },
+  costClientsecret: {
+    id: 'cost.clientSecret',
+    defaultMessage: 'Client secret',
+  },
+  costClientappid: {
+    id: 'cost.clientAppId',
+    defaultMessage: 'Client (Application) ID',
+  },
+  costTenantdirid: {
+    id: 'cost.tenantDirId',
+    defaultMessage: 'Tenant (Directory) ID',
+  },
+  costCreatedailyexport: {
+    id: 'cost.createDailyExport',
+    defaultMessage: 'Specify cost export scope',
+  },
+  costSenddefaultcostexport: {
+    id: 'cost.sendDefaultCostExport',
+    defaultMessage: 'I am OK with sending the default data set to Cost Management',
+  },
+  costCustomizecostexport: {
+    id: 'cost.customizeCostExport',
+    defaultMessage: 'I wish to manually customize the data set sent to Cost Management',
+  },
+  costAzureIncludesrhelusage: {
+    id: 'cost.azure.includesRhelUsage',
+    defaultMessage: 'Include RHEL usage',
+  },
+  wizardCostexportscope: {
+    id: 'wizard.costExportScope',
+    defaultMessage: 'Cost export scope',
+  },
+  wizardCostexportname: {
+    id: 'wizard.costExportName',
+    defaultMessage: 'Cost export name',
+  },
+  costAzuresubstepid: {
+    id: 'cost.azureSubStepId',
+    defaultMessage: 'Resource group and storage account',
+  },
+  wizardResourcegroupname: {
+    id: 'wizard.resourceGroupName',
+    defaultMessage: 'Resource group name',
+  },
+  wizardStorageaccountname: {
+    id: 'wizard.storageAccountName',
+    defaultMessage: 'Storage account name',
+  },
+  wizardSubscriptionid: {
+    id: 'wizard.subscriptionId',
+    defaultMessage: 'Subscription ID',
+  },
+  wizardConfigureroles: {
+    id: 'wizard.configureRoles',
+    defaultMessage: 'Roles',
+  },
+  provisioningLighthouseTitle: {
+    id: 'provisioning.lighthouse.title',
+    defaultMessage: 'Configure Azure Lighthouse',
+  },
+  provisioningLighthouseSubscriptionid: {
+    id: 'provisioning.lighthouse.subscriptionId',
+    defaultMessage: 'Set subscription ID',
+  },
+  provisioningSubscriptionidpattern: {
+    id: 'provisioning.subscriptionIdPattern',
+    defaultMessage: 'Subscription ID must only contain alphanumeric characters and hyphens',
+  },
+  wizardAccountid: {
+    id: 'wizard.accountId',
+    defaultMessage: 'Account ID',
+  },
+  imageBuilderAwsAccountIdAccountidpatter: {
+    id: 'image-builder-aws-account-id.accountIdPatter',
+    defaultMessage: 'Account Id has to be 12 numbers',
+  },
+  wizardAccesskeyid: {
+    id: 'wizard.accessKeyId',
+    defaultMessage: 'Access key ID',
+  },
+  wizardSecretaccesskey: {
+    id: 'wizard.secretAccessKey',
+    defaultMessage: 'Secret access key',
+  },
+  wizardConfigureaccountaccess: {
+    id: 'wizard.configureAccountAccess',
+    defaultMessage: 'Account access',
+  },
+  cloudmeterCreateiampolicy: {
+    id: 'cloudmeter.createIamPolicy',
+    defaultMessage: 'Create IAM policy',
+  },
+  cloudmeterEnableaccountaccess: {
+    id: 'cloudmeter.enableAccountAccess',
+    defaultMessage: 'Enable account access',
+  },
+  cloudmeterCreateiamrole: {
+    id: 'cloudmeter.createIamRole',
+    defaultMessage: 'Create IAM role',
+  },
+  cloudmeterEnterarn: {
+    id: 'cloudmeter.enterArn',
+    defaultMessage: 'Enter ARN',
+  },
+  provisioningCreateiampolicy: {
+    id: 'provisioning.createIamPolicy',
+    defaultMessage: 'AWS Account Number',
+  },
+  provisioningEnableaccountaccess: {
+    id: 'provisioning.enableAccountAccess',
+    defaultMessage: 'Enable account access',
+  },
+  provisioningCreateiamrole: {
+    id: 'provisioning.createIamRole',
+    defaultMessage: 'Create IAM role',
+  },
+  provisioningEnterarn: {
+    id: 'provisioning.enterArn',
+    defaultMessage: 'Enter ARN',
+  },
+  satelliteSatelliteid: {
+    id: 'satellite.satelliteId',
+    defaultMessage: 'Satellite ID',
+  },
+  satelliteReceptorid: {
+    id: 'satellite.receptorId',
+    defaultMessage: 'Receptor ID',
+  },
+  satelliteCredentials: {
+    id: 'satellite.credentials',
+    defaultMessage: 'Credentials',
+  },
+  wizardUsername: {
+    id: 'wizard.username',
+    defaultMessage: 'Username',
+  },
+  wizardPassword: {
+    id: 'wizard.password',
+    defaultMessage: 'Password',
+  },
+  wizardCertificateauthoriy: {
+    id: 'wizard.certificateAuthoriy',
+    defaultMessage: 'Certificate authority',
+  },
+  wizardVerifyssl: {
+    id: 'wizard.verifySsl',
+    defaultMessage: 'Verify TLS',
+  },
+  wizardCredentials: {
+    id: 'wizard.credentials',
+    defaultMessage: 'Credentials',
+  },
+  catalogAnsibletowerendpoint: {
+    id: 'catalog.ansibleTowerEndpoint',
+    defaultMessage: 'Ansible Tower endpoint',
+  },
+  wizardCertificateauthority: {
+    id: 'wizard.certificateAuthority',
+    defaultMessage: 'Certificate authority',
+  },
+  provisioningEnterprojectid: {
+    id: 'provisioning.enterProjectID',
+    defaultMessage: 'Enter Project ID',
+  },
+  provisioningCreaterole: {
+    id: 'provisioning.createRole',
+    defaultMessage: 'Create custom role',
+  },
+  costGcpProjecttitle: {
+    id: 'cost.gcp.projectTitle',
+    defaultMessage: 'Project',
+  },
+  costGcpSenddefaultcur: {
+    id: 'cost.gcp.sendDefaultCUR',
+    defaultMessage: 'I am OK with sending the default dataset to Cost Management',
+  },
+  costGcpCustomizecur: {
+    id: 'cost.gcp.customizeCUR',
+    defaultMessage: 'I wish to manually customize the dataset sent to Cost Management',
+  },
+  costGcpCloudstorage: {
+    id: 'cost.gcp.cloudStorage',
+    defaultMessage: 'Create cloud storage bucket',
+  },
+  costGcpIamtitle: {
+    id: 'cost.gcp.iamTitle',
+    defaultMessage: 'Create IAM role',
+  },
+  costGcpAccesstitle: {
+    id: 'cost.gcp.accessTitle',
+    defaultMessage: 'Assign access',
+  },
+  costGcpDatasettitle: {
+    id: 'cost.gcp.datasetTitle',
+    defaultMessage: 'Create dataset',
+  },
+  costGcpBillingexporttitle: {
+    id: 'cost.gcp.billingExportTitle',
+    defaultMessage: 'Billing export',
+  },
+});
+
+const arnMessagePattern = <FormattedMessage {...messages.wizardArnpattern} />;
+const arnMessageLength = <FormattedMessage {...messages.wizardArnlength} />;
 
 const arnField = {
   placeholder: 'arn:aws:iam:123456789:role/CostManagement',
@@ -100,19 +490,14 @@ const getArn = (authUsername, showHCS) => ({
         type: validatorTypes.PATTERN,
         pattern:
           /(?!(^((2(5[0-5]|[0-4][0-9])|[01]?[0-9]{1,2})\.){3}(2(5[0-5]|[0-4][0-9])|[01]?[0-9]{1,2})$|^xn--|-s3alias$))^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$/,
-        message: (
-          <FormattedMessage
-            id="cost.arn.s3BucketPattern"
-            defaultMessage="S3 bucket name must start with alphanumeric character and can contain lowercase letters, numbers, dots, and hyphens"
-          />
-        ),
+        message: <FormattedMessage {...messages.costArnS3bucketpattern} />,
       },
     ],
     isRequired: true,
   },
   additionalSteps: [
     {
-      title: <FormattedMessage id="cost.arn.storageTitle" defaultMessage="Create storage" />,
+      title: <FormattedMessage {...messages.costArnStoragetitle} />,
       nextStep: 'usage',
       fields: [
         {
@@ -123,13 +508,13 @@ const getArn = (authUsername, showHCS) => ({
         {
           name: 'application.extra.bucket',
           component: componentTypes.TEXT_FIELD,
-          label: <FormattedMessage id="cost.arn.s3Label" defaultMessage="S3 bucket name" />,
+          label: <FormattedMessage {...messages.costArnS3label} />,
         },
         {
           name: 'application.extra.bucket_region',
           component: componentTypes.SELECT,
           loadOptions: () => doLoadRegions().then((data) => data.map((item) => ({ value: item, label: item }))),
-          label: <FormattedMessage id="cost.arn.awsRegion" defaultMessage="AWS region" />,
+          label: <FormattedMessage {...messages.costArnAwsregion} />,
           placeholder: 'Select a region',
           validate: [
             {
@@ -141,7 +526,7 @@ const getArn = (authUsername, showHCS) => ({
       ],
     },
     {
-      title: <FormattedMessage id="cost.arn.usageDescriptionTitle" defaultMessage="Create cost and usage report" />,
+      title: <FormattedMessage {...messages.costArnUsagedescriptiontitle} />,
       name: 'usage',
       nextStep: 'tags',
       fields: [
@@ -156,31 +541,18 @@ const getArn = (authUsername, showHCS) => ({
           className: 'src-c-wizard__conditional-radio',
           options: [
             {
-              label: (
-                <FormattedMessage
-                  id="cost.arn.sendDefaultCUR"
-                  defaultMessage="I am OK with sending the default data export to Cost Management"
-                />
-              ),
+              label: <FormattedMessage {...messages.costArnSenddefaultcur} />,
               value: false,
             },
             {
               label: (
                 <span>
-                  <FormattedMessage
-                    id="cost.arn.customizeCUR"
-                    defaultMessage="I wish to manually customize the data export sent to Cost Management"
-                  />{' '}
+                  <FormattedMessage {...messages.costArnCustomizecur} />{' '}
                   <Popover
-                    aria-label="Help text"
+                    aria-label={HELP_TEXT_ARIA}
                     position="right"
                     maxWidth="5%"
-                    bodyContent={
-                      <FormattedMessage
-                        id="cost.arn.helpCustomizeCUR"
-                        defaultMessage="There will be a set of instructions at the end of this wizard that will guide you on how to complete the customize configuration that will be completed in the AWS console."
-                      />
-                    }
+                    bodyContent={<FormattedMessage {...messages.costArnHelpcustomizecur} />}
                   >
                     <Button
                       icon={<QuestionCircleIcon className="pf-v6-u-ml-sm" />}
@@ -213,7 +585,7 @@ const getArn = (authUsername, showHCS) => ({
       ],
     },
     {
-      title: <FormattedMessage id="cost.arn.tagsStepTitle" defaultMessage="Tags, aliases and organizational units" />,
+      title: <FormattedMessage {...messages.costArnTagssteptitle} />,
       name: 'tags',
       nextStep: 'iam-policy',
       fields: [
@@ -225,7 +597,7 @@ const getArn = (authUsername, showHCS) => ({
         {
           name: 'application.extra.metered',
           component: 'rhel-usage-checkbox',
-          label: <FormattedMessage id="cost.arn.includesRhelUsage" defaultMessage="Include RHEL usage" />,
+          label: <FormattedMessage {...messages.costArnIncludesrhelusage} />,
         },
         {
           name: 'aws.rhel_usage.divider',
@@ -234,34 +606,29 @@ const getArn = (authUsername, showHCS) => ({
         {
           name: 'cost.tags.aliasessOrgUnits',
           component: 'plain-text',
-          label: (
-            <FormattedMessage
-              id="cost.tags.aliasessOrgUnits"
-              defaultMessage="To use account aliases and organizational units in the display and filter of AWS resources, select the following"
-            />
-          ),
+          label: <FormattedMessage {...messages.costTagsAliasessorgunits} />,
         },
         {
           name: 'aws.aliases.enabled',
           component: 'checkbox-with-icon',
-          label: <FormattedMessage id="cost.arn.includesAliases" defaultMessage="Include AWS account aliases" />,
+          label: <FormattedMessage {...messages.costArnIncludesaliases} />,
           Icon: AwsArn.IncludeAliasesLabel,
         },
         {
           name: 'aws.org_units.enabled',
           component: 'checkbox-with-icon',
-          label: <FormattedMessage id="cost.arn.includeOrgUnits" defaultMessage="Include AWS organizational units" />,
+          label: <FormattedMessage {...messages.costArnIncludeorgunits} />,
           Icon: AwsArn.IncludeOrgUnitsLabel,
         },
       ],
     },
     {
-      title: <FormattedMessage id="cost.arn.iamPolicyTitle" defaultMessage="Create IAM policy" />,
+      title: <FormattedMessage {...messages.costArnIampolicytitle} />,
       name: 'iam-policy',
       nextStep: 'iam-role',
       substepOf: {
         name: 'eaa',
-        title: <FormattedMessage id="cost.arn.enableAccountAccess" defaultMessage="Enable account access" />,
+        title: <FormattedMessage {...messages.costArnEnableaccountaccess} />,
       },
       fields: [
         {
@@ -272,7 +639,7 @@ const getArn = (authUsername, showHCS) => ({
       ],
     },
     {
-      title: <FormattedMessage id="cost.arn.iamRoleStepTitle" defaultMessage="Create IAM role" />,
+      title: <FormattedMessage {...messages.costArnIamrolesteptitle} />,
       name: 'iam-role',
       nextStep: 'arn',
       substepOf: 'eaa',
@@ -291,7 +658,7 @@ const getArn = (authUsername, showHCS) => ({
       ],
     },
     {
-      title: <FormattedMessage id="cost.arn.enterArn" defaultMessage="Enter ARN" />,
+      title: <FormattedMessage {...messages.costArnEnterarn} />,
       name: 'arn',
       substepOf: 'eaa',
       fields: [
@@ -323,7 +690,7 @@ const subsWatchArnField = {
       message: arnMessageLength,
     },
   ],
-  label: <FormattedMessage id="wizard.arn" defaultMessage="ARN" />,
+  label: <FormattedMessage {...messages.wizardArn} />,
 };
 
 const ansibleTowerURL = {
@@ -332,20 +699,17 @@ const ansibleTowerURL = {
     { type: validatorTypes.REQUIRED },
     {
       type: validatorTypes.PATTERN,
-      message: <FormattedMessage id="catalog.urlPatternMessage" defaultMessage="URL must start with https:// or http://" />,
+      message: <FormattedMessage {...messages.catalogUrlpatternmessage} />,
       pattern: /^https{0,1}:\/\//,
     },
     { type: validatorTypes.URL },
   ],
   helperText: (
     <FormHelperText isHidden={false}>
-      <FormattedMessage
-        id="catalog.hostnameHelper"
-        defaultMessage="For example, https://myansibleinstance.example.com/ or https://127.0.0.1/"
-      />
+      <FormattedMessage {...messages.catalogHostnamehelper} />
     </FormHelperText>
   ),
-  label: <FormattedMessage id="wizard.hostname" defaultMessage="Hostname" />,
+  label: <FormattedMessage {...messages.wizardHostname} />,
 };
 
 const hardcodedSchemas = {
@@ -359,7 +723,7 @@ const hardcodedSchemas = {
           skipSelection: true,
           additionalSteps: [
             {
-              title: <FormattedMessage id="cost.ibm.enterpriseIdTitle" defaultMessage="Add enterprise ID" />,
+              title: <FormattedMessage {...messages.costIbmEnterpriseidtitle} />,
               showTitle: false,
               fields: [
                 {
@@ -389,11 +753,11 @@ const hardcodedSchemas = {
               nextStep: 'ibm-cm-account-id',
               substepOf: {
                 name: 'ibm-cm-substep',
-                title: <FormattedMessage id="cost.ibm.substepTitle" defaultMessage="Enter account IDs" />,
+                title: <FormattedMessage {...messages.costIbmSubsteptitle} />,
               },
             },
             {
-              title: <FormattedMessage id="cost.ibm.accountIdTitle" defaultMessage="Add account ID" />,
+              title: <FormattedMessage {...messages.costIbmAccountidtitle} />,
               showTitle: false,
               fields: [
                 {
@@ -418,7 +782,7 @@ const hardcodedSchemas = {
               name: 'ibm-cm-account-id',
             },
             {
-              title: <FormattedMessage id="cost.ibm.serviceIdTitle" defaultMessage="Create a service ID" />,
+              title: <FormattedMessage {...messages.costIbmServiceidtitle} />,
               fields: [
                 {
                   component: 'description',
@@ -441,7 +805,7 @@ const hardcodedSchemas = {
               name: 'ibm-cm-service-id',
             },
             {
-              title: <FormattedMessage id="cost.ibm.accessId" defaultMessage="Configure service ID access" />,
+              title: <FormattedMessage {...messages.costIbmAccessid} />,
               fields: [
                 {
                   component: 'description',
@@ -453,7 +817,7 @@ const hardcodedSchemas = {
               name: 'ibm-cm-configure-access',
             },
             {
-              title: <FormattedMessage id="cost.ibm.apiKeyTitle" defaultMessage="Create an API key" />,
+              title: <FormattedMessage {...messages.costIbmApikeytitle} />,
               fields: [
                 {
                   component: 'description',
@@ -500,7 +864,7 @@ const hardcodedSchemas = {
           skipSelection: true,
           skipEndpoint: true,
           'source.source_ref': {
-            label: <FormattedMessage id="wizard.clusterId" defaultMessage="Cluster Identifier" />,
+            label: <FormattedMessage {...messages.wizardClusterid} />,
             isRequired: true,
             component: componentTypes.TEXT_FIELD,
             validate: [
@@ -510,18 +874,13 @@ const hardcodedSchemas = {
               {
                 type: validatorTypes.PATTERN,
                 pattern: /^[A-Za-z0-9]+[A-Za-z0-9_-]*$/,
-                message: (
-                  <FormattedMessage
-                    id="wizard.clusterIdPattern"
-                    defaultMessage="Cluster ID must start with alphanumeric character and can contain underscore and hyphen"
-                  />
-                ),
+                message: <FormattedMessage {...messages.wizardClusteridpattern} />,
               },
             ],
           },
           additionalSteps: [
             {
-              title: <FormattedMessage id="cost.configureOperator" defaultMessage="Install and configure operator" />,
+              title: <FormattedMessage {...messages.costConfigureoperator} />,
               fields: [
                 {
                   component: 'description',
@@ -552,7 +911,7 @@ const hardcodedSchemas = {
           { type: validatorTypes.REQUIRED },
           {
             type: validatorTypes.URL,
-            message: <FormattedMessage id="wizard.urlPatternMessage" defaultMessage="The URL is not formatted correctly." />,
+            message: <FormattedMessage {...messages.wizardUrlpatternmessage} />,
           },
         ],
       },
@@ -579,7 +938,7 @@ const hardcodedSchemas = {
             validate: [{ type: validatorTypes.REQUIRED }],
           },
           'authentication.username': {
-            label: <FormattedMessage id="azure.generic.username" defaultMessage="App ID" />,
+            label: <FormattedMessage {...messages.azureGenericUsername} />,
             isRequired: true,
             validate: [{ type: validatorTypes.REQUIRED }],
           },
@@ -596,11 +955,11 @@ const hardcodedSchemas = {
           customSteps: true,
           additionalSteps: [
             {
-              title: <FormattedMessage id="subwatch.azure.tokenTitle" defaultMessage="Obtain offline token" />,
+              title: <FormattedMessage {...messages.subwatchAzureTokentitle} />,
               nextStep: 'cost-azure-playbook',
               substepOf: {
                 name: 'eaa',
-                title: <FormattedMessage id="subwatch.azure.substepTitle" defaultMessage="Enable account access" />,
+                title: <FormattedMessage {...messages.subwatchAzureSubsteptitle} />,
               },
               fields: [
                 {
@@ -618,7 +977,7 @@ const hardcodedSchemas = {
               ],
             },
             {
-              title: <FormattedMessage id="subwatch.azure.playbookTitle" defaultMessage="Run Ansible playbook" />,
+              title: <FormattedMessage {...messages.subwatchAzurePlaybooktitle} />,
               name: 'cost-azure-playbook',
               substepOf: 'eaa',
               fields: [
@@ -639,7 +998,7 @@ const hardcodedSchemas = {
           customSteps: true,
           additionalSteps: [
             {
-              title: <FormattedMessage id="subwatch.lighthouse.title" defaultMessage="Configure Azure Lighthouse" />,
+              title: <FormattedMessage {...messages.subwatchLighthouseTitle} />,
               nextStep: 'subwatch-lighthouse-sub-id',
               fields: [
                 {
@@ -663,7 +1022,7 @@ const hardcodedSchemas = {
               ],
             },
             {
-              title: <FormattedMessage id="subwatch.lighthouse.subscriptionId" defaultMessage="Set subscription ID" />,
+              title: <FormattedMessage {...messages.subwatchLighthouseSubscriptionid} />,
               name: 'subwatch-lighthouse-sub-id',
               fields: [
                 {
@@ -697,12 +1056,7 @@ const hardcodedSchemas = {
               {
                 type: validatorTypes.PATTERN,
                 pattern: /^[A-Za-z0-9]+[A-Za-z0-9_-]*$/,
-                message: (
-                  <FormattedMessage
-                    id="cost.subidPattern"
-                    defaultMessage="Subscription ID must start with alphanumeric character and can contain underscore and hyphen"
-                  />
-                ),
+                message: <FormattedMessage {...messages.costSubidpattern} />,
               },
             ],
             isRequired: true,
@@ -716,12 +1070,7 @@ const hardcodedSchemas = {
               {
                 type: validatorTypes.PATTERN,
                 pattern: /^[A-Za-z0-9]+[A-Za-z0-9_-]*$/,
-                message: (
-                  <FormattedMessage
-                    id="cost.resourceGroupPattern"
-                    defaultMessage="Resource group must start with alphanumeric character and can contain underscore and hyphen"
-                  />
-                ),
+                message: <FormattedMessage {...messages.costResourcegrouppattern} />,
               },
             ],
           },
@@ -734,12 +1083,7 @@ const hardcodedSchemas = {
               {
                 type: validatorTypes.PATTERN,
                 pattern: /^[A-Za-z0-9]+[A-Za-z0-9_-]*$/,
-                message: (
-                  <FormattedMessage
-                    id="cost.storageAccountPattern"
-                    defaultMessage="Storage account must start with alphanumeric character and can contain underscore and hyphen"
-                  />
-                ),
+                message: <FormattedMessage {...messages.costStorageaccountpattern} />,
               },
             ],
           },
@@ -749,12 +1093,7 @@ const hardcodedSchemas = {
               {
                 type: validatorTypes.PATTERN,
                 pattern: /^[\/A-Za-z0-9]+[\.\/\:A-Za-z0-9_-]*$/, // eslint-disable-line no-useless-escape
-                message: (
-                  <FormattedMessage
-                    id="cost.scopePattern"
-                    defaultMessage="Cost export scope must start with alphanumeric character and can contain underscore, hyphen, and foward slash"
-                  />
-                ),
+                message: <FormattedMessage {...messages.costScopepattern} />,
               },
             ],
           },
@@ -764,12 +1103,7 @@ const hardcodedSchemas = {
               {
                 type: validatorTypes.PATTERN,
                 pattern: /^[A-Za-z0-9]+[A-Za-z0-9_-]*$/,
-                message: (
-                  <FormattedMessage
-                    id="cost.exportNamePattern"
-                    defaultMessage="Cost export name must start with alphanumeric character and can contain underscore and hyphen"
-                  />
-                ),
+                message: <FormattedMessage {...messages.costExportnamepattern} />,
               },
             ],
           },
@@ -780,7 +1114,7 @@ const hardcodedSchemas = {
                 type: validatorTypes.REQUIRED,
               },
             ],
-            label: <FormattedMessage id="cost.clientSecret" defaultMessage="Client secret" />,
+            label: <FormattedMessage {...messages.costClientsecret} />,
           },
           'authentication.username': {
             validate: [
@@ -788,10 +1122,10 @@ const hardcodedSchemas = {
                 type: validatorTypes.REQUIRED,
               },
             ],
-            label: <FormattedMessage id="cost.clientAppId" defaultMessage="Client (Application) ID" />,
+            label: <FormattedMessage {...messages.costClientappid} />,
           },
           'authentication.extra.azure.tenant_id': {
-            label: <FormattedMessage id="cost.tenantDirId" defaultMessage="Tenant (Directory) ID" />,
+            label: <FormattedMessage {...messages.costTenantdirid} />,
             validate: [
               {
                 type: validatorTypes.REQUIRED,
@@ -800,7 +1134,7 @@ const hardcodedSchemas = {
           },
           additionalSteps: [
             {
-              title: <FormattedMessage id="cost.createDailyExport" defaultMessage="Specify cost export scope" />,
+              title: <FormattedMessage {...messages.costCreatedailyexport} />,
               nextStep: 'azure-rg-and-sa',
               fields: [
                 {
@@ -814,21 +1148,11 @@ const hardcodedSchemas = {
                   className: 'src-c-wizard__conditional-radio',
                   options: [
                     {
-                      label: (
-                        <FormattedMessage
-                          id="cost.sendDefaultCostExport"
-                          defaultMessage="I am OK with sending the default data set to Cost Management"
-                        />
-                      ),
+                      label: <FormattedMessage {...messages.costSenddefaultcostexport} />,
                       value: false,
                     },
                     {
-                      label: (
-                        <FormattedMessage
-                          id="cost.customizeCostExport"
-                          defaultMessage="I wish to manually customize the data set sent to Cost Management"
-                        />
-                      ),
+                      label: <FormattedMessage {...messages.costCustomizecostexport} />,
                       value: true,
                     },
                   ],
@@ -844,7 +1168,7 @@ const hardcodedSchemas = {
                 {
                   name: 'application.extra.metered',
                   component: 'rhel-usage-checkbox',
-                  label: <FormattedMessage id="cost.azure.includesRhelUsage" defaultMessage="Include RHEL usage" />,
+                  label: <FormattedMessage {...messages.costAzureIncludesrhelusage} />,
                 },
                 {
                   name: 'azure.rhel_usage.divider',
@@ -858,13 +1182,13 @@ const hardcodedSchemas = {
                 {
                   name: 'application.extra.scope',
                   component: componentTypes.TEXT_FIELD,
-                  label: <FormattedMessage id="wizard.costExportScope" defaultMessage="Cost export scope" />,
+                  label: <FormattedMessage {...messages.wizardCostexportscope} />,
                   condition: { when: 'application.extra.storage_only', is: false },
                 },
               ],
             },
             {
-              title: <FormattedMessage id="cost.createDailyExport" defaultMessage="Daily export" />,
+              title: <FormattedMessage {...messages.costCreatedailyexport} />,
               name: 'daily-export',
               nextStep: 'azure-sub-id',
               fields: [
@@ -876,13 +1200,13 @@ const hardcodedSchemas = {
                 {
                   name: 'application.extra.export_name',
                   component: componentTypes.TEXT_FIELD,
-                  label: <FormattedMessage id="wizard.costExportName" defaultMessage="Cost export name" />,
+                  label: <FormattedMessage {...messages.wizardCostexportname} />,
                   condition: { when: 'application.extra.storage_only', is: false },
                 },
               ],
             },
             {
-              title: <FormattedMessage id="cost.azureSubStepId" defaultMessage="Resource group and storage account" />,
+              title: <FormattedMessage {...messages.costAzuresubstepid} />,
               name: 'azure-rg-and-sa',
               nextStep: 'daily-export',
               fields: [
@@ -906,17 +1230,17 @@ const hardcodedSchemas = {
                 {
                   name: 'application.extra.resource_group',
                   component: componentTypes.TEXT_FIELD,
-                  label: <FormattedMessage id="wizard.resourceGroupName" defaultMessage="Resource group name" />,
+                  label: <FormattedMessage {...messages.wizardResourcegroupname} />,
                 },
                 {
                   name: 'application.extra.storage_account',
                   component: componentTypes.TEXT_FIELD,
-                  label: <FormattedMessage id="wizard.storageAccountName" defaultMessage="Storage account name" />,
+                  label: <FormattedMessage {...messages.wizardStorageaccountname} />,
                 },
               ],
             },
             {
-              title: <FormattedMessage id="wizard.subscriptionId" defaultMessage="Subscription ID" />,
+              title: <FormattedMessage {...messages.wizardSubscriptionid} />,
               name: 'azure-sub-id',
               nextStep: 'configure-roles',
               fields: [
@@ -928,12 +1252,12 @@ const hardcodedSchemas = {
                 {
                   name: 'application.extra.subscription_id',
                   component: componentTypes.TEXT_FIELD,
-                  label: <FormattedMessage id="wizard.subscriptionId" defaultMessage="Subscription ID" />,
+                  label: <FormattedMessage {...messages.wizardSubscriptionid} />,
                 },
               ],
             },
             {
-              title: <FormattedMessage id="wizard.configureRoles" defaultMessage="Roles" />,
+              title: <FormattedMessage {...messages.wizardConfigureroles} />,
               name: 'configure-roles',
               fields: [
                 {
@@ -975,7 +1299,7 @@ const hardcodedSchemas = {
           customSteps: true,
           additionalSteps: [
             {
-              title: <FormattedMessage id="provisioning.lighthouse.title" defaultMessage="Configure Azure Lighthouse" />,
+              title: <FormattedMessage {...messages.provisioningLighthouseTitle} />,
               nextStep: 'provisioning-lighthouse-sub-id',
               fields: [
                 {
@@ -999,7 +1323,7 @@ const hardcodedSchemas = {
               ],
             },
             {
-              title: <FormattedMessage id="provisioning.lighthouse.subscriptionId" defaultMessage="Set subscription ID" />,
+              title: <FormattedMessage {...messages.provisioningLighthouseSubscriptionid} />,
               name: 'provisioning-lighthouse-sub-id',
               fields: [
                 {
@@ -1017,12 +1341,7 @@ const hardcodedSchemas = {
                     {
                       type: validatorTypes.PATTERN,
                       pattern: /^[A-Za-z0-9-]+$/,
-                      message: (
-                        <FormattedMessage
-                          id="provisioning.subscriptionIdPattern"
-                          defaultMessage="Subscription ID must only contain alphanumeric characters and hyphens"
-                        />
-                      ),
+                      message: <FormattedMessage {...messages.provisioningSubscriptionidpattern} />,
                     },
                     { type: 'required' },
                   ],
@@ -1039,7 +1358,7 @@ const hardcodedSchemas = {
       'image-builder-aws-account-id': {
         generic: {
           'authentication.username': {
-            label: <FormattedMessage id="wizard.accountId" defaultMessage="Account ID" />,
+            label: <FormattedMessage {...messages.wizardAccountid} />,
             placeholder: '123456789012',
             isRequired: true,
             pattern: '[0-9]{12}',
@@ -1050,12 +1369,7 @@ const hardcodedSchemas = {
               {
                 type: validatorTypes.PATTERN,
                 pattern: /^\d{12}$/,
-                message: (
-                  <FormattedMessage
-                    id="image-builder-aws-account-id.accountIdPatter"
-                    defaultMessage="Account Id has to be 12 numbers"
-                  />
-                ),
+                message: <FormattedMessage {...messages.imageBuilderAwsAccountIdAccountidpatter} />,
               },
             ],
           },
@@ -1064,13 +1378,13 @@ const hardcodedSchemas = {
       access_key_secret_key: {
         generic: {
           'authentication.username': {
-            label: <FormattedMessage id="wizard.accessKeyId" defaultMessage="Access key ID" />,
+            label: <FormattedMessage {...messages.wizardAccesskeyid} />,
             placeholder: 'AKIAIOSFODNN7EXAMPLE',
             isRequired: true,
             validate: [{ type: validatorTypes.REQUIRED }],
           },
           'authentication.password': {
-            label: <FormattedMessage id="wizard.secretAccessKey" defaultMessage="Secret access key" />,
+            label: <FormattedMessage {...messages.wizardSecretaccesskey} />,
             placeholder: 'wJairXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY',
             isRequired: true,
             validate: [{ type: validatorTypes.REQUIRED }],
@@ -1080,7 +1394,7 @@ const hardcodedSchemas = {
           onlyHiddenFields: true,
           additionalSteps: [
             {
-              title: <FormattedMessage id="wizard.configureAccountAccess" defaultMessage="Account access" />,
+              title: <FormattedMessage {...messages.wizardConfigureaccountaccess} />,
               fields: [
                 {
                   component: 'description',
@@ -1128,11 +1442,11 @@ const hardcodedSchemas = {
           'authentication.username': subsWatchArnField,
           additionalSteps: [
             {
-              title: <FormattedMessage id="cloudmeter.createIamPolicy" defaultMessage="Create IAM policy" />,
+              title: <FormattedMessage {...messages.cloudmeterCreateiampolicy} />,
               nextStep: 'subs-iam-role',
               substepOf: {
                 name: 'eaa',
-                title: <FormattedMessage id="cloudmeter.enableAccountAccess" defaultMessage="Enable account access" />,
+                title: <FormattedMessage {...messages.cloudmeterEnableaccountaccess} />,
               },
               fields: [
                 {
@@ -1150,7 +1464,7 @@ const hardcodedSchemas = {
               ],
             },
             {
-              title: <FormattedMessage id="cloudmeter.createIamRole" defaultMessage="Create IAM role" />,
+              title: <FormattedMessage {...messages.cloudmeterCreateiamrole} />,
               name: 'subs-iam-role',
               nextStep: 'subs-arn',
               substepOf: 'eaa',
@@ -1169,7 +1483,7 @@ const hardcodedSchemas = {
               ],
             },
             {
-              title: <FormattedMessage id="cloudmeter.enterArn" defaultMessage="Enter ARN" />,
+              title: <FormattedMessage {...messages.cloudmeterEnterarn} />,
               name: 'subs-arn',
               substepOf: 'eaa',
               fields: [
@@ -1198,11 +1512,11 @@ const hardcodedSchemas = {
           'authentication.username': provArnField,
           additionalSteps: [
             {
-              title: <FormattedMessage id="provisioning.createIamPolicy" defaultMessage="AWS Account Number" />,
+              title: <FormattedMessage {...messages.provisioningCreateiampolicy} />,
               nextStep: 'prov-iam-role',
               substepOf: {
                 name: 'eaa',
-                title: <FormattedMessage id="provisioning.enableAccountAccess" defaultMessage="Enable account access" />,
+                title: <FormattedMessage {...messages.provisioningEnableaccountaccess} />,
               },
               fields: [
                 {
@@ -1228,7 +1542,7 @@ const hardcodedSchemas = {
               ],
             },
             {
-              title: <FormattedMessage id="provisioning.createIamRole" defaultMessage="Create IAM role" />,
+              title: <FormattedMessage {...messages.provisioningCreateiamrole} />,
               name: 'prov-iam-role',
               nextStep: 'prov-arn',
               substepOf: 'eaa',
@@ -1241,7 +1555,7 @@ const hardcodedSchemas = {
               ],
             },
             {
-              title: <FormattedMessage id="provisioning.enterArn" defaultMessage="Enter ARN" />,
+              title: <FormattedMessage {...messages.provisioningEnterarn} />,
               name: 'prov-arn',
               substepOf: 'eaa',
               fields: [
@@ -1268,12 +1582,12 @@ const hardcodedSchemas = {
       receptor_node: {
         generic: {
           'source.source_ref': {
-            label: <FormattedMessage id="satellite.satelliteId" defaultMessage="Satellite ID" />,
+            label: <FormattedMessage {...messages.satelliteSatelliteid} />,
             validate: [{ type: validatorTypes.REQUIRED }],
             component: componentTypes.TEXT_FIELD,
           },
           'endpoint.receptor_node': {
-            label: <FormattedMessage id="satellite.receptorId" defaultMessage="Receptor ID" />,
+            label: <FormattedMessage {...messages.satelliteReceptorid} />,
             validate: [{ type: validatorTypes.REQUIRED }],
             component: componentTypes.TEXT_FIELD,
           },
@@ -1282,7 +1596,7 @@ const hardcodedSchemas = {
           customSteps: true,
           additionalSteps: [
             {
-              title: <FormattedMessage id="satellite.credentials" defaultMessage="Credentials" />,
+              title: <FormattedMessage {...messages.satelliteCredentials} />,
               nextStep: 'summary',
               fields: [
                 {
@@ -1335,25 +1649,25 @@ const hardcodedSchemas = {
           'authentication.username': {
             isRequired: false,
             validate: [{ type: validatorTypes.REQUIRED }],
-            label: <FormattedMessage id="wizard.username" defaultMessage="Username" />,
+            label: <FormattedMessage {...messages.wizardUsername} />,
           },
           'authentication.password': {
             type: 'password',
             isRequired: false,
             validate: [{ type: validatorTypes.REQUIRED }],
-            label: <FormattedMessage id="wizard.password" defaultMessage="Password" />,
+            label: <FormattedMessage {...messages.wizardPassword} />,
           },
           url: ansibleTowerURL,
           'endpoint.certificate_authority': {
-            label: <FormattedMessage id="wizard.certificateAuthoriy" defaultMessage="Certificate authority" />,
+            label: <FormattedMessage {...messages.wizardCertificateauthoriy} />,
           },
           'endpoint.verify_ssl': {
             initialValue: false,
-            label: <FormattedMessage id="wizard.verifySsl" defaultMessage="Verify TLS" />,
+            label: <FormattedMessage {...messages.wizardVerifyssl} />,
           },
           additionalSteps: [
             {
-              title: <FormattedMessage id="wizard.credentials" defaultMessage="Credentials" />,
+              title: <FormattedMessage {...messages.wizardCredentials} />,
               nextStep: 'ansible-tower-credentials-no-app',
               fields: [
                 {
@@ -1380,7 +1694,7 @@ const hardcodedSchemas = {
             },
             {
               name: 'ansible-tower-credentials-no-app',
-              title: <FormattedMessage id="catalog.ansibleTowerEndpoint" defaultMessage="Ansible Tower endpoint" />,
+              title: <FormattedMessage {...messages.catalogAnsibletowerendpoint} />,
               fields: [
                 {
                   name: 'endpoint.role',
@@ -1413,26 +1727,26 @@ const hardcodedSchemas = {
           'authentication.username': {
             isRequired: false,
             validate: [{ type: validatorTypes.REQUIRED }],
-            label: <FormattedMessage id="wizard.username" defaultMessage="Username" />,
+            label: <FormattedMessage {...messages.wizardUsername} />,
           },
           'authentication.password': {
             type: 'password',
             isRequired: false,
             validate: [{ type: validatorTypes.REQUIRED }],
-            label: <FormattedMessage id="wizard.password" defaultMessage="Password" />,
+            label: <FormattedMessage {...messages.wizardPassword} />,
           },
           url: ansibleTowerURL,
           'endpoint.certificate_authority': {
-            label: <FormattedMessage id="wizard.certificateAuthoriy" defaultMessage="Certificate authority" />,
+            label: <FormattedMessage {...messages.wizardCertificateauthoriy} />,
           },
           'endpoint.verify_ssl': {
             initialValue: false,
-            label: <FormattedMessage id="wizard.verifySsl" defaultMessage="Verify TLS" />,
+            label: <FormattedMessage {...messages.wizardVerifyssl} />,
           },
           additionalSteps: [
             {
               nextStep: 'catalog-ansible-tower',
-              title: <FormattedMessage id="catalog.ansibleTowerEndpoint" defaultMessage="Ansible Tower endpoint" />,
+              title: <FormattedMessage {...messages.catalogAnsibletowerendpoint} />,
               fields: [
                 {
                   name: 'ansible-tower-desc',
@@ -1462,7 +1776,7 @@ const hardcodedSchemas = {
               ],
             },
             {
-              title: <FormattedMessage id="wizard.credentials" defaultMessage="Credentials" />,
+              title: <FormattedMessage {...messages.wizardCredentials} />,
               name: 'catalog-ansible-tower',
               fields: [
                 {
@@ -1494,7 +1808,7 @@ const hardcodedSchemas = {
     endpoint: {
       url: ansibleTowerURL,
       'endpoint.certificate_authority': {
-        label: <FormattedMessage id="wizard.certificateAuthority" defaultMessage="Certificate authority" />,
+        label: <FormattedMessage {...messages.wizardCertificateauthority} />,
       },
       'endpoint.verify_ssl': {
         initialValue: false,
@@ -1510,11 +1824,11 @@ const hardcodedSchemas = {
           customSteps: true,
           additionalSteps: [
             {
-              title: <FormattedMessage id="subwatch.azure.tokenTitle" defaultMessage="Obtain offline token" />,
+              title: <FormattedMessage {...messages.subwatchAzureTokentitle} />,
               nextStep: 'cost-google-playbook',
               substepOf: {
                 name: 'eaa',
-                title: <FormattedMessage id="subwatch.azure.substepTitle" defaultMessage="Enable account access" />,
+                title: <FormattedMessage {...messages.subwatchAzureSubsteptitle} />,
               },
               fields: [
                 {
@@ -1532,7 +1846,7 @@ const hardcodedSchemas = {
               ],
             },
             {
-              title: <FormattedMessage id="subwatch.azure.playbookTitle" defaultMessage="Run Ansible playbook" />,
+              title: <FormattedMessage {...messages.subwatchAzurePlaybooktitle} />,
               name: 'cost-google-playbook',
               substepOf: 'eaa',
               fields: [
@@ -1556,11 +1870,11 @@ const hardcodedSchemas = {
           customSteps: true,
           additionalSteps: [
             {
-              title: <FormattedMessage id="provisioning.enterProjectID" defaultMessage="Enter Project ID" />,
+              title: <FormattedMessage {...messages.provisioningEnterprojectid} />,
               nextStep: 'prov-custom-role',
               substepOf: {
                 name: 'eaa',
-                title: <FormattedMessage id="provisioning.enableAccountAccess" defaultMessage="Enable account access" />,
+                title: <FormattedMessage {...messages.provisioningEnableaccountaccess} />,
               },
               fields: [
                 {
@@ -1586,7 +1900,7 @@ const hardcodedSchemas = {
               ],
             },
             {
-              title: <FormattedMessage id="provisioning.createRole" defaultMessage="Create custom role" />,
+              title: <FormattedMessage {...messages.provisioningCreaterole} />,
               name: 'prov-custom-role',
               substepOf: 'eaa',
               fields: [
@@ -1632,7 +1946,7 @@ const hardcodedSchemas = {
           },
           additionalSteps: [
             {
-              title: <FormattedMessage id="cost.gcp.projectTitle" defaultMessage="Project" />,
+              title: <FormattedMessage {...messages.costGcpProjecttitle} />,
               fields: [
                 {
                   component: 'description',
@@ -1656,21 +1970,13 @@ const hardcodedSchemas = {
                   className: 'src-c-wizard__conditional-radio',
                   options: [
                     {
-                      label: (
-                        <FormattedMessage
-                          id="cost.gcp.sendDefaultCUR"
-                          defaultMessage="I am OK with sending the default dataset to Cost Management"
-                        />
-                      ),
+                      label: <FormattedMessage {...messages.costGcpSenddefaultcur} />,
                       value: false,
                     },
                     {
                       label: (
                         <span>
-                          <FormattedMessage
-                            id="cost.gcp.customizeCUR"
-                            defaultMessage="I wish to manually customize the dataset sent to Cost Management"
-                          />
+                          <FormattedMessage {...messages.costGcpCustomizecur} />
                         </span>
                       ),
                       value: true,
@@ -1691,7 +1997,7 @@ const hardcodedSchemas = {
               },
             },
             {
-              title: <FormattedMessage id="cost.gcp.cloudStorage" defaultMessage="Create cloud storage bucket" />,
+              title: <FormattedMessage {...messages.costGcpCloudstorage} />,
               fields: [
                 {
                   component: 'description',
@@ -1714,7 +2020,7 @@ const hardcodedSchemas = {
               nextStep: 'cost-gcp-iam',
             },
             {
-              title: <FormattedMessage id="cost.gcp.iamTitle" defaultMessage="Create IAM role" />,
+              title: <FormattedMessage {...messages.costGcpIamtitle} />,
               fields: [
                 {
                   component: 'description',
@@ -1726,11 +2032,11 @@ const hardcodedSchemas = {
               name: 'cost-gcp-iam',
               substepOf: {
                 name: 'geaa',
-                title: <FormattedMessage id="cost.arn.enableAccountAccess" defaultMessage="Enable account access" />,
+                title: <FormattedMessage {...messages.costArnEnableaccountaccess} />,
               },
             },
             {
-              title: <FormattedMessage id="cost.gcp.accessTitle" defaultMessage="Assign access" />,
+              title: <FormattedMessage {...messages.costGcpAccesstitle} />,
               fields: [
                 {
                   component: 'description',
@@ -1743,7 +2049,7 @@ const hardcodedSchemas = {
               substepOf: 'geaa',
             },
             {
-              title: <FormattedMessage id="cost.gcp.datasetTitle" defaultMessage="Create dataset" />,
+              title: <FormattedMessage {...messages.costGcpDatasettitle} />,
               fields: [
                 {
                   component: 'description',
@@ -1762,7 +2068,7 @@ const hardcodedSchemas = {
               nextStep: 'cost-gcp-billing-export',
             },
             {
-              title: <FormattedMessage id="cost.gcp.billingExportTitle" defaultMessage="Billing export" />,
+              title: <FormattedMessage {...messages.costGcpBillingexporttitle} />,
               fields: [
                 {
                   component: 'description',

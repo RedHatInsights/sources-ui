@@ -8,10 +8,130 @@ import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
 import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 
 import { ACCOUNT_AUTHORIZATION } from '../components/constants';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage, defineMessages, useIntl } from 'react-intl';
 import { DateFormat } from '@redhat-cloud-services/frontend-components/DateFormat';
 import { Link } from 'react-router-dom';
 import AppLink from '../components/AppLink';
+
+// PF LabelGroup.fillTemplate replaces ${remaining} in the collapsedText string at render time,
+// so the token must survive react-intl formatting as a literal.
+const REMAINING_TEMPLATE = '${remaining}';
+
+const messages = defineMessages({
+  sourcesSourceerror: {
+    id: 'sources.sourceError',
+    defaultMessage: "Source's status: { error }",
+  },
+  sourcesEndpointerror: {
+    id: 'sources.endpointError',
+    defaultMessage: 'Endpoint error: { error }',
+  },
+  sourcesAutherrors: {
+    id: 'sources.authErrors',
+    defaultMessage: 'Authentication {count, plural, one {status} other {statuses}} : { errors }',
+  },
+  sourcesErrorauthtemplate: {
+    id: 'sources.errorAuthTemplate',
+    defaultMessage: '{ type }: { error }',
+  },
+  sourcesApperrors: {
+    id: 'sources.appErrors',
+    defaultMessage: 'Application {count, plural, one {status} other {statutes}}: { errors }',
+  },
+  sourcesErrorapptemplate: {
+    id: 'sources.errorAppTemplate',
+    defaultMessage: '{ app }: { error }',
+  },
+  sourcesAppstatuspartiallyok: {
+    id: 'sources.appStatusPartiallyOK',
+    defaultMessage: 'We found {count, plural, one {this error} other {these errors}}.',
+  },
+
+  sourcesAppstatusok: {
+    id: 'sources.appStatusOK',
+    defaultMessage: 'Everything works fine.',
+  },
+  sourcesUnknownerror: {
+    id: 'sources.unknownError',
+    defaultMessage: 'Unknown error',
+  },
+  sourcesAppstatusunknown: {
+    id: 'sources.appStatusUnknown',
+    defaultMessage: 'Status has not been verified.',
+  },
+  appplicationPausedAdditionaltext: {
+    id: 'appplication.paused.additionalText',
+    defaultMessage: 'Resume this application to continue data collection.',
+  },
+  applicationPausedHeader: {
+    id: 'application.paused.header',
+    defaultMessage: 'Application paused',
+  },
+  applicationsShowmore: {
+    id: 'applications.showMore',
+    defaultMessage: '{remaining} more',
+  },
+  configurationmodeTrust: {
+    id: 'configurationMode.trust',
+    defaultMessage: 'Account authorization',
+  },
+  configurationmodeTrustmodeDefaulterror: {
+    id: 'configurationMode.trustmode.defaultError',
+    defaultMessage: 'Edit credentials required.',
+  },
+  sourcesViewcredentials: {
+    id: 'sources.viewCredentials',
+    defaultMessage: 'View credentials',
+  },
+  sourcesEditcredentials: {
+    id: 'sources.editCredentials',
+    defaultMessage: 'Edit credentials',
+  },
+  configurationmodeManual: {
+    id: 'configurationMode.manual',
+    defaultMessage: 'Manual configuration',
+  },
+  sourcesCloudformimporttooltip: {
+    id: 'sources.cloudformImportTooltip',
+    defaultMessage: 'This integration can be managed from your connected CloudForms application.',
+  },
+  sourcesImported: {
+    id: 'sources.importedStatus',
+    defaultMessage: 'imported',
+  },
+  sourcesUnavailable: {
+    id: 'sources.unavailable',
+    defaultMessage: 'Unavailable',
+  },
+  sourcesAvailable: {
+    id: 'sources.available',
+    defaultMessage: 'Available',
+  },
+  sourcesPartiallyavailable: {
+    id: 'sources.partiallyAvailable',
+    defaultMessage: 'Partially available',
+  },
+  sourcesInprogress: {
+    id: 'sources.inProgress',
+    defaultMessage: 'In progress',
+  },
+  sourcesPaused: {
+    id: 'sources.paused',
+    defaultMessage: 'Paused',
+  },
+  sourcesUnknown: {
+    id: 'sources.unknown',
+    defaultMessage: 'Unknown',
+  },
+  sourcesInprogressstatus: {
+    id: 'sources.inProgressStatus',
+    defaultMessage: 'We are still working to validate credentials. Check back for status updates.',
+  },
+  sourcesPausedstatus: {
+    id: 'sources.pausedStatus',
+    defaultMessage: 'Data collection is temporarily disabled. Resume source to reestablish connection.',
+  },
+});
 
 export const defaultPort = (scheme) =>
   ({
@@ -33,12 +153,7 @@ const routes = {
 
 export const importsTexts = (value) =>
   ({
-    cfme: (
-      <FormattedMessage
-        id="sources.cloudformImportTooltip"
-        defaultMessage="This integration can be managed from your connected CloudForms application."
-      />
-    ),
+    cfme: <FormattedMessage {...messages.sourcesCloudformimporttooltip} />,
   })[value.toLowerCase()];
 
 export const schemaToPort = (schema, port) => (port && String(port) !== defaultPort(schema) ? `:${port}` : '');
@@ -96,7 +211,7 @@ export const importedFormatter = (value) => {
     return (
       <Tooltip content={text}>
         <Badge isRead className="src-m-help-cursor">
-          <FormattedMessage id="sources.imported" defaultMessage="imported" />
+          <FormattedMessage {...messages.sourcesImported} />
         </Badge>
       </Tooltip>
     );
@@ -104,7 +219,7 @@ export const importedFormatter = (value) => {
 
   return (
     <Badge isRead>
-      <FormattedMessage id="sources.imported" defaultMessage="imported" />
+      <FormattedMessage {...messages.sourcesImported} />
     </Badge>
   );
 };
@@ -126,46 +241,37 @@ export const getStatusColor = (status) =>
 
 export const getStatusText = (status) =>
   ({
-    [UNAVAILABLE]: <FormattedMessage id="sources.unavailable" defaultMessage="Unavailable" />,
-    [AVAILABLE]: <FormattedMessage id="sources.available" defaultMessage="Available" />,
-    [PARTIALLY_UNAVAILABLE]: <FormattedMessage id="sources.partiallyAvailable" defaultMessage="Partially available" />,
-    [IN_PROGRESS]: <FormattedMessage id="sources.inProgress" defaultMessage="In progress" />,
-    [PAUSED]: <FormattedMessage id="sources.paused" defaultMessage="Paused" />,
-  })[status] || <FormattedMessage id="sources.unknown" defaultMessage="Unknown" />;
+    [UNAVAILABLE]: <FormattedMessage {...messages.sourcesUnavailable} />,
+    [AVAILABLE]: <FormattedMessage {...messages.sourcesAvailable} />,
+    [PARTIALLY_UNAVAILABLE]: <FormattedMessage {...messages.sourcesPartiallyavailable} />,
+    [IN_PROGRESS]: <FormattedMessage {...messages.sourcesInprogress} />,
+    [PAUSED]: <FormattedMessage {...messages.sourcesPaused} />,
+  })[status] || <FormattedMessage {...messages.sourcesUnknown} />;
 
-export const UnknownError = () => <FormattedMessage id="sources.unknownError" defaultMessage="unavailable" />;
+export const UnknownError = () => <FormattedMessage {...messages.sourcesUnknownerror} />;
 
 export const formatAvailibilityErrors = (appTypes, errors) => (
   <React.Fragment>
     {errors.source && (
       <React.Fragment>
-        <FormattedMessage
-          id="sources.sourceError"
-          defaultMessage="Source's status: { error }"
-          values={{ error: errors.source }}
-        />
+        <FormattedMessage {...messages.sourcesSourceerror} values={{ error: errors.source }} />
         <br />
       </React.Fragment>
     )}
     {errors.endpoint && (
       <React.Fragment>
-        <FormattedMessage
-          id="sources.endpointError"
-          defaultMessage="Endpoint error: { error }"
-          values={{ error: errors.endpoint }}
-        />
+        <FormattedMessage {...messages.sourcesEndpointerror} values={{ error: errors.endpoint }} />
         <br />
       </React.Fragment>
     )}
     {errors.authentications && (
       <FormattedMessage
-        id="sources.authErrors"
-        defaultMessage="Authentication {count, plural, one {status} other {statuses}} : { errors }"
+        {...messages.sourcesAutherrors}
         values={{
           count: errors.authentications.length,
           errors: errors.authentications.map(({ error, type }) => (
             <React.Fragment key={type}>
-              <FormattedMessage id="sources.errorAuthTemplate" defaultMessage="{ type }: { error }" values={{ error, type }} />
+              <FormattedMessage {...messages.sourcesErrorauthtemplate} values={{ error, type }} />
               <br />
             </React.Fragment>
           )),
@@ -174,15 +280,13 @@ export const formatAvailibilityErrors = (appTypes, errors) => (
     )}
     {errors.applications && (
       <FormattedMessage
-        id="sources.appErrors"
-        defaultMessage="Application {count, plural, one {status} other {statutes}}: { errors }"
+        {...messages.sourcesApperrors}
         values={{
           count: errors.applications.length,
           errors: errors.applications.map(({ error, id }) => (
             <React.Fragment key={id}>
               <FormattedMessage
-                id="sources.errorAppTemplate"
-                defaultMessage="{ app }: { error }"
+                {...messages.sourcesErrorapptemplate}
                 values={{
                   error,
                   app: appTypes.find((app) => app.id === id)?.display_name || id,
@@ -201,40 +305,22 @@ export const getStatusTooltipText = (status, appTypes, errors = {}) =>
   ({
     [UNAVAILABLE]: (
       <React.Fragment>
-        <FormattedMessage
-          id="sources.appStatusPartiallyOK"
-          defaultMessage="We found {count, plural, one {this error} other {these errors}}."
-          values={{ count: Object.keys(errors).length }}
-        />
+        <FormattedMessage {...messages.sourcesAppstatuspartiallyok} values={{ count: Object.keys(errors).length }} />
         <hr />
         {formatAvailibilityErrors(appTypes, errors)}
       </React.Fragment>
     ),
-    [AVAILABLE]: <FormattedMessage id="sources.appStatusOK" defaultMessage="Everything works fine." />,
+    [AVAILABLE]: <FormattedMessage {...messages.sourcesAppstatusok} />,
     [PARTIALLY_UNAVAILABLE]: (
       <React.Fragment>
-        <FormattedMessage
-          id="sources.appStatusPartiallyOK"
-          defaultMessage="We found {count, plural, one {this error} other {these errors}}."
-          values={{ count: Object.keys(errors).length }}
-        />
+        <FormattedMessage {...messages.sourcesAppstatuspartiallyok} values={{ count: Object.keys(errors).length }} />
         <hr />
         {formatAvailibilityErrors(appTypes, errors)}
       </React.Fragment>
     ),
-    [IN_PROGRESS]: (
-      <FormattedMessage
-        id="sources.inProgressStatus"
-        defaultMessage="We are still working to validate credentials. Check back for status updates."
-      />
-    ),
-    [PAUSED]: (
-      <FormattedMessage
-        id="sources.pausedStatus"
-        defaultMessage="Data collection is temporarily disabled. Resume source to reestablish connection."
-      />
-    ),
-  })[status] || <FormattedMessage id="sources.appStatusUnknown" defaultMessage="Status has not been verified." />;
+    [IN_PROGRESS]: <FormattedMessage {...messages.sourcesInprogressstatus} />,
+    [PAUSED]: <FormattedMessage {...messages.sourcesPausedstatus} />,
+  })[status] || <FormattedMessage {...messages.sourcesAppstatusunknown} />;
 
 export const getAllErrors = ({
   availability_status,
@@ -351,22 +437,10 @@ export const availabilityFormatter = (_status, source, { appTypes }) => {
 
 export const getStatusTooltipTextApp = (status, error, intl) =>
   ({
-    [AVAILABLE]: intl.formatMessage({
-      id: 'sources.appStatusOK',
-      defaultMessage: 'Everything works fine.',
-    }),
-    [UNAVAILABLE]: error || intl.formatMessage({ id: 'sources.unknownError', defaultMessage: 'Unknown error' }),
-    [IN_PROGRESS]: (
-      <FormattedMessage
-        id="sources.inProgressStatus"
-        defaultMessage="We are still working to validate credentials. Check back for status updates."
-      />
-    ),
-  })[status] ||
-  intl.formatMessage({
-    id: 'sources.appStatusUnknown',
-    defaultMessage: 'Status has not been verified.',
-  });
+    [AVAILABLE]: intl.formatMessage(messages.sourcesAppstatusok),
+    [UNAVAILABLE]: error || intl.formatMessage(messages.sourcesUnknownerror),
+    [IN_PROGRESS]: <FormattedMessage {...messages.sourcesInprogressstatus} />,
+  })[status] || intl.formatMessage(messages.sourcesAppstatusunknown);
 
 export const ApplicationLabel = ({ app, showStatusText, ...props }) => {
   const intl = useIntl();
@@ -378,19 +452,9 @@ export const ApplicationLabel = ({ app, showStatusText, ...props }) => {
       showClose={false}
       key={app.display_name}
       aria-label={`${app.display_name} popover`}
-      bodyContent={
-        app.paused_at
-          ? `${statusText} ${intl.formatMessage({
-              id: 'appplication.paused.additionalText',
-              defaultMessage: 'Resume this application to continue data collection.',
-            })}`
-          : statusText
-      }
+      bodyContent={app.paused_at ? `${statusText} ${intl.formatMessage(messages.appplicationPausedAdditionaltext)}` : statusText}
       {...(app.paused_at && {
-        headerContent: intl.formatMessage({
-          id: 'application.paused.header',
-          defaultMessage: 'Application paused',
-        }),
+        headerContent: intl.formatMessage(messages.applicationPausedHeader),
       })}
     >
       <Label
@@ -423,10 +487,7 @@ const EnhancedLabelGroup = ({ applications, ...props }) => {
     <LabelGroup
       {...props}
       numLabels={2}
-      collapsedText={intl.formatMessage(
-        { id: 'applications.showMore', defaultMessage: '{remaining} more' },
-        { remaining: '${remaining}' },
-      )}
+      collapsedText={intl.formatMessage(messages.applicationsShowmore, { remaining: REMAINING_TEMPLATE })}
     >
       {applications.map((app, index) => (
         <ApplicationLabel app={app} key={app.id || index} />
@@ -487,19 +548,12 @@ export const configurationModeFormatter = (mode, item, { intl, sourceType }) => 
 
     return (
       <React.Fragment>
-        {intl.formatMessage({
-          id: 'configurationMode.trust',
-          defaultMessage: 'Account authorization',
-        })}
+        {intl.formatMessage(messages.configurationmodeTrust)}
         {superKeyAuth?.availability_status === UNAVAILABLE && (
           <Tooltip
             position="top"
             content={
-              superKeyAuth.availability_status_error ||
-              intl.formatMessage({
-                id: 'configurationMode.trustmode.defaultError',
-                defaultMessage: 'Edit credentials required.',
-              })
+              superKeyAuth.availability_status_error || intl.formatMessage(messages.configurationmodeTrustmodeDefaulterror)
             }
           >
             <span className="pf-v6-u-ml-sm">
@@ -511,14 +565,8 @@ export const configurationModeFormatter = (mode, item, { intl, sourceType }) => 
           <AppLink to={replaceRouteId(routes.sourcesDetailEditCredentials.path, item.id)}>
             <Button variant="link" id="edit-super-credentials" isInline>
               {item.paused_at
-                ? intl.formatMessage({
-                    id: 'sources.viewCredentials',
-                    defaultMessage: 'View credentials',
-                  })
-                : intl.formatMessage({
-                    id: 'sources.editCredentials',
-                    defaultMessage: 'Edit credentials',
-                  })}
+                ? intl.formatMessage(messages.sourcesViewcredentials)
+                : intl.formatMessage(messages.sourcesEditcredentials)}
             </Button>
           </AppLink>
         </div>
@@ -526,8 +574,5 @@ export const configurationModeFormatter = (mode, item, { intl, sourceType }) => 
     );
   }
 
-  return intl.formatMessage({
-    id: 'configurationMode.manual',
-    defaultMessage: 'Manual configuration',
-  });
+  return intl.formatMessage(messages.configurationmodeManual);
 };

@@ -1,3 +1,4 @@
+import { defineMessages, useIntl } from 'react-intl';
 import React, { useState } from 'react';
 import { Dropdown, DropdownItem, DropdownList, MenuToggle } from '@patternfly/react-core';
 import AsyncComponent from '@redhat-cloud-services/frontend-components/AsyncComponent';
@@ -8,6 +9,13 @@ import { useFlag } from '@unleash/proxy-client-react';
 import { useSelector, useStore } from 'react-redux';
 
 import PlusCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/plus-circle-icon';
+
+const messages = defineMessages({
+  createIntegration: {
+    id: 'integrationsDropdown.createIntegration',
+    defaultMessage: 'Create Integration',
+  },
+});
 
 const dropdownItems = (isPagerDutyEnabled, hasSourcesPermissions, hasIntegrationsPermissions) => [
   ...(hasSourcesPermissions
@@ -46,6 +54,7 @@ const dropdownItems = (isPagerDutyEnabled, hasSourcesPermissions, hasIntegration
 ];
 
 const IntegrationsDropdown = (props) => {
+  const intl = useIntl();
   const [isOpen, setIsOpen] = useState(false);
   const [isIntegrationsWizardOpen, setIsIntegrationsWizardOpen] = useState(false);
   const [isSourcesWizardOpen, setIsSourcesWizardOpen] = useState(false);
@@ -110,7 +119,7 @@ const IntegrationsDropdown = (props) => {
             className="pf-v6-u-pl-md"
             icon={<PlusCircleIcon />}
           >
-            Create Integration
+            {intl.formatMessage(messages.createIntegration)}
           </MenuToggle>
         )}
         {...props}

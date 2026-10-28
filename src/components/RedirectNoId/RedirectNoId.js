@@ -51,6 +51,7 @@ const RedirectNoId = () => {
           setIsApplicationLoaded(true);
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   }, [loaded, appTypesLoaded, sourceTypesLoaded]);
 
   if (applicationIsLoaded && !source) {

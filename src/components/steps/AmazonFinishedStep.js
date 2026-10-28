@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 
 import {
   Alert,
@@ -19,6 +19,49 @@ import {
 
 import CheckCircleIcon from '@patternfly/react-icons/dist/esm/icons/check-circle-icon';
 import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
+
+const messages = defineMessages({
+  awsAlerttitle: {
+    id: 'aws.alertTitle',
+    defaultMessage: 'Allow 24 hours for full activation',
+  },
+  awsAlertdescription: {
+    id: 'aws.alertDescription',
+    defaultMessage: 'Manage connections for this integration at any time in Settings > Integrations.',
+  },
+  awsSuccesstitle: {
+    id: 'aws.successTitle',
+    defaultMessage: 'Amazon Web Services connection established',
+  },
+  awsSuccessdescription: {
+    id: 'aws.successDescription',
+    defaultMessage: 'Discover the benefits of your connection or exit to manage your new integration.',
+  },
+  awsGoldimages: {
+    id: 'aws.goldImages',
+    defaultMessage: 'View enabled AWS gold images',
+  },
+  awsSubwtachusage: {
+    id: 'aws.subwtachUsage',
+    defaultMessage: 'Subscription Watch usage',
+  },
+  awsInsights: {
+    id: 'aws.insights',
+    defaultMessage: 'Get started with Red Hat Insights',
+  },
+  awsCostlink: {
+    id: 'aws.costLink',
+    defaultMessage: 'Cost Management reporting',
+  },
+  exit: {
+    id: 'exit',
+    defaultMessage: 'Exit',
+  },
+  awsLearnmore: {
+    id: 'aws.learnMore',
+    defaultMessage: 'Learn more about this Cloud',
+  },
+});
 
 const AwsLink = ({ href, children }) => (
   <React.Fragment>
@@ -50,21 +93,14 @@ const AmazonFinishedStep = ({ onClose }) => {
 
   return (
     <Fragment>
-      <Alert
-        variant="info"
-        isInline
-        title={intl.formatMessage({ id: 'aws.alertTitle', defaultMessage: 'Allow 24 hours for full activation' })}
-      >
-        {intl.formatMessage({
-          id: 'aws.alertDescription',
-          defaultMessage: 'Manage connections for this integration at any time in Settings > Integrations.',
-        })}
+      <Alert variant="info" isInline title={intl.formatMessage(messages.awsAlerttitle)}>
+        {intl.formatMessage(messages.awsAlertdescription)}
       </Alert>
       <Bullseye>
         <EmptyState
           titleText={
             <Title headingLevel="h2" size="xl" className="pf-v6-u-mt-xl">
-              {intl.formatMessage({ id: 'aws.successTitle', defaultMessage: 'Amazon Web Services connection established' })}
+              {intl.formatMessage(messages.awsSuccesstitle)}
             </Title>
           }
           icon={CheckCircleIcon}
@@ -72,39 +108,28 @@ const AmazonFinishedStep = ({ onClose }) => {
           className="pf-v6-u-mt-md"
         >
           <EmptyStateBody>
-            {intl.formatMessage({
-              id: 'aws.successDescription',
-              defaultMessage: 'Discover the benefits of your connection or exit to manage your new integration.',
-            })}
+            {intl.formatMessage(messages.awsSuccessdescription)}
             <Grid hasGutter className="src-c-aws-grid pf-v6-u-mt-md">
               <GridItem md="6">
-                <AwsLink href={GOLDIMAGES_HREF}>
-                  {intl.formatMessage({ id: 'aws.goldImages', defaultMessage: 'View enabled AWS gold images' })}
-                </AwsLink>
+                <AwsLink href={GOLDIMAGES_HREF}>{intl.formatMessage(messages.awsGoldimages)}</AwsLink>
               </GridItem>
               <GridItem md="6">
-                <AwsLink href={SUBWATCH_HREF}>
-                  {intl.formatMessage({ id: 'aws.subwtachUsage', defaultMessage: 'Subscription Watch usage' })}
-                </AwsLink>
+                <AwsLink href={SUBWATCH_HREF}>{intl.formatMessage(messages.awsSubwtachusage)}</AwsLink>
               </GridItem>
               <GridItem md="6">
-                <AwsLink href={INSIGHTS_HREF}>
-                  {intl.formatMessage({ id: 'aws.insights', defaultMessage: 'Get started with Red Hat Insights' })}
-                </AwsLink>
+                <AwsLink href={INSIGHTS_HREF}>{intl.formatMessage(messages.awsInsights)}</AwsLink>
               </GridItem>
               <GridItem md="6">
-                <AwsLink href={COST_HREF}>
-                  {intl.formatMessage({ id: 'aws.costLink', defaultMessage: 'Cost Management reporting' })}
-                </AwsLink>
+                <AwsLink href={COST_HREF}>{intl.formatMessage(messages.awsCostlink)}</AwsLink>
               </GridItem>
             </Grid>
           </EmptyStateBody>
           <Button variant="primary" onClick={onClose} className="pf-v6-u-mt-xl">
-            {intl.formatMessage({ id: 'exit', defaultMessage: 'Exit' })}
+            {intl.formatMessage(messages.exit)}
           </Button>
           <EmptyStateActions>
             <Content component="a" href={LEARNMORE_HREF} target="_blank" rel="noopener noreferrer">
-              {intl.formatMessage({ id: 'aws.learnMore', defaultMessage: 'Learn more about this Cloud' })}
+              {intl.formatMessage(messages.awsLearnmore)}
             </Content>
           </EmptyStateActions>
         </EmptyState>

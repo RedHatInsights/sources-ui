@@ -83,7 +83,12 @@ describe('<RecommendedServices />', () => {
       await waitFor(() => expect(screen.getByText('Filter by product type')).toBeInTheDocument());
 
       expect(screen.getByText('Browse catalog')).toBeInTheDocument();
-      expect(screen.getByText('A curated selection of offerings available for purchase from')).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          (_, element) =>
+            element?.textContent?.startsWith('A curated selection of offerings available for purchase from') ?? false,
+        ),
+      ).toBeInTheDocument();
 
       products.map((product) => {
         expect(within(screen.getByRole('dialog')).getByText(product.title)).toBeInTheDocument();

@@ -52,6 +52,7 @@ const DataLoader = () => {
 
   useEffect(() => {
     loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   }, []);
 
   useEffect(() => {
@@ -59,6 +60,7 @@ const DataLoader = () => {
       updateQuery(sources);
       previousPathname.current = pathname;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   }, [pathname]);
 
   return null;

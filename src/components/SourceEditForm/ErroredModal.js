@@ -1,10 +1,26 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 
 import { Content } from '@patternfly/react-core';
 
 import ErroredStep from '../steps/ErroredStep';
+
+const messages = defineMessages({
+  sourcesEditerrordescription: {
+    id: 'sources.editErrorDescription',
+    defaultMessage:
+      'There was a problem while trying to edit your source. Please try again. If the error persists, open a support case.',
+  },
+  sourcesOpenticket: {
+    id: 'sources.openTicket',
+    defaultMessage: 'Open a support case',
+  },
+  sourcesRetrytext: {
+    id: 'sources.retryText',
+    defaultMessage: 'Retry',
+  },
+});
 
 const ErroredModal = ({ onRetry }) => {
   const intl = useIntl();
@@ -12,11 +28,7 @@ const ErroredModal = ({ onRetry }) => {
   return (
     <ErroredStep
       onClose={onRetry}
-      customText={intl.formatMessage({
-        id: 'sources.editErrorDescription',
-        defaultMessage:
-          'There was a problem while trying to edit your source. Please try again. If the error persists, open a support case.',
-      })}
+      customText={intl.formatMessage(messages.sourcesEditerrordescription)}
       secondaryActions={
         <Content
           component="a"
@@ -24,16 +36,10 @@ const ErroredModal = ({ onRetry }) => {
           href="https://access.redhat.com/support/cases/#/case/new/open-case?caseCreate=true"
           rel="noopener noreferrer"
         >
-          {intl.formatMessage({
-            id: 'sources.openTicket',
-            defaultMessage: 'Open a support case',
-          })}
+          {intl.formatMessage(messages.sourcesOpenticket)}
         </Content>
       }
-      returnButtonTitle={intl.formatMessage({
-        id: 'sources.retryText',
-        defaultMessage: 'Retry',
-      })}
+      returnButtonTitle={intl.formatMessage(messages.sourcesRetrytext)}
     />
   );
 };

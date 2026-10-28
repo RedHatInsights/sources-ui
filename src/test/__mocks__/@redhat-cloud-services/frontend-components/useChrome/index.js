@@ -11,3 +11,5 @@ const useChrome = () => {
 };
 
 module.exports = useChrome;
+module.exports.default = useChrome;
+module.exports.useChrome = useChrome;
