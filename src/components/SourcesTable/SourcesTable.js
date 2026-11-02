@@ -268,7 +268,8 @@ const SourcesTable = () => {
             },
           }),
       ),
-    [state.rows],
+    // Permissions load after the rows. Without these deps, Pause/Edit/Remove stay disabled.
+    [state.rows, writePermissions, isOrgAdmin, intl, navigate, reduxDispatch],
   );
   const activeState = useMemo(() => {
     if (loading) {
