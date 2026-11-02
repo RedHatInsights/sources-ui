@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import propTypes from 'prop-types';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 
 import RedoIcon from '@patternfly/react-icons/dist/esm/icons/redo-icon';
 import { Button, Spinner } from '@patternfly/react-core';
@@ -8,6 +8,21 @@ import { Button, Spinner } from '@patternfly/react-core';
 import { useSource } from '../../hooks/useSource';
 import checkSourceStatus from '../../api/checkSourceStatus';
 import notificationsStore from '../../utilities/notificationsStore';
+
+const messages = defineMessages({
+  sourcesCheckavailability: {
+    id: 'sources.checkavailability',
+    defaultMessage: 'Check integration availability',
+  },
+  sourcesCheckavailabilityNotificationtitle: {
+    id: 'sources.checkavailability.notificationTitle',
+    defaultMessage: 'Request to check integration status was sent',
+  },
+  sourcesCheckavailabilityNotificationdescription: {
+    id: 'sources.checkavailability.notificationDescription',
+    defaultMessage: 'Check this page later for updates',
+  },
+});
 
 const AvailabilityChecker = ({ setCheckPending }) => {
   const source = useSource();
@@ -23,22 +38,16 @@ const AvailabilityChecker = ({ setCheckPending }) => {
         </>
       }
       variant="plain"
-      aria-label={intl.formatMessage({ id: 'sources.checkavailability', defaultMessage: 'Check integration availability' })}
+      aria-label={intl.formatMessage(messages.sourcesCheckavailability)}
       onClick={async () => {
         setCheckPending && setCheckPending();
         setLoading(true);
         await checkSourceStatus(source.id);
         setLoading(false);
         notificationsStore.addNotification({
-          title: intl.formatMessage({
-            id: 'sources.checkavailability.notificationTitle',
-            defaultMessage: 'Request to check integration status was sent',
-          }),
+          title: intl.formatMessage(messages.sourcesCheckavailabilityNotificationtitle),
           variant: 'info',
-          description: intl.formatMessage({
-            id: 'sources.checkavailability.notificationDescription',
-            defaultMessage: 'Check this page later for updates',
-          }),
+          description: intl.formatMessage(messages.sourcesCheckavailabilityNotificationdescription),
         });
       }}
       isDisabled={loading}

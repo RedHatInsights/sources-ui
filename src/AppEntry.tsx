@@ -1,4 +1,5 @@
 import React from 'react';
+import { IntlMessagesProvider, useChromeLocale } from './i18n';
 import { Provider } from 'react-redux';
 import { AccessCheck } from '@project-kessel/react-kessel-access-check';
 
@@ -12,14 +13,20 @@ if (!store) {
   store = getProdStore();
 }
 
-const AppEntry = () => (
-  <Provider store={store}>
-    <AccessCheck.Provider baseUrl={window.location.origin} apiPath="/api/kessel/v1beta2">
-      <KesselRbacAccessProvider>
-        <App />
-      </KesselRbacAccessProvider>
-    </AccessCheck.Provider>
-  </Provider>
-);
+const AppEntry = () => {
+  const locale = useChromeLocale();
+
+  return (
+    <Provider store={store}>
+      <AccessCheck.Provider baseUrl={window.location.origin} apiPath="/api/kessel/v1beta2">
+        <KesselRbacAccessProvider>
+          <IntlMessagesProvider locale={locale}>
+            <App />
+          </IntlMessagesProvider>
+        </KesselRbacAccessProvider>
+      </AccessCheck.Provider>
+    </Provider>
+  );
+};
 
 export default AppEntry;

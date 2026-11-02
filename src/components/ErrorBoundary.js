@@ -1,8 +1,21 @@
+import { defineMessages, useIntl } from 'react-intl';
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as Sentry from '@sentry/browser';
 import notificationsStore from '../utilities/notificationsStore';
+
+const messages = defineMessages({
+  errorOccurred: {
+    id: 'errorBoundary.errorOccurred',
+    defaultMessage: 'Error occurred',
+  },
+});
+
+const ErrorFallback = () => {
+  const intl = useIntl();
+  return <Fragment>{intl.formatMessage(messages.errorOccurred)}</Fragment>;
+};
 
 class ErrorBoundary extends Component {
   state = {
@@ -27,7 +40,7 @@ class ErrorBoundary extends Component {
     const { children } = this.props;
 
     if (error) {
-      return <Fragment>Error occurred</Fragment>;
+      return <ErrorFallback />;
     }
 
     return <Fragment>{children}</Fragment>;

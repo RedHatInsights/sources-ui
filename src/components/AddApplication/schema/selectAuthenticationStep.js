@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import get from 'lodash/get';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
@@ -9,20 +9,29 @@ import validatorTypes from '@data-driven-forms/react-form-renderer/validator-typ
 import { Content, ContentVariants } from '@patternfly/react-core';
 import { AuthTypeSetter } from '../AuthTypeSetter';
 
+const messages = defineMessages({
+  sourcesSelectauthenticationdescription: {
+    id: 'sources.selectAuthenticationDescription',
+    defaultMessage:
+      'Selected application { applicationTypeName } supports { authenticationTypeName } authentication type. You can use already defined authentication values or define new.',
+  },
+  sourcesSelectauthenticationtitle: {
+    id: 'sources.selectAuthenticationTitle',
+    defaultMessage: 'Select authentication',
+  },
+  sourcesSelectauthenticationradiolabel: {
+    id: 'sources.selectAuthenticationradioLabel',
+    defaultMessage: 'Define new { supportedAuthTypeName }',
+  },
+});
+
 export const SelectAuthenticationDescription = ({ applicationTypeName, authenticationTypeName }) => {
   const intl = useIntl();
 
   return (
     <Content>
       <Content component={ContentVariants.p}>
-        {intl.formatMessage(
-          {
-            id: 'sources.selectAuthenticationDescription',
-            defaultMessage:
-              'Selected application { applicationTypeName } supports { authenticationTypeName } authentication type. You can use already defined authentication values or define new.',
-          },
-          { applicationTypeName, authenticationTypeName },
-        )}
+        {intl.formatMessage(messages.sourcesSelectauthenticationdescription, { applicationTypeName, authenticationTypeName })}
       </Content>
     </Content>
   );
@@ -98,21 +107,12 @@ const selectAuthenticationStep = ({ intl, source, authenticationValues, sourceTy
             {
               component: componentTypes.RADIO,
               name: 'selectedAuthentication',
-              label: intl.formatMessage({
-                id: 'sources.selectAuthenticationTitle',
-                defaultMessage: 'Select authentication',
-              }),
+              label: intl.formatMessage(messages.sourcesSelectauthenticationtitle),
               isRequired: true,
               validate: [{ type: validatorTypes.REQUIRED }],
               options: [
                 {
-                  label: intl.formatMessage(
-                    {
-                      id: 'sources.selectAuthenticationradioLabel',
-                      defaultMessage: 'Define new { supportedAuthTypeName }',
-                    },
-                    { supportedAuthTypeName },
-                  ),
+                  label: intl.formatMessage(messages.sourcesSelectauthenticationradiolabel, { supportedAuthTypeName }),
                   value: `new-${supportedAuthType}`,
                 },
                 ...generateAuthSelectionOptions({
@@ -132,10 +132,7 @@ const selectAuthenticationStep = ({ intl, source, authenticationValues, sourceTy
 
   return {
     name: 'selectAuthentication',
-    title: intl.formatMessage({
-      id: 'sources.selectAuthenticationTitle',
-      defaultMessage: 'Select authentication',
-    }),
+    title: intl.formatMessage(messages.sourcesSelectauthenticationtitle),
     fields,
     nextStep,
   };

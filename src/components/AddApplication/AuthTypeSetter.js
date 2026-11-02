@@ -28,8 +28,10 @@ export const AuthTypeSetter = ({ authenticationValues }) => {
         authenticationValues,
         selectedAuthentication,
       });
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- pre-existing pattern, see i18n cleanup ticket
       setInitialValue(undefined);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   }, [selectedAuthentication]);
 
   return null;

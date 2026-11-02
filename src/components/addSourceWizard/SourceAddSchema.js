@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
@@ -18,6 +18,101 @@ import { REDHAT_VENDOR } from '../../utilities/constants';
 import validated from '../../utilities/resolveProps/validated';
 import handleError from '../../api/handleError';
 import { bold } from '../../utilities/intlShared';
+
+const messages = defineMessages({
+  wizardSelectyoursourcetype: {
+    id: 'wizard.selectYourSourceType',
+    defaultMessage: 'A. Select your integration type',
+  },
+  wizardSelectapplication: {
+    id: 'wizard.applicationStepTitle',
+    defaultMessage: 'B. Application',
+  },
+  wizardApplicationrequired: {
+    id: 'wizard.applicationRequired',
+    defaultMessage: 'An application must be selected.',
+  },
+  wizardSelectapplication_1: {
+    id: 'wizard.selectApplication',
+    defaultMessage: 'Select application',
+  },
+  wizardApplicationdescription: {
+    id: 'wizard.applicationDescription',
+    defaultMessage:
+      'Select an application to connect to your integration. You can connect additional applications after integration creation. {learnMore}',
+  },
+  wizardLearnmoreDefaultmessageLearnMore: {
+    id: 'wizard.learnMore defaultMessage=Learn more',
+    defaultMessage: 'Learn more',
+  },
+  wizardSelectapplicationtype: {
+    id: 'wizard.selectApplicationType',
+    defaultMessage: 'Select an application',
+  },
+  wizardChooseappandtype: {
+    id: 'wizard.chooseAppAndType',
+    defaultMessage: 'Integration type and application',
+  },
+  wizardSelectredhattype: {
+    id: 'wizard.selectRedHatType',
+    defaultMessage:
+      'To import data for an application, you need to configure an integration. Start by selecting your cloud provider and application.',
+  },
+  wizardChooseappandtype_1: {
+    id: 'wizard.selectCloudProvider',
+    defaultMessage: 'Select cloud provider',
+  },
+  wizardSelectcloudtype: {
+    id: 'wizard.selectCloudType',
+    defaultMessage:
+      'To import data for an application, you need to configure an integration. Start by selecting your cloud provider.',
+  },
+  wizardSelectcloudprovider: {
+    id: 'wizard.selectCloudProviderHeading',
+    defaultMessage: 'Select a cloud provider',
+  },
+  wizardNamedescription: {
+    id: 'wizard.nameDescription',
+    defaultMessage: 'Enter a name for your {typeName} integration.',
+  },
+  wizardNamesource: {
+    id: 'wizard.nameSource',
+    defaultMessage: 'Name integration',
+  },
+  wizardName: {
+    id: 'wizard.integrationName',
+    defaultMessage: 'Integration name',
+  },
+  wizardSummarydescription: {
+    id: 'wizard.summaryDescription',
+    defaultMessage:
+      'Review the information below and click <b>Add</b> to add your integration. To edit details in previous steps, click <b>Back</b>.',
+  },
+  wizardReviewdetails: {
+    id: 'wizard.reviewDetails',
+    defaultMessage: 'Review details',
+  },
+  sourcesAdd: {
+    id: 'sources.add',
+    defaultMessage: 'Add',
+  },
+  wizardBack: {
+    id: 'wizard.back',
+    defaultMessage: 'Back',
+  },
+  wizardCancel: {
+    id: 'wizard.cancel',
+    defaultMessage: 'Cancel',
+  },
+  wizardNext: {
+    id: 'wizard.next',
+    defaultMessage: 'Next',
+  },
+  wizardClose: {
+    id: 'wizard.closeWizard',
+    defaultMessage: 'Close wizard',
+  },
+});
 
 export const asyncValidator = async (value, sourceId = undefined, intl) => {
   if (!value) {
@@ -137,10 +232,7 @@ const sourceTypeSelect = ({ intl, sourceTypes, applicationTypes }) => ({
   component: 'card-select',
   name: 'source_type',
   isRequired: true,
-  label: intl.formatMessage({
-    id: 'wizard.selectYourSourceType',
-    defaultMessage: 'A. Select your integration type',
-  }),
+  label: intl.formatMessage(messages.wizardSelectyoursourcetype),
   iconMapper: iconMapper(sourceTypes),
   validate: [
     {
@@ -155,10 +247,7 @@ const redhatTypes = ({ intl, sourceTypes, applicationTypes, disableAppSelection 
   {
     component: 'enhanced-radio',
     name: 'application.application_type_id',
-    label: intl.formatMessage({
-      id: 'wizard.selectApplication',
-      defaultMessage: 'B. Application',
-    }),
+    label: intl.formatMessage(messages.wizardSelectapplication),
     options: compileAllApplicationComboOptions(applicationTypes, intl, REDHAT_VENDOR),
     mutator: appMutatorRedHat(applicationTypes),
     isDisabled: disableAppSelection,
@@ -171,10 +260,7 @@ const redhatTypes = ({ intl, sourceTypes, applicationTypes, disableAppSelection 
 // Custom validator to ensure a real application is selected (not NO_APPLICATION_VALUE)
 const validateApplicationSelection = (intl) => (value) => {
   if (!value || value === NO_APPLICATION_VALUE) {
-    return intl.formatMessage({
-      id: 'wizard.applicationRequired',
-      defaultMessage: 'An application must be selected.',
-    });
+    return intl.formatMessage(messages.wizardApplicationrequired);
   }
 
   return undefined;
@@ -182,46 +268,30 @@ const validateApplicationSelection = (intl) => (value) => {
 
 export const applicationStep = (applicationTypes, intl, activeCategory, hcsEnrolled) => ({
   name: 'application_step',
-  title: intl.formatMessage({
-    id: 'wizard.selectApplication',
-    defaultMessage: 'Select application',
-  }),
+  title: intl.formatMessage(messages.wizardSelectapplication_1),
   nextStep: nextStep(),
   fields: [
     {
       component: componentTypes.PLAIN_TEXT,
       name: 'app-description',
-      label: intl.formatMessage(
-        {
-          id: 'wizard.applicationDescription',
-          defaultMessage:
-            'Select an application to connect to your integration. You can connect additional applications after integration creation. {learnMore}',
-        },
-        {
-          learnMore: (
-            <Content
-              key="link"
-              rel="noopener noreferrer"
-              target="_blank"
-              component={ContentVariants.a}
-              href="https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/configuring_cloud_integrations_for_red_hat_services/assembly-adding-cloud-integrations_crc-cloud-integrations#adding-azure-integration_assembly-adding-cloud-integrations"
-            >
-              {intl.formatMessage({
-                id: 'wizard.learnMore defaultMessage=Learn more',
-                defaultMessage: 'Learn more',
-              })}
-            </Content>
-          ),
-        },
-      ),
+      label: intl.formatMessage(messages.wizardApplicationdescription, {
+        learnMore: (
+          <Content
+            key="link"
+            rel="noopener noreferrer"
+            target="_blank"
+            component={ContentVariants.a}
+            href="https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/html/configuring_cloud_integrations_for_red_hat_services/assembly-adding-cloud-integrations_crc-cloud-integrations#adding-azure-integration_assembly-adding-cloud-integrations"
+          >
+            {intl.formatMessage(messages.wizardLearnmoreDefaultmessageLearnMore)}
+          </Content>
+        ),
+      }),
     },
     {
       component: 'enhanced-radio',
       name: 'application.application_type_id',
-      label: intl.formatMessage({
-        id: 'wizard.selectApplicationType',
-        defaultMessage: 'Select an application',
-      }),
+      label: intl.formatMessage(messages.wizardSelectapplicationtype),
       options: compileAllApplicationComboOptions(applicationTypes, intl, hcsEnrolled),
       mutator: appMutatorRedHat(applicationTypes),
       menuIsPortal: true,
@@ -237,49 +307,32 @@ export const applicationStep = (applicationTypes, intl, activeCategory, hcsEnrol
 });
 
 export const typesStep = (sourceTypes, applicationTypes, disableAppSelection, intl) => ({
-  title: intl.formatMessage({
-    id: 'wizard.chooseAppAndType',
-    defaultMessage: 'Integration type and application',
-  }),
+  title: intl.formatMessage(messages.wizardChooseappandtype),
   name: 'types_step',
   nextStep: 'name_step',
   fields: [
     {
       component: componentTypes.PLAIN_TEXT,
       name: 'plain-text',
-      label: intl.formatMessage({
-        id: 'wizard.selectRedHatType',
-        defaultMessage:
-          'To import data for an application, you need to configure an integration. Start by selecting your cloud provider and application.',
-      }),
+      label: intl.formatMessage(messages.wizardSelectredhattype),
     },
     ...redhatTypes({ intl, sourceTypes, applicationTypes, disableAppSelection }),
   ],
 });
 
 export const cloudTypesStep = (sourceTypes, applicationTypes, intl) => ({
-  title: intl.formatMessage({
-    id: 'wizard.chooseAppAndType',
-    defaultMessage: 'Select cloud provider',
-  }),
+  title: intl.formatMessage(messages.wizardChooseappandtype_1),
   name: 'types_step',
   nextStep: 'name_step',
   fields: [
     {
       component: componentTypes.PLAIN_TEXT,
       name: 'plain-text',
-      label: intl.formatMessage({
-        id: 'wizard.selectCloudType',
-        defaultMessage:
-          'To import data for an application, you need to configure an integration. Start by selecting your cloud provider.',
-      }),
+      label: intl.formatMessage(messages.wizardSelectcloudtype),
     },
     {
       ...sourceTypeSelect({ intl, sourceTypes, applicationTypes }),
-      label: intl.formatMessage({
-        id: 'wizard.selectCloudProvider',
-        defaultMessage: 'Select a cloud provider',
-      }),
+      label: intl.formatMessage(messages.wizardSelectcloudprovider),
     },
   ],
 });
@@ -292,13 +345,7 @@ export const NameDescription = ({ sourceTypes }) => {
 
   return (
     <Content key="step1" component={ContentVariants.p}>
-      {intl.formatMessage(
-        {
-          id: 'wizard.nameDescription',
-          defaultMessage: 'Enter a name for your {typeName} integration.',
-        },
-        { typeName },
-      )}
+      {intl.formatMessage(messages.wizardNamedescription, { typeName })}
     </Content>
   );
 };
@@ -308,10 +355,7 @@ NameDescription.propTypes = {
 };
 
 const nameStep = (intl, selectedType, sourceTypes, activeCategory) => ({
-  title: intl.formatMessage({
-    id: 'wizard.nameSource',
-    defaultMessage: 'Name integration',
-  }),
+  title: intl.formatMessage(messages.wizardNamesource),
   name: 'name_step',
   nextStep: activeCategory === REDHAT_VENDOR ? nextStep(selectedType) : nextStepCloud(sourceTypes),
   fields: [
@@ -325,10 +369,7 @@ const nameStep = (intl, selectedType, sourceTypes, activeCategory) => ({
       component: componentTypes.TEXT_FIELD,
       name: 'source.name',
       type: 'text',
-      label: intl.formatMessage({
-        id: 'wizard.name',
-        defaultMessage: 'Integration name',
-      }),
+      label: intl.formatMessage(messages.wizardName),
       placeholder: 'integration_name',
       isRequired: true,
       validate: [(value) => asyncValidatorDebouncedWrapper(intl)(value, undefined, intl), { type: validatorTypes.REQUIRED }],
@@ -342,16 +383,9 @@ export const SummaryDescription = () => {
 
   return (
     <Content component={ContentVariants.p}>
-      {intl.formatMessage(
-        {
-          id: 'wizard.summaryDescription',
-          defaultMessage:
-            'Review the information below and click <b>Add</b> to add your integration. To edit details in previous steps, click <b>Back</b>.',
-        },
-        {
-          b: bold,
-        },
-      )}
+      {intl.formatMessage(messages.wizardSummarydescription, {
+        b: bold,
+      })}
     </Content>
   );
 };
@@ -376,10 +410,7 @@ const summaryStep = (sourceTypes, applicationTypes, intl) => ({
     },
   ],
   name: 'summary',
-  title: intl.formatMessage({
-    id: 'wizard.reviewDetails',
-    defaultMessage: 'Review details',
-  }),
+  title: intl.formatMessage(messages.wizardReviewdetails),
 });
 
 export default (
@@ -405,30 +436,15 @@ export default (
         inModal: true,
         description: wizardDescription(activeCategory),
         buttonLabels: {
-          submit: intl.formatMessage({
-            id: 'sources.add',
-            defaultMessage: 'Add',
-          }),
-          back: intl.formatMessage({
-            id: 'wizard.back',
-            defaultMessage: 'Back',
-          }),
-          cancel: intl.formatMessage({
-            id: 'wizard.cancel',
-            defaultMessage: 'Cancel',
-          }),
-          next: intl.formatMessage({
-            id: 'wizard.next',
-            defaultMessage: 'Next',
-          }),
+          submit: intl.formatMessage(messages.sourcesAdd),
+          back: intl.formatMessage(messages.wizardBack),
+          cancel: intl.formatMessage(messages.wizardCancel),
+          next: intl.formatMessage(messages.wizardNext),
         },
         container,
         showTitles: true,
         initialState: initialWizardState,
-        closeButtonAriaLabel: intl.formatMessage({
-          id: 'wizard.close',
-          defaultMessage: 'Close wizard',
-        }),
+        closeButtonAriaLabel: intl.formatMessage(messages.wizardClose),
         crossroads: [
           'application.application_type_id',
           'source_type',

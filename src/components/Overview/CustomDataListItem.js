@@ -21,8 +21,24 @@ import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 import { CLOUD_VENDOR, COMMUNICATIONS, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../../utilities/constants';
 import { AsyncComponent } from '@redhat-cloud-services/frontend-components';
 import AddSourceWizard from '../addSourceWizard';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import { useStore } from 'react-redux';
+
+const messages = defineMessages({
+  actionsAria: {
+    id: 'customDataList.actionsAria',
+    defaultMessage: 'Actions',
+  },
+  listOfIntegrationsAria: {
+    id: 'sourcesTable.listOfIntegrationsAria',
+    defaultMessage: 'List of Integrations',
+  },
+
+  integrationsOverviewDatalistitemlearnmore: {
+    id: 'integrations.overview.dataListItemLearnMore',
+    defaultMessage: 'Learn more',
+  },
+});
 
 const CustomDataListItem = ({ initialExpanded, icon, title, actionTitle, action, content, learnMoreLink }) => {
   const [isExpanded, setIsExpanded] = useState(initialExpanded);
@@ -65,7 +81,7 @@ const CustomDataListItem = ({ initialExpanded, icon, title, actionTitle, action,
             ]}
           />
           {actionTitle && action && (
-            <DataListAction aria-labelledby="item1 action1" id="action1" aria-label="Actions">
+            <DataListAction aria-labelledby="item1 action1" id="action1" aria-label={intl.formatMessage(messages.actionsAria)}>
               <Button
                 variant="link"
                 onClick={(e) => {
@@ -98,10 +114,7 @@ const CustomDataListItem = ({ initialExpanded, icon, title, actionTitle, action,
             icon={<ExternalLinkAltIcon />}
             iconPosition="end"
           >
-            {intl.formatMessage({
-              id: 'integrations.overview.dataListItemLearnMore',
-              defaultMessage: 'Learn more',
-            })}
+            {intl.formatMessage(messages.integrationsOverviewDatalistitemlearnmore)}
           </Button>
         </DataListContent>
       </DataListItem>

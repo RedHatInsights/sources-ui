@@ -1,5 +1,5 @@
 import React, { Fragment, useReducer, useRef } from 'react';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 
 import { Card, CardBody, CardTitle, FormGroup, Skeleton, Switch, Tooltip } from '@patternfly/react-core';
@@ -24,6 +24,37 @@ import { useAppNavigate } from '../../hooks/useAppNavigate';
 import notificationsStore from '../../utilities/notificationsStore';
 import PropTypes from 'prop-types';
 
+const messages = defineMessages({
+  detailApplicationsResumedAlertTitle: {
+    id: 'detail.applications.resumed.alert.title',
+    defaultMessage: '{appName} connection resumed',
+  },
+  detailApplicationsPausedAlertTitle: {
+    id: 'detail.applications.paused.alert.title',
+    defaultMessage: '{appName} connection paused',
+  },
+  detailApplicationsPausedAlertDescription: {
+    id: 'detail.applications.paused.alert.description',
+    defaultMessage: 'Your application will not reflect the most recent data until {appName} connection is resumed',
+  },
+  detailApplicationsAddError: {
+    id: 'detail.applications.add.error',
+    defaultMessage: 'Application create failed',
+  },
+  detailApplicationsPauseError: {
+    id: 'detail.applications.pause.error',
+    defaultMessage: 'Application pause failed',
+  },
+  detailApplicationsResumeError: {
+    id: 'detail.applications.resume.error',
+    defaultMessage: 'Application resume failed',
+  },
+  detailApplicationsTitle: {
+    id: 'detail.applications.title',
+    defaultMessage: 'Applications',
+  },
+});
+
 const initialState = {
   selectedApps: {},
 };
@@ -43,13 +74,7 @@ const addResumeNotification = (typeId, dispatch, intl, appTypes) => {
   const appName = appTypes.find((type) => type.id === typeId)?.display_name;
 
   notificationsStore.addNotification({
-    title: intl.formatMessage(
-      {
-        id: 'detail.applications.resumed.alert.title',
-        defaultMessage: '{appName} connection resumed',
-      },
-      { appName },
-    ),
+    title: intl.formatMessage(messages.detailApplicationsResumedAlertTitle, { appName }),
     variant: 'default',
     customIcon: <PlayIcon />,
   });
@@ -59,20 +84,8 @@ const addPausedNotification = (typeId, dispatch, intl, appTypes) => {
   const appName = appTypes.find((type) => type.id === typeId)?.display_name;
 
   notificationsStore.addNotification({
-    title: intl.formatMessage(
-      {
-        id: 'detail.applications.paused.alert.title',
-        defaultMessage: '{appName} connection paused',
-      },
-      { appName },
-    ),
-    description: intl.formatMessage(
-      {
-        id: 'detail.applications.paused.alert.description',
-        defaultMessage: 'Your application will not reflect the most recent data until {appName} connection is resumed',
-      },
-      { appName },
-    ),
+    title: intl.formatMessage(messages.detailApplicationsPausedAlertTitle, { appName }),
+    description: intl.formatMessage(messages.detailApplicationsPausedAlertDescription, { appName }),
     variant: 'default',
     customIcon: <PauseIcon />,
   });
@@ -80,18 +93,9 @@ const addPausedNotification = (typeId, dispatch, intl, appTypes) => {
 
 const addErrorNotification = (dispatch, intl, action, error) => {
   const title = {
-    create: intl.formatMessage({
-      id: 'detail.applications.add.error',
-      defaultMessage: 'Application create failed',
-    }),
-    pause: intl.formatMessage({
-      id: 'detail.applications.pause.error',
-      defaultMessage: 'Application pause failed',
-    }),
-    resume: intl.formatMessage({
-      id: 'detail.applications.resume.error',
-      defaultMessage: 'Application resume failed',
-    }),
+    create: intl.formatMessage(messages.detailApplicationsAddError),
+    pause: intl.formatMessage(messages.detailApplicationsPauseError),
+    resume: intl.formatMessage(messages.detailApplicationsResumeError),
   }[action];
 
   notificationsStore.addNotification({
@@ -248,12 +252,7 @@ const ApplicationsCard = () => {
 
   return filteredAppTypes.length > 0 ? (
     <Card className="src-c-card-applications pf-v6-u-m-lg pf-v6-u-mr-sm-on-md pf-v6-u-p-lg pf-v6-u-pl-sm-on-md">
-      <CardTitle>
-        {intl.formatMessage({
-          id: 'detail.applications.title',
-          defaultMessage: 'Applications',
-        })}
-      </CardTitle>
+      <CardTitle>{intl.formatMessage(messages.detailApplicationsTitle)}</CardTitle>
       <CardBody>
         <div className="pf-v6-c-form src-c-applications_form">
           {filteredAppTypes.map((app) => (

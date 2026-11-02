@@ -24,6 +24,7 @@ const RedirectNoPaused = () => {
         }),
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   }, [source.paused_at]);
 
   if (source.paused_at) {

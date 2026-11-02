@@ -1,5 +1,5 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { PageSection, Tab, TabTitleIcon, TabTitleText, Tabs } from '@patternfly/react-core';
@@ -9,6 +9,54 @@ import CloudIcon from '@patternfly/react-icons/dist/esm/icons/cloud-icon';
 import { setActiveCategory } from '../redux/sources/actions';
 import { CLOUD_VENDOR, COMMUNICATIONS, INTEGRATIONS, OVERVIEW, REDHAT_VENDOR, REPORTING, WEBHOOKS } from '../utilities/constants';
 import { useFlag } from '@unleash/proxy-client-react';
+
+const messages = defineMessages({
+  redhatIconAria: {
+    id: 'sources.redhatIconAria',
+    defaultMessage: 'Red Hat Icon',
+  },
+  cloudIconAria: {
+    id: 'sources.cloudIconAria',
+    defaultMessage: 'Cloud Icon',
+  },
+  sourcesCloud: {
+    id: 'sources.cloud',
+    defaultMessage: 'Cloud',
+  },
+  sourcesCloudSources: {
+    id: 'sources.cloudSources',
+    defaultMessage: 'Cloud sources',
+  },
+  sourcesRedhat: {
+    id: 'sources.redhat',
+    defaultMessage: 'Red Hat',
+  },
+  sourcesRedhatSources: {
+    id: 'sources.redhatSources',
+    defaultMessage: 'Red Hat sources',
+  },
+
+  sourcesCommunications: {
+    id: 'sources.communications',
+    defaultMessage: 'Communications',
+  },
+  sourcesReportingautomation: {
+    id: 'sources.reportingAutomation',
+    defaultMessage: 'Reporting & automation',
+  },
+  sourcesWebhooks: {
+    id: 'sources.webhooks',
+    defaultMessage: 'Webhooks',
+  },
+  sourcesIntegrations: {
+    id: 'sources.integrations',
+    defaultMessage: 'Integrations',
+  },
+  sourcesOverview: {
+    id: 'sources.overview',
+    defaultMessage: 'Overview',
+  },
+});
 
 const TabNavigation = () => {
   const intl = useIntl();
@@ -28,28 +76,16 @@ const TabNavigation = () => {
       <>
         <Tab
           eventKey={COMMUNICATIONS}
-          title={
-            <TabTitleText>{intl.formatMessage({ id: 'sources.communications', defaultMessage: 'Communications' })}</TabTitleText>
-          }
+          title={<TabTitleText>{intl.formatMessage(messages.sourcesCommunications)}</TabTitleText>}
         />
         <Tab
           eventKey={REPORTING}
-          title={
-            <TabTitleText>
-              {intl.formatMessage({ id: 'sources.reportingAutomation', defaultMessage: 'Reporting & automation' })}
-            </TabTitleText>
-          }
+          title={<TabTitleText>{intl.formatMessage(messages.sourcesReportingautomation)}</TabTitleText>}
         />
-        <Tab
-          eventKey={WEBHOOKS}
-          title={<TabTitleText>{intl.formatMessage({ id: 'sources.webhooks', defaultMessage: 'Webhooks' })}</TabTitleText>}
-        />
+        <Tab eventKey={WEBHOOKS} title={<TabTitleText>{intl.formatMessage(messages.sourcesWebhooks)}</TabTitleText>} />
       </>
     ) : (
-      <Tab
-        eventKey={INTEGRATIONS}
-        title={<TabTitleText>{intl.formatMessage({ id: 'sources.integrations', defaultMessage: 'Integrations' })}</TabTitleText>}
-      />
+      <Tab eventKey={INTEGRATIONS} title={<TabTitleText>{intl.formatMessage(messages.sourcesIntegrations)}</TabTitleText>} />
     ));
 
   const cloudTabs = (
@@ -62,14 +98,11 @@ const TabNavigation = () => {
               ''
             ) : (
               <TabTitleIcon>
-                <CloudIcon aria-label="Cloud Icon" />
+                <CloudIcon aria-label={intl.formatMessage(messages.cloudIconAria)} />
               </TabTitleIcon>
             )}
             <TabTitleText>
-              {intl.formatMessage({
-                id: 'sources.cloudSources',
-                defaultMessage: enableIntegrations ? 'Cloud' : 'Cloud sources',
-              })}
+              {intl.formatMessage(enableIntegrations ? messages.sourcesCloud : messages.sourcesCloudSources)}
             </TabTitleText>
           </React.Fragment>
         }
@@ -82,14 +115,11 @@ const TabNavigation = () => {
               ''
             ) : (
               <TabTitleIcon>
-                <RedhatIcon aria-label="Red Hat Icon" />
+                <RedhatIcon aria-label={intl.formatMessage(messages.redhatIconAria)} />
               </TabTitleIcon>
             )}
             <TabTitleText>
-              {intl.formatMessage({
-                id: 'sources.redhatSources',
-                defaultMessage: enableIntegrations ? 'Red Hat' : 'Red Hat sources',
-              })}
+              {intl.formatMessage(enableIntegrations ? messages.sourcesRedhat : messages.sourcesRedhatSources)}
             </TabTitleText>
           </React.Fragment>
         }
@@ -112,10 +142,7 @@ const TabNavigation = () => {
       >
         {enableIntegrationsOverview ? (
           <>
-            <Tab
-              eventKey={OVERVIEW}
-              title={<TabTitleText> {intl.formatMessage({ id: 'sources.overview', defaultMessage: 'Overview' })}</TabTitleText>}
-            ></Tab>
+            <Tab eventKey={OVERVIEW} title={<TabTitleText> {intl.formatMessage(messages.sourcesOverview)}</TabTitleText>}></Tab>
             {cloudTabs}
             {integrationsTabs}
           </>

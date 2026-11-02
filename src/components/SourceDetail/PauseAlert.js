@@ -1,5 +1,5 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSource } from '../../hooks/useSource';
 
@@ -9,6 +9,22 @@ import PauseIcon from '@patternfly/react-icons/dist/esm/icons/pause-icon';
 import { useHasWritePermissions } from '../../hooks/useHasWritePermissions';
 import { resumeSource } from '../../redux/sources/actions';
 import { disabledMessage } from '../../utilities/disabledTooltipProps';
+
+const messages = defineMessages({
+  sourceDetailPausedtitle: {
+    id: 'source.detail.pausedTitle',
+    defaultMessage: 'Integration paused',
+  },
+  sourceDetailResumeconnection: {
+    id: 'source.detail.resumeConnection',
+    defaultMessage: 'Resume connection',
+  },
+  sourceDetailPauseddescription: {
+    id: 'source.detail.pausedDescription',
+    defaultMessage:
+      'No data is being collected for this integration. Turn the integration back on to reestablish connection and data collection. Previous credentials will be restored and application connections will continue as seen on this page.',
+  },
+});
 
 const PauseAlert = () => {
   const intl = useIntl();
@@ -23,35 +39,20 @@ const PauseAlert = () => {
         customIcon={<PauseIcon />}
         variant="default"
         isInline
-        title={intl.formatMessage({
-          id: 'source.detail.pausedTitle',
-          defaultMessage: 'Integration paused',
-        })}
+        title={intl.formatMessage(messages.sourceDetailPausedtitle)}
         actionLinks={
           writePermissions ? (
             <AlertActionLink onClick={() => dispatch(resumeSource(source.id, source.name, intl))}>
-              {intl.formatMessage({
-                id: 'source.detail.resumeConnection',
-                defaultMessage: 'Resume connection',
-              })}
+              {intl.formatMessage(messages.sourceDetailResumeconnection)}
             </AlertActionLink>
           ) : (
             <Tooltip content={disabledMessage(intl, isOrgAdmin)}>
-              <AlertActionLink isDisabled>
-                {intl.formatMessage({
-                  id: 'source.detail.resumeConnection',
-                  defaultMessage: 'Resume connection',
-                })}
-              </AlertActionLink>
+              <AlertActionLink isDisabled>{intl.formatMessage(messages.sourceDetailResumeconnection)}</AlertActionLink>
             </Tooltip>
           )
         }
       >
-        {intl.formatMessage({
-          id: 'source.detail.pausedDescription',
-          defaultMessage:
-            'No data is being collected for this integration. Turn the integration back on to reestablish connection and data collection. Previous credentials will be restored and application connections will continue as seen on this page.',
-        })}
+        {intl.formatMessage(messages.sourceDetailPauseddescription)}
       </Alert>
     </GridItem>
   );

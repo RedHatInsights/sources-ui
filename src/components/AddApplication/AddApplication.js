@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import isEmpty from 'lodash/isEmpty';
 import { useFlag } from '@unleash/proxy-client-react';
 
@@ -39,6 +39,69 @@ import CloseModal from '../CloseModal';
 import { useAppNavigate } from '../../hooks/useAppNavigate';
 import AppLink from '../AppLink';
 import AppNavigate from '../AppNavigate';
+
+const messages = defineMessages({
+  sourcesAddapplicationnametitle: {
+    id: 'sources.addApplicationNameTitle',
+    defaultMessage: 'Connect {appName}',
+  },
+  sourcesAddapplicationnamedescription: {
+    id: 'sources.addApplicationNameDescription',
+    defaultMessage: 'Configure {appName} for this integration.',
+  },
+  sourcesLoading: {
+    id: 'sources.loading',
+    defaultMessage: 'Loading, please wait.',
+  },
+  sourcesClose: {
+    id: 'sources.close',
+    defaultMessage: 'Close',
+  },
+  wizardLoadingtext: {
+    id: 'wizard.loadingText',
+    defaultMessage: 'Validating credentials',
+  },
+  wizardLoadingdescription: {
+    id: 'wizard.loadingDescription',
+    defaultMessage: 'This could take a minute. If you prefer not to wait, close this dialog and the process will continue.',
+  },
+  sourcesRetry: {
+    id: 'sources.retry',
+    defaultMessage: 'Retry',
+  },
+  wizardOpenticket: {
+    id: 'wizard.openTicket',
+    defaultMessage: 'Open a support case',
+  },
+  sourcesConfigurationsuccessful: {
+    id: 'sources.configurationSuccessful',
+    defaultMessage: 'Configuration successful',
+  },
+  sourcesExit: {
+    id: 'sources.exit',
+    defaultMessage: 'Exit',
+  },
+  sourcesSuccessaddapp: {
+    id: 'sources.successAddApp',
+    defaultMessage: 'Your application was successfully added.',
+  },
+  sourcesConfigurationsuccessful_1: {
+    id: 'sources.configurationUnsuccessful',
+    defaultMessage: 'Configuration unsuccessful',
+  },
+  wizardRemoveapp: {
+    id: 'wizard.removeApp',
+    defaultMessage: 'Remove application',
+  },
+  wizardEditsource: {
+    id: 'wizard.editSource',
+    defaultMessage: 'Edit integration',
+  },
+  sourcesManageappsclosemodaltitle: {
+    id: 'sources.manageAppsCloseModalTitle',
+    defaultMessage: 'Exit application adding?',
+  },
+});
 
 export const onSubmit = (
   values,
@@ -142,28 +205,17 @@ const AddApplication = () => {
         }
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   }, [source]);
 
   const goToSources = () => navigate(replaceRouteId(routes.sourcesDetail.path, source.id));
 
-  const title = intl.formatMessage(
-    {
-      id: 'sources.addApplicationNameTitle',
-      defaultMessage: 'Connect {appName}',
-    },
-    {
-      appName: applicationType?.display_name || 'application',
-    },
-  );
-  const description = intl.formatMessage(
-    {
-      id: 'sources.addApplicationNameDescription',
-      defaultMessage: 'Configure {appName} for this integration.',
-    },
-    {
-      appName: applicationType?.display_name || 'application',
-    },
-  );
+  const title = intl.formatMessage(messages.sourcesAddapplicationnametitle, {
+    appName: applicationType?.display_name || 'application',
+  });
+  const description = intl.formatMessage(messages.sourcesAddapplicationnamedescription, {
+    appName: applicationType?.display_name || 'application',
+  });
 
   if ((!appTypesLoaded || !sourceTypesLoaded || !loaded || state.state === 'loading') && state.state !== 'submitting') {
     return (
@@ -173,14 +225,8 @@ const AddApplication = () => {
         description={description}
         step={
           <LoadingStep
-            customText={intl.formatMessage({
-              id: 'sources.loading',
-              defaultMessage: 'Loading, please wait.',
-            })}
-            cancelTitle={intl.formatMessage({
-              id: 'sources.close',
-              defaultMessage: 'Close',
-            })}
+            customText={intl.formatMessage(messages.sourcesLoading)}
+            cancelTitle={intl.formatMessage(messages.sourcesClose)}
             onClose={goToSources}
           />
         }
@@ -199,20 +245,10 @@ const AddApplication = () => {
         goToSources={goToSources}
         step={
           <LoadingStep
-            cancelTitle={intl.formatMessage({
-              id: 'sources.close',
-              defaultMessage: 'Close',
-            })}
+            cancelTitle={intl.formatMessage(messages.sourcesClose)}
             onClose={goToSources}
-            customText={intl.formatMessage({
-              id: 'wizard.loadingText',
-              defaultMessage: 'Validating credentials',
-            })}
-            description={intl.formatMessage({
-              id: 'wizard.loadingDescription',
-              defaultMessage:
-                'This could take a minute. If you prefer not to wait, close this dialog and the process will continue.',
-            })}
+            customText={intl.formatMessage(messages.wizardLoadingtext)}
+            description={intl.formatMessage(messages.wizardLoadingdescription)}
           />
         }
       />
@@ -231,10 +267,7 @@ const AddApplication = () => {
         <ErroredStep
           onRetry={onReset}
           onClose={goToSources}
-          returnButtonTitle={intl.formatMessage({
-            id: 'sources.retry',
-            defaultMessage: 'Retry',
-          })}
+          returnButtonTitle={intl.formatMessage(messages.sourcesRetry)}
           primaryAction={() => onSubmitWrapper(state.values, state.formApi)}
           secondaryActions={
             <Content
@@ -243,10 +276,7 @@ const AddApplication = () => {
               href="https://access.redhat.com/support/cases/#/case/new/open-case?caseCreate=true"
               rel="noopener noreferrer"
             >
-              {intl.formatMessage({
-                id: 'wizard.openTicket',
-                defaultMessage: 'Open a support case',
-              })}
+              {intl.formatMessage(messages.wizardOpenticket)}
             </Content>
           }
         />
@@ -259,20 +289,11 @@ const AddApplication = () => {
           } else {
             shownStep = (
               <FinishedStep
-                title={intl.formatMessage({
-                  id: 'sources.configurationSuccessful',
-                  defaultMessage: 'Configuration successful',
-                })}
+                title={intl.formatMessage(messages.sourcesConfigurationsuccessful)}
                 hideSourcesButton={true}
                 onClose={goToSources}
-                returnButtonTitle={intl.formatMessage({
-                  id: 'sources.exit',
-                  defaultMessage: 'Exit',
-                })}
-                successfulMessage={intl.formatMessage({
-                  id: 'sources.successAddApp',
-                  defaultMessage: 'Your application was successfully added.',
-                })}
+                returnButtonTitle={intl.formatMessage(messages.sourcesExit)}
+                successfulMessage={intl.formatMessage(messages.sourcesSuccessaddapp)}
               />
             );
           }
@@ -284,25 +305,16 @@ const AddApplication = () => {
               onRetry={onReset}
               onClose={goToSources}
               message={computeSourceError(state.data, intl)}
-              title={intl.formatMessage({
-                id: 'sources.configurationSuccessful',
-                defaultMessage: 'Configuration unsuccessful',
-              })}
+              title={intl.formatMessage(messages.sourcesConfigurationsuccessful_1)}
               secondaryActions={
                 <Button variant="link" onClick={removeApp}>
-                  {intl.formatMessage({
-                    id: 'wizard.removeApp',
-                    defaultMessage: 'Remove application',
-                  })}
+                  {intl.formatMessage(messages.wizardRemoveapp)}
                 </Button>
               }
               Component={() => (
                 <AppLink to={replaceRouteId(routes.sourcesDetail.path, source.id)}>
                   <Button variant="primary" className="pf-v6-u-mt-xl">
-                    {intl.formatMessage({
-                      id: 'wizard.editSource',
-                      defaultMessage: 'Edit integration',
-                    })}
+                    {intl.formatMessage(messages.wizardEditsource)}
                   </Button>
                 </AppLink>
               )}
@@ -310,15 +322,7 @@ const AddApplication = () => {
           );
           break;
         case 'timeout':
-          shownStep = (
-            <TimeoutStep
-              returnButtonTitle={intl.formatMessage({
-                id: 'sources.exit',
-                defaultMessage: 'Exit',
-              })}
-              onClose={goToSources}
-            />
-          );
+          shownStep = <TimeoutStep returnButtonTitle={intl.formatMessage(messages.sourcesExit)} onClose={goToSources} />;
           break;
       }
     }
@@ -349,6 +353,7 @@ const AddApplication = () => {
     applicationType,
     state.authenticationsValues,
     source,
+    // eslint-disable-next-line react-hooks/refs -- pre-existing pattern, see i18n cleanup ticket
     container.current,
     title,
     description,
@@ -384,14 +389,7 @@ const AddApplication = () => {
   return (
     <React.Fragment>
       {state.isCancelling && (
-        <CloseModal
-          title={intl.formatMessage({
-            id: 'sources.manageAppsCloseModalTitle',
-            defaultMessage: 'Exit application adding?',
-          })}
-          onStay={onStay}
-          onExit={goToSources}
-        />
+        <CloseModal title={intl.formatMessage(messages.sourcesManageappsclosemodaltitle)} onStay={onStay} onExit={goToSources} />
       )}
       <SourcesFormRenderer
         schema={schema}

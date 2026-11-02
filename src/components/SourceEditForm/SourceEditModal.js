@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 
 import FormTemplate from '@data-driven-forms/pf4-component-mapper/form-template';
@@ -16,6 +16,13 @@ import reducer, { initialState } from './reducer';
 import SubmittingModal from './SubmittingModal';
 import ErroredModal from './ErroredModal';
 import ClipboardCopy from '../FormComponents/ClipboardCopy';
+
+const editModalMessages = defineMessages({
+  saveChanges: {
+    id: 'sourceEdit.saveChanges',
+    defaultMessage: 'Save changes',
+  },
+});
 
 const SourceEditModal = () => {
   const [state, setState] = useReducer(reducer, initialState);
@@ -37,6 +44,7 @@ const SourceEditModal = () => {
     if (!initialLoad) {
       setState({ type: 'sourceChanged' });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   }, [sourceRedux, sourceRedux?.applications?.length]);
 
   useEffect(() => {
@@ -47,6 +55,7 @@ const SourceEditModal = () => {
         setState({ type: 'setSource', source, messages });
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   }, [sourceRedux, isLoaded, appTypesLoaded, initialLoad]);
 
   useEffect(() => {
@@ -55,6 +64,7 @@ const SourceEditModal = () => {
 
       setState({ type: 'createForm', sourceType, source, appTypes, hcsEnrolled, intl });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   }, [appTypesLoaded, source, sourceTypesLoaded, hcsEnrolledLoaded]);
 
   const isLoading = !hcsEnrolledLoaded || !appTypesLoaded || !sourceTypesLoaded || loading;
@@ -85,7 +95,7 @@ const SourceEditModal = () => {
         <FormTemplate
           canReset
           showFormControls={!hideFormControls}
-          submitLabel="Save changes"
+          submitLabel={intl.formatMessage(editModalMessages.saveChanges)}
           disableSubmit={['pristine', 'invalid']}
           {...props}
         />

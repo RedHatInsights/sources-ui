@@ -1,5 +1,5 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import TabNavigation from './TabNavigation';
 import { useFlag } from '@unleash/proxy-client-react';
 import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
@@ -9,6 +9,40 @@ import '../styles/sourcesHeader.scss';
 import { LockIcon } from '@patternfly/react-icons';
 import { Button, Content, ContentVariants, Popover } from '@patternfly/react-core';
 import { useSelector } from 'react-redux';
+
+const messages = defineMessages({
+  popoverAria: {
+    id: 'sourcesHeader.popoverAria',
+    defaultMessage: 'Popover with icon in the title example',
+  },
+
+  sourcesIntegrations: {
+    id: 'sources.integrations',
+    defaultMessage: 'Integrations',
+  },
+  sourcesIntegrationsSubtitle: {
+    id: 'sources.integrations.subtitle',
+    defaultMessage:
+      'Integrating third-party applications expands the scope of notifications beyond emails and messages, so that you can view and manage Hybrid Cloud Console events from your preferred platform dashboard. Cloud integrations connect your cloud provider accounts with the Hybrid Cloud Console to collect data, so you can use console services with your cloud providers.',
+  },
+  integrationsOverviewLearnmore: {
+    id: 'integrations.overview.learnMore',
+    defaultMessage: 'Learn more',
+  },
+  sourcesIntegrationsPopoverheader: {
+    id: 'sources.integrations.popoverHeader',
+    defaultMessage: 'Access needed',
+  },
+  integrationsOverviewPopoverbody: {
+    id: 'integrations.overview.popoverBody',
+    defaultMessage:
+      'You do not have the permissions for integration management. Contact your organization admin if you need these permissions updated.',
+  },
+  integrationsOverviewPopoverlink: {
+    id: 'integrations.overview.popoverLink',
+    defaultMessage: 'Learn about requesting access via the Virtual Assistant',
+  },
+});
 
 const SourcesHeader = () => {
   const intl = useIntl();
@@ -25,15 +59,11 @@ const SourcesHeader = () => {
           <PFPageHeader
             data-codemods
             ouiaId={'sources-header'}
-            title={intl.formatMessage({ id: 'sources.integrations', defaultMessage: 'Integrations' })}
-            subtitle={intl.formatMessage({
-              id: 'sources.integrations.subtitle',
-              defaultMessage:
-                'Integrating third-party applications expands the scope of notifications beyond emails and messages, so that you can view and manage Hybrid Cloud Console events from your preferred platform dashboard. Cloud integrations connect your cloud provider accounts with the Hybrid Cloud Console to collect data, so you can use console services with your cloud providers.',
-            })}
+            title={intl.formatMessage(messages.sourcesIntegrations)}
+            subtitle={intl.formatMessage(messages.sourcesIntegrationsSubtitle)}
             icon={<img src={integrationsIcon} alt="integrations-header-icon" />}
             linkProps={{
-              label: intl.formatMessage({ id: 'integrations.overview.learnMore', defaultMessage: 'Learn more' }),
+              label: intl.formatMessage(messages.integrationsOverviewLearnmore),
               isExternal: true,
               target: '_blank',
               component: 'a',
@@ -45,20 +75,13 @@ const SourcesHeader = () => {
                   triggerAction="hover"
                   alertSeverityVariant="info"
                   minWidth="450px"
-                  aria-label="Popover with icon in the title example"
-                  headerContent={intl.formatMessage({
-                    id: 'sources.integrations.popoverHeader',
-                    defaultMessage: 'Access needed',
-                  })}
+                  aria-label={intl.formatMessage(messages.popoverAria)}
+                  headerContent={intl.formatMessage(messages.sourcesIntegrationsPopoverheader)}
                   headerIcon={<LockIcon />}
                   bodyContent={
                     <Content>
                       <Content component={ContentVariants.p}>
-                        {intl.formatMessage({
-                          id: 'integrations.overview.popoverBody',
-                          defaultMessage:
-                            'You do not have the permissions for integration management. Contact your organization admin if you need these permissions updated.',
-                        })}{' '}
+                        {intl.formatMessage(messages.integrationsOverviewPopoverbody)}{' '}
                         <Button
                           component="a"
                           href="https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/get_started-ai_powered_support#virtual-assistant"
@@ -66,10 +89,7 @@ const SourcesHeader = () => {
                           target="_blank"
                           variant="link"
                         >
-                          {intl.formatMessage({
-                            id: 'integrations.overview.popoverLink',
-                            defaultMessage: 'Learn about requesting access via the Virtual Assistant',
-                          })}
+                          {intl.formatMessage(messages.integrationsOverviewPopoverlink)}
                         </Button>
                       </Content>
                     </Content>
@@ -100,7 +120,7 @@ const SourcesHeader = () => {
         </>
       ) : (
         <PageHeader className="pf-v6-u-pb-0">
-          <PageHeaderTitle title={intl.formatMessage({ id: 'sources.integrations', defaultMessage: 'Integrations' })} />
+          <PageHeaderTitle title={intl.formatMessage(messages.sourcesIntegrations)} />
           <TabNavigation />
         </PageHeader>
       )}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -17,6 +17,41 @@ import { useSource } from '../../hooks/useSource';
 import { configurationModeFormatter, dateFormatter, sourceTypeFormatter } from '../../views/formatters';
 import AvailabilityChecker from './AvailabilityChecker';
 import { setCheckPenging } from '../../redux/sources/actions';
+
+const messages = defineMessages({
+  detailSummaryTitle: {
+    id: 'detail.summary.title',
+    defaultMessage: 'Integration summary',
+  },
+  detailSummaryType: {
+    id: 'detail.summary.type',
+    defaultMessage: 'Integration type',
+  },
+  detailSummaryLastchecked: {
+    id: 'detail.summary.lastChecked',
+    defaultMessage: 'Last availability check',
+  },
+  detailSummaryWaitingforupdate: {
+    id: 'detail.summary.waitingForUpdate',
+    defaultMessage: 'Waiting for update',
+  },
+  detailSummaryDateadded: {
+    id: 'detail.summary.dateAdded',
+    defaultMessage: 'Date added',
+  },
+  detailSummaryLastmodified: {
+    id: 'detail.summary.lastModified',
+    defaultMessage: 'Last modified',
+  },
+  detailSummaryConfigurationmode: {
+    id: 'detail.summary.configurationMode',
+    defaultMessage: 'Configuration mode',
+  },
+  detailSummaryAwsaccountnumber: {
+    id: 'detail.summary.awsAccountNumber',
+    defaultMessage: 'AWS account number',
+  },
+});
 
 const DescriptionListItem = ({ term, description }) => (
   <DescriptionListGroup>
@@ -49,12 +84,7 @@ const SourceSummaryCard = () => {
 
   return (
     <Card className="pf-m-selectable pf-m-selected src-c-card-summary pf-v6-u-m-lg pf-v6-u-mr-sm-on-md">
-      <CardTitle>
-        {intl.formatMessage({
-          id: 'detail.summary.title',
-          defaultMessage: 'Integration summary',
-        })}
-      </CardTitle>
+      <CardTitle>{intl.formatMessage(messages.detailSummaryTitle)}</CardTitle>
       <CardBody>
         <DescriptionList
           columnModifier={{
@@ -62,58 +92,37 @@ const SourceSummaryCard = () => {
           }}
         >
           <DescriptionListItem
-            term={intl.formatMessage({
-              id: 'detail.summary.type',
-              defaultMessage: 'Integration type',
-            })}
+            term={intl.formatMessage(messages.detailSummaryType)}
             description={sourceTypeFormatter(source.source_type_id, undefined, { sourceTypes })}
           />
           <DescriptionListItem
-            term={intl.formatMessage({
-              id: 'detail.summary.lastChecked',
-              defaultMessage: 'Last availability check',
-            })}
+            term={intl.formatMessage(messages.detailSummaryLastchecked)}
             description={
               <React.Fragment>
                 {source.isCheckPending || !(source.last_checked_at || source.last_available_at)
-                  ? intl.formatMessage({
-                      id: 'detail.summary.waitingForUpdate',
-                      defaultMessage: 'Waiting for update',
-                    })
+                  ? intl.formatMessage(messages.detailSummaryWaitingforupdate)
                   : dateFormatter(source.last_checked_at || source.last_available_at)}
                 <AvailabilityChecker setCheckPending={() => dispatch(setCheckPenging(source.id))} />
               </React.Fragment>
             }
           />
           <DescriptionListItem
-            term={intl.formatMessage({
-              id: 'detail.summary.dateAdded',
-              defaultMessage: 'Date added',
-            })}
+            term={intl.formatMessage(messages.detailSummaryDateadded)}
             description={dateFormatter(source.created_at)}
           />
           <DescriptionListItem
-            term={intl.formatMessage({
-              id: 'detail.summary.lastModified',
-              defaultMessage: 'Last modified',
-            })}
+            term={intl.formatMessage(messages.detailSummaryLastmodified)}
             description={dateFormatter(source.updated_at)}
           />
           {source.app_creation_workflow && (
             <DescriptionListItem
-              term={intl.formatMessage({
-                id: 'detail.summary.configurationMode',
-                defaultMessage: 'Configuration mode',
-              })}
+              term={intl.formatMessage(messages.detailSummaryConfigurationmode)}
               description={configurationModeFormatter(source.app_creation_workflow, source, { intl, sourceType: type })}
             />
           )}
           {awsAccountNumber && (
             <DescriptionListItem
-              term={intl.formatMessage({
-                id: 'detail.summary.awsAccountNumber',
-                defaultMessage: 'AWS account number',
-              })}
+              term={intl.formatMessage(messages.detailSummaryAwsaccountnumber)}
               description={awsAccountNumber}
             />
           )}

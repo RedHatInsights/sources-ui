@@ -1,7 +1,7 @@
 import React, { useReducer, useState } from 'react';
 import PropTypes from 'prop-types';
 import isEmpty from 'lodash/isEmpty';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, defineMessages } from 'react-intl';
 
 import { Button } from '@patternfly/react-core';
 
@@ -15,6 +15,17 @@ import { CLOUD_VENDOR, REDHAT_VENDOR, timeoutedApps } from '../../utilities/cons
 import createSuperSource from '../../api/createSuperSource';
 import { doCreateSource } from '../../api/createSource';
 import CloseModal from '../CloseModal';
+
+const messages = defineMessages({
+  wizardSuccessfulmessage: {
+    id: 'wizard.successfulMessage',
+    defaultMessage: 'Your integration was successfully added.',
+  },
+  wizardGobacktosources: {
+    id: 'wizard.goBackToSources',
+    defaultMessage: 'Go back to Integrations',
+  },
+});
 
 const prepareInitialValues = (initialValues, activeCategory) => ({
   isSubmitted: false,
@@ -184,9 +195,9 @@ AddSourceWizard.propTypes = {
 };
 
 AddSourceWizard.defaultProps = {
-  successfulMessage: <FormattedMessage id="wizard.successfulMessage" defaultMessage="Your integration was successfully added." />,
+  successfulMessage: <FormattedMessage {...messages.wizardSuccessfulmessage} />,
   initialValues: {},
-  returnButtonTitle: <FormattedMessage id="wizard.goBackToSources" defaultMessage="Go back to Integrations" />,
+  returnButtonTitle: <FormattedMessage {...messages.wizardGobacktosources} />,
 };
 
 export const AddSourceButton = (props) => {

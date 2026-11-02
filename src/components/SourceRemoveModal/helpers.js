@@ -1,7 +1,14 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, defineMessages } from 'react-intl';
 
 import { ANSIBLE_TOWER_NAME, SATELLITE_NAME } from '../../utilities/constants';
+
+const messages = defineMessages({
+  sourcesDeletetextbodynoapps: {
+    id: 'sources.deleteTextBodyNoApps',
+    defaultMessage: 'Removing { name } will permanently delete all data collected.',
+  },
+});
 
 export const idToName = (id, appTypes) => appTypes.find((app) => app.id === id)?.display_name || 'Unknown';
 
@@ -11,8 +18,7 @@ export const bodyVariants = (variant, { name, count }) =>
   ({
     noApps: (
       <FormattedMessage
-        id="sources.deleteTextBodyNoApps"
-        defaultMessage="Removing { name } will permanently delete all data collected."
+        {...messages.sourcesDeletetextbodynoapps}
         values={{
           name: <b>{name}</b>,
         }}
