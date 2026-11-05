@@ -1,3 +1,4 @@
+import { defineMessages } from 'react-intl';
 import React from 'react';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
@@ -7,12 +8,47 @@ import { ACCOUNT_AUTHORIZATION, MANUAL_CONFIGURATION } from '../../constants';
 import SuperKeyCredentials from './SuperKeyCredentials';
 import { bold } from '../../../utilities/intlShared';
 
-const configurationStep = (intl, sourceTypes) => ({
-  name: 'configuration_step',
-  title: intl.formatMessage({
+const messages = defineMessages({
+  wizardConfigurationstep: {
     id: 'wizard.configurationStep',
     defaultMessage: 'Select configuration',
-  }),
+  },
+  wizardAccountauthdescription: {
+    id: 'wizard.accountAuthDescription',
+    defaultMessage:
+      'Configure your integration manually or let us manage all necessary credentials by selecting <b>account authorization</b> configuration.',
+  },
+  wizardConfigurationmode: {
+    id: 'wizard.selectConfigurationMode',
+    defaultMessage: 'Select a configuration mode',
+  },
+  wizardAccountauth: {
+    id: 'wizard.accountAuth',
+    defaultMessage: 'Account authorization',
+  },
+  wizardConfmodeReccomended: {
+    id: 'wizard.confMode.reccomended',
+    defaultMessage: 'Recommended',
+  },
+  wizardAccountauthDesc: {
+    id: 'wizard.accountAuth.desc',
+    defaultMessage:
+      'A new automated integration configuration method. Provide your {type} account credentials and let Red Hat configure and manage your integration for you.',
+  },
+  wizardManualauth: {
+    id: 'wizard.manualAuth',
+    defaultMessage: 'Manual configuration',
+  },
+  wizardManualauthDesc: {
+    id: 'wizard.manualAuth.desc',
+    defaultMessage:
+      'Configure and manage your integration manually if you do not wish to provide account authorization credentials. You will set up integrations the same way you do today.',
+  },
+});
+
+const configurationStep = (intl, sourceTypes) => ({
+  name: 'configuration_step',
+  title: intl.formatMessage(messages.wizardConfigurationstep),
   nextStep: ({ values }) => {
     if (!values.source?.app_creation_workflow) {
       return;
@@ -24,51 +60,31 @@ const configurationStep = (intl, sourceTypes) => ({
     {
       component: componentTypes.PLAIN_TEXT,
       name: 'conf-desc',
-      label: intl.formatMessage(
-        {
-          id: 'wizard.accountAuthDescription',
-          defaultMessage:
-            'Configure your integration manually or let us manage all necessary credentials by selecting <b>account authorization</b> configuration.',
-        },
-        {
-          b: bold,
-        },
-      ),
+      label: intl.formatMessage(messages.wizardAccountauthdescription, {
+        b: bold,
+      }),
     },
     {
       component: componentTypes.RADIO,
       name: 'source.app_creation_workflow',
-      label: intl.formatMessage({
-        id: 'wizard.configurationMode',
-        defaultMessage: 'Select a configuration mode',
-      }),
+      label: intl.formatMessage(messages.wizardConfigurationmode),
       isRequired: true,
       resolveProps: (_p, _f, formOptions) => ({
         options: [
           {
             label: (
               <span className="src-c-wizard__rhel-mag-label">
-                {intl.formatMessage({
-                  id: 'wizard.accountAuth',
-                  defaultMessage: 'Account authorization',
-                })}
+                {intl.formatMessage(messages.wizardAccountauth)}
                 <Label className="pf-v6-u-ml-sm" color="purple">
-                  {intl.formatMessage({ id: 'wizard.confMode.reccomended', defaultMessage: 'Recommended' })}
+                  {intl.formatMessage(messages.wizardConfmodeReccomended)}
                 </Label>
               </span>
             ),
-            description: intl.formatMessage(
-              {
-                id: 'wizard.accountAuth.desc',
-                defaultMessage:
-                  'A new automated integration configuration method. Provide your {type} account credentials and let Red Hat configure and manage your integration for you.',
-              },
-              {
-                type:
-                  { amazon: 'AWS', azure: 'Azure' }[formOptions.getState().values.source_type] ||
-                  formOptions.getState().values.source_type,
-              },
-            ),
+            description: intl.formatMessage(messages.wizardAccountauthDesc, {
+              type:
+                { amazon: 'AWS', azure: 'Azure' }[formOptions.getState().values.source_type] ||
+                formOptions.getState().values.source_type,
+            }),
             value: ACCOUNT_AUTHORIZATION,
           },
         ],
@@ -94,15 +110,8 @@ const configurationStep = (intl, sourceTypes) => ({
       name: 'source.app_creation_workflow',
       options: [
         {
-          label: intl.formatMessage({
-            id: 'wizard.manualAuth',
-            defaultMessage: 'Manual configuration',
-          }),
-          description: intl.formatMessage({
-            id: 'wizard.manualAuth.desc',
-            defaultMessage:
-              'Configure and manage your integration manually if you do not wish to provide account authorization credentials. You will set up integrations the same way you do today.',
-          }),
+          label: intl.formatMessage(messages.wizardManualauth),
+          description: intl.formatMessage(messages.wizardManualauthDesc),
           value: MANUAL_CONFIGURATION,
         },
       ],

@@ -166,7 +166,7 @@ const UnauthorizedState = () => {
               {intl.formatMessage({
                 id: 'integrations.overview.alertParagraph',
                 defaultMessage:
-                  'You do not have the permissions for integration management. Contact your organization admin if you need these permissions updated.',
+                  'You do not have the permissions for integration management. Contact your organization administrator if you need these permissions updated.',
               })}
             </Content>
           </Content>

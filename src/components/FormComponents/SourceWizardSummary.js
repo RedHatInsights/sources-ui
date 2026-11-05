@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { shallowEqual, useSelector } from 'react-redux';
 import get from 'lodash/get';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage, defineMessages, useIntl } from 'react-intl';
 import {
   Alert,
   Content,
@@ -24,6 +24,93 @@ import { MANUAL_CUR_STEPS as CUR_AWS } from '../addSourceWizard/hardcodedCompone
 import { MANUAL_CUR_STEPS as CUR_AZURE } from '../addSourceWizard/hardcodedComponents/azure/costManagement';
 import { MANUAL_CUR_STEPS as CUR_GCP } from '../addSourceWizard/hardcodedComponents/gcp/costManagement';
 import { NO_APPLICATION_VALUE } from '../../components/addSourceWizard/stringConstants';
+
+const messages = defineMessages({
+  costWarningtitlecur: {
+    id: 'cost.warningTitleCUR',
+    defaultMessage: "Don't forget additional configuration steps!",
+  },
+  costCustomizingreportcur: {
+    id: 'cost.customizingReportCUR',
+    defaultMessage: 'Customizing your {application} cost and usage report',
+  },
+  costWarningdescriptioncur: {
+    id: 'cost.warningDescriptionCUR',
+    defaultMessage:
+      'You will need to perform more configuration steps after creating the source. To find more information, click on the link below.',
+  },
+  costRbacwarningtitle: {
+    id: 'cost.rbacWarningTitle',
+    defaultMessage: 'Manage permissions in User Access',
+  },
+  costRbacwarningdescription: {
+    id: 'cost.rbacWarningDescription',
+    defaultMessage:
+      'Make sure to manage permissions for this integration in custom roles that contain permissions for Cost Management.',
+  },
+  azureRhelwarningtitle: {
+    id: 'azure.rhelWarningTitle',
+    defaultMessage: 'This integration will not be monitored in Integrations',
+  },
+  azureRhelwarningdescription: {
+    id: 'azure.rhelWarningDescription',
+    defaultMessage:
+      'This integration will be represented in the Integrations list, but will not reflect true status or resources.',
+  },
+  wizardNotselected: {
+    id: 'wizard.notSelected',
+    defaultMessage: 'Not selected',
+  },
+  wizardName: {
+    id: 'wizard.name',
+    defaultMessage: 'Name',
+  },
+  wizardSourcetype: {
+    id: 'wizard.sourceType',
+    defaultMessage: 'Integration type',
+  },
+  wizardConfigurationmode: {
+    id: 'wizard.configurationMode',
+    defaultMessage: 'Configuration mode',
+  },
+  wizardAccountauth: {
+    id: 'wizard.accountAuth',
+    defaultMessage: 'Account authorization',
+  },
+  wizardManualconfig: {
+    id: 'wizard.manualConfig',
+    defaultMessage: 'Manual configuration',
+  },
+  wizardApplications: {
+    id: 'wizard.applications',
+    defaultMessage: 'Applications',
+  },
+  none: {
+    id: 'none',
+    defaultMessage: 'None',
+  },
+  wizardApplication: {
+    id: 'wizard.application',
+    defaultMessage: 'Application',
+  },
+  wizardBucket: {
+    id: 'wizard.bucket',
+    defaultMessage: 'Bucket namespace',
+  },
+  wizardAuthenticationtype: {
+    id: 'wizard.authenticationType',
+    defaultMessage: 'Authentication type',
+  },
+  wizardEnabled: {
+    id: 'wizard.enabled',
+    defaultMessage: 'Enabled',
+  },
+  wizardDisabled: {
+    id: 'wizard.disabled',
+    defaultMessage: 'Disabled',
+  },
+});
+
 import {
   getAdditionalSteps,
   injectAuthFieldsInfo,
@@ -48,40 +135,19 @@ const SummaryAlert = ({ scope, sourceType, hcsEnrolled }) => {
           <Alert
             variant="info"
             isInline
-            title={intl.formatMessage({
-              id: 'cost.warningTitleCUR',
-              defaultMessage: "Don't forget additional configuration steps!",
-            })}
+            title={intl.formatMessage(messages.costWarningtitlecur)}
             actionLinks={
               <Content component={ContentVariants.a} href={linkMapper(sourceType)}>
-                {intl.formatMessage(
-                  {
-                    id: 'cost.customizingReportCUR',
-                    defaultMessage: 'Customizing your {application} cost and usage report',
-                  },
-                  { application },
-                )}
+                {intl.formatMessage(messages.costCustomizingreportcur, { application })}
               </Content>
             }
           >
-            {intl.formatMessage({
-              id: 'cost.warningDescriptionCUR',
-              defaultMessage:
-                'You will need to perform more configuration steps after creating the source. To find more information, click on the link below.',
-            })}
+            {intl.formatMessage(messages.costWarningdescriptioncur)}
           </Alert>
         ) : null}
         {hcsEnrolled ? null : (
-          <Alert
-            variant="default"
-            isInline
-            title={intl.formatMessage({ id: 'cost.rbacWarningTitle', defaultMessage: 'Manage permissions in User Access' })}
-          >
-            {intl.formatMessage({
-              id: 'cost.rbacWarningDescription',
-              defaultMessage:
-                'Make sure to manage permissions for this integration in custom roles that contain permissions for Cost Management.',
-            })}
+          <Alert variant="default" isInline title={intl.formatMessage(messages.costRbacwarningtitle)}>
+            {intl.formatMessage(messages.costRbacwarningdescription)}
           </Alert>
         )}
       </Fragment>
@@ -90,19 +156,8 @@ const SummaryAlert = ({ scope, sourceType, hcsEnrolled }) => {
 
   if (scope === CLOUD_METER_APP_NAME && ['google'].includes(sourceType)) {
     return (
-      <Alert
-        variant="info"
-        isInline
-        title={intl.formatMessage({
-          id: 'azure.rhelWarningTitle',
-          defaultMessage: 'This integration will not be monitored in Integrations',
-        })}
-      >
-        {intl.formatMessage({
-          id: 'azure.rhelWarningDescription',
-          defaultMessage:
-            'This integration will be represented in the Integrations list, but will not reflect true status or resources.',
-        })}
+      <Alert variant="info" isInline title={intl.formatMessage(messages.azureRhelwarningtitle)}>
+        {intl.formatMessage(messages.azureRhelwarningdescription)}
       </Alert>
     );
   }
@@ -146,11 +201,11 @@ export const createItem = (formField, values, stepKeys) => {
   if (typeof value === 'boolean') {
     value = value ? (
       <Label color="green">
-        <FormattedMessage id="wizard.enabled" defaultMessage="Enabled" />
+        <FormattedMessage {...messages.wizardEnabled} />
       </Label>
     ) : (
       <Label color="gray">
-        <FormattedMessage id="wizard.disabled" defaultMessage="Disabled" />
+        <FormattedMessage {...messages.wizardDisabled} />
       </Label>
     );
   }
@@ -221,11 +276,7 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
     ? applicationTypes.find((type) => type.id === values.application.application_type_id)
     : undefined;
 
-  const {
-    display_name = intl.formatMessage({ id: 'wizard.notSelected', defaultMessage: 'Not selected' }),
-    name,
-    id,
-  } = application ? application : {};
+  const { display_name = intl.formatMessage(messages.wizardNotselected), name, id } = application ? application : {};
 
   const skipEndpoint = shouldSkipEndpoint(type.name, hasAuthentication, name);
 
@@ -274,58 +325,31 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
   return (
     <React.Fragment>
       <DescriptionList isHorizontal className="src-c-wizard__summary-description-list">
-        <DesctiptionListItem
-          term={intl.formatMessage({
-            id: 'wizard.name',
-            defaultMessage: 'Name',
-          })}
-          description={values.source.name}
-        />
-        <DesctiptionListItem
-          term={intl.formatMessage({
-            id: 'wizard.sourceType',
-            defaultMessage: 'Integration type',
-          })}
-          description={type.product_name}
-        />
+        <DesctiptionListItem term={intl.formatMessage(messages.wizardName)} description={values.source.name} />
+        <DesctiptionListItem term={intl.formatMessage(messages.wizardSourcetype)} description={type.product_name} />
         {showApp && values.source.app_creation_workflow && (
           <DesctiptionListItem
-            term={intl.formatMessage({
-              id: 'wizard.configurationMode',
-              defaultMessage: 'Configuration mode',
-            })}
+            term={intl.formatMessage(messages.wizardConfigurationmode)}
             description={
               values.source.app_creation_workflow === ACCOUNT_AUTHORIZATION
-                ? intl.formatMessage({
-                    id: 'wizard.accountAuth',
-                    defaultMessage: 'Account authorization',
-                  })
-                : intl.formatMessage({
-                    id: 'wizard.manualConfig',
-                    defaultMessage: 'Manual configuration',
-                  })
+                ? intl.formatMessage(messages.wizardAccountauth)
+                : intl.formatMessage(messages.wizardManualconfig)
             }
           />
         )}
         {showApp && values.source.app_creation_workflow === ACCOUNT_AUTHORIZATION && (
           <DesctiptionListItem
-            term={intl.formatMessage({
-              id: 'wizard.applications',
-              defaultMessage: 'Applications',
-            })}
+            term={intl.formatMessage(messages.wizardApplications)}
             description={
               applicatioNames.length
                 ? applicatioNames.map((app) => <div key={app}>{app}</div>)
-                : intl.formatMessage({ id: 'none', defaultMessage: 'None' })
+                : intl.formatMessage(messages.none)
             }
           />
         )}
         {showApp && values.source.app_creation_workflow !== ACCOUNT_AUTHORIZATION && (
           <DesctiptionListItem
-            term={intl.formatMessage({
-              id: 'wizard.application',
-              defaultMessage: 'Application',
-            })}
+            term={intl.formatMessage(messages.wizardApplication)}
             description={
               // overwrite Cost management with HCS
               values.application?.application_type_id === COST_MANAGEMENT_APP_ID && hcsEnrolled ? HCS_APP_NAME : display_name
@@ -334,10 +358,7 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
         )}
         {showApp && values.application?.extra?.bucket_namespace && (
           <DesctiptionListItem
-            term={intl.formatMessage({
-              id: 'wizard.bucket',
-              defaultMessage: 'Bucket namespace',
-            })}
+            term={intl.formatMessage(messages.wizardBucket)}
             description={values.application?.extra?.bucket_namespace}
           />
         )}
@@ -346,13 +367,7 @@ const SourceWizardSummary = ({ sourceTypes, applicationTypes, showApp, showAuthT
           showAuthType &&
           values.source.app_creation_workflow !== ACCOUNT_AUTHORIZATION &&
           (!values.application?.application_type_id || values.application?.application_type_id === NO_APPLICATION_VALUE) && (
-            <DesctiptionListItem
-              term={intl.formatMessage({
-                id: 'wizard.authenticationType',
-                defaultMessage: 'Authentication type',
-              })}
-              description={authType.name}
-            />
+            <DesctiptionListItem term={intl.formatMessage(messages.wizardAuthenticationtype)} description={authType.name} />
           )}
         {valuesList}
       </DescriptionList>

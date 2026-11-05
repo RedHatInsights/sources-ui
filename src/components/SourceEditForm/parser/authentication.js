@@ -2,9 +2,16 @@ import React from 'react';
 import get from 'lodash/get';
 import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
 import { COST_MANAGEMENT_APP_NAME } from '../../../utilities/constants';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, defineMessages } from 'react-intl';
 import { doLoadRegions } from '../../../api/doLoadRegions';
 import hardcodedSchemas from '../../../components/addSourceWizard/hardcodedSchemas';
+
+const messages = defineMessages({
+  costArnExternalid: {
+    id: 'cost.arn.externalId',
+    defaultMessage: 'External ID',
+  },
+});
 
 export const createAuthFieldName = (fieldName, id) => `authentications.a${id}.${fieldName.replace('authentication.', '')}`;
 
@@ -54,7 +61,7 @@ export const modifyAuthSchemas = (fields, id, appId, useOpenShiftOperatorExcepti
 
     if (isExternalId) {
       finalField.hideField = false;
-      finalField.label = <FormattedMessage id="cost.arn.externalId" defaultMessage="External ID" />;
+      finalField.label = <FormattedMessage {...messages.costArnExternalid} />;
       finalField.component = 'clipboard-copy';
       finalField.isReadOnly = true;
     }

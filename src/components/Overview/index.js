@@ -1,6 +1,6 @@
 import React from 'react';
 import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import {
   Alert,
   AlertActionLink,
@@ -45,6 +45,173 @@ import { useSelector } from 'react-redux';
 import { bold } from '../../utilities/intlShared';
 import { useFlag } from '@unleash/proxy-client-react';
 
+const messages = defineMessages({
+  overviewRecommendedContentAria: {
+    id: 'overview.overviewRecommendedContentAria',
+    defaultMessage: 'Recommended content',
+  },
+
+  overviewIntegrationTypesAria: {
+    id: 'overview.overviewIntegrationTypesAria',
+    defaultMessage: 'Integration types',
+  },
+
+  integrationsOverviewDatalistitemtitle1: {
+    id: 'integrations.overview.dataListItemTitle1',
+    defaultMessage: '<b>Communication integrations</b> (Microsoft Teams, Google Chat, Slack, Email)',
+  },
+  integrationsOverviewDatalistitemactiontitle1: {
+    id: 'integrations.overview.dataListItemActionTitle1',
+    defaultMessage: 'Set up communication integration',
+  },
+  integrationsOverviewDatalistitemcontent1: {
+    id: 'integrations.overview.dataListItemContent1',
+    defaultMessage:
+      'Receive event notifications in your preferred communications application by connecting the Hybrid Cloud Console with Microsoft Teams, Google Chat, Slack, email',
+  },
+  integrationsOverviewDatalistitemactiontitle2: {
+    id: 'integrations.overview.dataListItemActionTitle2',
+    defaultMessage: 'Set up reporting and automation integration',
+  },
+  integrationsOverviewDatalistitemtitle3: {
+    id: 'integrations.overview.dataListItemTitle3',
+    defaultMessage: '<b>Webhook integrations</b>',
+  },
+  integrationsOverviewDatalistitemactiontitle3: {
+    id: 'integrations.overview.dataListItemActionTitle3',
+    defaultMessage: 'Set up webhook integration',
+  },
+  integrationsOverviewDatalistitemcontent3: {
+    id: 'integrations.overview.dataListItemContent3',
+    defaultMessage:
+      'Receive Hybrid Cloud Console event notifications in third-party applications where native integration is not available by configuring a webhook integration.',
+  },
+  integrationsOverviewDatalistitemtitle4: {
+    id: 'integrations.overview.dataListItemTitle4',
+    defaultMessage: '<b>Cloud provider integrations</b> (Amazon Web Services, Azure, Google Cloud Platform)',
+  },
+  integrationsOverviewDatalistitemactiontitle4: {
+    id: 'integrations.overview.dataListItemActionTitle4',
+    defaultMessage: 'Configure cloud provider integration',
+  },
+  integrationsOverviewDatalistitemcontent4: {
+    id: 'integrations.overview.dataListItemContent4',
+    defaultMessage:
+      'To use public cloud provider data with Hybrid Cloud Console services, connect your Amazon Web Services (AWS), Google Cloud or Microsoft Azure account to the Hybrid Cloud Console.',
+  },
+  integrationsOverviewDatalistitemtitle5: {
+    id: 'integrations.overview.dataListItemTitle5',
+    defaultMessage: '<b>Red Hat integrations</b> (OpenShift Container Platform)',
+  },
+  integrationsOverviewDatalistitemactiontitle5: {
+    id: 'integrations.overview.dataListItemActionTitle5',
+    defaultMessage: 'Configure Red Hat integration',
+  },
+  integrationsOverviewDatalistitemcontent5: {
+    id: 'integrations.overview.dataListItemContent5',
+    defaultMessage:
+      'Manage your cloud costs with Hybrid Cloud Console services by connecting your Red Hat OpenShift Container Platform environment.',
+  },
+  integrationsOverviewHerotitle: {
+    id: 'integrations.overview.heroTitle',
+    defaultMessage: 'Get started with Integrations',
+  },
+  integrationsOverviewHeroparagraph: {
+    id: 'integrations.overview.heroParagraph',
+    defaultMessage:
+      'Notifications and integrations services work together to transmit messages to third-party application endpoints, such as instant messaging platforms and external ticketing systems, when triggering events occur.',
+  },
+  integrationsOverviewHerolisttitle: {
+    id: 'integrations.overview.heroListTitle',
+    defaultMessage: 'Key features',
+  },
+  integrationsOverviewHerolistitem1: {
+    id: 'integrations.overview.heroListItem1',
+    defaultMessage: 'Create integrations and configure notifications to integrate with third-party applications',
+  },
+  integrationsOverviewHerolistitem2: {
+    id: 'integrations.overview.heroListItem2',
+    defaultMessage: 'Manage your integrations and troubleshoot broken connections',
+  },
+  integrationsOverviewAlerttitle: {
+    id: 'integrations.overview.alertTitle',
+    defaultMessage: 'Need to create an integration?',
+  },
+  integrationsOverviewAlertlink: {
+    id: 'integrations.overview.alertLink',
+    defaultMessage: 'Learn about requesting access via the Virtual Assistant',
+  },
+  integrationsOverviewAlertparagraph: {
+    id: 'integrations.overview.alertParagraph',
+    defaultMessage:
+      'You do not have the permissions for integration management. Contact your organization administrator if you need these permissions updated.',
+  },
+  integrationsOverviewHinttextbold: {
+    id: 'integrations.overview.hintTextBold',
+    defaultMessage: 'Already set up your integrations?',
+  },
+  integrationsOverviewHinttext1: {
+    id: 'integrations.overview.hintText1',
+    defaultMessage: 'As a next step, you can',
+  },
+  integrationsOverviewHintlink: {
+    id: 'integrations.overview.hintLink',
+    defaultMessage: 'enable the notifications',
+  },
+  integrationsOverviewHinttext2: {
+    id: 'integrations.overview.hintText2',
+    defaultMessage: 'of your choice to alert you via integrations.',
+  },
+  integrationsOverviewTitleintegrationtypes: {
+    id: 'integrations.overview.titleIntegrationTypes',
+    defaultMessage: 'Integration types',
+  },
+  integrationsOverviewTitlerecommendedcontent: {
+    id: 'integrations.overview.titleRecommendedContent',
+    defaultMessage: 'Recommended content',
+  },
+  integrationsOverviewRecommendedcontenttabletitle1: {
+    id: 'integrations.overview.recommendedContentTableTitle1',
+    defaultMessage: 'Configuring notifications and integrations',
+  },
+  integrationsOverviewRecommendedcontenttablelabel1: {
+    id: 'integrations.overview.recommendedContentTableLabel1',
+    defaultMessage: 'Documentation',
+  },
+  integrationsOverviewRecommendedcontenttablelink1: {
+    id: 'integrations.overview.recommendedContentTableLink1',
+    defaultMessage: 'View documentation',
+  },
+  integrationsOverviewRecommendedcontenttabletitle2: {
+    id: 'integrations.overview.recommendedContentTableTitle2',
+    defaultMessage: 'Configuring cloud integrations for Red Hat services',
+  },
+  integrationsOverviewRecommendedcontenttablelabel2: {
+    id: 'integrations.overview.recommendedContentTableLabel2',
+    defaultMessage: 'Documentation',
+  },
+  integrationsOverviewRecommendedcontenttablelink2: {
+    id: 'integrations.overview.recommendedContentTableLink2',
+    defaultMessage: 'View documentation',
+  },
+  integrationsOverviewRecommendedcontenttabletitle3: {
+    id: 'integrations.overview.recommendedContentTableTitle3',
+    defaultMessage: 'Configuring console notifications in Slack',
+  },
+  integrationsOverviewRecommendedcontenttablelabel3: {
+    id: 'integrations.overview.recommendedContentTableLabel3',
+    defaultMessage: 'Quick start',
+  },
+  integrationsOverviewRecommendedcontenttablelink3: {
+    id: 'integrations.overview.recommendedContentTableLink3',
+    defaultMessage: 'Begin Quick start',
+  },
+  integrationsOverviewViewalllearningresources: {
+    id: 'integrations.overview.viewAllLearningResources',
+    defaultMessage: 'View all Settings learning resources',
+  },
+});
+
 const VIEW_DOCUMENTATION =
   'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/observe-configure_notifications_hcc_services';
 
@@ -64,25 +231,12 @@ const Overview = () => {
     {
       isExpanded: true,
       icon: <OutlinedCommentsIcon className="pf-v6-u-primary-color-100" />,
-      title: intl.formatMessage(
-        {
-          id: 'integrations.overview.dataListItemTitle1',
-          defaultMessage: '<b>Communication integrations</b> (Microsoft Teams, Google Chat, Slack, Email)',
-        },
-        {
-          b: bold,
-        },
-      ),
-      actionTitle: intl.formatMessage({
-        id: 'integrations.overview.dataListItemActionTitle1',
-        defaultMessage: 'Set up communication integration',
+      title: intl.formatMessage(messages.integrationsOverviewDatalistitemtitle1, {
+        b: bold,
       }),
+      actionTitle: intl.formatMessage(messages.integrationsOverviewDatalistitemactiontitle1),
       action: COMMUNICATIONS,
-      content: intl.formatMessage({
-        id: 'integrations.overview.dataListItemContent1',
-        defaultMessage:
-          'Receive event notifications in your preferred communications application by connecting the Hybrid Cloud Console with Microsoft Teams, Google Chat, Slack, email',
-      }),
+      content: intl.formatMessage(messages.integrationsOverviewDatalistitemcontent1),
       learnMoreLink:
         'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/extend-integrate_communication_apps',
     },
@@ -92,100 +246,62 @@ const Overview = () => {
       title: intl.formatMessage(
         {
           id: 'integrations.overview.dataListItemTitle2',
-          defaultMessage: `<b>Reporting and automation integrations</b> (Event-Driven Ansible, ${
-            isPagerDutyEnabled ? 'PagerDuty' : null
-          }, ServiceNow, Splunk) `,
+          defaultMessage:
+            '<b>Reporting and automation integrations</b> (Event-Driven Ansible{pagerDuty, select, on {, PagerDuty} other {}}, ServiceNow, Splunk)',
         },
         {
           b: bold,
+          pagerDuty: isPagerDutyEnabled ? 'on' : 'off',
         },
       ),
-      actionTitle: intl.formatMessage({
-        id: 'integrations.overview.dataListItemActionTitle2',
-        defaultMessage: 'Set up reporting and automation integration',
-      }),
+      actionTitle: intl.formatMessage(messages.integrationsOverviewDatalistitemactiontitle2),
       action: REPORTING,
-      content: intl.formatMessage({
-        id: 'integrations.overview.dataListItemContent2',
-        defaultMessage: `Receive and manage event notifications where you manage other sources of data by connecting the Hybrid Cloud Console with Event-Driven Ansible, ${
-          isPagerDutyEnabled ? 'PagerDuty' : null
-        }, ServiceNow, or Splunk.`,
-      }),
+      content: intl.formatMessage(
+        {
+          id: 'integrations.overview.dataListItemContent2',
+          defaultMessage:
+            'Receive and manage event notifications where you manage other sources of data by connecting the Hybrid Cloud Console with Event-Driven Ansible{pagerDuty, select, on {, PagerDuty} other {}}, ServiceNow, or Splunk.',
+        },
+        {
+          pagerDuty: isPagerDutyEnabled ? 'on' : 'off',
+        },
+      ),
       learnMoreLink:
         'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/extend-integrate_reporting_automation_apps',
     },
     {
       isExpanded: false,
       icon: <WebhooksIcon className="pf-v6-u-primary-color-100" />,
-      title: intl.formatMessage(
-        {
-          id: 'integrations.overview.dataListItemTitle3',
-          defaultMessage: '<b>Webhook integrations</b>',
-        },
-        {
-          b: bold,
-        },
-      ),
-      actionTitle: intl.formatMessage({
-        id: 'integrations.overview.dataListItemActionTitle3',
-        defaultMessage: 'Set up webhook integration',
+      title: intl.formatMessage(messages.integrationsOverviewDatalistitemtitle3, {
+        b: bold,
       }),
+      actionTitle: intl.formatMessage(messages.integrationsOverviewDatalistitemactiontitle3),
       action: WEBHOOKS,
-      content: intl.formatMessage({
-        id: 'integrations.overview.dataListItemContent3',
-        defaultMessage:
-          'Receive Hybrid Cloud Console event notifications in third-party applications where native integration is not available by configuring a webhook integration.',
-      }),
+      content: intl.formatMessage(messages.integrationsOverviewDatalistitemcontent3),
       learnMoreLink:
         'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/extend-integrate_other_apps_with_webhooks',
     },
     {
       isExpanded: false,
       icon: <CloudIcon className="pf-v6-u-primary-color-100" />,
-      title: intl.formatMessage(
-        {
-          id: 'integrations.overview.dataListItemTitle4',
-          defaultMessage: '<b>Cloud provider integrations</b> (Amazon Web Services, Azure, Google Cloud Platform)',
-        },
-        {
-          b: bold,
-        },
-      ),
-      actionTitle: intl.formatMessage({
-        id: 'integrations.overview.dataListItemActionTitle4',
-        defaultMessage: 'Configure cloud provider integration',
+      title: intl.formatMessage(messages.integrationsOverviewDatalistitemtitle4, {
+        b: bold,
       }),
+      actionTitle: intl.formatMessage(messages.integrationsOverviewDatalistitemactiontitle4),
       action: CLOUD_VENDOR,
-      content: intl.formatMessage({
-        id: 'integrations.overview.dataListItemContent4',
-        defaultMessage:
-          'To use public cloud provider data with Hybrid Cloud Console services, connect your Amazon Web Services (AWS), Google Cloud or Microsoft Azure account to the Hybrid Cloud Console.',
-      }),
+      content: intl.formatMessage(messages.integrationsOverviewDatalistitemcontent4),
       learnMoreLink:
         'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/integrate-integrate_external_infrastructure_with_rh_services',
     },
     {
       isExpanded: false,
       icon: <RedhatIcon className="pf-v6-u-primary-color-100" />,
-      title: intl.formatMessage(
-        {
-          id: 'integrations.overview.dataListItemTitle5',
-          defaultMessage: '<b>Red Hat integrations</b> (OpenShift Container Platform)',
-        },
-        {
-          b: bold,
-        },
-      ),
-      actionTitle: intl.formatMessage({
-        id: 'integrations.overview.dataListItemActionTitle5',
-        defaultMessage: 'Configure Red Hat integration',
+      title: intl.formatMessage(messages.integrationsOverviewDatalistitemtitle5, {
+        b: bold,
       }),
+      actionTitle: intl.formatMessage(messages.integrationsOverviewDatalistitemactiontitle5),
       action: REDHAT_VENDOR,
-      content: intl.formatMessage({
-        id: 'integrations.overview.dataListItemContent5',
-        defaultMessage:
-          'Manage your cloud costs with Hybrid Cloud Console services by connecting your Red Hat OpenShift Container Platform environment.',
-      }),
+      content: intl.formatMessage(messages.integrationsOverviewDatalistitemcontent5),
       learnMoreLink: 'https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/create_ocp_integration',
     },
   ];
@@ -200,42 +316,20 @@ const Overview = () => {
         <Grid hasGutter>
           <GridItem sm={12} md={6} lg={8}>
             <CardTitle>
-              <Title headingLevel="h2">
-                {intl.formatMessage({
-                  id: 'integrations.overview.heroTitle',
-                  defaultMessage: 'Get started with Integrations',
-                })}
-              </Title>
+              <Title headingLevel="h2">{intl.formatMessage(messages.integrationsOverviewHerotitle)}</Title>
             </CardTitle>
             <CardBody>
               <Content>
                 <Content component={ContentVariants.p} className="pf-v6-u-mb-md">
-                  {intl.formatMessage({
-                    id: 'integrations.overview.heroParagraph',
-                    defaultMessage:
-                      'Notifications and integrations services work together to transmit messages to third-party application endpoints, such as instant messaging platforms and external ticketing systems, when triggering events occur.',
-                  })}
+                  {intl.formatMessage(messages.integrationsOverviewHeroparagraph)}
                 </Content>
               </Content>
               <Title headingLevel="h4" className="pf-v6-u-mb-sm">
-                {intl.formatMessage({
-                  id: 'integrations.overview.heroListTitle',
-                  defaultMessage: 'Key features',
-                })}
+                {intl.formatMessage(messages.integrationsOverviewHerolisttitle)}
               </Title>
               <List isPlain>
-                <ListItem icon={<CheckIcon />}>
-                  {intl.formatMessage({
-                    id: 'integrations.overview.heroListItem1',
-                    defaultMessage: 'Create integrations and configure notifications to integrate with third-party applications',
-                  })}
-                </ListItem>
-                <ListItem icon={<CheckIcon />}>
-                  {intl.formatMessage({
-                    id: 'integrations.overview.heroListItem2',
-                    defaultMessage: 'Manage your integrations and troubleshoot broken connections',
-                  })}
-                </ListItem>
+                <ListItem icon={<CheckIcon />}>{intl.formatMessage(messages.integrationsOverviewHerolistitem1)}</ListItem>
+                <ListItem icon={<CheckIcon />}>{intl.formatMessage(messages.integrationsOverviewHerolistitem2)}</ListItem>
               </List>
             </CardBody>
             <CardFooter>
@@ -252,10 +346,7 @@ const Overview = () => {
                   variant="info"
                   isInline
                   isExpandable
-                  title={intl.formatMessage({
-                    id: 'integrations.overview.alertTitle',
-                    defaultMessage: 'Need to create an integration?',
-                  })}
+                  title={intl.formatMessage(messages.integrationsOverviewAlerttitle)}
                   actionLinks={
                     <React.Fragment>
                       <AlertActionLink
@@ -263,21 +354,14 @@ const Overview = () => {
                         href="https://docs.redhat.com/en/documentation/red_hat_hybrid_cloud_console/1-latest/get_started-ai_powered_support#virtual-assistant"
                         target="_blank"
                       >
-                        {intl.formatMessage({
-                          id: 'integrations.overview.alertLink',
-                          defaultMessage: 'Learn about requesting access via the Virtual Assistant',
-                        })}
+                        {intl.formatMessage(messages.integrationsOverviewAlertlink)}
                       </AlertActionLink>
                     </React.Fragment>
                   }
                 >
                   <Content>
                     <Content component={ContentVariants.p}>
-                      {intl.formatMessage({
-                        id: 'integrations.overview.alertParagraph',
-                        defaultMessage:
-                          'You do not have the permissions for integration management. Contact your organization administrator if you need these permissions updated.',
-                      })}
+                      {intl.formatMessage(messages.integrationsOverviewAlertparagraph)}
                     </Content>
                   </Content>
                 </Alert>
@@ -291,16 +375,8 @@ const Overview = () => {
       {hasSourcesPermissions || hasIntegrationsPermissions ? (
         <Hint className="pf-v6-u-mb-lg">
           <HintBody>
-            <span className="pf-v6-u-font-weight-bold">
-              {intl.formatMessage({
-                id: 'integrations.overview.hintTextBold',
-                defaultMessage: 'Already set up your integrations?',
-              })}
-            </span>{' '}
-            {intl.formatMessage({
-              id: 'integrations.overview.hintText1',
-              defaultMessage: 'As a next step, you can',
-            })}{' '}
+            <span className="pf-v6-u-font-weight-bold">{intl.formatMessage(messages.integrationsOverviewHinttextbold)}</span>{' '}
+            {intl.formatMessage(messages.integrationsOverviewHinttext1)}{' '}
             <Button
               variant="link"
               onClick={(e) => {
@@ -309,26 +385,17 @@ const Overview = () => {
               }}
               isInline
             >
-              {intl.formatMessage({
-                id: 'integrations.overview.hintLink',
-                defaultMessage: 'enable the notifications',
-              })}
+              {intl.formatMessage(messages.integrationsOverviewHintlink)}
             </Button>{' '}
-            {intl.formatMessage({
-              id: 'integrations.overview.hintText2',
-              defaultMessage: 'of your choice to alert you via integrations.',
-            })}
+            {intl.formatMessage(messages.integrationsOverviewHinttext2)}
           </HintBody>
         </Hint>
       ) : null}
 
       <Title headingLevel="h2" className="pf-v6-u-mb-md">
-        {intl.formatMessage({
-          id: 'integrations.overview.titleIntegrationTypes',
-          defaultMessage: 'Integration types',
-        })}
+        {intl.formatMessage(messages.integrationsOverviewTitleintegrationtypes)}
       </Title>
-      <DataList aria-label="Integration types" className="pf-v6-u-mb-lg">
+      <DataList aria-label={intl.formatMessage(messages.overviewIntegrationTypesAria)} className="pf-v6-u-mb-lg">
         {data.map((item, index) => (
           <CustomDataListItem
             key={index}
@@ -344,31 +411,20 @@ const Overview = () => {
       </DataList>
 
       <Title headingLevel="h2" className="pf-v6-u-mb-md">
-        {intl.formatMessage({
-          id: 'integrations.overview.titleRecommendedContent',
-          defaultMessage: 'Recommended content',
-        })}
+        {intl.formatMessage(messages.integrationsOverviewTitlerecommendedcontent)}
       </Title>
-      <DataList aria-label="Recommended content">
+      <DataList aria-label={intl.formatMessage(messages.overviewRecommendedContentAria)}>
         <DataListItem aria-labelledby="configure-notif-int">
           <DataListItemRow>
             <DataListItemCells
               dataListCells={[
                 <DataListCell key="title" width={2}>
                   <span id="configure-notif-int">
-                    {intl.formatMessage({
-                      id: 'integrations.overview.recommendedContentTableTitle1',
-                      defaultMessage: 'Configuring notifications and integrations',
-                    })}
+                    {intl.formatMessage(messages.integrationsOverviewRecommendedcontenttabletitle1)}
                   </span>
                 </DataListCell>,
                 <DataListCell key="label" width={1}>
-                  <Label color="orange">
-                    {intl.formatMessage({
-                      id: 'integrations.overview.recommendedContentTableLabel1',
-                      defaultMessage: 'Documentation',
-                    })}
-                  </Label>
+                  <Label color="orange">{intl.formatMessage(messages.integrationsOverviewRecommendedcontenttablelabel1)}</Label>
                 </DataListCell>,
                 <DataListCell key="action" className="pf-v6-u-display-flex pf-v6-u-justify-content-flex-end">
                   <Button
@@ -379,10 +435,7 @@ const Overview = () => {
                     icon={<ExternalLinkAltIcon />}
                     iconPosition="end"
                   >
-                    {intl.formatMessage({
-                      id: 'integrations.overview.recommendedContentTableLink1',
-                      defaultMessage: 'View documentation',
-                    })}
+                    {intl.formatMessage(messages.integrationsOverviewRecommendedcontenttablelink1)}
                   </Button>
                 </DataListCell>,
               ]}
@@ -395,19 +448,11 @@ const Overview = () => {
               dataListCells={[
                 <DataListCell key="title" width={2}>
                   <span id="configure-cloud-int">
-                    {intl.formatMessage({
-                      id: 'integrations.overview.recommendedContentTableTitle2',
-                      defaultMessage: 'Configuring cloud integrations for Red Hat services',
-                    })}
+                    {intl.formatMessage(messages.integrationsOverviewRecommendedcontenttabletitle2)}
                   </span>
                 </DataListCell>,
                 <DataListCell key="label" width={1}>
-                  <Label color="orange">
-                    {intl.formatMessage({
-                      id: 'integrations.overview.recommendedContentTableLabel2',
-                      defaultMessage: 'Documentation',
-                    })}
-                  </Label>
+                  <Label color="orange">{intl.formatMessage(messages.integrationsOverviewRecommendedcontenttablelabel2)}</Label>
                 </DataListCell>,
                 <DataListCell key="action" className="pf-v6-u-display-flex pf-v6-u-justify-content-flex-end">
                   <Button
@@ -418,10 +463,7 @@ const Overview = () => {
                     icon={<ExternalLinkAltIcon />}
                     iconPosition="end"
                   >
-                    {intl.formatMessage({
-                      id: 'integrations.overview.recommendedContentTableLink2',
-                      defaultMessage: 'View documentation',
-                    })}
+                    {intl.formatMessage(messages.integrationsOverviewRecommendedcontenttablelink2)}
                   </Button>
                 </DataListCell>,
               ]}
@@ -433,27 +475,14 @@ const Overview = () => {
             <DataListItemCells
               dataListCells={[
                 <DataListCell key="title" width={2}>
-                  <span>
-                    {intl.formatMessage({
-                      id: 'integrations.overview.recommendedContentTableTitle3',
-                      defaultMessage: 'Configuring console notifications in Slack',
-                    })}
-                  </span>
+                  <span>{intl.formatMessage(messages.integrationsOverviewRecommendedcontenttabletitle3)}</span>
                 </DataListCell>,
                 <DataListCell key="label" width={1}>
-                  <Label color="green">
-                    {intl.formatMessage({
-                      id: 'integrations.overview.recommendedContentTableLabel3',
-                      defaultMessage: 'Quick start',
-                    })}
-                  </Label>
+                  <Label color="green">{intl.formatMessage(messages.integrationsOverviewRecommendedcontenttablelabel3)}</Label>
                 </DataListCell>,
                 <DataListCell key="action" className="pf-v6-u-display-flex pf-v6-u-justify-content-flex-end">
                   <Button icon={<ArrowRightIcon />} variant="link" onClick={handleActivateQuickstart} isInline>
-                    {intl.formatMessage({
-                      id: 'integrations.overview.recommendedContentTableLink3',
-                      defaultMessage: 'Begin Quick start',
-                    })}
+                    {intl.formatMessage(messages.integrationsOverviewRecommendedcontenttablelink3)}
                   </Button>
                 </DataListCell>,
               ]}
@@ -463,10 +492,7 @@ const Overview = () => {
       </DataList>
       <Link to={'/settings/learning-resources'}>
         <Button variant="link" className="pf-v6-u-mb-lg" isInline>
-          {intl.formatMessage({
-            id: 'integrations.overview.viewAllLearningResources',
-            defaultMessage: 'View all Settings learning resources',
-          })}
+          {intl.formatMessage(messages.integrationsOverviewViewalllearningresources)}
         </Button>
       </Link>
     </React.Fragment>

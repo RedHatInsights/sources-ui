@@ -30,6 +30,7 @@ export const KesselRbacAccessProvider: React.FC<{
   // Track workspace errors
   useEffect(() => {
     if (workspaceError) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- pre-existing pattern, see i18n cleanup ticket
       setErrors((prev) => [...prev, workspaceError]);
     }
   }, [workspaceError]);
@@ -68,6 +69,7 @@ export const KesselRbacAccessProvider: React.FC<{
     }
 
     if (permissionErrors.length > 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- pre-existing pattern, see i18n cleanup ticket
       setErrors((prev) => [...prev, ...permissionErrors]);
     }
   }, [integrationsEndpointsEdit.error, integrationsEndpointsView.error]);

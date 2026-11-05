@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer } from 'react';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import { shallowEqual, useSelector } from 'react-redux';
 import get from 'lodash/get';
 
@@ -16,13 +16,32 @@ import { prepareInitialValues } from '../SourceEditForm/helpers';
 import ResourcesEmptyState from './ResourcesEmptyState';
 import { pausedAppAlert } from '../../utilities/alerts';
 
+const messages = defineMessages({
+  resourcetableResourcetype: {
+    id: 'resourceTable.resourceType',
+    defaultMessage: 'Resource type',
+  },
+  resourcetableResourcevalue: {
+    id: 'resourceTable.resourceValue',
+    defaultMessage: 'Value',
+  },
+  resourcetableTitle: {
+    id: 'resourceTable.title',
+    defaultMessage: 'Connected application resources',
+  },
+  resourcetableDescription: {
+    id: 'resourceTable.description',
+    defaultMessage: 'View resources for your connected applications.',
+  },
+});
+
 const createColumns = (intl) => [
   {
-    title: intl.formatMessage({ id: 'resourceTable.resourceType', defaultMessage: 'Resource type' }),
+    title: intl.formatMessage(messages.resourcetableResourcetype),
     props: { 'aria-label': 'Resource type' },
   },
   {
-    title: intl.formatMessage({ id: 'resourceTable.resourceValue', defaultMessage: 'Value' }),
+    title: intl.formatMessage(messages.resourcetableResourcevalue),
     props: { 'aria-label': 'Resource value' },
   },
 ];
@@ -106,16 +125,12 @@ const ResourcesTable = () => {
         dispatch({ type: 'loaded', source, intl, sourceType, appTypes });
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   }, [source?.applications?.length, isLoaded, appTypesLoaded, sourceTypesLoaded]);
 
   return (
     <Card className="pf-v6-u-m-lg pf-v6-u-mt-0">
-      <CardTitle>
-        {intl.formatMessage({
-          id: 'resourceTable.title',
-          defaultMessage: 'Connected application resources',
-        })}
-      </CardTitle>
+      <CardTitle>{intl.formatMessage(messages.resourcetableTitle)}</CardTitle>
       <CardBody>
         {loading && (
           <Bullseye className="pf-v6-u-m-2xl">
@@ -126,10 +141,7 @@ const ResourcesTable = () => {
         {!loading && source.applications.length > 0 && (
           <React.Fragment>
             <Content component="p" className="pf-v6-u-mb-md">
-              {intl.formatMessage({
-                id: 'resourceTable.description',
-                defaultMessage: 'View resources for your connected applications.',
-              })}
+              {intl.formatMessage(messages.resourcetableDescription)}
             </Content>
             <Tabs isBox activeKey={activeTab} onSelect={(_e, activeTab) => dispatch({ type: 'switchTab', activeTab })}>
               {source.applications.map((app) => {
@@ -149,10 +161,7 @@ const ResourcesTable = () => {
                       <React.Fragment>
                         <Table
                           variant="compact"
-                          aria-label={intl.formatMessage({
-                            id: 'resourceTable.title',
-                            defaultMessage: 'Connected application resources',
-                          })}
+                          aria-label={intl.formatMessage(messages.resourcetableTitle)}
                           className="pf-v6-u-mt-md"
                         >
                           <Thead>

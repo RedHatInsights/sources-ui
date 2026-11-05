@@ -1,11 +1,18 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, defineMessages } from 'react-intl';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
 import hardcodedSchemas from './hardcodedSchemas';
 import get from 'lodash/get';
 import emptyAuthType from './emptyAuthType';
 import { COST_MANAGEMENT_APP_NAME, HCS_NAME } from '../../utilities/constants';
+
+const messages = defineMessages({
+  wizardCredentials: {
+    id: 'wizard.credentials',
+    defaultMessage: 'Credentials',
+  },
+});
 
 export const shouldAppendEmptyType = (type, appTypes) =>
   appTypes.some(
@@ -213,7 +220,7 @@ export const createAuthTypeSelection = (
 
     return {
       name: `${type.name}-${appType.id}`,
-      title: <FormattedMessage id="wizard.credentials" defaultMessage="Credentials" />,
+      title: <FormattedMessage {...messages.wizardCredentials} />,
       fields,
       nextStep: {
         when: 'auth_select',
@@ -276,7 +283,7 @@ export const createAuthTypeSelection = (
 
     return {
       name: `${type.name}-${appType.id}`,
-      title: <FormattedMessage id="wizard.credentials" defaultMessage="Credentials" />,
+      title: <FormattedMessage {...messages.wizardCredentials} />,
       fields: [
         ...fields,
         ...getAdditionalAuthFields(type.name, auth.type, hardcodedAppName),

@@ -1,8 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 
 import { Button, Popover } from '@patternfly/react-core';
+
+const messages = defineMessages({
+  wizardShowmore: {
+    id: 'wizard.showMore',
+    defaultMessage: 'Show more',
+  },
+});
 
 const ValuePopover = ({ label, value }) => {
   const intl = useIntl();
@@ -10,10 +17,7 @@ const ValuePopover = ({ label, value }) => {
   return (
     <Popover headerContent={label} bodyContent={value} position="top" maxWidth="80%">
       <Button variant="link" isInline className="src-c-wizard__summary-buttons">
-        {intl.formatMessage({
-          id: 'wizard.showMore',
-          defaultMessage: 'Show more',
-        })}
+        {intl.formatMessage(messages.wizardShowmore)}
       </Button>
     </Popover>
   );

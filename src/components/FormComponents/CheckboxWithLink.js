@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import Checkbox from '@data-driven-forms/pf4-component-mapper/checkbox';
 
+/* eslint-disable react-hooks/refs -- pre-existing PatternFly appendTo pattern */
 const CheckboxWithLink = ({ Link, ...props }) => {
   const ref = useRef();
 

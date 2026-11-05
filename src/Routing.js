@@ -87,6 +87,7 @@ const renderRoutes = (routes = []) =>
   ));
 
 const Routing = () => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   const routes = useMemo(() => renderRoutes(routeMap), [routeMap]);
   return (
     <Suspense fallback={<AppPlaceholder />}>

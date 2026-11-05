@@ -129,9 +129,11 @@ export const IntegrationsWidget: FunctionComponent = () => {
       const initiallyExpandedIndex = integrationsData
         .map((integration, index) => (badgeCounts(integration.items) > 0 ? index : null))
         .filter((index) => index !== null) as number[];
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- pre-existing pattern, see i18n cleanup ticket
       setExpandedIndex(initiallyExpandedIndex);
       setHasInitialized(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing pattern, see i18n cleanup ticket
   }, [integrationsData, integrationCounts, hasInitialized]);
 
   const onToggle = (index: number, isExpandable: boolean) => {

@@ -17,7 +17,7 @@ const authenticationSelectionStep = (sourceType, appType, intl, authenticationVa
   return {
     name: `selectAuthType-${appType.id}`,
     title: intl.formatMessage({
-      id: 'sources.selectAuthenticationTitle',
+      id: 'sources.selectAuthenticationType',
       defaultMessage: 'Select authentication type',
     }),
     fields: [

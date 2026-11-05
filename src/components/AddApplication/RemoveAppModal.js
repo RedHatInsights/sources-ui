@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
 
 import {
@@ -22,6 +22,29 @@ import removeAppSubmit from './removeAppSubmit';
 import { replaceRouteId, routes } from '../../routes';
 import { useAppNavigate } from '../../hooks/useAppNavigate';
 import AppNavigate from '../AppNavigate';
+
+const messages = defineMessages({
+  sourcesDeleteapptitle: {
+    id: 'sources.deleteAppTitle',
+    defaultMessage: 'Remove application?',
+  },
+  sourcesDeleteappwarning: {
+    id: 'sources.deleteAppWarning',
+    defaultMessage: '{ appName } will be disconnected from this integration.',
+  },
+  sourcesDeleteappdetails: {
+    id: 'sources.deleteAppDetails',
+    defaultMessage: 'This change will affect these applications: { apps }.',
+  },
+  sourcesRemove: {
+    id: 'sources.remove',
+    defaultMessage: 'Remove',
+  },
+  sourcesCancel: {
+    id: 'sources.cancel',
+    defaultMessage: 'Cancel',
+  },
+});
 
 const RemoveAppModal = () => {
   const intl = useIntl();
@@ -66,58 +89,34 @@ const RemoveAppModal = () => {
       isOpen={true}
       onClose={onCancel}
       variant="small"
-      aria-label={intl.formatMessage({
-        id: 'sources.deleteAppTitle',
-        defaultMessage: 'Remove application?',
-      })}
+      aria-label={intl.formatMessage(messages.sourcesDeleteapptitle)}
     >
       <ModalHeader>
         <Title headingLevel="h1" size="2xl" className="sources">
           <Icon size="xl" status="warning">
             <ExclamationTriangleIcon className="ins-m-alert pf-v6-u-mr-sm" />
           </Icon>
-          {intl.formatMessage({
-            id: 'sources.deleteAppTitle',
-            defaultMessage: 'Remove application?',
-          })}
+          {intl.formatMessage(messages.sourcesDeleteapptitle)}
         </Title>
       </ModalHeader>
       <ModalBody>
         <Content>
           <Content component={ContentVariants.p}>
-            {intl.formatMessage(
-              {
-                id: 'sources.deleteAppWarning',
-                defaultMessage: '{ appName } will be disconnected from this integration.',
-              },
-              { appName: <b key="b">{app.display_name}</b> },
-            )}
+            {intl.formatMessage(messages.sourcesDeleteappwarning, { appName: <b key="b">{app.display_name}</b> })}
           </Content>
           {dependentApps.length > 0 && (
             <Content component={ContentVariants.p}>
-              {intl.formatMessage(
-                {
-                  id: 'sources.deleteAppDetails',
-                  defaultMessage: 'This change will affect these applications: { apps }.',
-                },
-                { apps: dependentApps },
-              )}
+              {intl.formatMessage(messages.sourcesDeleteappdetails, { apps: dependentApps })}
             </Content>
           )}
         </Content>
       </ModalBody>
       <ModalFooter>
         <Button id="deleteSubmit" key="submit" variant="danger" type="button" onClick={onSubmit}>
-          {intl.formatMessage({
-            id: 'sources.remove',
-            defaultMessage: 'Remove',
-          })}
+          {intl.formatMessage(messages.sourcesRemove)}
         </Button>
         <Button id="deleteCancel" key="cancel" variant="link" type="button" onClick={onCancel}>
-          {intl.formatMessage({
-            id: 'sources.cancel',
-            defaultMessage: 'Cancel',
-          })}
+          {intl.formatMessage(messages.sourcesCancel)}
         </Button>
       </ModalFooter>
     </Modal>

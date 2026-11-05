@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, defineMessages, useIntl } from 'react-intl';
 import { useFormApi } from '@data-driven-forms/react-form-renderer';
 import {
   Alert,
@@ -15,10 +15,65 @@ import {
 
 import { getSourcesApi } from '../../../../api/entities';
 
+const BOLD_CONNECT_AWS = <strong>&apos;Connect AWS&apos;</strong>;
+const BOLD_CREATE_STACK = <strong>&apos;Create Stack&apos;</strong>;
+const BOLD_CREATE_COMPLETE = <strong>CREATE_COMPLETE</strong>;
+const BOLD_NEXT = <strong>&apos;Next&apos;</strong>;
+
+const messages = defineMessages({
+  seeRolePermissions: {
+    id: 'provisioningArn.seeRolePermissions',
+    defaultMessage: 'See role permissions',
+  },
+  provisioningAwsRoleStep1: {
+    id: 'provisioning.aws-role-step-1',
+    defaultMessage: 'Click on {connectAWS} to open AWS CloudFormation in a new tab with the IAM Role template.',
+  },
+  provisioningAwsRoleStep2: {
+    id: 'provisioning.aws-role-step-2',
+    defaultMessage:
+      'In AWS CloudFormation, click {createStack} to initiate the creation of the IAM Role. Wait until the status shows {status}.',
+  },
+  provisioningAwsRoleStep3: {
+    id: 'provisioning.aws-role-step-3',
+    defaultMessage: "Return to this window and click {next} to retrieve the new Role's ARN.",
+  },
+  provisioningIamEnableaccount: {
+    id: 'provisioning.iam.enableAccount',
+    defaultMessage:
+      'To enable account access, copy this provided {ARN} and paste it into the input field below. If you modified the role name during creation, update it accordingly.',
+  },
+  connectAws: {
+    id: 'provisioningArn.connectAws',
+    defaultMessage: 'Connect AWS',
+  },
+  provisioningAwsRoleCreationDesc: {
+    id: 'provisioning.aws-role-creation.desc',
+    defaultMessage: 'To integrate your AWS account with our service, you need to create an IAM role.',
+  },
+  provisioningIamFetcherror: {
+    id: 'provisioning.iam.fetchError',
+    defaultMessage: 'There was an error while loading the commands. Please go back and return to this step to try again.',
+  },
+  provisioningIamLoading: {
+    id: 'provisioning.iam.loading',
+    defaultMessage: 'Loading configuration...',
+  },
+  provisioningAwsRoleCreationFollowDesc: {
+    id: 'provisioning.aws-role-creation-follow.desc',
+    defaultMessage: 'Follow these steps to create the role:',
+  },
+  provisioningAwsAccountNumberDesc: {
+    id: 'provisioning.aws-account-number.desc',
+    defaultMessage: 'Login to your AWS account and copy your account number',
+  },
+});
+
 const STACK_TEMPLATE = 'https://provisioning-public-assets.s3.amazonaws.com/AWSStack/provisioning.yml';
 const ROLE_NAME = 'RH-HCC-provisioning-role';
 
 export const IAMRoleDescription = () => {
+  const intl = useIntl();
   const [provAppTypeId, setAppTypeId] = useState();
   const [provAwsAccount, setAwsAccount] = useState(null);
   const [fetchError, setFetchError] = useState(null);
@@ -49,24 +104,14 @@ export const IAMRoleDescription = () => {
   }, [provAppTypeId]);
 
   if (fetchError) {
-    return (
-      <Alert
-        variant="warning"
-        title={
-          <FormattedMessage
-            id="provisioning.iam.fetchError"
-            defaultMessage="There was an error while loading the commands. Please go back and return to this step to try again."
-          />
-        }
-      />
-    );
+    return <Alert variant="warning" title={<FormattedMessage {...messages.provisioningIamFetcherror} />} />;
   }
 
   if (provAwsAccount === null) {
     return (
       <Content>
         <Content component={ContentVariants.p}>
-          <FormattedMessage id="provisioning.iam.loading" defaultMessage="Loading configuration..." />
+          <FormattedMessage {...messages.provisioningIamLoading} />
         </Content>
       </Content>
     );
@@ -77,14 +122,11 @@ export const IAMRoleDescription = () => {
       <Stack hasGutter>
         <StackItem>
           <Content component="p">
-            <FormattedMessage
-              defaultMessage="To integrate your AWS account with our service, you need to create an IAM role."
-              id="provisioning.aws-role-creation.desc"
-            />
+            <FormattedMessage {...messages.provisioningAwsRoleCreationDesc} />
           </Content>
         </StackItem>
         <StackItem>
-          <ExpandableSection isIndented toggleText="See role permissions">
+          <ExpandableSection isIndented toggleText={intl.formatMessage(messages.seeRolePermissions)}>
             <Content component="p">
               <Content component="dl">
                 <Content component="li">IAM:GetPolicyVersion</Content>
@@ -118,45 +160,33 @@ export const IAMRoleDescription = () => {
         </StackItem>
         <StackItem>
           <Content>
-            <FormattedMessage
-              id="provisioning.aws-role-creation-follow.desc"
-              defaultMessage="Follow these steps to create the role:"
-            />
+            <FormattedMessage {...messages.provisioningAwsRoleCreationFollowDesc} />
           </Content>
         </StackItem>
         <StackItem>
           <Content>
             <Content component={ListComponent.ol}>
               <Content component="li">
-                <FormattedMessage
-                  id="provisioning.aws-role-step-1"
-                  defaultMessage="Click on {connectAWS} to open AWS CloudFormation in a new tab with the IAM Role template."
-                  values={{ connectAWS: <strong>&apos;Connect AWS&apos;</strong> }}
-                />
+                <FormattedMessage {...messages.provisioningAwsRoleStep1} values={{ connectAWS: BOLD_CONNECT_AWS }} />
               </Content>
               <Content component="li">
                 <FormattedMessage
-                  id="provisioning.aws-role-step-2"
-                  defaultMessage="In AWS CloudFormation, click {createStack} to initiate the creation of the IAM Role. Wait until the status shows {status}."
+                  {...messages.provisioningAwsRoleStep2}
                   values={{
-                    createStack: <strong>&apos;Create Stack&apos;</strong>,
-                    status: <strong>CREATE_COMPLETE</strong>,
+                    createStack: BOLD_CREATE_STACK,
+                    status: BOLD_CREATE_COMPLETE,
                   }}
                 />
               </Content>
               <Content component="li">
-                <FormattedMessage
-                  id="provisioning.aws-role-step-3"
-                  defaultMessage="Return to this window and click {next} to retrieve the new Role's ARN."
-                  values={{ next: <strong>&apos;Next&apos;</strong> }}
-                />
+                <FormattedMessage {...messages.provisioningAwsRoleStep3} values={{ next: BOLD_NEXT }} />
               </Content>
             </Content>
           </Content>
         </StackItem>
         <StackItem>
           <Button component="a" target="_blank" href={StackCreationURL} isBlock variant="primary">
-            Connect AWS
+            {intl.formatMessage(messages.connectAws)}
           </Button>
         </StackItem>
       </Stack>
@@ -168,10 +198,7 @@ export const AccountNumber = () => {
   return (
     <Content>
       <Content component="p">
-        <FormattedMessage
-          id="provisioning.aws-account-number.desc"
-          defaultMessage="Login to your AWS account and copy your account number"
-        />
+        <FormattedMessage {...messages.provisioningAwsAccountNumberDesc} />
       </Content>
     </Content>
   );
@@ -185,8 +212,7 @@ export const ArnDescription = () => {
     <Content>
       <Content component={ContentVariants.p}>
         <FormattedMessage
-          id="provisioning.iam.enableAccount"
-          defaultMessage="To enable account access, copy this provided {ARN} and paste it into the input field below. If you modified the role name during creation, update it accordingly."
+          {...messages.provisioningIamEnableaccount}
           values={{
             ARN: (
               <ClipboardCopy
